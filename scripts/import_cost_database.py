@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """
 Import US Tennessee Sitework Cost Items into OCERP.
-Run from project root: python scripts/import_cost_database.py
+Run from project root:
+  python scripts/import_cost_database.py                          # Batch 1 (default)
+  python scripts/import_cost_database.py --file data/us_tn_concrete_utilities_costs.json  # Batch 2
 
 Requires OCERP backend running at http://localhost:8082
 """
 
+import argparse
 import json
 import sys
 import urllib.request
@@ -14,7 +17,12 @@ import urllib.parse
 
 BASE_URL = "http://localhost:8082/api/v1"
 TOKEN = None
-DATA_FILE = "data/us_tn_sitework_costs.json"
+
+parser = argparse.ArgumentParser(description="Import cost items JSON into OCERP")
+parser.add_argument(
+    "--file", default="data/us_tn_sitework_costs.json",
+    help="Path to cost items JSON file (default: data/us_tn_sitework_costs.json)"
+)
 
 
 def api_call(method, path, data=None):
@@ -45,11 +53,6 @@ def login():
         sys.exit(1)
 
 
-def load_cost_items():
-    with open(DATA_FILE, "r") as f:
-        return json.load(f)
-
-
 def validate_item(item):
     """Validate that rate == sum(components.cost)"""
     total = item.get("rate", 0)
@@ -62,6 +65,9 @@ def validate_item(item):
 
 
 def main():
+    args = parser.parse_args()
+    data_file = args.file
+
     print("=" * 60)
     print("US Tennessee Sitework Cost Database — Import Script")
     print("=" * 60)
@@ -70,8 +76,9 @@ def main():
     login()
 
     # Load data
-    print(f"\nLoading {DATA_FILE}...")
-    items = load_cost_items()
+    print(f"\nLoading {data_file}...")
+    with open(data_file, "r") as f:
+        items = json.load(f)
     print(f"  Found {len(items)} cost items")
 
     # Validate all items
