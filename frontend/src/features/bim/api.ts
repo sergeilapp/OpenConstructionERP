@@ -243,11 +243,32 @@ export async function verifyBIMConverter(
  *  verifies) and typically takes 60–120 s for the RVT converter. */
 export async function installBIMConverter(
   converterId: string,
+  opts?: { force?: boolean },
 ): Promise<BIMConverterInstallResult> {
   return apiPost<BIMConverterInstallResult>(
     `/v1/takeoff/converters/${encodeURIComponent(converterId)}/install/`,
-    {},
+    opts ?? {},
   );
+}
+
+export interface ConverterVersionCheck {
+  converters: Array<{
+    id: string;
+    is_outdated?: boolean;
+    installed_sha?: string;
+    latest_sha?: string;
+    html_url?: string;
+    installed_path?: string;
+  }>;
+  any_outdated?: boolean;
+}
+
+export async function fetchConverterVersionCheck(): Promise<ConverterVersionCheck | null> {
+  try {
+    return await apiGet<ConverterVersionCheck>('/v1/takeoff/converters/version-check/');
+  } catch {
+    return null;
+  }
 }
 
 /* ── API Functions ─────────────────────────────────────────────────────── */
