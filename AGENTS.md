@@ -29,6 +29,9 @@ make dev-frontend     # cd frontend && npm run dev  (http://localhost:5173)
 # POSIX-only shortcut (Linux/macOS, backgrounds both):
 make dev-unix         # Does NOT work on Windows cmd.exe or MSYS2 make
 
+# Single-script dev start (Linux/macOS, starts infra + backend + frontend):
+./start-dev.sh        # Preserves DB volume, logs at /tmp/ocerp-*.log
+
 # Code quality (run before committing)
 make lint             # ruff check (backend) + eslint (frontend)
 make format           # ruff format (backend) + prettier (frontend)
