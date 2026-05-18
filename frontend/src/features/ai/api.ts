@@ -169,6 +169,8 @@ export const aiApi = {
   testConnection: (provider: AIProvider) =>
     apiPost<AITestResult, { provider: AIProvider }>('/v1/ai/settings/test/', { provider }),
 
+  getModels: () => apiGet<Array<{ id: string; name: string }>>('/v1/ai/models/'),
+
   quickEstimate: (data: QuickEstimateRequest) =>
     apiPost<EstimateJobResponse, QuickEstimateRequest>('/v1/ai/quick-estimate/', data),
 

@@ -32,6 +32,7 @@ import {
   LogOut,
   ChevronRight,
   Wrench,
+  Search,
 } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter, Button, Badge, InfoHint, Skeleton, Breadcrumb } from '@/shared/ui';
 import { UpdateNotification } from '@/shared/ui/UpdateChecker';
@@ -305,12 +306,39 @@ function AIConfigurationCard() {
   const [modelInput, setModelInput] = useState('');
   const [modelTouched, setModelTouched] = useState(false);
 
+  // Model browser modal state
+  const [showModelBrowser, setShowModelBrowser] = useState(false);
+  const [modelSearchQuery, setModelSearchQuery] = useState('');
+
   // Fetch current settings
   const { data: settings } = useQuery({
     queryKey: ['ai-settings'],
     queryFn: aiApi.getSettings,
     retry: false,
   });
+
+  // Fetch available models for the browser modal
+  const { data: availableModels = [], isLoading: modelsLoading } = useQuery({
+    queryKey: ['ai-models', selectedProvider],
+    queryFn: async () => {
+      try {
+        return await aiApi.getModels();
+      } catch {
+        return [];
+      }
+    },
+    enabled: showModelBrowser && !!selectedProvider,
+    staleTime: 10 * 60 * 1000, // 10 min
+  });
+
+  const filteredModels = useMemo(() => {
+    const query = modelSearchQuery.toLowerCase();
+    return availableModels.filter(
+      (m) =>
+        m.id.toLowerCase().includes(query) ||
+        m.name.toLowerCase().includes(query),
+    );
+  }, [availableModels, modelSearchQuery]);
 
   // Sync provider selection from preferred_model when settings are loaded
   useEffect(() => {
@@ -617,28 +645,42 @@ function AIConfigurationCard() {
             >
               {t('settings.ai_model_name', { defaultValue: 'Model name' })}
             </label>
-            <input
-              id="ai-model-name"
-              type="text"
-              value={modelInput}
-              onChange={(e) => {
-                setModelInput(e.target.value);
-                setModelTouched(true);
-              }}
-              placeholder={
-                defaultModel
-                  ? t('settings.ai_model_placeholder', {
-                      defaultValue: 'Default: {{model}}',
-                      model: defaultModel,
-                    })
-                  : t('settings.ai_model_placeholder_generic', {
-                      defaultValue: 'Leave blank to use the provider default',
-                    })
-              }
-              spellCheck={false}
-              autoComplete="off"
-              className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 font-mono text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all duration-normal ease-oe hover:border-content-tertiary"
-            />
+            <div className="flex gap-2">
+              <input
+                id="ai-model-name"
+                type="text"
+                value={modelInput}
+                onChange={(e) => {
+                  setModelInput(e.target.value);
+                  setModelTouched(true);
+                }}
+                placeholder={
+                  defaultModel
+                    ? t('settings.ai_model_placeholder', {
+                        defaultValue: 'Default: {{model}}',
+                        model: defaultModel,
+                      })
+                    : t('settings.ai_model_placeholder_generic', {
+                        defaultValue: 'Leave blank to use the provider default',
+                      })
+                }
+                spellCheck={false}
+                autoComplete="off"
+                className="h-10 flex-1 rounded-lg border border-border bg-surface-primary px-3 font-mono text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all duration-normal ease-oe hover:border-content-tertiary"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModelBrowser(true);
+                  setModelSearchQuery('');
+                }}
+                className="h-10 inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary hover:bg-surface-secondary hover:border-content-tertiary transition-all duration-fast"
+                title={t('settings.browse_models', { defaultValue: 'Browse available models' })}
+              >
+                <Search size={14} />
+                {t('settings.browse_models_btn', { defaultValue: 'Browse' })}
+              </button>
+            </div>
             <p className="mt-1.5 text-xs text-content-tertiary">
               {t('settings.ai_model_hint', {
                 defaultValue:
@@ -646,6 +688,90 @@ function AIConfigurationCard() {
               })}
             </p>
           </div>
+
+          {/* Model Browser Modal */}
+          {showModelBrowser && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+              role="dialog"
+              aria-modal="true"
+              onClick={() => setShowModelBrowser(false)}
+            >
+              <div
+                className="w-[28rem] max-h-[80vh] rounded-xl border border-border bg-surface-elevated shadow-lg flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                  <h3 className="text-base font-semibold text-content-primary">
+                    {t('settings.model_browser_title', { defaultValue: 'Select a model' })}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowModelBrowser(false)}
+                    className="text-content-tertiary hover:text-content-primary transition-colors"
+                  >
+                    <XCircle size={20} />
+                  </button>
+                </div>
+
+                <div className="px-5 py-3 border-b border-border">
+                  <div className="relative">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+                    <input
+                      type="text"
+                      value={modelSearchQuery}
+                      onChange={(e) => setModelSearchQuery(e.target.value)}
+                      placeholder={t('settings.model_browser_search', { defaultValue: 'Search models...' })}
+                      className="w-full h-9 rounded-lg border border-border bg-surface-primary pl-9 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto px-2 py-2">
+                  {modelsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 size={20} className="animate-spin text-content-tertiary" />
+                    </div>
+                  ) : filteredModels.length === 0 ? (
+                    <div className="text-center py-8 text-sm text-content-tertiary">
+                      {t('settings.no_models_found', { defaultValue: 'No models found' })}
+                    </div>
+                  ) : (
+                    <div className="space-y-0.5">
+                      {filteredModels.map((m) => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          onClick={() => {
+                            setModelInput(m.id);
+                            setModelTouched(true);
+                            setShowModelBrowser(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors duration-fast ${
+                            modelInput === m.id
+                              ? 'bg-oe-blue-subtle text-oe-blue'
+                              : 'text-content-primary hover:bg-surface-secondary'
+                          }`}
+                        >
+                          <span className="font-mono text-xs">{m.id}</span>
+                          {m.name !== m.id && (
+                            <span className="ml-2 text-xs text-content-tertiary">{m.name}</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="px-5 py-3 border-t border-border text-xs text-content-tertiary">
+                  {selectedProvider === 'openrouter'
+                    ? t('settings.openrouter_models_note', { defaultValue: 'Fetched live from OpenRouter API' })
+                    : t('settings.curated_models_note', { defaultValue: 'Curated list of known models for this provider' })}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Status */}
           <div className="rounded-lg bg-surface-secondary/50 px-4 py-3">
