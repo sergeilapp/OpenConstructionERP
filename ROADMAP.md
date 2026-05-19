@@ -38,6 +38,7 @@
 | AI takeoff from drone imagery | Auto-quantify earthworks from orthophotos | Needs POC dataset |
 | Multi-tenant SaaS mode | True tenant isolation for hosted version | Needs infra ADR |
 | Schedule ↔ Cost live link | EVM auto-update when schedule shifts | Needs CPM engine v2 |
+| Incoming Webhook Leads | Receive external webhook data to auto-create CRM leads | Needs module architecture, security design, payload mapping spec |
 
 ---
 

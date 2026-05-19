@@ -34,7 +34,6 @@ async def _update_fields(
     stmt = update(model).where(model.id == pk).values(**fields)
     await session.execute(stmt)
     await session.flush()
-    session.expire_all()
 
 
 # ── Account ──────────────────────────────────────────────────────────────
