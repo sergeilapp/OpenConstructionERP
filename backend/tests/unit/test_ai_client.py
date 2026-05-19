@@ -15,6 +15,7 @@ from app.modules.ai.ai_client import (
     GEMINI_MODEL,
     OPENAI_MODEL,
     OPENROUTER_MODEL,
+    _extract_openai_message_text,
     _model_override_for,
     default_model_for,
     extract_json,
@@ -107,6 +108,62 @@ class TestExtractJson:
         assert result is None
 
 
+# ── OpenAI-shaped extraction hardening (issue #138) ──────────────────────────
+
+
+class TestExtractOpenAIMessageText:
+    """A billed completion must NEVER be silently dropped — every response
+    shape resolves to non-empty text or a precise, actionable ValueError."""
+
+    def test_plain_string_content(self):
+        data = {"choices": [{"message": {"content": "  Hello estimator  "}}]}
+        assert _extract_openai_message_text("openrouter", data) == "Hello estimator"
+
+    def test_content_as_typed_parts_list(self):
+        data = {
+            "choices": [
+                {
+                    "message": {
+                        "content": [
+                            {"type": "text", "text": "Part one. "},
+                            {"type": "text", "text": "Part two."},
+                        ]
+                    }
+                }
+            ]
+        }
+        assert _extract_openai_message_text("openai", data) == "Part one. Part two."
+
+    def test_falls_back_to_reasoning_when_content_empty(self):
+        data = {
+            "choices": [
+                {"message": {"content": None, "reasoning": "Chain of thought answer"}}
+            ]
+        }
+        assert (
+            _extract_openai_message_text("openrouter", data)
+            == "Chain of thought answer"
+        )
+
+    def test_in_body_error_without_choices_raises(self):
+        data = {"error": {"message": "insufficient credits"}}
+        with pytest.raises(ValueError, match="insufficient credits"):
+            _extract_openai_message_text("openrouter", data)
+
+    def test_empty_choices_raises(self):
+        with pytest.raises(ValueError, match="no choices"):
+            _extract_openai_message_text("openrouter", {"choices": []})
+
+    def test_empty_message_raises_with_finish_reason(self):
+        data = {
+            "choices": [
+                {"message": {"content": ""}, "finish_reason": "content_filter"}
+            ]
+        }
+        with pytest.raises(ValueError, match="content_filter"):
+            _extract_openai_message_text("openrouter", data)
+
+
 # ── Model constants ──────────────────────────────────────────────────────────
 
 
@@ -144,31 +201,27 @@ class TestResolveProviderAndKey:
 
     def test_anthropic_preferred(self):
         settings = self._make_settings(anthropic_api_key="sk-ant-123")
-        provider, key, model = resolve_provider_and_key(settings, "claude-sonnet")
+        provider, key = resolve_provider_and_key(settings, "claude-sonnet")
         assert provider == "anthropic"
         assert key == "sk-ant-123"
-        assert model == "claude-sonnet"
 
     def test_openai_preferred(self):
         settings = self._make_settings(openai_api_key="sk-openai-123")
-        provider, key, model = resolve_provider_and_key(settings, "gpt-4o")
+        provider, key = resolve_provider_and_key(settings, "gpt-4o")
         assert provider == "openai"
         assert key == "sk-openai-123"
-        assert model == "gpt-4o"
 
     def test_gemini_preferred(self):
         settings = self._make_settings(gemini_api_key="AIza-123")
-        provider, key, model = resolve_provider_and_key(settings, "gemini-2.0-flash")
+        provider, key = resolve_provider_and_key(settings, "gemini-2.0-flash")
         assert provider == "gemini"
         assert key == "AIza-123"
-        assert model == "gemini-2.0-flash"
 
     def test_fallback_to_any_available(self):
         settings = self._make_settings(openai_api_key="sk-fallback")
-        provider, key, model = resolve_provider_and_key(settings, "claude-sonnet")
+        provider, key = resolve_provider_and_key(settings, "claude-sonnet")
         assert provider == "openai"
         assert key == "sk-fallback"
-        assert model == "claude-sonnet"
 
     def test_no_keys_raises_error(self):
         settings = self._make_settings()
@@ -178,6 +231,40 @@ class TestResolveProviderAndKey:
     def test_none_settings_raises_error(self):
         with pytest.raises(ValueError, match="No AI API key configured"):
             resolve_provider_and_key(None)
+
+
+class TestResolveProviderKeyModel:
+    def _make_settings(self, **kwargs):
+        defaults = {
+            "anthropic_api_key": None,
+            "openai_api_key": None,
+            "gemini_api_key": None,
+            "openrouter_api_key": None,
+            "mistral_api_key": None,
+            "groq_api_key": None,
+            "deepseek_api_key": None,
+            "preferred_model": "claude-sonnet",
+            "metadata_": None,
+        }
+        defaults.update(kwargs)
+        return SimpleNamespace(**defaults)
+
+    def test_returns_model_override_when_set(self):
+        settings = self._make_settings(
+            anthropic_api_key="sk-ant-123",
+            metadata_={"model_overrides": {"anthropic": "claude-opus-4"}},
+        )
+        provider, key, model_override = resolve_provider_key_model(settings)
+        assert provider == "anthropic"
+        assert key == "sk-ant-123"
+        assert model_override == "claude-opus-4"
+
+    def test_returns_none_when_no_override(self):
+        settings = self._make_settings(anthropic_api_key="sk-ant-123")
+        provider, key, model_override = resolve_provider_key_model(settings)
+        assert provider == "anthropic"
+        assert key == "sk-ant-123"
+        assert model_override is None
 
 
 # ── Model defaults & user-overridable model id (issue #129) ──────────────────

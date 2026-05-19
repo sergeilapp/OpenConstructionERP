@@ -18,6 +18,7 @@ import {
   useFileTree,
   useFolderPermissionCounts,
   useIsProjectOwner,
+  useProjectsLite,
   useStorageLocations,
 } from './hooks';
 import { PathBar } from './components/PathBar';
@@ -107,6 +108,10 @@ export function FileManagerPage() {
   // Folder-permissions surface — gear + lock badge.
   const isOwner = useIsProjectOwner(projectId);
   const permissionCounts = useFolderPermissionCounts(projectId, isOwner);
+  // Resolve a file's project name when opening into a context-store
+  // destination (Clash / BI Explorer) — keeps the global project label
+  // correct even from the cross-project global /files view.
+  const { data: projectsLite = [] } = useProjectsLite();
 
   useEffect(() => {
     writeViewMode(view);
@@ -212,9 +217,21 @@ export function FileManagerPage() {
 
   function handleOpen(row: FileRow) {
     // Opening a file means "take me to the tool that processes it" —
-    // PDFs jump to PDF Takeoff, IFC/RVT to BIM Viewer, DWG to DWG
+    // PDFs jump to PDF Takeoff, IFC/RVT to BIM 3D Viewer, DWG to DWG
     // Takeoff. Plain download stays available from the preview pane.
     const target = primaryModule(row.kind, row.extension);
+    // Destinations that resolve the project from the global context
+    // store (Clash, BI Explorer) need it bound first or they land on
+    // the empty "no project" state. Reuse the known context name when
+    // it's the same project.
+    if (target.setsActiveProject) {
+      const ctx = useProjectContextStore.getState();
+      const name =
+        ctx.activeProjectId === row.project_id
+          ? ctx.activeProjectName
+          : projectsLite.find((p) => p.id === row.project_id)?.name ?? ctx.activeProjectName;
+      ctx.setActiveProject(row.project_id, name);
+    }
     navigate(target.route(row.project_id, row.id));
   }
 
@@ -241,13 +258,13 @@ export function FileManagerPage() {
       <div className="flex items-center justify-center h-full">
         <EmptyState
           icon={<HardDrive size={28} />}
-          title={t('files.no_project_title', { defaultValue: 'No active project' })}
+          title={t('files.no_project_title', { defaultValue: 'No active project‌⁠‍' })}
           description={t('files.no_project_desc', {
             defaultValue:
-              'Pick a project from the dashboard to see all of its documents, photos, BIM and DWG files in one place.',
+              'Pick a project from the dashboard to see all of its documents, photos, BIM and DWG files in one place.‌⁠‍',
           })}
           action={{
-            label: t('files.go_to_projects', { defaultValue: 'Go to projects' }),
+            label: t('files.go_to_projects', { defaultValue: 'Go to projects‌⁠‍' }),
             onClick: () => navigate('/projects'),
           }}
         />
@@ -284,7 +301,7 @@ export function FileManagerPage() {
       <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-b border-border-light bg-surface-elevated">
         <nav
           className="flex items-center gap-1.5 text-sm min-w-0"
-          aria-label={t('common.breadcrumb', { defaultValue: 'Breadcrumb' })}
+          aria-label={t('common.breadcrumb', { defaultValue: 'Breadcrumb‌⁠‍' })}
         >
           <button
             type="button"
@@ -298,7 +315,7 @@ export function FileManagerPage() {
             disabled={showFolderGrid}
           >
             {!showFolderGrid && <ArrowLeft size={13} />}
-            {t('files.title_all', { defaultValue: 'All files' })}
+            {t('files.title_all', { defaultValue: 'All files‌⁠‍' })}
           </button>
           {!showFolderGrid && (
             <>

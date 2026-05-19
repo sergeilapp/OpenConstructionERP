@@ -1,6 +1,6 @@
 # DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 # Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-"""Image source adapter — single photo / drawing snapshot to /match-elements.
+"""‌⁠‍Image source adapter — single photo / drawing snapshot to /match-elements.
 
 Implements MAPPING_PROCESS.md §3.1 / §4.1.4 — the "Image" source type.
 The estimator uploads one PNG/JPG/WebP (a site photo, a hand-sketched
@@ -108,7 +108,7 @@ _UNIT_TO_QTY_KEY: dict[str, str] = {
 # Vision LLM prompt. Kept as a module constant so the test suite can
 # import and assert on it; updates to the wording need a paired update
 # to the LLM-output fixture.
-IMAGE_EXTRACTION_PROMPT: str = """\
+IMAGE_EXTRACTION_PROMPT: str = """‌⁠‍\
 Return a JSON array. Each item describes one construction element visible
 in the drawing/photo:
 [
@@ -134,7 +134,7 @@ _SYSTEM_PROMPT: str = (
 
 
 def _parse_ai_response(text: str) -> list[dict[str, Any]]:
-    """Parse the LLM's response into a list of element dicts.
+    """‌⁠‍Parse the LLM's response into a list of element dicts.
 
     Tolerates the same shapes :func:`app.modules.ai.ai_client.extract_json`
     handles (markdown code fences, surrounding prose, partial JSON), but
@@ -342,7 +342,7 @@ class ImageSourceAdapter:
         # the AI module at import time — so a tenant that disabled
         # the AI module entirely doesn't break match-elements imports.
         try:
-            from app.modules.ai.ai_client import call_ai, resolve_provider_and_key
+            from app.modules.ai.ai_client import call_ai, resolve_provider_key_model
             from app.modules.ai.repository import AISettingsRepository
         except ImportError as exc:
             logger.warning("ImageAdapter: AI module not available: %s", exc)
@@ -376,16 +376,16 @@ class ImageSourceAdapter:
                     ).scalars().all()
                     for row in rows:
                         try:
-                            provider, api_key, preferred_model = resolve_provider_and_key(row)
+                            provider, api_key, model_override = resolve_provider_key_model(row)
                             settings_row = row
                             break
                         except ValueError:
                             continue
                 if settings_row is not None and provider is None:
                     try:
-                        provider, api_key, preferred_model = resolve_provider_and_key(settings_row)
+                        provider, api_key, model_override = resolve_provider_key_model(settings_row)
                     except ValueError:
-                        provider, api_key, preferred_model = None, None, None
+                        provider, api_key, model_override = None, None, None
             except Exception as exc:  # noqa: BLE001 — AI is best-effort
                 logger.warning("ImageAdapter: settings lookup failed: %s", exc)
 
@@ -405,7 +405,7 @@ class ImageSourceAdapter:
                 prompt=IMAGE_EXTRACTION_PROMPT,
                 image_base64=image_b64,
                 image_media_type=mime,
-                model=preferred_model if 'preferred_model' in dir() else None,
+                model=model_override if 'model_override' in dir() else None,
             )
         except Exception as exc:  # noqa: BLE001 — vision is best-effort
             logger.warning("ImageAdapter: AI call failed: %s", exc)
