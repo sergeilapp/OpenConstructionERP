@@ -4,7 +4,6 @@ Supports Anthropic and OpenAI APIs with tool-calling (function calling).
 Other providers fall back to plain text via the shared ai_client.call_ai().
 """
 
-import asyncio
 import json
 import logging
 import uuid
