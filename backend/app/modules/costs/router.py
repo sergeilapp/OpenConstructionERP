@@ -142,6 +142,7 @@ _REGION_CURRENCY_LEGACY: dict[str, str] = {
     "BE_BRUSSELS": "EUR",
     "IE_DUBLIN": "EUR",
     "USA_NEWYORK": "USD",
+    "USA_TENNESSEE": "USD",
     "SA_RIYADH": "SAR",
     # NOTE: ``PT_SAOPAULO`` is intentionally NOT registered — it was a
     # mislabeled tag (São Paulo is Brazil; canonical key is ``BR_SAOPAULO``,
