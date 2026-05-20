@@ -86,6 +86,7 @@ _REGION_CURRENCY: dict[str, str] = {
     "RU_MOSCOW": "RUB",
     "USA_USD": "USD",
     "USA_NEWYORK": "USD",
+    "USA_TENNESSEE": "USD",
     "CA_TORONTO": "CAD",
     "MX_MEXICO": "MXN",
     "BR_SAOPAULO": "BRL",
