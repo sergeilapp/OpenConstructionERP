@@ -95,10 +95,7 @@ def _check_source_filter(value: str | None) -> None:
     if value not in ALIAS_SOURCE_FILTERS:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=(
-                f"source_filter must be one of {ALIAS_SOURCE_FILTERS}, "
-                f"got '{value}'"
-            ),
+            detail=(f"source_filter must be one of {ALIAS_SOURCE_FILTERS}, got '{value}'"),
         )
 
 
@@ -108,16 +105,11 @@ def _check_vth(value: str | None) -> None:
     if value not in ALIAS_VALUE_TYPE_HINTS:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=(
-                f"value_type_hint must be one of {ALIAS_VALUE_TYPE_HINTS}, "
-                f"got '{value}'"
-            ),
+            detail=(f"value_type_hint must be one of {ALIAS_VALUE_TYPE_HINTS}, got '{value}'"),
         )
 
 
-async def _resolve_tenant_id(
-    session: AsyncSession, user_id: str
-) -> uuid.UUID:
+async def _resolve_tenant_id(session: AsyncSession, user_id: str) -> uuid.UUID:
     """‌⁠‍Resolve the current user's tenant.
 
     Mirrors the helper used by :mod:`app.modules.eac.router` so this
@@ -454,12 +446,7 @@ async def export_aliases_route(
         aliases = [a for a in aliases if not a.is_built_in]
 
     if format == "json":
-        return {
-            "aliases": [
-                EacParameterAliasRead.model_validate(a).model_dump(mode="json")
-                for a in aliases
-            ]
-        }
+        return {"aliases": [EacParameterAliasRead.model_validate(a).model_dump(mode="json") for a in aliases]}
 
     buf = io.StringIO()
     writer = csv.writer(buf)
@@ -546,7 +533,8 @@ async def import_aliases_route(
                     {
                         "pattern": row.get("synonym_pattern") or row.get("pattern") or "",
                         "kind": row.get("kind") or "exact",
-                        "case_sensitive": (row.get("case_sensitive") or "0") in (
+                        "case_sensitive": (row.get("case_sensitive") or "0")
+                        in (
                             "1",
                             "true",
                             "True",

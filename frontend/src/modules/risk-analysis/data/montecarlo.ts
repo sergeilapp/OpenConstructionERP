@@ -9,7 +9,7 @@
 // Types
 // ---------------------------------------------------------------------------
 
-export type DistributionType = 'triangular' | 'uniform' | 'pert';
+export type DistributionType = "triangular" | "uniform" | "pert";
 
 export interface RiskParameter {
   /** Position ID from BOQ */
@@ -114,7 +114,11 @@ export function sampleTriangular(
 }
 
 /** Sample from uniform distribution. */
-export function sampleUniform(min: number, max: number, rand: () => number): number {
+export function sampleUniform(
+  min: number,
+  max: number,
+  rand: () => number,
+): number {
   return min + rand() * (max - min);
 }
 
@@ -186,7 +190,8 @@ function sampleGamma(shape: number, rand: () => number): number {
     v = v * v * v;
     const u = rand();
     if (u < 1 - 0.0331 * x * x * x * x) return d * v;
-    if (Math.log(u || 1e-10) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v;
+    if (Math.log(u || 1e-10) < 0.5 * x * x + d * (1 - v + Math.log(v)))
+      return d * v;
   }
 }
 
@@ -201,11 +206,11 @@ function samplePositionCost(param: RiskParameter, rand: () => number): number {
   const max = param.baseCost * param.pessimistic;
 
   switch (param.distribution) {
-    case 'uniform':
+    case "uniform":
       return sampleUniform(min, max, rand);
-    case 'pert':
+    case "pert":
       return samplePERT(min, mode, max, rand);
-    case 'triangular':
+    case "triangular":
     default:
       return sampleTriangular(min, mode, max, rand);
   }
@@ -229,7 +234,16 @@ export function runSimulation(
     return {
       iterations,
       baseTotal: 0,
-      percentiles: { p5: 0, p10: 0, p25: 0, p50: 0, p75: 0, p80: 0, p90: 0, p95: 0 },
+      percentiles: {
+        p5: 0,
+        p10: 0,
+        p25: 0,
+        p50: 0,
+        p75: 0,
+        p80: 0,
+        p90: 0,
+        p95: 0,
+      },
       mean: 0,
       stdDev: 0,
       contingency: 0,
@@ -261,7 +275,8 @@ export function runSimulation(
   const sorted = Array.from(totals).sort((a, b) => a - b);
 
   // Percentiles
-  const pct = (p: number) => sorted[Math.floor((p / 100) * (iterations - 1))] ?? 0;
+  const pct = (p: number) =>
+    sorted[Math.floor((p / 100) * (iterations - 1))] ?? 0;
   const percentiles = {
     p5: pct(5),
     p10: pct(10),
@@ -296,7 +311,10 @@ export function runSimulation(
     const binEnd = binStart + binWidth;
     let count = 0;
     for (let i = 0; i < iterations; i++) {
-      if (totals[i]! >= binStart && (b === bins - 1 ? totals[i]! <= binEnd : totals[i]! < binEnd)) {
+      if (
+        totals[i]! >= binStart &&
+        (b === bins - 1 ? totals[i]! <= binEnd : totals[i]! < binEnd)
+      ) {
         count++;
       }
     }
@@ -361,7 +379,7 @@ export function generateDefaultParams(
   positions: BOQPositionForRisk[],
   defaultOptimistic = 0.85,
   defaultPessimistic = 1.25,
-  defaultDistribution: DistributionType = 'triangular',
+  defaultDistribution: DistributionType = "triangular",
 ): RiskParameter[] {
   return positions
     .filter((p) => p.quantity > 0 && p.unit_rate > 0)

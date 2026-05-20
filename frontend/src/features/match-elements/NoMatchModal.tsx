@@ -3,11 +3,11 @@
 //
 // No-match action modal: Custom position · Send to RFQ · Mark TBD.
 
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { X, FileEdit, Send, Clock, Loader2 } from 'lucide-react';
-import { matchElementsApi } from './api';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { X, FileEdit, Send, Clock, Loader2 } from "lucide-react";
+import { matchElementsApi } from "./api";
 
 interface Props {
   sessionId: string;
@@ -16,22 +16,22 @@ interface Props {
   onDone: () => void;
 }
 
-type Action = 'custom' | 'rfq' | 'tbd';
+type Action = "custom" | "rfq" | "tbd";
 
 export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
   const { t } = useTranslation();
   const qc = useQueryClient();
-  const [action, setAction] = useState<Action>('tbd');
-  const [desc, setDesc] = useState('');
-  const [unit, setUnit] = useState('m3');
-  const [rate, setRate] = useState('');
+  const [action, setAction] = useState<Action>("tbd");
+  const [desc, setDesc] = useState("");
+  const [unit, setUnit] = useState("m3");
+  const [rate, setRate] = useState("");
 
   const mut = useMutation({
     mutationFn: () =>
       matchElementsApi.noMatch(sessionId, {
         group_key: groupKey,
         action,
-        ...(action === 'custom'
+        ...(action === "custom"
           ? {
               custom_description: desc || undefined,
               custom_unit: unit || undefined,
@@ -40,8 +40,8 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
           : {}),
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['match-groups', sessionId] });
-      qc.invalidateQueries({ queryKey: ['match-detail', sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-groups", sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-detail", sessionId] });
       onDone();
     },
   });
@@ -50,33 +50,50 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
   // The dialog is always mounted by the parent so this hook always runs.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.stopPropagation();
         onClose();
       }
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  const opts: Array<{ value: Action; icon: typeof FileEdit; title: string; sub: string }> = [
+  const opts: Array<{
+    value: Action;
+    icon: typeof FileEdit;
+    title: string;
+    sub: string;
+  }> = [
     {
-      value: 'custom',
+      value: "custom",
       icon: FileEdit,
-      title: t('match_elements.no_match.custom.title', 'Create custom position'),
-      sub: t('match_elements.no_match.custom.sub', 'Add a project-only position with description, unit and rate.'),
+      title: t(
+        "match_elements.no_match.custom.title",
+        "Create custom position",
+      ),
+      sub: t(
+        "match_elements.no_match.custom.sub",
+        "Add a project-only position with description, unit and rate.",
+      ),
     },
     {
-      value: 'rfq',
+      value: "rfq",
       icon: Send,
-      title: t('match_elements.no_match.rfq.title', 'Send to RFQ'),
-      sub: t('match_elements.no_match.rfq.sub', 'Mark for tendering — request quotes from subcontractors.'),
+      title: t("match_elements.no_match.rfq.title", "Send to RFQ"),
+      sub: t(
+        "match_elements.no_match.rfq.sub",
+        "Mark for tendering — request quotes from subcontractors.",
+      ),
     },
     {
-      value: 'tbd',
+      value: "tbd",
       icon: Clock,
-      title: t('match_elements.no_match.tbd.title', 'Mark TBD'),
-      sub: t('match_elements.no_match.tbd.sub', 'Park the group; revisit later. Excluded from BOQ totals until resolved.'),
+      title: t("match_elements.no_match.tbd.title", "Mark TBD"),
+      sub: t(
+        "match_elements.no_match.tbd.sub",
+        "Park the group; revisit later. Excluded from BOQ totals until resolved.",
+      ),
     },
   ];
 
@@ -94,12 +111,15 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
       >
         <header className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
           <h3 id="no-match-modal-heading" className="text-base font-semibold">
-            {t('match_elements.no_match.heading', 'No match — choose action')}
+            {t("match_elements.no_match.heading", "No match — choose action")}
           </h3>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('match_elements.no_match.close', 'Close no-match dialog')}
+            aria-label={t(
+              "match_elements.no_match.close",
+              "Close no-match dialog",
+            )}
             className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <X className="w-5 h-5" />
@@ -112,8 +132,8 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
               key={o.value}
               className={`block p-3 rounded border cursor-pointer transition ${
                 action === o.value
-                  ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
-                  : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                  ? "border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                  : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
               }`}
             >
               <div className="flex items-start gap-2">
@@ -136,13 +156,16 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
             </label>
           ))}
 
-          {action === 'custom' && (
+          {action === "custom" && (
             <div className="border border-slate-200 dark:border-slate-700 rounded p-3 mt-3 space-y-2">
               <input
                 type="text"
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
-                placeholder={t('match_elements.no_match.placeholder.description', 'Position description')}
+                placeholder={t(
+                  "match_elements.no_match.placeholder.description",
+                  "Position description",
+                )}
                 className="w-full px-2 py-1.5 text-sm rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900"
               />
               <div className="flex gap-2">
@@ -150,14 +173,20 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
                   type="text"
                   value={unit}
                   onChange={(e) => setUnit(e.target.value)}
-                  placeholder={t('match_elements.no_match.placeholder.unit', 'Unit')}
+                  placeholder={t(
+                    "match_elements.no_match.placeholder.unit",
+                    "Unit",
+                  )}
                   className="w-24 px-2 py-1.5 text-sm rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900"
                 />
                 <input
                   type="number"
                   value={rate}
                   onChange={(e) => setRate(e.target.value)}
-                  placeholder={t('match_elements.no_match.placeholder.rate', 'Unit rate')}
+                  placeholder={t(
+                    "match_elements.no_match.placeholder.rate",
+                    "Unit rate",
+                  )}
                   step="0.01"
                   className="flex-1 px-2 py-1.5 text-sm rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900"
                 />
@@ -171,8 +200,10 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
             className="mx-4 mb-3 -mt-1 rounded border border-rose-300 dark:border-rose-700 bg-rose-50 dark:bg-rose-900/20 px-3 py-2 text-xs text-rose-800 dark:text-rose-100"
             role="alert"
           >
-            {t('match_elements.no_match.error', 'Could not apply: {{error}}', {
-              error: String((mut.error as Error | null)?.message ?? mut.error ?? ''),
+            {t("match_elements.no_match.error", "Could not apply: {{error}}", {
+              error: String(
+                (mut.error as Error | null)?.message ?? mut.error ?? "",
+              ),
             })}
           </div>
         )}
@@ -183,7 +214,7 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
             onClick={onClose}
             className="px-3 py-1.5 text-sm rounded border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            {t('match_elements.no_match.cancel', 'Cancel')}
+            {t("match_elements.no_match.cancel", "Cancel")}
           </button>
           <button
             type="button"
@@ -192,7 +223,7 @@ export function NoMatchModal({ sessionId, groupKey, onClose, onDone }: Props) {
             className="px-3 py-1.5 text-sm rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50 inline-flex items-center gap-1.5"
           >
             {mut.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-            {t('match_elements.no_match.apply', 'Apply')}
+            {t("match_elements.no_match.apply", "Apply")}
           </button>
         </footer>
       </div>

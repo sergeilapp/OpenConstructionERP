@@ -1,20 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { Map as MapIcon, MapPin } from 'lucide-react';
-import clsx from 'clsx';
-import type { MapRef, MarkerProps } from 'react-map-gl/maplibre';
-import { buildGeocodeQuery } from '@/shared/ui/ProjectMap/geocode';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { Map as MapIcon, MapPin } from "lucide-react";
+import clsx from "clsx";
+import type { MapRef, MarkerProps } from "react-map-gl/maplibre";
+import { buildGeocodeQuery } from "@/shared/ui/ProjectMap/geocode";
 // maplibre-gl ships its canvas / control styles separately. The static
 // import lets Vite hoist the CSS into the dashboard chunk so markers
 // have correct positioning the moment the JS module resolves —
 // dynamic CSS imports leave the Marker positioned at (0,0) of the
 // page until the browser commits the style sheet, which is the second
 // half of the "no-pins" bug the user reported.
-import 'maplibre-gl/dist/maplibre-gl.css';
+import "maplibre-gl/dist/maplibre-gl.css";
 
-const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
-const CACHE_PREFIX = 'oe.geocode.';
+const MAP_STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
+const CACHE_PREFIX = "oe.geocode.";
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 30;
 
 // Dynamic-import both Map and Marker together via a single shared state
@@ -29,7 +29,7 @@ const CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 30;
 // attached to the underlying GL canvas. Fixing the lazy pattern at
 // once: the parent waits for the whole module, then renders both the
 // Map and all Markers in a single pass with the cached components.
-type MapLibreModule = typeof import('react-map-gl/maplibre');
+type MapLibreModule = typeof import("react-map-gl/maplibre");
 
 interface ProjectPin {
   id: string;
@@ -67,7 +67,8 @@ function readCache(q: string): { lat: number; lng: number } | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CacheEntry;
     if (Date.now() - parsed.at > CACHE_TTL_MS) return null;
-    if (!Number.isFinite(parsed.lat) || !Number.isFinite(parsed.lng)) return null;
+    if (!Number.isFinite(parsed.lat) || !Number.isFinite(parsed.lng))
+      return null;
     return { lat: parsed.lat, lng: parsed.lng };
   } catch {
     return null;
@@ -85,14 +86,20 @@ function writeCache(q: string, lat: number, lng: number) {
   }
 }
 
-async function geocodeOne(query: string, signal: AbortSignal): Promise<{ lat: number; lng: number } | null> {
+async function geocodeOne(
+  query: string,
+  signal: AbortSignal,
+): Promise<{ lat: number; lng: number } | null> {
   const cached = readCache(query);
   if (cached) return cached;
   const url =
-    'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' +
+    "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
     encodeURIComponent(query);
   try {
-    const res = await fetch(url, { signal, headers: { Accept: 'application/json' } });
+    const res = await fetch(url, {
+      signal,
+      headers: { Accept: "application/json" },
+    });
     if (!res.ok) return null;
     const rows = (await res.json()) as Array<{ lat: string; lon: string }>;
     const first = rows[0];
@@ -119,7 +126,7 @@ const REGION_FALLBACK: Record<string, { lat: number; lng: number }> = {
   switzerland: { lat: 46.818, lng: 8.227 },
   france: { lat: 46.227, lng: 2.213 },
   uk: { lat: 54.0, lng: -2.0 },
-  'united kingdom': { lat: 54.0, lng: -2.0 },
+  "united kingdom": { lat: 54.0, lng: -2.0 },
   britain: { lat: 54.0, lng: -2.0 },
   spain: { lat: 40.463, lng: -3.749 },
   italy: { lat: 41.871, lng: 12.567 },
@@ -127,8 +134,8 @@ const REGION_FALLBACK: Record<string, { lat: number; lng: number }> = {
   poland: { lat: 51.919, lng: 19.145 },
   usa: { lat: 39.83, lng: -98.58 },
   us: { lat: 39.83, lng: -98.58 },
-  'united states': { lat: 39.83, lng: -98.58 },
-  'united states of america': { lat: 39.83, lng: -98.58 },
+  "united states": { lat: 39.83, lng: -98.58 },
+  "united states of america": { lat: 39.83, lng: -98.58 },
   america: { lat: 39.83, lng: -98.58 },
   canada: { lat: 56.13, lng: -106.34 },
   brazil: { lat: -14.235, lng: -51.925 },
@@ -139,33 +146,38 @@ const REGION_FALLBACK: Record<string, { lat: number; lng: number }> = {
   australia: { lat: -25.274, lng: 133.775 },
   japan: { lat: 36.204, lng: 138.252 },
   uae: { lat: 23.424, lng: 53.848 },
-  'united arab emirates': { lat: 23.424, lng: 53.848 },
-  'saudi arabia': { lat: 23.886, lng: 45.079 },
+  "united arab emirates": { lat: 23.424, lng: 53.848 },
+  "saudi arabia": { lat: 23.886, lng: 45.079 },
   // Higher-level region groupings used in the project model
-  dach: { lat: 49.5, lng: 10.5 },          // ~middle of DE/AT/CH
+  dach: { lat: 49.5, lng: 10.5 }, // ~middle of DE/AT/CH
   europe: { lat: 50.0, lng: 10.0 },
   eu: { lat: 50.0, lng: 10.0 },
-  'middle east': { lat: 27.0, lng: 45.0 }, // ~middle of GCC region
+  "middle east": { lat: 27.0, lng: 45.0 }, // ~middle of GCC region
   gcc: { lat: 27.0, lng: 45.0 },
   asia: { lat: 34.047, lng: 100.619 },
-  'asia-pacific': { lat: 0.0, lng: 120.0 },
+  "asia-pacific": { lat: 0.0, lng: 120.0 },
   asiapacific: { lat: 0.0, lng: 120.0 },
   apac: { lat: 0.0, lng: 120.0 },
-  'latin america': { lat: -14.235, lng: -60.0 },
+  "latin america": { lat: -14.235, lng: -60.0 },
   latam: { lat: -14.235, lng: -60.0 },
-  'south america': { lat: -14.235, lng: -60.0 },
-  'north america': { lat: 45.0, lng: -100.0 },
+  "south america": { lat: -14.235, lng: -60.0 },
+  "north america": { lat: 45.0, lng: -100.0 },
   africa: { lat: 0.0, lng: 20.0 },
   oceania: { lat: -25.0, lng: 140.0 },
 };
 
-function regionFallback(region?: string | null): { lat: number; lng: number } | null {
+function regionFallback(
+  region?: string | null,
+): { lat: number; lng: number } | null {
   if (!region) return null;
   const key = region.toLowerCase().trim();
   return REGION_FALLBACK[key] ?? null;
 }
 
-export function DashboardProjectsMap({ projects, className }: DashboardProjectsMapProps) {
+export function DashboardProjectsMap({
+  projects,
+  className,
+}: DashboardProjectsMapProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [resolved, setResolved] = useState<ResolvedMarker[]>([]);
@@ -179,7 +191,7 @@ export function DashboardProjectsMap({ projects, className }: DashboardProjectsM
   // route-split via DashboardPage).
   useEffect(() => {
     let cancelled = false;
-    import('react-map-gl/maplibre').then((mod) => {
+    import("react-map-gl/maplibre").then((mod) => {
       if (!cancelled) setMapLib(mod);
     });
     return () => {
@@ -207,12 +219,24 @@ export function DashboardProjectsMap({ projects, className }: DashboardProjectsM
       const q = buildGeocodeQuery(p.address, p.city, p.country);
       const cached = q ? readCache(q) : null;
       if (cached) {
-        out.push({ id: p.id, name: p.name, region: p.region, lat: cached.lat, lng: cached.lng });
+        out.push({
+          id: p.id,
+          name: p.name,
+          region: p.region,
+          lat: cached.lat,
+          lng: cached.lng,
+        });
         continue;
       }
       const fallback = regionFallback(p.region);
       if (fallback) {
-        out.push({ id: p.id, name: p.name, region: p.region, lat: fallback.lat, lng: fallback.lng });
+        out.push({
+          id: p.id,
+          name: p.name,
+          region: p.region,
+          lat: fallback.lat,
+          lng: fallback.lng,
+        });
       }
     }
     setResolved(out);
@@ -231,7 +255,11 @@ export function DashboardProjectsMap({ projects, className }: DashboardProjectsM
         if (!coords) continue;
         setResolved((prev) => {
           const idx = prev.findIndex((m) => m.id === p.id);
-          if (idx === -1) return [...prev, { id: p.id, name: p.name, region: p.region, ...coords }];
+          if (idx === -1)
+            return [
+              ...prev,
+              { id: p.id, name: p.name, region: p.region, ...coords },
+            ];
           const next = prev.slice();
           const existing = next[idx]!;
           next[idx] = { ...existing, lat: coords.lat, lng: coords.lng };
@@ -306,14 +334,15 @@ export function DashboardProjectsMap({ projects, className }: DashboardProjectsM
 
   // Map height scales with project count — a 1-2 project workspace doesn't
   // need 256px of map real estate. Saves vertical space on small portfolios.
-  const heightClass = projects.length <= 3 ? 'h-48' : projects.length <= 6 ? 'h-56' : 'h-64';
+  const heightClass =
+    projects.length <= 3 ? "h-48" : projects.length <= 6 ? "h-56" : "h-64";
 
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-xl border border-border-light',
-        'bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50/30',
-        'dark:from-slate-900 dark:via-slate-900/60 dark:to-slate-800',
+        "relative overflow-hidden rounded-xl border border-border-light",
+        "bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50/30",
+        "dark:from-slate-900 dark:via-slate-900/60 dark:to-slate-800",
         heightClass,
         className,
       )}
@@ -325,7 +354,7 @@ export function DashboardProjectsMap({ projects, className }: DashboardProjectsM
           }}
           initialViewState={initialView}
           mapStyle={MAP_STYLE_URL}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
           interactive
           dragRotate={false}
           attributionControl={false}
@@ -336,7 +365,9 @@ export function DashboardProjectsMap({ projects, className }: DashboardProjectsM
               longitude={m.lng}
               latitude={m.lat}
               anchor="bottom"
-              onClick={(e: Parameters<NonNullable<MarkerProps['onClick']>>[0]) => {
+              onClick={(
+                e: Parameters<NonNullable<MarkerProps["onClick"]>>[0],
+              ) => {
                 e.originalEvent.stopPropagation();
                 navigate(`/projects/${m.id}`);
               }}
@@ -364,7 +395,7 @@ export function DashboardProjectsMap({ projects, className }: DashboardProjectsM
       <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-md bg-surface-elevated/90 backdrop-blur-sm px-2 py-1 shadow-sm">
         <MapIcon size={11} className="text-oe-blue" strokeWidth={2} />
         <span className="text-[11px] font-medium text-content-primary">
-          {t('dashboard.map_title', { defaultValue: 'Project locations‌⁠‍' })}
+          {t("dashboard.map_title", { defaultValue: "Project locations‌⁠‍" })}
         </span>
         <span className="text-[10px] text-content-tertiary tabular-nums">
           {resolved.length}/{projects.length}

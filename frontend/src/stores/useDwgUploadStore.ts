@@ -10,11 +10,11 @@
  * populated so the caller can navigate or refresh the drawing list.
  */
 
-import { create } from 'zustand';
-import { uploadDrawing } from '@/features/dwg-takeoff/api';
-import type { DwgDrawing } from '@/features/dwg-takeoff/api';
+import { create } from "zustand";
+import { uploadDrawing } from "@/features/dwg-takeoff/api";
+import type { DwgDrawing } from "@/features/dwg-takeoff/api";
 
-export type DwgUploadStatus = 'uploading' | 'converting' | 'ready' | 'error';
+export type DwgUploadStatus = "uploading" | "converting" | "ready" | "error";
 
 export interface DwgUploadJob {
   id: string;
@@ -66,10 +66,34 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
 
   function startStageTimer(jobId: string) {
     const phases = [
-      { status: 'uploading' as const, stage: 'dwg_upload.stage_uploading', target: 30, step: 2.0, interval: 200 },
-      { status: 'converting' as const, stage: 'dwg_upload.stage_converting', target: 70, step: 0.9, interval: 300 },
-      { status: 'converting' as const, stage: 'dwg_upload.stage_extracting', target: 90, step: 0.7, interval: 250 },
-      { status: 'converting' as const, stage: 'dwg_upload.stage_finalizing', target: 95, step: 1.5, interval: 200 },
+      {
+        status: "uploading" as const,
+        stage: "dwg_upload.stage_uploading",
+        target: 30,
+        step: 2.0,
+        interval: 200,
+      },
+      {
+        status: "converting" as const,
+        stage: "dwg_upload.stage_converting",
+        target: 70,
+        step: 0.9,
+        interval: 300,
+      },
+      {
+        status: "converting" as const,
+        stage: "dwg_upload.stage_extracting",
+        target: 90,
+        step: 0.7,
+        interval: 250,
+      },
+      {
+        status: "converting" as const,
+        stage: "dwg_upload.stage_finalizing",
+        target: 95,
+        step: 1.5,
+        interval: 200,
+      },
     ];
 
     let phaseIdx = 0;
@@ -87,7 +111,11 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
       const remaining = phase.target - currentPct;
       const increment = Math.max(0.2, Math.min(phase.step, remaining * 0.15));
       currentPct = Math.min(phase.target, currentPct + increment);
-      patchJob(jobId, { status: phase.status, stage: phase.stage, progress: Math.round(currentPct) });
+      patchJob(jobId, {
+        status: phase.status,
+        stage: phase.stage,
+        progress: Math.round(currentPct),
+      });
       if (currentPct >= phase.target - 0.2) phaseIdx += 1;
     };
 
@@ -115,20 +143,20 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
       );
       clearStageTimer(jobId);
       patchJob(jobId, {
-        status: 'ready',
+        status: "ready",
         progress: 100,
-        stage: 'dwg_upload.stage_done',
+        stage: "dwg_upload.stage_done",
         drawingId: res.id,
         completedAt: Date.now(),
       });
     } catch (err) {
       clearStageTimer(jobId);
-      if (err instanceof DOMException && err.name === 'AbortError') return;
+      if (err instanceof DOMException && err.name === "AbortError") return;
       const msg = err instanceof Error ? err.message : String(err);
       patchJob(jobId, {
-        status: 'error',
+        status: "error",
         progress: 0,
-        stage: 'dwg_upload.stage_failed',
+        stage: "dwg_upload.stage_failed",
         errorMessage: msg,
         completedAt: Date.now(),
       });
@@ -149,9 +177,9 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
         projectId: params.projectId,
         modelName: params.modelName,
         discipline: params.discipline,
-        status: 'uploading',
+        status: "uploading",
         progress: 5,
-        stage: 'dwg_upload.stage_sending',
+        stage: "dwg_upload.stage_sending",
         drawingId: null,
         errorMessage: null,
         startedAt: Date.now(),
@@ -195,7 +223,7 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
       set((state) => {
         const jobs = new Map(state.jobs);
         for (const [id, job] of jobs) {
-          if (job.status === 'ready' || job.status === 'error') jobs.delete(id);
+          if (job.status === "ready" || job.status === "error") jobs.delete(id);
         }
         return { jobs };
       });
@@ -203,7 +231,8 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
 
     hasActiveUploads: () => {
       for (const job of get().jobs.values()) {
-        if (job.status === 'uploading' || job.status === 'converting') return true;
+        if (job.status === "uploading" || job.status === "converting")
+          return true;
       }
       return false;
     },
@@ -211,7 +240,8 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
     activeJobs: () => {
       const out: DwgUploadJob[] = [];
       for (const job of get().jobs.values()) {
-        if (job.status === 'uploading' || job.status === 'converting') out.push(job);
+        if (job.status === "uploading" || job.status === "converting")
+          out.push(job);
       }
       return out;
     },
@@ -219,13 +249,12 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
     completedJobs: () => {
       const out: DwgUploadJob[] = [];
       for (const job of get().jobs.values()) {
-        if (job.status === 'ready' || job.status === 'error') out.push(job);
+        if (job.status === "ready" || job.status === "error") out.push(job);
       }
       return out;
     },
   };
 });
-
 
 // ── Zombie-job janitor ─────────────────────────────────────────────────────
 //
@@ -236,7 +265,7 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
 // to `error` so the UI drops it. Reported as "конвертация проходит
 // постоянно" alongside the BIM-side zombie.
 
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   const MAX_ACTIVE_MS = 45 * 60 * 1000;
   const PATROL_MS = 2 * 60 * 1000;
 
@@ -246,17 +275,17 @@ if (typeof window !== 'undefined') {
     let dirty = false;
     const nextJobs = new Map(state.jobs);
     for (const [id, job] of nextJobs) {
-      const active = job.status === 'uploading' || job.status === 'converting';
+      const active = job.status === "uploading" || job.status === "converting";
       if (!active) continue;
       if (now - job.startedAt < MAX_ACTIVE_MS) continue;
       nextJobs.set(id, {
         ...job,
-        status: 'error',
+        status: "error",
         progress: 0,
-        stage: 'dwg_upload.stage_stalled',
+        stage: "dwg_upload.stage_stalled",
         errorMessage:
           job.errorMessage ??
-          'Upload abandoned after 45 min — reload to retry if the file is still needed.',
+          "Upload abandoned after 45 min — reload to retry if the file is still needed.",
         completedAt: now,
       });
       dirty = true;

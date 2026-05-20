@@ -1,6 +1,6 @@
-import { lazy } from 'react';
-import { Workflow } from 'lucide-react';
-import type { ModuleManifest } from '../_types';
+import { lazy } from "react";
+import { Workflow } from "lucide-react";
+import type { ModuleManifest } from "../_types";
 
 /**
  * Pipeline Builder — visual node-graph automation editor (BETA, Phase 1).
@@ -19,62 +19,62 @@ import type { ModuleManifest } from '../_types';
  * root for onboarding instead.
  */
 export const manifest: ModuleManifest = {
-  id: 'pipelines',
-  name: 'Pipeline Builder',
+  id: "pipelines",
+  name: "Pipeline Builder",
   description:
-    'Visually compose construction automations: triggers, data sources, transforms, validation gates and outputs as a node graph.',
-  version: '0.1.0',
+    "Visually compose construction automations: triggers, data sources, transforms, validation gates and outputs as a node graph.",
+  version: "0.1.0",
   icon: Workflow,
-  category: 'tools',
+  category: "tools",
   defaultEnabled: false,
-  depends: ['validation'],
+  depends: ["validation"],
   routes: [
     {
-      path: '/pipelines',
-      title: 'Pipeline Builder',
-      component: lazy(() => import('@/features/pipelines/PipelinesPage')),
+      path: "/pipelines",
+      title: "Pipeline Builder",
+      component: lazy(() => import("@/features/pipelines/PipelinesPage")),
     },
   ],
   navItems: [
     {
-      labelKey: 'nav.pipelines',
-      to: '/pipelines',
+      labelKey: "nav.pipelines",
+      to: "/pipelines",
       icon: Workflow,
-      group: 'ai',
+      group: "ai",
       advancedOnly: true,
     },
   ],
   searchEntries: [
     {
-      label: 'Pipeline Builder',
-      path: '/pipelines',
+      label: "Pipeline Builder",
+      path: "/pipelines",
       keywords: [
-        'pipeline',
-        'automation',
-        'workflow',
-        'node graph',
-        'flow',
-        'trigger',
-        'no-code',
-        'orchestration',
+        "pipeline",
+        "automation",
+        "workflow",
+        "node graph",
+        "flow",
+        "trigger",
+        "no-code",
+        "orchestration",
       ],
     },
   ],
   translations: {
     en: {
-      'nav.pipelines': 'Pipeline Builder',
+      "nav.pipelines": "Pipeline Builder",
     },
     es: {
-      'nav.pipelines': 'Constructor de pipelines',
+      "nav.pipelines": "Constructor de pipelines",
     },
     de: {
-      'nav.pipelines': 'Pipeline-Builder',
+      "nav.pipelines": "Pipeline-Builder",
     },
     fr: {
-      'nav.pipelines': 'Générateur de pipelines',
+      "nav.pipelines": "Générateur de pipelines",
     },
     ru: {
-      'nav.pipelines': 'Конструктор конвейеров',
+      "nav.pipelines": "Конструктор конвейеров",
     },
   },
 };

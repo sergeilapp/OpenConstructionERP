@@ -5,8 +5,8 @@
 // pre/code block plus a tiny token-level highlighter — no codemirror
 // dependency.
 
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 interface DslPreviewProps {
   yaml: string | null;
@@ -15,13 +15,15 @@ interface DslPreviewProps {
 }
 
 /* Match YAML keys (foo:), strings ('bar'/"bar"), and numbers. */
-const TOKEN_RE = /(^[ \t]*[a-zA-Z_][a-zA-Z0-9_]*:)|('[^']*')|("[^"]*")|(\b\d+(?:\.\d+)?\b)/gm;
+const TOKEN_RE =
+  /(^[ \t]*[a-zA-Z_][a-zA-Z0-9_]*:)|('[^']*')|("[^"]*")|(\b\d+(?:\.\d+)?\b)/gm;
 
 function highlightToken(token: string): string {
-  if (token.endsWith(':')) return 'text-oe-blue font-medium';
-  if (token.startsWith("'") || token.startsWith('"')) return 'text-semantic-success';
-  if (/^\d/.test(token)) return 'text-semantic-warning';
-  return '';
+  if (token.endsWith(":")) return "text-oe-blue font-medium";
+  if (token.startsWith("'") || token.startsWith('"'))
+    return "text-semantic-success";
+  if (/^\d/.test(token)) return "text-semantic-warning";
+  return "";
 }
 
 function renderHighlighted(yaml: string): React.ReactNode {
@@ -64,11 +66,13 @@ export function DslPreview({ yaml, onCopy }: DslPreviewProps) {
     <div
       className="flex h-full flex-col"
       data-testid="dsl-preview"
-      aria-label={t('compliance.nl.preview_title', { defaultValue: 'DSL Preview‌⁠‍' })}
+      aria-label={t("compliance.nl.preview_title", {
+        defaultValue: "DSL Preview‌⁠‍",
+      })}
     >
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('compliance.nl.preview_title', { defaultValue: 'DSL Preview‌⁠‍' })}
+          {t("compliance.nl.preview_title", { defaultValue: "DSL Preview‌⁠‍" })}
         </h3>
         {yaml && onCopy && (
           <button
@@ -77,7 +81,7 @@ export function DslPreview({ yaml, onCopy }: DslPreviewProps) {
             data-testid="dsl-preview-copy"
             className="text-xs font-medium text-oe-blue hover:underline"
           >
-            {t('common.copy', { defaultValue: 'Copy' })}
+            {t("common.copy", { defaultValue: "Copy" })}
           </button>
         )}
       </div>
@@ -93,8 +97,9 @@ export function DslPreview({ yaml, onCopy }: DslPreviewProps) {
           data-testid="dsl-preview-empty"
           className="flex-1 rounded-lg border border-dashed border-border-light p-4 text-center text-xs text-content-tertiary"
         >
-          {t('compliance.nl.no_dsl_yet', {
-            defaultValue: 'Type a sentence and press Generate to see the DSL.‌⁠‍',
+          {t("compliance.nl.no_dsl_yet", {
+            defaultValue:
+              "Type a sentence and press Generate to see the DSL.‌⁠‍",
           })}
         </div>
       )}

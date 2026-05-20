@@ -6,9 +6,9 @@
  * math so the component itself stays purely presentational.
  */
 
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import clsx from "clsx";
 import {
   ArrowDown,
   ArrowUp,
@@ -16,8 +16,8 @@ import {
   FileSpreadsheet,
   Filter,
   X,
-} from 'lucide-react';
-import type { Measurement } from '../lib/takeoff-types';
+} from "lucide-react";
+import type { Measurement } from "../lib/takeoff-types";
 import {
   emptyFilter,
   filterMeasurements,
@@ -30,7 +30,7 @@ import {
   type LedgerFilter,
   type LedgerSortColumn,
   type SortDirection,
-} from '../lib/takeoff-ledger';
+} from "../lib/takeoff-ledger";
 
 export interface MeasurementLedgerProps {
   measurements: Measurement[];
@@ -46,15 +46,15 @@ export interface MeasurementLedgerProps {
 const COLUMNS: {
   key: LedgerSortColumn;
   label: string;
-  align: 'left' | 'right';
+  align: "left" | "right";
 }[] = [
-  { key: 'ordinal', label: '#', align: 'right' },
-  { key: 'type', label: 'Type', align: 'left' },
-  { key: 'annotation', label: 'Annotation', align: 'left' },
-  { key: 'group', label: 'Group', align: 'left' },
-  { key: 'value', label: 'Value', align: 'right' },
-  { key: 'unit', label: 'Unit', align: 'left' },
-  { key: 'page', label: 'Page', align: 'right' },
+  { key: "ordinal", label: "#", align: "right" },
+  { key: "type", label: "Type", align: "left" },
+  { key: "annotation", label: "Annotation", align: "left" },
+  { key: "group", label: "Group", align: "left" },
+  { key: "value", label: "Value", align: "right" },
+  { key: "unit", label: "Unit", align: "left" },
+  { key: "page", label: "Page", align: "right" },
 ];
 
 export function MeasurementLedger({
@@ -64,12 +64,15 @@ export function MeasurementLedger({
   selectedMeasurementId,
 }: MeasurementLedgerProps) {
   const { t } = useTranslation();
-  const [sortCol, setSortCol] = useState<LedgerSortColumn>('ordinal');
-  const [sortDir, setSortDir] = useState<SortDirection>('asc');
+  const [sortCol, setSortCol] = useState<LedgerSortColumn>("ordinal");
+  const [sortDir, setSortDir] = useState<SortDirection>("asc");
   const [filter, setFilter] = useState<LedgerFilter>(emptyFilter());
   const [showFilters, setShowFilters] = useState(false);
 
-  const options = useMemo(() => uniqueFilterOptions(measurements), [measurements]);
+  const options = useMemo(
+    () => uniqueFilterOptions(measurements),
+    [measurements],
+  );
 
   const filtered = useMemo(
     () => filterMeasurements(measurements, filter),
@@ -88,7 +91,7 @@ export function MeasurementLedger({
   const rowsByGroup = useMemo(() => {
     const map = new Map<string, typeof rows>();
     for (const row of rows) {
-      const g = row.measurement.group || 'General';
+      const g = row.measurement.group || "General";
       if (!map.has(g)) map.set(g, []);
       map.get(g)!.push(row);
     }
@@ -97,17 +100,17 @@ export function MeasurementLedger({
 
   const subtotals = useMemo(() => groupSubtotals(sorted), [sorted]);
   const subtotalByGroup = useMemo(() => {
-    const map = new Map<string, typeof subtotals[number]>();
+    const map = new Map<string, (typeof subtotals)[number]>();
     for (const s of subtotals) map.set(s.group, s);
     return map;
   }, [subtotals]);
 
   const toggleSort = (col: LedgerSortColumn) => {
     if (sortCol === col) {
-      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortCol(col);
-      setSortDir('asc');
+      setSortDir("asc");
     }
   };
 
@@ -126,9 +129,9 @@ export function MeasurementLedger({
 
   const handleExport = () => {
     const csv = ledgerToCsv(sorted);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = `takeoff-ledger-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
@@ -142,7 +145,7 @@ export function MeasurementLedger({
     >
       <div className="flex items-center justify-between mb-2 gap-2">
         <p className="text-xs font-semibold text-content-primary">
-          {t('takeoff_viewer.ledger', { defaultValue: 'Ledger‌⁠‍' })}{' '}
+          {t("takeoff_viewer.ledger", { defaultValue: "Ledger‌⁠‍" })}{" "}
           <span className="text-content-tertiary tabular-nums">
             ({rows.length}/{measurements.length})
           </span>
@@ -152,16 +155,16 @@ export function MeasurementLedger({
             type="button"
             onClick={() => setShowFilters((v) => !v)}
             className={clsx(
-              'flex items-center gap-1 px-1.5 py-1 rounded text-[10px] transition-colors',
+              "flex items-center gap-1 px-1.5 py-1 rounded text-[10px] transition-colors",
               showFilters || hasFilters
-                ? 'bg-oe-blue/10 text-oe-blue border border-oe-blue/30'
-                : 'hover:bg-surface-secondary text-content-tertiary border border-transparent',
+                ? "bg-oe-blue/10 text-oe-blue border border-oe-blue/30"
+                : "hover:bg-surface-secondary text-content-tertiary border border-transparent",
             )}
             aria-pressed={showFilters}
             data-testid="ledger-filter-toggle"
           >
             <Filter size={10} />
-            {t('takeoff_viewer.filters', { defaultValue: 'Filters‌⁠‍' })}
+            {t("takeoff_viewer.filters", { defaultValue: "Filters‌⁠‍" })}
             {hasFilters && (
               <span className="ml-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue" />
             )}
@@ -171,8 +174,8 @@ export function MeasurementLedger({
             onClick={handleExport}
             disabled={rows.length === 0}
             className="flex items-center gap-1 px-1.5 py-1 rounded text-[10px] hover:bg-surface-secondary text-content-tertiary disabled:opacity-40 disabled:pointer-events-none transition-colors"
-            title={t('takeoff_viewer.export_filtered_csv', {
-              defaultValue: 'Export filtered view as CSV‌⁠‍',
+            title={t("takeoff_viewer.export_filtered_csv", {
+              defaultValue: "Export filtered view as CSV‌⁠‍",
             })}
             data-testid="ledger-export-csv"
           >
@@ -188,7 +191,9 @@ export function MeasurementLedger({
           data-testid="ledger-filters"
         >
           <FilterChipGroup
-            label={t('takeoff_viewer.filter_groups', { defaultValue: 'Groups‌⁠‍' })}
+            label={t("takeoff_viewer.filter_groups", {
+              defaultValue: "Groups‌⁠‍",
+            })}
             options={options.groups}
             active={filter.groups}
             onToggle={(v) =>
@@ -198,7 +203,7 @@ export function MeasurementLedger({
             dataTestId="filter-group"
           />
           <FilterChipGroup
-            label={t('takeoff_viewer.filter_types', { defaultValue: 'Types' })}
+            label={t("takeoff_viewer.filter_types", { defaultValue: "Types" })}
             options={options.types}
             active={filter.types}
             onToggle={(v) =>
@@ -208,7 +213,7 @@ export function MeasurementLedger({
             dataTestId="filter-type"
           />
           <FilterChipGroup
-            label={t('takeoff_viewer.filter_pages', { defaultValue: 'Pages' })}
+            label={t("takeoff_viewer.filter_pages", { defaultValue: "Pages" })}
             options={options.pages}
             active={filter.pages}
             onToggle={(v) =>
@@ -224,7 +229,9 @@ export function MeasurementLedger({
               className="flex items-center gap-1 text-[10px] text-content-tertiary hover:text-content-primary transition-colors"
             >
               <X size={9} />
-              {t('takeoff_viewer.clear_filters', { defaultValue: 'Clear filters‌⁠‍' })}
+              {t("takeoff_viewer.clear_filters", {
+                defaultValue: "Clear filters‌⁠‍",
+              })}
             </button>
           )}
         </div>
@@ -235,8 +242,8 @@ export function MeasurementLedger({
           className="text-xs text-content-tertiary py-6 text-center"
           data-testid="ledger-empty"
         >
-          {t('takeoff_viewer.ledger_empty', {
-            defaultValue: 'No measurements yet — pick a tool to start.',
+          {t("takeoff_viewer.ledger_empty", {
+            defaultValue: "No measurements yet — pick a tool to start.",
           })}
         </p>
       ) : (
@@ -250,9 +257,9 @@ export function MeasurementLedger({
                 {COLUMNS.map((col) => {
                   const isActive = sortCol === col.key;
                   const Arrow =
-                    isActive && sortDir === 'asc'
+                    isActive && sortDir === "asc"
                       ? ArrowUp
-                      : isActive && sortDir === 'desc'
+                      : isActive && sortDir === "desc"
                         ? ArrowDown
                         : ArrowUpDown;
                   return (
@@ -260,8 +267,8 @@ export function MeasurementLedger({
                       key={col.key}
                       onClick={() => toggleSort(col.key)}
                       className={clsx(
-                        'px-1.5 py-1 font-semibold text-content-secondary cursor-pointer select-none hover:bg-surface-secondary transition-colors',
-                        col.align === 'right' ? 'text-right' : 'text-left',
+                        "px-1.5 py-1 font-semibold text-content-secondary cursor-pointer select-none hover:bg-surface-secondary transition-colors",
+                        col.align === "right" ? "text-right" : "text-left",
                       )}
                       data-testid={`ledger-header-${col.key}`}
                       data-sort={isActive ? sortDir : undefined}
@@ -271,8 +278,10 @@ export function MeasurementLedger({
                         <Arrow
                           size={9}
                           className={clsx(
-                            'shrink-0',
-                            isActive ? 'text-oe-blue' : 'text-content-quaternary',
+                            "shrink-0",
+                            isActive
+                              ? "text-oe-blue"
+                              : "text-content-quaternary",
                           )}
                         />
                       </span>
@@ -289,14 +298,15 @@ export function MeasurementLedger({
                     className="text-center text-content-tertiary py-4"
                     data-testid="ledger-no-matches"
                   >
-                    {t('takeoff_viewer.ledger_no_matches', {
-                      defaultValue: 'No measurements match the current filters.',
+                    {t("takeoff_viewer.ledger_no_matches", {
+                      defaultValue:
+                        "No measurements match the current filters.",
                     })}
                   </td>
                 </tr>
               )}
               {rowsByGroup.map(([group, groupRows]) => {
-                const color = groupColorMap[group] ?? '#3B82F6';
+                const color = groupColorMap[group] ?? "#3B82F6";
                 const sub = subtotalByGroup.get(group);
                 return (
                   <GroupRows
@@ -324,13 +334,16 @@ export function MeasurementLedger({
                       Total {gt.type}
                     </td>
                     <td className="px-1.5 py-1 text-content-tertiary">
-                      {gt.count} {t('takeoff_viewer.items', { defaultValue: 'items' })}
+                      {gt.count}{" "}
+                      {t("takeoff_viewer.items", { defaultValue: "items" })}
                     </td>
                     <td className="px-1.5 py-1" />
                     <td className="px-1.5 py-1 text-right font-semibold text-content-primary">
                       {formatNum(gt.total)}
                     </td>
-                    <td className="px-1.5 py-1 text-content-secondary">{gt.unit}</td>
+                    <td className="px-1.5 py-1 text-content-secondary">
+                      {gt.unit}
+                    </td>
                     <td className="px-1.5 py-1" />
                   </tr>
                 ))}
@@ -368,8 +381,8 @@ function GroupRows({
             key={measurement.id}
             onClick={() => onRowClick?.(measurement)}
             className={clsx(
-              'border-b border-border-light cursor-pointer transition-colors',
-              selected ? 'bg-oe-blue/10' : 'hover:bg-surface-secondary/60',
+              "border-b border-border-light cursor-pointer transition-colors",
+              selected ? "bg-oe-blue/10" : "hover:bg-surface-secondary/60",
             )}
             data-testid="ledger-row"
             data-measurement-id={measurement.id}
@@ -383,7 +396,7 @@ function GroupRows({
               className="px-1.5 py-1 text-content-primary truncate max-w-[140px]"
               title={measurement.annotation}
             >
-              {measurement.annotation || '—'}
+              {measurement.annotation || "—"}
             </td>
             <td className="px-1.5 py-1">
               <span className="inline-flex items-center gap-1">
@@ -397,8 +410,12 @@ function GroupRows({
             <td className="px-1.5 py-1 text-right font-mono">
               {formatNum(measurement.value)}
             </td>
-            <td className="px-1.5 py-1 text-content-secondary">{measurement.unit || ''}</td>
-            <td className="px-1.5 py-1 text-right text-content-tertiary">{measurement.page}</td>
+            <td className="px-1.5 py-1 text-content-secondary">
+              {measurement.unit || ""}
+            </td>
+            <td className="px-1.5 py-1 text-right text-content-tertiary">
+              {measurement.page}
+            </td>
           </tr>
         );
       })}
@@ -461,10 +478,10 @@ function FilterChipGroup<T extends string | number>({
               type="button"
               onClick={() => onToggle(opt)}
               className={clsx(
-                'px-1.5 py-0.5 rounded-full text-[10px] border transition-colors',
+                "px-1.5 py-0.5 rounded-full text-[10px] border transition-colors",
                 on
-                  ? 'bg-oe-blue/15 text-oe-blue border-oe-blue/30'
-                  : 'bg-surface-primary text-content-secondary border-border hover:border-oe-blue/40',
+                  ? "bg-oe-blue/15 text-oe-blue border-oe-blue/30"
+                  : "bg-surface-primary text-content-secondary border-border hover:border-oe-blue/40",
               )}
               data-testid={dataTestId}
               data-value={String(opt)}
@@ -480,7 +497,7 @@ function FilterChipGroup<T extends string | number>({
 }
 
 function formatNum(value: number): string {
-  if (value === 0) return '0';
+  if (value === 0) return "0";
   const abs = Math.abs(value);
   if (abs < 1) return value.toFixed(3);
   if (abs < 100) return value.toFixed(2);

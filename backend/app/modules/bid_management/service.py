@@ -132,17 +132,13 @@ def compute_submission_total(lines: list[Any]) -> Decimal:
     return total.quantize(Decimal("0.01"))
 
 
-def compute_completeness_score(
-    submission_lines: list[Any], package_lines: list[Any]
-) -> Decimal:
+def compute_completeness_score(submission_lines: list[Any], package_lines: list[Any]) -> Decimal:
     """Return percentage (0-100) of *mandatory* lines that are priced.
 
     A line is considered "priced" if a matching submission line exists
     AND its ``unit_price`` (or ``total_price``) is non-zero.
     """
-    mandatory = [
-        ln for ln in package_lines if getattr(ln, "is_mandatory", True)
-    ]
+    mandatory = [ln for ln in package_lines if getattr(ln, "is_mandatory", True)]
     if not mandatory:
         return Decimal("100.00")
 
@@ -206,8 +202,7 @@ def validate_submission_pre_open(
     priced_line_ids = {
         getattr(line, "line_item_id", None)
         for line in submission_lines
-        if _to_decimal(getattr(line, "unit_price", 0)) > 0
-        or _to_decimal(getattr(line, "total_price", 0)) > 0
+        if _to_decimal(getattr(line, "unit_price", 0)) > 0 or _to_decimal(getattr(line, "total_price", 0)) > 0
     }
 
     for line in package_lines:
@@ -224,9 +219,7 @@ def validate_submission_pre_open(
     return (len(errors) == 0, errors)
 
 
-def validate_late_submission(
-    submission: Any, package: Any, *, grace_minutes: int = 0
-) -> bool:
+def validate_late_submission(submission: Any, package: Any, *, grace_minutes: int = 0) -> bool:
     """Return True if the submission is late (beyond deadline + grace)."""
     deadline = _parse_iso(getattr(package, "submission_deadline", None))
     submitted_at = _parse_iso(getattr(submission, "submitted_at", None))
@@ -261,9 +254,7 @@ def normalize_submission_for_leveling(
 
     penalty = (
         raw_total * (exclusion_penalty_pct / Decimal("100")) * exclusion_count
-        + raw_total
-        * (qualification_penalty_pct / Decimal("100"))
-        * qualification_count
+        + raw_total * (qualification_penalty_pct / Decimal("100")) * qualification_count
     )
     normalized = raw_total + penalty
     return normalized.quantize(Decimal("0.01"))
@@ -306,9 +297,7 @@ def recommend_bidder(
     if not rank_one:
         # Levelings haven't been ranked yet — pick the top by score.
         top_score = max(_to_decimal(getattr(r, "total_score", 0)) for r in levelings)
-        rank_one = [
-            r for r in levelings if _to_decimal(getattr(r, "total_score", 0)) == top_score
-        ]
+        rank_one = [r for r in levelings if _to_decimal(getattr(r, "total_score", 0)) == top_score]
 
     bidder_lookup = {b.id: b for b in bidders}  # type: ignore[arg-type]
     chosen = rank_one[0]
@@ -390,9 +379,7 @@ def compute_bid_summary(submissions: list[Any]) -> dict[str, Any]:
         for s in submissions
         if _to_decimal(getattr(s, "total_amount", 0)) > 0
     ]
-    completeness = [
-        float(_to_decimal(getattr(s, "completeness_score", 0))) for s in submissions
-    ]
+    completeness = [float(_to_decimal(getattr(s, "completeness_score", 0))) for s in submissions]
     valid_count = sum(1 for s in submissions if getattr(s, "is_valid", False))
     late_count = sum(1 for s in submissions if getattr(s, "open_after_deadline", False))
 
@@ -407,9 +394,7 @@ def compute_bid_summary(submissions: list[Any]) -> dict[str, Any]:
         result_min = result_max = result_avg = result_sd = None
 
     comp_avg: Decimal | None = (
-        Decimal(str(statistics.mean(completeness))).quantize(Decimal("0.01"))
-        if completeness
-        else None
+        Decimal(str(statistics.mean(completeness))).quantize(Decimal("0.01")) if completeness else None
     )
 
     return {
@@ -450,9 +435,7 @@ class BidManagementService:
 
     # ── Packages ──────────────────────────────────────────────────────
 
-    async def create_package(
-        self, data: BidPackageCreate, user_id: str | None = None
-    ) -> BidPackage:
+    async def create_package(self, data: BidPackageCreate, user_id: str | None = None) -> BidPackage:
         existing = await self.package_repo.get_by_code(data.code)
         if existing is not None:
             raise HTTPException(status_code=409, detail="Package code already exists")
@@ -478,9 +461,7 @@ class BidManagementService:
     async def get_package(self, package_id: uuid.UUID) -> BidPackage:
         package = await self.package_repo.get_by_id(package_id)
         if package is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Bid package not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Bid package not found")
         return package
 
     async def list_packages(
@@ -491,13 +472,9 @@ class BidManagementService:
         limit: int = 50,
         status_filter: str | None = None,
     ) -> tuple[list[BidPackage], int]:
-        return await self.package_repo.list_for_project(
-            project_id, offset=offset, limit=limit, status=status_filter
-        )
+        return await self.package_repo.list_for_project(project_id, offset=offset, limit=limit, status=status_filter)
 
-    async def update_package(
-        self, package_id: uuid.UUID, data: BidPackageUpdate
-    ) -> BidPackage:
+    async def update_package(self, package_id: uuid.UUID, data: BidPackageUpdate) -> BidPackage:
         package = await self.get_package(package_id)
         fields: dict[str, Any] = data.model_dump(exclude_unset=True)
         # Lifecycle status is owned by the state machine. A generic PATCH
@@ -547,9 +524,7 @@ class BidManagementService:
         package.status = new_status
         await self.session.flush()
 
-    async def publish_package(
-        self, package_id: uuid.UUID, user_id: str | None = None
-    ) -> BidPackage:
+    async def publish_package(self, package_id: uuid.UUID, user_id: str | None = None) -> BidPackage:
         package = await self.get_package(package_id)
         await self._transition_package(package, "published")
         package.published_at = _now_iso()
@@ -566,9 +541,7 @@ class BidManagementService:
         )
         return package
 
-    async def open_bids(
-        self, package_id: uuid.UUID, *, now: datetime | None = None
-    ) -> BidPackage:
+    async def open_bids(self, package_id: uuid.UUID, *, now: datetime | None = None) -> BidPackage:
         """Move a published package to ``open`` and flip invitation flags."""
         package = await self.get_package(package_id)
         # Allow open from either ``published`` or ``open`` (idempotent).
@@ -590,16 +563,19 @@ class BidManagementService:
             submission = await self.submission_repo.get_by_invitation(invitation.id)
             if submission is None:
                 # Mark invitation as expired if past deadline & no submission.
-                if deadline and cutoff > deadline and invitation.status not in (
-                    "submitted",
-                    "declined",
-                    "expired",
+                if (
+                    deadline
+                    and cutoff > deadline
+                    and invitation.status
+                    not in (
+                        "submitted",
+                        "declined",
+                        "expired",
+                    )
                 ):
                     invitation.status = "expired"
                 continue
-            submission_lines = await self.submission_line_repo.list_for_submission(
-                submission.id
-            )
+            submission_lines = await self.submission_line_repo.list_for_submission(submission.id)
             is_valid, _errors = validate_submission_pre_open(
                 submission,
                 package,
@@ -608,12 +584,8 @@ class BidManagementService:
                 now=cutoff,
             )
             submission.is_valid = is_valid
-            submission.open_after_deadline = validate_late_submission(
-                submission, package
-            )
-            submission.completeness_score = str(
-                compute_completeness_score(submission_lines, package_lines)
-            )
+            submission.open_after_deadline = validate_late_submission(submission, package)
+            submission.completeness_score = str(compute_completeness_score(submission_lines, package_lines))
             invitation.status = "submitted"
 
         await self.session.flush()
@@ -637,9 +609,7 @@ class BidManagementService:
         await self.session.flush()
         return package
 
-    async def cancel_package(
-        self, package_id: uuid.UUID, *, reason: str = ""
-    ) -> BidPackage:
+    async def cancel_package(self, package_id: uuid.UUID, *, reason: str = "") -> BidPackage:
         package = await self.get_package(package_id)
         await self._transition_package(package, "cancelled")
         if reason:
@@ -649,9 +619,7 @@ class BidManagementService:
         await self.session.flush()
         return package
 
-    async def award_package(
-        self, package_id: uuid.UUID, data: BidAwardCreate, user_id: str | None = None
-    ) -> BidAward:
+    async def award_package(self, package_id: uuid.UUID, data: BidAwardCreate, user_id: str | None = None) -> BidAward:
         package = await self.get_package(package_id)
         if package.status != "closed":
             raise HTTPException(
@@ -671,18 +639,13 @@ class BidManagementService:
         if winner.status != "active":
             raise HTTPException(
                 status_code=409,
-                detail=(
-                    f"Cannot award a '{winner.status}' bidder "
-                    f"(must be 'active')"
-                ),
+                detail=(f"Cannot award a '{winner.status}' bidder (must be 'active')"),
             )
 
         # Award row (upsert)
         existing = await self.award_repo.get_for_package(package_id)
         if existing is not None:
-            raise HTTPException(
-                status_code=409, detail="Package is already awarded"
-            )
+            raise HTTPException(status_code=409, detail="Package is already awarded")
 
         award = BidAward(
             package_id=package_id,
@@ -771,9 +734,7 @@ class BidManagementService:
         ]
         return await self.line_repo.bulk_create(rows)
 
-    async def update_line(
-        self, line_id: uuid.UUID, data: BidPackageLineItemUpdate
-    ) -> BidPackageLineItem:
+    async def update_line(self, line_id: uuid.UUID, data: BidPackageLineItemUpdate) -> BidPackageLineItem:
         line = await self.line_repo.get_by_id(line_id)
         if line is None:
             raise HTTPException(status_code=404, detail="Line not found")
@@ -853,9 +814,7 @@ class BidManagementService:
         return await self.invitation_repo.create(invitation)
 
     async def send_invitations(self, package_id: uuid.UUID) -> int:
-        invitations = await self.invitation_repo.list_for_package(
-            package_id, status="pending"
-        )
+        invitations = await self.invitation_repo.list_for_package(package_id, status="pending")
         sent_at = _now_iso()
         for inv in invitations:
             inv.status = "sent"
@@ -874,9 +833,7 @@ class BidManagementService:
             )
         return len(invitations)
 
-    async def update_invitation(
-        self, invitation_id: uuid.UUID, data: BidInvitationUpdate
-    ) -> BidInvitation:
+    async def update_invitation(self, invitation_id: uuid.UUID, data: BidInvitationUpdate) -> BidInvitation:
         inv = await self.invitation_repo.get_by_id(invitation_id)
         if inv is None:
             raise HTTPException(status_code=404, detail="Invitation not found")
@@ -906,16 +863,12 @@ class BidManagementService:
         await self.session.flush()
         return inv
 
-    async def decline_invitation(
-        self, invitation_id: uuid.UUID, reason: str = ""
-    ) -> BidInvitation:
+    async def decline_invitation(self, invitation_id: uuid.UUID, reason: str = "") -> BidInvitation:
         inv = await self.invitation_repo.get_by_id(invitation_id)
         if inv is None:
             raise HTTPException(status_code=404, detail="Invitation not found")
         if "declined" not in allowed_invitation_transitions(inv.status):
-            raise HTTPException(
-                status_code=409, detail=f"Cannot decline from '{inv.status}'"
-            )
+            raise HTTPException(status_code=409, detail=f"Cannot decline from '{inv.status}'")
         inv.status = "declined"
         inv.declined_at = _now_iso()
         inv.decline_reason = reason
@@ -940,9 +893,7 @@ class BidManagementService:
         # Submission unique per invitation.
         existing = await self.submission_repo.get_by_invitation(data.invitation_id)
         if existing is not None:
-            raise HTTPException(
-                status_code=409, detail="Submission already exists for this invitation"
-            )
+            raise HTTPException(status_code=409, detail="Submission already exists for this invitation")
         sub = BidSubmission(
             invitation_id=data.invitation_id,
             bidder_id=data.bidder_id,
@@ -979,9 +930,7 @@ class BidManagementService:
         )
         return created
 
-    async def _package_for_submission(
-        self, submission_id: uuid.UUID
-    ) -> BidPackage | None:
+    async def _package_for_submission(self, submission_id: uuid.UUID) -> BidPackage | None:
         """Resolve the owning package for a submission (sub → inv → pkg)."""
         sub = await self.submission_repo.get_by_id(submission_id)
         if sub is None:
@@ -1000,15 +949,10 @@ class BidManagementService:
         if package is not None and package.status in ("awarded", "cancelled"):
             raise HTTPException(
                 status_code=409,
-                detail=(
-                    f"Submission is locked — package is "
-                    f"'{package.status}'"
-                ),
+                detail=(f"Submission is locked — package is '{package.status}'"),
             )
 
-    async def update_submission(
-        self, submission_id: uuid.UUID, data: BidSubmissionUpdate
-    ) -> BidSubmission:
+    async def update_submission(self, submission_id: uuid.UUID, data: BidSubmissionUpdate) -> BidSubmission:
         sub = await self.submission_repo.get_by_id(submission_id)
         if sub is None:
             raise HTTPException(status_code=404, detail="Submission not found")
@@ -1039,11 +983,9 @@ class BidManagementService:
 
     # ── Submission lines ──────────────────────────────────────────────
 
-    async def create_submission_line(
-        self, data: BidSubmissionLineCreate
-    ) -> BidSubmissionLine:
+    async def create_submission_line(self, data: BidSubmissionLineCreate) -> BidSubmissionLine:
         await self._assert_submission_mutable(data.submission_id)
-        total_price = (_to_decimal(data.unit_price) * _to_decimal(data.quantity_priced))
+        total_price = _to_decimal(data.unit_price) * _to_decimal(data.quantity_priced)
         line = BidSubmissionLine(
             submission_id=data.submission_id,
             line_item_id=data.line_item_id,
@@ -1055,7 +997,9 @@ class BidManagementService:
             comment=data.comment,
             inclusion_status=getattr(data, "inclusion_status", "included"),
             prevailing_wage_applicable=getattr(
-                data, "prevailing_wage_applicable", False,
+                data,
+                "prevailing_wage_applicable",
+                False,
             ),
         )
         return await self.submission_line_repo.create(line)
@@ -1066,7 +1010,7 @@ class BidManagementService:
         await self._assert_submission_mutable(submission_id)
         rows = []
         for item in items:
-            total = (_to_decimal(item.unit_price) * _to_decimal(item.quantity_priced))
+            total = _to_decimal(item.unit_price) * _to_decimal(item.quantity_priced)
             rows.append(
                 BidSubmissionLine(
                     submission_id=submission_id,
@@ -1086,9 +1030,7 @@ class BidManagementService:
             )
         return await self.submission_line_repo.bulk_create(rows)
 
-    async def update_submission_line(
-        self, line_id: uuid.UUID, data: BidSubmissionLineUpdate
-    ) -> BidSubmissionLine:
+    async def update_submission_line(self, line_id: uuid.UUID, data: BidSubmissionLineUpdate) -> BidSubmissionLine:
         line = await self.submission_line_repo.get_by_id(line_id)
         if line is None:
             raise HTTPException(status_code=404, detail="Submission line not found")
@@ -1102,9 +1044,7 @@ class BidManagementService:
         if "unit_price" in fields or "quantity_priced" in fields:
             new_unit = _to_decimal(fields.get("unit_price", line.unit_price))
             new_qty = _to_decimal(fields.get("quantity_priced", line.quantity_priced))
-            fields["total_price"] = str(
-                (new_unit * new_qty).quantize(Decimal("0.01"))
-            )
+            fields["total_price"] = str((new_unit * new_qty).quantize(Decimal("0.01")))
         if not fields:
             return line
         await self.submission_line_repo.update_fields(line_id, **fields)
@@ -1159,15 +1099,11 @@ class BidManagementService:
 
     # ── Comparison + leveling ─────────────────────────────────────────
 
-    async def create_comparison(
-        self, data: BidComparisonCreate
-    ) -> BidComparison:
+    async def create_comparison(self, data: BidComparisonCreate) -> BidComparison:
         await self.get_package(data.package_id)
         existing = await self.comparison_repo.get_for_package(data.package_id)
         if existing is not None:
-            raise HTTPException(
-                status_code=409, detail="Comparison already exists for this package"
-            )
+            raise HTTPException(status_code=409, detail="Comparison already exists for this package")
         comparison = BidComparison(
             package_id=data.package_id,
             technical_scoring_rule=data.technical_scoring_rule,
@@ -1176,9 +1112,7 @@ class BidManagementService:
         )
         return await self.comparison_repo.create(comparison)
 
-    async def update_comparison(
-        self, comparison_id: uuid.UUID, data: BidComparisonUpdate
-    ) -> BidComparison:
+    async def update_comparison(self, comparison_id: uuid.UUID, data: BidComparisonUpdate) -> BidComparison:
         comparison = await self.comparison_repo.get_by_id(comparison_id)
         if comparison is None:
             raise HTTPException(status_code=404, detail="Comparison not found")
@@ -1192,9 +1126,7 @@ class BidManagementService:
     async def delete_comparison(self, comparison_id: uuid.UUID) -> None:
         await self.comparison_repo.delete(comparison_id)
 
-    async def compute_leveling(
-        self, comparison_id: uuid.UUID
-    ) -> list[BidLeveling]:
+    async def compute_leveling(self, comparison_id: uuid.UUID) -> list[BidLeveling]:
         """Recompute the leveling rows for a comparison."""
         comparison = await self.comparison_repo.get_by_id(comparison_id)
         if comparison is None:
@@ -1213,16 +1145,15 @@ class BidManagementService:
 
         # Filter valid submissions from non-disqualified bidders
         valid = [
-            s for s in submissions
+            s
+            for s in submissions
             if s.is_valid
             and bidder_lookup.get(s.bidder_id) is not None
             and bidder_lookup[s.bidder_id].status == "active"
         ]
 
         # Normalize and compute commercial score: lowest normalized total gets 100.
-        normalized_totals = {
-            s.id: normalize_submission_for_leveling(s, package) for s in valid
-        }
+        normalized_totals = {s.id: normalize_submission_for_leveling(s, package) for s in valid}
         if normalized_totals:
             best = min(normalized_totals.values())
         else:
@@ -1239,13 +1170,11 @@ class BidManagementService:
             commercial_score = commercial_score.quantize(Decimal("0.0001"))
 
             # Technical score lives in envelope or scoring rule for now.
-            technical_score = _to_decimal(
-                (sub.envelope_payload or {}).get("technical_score", 0)
-            ).quantize(Decimal("0.0001"))
+            technical_score = _to_decimal((sub.envelope_payload or {}).get("technical_score", 0)).quantize(
+                Decimal("0.0001")
+            )
 
-            total_score = (
-                commercial_score * commercial_w + technical_score * technical_w
-            ).quantize(Decimal("0.0001"))
+            total_score = (commercial_score * commercial_w + technical_score * technical_w).quantize(Decimal("0.0001"))
 
             row = BidLeveling(
                 comparison_id=comparison_id,
@@ -1271,9 +1200,7 @@ class BidManagementService:
             comparison.normalized_high = str(max(normalized_totals.values()))
         recommended = recommend_bidder(comparison, rows, bidders)
         comparison.recommended_bidder_id = recommended.id if recommended else None
-        comparison.recommended_reason = (
-            f"Top rank ({recommended.company_name})" if recommended else ""
-        )
+        comparison.recommended_reason = f"Top rank ({recommended.company_name})" if recommended else ""
 
         await self.session.flush()
         return rows
@@ -1283,9 +1210,7 @@ class BidManagementService:
 
     # ── Awards / rejections ───────────────────────────────────────────
 
-    async def update_award(
-        self, award_id: uuid.UUID, data: BidAwardUpdate
-    ) -> BidAward:
+    async def update_award(self, award_id: uuid.UUID, data: BidAwardUpdate) -> BidAward:
         award = await self.award_repo.get_by_id(award_id)
         if award is None:
             raise HTTPException(status_code=404, detail="Award not found")
@@ -1322,9 +1247,7 @@ class BidManagementService:
         )
         return created
 
-    async def update_rejection(
-        self, rejection_id: uuid.UUID, data: BidRejectionUpdate
-    ) -> BidRejection:
+    async def update_rejection(self, rejection_id: uuid.UUID, data: BidRejectionUpdate) -> BidRejection:
         rejection = await self.rejection_repo.get_by_id(rejection_id)
         if rejection is None:
             raise HTTPException(status_code=404, detail="Rejection not found")
@@ -1348,9 +1271,7 @@ class BidManagementService:
 
     # ── Dashboards / analytics ────────────────────────────────────────
 
-    async def package_dashboard(
-        self, package_id: uuid.UUID
-    ) -> dict[str, Any]:
+    async def package_dashboard(self, package_id: uuid.UUID) -> dict[str, Any]:
         package = await self.get_package(package_id)
         invitations = await self.invitation_repo.list_for_package(package_id)
         submissions = await self.submission_repo.submissions_for_package(package_id)
@@ -1368,14 +1289,11 @@ class BidManagementService:
             "declined_count": sum(1 for i in invitations if i.status == "declined"),
             "open_questions_count": sum(1 for q in qa_rows if not q.answer),
             "answered_questions_count": sum(1 for q in qa_rows if q.answer),
-            "leveling_computed": comparison is not None
-            and comparison.computed_at is not None,
+            "leveling_computed": comparison is not None and comparison.computed_at is not None,
             "awarded_bidder_id": award.awarded_bidder_id if award else None,
         }
 
-    async def submission_analytics(
-        self, package_id: uuid.UUID
-    ) -> SubmissionAnalyticsResponse:
+    async def submission_analytics(self, package_id: uuid.UUID) -> SubmissionAnalyticsResponse:
         submissions = await self.submission_repo.submissions_for_package(package_id)
         summary = compute_bid_summary(submissions)
         return SubmissionAnalyticsResponse(
@@ -1425,93 +1343,94 @@ class BidManagementService:
             for bidder in active_bidders:
                 sub = sub_by_bidder.get(bidder.id)
                 if sub is None:
-                    cells.append({
-                        "bidder_id": bidder.id,
-                        "company_name": bidder.company_name,
-                        "unit_price": Decimal("0"),
-                        "quantity_priced": Decimal("0"),
-                        "total_price": Decimal("0"),
-                        "inclusion_status": "excluded",
-                        "alternative_offered": False,
-                        "comment": "No submission",
-                        "prevailing_wage_applicable": False,
-                        "is_low": False,
-                    })
+                    cells.append(
+                        {
+                            "bidder_id": bidder.id,
+                            "company_name": bidder.company_name,
+                            "unit_price": Decimal("0"),
+                            "quantity_priced": Decimal("0"),
+                            "total_price": Decimal("0"),
+                            "inclusion_status": "excluded",
+                            "alternative_offered": False,
+                            "comment": "No submission",
+                            "prevailing_wage_applicable": False,
+                            "is_low": False,
+                        }
+                    )
                     excluded_count += 1
                     continue
                 priced = next(
-                    (
-                        ln for ln in lines_by_sub.get(sub.id, [])
-                        if ln.line_item_id == line.id
-                    ),
+                    (ln for ln in lines_by_sub.get(sub.id, []) if ln.line_item_id == line.id),
                     None,
                 )
                 if priced is None:
-                    cells.append({
-                        "bidder_id": bidder.id,
-                        "company_name": bidder.company_name,
-                        "unit_price": Decimal("0"),
-                        "quantity_priced": Decimal("0"),
-                        "total_price": Decimal("0"),
-                        "inclusion_status": "excluded",
-                        "alternative_offered": False,
-                        "comment": "Line not priced",
-                        "prevailing_wage_applicable": False,
-                        "is_low": False,
-                    })
+                    cells.append(
+                        {
+                            "bidder_id": bidder.id,
+                            "company_name": bidder.company_name,
+                            "unit_price": Decimal("0"),
+                            "quantity_priced": Decimal("0"),
+                            "total_price": Decimal("0"),
+                            "inclusion_status": "excluded",
+                            "alternative_offered": False,
+                            "comment": "Line not priced",
+                            "prevailing_wage_applicable": False,
+                            "is_low": False,
+                        }
+                    )
                     excluded_count += 1
                     continue
                 if priced.inclusion_status == "excluded":
                     excluded_count += 1
                 elif priced.inclusion_status == "clarification_needed":
                     clarification_count += 1
-                cells.append({
-                    "bidder_id": bidder.id,
-                    "company_name": bidder.company_name,
-                    "unit_price": _to_decimal(priced.unit_price),
-                    "quantity_priced": _to_decimal(priced.quantity_priced),
-                    "total_price": _to_decimal(priced.total_price),
-                    "inclusion_status": priced.inclusion_status or "included",
-                    "alternative_offered": priced.alternative_offered,
-                    "comment": priced.comment or "",
-                    "prevailing_wage_applicable": (
-                        priced.prevailing_wage_applicable
-                    ),
-                    "is_low": False,
-                })
+                cells.append(
+                    {
+                        "bidder_id": bidder.id,
+                        "company_name": bidder.company_name,
+                        "unit_price": _to_decimal(priced.unit_price),
+                        "quantity_priced": _to_decimal(priced.quantity_priced),
+                        "total_price": _to_decimal(priced.total_price),
+                        "inclusion_status": priced.inclusion_status or "included",
+                        "alternative_offered": priced.alternative_offered,
+                        "comment": priced.comment or "",
+                        "prevailing_wage_applicable": (priced.prevailing_wage_applicable),
+                        "is_low": False,
+                    }
+                )
 
             # Mark the cell with the lowest non-zero total_price among
             # "included" / "alternative" / "noted" rows as is_low. Excluded
             # and clarification_needed rows do NOT participate (they are not
             # competitive bids on this scope).
             competitive = [
-                c for c in cells
-                if c["inclusion_status"]
-                in ("included", "alternative", "noted")
-                and c["total_price"] > Decimal("0")
+                c
+                for c in cells
+                if c["inclusion_status"] in ("included", "alternative", "noted") and c["total_price"] > Decimal("0")
             ]
             if competitive:
                 low_total = min(c["total_price"] for c in competitive)
                 for c in cells:
-                    if (
-                        c["total_price"] == low_total
-                        and c["inclusion_status"] in (
-                            "included", "alternative", "noted",
-                        )
+                    if c["total_price"] == low_total and c["inclusion_status"] in (
+                        "included",
+                        "alternative",
+                        "noted",
                     ):
                         c["is_low"] = True
 
-            rows.append({
-                "line_item_id": line.id,
-                "line_item_code": line.code,
-                "description": line.description,
-                "unit": line.unit,
-                "quantity": _to_decimal(line.quantity),
-                "is_mandatory": line.is_mandatory,
-                "cells": cells,
-                "excluded_count": excluded_count,
-                "clarification_count": clarification_count,
-            })
+            rows.append(
+                {
+                    "line_item_id": line.id,
+                    "line_item_code": line.code,
+                    "description": line.description,
+                    "unit": line.unit,
+                    "quantity": _to_decimal(line.quantity),
+                    "is_mandatory": line.is_mandatory,
+                    "cells": cells,
+                    "excluded_count": excluded_count,
+                    "clarification_count": clarification_count,
+                }
+            )
 
         return {
             "package_id": package_id,
@@ -1556,14 +1475,16 @@ class BidManagementService:
                         allow = True
             if not allow:
                 continue
-            visible.append({
-                "id": qa.id,
-                "question": qa.question,
-                "answer": qa.answer or "",
-                "asked_at": qa.asked_at,
-                "answered_at": qa.answered_at,
-                "is_public": qa.is_public,
-            })
+            visible.append(
+                {
+                    "id": qa.id,
+                    "question": qa.question,
+                    "answer": qa.answer or "",
+                    "asked_at": qa.asked_at,
+                    "answered_at": qa.answered_at,
+                    "is_public": qa.is_public,
+                }
+            )
 
         return {
             "package_id": package_id,
@@ -1636,11 +1557,7 @@ class BidManagementService:
             )
 
         tpl_by_lang = {t.get("language", "en"): t for t in templates}
-        default_tpl = (
-            tpl_by_lang.get(default_language)
-            or tpl_by_lang.get("en")
-            or templates[0]
-        )
+        default_tpl = tpl_by_lang.get(default_language) or tpl_by_lang.get("en") or templates[0]
 
         previews: list[dict[str, Any]] = []
         sent_count = 0
@@ -1672,13 +1589,15 @@ class BidManagementService:
             if inv.status == "pending":
                 inv.status = "sent"
             sent_count += 1
-            previews.append({
-                "invitee_email": inv.invitee_email,
-                "invitee_company_name": inv.invitee_company_name,
-                "subject": subj,
-                "body": body,
-                "language": tpl.get("language", default_language),
-            })
+            previews.append(
+                {
+                    "invitee_email": inv.invitee_email,
+                    "invitee_company_name": inv.invitee_company_name,
+                    "subject": subj,
+                    "body": body,
+                    "language": tpl.get("language", default_language),
+                }
+            )
 
         await self.session.flush()
 
@@ -1737,9 +1656,7 @@ class BidManagementService:
         quality = _clamp(_to_decimal(quality_score))
         safety = _clamp(_to_decimal(safety_score))
         commercial = _clamp(_to_decimal(commercial_score))
-        composite = (
-            (on_time + quality + safety + commercial) / Decimal("4")
-        ).quantize(Decimal("0.01"))
+        composite = ((on_time + quality + safety + commercial) / Decimal("4")).quantize(Decimal("0.01"))
 
         scorecard = {
             "bidder_id": str(bidder_id),

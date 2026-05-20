@@ -5,11 +5,11 @@
  * Used for: meeting chairperson, task assignee, inspection inspector, submittal reviewer, etc.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { X, User } from 'lucide-react';
-import { apiGet } from '@/shared/lib/api';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { X, User } from "lucide-react";
+import { apiGet } from "@/shared/lib/api";
 
 interface UserResult {
   id: string;
@@ -35,25 +35,28 @@ export function UserSearchInput({
   className,
 }: UserSearchInputProps) {
   const { t } = useTranslation();
-  const [query, setQuery] = useState(displayValue || '');
+  const [query, setQuery] = useState(displayValue || "");
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { data: users = [] } = useQuery({
-    queryKey: ['users-search'],
-    queryFn: () => apiGet<UserResult[]>('/v1/users/?limit=100&is_active=true'),
+    queryKey: ["users-search"],
+    queryFn: () => apiGet<UserResult[]>("/v1/users/?limit=100&is_active=true"),
     staleTime: 60_000,
   });
 
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Sync display value from prop
@@ -75,7 +78,7 @@ export function UserSearchInput({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       setQuery(val);
-      if (value) onChange('', '');
+      if (value) onChange("", "");
       setIsOpen(true);
     },
     [value, onChange],
@@ -91,16 +94,16 @@ export function UserSearchInput({
   );
 
   const handleClear = useCallback(() => {
-    setQuery('');
-    onChange('', '');
+    setQuery("");
+    onChange("", "");
     setIsOpen(false);
   }, [onChange]);
 
   const inputCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+    "h-10 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
   return (
-    <div ref={containerRef} className={`relative ${className || ''}`}>
+    <div ref={containerRef} className={`relative ${className || ""}`}>
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
         <User size={14} />
       </div>
@@ -109,7 +112,12 @@ export function UserSearchInput({
         value={query}
         onChange={handleInputChange}
         onFocus={() => setIsOpen(true)}
-        placeholder={placeholder || t('common.search_users', { defaultValue: 'Search team members...‌⁠‍' })}
+        placeholder={
+          placeholder ||
+          t("common.search_users", {
+            defaultValue: "Search team members...‌⁠‍",
+          })
+        }
         className={inputCls}
       />
       {(query || value) && (
@@ -132,13 +140,19 @@ export function UserSearchInput({
               className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm hover:bg-surface-secondary transition-colors"
             >
               <div className="w-6 h-6 rounded-full bg-oe-blue flex items-center justify-center text-white text-2xs font-bold shrink-0">
-                {u.full_name?.[0]?.toUpperCase() || '?'}
+                {u.full_name?.[0]?.toUpperCase() || "?"}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-content-primary truncate">{u.full_name}</div>
-                <div className="text-xs text-content-tertiary truncate">{u.email}</div>
+                <div className="text-content-primary truncate">
+                  {u.full_name}
+                </div>
+                <div className="text-xs text-content-tertiary truncate">
+                  {u.email}
+                </div>
               </div>
-              <span className="text-2xs text-content-quaternary capitalize shrink-0">{u.role}</span>
+              <span className="text-2xs text-content-quaternary capitalize shrink-0">
+                {u.role}
+              </span>
             </button>
           ))}
         </div>

@@ -2,29 +2,40 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  "translation": {
-    "about.ai_desc": "OpenConstructionERP inkluderar valfria AI-drivna verktyg — snabbkalkylering från textbeskrivningar, smarta kostnadsförslag och BOQ-chattassistent. Dessa funktioner kräver en API-nyckel från en valfri leverantör (Anthropic, OpenAI, Google). AI är alltid valfritt: det aktiveras först när du konfigurerar det, och du bestämmer vilka data som skickas. Utan API-nyckel fungerar alla övriga funktioner helt offline.",
+  translation: {
+    "about.ai_desc":
+      "OpenConstructionERP inkluderar valfria AI-drivna verktyg — snabbkalkylering från textbeskrivningar, smarta kostnadsförslag och BOQ-chattassistent. Dessa funktioner kräver en API-nyckel från en valfri leverantör (Anthropic, OpenAI, Google). AI är alltid valfritt: det aktiveras först när du konfigurerar det, och du bestämmer vilka data som skickas. Utan API-nyckel fungerar alla övriga funktioner helt offline.",
     "about.ai_title": "Om AI-funktioner",
     "about.cap.boq": "Mängdförteckning",
-    "about.cap.boq_desc": "Skapa detaljerade mängdförteckningar med hierarkiska avsnitt, positioner, sammansatta kalkylrader, påslag (omkostnader, vinst, moms) och automatiska summor. Stöder DIN 276, NRM 1/2, MasterFormat och anpassade klassificeringssystem.",
+    "about.cap.boq_desc":
+      "Skapa detaljerade mängdförteckningar med hierarkiska avsnitt, positioner, sammansatta kalkylrader, påslag (omkostnader, vinst, moms) och automatiska summor. Stöder DIN 276, NRM 1/2, MasterFormat och anpassade klassificeringssystem.",
     "about.cap.catalog": "Resurskatalog",
-    "about.cap.catalog_desc": "7 000+ resurser — material, utrustning, arbetskraft, maskinförare och installationer. Bygg återanvändbara sammansatta kalkylrader från katalogposter och tillämpa dem direkt på positioner i mängdförteckningen.",
+    "about.cap.catalog_desc":
+      "7 000+ resurser — material, utrustning, arbetskraft, maskinförare och installationer. Bygg återanvändbara sammansatta kalkylrader från katalogposter och tillämpa dem direkt på positioner i mängdförteckningen.",
     "about.cap.costmodel": "5D-kostnadsmodell",
-    "about.cap.costmodel_desc": "Följ budgetar över tid med Earned Value Management (SPI, CPI), S-kurvevisualisering, kassaflödesprognoser, kostnadsögonblicksbilder och tänk-om-scenariomodellering för välgrundade beslut.",
+    "about.cap.costmodel_desc":
+      "Följ budgetar över tid med Earned Value Management (SPI, CPI), S-kurvevisualisering, kassaflödesprognoser, kostnadsögonblicksbilder och tänk-om-scenariomodellering för välgrundade beslut.",
     "about.cap.costs": "Kostnadsdatabaser",
-    "about.cap.costs_desc": "55 000+ kostnadsposter i 11 regionala databaser som täcker DACH, Storbritannien, Nordamerika, Mellanöstern och fler. Lägg till egna priser, importera från Excel eller bygg en egen databas från grunden.",
+    "about.cap.costs_desc":
+      "55 000+ kostnadsposter i 11 regionala databaser som täcker DACH, Storbritannien, Nordamerika, Mellanöstern och fler. Lägg till egna priser, importera från Excel eller bygg en egen databas från grunden.",
     "about.cap.import": "Import och export",
-    "about.cap.import_desc": "Fullt stöd för GAEB XML (X83), Excel och CSV import/export. Generera professionella PDF-rapporter. Integrera sömlöst med dina befintliga verktyg och arbetsflöden.",
+    "about.cap.import_desc":
+      "Fullt stöd för GAEB XML (X83), Excel och CSV import/export. Generera professionella PDF-rapporter. Integrera sömlöst med dina befintliga verktyg och arbetsflöden.",
     "about.cap.schedule": "4D-tidplanering",
-    "about.cap.schedule_desc": "Skapa projekttidplaner med CPM-beräkning av kritisk väg, interaktiva Gantt-diagram, Monte Carlo-riskanalys, resurstilldelning och automatisk generering av aktiviteter från din mängdförteckning.",
+    "about.cap.schedule_desc":
+      "Skapa projekttidplaner med CPM-beräkning av kritisk väg, interaktiva Gantt-diagram, Monte Carlo-riskanalys, resurstilldelning och automatisk generering av aktiviteter från din mängdförteckning.",
     "about.cap.tendering": "Upphandling och anbud",
-    "about.cap.tendering_desc": "Skapa upphandlingspaket med omfattning och positioner, distribuera till underentreprenörer, samla in och jämför anbud sida vid sida i en prisspegel, och fatta tilldelningsbeslut baserat på data.",
+    "about.cap.tendering_desc":
+      "Skapa upphandlingspaket med omfattning och positioner, distribuera till underentreprenörer, samla in och jämför anbud sida vid sida i en prisspegel, och fatta tilldelningsbeslut baserat på data.",
     "about.cap.validation": "Kvalitetsvalidering",
-    "about.cap.validation_desc": "Inbyggd kvalitetsmotor kontrollerar automatiskt saknade mängder, nollpriser, dubblettpositioner, klassificeringsefterlevnad och prisavvikelser — med en trafikljusöversikt.",
+    "about.cap.validation_desc":
+      "Inbyggd kvalitetsmotor kontrollerar automatiskt saknade mängder, nollpriser, dubblettpositioner, klassificeringsefterlevnad och prisavvikelser — med en trafikljusöversikt.",
     "about.capabilities_title": "Vad du kan göra",
     "about.close": "Uppfattat",
-    "about.intro": "OpenConstructionERP är en modern plattform för hantering av byggkostnader. Den täcker hela kalkylarbetsflödet — från att skapa en mängdförteckning till upphandling och anbudsjämförelse. Utformad för yrkesverksamma världen över, med stöd för internationella standarder och 20 språk.",
-    "about.intro2": "Till skillnad från traditionella kommersiella lösningar körs OpenConstructionERP helt på din dator. Dina projektdata lämnar aldrig din maskin — du har full äganderätt och kontroll. Källkoden är öppen och granskningsbar, så du vet alltid exakt vad programvaran gör.",
+    "about.intro":
+      "OpenConstructionERP är en modern plattform för hantering av byggkostnader. Den täcker hela kalkylarbetsflödet — från att skapa en mängdförteckning till upphandling och anbudsjämförelse. Utformad för yrkesverksamma världen över, med stöd för internationella standarder och 20 språk.",
+    "about.intro2":
+      "Till skillnad från traditionella kommersiella lösningar körs OpenConstructionERP helt på din dator. Dina projektdata lämnar aldrig din maskin — du har full äganderätt och kontroll. Källkoden är öppen och granskningsbar, så du vet alltid exakt vad programvaran gör.",
     "about.numbers_title": "Plattformen i siffror",
     "about.stat.costs": "Kostnadsposter",
     "about.stat.free": "Gratis och öppen källkod",
@@ -41,11 +52,15 @@ const resource = {
     "about.who.qsurveyor": "Mängdingenjörer",
     "about.who.students": "Studenter och utbildare",
     "about.who.subs": "Underentreprenörer",
-    "about.who_desc": "OpenConstructionERP är utformat för alla som arbetar med byggkostnadshantering — oavsett om du jobbar med bostadsprojekt eller storskalig infrastruktur, internt eller som konsult.",
+    "about.who_desc":
+      "OpenConstructionERP är utformat för alla som arbetar med byggkostnadshantering — oavsett om du jobbar med bostadsprojekt eller storskalig infrastruktur, internt eller som konsult.",
     "about.who_title": "Vem är det för",
-    "about.why_1": "Byggkostnadsdata är en av de mest värdefulla tillgångarna ett företag äger. Med proprietär programvara är dina data ofta inlåsta i format du inte kan kontrollera. Om leverantören höjer priserna, ändrar villkoren eller lägger ner produkten — kan du förlora tillgång till års av arbete.",
-    "about.why_2": "OpenConstructionERP tar en annan väg. Dina data lagras i öppna format (SQLite, JSON, CSV) på din egen hårdvara. Du kan exportera allt när som helst. Källkoden är offentligt granskningsbar under AGPL-3.0, så det finns inga dolda dataöverföringar, ingen telemetri och inga överraskningar.",
-    "about.why_3": "Plattformen är modulär — installera bara det du behöver. Communitymoduler utökar funktionaliteten utan att tynga ner kärnan. Och eftersom den körs lokalt fungerar den offline och presterar snabbt även med stora projekt.",
+    "about.why_1":
+      "Byggkostnadsdata är en av de mest värdefulla tillgångarna ett företag äger. Med proprietär programvara är dina data ofta inlåsta i format du inte kan kontrollera. Om leverantören höjer priserna, ändrar villkoren eller lägger ner produkten — kan du förlora tillgång till års av arbete.",
+    "about.why_2":
+      "OpenConstructionERP tar en annan väg. Dina data lagras i öppna format (SQLite, JSON, CSV) på din egen hårdvara. Du kan exportera allt när som helst. Källkoden är offentligt granskningsbar under AGPL-3.0, så det finns inga dolda dataöverföringar, ingen telemetri och inga överraskningar.",
+    "about.why_3":
+      "Plattformen är modulär — installera bara det du behöver. Communitymoduler utökar funktionaliteten utan att tynga ner kärnan. Och eftersom den körs lokalt fungerar den offline och presterar snabbt även med stora projekt.",
     "about.why_title": "Varför öppen källkod är viktigt",
     "ai.analyze_photo": "Analysera foto",
     "ai.area": "Area (m²)",
@@ -53,7 +68,8 @@ const resource = {
     "ai.boq_name_placeholder": "Namn för denna kalkyl...",
     "ai.boq_saved": "Kalkyl sparad",
     "ai.building_type": "Byggnadstyp",
-    "ai.cad_info": "CAD/BIM-filer (.rvt, .ifc, .dwg, .dgn) kräver att DDC-konverteraren är installerad. Element extraheras och används för att generera en kostnadskalkyl. Ladda ner konverterare från GitHub och placera dem i ~/.openestimator/converters/.",
+    "ai.cad_info":
+      "CAD/BIM-filer (.rvt, .ifc, .dwg, .dgn) kräver att DDC-konverteraren är installerad. Element extraheras och används för att generera en kostnadskalkyl. Ladda ner konverterare från GitHub och placera dem i ~/.openestimator/converters/.",
     "ai.choose_project": "-- Välj ett projekt --",
     "ai.col_description": "Beskrivning",
     "ai.col_pos": "Pos",
@@ -74,7 +90,8 @@ const resource = {
     "ai.estimate_failed": "Kalkylering misslyckades",
     "ai.estimate_subtitle": "Skapa en kalkyl från valfri källa",
     "ai.estimate_title": "AI-kalkyl",
-    "ai.excel_hint": "Fungerar bäst med kolumner: Beskrivning, Enhet, Mängd, Pris/À-pris.",
+    "ai.excel_hint":
+      "Fungerar bäst med kolumner: Beskrivning, Enhet, Mängd, Pris/À-pris.",
     "ai.export_coming_soon": "Export kommer snart",
     "ai.export_pdf": "Exportera PDF",
     "ai.extract_estimate": "Extrahera och kalkylera",
@@ -89,9 +106,12 @@ const resource = {
     "ai.location_placeholder": "t.ex. Stockholm",
     "ai.new_estimate": "Ny kalkyl",
     "ai.parse_import": "Tolka och importera",
-    "ai.paste_info": "Upptäcker automatiskt tabbseparerad, semikolon- eller kommaavgränsad data. AI tolkar och strukturerar dina data till kalkylposter.",
-    "ai.paste_placeholder": "Klistra in dina kalkyldata här (från Excel, Word eller valfri tabell)...\n\nExempel:\nPos\\tBeskrivning\\tEnhet\\tMängd\\tÀ-pris\n01.01\\tSchaktning\\tm3\\t250\\t18,50\n01.02\\tBetong C30/37\\tm3\\t120\\t145,00\n01.03\\tArmering BSt 500\\tkg\\t12000\\t1,85",
-    "ai.pdf_hint": "Ladda upp kalkylhandlingar, specifikationer eller ritningar i PDF-format.",
+    "ai.paste_info":
+      "Upptäcker automatiskt tabbseparerad, semikolon- eller kommaavgränsad data. AI tolkar och strukturerar dina data till kalkylposter.",
+    "ai.paste_placeholder":
+      "Klistra in dina kalkyldata här (från Excel, Word eller valfri tabell)...\n\nExempel:\nPos\\tBeskrivning\\tEnhet\\tMängd\\tÀ-pris\n01.01\\tSchaktning\\tm3\\t250\\t18,50\n01.02\\tBetong C30/37\\tm3\\t120\\t145,00\n01.03\\tArmering BSt 500\\tkg\\t12000\\t1,85",
+    "ai.pdf_hint":
+      "Ladda upp kalkylhandlingar, specifikationer eller ritningar i PDF-format.",
     "ai.powered_by": "Drivs av {{model}}",
     "ai.results": "Kalkylresultat",
     "ai.save": "Spara",
@@ -99,18 +119,21 @@ const resource = {
     "ai.save_failed": "Kunde inte spara kalkyl",
     "ai.save_to_boq": "Spara som kalkyl",
     "ai.select_project": "Välj projekt",
-    "ai.setup_required_desc": "Lägg till din API-nyckel för Anthropic Claude, OpenAI eller Google Gemini för att generera kalkyler från text, foton, PDF:er och CAD-filer.",
+    "ai.setup_required_desc":
+      "Lägg till din API-nyckel för Anthropic Claude, OpenAI eller Google Gemini för att generera kalkyler från text, foton, PDF:er och CAD-filer.",
     "ai.setup_required_title": "Anslut din AI för att komma igång",
     "ai.standard_label": "Standard",
     "ai.supported_formats": "Stöder: {{formats}}",
     "ai.try_again": "Försök igen eller kontrollera dina AI-inställningar.",
     "ai.advisor_title": "AI Kostnadsrådgivare",
-    "ai.advisor_desc": "Ställ frågor om kostnader, material och priser — från din databas och AI-kunskap",
+    "ai.advisor_desc":
+      "Ställ frågor om kostnader, material och priser — från din databas och AI-kunskap",
     "ai.advisor_empty": "Fråga mig om byggkostnader",
     "ai.advisor_placeholder": "Fråga om kostnader, material, priser...",
     "ai.advisor_sources": "Källor:",
     "ai.advisor_error": "AI-rådgivare fel",
-    "ai.advisor_unavailable": "Kunde inte få svar. Kontrollera AI-inställningarna.",
+    "ai.advisor_unavailable":
+      "Kunde inte få svar. Kontrollera AI-inställningarna.",
     "ai.advisor_q1": "Vad kostar i genomsnitt m² puts?",
     "ai.advisor_q2": "Jämför betongpriser per region",
     "ai.advisor_q3": "Föreslå billigare alternativ till stål",
@@ -118,11 +141,14 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Professionell plattform för byggkalkylering",
     "assemblies.assemblies_found": "sammansatta kalkylrader",
-    "assemblies.description": "Återanvändbara kostnadsrecept för vanliga byggelement",
-    "assemblies.what_are_assemblies": "Sammansatta kalkylrader är återanvändbara kostnadsrecept som kombinerar flera resurser (material, arbetskraft, utrustning) till ett sammansatt à-pris. Till exempel inkluderar en sammansatt kalkylrad för \"Armerad betongvägg\" betong, armering, formning och arbetskraft. Tillämpa sammansatta kalkylrader på positioner i mängdförteckningen för att automatiskt fylla i komponentkostnader.",
+    "assemblies.description":
+      "Återanvändbara kostnadsrecept för vanliga byggelement",
+    "assemblies.what_are_assemblies":
+      'Sammansatta kalkylrader är återanvändbara kostnadsrecept som kombinerar flera resurser (material, arbetskraft, utrustning) till ett sammansatt à-pris. Till exempel inkluderar en sammansatt kalkylrad för "Armerad betongvägg" betong, armering, formning och arbetskraft. Tillämpa sammansatta kalkylrader på positioner i mängdförteckningen för att automatiskt fylla i komponentkostnader.',
     "assemblies.new_assembly": "Ny sammansatt kalkylrad",
     "assemblies.no_results": "Inga sammansatta kalkylrader hittades",
-    "assemblies.no_results_hint": "Försök justera din sökning eller dina filter",
+    "assemblies.no_results_hint":
+      "Försök justera din sökning eller dina filter",
     "assemblies.title": "Sammansatta kalkylrader",
     "auth.back_to_login": "Tillbaka till inloggning",
     "auth.check_email": "Kontrollera din e-post",
@@ -132,7 +158,8 @@ const resource = {
     "auth.create_account": "Skapa konto",
     "auth.email": "E-post",
     "auth.forgot_password": "Glömt lösenordet?",
-    "auth.forgot_subtitle": "Ange din e-postadress så skickar vi en återställningslänk.",
+    "auth.forgot_subtitle":
+      "Ange din e-postadress så skickar vi en återställningslänk.",
     "auth.full_name": "Fullständigt namn",
     "auth.full_name_placeholder": "Anna Svensson",
     "auth.has_account": "Har du redan ett konto?",
@@ -152,8 +179,10 @@ const resource = {
     "auth.register_subtitle": "Kom igång med OpenEstimate",
     "auth.register_title": "Skapa konto",
     "auth.remember_me": "Kom ihåg mig i 30 dagar",
-    "auth.reset_error": "Kunde inte behandla återställningsbegäran. Försök igen.",
-    "auth.reset_sent": "Om det finns ett konto för denna e-postadress får du snart en länk för lösenordsåterställning.",
+    "auth.reset_error":
+      "Kunde inte behandla återställningsbegäran. Försök igen.",
+    "auth.reset_sent":
+      "Om det finns ett konto för denna e-postadress får du snart en länk för lösenordsåterställning.",
     "auth.send_reset_link": "Skicka återställningslänk",
     "auth.server_error": "Kan inte ansluta till servern. Försök igen.",
     "auth.sign_in": "Logga in",
@@ -165,7 +194,8 @@ const resource = {
     "boq.aace_methodology": "Metodik",
     "boq.aace_metrics": "Klassificeringsmått",
     "boq.aace_positions": "Positioner",
-    "boq.aace_reference": "Baserat på AACE International Recommended Practice 18R-97. Klassificering upptäcks automatiskt från mängdförteckningens fullständighetsmått.",
+    "boq.aace_reference":
+      "Baserat på AACE International Recommended Practice 18R-97. Klassificering upptäcks automatiskt från mängdförteckningens fullständighetsmått.",
     "boq.aace_to": "till",
     "boq.aace_with_classification": "Med klassificering",
     "boq.aace_with_rates": "Med à-priser",
@@ -178,20 +208,23 @@ const resource = {
     "boq.add_n_positions": "Lägg till {{count}} i kalkyl",
     "boq.add_position": "Lägg till position",
     "boq.add_resource": "Lägg till",
-    "boq.add_resource_hint": "Tryck Enter för att lägga till, Escape för att avbryta",
+    "boq.add_resource_hint":
+      "Tryck Enter för att lägga till, Escape för att avbryta",
     "boq.add_section": "Lägg till avsnitt",
     "boq.add_selected": "Lägg till markerade i kalkyl",
     "boq.adding": "Lägger till...",
     "boq.ai_assistant": "AI-assistent",
     "boq.ai_chat_error": "AI-begäran misslyckades. Försök igen.",
-    "boq.ai_hint": "Be mig generera kalkylpositioner. Till exempel: \"Lägg till installationsposter för ett 5-vånings kontorshus\"",
+    "boq.ai_hint":
+      'Be mig generera kalkylpositioner. Till exempel: "Lägg till installationsposter för ett 5-vånings kontorshus"',
     "boq.ai_placeholder": "Beskriv positioner att generera...",
     "boq.ai_welcome": "Be mig generera kalkylpositioner. Till exempel: ",
     "boq.all_projects": "Alla projekt",
     "boq.all_statuses": "Alla statusar",
     "boq.area_m2": "Area (m²)",
     "boq.back_to_project": "Tillbaka till projekt",
-    "boq.toolbar_hint": "Använd verktygsfältet för att lägga till avsnitt och positioner, importera från kostnadsdatabas eller sammansatta kalkylrader, exportera till GAEB/PDF/Excel eller köra AI-kalkylering. Netto = summan av positionstotaler. Påslag tillämpas som procentsatser. Slutsumma = Netto + Påslag + Moms.",
+    "boq.toolbar_hint":
+      "Använd verktygsfältet för att lägga till avsnitt och positioner, importera från kostnadsdatabas eller sammansatta kalkylrader, exportera till GAEB/PDF/Excel eller köra AI-kalkylering. Netto = summan av positionstotaler. Påslag tillämpas som procentsatser. Slutsumma = Netto + Påslag + Moms.",
     "boq.boq_created": "Kalkyl skapad",
     "boq.boq_name": "Kalkylnamn",
     "boq.cancel_compare": "Avbryt jämförelse",
@@ -207,7 +240,8 @@ const resource = {
     "boq.compare_selected": "Vald för jämförelse",
     "boq.compare_title": "Kalkyljämförelse",
     "boq.confirm_delete": "Ta bort denna position?",
-    "boq.confirm_delete_section": "Ta bort detta avsnitt och alla dess positioner?",
+    "boq.confirm_delete_section":
+      "Ta bort detta avsnitt och alla dess positioner?",
     "boq.cost_breakdown": "Kostnadsfördelning",
     "boq.cost_breakdown_by_category": "Per kategori",
     "boq.cost_breakdown_items": "poster",
@@ -224,7 +258,8 @@ const resource = {
     "boq.cost_risk_contingency": "Reserv (P80 - P50)",
     "boq.cost_risk_distribution": "Kostnadsfördelning",
     "boq.cost_risk_drivers": "Största riskfaktorerna",
-    "boq.cost_risk_empty": "Lägg till positioner med kostnader för att köra Monte Carlo-simuleringen.",
+    "boq.cost_risk_empty":
+      "Lägg till positioner med kostnader för att köra Monte Carlo-simuleringen.",
     "boq.cost_risk_iterations": "Iterationer",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Kör Monte Carlo-simulering...",
@@ -250,7 +285,8 @@ const resource = {
     "boq.markup_bond": "Borgen",
     "boq.markup_other": "Övrigt",
     "boq.template_applied": "Regional mall tillämpad",
-    "boq.confirm_replace_markups": "Detta ersätter befintliga påslag. Fortsätta?",
+    "boq.confirm_replace_markups":
+      "Detta ersätter befintliga påslag. Fortsätta?",
     "boq.no_markups": "Inga påslag. Lägg till ett eller tillämpa en mall.",
     "boq.new_markup": "Nytt påslag",
     "boq.markup_added": "Påslag tillagt",
@@ -264,7 +300,8 @@ const resource = {
     "boq.duplicate_failed": "Kunde inte duplicera",
     "boq.duplicated": "Kalkyl duplicerad",
     "boq.editor": "Kalkylredigerare",
-    "boq.empty_section": "Inga poster i detta avsnitt. Klicka på \"Lägg till position\" för att lägga till en.",
+    "boq.empty_section":
+      'Inga poster i detta avsnitt. Klicka på "Lägg till position" för att lägga till en.',
     "boq.enter_description": "Ange beskrivning...",
     "boq.estimated_total": "Beräknad totalsumma",
     "boq.estimates": "kalkyler",
@@ -295,10 +332,13 @@ const resource = {
     "boq.new_estimate": "Ny kalkyl",
     "boq.no_activity": "Ingen aktivitet ännu. Ändringar visas här.",
     "boq.no_boqs": "Inga kalkyler ännu",
-    "boq.no_boqs_hint": "Skapa ett projekt först, lägg sedan till en mängdförteckning",
+    "boq.no_boqs_hint":
+      "Skapa ett projekt först, lägg sedan till en mängdförteckning",
     "boq.no_items_found": "Inga matchande poster hittades",
-    "boq.no_positions": "Inga positioner ännu. Lägg till ett avsnitt för att komma igång.",
-    "boq.no_resources": "Inga resurser tilldelade. Välj en kostnadspost med ⚡-ikonen från autocomplete-förslagen för att fylla i automatiskt.",
+    "boq.no_positions":
+      "Inga positioner ännu. Lägg till ett avsnitt för att komma igång.",
+    "boq.no_resources":
+      "Inga resurser tilldelade. Välj en kostnadspost med ⚡-ikonen från autocomplete-förslagen för att fylla i automatiskt.",
     "boq.no_results": "Inga matchande kalkyler",
     "boq.no_results_hint": "Försök justera din sökning eller dina filter",
     "boq.no_section": "Inget avsnitt (toppnivå)",
@@ -319,7 +359,8 @@ const resource = {
     "boq.quality_descriptions": "Beskrivningar ifyllda",
     "boq.quality_fair": "Godtagbar",
     "boq.quality_great": "Utmärkt",
-    "boq.quality_hint": "Fyll i alla fält för att nå 100% och säkerställa kalkylens noggrannhet.",
+    "boq.quality_hint":
+      "Fyll i alla fält för att nå 100% och säkerställa kalkylens noggrannhet.",
     "boq.quality_markups": "Påslag tillagda",
     "boq.quality_missing": "Saknas",
     "boq.quality_needs_work": "Behöver arbete",
@@ -328,17 +369,21 @@ const resource = {
     "boq.quantity": "Mängd",
     "boq.quick_add": "Snabbtillägg",
     "boq.quick_add_position": "Lägg till position",
-    "boq.quick_add_position_desc": "Lägg till en tom position i aktuellt avsnitt",
+    "boq.quick_add_position_desc":
+      "Lägg till en tom position i aktuellt avsnitt",
     "boq.quick_add_section": "Lägg till avsnitt",
-    "boq.quick_add_section_desc": "Skapa ett nytt avsnitt för att organisera positioner",
+    "boq.quick_add_section_desc":
+      "Skapa ett nytt avsnitt för att organisera positioner",
     "boq.quick_import_costs": "Importera från kostnadsdatabas",
-    "boq.quick_import_costs_desc": "Bläddra och välj poster från kostnadsdatabasen",
+    "boq.quick_import_costs_desc":
+      "Bläddra och välj poster från kostnadsdatabasen",
     "boq.quick_use_template": "Använd mall",
     "boq.quick_use_template_desc": "Börja från en färdig kalkylmall",
     "boq.recalculate": "Beräkna om",
     "boq.recalculate_complete": "Omberäkning klar",
     "boq.recalculate_failed": "Omberäkning misslyckades",
-    "boq.recalculate_summary": "Omberäknat: {{sections}} avsnitt, {{positions}} positioner",
+    "boq.recalculate_summary":
+      "Omberäknat: {{sections}} avsnitt, {{positions}} positioner",
     "boq.recent_activity": "Senaste aktivitet",
     "boq.redo": "Gör om (Ctrl+Y)",
     "boq.redone": "Omgjort",
@@ -398,7 +443,8 @@ const resource = {
     "boq.sections": "avsnitt",
     "boq.select_project": "Välj ett projekt...",
     "boq.sensitivity_base_total": "Bassumma",
-    "boq.sensitivity_empty": "Lägg till positioner med kostnader för att se känslighetsanalysen.",
+    "boq.sensitivity_empty":
+      "Lägg till positioner med kostnader för att se känslighetsanalysen.",
     "boq.sensitivity_impact_high": "Påverkan (+)",
     "boq.sensitivity_impact_low": "Påverkan (-)",
     "boq.sensitivity_overrun": "Kostnadsökning",
@@ -409,16 +455,21 @@ const resource = {
     "boq.show_all_activity": "Visa all aktivitet...",
     "boq.showing_estimates": "{{shown}} av {{total}} kalkyler",
     "boq.start_building": "Börja bygga din kalkyl",
-    "boq.start_building_desc": "Följ dessa steg för att skapa en professionell mängdförteckning",
+    "boq.start_building_desc":
+      "Följ dessa steg för att skapa en professionell mängdförteckning",
     "boq.status": "Status",
     "boq.step_add_positions": "Lägg till positioner",
-    "boq.step_add_positions_desc": "Lägg till rader med beskrivningar och enheter i varje avsnitt",
+    "boq.step_add_positions_desc":
+      "Lägg till rader med beskrivningar och enheter i varje avsnitt",
     "boq.step_add_sections": "Lägg till avsnitt",
-    "boq.step_add_sections_desc": "Organisera din kalkyl i avsnitt (t.ex. Grundläggning, Väggar, Tak)",
+    "boq.step_add_sections_desc":
+      "Organisera din kalkyl i avsnitt (t.ex. Grundläggning, Väggar, Tak)",
     "boq.step_review": "Granska summor",
-    "boq.step_review_desc": "Lägg till påslag för omkostnader och vinst, granska sedan slutsumman",
+    "boq.step_review_desc":
+      "Lägg till påslag för omkostnader och vinst, granska sedan slutsumman",
     "boq.step_set_quantities": "Ange mängder",
-    "boq.step_set_quantities_desc": "Ange mängder och à-priser för varje position för att beräkna summor",
+    "boq.step_set_quantities_desc":
+      "Ange mängder och à-priser för varje position för att beräkna summor",
     "boq.subtotal": "Delsumma",
     "boq.sync_rate": "Synkronisera pris",
     "boq.table_label": "Positioner i mängdförteckning",
@@ -426,13 +477,20 @@ const resource = {
     "boq.template_error": "Kunde inte skapa kalkyl från mall",
     "boq.templates": "Kalkylmallar",
     "boq.templates_coming_soon": "Mallar kommer snart",
-    "boq.templates_coming_soon_desc": "Mallväljaren blir tillgänglig i en framtida uppdatering.",
-    "boq.templates_subtitle": "Börja med en professionell mall för din byggnadstyp. Välj en mall, ange arean och generera en komplett kalkyl direkt.",
-    "boq.tip_autocomplete": "Fyll i beskrivningar för alla positioner — börja skriva för att se förslag från kostnadsdatabasen",
-    "boq.tip_markups": "Lägg till påslag för omkostnader och vinst i avsnittet Påslag under tabellen",
-    "boq.tip_menu": "Klicka på (...)-menyn på ett avsnitt för att lägga till positioner eller ta bort det",
-    "boq.tip_sections": "Lägg till avsnitt för att organisera din kalkyl (t.ex. Grundläggning, Väggar, Tak)",
-    "boq.tip_tab": "Använd Tab för att flytta mellan fält, Enter för att spara ändringar",
+    "boq.templates_coming_soon_desc":
+      "Mallväljaren blir tillgänglig i en framtida uppdatering.",
+    "boq.templates_subtitle":
+      "Börja med en professionell mall för din byggnadstyp. Välj en mall, ange arean och generera en komplett kalkyl direkt.",
+    "boq.tip_autocomplete":
+      "Fyll i beskrivningar för alla positioner — börja skriva för att se förslag från kostnadsdatabasen",
+    "boq.tip_markups":
+      "Lägg till påslag för omkostnader och vinst i avsnittet Påslag under tabellen",
+    "boq.tip_menu":
+      "Klicka på (...)-menyn på ett avsnitt för att lägga till positioner eller ta bort det",
+    "boq.tip_sections":
+      "Lägg till avsnitt för att organisera din kalkyl (t.ex. Grundläggning, Väggar, Tak)",
+    "boq.tip_tab":
+      "Använd Tab för att flytta mellan fält, Enter för att spara ändringar",
     "boq.tips_title": "Tips och råd",
     "boq.mvp.title": "Välj material",
     "boq.mvp.subtitle_one": "{{count}} resurs behöver ett val",
@@ -499,12 +557,15 @@ const resource = {
     "catalog.creating": "Skapar...",
     "catalog.delete_failed": "Borttagning misslyckades",
     "catalog.delete_region": "Ta bort region",
-    "catalog.empty_hint": "Importera en regional katalog för att fylla resurser, eller extrahera från kostnadsposter.",
-    "catalog.empty_with_regions": "Inga resurser matchar aktuella filter. Prova att ändra typ eller region.",
+    "catalog.empty_hint":
+      "Importera en regional katalog för att fylla resurser, eller extrahera från kostnadsposter.",
+    "catalog.empty_with_regions":
+      "Inga resurser matchar aktuella filter. Prova att ändra typ eller region.",
     "catalog.import": "Importera",
     "catalog.import_failed": "Import misslyckades",
     "catalog.import_region": "Importera region",
-    "catalog.import_regions_desc": "Ladda ner färdigbyggda resurskataloger från CWICR regionala databaser",
+    "catalog.import_regions_desc":
+      "Ladda ner färdigbyggda resurskataloger från CWICR regionala databaser",
     "catalog.import_regions_title": "Importera resurskatalog",
     "catalog.import_success": "Import klar",
     "catalog.importing": "Importerar...",
@@ -513,7 +574,8 @@ const resource = {
     "catalog.loaded": "Laddad",
     "catalog.my_catalog": "Min katalog",
     "catalog.my_catalog_empty": "Din katalog är tom",
-    "catalog.my_catalog_empty_desc": "Lägg till egna material, utrustning och arbetskraftspriser. Egna resurser kan användas i sammansatta kalkylrader och tillämpas på positioner i mängdförteckningen.",
+    "catalog.my_catalog_empty_desc":
+      "Lägg till egna material, utrustning och arbetskraftspriser. Egna resurser kan användas i sammansatta kalkylrader och tillämpas på positioner i mängdförteckningen.",
     "catalog.name": "Namn",
     "catalog.no_results": "Inga resurser hittades",
     "catalog.no_results_hint": "Försök justera din sökning eller dina filter",
@@ -529,8 +591,10 @@ const resource = {
     "catalog.resources_found": "resurser hittade",
     "catalog.resources_imported": "resurser importerade",
     "catalog.resources_removed": "resurser borttagna",
-    "catalog.search_hint": "Bläddra bland material, utrustning, arbetskraft och maskinförare",
-    "catalog.what_is_catalog": "Material-, arbetskrafts-, utrustnings- och maskinförarpriser ordnade per region. Installera regionala kataloger från Moduler och använd dem sedan för att bygga sammansatta kalkylrader eller lägga till poster direkt i mängdförteckningen.",
+    "catalog.search_hint":
+      "Bläddra bland material, utrustning, arbetskraft och maskinförare",
+    "catalog.what_is_catalog":
+      "Material-, arbetskrafts-, utrustnings- och maskinförarpriser ordnade per region. Installera regionala kataloger från Moduler och använd dem sedan för att bygga sammansatta kalkylrader eller lägga till poster direkt i mängdförteckningen.",
     "catalog.search_in": "Sök i",
     "catalog.search_placeholder": "Sök på namn eller kod...",
     "catalog.selected": "markerade",
@@ -555,12 +619,14 @@ const resource = {
     "command_palette.action_run_validation": "Kör validering",
     "command_palette.action_import_database": "Importera databas",
     "error.something_wrong": "Något gick fel",
-    "error.unexpected_error": "Ett oväntat fel uppstod vid rendering av denna sida. Du kan prova att ladda om eller gå tillbaka till översikten.",
+    "error.unexpected_error":
+      "Ett oväntat fel uppstod vid rendering av denna sida. Du kan prova att ladda om eller gå tillbaka till översikten.",
     "error.details": "Felinformation",
     "error.try_again": "Försök igen",
     "error.go_dashboard": "Gå till översikten",
     "error.not_found": "Sidan hittades inte",
-    "error.not_found_desc": "Sidan du söker finns inte eller har flyttats. Kontrollera webbadressen eller gå tillbaka till översikten.",
+    "error.not_found_desc":
+      "Sidan du söker finns inte eller har flyttats. Kontrollera webbadressen eller gå tillbaka till översikten.",
     "error.go_back": "Gå tillbaka",
     "common.archive": "Arkivera",
     "common.back": "Tillbaka",
@@ -597,7 +663,8 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Kostnad / m²",
     "costmodel.benchmark_current_cost": "Nuvarande: {{value}}/m²",
-    "costmodel.benchmark_enter_area": "Ange projektarean för att se jämförelse av kostnad per m²",
+    "costmodel.benchmark_enter_area":
+      "Ange projektarean för att se jämförelse av kostnad per m²",
     "costmodel.benchmark_per_m2": "per m²",
     "costmodel.benchmark_project_area": "Projektarea (m²)",
     "costmodel.benchmark_project_type": "Projekttyp",
@@ -641,7 +708,8 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Status",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint": "För att avsluta inom budget krävs ett CPI på {{tcpi}} framåt",
+    "costmodel.evm_tcpi_hint":
+      "För att avsluta inom budget krävs ett CPI på {{tcpi}} framåt",
     "costmodel.evm_time_elapsed": "Förfluten tid",
     "costmodel.evm_title": "Intjänat värde-analys",
     "costmodel.evm_unknown": "Okänd",
@@ -661,7 +729,8 @@ const resource = {
     "costmodel.s_curve": "S-kurva (EVM)",
     "costmodel.s_curve_chart": "S-kurvdiagram",
     "costmodel.title": "5D-kostnadsmodell",
-    "costmodel.what_is_5d": "5D-kostnadshantering lägger till kostnadsuppföljning över tid i ditt projekt. Övervaka budget kontra faktiskt utfall med S-kurvdiagram, följ Earned Value (SPI = tidplanseffektivitet, CPI = kostnadseffektivitet — båda >= 1,0 innebär sunt), och kör tänk-om-scenarier för att prognostisera utfall.",
+    "costmodel.what_is_5d":
+      "5D-kostnadshantering lägger till kostnadsuppföljning över tid i ditt projekt. Övervaka budget kontra faktiskt utfall med S-kurvdiagram, följ Earned Value (SPI = tidplanseffektivitet, CPI = kostnadseffektivitet — båda >= 1,0 innebär sunt), och kör tänk-om-scenarier för att prognostisera utfall.",
     "costmodel.total": "Totalt",
     "costmodel.total_budget": "Total budget",
     "costmodel.variance": "Avvikelse",
@@ -676,7 +745,8 @@ const resource = {
     "costmodel.whatif_material": "Materialkostnad",
     "costmodel.whatif_original_bac": "Ursprunglig BAC",
     "costmodel.whatif_reset": "Återställ",
-    "costmodel.whatif_scenario_name": "Tänk-om: M{{material}}% A{{labor}}% T{{duration}}%",
+    "costmodel.whatif_scenario_name":
+      "Tänk-om: M{{material}}% A{{labor}}% T{{duration}}%",
     "costmodel.whatif_title": "Tänk-om-scenarier",
     "costs.add_database": "Importera",
     "costs.add_item": "Lägg till post",
@@ -714,18 +784,22 @@ const resource = {
     "costs.import_and_more": "och {{count}} fler fel",
     "costs.import_another": "Importera ytterligare",
     "costs.import_click_to_change": "Klicka för att välja en annan fil",
-    "costs.import_columns_hint": "Kolumner identifieras automatiskt. Accepterade rubriker: Code, Description, Unit, Rate/Price/Cost, Currency, DIN 276/Classification.",
+    "costs.import_columns_hint":
+      "Kolumner identifieras automatiskt. Accepterade rubriker: Code, Description, Unit, Rate/Price/Cost, Currency, DIN 276/Classification.",
     "costs.import_complete": "Import klar",
     "costs.import_database": "Importera databas",
     "costs.import_drop_here": "Släpp din fil här",
-    "costs.import_drop_or_click": "Släpp din fil här eller klicka för att bläddra",
+    "costs.import_drop_or_click":
+      "Släpp din fil här eller klicka för att bläddra",
     "costs.import_error_details": "Felinformation",
     "costs.import_errors": "Fel",
     "costs.import_failed": "Import misslyckades",
     "costs.import_file_too_large": "Filen är för stor",
-    "costs.import_first_hint": "Importera en regional kostnadsdatabas för att börja söka bland 55 000+ poster.",
+    "costs.import_first_hint":
+      "Importera en regional kostnadsdatabas för att börja söka bland 55 000+ poster.",
     "costs.import_format_csv": "CSV (.csv) med samma kolumner",
-    "costs.import_format_excel": "Excel (.xlsx) med kolumner: Kod, Beskrivning, Enhet, Pris",
+    "costs.import_format_excel":
+      "Excel (.xlsx) med kolumner: Kod, Beskrivning, Enhet, Pris",
     "costs.import_formats_title": "Format som stöds",
     "costs.import_go_to_database": "Gå till kostnadsdatabas",
     "costs.import_imported": "Importerade",
@@ -734,9 +808,11 @@ const resource = {
     "costs.import_row": "Rad",
     "costs.import_rows_processed": "rader bearbetade",
     "costs.import_skipped": "Överhoppade",
-    "costs.import_subtitle": "Ladda en prisdatabas eller ladda upp en egen fil.",
+    "costs.import_subtitle":
+      "Ladda en prisdatabas eller ladda upp en egen fil.",
     "costs.import_success": "Import klar",
-    "costs.import_supported_hint": "Ladda upp en Excel-fil (.xlsx) eller CSV-fil (.csv).",
+    "costs.import_supported_hint":
+      "Ladda upp en Excel-fil (.xlsx) eller CSV-fil (.csv).",
     "costs.import_title": "Importera kostnadsdatabas",
     "costs.import_unsupported_format": "Filformat stöds inte",
     "costs.indexing_failed": "Indexering misslyckades",
@@ -745,7 +821,8 @@ const resource = {
     "costs.items_copied": "{{count}} poster kopierade till urklipp",
     "costs.load_more": "Ladda fler",
     "costs.loaded_databases": "Laddade databaser",
-    "costs.no_boqs_helper": "Inga kalkyler i detta projekt. Skapa en först i kalkylredigeraren.",
+    "costs.no_boqs_helper":
+      "Inga kalkyler i detta projekt. Skapa en först i kalkylredigeraren.",
     "costs.no_database_loaded": "Ingen databas laddad",
     "costs.no_results": "Inga kostnadsposter hittades",
     "costs.no_results_hint": "Försök justera din sökning eller dina filter",
@@ -757,16 +834,19 @@ const resource = {
     "costs.region_cleared": "Region rensad",
     "costs.results_found": "resultat hittade",
     "costs.search_hint": "Sök kostnadsposter via beskrivning eller kod",
-    "costs.what_is_cost_db": "À-priser och sammansatta priser för material, arbetskraft och utrustning. Importera regionala databaser (CWICR, BKI, RSMeans) från Moduler eller lägg till egna priser. Aktivera AI-semantisk sökning för naturligt språk-frågor.",
+    "costs.what_is_cost_db":
+      "À-priser och sammansatta priser för material, arbetskraft och utrustning. Importera regionala databaser (CWICR, BKI, RSMeans) från Moduler eller lägg till egna priser. Aktivera AI-semantisk sökning för naturligt språk-frågor.",
     "costs.search_placeholder": "Sök på beskrivning eller kod...",
-    "costs.semantic_placeholder": "Beskriv vad du behöver (AI hittar liknande)...",
+    "costs.semantic_placeholder":
+      "Beskriv vad du behöver (AI hittar liknande)...",
     "costs.showing": "Visar",
     "costs.title": "Kostnadsdatabas",
     "costs.yes_clear_all": "Ja, rensa allt",
     "dashboard.add_api_keys": "Lägg till API-nycklar",
     "dashboard.ai_providers": "AI-leverantörer",
     "dashboard.analytics": "Analys",
-    "dashboard.kpi_hint": "Sammanfattning av alla projekt. Värdena uppdateras när du lägger till kalkyler och tidplansaktiviteter.",
+    "dashboard.kpi_hint":
+      "Sammanfattning av alla projekt. Värdena uppdateras när du lägger till kalkyler och tidplansaktiviteter.",
     "dashboard.api_server": "API-server",
     "dashboard.boq_status": "Kalkylstatus",
     "dashboard.completed": "Slutförd",
@@ -790,22 +870,28 @@ const resource = {
     "dashboard.new_project": "Nytt projekt",
     "dashboard.no_boq_data": "Inga kalkyldata tillgängliga",
     "dashboard.no_projects": "Inga projekt ännu",
-    "dashboard.no_projects_desc": "Skapa ditt första projekt för att komma igång",
+    "dashboard.no_projects_desc":
+      "Skapa ditt första projekt för att komma igång",
     "dashboard.not_configured": "Ej konfigurerad",
     "dashboard.project_overview": "Projektöversikt",
     "dashboard.quick_actions": "Snabbåtgärder",
     "dashboard.recent_projects": "Senaste projekt",
     "dashboard.show_shortcuts": "Visa tangentbordsgenvägar",
     "dashboard.step_ai_search": "Aktivera AI-sökning",
-    "dashboard.step_ai_search_desc": "Generera vektorinbäddningar för semantisk kostnadsmatchning",
+    "dashboard.step_ai_search_desc":
+      "Generera vektorinbäddningar för semantisk kostnadsmatchning",
     "dashboard.step_build_boq": "Bygg din kalkyl",
-    "dashboard.step_build_boq_desc": "Skapa en mängdförteckning med AI-assistans",
+    "dashboard.step_build_boq_desc":
+      "Skapa en mängdförteckning med AI-assistans",
     "dashboard.step_connect_ai": "Anslut AI",
-    "dashboard.step_connect_ai_desc": "Lägg till dina API-nycklar för AI-driven kalkylering",
+    "dashboard.step_connect_ai_desc":
+      "Lägg till dina API-nycklar för AI-driven kalkylering",
     "dashboard.step_create_project": "Skapa projekt",
-    "dashboard.step_create_project_desc": "Starta ditt första byggkalkylprojekt",
+    "dashboard.step_create_project_desc":
+      "Starta ditt första byggkalkylprojekt",
     "dashboard.step_load_db": "Ladda kostnadsdatabas",
-    "dashboard.step_load_db_desc": "Importera regional prisdata med 55 000+ poster",
+    "dashboard.step_load_db_desc":
+      "Importera regional prisdata med 55 000+ poster",
     "dashboard.subtitle": "Din arbetsyta för byggkalkylering",
     "dashboard.subtitle_2": "Smart resursplanering för dina byggprojekt",
     "dashboard.system_status": "Systemstatus",
@@ -820,16 +906,19 @@ const resource = {
     "demo.install": "Installera",
     "demo.install_error": "Kunde inte installera demoprojekt. Försök igen.",
     "demo.installing": "Installerar...",
-    "demo.modal_subtitle": "Installera ett komplett projekt med kalkyl, tidplan, budget och upphandling",
+    "demo.modal_subtitle":
+      "Installera ett komplett projekt med kalkyl, tidplan, budget och upphandling",
     "demo.modal_title": "Importera demoprojekt",
     "documents.title": "Dokument",
-    "documents.subtitle": "Ladda upp och hantera projektfiler — ritningar, kontrakt, specifikationer",
+    "documents.subtitle":
+      "Ladda upp och hantera projektfiler — ritningar, kontrakt, specifikationer",
     "documents.upload": "Ladda upp filer",
     "documents.uploaded": "Uppladdad",
     "documents.upload_failed": "Uppladdning misslyckades",
     "documents.upload_skipped": "Fil överhoppad",
     "documents.file_too_large": "{{name}} överskrider gränsen på 100 MB",
-    "documents.upload_summary": "Uppladdning klar: {{success}} uppladdade, {{failed}} misslyckade",
+    "documents.upload_summary":
+      "Uppladdning klar: {{success}} uppladdade, {{failed}} misslyckade",
     "documents.delete_failed": "Radering misslyckades",
     "documents.deleted": "Dokument raderat",
     "documents.download": "Ladda ner",
@@ -843,9 +932,11 @@ const resource = {
     "documents.drop_hint": "Dra och släpp filer här, eller klicka på Ladda upp",
     "documents.drop_hint_types": "PDF, bilder, Excel, DWG, IFC — alla filtyper",
     "documents.empty": "Inga dokument ännu",
-    "documents.empty_hint": "Ladda upp din första fil — ritningar, kontrakt, foton eller andra projektdokument.",
+    "documents.empty_hint":
+      "Ladda upp din första fil — ritningar, kontrakt, foton eller andra projektdokument.",
     "documents.select_project": "Välj ett projekt",
-    "documents.select_project_hint": "Använd projektväljaren i sidhuvudet för att välja ett projekt först.",
+    "documents.select_project_hint":
+      "Använd projektväljaren i sidhuvudet för att välja ett projekt först.",
     "documents.sort_date": "Efter datum",
     "documents.sort_name": "Efter namn",
     "documents.sort_size": "Efter storlek",
@@ -859,33 +950,45 @@ const resource = {
     "documents.cat_correspondence": "Korrespondens",
     "documents.cat_other": "Övrigt",
     "login.benefit.ai": "AI-assisterad kalkylering",
-    "login.benefit.ai_desc": "Smarta förslag med konfidenspoäng. Du beslutar, AI assisterar.",
+    "login.benefit.ai_desc":
+      "Smarta förslag med konfidenspoäng. Du beslutar, AI assisterar.",
     "login.benefit.allinone": "Kalkyl + 4D + 5D + Upphandling",
-    "login.benefit.allinone_desc": "Komplett arbetsflöde från kostnadskalkylering till anbudsjämförelse i ett verktyg.",
+    "login.benefit.allinone_desc":
+      "Komplett arbetsflöde från kostnadskalkylering till anbudsjämförelse i ett verktyg.",
     "login.benefit.free": "Gratis för alla",
-    "login.benefit.free_desc": "Inga licensavgifter. Inga begränsningar. Byggt av kalkylspecialister, för kalkylspecialister.",
+    "login.benefit.free_desc":
+      "Inga licensavgifter. Inga begränsningar. Byggt av kalkylspecialister, för kalkylspecialister.",
     "login.benefit.local": "Dina data stannar på din dator",
-    "login.benefit.local_desc": "Inget moln. Inga tredjepartsservrar. Full kontroll över dina projektdata.",
+    "login.benefit.local_desc":
+      "Inget moln. Inga tredjepartsservrar. Full kontroll över dina projektdata.",
     "login.benefit.open_source": "100% öppen källkod",
-    "login.benefit.open_source_desc": "Transparent kod. Inget leverantörsberoende. Exportera allt, när som helst.",
+    "login.benefit.open_source_desc":
+      "Transparent kod. Inget leverantörsberoende. Exportera allt, när som helst.",
     "login.benefit.standards": "Internationella standarder",
-    "login.benefit.standards_desc": "Över 55 000 kostnadsposter i 11 regionala databaser världen över.",
-    "login.hero_desc": "Professionell mängdförteckning, 4D-tidplanering, 5D-kostnadsmodell och upphandling — allt i en plattform med öppen källkod.",
+    "login.benefit.standards_desc":
+      "Över 55 000 kostnadsposter i 11 regionala databaser världen över.",
+    "login.hero_desc":
+      "Professionell mängdförteckning, 4D-tidplanering, 5D-kostnadsmodell och upphandling — allt i en plattform med öppen källkod.",
     "login.hero_highlight": "nytänkt",
     "login.hero_title": "Byggkalkylering,",
     "login.open_source_badge": "Första open-source bygg-ERP",
     "dashboard.open_source_badge": "Första open-source bygg-ERP",
     "login.learn_more": "Läs mer om plattformen",
-    "login.privacy": "All data behandlas och lagras lokalt på din maskin. Ingenting skickas till externa servrar. Du äger dina data — alltid.",
-    "login.privacy_ai": "Om du använder inbyggda AI-verktyg kan viss data skickas till den AI-leverantör du konfigurerar (OpenAI, Anthropic, m.fl.). Du styr vilken leverantör du använder och vilka data du delar.",
+    "login.privacy":
+      "All data behandlas och lagras lokalt på din maskin. Ingenting skickas till externa servrar. Du äger dina data — alltid.",
+    "login.privacy_ai":
+      "Om du använder inbyggda AI-verktyg kan viss data skickas till den AI-leverantör du konfigurerar (OpenAI, Anthropic, m.fl.). Du styr vilken leverantör du använder och vilka data du delar.",
     "marketplace.active": "Aktiv",
     "marketplace.available": "Tillgängliga moduler",
     "marketplace.builtin": "Inbyggd",
-    "marketplace.builtin_message": "Denna modul är inbyggd i din installation och redo att använda.",
+    "marketplace.builtin_message":
+      "Denna modul är inbyggd i din installation och redo att använda.",
     "marketplace.catalog_imported": "Katalog importerad",
-    "marketplace.catalog_imported_message": "{{imported}} resurser importerade, {{skipped}} överhoppade för {{region}}.",
+    "marketplace.catalog_imported_message":
+      "{{imported}} resurser importerade, {{skipped}} överhoppade för {{region}}.",
     "marketplace.demo_installed": "Demo installerad",
-    "marketplace.demo_installed_message": "{{name}} skapad med komplett kalkyl, tidplan, budget och upphandling.",
+    "marketplace.demo_installed_message":
+      "{{name}} skapad med komplett kalkyl, tidplan, budget och upphandling.",
     "marketplace.free": "Gratis",
     "marketplace.import_failed": "Import misslyckades",
     "marketplace.imported": "Importerad",
@@ -894,7 +997,8 @@ const resource = {
     "marketplace.install_failed": "Installation misslyckades",
     "marketplace.installed_modules": "Installerade kärnmoduler",
     "marketplace.installing": "Installerar...",
-    "marketplace.language_activated": "Språkpaket aktiverat. Byt språk under Inställningar.",
+    "marketplace.language_activated":
+      "Språkpaket aktiverat. Byt språk under Inställningar.",
     "marketplace.language_already_included": "Detta språk ingår redan.",
     "marketplace.manage": "Hantera",
     "marketplace.module_disabled": "{{name}} inaktiverad",
@@ -902,18 +1006,22 @@ const resource = {
     "marketplace.my_modules": "Installerade moduler",
     "marketplace.no_region_mapping": "Ingen regionmappning för {{id}}",
     "marketplace.no_results": "Inga moduler hittades",
-    "marketplace.no_results_hint": "Försök justera din sökning eller kategorifilter.",
+    "marketplace.no_results_hint":
+      "Försök justera din sökning eller kategorifilter.",
     "marketplace.rules": "regler",
     "marketplace.search_placeholder": "Sök moduler...",
-    "marketplace.subtitle": "Bläddra och installera tillägg för kostnadsdatabaser, AI-verktyg, CAD-konverterare med mera.",
-    "marketplace.description": "Utöka OpenEstimate med regionala kostnadsdatabaser, resurskataloger (CWICR), vektorsökindex för AI, språkpaket, demoprojekt och integrationer. Installera en modul för att aktivera den — avinstallera när som helst.",
+    "marketplace.subtitle":
+      "Bläddra och installera tillägg för kostnadsdatabaser, AI-verktyg, CAD-konverterare med mera.",
+    "marketplace.description":
+      "Utöka OpenEstimate med regionala kostnadsdatabaser, resurskataloger (CWICR), vektorsökindex för AI, språkpaket, demoprojekt och integrationer. Installera en modul för att aktivera den — avinstallera när som helst.",
     "marketplace.title": "Modulmarknadsplats",
     "marketplace.uninstall": "Avinstallera",
     "marketplace.unknown_region": "Okänd region",
     "marketplace.validation_rule_sets": "Valideringsregeluppsättningar",
     "marketplace.validation_rules_active": "valideringsregler aktiva",
     "marketplace.vector_index": "Vektorindex",
-    "marketplace.vector_index_hint": "Importera kostnadsdatabasen först och generera sedan vektorer.",
+    "marketplace.vector_index_hint":
+      "Importera kostnadsdatabasen först och generera sedan vektorer.",
     "modules.title": "Moduler",
     "files.title": "Projektfiler",
     "files.empty": "Inga filer matchar dina filter.",
@@ -962,20 +1070,27 @@ const resource = {
     "files.toast.copied": "Kopierad",
     "files.toast.copy_failed": "Kunde inte kopiera",
     "files.no_project_title": "Inget aktivt projekt",
-    "files.no_project_desc": "Välj ett projekt från instrumentpanelen för att se alla dess dokument, foton, BIM- och DWG-filer på ett ställe.",
+    "files.no_project_desc":
+      "Välj ett projekt från instrumentpanelen för att se alla dess dokument, foton, BIM- och DWG-filer på ett ställe.",
     "files.go_to_projects": "Gå till projekt",
     "files.export.title": "Exportera projektpaket",
-    "files.export.intro": "Välj vad som ska ingå. Mindre paket överförs snabbare; större bevarar mer.",
+    "files.export.intro":
+      "Välj vad som ska ingå. Mindre paket överförs snabbare; större bevarar mer.",
     "files.export.scope_metadata": "Endast metadata",
-    "files.export.scope_metadata_hint": "E-postvänligt. Mängdförteckningar, tabeller och länkar — inga bilagor.",
+    "files.export.scope_metadata_hint":
+      "E-postvänligt. Mängdförteckningar, tabeller och länkar — inga bilagor.",
     "files.export.scope_documents": "Dokument",
-    "files.export.scope_documents_hint": "Lägger till uppladdade dokument och foton med miniatyrer.",
+    "files.export.scope_documents_hint":
+      "Lägger till uppladdade dokument och foton med miniatyrer.",
     "files.export.scope_bim": "BIM-modeller",
-    "files.export.scope_bim_hint": "Lägger till BIM-modeller, element och kanonisk geometri.",
+    "files.export.scope_bim_hint":
+      "Lägger till BIM-modeller, element och kanonisk geometri.",
     "files.export.scope_dwg": "DWG-ritningar",
-    "files.export.scope_dwg_hint": "Lägger till DWG-ritningar, versioner och relaterade ark.",
+    "files.export.scope_dwg_hint":
+      "Lägger till DWG-ritningar, versioner och relaterade ark.",
     "files.export.scope_full": "Hela projektet",
-    "files.export.scope_full_hint": "Allt — komplett migreringspaket inklusive alla bilagor.",
+    "files.export.scope_full_hint":
+      "Allt — komplett migreringspaket inklusive alla bilagor.",
     "files.export.stat_scope": "Omfattning",
     "files.export.stat_attachments": "Bilagor",
     "files.export.stat_size": "Uppskattad storlek",
@@ -983,10 +1098,12 @@ const resource = {
     "files.export.tables": "Tabeller",
     "files.export.preview_btn": "Förhandsgranska",
     "files.export.download_btn": "Ladda ner paket",
-    "files.export.large_warn": "Stort paket — håll fliken öppen under exporten.",
+    "files.export.large_warn":
+      "Stort paket — håll fliken öppen under exporten.",
     "files.export.success_title": "Paket nedladdat",
     "files.import.title": "Importera projektpaket",
-    "files.import.intro": "Välj ett .ocep-paket exporterat från denna eller en annan arbetsyta.",
+    "files.import.intro":
+      "Välj ett .ocep-paket exporterat från denna eller en annan arbetsyta.",
     "files.import.select_file": "Välj .ocep-fil",
     "files.import.drop_hint": "Klicka för att bläddra",
     "files.import.validating": "Validerar paket…",
@@ -998,15 +1115,19 @@ const resource = {
     "files.import.stat_format": "Format",
     "files.import.choose_mode": "Importläge",
     "files.import.mode_new": "Skapa nytt projekt",
-    "files.import.mode_new_hint": "Säkrast. Nya ID överallt; inget i din arbetsyta ändras.",
+    "files.import.mode_new_hint":
+      "Säkrast. Nya ID överallt; inget i din arbetsyta ändras.",
     "files.import.mode_merge": "Slå samman med befintligt projekt",
-    "files.import.mode_merge_hint": "Lägger till rader i ett valt projekt. Befintliga ID hoppas över.",
+    "files.import.mode_merge_hint":
+      "Lägger till rader i ett valt projekt. Befintliga ID hoppas över.",
     "files.import.mode_replace": "Ersätt befintligt projekt",
-    "files.import.mode_replace_hint": "Raderar valda projektets paketstyrda rader och importerar sedan. Destruktivt.",
+    "files.import.mode_replace_hint":
+      "Raderar valda projektets paketstyrda rader och importerar sedan. Destruktivt.",
     "files.import.rename": "Nytt projektnamn (valfritt)",
     "files.import.target_project": "Målprojekt",
     "files.import.pick_project": "— välj ett projekt —",
-    "files.import.destructive_warn": "Detta kommer permanent att radera paketstyrda rader i målprojektet före import. Kan inte ångras.",
+    "files.import.destructive_warn":
+      "Detta kommer permanent att radera paketstyrda rader i målprojektet före import. Kan inte ångras.",
     "files.import.confirm": "Importera",
     "files.import.result_done": "Import klar",
     "files.import.imported": "Importerad",
@@ -1026,7 +1147,8 @@ const resource = {
     "files.email.paste_into_email": "Exempel på e-postinnehåll",
     "files.email.open_mail_client": "Öppna e-postklient",
     "files.email.sample_subject": "Fil: {{name}}",
-    "files.email.sample_body": "Hej,\n\nhär är filen du frågade om — {{name}} ({{size}}).\nNedladdningslänk (upphör {{expires}}):\n{{url}}\n\n— skickat från OpenConstructionERP",
+    "files.email.sample_body":
+      "Hej,\n\nhär är filen du frågade om — {{name}} ({{size}}).\nNedladdningslänk (upphör {{expires}}):\n{{url}}\n\n— skickat från OpenConstructionERP",
     "files.title_all": "Alla filer",
     "files.empty_category": "Inga {{category}} än",
     "files.cta.add_first": "Lägg till din första {{category}}",
@@ -1036,11 +1158,13 @@ const resource = {
     "files.upload": "Ladda upp filer",
     "files.upload_drag": "Dra och släpp filer här",
     "files.upload_drop_here": "Släpp filer för att ladda upp",
-    "files.upload_hint": "PDF, bilder, Excel, DWG, IFC — vilken filtyp som helst",
+    "files.upload_hint":
+      "PDF, bilder, Excel, DWG, IFC — vilken filtyp som helst",
     "files.upload_browse": "Bläddra bland filer",
     "files.upload_no_project": "Inget aktivt projekt",
     "files.upload_too_large": "Filer för stora",
-    "files.upload_too_large_msg": "{{count}} fil(er) överskrider gränsen 100 MB och hoppades över.",
+    "files.upload_too_large_msg":
+      "{{count}} fil(er) överskrider gränsen 100 MB och hoppades över.",
     "files.upload_queued": "{{count}} fil(er) i kö",
     "files.uploading": "Laddar upp…",
     "files.uploaded": "Uppladdad",
@@ -1107,13 +1231,16 @@ const resource = {
     "nav.bi_dashboards": "BI-dashboards",
     "nav.match_elements": "Matcha element → Kostnader",
     "nav.group_operations": "Platsdrift",
-    "nav.group_operations_desc": "Daglig platsdrift — serviceärenden, utrustning, dagbok, underentreprenörsportal, resurser",
+    "nav.group_operations_desc":
+      "Daglig platsdrift — serviceärenden, utrustning, dagbok, underentreprenörsportal, resurser",
     "nav.group_commercial": "Kommersiellt",
-    "nav.group_commercial_desc": "Kommersiell pipeline — CRM, kontrakt, anbud, ändringar, leverantörer, fastighetsutveckling",
+    "nav.group_commercial_desc":
+      "Kommersiell pipeline — CRM, kontrakt, anbud, ändringar, leverantörer, fastighetsutveckling",
     "nav.group_bi": "Analys",
     "nav.group_bi_desc": "BI-dashboards byggda på datalagerprojektioner",
     "nav.group_estimation": "Kalkylering",
-    "nav.group_estimation_desc": "Kärnverktyg: projekt, kalkyl, kostnader och sammansatta kalkylrader",
+    "nav.group_estimation_desc":
+      "Kärnverktyg: projekt, kalkyl, kostnader och sammansatta kalkylrader",
     "nav.group_databases": "Databaser",
     "nav.group_takeoff": "Mängdberäkning",
     "nav.group_cad_bim": "CAD / BIM & BI",
@@ -1174,10 +1301,13 @@ const resource = {
     "requirements.source_reference": "Källreferens",
     "requirements.source_placeholder": "t.ex. Ritning A-101, Detalj 3",
     "requirements.notes": "Anteckningar",
-    "requirements.notes_placeholder": "Ytterligare anteckningar eller kontext...",
+    "requirements.notes_placeholder":
+      "Ytterligare anteckningar eller kontext...",
     "requirements.import_text": "Importera från text",
-    "requirements.import_text_desc": "Klistra in kravspecifikationer. Varje rad i formatet: entitet | egenskap | villkorstyp | värde | enhet | kategori | prioritet",
-    "requirements.import_placeholder": "vägg | tjocklek | min | 200 | mm | konstruktion | måste\ntak | u_värde | max | 0,20 | W/m²K | termisk | måste",
+    "requirements.import_text_desc":
+      "Klistra in kravspecifikationer. Varje rad i formatet: entitet | egenskap | villkorstyp | värde | enhet | kategori | prioritet",
+    "requirements.import_placeholder":
+      "vägg | tjocklek | min | 200 | mm | konstruktion | måste\ntak | u_värde | max | 0,20 | W/m²K | termisk | måste",
     "requirements.set_created": "Kravuppsättning skapad",
     "requirements.new_set": "Ny kravuppsättning",
     "requirements.set_name_placeholder": "t.ex. Konstruktionskrav Fas 1",
@@ -1196,35 +1326,42 @@ const resource = {
     "requirements.all_priorities": "Alla prioriteter",
     "requirements.all_statuses": "Alla statusar",
     "requirements.no_sets": "Inga kravuppsättningar",
-    "requirements.no_sets_desc": "Skapa en kravuppsättning för att börja definiera projektkrav och kvalitetsgrindar.",
+    "requirements.no_sets_desc":
+      "Skapa en kravuppsättning för att börja definiera projektkrav och kvalitetsgrindar.",
     "requirements.empty": "Inga krav ännu",
-    "requirements.empty_desc": "Lägg till krav för att definiera Entitet-Egenskap-Villkor-tripplar för ditt projekt.",
+    "requirements.empty_desc":
+      "Lägg till krav för att definiera Entitet-Egenskap-Villkor-tripplar för ditt projekt.",
     "requirements.no_match": "Inga krav matchar dina filter.",
     "requirements.constraint": "Villkor",
     "requirements.confidence": "Konf.",
     "requirements.source": "Källa",
     "requirements.showing": "{{count}} krav",
     "requirements.of_total": "av {{total}}",
-    "requirements.confirm_delete_set": "Ta bort denna kravuppsättning och alla dess krav?",
+    "requirements.confirm_delete_set":
+      "Ta bort denna kravuppsättning och alla dess krav?",
     "requirements.delete_set": "Ta bort uppsättning",
     "requirements.and_more": "och {{count}} till...",
     "requirements.click_to_upload_csv": "Klicka för att ladda upp CSV-fil",
     "requirements.click_to_upload_json": "Klicka för att ladda upp JSON-fil",
     "requirements.csv_loaded": "{{count}} rader laddade från CSV",
-    "requirements.csv_parse_error": "CSV måste ha rubriker: entity, attribute, constraint_value",
+    "requirements.csv_parse_error":
+      "CSV måste ha rubriker: entity, attribute, constraint_value",
     "requirements.export": "Exportera",
     "requirements.export_csv": "Exportera CSV",
     "requirements.export_excel": "Exportera Excel",
     "requirements.export_json": "Exportera JSON",
     "requirements.exported": "Krav exporterade",
     "requirements.import_count": "Importerar {{count}} krav...",
-    "requirements.import_csv_desc": "Ladda upp en CSV-fil med kolumner: entity, attribute, constraint_value",
+    "requirements.import_csv_desc":
+      "Ladda upp en CSV-fil med kolumner: entity, attribute, constraint_value",
     "requirements.import_json_desc": "Ladda upp en JSON-array med kravsobjekt",
     "requirements.import_requirements": "Importera Krav",
     "requirements.json_loaded": "{{count}} objekt laddade från JSON",
-    "requirements.json_parse_error": "JSON måste vara en array av objekt med entity, attribute, constraint_value",
+    "requirements.json_parse_error":
+      "JSON måste vara en array av objekt med entity, attribute, constraint_value",
     "requirements.preview": "Förhandsgranska",
-    "requirements.regex_hint": "Ange ett reguljärt uttrycksmönster, t.ex. ^F[0-9]+$",
+    "requirements.regex_hint":
+      "Ange ett reguljärt uttrycksmönster, t.ex. ^F[0-9]+$",
     "requirements.regex_invalid": "Ogiltigt mönster",
     "requirements.regex_placeholder": "^F[0-9]+$",
     "requirements.regex_valid": "Giltigt mönster",
@@ -1276,11 +1413,13 @@ const resource = {
     "markups.col_measurement": "Mätning",
     "markups.col_date": "Datum",
     "markups.empty_title": "Inga markeringar hittades",
-    "markups.empty_desc": "Markeringar och anteckningar från dina projektdokument visas här.",
+    "markups.empty_desc":
+      "Markeringar och anteckningar från dina projektdokument visas här.",
     "markups.action_resolve": "Lös",
     "markups.action_archive": "Arkivera",
     "markups.add_markup": "Lägg till markering",
-    "markups.add_first": "Lägg till din första markering för att börja annotera dokument",
+    "markups.add_first":
+      "Lägg till din första markering för att börja annotera dokument",
     "markups.active": "Aktiv",
     "markups.all_documents": "Alla dokument",
     "markups.clear_filters": "Rensa filter",
@@ -1298,7 +1437,8 @@ const resource = {
     "markups.measurement_unit": "Enhet",
     "markups.measurement_value": "Värde",
     "markups.no_document": "Inget dokument",
-    "markups.no_project_desc": "Välj ett projekt för att visa och hantera markeringar",
+    "markups.no_project_desc":
+      "Välj ett projekt för att visa och hantera markeringar",
     "markups.no_project_title": "Inget projekt valt",
     "markups.page": "Sida",
     "markups.resolved": "Löst",
@@ -1357,7 +1497,8 @@ const resource = {
     "punch.all_assignees": "Alla tilldelade",
     "punch.kanban_empty": "Inga poster",
     "punch.empty_title": "Inga anmärkningar",
-    "punch.empty_desc": "Skapa anmärkningar för att spåra brister, fel och återstående arbete.",
+    "punch.empty_desc":
+      "Skapa anmärkningar för att spåra brister, fel och återstående arbete.",
     "punch.col_title": "Titel",
     "punch.col_priority": "Prioritet",
     "punch.col_status": "Status",
@@ -1423,7 +1564,8 @@ const resource = {
     "field_reports.total": "Totalt rapporter",
     "field_reports.workforce_hours": "Arbetstimmar",
     "field_reports.empty": "Inga rapporter ännu",
-    "field_reports.empty_desc": "Skapa din första dagliga rapport för att börja dokumentera byggframstegen",
+    "field_reports.empty_desc":
+      "Skapa din första dagliga rapport för att börja dokumentera byggframstegen",
     "nav.photos": "Projektfoton",
     "photos.title": "Projektfoton",
     "photos.upload": "Ladda upp foton",
@@ -1442,7 +1584,8 @@ const resource = {
     "photos.grid": "Rutnät",
     "photos.timeline": "Tidslinje",
     "photos.empty": "Inga foton ännu",
-    "photos.empty_desc": "Ladda upp foton från byggarbetsplatsen för att dokumentera framsteg",
+    "photos.empty_desc":
+      "Ladda upp foton från byggarbetsplatsen för att dokumentera framsteg",
     "photos.delete_confirm": "Ta bort detta foto?",
     "photos.edit": "Redigera foto",
     "onboarding.ai_feature_1": "Generera kalkyler från textbeskrivningar",
@@ -1456,8 +1599,10 @@ const resource = {
     "onboarding.ai_title": "AI-leverantör (Valfri)",
     "onboarding.api_key": "API-nyckel",
     "onboarding.api_key_placeholder": "Klistra in din API-nyckel här...",
-    "onboarding.cost_db_hint": "Du kan lägga till fler databaser senare under Kostnadsdatabas → Importera.",
-    "onboarding.cost_db_subtitle": "Ladda en prisdatabas för noggranna kalkyler. Välj din region:",
+    "onboarding.cost_db_hint":
+      "Du kan lägga till fler databaser senare under Kostnadsdatabas → Importera.",
+    "onboarding.cost_db_subtitle":
+      "Ladda en prisdatabas för noggranna kalkyler. Välj din region:",
     "onboarding.cost_db_title": "Kostnadsdatabas",
     "onboarding.create_error": "Kunde inte skapa projekt",
     "onboarding.create_project": "Skapa och börja kalkylera",
@@ -1467,13 +1612,15 @@ const resource = {
     "onboarding.get_started": "Kom igång",
     "onboarding.items_loaded": "poster laddade",
     "onboarding.loading_database": "Importerar databas...",
-    "onboarding.loading_database_hint": "Laddar ~55 000 poster. Det tar 1–3 minuter.",
+    "onboarding.loading_database_hint":
+      "Laddar ~55 000 poster. Det tar 1–3 minuter.",
     "onboarding.project_created": "Projekt skapat!",
     "onboarding.project_created_msg": "Din arbetsyta är redo. Låt oss",
     "onboarding.project_error": "Kunde inte skapa projekt",
     "onboarding.project_name": "Projektnamn",
     "onboarding.project_name_placeholder": "t.ex. Kontorshus Centrum",
-    "onboarding.project_subtitle": "Konfigurera ditt första projekt för att komma igång.",
+    "onboarding.project_subtitle":
+      "Konfigurera ditt första projekt för att komma igång.",
     "onboarding.project_title": "Ditt första projekt",
     "onboarding.recommended": "Rekommenderad",
     "onboarding.region": "Region",
@@ -1482,8 +1629,10 @@ const resource = {
     "onboarding.standard": "Standard",
     "onboarding.test_connection": "Testa anslutning",
     "onboarding.testing": "Testar...",
-    "onboarding.welcome_hint": "Gratis och öppen källkod. Inget kreditkort krävs.",
-    "onboarding.welcome_subtitle": "Den professionella plattformen för byggkalkylering.\nKonfigurera din arbetsyta med några enkla steg.",
+    "onboarding.welcome_hint":
+      "Gratis och öppen källkod. Inget kreditkort krävs.",
+    "onboarding.welcome_subtitle":
+      "Den professionella plattformen för byggkalkylering.\nKonfigurera din arbetsyta med några enkla steg.",
     "onboarding.welcome_title": "Välkommen till OpenConstructionERP",
     "onboarding.tour_step": "Guidesteg",
     "onboarding.step_label": "Steg",
@@ -1492,15 +1641,20 @@ const resource = {
     "onboarding.next": "Nästa",
     "onboarding.finish": "Slutför",
     "onboarding.step1.title": "Navigeringspanel",
-    "onboarding.step1.description": "Sidopanelen ger dig snabb åtkomst till alla moduler: projekt, kalkyler, kostnadsdatabaser, tidplaner med mera.",
+    "onboarding.step1.description":
+      "Sidopanelen ger dig snabb åtkomst till alla moduler: projekt, kalkyler, kostnadsdatabaser, tidplaner med mera.",
     "onboarding.step2.title": "Projekt",
-    "onboarding.step2.description": "Börja här genom att skapa ditt första projekt. Varje projekt samlar kalkyler, tidplaner och dokument på ett ställe.",
+    "onboarding.step2.description":
+      "Börja här genom att skapa ditt första projekt. Varje projekt samlar kalkyler, tidplaner och dokument på ett ställe.",
     "onboarding.step3.title": "Mängdförteckning",
-    "onboarding.step3.description": "Bygg detaljerade kalkyler med kalkylredigeraren — hierarkiska positioner, sammansatta kalkylrader och kostnadsberäkning i realtid.",
+    "onboarding.step3.description":
+      "Bygg detaljerade kalkyler med kalkylredigeraren — hierarkiska positioner, sammansatta kalkylrader och kostnadsberäkning i realtid.",
     "onboarding.step4.title": "Kostnadsdatabaser",
-    "onboarding.step4.description": "Bläddra och hantera kostnadsdatabaser inklusive inbyggda CWICR med 55 000+ positioner på 9 språk.",
+    "onboarding.step4.description":
+      "Bläddra och hantera kostnadsdatabaser inklusive inbyggda CWICR med 55 000+ positioner på 9 språk.",
     "onboarding.step5.title": "Enkel / Avancerad läge",
-    "onboarding.step5.description": "Växla mellan Enkel läge (grundläggande verktyg) och Avancerad läge (alla funktioner inklusive upphandling och tidplanering).",
+    "onboarding.step5.description":
+      "Växla mellan Enkel läge (grundläggande verktyg) och Avancerad läge (alla funktioner inklusive upphandling och tidplanering).",
     "projects.4d_schedule": "4D-tidplan",
     "projects.5d_budget": "5D-budget",
     "projects.active": "aktiv",
@@ -1518,7 +1672,8 @@ const resource = {
     "projects.delete_failed": "Kunde inte ta bort projekt",
     "projects.deleted": "Projekt arkiverat",
     "projects.description": "Beskrivning",
-    "projects.description_placeholder": "Projektbeskrivning, omfattning, anteckningar...",
+    "projects.description_placeholder":
+      "Projektbeskrivning, omfattning, anteckningar...",
     "projects.duplicate_failed": "Kunde inte duplicera",
     "projects.duplicated": "Projekt duplicerat",
     "projects.enter_custom_currency": "t.ex. XAF",
@@ -1532,21 +1687,27 @@ const resource = {
     "projects.name_placeholder": "t.ex. Kontorshus Centrum",
     "projects.new_boq": "Ny kalkyl",
     "projects.new_project": "Nytt projekt",
-    "projects.create_hint": "Region avgör tillgängliga kostnadsdatabaser och momssatser. Klassificeringsstandard definierar kostnadsstrukturen: DIN 276 för DACH-länder, NRM för Storbritannien, MasterFormat för USA/Kanada, UniFormat för Oceanien. Valuta styr all prissättning i kalkylen.",
+    "projects.create_hint":
+      "Region avgör tillgängliga kostnadsdatabaser och momssatser. Klassificeringsstandard definierar kostnadsstrukturen: DIN 276 för DACH-länder, NRM för Storbritannien, MasterFormat för USA/Kanada, UniFormat för Oceanien. Valuta styr all prissättning i kalkylen.",
     "projects.no_boqs": "Inga kalkyler ännu",
-    "projects.no_boqs_desc": "Skapa en mängdförteckning för att börja kalkylera kostnader för detta projekt.",
+    "projects.no_boqs_desc":
+      "Skapa en mängdförteckning för att börja kalkylera kostnader för detta projekt.",
     "projects.no_budget": "Inga budgetdata",
-    "projects.no_budget_desc": "Konfigurera en 5D-kostnadsmodell för att följa planerat kontra faktiskt utfall.",
+    "projects.no_budget_desc":
+      "Konfigurera en 5D-kostnadsmodell för att följa planerat kontra faktiskt utfall.",
     "projects.no_projects": "Inga projekt ännu",
     "projects.no_projects_description": "Skapa ditt första byggkalkylprojekt",
     "projects.no_results": "Inga matchande projekt",
     "projects.no_results_hint": "Försök justera din sökning eller dina filter",
     "projects.no_schedules": "Inga tidplaner ännu",
-    "projects.no_schedules_desc": "Skapa en tidplan för att hantera projekttidslinjer.",
+    "projects.no_schedules_desc":
+      "Skapa en tidplan för att hantera projekttidslinjer.",
     "projects.no_tenders": "Inga upphandlingspaket",
-    "projects.no_tenders_desc": "Skapa upphandlingspaket för att hantera anbudsgivning för detta projekt.",
+    "projects.no_tenders_desc":
+      "Skapa upphandlingspaket för att hantera anbudsgivning för detta projekt.",
     "projects.not_found": "Projekt hittades inte",
-    "projects.not_found_desc": "Projektet du söker finns inte eller har tagits bort.",
+    "projects.not_found_desc":
+      "Projektet du söker finns inte eller har tagits bort.",
     "projects.of": "av",
     "projects.open_tendering": "Öppna upphandling",
     "projects.overview": "Översikt",
@@ -1559,7 +1720,8 @@ const resource = {
     "projects.projects_label": "projekt",
     "projects.region": "Region",
     "projects.regional_factor": "Regional faktor",
-    "projects.regional_factor_hint": "Multiplicera alla priser med denna faktor (t.ex. Stockholm = 1,10, Malmö = 1,03)",
+    "projects.regional_factor_hint":
+      "Multiplicera alla priser med denna faktor (t.ex. Stockholm = 1,10, Malmö = 1,03)",
     "projects.remaining": "Återstående",
     "projects.schedule_subtitle": "Projekttidplaner och tidslinje",
     "projects.search_placeholder": "Sök projekt...",
@@ -1586,51 +1748,68 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Kommer snart",
     "quantities.how_it_works": "Så fungerar det",
-    "quantities.manual_desc": "Behöver du lägga till mängder direkt? Gå till kalkylredigeraren.",
+    "quantities.manual_desc":
+      "Behöver du lägga till mängder direkt? Gå till kalkylredigeraren.",
     "quantities.manual_title": "Snabb manuell inmatning",
-    "quantities.method_ai_desc": "Beskriv din byggnad och AI genererar en mängdförteckning med beräknade volymer och kostnader.",
+    "quantities.method_ai_desc":
+      "Beskriv din byggnad och AI genererar en mängdförteckning med beräknade volymer och kostnader.",
     "quantities.method_ai_title": "AI-textinmatning",
-    "quantities.method_cad_desc": "Importera DWG-, RVT-, IFC- eller DGN-filer och extrahera mängder direkt från 3D-geometri.",
+    "quantities.method_cad_desc":
+      "Importera DWG-, RVT-, IFC- eller DGN-filer och extrahera mängder direkt från 3D-geometri.",
     "quantities.method_cad_title": "CAD/BIM-modeller",
-    "quantities.method_pdf_desc": "Ladda upp byggritningar (PDF) och extrahera mängder automatiskt med AI-driven mängdavtagning.",
+    "quantities.method_pdf_desc":
+      "Ladda upp byggritningar (PDF) och extrahera mängder automatiskt med AI-driven mängdavtagning.",
     "quantities.method_pdf_title": "PDF-ritningar",
     "quantities.open": "Öppna",
     "quantities.open_boq": "Öppna kalkylredigerare",
-    "quantities.step1_desc": "Välj din inmatningsmetod: text, PDF eller CAD-modell.",
+    "quantities.step1_desc":
+      "Välj din inmatningsmetod: text, PDF eller CAD-modell.",
     "quantities.step1_title": "Ladda upp eller beskriv",
-    "quantities.step2_desc": "Vår AI analyserar din indata och extraherar strukturerade mängder.",
+    "quantities.step2_desc":
+      "Vår AI analyserar din indata och extraherar strukturerade mängder.",
     "quantities.step2_title": "AI extraherar mängder",
-    "quantities.step3_desc": "Granska resultaten och lägg till dem i din mängdförteckning.",
+    "quantities.step3_desc":
+      "Granska resultaten och lägg till dem i din mängdförteckning.",
     "quantities.step3_title": "Granska och lägg till i kalkyl",
-    "quantities.subtitle": "Samla projektmängder — från AI-textinmatning, PDF-ritningar eller CAD/BIM-modeller",
+    "quantities.subtitle":
+      "Samla projektmängder — från AI-textinmatning, PDF-ritningar eller CAD/BIM-modeller",
     "quantities.converter_title": "Så fungerar CAD/BIM-konvertering",
-    "quantities.converter_desc": "Ladda upp dina CAD/BIM-filer (.rvt, .ifc, .dwg, .dgn) och DDC-konverteraren extraherar alla element till en strukturerad tabell — väggar, plattor, pelare, dörrar, fönster — med beräknade volymer, areor och mängder. AI mappar sedan dessa element till kostnadsposter och genererar en komplett kalkyl automatiskt.",
+    "quantities.converter_desc":
+      "Ladda upp dina CAD/BIM-filer (.rvt, .ifc, .dwg, .dgn) och DDC-konverteraren extraherar alla element till en strukturerad tabell — väggar, plattor, pelare, dörrar, fönster — med beräknade volymer, areor och mängder. AI mappar sedan dessa element till kostnadsposter och genererar en komplett kalkyl automatiskt.",
     "quantities.download_converters": "Ladda ner DDC-konverterare",
-    "quantities.converter_path": "Installera till: ~/.openestimator/converters/",
+    "quantities.converter_path":
+      "Installera till: ~/.openestimator/converters/",
     "quantities.title": "Mängdavtagning",
     "reports.5d_report": "5D-kostnadsrapport",
-    "reports.5d_report_desc": "Budget kontra utfall-analys med S-kurva och kostnadsprognoser.",
+    "reports.5d_report_desc":
+      "Budget kontra utfall-analys med S-kurva och kostnadsprognoser.",
     "reports.boq_report": "Kalkylrapport",
-    "reports.boq_report_desc": "Komplett mängdförteckning med avsnitt, positioner, påslag och summor. Tillgänglig som PDF eller Excel.",
+    "reports.boq_report_desc":
+      "Komplett mängdförteckning med avsnitt, positioner, påslag och summor. Tillgänglig som PDF eller Excel.",
     "reports.coming_soon": "Kommer snart",
     "reports.cost_report": "Kostnadsrapport",
-    "reports.cost_report_desc": "Kostnadsfördelning per kategori med sammanfattande diagram och detaljerad kostnadsanalys.",
+    "reports.cost_report_desc":
+      "Kostnadsfördelning per kategori med sammanfattande diagram och detaljerad kostnadsanalys.",
     "reports.download_error": "Kunde inte generera rapport",
     "reports.download_format": "Ladda ner {{format}}",
     "reports.download_success": "Rapport nedladdad",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc": "GAEB X83 anbudsexport — standardutbytesformatet för DACH-byggmarknaden.",
+    "reports.gaeb_xml_desc":
+      "GAEB X83 anbudsexport — standardutbytesformatet för DACH-byggmarknaden.",
     "reports.no_boqs": "Inga kalkyler i detta projekt",
     "reports.no_projects": "Inga projekt tillgängliga",
     "reports.schedule_report": "Tidplansrapport",
-    "reports.schedule_report_desc": "Gantt-schema med projekttidslinje, milstolpar och kritisk väg.",
+    "reports.schedule_report_desc":
+      "Gantt-schema med projekttidslinje, milstolpar och kritisk väg.",
     "reports.select_boq_first": "Välj ett projekt och en kalkyl först",
     "reports.select_project_first": "Välj ett projekt först",
     "reports.subtitle": "Generera professionella rapporter för dina projekt",
-    "reports.guide_desc": "Kalkylrapport = detaljerad mängdförteckning med summor. Kostnadsrapport = kostnadsfördelning per kategori. GAEB XML = tyskt upphandlingsformat (.x83) för utbyte med underentreprenörer. Validering = resultat av efterlevnadskontroll. Tidplan = sammanfattning av Gantt-aktiviteter. 5D = budget kontra faktiska kostnadskurvor.",
+    "reports.guide_desc":
+      "Kalkylrapport = detaljerad mängdförteckning med summor. Kostnadsrapport = kostnadsfördelning per kategori. GAEB XML = tyskt upphandlingsformat (.x83) för utbyte med underentreprenörer. Validering = resultat av efterlevnadskontroll. Tidplan = sammanfattning av Gantt-aktiviteter. 5D = budget kontra faktiska kostnadskurvor.",
     "reports.title": "Rapporter",
     "reports.validation_report": "Valideringsrapport",
-    "reports.validation_report_desc": "Efterlevnadsrapport mot DIN 276, NRM eller MasterFormat-standarder.",
+    "reports.validation_report_desc":
+      "Efterlevnadsrapport mot DIN 276, NRM eller MasterFormat-standarder.",
     "schedule.activity": "Aktivitet",
     "schedule.activity_name": "Aktivitetsnamn",
     "schedule.activity_name_placeholder": "t.ex. Grundläggningsarbeten",
@@ -1641,7 +1820,8 @@ const resource = {
     "schedule.buffer": "Buffert",
     "schedule.calculate_cpm": "Kritisk väg",
     "schedule.completed": "Slutförd",
-    "schedule.cpm_result": "Kritisk väg: {{duration}} dagar, {{count}} kritiska aktiviteter",
+    "schedule.cpm_result":
+      "Kritisk väg: {{duration}} dagar, {{count}} kritiska aktiviteter",
     "schedule.create_activity": "Skapa aktivitet",
     "schedule.create_schedule": "Skapa tidplan",
     "schedule.critical_path": "Kritisk väg",
@@ -1656,32 +1836,41 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% konfidens",
     "schedule.generate": "Generera",
     "schedule.generate_from_boq": "Generera från kalkyl",
-    "schedule.generate_from_boq_description": "Välj en kalkyl för att automatiskt generera tidplansaktiviteter. En aktivitet skapas per kalkylavsnitt med kostnadsproportionella varaktigheter.",
+    "schedule.generate_from_boq_description":
+      "Välj en kalkyl för att automatiskt generera tidplansaktiviteter. En aktivitet skapas per kalkylavsnitt med kostnadsproportionella varaktigheter.",
     "schedule.in_progress": "Pågående",
     "schedule.mean_label": "Medelvärde (kritisk väg)",
     "schedule.ninetyfive_pct_confidence": "95% konfidens",
     "schedule.no_activities": "Inga aktiviteter ännu",
-    "schedule.no_activities_hint": "Lägg till aktiviteter för att bygga din projekttidplan",
-    "schedule.no_boqs_available": "Inga kalkyler tillgängliga för detta projekt.",
+    "schedule.no_activities_hint":
+      "Lägg till aktiviteter för att bygga din projekttidplan",
+    "schedule.no_boqs_available":
+      "Inga kalkyler tillgängliga för detta projekt.",
     "schedule.no_dates": "Inga datum angivna",
     "schedule.no_projects": "Inga projekt tillgängliga",
-    "schedule.no_projects_hint": "Skapa ett projekt först, lägg sedan till tidplaner",
+    "schedule.no_projects_hint":
+      "Skapa ett projekt först, lägg sedan till tidplaner",
     "schedule.no_schedules": "Inga tidplaner ännu",
-    "schedule.no_schedules_hint": "Skapa en tidplan för att börja planera din projekttidslinje",
+    "schedule.no_schedules_hint":
+      "Skapa en tidplan för att börja planera din projekttidslinje",
     "schedule.planned_duration": "Planerad varaktighet",
     "schedule.project_schedules": "Tidplaner för detta projekt",
     "schedule.risk_analysis": "Riskanalys (PERT)",
     "schedule.risk_analysis_btn": "Riskanalys",
     "schedule.schedule_name": "Tidplansnamn",
-    "schedule.schedule_name_placeholder": "t.ex. Huvudtidplan för byggproduktion",
-    "schedule.select_project": "Välj ett projekt för att visa och hantera dess byggtidplan",
+    "schedule.schedule_name_placeholder":
+      "t.ex. Huvudtidplan för byggproduktion",
+    "schedule.select_project":
+      "Välj ett projekt för att visa och hantera dess byggtidplan",
     "schedule.start": "Start",
     "schedule.start_date": "Startdatum",
     "schedule.status_active": "aktiv",
     "schedule.status_draft": "utkast",
     "schedule.std_dev_label": "Standardavvikelse",
-    "schedule.subtitle": "Välj ett projekt för att visa och hantera dess byggtidplan",
-    "schedule.what_is_4d": "4D-tidplanering kopplar dina kalkylpositioner till en projekttidslinje. Skapa aktiviteter, ange beroenden och visualisera framsteg i ett Gantt-diagram. Analysen av kritisk väg markerar aktiviteter som direkt påverkar projektets slutdatum. Aktivitetstyper: Uppgift = arbetsmoment, Milstolpe = kontrollpunkt med noll varaktighet, Sammanfattning = grupperingsrubrik.",
+    "schedule.subtitle":
+      "Välj ett projekt för att visa och hantera dess byggtidplan",
+    "schedule.what_is_4d":
+      "4D-tidplanering kopplar dina kalkylpositioner till en projekttidslinje. Skapa aktiviteter, ange beroenden och visualisera framsteg i ett Gantt-diagram. Analysen av kritisk väg markerar aktiviteter som direkt påverkar projektets slutdatum. Aktivitetstyper: Uppgift = arbetsmoment, Milstolpe = kontrollpunkt med noll varaktighet, Sammanfattning = grupperingsrubrik.",
     "schedule.title": "4D-tidplan",
     "schedule.total_activities": "Totalt",
     "schedule.type_milestone": "Milstolpe",
@@ -1697,14 +1886,17 @@ const resource = {
     "settings.active": "Aktiv",
     "settings.ai_api_key": "API-nyckel",
     "settings.ai_connected": "Ansluten",
-    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — bäst för byggkalkylering",
+    "settings.ai_desc_anthropic":
+      "Claude 3.5 Sonnet / Opus — bäst för byggkalkylering",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — multimodala funktioner",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — brett stöd",
     "settings.ai_error": "Anslutningsfel",
     "settings.ai_get_key": "Skaffa en API-nyckel",
-    "settings.ai_key_hint": "Din API-nyckel krypteras och lagras säkert. Den delas aldrig.",
+    "settings.ai_key_hint":
+      "Din API-nyckel krypteras och lagras säkert. Den delas aldrig.",
     "settings.ai_key_placeholder": "Ange din API-nyckel...",
-    "settings.ai_key_placeholder_existing": "Ange ny nyckel för att ersätta befintlig...",
+    "settings.ai_key_placeholder_existing":
+      "Ange ny nyckel för att ersätta befintlig...",
     "settings.ai_key_set": "Nyckel konfigurerad",
     "settings.ai_last_tested": "(senast testad: {{time}})",
     "settings.ai_not_configured": "Ej konfigurerad",
@@ -1735,7 +1927,8 @@ const resource = {
     "settings.sign_out": "Logga ut",
     "settings.status": "Status",
     "settings.subtitle": "Hantera ditt konto och dina preferenser",
-    "settings.ai_guidance": "AI-funktioner (kalkylering, mängdavtagningsanalys, semantisk sökning) kräver en API-nyckel. Anthropic Claude rekommenderas för bäst noggrannhet. Nycklar lagras krypterade och lämnar aldrig din server.",
+    "settings.ai_guidance":
+      "AI-funktioner (kalkylering, mängdavtagningsanalys, semantisk sökning) kräver en API-nyckel. Anthropic Claude rekommenderas för bäst noggrannhet. Nycklar lagras krypterade och lämnar aldrig din server.",
     "settings.theme_dark": "Mörkt",
     "settings.theme_light": "Ljust",
     "settings.theme_system": "System",
@@ -1744,7 +1937,8 @@ const resource = {
     "shortcuts.cancel_editing": "Avbryt redigering",
     "shortcuts.command_palette": "Kommandopalett",
     "shortcuts.confirm_next_row": "Bekräfta / Nästa rad",
-    "shortcuts.footer_hint": "Genvägar är inaktiverade när fokus ligger på inmatningsfält.",
+    "shortcuts.footer_hint":
+      "Genvägar är inaktiverade när fokus ligger på inmatningsfält.",
     "shortcuts.group.actions": "Åtgärder",
     "shortcuts.group.boq_editor": "Kalkylredigerare",
     "shortcuts.group.general": "Allmänt",
@@ -1770,16 +1964,19 @@ const resource = {
     "shortcuts.separator_then": "sedan",
     "shortcuts.show_help": "Visa denna dialog",
     "shortcuts.title": "Tangentbordsgenvägar",
-    "errors.bad_request": "Begäran kunde inte behandlas. Kontrollera dina uppgifter.",
+    "errors.bad_request":
+      "Begäran kunde inte behandlas. Kontrollera dina uppgifter.",
     "errors.unauthorized": "Din session har gått ut. Logga in igen.",
     "errors.forbidden": "Du har inte behörighet att utföra denna åtgärd.",
     "errors.not_found": "Det begärda objektet hittades inte.",
-    "errors.conflict": "Konflikt med befintliga data — uppdatera och försök igen.",
+    "errors.conflict":
+      "Konflikt med befintliga data — uppdatera och försök igen.",
     "errors.payload_too_large": "Filen är för stor. Prova en mindre.",
     "errors.validation": "Några fält är ogiltiga. Granska dina uppgifter.",
     "errors.rate_limit": "För många förfrågningar. Vänta en stund.",
     "errors.server": "Serverfel. Försök igen om en stund.",
-    "errors.unavailable": "Servern är tillfälligt otillgänglig. Försök igen snart.",
+    "errors.unavailable":
+      "Servern är tillfälligt otillgänglig. Försök igen snart.",
     "errors.client": "Begäran kunde inte slutföras.",
     "errors.unknown": "Något gick fel. Försök igen.",
     "errors.network": "Kunde inte nå servern. Kontrollera anslutningen.",
@@ -1790,18 +1987,21 @@ const resource = {
     "sustainability.boq": "Kalkyl",
     "sustainability.breakdown_title": "Fördelning per material",
     "sustainability.calculate": "Beräkna",
-    "sustainability.empty_desc": "Välj ett projekt och en kalkyl ovan, klicka sedan på Beräkna för att analysera CO2-utsläpp baserat på materialtyper.",
+    "sustainability.empty_desc":
+      "Välj ett projekt och en kalkyl ovan, klicka sedan på Beräkna för att analysera CO2-utsläpp baserat på materialtyper.",
     "sustainability.empty_title": "CO2-fotavtrycksanalys",
     "sustainability.export_pdf": "Exportera CO2-rapport PDF",
     "sustainability.material": "Material",
-    "sustainability.no_area": "Ange projektarea för att se referensvärde per m2",
+    "sustainability.no_area":
+      "Ange projektarea för att se referensvärde per m2",
     "sustainability.positions_matched": "positioner matchade",
     "sustainability.project": "Projekt",
     "sustainability.project_area": "projekt",
     "sustainability.rating": "Betyg",
     "sustainability.select_boq": "-- Välj kalkyl --",
     "sustainability.select_project": "-- Välj projekt --",
-    "sustainability.subtitle": "Välj projekt och kalkyl för att analysera CO2-fotavtryck",
+    "sustainability.subtitle":
+      "Välj projekt och kalkyl för att analysera CO2-fotavtryck",
     "sustainability.title": "Hållbarhet / CO2",
     "sustainability.total_co2": "Total CO2",
     "takeoff.add_selected_to_boq": "Lägg till {{count}} i kalkyl",
@@ -1823,7 +2023,8 @@ const resource = {
     "takeoff.just_now": "Just nu",
     "takeoff.minutes_ago": "{{count}} min sedan",
     "takeoff.no_documents": "Inga dokument uppladdade",
-    "takeoff.no_documents_description": "Ladda upp PDF-byggritningar för att börja extrahera mängder med AI.",
+    "takeoff.no_documents_description":
+      "Ladda upp PDF-byggritningar för att börja extrahera mängder med AI.",
     "takeoff.pages": "sidor",
     "takeoff.pdf_limit": ".pdf-filer upp till {{size}}MB",
     "takeoff.quick_measurements": "Snabbmätningar",
@@ -1831,14 +2032,16 @@ const resource = {
     "takeoff.select_all": "Markera alla",
     "takeoff.select_boq": "Mängdförteckning",
     "takeoff.select_boq_placeholder": "Välj en kalkyl...",
-    "takeoff.select_boq_to_add": "Välj ett projekt och en kalkyl ovan för att lägga till mätningar.",
+    "takeoff.select_boq_to_add":
+      "Välj ett projekt och en kalkyl ovan för att lägga till mätningar.",
     "takeoff.select_items_hint": "Markera poster att lägga till i kalkyl",
     "takeoff.select_project": "Projekt",
     "takeoff.select_project_first": "Välj ett projekt först",
     "takeoff.select_project_placeholder": "Välj ett projekt...",
     "takeoff.selected": "markerade",
     "takeoff.subtitle": "Ladda upp byggritningar för att extrahera mängder",
-    "takeoff.workflow_desc": "Ladda upp en PDF-ritning → AI analyserar sidor och extraherar element (väggar, plattor, dörrar, etc.) med mängder → Granska resultat och justera → Lägg till valda poster i din kalkyl. Konfidenspoäng: grön (>80%) = hög konfidens, gul (50–80%) = granskning rekommenderas, röd (<50%) = manuell verifiering behövs.",
+    "takeoff.workflow_desc":
+      "Ladda upp en PDF-ritning → AI analyserar sidor och extraherar element (väggar, plattor, dörrar, etc.) med mängder → Granska resultat och justera → Lägg till valda poster i din kalkyl. Konfidenspoäng: grön (>80%) = hög konfidens, gul (50–80%) = granskning rekommenderas, röd (<50%) = manuell verifiering behövs.",
     "takeoff.summary": "Sammanfattning",
     "takeoff.title": "PDF-mängdavtagning",
     "takeoff.total_quantity": "totalt",
@@ -1853,7 +2056,8 @@ const resource = {
     "tendering.award": "Tilldela",
     "tendering.award_bid": "Tilldela detta anbud",
     "tendering.bid_comparison": "Anbudsjämförelse",
-    "tendering.bid_comparison_chart_label": "Stapeldiagram som jämför anbudssummor",
+    "tendering.bid_comparison_chart_label":
+      "Stapeldiagram som jämför anbudssummor",
     "tendering.bid_totals_chart": "Översikt anbudssummor",
     "tendering.bids_count": "anbud",
     "tendering.bids_received": "Anbud mottagna",
@@ -1865,7 +2069,8 @@ const resource = {
     "tendering.create_package": "Skapa paket",
     "tendering.deadline": "Sista dag",
     "tendering.description": "Beskrivning",
-    "tendering.description_placeholder": "Kort beskrivning av paketets omfattning...",
+    "tendering.description_placeholder":
+      "Kort beskrivning av paketets omfattning...",
     "tendering.empty_title": "Välj ett projekt",
     "tendering.export_comparison": "Exportera",
     "tendering.highest": "Högsta",
@@ -1889,7 +2094,8 @@ const resource = {
     "tendering.source_boq": "Källkalkyl",
     "tendering.submit_bid": "Lämna anbud",
     "tendering.title": "Upphandling",
-    "tendering.workflow_desc": "Upphandlingsarbetsflöde: Utkast (förbereda paket) → Utskickat (skicka till anbudsgivare) → Insamling (ta emot anbud) → Utvärdering (jämför anbud sida vid sida) → Tilldelat (välj vinnare). Skapa ett paket från en kalkyl, lägg till anbud från underentreprenörer, använd sedan jämförelsetabellen för att identifiera bästa anbudet. Lägg till 2+ anbud för att se en jämförelse sida vid sida.",
+    "tendering.workflow_desc":
+      "Upphandlingsarbetsflöde: Utkast (förbereda paket) → Utskickat (skicka till anbudsgivare) → Insamling (ta emot anbud) → Utvärdering (jämför anbud sida vid sida) → Tilldelat (välj vinnare). Skapa ett paket från en kalkyl, lägg till anbud från underentreprenörer, använd sedan jämförelsetabellen för att identifiera bästa anbudet. Lägg till 2+ anbud för att se en jämförelse sida vid sida.",
     "tendering.total": "TOTALT",
     "tendering.total_amount": "Totalbelopp",
     "tendering.vs_budget": "mot budget",
@@ -1949,7 +2155,8 @@ const resource = {
     "cde.label_revisions": "Revisionshistorik",
     "cde.new_container": "Ny behållare",
     "cde.no_containers": "Inga behållare ännu",
-    "cde.no_containers_hint": "Skapa din första dokumentbehållare för att komma igång.",
+    "cde.no_containers_hint":
+      "Skapa din första dokumentbehållare för att komma igång.",
     "cde.no_results": "Inga matchande behållare",
     "cde.no_results_hint": "Försök justera sökning eller filter.",
     "cde.no_revisions": "Inga revisioner registrerade",
@@ -2002,7 +2209,8 @@ const resource = {
     "contacts.filter_all_types": "Alla typer",
     "contacts.name_placeholder": "Fullständigt namn",
     "contacts.no_contacts": "Inga kontakter ännu",
-    "contacts.no_contacts_hint": "Lägg till din första kontakt för att komma igång.",
+    "contacts.no_contacts_hint":
+      "Lägg till din första kontakt för att komma igång.",
     "contacts.no_results": "Inga matchande kontakter",
     "contacts.no_results_hint": "Försök justera sökning eller filter.",
     "contacts.notes_placeholder": "Ytterligare anteckningar...",
@@ -2040,7 +2248,8 @@ const resource = {
     "correspondence.label_to": "To",
     "correspondence.new_entry": "Ny post",
     "correspondence.no_entries": "Ingen korrespondens ännu",
-    "correspondence.no_entries_hint": "Logga din första korrespondens för att komma igång.",
+    "correspondence.no_entries_hint":
+      "Logga din första korrespondens för att komma igång.",
     "correspondence.no_results": "Inga matchande poster",
     "correspondence.no_results_hint": "Försök justera sökning eller filter.",
     "correspondence.notes_placeholder": "Ytterligare anteckningar...",
@@ -2087,11 +2296,13 @@ const resource = {
     "finance.no_budgets": "Inga budgetar definierade",
     "finance.no_budgets_desc": "Budgetposter visas här när de har definierats.",
     "finance.no_evm": "Ingen EVM-data",
-    "finance.no_evm_desc": "Upparbetningsvärdedata visas när ögonblicksbilder har tagits.",
+    "finance.no_evm_desc":
+      "Upparbetningsvärdedata visas när ögonblicksbilder har tagits.",
     "finance.no_invoices": "Inga fakturor",
     "finance.no_invoices_desc": "Fakturor visas här när de har skapats.",
     "finance.no_payments": "Inga betalningar",
-    "finance.no_payments_desc": "Betalningar visas här när de har registrerats.",
+    "finance.no_payments_desc":
+      "Betalningar visas här när de har registrerats.",
     "finance.no_project": "Välj ett projekt för att visa ekonomisk data.",
     "finance.on_track": "I tidplan",
     "finance.original": "Original",
@@ -2141,7 +2352,8 @@ const resource = {
     "inspections.location_placeholder": "Inspektionsplats",
     "inspections.new_inspection": "Ny inspektion",
     "inspections.no_inspections": "Inga inspektioner ännu",
-    "inspections.no_inspections_hint": "Boka din första inspektion för att komma igång.",
+    "inspections.no_inspections_hint":
+      "Boka din första inspektion för att komma igång.",
     "inspections.no_results": "Inga matchande inspektioner",
     "inspections.no_results_hint": "Försök justera sökning eller filter.",
     "inspections.page_title": "Inspections",
@@ -2223,7 +2435,8 @@ const resource = {
     "ncr.location_placeholder": "Plats för avvikelsen",
     "ncr.new_ncr": "Ny avvikelserapport",
     "ncr.no_ncrs": "Inga avvikelserapporter ännu",
-    "ncr.no_ncrs_hint": "Skapa din första avvikelserapport för att komma igång.",
+    "ncr.no_ncrs_hint":
+      "Skapa din första avvikelserapport för att komma igång.",
     "ncr.no_results": "Inga matchande avvikelserapporter",
     "ncr.no_results_hint": "Försök justera sökning eller filter.",
     "ncr.page_title": "Avvikelserapporter",
@@ -2243,15 +2456,19 @@ const resource = {
     "notifications.title": "Aviseringar",
     "notifications.unread": "Unread",
     "notifications.boq.created.title": "Mängdförteckning skapad",
-    "notifications.boq.created.body": "Din mängdförteckning '{{boq_name}}' har sparats.",
+    "notifications.boq.created.body":
+      "Din mängdförteckning '{{boq_name}}' har sparats.",
     "notifications.meeting.action_assigned.title": "Åtgärdspunkt tilldelad dig",
-    "notifications.meeting.action_assigned.body": "Från möte {{meeting_number}}: {{description}}",
+    "notifications.meeting.action_assigned.body":
+      "Från möte {{meeting_number}}: {{description}}",
     "notifications.cde.state_transitioned.title": "Dokumentstatus ändrad",
-    "notifications.cde.state_transitioned.body": "Container flyttades till '{{new_state}}'.",
+    "notifications.cde.state_transitioned.body":
+      "Container flyttades till '{{new_state}}'.",
     "notifications.rfi.assigned.title": "RFI tilldelad dig",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI besvarad",
-    "notifications.rfi.responded.body": "Din förfrågan {{code}} ({{title}}) har ett svar.",
+    "notifications.rfi.responded.body":
+      "Din förfrågan {{code}} ({{title}}) har ett svar.",
     "notifications.risk.assigned.title": "Risk tilldelad dig",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal inväntar granskning",
@@ -2259,15 +2476,20 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal godkänd",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal avvisad",
-    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Orsak: {{reason}}",
-    "notifications.submittal.revise_resubmit.title": "Submittal måste revideras",
-    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Orsak: {{reason}}",
+    "notifications.submittal.rejected.body":
+      "{{code}} ({{title}}). Orsak: {{reason}}",
+    "notifications.submittal.revise_resubmit.title":
+      "Submittal måste revideras",
+    "notifications.submittal.revise_resubmit.body":
+      "{{code}} ({{title}}). Orsak: {{reason}}",
     "notifications.transmittal.issued.title": "Transmittal utfärdad till dig",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal bekräftad",
-    "notifications.transmittal.acknowledged.body": "Mottagaren bekräftade {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.body":
+      "Mottagaren bekräftade {{code}} ({{title}}).",
     "notifications.transmittal.responded.title": "Transmittal besvarad",
-    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body":
+      "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Leveransdatum",
     "procurement.goods_receipts": "Godskvitton",
@@ -2343,7 +2565,8 @@ const resource = {
     "safety.no_incidents": "Inga incidenter registrerade",
     "safety.no_incidents_desc": "Incidenter visas här när de har rapporterats.",
     "safety.no_observations": "Inga observationer registrerade",
-    "safety.no_observations_desc": "Observationer visas här när de har rapporterats.",
+    "safety.no_observations_desc":
+      "Observationer visas här när de har rapporterats.",
     "safety.no_project": "Välj ett projekt för att visa säkerhetsdata.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observations",
@@ -2366,22 +2589,28 @@ const resource = {
     "settings.edit_profile": "Redigera profilnamn",
     "settings.full_name": "Fullständigt namn",
     "settings.imperial": "Imperialiskt (ft, lb)",
-    "settings.interface_mode_subtitle": "Kontrollera vilka funktioner som är synliga i navigeringen",
+    "settings.interface_mode_subtitle":
+      "Kontrollera vilka funktioner som är synliga i navigeringen",
     "settings.interface_mode_title": "Gränssnittsläge",
     "settings.measurement_system": "Måttsystem",
     "settings.metric": "Metrisk (m, kg)",
-    "settings.mode_advanced_detail": "Fullständig professionell verktygsuppsättning med alla moduler och funktioner synliga.",
-    "settings.mode_simple_detail": "Väsentliga kalkyleringsverktyg. Rent gränssnitt för fokuserat arbete.",
-    "settings.modules_link_desc": "Aktivera, inaktivera och konfigurera enskilda moduler i avsnittet Moduler.",
+    "settings.mode_advanced_detail":
+      "Fullständig professionell verktygsuppsättning med alla moduler och funktioner synliga.",
+    "settings.mode_simple_detail":
+      "Väsentliga kalkyleringsverktyg. Rent gränssnitt för fokuserat arbete.",
+    "settings.modules_link_desc":
+      "Aktivera, inaktivera och konfigurera enskilda moduler i avsnittet Moduler.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "Talformat",
     "settings.paper_size": "Pappersstorlek",
     "settings.preferences_error": "Det gick inte att spara inställningar",
     "settings.preferences_saved": "Inställningar sparade",
-    "settings.regional_subtitle": "Format, enheter och lokaliseringsinställningar",
+    "settings.regional_subtitle":
+      "Format, enheter och lokaliseringsinställningar",
     "settings.regional_title": "Regionala inställningar",
     "settings.restart_onboarding": "Öppna installationsguide",
-    "settings.setup_wizard_subtitle": "Kör den inledande installationen igen för att byta språk, installera databaser, kataloger eller demoprojekt",
+    "settings.setup_wizard_subtitle":
+      "Kör den inledande installationen igen för att byta språk, installera databaser, kataloger eller demoprojekt",
     "settings.setup_wizard_title": "Installationsguide",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -2406,7 +2635,8 @@ const resource = {
     "settings.tm_show_more": "Visa mer ({{remaining}} kvar)",
     "settings.tm_total_keys": "Totalt antal nycklar",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle": "Visa och anpassa översättningar för det aktuella språket",
+    "settings.translation_manager_subtitle":
+      "Visa och anpassa översättningar för det aktuella språket",
     "settings.translation_manager_title": "Översättningshanterare",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -2437,7 +2667,8 @@ const resource = {
     "submittals.no_results": "Inga matchande inlämningar",
     "submittals.no_results_hint": "Försök justera sökning eller filter.",
     "submittals.no_submittals": "Inga inlämningar ännu",
-    "submittals.no_submittals_hint": "Skapa din första inlämning för att komma igång.",
+    "submittals.no_submittals_hint":
+      "Skapa din första inlämning för att komma igång.",
     "submittals.page_title": "Submittals",
     "submittals.review_title": "Granska inlämning",
     "submittals.reviewed": "Inlämning granskad",
@@ -2508,7 +2739,8 @@ const resource = {
     "transmittals.no_results": "Inga matchande överföringar",
     "transmittals.no_results_hint": "Försök justera sökning eller filter.",
     "transmittals.no_transmittals": "Inga överföringar ännu",
-    "transmittals.no_transmittals_hint": "Skapa din första överföring för att komma igång.",
+    "transmittals.no_transmittals_hint":
+      "Skapa din första överföring för att komma igång.",
     "transmittals.page_title": "Transmittals",
     "transmittals.recipients_placeholder": "Ange mottagarnamn...",
     "transmittals.search_placeholder": "Sök överföringar...",
@@ -2547,7 +2779,8 @@ const resource = {
     "boq.cost_tree_no_categories": "Inga kategorier tillgängliga",
     "boq.cost_tree_search_placeholder": "Filtrera kategorier...",
     "boq.cost_tree_title": "Kategorier",
-    "boq.cursor_error_title": "Det gick inte att läsa in äldre resultat – uppdaterar",
+    "boq.cursor_error_title":
+      "Det gick inte att läsa in äldre resultat – uppdaterar",
     "boq.load_more": "Läs in mer",
     "boq.loaded_n_of_m": "{{loaded}} av {{total}} poster",
     "boq.tree_loading": "Laddar...",
@@ -2571,16 +2804,22 @@ const resource = {
     "costs.variant_per_unit": "Per enhet",
     "dashboard.activity": "Senaste aktivitet",
     "modules.cat_regional": "Regionala standarder",
-    "modules.cat_regional_desc": "Landsspecifika import/export-format för mängdförteckningar och klassificeringsstandarder",
+    "modules.cat_regional_desc":
+      "Landsspecifika import/export-format för mängdförteckningar och klassificeringsstandarder",
     "modules.community_title": "Bygg ditt eget modul",
-    "modules.community_desc": "OpenConstructionERP har en modulär plugin-arkitektur. Vem som helst kan skapa anpassade moduler – kostnadsdatabaser, regionala standarder, CAD-konverterare, analysdashboards, integrationer med externa system eller annan funktionalitet. Ditt modul visas i avsnittet Moduler och kan installeras av alla användare.",
+    "modules.community_desc":
+      "OpenConstructionERP har en modulär plugin-arkitektur. Vem som helst kan skapa anpassade moduler – kostnadsdatabaser, regionala standarder, CAD-konverterare, analysdashboards, integrationer med externa system eller annan funktionalitet. Ditt modul visas i avsnittet Moduler och kan installeras av alla användare.",
     "modules.community_type_data": "Datamoduler",
-    "modules.community_type_data_desc": "Regionala kostnadsdatabaser, resurskataloger, materialbibliotek, klassificeringsstandarder (DIN, NRM, SNIP, m.fl.)",
+    "modules.community_type_data_desc":
+      "Regionala kostnadsdatabaser, resurskataloger, materialbibliotek, klassificeringsstandarder (DIN, NRM, SNIP, m.fl.)",
     "modules.community_type_integration": "Integrationer",
-    "modules.community_type_integration_desc": "Anslut till SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera eller valfritt externt system via API",
+    "modules.community_type_integration_desc":
+      "Anslut till SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera eller valfritt externt system via API",
     "modules.community_type_tools": "Verktyg & analys",
-    "modules.community_type_tools_desc": "Anpassade rapporter, dashboards, kalkylatorer, formatkonverterare, AI-modeller eller specialiserade byggverktyg",
-    "modules.community_how": "Varje modul är ett Python-paket med en manifest.py-fil. Skapa ditt modul, testa det lokalt och dela det med gemenskapen. Även om du bara har en idé – skicka oss en textbeskrivning så hjälper vi dig att bygga det.",
+    "modules.community_type_tools_desc":
+      "Anpassade rapporter, dashboards, kalkylatorer, formatkonverterare, AI-modeller eller specialiserade byggverktyg",
+    "modules.community_how":
+      "Varje modul är ett Python-paket med en manifest.py-fil. Skapa ditt modul, testa det lokalt och dela det med gemenskapen. Även om du bara har en idé – skicka oss en textbeskrivning så hjälper vi dig att bygga det.",
     "modules.community_submit_email": "Skicka modul via e-post",
     "modules.community_submit_github": "Föreslå på GitHub",
     "modules.community_telegram": "Diskutera i Telegram",
@@ -2602,13 +2841,16 @@ const resource = {
     "bim.loading_geometry": "Laddar 3D-geometri…",
     "bim.loading_finalising": "Slutför scen…",
     "bim.loading_streaming": "Strömmar geometri från servern…",
-    "bim.loading_parsing": "Tolkar 3D-geometri — för stora modeller (>50 MB) kan detta ta 20-60 s; uppdatera inte sidan",
-    "bim.loading_navigate_hint": "Du kan navigera till andra sidor — inläsningen fortsätter i bakgrunden",
+    "bim.loading_parsing":
+      "Tolkar 3D-geometri — för stora modeller (>50 MB) kan detta ta 20-60 s; uppdatera inte sidan",
+    "bim.loading_navigate_hint":
+      "Du kan navigera till andra sidor — inläsningen fortsätter i bakgrunden",
     "bim.no_models": "Inga modeller uppladdade ännu",
     "bim.no_project": "Inget projekt valt",
     "bim.no_project_desc": "Välj ett projekt för att visa BIM-modeller.",
     "bim.select_model": "Välj en modell",
-    "bim.select_model_desc": "Välj en BIM-modell från listan för att visualisera den i 3D.",
+    "bim.select_model_desc":
+      "Välj en BIM-modell från listan för att visualisera den i 3D.",
     "bim.search_elements": "Sök element...",
     "bim.no_search_results": "Inga matchande element",
     "bim.load_error": "Det gick inte att läsa in modellelement",
@@ -2676,20 +2918,27 @@ const resource = {
     "onboarding.step_modules": "Moduler",
     "onboarding.step_mode": "Läge",
     "onboarding.company_type_title": "Vilken typ av företag är du?",
-    "onboarding.company_type_subtitle": "Vi förkonfigurerar den bästa moduluppsättningen för ditt arbetsflöde.",
+    "onboarding.company_type_subtitle":
+      "Vi förkonfigurerar den bästa moduluppsättningen för ditt arbetsflöde.",
     "onboarding.company_general_contractor": "Generalentreprenör",
-    "onboarding.company_general_contractor_desc": "Vi bygger projekt – kalkylering, inköp, platshantering",
+    "onboarding.company_general_contractor_desc":
+      "Vi bygger projekt – kalkylering, inköp, platshantering",
     "onboarding.company_estimator": "Kalkylatör / Kostnadskonsult",
-    "onboarding.company_estimator_desc": "Vi fokuserar på kostnadsuppskattning och mängdberäkning",
+    "onboarding.company_estimator_desc":
+      "Vi fokuserar på kostnadsuppskattning och mängdberäkning",
     "onboarding.company_project_management": "Projektledningsföretag",
-    "onboarding.company_project_management_desc": "Vi leder stora projekt – planering, kommunikation, dokument",
+    "onboarding.company_project_management_desc":
+      "Vi leder stora projekt – planering, kommunikation, dokument",
     "onboarding.company_architecture": "Arkitektur- / Ingenjörskontor",
-    "onboarding.company_architecture_desc": "Vi designar byggnader – BIM, dokument, gemensam datamiljö",
+    "onboarding.company_architecture_desc":
+      "Vi designar byggnader – BIM, dokument, gemensam datamiljö",
     "onboarding.company_full_enterprise": "Fullständigt företag",
-    "onboarding.company_full_enterprise_desc": "Vi behöver allt – hela byggnadens livscykel",
+    "onboarding.company_full_enterprise_desc":
+      "Vi behöver allt – hela byggnadens livscykel",
     "onboarding.modules_label": "moduler",
     "onboarding.modules_title": "Granska dina moduler",
-    "onboarding.modules_subtitle": "Förvalda baserat på din företagstyp. Aktivera eller inaktivera valfri modul.",
+    "onboarding.modules_subtitle":
+      "Förvalda baserat på din företagstyp. Aktivera eller inaktivera valfri modul.",
     "onboarding.modules_active": "moduler aktiva",
     "onboarding.mod_group_core": "Kärn-kalkylering",
     "onboarding.mod_group_takeoff": "Mängdberäkning & AI",
@@ -2704,22 +2953,27 @@ const resource = {
     "onboarding.mod_projects_desc": "Projekthantering och organisation",
     "onboarding.mod_costs_desc": "Kostnadsdatabaser och prishantering",
     "onboarding.mod_assemblies_desc": "Sammansatta priser och mallar",
-    "onboarding.mod_catalog_desc": "Katalog för material, arbetskraft och utrustning",
+    "onboarding.mod_catalog_desc":
+      "Katalog för material, arbetskraft och utrustning",
     "onboarding.mod_templates_desc": "Återanvändbara mängdförteckningsmallar",
-    "onboarding.mod_validation_desc": "Kvalitetsregler och efterlevnadskontroll",
+    "onboarding.mod_validation_desc":
+      "Kvalitetsregler och efterlevnadskontroll",
     "onboarding.mod_takeoff_desc": "Översikt av mängdberäkning",
-    "onboarding.mod_pdf_takeoff_desc": "PDF-baserade mätningar och anteckningar",
+    "onboarding.mod_pdf_takeoff_desc":
+      "PDF-baserade mätningar och anteckningar",
     "onboarding.mod_ai_estimate_desc": "AI-driven snabbkalkylering",
     "onboarding.mod_advisor_desc": "AI-kostnadsrådgivare och chattassistent",
     "onboarding.mod_data_explorer_desc": "CAD/BIM-datautforskning",
     "onboarding.mod_bim_desc": "3D BIM-modellvisare",
     "onboarding.mod_schedule_desc": "4D Gantt-diagram och CPM-planering",
-    "onboarding.mod_5d_desc": "5D-kostnadsmodell med upparbetningsvärdesspårning",
+    "onboarding.mod_5d_desc":
+      "5D-kostnadsmodell med upparbetningsvärdesspårning",
     "onboarding.mod_tasks_desc": "Uppgiftshantering och tilldelningar",
     "onboarding.mod_finance_desc": "Budgetuppföljning och ekonomisk översikt",
     "onboarding.mod_procurement_desc": "Inköpsordrar och leverantörshantering",
     "onboarding.mod_tendering_desc": "Anbudspaket och upphandlingsarbetsflöden",
-    "onboarding.mod_changeorders_desc": "Spårning och godkännande av ändringsordrar",
+    "onboarding.mod_changeorders_desc":
+      "Spårning och godkännande av ändringsordrar",
     "onboarding.mod_contacts_desc": "Kontaktkatalog och team",
     "onboarding.mod_meetings_desc": "Möteshantering och protokoll",
     "onboarding.mod_rfi_desc": "Begäran om information",
@@ -2733,7 +2987,8 @@ const resource = {
     "onboarding.mod_inspections_desc": "Platsinspektioner och checklistor",
     "onboarding.mod_ncr_desc": "Avvikelserapporter",
     "onboarding.mod_safety_desc": "Säkerhetshantering och incidenter",
-    "onboarding.mod_punchlist_desc": "Slutbesiktningslista / snag list-spårning",
+    "onboarding.mod_punchlist_desc":
+      "Slutbesiktningslista / snag list-spårning",
     "onboarding.mod_risks_desc": "Riskregister och riskminskning",
     "onboarding.mod_field_reports_desc": "Dagliga fältrapporter",
     "onboarding.mod_requirements_desc": "Krav och kvalitetsportar",
@@ -2744,22 +2999,29 @@ const resource = {
     "onboarding.mod_cost_benchmark_desc": "Kostnadsjämförelseanalys",
     "onboarding.mod_collaboration_desc": "Realtidssamarbetsverktyg",
     "support.button_label": "Stöd oss",
-    "support.button_tooltip": "Stöd projektet — ge en stjärna, dela eller skicka en fallstudie",
+    "support.button_tooltip":
+      "Stöd projektet — ge en stjärna, dela eller skicka en fallstudie",
     "support.button_aria": "Stöd oss",
     "support.modal_title": "Hjälp OpenConstructionERP att växa",
-    "support.modal_subtitle": "Vi bygger detta öppet och levererar varje funktion gratis. Några små handlingar från dig håller utvecklingen igång — de kostar inget men gör en enorm skillnad.",
+    "support.modal_subtitle":
+      "Vi bygger detta öppet och levererar varje funktion gratis. Några små handlingar från dig håller utvecklingen igång — de kostar inget men gör en enorm skillnad.",
     "support.action_star_title": "Ge oss en stjärna på GitHub",
-    "support.action_star_body": "30 sekunder. Stjärnor är hur nya byggteam upptäcker projektet och hur vi säkrar tid för nästa version.",
+    "support.action_star_body":
+      "30 sekunder. Stjärnor är hur nya byggteam upptäcker projektet och hur vi säkrar tid för nästa version.",
     "support.action_share_title": "Dela med ditt team eller nätverk",
-    "support.action_share_body": "Ett inlägg på LinkedIn eller X / Twitter når dussintals kalkylatorer, planerare och BIM-chefer. Hjälp oss att sätta öppen källkods-byggprogramvara på kartan.",
+    "support.action_share_body":
+      "Ett inlägg på LinkedIn eller X / Twitter når dussintals kalkylatorer, planerare och BIM-chefer. Hjälp oss att sätta öppen källkods-byggprogramvara på kartan.",
     "support.share_twitter": "Publicera på X",
     "support.share_linkedin": "Publicera på LinkedIn",
     "support.share_copy": "Kopiera text + länk",
     "support.share_copied": "Kopierat!",
-    "support.action_case_study_title": "Har du en fallstudie, video eller artikel?",
+    "support.action_case_study_title":
+      "Har du en fallstudie, video eller artikel?",
     "support.action_case_study_tag": "Vi förstärker den",
-    "support.action_case_study_body": "Visa oss hur du använder OpenConstructionERP — en video, en fallstudie, en LinkedIn-artikel. Du kan skicka länken direkt eller bara tagga @DataDrivenConstruction i ditt inlägg — vi upptäcker det och delar det vidare genom vårt nyhetsbrev och sociala kanaler, där tiotusentals byggproffs och seniora branschexperter följer vårt arbete. E-post för länkar: ",
-    "support.thanks": "Tack. Varje stjärna, delning och historia håller verkligen detta projekt vid liv — byggt med ❤️ för byggbranschens community.",
+    "support.action_case_study_body":
+      "Visa oss hur du använder OpenConstructionERP — en video, en fallstudie, en LinkedIn-artikel. Du kan skicka länken direkt eller bara tagga @DataDrivenConstruction i ditt inlägg — vi upptäcker det och delar det vidare genom vårt nyhetsbrev och sociala kanaler, där tiotusentals byggproffs och seniora branschexperter följer vårt arbete. E-post för länkar: ",
+    "support.thanks":
+      "Tack. Varje stjärna, delning och historia håller verkligen detta projekt vid liv — byggt med ❤️ för byggbranschens community.",
     "onboarding.mod_group_estimation": "Kalkylering",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM och 3D",
@@ -2772,128 +3034,182 @@ const resource = {
     "onboarding.mod_group_regional": "Regionala paket",
     "onboarding.mod_group_platform": "Plattform",
     "onboarding.mod_cost_match": "Kostnadsmatchning",
-    "onboarding.mod_cost_match_desc": "Automatisk matchning av BOQ-positioner mot kostnadsdatabasens poster",
+    "onboarding.mod_cost_match_desc":
+      "Automatisk matchning av BOQ-positioner mot kostnadsdatabasens poster",
     "onboarding.mod_match": "Elementmatchning",
-    "onboarding.mod_match_desc": "Koppla BIM/CAD-element till BOQ-positioner och à-priser",
+    "onboarding.mod_match_desc":
+      "Koppla BIM/CAD-element till BOQ-positioner och à-priser",
     "onboarding.mod_dwg_takeoff": "DWG-mängdning",
     "onboarding.mod_dwg_takeoff_desc": "Mängdning direkt från DWG-ritningar",
     "onboarding.mod_cad": "CAD-import",
-    "onboarding.mod_cad_desc": "Importera DWG/DGN/RVT/IFC via DDC cad2data-pipeline",
+    "onboarding.mod_cad_desc":
+      "Importera DWG/DGN/RVT/IFC via DDC cad2data-pipeline",
     "onboarding.mod_bim_requirements": "BIM-krav",
-    "onboarding.mod_bim_requirements_desc": "Definiera och validera modellkrav (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc":
+      "Definiera och validera modellkrav (IDS / EIR)",
     "onboarding.mod_match_elements": "Matcha element",
-    "onboarding.mod_match_elements_desc": "AI-assisterad BIM-till-kostnad-matchning med konfidenspoäng",
+    "onboarding.mod_match_elements_desc":
+      "AI-assisterad BIM-till-kostnad-matchning med konfidenspoäng",
     "onboarding.mod_opencde_api": "OpenCDE-API",
-    "onboarding.mod_opencde_api_desc": "OpenCDE-kompatibelt API för BCF + Dokument + Foundation",
+    "onboarding.mod_opencde_api_desc":
+      "OpenCDE-kompatibelt API för BCF + Dokument + Foundation",
     "onboarding.mod_erp_chat": "ERP-chatt",
-    "onboarding.mod_erp_chat_desc": "AI-chattassistent i appen med full ERP-kontext",
+    "onboarding.mod_erp_chat_desc":
+      "AI-chattassistent i appen med full ERP-kontext",
     "onboarding.mod_compliance_ai": "Compliance-AI",
-    "onboarding.mod_compliance_ai_desc": "LLM-drivna regelefterlevnadskontroller",
+    "onboarding.mod_compliance_ai_desc":
+      "LLM-drivna regelefterlevnadskontroller",
     "onboarding.mod_schedule_advanced": "Avancerad planering",
-    "onboarding.mod_schedule_advanced_desc": "Last Planner System med veckovis look-ahead och PPC",
+    "onboarding.mod_schedule_advanced_desc":
+      "Last Planner System med veckovis look-ahead och PPC",
     "onboarding.mod_eac": "EAC-motor",
     "onboarding.mod_eac_desc": "Estimate at Completion med rullande prognoser",
     "onboarding.mod_bid_management": "Anbudshantering",
-    "onboarding.mod_bid_management_desc": "Hantera utgående anbud, prisstrategier, vinst/förlust-spårning",
+    "onboarding.mod_bid_management_desc":
+      "Hantera utgående anbud, prisstrategier, vinst/förlust-spårning",
     "onboarding.mod_contracts": "Kontrakt",
-    "onboarding.mod_contracts_desc": "Kontraktstypsmotor (FIDIC, NEC, JCT, fast pris, löpande räkning)",
+    "onboarding.mod_contracts_desc":
+      "Kontraktstypsmotor (FIDIC, NEC, JCT, fast pris, löpande räkning)",
     "onboarding.mod_variations": "Ändringar",
-    "onboarding.mod_variations_desc": "Platsmätningsändringar med godkännandeflöde",
+    "onboarding.mod_variations_desc":
+      "Platsmätningsändringar med godkännandeflöde",
     "onboarding.mod_crm": "CRM",
     "onboarding.mod_crm_desc": "Säljpipeline, leads, möjligheter, konton",
     "onboarding.mod_supplier_catalogs": "Leverantörskataloger",
-    "onboarding.mod_supplier_catalogs_desc": "Live-prisflöden från leverantörer och leverantörshantering",
+    "onboarding.mod_supplier_catalogs_desc":
+      "Live-prisflöden från leverantörer och leverantörshantering",
     "onboarding.mod_property_dev": "Fastighetsutveckling",
-    "onboarding.mod_property_dev_desc": "Mark, etapper, försäljningsmix, genomförbarhet för utvecklare",
+    "onboarding.mod_property_dev_desc":
+      "Mark, etapper, försäljningsmix, genomförbarhet för utvecklare",
     "onboarding.mod_service": "Service och underhåll",
-    "onboarding.mod_service_desc": "Serviceförfrågningar efter överlämnande, garantier, underhåll",
+    "onboarding.mod_service_desc":
+      "Serviceförfrågningar efter överlämnande, garantier, underhåll",
     "onboarding.mod_equipment": "Utrustning och fordon",
-    "onboarding.mod_equipment_desc": "Maskiner, verktyg, fordon — utnyttjande, underhåll, hyrpriser",
+    "onboarding.mod_equipment_desc":
+      "Maskiner, verktyg, fordon — utnyttjande, underhåll, hyrpriser",
     "onboarding.mod_resources": "Resurser",
-    "onboarding.mod_resources_desc": "Resursplanering: arbetskraft, material, utrustning",
+    "onboarding.mod_resources_desc":
+      "Resursplanering: arbetskraft, material, utrustning",
     "onboarding.mod_daily_diary": "Dagbok",
-    "onboarding.mod_daily_diary_desc": "Daglig platsdagbok med väder, lag, utrustning, foton",
+    "onboarding.mod_daily_diary_desc":
+      "Daglig platsdagbok med väder, lag, utrustning, foton",
     "onboarding.mod_subcontractors": "Underentreprenörer",
-    "onboarding.mod_subcontractors_desc": "Onboarding av underentreprenörer, kontrakt, betalningar, prestation",
+    "onboarding.mod_subcontractors_desc":
+      "Onboarding av underentreprenörer, kontrakt, betalningar, prestation",
     "onboarding.mod_portal": "Kundportal",
-    "onboarding.mod_portal_desc": "Extern portal för kunder och partners med begränsad åtkomst",
+    "onboarding.mod_portal_desc":
+      "Extern portal för kunder och partners med begränsad åtkomst",
     "onboarding.mod_notifications": "Notifikationer",
-    "onboarding.mod_notifications_desc": "Notifikationer i appen, via e-post och webhook",
+    "onboarding.mod_notifications_desc":
+      "Notifikationer i appen, via e-post och webhook",
     "onboarding.mod_hse_advanced": "Avancerad HSE",
-    "onboarding.mod_hse_advanced_desc": "Avancerad hälsa, säkerhet, miljö — toolbox talks, JHA, revisioner",
+    "onboarding.mod_hse_advanced_desc":
+      "Avancerad hälsa, säkerhet, miljö — toolbox talks, JHA, revisioner",
     "onboarding.mod_qms": "Kvalitetsledningssystem",
-    "onboarding.mod_qms_desc": "QMS i linje med ISO 9001 — procedurer, revisioner, KPI:er",
+    "onboarding.mod_qms_desc":
+      "QMS i linje med ISO 9001 — procedurer, revisioner, KPI:er",
     "onboarding.mod_compliance": "Compliance-DSL",
-    "onboarding.mod_compliance_desc": "Code-as-rules domänspecifikt språk för regelefterlevnad",
+    "onboarding.mod_compliance_desc":
+      "Code-as-rules domänspecifikt språk för regelefterlevnad",
     "onboarding.mod_compliance_docs": "Compliance-dokument",
-    "onboarding.mod_compliance_docs_desc": "Certifikatbibliotek, giltighetsspårning, förnyelsepåminnelser",
+    "onboarding.mod_compliance_docs_desc":
+      "Certifikatbibliotek, giltighetsspårning, förnyelsepåminnelser",
     "onboarding.mod_carbon": "Koldioxid och hållbarhet",
-    "onboarding.mod_carbon_desc": "Inbäddat + drift-CO₂, ESG-rapportering, EN 15978",
+    "onboarding.mod_carbon_desc":
+      "Inbäddat + drift-CO₂, ESG-rapportering, EN 15978",
     "onboarding.mod_bi_dashboards": "BI-dashboards",
-    "onboarding.mod_bi_dashboards_desc": "Interaktiv analys över moduler med drill-down",
+    "onboarding.mod_bi_dashboards_desc":
+      "Interaktiv analys över moduler med drill-down",
     "onboarding.mod_enterprise_workflows": "Enterprise-arbetsflöden",
-    "onboarding.mod_enterprise_workflows_desc": "FSM-baserade anpassade godkännandeflöden för stora organisationer",
+    "onboarding.mod_enterprise_workflows_desc":
+      "FSM-baserade anpassade godkännandeflöden för stora organisationer",
     "onboarding.mod_full_evm": "Fullständig EVM",
-    "onboarding.mod_full_evm_desc": "Fullständig Earned Value Management — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc":
+      "Fullständig Earned Value Management — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ och budgivning",
-    "onboarding.mod_rfq_bidding_desc": "Flerrundiga RFQ-arbetsflöden, slutna anbud, e-auktioner",
+    "onboarding.mod_rfq_bidding_desc":
+      "Flerrundiga RFQ-arbetsflöden, slutna anbud, e-auktioner",
     "onboarding.mod_integrations": "Integrationer",
-    "onboarding.mod_integrations_desc": "Webhooks, SAP, Procore, MS Project via n8n",
+    "onboarding.mod_integrations_desc":
+      "Webhooks, SAP, Procore, MS Project via n8n",
     "onboarding.mod_dach_pack": "Regionalt paket — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc": "Standarder, klassificeringar, valutor, format för DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc":
+      "Standarder, klassificeringar, valutor, format för DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "Regionalt paket — Storbritannien",
-    "onboarding.mod_uk_pack_desc": "Standarder, klassificeringar, valutor, format för Storbritannien",
+    "onboarding.mod_uk_pack_desc":
+      "Standarder, klassificeringar, valutor, format för Storbritannien",
     "onboarding.mod_us_pack": "Regionalt paket — USA",
-    "onboarding.mod_us_pack_desc": "Standarder, klassificeringar, valutor, format för USA",
+    "onboarding.mod_us_pack_desc":
+      "Standarder, klassificeringar, valutor, format för USA",
     "onboarding.mod_india_pack": "Regionalt paket — Indien",
-    "onboarding.mod_india_pack_desc": "Standarder, klassificeringar, valutor, format för Indien",
+    "onboarding.mod_india_pack_desc":
+      "Standarder, klassificeringar, valutor, format för Indien",
     "onboarding.mod_middle_east_pack": "Regionalt paket — Mellanöstern och GCC",
-    "onboarding.mod_middle_east_pack_desc": "Standarder, klassificeringar, valutor, format för Mellanöstern och GCC",
+    "onboarding.mod_middle_east_pack_desc":
+      "Standarder, klassificeringar, valutor, format för Mellanöstern och GCC",
     "onboarding.mod_latam_pack": "Regionalt paket — Latinamerika",
-    "onboarding.mod_latam_pack_desc": "Standarder, klassificeringar, valutor, format för Latinamerika",
+    "onboarding.mod_latam_pack_desc":
+      "Standarder, klassificeringar, valutor, format för Latinamerika",
     "onboarding.mod_asia_pac_pack": "Regionalt paket — Asien-Stillahavsområdet",
-    "onboarding.mod_asia_pac_pack_desc": "Standarder, klassificeringar, valutor, format för Asien-Stillahavsområdet",
+    "onboarding.mod_asia_pac_pack_desc":
+      "Standarder, klassificeringar, valutor, format för Asien-Stillahavsområdet",
     "onboarding.mod_russia_pack": "Regionalt paket — Ryssland och OSS",
-    "onboarding.mod_russia_pack_desc": "Standarder, klassificeringar, valutor, format för Ryssland och OSS",
+    "onboarding.mod_russia_pack_desc":
+      "Standarder, klassificeringar, valutor, format för Ryssland och OSS",
     "onboarding.mod_users": "Användare och Auth",
     "onboarding.mod_users_desc": "Användarkonton, roller, JWT, API-nycklar",
     "onboarding.mod_teams": "Team",
-    "onboarding.mod_teams_desc": "Teamgruppering, synlighetsomfång, projektilldelning",
+    "onboarding.mod_teams_desc":
+      "Teamgruppering, synlighetsomfång, projektilldelning",
     "onboarding.mod_uploads": "Uppladdningar",
-    "onboarding.mod_uploads_desc": "Direkta uppladdningar av stora filer med återupptagning",
+    "onboarding.mod_uploads_desc":
+      "Direkta uppladdningar av stora filer med återupptagning",
     "onboarding.mod_jobs": "Bakgrundsjobb",
-    "onboarding.mod_jobs_desc": "Worker-köer för imports, exports, CV-pipelines",
+    "onboarding.mod_jobs_desc":
+      "Worker-köer för imports, exports, CV-pipelines",
     "onboarding.mod_search": "Semantisk sökning",
-    "onboarding.mod_search_desc": "Vektor- + lexikal sökning över BOQ, dokument, ritningar",
+    "onboarding.mod_search_desc":
+      "Vektor- + lexikal sökning över BOQ, dokument, ritningar",
     "onboarding.mod_backup": "Säkerhetskopiering och återställning",
-    "onboarding.mod_backup_desc": "Automatiska säkerhetskopior med återställning till tidpunkt",
+    "onboarding.mod_backup_desc":
+      "Automatiska säkerhetskopior med återställning till tidpunkt",
     "onboarding.mod_admin": "Admin-konsol",
-    "onboarding.mod_admin_desc": "Operatörsslutpunkter, QA-pipelines, systemunderhåll",
+    "onboarding.mod_admin_desc":
+      "Operatörsslutpunkter, QA-pipelines, systemunderhåll",
     "onboarding.mod_i18n_foundation": "i18n-grund",
-    "onboarding.mod_i18n_foundation_desc": "i18n-runtime för 27 språk med lat laddade locale-chunks",
+    "onboarding.mod_i18n_foundation_desc":
+      "i18n-runtime för 27 språk med lat laddade locale-chunks",
     "onboarding.mod_collaboration_locks": "Samarbetslås",
-    "onboarding.mod_collaboration_locks_desc": "Optimistisk och pessimistisk låsning för flertranvändarredigering",
+    "onboarding.mod_collaboration_locks_desc":
+      "Optimistisk och pessimistisk låsning för flertranvändarredigering",
     "onboarding.mod_architecture_map": "Arkitekturkarta",
-    "onboarding.mod_architecture_map_desc": "Interaktiv visuell karta över systemarkitektur",
+    "onboarding.mod_architecture_map_desc":
+      "Interaktiv visuell karta över systemarkitektur",
     "onboarding.mod_dashboards": "Dashboards",
     "onboarding.mod_dashboards_desc": "Dashboards per projekt och portfölj",
     "onboarding.mode_title": "Välj gränssnittsläge",
-    "onboarding.mode_subtitle": "Du kan byta läge när som helst i Inställningar.",
+    "onboarding.mode_subtitle":
+      "Du kan byta läge när som helst i Inställningar.",
     "onboarding.mode_simple": "Enkel",
     "onboarding.mode_advanced": "Avancerad",
     "onboarding.summary_company": "Företagstyp",
     "onboarding.summary_modules": "Aktiva moduler",
     "onboarding.summary_mode": "Gränssnittsläge",
     "reports.cash_flow": "Kassaflödesprognos",
-    "reports.cash_flow_desc": "Månatlig kassaflödesprojektion från S-kurva planerat kontra faktiska utgifter.",
+    "reports.cash_flow_desc":
+      "Månatlig kassaflödesprojektion från S-kurva planerat kontra faktiska utgifter.",
     "reports.change_order_register": "Ändringsorderregister",
-    "reports.change_order_register_desc": "Komplett register över scopeförändringar med kumulativ kostnad och tidplanspåverkan.",
+    "reports.change_order_register_desc":
+      "Komplett register över scopeförändringar med kumulativ kostnad och tidplanspåverkan.",
     "reports.tender_comparison": "Anbudsjämförelse",
-    "reports.tender_comparison_desc": "Sida-vid-sida-jämförelse av underentreprenörsanbud med avvikelseanalys.",
+    "reports.tender_comparison_desc":
+      "Sida-vid-sida-jämförelse av underentreprenörsanbud med avvikelseanalys.",
     "reports.risk_register": "Riskregister",
-    "reports.risk_register_desc": "Riskmatris med sannolikhet, påverkan, poäng och riskminskninsplaner.",
+    "reports.risk_register_desc":
+      "Riskmatris med sannolikhet, påverkan, poäng och riskminskninsplaner.",
     "reports.progress_report": "Framstegsrapport",
-    "reports.progress_report_desc": "EVM-prestanda, tidplanstatus och toppriske i en rapport.",
+    "reports.progress_report_desc":
+      "EVM-prestanda, tidplanstatus och toppriske i en rapport.",
     "reports.preset_monthly": "Månadsframsteg",
     "reports.preset_client": "Kundpresentation",
     "reports.preset_audit": "Revisionsrapport",
@@ -2910,20 +3226,25 @@ const resource = {
     "cde.suitability_none": "– Ingen –",
     "cde.view_history": "Historik",
     "cde.history_title": "Statusövergångshistorik",
-    "cde.history_empty": "Inga statusövergångar ännu – befordra behållaren för att starta revisionsspåret.",
+    "cde.history_empty":
+      "Inga statusövergångar ännu – befordra behållaren för att starta revisionsspåret.",
     "cde.history_by_role": "Av: {{role}}",
     "cde.history_signature": "Signerat: {{signer}}",
     "cde.gate_label": "Port {{code}}",
     "cde.transmittals_badge": "{{count}} överföringar",
-    "cde.transmittals_badge_aria": "{{count}} överföringar kopplade till denna behållare",
-    "cde.transmittals_drawer_title": "Överföringar som innehåller denna behållare",
+    "cde.transmittals_badge_aria":
+      "{{count}} överföringar kopplade till denna behållare",
+    "cde.transmittals_drawer_title":
+      "Överföringar som innehåller denna behållare",
     "cde.approval_modal_title": "Port B godkännandesignatur",
-    "cde.approval_modal_body": "Befordring av {{code}} från DELAD till PUBLICERAD kräver ett signerat godkännande (ISO 19650). Din signatur och kommentarer registreras i revisionsloggen.",
+    "cde.approval_modal_body":
+      "Befordring av {{code}} från DELAD till PUBLICERAD kräver ett signerat godkännande (ISO 19650). Din signatur och kommentarer registreras i revisionsloggen.",
     "cde.approval_field_signature": "Signatur",
     "cde.approval_field_comments": "Kommentarer",
     "cde.approval_signature_placeholder": "Fullständigt namn / initialer",
     "cde.approval_signature_required": "Signatur krävs",
-    "cde.approval_comments_placeholder": "Valfria anteckningar för revisionsloggen...",
+    "cde.approval_comments_placeholder":
+      "Valfria anteckningar för revisionsloggen...",
     "cde.approval_submit": "Signera och publicera",
     "transmittals.field_link_revision": "Länka CDE-revision",
     "transmittals.picker_select_container": "Välj behållare…",
@@ -2960,7 +3281,8 @@ const resource = {
     "users.role_viewer_desc": "Skrivskyddad åtkomst",
     "integrations.add_another": "Lägg till ytterligare",
     "integrations.calendar": "Kalender",
-    "integrations.calendar_desc": "Prenumerera i Google/Outlook-kalender (iCal-flöde)",
+    "integrations.calendar_desc":
+      "Prenumerera i Google/Outlook-kalender (iCal-flöde)",
     "integrations.coming_soon": "Kommer snart",
     "integrations.confirm_disconnect": "Koppla bort denna integration?",
     "integrations.connect": "Anslut",
@@ -2974,10 +3296,13 @@ const resource = {
     "integrations.email_desc": "Ta emot e-postnotifieringar (SMTP)",
     "integrations.setup_steps": "Installationsanvisningar",
     "integrations.slack": "Slack",
-    "integrations.slack_desc": "Skicka notifieringar till Slack via inkommande webhook",
-    "integrations.subtitle": "Anslut externa tjänster för att ta emot projektnotifieringar i dina favoritverktyg.",
+    "integrations.slack_desc":
+      "Skicka notifieringar till Slack via inkommande webhook",
+    "integrations.subtitle":
+      "Anslut externa tjänster för att ta emot projektnotifieringar i dina favoritverktyg.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc": "Skicka notifieringar till din Teams-kanal via inkommande webhook",
+    "integrations.teams_desc":
+      "Skicka notifieringar till din Teams-kanal via inkommande webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Få notifieringar via Telegram-bot",
     "integrations.test": "Testa",
@@ -3024,7 +3349,8 @@ const resource = {
     "common.previous": "Föregående",
     "common.project": "Projekt",
     "common.quantity": "Mängd",
-    "common.rate_limit_wait": "Vänta {{seconds}} sekunder innan du försöker igen.",
+    "common.rate_limit_wait":
+      "Vänta {{seconds}} sekunder innan du försöker igen.",
     "common.recommended": "Rekommenderad",
     "common.region": "Region",
     "common.remove": "Ta bort",
@@ -3052,9 +3378,11 @@ const resource = {
     "dashboard.create_first_project": "Skapa första projektet",
     "dashboard.create_first_project_desc": "Sätt upp en ny kalkyl från grunden",
     "dashboard.import_existing_boq": "Importera befintlig mängdförteckning",
-    "dashboard.import_existing_boq_desc": "Använd AI för att uppskatta från ett befintligt dokument",
+    "dashboard.import_existing_boq_desc":
+      "Använd AI för att uppskatta från ett befintligt dokument",
     "dashboard.install_demo": "Installera demoprojekt",
-    "dashboard.install_demo_desc": "Förkonfigurerat bostadsprojekt med realistisk data",
+    "dashboard.install_demo_desc":
+      "Förkonfigurerat bostadsprojekt med realistisk data",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "kör validering",
     "dashboard.over_budget": "över budget",
@@ -3063,16 +3391,22 @@ const resource = {
     "dashboard.quick_start": "Snabbstart-kalkyl",
     "dashboard.run_setup": "Kör installationsguide",
     "dashboard.total_budget_all": "Total budget",
-    "dashboard.welcome_body": "Detta projekt byggs och underhålls av gemenskapen. Ditt stöd hjälper oss att lägga till nya funktioner, regionala databaser och hålla det gratis för alla.",
+    "dashboard.welcome_body":
+      "Detta projekt byggs och underhålls av gemenskapen. Ditt stöd hjälper oss att lägga till nya funktioner, regionala databaser och hålla det gratis för alla.",
     "dashboard.welcome_consult": "Professionell konsultation",
-    "dashboard.welcome_consult_desc": "Anpassad driftsättning, utbildning och företagslösningar globalt",
-    "dashboard.welcome_desc": "Börja med att installera ett demoprojekt eller skapa ditt eget.",
+    "dashboard.welcome_consult_desc":
+      "Anpassad driftsättning, utbildning och företagslösningar globalt",
+    "dashboard.welcome_desc":
+      "Börja med att installera ett demoprojekt eller skapa ditt eget.",
     "dashboard.welcome_sponsor": "Bli sponsor",
-    "dashboard.welcome_sponsor_desc": "Finansiera nya funktioner och håll projektet gratis för alla",
+    "dashboard.welcome_sponsor_desc":
+      "Finansiera nya funktioner och håll projektet gratis för alla",
     "dashboard.welcome_star": "Stjärnmärk på GitHub",
-    "dashboard.welcome_star_desc": "Hjälp andra att hitta projektet – tar 2 sekunder",
+    "dashboard.welcome_star_desc":
+      "Hjälp andra att hitta projektet – tar 2 sekunder",
     "dashboard.welcome_start": "Kom igång",
-    "dashboard.welcome_sub": "Gratis och öppen källkod för byggkostnadsuppskattning",
+    "dashboard.welcome_sub":
+      "Gratis och öppen källkod för byggkostnadsuppskattning",
     "dashboard.welcome_title": "Välkommen till OpenConstructionERP",
     "dashboard.with_budget": "Med budget",
     "analytics.action_create_project": "Skapa ett projekt",
@@ -3091,7 +3425,8 @@ const resource = {
     "analytics.col_status": "Status",
     "analytics.col_variance": "Avvikelse",
     "analytics.col_variance_pct": "Avv. %",
-    "analytics.empty_description": "Skapa projekt med budgetar för att se analyser över projekt.",
+    "analytics.empty_description":
+      "Skapa projekt med budgetar för att se analyser över projekt.",
     "analytics.empty_title": "Ingen analysdata ännu",
     "analytics.export_csv": "Exportera CSV",
     "analytics.filter_region": "Filtrera efter region",
@@ -3114,32 +3449,39 @@ const resource = {
     "analytics.total_projects": "Totalt antal projekt",
     "analytics.with_budget": "{{count}} med budget",
     "backup.confirm_replace_btn": "Ersätt alla data",
-    "backup.confirm_replace_message": "Detta ersätter alla befintliga data med säkerhetskopians innehåll. Denna åtgärd kan inte ångras.",
+    "backup.confirm_replace_message":
+      "Detta ersätter alla befintliga data med säkerhetskopians innehåll. Denna åtgärd kan inte ångras.",
     "backup.confirm_replace_title": "Ersätt alla data?",
     "backup.drop_zone_hint": ".zip-säkerhetskopia",
-    "backup.drop_zone_label": "Släpp säkerhetskopian här eller klicka för att bläddra",
+    "backup.drop_zone_label":
+      "Släpp säkerhetskopian här eller klicka för att bläddra",
     "backup.export_btn": "Skapa säkerhetskopia",
-    "backup.export_desc": "Ladda ner en komplett säkerhetskopia av alla dina data som en ZIP-fil.",
+    "backup.export_desc":
+      "Ladda ner en komplett säkerhetskopia av alla dina data som en ZIP-fil.",
     "backup.export_error": "Export misslyckades",
     "backup.export_success": "Säkerhetskopia skapad",
     "backup.export_success_detail": "Din säkerhetskopia har laddats ned.",
     "backup.export_title": "Skapa säkerhetskopia",
     "backup.exporting": "Skapar säkerhetskopia...",
-    "backup.import_desc": "Återställ data från en tidigare exporterad säkerhetskopia.",
+    "backup.import_desc":
+      "Återställ data från en tidigare exporterad säkerhetskopia.",
     "backup.import_title": "Återställ från säkerhetskopia",
     "backup.incompatible": "Inkompatibel säkerhetskopieversion",
     "backup.invalid_file": "Ogiltig fil",
     "backup.mode_merge": "Slå samman (lägg till ny, behåll befintlig)",
     "backup.mode_replace": "Ersätt (skriv över allt)",
     "backup.record_counts": "Postantal",
-    "backup.replace_warning": "Varning: Ersättningsläge raderar alla befintliga data.",
+    "backup.replace_warning":
+      "Varning: Ersättningsläge raderar alla befintliga data.",
     "backup.restore_btn": "Återställ",
     "backup.restore_error": "Återställningsfel",
     "backup.restore_failed": "Återställning misslyckades",
-    "backup.restore_failed_detail": "Det gick inte att återställa från säkerhetskopian",
+    "backup.restore_failed_detail":
+      "Det gick inte att återställa från säkerhetskopian",
     "backup.restore_mode": "Återställningsläge",
     "backup.restore_success": "Säkerhetskopia återställd",
-    "backup.restore_success_detail": "Alla data har återställts från säkerhetskopian.",
+    "backup.restore_success_detail":
+      "Alla data har återställts från säkerhetskopian.",
     "backup.restoring": "Återställer...",
     "backup.subtitle": "Exportera och importera dina data",
     "backup.title": "Säkerhetskopiering & återställning",
@@ -3151,7 +3493,8 @@ const resource = {
     "changeorders.add_item": "Lägg till rad",
     "changeorders.all_statuses": "Alla statusar",
     "changeorders.approve": "Godkänn",
-    "changeorders.approve_confirm": "Godkänn denna ändringsorder? Kostnadspåverkan läggs till i projektbudgeten.",
+    "changeorders.approve_confirm":
+      "Godkänn denna ändringsorder? Kostnadspåverkan läggs till i projektbudgeten.",
     "changeorders.approved": "Ändringsorder godkänd",
     "changeorders.approved_at": "Godkänd",
     "changeorders.approved_impact": "Godkänd påverkan",
@@ -3163,24 +3506,28 @@ const resource = {
     "changeorders.delete_item_confirm": "Radera denna rad?",
     "changeorders.deleted": "Ändringsorder raderad",
     "changeorders.empty": "Inga ändringsordrar",
-    "changeorders.empty_desc": "Skapa en ändringsorder för att spåra scopeförändringar med kostnads- och tidplanspåverkan",
+    "changeorders.empty_desc":
+      "Skapa en ändringsorder för att spåra scopeförändringar med kostnads- och tidplanspåverkan",
     "changeorders.export_csv": "Exportera CSV",
     "changeorders.filter_status": "Filtrera efter status",
     "changeorders.item_added": "Rad tillagd",
     "changeorders.item_deleted": "Rad raderad",
     "changeorders.items": "Rader",
-    "changeorders.load_error": "Det gick inte att läsa in ändringsordrar. Försök igen.",
+    "changeorders.load_error":
+      "Det gick inte att läsa in ändringsordrar. Försök igen.",
     "changeorders.new": "Ny ändringsorder",
     "changeorders.new_qty": "Ny mängd",
     "changeorders.new_rate": "Nytt pris",
     "changeorders.no_items": "Inga rader ännu",
-    "changeorders.no_items_desc": "Lägg till rader för att definiera scopeförändringen",
+    "changeorders.no_items_desc":
+      "Lägg till rader för att definiera scopeförändringen",
     "changeorders.of_total": "av",
     "changeorders.orig_qty": "Ursprunglig mängd",
     "changeorders.orig_rate": "Ursprungligt pris",
     "changeorders.pending": "Väntande",
     "changeorders.pending_approval": "Väntar på godkännande",
-    "changeorders.pending_approval_hint": "Endast chefer och administratörer kan godkänna.",
+    "changeorders.pending_approval_hint":
+      "Endast chefer och administratörer kan godkänna.",
     "changeorders.reason": "Orsak",
     "changeorders.reject": "Avvisa",
     "changeorders.reject_confirm": "Avvisa denna ändringsorder?",
@@ -3196,10 +3543,12 @@ const resource = {
     "changeorders.status_submitted": "Inlämnad",
     "changeorders.status_under_review": "Under granskning",
     "changeorders.submit": "Skicka in",
-    "changeorders.submit_confirm": "Skicka in denna ändringsorder för granskning? Kan inte ångras.",
+    "changeorders.submit_confirm":
+      "Skicka in denna ändringsorder för granskning? Kan inte ångras.",
     "changeorders.submitted": "Ändringsorder inlämnad",
     "changeorders.submitted_at": "Inlämnad",
-    "changeorders.subtitle": "Spåra scopeförändringar med kostnads- och tidplanspåverkan",
+    "changeorders.subtitle":
+      "Spåra scopeförändringar med kostnads- och tidplanspåverkan",
     "changeorders.title_placeholder": "t.ex. Ytterligare grundläggningsarbete",
     "changeorders.total": "Totalt antal ordrar",
     "changeorders.type": "Typ",
@@ -3208,12 +3557,15 @@ const resource = {
     "changeorders.type_removed": "Borttagen",
     "changeorders.unit_placeholder": "m2, m3, st...",
     "changeorders.workflow": "Arbetsflöde",
-    "changeorders.workflow_desc": "Ändringsorderarbetsflöde: Utkast (förbered scopeändring) → Inlämnad (skicka för granskning) → Godkänd eller Avvisad. Varje order spårar kostnadspåverkan och tidplanspåverkan i dagar. Lägg till rader för att specificera vad som förändrades – ursprungliga vs nya mängder och priser. Kostnadsdelta beräknas automatiskt.",
+    "changeorders.workflow_desc":
+      "Ändringsorderarbetsflöde: Utkast (förbered scopeändring) → Inlämnad (skicka för granskning) → Godkänd eller Avvisad. Varje order spårar kostnadspåverkan och tidplanspåverkan i dagar. Lägg till rader för att specificera vad som förändrades – ursprungliga vs nya mängder och priser. Kostnadsdelta beräknas automatiskt.",
     "explorer.analysis_name": "Namn",
     "explorer.apply_pivot": "Tillämpa",
     "explorer.bar": "Stapel",
-    "explorer.boq_create_failed": "Det gick inte att skapa mängdförteckningsposter",
-    "explorer.boq_created_success": "{{count}} poster skapade i mängdförteckningen",
+    "explorer.boq_create_failed":
+      "Det gick inte att skapa mängdförteckningsposter",
+    "explorer.boq_created_success":
+      "{{count}} poster skapade i mängdförteckningen",
     "explorer.categories": "Kategorier",
     "explorer.chart_type": "Typ",
     "explorer.click_header_sort": "Klicka på kolumnrubriker för att sortera",
@@ -3224,13 +3576,16 @@ const resource = {
     "explorer.conversion_complete": "Konvertering klar",
     "explorer.conversion_failed": "Konvertering misslyckades",
     "explorer.converters": "CAD-konverterare",
-    "explorer.converters_desc": "DDC Community-konverterare för att extrahera BIM-elementdata",
-    "explorer.converters_external_hint": "CAD-konverterare kräver DDC cad2data-verktyg installerade på din server",
+    "explorer.converters_desc":
+      "DDC Community-konverterare för att extrahera BIM-elementdata",
+    "explorer.converters_external_hint":
+      "CAD-konverterare kräver DDC cad2data-verktyg installerade på din server",
     "explorer.converting": "Konverterar {{name}}...",
     "explorer.converting_msg": "Konverterar...",
     "explorer.count": "Antal",
     "explorer.create_boq_from_pivot": "Skapa mängdförteckning",
-    "explorer.create_boq_subtitle": "{{count}} grupper blir mängdförteckningsposter",
+    "explorer.create_boq_subtitle":
+      "{{count}} grupper blir mängdförteckningsposter",
     "explorer.create_boq_title": "Skapa mängdförteckning från pivot",
     "explorer.create_positions": "Skapa {{count}} poster",
     "explorer.data_completeness": "Datatäckning",
@@ -3249,7 +3604,8 @@ const resource = {
     "explorer.heatmap": "Växla värdeheatmap",
     "explorer.heatmap_short": "Heatmap",
     "explorer.installed": "installerad",
-    "explorer.invalid_format": "Format som inte stöds. Använd RVT, IFC, DWG eller DGN.",
+    "explorer.invalid_format":
+      "Format som inte stöds. Använd RVT, IFC, DWG eller DGN.",
     "explorer.like_describe": "som df.describe()",
     "explorer.max": "Max",
     "explorer.mean": "Medel",
@@ -3260,7 +3616,8 @@ const resource = {
     "explorer.no_chart_data": "Inga diagramdata",
     "explorer.no_groups": "Inga grupper hittades. Prova andra kolumner.",
     "explorer.non_null": "Icke-null",
-    "explorer.or_click": "eller klicka för att bläddra – datatabell, pivot, diagram & statistik",
+    "explorer.or_click":
+      "eller klicka för att bläddra – datatabell, pivot, diagram & statistik",
     "explorer.page_of": "Sida {{page}} av {{total}}",
     "explorer.page_summary": "Sidtotaler:",
     "explorer.pie": "Cirkel",
@@ -3269,22 +3626,27 @@ const resource = {
     "explorer.powered_by": "Drivs av",
     "explorer.project": "Projekt",
     "explorer.recent_models": "Senaste modeller",
-    "explorer.requires_external": "Externt verktyg – klicka för installationsanvisningar",
+    "explorer.requires_external":
+      "Externt verktyg – klicka för installationsanvisningar",
     "explorer.rows": "rader",
     "explorer.save_analysis": "Spara analys",
     "explorer.save_as_bim": "Spara som BIM-modell",
     "explorer.save_permanently": "Spara permanent",
     "explorer.save_to_project": "Spara till projekt (BIM Hub)",
     "explorer.save_to_project_btn": "Spara till projekt",
-    "explorer.save_to_project_desc": "Skapar en BIM-modell med alla extraherade element i det valda projektet.",
+    "explorer.save_to_project_desc":
+      "Skapar en BIM-modell med alla extraherade element i det valda projektet.",
     "explorer.saved": "Analys sparad permanent",
     "explorer.saved_to_project": "Sparad till BIM Hub",
-    "explorer.saved_to_project_msg": "Element sparade till BIM Hub. Visa dem i BIM-visaren.",
+    "explorer.saved_to_project_msg":
+      "Element sparade till BIM Hub. Visa dem i BIM-visaren.",
     "explorer.search_all": "Sök alla kolumner...",
-    "explorer.select_columns_for_chart": "Välj grupp efter och värdekolumner för att generera ett diagram.",
+    "explorer.select_columns_for_chart":
+      "Välj grupp efter och värdekolumner för att generera ett diagram.",
     "explorer.select_project": "Välj projekt...",
     "explorer.selected": "markerad",
-    "explorer.session_expired_desc": "CAD-sessioner gäller i 24 timmar. Ladda upp filen igen för att fortsätta.",
+    "explorer.session_expired_desc":
+      "CAD-sessioner gäller i 24 timmar. Ladda upp filen igen för att fortsätta.",
     "explorer.session_expired_title": "Session utgången eller hittades inte",
     "explorer.setup_guide": "Installationsguide",
     "explorer.sparse_columns": "Gles (<10%)",
@@ -3304,7 +3666,8 @@ const resource = {
     "explorer.visible_columns": "Synliga kolumner",
     "explorer.active_filters": "Aktiva filter",
     "explorer.clear_all_filters": "Rensa alla",
-    "explorer.no_active_filters": "Klicka på ett diagramstapel eller segment för att filtrera över flikar.",
+    "explorer.no_active_filters":
+      "Klicka på ett diagramstapel eller segment för att filtrera över flikar.",
     "explorer.line": "Linje",
     "explorer.scatter": "Punkt",
     "explorer.format": "Format",
@@ -3319,7 +3682,8 @@ const resource = {
     "explorer.save_view": "Spara vy",
     "explorer.save_view_prompt": "Namnge denna vy",
     "explorer.saved_views": "Sparade vyer",
-    "explorer.no_saved_views": "Inga sparade vyer ännu. Spara dina filter, diagram och pivotkonfiguration för senare.",
+    "explorer.no_saved_views":
+      "Inga sparade vyer ännu. Spara dina filter, diagram och pivotkonfiguration för senare.",
     "explorer.load_view": "Läs in",
     "explorer.delete_view": "Radera",
     "explorer.view_saved": "Vy sparad",
@@ -3328,7 +3692,8 @@ const resource = {
     "explorer.drill_down_empty": "Inga rader matchar detta segment.",
     "explorer.close": "Stäng",
     "explorer.showing_rows": "Visar {{count}} rader",
-    "explorer.chart_click_hint": "Klicka på stapel / segment / punkt för att korsfiltrera",
+    "explorer.chart_click_hint":
+      "Klicka på stapel / segment / punkt för att korsfiltrera",
     "fieldreports.add_trade": "Lägg till yrke",
     "fieldreports.all_statuses": "Alla statusar",
     "fieldreports.all_types": "Alla typer",
@@ -3351,12 +3716,15 @@ const resource = {
     "fieldreports.delays_placeholder": "Beskriv eventuella fördröjningar...",
     "fieldreports.deleted": "Fältrapport raderad",
     "fieldreports.deliveries": "Leveranser",
-    "fieldreports.deliveries_placeholder": "Material eller utrustning som levererats...",
+    "fieldreports.deliveries_placeholder":
+      "Material eller utrustning som levererats...",
     "fieldreports.download_template": "Ladda ner importmall",
-    "fieldreports.drop_file": "Släpp Excel- eller CSV-fil här eller klicka för att bläddra",
+    "fieldreports.drop_file":
+      "Släpp Excel- eller CSV-fil här eller klicka för att bläddra",
     "fieldreports.edit_report": "Redigera fältrapport",
     "fieldreports.empty": "Inga fältrapporter ännu",
-    "fieldreports.empty_desc": "Skapa din första dagliga fältrapport för att spåra platsaktiviteter.",
+    "fieldreports.empty_desc":
+      "Skapa din första dagliga fältrapport för att spåra platsaktiviteter.",
     "fieldreports.export": "Exportera",
     "fieldreports.export_failed": "Export misslyckades",
     "fieldreports.export_pdf": "Exportera PDF",
@@ -3368,20 +3736,24 @@ const resource = {
     "fieldreports.import": "Importera",
     "fieldreports.import_btn": "Importera",
     "fieldreports.import_reports": "Importera fältrapporter",
-    "fieldreports.import_result": "Importerade: {{imported}}, Hoppade över: {{skipped}}, Fel: {{errors}}",
+    "fieldreports.import_result":
+      "Importerade: {{imported}}, Hoppade över: {{skipped}}, Fel: {{errors}}",
     "fieldreports.list_view": "Lista",
     "fieldreports.new_report": "Ny rapport",
     "fieldreports.no_match": "Inga matchande rapporter",
     "fieldreports.no_match_desc": "Försök justera status- eller typfilter.",
     "fieldreports.no_project": "Välj ett projekt",
-    "fieldreports.no_project_desc": "Välj ett projekt i sidofältet för att visa fältrapporter.",
+    "fieldreports.no_project_desc":
+      "Välj ett projekt i sidofältet för att visa fältrapporter.",
     "fieldreports.notes": "Anteckningar",
-    "fieldreports.notes_placeholder": "Ytterligare anteckningar eller observationer...",
+    "fieldreports.notes_placeholder":
+      "Ytterligare anteckningar eller observationer...",
     "fieldreports.report_date": "Datum",
     "fieldreports.report_type": "Rapporttyp",
     "fieldreports.row_error": "Rad {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Säkerhetsincidenter",
-    "fieldreports.safety_placeholder": "Rapportera säkerhetsincidenter eller tillbud...",
+    "fieldreports.safety_placeholder":
+      "Rapportera säkerhetsincidenter eller tillbud...",
     "fieldreports.show_errors": "Visa feldetaljer",
     "fieldreports.stat_approved": "Godkänd",
     "fieldreports.stat_draft": "Utkast",
@@ -3404,7 +3776,8 @@ const resource = {
     "fieldreports.wind": "Vind",
     "fieldreports.wind_placeholder": "t.ex. 15 km/h NW",
     "fieldreports.work_performed": "Utfört arbete",
-    "fieldreports.work_performed_placeholder": "Beskriv utförda arbetsaktiviteter idag...",
+    "fieldreports.work_performed_placeholder":
+      "Beskriv utförda arbetsaktiviteter idag...",
     "fieldreports.workers": "arbetare",
     "fieldreports.workforce_section": "Personal",
     "risk.all_categories": "Alla kategorier",
@@ -3419,14 +3792,16 @@ const resource = {
     "risk.delete_message": "Denna risk tas bort permanent. Kan inte ångras.",
     "risk.delete_title": "Radera risk",
     "risk.deleted": "Risk raderad",
-    "risk.disclaimer": "Monte Carlo-simulation ger enbart probabilistiska uppskattningar. Resultaten beror på ingångsantaganden.",
+    "risk.disclaimer":
+      "Monte Carlo-simulation ger enbart probabilistiska uppskattningar. Resultaten beror på ingångsantaganden.",
     "risk.dist": "Fördelning",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Triangulär",
     "risk.dist_uniform": "Jämn",
     "risk.distribution": "Kostnadsfördelning (histogram)",
     "risk.empty": "Inga risker registrerade",
-    "risk.empty_desc": "Lägg till risker för att spåra potentiella problem och riskminskninsstrategier",
+    "risk.empty_desc":
+      "Lägg till risker för att spåra potentiella problem och riskminskninsstrategier",
     "risk.export_csv": "Exportera CSV",
     "risk.exposure": "Total exponering",
     "risk.heatmap": "Riskmatris",
@@ -3467,7 +3842,8 @@ const resource = {
     "risk.severity": "Påverkansgrad",
     "risk.status": "Status",
     "risk.std_dev": "Std.avv.",
-    "risk.subtitle": "Probabilistisk kostnadsuppskattning med Monte Carlo-simulation",
+    "risk.subtitle":
+      "Probabilistisk kostnadsuppskattning med Monte Carlo-simulation",
     "risk.title": "Riskanalys (Monte Carlo)",
     "risk.title_placeholder": "t.ex. Markinstabilitet i grundläggning",
     "risk.top_drivers": "Topp 10 riskdrivare",
@@ -3499,11 +3875,13 @@ const resource = {
     "toasts.schedule_generated": "Tidplan genererad från mängdförteckning",
     "toasts.status_updated": "Status uppdaterad",
     "toasts.update_failed": "Uppdatering misslyckades",
-    "bim.cad_processing_note": "Bearbetning kan ta några minuter för stora filer",
+    "bim.cad_processing_note":
+      "Bearbetning kan ta några minuter för stora filer",
     "bim.cad_upload_queued": "CAD-fil köad för bearbetning",
     "bim.cad_upload_success": "CAD-fil uppladdad",
-    "bim.cad_upload_success_desc": "Filen har laddats upp. Bearbetning börjar strax.",
-    "bim.confirm_delete_model": "Radera \"{{name}}\"? Alla element tas bort.",
+    "bim.cad_upload_success_desc":
+      "Filen har laddats upp. Bearbetning börjar strax.",
+    "bim.confirm_delete_model": 'Radera "{{name}}"? Alla element tas bort.',
     "bim.disc_architecture": "Arkitektur",
     "bim.disc_civil": "Anläggning",
     "bim.disc_electrical": "El",
@@ -3515,22 +3893,30 @@ const resource = {
     "bim.disc_structural": "Konstruktion",
     "bim.discipline_label": "Disciplin",
     "bim.getting_started": "BIM-visare",
-    "bim.getting_started_desc": "Ladda upp elementdata (CSV/Excel) och valfri 3D-geometri (DAE) från din CAD-konverterare för att visualisera byggnadsmodeller i 3D. Element kan länkas till mängdförteckningsposter för mängdverifiering.",
+    "bim.getting_started_desc":
+      "Ladda upp elementdata (CSV/Excel) och valfri 3D-geometri (DAE) från din CAD-konverterare för att visualisera byggnadsmodeller i 3D. Element kan länkas till mängdförteckningsposter för mängdverifiering.",
     "bim.hide_upload": "Stäng",
     "bim.landing_drop_here": "Släpp filen här",
-    "bim.landing_feat_3d_desc": "Interaktiv Three.js-visare med våningsfiltrering, disciplinfärgning och elementurval.",
+    "bim.landing_feat_3d_desc":
+      "Interaktiv Three.js-visare med våningsfiltrering, disciplinfärgning och elementurval.",
     "bim.landing_feat_3d_title": "3D-visualisering",
-    "bim.landing_feat_boq_desc": "Koppla BIM-element till kostnadsposter för automatisk mängdverifiering och 5D-mängdberäkning.",
+    "bim.landing_feat_boq_desc":
+      "Koppla BIM-element till kostnadsposter för automatisk mängdverifiering och 5D-mängdberäkning.",
     "bim.landing_feat_boq_title": "Mängdförteckningslänkning",
-    "bim.landing_feat_compare_desc": "Jämför versioner för att automatiskt detektera tillagda, borttagna och ändrade element.",
+    "bim.landing_feat_compare_desc":
+      "Jämför versioner för att automatiskt detektera tillagda, borttagna och ändrade element.",
     "bim.landing_feat_compare_title": "Modellnjämförelse",
-    "bim.landing_feat_extract_desc": "Väggar, bjälklag, pelare, balkar, MEP – med egenskaper, areor, volymer och klassificering.",
+    "bim.landing_feat_extract_desc":
+      "Väggar, bjälklag, pelare, balkar, MEP – med egenskaper, areor, volymer och klassificering.",
     "bim.landing_feat_extract_title": "Elementextraktion",
-    "bim.landing_feat_format_desc": "IFC bearbetas omedelbart. RVT via DDC cad2data. CSV/Excel för förkonverterade data.",
+    "bim.landing_feat_format_desc":
+      "IFC bearbetas omedelbart. RVT via DDC cad2data. CSV/Excel för förkonverterade data.",
     "bim.landing_feat_format_title": "Formatoberoende",
-    "bim.landing_feat_qty_desc": "Definiera regler för att extrahera area, volym och längd – tillämpa på hela modellen på en gång.",
+    "bim.landing_feat_qty_desc":
+      "Definiera regler för att extrahera area, volym och längd – tillämpa på hela modellen på en gång.",
     "bim.landing_feat_qty_title": "Mängdkartor",
-    "bim.landing_hero_subtitle": "Ladda upp IFC- eller Revit-filer för att visualisera byggnadselement, extrahera mängder och länka till din mängdförteckning.",
+    "bim.landing_hero_subtitle":
+      "Ladda upp IFC- eller Revit-filer för att visualisera byggnadselement, extrahera mängder och länka till din mängdförteckning.",
     "bim.landing_hero_title": "BIM 3D-visare",
     "bim.landing_processing": "Bearbetar...",
     "bim.landing_size_hint": "IFC, Revit, CSV eller Excel",
@@ -3541,11 +3927,14 @@ const resource = {
     "bim.model_name_placeholder": "t.ex. Byggnad A – Arkitektur",
     "bim.no_models_hint_upload": "Ladda upp BIM-data för att komma igång.",
     "bim.overlay_delete_btn": "Radera",
-    "bim.overlay_error_desc": "Det gick inte att extrahera element. Konvertera till IFC först eller ladda upp data manuellt.",
+    "bim.overlay_error_desc":
+      "Det gick inte att extrahera element. Konvertera till IFC först eller ladda upp data manuellt.",
     "bim.overlay_error_title": "Bearbetning misslyckades",
-    "bim.overlay_needs_converter_desc": "{{format}}-filer kräver DDC cad2data för extraktion. Konvertera till IFC först, eller ladda upp förkonverterade data.",
+    "bim.overlay_needs_converter_desc":
+      "{{format}}-filer kräver DDC cad2data för extraktion. Konvertera till IFC först, eller ladda upp förkonverterade data.",
     "bim.overlay_needs_converter_title": "Konverterare krävs",
-    "bim.overlay_processing_desc": "Extraherar element från din {{format}}-fil. Det kan ta en stund.",
+    "bim.overlay_processing_desc":
+      "Extraherar element från din {{format}}-fil. Det kan ta en stund.",
     "bim.overlay_processing_title": "Bearbetar modell...",
     "bim.overlay_upload_converted_btn": "Ladda upp konverterade data",
     "bim.show_upload": "Ladda upp BIM-data",
@@ -3578,15 +3967,18 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D-geometri",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle": "Redan konverterat? Ladda upp data + geometri separat",
+    "bim.upload_advanced_mode_toggle":
+      "Redan konverterat? Ladda upp data + geometri separat",
     "bim.upload_depth_label": "Konverteringsdjup",
     "bim.upload_depth_standard": "Standard · huvudkategorier (snabb)",
     "bim.upload_depth_medium": "Medium · utökade kategorier (balanserad)",
     "bim.upload_depth_complete": "Fullständig · alla kategorier (långsam)",
-    "bim.upload_depth_help": "Styr hur många Revit-kategorier som extraheras. Element-ID:n och fullständiga egenskaper bevaras alltid.",
+    "bim.upload_depth_help":
+      "Styr hur många Revit-kategorier som extraheras. Element-ID:n och fullständiga egenskaper bevaras alltid.",
     "bim.upload_discipline_label": "Disciplin",
     "bim.upload_drop_here": "Släpp fil här",
-    "bim.upload_generate_pdf_label": "Exportera även projektblad som PDF (bakgrund)",
+    "bim.upload_generate_pdf_label":
+      "Exportera även projektblad som PDF (bakgrund)",
     "bim.upload_model_name_label": "Modellnamn",
     "bim.upload_model_name_placeholder": "t.ex. Byggnad A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
@@ -3617,7 +4009,8 @@ const resource = {
     "modules.disabled": "{{name}} inaktiverat",
     "modules.disabled_label": "Inaktiverat",
     "modules.enabled": "{{name}} aktiverat",
-    "modules.page_subtitle": "Aktivera, inaktivera och hantera plattformsmoduler",
+    "modules.page_subtitle":
+      "Aktivera, inaktivera och hantera plattformsmoduler",
     "modules.page_title": "Moduler & Marketplace",
     "modules.required_by": "Krävs av: {{deps}}",
     "modules.required_by_short": "Krävs av {{count}} moduler",
@@ -3652,9 +4045,11 @@ const resource = {
     "reporting.invoices_month": "Fakturor förfaller (månad)",
     "reporting.invoices_week": "Fakturor förfaller (vecka)",
     "reporting.no_boqs": "Inga mängdförteckningar i detta projekt",
-    "reporting.no_finance_data": "Ingen ekonomisk data tillgänglig för detta projekt. Skapa fakturor och budgetar först.",
+    "reporting.no_finance_data":
+      "Ingen ekonomisk data tillgänglig för detta projekt. Skapa fakturor och budgetar först.",
     "reporting.no_projects": "Inga projekt hittades",
-    "reporting.no_safety_data": "Ingen säkerhetsdata tillgänglig för detta projekt.",
+    "reporting.no_safety_data":
+      "Ingen säkerhetsdata tillgänglig för detta projekt.",
     "reporting.observations": "Observationer",
     "reporting.on_track": "I tidplan",
     "reporting.open": "Öppen",
@@ -3678,7 +4073,8 @@ const resource = {
     "reporting.schedule_progress": "Tidplansframsteg",
     "reporting.schedule_summary": "Tidplanssammanfattning",
     "reporting.select_project": "Projekt",
-    "reporting.select_project_prompt": "Välj ett projekt för att visa dashboard",
+    "reporting.select_project_prompt":
+      "Välj ett projekt för att visa dashboard",
     "reporting.spi": "Tidplans-SPI",
     "reporting.subtitle": "Rapporteringsdashboards",
     "reporting.today_activities": "Totala aktiviteter",
@@ -3693,12 +4089,14 @@ const resource = {
     "settings.tm_showing": "Visar {{count}} av {{total}} nycklar",
     "punch.stat_avg_close": "Genomsnittliga dagar för avslut",
     "match_elements.title": "Matcha element",
-    "match_elements.subtitle": "Mappa BIM-element → CWICR-positioner. BIM är live; DWG / PDF / Foto kommer i kommande faser.",
+    "match_elements.subtitle":
+      "Mappa BIM-element → CWICR-positioner. BIM är live; DWG / PDF / Foto kommer i kommande faser.",
     "match_elements.select_project": "Välj projekt…",
     "match_elements.source.bim_live": "BIM (live)",
     "match_elements.library": "Bibliotek",
     "match_elements.library_title": "Mallbibliotek mellan projekt",
-    "match_elements.refresh_title": "Uppdatera — hämtar de senaste BIM-elementen",
+    "match_elements.refresh_title":
+      "Uppdatera — hämtar de senaste BIM-elementen",
     "match_elements.clear_filter": "rensa filter",
     "match_elements.clear_selection": "rensa val",
     "match_elements.session_id": "Session {{id}}…",
@@ -3706,9 +4104,11 @@ const resource = {
     "match_elements.detail": "Detalj",
     "match_elements.no_match": "Ingen matchning…",
     "match_elements.loading_groups": "Laddar grupper…",
-    "match_elements.no_groups": "Inga grupper ännu — importera en BIM-modell för att fylla detta projekt.",
+    "match_elements.no_groups":
+      "Inga grupper ännu — importera en BIM-modell för att fylla detta projekt.",
     "match_elements.loading_detail": "Laddar detalj…",
-    "match_elements.footer": "Faserna A.10–A.12 — flerval, tröskelbekräftelse, ingen-matchning-flöde och hyresgästmallbibliotek är aktiva. Dragbara chips och 3D-markering kommer i fas B.",
+    "match_elements.footer":
+      "Faserna A.10–A.12 — flerval, tröskelbekräftelse, ingen-matchning-flöde och hyresgästmallbibliotek är aktiva. Dragbara chips och 3D-markering kommer i fas B.",
     "match_elements.aria.select_all": "Välj alla synliga grupper",
     "match_elements.aria.select_group": "Välj {{key}}",
     "match_elements.col.group": "Grupp",
@@ -3731,40 +4131,54 @@ const resource = {
     "match_elements.action.lexical_all": "Lexikal matchning — topp 10",
     "match_elements.action.resources_selected": "Resurser ({{count}})",
     "match_elements.action.resources_all": "Resursmatchning — topp 10",
-    "match_elements.action.resources_title": "Matcha mot material-/resurskatalogen",
+    "match_elements.action.resources_title":
+      "Matcha mot material-/resurskatalogen",
     "match_elements.action.confirm_selected": "Bekräfta {{count}} ≥ {{thr}}",
     "match_elements.action.confirm_all": "Bekräfta alla ≥ {{thr}}",
     "match_elements.action.skip_n": "Hoppa över {{count}} (att bestämma)",
-    "match_elements.busy.run_selected": "Kör {{method}}-matchare på {{count}} valda…",
+    "match_elements.busy.run_selected":
+      "Kör {{method}}-matchare på {{count}} valda…",
     "match_elements.busy.run_all": "Kör {{method}}-matchare på alla grupper…",
-    "match_elements.busy.bulk_confirm_selected": "Massbekräftar {{count}} valda ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all": "Massbekräftar matchningar ≥ {{thr}}…",
-    "match_elements.busy.mark_tbd": "Markerar {{count}} grupper som att bestämma…",
+    "match_elements.busy.bulk_confirm_selected":
+      "Massbekräftar {{count}} valda ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all":
+      "Massbekräftar matchningar ≥ {{thr}}…",
+    "match_elements.busy.mark_tbd":
+      "Markerar {{count}} grupper som att bestämma…",
     "match_elements.alert.confirmed": "Bekräftade {{count}} grupper",
-    "match_elements.alert.marked_tbd": "Markerade {{count}} grupper som att bestämma",
+    "match_elements.alert.marked_tbd":
+      "Markerade {{count}} grupper som att bestämma",
     "match_elements.detail.elements_count": "{{count}} element",
-    "match_elements.detail.no_matchers_run": "Ingen matchare har körts för denna grupp ännu.",
-    "match_elements.detail.use_action_bar": "Använd knapparna i åtgärdsfältet ovan.",
+    "match_elements.detail.no_matchers_run":
+      "Ingen matchare har körts för denna grupp ännu.",
+    "match_elements.detail.use_action_bar":
+      "Använd knapparna i åtgärdsfältet ovan.",
     "match_elements.detail.col.code": "Kod",
     "match_elements.detail.col.description": "Beskrivning",
     "match_elements.detail.col.unit_rate": "Enhet · Pris",
     "match_elements.detail.col.conf": "Tillf.",
     "match_elements.detail.confirm": "Bekräfta",
-    "match_elements.detail.element_ids_count": "{{count}} element-ID(n). 3D-markering i fas A.12.",
+    "match_elements.detail.element_ids_count":
+      "{{count}} element-ID(n). 3D-markering i fas A.12.",
     "match_elements.detail.and_more": "…och {{count}} till",
     "match_elements.detail.building_preview": "Bygger förhandsvisning…",
-    "match_elements.detail.auto_loaded_resources": "Automatiskt laddade resurser:",
-    "match_elements.detail.confirm_first": "Bekräfta först en matchning för att se BOQ-förhandsvisning.",
+    "match_elements.detail.auto_loaded_resources":
+      "Automatiskt laddade resurser:",
+    "match_elements.detail.confirm_first":
+      "Bekräfta först en matchning för att se BOQ-förhandsvisning.",
     "match_elements.tab.methods": "Matchningskandidater",
     "match_elements.tab.elements": "Element ({{count}})",
     "match_elements.tab.apply": "Förhandsvisning av tillämpning",
     "match_elements.no_match.heading": "Ingen matchning — välj åtgärd",
     "match_elements.no_match.custom.title": "Skapa anpassad position",
-    "match_elements.no_match.custom.sub": "Lägg till en projektspecifik position med beskrivning, enhet och pris.",
+    "match_elements.no_match.custom.sub":
+      "Lägg till en projektspecifik position med beskrivning, enhet och pris.",
     "match_elements.no_match.rfq.title": "Skicka till anbud",
-    "match_elements.no_match.rfq.sub": "Markera för anbud — begär offerter från underentreprenörer.",
+    "match_elements.no_match.rfq.sub":
+      "Markera för anbud — begär offerter från underentreprenörer.",
     "match_elements.no_match.tbd.title": "Markera att bestämma",
-    "match_elements.no_match.tbd.sub": "Pausa gruppen; granska senare. Utesluten från BOQ-totaler tills löst.",
+    "match_elements.no_match.tbd.sub":
+      "Pausa gruppen; granska senare. Utesluten från BOQ-totaler tills löst.",
     "match_elements.no_match.placeholder.description": "Positionsbeskrivning",
     "match_elements.no_match.placeholder.unit": "Enhet",
     "match_elements.no_match.placeholder.rate": "Enhetspris",
@@ -3774,38 +4188,51 @@ const resource = {
     "match_elements.templates.count": "{{count}} signaturer",
     "match_elements.templates.loading": "Laddar bibliotek…",
     "match_elements.templates.empty": "Inga sparade mallar ännu.",
-    "match_elements.templates.empty_hint": "Bekräftade matchningar med «Spara i bibliotek» aktiverat visas här och sprider sig till framtida projekt.",
+    "match_elements.templates.empty_hint":
+      "Bekräftade matchningar med «Spara i bibliotek» aktiverat visas här och sprider sig till framtida projekt.",
     "match_elements.templates.unnamed": "(namnlös)",
     "match_elements.templates.sig": "sign: {{prefix}}…",
     "match_elements.templates.used": "Använd",
     "match_elements.templates.last": "senast {{date}}",
-    "match_elements.templates.remove_confirm": "Ta bort denna mall från biblioteket?",
+    "match_elements.templates.remove_confirm":
+      "Ta bort denna mall från biblioteket?",
     "match_elements.templates.remove_title": "Ta bort från bibliotek",
-    "match_elements.templates.footer": "Mallar är hyresgästbaserade. Bekräftade signaturer föreslår automatiskt matchningar i framtida projekt.",
+    "match_elements.templates.footer":
+      "Mallar är hyresgästbaserade. Bekräftade signaturer föreslår automatiskt matchningar i framtida projekt.",
     "match_elements.no_project_title": "Inget aktivt projekt valt.",
-    "match_elements.no_project_hint": "Open the project picker in the header, or visit",
+    "match_elements.no_project_hint":
+      "Open the project picker in the header, or visit",
     "match_elements.active_project": "Aktivt projekt",
     "match_elements.loading_sessions": "Loading sessions…",
-    "match_elements.no_prior_sessions": "No prior matching sessions for this project.",
+    "match_elements.no_prior_sessions":
+      "No prior matching sessions for this project.",
     "match_elements.session_default_name": "Session {{id}}",
     "match_elements.new_session": "Ny session",
     "match_elements.new_text.button": "Från text",
-    "match_elements.new_text.button_title": "Klistra in beskrivningar — en per rad",
+    "match_elements.new_text.button_title":
+      "Klistra in beskrivningar — en per rad",
     "match_elements.new_text.title": "Ny session — klistra in beskrivningar",
-    "match_elements.new_text.hint": "En rad per post. Varje rad blir en grupp; semantisk sökning hittar närmaste CWICR-priser. Vilket språk som helst — den flerspråkiga kodaren hanterar tvärspråkliga frågor.",
+    "match_elements.new_text.hint":
+      "En rad per post. Varje rad blir en grupp; semantisk sökning hittar närmaste CWICR-priser. Vilket språk som helst — den flerspråkiga kodaren hanterar tvärspråkliga frågor.",
     "match_elements.new_text.name_label": "Sessionsnamn (valfritt)",
     "match_elements.new_text.name_placeholder": "t.ex. Snabbestimat Q3",
     "match_elements.new_text.lines_label": "Beskrivningar (en per rad)",
-    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder":
+      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Skapa session",
     "match_elements.new_excel.button": "Från Excel-mängdförteckning",
-    "match_elements.new_excel.button_title": "Ladda upp en .xlsx-mängdförteckning",
+    "match_elements.new_excel.button_title":
+      "Ladda upp en .xlsx-mängdförteckning",
     "match_elements.new_excel.title": "Ny session från Excel-mängdförteckning",
-    "match_elements.new_excel.hint": "Ladda upp en .xlsx med minst en kolumn « Beskrivning » (eller dess lokaliserade motsvarighet — Description, Beschreibung, Описание, Descripción, 描述, etc.). Valfria kolumner: Mängd, Enhet, Kod, Kategori. Mängder med decimalkomma känns igen.",
+    "match_elements.new_excel.hint":
+      "Ladda upp en .xlsx med minst en kolumn « Beskrivning » (eller dess lokaliserade motsvarighet — Description, Beschreibung, Описание, Descripción, 描述, etc.). Valfria kolumner: Mängd, Enhet, Kod, Kategori. Mängder med decimalkomma känns igen.",
     "match_elements.new_excel.name_label": "Sessionsnamn (valfritt)",
-    "match_elements.new_excel.name_placeholder": "t.ex. Anbudsförteckning rev 3",
-    "match_elements.new_excel.drop": "Släpp din .xlsx här eller klicka för att bläddra",
-    "match_elements.new_excel.format_hint": "Endast .xlsx · flerspråkiga rubriker stöds",
+    "match_elements.new_excel.name_placeholder":
+      "t.ex. Anbudsförteckning rev 3",
+    "match_elements.new_excel.drop":
+      "Släpp din .xlsx här eller klicka för att bläddra",
+    "match_elements.new_excel.format_hint":
+      "Endast .xlsx · flerspråkiga rubriker stöds",
     "match_elements.new_excel.create": "Ladda upp och skapa session",
     "match_elements.legend_label": "Confidence",
     "match_elements.legend_high": "Hög",
@@ -3813,16 +4240,21 @@ const resource = {
     "match_elements.legend_low": "Låg",
     "match_elements.col.suggested": "Suggested cost",
     "match_elements.subtractive_hint": "Subtractive / non-billable",
-    "match_elements.detail.opening_warning": "host has openings but gross == net (IFC export bug)",
-    "match_elements.detail.candidate_no_id": "Candidate has no DB id — cannot confirm",
+    "match_elements.detail.opening_warning":
+      "host has openings but gross == net (IFC export bug)",
+    "match_elements.detail.candidate_no_id":
+      "Candidate has no DB id — cannot confirm",
     "match_elements.detail.apply_total": "Totalt",
     "match_elements.auto_confirm_threshold": "Auto-confirm threshold",
-    "match_elements.auto_confirm_help": "Suggested matches at or above this score auto-confirm.",
+    "match_elements.auto_confirm_help":
+      "Suggested matches at or above this score auto-confirm.",
     "match_elements.use_net": "Use net quantities (deduct openings)",
-    "match_elements.use_net_help": "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
+    "match_elements.use_net_help":
+      "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
     "match_elements.trade_filter": "Filter by trade",
     "match_elements.stage_label": "Byggfas",
-    "match_elements.stage_help": "Lås träffar till en OmniClass-fas. Lämna tomt för att söka i alla faser.",
+    "match_elements.stage_help":
+      "Lås träffar till en OmniClass-fas. Lämna tomt för att söka i alla faser.",
     "match_elements.stage_any": "Alla faser",
     "match_elements.stage.02_Demolition": "Rivning",
     "match_elements.stage.03_Earthwork": "Markarbete",
@@ -3838,14 +4270,17 @@ const resource = {
     "match_elements.stage.13_Sitework": "Markanläggning",
     "match_elements.group_by": "Gruppera efter",
     "match_elements.group_by_empty": "Välj minst ett attribut",
-    "match_elements.group_by_active": "{{count}} aktiva · klicka för att ta bort",
+    "match_elements.group_by_active":
+      "{{count}} aktiva · klicka för att ta bort",
     "match_elements.group_by_remove": "Klicka för att ta bort från gruppering",
     "match_elements.group_by_sample": "t.ex.",
     "match_elements.loading_attributes": "Laddar…",
     "match_elements.action.apply": "Apply to BOQ ({{n}})",
-    "match_elements.action.apply_title": "Write confirmed matches to the project BOQ",
+    "match_elements.action.apply_title":
+      "Write confirmed matches to the project BOQ",
     "match_elements.busy.applying": "Applying confirmed groups to BOQ…",
-    "match_elements.alert.applied": "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
+    "match_elements.alert.applied":
+      "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visible",
     "match_elements.selected_count": "{{n}} selected",
     "match_elements.trade.architectural": "Architectural",
@@ -3863,7 +4298,8 @@ const resource = {
     "nav.request_custom_module_hint": "Saknas något? Berätta vad du behöver",
     "modules.dev_guide": "Bygg en modul — utvecklarguide",
     "boq.accept": "Acceptera",
-    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions":
+      "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Lägg till kolumn",
@@ -3885,54 +4321,68 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip":
+      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle":
+      "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic":
+      "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary":
+      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg":
+      "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs":
+      "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection":
+      "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc":
+      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle":
+      "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle":
+      "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer":
+      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip":
+      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count":
+      "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip":
+      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -3946,22 +4396,27 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available":
+      "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message":
+      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed":
+      "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title":
+      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip":
+      "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -3988,19 +4443,22 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
+    "boq.column_delete_confirm":
+      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
+    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint":
+      "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
+    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options": "Select column needs at least one option",
+    "boq.column_select_needs_options":
+      "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Typ",
@@ -4020,13 +4478,17 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query": "Enter a description to search the cost database",
+    "boq.cost_finder_no_query":
+      "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder":
+      "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip":
+      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error":
+      "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4036,8 +4498,10 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint":
+      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle":
+      "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4046,7 +4510,8 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint":
+      "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Budget",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4059,28 +4524,35 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc":
+      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc":
+      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
+    "boq.grand_total_conversion_tooltip_v2":
+      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint":
+      "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint":
+      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint":
+      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout":
+      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4091,13 +4563,16 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count":
+      "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm":
+      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip":
+      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4108,7 +4583,8 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint":
+      "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4118,52 +4594,64 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns":
+      "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help":
+      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
+    "boq.no_quantities_hint_button":
+      'No quantities — press "Show all" above to surface every BIM property',
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title":
+      "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint":
+      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data":
+      "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder":
+      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc":
+      "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip":
+      "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
+    "boq.preset_already_applied":
+      "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint":
+      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc":
+      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4172,29 +4660,40 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources":
+      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1":
+      "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2":
+      "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3":
+      "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning":
+      "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped":
+      "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual":
+      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint":
+      "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip":
+      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle":
+      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint":
+      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4202,14 +4701,19 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc":
+      "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc":
+      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc":
+      "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc":
+      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning":
+      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4217,28 +4721,41 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Valuta",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom":
+      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint":
+      "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match":
+      "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge":
+      "Variant resource — multiple price options available",
     "boq.resource_name": "Namn",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate":
+      "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click":
+      "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base":
+      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Typ",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip":
+      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default":
+      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked":
+      "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked":
+      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4246,19 +4763,25 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip":
+      "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip":
+      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog":
+      "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip":
+      "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip":
+      "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip":
+      "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4267,8 +4790,10 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources": "Search cost items to add as resources to position",
-    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources":
+      "Search cost items to add as resources to position",
+    "boq.search_catalog_resources":
+      "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4276,7 +4801,8 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error":
+      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4305,7 +4831,8 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint":
+      "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4316,9 +4843,11 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement":
+      "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title":
+      "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4326,20 +4855,25 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria":
+      "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked":
+      "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip":
+      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4356,48 +4890,64 @@ const resource = {
     "boq.variables_description": "Beskrivning",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help":
+      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Namn",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Typ",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg":
+      "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip":
+      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip":
+      "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip":
+      "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip":
+      "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip":
+      "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc":
+      "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc":
+      "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg":
+      "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg":
+      "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc":
+      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty":
+      "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial":
+      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum":
+      "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Efterlevnad",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle":
+      "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4428,8 +4978,10 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability": "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability":
+      "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp":
+      "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4443,9 +4995,11 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description":
+      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description":
+      "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4468,7 +5022,8 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body":
+      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -4476,7 +5031,8 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region":
+      "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -4494,23 +5050,30 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder":
+      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Sök",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading":
+      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
-    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline":
+      "Cost items are saved locally and available offline.",
+    "costs.description_placeholder":
+      "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above":
+      "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Utrustning",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc":
+      "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer":
+      "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -4529,21 +5092,26 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed":
+      "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint":
+      "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint":
+      "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint": "Positions created with unit rates from cost database",
+    "costs.positions_created_hint":
+      "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
-    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": 'No regions match "{{q}}"',
+    "costs.region_filter_placeholder":
+      "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -4576,12 +5144,14 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip":
+      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding":
+      "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -4595,7 +5165,8 @@ const resource = {
     "files.activity.title": "Aktivitet",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint":
+      "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Okänd användare",
@@ -4609,7 +5180,8 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle":
+      "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -4624,12 +5196,15 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural":
+      "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate": "This member already has access at this level.",
+    "files.permissions.error_duplicate":
+      "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle":
+      "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Lösenord",
@@ -4644,59 +5219,85 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed":
+      "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
-    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
-    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
-    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail":
+      "{{failed}} file(s) could not be deleted.",
+    "onboarding.mode_simple_desc":
+      "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_advanced_desc":
+      "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "project_intelligence.ai.cost_advisor_title":
+      "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc":
+      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title":
+      "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub":
+      "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub":
+      "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio":
+      "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub":
+      "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub":
+      "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration":
+      "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub":
+      "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint":
+      "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
+    "project_intelligence.chat_error":
+      "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt":
+      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact":
+      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub":
+      "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub":
+      "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin":
+      "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body":
+      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote":
+      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title":
+      "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc":
+      "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations":
+      "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -4705,18 +5306,24 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191":
+      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain":
+      "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc":
+      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt":
+      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Foton",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc":
+      "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc":
+      "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -4736,7 +5343,8 @@ const resource = {
     "takeoff.markup.close": "Stäng",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Kommentarer",
-    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty":
+      "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -4746,7 +5354,8 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm":
+      "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Stäng",
@@ -4756,8 +5365,10 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description":
+      "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc":
+      "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -4773,7 +5384,8 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle":
+      "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -4787,14 +5399,18 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
+    "finance.boq_tip_desc":
+      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
     "finance.boq_tip_title": "Tips:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint":
+      "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Budget",
-    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder":
+      "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation":
+      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Utrustning",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -4808,8 +5424,10 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Valuta",
     "finance.direction": "Direction",
-    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file":
+      "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation":
+      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -4823,11 +5441,14 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result":
+      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder":
+      "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation":
+      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -4835,12 +5456,15 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc":
+      "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip":
+      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation":
+      "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -4871,15 +5495,19 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body":
+      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body":
+      "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body":
+      "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body":
+      "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Lägg till objekt",
@@ -4900,7 +5528,8 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder": "Optional notes or special instructions...",
+    "procurement.notes_placeholder":
+      "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -4911,60 +5540,87 @@ const resource = {
     "procurement.subtotal": "Subtotal",
     "procurement.tax": "Tax",
     "procurement.total": "Total",
-    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help":
+      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "match_elements.info.button_aria": "How matching works",
     "match_elements.info.button_title": "How matching works",
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer": "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract":
+      "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search":
+      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist":
+      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save":
+      "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer":
+      "Saved sessions live in the list on this page.",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help":
+      "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help":
+      "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help":
+      "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help":
+      "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help":
+      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help":
+      "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail":
+      "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail":
+      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
+    "match_elements.vector_status_missing_detail":
+      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail":
+      "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail":
+      "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail":
+      "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help":
+      "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title":
+      "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail":
+      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail":
+      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title":
+      "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail":
+      "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail":
+      "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available":
+      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint":
+      "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -4982,12 +5638,17 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body":
+      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
-    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption":
+      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption":
+      "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after":
+      "After install, restart the backend.",
+    "match_elements.embedder_size_caption":
+      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -4998,8 +5659,10 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption":
+      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption":
+      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5040,14 +5703,18 @@ const resource = {
     "match_progress.title_running": "Matchning pågår",
     "match_progress.title_done": "Matchning klar",
     "match_progress.title_error": "Matchning misslyckades",
-    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running":
+      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done":
+      "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error":
+      "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Förflutet",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long": "Almost done — large projects can take a minute",
+    "match_progress.headline_long":
+      "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5057,7 +5724,8 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint":
+      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "Matchning misslyckades",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5075,9 +5743,611 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Fastighetsutvecklare",
-    "onboarding.company_property_developer_desc": "Team för fastighetsutveckling",
+    "onboarding.company_property_developer_desc":
+      "Team för fastighetsutveckling",
     "onboarding.explore_all_modules": "Utforska alla {{count}} moduler",
-  }
+    "boq.add_child_position": "Add Child Partida",
+    "boq.add_sub_section": "Add Sub-section",
+    "boq.ai_no_answer":
+      "The assistant did not return an answer. Please rephrase or try again.‌⁠‍",
+    "boq.compare_added": "Added",
+    "boq.compare_against": "Compare against",
+    "boq.compare_btn": "Compare",
+    "boq.compare_btn_hint": "Compare this estimate against another BOQ",
+    "boq.compare_col_delta": "Δ base",
+    "boq.compare_col_line": "Line",
+    "boq.compare_col_qty": "Qty",
+    "boq.compare_col_rate": "Rate",
+    "boq.compare_error": "Could not compare these BOQs.",
+    "boq.compare_hide_unchanged": "Hide unchanged lines",
+    "boq.compare_no_diff": "No differences between these BOQs.",
+    "boq.compare_pick": "— Select a BOQ —",
+    "boq.compare_qty": "Qty",
+    "boq.compare_rate": "Rate",
+    "boq.compare_removed": "Removed",
+    "boq.compare_select_hint":
+      "Pick another BOQ above to see a line-by-line diff.",
+    "boq.compare_unchanged": "Unchanged",
+    "boq.compare_ct_added": "Added",
+    "boq.compare_ct_removed": "Removed",
+    "boq.compare_ct_qty_changed": "Qty",
+    "boq.compare_ct_rate_changed": "Rate",
+    "boq.compare_ct_changed": "Changed",
+    "boq.compare_ct_unchanged": "Unchanged",
+    "boq.model_link_action": "Model link…",
+    "boq.model_link_aggregation": "Aggregation",
+    "boq.model_link_agg_sum": "Sum",
+    "boq.model_link_agg_max": "Max",
+    "boq.model_link_agg_min": "Min",
+    "boq.model_link_agg_count": "Count",
+    "boq.model_link_agg_first": "First",
+    "boq.model_link_create": "Create link",
+    "boq.model_link_created": "Model link created",
+    "boq.model_link_created_hint":
+      "The quantity is not changed yet — use “Refresh from model” then Apply to pull it in.",
+    "boq.model_link_delete": "Delete link",
+    "boq.model_link_delete_failed": "Could not remove model link",
+    "boq.model_link_deleted": "Model link removed",
+    "boq.model_link_elem_count": "{{count}} element(s)",
+    "boq.model_link_elements": "Elements ({{selected}} selected)",
+    "boq.model_link_existing": "Existing links",
+    "boq.model_link_failed": "Could not create model link",
+    "boq.model_link_model": "BIM model",
+    "boq.model_link_new": "New link",
+    "boq.model_link_no_elements": "This model has no elements.",
+    "boq.model_link_no_models": "This project has no BIM models yet.",
+    "boq.model_link_none": "No model links yet for this position.",
+    "boq.model_link_pick_field": "— Select a quantity —",
+    "boq.model_link_pick_model": "— Select a model —",
+    "boq.model_link_quantity_field": "Quantity field",
+    "boq.model_link_status_active": "In sync",
+    "boq.model_link_status_stale": "Stale",
+    "boq.model_link_status_broken": "Broken",
+    "boq.model_link_subtitle":
+      "Position {{ordinal}} — bind its quantity to BIM model elements",
+    "boq.model_link_title": "Model link",
+    "boq.model_link_version": "model v{{v}}",
+    "boq.model_review_all_synced":
+      "All linked quantities are in sync with the model.",
+    "boq.model_review_applied": "{{count}} quantity update(s) applied",
+    "boq.model_review_apply": "Apply {{count}} selected",
+    "boq.model_review_apply_failed": "Apply failed",
+    "boq.model_review_btn": "Model sync",
+    "boq.model_review_btn_hint": "Re-pull quantities from linked BIM models",
+    "boq.model_review_hint":
+      "Re-pulls bound quantities against the latest model version. Nothing changes until you Apply.",
+    "boq.model_review_missing": "{{count}} missing",
+    "boq.model_review_no_links": "No model links in this BOQ",
+    "boq.model_review_refresh": "Refresh from model",
+    "boq.model_review_refresh_failed": "Refresh from model failed",
+    "boq.model_review_run": "Run a refresh to see model-driven changes.",
+    "boq.model_review_title": "Model quantity review",
+    "boq.position_added_edit_hint":
+      "Type the description, then Tab through unit, quantity & rate‌⁠‍",
+    "boq.link_badge_instance":
+      "Linked instance of code {{code}} — edits to its definition will diverge it‌⁠‍",
+    "boq.link_badge_master": "Master of code {{code}} — {{count}} linked‌⁠‍",
+    "boq.link_master_badge": "Master‌⁠‍",
+    "boq.link_propagated_msg":
+      "Updated {{count}} linked position(s) across this project.‌⁠‍",
+    "boq.link_propagated_title": "Definition propagated‌⁠‍",
+    "boq.max_depth_reached_tooltip":
+      "Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.",
+    "boq.resource_link_propagated_msg":
+      "Updated the shared resource on {{count}} other position(s) across this project.‌⁠‍",
+    "boq.resource_link_propagated_title": "Resource definition propagated‌⁠‍",
+    "boq.link_role_instance": "Linked instance‌⁠‍",
+    "boq.link_role_master": "Master (definition of record)‌⁠‍",
+    "boq.link_unlinked_msg":
+      "Your edit changed this linked copy, so it no longer follows the shared code. If you did not mean to diverge it, change its code back instead.‌⁠‍",
+    "boq.link_unlinked_title": "Position unlinked from shared code‌⁠‍",
+    "boq.linked_positions_count":
+      "{{total}} positions share this code ({{instances}} linked instance(s)). The master is the definition of record; editing it propagates to every instance in this project.‌⁠‍",
+    "boq.linked_positions_error": "Could not load linked positions.‌⁠‍",
+    "boq.linked_positions_none":
+      "This position is standalone — no other position shares its code.‌⁠‍",
+    "boq.linked_positions_subtitle":
+      "Code {{code}} — viewing from position {{ordinal}}",
+    "boq.linked_positions_title": "Linked positions‌⁠‍",
+    "boq.no_description": "(no description)‌⁠‍",
+    "boq.reuse_code_action": "Reuse Existing Code…",
+    "boq.reuse_code_existing": "Existing codes: {{codes}}",
+    "boq.reuse_code_msg":
+      "Linked instance created — {{count}} positions share this code. Its quantity is independently editable.‌⁠‍",
+    "boq.reuse_code_prompt":
+      "Enter an existing code to reuse it here (its definition & sub-items are copied; quantity stays independent):",
+    "boq.reuse_code_title": "Reused code {{code}}‌⁠‍",
+    "boq.show_linked": "Show Linked Positions",
+    "boq.unlink_done_msg":
+      "Code {{code}} kept. This position no longer follows the shared code; its values were preserved.‌⁠‍",
+    "boq.unlink_done_title": "Position unlinked‌⁠‍",
+    "boq.unlink_failed": "Failed to unlink position‌⁠‍",
+    "boq.unlink_this": "Unlink this position‌⁠‍",
+    "login.github": "GitHub",
+    "login.github_sub": "Source code",
+    "login.community": "Community",
+    "login.community_sub": "Get help & discuss",
+    "login.brand_edit": "Customize logo",
+    "login.brand_title": "White-label branding",
+    "login.brand_desc":
+      "Shown on this sign-in screen and across the app. Stored only in this browser.",
+    "login.brand_upload": "Upload logo",
+    "login.brand_name_ph": "Company name",
+    "login.brand_reset": "Reset to default",
+    "login.brand_too_big": "Image too large (max 512 KB).",
+    "login.brand_bad_type": "Please choose a PNG, JPG, SVG or WebP image.",
+    "nav.project_route": "Project route",
+    "nav.phase_estimation": "Estimation",
+    "nav.phase_planning": "Planning",
+    "nav.phase_execution": "Execution",
+    "nav.phase_closure": "Quality & Closure",
+    "nav.clash_detection": "Clash Detection",
+    "schedule_advanced.master_hint":
+      "Select a master schedule to make it the working plan for the Phases, Look-Ahead, Weekly and Constraints tabs. Use the row actions to rename it, change its planned dates and status, or delete it.",
+    "schedule_advanced.no_master_yet_desc":
+      "The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.",
+    "schedule_advanced.active_selection": "Working plan",
+    "schedule_advanced.master_status.active": "Active",
+    "schedule_advanced.master_status.archived": "Archived",
+    "schedule_advanced.edit_master": "Edit master schedule",
+    "schedule_advanced.master_updated": "Master schedule updated",
+    "schedule_advanced.master_deleted": "Master schedule deleted",
+    "schedule_advanced.delete_master_title": "Delete master schedule?",
+    "schedule_advanced.delete_master_message":
+      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
+    "schedule_advanced.err_master_name_required":
+      "Master schedule name is required.",
+    "schedule_advanced.master_name_placeholder":
+      "e.g. Construction master schedule",
+    "schedule_advanced.master_status_hint":
+      "Archive a schedule to keep its history without it being the working plan. Archived schedules can be reactivated here at any time.",
+    "schedule_advanced.master_notes_placeholder":
+      "Scope, contract reference, key milestones…",
+    "files.cta.add_first_short": "Add files",
+    "files.folder.files_count": "files",
+    "files.folder.subfolders": "{{count}} folders",
+    "files.folder.share": "{{pct}}% of total storage",
+    "notifications.safety.incident_created": "Safety incident reported",
+    "notifications.safety.incident_created_body":
+      "Incident {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation":
+      "High-risk safety observation",
+    "notifications.safety.high_risk_body":
+      "Observation {{observation_number}} (risk {{risk_score}}): {{description}}",
+    "notifications.bi.alert.title": "Dashboard alert triggered",
+    "notifications.bi.alert.body":
+      "{{alert_name}} — {{kpi_code}} is {{value}} ({{condition}} threshold {{threshold}}).",
+    "notifications.bi.report.title": "Scheduled report ready",
+    "notifications.bi.report.body":
+      "Report {{report_code}} generated with {{row_count}} rows.",
+    "notifications.supplier_catalogs.po.sent.title": "Purchase order sent",
+    "notifications.supplier_catalogs.po.sent.body":
+      "PO sent to vendor {{vendor_id}} for {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title":
+      "Invoice exception",
+    "notifications.supplier_catalogs.invoice.exception.body":
+      "Invoice for PO {{po_id}} needs review: {{reason}}",
+    "notifications.supplier_catalogs.stock.low.title": "Low stock warning",
+    "notifications.supplier_catalogs.stock.low.body":
+      "{{sku}}: {{available_qty}} left, at or below reorder point {{reorder_point}}.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title":
+      "Vendor blacklisted",
+    "notifications.supplier_catalogs.vendor.blacklisted.body":
+      "Vendor {{code}} was blacklisted: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title":
+      "Vendor compliance document expired",
+    "notifications.supplier_catalogs.kyc.expired.body":
+      "{{doc_type}} expired on {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title":
+      "Vendor compliance document expiring",
+    "notifications.supplier_catalogs.kyc.expiring.body":
+      "{{doc_type}} expires on {{expires_on}} ({{days_until_expiry}} days left).",
+    "notifications.resources.cert_expiring.title": "Certification expiring",
+    "notifications.resources.cert_expiring.body":
+      "{{resource_name}} — {{cert_type}} expires {{valid_until}} ({{days_left}} days left).",
+    "notifications.resources.assignment_proposed.title":
+      "Resource assignment proposed",
+    "notifications.resources.assignment_proposed.body":
+      "Proposed for task {{task}} starting {{start}}.",
+    "notifications.resources.assignment_confirmed.title":
+      "Resource assignment confirmed",
+    "notifications.resources.assignment_confirmed.body":
+      "Assignment confirmed for task {{task}}.",
+    "notifications.contracts.signed.title": "Contract signed",
+    "notifications.contracts.signed.body":
+      "Contract {{code}} signed for {{value}} {{currency}}.",
+    "notifications.contracts.claim_submitted.title": "Contract claim submitted",
+    "notifications.contracts.claim_submitted.body":
+      "Claim submitted for {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.title": "Contract claim paid",
+    "notifications.contracts.claim_paid.body":
+      "Claim paid: {{amount}} {{currency}}.",
+    "notifications.contracts.retention_released.title": "Retention released",
+    "notifications.contracts.retention_released.body":
+      "Contract {{contract_code}}: {{amount_released}} released, {{remaining}} remaining.",
+    "notifications.crm.lead_qualified.title": "Lead qualified",
+    "notifications.crm.lead_qualified.body":
+      "Lead {{name}} has been qualified.",
+    "notifications.crm.opportunity_won.title": "Opportunity won",
+    "notifications.crm.opportunity_won.body": "{{name}} won — value {{value}}.",
+    "notifications.crm.opportunity_scored.title": "Opportunity scored",
+    "notifications.crm.opportunity_scored.body":
+      "{{title}} scored {{score}} (band {{band}}).",
+    "notifications.carbon.boq_position_assigned.title":
+      "Carbon factor assigned",
+    "notifications.carbon.boq_position_assigned.body":
+      "BOQ position {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title": "Buyer contracted",
+    "notifications.property_dev.buyer_contracted.body":
+      "{{buyer}} contracted for plot {{plot}}.",
+    "notifications.property_dev.handover_completed.title": "Handover completed",
+    "notifications.property_dev.handover_completed.body":
+      "Plot {{plot}} handover completed.",
+    "notifications.property_dev.warranty_raised.title": "Warranty claim raised",
+    "notifications.property_dev.warranty_raised.body":
+      "{{category}} warranty claim raised for plot {{plot}}.",
+    "notifications.bid_management.invitation_sent.title": "Bid invitation sent",
+    "notifications.bid_management.invitation_sent.body":
+      "Invitation for {{package}} sent, due {{due}}.",
+    "notifications.bid_management.awarded.title": "Bid awarded",
+    "notifications.bid_management.awarded.body":
+      "{{package}} awarded for {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title":
+      "Schedule constraint cleared",
+    "notifications.schedule_advanced.constraint_cleared.body":
+      "Task {{task}} is no longer blocked.",
+    "notifications.daily_diary.signed.title": "Daily diary signed",
+    "notifications.daily_diary.signed.body":
+      "Diary for {{date}} has been signed.",
+    "notifications.service.ticket_dispatched.title":
+      "Service ticket dispatched",
+    "notifications.service.ticket_dispatched.body":
+      "Ticket {{ticket_number}} dispatched ({{priority}} priority).",
+    "notifications.service.ticket_resolved.title": "Service ticket resolved",
+    "notifications.service.ticket_resolved.body":
+      "Ticket {{ticket_number}} has been resolved.",
+    "notifications.service.work_order_billed.title": "Work order billed",
+    "notifications.service.work_order_billed.body":
+      "Work order {{wo_number}} billed for {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.title":
+      "Prequalification submitted",
+    "notifications.subcontractors.prequal_submitted.body":
+      "{{subcontractor_name}} submitted a prequalification.",
+    "notifications.subcontractors.payment_app_submitted.title":
+      "Payment application submitted",
+    "notifications.subcontractors.payment_app_submitted.body":
+      "Application {{application_number}} submitted for {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title":
+      "Subcontractor retention released",
+    "notifications.subcontractors.retention_released.body":
+      "{{amount}} {{currency}} retention released.",
+    "notifications.equipment.assigned.title": "Equipment assigned",
+    "notifications.equipment.assigned.body":
+      "{{equipment_code}} assigned to {{project_name}}.",
+    "notifications.equipment.damage_reported.title":
+      "Equipment damage reported",
+    "notifications.equipment.damage_reported.body":
+      "{{equipment_code}} damage reported ({{severity}}).",
+    "notifications.portal.user_invited.title": "Portal user invited",
+    "notifications.portal.user_invited.body":
+      "{{portal_user_email}} invited as {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer":
+      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
+    "match_elements.vector_status_disconnected_fallback":
+      "You can still proceed now: matching automatically falls back to lexical (keyword) and rule-based scoring while the vector DB is offline.",
+    "match_elements.vector_status_retry": "Retry connection",
+    "match_elements.vector_status_open_costs_long": "Open cost-database tools",
+    "match_elements.pipeline.title": "Match pipeline",
+    "match_elements.pipeline.subtitle":
+      "Seven steps from CAD file to priced BoQ — every step is visible and tunable",
+    "match_elements.pipeline.done_suffix": "done",
+    "match_elements.pipeline.run_all": "Run all stages",
+    "match_elements.pipeline.running_all": "Running all…",
+    "match_elements.pipeline.loading": "Loading pipeline…",
+    "match_elements.pipeline.load_failed": "Could not load the pipeline.",
+    "match_elements.pipeline.loading_prompts": "Loading prompts…",
+    "match_elements.pipeline.run": "Run",
+    "match_elements.pipeline.rerun": "Re-run",
+    "match_elements.pipeline.adjust": "Adjust",
+    "match_elements.pipeline.adjust_stage": "Adjust stage",
+    "match_elements.pipeline.rerun_from_here": "Re-run from here",
+    "match_elements.pipeline.status_pending": "Not run",
+    "match_elements.pipeline.status_running": "Running",
+    "match_elements.pipeline.status_done": "Done",
+    "match_elements.pipeline.status_error": "Error",
+    "match_elements.pipeline.status_stale": "Needs re-run",
+    "match_elements.pipeline.status_skipped": "Skipped",
+    "match_elements.pipeline.stale_hint":
+      "An earlier stage changed — re-run this step to refresh its output.",
+    "match_elements.pipeline.llm_badge": "LLM",
+    "match_elements.pipeline.llm_tunable": "LLM-augmented — prompt is editable",
+    "match_elements.pipeline.group_by": "Group by keys",
+    "match_elements.pipeline.group_by_hint":
+      "Comma-separated. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.method": "Method",
+    "match_elements.pipeline.max_groups": "Max groups",
+    "match_elements.pipeline.llm_provider": "LLM provider",
+    "match_elements.pipeline.prompt": "Prompt",
+    "match_elements.pipeline.system": "system",
+    "match_elements.pipeline.system_readonly":
+      "System prompt — read-only. Fork it to edit and tune for your company.",
+    "match_elements.pipeline.system_prompt": "System prompt",
+    "match_elements.pipeline.user_template": "User template",
+    "match_elements.pipeline.variables": "Variables the stage fills:",
+    "match_elements.pipeline.fork": "Fork to edit",
+    "match_elements.pipeline.duplicate": "Duplicate",
+    "match_elements.pipeline.save_prompt": "Save prompt",
+    "match_elements.pipeline.revert": "Revert",
+    "match_elements.pipeline.run_failed": "Stage run failed",
+    "match_elements.pipeline.intro_title": "Open the visible match pipeline",
+    "match_elements.pipeline.intro_blurb":
+      "Seven steps from CAD file to priced BoQ — Convert, Load, Schema, Filter, Group, Match, Rollup. Every step is visible, explained, and tunable (prompts, LLM provider, group keys).",
+    "match_elements.pipeline.intro_cta": "Open the pipeline",
+    "match_elements.pipeline.intro_resume": "Resume last session",
+    "match_elements.pipeline.busy_hint":
+      "A stage is running — wait for it to finish before starting another.",
+    "match_elements.pipeline.step_convert": "Convert",
+    "match_elements.pipeline.step_load": "Load",
+    "match_elements.pipeline.step_schema": "Schema",
+    "match_elements.pipeline.step_filter": "Filter",
+    "match_elements.pipeline.step_group": "Group",
+    "match_elements.pipeline.step_match": "Match",
+    "match_elements.pipeline.step_rollup": "Rollup",
+    "clash.title": "Clash Detection",
+    "clash.subtitle":
+      "Geometric interference & clearance coordination across federated BIM models — with a clash matrix and BCF export.",
+    "clash.pick_project": "Select a project",
+    "clash.new_run": "New clash run",
+    "clash.models": "Models",
+    "clash.no_models": "No parsed BIM models in this project.",
+    "clash.tolerance": "Tolerance (mm)",
+    "clash.clearance": "Clearance (mm)",
+    "clash.mode": "Test scope",
+    "clash.mode_cross": "Cross-discipline only",
+    "clash.mode_all": "Every pair",
+    "clash.mode_sets": "Set A vs Set B (by type)",
+    "clash.sets_hint":
+      "Only pairs where one element is in Set A and the other in Set B are tested — e.g. all Walls (A) against all Pipes (B).",
+    "clash.set_a": "Set A",
+    "clash.set_b": "Set B",
+    "clash.sets_required":
+      "Pick at least one type or discipline for both Set A and Set B.",
+    "clash.set_search": "Search types / disciplines…",
+    "clash.set_empty": "No elements — select a parsed model first.",
+    "clash.disciplines": "Disciplines",
+    "clash.element_types": "Element types",
+    "clash.run": "Run clash detection",
+    "clash.history": "Run history",
+    "clash.no_runs": "No runs yet.",
+    "clash.run_failed": "Clash run failed",
+    "clash.run_done": "{{n}} clashes found across {{e}} elements",
+    "clash.status_failed": "Could not update status",
+    "clash.status_saved": "Status updated",
+    "clash.bcf_done": "Exported {{n}} clash(es) to BCF ({{s}} skipped)",
+    "clash.empty_title": "No clash run selected",
+    "clash.empty_desc":
+      "Pick the BIM models on the left and run clash detection to build the coordination matrix.",
+    "clash.kpi_total": "Total clashes",
+    "clash.kpi_hard": "Hard",
+    "clash.kpi_clearance": "Clearance",
+    "clash.kpi_open": "Open",
+    "clash.kpi_resolved": "Resolved",
+    "clash.kpi_disciplines": "Disciplines",
+    "clash.kpi_matrix_cells": "Matrix cells",
+    "clash.matrix_title": "Clash matrix — discipline × discipline",
+    "clash.matrix_open": "{{n}} open",
+    "clash.clear_filter": "Clear filter",
+    "clash.no_clashes": "No clashes — the models are clean.",
+    "clash.no_clashes_title": "No clashes detected",
+    "clash.no_match_title": "No clashes match the filters",
+    "clash.no_match_desc": "Try widening or clearing the active filters.",
+    "clash.results_error": "Failed to load clash results",
+    "clash.results_error_desc":
+      "The clash results could not be loaded. This does not mean the models are clean — please retry.",
+    "clash.retry": "Retry",
+    "clash.capped_notice":
+      "Showing the first {{loaded}} of {{total}} clashes — refine the filters to narrow the review set.",
+    "clash.results": "Clash results",
+    "clash.count_of": "{{shown}} of {{total}}",
+    "clash.search_ph": "Search element name…",
+    "clash.all_types": "All types",
+    "clash.type_hard": "Hard",
+    "clash.type_clearance": "Clearance",
+    "clash.export_sel": "Export {{n}} to BCF",
+    "clash.export_open": "Export open → BCF",
+    "clash.export_row": "Export this clash to BCF",
+    "clash.filter_status": "Status",
+    "clash.filter_min_pen": "Min penetration",
+    "clash.clear_all": "Clear all",
+    "clash.col_a": "Element A",
+    "clash.col_b": "Element B",
+    "clash.col_type": "Type",
+    "clash.col_penetration": "Penetration",
+    "clash.col_distance": "Distance",
+    "clash.col_status": "Status",
+    "clash.col_actions": "Actions",
+    "clash.select_all": "Select all on page",
+    "clash.select_row": "Select clash",
+    "clash.bcf": "BCF",
+    "clash.isolate_3d": "Isolate in 3D",
+    "clash.isolate_3d_short": "3D",
+    "clash.n_selected": "{{n}} selected",
+    "clash.clear_selection": "Clear",
+    "clash.clear_filter_short": "Clear",
+    "clash.page_range": "{{from}}–{{to}} of {{total}}",
+    "clash.page_of": "Page {{p}} / {{n}}",
+    "clash.prev": "Prev",
+    "clash.next": "Next",
+    "clash.status.new": "New",
+    "clash.status.active": "Active",
+    "clash.status.reviewed": "Reviewed",
+    "clash.status.approved": "Approved",
+    "clash.status.resolved": "Resolved",
+    "clash.status.ignored": "Ignored",
+    "nav.pipelines": "Pipeline Builder",
+    "pipeline.untitled": "Untitled pipeline",
+    "pipeline.empty.title": "Build your first automation",
+    "pipeline.empty.description":
+      "Drag a trigger and a few steps from the palette on the left, connect them, then press Run.",
+    "pipeline.toast.saved": "Pipeline saved",
+    "pipeline.toast.save_failed": "Could not save pipeline",
+    "pipeline.toast.run_failed": "Could not start the run",
+    "pipeline.explain.coming_soon_title": "Explain this pipeline",
+    "pipeline.explain.coming_soon_body":
+      "The plain-language story view arrives in the next release.",
+    "pipeline.tour.palette_title": "Pick your steps",
+    "pipeline.tour.palette_body":
+      "Drag a step from here onto the canvas, or just click it to drop it in the middle.",
+    "pipeline.tour.canvas_title": "Connect the steps",
+    "pipeline.tour.canvas_body":
+      "Drag from one step output dot to the next step input. Colours show the data type.",
+    "pipeline.tour.run_title": "Run it",
+    "pipeline.tour.run_body":
+      "Press Run to execute the pipeline and watch each step light up live.",
+    "pipeline.toolbar.aria": "Pipeline toolbar",
+    "pipeline.toolbar.undo": "Undo",
+    "pipeline.toolbar.redo": "Redo",
+    "pipeline.toolbar.fit": "Fit view",
+    "pipeline.toolbar.explain": "Explain this pipeline",
+    "pipeline.toolbar.issues": "{{count}} issue(s)",
+    "pipeline.toolbar.save": "Save",
+    "pipeline.toolbar.run": "Run",
+    "pipeline.toolbar.stop": "Stop",
+    "pipeline.palette.title": "Steps",
+    "pipeline.palette.aria": "Node palette",
+    "pipeline.palette.expand": "Expand palette",
+    "pipeline.palette.collapse": "Collapse palette",
+    "pipeline.palette.search": "Search steps",
+    "pipeline.palette.search_ph": "Search…",
+    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.none": "No step types available.",
+    "pipeline.palette.module_chip": "Touches the {{module}} module",
+    "pipeline.palette.writes": "writes",
+    "pipeline.palette.writes_chip":
+      "This step writes data — needs a gate before it",
+    "pipeline.palette.cat_trigger": "Sources / Triggers",
+    "pipeline.palette.cat_source": "Get data",
+    "pipeline.palette.cat_transform": "Transform",
+    "pipeline.palette.cat_gate": "Validate",
+    "pipeline.palette.cat_ai": "AI",
+    "pipeline.palette.cat_action": "Actions / Outputs",
+    "pipeline.palette.cat_flow": "Flow control",
+    "pipeline.inspector.aria": "Inspector",
+    "pipeline.inspector.expand": "Expand inspector",
+    "pipeline.inspector.collapse": "Collapse inspector",
+    "pipeline.inspector.tab_node": "Node",
+    "pipeline.inspector.tab_pipeline": "Pipeline",
+    "pipeline.inspector.context_node": "Editing step",
+    "pipeline.inspector.context_pipeline": "Editing pipeline",
+    "pipeline.inspector.no_params": "This step has no settings to configure.",
+    "pipeline.inspector.enabled": "Enabled",
+    "pipeline.inspector.choose": "Choose…",
+    "pipeline.inspector.duplicate": "Duplicate",
+    "pipeline.inspector.delete": "Delete",
+    "pipeline.inspector.name": "Name",
+    "pipeline.inspector.name_ph": "My automation",
+    "pipeline.inspector.description": "Description",
+    "pipeline.inspector.published": "Published (can be triggered)",
+    "pipeline.inspector.summary_stub":
+      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.canvas.aria": "Pipeline editor canvas",
+    "pipeline.canvas.hint":
+      "Drag steps from the palette, connect their ports, then press Run.",
+    "pipeline.canvas.legend_sr":
+      "Edge colour, shape and dash together encode the data type.",
+    "pipeline.connect.incompatible_title": "These steps can't be connected",
+    "pipeline.connect.incompatible_body":
+      "This output is a {{from}}; that input expects a {{to}}.",
+    "pipeline.node.rename": "Rename node",
+    "pipeline.node.rename_hint": "Double-click to rename",
+    "pipeline.node.ai_badge": "AI",
+    "pipeline.node.ai_confidence":
+      "AI suggestion — review the confidence score",
+    "pipeline.node.help": "What this node does",
+    "pipeline.node.help_generic":
+      "Configure this step in the Inspector. It receives data from the connected step before it and passes its result on.",
+    "pipeline.node.collapse": "Collapse",
+    "pipeline.node.expand": "Expand",
+    "pipeline.node.more_params": "+{{count}} more",
+    "pipeline.node.took_ms": "{{ms}} ms",
+    "pipeline.port.aria_input": "input: {{label}}, type {{type}}",
+    "pipeline.port.aria_output": "output: {{label}}, type {{type}}",
+    "pipeline.port.table": "Table / rows",
+    "pipeline.port.file": "File / document",
+    "pipeline.port.bim": "BIM model",
+    "pipeline.port.number": "Number",
+    "pipeline.port.boolean": "Boolean / flag",
+    "pipeline.port.any": "Any / passthrough",
+    "pipeline.port.error": "Error branch",
+    "pipeline.dock.run": "Run",
+    "pipeline.dock.expand": "Expand run dock",
+    "pipeline.dock.collapse": "Collapse run dock",
+    "pipeline.dock.idle": "Idle",
+    "pipeline.dock.progress": "{{pct}}%",
+    "pipeline.dock.tab_run": "Run",
+    "pipeline.dock.tab_history": "History",
+    "pipeline.dock.no_steps":
+      "Add steps and press Run to watch data flow through your pipeline.",
+    "pipeline.dock.loading_history": "Loading run history…",
+    "pipeline.dock.no_runs_title": "No runs yet",
+    "pipeline.dock.no_runs_desc":
+      "Press Run to see data flow through your pipeline.",
+    "pipeline.dock.manual": "Manual",
+    "pipeline.dock.queued_hint": "Waiting for a worker to pick up the run…",
+    "pipeline.runstatus.pending": "Pending",
+    "pipeline.runstatus.queued": "Queued",
+    "pipeline.runstatus.running": "Running",
+    "pipeline.runstatus.started": "Running",
+    "pipeline.runstatus.done": "Done",
+    "pipeline.runstatus.success": "Done",
+    "pipeline.runstatus.error": "Error",
+    "pipeline.runstatus.failed": "Failed",
+    "pipeline.runstatus.skipped": "Skipped",
+    "pipeline.runstatus.stale": "Needs re-run",
+    "pipeline.runstatus.paused": "Paused",
+    "pipeline.runstatus.cancelled": "Cancelled",
+    "pipeline.trigger.manual": "Manual",
+    "pipeline.trigger.schedule": "Scheduled",
+    "pipeline.trigger.event": "Event",
+    "pipeline.nodetype.trigger.manual": "Manual trigger",
+    "pipeline.nodetype.trigger.manual.desc":
+      "Start the pipeline from a REST call. No inputs.",
+    "pipeline.nodetype.source.project": "Get project",
+    "pipeline.nodetype.source.project.desc":
+      "Load the bound project's id + name.",
+    "pipeline.nodetype.source.boq": "Get BOQ positions",
+    "pipeline.nodetype.source.boq.desc":
+      "Load every BOQ position for the project as rows (ids + a small sample).",
+    "pipeline.nodetype.transform.filter": "Filter rows",
+    "pipeline.nodetype.transform.filter.desc":
+      "Keep only rows matching a simple field/op/value test.",
+    "pipeline.nodetype.gate.validation": "Validation gate",
+    "pipeline.nodetype.gate.validation.desc":
+      "Run the validation engine over the rows; stop the run on blocking errors.",
+    "pipeline.nodetype.action.export.excel": "Export to Excel",
+    "pipeline.nodetype.action.export.excel.desc":
+      "Write the rows to an .xlsx file (returns a download reference; does not mutate the database).",
+    "pipeline.nodehelp.trigger.manual":
+      "This is where the pipeline begins. It carries no settings — connect it to a data step next.",
+    "pipeline.nodehelp.source.project":
+      "Loads the project this pipeline is bound to. Leave the project id blank to use the one from the page URL.",
+    "pipeline.nodehelp.source.boq":
+      "Reads every BOQ position for the project. Only ids and a small preview travel between steps; the full data stays on the server.",
+    "pipeline.nodehelp.transform.filter":
+      "Keeps only the rows that match the field / operator / value test you set in the Inspector. Leave the field blank to pass everything through.",
+    "pipeline.nodehelp.gate.validation":
+      "Runs the validation engine over the rows. If there are blocking errors the run stops here, so write steps after it never act on bad data.",
+    "pipeline.nodehelp.action.export.excel":
+      "Writes the incoming rows to an Excel file and returns a download reference. It does not change any data.",
+    "pipeline.param.source.project.project_id": "Project id (optional)",
+    "pipeline.param.source.boq.project_id": "Project id (optional)",
+    "pipeline.param.transform.filter.field": "Field",
+    "pipeline.param.transform.filter.op": "Operator",
+    "pipeline.param.transform.filter.value": "Value",
+    "pipeline.param.gate.validation.rule_sets": "Rule sets",
+    "pipeline.param.action.export.excel.filename": "File name",
+    "pipeline.param.action.export.excel.columns": "Columns",
+  },
 } as { translation: Record<string, string> };
 
 export default resource;

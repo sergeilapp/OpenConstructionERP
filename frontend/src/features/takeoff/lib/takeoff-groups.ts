@@ -5,15 +5,15 @@
  * summary rows (count + total value) so the legend renders in one pass.
  */
 
-import type { Measurement } from './takeoff-types';
+import type { Measurement } from "./takeoff-types";
 
 /** Tool types that shouldn't be counted in legend totals. */
 export const ANNOTATION_TYPES = new Set([
-  'cloud',
-  'arrow',
-  'text',
-  'rectangle',
-  'highlight',
+  "cloud",
+  "arrow",
+  "text",
+  "rectangle",
+  "highlight",
 ]);
 
 export interface GroupSummary {
@@ -37,7 +37,7 @@ export interface GroupSummary {
 export function computeGroupSummaries(
   measurements: Measurement[],
   groupColorMap: Readonly<Record<string, string>>,
-  fallbackColor: string = '#3B82F6',
+  fallbackColor: string = "#3B82F6",
 ): GroupSummary[] {
   const byGroup = new Map<
     string,
@@ -45,7 +45,7 @@ export function computeGroupSummaries(
   >();
 
   for (const m of measurements) {
-    const name = m.group || 'General';
+    const name = m.group || "General";
     const existing = byGroup.get(name) ?? {
       count: 0,
       total: 0,
@@ -66,8 +66,8 @@ export function computeGroupSummaries(
   for (const [name, { count, total, unitCounts }] of byGroup.entries()) {
     // Pick the most-used unit for this group (stable tiebreak: lexicographic).
     const unitEntries = Object.entries(unitCounts);
-    unitEntries.sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0]));
-    const unit = unitEntries[0]?.[0] ?? '';
+    unitEntries.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const unit = unitEntries[0]?.[0] ?? "";
     summaries.push({
       name,
       color: groupColorMap[name] ?? fallbackColor,

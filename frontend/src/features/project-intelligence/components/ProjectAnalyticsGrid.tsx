@@ -10,9 +10,9 @@
  *   6. Real-time validation (live rule pass count)
  */
 
-import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   BarChart,
   Bar,
@@ -26,9 +26,9 @@ import {
   AreaChart,
   Area,
   ResponsiveContainer,
-} from 'recharts';
-import { apiGet } from '@/shared/lib/api';
-import { buildPareto, type ParetoInput } from './ParetoHelper';
+} from "recharts";
+import { apiGet } from "@/shared/lib/api";
+import { buildPareto, type ParetoInput } from "./ParetoHelper";
 
 export const PI_QUERY_STALE_MS = 60_000;
 
@@ -59,7 +59,12 @@ interface BidSpread {
 
 interface BidAnalysis {
   vendors: BidVendor[];
-  outliers: Array<{ bid_id: string; company_name: string; total: number; reason: string }>;
+  outliers: Array<{
+    bid_id: string;
+    company_name: string;
+    total: number;
+    reason: string;
+  }>;
   spread: BidSpread;
 }
 
@@ -79,8 +84,8 @@ interface LaborCostByPhase {
 
 interface AnomalyRow {
   position_id: string;
-  type: 'outlier' | 'jump' | 'format';
-  severity: 'info' | 'warning' | 'error';
+  type: "outlier" | "jump" | "format";
+  severity: "info" | "warning" | "error";
 }
 
 interface SummaryState {
@@ -104,7 +109,14 @@ interface ProjectAnalyticsGridProps {
   projectId: string;
 }
 
-const COLORS = ['#58a6ff', '#bc8cff', '#3fb950', '#f0883e', '#ffa657', '#8b949e'];
+const COLORS = [
+  "#58a6ff",
+  "#bc8cff",
+  "#3fb950",
+  "#f0883e",
+  "#ffa657",
+  "#8b949e",
+];
 
 function WidgetCard({
   testId,
@@ -145,7 +157,7 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
   const { t } = useTranslation();
 
   const lineItemsQ = useQuery({
-    queryKey: ['pi', 'line-items', projectId],
+    queryKey: ["pi", "line-items", projectId],
     queryFn: () =>
       apiGet<LineItemRow[]>(
         `/v1/boq/line-items/?project_id=${projectId}&group=cost&top_n=20`,
@@ -155,15 +167,17 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
   });
 
   const bidAnalysisQ = useQuery({
-    queryKey: ['pi', 'bid-analysis', projectId],
+    queryKey: ["pi", "bid-analysis", projectId],
     queryFn: () =>
-      apiGet<BidAnalysis>(`/v1/tendering/bid-analysis/?project_id=${projectId}`),
+      apiGet<BidAnalysis>(
+        `/v1/tendering/bid-analysis/?project_id=${projectId}`,
+      ),
     staleTime: PI_QUERY_STALE_MS,
     enabled: !!projectId,
   });
 
   const laborCostQ = useQuery({
-    queryKey: ['pi', 'labor-cost-by-phase', projectId],
+    queryKey: ["pi", "labor-cost-by-phase", projectId],
     queryFn: () =>
       apiGet<LaborCostByPhase>(
         `/v1/schedule/labor-cost-by-phase/?project_id=${projectId}`,
@@ -173,16 +187,19 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
   });
 
   const anomaliesQ = useQuery({
-    queryKey: ['pi', 'anomalies', projectId],
-    queryFn: () => apiGet<AnomalyRow[]>(`/v1/boq/anomalies/?project_id=${projectId}`),
+    queryKey: ["pi", "anomalies", projectId],
+    queryFn: () =>
+      apiGet<AnomalyRow[]>(`/v1/boq/anomalies/?project_id=${projectId}`),
     staleTime: PI_QUERY_STALE_MS,
     enabled: !!projectId,
   });
 
   const summaryQ = useQuery({
-    queryKey: ['pi', 'summary', projectId],
+    queryKey: ["pi", "summary", projectId],
     queryFn: () =>
-      apiGet<SummaryResponse>(`/v1/project_intelligence/summary/?project_id=${projectId}`),
+      apiGet<SummaryResponse>(
+        `/v1/project_intelligence/summary/?project_id=${projectId}`,
+      ),
     staleTime: PI_QUERY_STALE_MS,
     enabled: !!projectId,
   });
@@ -198,11 +215,11 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
     const s = bidAnalysisQ.data?.spread;
     if (!s || s.sample_size === 0) return [];
     return [
-      { name: 'min', value: s.min },
-      { name: 'p25', value: s.p25 },
-      { name: 'p50', value: s.p50 },
-      { name: 'p75', value: s.p75 },
-      { name: 'max', value: s.max },
+      { name: "min", value: s.min },
+      { name: "p25", value: s.p25 },
+      { name: "p50", value: s.p50 },
+      { name: "p75", value: s.p75 },
+      { name: "max", value: s.max },
     ];
   }, [bidAnalysisQ.data]);
 
@@ -218,7 +235,7 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
     const pieData = top3.map((v) => ({ name: v.company_name, value: v.total }));
     if (rest.length > 0) {
       pieData.push({
-        name: 'other',
+        name: "other",
         value: rest.reduce((acc, v) => acc + v.total, 0),
       });
     }
@@ -240,14 +257,16 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
     const anomalies = anomaliesQ.data ?? [];
     const passed = v?.rules_passed ?? 0;
     const total = v?.rules_total ?? passed + anomalies.length;
-    const errors = (v?.errors ?? 0) + anomalies.filter((a) => a.severity === 'error').length;
+    const errors =
+      (v?.errors ?? 0) + anomalies.filter((a) => a.severity === "error").length;
     const warnings =
-      (v?.warnings ?? 0) + anomalies.filter((a) => a.severity === 'warning').length;
+      (v?.warnings ?? 0) +
+      anomalies.filter((a) => a.severity === "warning").length;
     return { passed, total, errors, warnings };
   }, [summaryQ.data, anomaliesQ.data]);
 
-  const emptyLabel = t('project_intelligence.analytics.no_data', {
-    defaultValue: 'No data yet‌⁠‍',
+  const emptyLabel = t("project_intelligence.analytics.no_data", {
+    defaultValue: "No data yet‌⁠‍",
   });
 
   return (
@@ -255,18 +274,21 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
       {/* 1. Cost drivers (Pareto) */}
       <WidgetCard
         testId="pi-widget-cost-drivers"
-        title={t('project_intelligence.analytics.cost_drivers', {
-          defaultValue: 'Cost drivers‌⁠‍',
+        title={t("project_intelligence.analytics.cost_drivers", {
+          defaultValue: "Cost drivers‌⁠‍",
         })}
-        subtitle={t('project_intelligence.analytics.cost_drivers_sub', {
-          defaultValue: 'Top 5 line items by total cost‌⁠‍',
+        subtitle={t("project_intelligence.analytics.cost_drivers_sub", {
+          defaultValue: "Top 5 line items by total cost‌⁠‍",
         })}
       >
         {pareto.length === 0 ? (
           <Empty label={emptyLabel} />
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={pareto} margin={{ left: 0, right: 8, top: 4, bottom: 4 }}>
+            <BarChart
+              data={pareto}
+              margin={{ left: 0, right: 8, top: 4, bottom: 4 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="#8b949e22" />
               <XAxis
                 dataKey="label"
@@ -287,18 +309,21 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
       {/* 2. Price volatility */}
       <WidgetCard
         testId="pi-widget-price-volatility"
-        title={t('project_intelligence.analytics.price_volatility', {
-          defaultValue: 'Price volatility‌⁠‍',
+        title={t("project_intelligence.analytics.price_volatility", {
+          defaultValue: "Price volatility‌⁠‍",
         })}
-        subtitle={t('project_intelligence.analytics.price_volatility_sub', {
-          defaultValue: 'Bid total spread across vendors‌⁠‍',
+        subtitle={t("project_intelligence.analytics.price_volatility_sub", {
+          defaultValue: "Bid total spread across vendors‌⁠‍",
         })}
       >
         {volatility.length === 0 ? (
           <Empty label={emptyLabel} />
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={volatility} margin={{ left: 0, right: 8, top: 4, bottom: 4 }}>
+            <BarChart
+              data={volatility}
+              margin={{ left: 0, right: 8, top: 4, bottom: 4 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="#8b949e22" />
               <XAxis dataKey="name" tick={{ fontSize: 10 }} />
               <YAxis tick={{ fontSize: 10 }} />
@@ -312,11 +337,11 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
       {/* 3. Schedule <-> cost correlation */}
       <WidgetCard
         testId="pi-widget-schedule-cost"
-        title={t('project_intelligence.analytics.schedule_cost', {
-          defaultValue: 'Schedule ↔ cost',
+        title={t("project_intelligence.analytics.schedule_cost", {
+          defaultValue: "Schedule ↔ cost",
         })}
-        subtitle={t('project_intelligence.analytics.schedule_cost_sub', {
-          defaultValue: 'Labour cost by phase',
+        subtitle={t("project_intelligence.analytics.schedule_cost_sub", {
+          defaultValue: "Labour cost by phase",
         })}
       >
         {laborPhases.length === 0 ? (
@@ -353,11 +378,11 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
       {/* 4. Vendor concentration */}
       <WidgetCard
         testId="pi-widget-vendor-concentration"
-        title={t('project_intelligence.analytics.vendor_concentration', {
-          defaultValue: 'Vendor concentration',
+        title={t("project_intelligence.analytics.vendor_concentration", {
+          defaultValue: "Vendor concentration",
         })}
-        subtitle={t('project_intelligence.analytics.vendor_concentration_sub', {
-          defaultValue: 'Top 3 bidders\u2019 share',
+        subtitle={t("project_intelligence.analytics.vendor_concentration_sub", {
+          defaultValue: "Top 3 bidders\u2019 share",
         })}
       >
         {vendorPie.length === 0 ? (
@@ -385,11 +410,11 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
       {/* 5. Scope coverage */}
       <WidgetCard
         testId="pi-widget-scope-coverage"
-        title={t('project_intelligence.analytics.scope_coverage', {
-          defaultValue: 'Scope coverage',
+        title={t("project_intelligence.analytics.scope_coverage", {
+          defaultValue: "Scope coverage",
         })}
-        subtitle={t('project_intelligence.analytics.scope_coverage_sub', {
-          defaultValue: 'BOQ line count vs baseline',
+        subtitle={t("project_intelligence.analytics.scope_coverage_sub", {
+          defaultValue: "BOQ line count vs baseline",
         })}
       >
         <div className="h-full flex flex-col items-center justify-center">
@@ -397,8 +422,8 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
             {coverage.pct.toFixed(0)}%
           </div>
           <div className="text-2xs text-content-tertiary mt-1">
-            {t('project_intelligence.analytics.scope_coverage_ratio', {
-              defaultValue: '{{current}} of {{baseline}} lines',
+            {t("project_intelligence.analytics.scope_coverage_ratio", {
+              defaultValue: "{{current}} of {{baseline}} lines",
               current: coverage.current,
               baseline: coverage.baseline,
             })}
@@ -409,32 +434,32 @@ export function ProjectAnalyticsGrid({ projectId }: ProjectAnalyticsGridProps) {
       {/* 6. Real-time validation */}
       <WidgetCard
         testId="pi-widget-validation"
-        title={t('project_intelligence.analytics.validation_live', {
-          defaultValue: 'Real-time validation',
+        title={t("project_intelligence.analytics.validation_live", {
+          defaultValue: "Real-time validation",
         })}
-        subtitle={t('project_intelligence.analytics.validation_live_sub', {
-          defaultValue: 'Rule pass count (updates every 60s)',
+        subtitle={t("project_intelligence.analytics.validation_live_sub", {
+          defaultValue: "Rule pass count (updates every 60s)",
         })}
       >
         <div className="h-full flex flex-col items-center justify-center gap-1">
           <div className="text-3xl font-bold text-content-primary tabular-nums">
             {validation.passed}
             <span className="text-lg text-content-tertiary font-normal">
-              {' '}
+              {" "}
               / {validation.total}
             </span>
           </div>
           <div className="flex items-center gap-3 text-2xs mt-1">
             <span className="text-rose-500">
-              {validation.errors}{' '}
-              {t('project_intelligence.analytics.errors', {
-                defaultValue: 'errors',
+              {validation.errors}{" "}
+              {t("project_intelligence.analytics.errors", {
+                defaultValue: "errors",
               })}
             </span>
             <span className="text-amber-500">
-              {validation.warnings}{' '}
-              {t('project_intelligence.analytics.warnings', {
-                defaultValue: 'warnings',
+              {validation.warnings}{" "}
+              {t("project_intelligence.analytics.warnings", {
+                defaultValue: "warnings",
               })}
             </span>
           </div>

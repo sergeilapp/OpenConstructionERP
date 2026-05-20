@@ -7,7 +7,7 @@
  * Reference: GAEB DA XML 3.3 (Gemeinsamer Ausschuss Elektronik im Bauwesen)
  */
 
-import { triggerDownload } from '@/shared/lib/api';
+import { triggerDownload } from "@/shared/lib/api";
 
 // ---------------------------------------------------------------------------
 // Unit code mapping — internal canonical units → GAEB-DA short codes
@@ -26,44 +26,44 @@ import { triggerDownload } from '@/shared/lib/api';
  */
 const GAEB_UNIT_CODES: Record<string, string> = {
   // length
-  m: 'm',
-  mm: 'mm',
-  cm: 'cm',
-  km: 'km',
-  lm: 'm', // linear meter — same code as m in GAEB
-  ll: 'm',
-  ft: 'ft',
-  in: 'in',
+  m: "m",
+  mm: "mm",
+  cm: "cm",
+  km: "km",
+  lm: "m", // linear meter — same code as m in GAEB
+  ll: "m",
+  ft: "ft",
+  in: "in",
   // area
-  m2: 'm²',
-  cm2: 'cm²',
-  ft2: 'ft²',
+  m2: "m²",
+  cm2: "cm²",
+  ft2: "ft²",
   // volume
-  m3: 'm³',
-  cm3: 'cm³',
-  l: 'l',
-  ft3: 'ft³',
+  m3: "m³",
+  cm3: "cm³",
+  l: "l",
+  ft3: "ft³",
   // mass
-  kg: 'kg',
-  g: 'g',
-  t: 't',
+  kg: "kg",
+  g: "g",
+  t: "t",
   // counts / lump
-  pcs: 'Stk',
-  ea: 'Stk',
-  no: 'Stk',
-  set: 'Stk',
-  lsum: 'psch',
-  ls: 'psch',
+  pcs: "Stk",
+  ea: "Stk",
+  no: "Stk",
+  set: "Stk",
+  lsum: "psch",
+  ls: "psch",
   // time / labour
-  hr: 'Std',
-  h: 'Std',
-  hrs: 'Std',
-  hour: 'Std',
-  hours: 'Std',
-  day: 'Tag',
-  days: 'Tag',
-  wk: 'Wo',
-  month: 'Mon',
+  hr: "Std",
+  h: "Std",
+  hrs: "Std",
+  hour: "Std",
+  hours: "Std",
+  day: "Tag",
+  days: "Tag",
+  wk: "Wo",
+  month: "Mon",
 };
 
 /**
@@ -71,9 +71,9 @@ const GAEB_UNIT_CODES: Record<string, string> = {
  * Falls back to a sanitised version of the input if no mapping exists.
  */
 export function toGaebUnitCode(unit: string | undefined | null): string {
-  if (!unit) return 'Stk';
+  if (!unit) return "Stk";
   const trimmed = unit.trim();
-  if (!trimmed) return 'Stk';
+  if (!trimmed) return "Stk";
   const lower = trimmed.toLowerCase();
   return GAEB_UNIT_CODES[lower] ?? trimmed;
 }
@@ -84,32 +84,32 @@ export function toGaebUnitCode(unit: string | undefined | null): string {
  * call it; not used inside this file.
  */
 export function fromGaebUnitCode(code: string | undefined | null): string {
-  if (!code) return '';
+  if (!code) return "";
   const trimmed = code.trim();
-  if (!trimmed) return '';
+  if (!trimmed) return "";
   // Accept common GAEB short codes and normalise back to canonical units.
   const map: Record<string, string> = {
-    'm²': 'm2',
-    m2: 'm2',
-    'm³': 'm3',
-    m3: 'm3',
-    'cm²': 'cm2',
-    'cm³': 'cm3',
-    'ft²': 'ft2',
-    'ft³': 'ft3',
-    Stk: 'pcs',
-    stk: 'pcs',
-    St: 'pcs',
-    psch: 'lsum',
-    Psch: 'lsum',
-    Std: 'hr',
-    std: 'hr',
-    Tag: 'day',
-    tag: 'day',
-    Wo: 'wk',
-    wo: 'wk',
-    Mon: 'month',
-    mon: 'month',
+    "m²": "m2",
+    m2: "m2",
+    "m³": "m3",
+    m3: "m3",
+    "cm²": "cm2",
+    "cm³": "cm3",
+    "ft²": "ft2",
+    "ft³": "ft3",
+    Stk: "pcs",
+    stk: "pcs",
+    St: "pcs",
+    psch: "lsum",
+    Psch: "lsum",
+    Std: "hr",
+    std: "hr",
+    Tag: "day",
+    tag: "day",
+    Wo: "wk",
+    wo: "wk",
+    Mon: "month",
+    mon: "month",
   };
   return map[trimmed] ?? trimmed;
 }
@@ -118,7 +118,7 @@ export function fromGaebUnitCode(code: string | undefined | null): string {
 // Types
 // ---------------------------------------------------------------------------
 
-export type GAEBExportFormat = 'X81' | 'X83';
+export type GAEBExportFormat = "X81" | "X83";
 
 export interface ExportPosition {
   id: string;
@@ -169,11 +169,11 @@ export interface GAEBExportResult {
 
 function escapeXml(str: string): string {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 }
 
 function formatDecimal(value: number, decimals = 3): string {
@@ -181,7 +181,7 @@ function formatDecimal(value: number, decimals = 3): string {
 }
 
 function indent(level: number): string {
-  return '  '.repeat(level);
+  return "  ".repeat(level);
 }
 
 // ---------------------------------------------------------------------------
@@ -232,9 +232,9 @@ function buildSectionTree(positions: ExportPosition[]): SectionNode[] {
   }
 
   const root: SectionNode = {
-    ordinal: '',
-    rnoPart: '',
-    label: '',
+    ordinal: "",
+    rnoPart: "",
+    label: "",
     positions: [],
     children: [],
   };
@@ -243,15 +243,17 @@ function buildSectionTree(positions: ExportPosition[]): SectionNode[] {
   function ensureNode(parts: string[]): SectionNode {
     let node: SectionNode = root;
     for (let i = 0; i < parts.length; i++) {
-      const part = parts[i] ?? '';
-      const ordinal = parts.slice(0, i + 1).join('.');
-      let child: SectionNode | undefined = node.children.find((c) => c.rnoPart === part);
+      const part = parts[i] ?? "";
+      const ordinal = parts.slice(0, i + 1).join(".");
+      let child: SectionNode | undefined = node.children.find(
+        (c) => c.rnoPart === part,
+      );
       if (!child) {
         const sectionRow = sectionRowByOrdinal.get(ordinal);
         child = {
           ordinal,
           rnoPart: part,
-          label: sectionRow?.description ?? '',
+          label: sectionRow?.description ?? "",
           positions: [],
           children: [],
         };
@@ -266,7 +268,7 @@ function buildSectionTree(positions: ExportPosition[]): SectionNode[] {
   // sections (no positions) survive into the export.
   for (const p of positions) {
     if (p.isSection && p.ordinal) {
-      ensureNode(p.ordinal.split('.'));
+      ensureNode(p.ordinal.split("."));
     }
   }
 
@@ -274,11 +276,11 @@ function buildSectionTree(positions: ExportPosition[]): SectionNode[] {
   for (const p of positions) {
     if (p.isSection) continue;
 
-    const ordParts = p.ordinal.split('.').filter(Boolean);
+    const ordParts = p.ordinal.split(".").filter(Boolean);
     if (ordParts.length <= 1) {
       // Top-level position with no category prefix — bucket under "default".
-      const def = ensureNode(['default']);
-      if (!def.label) def.label = 'General';
+      const def = ensureNode(["default"]);
+      if (!def.label) def.label = "General";
       def.positions.push(p);
       continue;
     }
@@ -287,7 +289,7 @@ function buildSectionTree(positions: ExportPosition[]): SectionNode[] {
     const parentParts = ordParts.slice(0, -1);
     const node = ensureNode(parentParts);
     if (!node.label) {
-      node.label = p.section ?? parentParts.join('.');
+      node.label = p.section ?? parentParts.join(".");
     }
     node.positions.push(p);
   }
@@ -309,13 +311,15 @@ function renderItem(
   baseIndent: number,
   lines: string[],
 ): void {
-  const itemOrdParts = pos.ordinal.split('.');
+  const itemOrdParts = pos.ordinal.split(".");
   const itemNo = itemOrdParts[itemOrdParts.length - 1] || pos.ordinal;
 
   lines.push(`${indent(baseIndent)}<Item RNoPart="${escapeXml(itemNo)}">`);
 
   // Quantity
-  lines.push(`${indent(baseIndent + 1)}<Qty>${formatDecimal(pos.quantity)}</Qty>`);
+  lines.push(
+    `${indent(baseIndent + 1)}<Qty>${formatDecimal(pos.quantity)}</Qty>`,
+  );
 
   // Unit (mapped to GAEB-DA short code)
   const gaebUnit = toGaebUnitCode(pos.unit);
@@ -327,7 +331,7 @@ function renderItem(
   lines.push(`${indent(baseIndent + 1)}<Description>`);
   lines.push(`${indent(baseIndent + 2)}<CompleteText>`);
   lines.push(`${indent(baseIndent + 3)}<DetailTxt>`);
-  const paragraphs = (pos.description ?? '')
+  const paragraphs = (pos.description ?? "")
     .split(/\n+/)
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
@@ -343,15 +347,22 @@ function renderItem(
 
   // ShortText: first paragraph, truncated to 70 chars per GAEB convention.
   // No trailing ellipsis — many AVA readers display it verbatim.
-  const firstPara = paragraphs[0] ?? pos.description ?? '';
-  const shortText = firstPara.length > 70 ? firstPara.substring(0, 70) : firstPara;
-  lines.push(`${indent(baseIndent + 2)}<ShortText>${escapeXml(shortText)}</ShortText>`);
+  const firstPara = paragraphs[0] ?? pos.description ?? "";
+  const shortText =
+    firstPara.length > 70 ? firstPara.substring(0, 70) : firstPara;
+  lines.push(
+    `${indent(baseIndent + 2)}<ShortText>${escapeXml(shortText)}</ShortText>`,
+  );
   lines.push(`${indent(baseIndent + 1)}</Description>`);
 
   // Unit price (only in X83)
   if (isX83) {
-    lines.push(`${indent(baseIndent + 1)}<UP>${formatDecimal(pos.unitRate, 2)}</UP>`);
-    lines.push(`${indent(baseIndent + 1)}<IT>${formatDecimal(pos.total, 2)}</IT>`);
+    lines.push(
+      `${indent(baseIndent + 1)}<UP>${formatDecimal(pos.unitRate, 2)}</UP>`,
+    );
+    lines.push(
+      `${indent(baseIndent + 1)}<IT>${formatDecimal(pos.total, 2)}</IT>`,
+    );
   }
 
   lines.push(`${indent(baseIndent)}</Item>`);
@@ -364,8 +375,12 @@ function renderSection(
   baseIndent: number,
   lines: string[],
 ): void {
-  lines.push(`${indent(baseIndent)}<BoQCtgy RNoPart="${escapeXml(node.rnoPart)}">`);
-  lines.push(`${indent(baseIndent + 1)}<LblTx>${escapeXml(node.label || node.rnoPart)}</LblTx>`);
+  lines.push(
+    `${indent(baseIndent)}<BoQCtgy RNoPart="${escapeXml(node.rnoPart)}">`,
+  );
+  lines.push(
+    `${indent(baseIndent + 1)}<LblTx>${escapeXml(node.label || node.rnoPart)}</LblTx>`,
+  );
   lines.push(`${indent(baseIndent + 1)}<BoQBody>`);
 
   // Render direct positions first (if any) inside an Itemlist
@@ -400,12 +415,12 @@ export function generateGAEBXML(options: GAEBExportOptions): GAEBExportResult {
     format,
     projectName,
     boqName,
-    currency = 'EUR',
+    currency = "EUR",
     positions,
     awardInfo,
   } = options;
 
-  const isX83 = format === 'X83';
+  const isX83 = format === "X83";
   const nonSectionPositions = positions.filter((p) => !p.isSection);
   const sectionTree = buildSectionTree(positions);
   const sectionCount = countSections(sectionTree);
@@ -417,8 +432,8 @@ export function generateGAEBXML(options: GAEBExportOptions): GAEBExportResult {
   lines.push('<?xml version="1.0" encoding="UTF-8"?>');
   // Namespace differs per format: DA83 (priced) vs DA81 (tender).
   const namespace = isX83
-    ? 'http://www.gaeb.de/GAEB_DA_XML/DA83/3.3'
-    : 'http://www.gaeb.de/GAEB_DA_XML/DA81/3.3';
+    ? "http://www.gaeb.de/GAEB_DA_XML/DA83/3.3"
+    : "http://www.gaeb.de/GAEB_DA_XML/DA81/3.3";
   lines.push(`<GAEB xmlns="${namespace}">`);
 
   // GAEBInfo — spec-compliant VersMajor / VersMinor pair (Version is legacy
@@ -427,7 +442,9 @@ export function generateGAEBXML(options: GAEBExportOptions): GAEBExportResult {
   lines.push(`${indent(2)}<VersMajor>3</VersMajor>`);
   lines.push(`${indent(2)}<VersMinor>3</VersMinor>`);
   lines.push(`${indent(2)}<VersDate>2013-02</VersDate>`);
-  lines.push(`${indent(2)}<Date>${new Date().toISOString().split('T')[0]}</Date>`);
+  lines.push(
+    `${indent(2)}<Date>${new Date().toISOString().split("T")[0]}</Date>`,
+  );
   lines.push(`${indent(2)}<ProgSystem>OpenEstimate</ProgSystem>`);
   lines.push(`${indent(2)}<ProgSystemVers>1.0</ProgSystemVers>`);
   lines.push(`${indent(1)}</GAEBInfo>`);
@@ -436,22 +453,30 @@ export function generateGAEBXML(options: GAEBExportOptions): GAEBExportResult {
   lines.push(`${indent(1)}<PrjInfo>`);
   lines.push(`${indent(2)}<NamePrj>${escapeXml(projectName)}</NamePrj>`);
   lines.push(`${indent(2)}<Cur>${currency}</Cur>`);
-  lines.push(`${indent(2)}<CurLbl>${currency === 'EUR' ? '€' : currency}</CurLbl>`);
+  lines.push(
+    `${indent(2)}<CurLbl>${currency === "EUR" ? "€" : currency}</CurLbl>`,
+  );
   lines.push(`${indent(1)}</PrjInfo>`);
 
   // Main section: Award (X83) or Tender (X81)
-  const mainTag = isX83 ? 'Award' : 'Tender';
+  const mainTag = isX83 ? "Award" : "Tender";
   lines.push(`${indent(1)}<${mainTag}>`);
 
   // Award/Tender info
   if (isX83) {
     lines.push(`${indent(2)}<AwardInfo>`);
-    lines.push(`${indent(3)}<Dp>${new Date().toISOString().split('T')[0]}</Dp>`);
+    lines.push(
+      `${indent(3)}<Dp>${new Date().toISOString().split("T")[0]}</Dp>`,
+    );
     if (awardInfo?.bidderName) {
       lines.push(`${indent(3)}<Bidder>`);
-      lines.push(`${indent(4)}<Name1>${escapeXml(awardInfo.bidderName)}</Name1>`);
+      lines.push(
+        `${indent(4)}<Name1>${escapeXml(awardInfo.bidderName)}</Name1>`,
+      );
       if (awardInfo.bidderCity) {
-        lines.push(`${indent(4)}<PCode>${escapeXml(awardInfo.bidderCity)}</PCode>`);
+        lines.push(
+          `${indent(4)}<PCode>${escapeXml(awardInfo.bidderCity)}</PCode>`,
+        );
       }
       lines.push(`${indent(3)}</Bidder>`);
     }
@@ -473,21 +498,25 @@ export function generateGAEBXML(options: GAEBExportOptions): GAEBExportResult {
   lines.push(`${indent(3)}</BoQBody>`);
   lines.push(`${indent(2)}</BoQ>`);
   lines.push(`${indent(1)}</${mainTag}>`);
-  lines.push('</GAEB>');
+  lines.push("</GAEB>");
 
-  const xml = lines.join('\n');
-  const ext = isX83 ? 'x83' : 'x81';
+  const xml = lines.join("\n");
+  const ext = isX83 ? "x83" : "x81";
   // Filename: <project>-<boq>.<ext> — keeps both project and BOQ context.
   // Falls back gracefully when project name is empty.
-  const safeProject = (projectName || '').replace(/[^a-zA-Z0-9_-]/g, '_');
-  const safeBoq = (boqName || 'export').replace(/[^a-zA-Z0-9_-]/g, '_');
-  const filename = safeProject ? `${safeProject}-${safeBoq}.${ext}` : `${safeBoq}.${ext}`;
+  const safeProject = (projectName || "").replace(/[^a-zA-Z0-9_-]/g, "_");
+  const safeBoq = (boqName || "export").replace(/[^a-zA-Z0-9_-]/g, "_");
+  const filename = safeProject
+    ? `${safeProject}-${safeBoq}.${ext}`
+    : `${safeBoq}.${ext}`;
 
   return { xml, filename, positionCount, sectionCount };
 }
 
 /** Download the generated GAEB XML as a file. */
 export function downloadGAEBXML(result: GAEBExportResult): void {
-  const blob = new Blob([result.xml], { type: 'application/xml; charset=utf-8' });
+  const blob = new Blob([result.xml], {
+    type: "application/xml; charset=utf-8",
+  });
   triggerDownload(blob, result.filename);
 }

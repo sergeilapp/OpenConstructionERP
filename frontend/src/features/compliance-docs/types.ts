@@ -2,29 +2,29 @@
 // Compliance-docs feature types (hand-written; backend is owner of truth).
 
 export const COMPLIANCE_DOC_TYPES = [
-  'insurance_general_liability',
-  'insurance_workers_comp',
-  'insurance_auto',
-  'insurance_umbrella',
-  'permit_building',
-  'permit_electrical',
-  'permit_plumbing',
-  'permit_other',
-  'bond_payment',
-  'bond_performance',
-  'bond_bid',
-  'certification_safety',
-  'certification_other',
-  'other',
+  "insurance_general_liability",
+  "insurance_workers_comp",
+  "insurance_auto",
+  "insurance_umbrella",
+  "permit_building",
+  "permit_electrical",
+  "permit_plumbing",
+  "permit_other",
+  "bond_payment",
+  "bond_performance",
+  "bond_bid",
+  "certification_safety",
+  "certification_other",
+  "other",
 ] as const;
 export type ComplianceDocType = (typeof COMPLIANCE_DOC_TYPES)[number];
 
 export const COMPLIANCE_STATUSES = [
-  'active',
-  'expiring_soon',
-  'expired',
-  'cancelled',
-  'void',
+  "active",
+  "expiring_soon",
+  "expired",
+  "cancelled",
+  "void",
 ] as const;
 export type ComplianceStatus = (typeof COMPLIANCE_STATUSES)[number];
 

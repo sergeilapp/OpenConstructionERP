@@ -17,11 +17,11 @@
  */
 
 export type TelemetryEvent =
-  | 'wizard_started'
-  | 'preset_selected'
-  | 'module_toggled'
-  | 'setup_completed'
-  | 'setup_rerun';
+  | "wizard_started"
+  | "preset_selected"
+  | "module_toggled"
+  | "setup_completed"
+  | "setup_rerun";
 
 export interface TelemetryRecord {
   event: TelemetryEvent;
@@ -30,7 +30,7 @@ export interface TelemetryRecord {
 }
 
 const MAX_EVENTS = 100;
-const LS_KEY = 'oe_telemetry_buffer';
+const LS_KEY = "oe_telemetry_buffer";
 
 const buffer: TelemetryRecord[] = [];
 
@@ -47,10 +47,7 @@ function readLs(): TelemetryRecord[] {
 
 function writeLs(records: TelemetryRecord[]) {
   try {
-    localStorage.setItem(
-      LS_KEY,
-      JSON.stringify(records.slice(-MAX_EVENTS)),
-    );
+    localStorage.setItem(LS_KEY, JSON.stringify(records.slice(-MAX_EVENTS)));
   } catch {
     /* storage full / unavailable — telemetry is best-effort */
   }
@@ -73,7 +70,7 @@ export function track(
 
   if (import.meta.env.DEV) {
     // eslint-disable-next-line no-console
-    console.debug('[telemetry]', event, props);
+    console.debug("[telemetry]", event, props);
   }
 }
 

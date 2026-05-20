@@ -10,14 +10,14 @@
  * locale-aware `Intl.NumberFormat` (no hardcoded formatting/currency).
  */
 
-import { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, RefreshCw, ArrowRight, CheckCircle2, X } from 'lucide-react';
-import clsx from 'clsx';
-import { Button, Badge } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
-import { boqApi, type QuantityLinkRefreshRow } from './api';
+import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2, RefreshCw, ArrowRight, CheckCircle2, X } from "lucide-react";
+import clsx from "clsx";
+import { Button, Badge } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
+import { boqApi, type QuantityLinkRefreshRow } from "./api";
 
 export interface ModelLinkReviewPanelProps {
   boqId: string;
@@ -52,7 +52,7 @@ export function ModelLinkReviewPanel({
   );
   const fmt = useCallback(
     (v: string | null) => {
-      if (v == null || v === '') return '—';
+      if (v == null || v === "") return "—";
       const n = Number(v);
       return Number.isFinite(n) ? numberFmt.format(n) : v;
     },
@@ -69,18 +69,18 @@ export function ModelLinkReviewPanel({
       );
       if (res.checked === 0) {
         addToast({
-          type: 'info',
-          title: t('boq.model_review_no_links', {
-            defaultValue: 'No model links in this BOQ‌⁠‍',
+          type: "info",
+          title: t("boq.model_review_no_links", {
+            defaultValue: "No model links in this BOQ‌⁠‍",
           }),
         });
       }
     },
     onError: (e: Error) => {
       addToast({
-        type: 'error',
-        title: t('boq.model_review_refresh_failed', {
-          defaultValue: 'Refresh from model failed‌⁠‍',
+        type: "error",
+        title: t("boq.model_review_refresh_failed", {
+          defaultValue: "Refresh from model failed‌⁠‍",
         }),
         message: e.message,
       });
@@ -91,12 +91,12 @@ export function ModelLinkReviewPanel({
     mutationFn: (linkIds: string[]) =>
       boqApi.applyQuantityLinks(boqId, linkIds),
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
+      queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
       onApplied();
       addToast({
-        type: 'success',
-        title: t('boq.model_review_applied', {
-          defaultValue: '{{count}} quantity update(s) applied‌⁠‍',
+        type: "success",
+        title: t("boq.model_review_applied", {
+          defaultValue: "{{count}} quantity update(s) applied‌⁠‍",
           count: res.applied,
         }),
       });
@@ -106,9 +106,9 @@ export function ModelLinkReviewPanel({
     },
     onError: (e: Error) => {
       addToast({
-        type: 'error',
-        title: t('boq.model_review_apply_failed', {
-          defaultValue: 'Apply failed‌⁠‍',
+        type: "error",
+        title: t("boq.model_review_apply_failed", {
+          defaultValue: "Apply failed‌⁠‍",
         }),
         message: e.message,
       });
@@ -125,7 +125,7 @@ export function ModelLinkReviewPanel({
   }, []);
 
   const staleRows = useMemo(
-    () => (rows ?? []).filter((r) => r.changed || r.status !== 'active'),
+    () => (rows ?? []).filter((r) => r.changed || r.status !== "active"),
     [rows],
   );
 
@@ -133,12 +133,16 @@ export function ModelLinkReviewPanel({
 
   return (
     <div className="fixed inset-y-0 right-0 z-50 flex">
-      <div className="fixed inset-0 bg-black/20" onClick={onClose} aria-hidden="true" />
+      <div
+        className="fixed inset-0 bg-black/20"
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t('boq.model_review_title', {
-          defaultValue: 'Model quantity review‌⁠‍',
+        aria-label={t("boq.model_review_title", {
+          defaultValue: "Model quantity review‌⁠‍",
         })}
         className="relative ml-auto flex h-full w-[420px] flex-col bg-surface-elevated border-l border-border shadow-2xl animate-slide-in-right"
       >
@@ -147,12 +151,14 @@ export function ModelLinkReviewPanel({
           <div className="flex items-center gap-2">
             <RefreshCw size={16} className="text-oe-blue" />
             <h3 className="text-sm font-semibold text-content-primary">
-              {t('boq.model_review_title', { defaultValue: 'Model quantity review' })}
+              {t("boq.model_review_title", {
+                defaultValue: "Model quantity review",
+              })}
             </h3>
           </div>
           <button
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={16} />
@@ -173,12 +179,14 @@ export function ModelLinkReviewPanel({
             ) : (
               <RefreshCw size={14} className="mr-1" />
             )}
-            {t('boq.model_review_refresh', { defaultValue: 'Refresh from model' })}
+            {t("boq.model_review_refresh", {
+              defaultValue: "Refresh from model",
+            })}
           </Button>
           <p className="text-2xs text-content-tertiary mt-2">
-            {t('boq.model_review_hint', {
+            {t("boq.model_review_hint", {
               defaultValue:
-                'Re-pulls bound quantities against the latest model version. Nothing changes until you Apply.',
+                "Re-pulls bound quantities against the latest model version. Nothing changes until you Apply.",
             })}
           </p>
         </div>
@@ -189,17 +197,21 @@ export function ModelLinkReviewPanel({
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
               <RefreshCw size={32} className="text-content-quaternary mb-3" />
               <p className="text-sm text-content-secondary">
-                {t('boq.model_review_run', {
-                  defaultValue: 'Run a refresh to see model-driven changes.',
+                {t("boq.model_review_run", {
+                  defaultValue: "Run a refresh to see model-driven changes.",
                 })}
               </p>
             </div>
           ) : staleRows.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-              <CheckCircle2 size={32} className="text-semantic-success/60 mb-3" />
+              <CheckCircle2
+                size={32}
+                className="text-semantic-success/60 mb-3"
+              />
               <p className="text-sm text-content-secondary">
-                {t('boq.model_review_all_synced', {
-                  defaultValue: 'All linked quantities are in sync with the model.',
+                {t("boq.model_review_all_synced", {
+                  defaultValue:
+                    "All linked quantities are in sync with the model.",
                 })}
               </p>
             </div>
@@ -222,9 +234,11 @@ export function ModelLinkReviewPanel({
                           <span className="text-xs font-medium text-content-primary truncate">
                             {r.ordinal} — {r.description}
                           </span>
-                          {r.status !== 'active' && (
+                          {r.status !== "active" && (
                             <Badge
-                              variant={r.status === 'broken' ? 'error' : 'warning'}
+                              variant={
+                                r.status === "broken" ? "error" : "warning"
+                              }
                               size="sm"
                             >
                               {t(`boq.model_link_status_${r.status}`, {
@@ -237,37 +251,42 @@ export function ModelLinkReviewPanel({
                           <span className="text-content-tertiary">
                             {fmt(r.old_quantity)}
                           </span>
-                          <ArrowRight size={11} className="text-content-quaternary" />
+                          <ArrowRight
+                            size={11}
+                            className="text-content-quaternary"
+                          />
                           <span className="text-content-primary font-semibold">
                             {fmt(r.new_quantity)}
                           </span>
-                          <span className="text-content-tertiary">{r.unit}</span>
+                          <span className="text-content-tertiary">
+                            {r.unit}
+                          </span>
                           {Number.isFinite(deltaNum) && deltaNum !== 0 && (
                             <span
                               className={clsx(
-                                'ml-1 font-medium',
+                                "ml-1 font-medium",
                                 deltaNum > 0
-                                  ? 'text-emerald-600 dark:text-emerald-400'
-                                  : 'text-red-600 dark:text-red-400',
+                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  : "text-red-600 dark:text-red-400",
                               )}
                             >
-                              {deltaNum > 0 ? '+' : ''}
+                              {deltaNum > 0 ? "+" : ""}
                               {fmt(r.delta)}
                             </span>
                           )}
                         </div>
                         <p className="text-2xs text-content-tertiary mt-1">
-                          {r.aggregation}({r.quantity_field}) ·{' '}
-                          {t('boq.model_link_elem_count', {
-                            defaultValue: '{{count}} element(s)',
+                          {r.aggregation}({r.quantity_field}) ·{" "}
+                          {t("boq.model_link_elem_count", {
+                            defaultValue: "{{count}} element(s)",
                             count: r.contributing_elements.length,
                           })}
                           {r.missing_element_ids.length > 0
-                            ? ` · ${t('boq.model_review_missing', {
-                                defaultValue: '{{count}} missing',
+                            ? ` · ${t("boq.model_review_missing", {
+                                defaultValue: "{{count}} missing",
                                 count: r.missing_element_ids.length,
                               })}`
-                            : ''}
+                            : ""}
                         </p>
                         {r.message && (
                           <p className="text-2xs text-amber-600 dark:text-amber-400 mt-0.5">
@@ -298,8 +317,8 @@ export function ModelLinkReviewPanel({
               ) : (
                 <CheckCircle2 size={14} className="mr-1" />
               )}
-              {t('boq.model_review_apply', {
-                defaultValue: 'Apply {{count}} selected',
+              {t("boq.model_review_apply", {
+                defaultValue: "Apply {{count}} selected",
                 count: selected.size,
               })}
             </Button>

@@ -23,9 +23,9 @@
 // Keeping that contract here would mean we'd have to mirror every
 // future website-form change in two places.
 
-import { useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import {
   X,
   Users,
@@ -37,10 +37,10 @@ import {
   Database,
   Plug,
   BarChart3,
-} from 'lucide-react';
-import ddcLogoUrl from '/brand/ddc-logo.webp';
-import { Link } from 'react-router-dom';
-import clsx from 'clsx';
+} from "lucide-react";
+import ddcLogoUrl from "/brand/ddc-logo.webp";
+import { Link } from "react-router-dom";
+import clsx from "clsx";
 
 interface Props {
   open: boolean;
@@ -58,9 +58,9 @@ interface Props {
 // The earlier-tried openestimator.io / openestimate.io hosts are
 // parked / 405 and dead-ended the buttons.
 const URL_COMMUNITY =
-  'https://openconstructionerp.com/contact?topic=module_proposal_public&utm_source=oe_app&utm_medium=sidebar_cta&utm_campaign=request_module';
+  "https://openconstructionerp.com/contact?topic=module_proposal_public&utm_source=oe_app&utm_medium=sidebar_cta&utm_campaign=request_module";
 const URL_PRIVATE =
-  'https://openconstructionerp.com/contact?topic=module_proposal_private&utm_source=oe_app&utm_medium=sidebar_cta&utm_campaign=request_module_bespoke';
+  "https://openconstructionerp.com/contact?topic=module_proposal_private&utm_source=oe_app&utm_medium=sidebar_cta&utm_campaign=request_module_bespoke";
 
 export function RequestCustomModuleDialog({ open, onClose }: Props) {
   const { t } = useTranslation();
@@ -73,15 +73,15 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         e.stopPropagation();
         onClose();
       }
     };
-    document.addEventListener('keydown', handler, { capture: true });
+    document.addEventListener("keydown", handler, { capture: true });
     return () =>
-      document.removeEventListener('keydown', handler, { capture: true });
+      document.removeEventListener("keydown", handler, { capture: true });
   }, [open, onClose]);
 
   // Lock background scroll while the modal is open so a long page
@@ -89,7 +89,7 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
@@ -123,10 +123,10 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
   const panel = (
     <div
       className={clsx(
-        'fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-6 lg:p-10',
+        "fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-6 lg:p-10",
         // Backdrop sits BEHIND the inner panel — use bg here so the
         // entire app dims uniformly regardless of viewport size.
-        'bg-black/45 backdrop-blur-[3px]',
+        "bg-black/45 backdrop-blur-[3px]",
       )}
       role="dialog"
       aria-modal="true"
@@ -140,9 +140,9 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         className={clsx(
-          'relative w-full max-w-[1100px] max-h-[92vh] overflow-y-auto',
-          'rounded-2xl bg-surface-primary shadow-2xl border border-border-light',
-          'animate-card-in',
+          "relative w-full max-w-[1100px] max-h-[92vh] overflow-y-auto",
+          "rounded-2xl bg-surface-primary shadow-2xl border border-border-light",
+          "animate-card-in",
         )}
       >
         {/* Hero band — gradient backdrop + centred eyebrow + title.
@@ -164,7 +164,7 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="absolute top-3 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={18} />
@@ -180,22 +180,22 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
               />
             </div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-purple-600 dark:text-purple-300 mb-2">
-              {t('modules.request_eyebrow', {
-                defaultValue: 'Missing a module?‌⁠‍',
+              {t("modules.request_eyebrow", {
+                defaultValue: "Missing a module?‌⁠‍",
               })}
             </p>
             <h2
               id="request-module-title"
               className="text-2xl sm:text-3xl font-bold text-content-primary leading-tight"
             >
-              {t('modules.request_hero_title', {
-                defaultValue: 'Tell us what your team needs.‌⁠‍',
+              {t("modules.request_hero_title", {
+                defaultValue: "Tell us what your team needs.‌⁠‍",
               })}
             </h2>
             <p className="mt-3 mx-auto max-w-[640px] text-sm sm:text-base text-content-secondary leading-relaxed">
-              {t('modules.request_hero_subtitle', {
+              {t("modules.request_hero_subtitle", {
                 defaultValue:
-                  'OpenConstructionERP runs on a plug-in architecture — every report, integration, regional catalogue and AI tool is its own module. If the one you need is missing, we will build it. Choose the path that fits your situation.‌⁠‍',
+                  "OpenConstructionERP runs on a plug-in architecture — every report, integration, regional catalogue and AI tool is its own module. If the one you need is missing, we will build it. Choose the path that fits your situation.‌⁠‍",
               })}
             </p>
           </div>
@@ -213,10 +213,10 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
             data-firstfocus="true"
             onClick={onClose}
             className={clsx(
-              'group relative overflow-hidden rounded-xl border-2 p-5 sm:p-6 flex flex-col gap-3',
-              'border-oe-blue/30 bg-gradient-to-br from-oe-blue-subtle via-transparent to-blue-50/40',
-              'dark:border-oe-blue/30 dark:from-oe-blue/10 dark:via-transparent dark:to-slate-900/30',
-              'hover:border-oe-blue hover:shadow-lg hover:-translate-y-0.5 transition-all',
+              "group relative overflow-hidden rounded-xl border-2 p-5 sm:p-6 flex flex-col gap-3",
+              "border-oe-blue/30 bg-gradient-to-br from-oe-blue-subtle via-transparent to-blue-50/40",
+              "dark:border-oe-blue/30 dark:from-oe-blue/10 dark:via-transparent dark:to-slate-900/30",
+              "hover:border-oe-blue hover:shadow-lg hover:-translate-y-0.5 transition-all",
             )}
           >
             <div className="flex items-start gap-3">
@@ -225,49 +225,49 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-base sm:text-lg font-semibold text-content-primary">
-                  {t('modules.request_card_community_title', {
-                    defaultValue: 'Could help other teams too‌⁠‍',
+                  {t("modules.request_card_community_title", {
+                    defaultValue: "Could help other teams too‌⁠‍",
                   })}
                 </h3>
                 <p className="mt-1 text-xs text-content-tertiary uppercase tracking-wider font-semibold">
-                  {t('modules.request_card_community_tag', {
-                    defaultValue: 'Open-source · free for everyone‌⁠‍',
+                  {t("modules.request_card_community_tag", {
+                    defaultValue: "Open-source · free for everyone‌⁠‍",
                   })}
                 </p>
               </div>
             </div>
             <p className="text-sm text-content-secondary leading-relaxed">
-              {t('modules.request_card_community_body', {
+              {t("modules.request_card_community_body", {
                 defaultValue:
-                  'We add your idea to the public roadmap. If it has broad demand we ship it in a future release of OpenConstructionERP — included in every user’s install, including yours, at no cost.',
+                  "We add your idea to the public roadmap. If it has broad demand we ship it in a future release of OpenConstructionERP — included in every user’s install, including yours, at no cost.",
               })}
             </p>
             <ul className="space-y-1.5 text-xs text-content-secondary">
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue shrink-0" />
-                {t('modules.request_card_community_bullet1', {
+                {t("modules.request_card_community_bullet1", {
                   defaultValue:
-                    'Free — ships in the next public release if accepted.',
+                    "Free — ships in the next public release if accepted.",
                 })}
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue shrink-0" />
-                {t('modules.request_card_community_bullet2', {
+                {t("modules.request_card_community_bullet2", {
                   defaultValue:
-                    'Public GitHub thread — other teams can upvote, refine and contribute.',
+                    "Public GitHub thread — other teams can upvote, refine and contribute.",
                 })}
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue shrink-0" />
-                {t('modules.request_card_community_bullet3', {
+                {t("modules.request_card_community_bullet3", {
                   defaultValue:
-                    'Best for regional standards, integrations, reports and AI tools that are universal.',
+                    "Best for regional standards, integrations, reports and AI tools that are universal.",
                 })}
               </li>
             </ul>
             <div className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-oe-blue group-hover:gap-3 transition-all">
-              {t('modules.request_card_community_cta', {
-                defaultValue: 'Propose on our roadmap',
+              {t("modules.request_card_community_cta", {
+                defaultValue: "Propose on our roadmap",
               })}
               <ArrowRight size={16} />
             </div>
@@ -284,10 +284,10 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
             rel="noopener noreferrer"
             onClick={onClose}
             className={clsx(
-              'group relative overflow-hidden rounded-xl border-2 p-5 sm:p-6 flex flex-col gap-3',
-              'border-purple-300/50 bg-gradient-to-br from-purple-50/80 via-transparent to-fuchsia-50/40',
-              'dark:border-purple-500/30 dark:from-purple-950/30 dark:via-transparent dark:to-slate-900/30',
-              'hover:border-purple-500 hover:shadow-lg hover:-translate-y-0.5 transition-all',
+              "group relative overflow-hidden rounded-xl border-2 p-5 sm:p-6 flex flex-col gap-3",
+              "border-purple-300/50 bg-gradient-to-br from-purple-50/80 via-transparent to-fuchsia-50/40",
+              "dark:border-purple-500/30 dark:from-purple-950/30 dark:via-transparent dark:to-slate-900/30",
+              "hover:border-purple-500 hover:shadow-lg hover:-translate-y-0.5 transition-all",
             )}
           >
             <div className="flex items-start gap-3">
@@ -296,49 +296,48 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-base sm:text-lg font-semibold text-content-primary">
-                  {t('modules.request_card_private_title', {
-                    defaultValue: 'Built just for our company',
+                  {t("modules.request_card_private_title", {
+                    defaultValue: "Built just for our company",
                   })}
                 </h3>
                 <p className="mt-1 text-xs text-content-tertiary uppercase tracking-wider font-semibold">
-                  {t('modules.request_card_private_tag', {
-                    defaultValue: 'Bespoke · custom delivery',
+                  {t("modules.request_card_private_tag", {
+                    defaultValue: "Bespoke · custom delivery",
                   })}
                 </p>
               </div>
             </div>
             <p className="text-sm text-content-secondary leading-relaxed">
-              {t('modules.request_card_private_body', {
+              {t("modules.request_card_private_body", {
                 defaultValue:
-                  'For workflows specific to your business — internal naming, proprietary cost data, ERP integrations, restricted security. We design, build, deploy and maintain the module privately for your team.',
+                  "For workflows specific to your business — internal naming, proprietary cost data, ERP integrations, restricted security. We design, build, deploy and maintain the module privately for your team.",
               })}
             </p>
             <ul className="space-y-1.5 text-xs text-content-secondary">
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-purple-500 shrink-0" />
-                {t('modules.request_card_private_bullet1', {
-                  defaultValue:
-                    'Fixed-scope quote within 2 business days.',
+                {t("modules.request_card_private_bullet1", {
+                  defaultValue: "Fixed-scope quote within 2 business days.",
                 })}
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-purple-500 shrink-0" />
-                {t('modules.request_card_private_bullet2', {
+                {t("modules.request_card_private_bullet2", {
                   defaultValue:
-                    'Closed-source, deployed only to your install, signed by your team.',
+                    "Closed-source, deployed only to your install, signed by your team.",
                 })}
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-purple-500 shrink-0" />
-                {t('modules.request_card_private_bullet3', {
+                {t("modules.request_card_private_bullet3", {
                   defaultValue:
-                    'Maintenance + SLA included — works seamlessly with each ERP release.',
+                    "Maintenance + SLA included — works seamlessly with each ERP release.",
                 })}
               </li>
             </ul>
             <div className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-purple-700 dark:text-purple-300 group-hover:gap-3 transition-all">
-              {t('modules.request_card_private_cta', {
-                defaultValue: 'Request a scope & quote',
+              {t("modules.request_card_private_cta", {
+                defaultValue: "Request a scope & quote",
               })}
               <ArrowRight size={16} />
             </div>
@@ -354,31 +353,31 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
             modules are commonly requested. Pure decoration. */}
         <div className="px-6 sm:px-10 pt-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3 text-center">
-            {t('modules.request_examples_label', {
-              defaultValue: 'Examples of what users ask for',
+            {t("modules.request_examples_label", {
+              defaultValue: "Examples of what users ask for",
             })}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
             {[
               {
                 icon: Database,
-                key: 'modules.request_chip_data',
-                fallback: 'Regional cost catalogues',
+                key: "modules.request_chip_data",
+                fallback: "Regional cost catalogues",
               },
               {
                 icon: Plug,
-                key: 'modules.request_chip_integration',
-                fallback: 'SAP / Procore / MS Project integrations',
+                key: "modules.request_chip_integration",
+                fallback: "SAP / Procore / MS Project integrations",
               },
               {
                 icon: BarChart3,
-                key: 'modules.request_chip_analytics',
-                fallback: 'Bespoke dashboards & KPI reports',
+                key: "modules.request_chip_analytics",
+                fallback: "Bespoke dashboards & KPI reports",
               },
               {
                 icon: Boxes,
-                key: 'modules.request_chip_tools',
-                fallback: 'Custom estimation tools & AI agents',
+                key: "modules.request_chip_tools",
+                fallback: "Custom estimation tools & AI agents",
               },
             ].map((it) => (
               <span
@@ -397,9 +396,9 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
             who are coders keep their flow inside the product. */}
         <div className="mt-6 sm:mt-7 px-6 sm:px-10 py-4 border-t border-border-light bg-surface-secondary/30 rounded-b-2xl flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-content-tertiary leading-relaxed max-w-[560px]">
-            {t('modules.request_footer_diy', {
+            {t("modules.request_footer_diy", {
               defaultValue:
-                'Prefer to build it yourself? Every module is a small Python package — the developer guide walks through it end-to-end in under an hour.',
+                "Prefer to build it yourself? Every module is a small Python package — the developer guide walks through it end-to-end in under an hour.",
             })}
           </p>
           <Link
@@ -408,8 +407,8 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
             className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-secondary hover:text-oe-blue hover:border-oe-blue transition-colors"
           >
             <BookOpen size={12} />
-            {t('modules.request_footer_diy_cta', {
-              defaultValue: 'Open developer guide',
+            {t("modules.request_footer_diy_cta", {
+              defaultValue: "Open developer guide",
             })}
           </Link>
         </div>

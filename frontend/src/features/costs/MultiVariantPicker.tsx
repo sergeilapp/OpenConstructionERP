@@ -28,9 +28,9 @@
 //   * Apply or Cancel. Cancel falls back to the previous silent-default
 //     behaviour (median per slot) so power users aren't slowed down.
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import {
   X,
   Check,
@@ -40,10 +40,10 @@ import {
   Wand2,
   TrendingDown,
   TrendingUp,
-} from 'lucide-react';
-import { Button, Badge } from '@/shared/ui';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import type { CostVariant, VariantStats } from './api';
+} from "lucide-react";
+import { Button, Badge } from "@/shared/ui";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import type { CostVariant, VariantStats } from "./api";
 
 /* ── Types ────────────────────────────────────────────────────────────── */
 
@@ -64,8 +64,8 @@ export interface VariantSlot {
 
 /** What the user chose for one slot. */
 export type SlotPick =
-  | { kind: 'variant'; variant: CostVariant }
-  | { kind: 'default'; strategy: 'mean' | 'median' };
+  | { kind: "variant"; variant: CostVariant }
+  | { kind: "default"; strategy: "mean" | "median" };
 
 export interface MultiVariantPickerResult {
   /** Map of slotId → pick. Every slot in the input is present here on apply. */
@@ -102,8 +102,8 @@ interface MultiVariantPickerProps {
 function formatPrice(value: number, currency: string): string {
   try {
     return new Intl.NumberFormat(getIntlLocale(), {
-      style: 'currency',
-      currency: currency || 'USD',
+      style: "currency",
+      currency: currency || "USD",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
@@ -125,32 +125,38 @@ function priciest(variants: CostVariant[]): CostVariant | null {
   return variants.reduce((a, b) => (a.price >= b.price ? a : b));
 }
 
-interface DeltaInfo { text: string; tone: 'pos' | 'neg' | 'flat' }
+interface DeltaInfo {
+  text: string;
+  tone: "pos" | "neg" | "flat";
+}
 function deltaVsMean(price: number, mean: number): DeltaInfo {
-  if (!mean || mean === 0) return { text: '—', tone: 'flat' };
+  if (!mean || mean === 0) return { text: "—", tone: "flat" };
   const pct = Math.round(((price - mean) / mean) * 100);
-  if (pct === 0) return { text: '0%', tone: 'flat' };
-  return { text: `${pct > 0 ? '+' : ''}${pct}%`, tone: pct > 0 ? 'pos' : 'neg' };
+  if (pct === 0) return { text: "0%", tone: "flat" };
+  return {
+    text: `${pct > 0 ? "+" : ""}${pct}%`,
+    tone: pct > 0 ? "pos" : "neg",
+  };
 }
 
 /** Resolve the slot's effective unit-rate from a pick. */
 function rateFromPick(pick: SlotPick, stats: VariantStats): number {
-  if (pick.kind === 'variant') return pick.variant.price;
-  return pick.strategy === 'mean' ? stats.mean : stats.median;
+  if (pick.kind === "variant") return pick.variant.price;
+  return pick.strategy === "mean" ? stats.mean : stats.median;
 }
 
 /** Slot label for the resource — prefers `common_start + label`, falls back
  *  to the variant's own `full_label`, then bare `label`. Mirrors the same
  *  resolution VariantPicker uses, so labels stay consistent across surfaces. */
 function pickDisplayLabel(slot: VariantSlot, pick: SlotPick): string {
-  if (pick.kind === 'variant') {
+  if (pick.kind === "variant") {
     const v = pick.variant;
-    const full = (v.full_label || '').trim();
+    const full = (v.full_label || "").trim();
     if (full) return full;
-    const cs = (slot.stats.common_start || '').trim();
+    const cs = (slot.stats.common_start || "").trim();
     return cs ? `${cs} ${v.label}`.trim() : v.label;
   }
-  return pick.strategy === 'mean' ? 'average' : 'median';
+  return pick.strategy === "mean" ? "average" : "median";
 }
 
 /* ── Component ────────────────────────────────────────────────────────── */
@@ -179,15 +185,17 @@ export function MultiVariantPicker({
       // in the new slot's variant list. CWICR rows can have different
       // variant indices even under the same slot name, so a stale index
       // would otherwise stamp a phantom rate.
-      if (carried?.kind === 'variant') {
-        const stillThere = s.variants.some((v) => v.index === carried.variant.index);
+      if (carried?.kind === "variant") {
+        const stillThere = s.variants.some(
+          (v) => v.index === carried.variant.index,
+        );
         seed[s.slotId] = stillThere
           ? carried
-          : { kind: 'default', strategy: 'median' };
-      } else if (carried?.kind === 'default') {
+          : { kind: "default", strategy: "median" };
+      } else if (carried?.kind === "default") {
         seed[s.slotId] = carried;
       } else {
-        seed[s.slotId] = { kind: 'default', strategy: 'median' };
+        seed[s.slotId] = { kind: "default", strategy: "median" };
       }
     }
     return seed;
@@ -210,20 +218,20 @@ export function MultiVariantPicker({
    *  control — defensive, but the modal has no inputs today). */
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         onCancel();
         return;
       }
       if (
-        e.key === 'Enter' &&
+        e.key === "Enter" &&
         !e.shiftKey &&
         !e.ctrlKey &&
         !e.metaKey &&
         !(
           e.target instanceof HTMLElement &&
-          (e.target.tagName === 'INPUT' ||
-            e.target.tagName === 'TEXTAREA' ||
+          (e.target.tagName === "INPUT" ||
+            e.target.tagName === "TEXTAREA" ||
             e.target.isContentEditable)
         )
       ) {
@@ -231,8 +239,8 @@ export function MultiVariantPicker({
         onApply({ picks });
       }
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onCancel, onApply, picks]);
 
   const subtotal = useMemo(() => {
@@ -248,12 +256,10 @@ export function MultiVariantPicker({
     return sum;
   }, [picks, slots]);
 
-  const subtotalCurrency = slots[0]?.currency || 'USD';
+  const subtotalCurrency = slots[0]?.currency || "USD";
 
   /* Bulk actions. Each one is idempotent — re-clicking always re-seeds. */
-  const applyAll = (
-    resolver: (slot: VariantSlot) => SlotPick,
-  ): void => {
+  const applyAll = (resolver: (slot: VariantSlot) => SlotPick): void => {
     const next: Record<string, SlotPick> = {};
     for (const s of slots) {
       next[s.slotId] = resolver(s);
@@ -261,17 +267,22 @@ export function MultiVariantPicker({
     setPicks(next);
   };
 
-  const allMedian = () => applyAll(() => ({ kind: 'default', strategy: 'median' }));
-  const allMean = () => applyAll(() => ({ kind: 'default', strategy: 'mean' }));
+  const allMedian = () =>
+    applyAll(() => ({ kind: "default", strategy: "median" }));
+  const allMean = () => applyAll(() => ({ kind: "default", strategy: "mean" }));
   const allCheapest = () =>
     applyAll((s) => {
       const v = cheapest(s.variants);
-      return v ? { kind: 'variant', variant: v } : { kind: 'default', strategy: 'median' };
+      return v
+        ? { kind: "variant", variant: v }
+        : { kind: "default", strategy: "median" };
     });
   const allPriciest = () =>
     applyAll((s) => {
       const v = priciest(s.variants);
-      return v ? { kind: 'variant', variant: v } : { kind: 'default', strategy: 'median' };
+      return v
+        ? { kind: "variant", variant: v }
+        : { kind: "default", strategy: "median" };
     });
 
   /* Per-slot pick handlers. */
@@ -306,7 +317,7 @@ export function MultiVariantPicker({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h3 id="mvp-title" className="text-base font-semibold truncate">
-                {t('boq.mvp.title', { defaultValue: 'Choose materials‌⁠‍' })}
+                {t("boq.mvp.title", { defaultValue: "Choose materials‌⁠‍" })}
               </h3>
               {batchProgress && batchProgress.total > 1 && (
                 <Badge
@@ -314,21 +325,24 @@ export function MultiVariantPicker({
                   size="sm"
                   data-testid="mvp-batch-progress"
                 >
-                  {t('boq.mvp.batch_progress', {
-                    defaultValue: 'Item {{current}} of {{total}}‌⁠‍',
+                  {t("boq.mvp.batch_progress", {
+                    defaultValue: "Item {{current}} of {{total}}‌⁠‍",
                     current: batchProgress.current,
                     total: batchProgress.total,
                   })}
                 </Badge>
               )}
             </div>
-            <p className="text-xs text-content-secondary truncate" title={positionTitle}>
+            <p
+              className="text-xs text-content-secondary truncate"
+              title={positionTitle}
+            >
               {positionTitle}
             </p>
             <p className="text-xs text-content-tertiary mt-0.5">
-              {t('boq.mvp.subtitle', {
-                defaultValue: '{{count}} resource needs a choice‌⁠‍',
-                defaultValue_other: '{{count}} resources need a choice',
+              {t("boq.mvp.subtitle", {
+                defaultValue: "{{count}} resource needs a choice‌⁠‍",
+                defaultValue_other: "{{count}} resources need a choice",
                 count: slots.length,
               })}
             </p>
@@ -336,7 +350,7 @@ export function MultiVariantPicker({
           <button
             onClick={onCancel}
             className="p-1.5 rounded-lg hover:bg-surface-hover text-content-tertiary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             data-testid="multi-variant-picker-close"
           >
             <X size={18} />
@@ -347,28 +361,34 @@ export function MultiVariantPicker({
         <div className="px-6 py-3 border-b border-border-light bg-surface-secondary/40 flex flex-wrap items-center gap-2">
           <span className="text-[11px] uppercase tracking-wide text-content-tertiary font-medium me-1">
             <Wand2 size={12} className="inline me-1 -mt-0.5" />
-            {t('boq.mvp.bulk_label', { defaultValue: 'Quick fill:‌⁠‍' })}
+            {t("boq.mvp.bulk_label", { defaultValue: "Quick fill:‌⁠‍" })}
           </span>
           <BulkChip
             onClick={allMedian}
-            label={t('boq.mvp.bulk_median', { defaultValue: 'Median for all‌⁠‍' })}
+            label={t("boq.mvp.bulk_median", {
+              defaultValue: "Median for all‌⁠‍",
+            })}
             testId="mvp-bulk-median"
           />
           <BulkChip
             onClick={allMean}
-            label={t('boq.mvp.bulk_mean', { defaultValue: 'Average for all' })}
+            label={t("boq.mvp.bulk_mean", { defaultValue: "Average for all" })}
             testId="mvp-bulk-mean"
           />
           <BulkChip
             onClick={allCheapest}
             icon={<TrendingDown size={12} />}
-            label={t('boq.mvp.bulk_cheapest', { defaultValue: 'Cheapest for all' })}
+            label={t("boq.mvp.bulk_cheapest", {
+              defaultValue: "Cheapest for all",
+            })}
             testId="mvp-bulk-cheapest"
           />
           <BulkChip
             onClick={allPriciest}
             icon={<TrendingUp size={12} />}
-            label={t('boq.mvp.bulk_priciest', { defaultValue: 'Most expensive for all' })}
+            label={t("boq.mvp.bulk_priciest", {
+              defaultValue: "Most expensive for all",
+            })}
             testId="mvp-bulk-priciest"
           />
         </div>
@@ -376,7 +396,10 @@ export function MultiVariantPicker({
         {/* Slots */}
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
           {slots.map((slot) => {
-            const pick = picks[slot.slotId] ?? { kind: 'default', strategy: 'median' };
+            const pick = picks[slot.slotId] ?? {
+              kind: "default",
+              strategy: "median",
+            };
             const expanded = expandedSlot === slot.slotId;
             const rate = rateFromPick(pick, slot.stats);
             const lineTotal = rate * (slot.quantity ?? 1);
@@ -396,27 +419,39 @@ export function MultiVariantPicker({
                   aria-controls={`mvp-slot-body-${slot.slotId}`}
                 >
                   <div className="mt-0.5 text-content-tertiary shrink-0">
-                    {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                    {expanded ? (
+                      <ChevronDown size={16} />
+                    ) : (
+                      <ChevronRight size={16} />
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-sm font-medium truncate">{slot.name}</span>
+                      <span className="text-sm font-medium truncate">
+                        {slot.name}
+                      </span>
                       <Badge variant="neutral" size="sm">
-                        {t('boq.mvp.slot_variant_count', {
-                          defaultValue: '{{n}} options',
+                        {t("boq.mvp.slot_variant_count", {
+                          defaultValue: "{{n}} options",
                           n: slot.variants.length,
                         })}
                       </Badge>
                     </div>
                     <div className="text-xs text-content-secondary truncate">
                       <span className="text-content-tertiary me-1">
-                        {t('boq.mvp.selected_label', { defaultValue: 'Picked:' })}
+                        {t("boq.mvp.selected_label", {
+                          defaultValue: "Picked:",
+                        })}
                       </span>
-                      {pick.kind === 'default' ? (
+                      {pick.kind === "default" ? (
                         <span className="italic">
-                          {pick.strategy === 'mean'
-                            ? t('boq.mvp.default_mean', { defaultValue: 'average rate' })
-                            : t('boq.mvp.default_median', { defaultValue: 'median rate' })}
+                          {pick.strategy === "mean"
+                            ? t("boq.mvp.default_mean", {
+                                defaultValue: "average rate",
+                              })
+                            : t("boq.mvp.default_median", {
+                                defaultValue: "median rate",
+                              })}
                         </span>
                       ) : (
                         <span>{displayLabel}</span>
@@ -433,12 +468,12 @@ export function MultiVariantPicker({
                     <div className="flex items-center gap-1 justify-end mt-0.5">
                       <span
                         className={
-                          'text-[10px] font-mono font-medium ' +
-                          (delta.tone === 'pos'
-                            ? 'text-rose-600 dark:text-rose-400'
-                            : delta.tone === 'neg'
-                              ? 'text-emerald-600 dark:text-emerald-400'
-                              : 'text-content-tertiary')
+                          "text-[10px] font-mono font-medium " +
+                          (delta.tone === "pos"
+                            ? "text-rose-600 dark:text-rose-400"
+                            : delta.tone === "neg"
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-content-tertiary")
                         }
                       >
                         {delta.text}
@@ -460,56 +495,82 @@ export function MultiVariantPicker({
                   >
                     <DefaultRow
                       slot={slot}
-                      picked={pick.kind === 'default' && pick.strategy === 'median'}
-                      onPick={() => setSlotPick(slot.slotId, { kind: 'default', strategy: 'median' })}
-                      label={t('boq.mvp.row_median', {
-                        defaultValue: 'Median rate · {{price}}',
+                      picked={
+                        pick.kind === "default" && pick.strategy === "median"
+                      }
+                      onPick={() =>
+                        setSlotPick(slot.slotId, {
+                          kind: "default",
+                          strategy: "median",
+                        })
+                      }
+                      label={t("boq.mvp.row_median", {
+                        defaultValue: "Median rate · {{price}}",
                         price: formatPrice(slot.stats.median, slot.currency),
                       })}
                       strategy="median"
                     />
                     <DefaultRow
                       slot={slot}
-                      picked={pick.kind === 'default' && pick.strategy === 'mean'}
-                      onPick={() => setSlotPick(slot.slotId, { kind: 'default', strategy: 'mean' })}
-                      label={t('boq.mvp.row_mean', {
-                        defaultValue: 'Average rate · {{price}}',
+                      picked={
+                        pick.kind === "default" && pick.strategy === "mean"
+                      }
+                      onPick={() =>
+                        setSlotPick(slot.slotId, {
+                          kind: "default",
+                          strategy: "mean",
+                        })
+                      }
+                      label={t("boq.mvp.row_mean", {
+                        defaultValue: "Average rate · {{price}}",
                         price: formatPrice(slot.stats.mean, slot.currency),
                       })}
                       strategy="mean"
                     />
                     <div className="border-t border-border-light/60 my-1" />
                     {slot.variants.map((v) => {
-                      const checked = pick.kind === 'variant' && pick.variant.index === v.index;
+                      const checked =
+                        pick.kind === "variant" &&
+                        pick.variant.index === v.index;
                       const rowDelta = deltaVsMean(v.price, slot.stats.mean);
-                      const label = (v.full_label || '').trim() ||
-                        ((slot.stats.common_start || '').trim()
+                      const label =
+                        (v.full_label || "").trim() ||
+                        ((slot.stats.common_start || "").trim()
                           ? `${slot.stats.common_start} ${v.label}`.trim()
                           : v.label);
                       return (
                         <button
                           key={v.index}
                           onClick={() =>
-                            setSlotPick(slot.slotId, { kind: 'variant', variant: v })
+                            setSlotPick(slot.slotId, {
+                              kind: "variant",
+                              variant: v,
+                            })
                           }
                           className={
-                            'w-full px-4 py-2.5 flex items-start gap-3 text-start hover:bg-surface-hover ' +
-                            (checked ? 'bg-blue-50/50 dark:bg-blue-950/30 ring-1 ring-inset ring-oe-blue/30' : '')
+                            "w-full px-4 py-2.5 flex items-start gap-3 text-start hover:bg-surface-hover " +
+                            (checked
+                              ? "bg-blue-50/50 dark:bg-blue-950/30 ring-1 ring-inset ring-oe-blue/30"
+                              : "")
                           }
                           data-testid={`mvp-row-${slot.slotId}-${v.index}`}
                         >
                           <div
                             className={
-                              'mt-0.5 h-4 w-4 rounded-full border-2 shrink-0 flex items-center justify-center ' +
+                              "mt-0.5 h-4 w-4 rounded-full border-2 shrink-0 flex items-center justify-center " +
                               (checked
-                                ? 'border-oe-blue bg-oe-blue'
-                                : 'border-border')
+                                ? "border-oe-blue bg-oe-blue"
+                                : "border-border")
                             }
                           >
-                            {checked && <Check size={10} className="text-white" />}
+                            {checked && (
+                              <Check size={10} className="text-white" />
+                            )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <span className="text-sm leading-snug line-clamp-2">{label}</span>
+                            <span className="text-sm leading-snug line-clamp-2">
+                              {label}
+                            </span>
                           </div>
                           <div className="text-end shrink-0">
                             <span className="text-sm font-mono font-medium tabular-nums">
@@ -517,12 +578,12 @@ export function MultiVariantPicker({
                             </span>
                             <span
                               className={
-                                'block text-[10px] font-mono font-medium mt-0.5 ' +
-                                (rowDelta.tone === 'pos'
-                                  ? 'text-rose-600 dark:text-rose-400'
-                                  : rowDelta.tone === 'neg'
-                                    ? 'text-emerald-600 dark:text-emerald-400'
-                                    : 'text-content-tertiary')
+                                "block text-[10px] font-mono font-medium mt-0.5 " +
+                                (rowDelta.tone === "pos"
+                                  ? "text-rose-600 dark:text-rose-400"
+                                  : rowDelta.tone === "neg"
+                                    ? "text-emerald-600 dark:text-emerald-400"
+                                    : "text-content-tertiary")
                               }
                             >
                               {rowDelta.text}
@@ -542,7 +603,7 @@ export function MultiVariantPicker({
         <div className="px-6 py-4 border-t border-border-light bg-surface-secondary/30 flex items-center justify-between gap-3">
           <div>
             <div className="text-[11px] uppercase tracking-wide text-content-tertiary font-medium">
-              {t('boq.mvp.subtotal_label', { defaultValue: 'Position rate' })}
+              {t("boq.mvp.subtotal_label", { defaultValue: "Position rate" })}
             </div>
             <div className="text-lg font-mono font-semibold tabular-nums text-content-primary">
               {formatPrice(subtotal, subtotalCurrency)}
@@ -555,7 +616,7 @@ export function MultiVariantPicker({
               onClick={onCancel}
               data-testid="mvp-cancel"
             >
-              {t('common.cancel', { defaultValue: 'Cancel' })}
+              {t("common.cancel", { defaultValue: "Cancel" })}
             </Button>
             {remainingCount > 0 && (
               <Button
@@ -563,13 +624,13 @@ export function MultiVariantPicker({
                 size="md"
                 onClick={handleApplyToAll}
                 data-testid="mvp-apply-to-all"
-                title={t('boq.mvp.apply_to_remaining_hint', {
+                title={t("boq.mvp.apply_to_remaining_hint", {
                   defaultValue:
-                    'Re-use these picks for all other multi-variant items in this batch',
+                    "Re-use these picks for all other multi-variant items in this batch",
                 })}
               >
-                {t('boq.mvp.apply_to_remaining', {
-                  defaultValue: 'Apply to remaining {{count}}',
+                {t("boq.mvp.apply_to_remaining", {
+                  defaultValue: "Apply to remaining {{count}}",
                   count: remainingCount,
                 })}
               </Button>
@@ -581,7 +642,7 @@ export function MultiVariantPicker({
               onClick={handleApply}
               data-testid="mvp-apply"
             >
-              {t('boq.mvp.apply', { defaultValue: 'Apply & add to BOQ' })}
+              {t("boq.mvp.apply", { defaultValue: "Apply & add to BOQ" })}
             </Button>
           </div>
         </div>
@@ -627,21 +688,23 @@ function DefaultRow({
   picked: boolean;
   onPick: () => void;
   label: string;
-  strategy: 'mean' | 'median';
+  strategy: "mean" | "median";
 }) {
   return (
     <button
       onClick={onPick}
       className={
-        'w-full px-4 py-2.5 flex items-start gap-3 text-start hover:bg-surface-hover ' +
-        (picked ? 'bg-blue-50/50 dark:bg-blue-950/30 ring-1 ring-inset ring-oe-blue/30' : '')
+        "w-full px-4 py-2.5 flex items-start gap-3 text-start hover:bg-surface-hover " +
+        (picked
+          ? "bg-blue-50/50 dark:bg-blue-950/30 ring-1 ring-inset ring-oe-blue/30"
+          : "")
       }
       data-testid={`mvp-row-${slot.slotId}-default-${strategy}`}
     >
       <div
         className={
-          'mt-0.5 h-4 w-4 rounded-full border-2 shrink-0 flex items-center justify-center ' +
-          (picked ? 'border-oe-blue bg-oe-blue' : 'border-border')
+          "mt-0.5 h-4 w-4 rounded-full border-2 shrink-0 flex items-center justify-center " +
+          (picked ? "border-oe-blue bg-oe-blue" : "border-border")
         }
       >
         {picked && <Check size={10} className="text-white" />}
@@ -682,7 +745,7 @@ interface CostItemLike {
  *  resolve to the same 8-variant beam catalog), so dedupe-by-resource_code
  *  alone misses the top-vs-component case. */
 export function variantCatalogHash(variants: CostVariant[]): string {
-  return variants.map((v) => (v.label || '').trim()).join('|');
+  return variants.map((v) => (v.label || "").trim()).join("|");
 }
 
 /** Build the variant-slot list for one CostItem. Order is stable: top-level
@@ -703,7 +766,8 @@ export function collectVariantSlots(
   item: CostItemLike,
   fallbackCurrency: string,
 ): VariantSlot[] {
-  const itemCurrency = (item.currency && item.currency.trim()) || fallbackCurrency;
+  const itemCurrency =
+    (item.currency && item.currency.trim()) || fallbackCurrency;
   const top = item.metadata_?.variants;
   const topStats = item.metadata_?.variant_stats;
 
@@ -733,9 +797,12 @@ export function collectVariantSlots(
     if (!componentHashes.has(topHash)) {
       seenHashes.add(topHash);
       out.push({
-        slotId: 'top',
-        name: (topStats.common_start || '').trim() || item.description || 'Resource',
-        unit: item.unit || 'pcs',
+        slotId: "top",
+        name:
+          (topStats.common_start || "").trim() ||
+          item.description ||
+          "Resource",
+        unit: item.unit || "pcs",
         quantity: 1,
         variants: top,
         stats: topStats,
@@ -750,7 +817,7 @@ export function collectVariantSlots(
       c.available_variants.length >= 2 &&
       c.available_variant_stats
     ) {
-      const code = (c.code || '').trim();
+      const code = (c.code || "").trim();
       const codeKey = code || `__c${i}`;
       if (seenCodes.has(codeKey)) continue;
       const hash = variantCatalogHash(c.available_variants);

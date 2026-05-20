@@ -11,14 +11,18 @@
  *   4. clicking "+" opens the Add Member modal
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TeamStrip, type ProjectMember, getInitials } from '../components/TeamStrip';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  TeamStrip,
+  type ProjectMember,
+  getInitials,
+} from "../components/TeamStrip";
 
 // Avoid hitting the network — the TeamStrip's useQuery is short-circuited
 // when `initialMembers` is passed via props (see component source).
-vi.mock('@/shared/lib/api', () => ({
+vi.mock("@/shared/lib/api", () => ({
   apiGet: vi.fn(),
   apiPost: vi.fn(),
   apiDelete: vi.fn(),
@@ -26,7 +30,7 @@ vi.mock('@/shared/lib/api', () => ({
 
 // UserSearchInput hits /v1/users/ via React Query — stub it out so the
 // Add-Member modal renders without firing a real request.
-vi.mock('@/shared/ui/UserSearchInput', () => ({
+vi.mock("@/shared/ui/UserSearchInput", () => ({
   UserSearchInput: ({
     value,
     onChange,
@@ -47,7 +51,7 @@ function makeMember(i: number): ProjectMember {
     user_id: `user-${i}`,
     email: `user${i}@example.com`,
     full_name: `User ${i} Lastname`,
-    role: i === 0 ? 'owner' : 'estimator',
+    role: i === 0 ? "owner" : "estimator",
     is_owner: i === 0,
   };
 }
@@ -71,53 +75,53 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe('TeamStrip', () => {
-  describe('getInitials helper', () => {
-    it('returns two-letter uppercase initials from first+last name', () => {
+describe("TeamStrip", () => {
+  describe("getInitials helper", () => {
+    it("returns two-letter uppercase initials from first+last name", () => {
       expect(
-        getInitials({ full_name: 'Jane Doe', email: 'jd@example.com' }),
-      ).toBe('JD');
+        getInitials({ full_name: "Jane Doe", email: "jd@example.com" }),
+      ).toBe("JD");
     });
 
-    it('falls back to first two letters of single-word name', () => {
+    it("falls back to first two letters of single-word name", () => {
       expect(
-        getInitials({ full_name: 'Madonna', email: 'm@example.com' }),
-      ).toBe('MA');
+        getInitials({ full_name: "Madonna", email: "m@example.com" }),
+      ).toBe("MA");
     });
 
-    it('falls back to email local part when name is empty', () => {
-      expect(
-        getInitials({ full_name: '', email: 'art@datadriven.io' }),
-      ).toBe('AR');
+    it("falls back to email local part when name is empty", () => {
+      expect(getInitials({ full_name: "", email: "art@datadriven.io" })).toBe(
+        "AR",
+      );
     });
 
-    it('returns ? when both name and email are empty', () => {
-      expect(getInitials({ full_name: '', email: '' })).toBe('?');
+    it("returns ? when both name and email are empty", () => {
+      expect(getInitials({ full_name: "", email: "" })).toBe("?");
     });
   });
 
-  it('renders the empty placeholder when no members exist', () => {
+  it("renders the empty placeholder when no members exist", () => {
     renderStrip([]);
-    expect(screen.getByTestId('team-strip-empty')).toBeInTheDocument();
-    expect(screen.queryAllByTestId('team-strip-avatar')).toHaveLength(0);
+    expect(screen.getByTestId("team-strip-empty")).toBeInTheDocument();
+    expect(screen.queryAllByTestId("team-strip-avatar")).toHaveLength(0);
     // The + button is still rendered so the owner can invite the first
     // member — the spec wires it to the add-member modal.
-    expect(screen.getByTestId('team-strip-add-button')).toBeInTheDocument();
+    expect(screen.getByTestId("team-strip-add-button")).toBeInTheDocument();
   });
 
-  it('renders exactly 3 avatars when there are 3 members', () => {
+  it("renders exactly 3 avatars when there are 3 members", () => {
     const members = [0, 1, 2].map(makeMember);
     renderStrip(members);
-    expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(3);
+    expect(screen.getAllByTestId("team-strip-avatar")).toHaveLength(3);
     // No overflow chip below the 7-member threshold.
-    expect(screen.queryByTestId('team-strip-more')).toBeNull();
+    expect(screen.queryByTestId("team-strip-more")).toBeNull();
   });
 
   it('renders 6 avatars + "+2 more" chip when there are 8 members', () => {
     const members = Array.from({ length: 8 }, (_, i) => makeMember(i));
     renderStrip(members);
-    expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(6);
-    const moreChip = screen.getByTestId('team-strip-more');
+    expect(screen.getAllByTestId("team-strip-avatar")).toHaveLength(6);
+    const moreChip = screen.getByTestId("team-strip-more");
     expect(moreChip).toBeInTheDocument();
     expect(moreChip.textContent).toMatch(/\+2/);
   });
@@ -125,19 +129,19 @@ describe('TeamStrip', () => {
   it('opens the Add Member modal when the "+" button is clicked', () => {
     renderStrip([makeMember(0)]);
     // Modal isn't mounted initially.
-    expect(screen.queryByTestId('team-strip-add-modal')).toBeNull();
-    fireEvent.click(screen.getByTestId('team-strip-add-button'));
+    expect(screen.queryByTestId("team-strip-add-modal")).toBeNull();
+    fireEvent.click(screen.getByTestId("team-strip-add-button"));
     // Modal becomes visible with the role selector + user search.
-    expect(screen.getByTestId('team-strip-add-modal')).toBeInTheDocument();
-    expect(screen.getByTestId('mock-user-search')).toBeInTheDocument();
-    expect(screen.getByTestId('team-strip-add-submit')).toBeInTheDocument();
+    expect(screen.getByTestId("team-strip-add-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("mock-user-search")).toBeInTheDocument();
+    expect(screen.getByTestId("team-strip-add-submit")).toBeInTheDocument();
   });
 
-  it('hides the add controls when canManage is false', () => {
+  it("hides the add controls when canManage is false", () => {
     renderStrip([makeMember(0), makeMember(1)], false);
-    expect(screen.queryByTestId('team-strip-add-button')).toBeNull();
-    expect(screen.queryByTestId('team-strip-manage')).toBeNull();
+    expect(screen.queryByTestId("team-strip-add-button")).toBeNull();
+    expect(screen.queryByTestId("team-strip-manage")).toBeNull();
     // Avatars still render in read-only mode.
-    expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(2);
+    expect(screen.getAllByTestId("team-strip-avatar")).toHaveLength(2);
   });
 });

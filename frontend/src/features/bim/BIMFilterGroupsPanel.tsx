@@ -23,15 +23,15 @@
  *     feature exists.
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import BIMFilterPanel from './BIMFilterPanel';
-import BIMGroupsPanel from './BIMGroupsPanel';
-import type { BIMElementGroup } from './api';
-import type { BIMFilterState } from './BIMFilterPanel';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import BIMFilterPanel from "./BIMFilterPanel";
+import BIMGroupsPanel from "./BIMGroupsPanel";
+import type { BIMElementGroup } from "./api";
+import type { BIMFilterState } from "./BIMFilterPanel";
 
-type TabId = 'filters' | 'groups';
+type TabId = "filters" | "groups";
 
 export interface BIMFilterGroupsPanelProps {
   /* ── Shared ────────────────────────────────────────────────── */
@@ -58,7 +58,7 @@ export interface BIMFilterGroupsPanelProps {
   onLinkGroupToBOQ?: (group: BIMElementGroup) => void;
   onDeleteGroup: (group: BIMElementGroup) => void;
   onSmartFilter?: (
-    filterId: 'errors' | 'warnings' | 'unlinked_boq' | 'has_tasks' | 'has_docs',
+    filterId: "errors" | "warnings" | "unlinked_boq" | "has_tasks" | "has_docs",
   ) => void;
   isolatedIds?: string[] | null;
   onClearIsolation?: () => void;
@@ -73,18 +73,18 @@ export interface BIMFilterGroupsPanelProps {
 
 export default function BIMFilterGroupsPanel(props: BIMFilterGroupsPanelProps) {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<TabId>('filters');
+  const [activeTab, setActiveTab] = useState<TabId>("filters");
 
   const groupsCount = props.savedGroups.length;
 
   const tabs: { id: TabId; label: string }[] = [
     {
-      id: 'filters',
-      label: t('bim.tab_filters', { defaultValue: 'Filters‌⁠‍' }),
+      id: "filters",
+      label: t("bim.tab_filters", { defaultValue: "Filters‌⁠‍" }),
     },
     {
-      id: 'groups',
-      label: t('bim.tab_groups', { defaultValue: 'Groups‌⁠‍' }),
+      id: "groups",
+      label: t("bim.tab_groups", { defaultValue: "Groups‌⁠‍" }),
     },
   ];
 
@@ -93,14 +93,14 @@ export default function BIMFilterGroupsPanel(props: BIMFilterGroupsPanelProps) {
       {/* Tab strip — styling mirrors BIMRightPanelTabs. */}
       <div
         role="tablist"
-        aria-label={t('bim.filter_groups_tabs_aria', {
-          defaultValue: 'Filter and groups tabs‌⁠‍',
+        aria-label={t("bim.filter_groups_tabs_aria", {
+          defaultValue: "Filter and groups tabs‌⁠‍",
         })}
         className="flex items-stretch border-b border-border-light bg-surface-secondary"
       >
         {tabs.map(({ id, label }) => {
           const isActive = activeTab === id;
-          const showBadge = id === 'groups' && groupsCount > 0;
+          const showBadge = id === "groups" && groupsCount > 0;
           return (
             <button
               key={id}
@@ -111,8 +111,8 @@ export default function BIMFilterGroupsPanel(props: BIMFilterGroupsPanelProps) {
               data-testid={`bim-filter-groups-tab-${id}`}
               className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-[11px] font-medium transition-colors ${
                 isActive
-                  ? 'text-oe-blue bg-surface-primary border-b-2 border-oe-blue'
-                  : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-tertiary'
+                  ? "text-oe-blue bg-surface-primary border-b-2 border-oe-blue"
+                  : "text-content-tertiary hover:text-content-secondary hover:bg-surface-tertiary"
               }`}
             >
               <span className="truncate">{label}</span>
@@ -120,11 +120,11 @@ export default function BIMFilterGroupsPanel(props: BIMFilterGroupsPanelProps) {
                 <span
                   className={`inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full text-[9px] font-semibold ${
                     isActive
-                      ? 'bg-oe-blue text-white'
-                      : 'bg-surface-tertiary text-content-secondary'
+                      ? "bg-oe-blue text-white"
+                      : "bg-surface-tertiary text-content-secondary"
                   }`}
-                  aria-label={t('bim.groups_count_badge', {
-                    defaultValue: '{{count}} saved groups‌⁠‍',
+                  aria-label={t("bim.groups_count_badge", {
+                    defaultValue: "{{count}} saved groups‌⁠‍",
                     count: groupsCount,
                   })}
                 >
@@ -141,7 +141,7 @@ export default function BIMFilterGroupsPanel(props: BIMFilterGroupsPanelProps) {
           time the user switches back.  For a lightweight sidebar this
           is cheaper and clearer than using `hidden` with mounted state. */}
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-        {activeTab === 'filters' && (
+        {activeTab === "filters" && (
           <BIMFilterPanel
             elements={props.elements}
             modelId={props.modelId}
@@ -161,7 +161,7 @@ export default function BIMFilterGroupsPanel(props: BIMFilterGroupsPanelProps) {
             onClearIsolation={props.onClearIsolation}
           />
         )}
-        {activeTab === 'groups' && (
+        {activeTab === "groups" && (
           <BIMGroupsPanel
             savedGroups={props.savedGroups}
             elements={props.elements}

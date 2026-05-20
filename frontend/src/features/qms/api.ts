@@ -4,40 +4,40 @@
  * Backed by /api/v1/qms/ — see backend/app/modules/qms/router.py
  */
 
-import { apiGet, apiPost, apiPatch } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type ITPStatus = 'draft' | 'active' | 'superseded' | 'closed';
+export type ITPStatus = "draft" | "active" | "superseded" | "closed";
 export type InspectionStatus =
-  | 'scheduled'
-  | 'in_progress'
-  | 'passed'
-  | 'failed'
-  | 'conditional';
+  | "scheduled"
+  | "in_progress"
+  | "passed"
+  | "failed"
+  | "conditional";
 export type NCRStatus =
-  | 'open'
-  | 'action_pending'
-  | 'verifying'
-  | 'closed'
-  | 'cancelled';
-export type NCRSeverity = 'minor' | 'major' | 'critical';
+  | "open"
+  | "action_pending"
+  | "verifying"
+  | "closed"
+  | "cancelled";
+export type NCRSeverity = "minor" | "major" | "critical";
 export type PunchStatus =
-  | 'open'
-  | 'assigned'
-  | 'in_progress'
-  | 'ready_for_inspection'
-  | 'closed'
-  | 'rejected';
+  | "open"
+  | "assigned"
+  | "in_progress"
+  | "ready_for_inspection"
+  | "closed"
+  | "rejected";
 export type PunchCategory =
-  | 'architectural'
-  | 'mechanical'
-  | 'electrical'
-  | 'finishes'
-  | 'structure';
-export type AuditType = 'internal' | 'external' | 'supplier';
-export type AuditStatus = 'planned' | 'in_progress' | 'completed' | 'closed';
-export type FindingType = 'observation' | 'minor' | 'major' | 'critical';
+  | "architectural"
+  | "mechanical"
+  | "electrical"
+  | "finishes"
+  | "structure";
+export type AuditType = "internal" | "external" | "supplier";
+export type AuditStatus = "planned" | "in_progress" | "completed" | "closed";
+export type FindingType = "observation" | "minor" | "major" | "critical";
 
 export interface ITPPlan {
   id: string;
@@ -61,7 +61,7 @@ export interface ITPItem {
   frequency: string | null;
   method: string | null;
   acceptance_criteria: string | null;
-  hold_witness_point: 'hold' | 'witness' | 'review';
+  hold_witness_point: "hold" | "witness" | "review";
   responsible_role: string | null;
   signatories_required: number;
   created_at: string;
@@ -89,9 +89,15 @@ export interface InspectionSignature {
   id: string;
   inspection_id: string;
   signer_user_id: string;
-  signer_role: 'GC' | 'designer' | 'client' | 'subcontractor' | 'inspector' | 'other';
+  signer_role:
+    | "GC"
+    | "designer"
+    | "client"
+    | "subcontractor"
+    | "inspector"
+    | "other";
   signed_at: string | null;
-  signature_method: 'electronic' | 'wet' | 'biometric';
+  signature_method: "electronic" | "wet" | "biometric";
   comments: string | null;
   created_at: string;
   updated_at: string;
@@ -121,7 +127,7 @@ export interface NCRAction {
   description: string;
   responsible_user_id: string | null;
   due_date: string | null;
-  status: 'assigned' | 'in_progress' | 'done';
+  status: "assigned" | "in_progress" | "done";
   verification_method: string | null;
   verified_by: string | null;
   verified_at: string | null;
@@ -146,7 +152,7 @@ export interface PunchItem {
   due_date: string | null;
   closed_at: string | null;
   photos_json: Array<Record<string, unknown>>;
-  source: 'manual' | 'inspection' | 'walkthrough';
+  source: "manual" | "inspection" | "walkthrough";
   category: PunchCategory | null;
   created_at: string;
   updated_at: string;
@@ -174,7 +180,7 @@ export interface AuditFinding {
   description: string;
   clause_ref: string | null;
   corrective_action_required: string | null;
-  status: 'open' | 'in_progress' | 'verified' | 'closed';
+  status: "open" | "in_progress" | "verified" | "closed";
   due_date: string | null;
   closed_at: string | null;
   created_at: string;
@@ -215,7 +221,7 @@ export interface CreateITPItemPayload {
   frequency?: string;
   method?: string;
   acceptance_criteria?: string;
-  hold_witness_point?: 'hold' | 'witness' | 'review';
+  hold_witness_point?: "hold" | "witness" | "review";
   responsible_role?: string;
   signatories_required?: number;
 }
@@ -233,8 +239,8 @@ export interface CreateInspectionPayload {
 
 export interface SignInspectionPayload {
   signer_user_id: string;
-  signer_role: InspectionSignature['signer_role'];
-  signature_method?: InspectionSignature['signature_method'];
+  signer_role: InspectionSignature["signer_role"];
+  signature_method?: InspectionSignature["signature_method"];
   comments?: string;
 }
 
@@ -276,7 +282,7 @@ export interface CreatePunchItemPayload {
   severity?: NCRSeverity;
   assigned_to?: string;
   due_date?: string;
-  source?: 'manual' | 'inspection' | 'walkthrough';
+  source?: "manual" | "inspection" | "walkthrough";
   category?: PunchCategory;
 }
 
@@ -302,10 +308,10 @@ export interface CreateAuditFindingPayload {
 function buildQs(params: Record<string, string | number | undefined>): string {
   const qs = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== '' && v !== null) qs.set(k, String(v));
+    if (v !== undefined && v !== "" && v !== null) qs.set(k, String(v));
   }
   const s = qs.toString();
-  return s ? `?${s}` : '';
+  return s ? `?${s}` : "";
 }
 
 /* ── ITP Plans ─────────────────────────────────────────────────────────── */
@@ -320,7 +326,7 @@ export function listITPPlans(params: {
 }
 
 export function createITPPlan(data: CreateITPPlanPayload): Promise<ITPPlan> {
-  return apiPost<ITPPlan>('/v1/qms/itp-plans', data);
+  return apiPost<ITPPlan>("/v1/qms/itp-plans", data);
 }
 
 export function addITPItem(
@@ -348,7 +354,7 @@ export function listInspections(params: {
 export function createInspection(
   data: CreateInspectionPayload,
 ): Promise<Inspection> {
-  return apiPost<Inspection>('/v1/qms/inspections', data);
+  return apiPost<Inspection>("/v1/qms/inspections", data);
 }
 
 export function signInspection(
@@ -363,7 +369,7 @@ export function signInspection(
 
 export function completeInspection(
   inspectionId: string,
-  result: 'passed' | 'failed' | 'conditional',
+  result: "passed" | "failed" | "conditional",
   notes?: string,
 ): Promise<Inspection> {
   return apiPost<Inspection>(
@@ -392,7 +398,7 @@ export function listNCRs(params: {
 }
 
 export function createNCR(data: CreateNCRPayload): Promise<NCR> {
-  return apiPost<NCR>('/v1/qms/ncrs', data);
+  return apiPost<NCR>("/v1/qms/ncrs", data);
 }
 
 export function updateNCR(ncrId: string, data: UpdateNCRPayload): Promise<NCR> {
@@ -434,7 +440,7 @@ export function listPunchItems(params: {
 export function createPunchItem(
   data: CreatePunchItemPayload,
 ): Promise<PunchItem> {
-  return apiPost<PunchItem>('/v1/qms/punch-items', data);
+  return apiPost<PunchItem>("/v1/qms/punch-items", data);
 }
 
 export function assignPunchItem(
@@ -463,7 +469,7 @@ export function listAudits(params: {
 }
 
 export function createAudit(data: CreateAuditPayload): Promise<Audit> {
-  return apiPost<Audit>('/v1/qms/audits', data);
+  return apiPost<Audit>("/v1/qms/audits", data);
 }
 
 export function addAuditFinding(
@@ -487,7 +493,7 @@ export function completeAudit(
 
 export function fetchCOPQ(
   projectId: string,
-  currency = '',
+  currency = "",
 ): Promise<COPQReport> {
   return apiGet<COPQReport>(
     `/v1/qms/reports/copq${buildQs({ project_id: projectId, currency })}`,

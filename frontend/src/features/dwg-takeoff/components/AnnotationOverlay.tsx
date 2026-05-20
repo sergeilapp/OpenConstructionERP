@@ -6,11 +6,11 @@
  * of the DXF entities.
  */
 
-import type { DwgAnnotation } from '../api';
-import type { ViewportState } from '../lib/viewport';
-import { worldToScreen } from '../lib/viewport';
-import { formatMeasurement } from '../lib/measurement';
-import type { CalibrationUnit } from '../lib/calibration';
+import type { DwgAnnotation } from "../api";
+import type { ViewportState } from "../lib/viewport";
+import { worldToScreen } from "../lib/viewport";
+import { formatMeasurement } from "../lib/measurement";
+import type { CalibrationUnit } from "../lib/calibration";
 
 /** Optional two-click calibration override. When present, every linear
  *  ``measurement_value`` is multiplied by ``unitsPerPixel`` and areal
@@ -29,7 +29,9 @@ function formatCalibrated(
   isArea: boolean,
   cal: CalibrationOverride,
 ): string {
-  const factor = isArea ? cal.unitsPerPixel * cal.unitsPerPixel : cal.unitsPerPixel;
+  const factor = isArea
+    ? cal.unitsPerPixel * cal.unitsPerPixel
+    : cal.unitsPerPixel;
   const v = rawValue * factor;
   const unit = isArea ? `${cal.unit}\u00B2` : cal.unit;
   if (v >= 1000) return `${(v / 1000).toFixed(2)}k ${unit}`;
@@ -48,9 +50,9 @@ function measurementLabel(
 ): string | null {
   if (ann.measurement_value == null) return ann.text ?? null;
   const isArea =
-    ann.measurement_unit === 'm\u00B2' ||
-    ann.measurement_unit === 'm2' ||
-    (ann.measurement_unit ?? '').includes('\u00B2');
+    ann.measurement_unit === "m\u00B2" ||
+    ann.measurement_unit === "m2" ||
+    (ann.measurement_unit ?? "").includes("\u00B2");
   if (cal) {
     return formatCalibrated(ann.measurement_value, isArea, cal);
   }
@@ -71,9 +73,9 @@ function measurementLabel(
  */
 function strokeWidth(ann: DwgAnnotation, isSelected: boolean): number {
   const base =
-    typeof ann.thickness === 'number' && ann.thickness > 0
+    typeof ann.thickness === "number" && ann.thickness > 0
       ? ann.thickness
-      : typeof ann.line_width === 'number' && ann.line_width > 0
+      : typeof ann.line_width === "number" && ann.line_width > 0
         ? ann.line_width
         : 2;
   return isSelected ? Math.max(base + 1, base * 1.5) : base;
@@ -90,12 +92,12 @@ function scaleMeasurement(
   scale: number,
 ): number {
   if (!Number.isFinite(scale) || scale <= 0 || scale === 1) return value;
-  const normalised = (unit ?? '').trim();
+  const normalised = (unit ?? "").trim();
   const isArea =
-    normalised === 'm²' ||
-    normalised === 'm2' ||
-    normalised === '\u00B2' ||
-    normalised.includes('²');
+    normalised === "m²" ||
+    normalised === "m2" ||
+    normalised === "\u00B2" ||
+    normalised.includes("²");
   return isArea ? value * scale * scale : value * scale;
 }
 
@@ -110,31 +112,67 @@ export function renderAnnotations(
 ): void {
   for (const ann of annotations) {
     const isSelected = ann.id === selectedId;
-    const color = isSelected ? '#3b82f6' : ann.color;
+    const color = isSelected ? "#3b82f6" : ann.color;
     const width = strokeWidth(ann, isSelected);
 
     switch (ann.type) {
-      case 'text_pin':
+      case "text_pin":
         renderTextPin(ctx, ann, vp, color, isSelected);
         break;
-      case 'arrow':
+      case "arrow":
         renderArrow(ctx, ann, vp, color, isSelected, width);
         break;
-      case 'rectangle':
+      case "rectangle":
         renderRectangle(ctx, ann, vp, color, isSelected, width);
         break;
-      case 'distance':
-      case 'line':
-        renderDistance(ctx, ann, vp, color, isSelected, width, drawingScale, calibration);
+      case "distance":
+      case "line":
+        renderDistance(
+          ctx,
+          ann,
+          vp,
+          color,
+          isSelected,
+          width,
+          drawingScale,
+          calibration,
+        );
         break;
-      case 'area':
-        renderArea(ctx, ann, vp, color, isSelected, width, drawingScale, calibration);
+      case "area":
+        renderArea(
+          ctx,
+          ann,
+          vp,
+          color,
+          isSelected,
+          width,
+          drawingScale,
+          calibration,
+        );
         break;
-      case 'circle':
-        renderCircle(ctx, ann, vp, color, isSelected, width, drawingScale, calibration);
+      case "circle":
+        renderCircle(
+          ctx,
+          ann,
+          vp,
+          color,
+          isSelected,
+          width,
+          drawingScale,
+          calibration,
+        );
         break;
-      case 'polyline':
-        renderPolyline(ctx, ann, vp, color, isSelected, width, drawingScale, calibration);
+      case "polyline":
+        renderPolyline(
+          ctx,
+          ann,
+          vp,
+          color,
+          isSelected,
+          width,
+          drawingScale,
+          calibration,
+        );
         break;
     }
   }
@@ -166,16 +204,16 @@ function renderCircle(
   ctx.fill();
 
   // Area label at centre when measurement is available.
-  const label = measurementLabel(ann, drawingScale, calibration, 'm\u00B2');
+  const label = measurementLabel(ann, drawingScale, calibration, "m\u00B2");
   if (label) {
-    ctx.font = '600 11px ui-monospace, monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba(0,0,0,0.75)';
+    ctx.font = "600 11px ui-monospace, monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgba(0,0,0,0.75)";
     const tw = ctx.measureText(label).width + 10;
     const th = 18;
     ctx.fillRect(center.x - tw / 2, center.y - th / 2, tw, th);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = "#fff";
     ctx.fillText(label, center.x, center.y + 1);
   }
 }
@@ -216,16 +254,16 @@ function renderPolyline(
     );
     const mx = (pA.x + pB.x) / 2;
     const my = (pA.y + pB.y) / 2;
-    const label = measurementLabel(ann, drawingScale, calibration, 'm');
+    const label = measurementLabel(ann, drawingScale, calibration, "m");
     if (label) {
-      ctx.font = '600 11px ui-monospace, monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'rgba(0,0,0,0.75)';
+      ctx.font = "600 11px ui-monospace, monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "rgba(0,0,0,0.75)";
       const tw = ctx.measureText(label).width + 10;
       const th = 18;
       ctx.fillRect(mx - tw / 2, my - 20 - th / 2, tw, th);
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = "#fff";
       ctx.fillText(label, mx, my - 19);
     }
   }
@@ -245,7 +283,7 @@ function renderTextPin(
   // Read custom font size from metadata (default 14px — bumped so blank
   // pins show a clearly visible marker).
   const customFontSize =
-    ann.metadata && typeof ann.metadata.font_size === 'number'
+    ann.metadata && typeof ann.metadata.font_size === "number"
       ? ann.metadata.font_size
       : 14;
 
@@ -264,10 +302,16 @@ function renderTextPin(
     0,
     Math.PI * 2,
   );
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+  ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
   ctx.fill();
   ctx.beginPath();
-  ctx.arc(pos.x, pos.y, isSelected ? markerRadius + 1 : markerRadius, 0, Math.PI * 2);
+  ctx.arc(
+    pos.x,
+    pos.y,
+    isSelected ? markerRadius + 1 : markerRadius,
+    0,
+    Math.PI * 2,
+  );
   ctx.fillStyle = pinColor;
   ctx.globalAlpha = 0.95;
   ctx.fill();
@@ -277,7 +321,7 @@ function renderTextPin(
   if (ann.text) {
     ctx.font = `600 ${customFontSize}px Inter, system-ui, sans-serif`;
     ctx.fillStyle = pinColor;
-    ctx.textBaseline = 'bottom';
+    ctx.textBaseline = "bottom";
 
     // Background pill for readability
     const textMetrics = ctx.measureText(ann.text);
@@ -287,14 +331,20 @@ function renderTextPin(
     const pillX = pos.x + markerRadius + 6;
     const pillY = pos.y - customFontSize - pillPad / 2;
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+    ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
     ctx.beginPath();
     const r = 3;
     ctx.moveTo(pillX + r, pillY);
     ctx.lineTo(pillX + pillW - r, pillY);
     ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + r, r);
     ctx.lineTo(pillX + pillW, pillY + pillH - r);
-    ctx.arcTo(pillX + pillW, pillY + pillH, pillX + pillW - r, pillY + pillH, r);
+    ctx.arcTo(
+      pillX + pillW,
+      pillY + pillH,
+      pillX + pillW - r,
+      pillY + pillH,
+      r,
+    );
     ctx.lineTo(pillX + r, pillY + pillH);
     ctx.arcTo(pillX, pillY + pillH, pillX, pillY + pillH - r, r);
     ctx.lineTo(pillX, pillY + r);
@@ -307,7 +357,7 @@ function renderTextPin(
   }
 
   if (isSelected) {
-    ctx.strokeStyle = '#3b82f6';
+    ctx.strokeStyle = "#3b82f6";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(pos.x, pos.y, markerRadius + 5, 0, Math.PI * 2);
@@ -342,8 +392,14 @@ function renderArrow(
   ctx.fillStyle = color;
   ctx.beginPath();
   ctx.moveTo(to.x, to.y);
-  ctx.lineTo(to.x - headLen * Math.cos(angle - 0.4), to.y - headLen * Math.sin(angle - 0.4));
-  ctx.lineTo(to.x - headLen * Math.cos(angle + 0.4), to.y - headLen * Math.sin(angle + 0.4));
+  ctx.lineTo(
+    to.x - headLen * Math.cos(angle - 0.4),
+    to.y - headLen * Math.sin(angle - 0.4),
+  );
+  ctx.lineTo(
+    to.x - headLen * Math.cos(angle + 0.4),
+    to.y - headLen * Math.sin(angle + 0.4),
+  );
   ctx.closePath();
   ctx.fill();
 }
@@ -379,7 +435,7 @@ function renderRectangle(
   // Drag handles when selected
   if (isSelected) {
     for (const p of [p1, p2]) {
-      ctx.fillStyle = '#3b82f6';
+      ctx.fillStyle = "#3b82f6";
       ctx.fillRect(p.x - 4, p.y - 4, 8, 8);
     }
   }
@@ -405,7 +461,7 @@ function renderDistance(
   ctx.lineWidth = width;
   // Dashed only for the measurement 'distance' tool so user-drawn 'line'
   // primitives stroke solid (more natural for markup).
-  if (ann.type === 'distance') {
+  if (ann.type === "distance") {
     ctx.setLineDash([6, 4]);
   }
   ctx.beginPath();
@@ -415,16 +471,16 @@ function renderDistance(
   ctx.setLineDash([]);
 
   // Dimension text
-  const label = measurementLabel(ann, drawingScale, calibration, 'm') ?? '';
+  const label = measurementLabel(ann, drawingScale, calibration, "m") ?? "";
   if (label) {
     const mx = (p1.x + p2.x) / 2;
     const my = (p1.y + p2.y) / 2;
-    ctx.font = 'bold 11px Inter, system-ui, sans-serif';
+    ctx.font = "bold 11px Inter, system-ui, sans-serif";
     ctx.fillStyle = color;
-    ctx.textBaseline = 'bottom';
-    ctx.textAlign = 'center';
+    ctx.textBaseline = "bottom";
+    ctx.textAlign = "center";
     ctx.fillText(label, mx, my - 4);
-    ctx.textAlign = 'start';
+    ctx.textAlign = "start";
   }
 
   // End markers
@@ -476,13 +532,14 @@ function renderArea(
   // Area text at centroid
   const cx = screenPts.reduce((s, p) => s + p.x, 0) / screenPts.length;
   const cy = screenPts.reduce((s, p) => s + p.y, 0) / screenPts.length;
-  const label = measurementLabel(ann, drawingScale, calibration, 'm\u00B2') ?? '';
+  const label =
+    measurementLabel(ann, drawingScale, calibration, "m\u00B2") ?? "";
   if (label) {
-    ctx.font = 'bold 11px Inter, system-ui, sans-serif';
+    ctx.font = "bold 11px Inter, system-ui, sans-serif";
     ctx.fillStyle = color;
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
     ctx.fillText(label, cx, cy);
-    ctx.textAlign = 'start';
+    ctx.textAlign = "start";
   }
 }

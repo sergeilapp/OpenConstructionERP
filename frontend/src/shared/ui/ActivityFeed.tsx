@@ -10,10 +10,10 @@
  *   <ActivityFeed />  // all projects
  */
 
-import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   FolderOpen,
   Table2,
@@ -32,9 +32,9 @@ import {
   Receipt,
   Users,
   type LucideIcon,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { apiGet } from '@/shared/lib/api';
+} from "lucide-react";
+import clsx from "clsx";
+import { apiGet } from "@/shared/lib/api";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -68,17 +68,17 @@ const ICON_MAP: Record<string, LucideIcon> = {
   table: Table2,
   list: Table2,
   file: FileText,
-  'file-text': FileText,
-  'help-circle': HelpCircle,
-  'check-square': CheckSquare,
+  "file-text": FileText,
+  "help-circle": HelpCircle,
+  "check-square": CheckSquare,
   database: Database,
   calendar: CalendarDays,
   clipboard: ClipboardList,
-  'alert-triangle': AlertTriangle,
+  "alert-triangle": AlertTriangle,
   shield: ShieldCheck,
   send: Send,
-  'git-branch': GitBranch,
-  'shopping-cart': ShoppingCart,
+  "git-branch": GitBranch,
+  "shopping-cart": ShoppingCart,
   receipt: Receipt,
   users: Users,
   activity: Activity,
@@ -87,49 +87,62 @@ const ICON_MAP: Record<string, LucideIcon> = {
 // ── Action color map ─────────────────────────────────────────────────────
 
 function getActionColor(action: string): string {
-  if (action === 'create' || action === 'approve' || action === 'enable') {
-    return 'text-semantic-success';
+  if (action === "create" || action === "approve" || action === "enable") {
+    return "text-semantic-success";
   }
-  if (action === 'delete' || action === 'reject' || action === 'disable') {
-    return 'text-semantic-error';
+  if (action === "delete" || action === "reject" || action === "disable") {
+    return "text-semantic-error";
   }
-  if (action === 'update' || action === 'export' || action === 'import') {
-    return 'text-oe-blue';
+  if (action === "update" || action === "export" || action === "import") {
+    return "text-oe-blue";
   }
-  return 'text-content-tertiary';
+  return "text-content-tertiary";
 }
 
 // ── Time formatting ──────────────────────────────────────────────────────
 
 function formatTimeAgo(
   dateStr: string,
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
 ): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) return t('notifications.just_now', { defaultValue: 'Just now‌⁠‍' });
+  if (seconds < 60)
+    return t("notifications.just_now", { defaultValue: "Just now‌⁠‍" });
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60)
-    return t('time.minutes_ago', { defaultValue: '{{count}}m ago‌⁠‍', count: minutes });
+    return t("time.minutes_ago", {
+      defaultValue: "{{count}}m ago‌⁠‍",
+      count: minutes,
+    });
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return t('time.hours_ago', { defaultValue: '{{count}}h ago‌⁠‍', count: hours });
+  if (hours < 24)
+    return t("time.hours_ago", {
+      defaultValue: "{{count}}h ago‌⁠‍",
+      count: hours,
+    });
   const days = Math.floor(hours / 24);
-  return t('time.days_ago', { defaultValue: '{{count}}d ago‌⁠‍', count: days });
+  return t("time.days_ago", { defaultValue: "{{count}}d ago‌⁠‍", count: days });
 }
 
 // ── Component ────────────────────────────────────────────────────────────
 
-export function ActivityFeed({ projectId, limit = 15, className }: ActivityFeedProps) {
+export function ActivityFeed({
+  projectId,
+  limit = 15,
+  className,
+}: ActivityFeedProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const queryParams = new URLSearchParams();
-  queryParams.set('limit', String(limit));
-  if (projectId) queryParams.set('project_id', projectId);
+  queryParams.set("limit", String(limit));
+  if (projectId) queryParams.set("project_id", projectId);
 
   const { data: entries, isLoading } = useQuery({
-    queryKey: ['activity-feed', projectId, limit],
-    queryFn: () => apiGet<ActivityEntry[]>(`/v1/activity?${queryParams.toString()}`),
+    queryKey: ["activity-feed", projectId, limit],
+    queryFn: () =>
+      apiGet<ActivityEntry[]>(`/v1/activity?${queryParams.toString()}`),
     staleTime: 30_000,
     refetchInterval: 60_000,
     retry: false,
@@ -146,7 +159,7 @@ export function ActivityFeed({ projectId, limit = 15, className }: ActivityFeedP
 
   if (isLoading) {
     return (
-      <div className={clsx('space-y-3', className)}>
+      <div className={clsx("space-y-3", className)}>
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex items-start gap-3 animate-pulse">
             <div className="w-7 h-7 rounded-full bg-surface-secondary shrink-0" />
@@ -164,17 +177,17 @@ export function ActivityFeed({ projectId, limit = 15, className }: ActivityFeedP
 
   if (items.length === 0) {
     return (
-      <div className={clsx('text-center py-8', className)}>
+      <div className={clsx("text-center py-8", className)}>
         <Activity size={24} className="mx-auto mb-2 text-content-quaternary" />
         <p className="text-xs text-content-tertiary">
-          {t('activity.no_activity', { defaultValue: 'No recent activity‌⁠‍' })}
+          {t("activity.no_activity", { defaultValue: "No recent activity‌⁠‍" })}
         </p>
       </div>
     );
   }
 
   return (
-    <div className={clsx('space-y-0.5', className)}>
+    <div className={clsx("space-y-0.5", className)}>
       {items.map((entry, idx) => {
         const IconComponent = ICON_MAP[entry.icon] ?? Activity;
         const actionColor = getActionColor(entry.action);
@@ -185,16 +198,16 @@ export function ActivityFeed({ projectId, limit = 15, className }: ActivityFeedP
             type="button"
             onClick={() => handleClick(entry)}
             className={clsx(
-              'flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left',
-              'hover:bg-surface-secondary transition-colors group',
+              "flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left",
+              "hover:bg-surface-secondary transition-colors group",
             )}
           >
             {/* Icon */}
             <div
               className={clsx(
-                'flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-                'bg-surface-secondary group-hover:bg-surface-tertiary',
-                'transition-colors',
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
+                "bg-surface-secondary group-hover:bg-surface-tertiary",
+                "transition-colors",
               )}
             >
               <IconComponent size={14} className={actionColor} />

@@ -1,13 +1,13 @@
-import { Layers } from 'lucide-react';
-import type { ModuleManifest } from '../_types';
+import { Layers } from "lucide-react";
+import type { ModuleManifest } from "../_types";
 
 export const manifest: ModuleManifest = {
-  id: 'assemblies',
-  name: 'nav.assemblies',
-  description: 'modules.assemblies_desc',
-  version: '1.0.0',
+  id: "assemblies",
+  name: "nav.assemblies",
+  description: "modules.assemblies_desc",
+  version: "1.0.0",
   icon: Layers,
-  category: 'estimation',
+  category: "estimation",
   defaultEnabled: true,
   routes: [],
   navItems: [],

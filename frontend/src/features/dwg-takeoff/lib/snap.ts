@@ -10,7 +10,7 @@
  * Kept pure so it can be unit-tested without a canvas.
  */
 
-import type { DxfEntity } from '../api';
+import type { DxfEntity } from "../api";
 
 export interface Pt {
   x: number;
@@ -29,7 +29,7 @@ export interface SnapModes {
 /** A point the cursor can snap to, with provenance for UI labelling. */
 export interface SnapCandidate {
   point: Pt;
-  kind: 'endpoint' | 'midpoint' | 'intersection';
+  kind: "endpoint" | "midpoint" | "intersection";
   /** Source entity id — handy for tests and optional tooltip text. */
   entityId: string;
 }
@@ -52,15 +52,23 @@ export function collectSnapCandidates(
   const out: SnapCandidate[] = [];
   for (const e of entities) {
     // LINE: start + end endpoints; segment midpoint.
-    if (e.type === 'LINE' && isFinitePt(e.start) && isFinitePt(e.end)) {
+    if (e.type === "LINE" && isFinitePt(e.start) && isFinitePt(e.end)) {
       if (modes.endpoint) {
-        out.push({ point: { x: e.start.x, y: e.start.y }, kind: 'endpoint', entityId: e.id });
-        out.push({ point: { x: e.end.x, y: e.end.y }, kind: 'endpoint', entityId: e.id });
+        out.push({
+          point: { x: e.start.x, y: e.start.y },
+          kind: "endpoint",
+          entityId: e.id,
+        });
+        out.push({
+          point: { x: e.end.x, y: e.end.y },
+          kind: "endpoint",
+          entityId: e.id,
+        });
       }
       if (modes.midpoint) {
         out.push({
           point: { x: (e.start.x + e.end.x) / 2, y: (e.start.y + e.end.y) / 2 },
-          kind: 'midpoint',
+          kind: "midpoint",
           entityId: e.id,
         });
       }
@@ -68,12 +76,16 @@ export function collectSnapCandidates(
     }
 
     // LWPOLYLINE: each vertex is an endpoint; midpoint of each segment.
-    if (e.type === 'LWPOLYLINE' && e.vertices && e.vertices.length >= 2) {
+    if (e.type === "LWPOLYLINE" && e.vertices && e.vertices.length >= 2) {
       const verts = e.vertices;
       if (modes.endpoint) {
         for (const v of verts) {
           if (isFinitePt(v)) {
-            out.push({ point: { x: v.x, y: v.y }, kind: 'endpoint', entityId: e.id });
+            out.push({
+              point: { x: v.x, y: v.y },
+              kind: "endpoint",
+              entityId: e.id,
+            });
           }
         }
       }
@@ -86,7 +98,7 @@ export function collectSnapCandidates(
           if (isFinitePt(a) && isFinitePt(b)) {
             out.push({
               point: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
-              kind: 'midpoint',
+              kind: "midpoint",
               entityId: e.id,
             });
           }
@@ -96,9 +108,13 @@ export function collectSnapCandidates(
     }
 
     // CIRCLE / ARC: centre acts as endpoint-like anchor. (Cheap + useful.)
-    if ((e.type === 'CIRCLE' || e.type === 'ARC') && isFinitePt(e.start)) {
+    if ((e.type === "CIRCLE" || e.type === "ARC") && isFinitePt(e.start)) {
       if (modes.endpoint) {
-        out.push({ point: { x: e.start.x, y: e.start.y }, kind: 'endpoint', entityId: e.id });
+        out.push({
+          point: { x: e.start.x, y: e.start.y },
+          kind: "endpoint",
+          entityId: e.id,
+        });
       }
     }
   }
@@ -117,7 +133,7 @@ export function closestSnapCandidate(
 ): SnapCandidate | null {
   let best: SnapCandidate | null = null;
   let bestDist = Infinity;
-  const priority: Record<SnapCandidate['kind'], number> = {
+  const priority: Record<SnapCandidate["kind"], number> = {
     endpoint: 0,
     intersection: 1,
     midpoint: 2,

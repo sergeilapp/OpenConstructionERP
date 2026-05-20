@@ -3,7 +3,7 @@
  * time header generation, dependency arrow paths, and date range calculations.
  */
 
-export type ViewMode = 'day' | 'week' | 'month' | 'quarter' | 'year';
+export type ViewMode = "day" | "week" | "month" | "quarter" | "year";
 
 /** Pixels per unit for each zoom level */
 export const COLUMN_WIDTH: Record<ViewMode, number> = {
@@ -45,39 +45,47 @@ export function addDays(d: Date, n: number): Date {
 /* ── Coordinate conversions ─────────────────────────────────────── */
 
 /** Convert a Date to an X pixel position relative to the timeline start. */
-export function dateToPx(date: Date, viewMode: ViewMode, startDate: Date): number {
+export function dateToPx(
+  date: Date,
+  viewMode: ViewMode,
+  startDate: Date,
+): number {
   const days = daysBetween(startDate, date);
   switch (viewMode) {
-    case 'day':
+    case "day":
       return days * COLUMN_WIDTH.day;
-    case 'week':
+    case "week":
       return (days / 7) * COLUMN_WIDTH.week;
-    case 'month':
+    case "month":
       return (days / 30) * COLUMN_WIDTH.month;
-    case 'quarter':
+    case "quarter":
       return (days / 91) * COLUMN_WIDTH.quarter;
-    case 'year':
+    case "year":
       return (days / 365) * COLUMN_WIDTH.year;
   }
 }
 
 /** Convert an X pixel position back to a Date. */
-export function pxToDate(px: number, viewMode: ViewMode, startDate: Date): Date {
+export function pxToDate(
+  px: number,
+  viewMode: ViewMode,
+  startDate: Date,
+): Date {
   let days: number;
   switch (viewMode) {
-    case 'day':
+    case "day":
       days = Math.round(px / COLUMN_WIDTH.day);
       break;
-    case 'week':
+    case "week":
       days = Math.round((px / COLUMN_WIDTH.week) * 7);
       break;
-    case 'month':
+    case "month":
       days = Math.round((px / COLUMN_WIDTH.month) * 30);
       break;
-    case 'quarter':
+    case "quarter":
       days = Math.round((px / COLUMN_WIDTH.quarter) * 91);
       break;
-    case 'year':
+    case "year":
       days = Math.round((px / COLUMN_WIDTH.year) * 365);
       break;
   }
@@ -109,9 +117,12 @@ export function generateTimeHeaders(
   const topRow: HeaderCell[] = [];
   const bottomRow: HeaderCell[] = [];
 
-  const topFmt = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
+  const topFmt = new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+  });
 
-  if (viewMode === 'day') {
+  if (viewMode === "day") {
     // Top row: one cell per month
     const cursor = new Date(startDate);
     cursor.setDate(1);
@@ -132,7 +143,7 @@ export function generateTimeHeaders(
     }
 
     // Bottom row: one cell per day
-    const dayFmt = new Intl.DateTimeFormat(locale, { day: 'numeric' });
+    const dayFmt = new Intl.DateTimeFormat(locale, { day: "numeric" });
     const d = new Date(startDate);
     while (d <= endDate) {
       const x = dateToPx(d, viewMode, startDate);
@@ -143,7 +154,7 @@ export function generateTimeHeaders(
       });
       d.setDate(d.getDate() + 1);
     }
-  } else if (viewMode === 'week') {
+  } else if (viewMode === "week") {
     // Top row: one cell per month
     const cursor = new Date(startDate);
     cursor.setDate(1);
@@ -181,10 +192,10 @@ export function generateTimeHeaders(
       d.setDate(d.getDate() + 7);
       weekNum++;
     }
-  } else if (viewMode === 'month') {
+  } else if (viewMode === "month") {
     // month view
     // Top row: one cell per year
-    const yearFmt = new Intl.DateTimeFormat(locale, { year: 'numeric' });
+    const yearFmt = new Intl.DateTimeFormat(locale, { year: "numeric" });
     const cursor = new Date(startDate);
     cursor.setMonth(0);
     cursor.setDate(1);
@@ -204,7 +215,7 @@ export function generateTimeHeaders(
     }
 
     // Bottom row: one cell per month
-    const monthShortFmt = new Intl.DateTimeFormat(locale, { month: 'short' });
+    const monthShortFmt = new Intl.DateTimeFormat(locale, { month: "short" });
     const m = new Date(startDate);
     m.setDate(1);
     while (m <= endDate) {
@@ -220,10 +231,10 @@ export function generateTimeHeaders(
       m.setMonth(m.getMonth() + 1);
       m.setDate(1);
     }
-  } else if (viewMode === 'quarter') {
+  } else if (viewMode === "quarter") {
     // quarter view
     // Top row: one cell per year
-    const yearFmt = new Intl.DateTimeFormat(locale, { year: 'numeric' });
+    const yearFmt = new Intl.DateTimeFormat(locale, { year: "numeric" });
     const cursor = new Date(startDate);
     cursor.setMonth(0);
     cursor.setDate(1);
@@ -264,7 +275,7 @@ export function generateTimeHeaders(
   } else {
     // year view
     // Top row: one cell per decade (or just label each year in top)
-    const yearFmt = new Intl.DateTimeFormat(locale, { year: 'numeric' });
+    const yearFmt = new Intl.DateTimeFormat(locale, { year: "numeric" });
 
     // Top row: empty / decade label (we'll just use a single span)
     const decadeCursor = new Date(startDate);
@@ -373,7 +384,10 @@ export interface GanttActivity {
  * Compute the overall date range from a list of activities.
  * Adds padding of 2 days before and 5 days after.
  */
-export function getDateRange(activities: GanttActivity[]): { start: Date; end: Date } {
+export function getDateRange(activities: GanttActivity[]): {
+  start: Date;
+  end: Date;
+} {
   if (activities.length === 0) {
     const now = new Date();
     return {
@@ -414,6 +428,10 @@ export function getDateRange(activities: GanttActivity[]): { start: Date; end: D
 /**
  * Compute the total SVG width for the timeline area given a date range and view mode.
  */
-export function getTimelineWidth(startDate: Date, endDate: Date, viewMode: ViewMode): number {
+export function getTimelineWidth(
+  startDate: Date,
+  endDate: Date,
+  viewMode: ViewMode,
+): number {
   return dateToPx(endDate, viewMode, startDate);
 }

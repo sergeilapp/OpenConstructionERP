@@ -6,7 +6,8 @@
  * automatically updates the sidebar, About page, bug reports, error logs,
  * and update checker — no other files need to change.
  */
-export const APP_VERSION: string = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
+export const APP_VERSION: string =
+  typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "0.0.0";
 
 /**
  * Stable build identifier for the frontend bundle.  Derived once at
@@ -15,4 +16,4 @@ export const APP_VERSION: string = typeof __APP_VERSION__ !== 'undefined' ? __AP
  * the update checker to disambiguate frontend builds without trusting
  * the package.json version (which can be edited mid-flight).
  */
-export const APP_BUILD_FINGERPRINT: string = '34c75c58fc650e71';
+export const APP_BUILD_FINGERPRINT: string = "34c75c58fc650e71";

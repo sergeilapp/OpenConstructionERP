@@ -28,7 +28,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, status
 from fastapi.responses import Response
 
-from app.core.rate_limiter import approval_limiter, upload_limiter
+from app.core.rate_limiter import upload_limiter
 from app.dependencies import CurrentUserId, RequirePermission, SessionDep
 from app.modules.dwg_takeoff.schemas import (
     BoqLinkRequest,

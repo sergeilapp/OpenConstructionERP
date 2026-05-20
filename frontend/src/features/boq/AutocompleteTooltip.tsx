@@ -32,12 +32,19 @@
  * on hover-capable devices.
  */
 
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
-import { HardHat, Wrench, Package, Layers, Sparkles, CornerDownLeft } from 'lucide-react';
-import type { CostAutocompleteItem } from './api';
-import { getIntlLocale } from '@/shared/lib/formatters';
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import {
+  HardHat,
+  Wrench,
+  Package,
+  Layers,
+  Sparkles,
+  CornerDownLeft,
+} from "lucide-react";
+import type { CostAutocompleteItem } from "./api";
+import { getIntlLocale } from "@/shared/lib/formatters";
 
 const TOOLTIP_WIDTH = 320; // px
 const VIEWPORT_GUTTER = 8; // px — gap between dropdown and tooltip
@@ -60,12 +67,19 @@ export interface AutocompleteTooltipProps {
  * ``subsection``) and skips empty / sentinel values. Empty result means
  * the row carried no classification — the section then hides.
  */
-function buildClassificationPath(classification: Record<string, string>): string[] {
-  const order: (keyof typeof classification)[] = ['collection', 'department', 'section', 'subsection'];
+function buildClassificationPath(
+  classification: Record<string, string>,
+): string[] {
+  const order: (keyof typeof classification)[] = [
+    "collection",
+    "department",
+    "section",
+    "subsection",
+  ];
   const out: string[] = [];
   for (const key of order) {
     const v = classification[key];
-    if (typeof v === 'string' && v.trim() && v !== '__unspecified__') {
+    if (typeof v === "string" && v.trim() && v !== "__unspecified__") {
       out.push(v.trim());
     }
   }
@@ -82,9 +96,9 @@ function formatNumber(value: number): string {
 
 /** True when the user's OS asks for reduced motion. SSR-safe. */
 function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  if (typeof window === "undefined" || !window.matchMedia) return false;
   try {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   } catch {
     return false;
   }
@@ -102,20 +116,24 @@ export function AutocompleteTooltip({
 
   // Final position. Computed in a layout effect so we can flip the
   // tooltip when it would overflow the viewport's right edge.
-  const [position, setPosition] = useState<{ left: number; top: number }>(() => ({
-    left: anchorRect.right + VIEWPORT_GUTTER,
-    top: anchorRect.top,
-  }));
+  const [position, setPosition] = useState<{ left: number; top: number }>(
+    () => ({
+      left: anchorRect.right + VIEWPORT_GUTTER,
+      top: anchorRect.top,
+    }),
+  );
 
   useLayoutEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     const node = ref.current;
     // ``offsetWidth`` / ``offsetHeight`` return 0 in JSDOM and during the
     // first paint before the browser has a chance to compute layout —
     // fall back to the fixed sizes so the flip math still produces a
     // sensible result instead of always thinking the tooltip is empty.
-    const measuredHeight = node && node.offsetHeight > 0 ? node.offsetHeight : 240;
-    const measuredWidth = node && node.offsetWidth > 0 ? node.offsetWidth : TOOLTIP_WIDTH;
+    const measuredHeight =
+      node && node.offsetHeight > 0 ? node.offsetHeight : 240;
+    const measuredWidth =
+      node && node.offsetWidth > 0 ? node.offsetWidth : TOOLTIP_WIDTH;
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -123,12 +141,18 @@ export function AutocompleteTooltip({
     let left = anchorRect.right + VIEWPORT_GUTTER;
     if (left + measuredWidth + VIEWPORT_PADDING > viewportWidth) {
       // Flip to the LEFT side of the dropdown row.
-      left = Math.max(VIEWPORT_PADDING, anchorRect.left - measuredWidth - VIEWPORT_GUTTER);
+      left = Math.max(
+        VIEWPORT_PADDING,
+        anchorRect.left - measuredWidth - VIEWPORT_GUTTER,
+      );
     }
     let top = anchorRect.top;
     // Pin into the viewport vertically so we never disappear off-screen.
     if (top + measuredHeight + VIEWPORT_PADDING > viewportHeight) {
-      top = Math.max(VIEWPORT_PADDING, viewportHeight - measuredHeight - VIEWPORT_PADDING);
+      top = Math.max(
+        VIEWPORT_PADDING,
+        viewportHeight - measuredHeight - VIEWPORT_PADDING,
+      );
     }
     if (top < VIEWPORT_PADDING) top = VIEWPORT_PADDING;
 
@@ -147,7 +171,9 @@ export function AutocompleteTooltip({
 
   const variantCount =
     item.metadata_?.variant_count ??
-    (Array.isArray(item.metadata_?.variants) ? item.metadata_!.variants!.length : 0);
+    (Array.isArray(item.metadata_?.variants)
+      ? item.metadata_!.variants!.length
+      : 0);
   const hasVariants = variantCount >= 2;
 
   const node = (
@@ -156,17 +182,17 @@ export function AutocompleteTooltip({
       role="tooltip"
       data-testid="autocomplete-tooltip"
       style={{
-        position: 'fixed',
+        position: "fixed",
         left: position.left,
         top: position.top,
         width: TOOLTIP_WIDTH,
-        pointerEvents: 'none',
+        pointerEvents: "none",
         zIndex: 10000,
       }}
       className={
-        'rounded-lg border border-border-light dark:border-border-dark ' +
-        'bg-surface-elevated shadow-2xl text-content-primary ' +
-        (reduceMotion ? '' : 'animate-fade-in')
+        "rounded-lg border border-border-light dark:border-border-dark " +
+        "bg-surface-elevated shadow-2xl text-content-primary " +
+        (reduceMotion ? "" : "animate-fade-in")
       }
     >
       {/* ── Header: full description + code/region badges ──────────── */}
@@ -196,12 +222,14 @@ export function AutocompleteTooltip({
       <div className="px-3 py-2.5 space-y-2">
         <div className="flex items-baseline justify-between">
           <span className="text-[11px] uppercase tracking-wider text-content-tertiary">
-            {t('boq.autocomplete_tooltip_rate_per_unit', { defaultValue: 'Rate per unit‌⁠‍' })}
+            {t("boq.autocomplete_tooltip_rate_per_unit", {
+              defaultValue: "Rate per unit‌⁠‍",
+            })}
           </span>
           <span className="text-sm font-semibold tabular-nums">
             {formatNumber(item.rate)} {currencySymbol}
             <span className="ml-1 text-[10px] text-content-tertiary uppercase">
-              {t('boq.autocomplete_tooltip_unit', { defaultValue: '/' })}
+              {t("boq.autocomplete_tooltip_unit", { defaultValue: "/" })}
               {item.unit}
             </span>
           </span>
@@ -215,21 +243,27 @@ export function AutocompleteTooltip({
             {(breakdown?.labor_cost ?? 0) > 0 && (
               <BreakdownRow
                 icon={<HardHat size={12} className="text-amber-600" />}
-                label={t('boq.autocomplete_tooltip_labor', { defaultValue: 'Labor' })}
+                label={t("boq.autocomplete_tooltip_labor", {
+                  defaultValue: "Labor",
+                })}
                 value={`${formatNumber(breakdown!.labor_cost!)} ${currencySymbol}`}
               />
             )}
             {(breakdown?.material_cost ?? 0) > 0 && (
               <BreakdownRow
                 icon={<Package size={12} className="text-emerald-600" />}
-                label={t('boq.autocomplete_tooltip_material', { defaultValue: 'Material‌⁠‍' })}
+                label={t("boq.autocomplete_tooltip_material", {
+                  defaultValue: "Material‌⁠‍",
+                })}
                 value={`${formatNumber(breakdown!.material_cost!)} ${currencySymbol}`}
               />
             )}
             {(breakdown?.equipment_cost ?? 0) > 0 && (
               <BreakdownRow
                 icon={<Wrench size={12} className="text-sky-600" />}
-                label={t('boq.autocomplete_tooltip_equipment', { defaultValue: 'Equipment‌⁠‍' })}
+                label={t("boq.autocomplete_tooltip_equipment", {
+                  defaultValue: "Equipment‌⁠‍",
+                })}
                 value={`${formatNumber(breakdown!.equipment_cost!)} ${currencySymbol}`}
               />
             )}
@@ -245,14 +279,17 @@ export function AutocompleteTooltip({
               className="flex items-start gap-1.5 text-[11px] text-content-secondary"
               data-testid="autocomplete-tooltip-classification"
             >
-              <Layers size={11} className="mt-0.5 shrink-0 text-content-tertiary" />
+              <Layers
+                size={11}
+                className="mt-0.5 shrink-0 text-content-tertiary"
+              />
               <span className="leading-snug">
                 <span className="text-[9px] uppercase tracking-wider text-content-tertiary mr-1">
-                  {t('boq.autocomplete_tooltip_classification', {
-                    defaultValue: 'Classification‌⁠‍',
+                  {t("boq.autocomplete_tooltip_classification", {
+                    defaultValue: "Classification‌⁠‍",
                   })}
                 </span>
-                <span>{classificationPath.join(' › ')}</span>
+                <span>{classificationPath.join(" › ")}</span>
               </span>
             </div>
           )}
@@ -263,7 +300,7 @@ export function AutocompleteTooltip({
             >
               <Sparkles size={11} className="shrink-0" />
               <span>
-                {t('boq.autocomplete_tooltip_variants_available', {
+                {t("boq.autocomplete_tooltip_variants_available", {
                   count: variantCount,
                   defaultValue: `${variantCount} variants available`,
                 })}
@@ -276,15 +313,15 @@ export function AutocompleteTooltip({
       <div className="px-3 py-1.5 border-t border-border-light dark:border-border-dark bg-surface-secondary/40 rounded-b-lg flex items-center gap-1.5 text-[10px] text-content-tertiary">
         <CornerDownLeft size={11} className="shrink-0" />
         <span>
-          {t('boq.autocomplete_tooltip_tab_to_insert', {
-            defaultValue: 'Tab or Enter to insert‌⁠‍',
+          {t("boq.autocomplete_tooltip_tab_to_insert", {
+            defaultValue: "Tab or Enter to insert‌⁠‍",
           })}
         </span>
       </div>
     </div>
   );
 
-  if (typeof document === 'undefined') return null;
+  if (typeof document === "undefined") return null;
   return createPortal(node, document.body);
 }
 
@@ -301,7 +338,9 @@ function BreakdownRow({ icon, label, value }: BreakdownRowProps) {
         {icon}
         {label}
       </span>
-      <span className="tabular-nums font-mono text-content-primary">{value}</span>
+      <span className="tabular-nums font-mono text-content-primary">
+        {value}
+      </span>
     </div>
   );
 }

@@ -2,29 +2,40 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  "translation": {
-    "about.ai_desc": "OpenConstructionERP bevat optionele AI-tools — snelle ramingen op basis van tekstbeschrijvingen, slimme kostensuggesties en een BOQ-chatasssistent. Deze functies vereisen een API-sleutel van een provider naar keuze (Anthropic, OpenAI, Google). AI is altijd optioneel: het wordt alleen geactiveerd wanneer u het configureert, en u bepaalt welke gegevens worden verzonden. Zonder API-sleutel werken alle andere functies volledig offline.",
+  translation: {
+    "about.ai_desc":
+      "OpenConstructionERP bevat optionele AI-tools — snelle ramingen op basis van tekstbeschrijvingen, slimme kostensuggesties en een BOQ-chatasssistent. Deze functies vereisen een API-sleutel van een provider naar keuze (Anthropic, OpenAI, Google). AI is altijd optioneel: het wordt alleen geactiveerd wanneer u het configureert, en u bepaalt welke gegevens worden verzonden. Zonder API-sleutel werken alle andere functies volledig offline.",
     "about.ai_title": "Over AI-functies",
     "about.cap.boq": "Raming",
-    "about.cap.boq_desc": "Maak gedetailleerde ramingen met hiërarchische secties, posten, samenstellingen, opslagen (algemene kosten, winst, BTW) en automatische totalen. Ondersteunt DIN 276, NRM 1/2, MasterFormat en aangepaste classificatiesystemen.",
+    "about.cap.boq_desc":
+      "Maak gedetailleerde ramingen met hiërarchische secties, posten, samenstellingen, opslagen (algemene kosten, winst, BTW) en automatische totalen. Ondersteunt DIN 276, NRM 1/2, MasterFormat en aangepaste classificatiesystemen.",
     "about.cap.catalog": "Middelencatalogus",
-    "about.cap.catalog_desc": "7.000+ middelen — materialen, materieel, arbeid, machinisten en nutsvoorzieningen. Bouw herbruikbare samenstellingen (samengestelde tarieven) uit catalogusitems en pas ze direct toe op ramingsposten.",
+    "about.cap.catalog_desc":
+      "7.000+ middelen — materialen, materieel, arbeid, machinisten en nutsvoorzieningen. Bouw herbruikbare samenstellingen (samengestelde tarieven) uit catalogusitems en pas ze direct toe op ramingsposten.",
     "about.cap.costmodel": "5D Kostenmodel",
-    "about.cap.costmodel_desc": "Volg budgetten in de tijd met Earned Value Management (SPI, CPI), S-curve visualisatie, kasstroomprognoses, kostenmomentopnames en wat-als scenario-modellering voor onderbouwde besluitvorming.",
+    "about.cap.costmodel_desc":
+      "Volg budgetten in de tijd met Earned Value Management (SPI, CPI), S-curve visualisatie, kasstroomprognoses, kostenmomentopnames en wat-als scenario-modellering voor onderbouwde besluitvorming.",
     "about.cap.costs": "Kostendatabases",
-    "about.cap.costs_desc": "55.000+ kostenposten in 11 regionale databases voor DACH, VK, Noord-Amerika, Midden-Oosten en meer. Voeg uw eigen tarieven toe, importeer vanuit Excel of bouw een eigen database.",
+    "about.cap.costs_desc":
+      "55.000+ kostenposten in 11 regionale databases voor DACH, VK, Noord-Amerika, Midden-Oosten en meer. Voeg uw eigen tarieven toe, importeer vanuit Excel of bouw een eigen database.",
     "about.cap.import": "Import & Export",
-    "about.cap.import_desc": "Volledige ondersteuning voor GAEB XML (X83), Excel en CSV import/export. Genereer professionele PDF-rapporten. Sluit naadloos aan op uw bestaande tools en werkprocessen.",
+    "about.cap.import_desc":
+      "Volledige ondersteuning voor GAEB XML (X83), Excel en CSV import/export. Genereer professionele PDF-rapporten. Sluit naadloos aan op uw bestaande tools en werkprocessen.",
     "about.cap.schedule": "4D Planning",
-    "about.cap.schedule_desc": "Maak projectplanningen met CPM kritiek pad berekening, interactieve Gantt-diagrammen, Monte Carlo risicoanalyse, middeltoewijzing en automatische activiteitgeneratie vanuit uw raming.",
+    "about.cap.schedule_desc":
+      "Maak projectplanningen met CPM kritiek pad berekening, interactieve Gantt-diagrammen, Monte Carlo risicoanalyse, middeltoewijzing en automatische activiteitgeneratie vanuit uw raming.",
     "about.cap.tendering": "Aanbesteding & Biedingen",
-    "about.cap.tendering_desc": "Maak aanbestedingspakketten met scope en posten, distribueer naar onderaannemers, verzamel en vergelijk biedingen naast elkaar in een prijzenspiegel, en neem gunningsbeslissingen op basis van data.",
+    "about.cap.tendering_desc":
+      "Maak aanbestedingspakketten met scope en posten, distribueer naar onderaannemers, verzamel en vergelijk biedingen naast elkaar in een prijzenspiegel, en neem gunningsbeslissingen op basis van data.",
     "about.cap.validation": "Kwaliteitsvalidatie",
-    "about.cap.validation_desc": "Ingebouwde kwaliteitsengine controleert automatisch op ontbrekende hoeveelheden, nulprijzen, dubbele posten, classificatienaleving en tariefafwijkingen — met een stoplicht-dashboard.",
+    "about.cap.validation_desc":
+      "Ingebouwde kwaliteitsengine controleert automatisch op ontbrekende hoeveelheden, nulprijzen, dubbele posten, classificatienaleving en tariefafwijkingen — met een stoplicht-dashboard.",
     "about.capabilities_title": "Wat u kunt doen",
     "about.close": "Begrepen",
-    "about.intro": "OpenConstructionERP is een modern platform voor bouwkostenbeheer. Het omvat de volledige ramingsworkflow — van het opstellen van een bestek tot aanbesteding en biedingsvergelijking. Ontworpen voor professionals wereldwijd, met ondersteuning voor internationale normen en beschikbaar in 20 talen.",
-    "about.intro2": "In tegenstelling tot traditionele commerciële oplossingen draait OpenConstructionERP volledig op uw computer. Uw projectgegevens verlaten nooit uw apparaat — u heeft volledig eigenaarschap en controle. De broncode is open en controleerbaar, zodat u altijd precies weet wat de software doet.",
+    "about.intro":
+      "OpenConstructionERP is een modern platform voor bouwkostenbeheer. Het omvat de volledige ramingsworkflow — van het opstellen van een bestek tot aanbesteding en biedingsvergelijking. Ontworpen voor professionals wereldwijd, met ondersteuning voor internationale normen en beschikbaar in 20 talen.",
+    "about.intro2":
+      "In tegenstelling tot traditionele commerciële oplossingen draait OpenConstructionERP volledig op uw computer. Uw projectgegevens verlaten nooit uw apparaat — u heeft volledig eigenaarschap en controle. De broncode is open en controleerbaar, zodat u altijd precies weet wat de software doet.",
     "about.numbers_title": "Platform in cijfers",
     "about.stat.costs": "Kostenposten",
     "about.stat.free": "Gratis & open source",
@@ -41,11 +52,15 @@ const resource = {
     "about.who.qsurveyor": "Hoeveelheidsmeters",
     "about.who.students": "Studenten & docenten",
     "about.who.subs": "Onderaannemers",
-    "about.who_desc": "OpenConstructionERP is ontworpen voor iedereen die betrokken is bij bouwkostenbeheer — of u nu werkt aan woningbouwprojecten of grootschalige infrastructuur, intern of als adviseur.",
+    "about.who_desc":
+      "OpenConstructionERP is ontworpen voor iedereen die betrokken is bij bouwkostenbeheer — of u nu werkt aan woningbouwprojecten of grootschalige infrastructuur, intern of als adviseur.",
     "about.who_title": "Voor wie is het",
-    "about.why_1": "Bouwkostendata is een van de meest waardevolle bezittingen van een bedrijf. Bij propriëtaire software zijn uw gegevens vaak opgesloten in formaten die u niet kunt beheren. Als de leverancier de prijs verhoogt, de voorwaarden wijzigt of het product stopzet — kunt u jarenlang werk verliezen.",
-    "about.why_2": "OpenConstructionERP kiest een andere aanpak. Uw gegevens worden opgeslagen in open formaten (SQLite, JSON, CSV) op uw eigen hardware. U kunt alles op elk moment exporteren. De broncode is publiek controleerbaar onder AGPL-3.0, dus er zijn geen verborgen gegevensoverdrachten, geen telemetrie en geen verrassingen.",
-    "about.why_3": "Het platform is modulair — installeer alleen wat u nodig heeft. Community-modules breiden de functionaliteit uit zonder de kern op te blazen. En omdat het lokaal draait, werkt het offline en presteert het snel, zelfs bij grote projecten.",
+    "about.why_1":
+      "Bouwkostendata is een van de meest waardevolle bezittingen van een bedrijf. Bij propriëtaire software zijn uw gegevens vaak opgesloten in formaten die u niet kunt beheren. Als de leverancier de prijs verhoogt, de voorwaarden wijzigt of het product stopzet — kunt u jarenlang werk verliezen.",
+    "about.why_2":
+      "OpenConstructionERP kiest een andere aanpak. Uw gegevens worden opgeslagen in open formaten (SQLite, JSON, CSV) op uw eigen hardware. U kunt alles op elk moment exporteren. De broncode is publiek controleerbaar onder AGPL-3.0, dus er zijn geen verborgen gegevensoverdrachten, geen telemetrie en geen verrassingen.",
+    "about.why_3":
+      "Het platform is modulair — installeer alleen wat u nodig heeft. Community-modules breiden de functionaliteit uit zonder de kern op te blazen. En omdat het lokaal draait, werkt het offline en presteert het snel, zelfs bij grote projecten.",
     "about.why_title": "Waarom open source belangrijk is",
     "ai.analyze_photo": "Foto analyseren",
     "ai.area": "Oppervlakte (m²)",
@@ -53,7 +68,8 @@ const resource = {
     "ai.boq_name_placeholder": "Naam voor deze raming...",
     "ai.boq_saved": "Raming succesvol opgeslagen",
     "ai.building_type": "Gebouwtype",
-    "ai.cad_info": "CAD/BIM-bestanden (.rvt, .ifc, .dwg, .dgn) vereisen dat de DDC-converter is geïnstalleerd. Elementen worden geëxtraheerd en gebruikt om een kostenraming te genereren. Download converters van GitHub en plaats ze in ~/.openestimator/converters/.",
+    "ai.cad_info":
+      "CAD/BIM-bestanden (.rvt, .ifc, .dwg, .dgn) vereisen dat de DDC-converter is geïnstalleerd. Elementen worden geëxtraheerd en gebruikt om een kostenraming te genereren. Download converters van GitHub en plaats ze in ~/.openestimator/converters/.",
     "ai.choose_project": "-- Kies een project --",
     "ai.col_description": "Omschrijving",
     "ai.col_pos": "Pos",
@@ -74,7 +90,8 @@ const resource = {
     "ai.estimate_failed": "Raming mislukt",
     "ai.estimate_subtitle": "Maak een raming vanuit elke bron",
     "ai.estimate_title": "AI Raming",
-    "ai.excel_hint": "Werkt het beste met kolommen: Omschrijving, Eenheid, Hoeveelheid, Tarief/Prijs.",
+    "ai.excel_hint":
+      "Werkt het beste met kolommen: Omschrijving, Eenheid, Hoeveelheid, Tarief/Prijs.",
     "ai.export_coming_soon": "Export binnenkort beschikbaar",
     "ai.export_pdf": "Exporteer PDF",
     "ai.extract_estimate": "Extraheren & Ramen",
@@ -89,9 +106,12 @@ const resource = {
     "ai.location_placeholder": "bijv. Amsterdam",
     "ai.new_estimate": "Nieuwe raming",
     "ai.parse_import": "Verwerken & Importeren",
-    "ai.paste_info": "Detecteert automatisch tab-gescheiden, puntkomma- of kommagescheiden gegevens. AI zal uw gegevens verwerken en structureren tot ramingsitems.",
-    "ai.paste_placeholder": "Plak hier uw ramingsgegevens (vanuit Excel, Word of een tabel)...\n\nVoorbeeld:\nPos\\tOmschrijving\\tEenheid\\tHvh\\tTarief\n01.01\\tGrondwerk\\tm3\\t250\\t18,50\n01.02\\tBeton C30/37\\tm3\\t120\\t145,00\n01.03\\tWapening BSt 500\\tkg\\t12000\\t1,85",
-    "ai.pdf_hint": "Upload bestekdocumenten, specificaties of tekeningen in PDF-formaat.",
+    "ai.paste_info":
+      "Detecteert automatisch tab-gescheiden, puntkomma- of kommagescheiden gegevens. AI zal uw gegevens verwerken en structureren tot ramingsitems.",
+    "ai.paste_placeholder":
+      "Plak hier uw ramingsgegevens (vanuit Excel, Word of een tabel)...\n\nVoorbeeld:\nPos\\tOmschrijving\\tEenheid\\tHvh\\tTarief\n01.01\\tGrondwerk\\tm3\\t250\\t18,50\n01.02\\tBeton C30/37\\tm3\\t120\\t145,00\n01.03\\tWapening BSt 500\\tkg\\t12000\\t1,85",
+    "ai.pdf_hint":
+      "Upload bestekdocumenten, specificaties of tekeningen in PDF-formaat.",
     "ai.powered_by": "Aangedreven door {{model}}",
     "ai.results": "Ramingsresultaten",
     "ai.save": "Opslaan",
@@ -99,18 +119,21 @@ const resource = {
     "ai.save_failed": "Opslaan van raming mislukt",
     "ai.save_to_boq": "Opslaan als raming",
     "ai.select_project": "Selecteer project",
-    "ai.setup_required_desc": "Voeg uw API-sleutel toe voor Anthropic Claude, OpenAI of Google Gemini om ramingen te genereren vanuit tekst, foto's, PDF's en CAD-bestanden.",
+    "ai.setup_required_desc":
+      "Voeg uw API-sleutel toe voor Anthropic Claude, OpenAI of Google Gemini om ramingen te genereren vanuit tekst, foto's, PDF's en CAD-bestanden.",
     "ai.setup_required_title": "Verbind uw AI om te beginnen",
     "ai.standard_label": "Norm",
     "ai.supported_formats": "Ondersteund: {{formats}}",
     "ai.try_again": "Probeer het opnieuw of controleer uw AI-instellingen.",
     "ai.advisor_title": "AI Kostenadvieseur",
-    "ai.advisor_desc": "Stel vragen over kosten, materialen en prijzen — uit uw database en AI-kennis",
+    "ai.advisor_desc":
+      "Stel vragen over kosten, materialen en prijzen — uit uw database en AI-kennis",
     "ai.advisor_empty": "Vraag me alles over bouwkosten",
     "ai.advisor_placeholder": "Vraag over kosten, materialen, prijzen...",
     "ai.advisor_sources": "Bronnen:",
     "ai.advisor_error": "AI Adviseur Fout",
-    "ai.advisor_unavailable": "Kan geen antwoord krijgen. Controleer de AI-instellingen.",
+    "ai.advisor_unavailable":
+      "Kan geen antwoord krijgen. Controleer de AI-instellingen.",
     "ai.advisor_q1": "Wat kost gemiddeld m² stucwerk?",
     "ai.advisor_q2": "Betonprijzen per regio vergelijken",
     "ai.advisor_q3": "Goedkopere alternatieven voor staal voorstellen",
@@ -118,8 +141,10 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Professioneel platform voor bouwkostencalculatie",
     "assemblies.assemblies_found": "samenstellingen",
-    "assemblies.description": "Herbruikbare kostenrecepten voor veelvoorkomende bouwelementen",
-    "assemblies.what_are_assemblies": "Samenstellingen zijn herbruikbare kostenrecepten die meerdere middelen (materialen, arbeid, materieel) combineren tot één samengesteld tarief. Bijvoorbeeld een samenstelling \"Gewapend betonwand\" bevat beton, wapening, bekisting en arbeid. Pas samenstellingen toe op ramingsposten om de componentkosten automatisch in te vullen.",
+    "assemblies.description":
+      "Herbruikbare kostenrecepten voor veelvoorkomende bouwelementen",
+    "assemblies.what_are_assemblies":
+      'Samenstellingen zijn herbruikbare kostenrecepten die meerdere middelen (materialen, arbeid, materieel) combineren tot één samengesteld tarief. Bijvoorbeeld een samenstelling "Gewapend betonwand" bevat beton, wapening, bekisting en arbeid. Pas samenstellingen toe op ramingsposten om de componentkosten automatisch in te vullen.',
     "assemblies.new_assembly": "Nieuwe samenstelling",
     "assemblies.no_results": "Geen samenstellingen gevonden",
     "assemblies.no_results_hint": "Pas uw zoekopdracht of filters aan",
@@ -128,17 +153,20 @@ const resource = {
     "auth.check_email": "Controleer uw e-mail",
     "auth.confirm_password": "Wachtwoord bevestigen",
     "auth.confirm_password_placeholder": "Herhaal uw wachtwoord",
-    "auth.connection_error": "Kan geen verbinding maken met de server. Probeer het opnieuw.",
+    "auth.connection_error":
+      "Kan geen verbinding maken met de server. Probeer het opnieuw.",
     "auth.create_account": "Account aanmaken",
     "auth.email": "E-mail",
     "auth.forgot_password": "Wachtwoord vergeten?",
-    "auth.forgot_subtitle": "Voer uw e-mailadres in en wij sturen u een herstelkoppeling.",
+    "auth.forgot_subtitle":
+      "Voer uw e-mailadres in en wij sturen u een herstelkoppeling.",
     "auth.full_name": "Volledige naam",
     "auth.full_name_placeholder": "Jan de Vries",
     "auth.has_account": "Heeft u al een account?",
     "auth.invalid_credentials": "Ongeldig e-mailadres of wachtwoord",
     "auth.login": "Inloggen",
-    "auth.login_subtitle": "Voer uw inloggegevens in om toegang te krijgen tot uw werkruimte",
+    "auth.login_subtitle":
+      "Voer uw inloggegevens in om toegang te krijgen tot uw werkruimte",
     "auth.logout": "Uitloggen",
     "auth.no_account": "Nog geen account?",
     "auth.password": "Wachtwoord",
@@ -152,10 +180,13 @@ const resource = {
     "auth.register_subtitle": "Aan de slag met OpenEstimate",
     "auth.register_title": "Account aanmaken",
     "auth.remember_me": "Onthoud mij voor 30 dagen",
-    "auth.reset_error": "Kan het herstelverzoek niet verwerken. Probeer het opnieuw.",
-    "auth.reset_sent": "Als er een account bestaat voor dit e-mailadres, ontvangt u binnenkort een link voor wachtwoordherstel.",
+    "auth.reset_error":
+      "Kan het herstelverzoek niet verwerken. Probeer het opnieuw.",
+    "auth.reset_sent":
+      "Als er een account bestaat voor dit e-mailadres, ontvangt u binnenkort een link voor wachtwoordherstel.",
     "auth.send_reset_link": "Herstelkoppeling versturen",
-    "auth.server_error": "Kan geen verbinding maken met de server. Probeer het opnieuw.",
+    "auth.server_error":
+      "Kan geen verbinding maken met de server. Probeer het opnieuw.",
     "auth.sign_in": "Inloggen",
     "boq.aace_accuracy": "Nauwkeurigheid",
     "boq.aace_accuracy_range": "Nauwkeurigheidsbereik",
@@ -165,7 +196,8 @@ const resource = {
     "boq.aace_methodology": "Methodologie",
     "boq.aace_metrics": "Classificatiekengetallen",
     "boq.aace_positions": "Posten",
-    "boq.aace_reference": "Gebaseerd op AACE International Recommended Practice 18R-97. Classificatie wordt automatisch bepaald op basis van de volledigheidskengetallen van de raming.",
+    "boq.aace_reference":
+      "Gebaseerd op AACE International Recommended Practice 18R-97. Classificatie wordt automatisch bepaald op basis van de volledigheidskengetallen van de raming.",
     "boq.aace_to": "tot",
     "boq.aace_with_classification": "Met classificatie",
     "boq.aace_with_rates": "Met eenheidsprijzen",
@@ -178,20 +210,23 @@ const resource = {
     "boq.add_n_positions": "{{count}} toevoegen aan raming",
     "boq.add_position": "Post toevoegen",
     "boq.add_resource": "Toevoegen",
-    "boq.add_resource_hint": "Druk op Enter om toe te voegen, Escape om te annuleren",
+    "boq.add_resource_hint":
+      "Druk op Enter om toe te voegen, Escape om te annuleren",
     "boq.add_section": "Sectie toevoegen",
     "boq.add_selected": "Geselecteerde toevoegen aan raming",
     "boq.adding": "Bezig met toevoegen...",
     "boq.ai_assistant": "AI-assistent",
     "boq.ai_chat_error": "AI-verzoek mislukt. Probeer het opnieuw.",
-    "boq.ai_hint": "Vraag mij om ramingsposten te genereren. Bijvoorbeeld: \"Voeg installatieposten toe voor een kantoorgebouw van 5 verdiepingen\"",
+    "boq.ai_hint":
+      'Vraag mij om ramingsposten te genereren. Bijvoorbeeld: "Voeg installatieposten toe voor een kantoorgebouw van 5 verdiepingen"',
     "boq.ai_placeholder": "Beschrijf de te genereren posten...",
     "boq.ai_welcome": "Vraag mij om ramingsposten te genereren. Bijvoorbeeld: ",
     "boq.all_projects": "Alle projecten",
     "boq.all_statuses": "Alle statussen",
     "boq.area_m2": "Oppervlakte (m²)",
     "boq.back_to_project": "Terug naar project",
-    "boq.toolbar_hint": "Gebruik de werkbalk om secties en posten toe te voegen, te importeren uit de kostendatabase of samenstellingen, te exporteren naar GAEB/PDF/Excel, of AI-raming uit te voeren. Netto = som van posttotalen. Opslagen worden toegepast als percentages. Eindtotaal = Netto + Opslagen + BTW.",
+    "boq.toolbar_hint":
+      "Gebruik de werkbalk om secties en posten toe te voegen, te importeren uit de kostendatabase of samenstellingen, te exporteren naar GAEB/PDF/Excel, of AI-raming uit te voeren. Netto = som van posttotalen. Opslagen worden toegepast als percentages. Eindtotaal = Netto + Opslagen + BTW.",
     "boq.boq_created": "Raming aangemaakt",
     "boq.boq_name": "Naam raming",
     "boq.cancel_compare": "Vergelijking annuleren",
@@ -202,12 +237,15 @@ const resource = {
     "boq.compare_by_section": "Per sectie",
     "boq.compare_diff": "Verschil",
     "boq.compare_difference": "Verschil (B vs A)",
-    "boq.compare_load_error": "Laden van ramingsgegevens voor vergelijking mislukt",
-    "boq.compare_select_second": "Selecteer een tweede raming om te vergelijken",
+    "boq.compare_load_error":
+      "Laden van ramingsgegevens voor vergelijking mislukt",
+    "boq.compare_select_second":
+      "Selecteer een tweede raming om te vergelijken",
     "boq.compare_selected": "Geselecteerd voor vergelijking",
     "boq.compare_title": "Ramingsvergelijking",
     "boq.confirm_delete": "Deze post verwijderen?",
-    "boq.confirm_delete_section": "Deze sectie en alle bijbehorende posten verwijderen?",
+    "boq.confirm_delete_section":
+      "Deze sectie en alle bijbehorende posten verwijderen?",
     "boq.cost_breakdown": "Kostenverdeling",
     "boq.cost_breakdown_by_category": "Per categorie",
     "boq.cost_breakdown_items": "items",
@@ -224,7 +262,8 @@ const resource = {
     "boq.cost_risk_contingency": "Onvoorzien (P80 - P50)",
     "boq.cost_risk_distribution": "Kostenverdeling",
     "boq.cost_risk_drivers": "Belangrijkste risicofactoren",
-    "boq.cost_risk_empty": "Voeg posten met kosten toe om de Monte Carlo simulatie uit te voeren.",
+    "boq.cost_risk_empty":
+      "Voeg posten met kosten toe om de Monte Carlo simulatie uit te voeren.",
     "boq.cost_risk_iterations": "Iteraties",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Monte Carlo simulatie wordt uitgevoerd...",
@@ -251,7 +290,8 @@ const resource = {
     "boq.markup_other": "Overig",
     "boq.template_applied": "Regionaal sjabloon toegepast",
     "boq.confirm_replace_markups": "Dit vervangt bestaande opslagen. Doorgaan?",
-    "boq.no_markups": "Nog geen opslagen. Voeg er een toe of pas een sjabloon toe.",
+    "boq.no_markups":
+      "Nog geen opslagen. Voeg er een toe of pas een sjabloon toe.",
     "boq.new_markup": "Nieuwe opslag",
     "boq.markup_added": "Opslag toegevoegd",
     "boq.markup_deleted": "Opslag verwijderd",
@@ -264,7 +304,8 @@ const resource = {
     "boq.duplicate_failed": "Dupliceren mislukt",
     "boq.duplicated": "Raming gedupliceerd",
     "boq.editor": "Ramingeditor",
-    "boq.empty_section": "Geen items in deze sectie. Klik op \"Post toevoegen\" om er een toe te voegen.",
+    "boq.empty_section":
+      'Geen items in deze sectie. Klik op "Post toevoegen" om er een toe te voegen.',
     "boq.enter_description": "Voer omschrijving in...",
     "boq.estimated_total": "Geschat totaal",
     "boq.estimates": "ramingen",
@@ -295,10 +336,12 @@ const resource = {
     "boq.new_estimate": "Nieuwe raming",
     "boq.no_activity": "Nog geen activiteit. Wijzigingen verschijnen hier.",
     "boq.no_boqs": "Nog geen ramingen",
-    "boq.no_boqs_hint": "Maak eerst een project aan en voeg vervolgens een raming toe",
+    "boq.no_boqs_hint":
+      "Maak eerst een project aan en voeg vervolgens een raming toe",
     "boq.no_items_found": "Geen overeenkomende items gevonden",
     "boq.no_positions": "Nog geen posten. Voeg een sectie toe om te beginnen.",
-    "boq.no_resources": "Geen middelen toegewezen. Selecteer een kostenpost met het ⚡-pictogram uit de autocomplete-suggesties om automatisch in te vullen.",
+    "boq.no_resources":
+      "Geen middelen toegewezen. Selecteer een kostenpost met het ⚡-pictogram uit de autocomplete-suggesties om automatisch in te vullen.",
     "boq.no_results": "Geen overeenkomende ramingen",
     "boq.no_results_hint": "Pas uw zoekopdracht of filters aan",
     "boq.no_section": "Geen sectie (bovenste niveau)",
@@ -319,7 +362,8 @@ const resource = {
     "boq.quality_descriptions": "Omschrijvingen ingevuld",
     "boq.quality_fair": "Redelijk",
     "boq.quality_great": "Uitstekend",
-    "boq.quality_hint": "Vul alle velden in om 100% te bereiken en de nauwkeurigheid van de raming te waarborgen.",
+    "boq.quality_hint":
+      "Vul alle velden in om 100% te bereiken en de nauwkeurigheid van de raming te waarborgen.",
     "boq.quality_markups": "Opslagen toegevoegd",
     "boq.quality_missing": "Ontbrekend",
     "boq.quality_needs_work": "Verbetering nodig",
@@ -328,17 +372,22 @@ const resource = {
     "boq.quantity": "Hoeveelheid",
     "boq.quick_add": "Snel toevoegen",
     "boq.quick_add_position": "Post toevoegen",
-    "boq.quick_add_position_desc": "Voeg een lege post toe aan de huidige sectie",
+    "boq.quick_add_position_desc":
+      "Voeg een lege post toe aan de huidige sectie",
     "boq.quick_add_section": "Sectie toevoegen",
-    "boq.quick_add_section_desc": "Maak een nieuwe sectie om posten te organiseren",
+    "boq.quick_add_section_desc":
+      "Maak een nieuwe sectie om posten te organiseren",
     "boq.quick_import_costs": "Importeren uit kostendatabase",
-    "boq.quick_import_costs_desc": "Blader door en selecteer items uit de kostendatabase",
+    "boq.quick_import_costs_desc":
+      "Blader door en selecteer items uit de kostendatabase",
     "boq.quick_use_template": "Sjabloon gebruiken",
-    "boq.quick_use_template_desc": "Begin met een vooraf opgestelde ramingssjabloon",
+    "boq.quick_use_template_desc":
+      "Begin met een vooraf opgestelde ramingssjabloon",
     "boq.recalculate": "Herberekenen",
     "boq.recalculate_complete": "Herberekening voltooid",
     "boq.recalculate_failed": "Herberekening mislukt",
-    "boq.recalculate_summary": "Herberekend: {{sections}} secties, {{positions}} posten",
+    "boq.recalculate_summary":
+      "Herberekend: {{sections}} secties, {{positions}} posten",
     "boq.recent_activity": "Recente activiteit",
     "boq.redo": "Opnieuw (Ctrl+Y)",
     "boq.redone": "Opnieuw uitgevoerd",
@@ -398,7 +447,8 @@ const resource = {
     "boq.sections": "secties",
     "boq.select_project": "Selecteer een project...",
     "boq.sensitivity_base_total": "Basistotaal",
-    "boq.sensitivity_empty": "Voeg posten met kosten toe om de gevoeligheidsanalyse te bekijken.",
+    "boq.sensitivity_empty":
+      "Voeg posten met kosten toe om de gevoeligheidsanalyse te bekijken.",
     "boq.sensitivity_impact_high": "Impact (+)",
     "boq.sensitivity_impact_low": "Impact (-)",
     "boq.sensitivity_overrun": "Kostenstijging",
@@ -409,16 +459,21 @@ const resource = {
     "boq.show_all_activity": "Alle activiteit tonen...",
     "boq.showing_estimates": "{{shown}} van {{total}} ramingen",
     "boq.start_building": "Begin met het opstellen van uw raming",
-    "boq.start_building_desc": "Volg deze stappen om een professionele raming op te stellen",
+    "boq.start_building_desc":
+      "Volg deze stappen om een professionele raming op te stellen",
     "boq.status": "Status",
     "boq.step_add_positions": "Posten toevoegen",
-    "boq.step_add_positions_desc": "Voeg regelitems toe met omschrijvingen en eenheden aan elke sectie",
+    "boq.step_add_positions_desc":
+      "Voeg regelitems toe met omschrijvingen en eenheden aan elke sectie",
     "boq.step_add_sections": "Secties toevoegen",
-    "boq.step_add_sections_desc": "Organiseer uw raming in secties (bijv. Funderingen, Wanden, Dak)",
+    "boq.step_add_sections_desc":
+      "Organiseer uw raming in secties (bijv. Funderingen, Wanden, Dak)",
     "boq.step_review": "Totalen controleren",
-    "boq.step_review_desc": "Voeg opslagen toe voor algemene kosten en winst, en controleer vervolgens uw eindtotaal",
+    "boq.step_review_desc":
+      "Voeg opslagen toe voor algemene kosten en winst, en controleer vervolgens uw eindtotaal",
     "boq.step_set_quantities": "Hoeveelheden invoeren",
-    "boq.step_set_quantities_desc": "Voer hoeveelheden en eenheidsprijzen in voor elke post om totalen te berekenen",
+    "boq.step_set_quantities_desc":
+      "Voer hoeveelheden en eenheidsprijzen in voor elke post om totalen te berekenen",
     "boq.subtotal": "Subtotaal",
     "boq.sync_rate": "Tarief synchroniseren",
     "boq.table_label": "Ramingsposten",
@@ -426,13 +481,20 @@ const resource = {
     "boq.template_error": "Aanmaken van raming vanuit sjabloon mislukt",
     "boq.templates": "Ramingssjablonen",
     "boq.templates_coming_soon": "Sjablonen binnenkort beschikbaar",
-    "boq.templates_coming_soon_desc": "De sjabloonselector wordt beschikbaar in een toekomstige update.",
-    "boq.templates_subtitle": "Begin met een professioneel sjabloon voor uw gebouwtype. Selecteer een sjabloon, stel de oppervlakte in en genereer direct een volledige raming.",
-    "boq.tip_autocomplete": "Vul omschrijvingen in voor alle posten — begin met typen om suggesties uit de kostendatabase te zien",
-    "boq.tip_markups": "Voeg opslagen toe voor algemene kosten en winst via het gedeelte Opslagen onder de tabel",
-    "boq.tip_menu": "Klik op het (...) menu van een sectie om posten toe te voegen of te verwijderen",
-    "boq.tip_sections": "Voeg secties toe om uw raming te organiseren (bijv. Funderingen, Wanden, Dak)",
-    "boq.tip_tab": "Gebruik Tab om tussen velden te navigeren, Enter om wijzigingen op te slaan",
+    "boq.templates_coming_soon_desc":
+      "De sjabloonselector wordt beschikbaar in een toekomstige update.",
+    "boq.templates_subtitle":
+      "Begin met een professioneel sjabloon voor uw gebouwtype. Selecteer een sjabloon, stel de oppervlakte in en genereer direct een volledige raming.",
+    "boq.tip_autocomplete":
+      "Vul omschrijvingen in voor alle posten — begin met typen om suggesties uit de kostendatabase te zien",
+    "boq.tip_markups":
+      "Voeg opslagen toe voor algemene kosten en winst via het gedeelte Opslagen onder de tabel",
+    "boq.tip_menu":
+      "Klik op het (...) menu van een sectie om posten toe te voegen of te verwijderen",
+    "boq.tip_sections":
+      "Voeg secties toe om uw raming te organiseren (bijv. Funderingen, Wanden, Dak)",
+    "boq.tip_tab":
+      "Gebruik Tab om tussen velden te navigeren, Enter om wijzigingen op te slaan",
     "boq.tips_title": "Tips & Hints",
     "boq.mvp.title": "Materialen kiezen",
     "boq.mvp.subtitle_one": "{{count}} resource heeft een keuze nodig",
@@ -499,12 +561,15 @@ const resource = {
     "catalog.creating": "Bezig met aanmaken...",
     "catalog.delete_failed": "Verwijderen mislukt",
     "catalog.delete_region": "Regio verwijderen",
-    "catalog.empty_hint": "Importeer een regionale catalogus om middelen te vullen, of extraheer uit kostenposten.",
-    "catalog.empty_with_regions": "Geen middelen komen overeen met de huidige filters. Probeer het type of de regio te wijzigen.",
+    "catalog.empty_hint":
+      "Importeer een regionale catalogus om middelen te vullen, of extraheer uit kostenposten.",
+    "catalog.empty_with_regions":
+      "Geen middelen komen overeen met de huidige filters. Probeer het type of de regio te wijzigen.",
     "catalog.import": "Importeren",
     "catalog.import_failed": "Import mislukt",
     "catalog.import_region": "Regio importeren",
-    "catalog.import_regions_desc": "Download voorgebouwde middelencatalogi uit CWICR regionale databases",
+    "catalog.import_regions_desc":
+      "Download voorgebouwde middelencatalogi uit CWICR regionale databases",
     "catalog.import_regions_title": "Middelencatalogus importeren",
     "catalog.import_success": "Import voltooid",
     "catalog.importing": "Bezig met importeren...",
@@ -513,7 +578,8 @@ const resource = {
     "catalog.loaded": "Geladen",
     "catalog.my_catalog": "Mijn catalogus",
     "catalog.my_catalog_empty": "Uw catalogus is leeg",
-    "catalog.my_catalog_empty_desc": "Voeg uw eigen materialen, materieel en arbeidstarieven toe. Eigen middelen kunnen worden gebruikt in samenstellingen en toegepast op ramingsposten.",
+    "catalog.my_catalog_empty_desc":
+      "Voeg uw eigen materialen, materieel en arbeidstarieven toe. Eigen middelen kunnen worden gebruikt in samenstellingen en toegepast op ramingsposten.",
     "catalog.name": "Naam",
     "catalog.no_results": "Geen middelen gevonden",
     "catalog.no_results_hint": "Pas uw zoekopdracht of filters aan",
@@ -529,8 +595,10 @@ const resource = {
     "catalog.resources_found": "middelen gevonden",
     "catalog.resources_imported": "middelen geïmporteerd",
     "catalog.resources_removed": "middelen verwijderd",
-    "catalog.search_hint": "Blader door materialen, materieel, arbeid en machinisten",
-    "catalog.what_is_catalog": "Materialen, arbeid, materieel en machinistentarieven georganiseerd per regio. Installeer regionale catalogi vanuit Modules en gebruik ze vervolgens om samenstellingen op te bouwen of items direct aan ramingsposten toe te voegen.",
+    "catalog.search_hint":
+      "Blader door materialen, materieel, arbeid en machinisten",
+    "catalog.what_is_catalog":
+      "Materialen, arbeid, materieel en machinistentarieven georganiseerd per regio. Installeer regionale catalogi vanuit Modules en gebruik ze vervolgens om samenstellingen op te bouwen of items direct aan ramingsposten toe te voegen.",
     "catalog.search_in": "Zoeken in",
     "catalog.search_placeholder": "Zoeken op naam of code...",
     "catalog.selected": "geselecteerd",
@@ -555,12 +623,14 @@ const resource = {
     "command_palette.action_run_validation": "Validatie uitvoeren",
     "command_palette.action_import_database": "Database importeren",
     "error.something_wrong": "Er is iets misgegaan",
-    "error.unexpected_error": "Er is een onverwachte fout opgetreden bij het weergeven van deze pagina. U kunt proberen te herladen of terug te gaan naar het dashboard.",
+    "error.unexpected_error":
+      "Er is een onverwachte fout opgetreden bij het weergeven van deze pagina. U kunt proberen te herladen of terug te gaan naar het dashboard.",
     "error.details": "Foutdetails",
     "error.try_again": "Opnieuw proberen",
     "error.go_dashboard": "Naar dashboard",
     "error.not_found": "Pagina niet gevonden",
-    "error.not_found_desc": "De pagina die u zoekt bestaat niet of is verplaatst. Controleer de URL of ga terug naar het dashboard.",
+    "error.not_found_desc":
+      "De pagina die u zoekt bestaat niet of is verplaatst. Controleer de URL of ga terug naar het dashboard.",
     "error.go_back": "Terug",
     "common.archive": "Archiveren",
     "common.back": "Terug",
@@ -597,7 +667,8 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Kosten / m²",
     "costmodel.benchmark_current_cost": "Huidig: {{value}}/m²",
-    "costmodel.benchmark_enter_area": "Voer het projectoppervlak in om de kosten per m² benchmarkvergelijking te zien",
+    "costmodel.benchmark_enter_area":
+      "Voer het projectoppervlak in om de kosten per m² benchmarkvergelijking te zien",
     "costmodel.benchmark_per_m2": "per m²",
     "costmodel.benchmark_project_area": "Projectoppervlak (m²)",
     "costmodel.benchmark_project_type": "Projecttype",
@@ -641,7 +712,8 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Status",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint": "Om binnen budget te eindigen, heeft u een CPI van {{tcpi}} nodig voor het resterende werk",
+    "costmodel.evm_tcpi_hint":
+      "Om binnen budget te eindigen, heeft u een CPI van {{tcpi}} nodig voor het resterende werk",
     "costmodel.evm_time_elapsed": "Verstreken tijd",
     "costmodel.evm_title": "Earned Value Analyse",
     "costmodel.evm_unknown": "Onbekend",
@@ -661,7 +733,8 @@ const resource = {
     "costmodel.s_curve": "S-Curve (EVM)",
     "costmodel.s_curve_chart": "S-Curve grafiek",
     "costmodel.title": "5D Kostenmodel",
-    "costmodel.what_is_5d": "5D kostenbeheer voegt kostenmonitoring in de tijd toe aan uw project. Monitor budget versus werkelijke uitgaven met S-curve grafieken, volg Earned Value (SPI = planningsefficiëntie, CPI = kostenefficiëntie — beide >= 1,0 betekent gezond), en voer wat-als scenario's uit om resultaten te voorspellen.",
+    "costmodel.what_is_5d":
+      "5D kostenbeheer voegt kostenmonitoring in de tijd toe aan uw project. Monitor budget versus werkelijke uitgaven met S-curve grafieken, volg Earned Value (SPI = planningsefficiëntie, CPI = kostenefficiëntie — beide >= 1,0 betekent gezond), en voer wat-als scenario's uit om resultaten te voorspellen.",
     "costmodel.total": "Totaal",
     "costmodel.total_budget": "Totaal budget",
     "costmodel.variance": "Afwijking",
@@ -670,13 +743,15 @@ const resource = {
     "costmodel.whatif_adjusted_eac": "Aangepaste EAC",
     "costmodel.whatif_calculate": "Impact berekenen",
     "costmodel.whatif_duration": "Doorlooptijd",
-    "costmodel.whatif_error": "Scenarioberekening mislukt. Probeer het opnieuw.",
+    "costmodel.whatif_error":
+      "Scenarioberekening mislukt. Probeer het opnieuw.",
     "costmodel.whatif_impact": "Impact",
     "costmodel.whatif_labor": "Arbeidskosten",
     "costmodel.whatif_material": "Materiaalkosten",
     "costmodel.whatif_original_bac": "Oorspronkelijke BAC",
     "costmodel.whatif_reset": "Herstellen",
-    "costmodel.whatif_scenario_name": "Wat-als: M{{material}}% A{{labor}}% D{{duration}}%",
+    "costmodel.whatif_scenario_name":
+      "Wat-als: M{{material}}% A{{labor}}% D{{duration}}%",
     "costmodel.whatif_title": "Wat-als scenario's",
     "costs.add_database": "Importeren",
     "costs.add_item": "Item toevoegen",
@@ -714,18 +789,22 @@ const resource = {
     "costs.import_and_more": "en nog {{count}} fouten",
     "costs.import_another": "Nog een importeren",
     "costs.import_click_to_change": "Klik om een ander bestand te kiezen",
-    "costs.import_columns_hint": "Kolommen worden automatisch gedetecteerd. Geaccepteerde kolomkoppen: Code, Omschrijving, Eenheid, Tarief/Prijs/Kosten, Valuta, DIN 276/Classificatie.",
+    "costs.import_columns_hint":
+      "Kolommen worden automatisch gedetecteerd. Geaccepteerde kolomkoppen: Code, Omschrijving, Eenheid, Tarief/Prijs/Kosten, Valuta, DIN 276/Classificatie.",
     "costs.import_complete": "Import voltooid",
     "costs.import_database": "Database importeren",
     "costs.import_drop_here": "Sleep uw bestand hierheen",
-    "costs.import_drop_or_click": "Sleep uw bestand hierheen of klik om te bladeren",
+    "costs.import_drop_or_click":
+      "Sleep uw bestand hierheen of klik om te bladeren",
     "costs.import_error_details": "Foutdetails",
     "costs.import_errors": "Fouten",
     "costs.import_failed": "Import mislukt",
     "costs.import_file_too_large": "Bestand te groot",
-    "costs.import_first_hint": "Importeer een regionale kostendatabase om te beginnen met zoeken in 55.000+ items.",
+    "costs.import_first_hint":
+      "Importeer een regionale kostendatabase om te beginnen met zoeken in 55.000+ items.",
     "costs.import_format_csv": "CSV (.csv) met dezelfde kolommen",
-    "costs.import_format_excel": "Excel (.xlsx) met kolommen: Code, Omschrijving, Eenheid, Tarief",
+    "costs.import_format_excel":
+      "Excel (.xlsx) met kolommen: Code, Omschrijving, Eenheid, Tarief",
     "costs.import_formats_title": "Ondersteunde formaten",
     "costs.import_go_to_database": "Naar kostendatabase",
     "costs.import_imported": "Geïmporteerd",
@@ -734,9 +813,11 @@ const resource = {
     "costs.import_row": "Rij",
     "costs.import_rows_processed": "rijen verwerkt",
     "costs.import_skipped": "Overgeslagen",
-    "costs.import_subtitle": "Laad een prijsdatabase of upload uw eigen bestand.",
+    "costs.import_subtitle":
+      "Laad een prijsdatabase of upload uw eigen bestand.",
     "costs.import_success": "Import voltooid",
-    "costs.import_supported_hint": "Upload een Excel (.xlsx) of CSV (.csv) bestand.",
+    "costs.import_supported_hint":
+      "Upload een Excel (.xlsx) of CSV (.csv) bestand.",
     "costs.import_title": "Kostendatabase importeren",
     "costs.import_unsupported_format": "Niet-ondersteund bestandsformaat",
     "costs.indexing_failed": "Indexering mislukt",
@@ -745,7 +826,8 @@ const resource = {
     "costs.items_copied": "{{count}} items gekopieerd naar klembord",
     "costs.load_more": "Meer laden",
     "costs.loaded_databases": "Geladen databases",
-    "costs.no_boqs_helper": "Geen ramingen in dit project. Maak er eerst een aan in de ramingeditor.",
+    "costs.no_boqs_helper":
+      "Geen ramingen in dit project. Maak er eerst een aan in de ramingeditor.",
     "costs.no_database_loaded": "Geen database geladen",
     "costs.no_results": "Geen kostenposten gevonden",
     "costs.no_results_hint": "Pas uw zoekopdracht of filters aan",
@@ -757,16 +839,19 @@ const resource = {
     "costs.region_cleared": "Regio gewist",
     "costs.results_found": "resultaten gevonden",
     "costs.search_hint": "Zoek kostenposten op omschrijving of code",
-    "costs.what_is_cost_db": "Eenheidsprijzen en samengestelde prijzen voor materialen, arbeid en materieel. Importeer regionale databases (CWICR, BKI, RSMeans) vanuit Modules of voeg eigen tarieven toe. Schakel AI Semantisch zoeken in voor zoekopdrachten in natuurlijke taal.",
+    "costs.what_is_cost_db":
+      "Eenheidsprijzen en samengestelde prijzen voor materialen, arbeid en materieel. Importeer regionale databases (CWICR, BKI, RSMeans) vanuit Modules of voeg eigen tarieven toe. Schakel AI Semantisch zoeken in voor zoekopdrachten in natuurlijke taal.",
     "costs.search_placeholder": "Zoeken op omschrijving of code...",
-    "costs.semantic_placeholder": "Beschrijf wat u nodig heeft (AI zoekt vergelijkbare)...",
+    "costs.semantic_placeholder":
+      "Beschrijf wat u nodig heeft (AI zoekt vergelijkbare)...",
     "costs.showing": "Toont",
     "costs.title": "Kostendatabase",
     "costs.yes_clear_all": "Ja, alles wissen",
     "dashboard.add_api_keys": "API-sleutels toevoegen",
     "dashboard.ai_providers": "AI-providers",
     "dashboard.analytics": "Analyse",
-    "dashboard.kpi_hint": "Samenvatting over alle projecten. Waarden worden bijgewerkt zodra u ramingen en planningsactiviteiten toevoegt.",
+    "dashboard.kpi_hint":
+      "Samenvatting over alle projecten. Waarden worden bijgewerkt zodra u ramingen en planningsactiviteiten toevoegt.",
     "dashboard.api_server": "API-server",
     "dashboard.boq_status": "Ramingsstatus",
     "dashboard.completed": "Voltooid",
@@ -797,15 +882,19 @@ const resource = {
     "dashboard.recent_projects": "Recente projecten",
     "dashboard.show_shortcuts": "Sneltoetsen tonen",
     "dashboard.step_ai_search": "AI-zoeken inschakelen",
-    "dashboard.step_ai_search_desc": "Genereer vectorembeddings voor semantische kostenmatch",
+    "dashboard.step_ai_search_desc":
+      "Genereer vectorembeddings voor semantische kostenmatch",
     "dashboard.step_build_boq": "Raming opstellen",
     "dashboard.step_build_boq_desc": "Maak een raming met AI-ondersteuning",
     "dashboard.step_connect_ai": "AI verbinden",
-    "dashboard.step_connect_ai_desc": "Voeg uw API-sleutels toe voor AI-ondersteunde ramingen",
+    "dashboard.step_connect_ai_desc":
+      "Voeg uw API-sleutels toe voor AI-ondersteunde ramingen",
     "dashboard.step_create_project": "Project aanmaken",
-    "dashboard.step_create_project_desc": "Start uw eerste bouwkostenramingsproject",
+    "dashboard.step_create_project_desc":
+      "Start uw eerste bouwkostenramingsproject",
     "dashboard.step_load_db": "Kostendatabase laden",
-    "dashboard.step_load_db_desc": "Importeer regionale prijsgegevens met 55.000+ items",
+    "dashboard.step_load_db_desc":
+      "Importeer regionale prijsgegevens met 55.000+ items",
     "dashboard.subtitle": "Uw werkruimte voor bouwkostencalculatie",
     "dashboard.subtitle_2": "Slimme resourceplanning voor uw bouwprojecten",
     "dashboard.system_status": "Systeemstatus",
@@ -818,18 +907,22 @@ const resource = {
     "dashboard.welcome": "Welkom bij OpenConstructionERP",
     "demo.import_demo": "Demo importeren",
     "demo.install": "Installeren",
-    "demo.install_error": "Installatie van demoproject mislukt. Probeer het opnieuw.",
+    "demo.install_error":
+      "Installatie van demoproject mislukt. Probeer het opnieuw.",
     "demo.installing": "Bezig met installeren...",
-    "demo.modal_subtitle": "Installeer een compleet project met raming, planning, budget en aanbesteding",
+    "demo.modal_subtitle":
+      "Installeer een compleet project met raming, planning, budget en aanbesteding",
     "demo.modal_title": "Demoproject importeren",
     "documents.title": "Documenten",
-    "documents.subtitle": "Upload en beheer projectbestanden — tekeningen, contracten, specificaties",
+    "documents.subtitle":
+      "Upload en beheer projectbestanden — tekeningen, contracten, specificaties",
     "documents.upload": "Bestanden uploaden",
     "documents.uploaded": "Geüpload",
     "documents.upload_failed": "Upload mislukt",
     "documents.upload_skipped": "Bestand overgeslagen",
     "documents.file_too_large": "{{name}} overschrijdt de limiet van 100 MB",
-    "documents.upload_summary": "Upload voltooid: {{success}} geüpload, {{failed}} mislukt",
+    "documents.upload_summary":
+      "Upload voltooid: {{success}} geüpload, {{failed}} mislukt",
     "documents.delete_failed": "Verwijderen mislukt",
     "documents.deleted": "Document verwijderd",
     "documents.download": "Downloaden",
@@ -841,11 +934,14 @@ const resource = {
     "documents.no_results_hint": "Probeer een andere zoekterm",
     "documents.clear_search": "Zoekopdracht wissen",
     "documents.drop_hint": "Sleep bestanden hierheen, of klik op Uploaden",
-    "documents.drop_hint_types": "PDF, afbeeldingen, Excel, DWG, IFC — elk bestandstype",
+    "documents.drop_hint_types":
+      "PDF, afbeeldingen, Excel, DWG, IFC — elk bestandstype",
     "documents.empty": "Nog geen documenten",
-    "documents.empty_hint": "Upload uw eerste bestand — tekeningen, contracten, foto's of elk projectdocument.",
+    "documents.empty_hint":
+      "Upload uw eerste bestand — tekeningen, contracten, foto's of elk projectdocument.",
     "documents.select_project": "Selecteer een project",
-    "documents.select_project_hint": "Gebruik de projectkiezer in de header om eerst een project te selecteren.",
+    "documents.select_project_hint":
+      "Gebruik de projectkiezer in de header om eerst een project te selecteren.",
     "documents.sort_date": "Op datum",
     "documents.sort_name": "Op naam",
     "documents.sort_size": "Op grootte",
@@ -859,33 +955,45 @@ const resource = {
     "documents.cat_correspondence": "Correspondentie",
     "documents.cat_other": "Overig",
     "login.benefit.ai": "AI-ondersteunde raming",
-    "login.benefit.ai_desc": "Slimme suggesties met betrouwbaarheidsscores. U beslist, AI assisteert.",
+    "login.benefit.ai_desc":
+      "Slimme suggesties met betrouwbaarheidsscores. U beslist, AI assisteert.",
     "login.benefit.allinone": "Raming + 4D + 5D + Aanbesteding",
-    "login.benefit.allinone_desc": "Volledige workflow van kostenraming tot biedingsvergelijking in één tool.",
+    "login.benefit.allinone_desc":
+      "Volledige workflow van kostenraming tot biedingsvergelijking in één tool.",
     "login.benefit.free": "Gratis voor iedereen",
-    "login.benefit.free_desc": "Geen licentiekosten. Geen beperkingen. Gemaakt door calculatoren, voor calculatoren.",
+    "login.benefit.free_desc":
+      "Geen licentiekosten. Geen beperkingen. Gemaakt door calculatoren, voor calculatoren.",
     "login.benefit.local": "Uw gegevens blijven op uw computer",
-    "login.benefit.local_desc": "Geen cloud. Geen externe servers. Volledige controle over uw projectgegevens.",
+    "login.benefit.local_desc":
+      "Geen cloud. Geen externe servers. Volledige controle over uw projectgegevens.",
     "login.benefit.open_source": "100% open source",
-    "login.benefit.open_source_desc": "Transparante code. Geen vendor lock-in. Exporteer alles, altijd.",
+    "login.benefit.open_source_desc":
+      "Transparante code. Geen vendor lock-in. Exporteer alles, altijd.",
     "login.benefit.standards": "Internationale standaarden",
-    "login.benefit.standards_desc": "Meer dan 55.000 kostenposten in 11 regionale databases wereldwijd.",
-    "login.hero_desc": "Professionele raming, 4D planning, 5D kostenmodel en aanbesteding — alles in één open-source platform.",
+    "login.benefit.standards_desc":
+      "Meer dan 55.000 kostenposten in 11 regionale databases wereldwijd.",
+    "login.hero_desc":
+      "Professionele raming, 4D planning, 5D kostenmodel en aanbesteding — alles in één open-source platform.",
     "login.hero_highlight": "opnieuw uitgevonden",
     "login.hero_title": "Bouwkostencalculatie,",
     "login.open_source_badge": "Eerste open-source bouw-ERP",
     "dashboard.open_source_badge": "Eerste open-source bouw-ERP",
     "login.learn_more": "Meer informatie over het platform",
-    "login.privacy": "Alle gegevens worden lokaal op uw apparaat verwerkt en opgeslagen. Er wordt niets naar externe servers verzonden. U bent eigenaar van uw gegevens — altijd.",
-    "login.privacy_ai": "Als u de ingebouwde AI-tools gebruikt, kunnen sommige gegevens worden verzonden naar de AI-provider die u configureert (OpenAI, Anthropic, etc.). U bepaalt welke provider u gebruikt en welke gegevens u deelt.",
+    "login.privacy":
+      "Alle gegevens worden lokaal op uw apparaat verwerkt en opgeslagen. Er wordt niets naar externe servers verzonden. U bent eigenaar van uw gegevens — altijd.",
+    "login.privacy_ai":
+      "Als u de ingebouwde AI-tools gebruikt, kunnen sommige gegevens worden verzonden naar de AI-provider die u configureert (OpenAI, Anthropic, etc.). U bepaalt welke provider u gebruikt en welke gegevens u deelt.",
     "marketplace.active": "Actief",
     "marketplace.available": "Beschikbare modules",
     "marketplace.builtin": "Ingebouwd",
-    "marketplace.builtin_message": "Deze module is ingebouwd in uw installatie en klaar voor gebruik.",
+    "marketplace.builtin_message":
+      "Deze module is ingebouwd in uw installatie en klaar voor gebruik.",
     "marketplace.catalog_imported": "Catalogus geïmporteerd",
-    "marketplace.catalog_imported_message": "{{imported}} middelen geïmporteerd, {{skipped}} overgeslagen voor {{region}}.",
+    "marketplace.catalog_imported_message":
+      "{{imported}} middelen geïmporteerd, {{skipped}} overgeslagen voor {{region}}.",
     "marketplace.demo_installed": "Demo geïnstalleerd",
-    "marketplace.demo_installed_message": "{{name}} aangemaakt met volledige raming, planning, budget en aanbesteding.",
+    "marketplace.demo_installed_message":
+      "{{name}} aangemaakt met volledige raming, planning, budget en aanbesteding.",
     "marketplace.free": "Gratis",
     "marketplace.import_failed": "Import mislukt",
     "marketplace.imported": "Geïmporteerd",
@@ -894,7 +1002,8 @@ const resource = {
     "marketplace.install_failed": "Installatie mislukt",
     "marketplace.installed_modules": "Geïnstalleerde kernmodules",
     "marketplace.installing": "Bezig met installeren...",
-    "marketplace.language_activated": "Taalpakket geactiveerd. Wijzig de taal in Instellingen.",
+    "marketplace.language_activated":
+      "Taalpakket geactiveerd. Wijzig de taal in Instellingen.",
     "marketplace.language_already_included": "Deze taal is al inbegrepen.",
     "marketplace.manage": "Beheren",
     "marketplace.module_disabled": "{{name}} uitgeschakeld",
@@ -902,18 +1011,22 @@ const resource = {
     "marketplace.my_modules": "Geïnstalleerde modules",
     "marketplace.no_region_mapping": "Geen regiokoppeling voor {{id}}",
     "marketplace.no_results": "Geen modules gevonden",
-    "marketplace.no_results_hint": "Pas uw zoekopdracht of categoriefilter aan.",
+    "marketplace.no_results_hint":
+      "Pas uw zoekopdracht of categoriefilter aan.",
     "marketplace.rules": "regels",
     "marketplace.search_placeholder": "Modules zoeken...",
-    "marketplace.subtitle": "Blader door en installeer add-ons voor kostendatabases, AI-tools, CAD-converters en meer.",
-    "marketplace.description": "Breid OpenEstimate uit met regionale kostendatabases, middelencatalogi (CWICR), vectorzoekindexen voor AI, taalpakketten, demoprojecten en integraties. Installeer een module om deze te activeren — verwijder op elk moment.",
+    "marketplace.subtitle":
+      "Blader door en installeer add-ons voor kostendatabases, AI-tools, CAD-converters en meer.",
+    "marketplace.description":
+      "Breid OpenEstimate uit met regionale kostendatabases, middelencatalogi (CWICR), vectorzoekindexen voor AI, taalpakketten, demoprojecten en integraties. Installeer een module om deze te activeren — verwijder op elk moment.",
     "marketplace.title": "Module Marktplaats",
     "marketplace.uninstall": "Verwijderen",
     "marketplace.unknown_region": "Onbekende regio",
     "marketplace.validation_rule_sets": "Validatieregelsets",
     "marketplace.validation_rules_active": "validatieregels actief",
     "marketplace.vector_index": "Vectorindex",
-    "marketplace.vector_index_hint": "Importeer eerst de kostendatabase en genereer daarna vectoren.",
+    "marketplace.vector_index_hint":
+      "Importeer eerst de kostendatabase en genereer daarna vectoren.",
     "modules.title": "Modules",
     "files.title": "Projectbestanden",
     "files.empty": "Geen bestanden voldoen aan uw filters.",
@@ -962,20 +1075,27 @@ const resource = {
     "files.toast.copied": "Gekopieerd",
     "files.toast.copy_failed": "Kopiëren mislukt",
     "files.no_project_title": "Geen actief project",
-    "files.no_project_desc": "Kies een project op het dashboard om alle documenten, foto's, BIM- en DWG-bestanden op één plek te zien.",
+    "files.no_project_desc":
+      "Kies een project op het dashboard om alle documenten, foto's, BIM- en DWG-bestanden op één plek te zien.",
     "files.go_to_projects": "Naar projecten",
     "files.export.title": "Projectpakket exporteren",
-    "files.export.intro": "Kies wat u wilt opnemen. Kleinere pakketten dragen sneller over; grotere bewaren meer.",
+    "files.export.intro":
+      "Kies wat u wilt opnemen. Kleinere pakketten dragen sneller over; grotere bewaren meer.",
     "files.export.scope_metadata": "Alleen metadata",
-    "files.export.scope_metadata_hint": "Geschikt voor e-mail. Hoeveelheden, tabellen en links — geen bijlagen.",
+    "files.export.scope_metadata_hint":
+      "Geschikt voor e-mail. Hoeveelheden, tabellen en links — geen bijlagen.",
     "files.export.scope_documents": "Documenten",
-    "files.export.scope_documents_hint": "Voegt geüploade documenten en foto's met thumbnails toe.",
+    "files.export.scope_documents_hint":
+      "Voegt geüploade documenten en foto's met thumbnails toe.",
     "files.export.scope_bim": "BIM-modellen",
-    "files.export.scope_bim_hint": "Voegt BIM-modellen, elementen en standaardgeometrie toe.",
+    "files.export.scope_bim_hint":
+      "Voegt BIM-modellen, elementen en standaardgeometrie toe.",
     "files.export.scope_dwg": "DWG-tekeningen",
-    "files.export.scope_dwg_hint": "Voegt DWG-tekeningen, versies en gerelateerde bladen toe.",
+    "files.export.scope_dwg_hint":
+      "Voegt DWG-tekeningen, versies en gerelateerde bladen toe.",
     "files.export.scope_full": "Volledig project",
-    "files.export.scope_full_hint": "Alles — volledig migratiepakket inclusief alle bijlagen.",
+    "files.export.scope_full_hint":
+      "Alles — volledig migratiepakket inclusief alle bijlagen.",
     "files.export.stat_scope": "Bereik",
     "files.export.stat_attachments": "Bijlagen",
     "files.export.stat_size": "Geschatte grootte",
@@ -983,10 +1103,12 @@ const resource = {
     "files.export.tables": "Tabellen",
     "files.export.preview_btn": "Voorbeeld",
     "files.export.download_btn": "Pakket downloaden",
-    "files.export.large_warn": "Groot pakket — houd dit tabblad open tijdens het exporteren.",
+    "files.export.large_warn":
+      "Groot pakket — houd dit tabblad open tijdens het exporteren.",
     "files.export.success_title": "Pakket gedownload",
     "files.import.title": "Projectpakket importeren",
-    "files.import.intro": "Selecteer een .ocep-pakket dat is geëxporteerd vanuit deze of een andere werkruimte.",
+    "files.import.intro":
+      "Selecteer een .ocep-pakket dat is geëxporteerd vanuit deze of een andere werkruimte.",
     "files.import.select_file": ".ocep-bestand kiezen",
     "files.import.drop_hint": "Klik om te bladeren",
     "files.import.validating": "Pakket wordt gevalideerd…",
@@ -998,15 +1120,19 @@ const resource = {
     "files.import.stat_format": "Formaat",
     "files.import.choose_mode": "Importmodus",
     "files.import.mode_new": "Nieuw project aanmaken",
-    "files.import.mode_new_hint": "Veiligst. Overal nieuwe ID's; uw werkruimte verandert niet.",
+    "files.import.mode_new_hint":
+      "Veiligst. Overal nieuwe ID's; uw werkruimte verandert niet.",
     "files.import.mode_merge": "Samenvoegen met bestaand project",
-    "files.import.mode_merge_hint": "Voegt rijen toe aan een gekozen project. Bestaande ID's worden overgeslagen.",
+    "files.import.mode_merge_hint":
+      "Voegt rijen toe aan een gekozen project. Bestaande ID's worden overgeslagen.",
     "files.import.mode_replace": "Bestaand project vervangen",
-    "files.import.mode_replace_hint": "Wist de pakketgestuurde rijen van het gekozen project en importeert daarna. Destructief.",
+    "files.import.mode_replace_hint":
+      "Wist de pakketgestuurde rijen van het gekozen project en importeert daarna. Destructief.",
     "files.import.rename": "Nieuwe projectnaam (optioneel)",
     "files.import.target_project": "Doelproject",
     "files.import.pick_project": "— kies een project —",
-    "files.import.destructive_warn": "Dit verwijdert vóór het importeren definitief de pakketgestuurde rijen in het doelproject. Kan niet ongedaan worden gemaakt.",
+    "files.import.destructive_warn":
+      "Dit verwijdert vóór het importeren definitief de pakketgestuurde rijen in het doelproject. Kan niet ongedaan worden gemaakt.",
     "files.import.confirm": "Importeren",
     "files.import.result_done": "Import voltooid",
     "files.import.imported": "Geïmporteerd",
@@ -1026,7 +1152,8 @@ const resource = {
     "files.email.paste_into_email": "Voorbeeld e-mailbody",
     "files.email.open_mail_client": "E-mailclient openen",
     "files.email.sample_subject": "Bestand: {{name}}",
-    "files.email.sample_body": "Hallo,\n\nhier is het gevraagde bestand — {{name}} ({{size}}).\nDownloadlink (verloopt {{expires}}):\n{{url}}\n\n— verzonden vanuit OpenConstructionERP",
+    "files.email.sample_body":
+      "Hallo,\n\nhier is het gevraagde bestand — {{name}} ({{size}}).\nDownloadlink (verloopt {{expires}}):\n{{url}}\n\n— verzonden vanuit OpenConstructionERP",
     "files.title_all": "Alle bestanden",
     "files.empty_category": "Nog geen {{category}}",
     "files.cta.add_first": "Voeg uw eerste {{category}} toe",
@@ -1036,11 +1163,13 @@ const resource = {
     "files.upload": "Bestanden uploaden",
     "files.upload_drag": "Sleep bestanden hierheen",
     "files.upload_drop_here": "Laat bestanden los om te uploaden",
-    "files.upload_hint": "PDF, afbeeldingen, Excel, DWG, IFC — elk bestandstype",
+    "files.upload_hint":
+      "PDF, afbeeldingen, Excel, DWG, IFC — elk bestandstype",
     "files.upload_browse": "Bestanden kiezen",
     "files.upload_no_project": "Geen actief project",
     "files.upload_too_large": "Bestanden te groot",
-    "files.upload_too_large_msg": "{{count}} bestand(en) overschrijden de limiet van 100 MB en zijn overgeslagen.",
+    "files.upload_too_large_msg":
+      "{{count}} bestand(en) overschrijden de limiet van 100 MB en zijn overgeslagen.",
     "files.upload_queued": "{{count}} bestand(en) in wachtrij",
     "files.uploading": "Uploaden…",
     "files.uploaded": "Geüpload",
@@ -1051,7 +1180,8 @@ const resource = {
     "files.bulk.deleted": "{{count}} bestand(en) verwijderd",
     "files.bulk.delete_failed": "Bulk-verwijderen mislukt",
     "files.bulk.skip_unsupported": "{{count}} overgeslagen (niet ondersteund)",
-    "files.bulk.no_deletable": "Geselecteerde bestanden kunnen hier nog niet worden verwijderd",
+    "files.bulk.no_deletable":
+      "Geselecteerde bestanden kunnen hier nog niet worden verwijderd",
     "files.actions.open_in": "Openen in {{module}}",
     "files.actions.open_in_short": "Openen in {{module}}",
     "files.actions.share": "Delen",
@@ -1064,7 +1194,8 @@ const resource = {
     "files.share.downloads_plural": "{{count}} downloads",
     "files.share.error_create": "Kon de deellink niet aanmaken.",
     "files.share.error_revoke": "Kon de deellink niet intrekken.",
-    "files.share.existing_empty": "Nog geen deellinks — maak er hierboven een aan.",
+    "files.share.existing_empty":
+      "Nog geen deellinks — maak er hierboven een aan.",
     "files.share.existing_title": "Bestaande links",
     "files.share.expires_label": "Verloopt",
     "files.share.expiry_1d": "1 dag",
@@ -1110,13 +1241,16 @@ const resource = {
     "nav.bi_dashboards": "BI-dashboards",
     "nav.match_elements": "Elementen koppelen → Kosten",
     "nav.group_operations": "Bouwplaatsoperaties",
-    "nav.group_operations_desc": "Dagelijkse bouwplaatsoperaties — servicetickets, materieel, dagboek, onderaannemersportaal, middelen",
+    "nav.group_operations_desc":
+      "Dagelijkse bouwplaatsoperaties — servicetickets, materieel, dagboek, onderaannemersportaal, middelen",
     "nav.group_commercial": "Commercieel",
-    "nav.group_commercial_desc": "Commerciële pipeline — CRM, contracten, offertes, meerwerken, leveranciers, projectontwikkeling",
+    "nav.group_commercial_desc":
+      "Commerciële pipeline — CRM, contracten, offertes, meerwerken, leveranciers, projectontwikkeling",
     "nav.group_bi": "Analytics",
     "nav.group_bi_desc": "BI-dashboards op basis van datawarehouse-projecties",
     "nav.group_estimation": "Raming",
-    "nav.group_estimation_desc": "Kerntools: projecten, raming, kosten en samenstellingen",
+    "nav.group_estimation_desc":
+      "Kerntools: projecten, raming, kosten en samenstellingen",
     "nav.group_databases": "Databases",
     "nav.group_planning": "Planning",
     "nav.group_planning_desc": "4D planning en 5D kostenbeheer",
@@ -1172,8 +1306,10 @@ const resource = {
     "requirements.notes": "Opmerkingen",
     "requirements.notes_placeholder": "Aanvullende opmerkingen of context...",
     "requirements.import_text": "Importeren uit Tekst",
-    "requirements.import_text_desc": "Plak vereistenspecificaties. Elke regel in het formaat: entiteit | eigenschap | restrictietype | waarde | eenheid | categorie | prioriteit",
-    "requirements.import_placeholder": "muur | dikte | min | 200 | mm | constructief | moet\ndak | u_waarde | max | 0,20 | W/m²K | thermisch | moet",
+    "requirements.import_text_desc":
+      "Plak vereistenspecificaties. Elke regel in het formaat: entiteit | eigenschap | restrictietype | waarde | eenheid | categorie | prioriteit",
+    "requirements.import_placeholder":
+      "muur | dikte | min | 200 | mm | constructief | moet\ndak | u_waarde | max | 0,20 | W/m²K | thermisch | moet",
     "requirements.set_created": "Vereistenset aangemaakt",
     "requirements.new_set": "Nieuwe Vereistenset",
     "requirements.set_name_placeholder": "bijv. Constructieve Vereisten Fase 1",
@@ -1192,35 +1328,43 @@ const resource = {
     "requirements.all_priorities": "Alle Prioriteiten",
     "requirements.all_statuses": "Alle Statussen",
     "requirements.no_sets": "Geen vereistensets",
-    "requirements.no_sets_desc": "Maak een vereistenset aan om projectvereisten en kwaliteitspoorten te definiëren.",
+    "requirements.no_sets_desc":
+      "Maak een vereistenset aan om projectvereisten en kwaliteitspoorten te definiëren.",
     "requirements.empty": "Nog geen vereisten",
-    "requirements.empty_desc": "Voeg vereisten toe om Entiteit-Eigenschap-Restrictie-drietallen voor uw project te definiëren.",
+    "requirements.empty_desc":
+      "Voeg vereisten toe om Entiteit-Eigenschap-Restrictie-drietallen voor uw project te definiëren.",
     "requirements.no_match": "Geen vereisten komen overeen met uw filters.",
     "requirements.constraint": "Restrictie",
     "requirements.confidence": "Conf.",
     "requirements.source": "Bron",
     "requirements.showing": "{{count}} vereisten",
     "requirements.of_total": "van {{total}}",
-    "requirements.confirm_delete_set": "Deze vereistenset en alle bijbehorende vereisten verwijderen?",
+    "requirements.confirm_delete_set":
+      "Deze vereistenset en alle bijbehorende vereisten verwijderen?",
     "requirements.delete_set": "Set Verwijderen",
     "requirements.and_more": "en {{count}} meer...",
     "requirements.click_to_upload_csv": "Klik om CSV-bestand te uploaden",
     "requirements.click_to_upload_json": "Klik om JSON-bestand te uploaden",
     "requirements.csv_loaded": "{{count}} rijen geladen uit CSV",
-    "requirements.csv_parse_error": "CSV moet koppen hebben: entity, attribute, constraint_value",
+    "requirements.csv_parse_error":
+      "CSV moet koppen hebben: entity, attribute, constraint_value",
     "requirements.export": "Exporteren",
     "requirements.export_csv": "CSV exporteren",
     "requirements.export_excel": "Excel exporteren",
     "requirements.export_json": "JSON exporteren",
     "requirements.exported": "Vereisten geëxporteerd",
     "requirements.import_count": "{{count}} vereisten worden geïmporteerd...",
-    "requirements.import_csv_desc": "Upload een CSV-bestand met kolommen: entity, attribute, constraint_value",
-    "requirements.import_json_desc": "Upload een JSON-array van vereistenobjecten",
+    "requirements.import_csv_desc":
+      "Upload een CSV-bestand met kolommen: entity, attribute, constraint_value",
+    "requirements.import_json_desc":
+      "Upload een JSON-array van vereistenobjecten",
     "requirements.import_requirements": "Vereisten Importeren",
     "requirements.json_loaded": "{{count}} items geladen uit JSON",
-    "requirements.json_parse_error": "JSON moet een array zijn van objecten met entity, attribute, constraint_value",
+    "requirements.json_parse_error":
+      "JSON moet een array zijn van objecten met entity, attribute, constraint_value",
     "requirements.preview": "Voorbeeld",
-    "requirements.regex_hint": "Voer een reguliere expressiepatroon in, bijv. ^F[0-9]+$",
+    "requirements.regex_hint":
+      "Voer een reguliere expressiepatroon in, bijv. ^F[0-9]+$",
     "requirements.regex_invalid": "Ongeldig patroon",
     "requirements.regex_placeholder": "^F[0-9]+$",
     "requirements.regex_valid": "Geldig patroon",
@@ -1272,11 +1416,13 @@ const resource = {
     "markups.col_measurement": "Meting",
     "markups.col_date": "Datum",
     "markups.empty_title": "Geen markeringen gevonden",
-    "markups.empty_desc": "Markeringen en annotaties van uw projectdocumenten verschijnen hier.",
+    "markups.empty_desc":
+      "Markeringen en annotaties van uw projectdocumenten verschijnen hier.",
     "markups.action_resolve": "Oplossen",
     "markups.action_archive": "Archiveren",
     "markups.add_markup": "Markering toevoegen",
-    "markups.add_first": "Voeg uw eerste markering toe om documenten te annoteren",
+    "markups.add_first":
+      "Voeg uw eerste markering toe om documenten te annoteren",
     "markups.active": "Actief",
     "markups.all_documents": "Alle documenten",
     "markups.clear_filters": "Filters wissen",
@@ -1294,7 +1440,8 @@ const resource = {
     "markups.measurement_unit": "Eenheid",
     "markups.measurement_value": "Waarde",
     "markups.no_document": "Geen document",
-    "markups.no_project_desc": "Selecteer een project om markeringen te bekijken en beheren",
+    "markups.no_project_desc":
+      "Selecteer een project om markeringen te bekijken en beheren",
     "markups.no_project_title": "Geen project geselecteerd",
     "markups.page": "Pagina",
     "markups.resolved": "Opgelost",
@@ -1315,7 +1462,8 @@ const resource = {
     "punch.stat_overdue": "Achterstallig",
     "punch.add_item": "Opname-item toevoegen",
     "punch.field_title": "Titel",
-    "punch.title_placeholder": "bijv. Ontbrekende brandafdichting op verdieping 3",
+    "punch.title_placeholder":
+      "bijv. Ontbrekende brandafdichting op verdieping 3",
     "punch.field_description": "Beschrijving",
     "punch.description_placeholder": "Geef details over het probleem...",
     "punch.field_priority": "Prioriteit",
@@ -1353,7 +1501,8 @@ const resource = {
     "punch.all_assignees": "Alle toegewezenen",
     "punch.kanban_empty": "Geen items",
     "punch.empty_title": "Geen opname-items",
-    "punch.empty_desc": "Maak opname-items aan om gebreken, tekortkomingen en openstaand werk bij te houden.",
+    "punch.empty_desc":
+      "Maak opname-items aan om gebreken, tekortkomingen en openstaand werk bij te houden.",
     "punch.col_title": "Titel",
     "punch.col_priority": "Prioriteit",
     "punch.col_status": "Status",
@@ -1419,7 +1568,8 @@ const resource = {
     "field_reports.total": "Totaal rapporten",
     "field_reports.workforce_hours": "Werkuren",
     "field_reports.empty": "Nog geen rapporten",
-    "field_reports.empty_desc": "Maak uw eerste dagrapport aan om de voortgang van de bouw te documenteren",
+    "field_reports.empty_desc":
+      "Maak uw eerste dagrapport aan om de voortgang van de bouw te documenteren",
     "nav.photos": "Projectfoto's",
     "photos.title": "Projectfoto's",
     "photos.upload": "Foto's uploaden",
@@ -1438,7 +1588,8 @@ const resource = {
     "photos.grid": "Raster",
     "photos.timeline": "Tijdlijn",
     "photos.empty": "Nog geen foto's",
-    "photos.empty_desc": "Upload foto's van de bouwplaats om de voortgang te documenteren",
+    "photos.empty_desc":
+      "Upload foto's van de bouwplaats om de voortgang te documenteren",
     "photos.delete_confirm": "Deze foto verwijderen?",
     "photos.edit": "Foto bewerken",
     "onboarding.ai_feature_1": "Ramingen genereren vanuit tekstbeschrijvingen",
@@ -1452,8 +1603,10 @@ const resource = {
     "onboarding.ai_title": "AI-provider (optioneel)",
     "onboarding.api_key": "API-sleutel",
     "onboarding.api_key_placeholder": "Plak hier uw API-sleutel...",
-    "onboarding.cost_db_hint": "U kunt later meer databases toevoegen via Kostendatabase → Importeren.",
-    "onboarding.cost_db_subtitle": "Laad een prijsdatabase voor nauwkeurige ramingen. Kies uw regio:",
+    "onboarding.cost_db_hint":
+      "U kunt later meer databases toevoegen via Kostendatabase → Importeren.",
+    "onboarding.cost_db_subtitle":
+      "Laad een prijsdatabase voor nauwkeurige ramingen. Kies uw regio:",
     "onboarding.cost_db_title": "Kostendatabase",
     "onboarding.create_error": "Aanmaken van project mislukt",
     "onboarding.create_project": "Aanmaken & Beginnen met ramen",
@@ -1463,7 +1616,8 @@ const resource = {
     "onboarding.get_started": "Aan de slag",
     "onboarding.items_loaded": "items geladen",
     "onboarding.loading_database": "Database importeren...",
-    "onboarding.loading_database_hint": "Laden van ~55.000 items. Dit duurt 1-3 minuten.",
+    "onboarding.loading_database_hint":
+      "Laden van ~55.000 items. Dit duurt 1-3 minuten.",
     "onboarding.project_created": "Project aangemaakt!",
     "onboarding.project_created_msg": "Uw werkruimte is klaar. Laten we",
     "onboarding.project_error": "Aanmaken van project mislukt",
@@ -1478,8 +1632,10 @@ const resource = {
     "onboarding.standard": "Norm",
     "onboarding.test_connection": "Verbinding testen",
     "onboarding.testing": "Bezig met testen...",
-    "onboarding.welcome_hint": "Gratis en open source. Geen creditcard vereist.",
-    "onboarding.welcome_subtitle": "Het professionele platform voor bouwkostencalculatie.\nStel uw werkruimte in met een paar eenvoudige stappen.",
+    "onboarding.welcome_hint":
+      "Gratis en open source. Geen creditcard vereist.",
+    "onboarding.welcome_subtitle":
+      "Het professionele platform voor bouwkostencalculatie.\nStel uw werkruimte in met een paar eenvoudige stappen.",
     "onboarding.welcome_title": "Welkom bij OpenConstructionERP",
     "onboarding.tour_step": "Rondleidingsstap",
     "onboarding.step_label": "Stap",
@@ -1488,15 +1644,20 @@ const resource = {
     "onboarding.next": "Volgende",
     "onboarding.finish": "Voltooien",
     "onboarding.step1.title": "Navigatiebalk",
-    "onboarding.step1.description": "De zijbalk geeft u snel toegang tot alle modules: projecten, ramingen, kostendatabases, planningen en meer.",
+    "onboarding.step1.description":
+      "De zijbalk geeft u snel toegang tot alle modules: projecten, ramingen, kostendatabases, planningen en meer.",
     "onboarding.step2.title": "Projecten",
-    "onboarding.step2.description": "Begin hier met het aanmaken van uw eerste project. Elk project bevat ramingen, planningen en documenten op één plek.",
+    "onboarding.step2.description":
+      "Begin hier met het aanmaken van uw eerste project. Elk project bevat ramingen, planningen en documenten op één plek.",
     "onboarding.step3.title": "Raming",
-    "onboarding.step3.description": "Maak gedetailleerde ramingen met de ramingeditor — hiërarchische posten, samenstellingen en realtime kostenberekening.",
+    "onboarding.step3.description":
+      "Maak gedetailleerde ramingen met de ramingeditor — hiërarchische posten, samenstellingen en realtime kostenberekening.",
     "onboarding.step4.title": "Kostendatabases",
-    "onboarding.step4.description": "Blader door en beheer kostentariefdatabases inclusief de ingebouwde CWICR met 55.000+ posten in 9 talen.",
+    "onboarding.step4.description":
+      "Blader door en beheer kostentariefdatabases inclusief de ingebouwde CWICR met 55.000+ posten in 9 talen.",
     "onboarding.step5.title": "Eenvoudig / Geavanceerd",
-    "onboarding.step5.description": "Schakel tussen Eenvoudige modus (essentiële tools) en Geavanceerde modus (alle functies inclusief aanbesteding en planning).",
+    "onboarding.step5.description":
+      "Schakel tussen Eenvoudige modus (essentiële tools) en Geavanceerde modus (alle functies inclusief aanbesteding en planning).",
     "projects.4d_schedule": "4D Planning",
     "projects.5d_budget": "5D Budget",
     "projects.active": "actief",
@@ -1514,7 +1675,8 @@ const resource = {
     "projects.delete_failed": "Verwijderen van project mislukt",
     "projects.deleted": "Project gearchiveerd",
     "projects.description": "Omschrijving",
-    "projects.description_placeholder": "Projectomschrijving, scope, opmerkingen...",
+    "projects.description_placeholder":
+      "Projectomschrijving, scope, opmerkingen...",
     "projects.duplicate_failed": "Dupliceren mislukt",
     "projects.duplicated": "Project gedupliceerd",
     "projects.enter_custom_currency": "bijv. XAF",
@@ -1528,21 +1690,28 @@ const resource = {
     "projects.name_placeholder": "bijv. Kantoortoren Centrum",
     "projects.new_boq": "Nieuwe raming",
     "projects.new_project": "Nieuw project",
-    "projects.create_hint": "Regio bepaalt de beschikbare kostendatabases en BTW-tarieven. Classificatienorm definieert de kostenstructuur: DIN 276 voor DACH-landen, NRM voor VK, MasterFormat voor VS/Canada, UniFormat voor Oceanië. Valuta stelt alle prijzen in de raming in.",
+    "projects.create_hint":
+      "Regio bepaalt de beschikbare kostendatabases en BTW-tarieven. Classificatienorm definieert de kostenstructuur: DIN 276 voor DACH-landen, NRM voor VK, MasterFormat voor VS/Canada, UniFormat voor Oceanië. Valuta stelt alle prijzen in de raming in.",
     "projects.no_boqs": "Nog geen ramingen",
-    "projects.no_boqs_desc": "Maak een raming om te beginnen met het calculeren van kosten voor dit project.",
+    "projects.no_boqs_desc":
+      "Maak een raming om te beginnen met het calculeren van kosten voor dit project.",
     "projects.no_budget": "Geen budgetgegevens",
-    "projects.no_budget_desc": "Stel een 5D kostenmodel in om geplande versus werkelijke kosten te volgen.",
+    "projects.no_budget_desc":
+      "Stel een 5D kostenmodel in om geplande versus werkelijke kosten te volgen.",
     "projects.no_projects": "Nog geen projecten",
-    "projects.no_projects_description": "Maak uw eerste bouwkostenramingsproject aan",
+    "projects.no_projects_description":
+      "Maak uw eerste bouwkostenramingsproject aan",
     "projects.no_results": "Geen overeenkomende projecten",
     "projects.no_results_hint": "Pas uw zoekopdracht of filters aan",
     "projects.no_schedules": "Nog geen planningen",
-    "projects.no_schedules_desc": "Maak een planning om projecttijdlijnen te beheren.",
+    "projects.no_schedules_desc":
+      "Maak een planning om projecttijdlijnen te beheren.",
     "projects.no_tenders": "Geen aanbestedingspakketten",
-    "projects.no_tenders_desc": "Maak aanbestedingspakketten om biedingen voor dit project te beheren.",
+    "projects.no_tenders_desc":
+      "Maak aanbestedingspakketten om biedingen voor dit project te beheren.",
     "projects.not_found": "Project niet gevonden",
-    "projects.not_found_desc": "Het project dat u zoekt bestaat niet of is verwijderd.",
+    "projects.not_found_desc":
+      "Het project dat u zoekt bestaat niet of is verwijderd.",
     "projects.of": "van",
     "projects.open_tendering": "Aanbesteding openen",
     "projects.overview": "Overzicht",
@@ -1555,7 +1724,8 @@ const resource = {
     "projects.projects_label": "projecten",
     "projects.region": "Regio",
     "projects.regional_factor": "Regionale factor",
-    "projects.regional_factor_hint": "Vermenigvuldig alle tarieven met deze factor (bijv. Amsterdam = 1,08, Rotterdam = 1,03)",
+    "projects.regional_factor_hint":
+      "Vermenigvuldig alle tarieven met deze factor (bijv. Amsterdam = 1,08, Rotterdam = 1,03)",
     "projects.remaining": "Resterend",
     "projects.schedule_subtitle": "Projectplanningen en tijdlijn",
     "projects.search_placeholder": "Projecten zoeken...",
@@ -1582,51 +1752,66 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Binnenkort beschikbaar",
     "quantities.how_it_works": "Hoe het werkt",
-    "quantities.manual_desc": "Wilt u hoeveelheden direct invoeren? Ga naar de ramingeditor.",
+    "quantities.manual_desc":
+      "Wilt u hoeveelheden direct invoeren? Ga naar de ramingeditor.",
     "quantities.manual_title": "Snelle handmatige invoer",
-    "quantities.method_ai_desc": "Beschrijf uw gebouw en AI genereert een raming met geschatte volumes en kosten.",
+    "quantities.method_ai_desc":
+      "Beschrijf uw gebouw en AI genereert een raming met geschatte volumes en kosten.",
     "quantities.method_ai_title": "AI Tekstinvoer",
-    "quantities.method_cad_desc": "Importeer DWG, RVT, IFC of DGN bestanden en extraheer hoeveelheden direct uit de 3D-geometrie.",
+    "quantities.method_cad_desc":
+      "Importeer DWG, RVT, IFC of DGN bestanden en extraheer hoeveelheden direct uit de 3D-geometrie.",
     "quantities.method_cad_title": "CAD / BIM Modellen",
-    "quantities.method_pdf_desc": "Upload bouwtekeningen (PDF) en extraheer hoeveelheden automatisch met AI-ondersteunde opmeting.",
+    "quantities.method_pdf_desc":
+      "Upload bouwtekeningen (PDF) en extraheer hoeveelheden automatisch met AI-ondersteunde opmeting.",
     "quantities.method_pdf_title": "PDF Tekeningen",
     "quantities.open": "Openen",
     "quantities.open_boq": "Ramingeditor openen",
     "quantities.step1_desc": "Kies uw invoermethode: tekst, PDF of CAD-model.",
     "quantities.step1_title": "Uploaden of beschrijven",
-    "quantities.step2_desc": "Onze AI analyseert uw invoer en extraheert gestructureerde hoeveelheden.",
+    "quantities.step2_desc":
+      "Onze AI analyseert uw invoer en extraheert gestructureerde hoeveelheden.",
     "quantities.step2_title": "AI extraheert hoeveelheden",
-    "quantities.step3_desc": "Controleer de resultaten en voeg ze toe aan uw raming.",
+    "quantities.step3_desc":
+      "Controleer de resultaten en voeg ze toe aan uw raming.",
     "quantities.step3_title": "Controleren & toevoegen aan raming",
-    "quantities.subtitle": "Verzamel projecthoeveelheden — via AI-tekstinvoer, PDF-tekeningen of CAD/BIM-modellen",
+    "quantities.subtitle":
+      "Verzamel projecthoeveelheden — via AI-tekstinvoer, PDF-tekeningen of CAD/BIM-modellen",
     "quantities.converter_title": "Hoe CAD/BIM-conversie werkt",
-    "quantities.converter_desc": "Upload uw CAD/BIM-bestanden (.rvt, .ifc, .dwg, .dgn) en de DDC-converter extraheert alle elementen in een gestructureerde tabel — wanden, vloeren, kolommen, deuren, ramen — met berekende volumes, oppervlakten en hoeveelheden. AI koppelt vervolgens deze elementen aan kostenposten en genereert automatisch een volledige raming.",
+    "quantities.converter_desc":
+      "Upload uw CAD/BIM-bestanden (.rvt, .ifc, .dwg, .dgn) en de DDC-converter extraheert alle elementen in een gestructureerde tabel — wanden, vloeren, kolommen, deuren, ramen — met berekende volumes, oppervlakten en hoeveelheden. AI koppelt vervolgens deze elementen aan kostenposten en genereert automatisch een volledige raming.",
     "quantities.download_converters": "DDC Converters downloaden",
     "quantities.converter_path": "Installeren in: ~/.openestimator/converters/",
     "quantities.title": "Hoeveelheden berekening",
     "reports.5d_report": "5D Kostenrapport",
-    "reports.5d_report_desc": "Budget versus werkelijke analyse met S-curve en kostenprognose.",
+    "reports.5d_report_desc":
+      "Budget versus werkelijke analyse met S-curve en kostenprognose.",
     "reports.boq_report": "Ramingsrapport",
-    "reports.boq_report_desc": "Volledige raming met secties, posten, opslagen en totalen. Beschikbaar als PDF of Excel.",
+    "reports.boq_report_desc":
+      "Volledige raming met secties, posten, opslagen en totalen. Beschikbaar als PDF of Excel.",
     "reports.coming_soon": "Binnenkort beschikbaar",
     "reports.cost_report": "Kostenrapport",
-    "reports.cost_report_desc": "Kostenverdeling per categorie met samenvattende grafieken en gedetailleerde kostenanalyse.",
+    "reports.cost_report_desc":
+      "Kostenverdeling per categorie met samenvattende grafieken en gedetailleerde kostenanalyse.",
     "reports.download_error": "Genereren van rapport mislukt",
     "reports.download_format": "{{format}} downloaden",
     "reports.download_success": "Rapport succesvol gedownload",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc": "GAEB X83 aanbestedingsexport — het standaard uitwisselingsformaat voor de DACH-bouwmarkt.",
+    "reports.gaeb_xml_desc":
+      "GAEB X83 aanbestedingsexport — het standaard uitwisselingsformaat voor de DACH-bouwmarkt.",
     "reports.no_boqs": "Geen ramingen in dit project",
     "reports.no_projects": "Geen projecten beschikbaar",
     "reports.schedule_report": "Planningsrapport",
-    "reports.schedule_report_desc": "Gantt-diagram met projecttijdlijn, mijlpalen en kritiek pad.",
+    "reports.schedule_report_desc":
+      "Gantt-diagram met projecttijdlijn, mijlpalen en kritiek pad.",
     "reports.select_boq_first": "Selecteer eerst een project en raming",
     "reports.select_project_first": "Selecteer eerst een project",
     "reports.subtitle": "Genereer professionele rapporten voor uw projecten",
-    "reports.guide_desc": "Ramingsrapport = gedetailleerde raming met totalen. Kostenrapport = kostenverdeling per categorie. GAEB XML = Duits aanbestedingsformaat (.x83) voor uitwisseling met onderaannemers. Validatie = nalevingscontroleresultaten. Planning = samenvatting Gantt-activiteiten. 5D = budget versus werkelijke kostencurves.",
+    "reports.guide_desc":
+      "Ramingsrapport = gedetailleerde raming met totalen. Kostenrapport = kostenverdeling per categorie. GAEB XML = Duits aanbestedingsformaat (.x83) voor uitwisseling met onderaannemers. Validatie = nalevingscontroleresultaten. Planning = samenvatting Gantt-activiteiten. 5D = budget versus werkelijke kostencurves.",
     "reports.title": "Rapporten",
     "reports.validation_report": "Validatierapport",
-    "reports.validation_report_desc": "Nalevingscontrolerapport volgens DIN 276, NRM of MasterFormat normen.",
+    "reports.validation_report_desc":
+      "Nalevingscontrolerapport volgens DIN 276, NRM of MasterFormat normen.",
     "schedule.activity": "Activiteit",
     "schedule.activity_name": "Activiteitnaam",
     "schedule.activity_name_placeholder": "bijv. Funderingswerkzaamheden",
@@ -1637,7 +1822,8 @@ const resource = {
     "schedule.buffer": "Buffer",
     "schedule.calculate_cpm": "Kritiek pad",
     "schedule.completed": "Voltooid",
-    "schedule.cpm_result": "Kritiek pad: {{duration}} dagen, {{count}} kritieke activiteiten",
+    "schedule.cpm_result":
+      "Kritiek pad: {{duration}} dagen, {{count}} kritieke activiteiten",
     "schedule.create_activity": "Activiteit aanmaken",
     "schedule.create_schedule": "Planning aanmaken",
     "schedule.critical_path": "Kritiek pad",
@@ -1652,32 +1838,39 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% betrouwbaarheid",
     "schedule.generate": "Genereren",
     "schedule.generate_from_boq": "Genereren vanuit raming",
-    "schedule.generate_from_boq_description": "Selecteer een raming om automatisch planningsactiviteiten te genereren. Per ramingssectie wordt één activiteit aangemaakt met kosten-proportionele doorlooptijden.",
+    "schedule.generate_from_boq_description":
+      "Selecteer een raming om automatisch planningsactiviteiten te genereren. Per ramingssectie wordt één activiteit aangemaakt met kosten-proportionele doorlooptijden.",
     "schedule.in_progress": "In uitvoering",
     "schedule.mean_label": "Gemiddelde (kritiek pad)",
     "schedule.ninetyfive_pct_confidence": "95% betrouwbaarheid",
     "schedule.no_activities": "Nog geen activiteiten",
-    "schedule.no_activities_hint": "Voeg activiteiten toe om uw projectplanning op te bouwen",
+    "schedule.no_activities_hint":
+      "Voeg activiteiten toe om uw projectplanning op te bouwen",
     "schedule.no_boqs_available": "Geen ramingen beschikbaar voor dit project.",
     "schedule.no_dates": "Geen datums ingesteld",
     "schedule.no_projects": "Geen projecten beschikbaar",
-    "schedule.no_projects_hint": "Maak eerst een project aan en voeg vervolgens planningen toe",
+    "schedule.no_projects_hint":
+      "Maak eerst een project aan en voeg vervolgens planningen toe",
     "schedule.no_schedules": "Nog geen planningen",
-    "schedule.no_schedules_hint": "Maak een planning om te beginnen met het plannen van uw projecttijdlijn",
+    "schedule.no_schedules_hint":
+      "Maak een planning om te beginnen met het plannen van uw projecttijdlijn",
     "schedule.planned_duration": "Geplande doorlooptijd",
     "schedule.project_schedules": "Planningen voor dit project",
     "schedule.risk_analysis": "Risicoanalyse (PERT)",
     "schedule.risk_analysis_btn": "Risicoanalyse",
     "schedule.schedule_name": "Planningsnaam",
     "schedule.schedule_name_placeholder": "bijv. Hoofdbouwplanning",
-    "schedule.select_project": "Selecteer een project om de bouwplanning te bekijken en beheren",
+    "schedule.select_project":
+      "Selecteer een project om de bouwplanning te bekijken en beheren",
     "schedule.start": "Start",
     "schedule.start_date": "Startdatum",
     "schedule.status_active": "actief",
     "schedule.status_draft": "concept",
     "schedule.std_dev_label": "Standaardafwijking",
-    "schedule.subtitle": "Selecteer een project om de bouwplanning te bekijken en beheren",
-    "schedule.what_is_4d": "4D planning koppelt uw ramingsposten aan een projecttijdlijn. Maak activiteiten, stel afhankelijkheden in en visualiseer voortgang op een Gantt-diagram. De kritiek-padanalyse markeert activiteiten die direct invloed hebben op de projecteinddatum. Activiteittypen: Taak = werkitem, Mijlpaal = controlepunt met nul doorlooptijd, Samenvatting = groeperingskop.",
+    "schedule.subtitle":
+      "Selecteer een project om de bouwplanning te bekijken en beheren",
+    "schedule.what_is_4d":
+      "4D planning koppelt uw ramingsposten aan een projecttijdlijn. Maak activiteiten, stel afhankelijkheden in en visualiseer voortgang op een Gantt-diagram. De kritiek-padanalyse markeert activiteiten die direct invloed hebben op de projecteinddatum. Activiteittypen: Taak = werkitem, Mijlpaal = controlepunt met nul doorlooptijd, Samenvatting = groeperingskop.",
     "schedule.title": "4D Planning",
     "schedule.total_activities": "Totaal",
     "schedule.type_milestone": "Mijlpaal",
@@ -1693,14 +1886,17 @@ const resource = {
     "settings.active": "Actief",
     "settings.ai_api_key": "API-sleutel",
     "settings.ai_connected": "Verbonden",
-    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — beste voor bouwkostencalculatie",
+    "settings.ai_desc_anthropic":
+      "Claude 3.5 Sonnet / Opus — beste voor bouwkostencalculatie",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — multimodale mogelijkheden",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — breed ondersteund",
     "settings.ai_error": "Verbindingsfout",
     "settings.ai_get_key": "API-sleutel ophalen",
-    "settings.ai_key_hint": "Uw API-sleutel wordt versleuteld en veilig opgeslagen. Deze wordt nooit gedeeld.",
+    "settings.ai_key_hint":
+      "Uw API-sleutel wordt versleuteld en veilig opgeslagen. Deze wordt nooit gedeeld.",
     "settings.ai_key_placeholder": "Voer uw API-sleutel in...",
-    "settings.ai_key_placeholder_existing": "Voer een nieuwe sleutel in om de bestaande te vervangen...",
+    "settings.ai_key_placeholder_existing":
+      "Voer een nieuwe sleutel in om de bestaande te vervangen...",
     "settings.ai_key_set": "Sleutel geconfigureerd",
     "settings.ai_last_tested": "(laatst getest: {{time}})",
     "settings.ai_not_configured": "Niet geconfigureerd",
@@ -1731,7 +1927,8 @@ const resource = {
     "settings.sign_out": "Uitloggen",
     "settings.status": "Status",
     "settings.subtitle": "Beheer uw account en voorkeuren",
-    "settings.ai_guidance": "AI-functies (raming, opmetingsanalyse, semantisch zoeken) vereisen een API-sleutel. Anthropic Claude wordt aanbevolen voor de beste nauwkeurigheid. Sleutels worden versleuteld opgeslagen en verlaten nooit uw server.",
+    "settings.ai_guidance":
+      "AI-functies (raming, opmetingsanalyse, semantisch zoeken) vereisen een API-sleutel. Anthropic Claude wordt aanbevolen voor de beste nauwkeurigheid. Sleutels worden versleuteld opgeslagen en verlaten nooit uw server.",
     "settings.theme_dark": "Donker",
     "settings.theme_light": "Licht",
     "settings.theme_system": "Systeem",
@@ -1740,7 +1937,8 @@ const resource = {
     "shortcuts.cancel_editing": "Bewerking annuleren",
     "shortcuts.command_palette": "Commandopalet",
     "shortcuts.confirm_next_row": "Bevestigen / Volgende rij",
-    "shortcuts.footer_hint": "Sneltoetsen zijn uitgeschakeld wanneer een invoerveld actief is.",
+    "shortcuts.footer_hint":
+      "Sneltoetsen zijn uitgeschakeld wanneer een invoerveld actief is.",
     "shortcuts.group.actions": "Acties",
     "shortcuts.group.boq_editor": "Ramingeditor",
     "shortcuts.group.general": "Algemeen",
@@ -1766,38 +1964,46 @@ const resource = {
     "shortcuts.separator_then": "dan",
     "shortcuts.show_help": "Dit dialoogvenster tonen",
     "shortcuts.title": "Sneltoetsen",
-    "errors.bad_request": "Verzoek kon niet worden verwerkt. Controleer uw invoer.",
+    "errors.bad_request":
+      "Verzoek kon niet worden verwerkt. Controleer uw invoer.",
     "errors.unauthorized": "Uw sessie is verlopen. Meld u opnieuw aan.",
     "errors.forbidden": "U heeft geen toestemming voor deze actie.",
     "errors.not_found": "Het gevraagde item is niet gevonden.",
-    "errors.conflict": "Conflict met bestaande gegevens — vernieuw en probeer opnieuw.",
-    "errors.payload_too_large": "Het bestand is te groot. Probeer een kleiner bestand.",
+    "errors.conflict":
+      "Conflict met bestaande gegevens — vernieuw en probeer opnieuw.",
+    "errors.payload_too_large":
+      "Het bestand is te groot. Probeer een kleiner bestand.",
     "errors.validation": "Sommige velden zijn ongeldig. Controleer uw invoer.",
     "errors.rate_limit": "Te veel verzoeken. Wacht even.",
     "errors.server": "Serverfout. Probeer het zo opnieuw.",
-    "errors.unavailable": "De server is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
+    "errors.unavailable":
+      "De server is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
     "errors.client": "Verzoek kon niet worden voltooid.",
     "errors.unknown": "Er ging iets mis. Probeer het opnieuw.",
     "errors.network": "Kan de server niet bereiken. Controleer uw verbinding.",
-    "errors.timeout": "Het verzoek duurde te lang en is geannuleerd. Probeer het opnieuw.",
+    "errors.timeout":
+      "Het verzoek duurde te lang en is geannuleerd. Probeer het opnieuw.",
     "shortcuts.undo": "Ongedaan maken",
     "sustainability.area": "Oppervlakte (m2)",
     "sustainability.benchmark": "Benchmark",
     "sustainability.boq": "Raming",
     "sustainability.breakdown_title": "Uitsplitsing per materiaal",
     "sustainability.calculate": "Berekenen",
-    "sustainability.empty_desc": "Selecteer hierboven een project en raming, klik vervolgens op Berekenen om CO2-uitstoot te analyseren op basis van materiaaltypen.",
+    "sustainability.empty_desc":
+      "Selecteer hierboven een project en raming, klik vervolgens op Berekenen om CO2-uitstoot te analyseren op basis van materiaaltypen.",
     "sustainability.empty_title": "CO2-voetafdrukanalyse",
     "sustainability.export_pdf": "CO2-rapport PDF exporteren",
     "sustainability.material": "Materiaal",
-    "sustainability.no_area": "Voer het projectoppervlak in om de benchmark per m2 te zien",
+    "sustainability.no_area":
+      "Voer het projectoppervlak in om de benchmark per m2 te zien",
     "sustainability.positions_matched": "posten gekoppeld",
     "sustainability.project": "Project",
     "sustainability.project_area": "project",
     "sustainability.rating": "Beoordeling",
     "sustainability.select_boq": "-- Selecteer raming --",
     "sustainability.select_project": "-- Selecteer project --",
-    "sustainability.subtitle": "Selecteer project en raming om CO2-voetafdruk te analyseren",
+    "sustainability.subtitle":
+      "Selecteer project en raming om CO2-voetafdruk te analyseren",
     "sustainability.title": "Duurzaamheid / CO2",
     "sustainability.total_co2": "Totaal CO2",
     "takeoff.add_selected_to_boq": "{{count}} toevoegen aan raming",
@@ -1819,7 +2025,8 @@ const resource = {
     "takeoff.just_now": "Zojuist",
     "takeoff.minutes_ago": "{{count}} min geleden",
     "takeoff.no_documents": "Geen documenten geüpload",
-    "takeoff.no_documents_description": "Upload PDF-bouwtekeningen om te beginnen met het extraheren van hoeveelheden met AI.",
+    "takeoff.no_documents_description":
+      "Upload PDF-bouwtekeningen om te beginnen met het extraheren van hoeveelheden met AI.",
     "takeoff.pages": "pagina's",
     "takeoff.pdf_limit": ".pdf bestanden tot {{size}}MB",
     "takeoff.quick_measurements": "Snelle metingen",
@@ -1827,14 +2034,16 @@ const resource = {
     "takeoff.select_all": "Alles selecteren",
     "takeoff.select_boq": "Raming",
     "takeoff.select_boq_placeholder": "Kies een raming...",
-    "takeoff.select_boq_to_add": "Selecteer hierboven een project en raming om metingen toe te voegen.",
+    "takeoff.select_boq_to_add":
+      "Selecteer hierboven een project en raming om metingen toe te voegen.",
     "takeoff.select_items_hint": "Selecteer items om aan raming toe te voegen",
     "takeoff.select_project": "Project",
     "takeoff.select_project_first": "Selecteer eerst een project",
     "takeoff.select_project_placeholder": "Kies een project...",
     "takeoff.selected": "geselecteerd",
     "takeoff.subtitle": "Upload bouwtekeningen om hoeveelheden te extraheren",
-    "takeoff.workflow_desc": "Upload een PDF-tekening → AI analyseert pagina's en extraheert elementen (wanden, vloeren, deuren, etc.) met hoeveelheden → Controleer resultaten en pas aan → Voeg geselecteerde items toe aan uw raming. Betrouwbaarheidsscores: groen (>80%) = hoge betrouwbaarheid, geel (50-80%) = controle aanbevolen, rood (<50%) = handmatige verificatie nodig.",
+    "takeoff.workflow_desc":
+      "Upload een PDF-tekening → AI analyseert pagina's en extraheert elementen (wanden, vloeren, deuren, etc.) met hoeveelheden → Controleer resultaten en pas aan → Voeg geselecteerde items toe aan uw raming. Betrouwbaarheidsscores: groen (>80%) = hoge betrouwbaarheid, geel (50-80%) = controle aanbevolen, rood (<50%) = handmatige verificatie nodig.",
     "takeoff.summary": "Samenvatting",
     "takeoff.title": "PDF Hoeveelheden",
     "takeoff.total_quantity": "totaal",
@@ -1849,7 +2058,8 @@ const resource = {
     "tendering.award": "Gunnen",
     "tendering.award_bid": "Deze bieding gunnen",
     "tendering.bid_comparison": "Biedingsvergelijking",
-    "tendering.bid_comparison_chart_label": "Staafdiagram met vergelijking van biedingstotalen",
+    "tendering.bid_comparison_chart_label":
+      "Staafdiagram met vergelijking van biedingstotalen",
     "tendering.bid_totals_chart": "Overzicht biedingstotalen",
     "tendering.bids_count": "biedingen",
     "tendering.bids_received": "Biedingen ontvangen",
@@ -1861,7 +2071,8 @@ const resource = {
     "tendering.create_package": "Pakket aanmaken",
     "tendering.deadline": "Deadline",
     "tendering.description": "Omschrijving",
-    "tendering.description_placeholder": "Korte omschrijving van de pakketscope...",
+    "tendering.description_placeholder":
+      "Korte omschrijving van de pakketscope...",
     "tendering.empty_title": "Selecteer een project",
     "tendering.export_comparison": "Exporteren",
     "tendering.highest": "Hoogste",
@@ -1885,7 +2096,8 @@ const resource = {
     "tendering.source_boq": "Bronraming",
     "tendering.submit_bid": "Bieding indienen",
     "tendering.title": "Aanbesteding",
-    "tendering.workflow_desc": "Aanbestedingsworkflow: Concept (pakket voorbereiden) → Uitgegeven (naar inschrijvers verzenden) → Verzamelen (biedingen ontvangen) → Beoordelen (offertes naast elkaar vergelijken) → Gegund (winnaar selecteren). Maak een pakket vanuit een raming, voeg biedingen van onderaannemers toe en gebruik vervolgens de vergelijkingstabel om de beste offerte te identificeren. Voeg 2+ biedingen toe om een analyse naast elkaar te zien.",
+    "tendering.workflow_desc":
+      "Aanbestedingsworkflow: Concept (pakket voorbereiden) → Uitgegeven (naar inschrijvers verzenden) → Verzamelen (biedingen ontvangen) → Beoordelen (offertes naast elkaar vergelijken) → Gegund (winnaar selecteren). Maak een pakket vanuit een raming, voeg biedingen van onderaannemers toe en gebruik vervolgens de vergelijkingstabel om de beste offerte te identificeren. Voeg 2+ biedingen toe om een analyse naast elkaar te zien.",
     "tendering.total": "TOTAAL",
     "tendering.total_amount": "Totaalbedrag",
     "tendering.vs_budget": "versus budget",
@@ -1945,7 +2157,8 @@ const resource = {
     "cde.label_revisions": "Revisiehistorie",
     "cde.new_container": "Nieuwe container",
     "cde.no_containers": "Nog geen containers",
-    "cde.no_containers_hint": "Maak uw eerste documentcontainer aan om te beginnen.",
+    "cde.no_containers_hint":
+      "Maak uw eerste documentcontainer aan om te beginnen.",
     "cde.no_results": "Geen overeenkomende containers",
     "cde.no_results_hint": "Pas uw zoekopdracht of filters aan.",
     "cde.no_revisions": "Geen revisies geregistreerd",
@@ -2036,7 +2249,8 @@ const resource = {
     "correspondence.label_to": "To",
     "correspondence.new_entry": "Nieuwe invoer",
     "correspondence.no_entries": "Nog geen correspondentie",
-    "correspondence.no_entries_hint": "Registreer uw eerste correspondentie om te beginnen.",
+    "correspondence.no_entries_hint":
+      "Registreer uw eerste correspondentie om te beginnen.",
     "correspondence.no_results": "Geen overeenkomende invoeren",
     "correspondence.no_results_hint": "Pas uw zoekopdracht of filters aan.",
     "correspondence.notes_placeholder": "Aanvullende notities...",
@@ -2081,14 +2295,19 @@ const resource = {
     "finance.mark_paid": "Als betaald markeren",
     "finance.method": "Method",
     "finance.no_budgets": "Geen budgetten gedefinieerd",
-    "finance.no_budgets_desc": "Budgetitems verschijnen hier zodra ze zijn gedefinieerd.",
+    "finance.no_budgets_desc":
+      "Budgetitems verschijnen hier zodra ze zijn gedefinieerd.",
     "finance.no_evm": "Geen EVM-gegevens",
-    "finance.no_evm_desc": "Earned value-gegevens verschijnen zodra momentopnamen zijn genomen.",
+    "finance.no_evm_desc":
+      "Earned value-gegevens verschijnen zodra momentopnamen zijn genomen.",
     "finance.no_invoices": "Geen facturen",
-    "finance.no_invoices_desc": "Facturen verschijnen hier zodra ze zijn aangemaakt.",
+    "finance.no_invoices_desc":
+      "Facturen verschijnen hier zodra ze zijn aangemaakt.",
     "finance.no_payments": "Geen betalingen",
-    "finance.no_payments_desc": "Betalingen verschijnen hier zodra ze zijn geregistreerd.",
-    "finance.no_project": "Selecteer een project om financiële gegevens te bekijken.",
+    "finance.no_payments_desc":
+      "Betalingen verschijnen hier zodra ze zijn geregistreerd.",
+    "finance.no_project":
+      "Selecteer een project om financiële gegevens te bekijken.",
     "finance.on_track": "Op schema",
     "finance.original": "Original",
     "finance.payable": "Payable",
@@ -2137,7 +2356,8 @@ const resource = {
     "inspections.location_placeholder": "Inspectielocatie",
     "inspections.new_inspection": "Nieuwe inspectie",
     "inspections.no_inspections": "Nog geen inspecties",
-    "inspections.no_inspections_hint": "Plan uw eerste inspectie om te beginnen.",
+    "inspections.no_inspections_hint":
+      "Plan uw eerste inspectie om te beginnen.",
     "inspections.no_results": "Geen overeenkomende inspecties",
     "inspections.no_results_hint": "Pas uw zoekopdracht of filters aan.",
     "inspections.page_title": "Inspections",
@@ -2239,15 +2459,19 @@ const resource = {
     "notifications.title": "Meldingen",
     "notifications.unread": "Unread",
     "notifications.boq.created.title": "BOQ aangemaakt",
-    "notifications.boq.created.body": "Uw hoeveelhedenstaat '{{boq_name}}' is opgeslagen.",
+    "notifications.boq.created.body":
+      "Uw hoeveelhedenstaat '{{boq_name}}' is opgeslagen.",
     "notifications.meeting.action_assigned.title": "Actiepunt aan u toegewezen",
-    "notifications.meeting.action_assigned.body": "Uit vergadering {{meeting_number}}: {{description}}",
+    "notifications.meeting.action_assigned.body":
+      "Uit vergadering {{meeting_number}}: {{description}}",
     "notifications.cde.state_transitioned.title": "Documentstatus gewijzigd",
-    "notifications.cde.state_transitioned.body": "Container ging naar '{{new_state}}'.",
+    "notifications.cde.state_transitioned.body":
+      "Container ging naar '{{new_state}}'.",
     "notifications.rfi.assigned.title": "RFI aan u toegewezen",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI beantwoord",
-    "notifications.rfi.responded.body": "Uw verzoek {{code}} ({{title}}) heeft een reactie.",
+    "notifications.rfi.responded.body":
+      "Uw verzoek {{code}} ({{title}}) heeft een reactie.",
     "notifications.risk.assigned.title": "Risico aan u toegewezen",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal wacht op beoordeling",
@@ -2255,25 +2479,33 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal goedgekeurd",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal afgewezen",
-    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Reden: {{reason}}",
-    "notifications.submittal.revise_resubmit.title": "Submittal moet worden herzien",
-    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Reden: {{reason}}",
+    "notifications.submittal.rejected.body":
+      "{{code}} ({{title}}). Reden: {{reason}}",
+    "notifications.submittal.revise_resubmit.title":
+      "Submittal moet worden herzien",
+    "notifications.submittal.revise_resubmit.body":
+      "{{code}} ({{title}}). Reden: {{reason}}",
     "notifications.transmittal.issued.title": "Transmittal aan u uitgegeven",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal bevestigd",
-    "notifications.transmittal.acknowledged.body": "Ontvanger bevestigde {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.body":
+      "Ontvanger bevestigde {{code}} ({{title}}).",
     "notifications.transmittal.responded.title": "Transmittal beantwoord",
-    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body":
+      "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Leveringsdatum",
     "procurement.goods_receipts": "Goederenontvangsten",
     "procurement.gr_ref": "GR-referentie",
     "procurement.issue_date": "Uitgiftedatum",
     "procurement.no_gr": "Geen goederenontvangsten",
-    "procurement.no_gr_desc": "Goederenontvangsten verschijnen hier zodra ze zijn geregistreerd.",
+    "procurement.no_gr_desc":
+      "Goederenontvangsten verschijnen hier zodra ze zijn geregistreerd.",
     "procurement.no_po": "Geen inkooporders",
-    "procurement.no_po_desc": "Inkooporders verschijnen hier zodra ze zijn aangemaakt.",
-    "procurement.no_project": "Selecteer een project om inkoopgegevens te bekijken.",
+    "procurement.no_po_desc":
+      "Inkooporders verschijnen hier zodra ze zijn aangemaakt.",
+    "procurement.no_project":
+      "Selecteer een project om inkoopgegevens te bekijken.",
     "procurement.po_number": "PO #",
     "procurement.po_ref": "IO-referentie",
     "procurement.purchase_orders": "Inkooporders",
@@ -2337,10 +2569,13 @@ const resource = {
     "safety.incident_number": "Incident #",
     "safety.incidents": "Incidents",
     "safety.no_incidents": "Geen incidenten geregistreerd",
-    "safety.no_incidents_desc": "Incidenten verschijnen hier zodra ze zijn gemeld.",
+    "safety.no_incidents_desc":
+      "Incidenten verschijnen hier zodra ze zijn gemeld.",
     "safety.no_observations": "Geen observaties geregistreerd",
-    "safety.no_observations_desc": "Observaties verschijnen hier zodra ze zijn gemeld.",
-    "safety.no_project": "Selecteer een project om veiligheidsgegevens te bekijken.",
+    "safety.no_observations_desc":
+      "Observaties verschijnen hier zodra ze zijn gemeld.",
+    "safety.no_project":
+      "Selecteer een project om veiligheidsgegevens te bekijken.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observations",
     "safety.risk_critical": "Critical",
@@ -2362,13 +2597,17 @@ const resource = {
     "settings.edit_profile": "Profielnaam bewerken",
     "settings.full_name": "Volledige naam",
     "settings.imperial": "Imperiaal (ft, lb)",
-    "settings.interface_mode_subtitle": "Bepaal welke functies zichtbaar zijn in de navigatie",
+    "settings.interface_mode_subtitle":
+      "Bepaal welke functies zichtbaar zijn in de navigatie",
     "settings.interface_mode_title": "Interfacemodus",
     "settings.measurement_system": "Maatstelsel",
     "settings.metric": "Metrisch (m, kg)",
-    "settings.mode_advanced_detail": "Volledig professioneel gereedschapsset met alle modules en functies zichtbaar.",
-    "settings.mode_simple_detail": "Essentiële ramingstools. Overzichtelijke interface voor gefocust werk.",
-    "settings.modules_link_desc": "Afzonderlijke modules in- en uitschakelen en configureren in het gedeelte Modules.",
+    "settings.mode_advanced_detail":
+      "Volledig professioneel gereedschapsset met alle modules en functies zichtbaar.",
+    "settings.mode_simple_detail":
+      "Essentiële ramingstools. Overzichtelijke interface voor gefocust werk.",
+    "settings.modules_link_desc":
+      "Afzonderlijke modules in- en uitschakelen en configureren in het gedeelte Modules.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "Getalnotatie",
     "settings.paper_size": "Papierformaat",
@@ -2377,7 +2616,8 @@ const resource = {
     "settings.regional_subtitle": "Notaties, eenheden en lokalisatievoorkeuren",
     "settings.regional_title": "Regionale instellingen",
     "settings.restart_onboarding": "Installatiewizard openen",
-    "settings.setup_wizard_subtitle": "Voer de initiële installatie opnieuw uit om taal te wijzigen, databases, catalogi of demoprojecten te installeren",
+    "settings.setup_wizard_subtitle":
+      "Voer de initiële installatie opnieuw uit om taal te wijzigen, databases, catalogi of demoprojecten te installeren",
     "settings.setup_wizard_title": "Installatiewizard",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -2396,13 +2636,15 @@ const resource = {
     "settings.tm_import": "Import",
     "settings.tm_missing": "Missing",
     "settings.tm_missing_label": "(missing)",
-    "settings.tm_no_results": "Geen sleutels komen overeen met uw zoekopdracht.",
+    "settings.tm_no_results":
+      "Geen sleutels komen overeen met uw zoekopdracht.",
     "settings.tm_reset_tooltip": "Terug naar standaard",
     "settings.tm_search_placeholder": "Vertaalsleutels zoeken...",
     "settings.tm_show_more": "Meer weergeven ({{remaining}} resterend)",
     "settings.tm_total_keys": "Totaal sleutels",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle": "Vertalingen voor de huidige taal bekijken en aanpassen",
+    "settings.translation_manager_subtitle":
+      "Vertalingen voor de huidige taal bekijken en aanpassen",
     "settings.translation_manager_title": "Vertalingsbeheer",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -2433,7 +2675,8 @@ const resource = {
     "submittals.no_results": "Geen overeenkomende inzendingen",
     "submittals.no_results_hint": "Pas uw zoekopdracht of filters aan.",
     "submittals.no_submittals": "Nog geen inzendingen",
-    "submittals.no_submittals_hint": "Maak uw eerste inzending aan om te beginnen.",
+    "submittals.no_submittals_hint":
+      "Maak uw eerste inzending aan om te beginnen.",
     "submittals.page_title": "Submittals",
     "submittals.review_title": "Inzending beoordelen",
     "submittals.reviewed": "Inzending beoordeeld",
@@ -2485,7 +2728,8 @@ const resource = {
     "transmittals.col_recipients": "Recipients",
     "transmittals.col_status": "Status",
     "transmittals.col_subject": "Subject",
-    "transmittals.cover_note_placeholder": "Begeleidende notitie bij de transmittal...",
+    "transmittals.cover_note_placeholder":
+      "Begeleidende notitie bij de transmittal...",
     "transmittals.create_transmittal": "Transmittal aanmaken",
     "transmittals.created": "Transmittal aangemaakt",
     "transmittals.field_cover_note": "Begeleidende notitie",
@@ -2504,7 +2748,8 @@ const resource = {
     "transmittals.no_results": "Geen overeenkomende transmittals",
     "transmittals.no_results_hint": "Pas uw zoekopdracht of filters aan.",
     "transmittals.no_transmittals": "Nog geen transmittals",
-    "transmittals.no_transmittals_hint": "Maak uw eerste transmittal aan om te beginnen.",
+    "transmittals.no_transmittals_hint":
+      "Maak uw eerste transmittal aan om te beginnen.",
     "transmittals.page_title": "Transmittals",
     "transmittals.recipients_placeholder": "Namen van ontvangers invoeren...",
     "transmittals.search_placeholder": "Transmittals zoeken...",
@@ -2567,16 +2812,22 @@ const resource = {
     "costs.variant_per_unit": "Per eenheid",
     "dashboard.activity": "Recente activiteit",
     "modules.cat_regional": "Regionale normen",
-    "modules.cat_regional_desc": "Landspecifieke import-/exportformaten voor hoeveelheidsstaten en classificatienormen",
+    "modules.cat_regional_desc":
+      "Landspecifieke import-/exportformaten voor hoeveelheidsstaten en classificatienormen",
     "modules.community_title": "Bouw uw eigen module",
-    "modules.community_desc": "OpenConstructionERP heeft een modulaire plug-inarchitectuur. Iedereen kan aangepaste modules maken — kostendatabases, regionale normen, CAD-converters, analysedashboards, integraties met externe systemen of andere functionaliteit. Uw module verschijnt in dit gedeelte Modules en kan door elke gebruiker worden geïnstalleerd.",
+    "modules.community_desc":
+      "OpenConstructionERP heeft een modulaire plug-inarchitectuur. Iedereen kan aangepaste modules maken — kostendatabases, regionale normen, CAD-converters, analysedashboards, integraties met externe systemen of andere functionaliteit. Uw module verschijnt in dit gedeelte Modules en kan door elke gebruiker worden geïnstalleerd.",
     "modules.community_type_data": "Datamodules",
-    "modules.community_type_data_desc": "Regionale kostendatabases, resourcecatalogi, materiaalinventarissen, classificatienormen (DIN, NRM, SNIP, etc.)",
+    "modules.community_type_data_desc":
+      "Regionale kostendatabases, resourcecatalogi, materiaalinventarissen, classificatienormen (DIN, NRM, SNIP, etc.)",
     "modules.community_type_integration": "Integraties",
-    "modules.community_type_integration_desc": "Verbinding maken met SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera of elk extern systeem via API",
+    "modules.community_type_integration_desc":
+      "Verbinding maken met SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera of elk extern systeem via API",
     "modules.community_type_tools": "Tools & Analytics",
-    "modules.community_type_tools_desc": "Aangepaste rapporten, dashboards, calculators, formaatconverters, AI-modellen of gespecialiseerde bouwtools",
-    "modules.community_how": "Elke module is een Python-pakket met een manifest.py-bestand. Maak uw module, test deze lokaal en deel hem met de community. Zelfs als u alleen een idee heeft — stuur ons een tekstbeschrijving en wij helpen u het te bouwen.",
+    "modules.community_type_tools_desc":
+      "Aangepaste rapporten, dashboards, calculators, formaatconverters, AI-modellen of gespecialiseerde bouwtools",
+    "modules.community_how":
+      "Elke module is een Python-pakket met een manifest.py-bestand. Maak uw module, test deze lokaal en deel hem met de community. Zelfs als u alleen een idee heeft — stuur ons een tekstbeschrijving en wij helpen u het te bouwen.",
     "modules.community_submit_email": "Module indienen via e-mail",
     "modules.community_submit_github": "Voorstel doen op GitHub",
     "modules.community_telegram": "Bespreken in Telegram",
@@ -2602,13 +2853,16 @@ const resource = {
     "bim.loading_geometry": "3D-geometrie wordt geladen…",
     "bim.loading_finalising": "Scène afronden…",
     "bim.loading_streaming": "Geometrie streamen vanaf de server…",
-    "bim.loading_parsing": "3D-geometrie wordt verwerkt — bij grote modellen (>50 MB) kan dit 20-60 s duren; pagina niet vernieuwen",
-    "bim.loading_navigate_hint": "U kunt naar andere pagina's navigeren — het laden gaat op de achtergrond door",
+    "bim.loading_parsing":
+      "3D-geometrie wordt verwerkt — bij grote modellen (>50 MB) kan dit 20-60 s duren; pagina niet vernieuwen",
+    "bim.loading_navigate_hint":
+      "U kunt naar andere pagina's navigeren — het laden gaat op de achtergrond door",
     "bim.no_models": "Nog geen modellen geüpload",
     "bim.no_project": "Geen project geselecteerd",
     "bim.no_project_desc": "Selecteer een project om BIM-modellen te bekijken.",
     "bim.select_model": "Selecteer een model",
-    "bim.select_model_desc": "Kies een BIM-model uit de lijst om het in 3D te visualiseren.",
+    "bim.select_model_desc":
+      "Kies een BIM-model uit de lijst om het in 3D te visualiseren.",
     "bim.search_elements": "Elementen zoeken...",
     "bim.no_search_results": "Geen overeenkomende elementen",
     "bim.load_error": "Laden van modelelementen mislukt",
@@ -2676,20 +2930,27 @@ const resource = {
     "onboarding.step_modules": "Modules",
     "onboarding.step_mode": "Modus",
     "onboarding.company_type_title": "Wat voor soort bedrijf bent u?",
-    "onboarding.company_type_subtitle": "Wij configureren vooraf de beste set modules voor uw workflow.",
+    "onboarding.company_type_subtitle":
+      "Wij configureren vooraf de beste set modules voor uw workflow.",
     "onboarding.company_general_contractor": "Hoofdaannemer",
-    "onboarding.company_general_contractor_desc": "Wij bouwen projecten — raming, inkoop, bouwplaatsbeheer",
+    "onboarding.company_general_contractor_desc":
+      "Wij bouwen projecten — raming, inkoop, bouwplaatsbeheer",
     "onboarding.company_estimator": "Calculator / Kostendeskundige",
-    "onboarding.company_estimator_desc": "Wij richten ons op kostenraming en hoeveelheidberekening",
+    "onboarding.company_estimator_desc":
+      "Wij richten ons op kostenraming en hoeveelheidberekening",
     "onboarding.company_project_management": "Projectmanagementbureau",
-    "onboarding.company_project_management_desc": "Wij beheren grote projecten — planning, communicatie, documenten",
+    "onboarding.company_project_management_desc":
+      "Wij beheren grote projecten — planning, communicatie, documenten",
     "onboarding.company_architecture": "Architecten- / Ingenieursbureau",
-    "onboarding.company_architecture_desc": "Wij ontwerpen gebouwen — BIM, documenten, Gemeenschappelijke Gegevensomgeving",
+    "onboarding.company_architecture_desc":
+      "Wij ontwerpen gebouwen — BIM, documenten, Gemeenschappelijke Gegevensomgeving",
     "onboarding.company_full_enterprise": "Volledig enterprise",
-    "onboarding.company_full_enterprise_desc": "Wij hebben alles nodig — volledige bouwlevenscyclus",
+    "onboarding.company_full_enterprise_desc":
+      "Wij hebben alles nodig — volledige bouwlevenscyclus",
     "onboarding.modules_label": "modules",
     "onboarding.modules_title": "Uw modules bekijken",
-    "onboarding.modules_subtitle": "Voorgeselecteerd op basis van uw bedrijfstype. Schakel modules naar wens in of uit.",
+    "onboarding.modules_subtitle":
+      "Voorgeselecteerd op basis van uw bedrijfstype. Schakel modules naar wens in of uit.",
     "onboarding.modules_active": "modules actief",
     "onboarding.mod_group_core": "Kernbegroting",
     "onboarding.mod_group_takeoff": "Hoeveelheidberekening & AI",
@@ -2700,11 +2961,14 @@ const resource = {
     "onboarding.mod_group_quality": "Kwaliteit & Veiligheid",
     "onboarding.mod_group_field": "Terrein",
     "onboarding.mod_group_analytics": "Analytics & Extra's",
-    "onboarding.mod_boq_desc": "Hoeveelheidsstaat-editor met hiërarchische posten",
+    "onboarding.mod_boq_desc":
+      "Hoeveelheidsstaat-editor met hiërarchische posten",
     "onboarding.mod_projects_desc": "Projectbeheer en -organisatie",
     "onboarding.mod_costs_desc": "Kostendatabases en tariefbeheer",
-    "onboarding.mod_assemblies_desc": "Samengestelde tariefrecipes en sjablonen",
-    "onboarding.mod_catalog_desc": "Cataloog van materialen, arbeid en materieel",
+    "onboarding.mod_assemblies_desc":
+      "Samengestelde tariefrecipes en sjablonen",
+    "onboarding.mod_catalog_desc":
+      "Cataloog van materialen, arbeid en materieel",
     "onboarding.mod_templates_desc": "Herbruikbare hoeveelheidsstaat-sjablonen",
     "onboarding.mod_validation_desc": "Kwaliteitsregels en compliancecontrole",
     "onboarding.mod_takeoff_desc": "Overzicht hoeveelheidberekening",
@@ -2718,12 +2982,15 @@ const resource = {
     "onboarding.mod_tasks_desc": "Taakbeheer en toewijzingen",
     "onboarding.mod_finance_desc": "Budgetbewaking en financieel overzicht",
     "onboarding.mod_procurement_desc": "Inkooporders en leveranciersbeheer",
-    "onboarding.mod_tendering_desc": "Aanbestedingspakketten en aanbestedingsworkflows",
-    "onboarding.mod_changeorders_desc": "Bijhouden en goedkeuring van wijzigingsopdrachten",
+    "onboarding.mod_tendering_desc":
+      "Aanbestedingspakketten en aanbestedingsworkflows",
+    "onboarding.mod_changeorders_desc":
+      "Bijhouden en goedkeuring van wijzigingsopdrachten",
     "onboarding.mod_contacts_desc": "Contactenregister en teams",
     "onboarding.mod_meetings_desc": "Vergaderbeheer en notulen",
     "onboarding.mod_rfi_desc": "Informatieverzoeken",
-    "onboarding.mod_submittals_desc": "Bijhouden en beoordeling van inzendingen",
+    "onboarding.mod_submittals_desc":
+      "Bijhouden en beoordeling van inzendingen",
     "onboarding.mod_transmittals_desc": "Documenttransmittals",
     "onboarding.mod_correspondence_desc": "Projectcorrespondentielog",
     "onboarding.mod_documents_desc": "Documentbeheersysteem",
@@ -2744,22 +3011,29 @@ const resource = {
     "onboarding.mod_cost_benchmark_desc": "Kostenbenchmarkanalyse",
     "onboarding.mod_collaboration_desc": "Realtime samenwerkingstools",
     "support.button_label": "Steun ons",
-    "support.button_tooltip": "Steun het project — geef ons een ster, deel of stuur een casestudy",
+    "support.button_tooltip":
+      "Steun het project — geef ons een ster, deel of stuur een casestudy",
     "support.button_aria": "Steun ons",
     "support.modal_title": "Help OpenConstructionERP groeien",
-    "support.modal_subtitle": "We bouwen dit in de open source en leveren elke functie gratis. Een paar kleine acties van jou houden de ontwikkeling gaande — ze kosten niets maar maken een enorm verschil.",
+    "support.modal_subtitle":
+      "We bouwen dit in de open source en leveren elke functie gratis. Een paar kleine acties van jou houden de ontwikkeling gaande — ze kosten niets maar maken een enorm verschil.",
     "support.action_star_title": "Geef ons een ster op GitHub",
-    "support.action_star_body": "30 seconden. Sterren zijn hoe nieuwe bouwteams het project ontdekken en hoe wij tijd verzekeren voor de volgende release.",
+    "support.action_star_body":
+      "30 seconden. Sterren zijn hoe nieuwe bouwteams het project ontdekken en hoe wij tijd verzekeren voor de volgende release.",
     "support.action_share_title": "Deel met je team of netwerk",
-    "support.action_share_body": "Eén bericht op LinkedIn of X / Twitter bereikt tientallen calculators, planners en BIM-managers. Help ons om open-source bouwsoftware op de kaart te zetten.",
+    "support.action_share_body":
+      "Eén bericht op LinkedIn of X / Twitter bereikt tientallen calculators, planners en BIM-managers. Help ons om open-source bouwsoftware op de kaart te zetten.",
     "support.share_twitter": "Plaats op X",
     "support.share_linkedin": "Plaats op LinkedIn",
     "support.share_copy": "Tekst + link kopiëren",
     "support.share_copied": "Gekopieerd!",
-    "support.action_case_study_title": "Heb je een casestudy, video of artikel?",
+    "support.action_case_study_title":
+      "Heb je een casestudy, video of artikel?",
     "support.action_case_study_tag": "Wij versterken het",
-    "support.action_case_study_body": "Laat ons zien hoe je OpenConstructionERP gebruikt — een video, een casestudy, een LinkedIn-artikel. Je kunt ons de link direct sturen, of gewoon @DataDrivenConstruction taggen in je bericht — wij zien het en delen het opnieuw via onze nieuwsbrief en sociale kanalen, waar tienduizenden bouwprofessionals en senior industrie-experts ons werk volgen. E-mail voor links: ",
-    "support.thanks": "Dank je wel. Elke ster, elke deling en elk verhaal houdt dit project echt levend — gebouwd met ❤️ voor de bouwgemeenschap.",
+    "support.action_case_study_body":
+      "Laat ons zien hoe je OpenConstructionERP gebruikt — een video, een casestudy, een LinkedIn-artikel. Je kunt ons de link direct sturen, of gewoon @DataDrivenConstruction taggen in je bericht — wij zien het en delen het opnieuw via onze nieuwsbrief en sociale kanalen, waar tienduizenden bouwprofessionals en senior industrie-experts ons werk volgen. E-mail voor links: ",
+    "support.thanks":
+      "Dank je wel. Elke ster, elke deling en elk verhaal houdt dit project echt levend — gebouwd met ❤️ voor de bouwgemeenschap.",
     "onboarding.mod_group_estimation": "Calculatie",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM & 3D",
@@ -2772,128 +3046,184 @@ const resource = {
     "onboarding.mod_group_regional": "Regionale pakketten",
     "onboarding.mod_group_platform": "Platform",
     "onboarding.mod_cost_match": "Kostenmatching",
-    "onboarding.mod_cost_match_desc": "Automatische matching van bestekposten met kostendatabase",
+    "onboarding.mod_cost_match_desc":
+      "Automatische matching van bestekposten met kostendatabase",
     "onboarding.mod_match": "Element-matching",
-    "onboarding.mod_match_desc": "BIM/CAD-elementen koppelen aan bestekposten en tarieven",
+    "onboarding.mod_match_desc":
+      "BIM/CAD-elementen koppelen aan bestekposten en tarieven",
     "onboarding.mod_dwg_takeoff": "DWG-meetstaat",
-    "onboarding.mod_dwg_takeoff_desc": "Hoeveelhedenextractie direct uit DWG-tekeningen",
+    "onboarding.mod_dwg_takeoff_desc":
+      "Hoeveelhedenextractie direct uit DWG-tekeningen",
     "onboarding.mod_cad": "CAD-import",
-    "onboarding.mod_cad_desc": "DWG/DGN/RVT/IFC importeren via DDC cad2data-pipeline",
+    "onboarding.mod_cad_desc":
+      "DWG/DGN/RVT/IFC importeren via DDC cad2data-pipeline",
     "onboarding.mod_bim_requirements": "BIM-vereisten",
-    "onboarding.mod_bim_requirements_desc": "Modelvereisten definiëren en valideren (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc":
+      "Modelvereisten definiëren en valideren (IDS / EIR)",
     "onboarding.mod_match_elements": "Elementen matchen",
-    "onboarding.mod_match_elements_desc": "AI-ondersteunde BIM-naar-kostenmatching met betrouwbaarheidsscores",
+    "onboarding.mod_match_elements_desc":
+      "AI-ondersteunde BIM-naar-kostenmatching met betrouwbaarheidsscores",
     "onboarding.mod_opencde_api": "OpenCDE-API",
-    "onboarding.mod_opencde_api_desc": "OpenCDE-compliant API voor BCF + Documenten + Foundation",
+    "onboarding.mod_opencde_api_desc":
+      "OpenCDE-compliant API voor BCF + Documenten + Foundation",
     "onboarding.mod_erp_chat": "ERP-chat",
-    "onboarding.mod_erp_chat_desc": "In-app AI-chatassistent met volledige ERP-context",
+    "onboarding.mod_erp_chat_desc":
+      "In-app AI-chatassistent met volledige ERP-context",
     "onboarding.mod_compliance_ai": "Compliance-AI",
-    "onboarding.mod_compliance_ai_desc": "LLM-gedreven controles voor regelgevingsnaleving",
+    "onboarding.mod_compliance_ai_desc":
+      "LLM-gedreven controles voor regelgevingsnaleving",
     "onboarding.mod_schedule_advanced": "Geavanceerde planning",
-    "onboarding.mod_schedule_advanced_desc": "Last Planner System met wekelijkse look-aheads en PPC",
+    "onboarding.mod_schedule_advanced_desc":
+      "Last Planner System met wekelijkse look-aheads en PPC",
     "onboarding.mod_eac": "EAC-engine",
     "onboarding.mod_eac_desc": "Estimate at Completion met rollende prognoses",
     "onboarding.mod_bid_management": "Offertebeheer",
-    "onboarding.mod_bid_management_desc": "Uitgaande offertes, prijsstrategieën, gewonnen/verloren-tracking beheren",
+    "onboarding.mod_bid_management_desc":
+      "Uitgaande offertes, prijsstrategieën, gewonnen/verloren-tracking beheren",
     "onboarding.mod_contracts": "Contracten",
-    "onboarding.mod_contracts_desc": "Contracttypes-engine (FIDIC, NEC, JCT, lump sum, T&M)",
+    "onboarding.mod_contracts_desc":
+      "Contracttypes-engine (FIDIC, NEC, JCT, lump sum, T&M)",
     "onboarding.mod_variations": "Meerwerken",
-    "onboarding.mod_variations_desc": "Meerwerken met meetstaat op locatie en goedkeuringsworkflow",
+    "onboarding.mod_variations_desc":
+      "Meerwerken met meetstaat op locatie en goedkeuringsworkflow",
     "onboarding.mod_crm": "CRM",
     "onboarding.mod_crm_desc": "Verkooppipeline, leads, kansen, accounts",
     "onboarding.mod_supplier_catalogs": "Leverancierscatalogi",
-    "onboarding.mod_supplier_catalogs_desc": "Live leveranciersprijslijsten en leveranciersbeheer",
+    "onboarding.mod_supplier_catalogs_desc":
+      "Live leveranciersprijslijsten en leveranciersbeheer",
     "onboarding.mod_property_dev": "Vastgoedontwikkeling",
-    "onboarding.mod_property_dev_desc": "Grond, fasering, verkoopmix, haalbaarheid voor ontwikkelaars",
+    "onboarding.mod_property_dev_desc":
+      "Grond, fasering, verkoopmix, haalbaarheid voor ontwikkelaars",
     "onboarding.mod_service": "Service & Onderhoud",
-    "onboarding.mod_service_desc": "Serviceverzoeken na oplevering, garanties, onderhoud",
+    "onboarding.mod_service_desc":
+      "Serviceverzoeken na oplevering, garanties, onderhoud",
     "onboarding.mod_equipment": "Materieel & Wagenpark",
-    "onboarding.mod_equipment_desc": "Machines, gereedschap, voertuigen — gebruik, onderhoud, huurtarieven",
+    "onboarding.mod_equipment_desc":
+      "Machines, gereedschap, voertuigen — gebruik, onderhoud, huurtarieven",
     "onboarding.mod_resources": "Resources",
-    "onboarding.mod_resources_desc": "Resourceplanning: arbeid, materialen, materieel",
+    "onboarding.mod_resources_desc":
+      "Resourceplanning: arbeid, materialen, materieel",
     "onboarding.mod_daily_diary": "Dagrapport",
-    "onboarding.mod_daily_diary_desc": "Dagelijks bouwplaats-dagboek met weer, ploegen, materieel, foto's",
+    "onboarding.mod_daily_diary_desc":
+      "Dagelijks bouwplaats-dagboek met weer, ploegen, materieel, foto's",
     "onboarding.mod_subcontractors": "Onderaannemers",
-    "onboarding.mod_subcontractors_desc": "Onboarding onderaannemers, contracten, betalingen, prestaties",
+    "onboarding.mod_subcontractors_desc":
+      "Onboarding onderaannemers, contracten, betalingen, prestaties",
     "onboarding.mod_portal": "Klantportaal",
-    "onboarding.mod_portal_desc": "Extern portaal voor klanten en partners met beperkte toegang",
+    "onboarding.mod_portal_desc":
+      "Extern portaal voor klanten en partners met beperkte toegang",
     "onboarding.mod_notifications": "Notificaties",
-    "onboarding.mod_notifications_desc": "In-app, e-mail en webhook-notificaties",
+    "onboarding.mod_notifications_desc":
+      "In-app, e-mail en webhook-notificaties",
     "onboarding.mod_hse_advanced": "Geavanceerd HSE",
-    "onboarding.mod_hse_advanced_desc": "Geavanceerd Health, Safety, Environment — toolbox talks, JHA, audits",
+    "onboarding.mod_hse_advanced_desc":
+      "Geavanceerd Health, Safety, Environment — toolbox talks, JHA, audits",
     "onboarding.mod_qms": "Kwaliteitsmanagementsysteem",
-    "onboarding.mod_qms_desc": "QMS conform ISO 9001 — procedures, audits, KPI's",
+    "onboarding.mod_qms_desc":
+      "QMS conform ISO 9001 — procedures, audits, KPI's",
     "onboarding.mod_compliance": "Compliance-DSL",
-    "onboarding.mod_compliance_desc": "Code-as-rules domeinspecifieke taal voor compliance",
+    "onboarding.mod_compliance_desc":
+      "Code-as-rules domeinspecifieke taal voor compliance",
     "onboarding.mod_compliance_docs": "Compliance-documenten",
-    "onboarding.mod_compliance_docs_desc": "Certificaatbibliotheek, geldigheidstracking, herinneringen voor vernieuwing",
+    "onboarding.mod_compliance_docs_desc":
+      "Certificaatbibliotheek, geldigheidstracking, herinneringen voor vernieuwing",
     "onboarding.mod_carbon": "CO₂ & Duurzaamheid",
-    "onboarding.mod_carbon_desc": "Gebonden + operationele CO₂, ESG-rapportage, EN 15978",
+    "onboarding.mod_carbon_desc":
+      "Gebonden + operationele CO₂, ESG-rapportage, EN 15978",
     "onboarding.mod_bi_dashboards": "BI-dashboards",
-    "onboarding.mod_bi_dashboards_desc": "Interactieve cross-module analytics met drill-down",
+    "onboarding.mod_bi_dashboards_desc":
+      "Interactieve cross-module analytics met drill-down",
     "onboarding.mod_enterprise_workflows": "Enterprise-workflows",
-    "onboarding.mod_enterprise_workflows_desc": "FSM-gebaseerde aangepaste goedkeuringsworkflows voor grote organisaties",
+    "onboarding.mod_enterprise_workflows_desc":
+      "FSM-gebaseerde aangepaste goedkeuringsworkflows voor grote organisaties",
     "onboarding.mod_full_evm": "Volledige EVM",
-    "onboarding.mod_full_evm_desc": "Volledig Earned Value Management — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc":
+      "Volledig Earned Value Management — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ & Aanbesteden",
-    "onboarding.mod_rfq_bidding_desc": "Multi-ronde RFQ-workflows, gesloten biedingen, eAuctions",
+    "onboarding.mod_rfq_bidding_desc":
+      "Multi-ronde RFQ-workflows, gesloten biedingen, eAuctions",
     "onboarding.mod_integrations": "Integraties",
-    "onboarding.mod_integrations_desc": "Webhooks, SAP, Procore, MS Project via n8n",
+    "onboarding.mod_integrations_desc":
+      "Webhooks, SAP, Procore, MS Project via n8n",
     "onboarding.mod_dach_pack": "Regionaal pakket — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc": "Normen, classificaties, valuta's, formaten voor DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "Regionaal pakket — Verenigd Koninkrijk",
-    "onboarding.mod_uk_pack_desc": "Normen, classificaties, valuta's, formaten voor het Verenigd Koninkrijk",
+    "onboarding.mod_uk_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor het Verenigd Koninkrijk",
     "onboarding.mod_us_pack": "Regionaal pakket — Verenigde Staten",
-    "onboarding.mod_us_pack_desc": "Normen, classificaties, valuta's, formaten voor de Verenigde Staten",
+    "onboarding.mod_us_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor de Verenigde Staten",
     "onboarding.mod_india_pack": "Regionaal pakket — India",
-    "onboarding.mod_india_pack_desc": "Normen, classificaties, valuta's, formaten voor India",
+    "onboarding.mod_india_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor India",
     "onboarding.mod_middle_east_pack": "Regionaal pakket — Midden-Oosten & GCC",
-    "onboarding.mod_middle_east_pack_desc": "Normen, classificaties, valuta's, formaten voor Midden-Oosten & GCC",
+    "onboarding.mod_middle_east_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor Midden-Oosten & GCC",
     "onboarding.mod_latam_pack": "Regionaal pakket — Latijns-Amerika",
-    "onboarding.mod_latam_pack_desc": "Normen, classificaties, valuta's, formaten voor Latijns-Amerika",
+    "onboarding.mod_latam_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor Latijns-Amerika",
     "onboarding.mod_asia_pac_pack": "Regionaal pakket — Azië-Pacific",
-    "onboarding.mod_asia_pac_pack_desc": "Normen, classificaties, valuta's, formaten voor Azië-Pacific",
+    "onboarding.mod_asia_pac_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor Azië-Pacific",
     "onboarding.mod_russia_pack": "Regionaal pakket — Rusland & GOS",
-    "onboarding.mod_russia_pack_desc": "Normen, classificaties, valuta's, formaten voor Rusland & GOS",
+    "onboarding.mod_russia_pack_desc":
+      "Normen, classificaties, valuta's, formaten voor Rusland & GOS",
     "onboarding.mod_users": "Gebruikers & Auth",
-    "onboarding.mod_users_desc": "Gebruikersaccounts, rollen, JWT, API-sleutels",
+    "onboarding.mod_users_desc":
+      "Gebruikersaccounts, rollen, JWT, API-sleutels",
     "onboarding.mod_teams": "Teams",
-    "onboarding.mod_teams_desc": "Teamgroepering, zichtbaarheidsscope, projecttoewijzing",
+    "onboarding.mod_teams_desc":
+      "Teamgroepering, zichtbaarheidsscope, projecttoewijzing",
     "onboarding.mod_uploads": "Uploads",
-    "onboarding.mod_uploads_desc": "Directe uploads van grote bestanden met hervatbaarheid",
+    "onboarding.mod_uploads_desc":
+      "Directe uploads van grote bestanden met hervatbaarheid",
     "onboarding.mod_jobs": "Achtergrondtaken",
-    "onboarding.mod_jobs_desc": "Worker-wachtrijen voor imports, exports, CV-pipelines",
+    "onboarding.mod_jobs_desc":
+      "Worker-wachtrijen voor imports, exports, CV-pipelines",
     "onboarding.mod_search": "Semantische zoekfunctie",
-    "onboarding.mod_search_desc": "Vector- + lexicale zoek over bestek, documenten, tekeningen",
+    "onboarding.mod_search_desc":
+      "Vector- + lexicale zoek over bestek, documenten, tekeningen",
     "onboarding.mod_backup": "Back-up & Herstel",
-    "onboarding.mod_backup_desc": "Automatische back-ups met point-in-time herstel",
+    "onboarding.mod_backup_desc":
+      "Automatische back-ups met point-in-time herstel",
     "onboarding.mod_admin": "Beheerdersconsole",
-    "onboarding.mod_admin_desc": "Operator-endpoints, QA-pipelines, systeemonderhoud",
+    "onboarding.mod_admin_desc":
+      "Operator-endpoints, QA-pipelines, systeemonderhoud",
     "onboarding.mod_i18n_foundation": "i18n-fundament",
-    "onboarding.mod_i18n_foundation_desc": "i18n-runtime voor 27 talen met lazy locale-chunks",
+    "onboarding.mod_i18n_foundation_desc":
+      "i18n-runtime voor 27 talen met lazy locale-chunks",
     "onboarding.mod_collaboration_locks": "Samenwerkingsvergrendeling",
-    "onboarding.mod_collaboration_locks_desc": "Optimistische en pessimistische locking voor multi-user bewerking",
+    "onboarding.mod_collaboration_locks_desc":
+      "Optimistische en pessimistische locking voor multi-user bewerking",
     "onboarding.mod_architecture_map": "Architectuurkaart",
-    "onboarding.mod_architecture_map_desc": "Interactieve visuele kaart van systeemarchitectuur",
+    "onboarding.mod_architecture_map_desc":
+      "Interactieve visuele kaart van systeemarchitectuur",
     "onboarding.mod_dashboards": "Dashboards",
     "onboarding.mod_dashboards_desc": "Project- en portfolio-dashboards",
     "onboarding.mode_title": "Interfacemodus kiezen",
-    "onboarding.mode_subtitle": "U kunt op elk moment wisselen van modus in Instellingen.",
+    "onboarding.mode_subtitle":
+      "U kunt op elk moment wisselen van modus in Instellingen.",
     "onboarding.mode_simple": "Eenvoudig",
     "onboarding.mode_advanced": "Geavanceerd",
     "onboarding.summary_company": "Bedrijfstype",
     "onboarding.summary_modules": "Actieve modules",
     "onboarding.summary_mode": "Interfacemodus",
     "reports.cash_flow": "Kasstroominschatting",
-    "reports.cash_flow_desc": "Maandelijkse kasstroomprognose op basis van S-curve geplande vs. werkelijke uitgaven.",
+    "reports.cash_flow_desc":
+      "Maandelijkse kasstroomprognose op basis van S-curve geplande vs. werkelijke uitgaven.",
     "reports.change_order_register": "Wijzigingsopdrachtenregister",
-    "reports.change_order_register_desc": "Volledig register van scopewijzigingen met cumulatieve kosten- en planningsimpact.",
+    "reports.change_order_register_desc":
+      "Volledig register van scopewijzigingen met cumulatieve kosten- en planningsimpact.",
     "reports.tender_comparison": "Aanbestedingsvergelijking",
-    "reports.tender_comparison_desc": "Zij-aan-zij vergelijking van onderaannemersbiedingen met afwijkingsanalyse.",
+    "reports.tender_comparison_desc":
+      "Zij-aan-zij vergelijking van onderaannemersbiedingen met afwijkingsanalyse.",
     "reports.risk_register": "Risicoregister",
-    "reports.risk_register_desc": "Risicomatrix met kans, impact, scores en mitigatieplannen.",
+    "reports.risk_register_desc":
+      "Risicomatrix met kans, impact, scores en mitigatieplannen.",
     "reports.progress_report": "Voortgangsrapport",
-    "reports.progress_report_desc": "EVM-prestaties, planningstatus en toprisico's in één rapport.",
+    "reports.progress_report_desc":
+      "EVM-prestaties, planningstatus en toprisico's in één rapport.",
     "reports.preset_monthly": "Maandelijkse voortgang",
     "reports.preset_client": "Klantpresentatie",
     "reports.preset_audit": "Auditrapport",
@@ -2910,20 +3240,24 @@ const resource = {
     "cde.suitability_none": "— Geen —",
     "cde.view_history": "Historie",
     "cde.history_title": "Statusovergangshistorie",
-    "cde.history_empty": "Nog geen statusovergangen — promoveer de container om de audittrail te starten.",
+    "cde.history_empty":
+      "Nog geen statusovergangen — promoveer de container om de audittrail te starten.",
     "cde.history_by_role": "Door: {{role}}",
     "cde.history_signature": "Ondertekend: {{signer}}",
     "cde.gate_label": "Poort {{code}}",
     "cde.transmittals_badge": "{{count}} transmittals",
-    "cde.transmittals_badge_aria": "{{count}} transmittals gekoppeld aan deze container",
+    "cde.transmittals_badge_aria":
+      "{{count}} transmittals gekoppeld aan deze container",
     "cde.transmittals_drawer_title": "Transmittals die deze container bevatten",
     "cde.approval_modal_title": "Poort B-goedkeuringshandtekening",
-    "cde.approval_modal_body": "Promotie van {{code}} van GEDEELD naar GEPUBLICEERD vereist een ondertekende goedkeuring (ISO 19650). Uw handtekening en opmerkingen worden geregistreerd in het auditlog.",
+    "cde.approval_modal_body":
+      "Promotie van {{code}} van GEDEELD naar GEPUBLICEERD vereist een ondertekende goedkeuring (ISO 19650). Uw handtekening en opmerkingen worden geregistreerd in het auditlog.",
     "cde.approval_field_signature": "Handtekening",
     "cde.approval_field_comments": "Opmerkingen",
     "cde.approval_signature_placeholder": "Volledige naam / initialen",
     "cde.approval_signature_required": "Handtekening is verplicht",
-    "cde.approval_comments_placeholder": "Optionele notities voor de audittrail...",
+    "cde.approval_comments_placeholder":
+      "Optionele notities voor de audittrail...",
     "cde.approval_submit": "Ondertekenen en publiceren",
     "transmittals.field_link_revision": "CDE-revisie koppelen",
     "transmittals.picker_select_container": "Container selecteren…",
@@ -2960,7 +3294,8 @@ const resource = {
     "users.role_viewer_desc": "Alleen-lezen toegang",
     "integrations.add_another": "Nog een toevoegen",
     "integrations.calendar": "Agenda",
-    "integrations.calendar_desc": "Abonneren in Google/Outlook Agenda (iCal-feed)",
+    "integrations.calendar_desc":
+      "Abonneren in Google/Outlook Agenda (iCal-feed)",
     "integrations.coming_soon": "Binnenkort beschikbaar",
     "integrations.confirm_disconnect": "Deze integratie verbreken?",
     "integrations.connect": "Verbinden",
@@ -2974,10 +3309,13 @@ const resource = {
     "integrations.email_desc": "E-mailmeldingen ontvangen (SMTP)",
     "integrations.setup_steps": "Installatie-instructies",
     "integrations.slack": "Slack",
-    "integrations.slack_desc": "Meldingen naar Slack sturen via Incoming Webhook",
-    "integrations.subtitle": "Verbind externe services om projectmeldingen te ontvangen in uw favoriete tools.",
+    "integrations.slack_desc":
+      "Meldingen naar Slack sturen via Incoming Webhook",
+    "integrations.subtitle":
+      "Verbind externe services om projectmeldingen te ontvangen in uw favoriete tools.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc": "Meldingen naar uw Teams-kanaal sturen via Incoming Webhook",
+    "integrations.teams_desc":
+      "Meldingen naar uw Teams-kanaal sturen via Incoming Webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Meldingen ontvangen via Telegram-bot",
     "integrations.test": "Testen",
@@ -2985,7 +3323,8 @@ const resource = {
     "integrations.test_ok": "Testmelding verzonden!",
     "integrations.title": "Integraties",
     "integrations.webhook": "Webhooks",
-    "integrations.webhook_desc": "Gebeurtenissen verzenden naar elke URL (HTTP POST)",
+    "integrations.webhook_desc":
+      "Gebeurtenissen verzenden naar elke URL (HTTP POST)",
     "common.actions": "Acties",
     "common.add": "Toevoegen",
     "common.added": "Toegevoegd",
@@ -3024,7 +3363,8 @@ const resource = {
     "common.previous": "Vorige",
     "common.project": "Project",
     "common.quantity": "Hoeveelheid",
-    "common.rate_limit_wait": "Wacht {{seconds}} seconden voordat u het opnieuw probeert.",
+    "common.rate_limit_wait":
+      "Wacht {{seconds}} seconden voordat u het opnieuw probeert.",
     "common.recommended": "Aanbevolen",
     "common.region": "Regio",
     "common.remove": "Verwijderen",
@@ -3050,11 +3390,14 @@ const resource = {
     "dashboard.budget_warnings": "Budgetwaarschuwingen",
     "dashboard.continue_work": "Verder werken",
     "dashboard.create_first_project": "Eerste project aanmaken",
-    "dashboard.create_first_project_desc": "Een nieuwe raming opzetten vanaf het begin",
+    "dashboard.create_first_project_desc":
+      "Een nieuwe raming opzetten vanaf het begin",
     "dashboard.import_existing_boq": "Bestaande hoeveelheidsstaat importeren",
-    "dashboard.import_existing_boq_desc": "Gebruik AI om te ramen vanuit een bestaand document",
+    "dashboard.import_existing_boq_desc":
+      "Gebruik AI om te ramen vanuit een bestaand document",
     "dashboard.install_demo": "Demoprojecte installeren",
-    "dashboard.install_demo_desc": "Vooraf gebouwd woonproject met realistische gegevens",
+    "dashboard.install_demo_desc":
+      "Vooraf gebouwd woonproject met realistische gegevens",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "validatie uitvoeren",
     "dashboard.over_budget": "boven budget",
@@ -3063,14 +3406,19 @@ const resource = {
     "dashboard.quick_start": "Snelle ramingsstart",
     "dashboard.run_setup": "Installatiewizard uitvoeren",
     "dashboard.total_budget_all": "Totaal budget",
-    "dashboard.welcome_body": "Dit project is gebouwd en onderhouden door de community. Uw steun helpt ons nieuwe functies, regionale databases toe te voegen en het voor iedereen gratis te houden.",
+    "dashboard.welcome_body":
+      "Dit project is gebouwd en onderhouden door de community. Uw steun helpt ons nieuwe functies, regionale databases toe te voegen en het voor iedereen gratis te houden.",
     "dashboard.welcome_consult": "Professioneel advies",
-    "dashboard.welcome_consult_desc": "Aangepaste implementatie, training en enterprise-oplossingen wereldwijd",
-    "dashboard.welcome_desc": "Begin door een demoprojecte te installeren of uw eigen project aan te maken.",
+    "dashboard.welcome_consult_desc":
+      "Aangepaste implementatie, training en enterprise-oplossingen wereldwijd",
+    "dashboard.welcome_desc":
+      "Begin door een demoprojecte te installeren of uw eigen project aan te maken.",
     "dashboard.welcome_sponsor": "Sponsor worden",
-    "dashboard.welcome_sponsor_desc": "Nieuwe functies financieren en het project voor iedereen gratis houden",
+    "dashboard.welcome_sponsor_desc":
+      "Nieuwe functies financieren en het project voor iedereen gratis houden",
     "dashboard.welcome_star": "Ster geven op GitHub",
-    "dashboard.welcome_star_desc": "Help anderen het project te ontdekken — duurt 2 seconden",
+    "dashboard.welcome_star_desc":
+      "Help anderen het project te ontdekken — duurt 2 seconden",
     "dashboard.welcome_start": "Aan de slag",
     "dashboard.welcome_sub": "Gratis en open-source bouwkostenraming",
     "dashboard.welcome_title": "Welkom bij OpenConstructionERP",
@@ -3091,7 +3439,8 @@ const resource = {
     "analytics.col_status": "Status",
     "analytics.col_variance": "Variantie",
     "analytics.col_variance_pct": "Var. %",
-    "analytics.empty_description": "Maak projecten met budgetten aan om projectoverschrijdende analyses te zien.",
+    "analytics.empty_description":
+      "Maak projecten met budgetten aan om projectoverschrijdende analyses te zien.",
     "analytics.empty_title": "Nog geen analysegegevens",
     "analytics.export_csv": "Exporteren naar CSV",
     "analytics.filter_region": "Filteren op regio",
@@ -3114,32 +3463,38 @@ const resource = {
     "analytics.total_projects": "Totaal projecten",
     "analytics.with_budget": "{{count}} met budget",
     "backup.confirm_replace_btn": "Alle gegevens vervangen",
-    "backup.confirm_replace_message": "Dit vervangt alle bestaande gegevens door de inhoud van de back-up. Deze actie kan niet ongedaan worden gemaakt.",
+    "backup.confirm_replace_message":
+      "Dit vervangt alle bestaande gegevens door de inhoud van de back-up. Deze actie kan niet ongedaan worden gemaakt.",
     "backup.confirm_replace_title": "Alle gegevens vervangen?",
     "backup.drop_zone_hint": ".zip back-upbestand",
-    "backup.drop_zone_label": "Back-upbestand hier neerzetten of klikken om te bladeren",
+    "backup.drop_zone_label":
+      "Back-upbestand hier neerzetten of klikken om te bladeren",
     "backup.export_btn": "Back-up aanmaken",
-    "backup.export_desc": "Download een volledige back-up van al uw gegevens als ZIP-bestand.",
+    "backup.export_desc":
+      "Download een volledige back-up van al uw gegevens als ZIP-bestand.",
     "backup.export_error": "Exporteren mislukt",
     "backup.export_success": "Back-up aangemaakt",
     "backup.export_success_detail": "Uw back-upbestand is gedownload.",
     "backup.export_title": "Back-up aanmaken",
     "backup.exporting": "Back-up aanmaken...",
-    "backup.import_desc": "Gegevens herstellen vanuit een eerder geëxporteerd back-upbestand.",
+    "backup.import_desc":
+      "Gegevens herstellen vanuit een eerder geëxporteerd back-upbestand.",
     "backup.import_title": "Herstellen vanuit back-up",
     "backup.incompatible": "Incompatibele back-upversie",
     "backup.invalid_file": "Ongeldig bestand",
     "backup.mode_merge": "Samenvoegen (nieuw toevoegen, bestaand behouden)",
     "backup.mode_replace": "Vervangen (alles overschrijven)",
     "backup.record_counts": "Recordtellingen",
-    "backup.replace_warning": "Waarschuwing: Vervangmodus verwijdert alle bestaande gegevens.",
+    "backup.replace_warning":
+      "Waarschuwing: Vervangmodus verwijdert alle bestaande gegevens.",
     "backup.restore_btn": "Herstellen",
     "backup.restore_error": "Herstelfout",
     "backup.restore_failed": "Herstellen mislukt",
     "backup.restore_failed_detail": "Kon niet herstellen vanuit back-up",
     "backup.restore_mode": "Herstelmodus",
     "backup.restore_success": "Back-up hersteld",
-    "backup.restore_success_detail": "Alle gegevens zijn hersteld vanuit de back-up.",
+    "backup.restore_success_detail":
+      "Alle gegevens zijn hersteld vanuit de back-up.",
     "backup.restoring": "Herstellen...",
     "backup.subtitle": "Uw gegevens exporteren en importeren",
     "backup.title": "Back-up & Herstel",
@@ -3151,7 +3506,8 @@ const resource = {
     "changeorders.add_item": "Item toevoegen",
     "changeorders.all_statuses": "Alle statussen",
     "changeorders.approve": "Goedkeuren",
-    "changeorders.approve_confirm": "Deze wijzigingsopdracht goedkeuren? De kostenimpact wordt toegepast op het projectbudget.",
+    "changeorders.approve_confirm":
+      "Deze wijzigingsopdracht goedkeuren? De kostenimpact wordt toegepast op het projectbudget.",
     "changeorders.approved": "Wijzigingsopdracht goedgekeurd",
     "changeorders.approved_at": "Goedgekeurd",
     "changeorders.approved_impact": "Goedgekeurde impact",
@@ -3163,24 +3519,28 @@ const resource = {
     "changeorders.delete_item_confirm": "Dit item verwijderen?",
     "changeorders.deleted": "Wijzigingsopdracht verwijderd",
     "changeorders.empty": "Geen wijzigingsopdrachten",
-    "changeorders.empty_desc": "Maak een wijzigingsopdracht aan om scopewijzigingen bij te houden met kosten- en planningsimpact",
+    "changeorders.empty_desc":
+      "Maak een wijzigingsopdracht aan om scopewijzigingen bij te houden met kosten- en planningsimpact",
     "changeorders.export_csv": "Exporteren naar CSV",
     "changeorders.filter_status": "Filteren op status",
     "changeorders.item_added": "Item toegevoegd",
     "changeorders.item_deleted": "Item verwijderd",
     "changeorders.items": "Regelitems",
-    "changeorders.load_error": "Laden van wijzigingsopdrachten mislukt. Probeer het opnieuw.",
+    "changeorders.load_error":
+      "Laden van wijzigingsopdrachten mislukt. Probeer het opnieuw.",
     "changeorders.new": "Nieuwe wijzigingsopdracht",
     "changeorders.new_qty": "Nieuwe hoev.",
     "changeorders.new_rate": "Nieuw tarief",
     "changeorders.no_items": "Nog geen items",
-    "changeorders.no_items_desc": "Voeg regelitems toe om de scopewijziging te definiëren",
+    "changeorders.no_items_desc":
+      "Voeg regelitems toe om de scopewijziging te definiëren",
     "changeorders.of_total": "van",
     "changeorders.orig_qty": "Oorspronkelijke hoev.",
     "changeorders.orig_rate": "Oorspronkelijk tarief",
     "changeorders.pending": "In behandeling",
     "changeorders.pending_approval": "Wacht op goedkeuring",
-    "changeorders.pending_approval_hint": "Alleen managers en beheerders kunnen goedkeuren.",
+    "changeorders.pending_approval_hint":
+      "Alleen managers en beheerders kunnen goedkeuren.",
     "changeorders.reason": "Reden",
     "changeorders.reject": "Afwijzen",
     "changeorders.reject_confirm": "Deze wijzigingsopdracht afwijzen?",
@@ -3196,10 +3556,12 @@ const resource = {
     "changeorders.status_submitted": "Ingediend",
     "changeorders.status_under_review": "In beoordeling",
     "changeorders.submit": "Indienen",
-    "changeorders.submit_confirm": "Deze wijzigingsopdracht indienen voor beoordeling? Dit kan niet ongedaan worden gemaakt.",
+    "changeorders.submit_confirm":
+      "Deze wijzigingsopdracht indienen voor beoordeling? Dit kan niet ongedaan worden gemaakt.",
     "changeorders.submitted": "Wijzigingsopdracht ingediend",
     "changeorders.submitted_at": "Ingediend",
-    "changeorders.subtitle": "Scopewijzigingen bijhouden met kosten- en planningsimpact",
+    "changeorders.subtitle":
+      "Scopewijzigingen bijhouden met kosten- en planningsimpact",
     "changeorders.title_placeholder": "bijv. Aanvullend funderingswerk",
     "changeorders.total": "Totaal opdrachten",
     "changeorders.type": "Type",
@@ -3208,12 +3570,15 @@ const resource = {
     "changeorders.type_removed": "Verwijderd",
     "changeorders.unit_placeholder": "m2, m3, st...",
     "changeorders.workflow": "Workflow",
-    "changeorders.workflow_desc": "Workflow voor wijzigingsopdrachten: Concept (scope wijziging voorbereiden) → Ingediend (ter beoordeling sturen) → Goedgekeurd of Afgewezen. Elke opdracht registreert kosten- en planningsimpact in dagen. Voeg regelitems toe om te specificeren wat er is gewijzigd — originele vs. nieuwe hoeveelheden en tarieven. Het kostenverschil wordt automatisch berekend.",
+    "changeorders.workflow_desc":
+      "Workflow voor wijzigingsopdrachten: Concept (scope wijziging voorbereiden) → Ingediend (ter beoordeling sturen) → Goedgekeurd of Afgewezen. Elke opdracht registreert kosten- en planningsimpact in dagen. Voeg regelitems toe om te specificeren wat er is gewijzigd — originele vs. nieuwe hoeveelheden en tarieven. Het kostenverschil wordt automatisch berekend.",
     "explorer.analysis_name": "Naam",
     "explorer.apply_pivot": "Toepassen",
     "explorer.bar": "Staafdiagram",
-    "explorer.boq_create_failed": "Aanmaken van hoeveelheidsstaat-posten mislukt",
-    "explorer.boq_created_success": "{{count}} posten aangemaakt in hoeveelheidsstaat",
+    "explorer.boq_create_failed":
+      "Aanmaken van hoeveelheidsstaat-posten mislukt",
+    "explorer.boq_created_success":
+      "{{count}} posten aangemaakt in hoeveelheidsstaat",
     "explorer.categories": "Categorieën",
     "explorer.chart_type": "Type",
     "explorer.click_header_sort": "Klik op kolomkoppen om te sorteren",
@@ -3224,17 +3589,21 @@ const resource = {
     "explorer.conversion_complete": "Conversie voltooid",
     "explorer.conversion_failed": "Conversie mislukt",
     "explorer.converters": "CAD-converters",
-    "explorer.converters_desc": "DDC Community-converters voor het extraheren van BIM-elementgegevens",
-    "explorer.converters_external_hint": "CAD-converters vereisen DDC cad2data tools geïnstalleerd op uw server",
+    "explorer.converters_desc":
+      "DDC Community-converters voor het extraheren van BIM-elementgegevens",
+    "explorer.converters_external_hint":
+      "CAD-converters vereisen DDC cad2data tools geïnstalleerd op uw server",
     "explorer.converting": "{{name}} converteren...",
     "explorer.converting_msg": "Converteren...",
     "explorer.count": "Aantal",
     "explorer.create_boq_from_pivot": "Hoeveelheidsstaat aanmaken",
-    "explorer.create_boq_subtitle": "{{count}} groepen worden hoeveelheidsstaat-posten",
+    "explorer.create_boq_subtitle":
+      "{{count}} groepen worden hoeveelheidsstaat-posten",
     "explorer.create_boq_title": "Hoeveelheidsstaat aanmaken vanuit pivot",
     "explorer.create_positions": "{{count}} posten aanmaken",
     "explorer.data_completeness": "Datavolledigheid",
-    "explorer.delete_session_confirm": "Deze analyse verwijderen? Dit kan niet ongedaan worden gemaakt.",
+    "explorer.delete_session_confirm":
+      "Deze analyse verwijderen? Dit kan niet ongedaan worden gemaakt.",
     "explorer.documents": "Documenten",
     "explorer.done": "Conversie voltooid! Laden...",
     "explorer.drop_cad": "Sleep een CAD/BIM-bestand om te verkennen",
@@ -3249,7 +3618,8 @@ const resource = {
     "explorer.heatmap": "Waardeheatmap in-/uitschakelen",
     "explorer.heatmap_short": "Heatmap",
     "explorer.installed": "geïnstalleerd",
-    "explorer.invalid_format": "Niet-ondersteund bestandsformaat. Gebruik RVT, IFC, DWG of DGN.",
+    "explorer.invalid_format":
+      "Niet-ondersteund bestandsformaat. Gebruik RVT, IFC, DWG of DGN.",
     "explorer.like_describe": "zoals df.describe()",
     "explorer.max": "Max",
     "explorer.mean": "Gemiddelde",
@@ -3260,7 +3630,8 @@ const resource = {
     "explorer.no_chart_data": "Geen grafiekgegevens",
     "explorer.no_groups": "Geen groepen gevonden. Probeer andere kolommen.",
     "explorer.non_null": "Niet-null",
-    "explorer.or_click": "of klik om te bladeren — datatabel, pivot, grafieken & statistieken",
+    "explorer.or_click":
+      "of klik om te bladeren — datatabel, pivot, grafieken & statistieken",
     "explorer.page_of": "Pagina {{page}} van {{total}}",
     "explorer.page_summary": "Paginatotalen:",
     "explorer.pie": "Cirkeldiagram",
@@ -3269,22 +3640,27 @@ const resource = {
     "explorer.powered_by": "Mogelijk gemaakt door",
     "explorer.project": "Project",
     "explorer.recent_models": "Recente modellen",
-    "explorer.requires_external": "Extern gereedschap — klik voor installatie-instructies",
+    "explorer.requires_external":
+      "Extern gereedschap — klik voor installatie-instructies",
     "explorer.rows": "rijen",
     "explorer.save_analysis": "Analyse opslaan",
     "explorer.save_as_bim": "Opslaan als BIM-model",
     "explorer.save_permanently": "Permanent opslaan",
     "explorer.save_to_project": "Opslaan in project (BIM Hub)",
     "explorer.save_to_project_btn": "Opslaan in project",
-    "explorer.save_to_project_desc": "Maakt een BIM-model aan met alle geëxtraheerde elementen in het geselecteerde project.",
+    "explorer.save_to_project_desc":
+      "Maakt een BIM-model aan met alle geëxtraheerde elementen in het geselecteerde project.",
     "explorer.saved": "Analyse permanent opgeslagen",
     "explorer.saved_to_project": "Opgeslagen in BIM Hub",
-    "explorer.saved_to_project_msg": "Elementen opgeslagen in BIM Hub. Bekijk ze in de BIM Viewer.",
+    "explorer.saved_to_project_msg":
+      "Elementen opgeslagen in BIM Hub. Bekijk ze in de BIM Viewer.",
     "explorer.search_all": "Alle kolommen doorzoeken...",
-    "explorer.select_columns_for_chart": "Selecteer groepeer-op- en waardekolommen om een grafiek te genereren.",
+    "explorer.select_columns_for_chart":
+      "Selecteer groepeer-op- en waardekolommen om een grafiek te genereren.",
     "explorer.select_project": "Project selecteren...",
     "explorer.selected": "geselecteerd",
-    "explorer.session_expired_desc": "CAD-sessies zijn 24 uur geldig. Upload uw bestand opnieuw om verder te gaan.",
+    "explorer.session_expired_desc":
+      "CAD-sessies zijn 24 uur geldig. Upload uw bestand opnieuw om verder te gaan.",
     "explorer.session_expired_title": "Sessie verlopen of niet gevonden",
     "explorer.setup_guide": "Installatiegids",
     "explorer.sparse_columns": "Spaars (<10%)",
@@ -3304,7 +3680,8 @@ const resource = {
     "explorer.visible_columns": "Zichtbare kolommen",
     "explorer.active_filters": "Actieve filters",
     "explorer.clear_all_filters": "Alles wissen",
-    "explorer.no_active_filters": "Klik op een balk, segment of punt om te kruisfilteren op alle tabbladen.",
+    "explorer.no_active_filters":
+      "Klik op een balk, segment of punt om te kruisfilteren op alle tabbladen.",
     "explorer.line": "Lijndiagram",
     "explorer.scatter": "Spreidingsdiagram",
     "explorer.format": "Formaat",
@@ -3319,7 +3696,8 @@ const resource = {
     "explorer.save_view": "Weergave opslaan",
     "explorer.save_view_prompt": "Geef deze weergave een naam",
     "explorer.saved_views": "Opgeslagen weergaven",
-    "explorer.no_saved_views": "Nog geen opgeslagen weergaven. Sla uw filters, grafiek- en pivotconfiguratie op voor later.",
+    "explorer.no_saved_views":
+      "Nog geen opgeslagen weergaven. Sla uw filters, grafiek- en pivotconfiguratie op voor later.",
     "explorer.load_view": "Laden",
     "explorer.delete_view": "Verwijderen",
     "explorer.view_saved": "Weergave opgeslagen",
@@ -3328,7 +3706,8 @@ const resource = {
     "explorer.drill_down_empty": "Geen rijen komen overeen met dit segment.",
     "explorer.close": "Sluiten",
     "explorer.showing_rows": "{{count}} rijen weergegeven",
-    "explorer.chart_click_hint": "Klik op een balk / segment / punt om kruisfiltering toe te passen",
+    "explorer.chart_click_hint":
+      "Klik op een balk / segment / punt om kruisfiltering toe te passen",
     "fieldreports.add_trade": "Vak toevoegen",
     "fieldreports.all_statuses": "Alle statussen",
     "fieldreports.all_types": "Alle typen",
@@ -3351,12 +3730,15 @@ const resource = {
     "fieldreports.delays_placeholder": "Beschrijf eventuele vertragingen...",
     "fieldreports.deleted": "Veldrapport verwijderd",
     "fieldreports.deliveries": "Leveringen",
-    "fieldreports.deliveries_placeholder": "Geleverde materialen of materieel...",
+    "fieldreports.deliveries_placeholder":
+      "Geleverde materialen of materieel...",
     "fieldreports.download_template": "Importsjabloon downloaden",
-    "fieldreports.drop_file": "Excel- of CSV-bestand hier neerzetten of klikken om te bladeren",
+    "fieldreports.drop_file":
+      "Excel- of CSV-bestand hier neerzetten of klikken om te bladeren",
     "fieldreports.edit_report": "Veldrapport bewerken",
     "fieldreports.empty": "Nog geen veldrapporten",
-    "fieldreports.empty_desc": "Maak uw eerste dagelijkse veldrapport aan om bouwplaatsactiviteiten bij te houden.",
+    "fieldreports.empty_desc":
+      "Maak uw eerste dagelijkse veldrapport aan om bouwplaatsactiviteiten bij te houden.",
     "fieldreports.export": "Exporteren",
     "fieldreports.export_failed": "Exporteren mislukt",
     "fieldreports.export_pdf": "Exporteren naar PDF",
@@ -3368,20 +3750,23 @@ const resource = {
     "fieldreports.import": "Importeren",
     "fieldreports.import_btn": "Importeren",
     "fieldreports.import_reports": "Veldrapporten importeren",
-    "fieldreports.import_result": "Geïmporteerd: {{imported}}, Overgeslagen: {{skipped}}, Fouten: {{errors}}",
+    "fieldreports.import_result":
+      "Geïmporteerd: {{imported}}, Overgeslagen: {{skipped}}, Fouten: {{errors}}",
     "fieldreports.list_view": "Lijst",
     "fieldreports.new_report": "Nieuw rapport",
     "fieldreports.no_match": "Geen overeenkomende rapporten",
     "fieldreports.no_match_desc": "Pas uw status- of typefilters aan.",
     "fieldreports.no_project": "Selecteer een project",
-    "fieldreports.no_project_desc": "Kies een project uit de zijbalk om veldrapporten te bekijken.",
+    "fieldreports.no_project_desc":
+      "Kies een project uit de zijbalk om veldrapporten te bekijken.",
     "fieldreports.notes": "Notities",
     "fieldreports.notes_placeholder": "Aanvullende notities of observaties...",
     "fieldreports.report_date": "Datum",
     "fieldreports.report_type": "Rapporttype",
     "fieldreports.row_error": "Rij {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Veiligheidsincidenten",
-    "fieldreports.safety_placeholder": "Meld eventuele veiligheidsincidenten of bijna-ongelukken...",
+    "fieldreports.safety_placeholder":
+      "Meld eventuele veiligheidsincidenten of bijna-ongelukken...",
     "fieldreports.show_errors": "Foutdetails weergeven",
     "fieldreports.stat_approved": "Goedgekeurd",
     "fieldreports.stat_draft": "Concept",
@@ -3404,7 +3789,8 @@ const resource = {
     "fieldreports.wind": "Wind",
     "fieldreports.wind_placeholder": "bijv. 15 km/u NW",
     "fieldreports.work_performed": "Uitgevoerd werk",
-    "fieldreports.work_performed_placeholder": "Beschrijf de uitgevoerde werkzaamheden vandaag...",
+    "fieldreports.work_performed_placeholder":
+      "Beschrijf de uitgevoerde werkzaamheden vandaag...",
     "fieldreports.workers": "werknemers",
     "fieldreports.workforce_section": "Personeel",
     "risk.all_categories": "Alle categorieën",
@@ -3416,17 +3802,20 @@ const resource = {
     "risk.contingency": "Noodplan",
     "risk.created": "Risico aangemaakt",
     "risk.critical": "Kritiek (16-25)",
-    "risk.delete_message": "Dit risico wordt permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+    "risk.delete_message":
+      "Dit risico wordt permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
     "risk.delete_title": "Risico verwijderen",
     "risk.deleted": "Risico verwijderd",
-    "risk.disclaimer": "Monte Carlo-simulatie geeft alleen probabilistische schattingen. Resultaten zijn afhankelijk van invoerveronderstellingen.",
+    "risk.disclaimer":
+      "Monte Carlo-simulatie geeft alleen probabilistische schattingen. Resultaten zijn afhankelijk van invoerveronderstellingen.",
     "risk.dist": "Verdeling",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Driehoekig",
     "risk.dist_uniform": "Uniform",
     "risk.distribution": "Kostenverdeling (histogram)",
     "risk.empty": "Geen risico's geregistreerd",
-    "risk.empty_desc": "Voeg risico's toe om potentiële problemen en mitigatiestrategieën bij te houden",
+    "risk.empty_desc":
+      "Voeg risico's toe om potentiële problemen en mitigatiestrategieën bij te houden",
     "risk.export_csv": "Exporteren naar CSV",
     "risk.exposure": "Totale blootstelling",
     "risk.heatmap": "Risicomatrix",
@@ -3475,7 +3864,8 @@ const resource = {
     "risk.updated": "Risico bijgewerkt",
     "risk.variance_share": "Variantieaandeel",
     "toasts.activity_created": "Activiteit aangemaakt",
-    "toasts.assembly_applied": "Samengestelde post toegepast op hoeveelheidsstaat",
+    "toasts.assembly_applied":
+      "Samengestelde post toegepast op hoeveelheidsstaat",
     "toasts.assembly_deleted": "Samengestelde post verwijderd",
     "toasts.assembly_duplicated": "Samengestelde post gedupliceerd",
     "toasts.bid_awarded": "Bod gegund",
@@ -3496,14 +3886,18 @@ const resource = {
     "toasts.project_updated": "Project bijgewerkt",
     "toasts.risk_analysis_complete": "Risicoanalyse voltooid",
     "toasts.schedule_created": "Planning aangemaakt",
-    "toasts.schedule_generated": "Planning gegenereerd vanuit hoeveelheidsstaat",
+    "toasts.schedule_generated":
+      "Planning gegenereerd vanuit hoeveelheidsstaat",
     "toasts.status_updated": "Status bijgewerkt",
     "toasts.update_failed": "Bijwerken mislukt",
-    "bim.cad_processing_note": "Verwerking kan enkele minuten duren voor grote bestanden",
+    "bim.cad_processing_note":
+      "Verwerking kan enkele minuten duren voor grote bestanden",
     "bim.cad_upload_queued": "CAD-bestand in de wachtrij voor verwerking",
     "bim.cad_upload_success": "CAD-bestand geüpload",
-    "bim.cad_upload_success_desc": "Bestand succesvol geüpload. Verwerking begint binnenkort.",
-    "bim.confirm_delete_model": "\"{{name}}\" verwijderen? Alle elementen worden verwijderd.",
+    "bim.cad_upload_success_desc":
+      "Bestand succesvol geüpload. Verwerking begint binnenkort.",
+    "bim.confirm_delete_model":
+      '"{{name}}" verwijderen? Alle elementen worden verwijderd.',
     "bim.disc_architecture": "Architectuur",
     "bim.disc_civil": "Civiel",
     "bim.disc_electrical": "Elektro",
@@ -3515,22 +3909,30 @@ const resource = {
     "bim.disc_structural": "Constructief",
     "bim.discipline_label": "Discipline",
     "bim.getting_started": "BIM Viewer",
-    "bim.getting_started_desc": "Upload elementgegevens (CSV/Excel) en optionele 3D-geometrie (DAE) van uw CAD-converter om bouwmodellen in 3D te visualiseren. Elementen kunnen worden gekoppeld aan hoeveelheidsstaat-posten voor hoeveelheidsverificatie.",
+    "bim.getting_started_desc":
+      "Upload elementgegevens (CSV/Excel) en optionele 3D-geometrie (DAE) van uw CAD-converter om bouwmodellen in 3D te visualiseren. Elementen kunnen worden gekoppeld aan hoeveelheidsstaat-posten voor hoeveelheidsverificatie.",
     "bim.hide_upload": "Sluiten",
     "bim.landing_drop_here": "Uw bestand hier neerzetten",
-    "bim.landing_feat_3d_desc": "Interactieve Three.js-viewer met verdiepingfiltering, disciplinekleuring en elementselectie.",
+    "bim.landing_feat_3d_desc":
+      "Interactieve Three.js-viewer met verdiepingfiltering, disciplinekleuring en elementselectie.",
     "bim.landing_feat_3d_title": "3D-visualisatie",
-    "bim.landing_feat_boq_desc": "BIM-elementen koppelen aan kostenposten voor geautomatiseerde hoeveelheidsverificatie en 5D-hoeveelheidberekening.",
+    "bim.landing_feat_boq_desc":
+      "BIM-elementen koppelen aan kostenposten voor geautomatiseerde hoeveelheidsverificatie en 5D-hoeveelheidberekening.",
     "bim.landing_feat_boq_title": "Hoeveelheidsstaat-koppeling",
-    "bim.landing_feat_compare_desc": "Versies vergelijken om toegevoegde, verwijderde en gewijzigde elementen automatisch te detecteren.",
+    "bim.landing_feat_compare_desc":
+      "Versies vergelijken om toegevoegde, verwijderde en gewijzigde elementen automatisch te detecteren.",
     "bim.landing_feat_compare_title": "Modelvergelijking",
-    "bim.landing_feat_extract_desc": "Wanden, vloeren, kolommen, balken, MEP — met eigenschappen, oppervlakten, volumes en classificatie.",
+    "bim.landing_feat_extract_desc":
+      "Wanden, vloeren, kolommen, balken, MEP — met eigenschappen, oppervlakten, volumes en classificatie.",
     "bim.landing_feat_extract_title": "Elementextractie",
-    "bim.landing_feat_format_desc": "IFC direct verwerkt. RVT via DDC cad2data. CSV/Excel voor vooraf geconverteerde gegevens.",
+    "bim.landing_feat_format_desc":
+      "IFC direct verwerkt. RVT via DDC cad2data. CSV/Excel voor vooraf geconverteerde gegevens.",
     "bim.landing_feat_format_title": "Formaatproof",
-    "bim.landing_feat_qty_desc": "Regels definiëren om oppervlakte, volume en lengte te extraheren — toe te passen op uw gehele model tegelijk.",
+    "bim.landing_feat_qty_desc":
+      "Regels definiëren om oppervlakte, volume en lengte te extraheren — toe te passen op uw gehele model tegelijk.",
     "bim.landing_feat_qty_title": "Hoeveelheidskaarten",
-    "bim.landing_hero_subtitle": "Upload IFC- of Revit-bestanden om bouwcomponenten te visualiseren, hoeveelheden te extraheren en te koppelen aan uw hoeveelheidsstaat.",
+    "bim.landing_hero_subtitle":
+      "Upload IFC- of Revit-bestanden om bouwcomponenten te visualiseren, hoeveelheden te extraheren en te koppelen aan uw hoeveelheidsstaat.",
     "bim.landing_hero_title": "BIM 3D Viewer",
     "bim.landing_processing": "Verwerken...",
     "bim.landing_size_hint": "IFC, Revit, CSV of Excel",
@@ -3541,11 +3943,14 @@ const resource = {
     "bim.model_name_placeholder": "bijv. Gebouw A — Architectuur",
     "bim.no_models_hint_upload": "Upload BIM-gegevens om te beginnen.",
     "bim.overlay_delete_btn": "Verwijderen",
-    "bim.overlay_error_desc": "Elementen konden niet worden geëxtraheerd. Probeer eerst naar IFC te converteren of upload gegevens handmatig.",
+    "bim.overlay_error_desc":
+      "Elementen konden niet worden geëxtraheerd. Probeer eerst naar IFC te converteren of upload gegevens handmatig.",
     "bim.overlay_error_title": "Verwerking mislukt",
-    "bim.overlay_needs_converter_desc": "{{format}}-bestanden vereisen DDC cad2data voor extractie. Converteer eerst naar IFC of upload vooraf geconverteerde gegevens.",
+    "bim.overlay_needs_converter_desc":
+      "{{format}}-bestanden vereisen DDC cad2data voor extractie. Converteer eerst naar IFC of upload vooraf geconverteerde gegevens.",
     "bim.overlay_needs_converter_title": "Converter vereist",
-    "bim.overlay_processing_desc": "Elementen extraheren uit uw {{format}}-bestand. Dit kan even duren.",
+    "bim.overlay_processing_desc":
+      "Elementen extraheren uit uw {{format}}-bestand. Dit kan even duren.",
     "bim.overlay_processing_title": "Model verwerken...",
     "bim.overlay_upload_converted_btn": "Geconverteerde gegevens uploaden",
     "bim.show_upload": "BIM-gegevens uploaden",
@@ -3556,7 +3961,8 @@ const resource = {
     "bim.toast_model_deleted_title": "Model verwijderd",
     "bim.toast_model_processed_title": "Model verwerkt",
     "bim.toast_model_ready_title": "Model gereed",
-    "bim.toast_processing_failed_msg": "Elementen konden niet worden geëxtraheerd",
+    "bim.toast_processing_failed_msg":
+      "Elementen konden niet worden geëxtraheerd",
     "bim.toast_processing_failed_title": "Verwerking mislukt",
     "bim.toast_processing_queued_msg": "Verwerking in de wachtrij",
     "bim.toast_uploaded_title": "Geüpload",
@@ -3567,7 +3973,8 @@ const resource = {
     "bim.upload_data_columns": "Kolommen gedetecteerd",
     "bim.upload_data_hint": "CSV of Excel van CAD-converter",
     "bim.upload_data_label": "Elementgegevens (verplicht)",
-    "bim.upload_desc_full": "Elementgegevens en optionele 3D-geometrie uploaden",
+    "bim.upload_desc_full":
+      "Elementgegevens en optionele 3D-geometrie uploaden",
     "bim.upload_failed": "Uploaden mislukt",
     "bim.upload_geo_hint": "DAE (Collada)-formaat voor 3D-visualisatie",
     "bim.upload_geo_label": "3D-geometrie (optioneel)",
@@ -3578,21 +3985,26 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D-geometrie",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle": "Al geconverteerd? Gegevens + geometrie apart uploaden",
+    "bim.upload_advanced_mode_toggle":
+      "Al geconverteerd? Gegevens + geometrie apart uploaden",
     "bim.upload_depth_label": "Conversiediepte",
     "bim.upload_depth_standard": "Standaard · hoofdcategorieën (snel)",
-    "bim.upload_depth_medium": "Gemiddeld · uitgebreide categorieën (gebalanceerd)",
+    "bim.upload_depth_medium":
+      "Gemiddeld · uitgebreide categorieën (gebalanceerd)",
     "bim.upload_depth_complete": "Volledig · alle categorieën (traag)",
-    "bim.upload_depth_help": "Bepaalt hoeveel Revit-categorieën worden geëxtraheerd. Element-ID's en volledige eigenschappen worden altijd bewaard.",
+    "bim.upload_depth_help":
+      "Bepaalt hoeveel Revit-categorieën worden geëxtraheerd. Element-ID's en volledige eigenschappen worden altijd bewaard.",
     "bim.upload_discipline_label": "Discipline",
     "bim.upload_drop_here": "Bestand hier neerzetten",
-    "bim.upload_generate_pdf_label": "Projectbladen ook exporteren als PDF (op de achtergrond)",
+    "bim.upload_generate_pdf_label":
+      "Projectbladen ook exporteren als PDF (op de achtergrond)",
     "bim.upload_model_name_label": "Modelnaam",
     "bim.upload_model_name_placeholder": "bijv. Gebouw A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "Model uploaden",
     "bim.upload_remove_file": "Verwijderen",
-    "bim.upload_rvt_note": "Opmerking: RVT-bestanden vereisen DDC cad2data. Overweeg IFC.",
+    "bim.upload_rvt_note":
+      "Opmerking: RVT-bestanden vereisen DDC cad2data. Overweeg IFC.",
     "bim.upload_simple_mode_toggle": "Naar eenvoudige modus schakelen",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc)",
     "bim.upload_success_desc": "Model succesvol geüpload.",
@@ -3652,9 +4064,11 @@ const resource = {
     "reporting.invoices_month": "Facturen vervallend (maand)",
     "reporting.invoices_week": "Facturen vervallend (week)",
     "reporting.no_boqs": "Geen hoeveelheidsstaten in dit project",
-    "reporting.no_finance_data": "Geen financiële gegevens beschikbaar voor dit project. Maak eerst facturen en budgetten aan.",
+    "reporting.no_finance_data":
+      "Geen financiële gegevens beschikbaar voor dit project. Maak eerst facturen en budgetten aan.",
     "reporting.no_projects": "Geen projecten gevonden",
-    "reporting.no_safety_data": "Geen veiligheidsgegevens beschikbaar voor dit project.",
+    "reporting.no_safety_data":
+      "Geen veiligheidsgegevens beschikbaar voor dit project.",
     "reporting.observations": "Observaties",
     "reporting.on_track": "Op schema",
     "reporting.open": "Open",
@@ -3678,7 +4092,8 @@ const resource = {
     "reporting.schedule_progress": "Planningsvoortgang",
     "reporting.schedule_summary": "Planningssamenvatting",
     "reporting.select_project": "Project",
-    "reporting.select_project_prompt": "Selecteer een project om het dashboard te bekijken",
+    "reporting.select_project_prompt":
+      "Selecteer een project om het dashboard te bekijken",
     "reporting.spi": "Planning SPI",
     "reporting.subtitle": "Rapportagedashboards",
     "reporting.today_activities": "Totaal activiteiten",
@@ -3693,12 +4108,14 @@ const resource = {
     "settings.tm_showing": "{{count}} van {{total}} sleutels weergegeven",
     "punch.stat_avg_close": "Gem. dagen tot sluiting",
     "match_elements.title": "Elementen matchen",
-    "match_elements.subtitle": "BIM-elementen → CWICR-posities mappen. BIM is live; DWG / PDF / Foto komen in latere fasen.",
+    "match_elements.subtitle":
+      "BIM-elementen → CWICR-posities mappen. BIM is live; DWG / PDF / Foto komen in latere fasen.",
     "match_elements.select_project": "Project selecteren…",
     "match_elements.source.bim_live": "BIM (live)",
     "match_elements.library": "Bibliotheek",
     "match_elements.library_title": "Sjabloonbibliotheek tussen projecten",
-    "match_elements.refresh_title": "Vernieuwen — haalt de nieuwste BIM-elementen op",
+    "match_elements.refresh_title":
+      "Vernieuwen — haalt de nieuwste BIM-elementen op",
     "match_elements.clear_filter": "filter wissen",
     "match_elements.clear_selection": "selectie wissen",
     "match_elements.session_id": "Sessie {{id}}…",
@@ -3706,9 +4123,11 @@ const resource = {
     "match_elements.detail": "Detail",
     "match_elements.no_match": "Geen match…",
     "match_elements.loading_groups": "Groepen laden…",
-    "match_elements.no_groups": "Nog geen groepen — importeer een BIM-model om dit project te vullen.",
+    "match_elements.no_groups":
+      "Nog geen groepen — importeer een BIM-model om dit project te vullen.",
     "match_elements.loading_detail": "Detail laden…",
-    "match_elements.footer": "Fasen A.10–A.12 — meervoudige selectie, drempelbevestiging, geen-match-flow en tenant-sjabloonbibliotheek zijn live. Sleepbare chips en 3D-markering komen in fase B.",
+    "match_elements.footer":
+      "Fasen A.10–A.12 — meervoudige selectie, drempelbevestiging, geen-match-flow en tenant-sjabloonbibliotheek zijn live. Sleepbare chips en 3D-markering komen in fase B.",
     "match_elements.aria.select_all": "Alle zichtbare groepen selecteren",
     "match_elements.aria.select_group": "{{key}} selecteren",
     "match_elements.col.group": "Groep",
@@ -3731,40 +4150,55 @@ const resource = {
     "match_elements.action.lexical_all": "Lexicale match — top 10",
     "match_elements.action.resources_selected": "Resources ({{count}})",
     "match_elements.action.resources_all": "Resources matchen — top 10",
-    "match_elements.action.resources_title": "Matchen tegen materiaal-/resourcecatalogus",
+    "match_elements.action.resources_title":
+      "Matchen tegen materiaal-/resourcecatalogus",
     "match_elements.action.confirm_selected": "{{count}} bevestigen ≥ {{thr}}",
     "match_elements.action.confirm_all": "Alles bevestigen ≥ {{thr}}",
     "match_elements.action.skip_n": "{{count}} overslaan (te bepalen)",
-    "match_elements.busy.run_selected": "{{method}}-matcher uitvoeren op {{count}} geselecteerd…",
-    "match_elements.busy.run_all": "{{method}}-matcher uitvoeren op alle groepen…",
-    "match_elements.busy.bulk_confirm_selected": "Bulk-bevestigen van {{count}} geselecteerd ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all": "Matches in bulk bevestigen ≥ {{thr}}…",
-    "match_elements.busy.mark_tbd": "{{count}} groepen markeren als nog te bepalen…",
+    "match_elements.busy.run_selected":
+      "{{method}}-matcher uitvoeren op {{count}} geselecteerd…",
+    "match_elements.busy.run_all":
+      "{{method}}-matcher uitvoeren op alle groepen…",
+    "match_elements.busy.bulk_confirm_selected":
+      "Bulk-bevestigen van {{count}} geselecteerd ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all":
+      "Matches in bulk bevestigen ≥ {{thr}}…",
+    "match_elements.busy.mark_tbd":
+      "{{count}} groepen markeren als nog te bepalen…",
     "match_elements.alert.confirmed": "{{count}} groepen bevestigd",
-    "match_elements.alert.marked_tbd": "{{count}} groepen gemarkeerd als nog te bepalen",
+    "match_elements.alert.marked_tbd":
+      "{{count}} groepen gemarkeerd als nog te bepalen",
     "match_elements.detail.elements_count": "{{count}} elementen",
-    "match_elements.detail.no_matchers_run": "Voor deze groep is nog geen matcher uitgevoerd.",
-    "match_elements.detail.use_action_bar": "Gebruik de knoppen op de actiebalk hierboven.",
+    "match_elements.detail.no_matchers_run":
+      "Voor deze groep is nog geen matcher uitgevoerd.",
+    "match_elements.detail.use_action_bar":
+      "Gebruik de knoppen op de actiebalk hierboven.",
     "match_elements.detail.col.code": "Code",
     "match_elements.detail.col.description": "Beschrijving",
     "match_elements.detail.col.unit_rate": "Eenheid · Prijs",
     "match_elements.detail.col.conf": "Vertr.",
     "match_elements.detail.confirm": "Bevestigen",
-    "match_elements.detail.element_ids_count": "{{count}} element-ID('s). 3D-markering in fase A.12.",
+    "match_elements.detail.element_ids_count":
+      "{{count}} element-ID('s). 3D-markering in fase A.12.",
     "match_elements.detail.and_more": "…en {{count}} meer",
     "match_elements.detail.building_preview": "Voorbeeld bouwen…",
-    "match_elements.detail.auto_loaded_resources": "Automatisch geladen resources:",
-    "match_elements.detail.confirm_first": "Bevestig eerst een match om de begroting-preview te zien.",
+    "match_elements.detail.auto_loaded_resources":
+      "Automatisch geladen resources:",
+    "match_elements.detail.confirm_first":
+      "Bevestig eerst een match om de begroting-preview te zien.",
     "match_elements.tab.methods": "Match-kandidaten",
     "match_elements.tab.elements": "Elementen ({{count}})",
     "match_elements.tab.apply": "Toepassen-preview",
     "match_elements.no_match.heading": "Geen match — kies actie",
     "match_elements.no_match.custom.title": "Aangepaste positie maken",
-    "match_elements.no_match.custom.sub": "Voeg een projectspecifieke positie toe met beschrijving, eenheid en prijs.",
+    "match_elements.no_match.custom.sub":
+      "Voeg een projectspecifieke positie toe met beschrijving, eenheid en prijs.",
     "match_elements.no_match.rfq.title": "Naar offerte sturen",
-    "match_elements.no_match.rfq.sub": "Markeer voor aanbesteding — vraag offertes aan onderaannemers.",
+    "match_elements.no_match.rfq.sub":
+      "Markeer voor aanbesteding — vraag offertes aan onderaannemers.",
     "match_elements.no_match.tbd.title": "Markeren als te bepalen",
-    "match_elements.no_match.tbd.sub": "Groep parkeren; later herzien. Uitgesloten van begrotingstotalen tot opgelost.",
+    "match_elements.no_match.tbd.sub":
+      "Groep parkeren; later herzien. Uitgesloten van begrotingstotalen tot opgelost.",
     "match_elements.no_match.placeholder.description": "Positiebeschrijving",
     "match_elements.no_match.placeholder.unit": "Eenheid",
     "match_elements.no_match.placeholder.rate": "Eenheidsprijs",
@@ -3774,38 +4208,50 @@ const resource = {
     "match_elements.templates.count": "{{count}} signaturen",
     "match_elements.templates.loading": "Bibliotheek laden…",
     "match_elements.templates.empty": "Nog geen opgeslagen sjablonen.",
-    "match_elements.templates.empty_hint": "Bevestigde matches met «Opslaan in bibliotheek» ingeschakeld verschijnen hier en propageren naar toekomstige projecten.",
+    "match_elements.templates.empty_hint":
+      "Bevestigde matches met «Opslaan in bibliotheek» ingeschakeld verschijnen hier en propageren naar toekomstige projecten.",
     "match_elements.templates.unnamed": "(naamloos)",
     "match_elements.templates.sig": "sig: {{prefix}}…",
     "match_elements.templates.used": "Gebruikt",
     "match_elements.templates.last": "laatste {{date}}",
-    "match_elements.templates.remove_confirm": "Dit sjabloon uit de bibliotheek verwijderen?",
+    "match_elements.templates.remove_confirm":
+      "Dit sjabloon uit de bibliotheek verwijderen?",
     "match_elements.templates.remove_title": "Uit bibliotheek verwijderen",
-    "match_elements.templates.footer": "Sjablonen zijn tenant-bereik. Bevestigde signaturen suggereren matches automatisch in toekomstige projecten.",
+    "match_elements.templates.footer":
+      "Sjablonen zijn tenant-bereik. Bevestigde signaturen suggereren matches automatisch in toekomstige projecten.",
     "match_elements.no_project_title": "Geen actief project geselecteerd.",
-    "match_elements.no_project_hint": "Open the project picker in the header, or visit",
+    "match_elements.no_project_hint":
+      "Open the project picker in the header, or visit",
     "match_elements.active_project": "Actief project",
     "match_elements.loading_sessions": "Loading sessions…",
-    "match_elements.no_prior_sessions": "No prior matching sessions for this project.",
+    "match_elements.no_prior_sessions":
+      "No prior matching sessions for this project.",
     "match_elements.session_default_name": "Session {{id}}",
     "match_elements.new_session": "Nieuwe sessie",
     "match_elements.new_text.button": "Vanuit tekst",
-    "match_elements.new_text.button_title": "Plak beschrijvingen — één per regel",
+    "match_elements.new_text.button_title":
+      "Plak beschrijvingen — één per regel",
     "match_elements.new_text.title": "Nieuwe sessie — plak beschrijvingen",
-    "match_elements.new_text.hint": "Eén regel per post. Elke regel wordt een groep; semantisch zoeken vindt de dichtstbijzijnde CWICR-tarieven. Elke taal — de meertalige encoder verwerkt taaloverschrijdende vragen.",
+    "match_elements.new_text.hint":
+      "Eén regel per post. Elke regel wordt een groep; semantisch zoeken vindt de dichtstbijzijnde CWICR-tarieven. Elke taal — de meertalige encoder verwerkt taaloverschrijdende vragen.",
     "match_elements.new_text.name_label": "Sessienaam (optioneel)",
     "match_elements.new_text.name_placeholder": "bijv. Snelle raming Q3",
     "match_elements.new_text.lines_label": "Beschrijvingen (één per regel)",
-    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder":
+      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Sessie aanmaken",
     "match_elements.new_excel.button": "Vanuit Excel-staat",
     "match_elements.new_excel.button_title": "Upload een .xlsx-staat",
     "match_elements.new_excel.title": "Nieuwe sessie vanuit Excel-staat",
-    "match_elements.new_excel.hint": "Upload een .xlsx met minstens een kolom „Beschrijving\" (of het gelokaliseerde equivalent — Description, Beschreibung, Описание, Descripción, 描述, etc.). Optionele kolommen: Hoeveelheid, Eenheid, Code, Categorie. Hoeveelheden met decimaalkomma worden herkend.",
+    "match_elements.new_excel.hint":
+      'Upload een .xlsx met minstens een kolom „Beschrijving" (of het gelokaliseerde equivalent — Description, Beschreibung, Описание, Descripción, 描述, etc.). Optionele kolommen: Hoeveelheid, Eenheid, Code, Categorie. Hoeveelheden met decimaalkomma worden herkend.',
     "match_elements.new_excel.name_label": "Sessienaam (optioneel)",
-    "match_elements.new_excel.name_placeholder": "bijv. Aanbestedingsstaat rev 3",
-    "match_elements.new_excel.drop": "Sleep je .xlsx hier of klik om te bladeren",
-    "match_elements.new_excel.format_hint": "Alleen .xlsx · meertalige kolomkoppen ondersteund",
+    "match_elements.new_excel.name_placeholder":
+      "bijv. Aanbestedingsstaat rev 3",
+    "match_elements.new_excel.drop":
+      "Sleep je .xlsx hier of klik om te bladeren",
+    "match_elements.new_excel.format_hint":
+      "Alleen .xlsx · meertalige kolomkoppen ondersteund",
     "match_elements.new_excel.create": "Uploaden en sessie aanmaken",
     "match_elements.legend_label": "Confidence",
     "match_elements.legend_high": "Hoog",
@@ -3813,16 +4259,21 @@ const resource = {
     "match_elements.legend_low": "Laag",
     "match_elements.col.suggested": "Suggested cost",
     "match_elements.subtractive_hint": "Subtractive / non-billable",
-    "match_elements.detail.opening_warning": "host has openings but gross == net (IFC export bug)",
-    "match_elements.detail.candidate_no_id": "Candidate has no DB id — cannot confirm",
+    "match_elements.detail.opening_warning":
+      "host has openings but gross == net (IFC export bug)",
+    "match_elements.detail.candidate_no_id":
+      "Candidate has no DB id — cannot confirm",
     "match_elements.detail.apply_total": "Totaal",
     "match_elements.auto_confirm_threshold": "Auto-confirm threshold",
-    "match_elements.auto_confirm_help": "Suggested matches at or above this score auto-confirm.",
+    "match_elements.auto_confirm_help":
+      "Suggested matches at or above this score auto-confirm.",
     "match_elements.use_net": "Use net quantities (deduct openings)",
-    "match_elements.use_net_help": "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
+    "match_elements.use_net_help":
+      "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
     "match_elements.trade_filter": "Filter by trade",
     "match_elements.stage_label": "Bouwfase",
-    "match_elements.stage_help": "Koppel matches aan één OmniClass-fase. Laat leeg om alle fasen te doorzoeken.",
+    "match_elements.stage_help":
+      "Koppel matches aan één OmniClass-fase. Laat leeg om alle fasen te doorzoeken.",
     "match_elements.stage_any": "Alle fasen",
     "match_elements.stage.02_Demolition": "Sloop",
     "match_elements.stage.03_Earthwork": "Grondwerk",
@@ -3838,14 +4289,18 @@ const resource = {
     "match_elements.stage.13_Sitework": "Terreininrichting",
     "match_elements.group_by": "Groeperen op",
     "match_elements.group_by_empty": "Kies minstens één attribuut",
-    "match_elements.group_by_active": "{{count}} actief · klik om te verwijderen",
-    "match_elements.group_by_remove": "Klik om uit de groepering te verwijderen",
+    "match_elements.group_by_active":
+      "{{count}} actief · klik om te verwijderen",
+    "match_elements.group_by_remove":
+      "Klik om uit de groepering te verwijderen",
     "match_elements.group_by_sample": "bv.",
     "match_elements.loading_attributes": "Laden…",
     "match_elements.action.apply": "Apply to BOQ ({{n}})",
-    "match_elements.action.apply_title": "Write confirmed matches to the project BOQ",
+    "match_elements.action.apply_title":
+      "Write confirmed matches to the project BOQ",
     "match_elements.busy.applying": "Applying confirmed groups to BOQ…",
-    "match_elements.alert.applied": "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
+    "match_elements.alert.applied":
+      "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visible",
     "match_elements.selected_count": "{{n}} selected",
     "match_elements.trade.architectural": "Architectural",
@@ -3860,10 +4315,12 @@ const resource = {
     "nav.add_module": "Module toevoegen",
     "nav.add_module_hint": "Bouw je eigen · ontwikkelaarsgids",
     "nav.request_custom_module": "Aangepaste module aanvragen",
-    "nav.request_custom_module_hint": "Mis je iets? Vertel ons wat je nodig hebt",
+    "nav.request_custom_module_hint":
+      "Mis je iets? Vertel ons wat je nodig hebt",
     "modules.dev_guide": "Een module bouwen — ontwikkelaarsgids",
     "boq.accept": "Accepteren",
-    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions":
+      "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Kolom toevoegen",
@@ -3885,54 +4342,68 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip":
+      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle":
+      "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic":
+      "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary":
+      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg":
+      "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs":
+      "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection":
+      "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc":
+      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle":
+      "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle":
+      "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer":
+      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip":
+      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count":
+      "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip":
+      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -3946,22 +4417,27 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available":
+      "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message":
+      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed":
+      "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title":
+      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip":
+      "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -3988,19 +4464,22 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
+    "boq.column_delete_confirm":
+      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
+    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint":
+      "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
+    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options": "Select column needs at least one option",
+    "boq.column_select_needs_options":
+      "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Type",
@@ -4020,13 +4499,17 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query": "Enter a description to search the cost database",
+    "boq.cost_finder_no_query":
+      "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder":
+      "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip":
+      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error":
+      "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4036,8 +4519,10 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint":
+      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle":
+      "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4046,7 +4531,8 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint":
+      "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Budget",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4059,28 +4545,35 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc":
+      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc":
+      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
+    "boq.grand_total_conversion_tooltip_v2":
+      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint":
+      "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint":
+      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint":
+      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout":
+      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4091,13 +4584,16 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count":
+      "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm":
+      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip":
+      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4108,7 +4604,8 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint":
+      "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4118,52 +4615,64 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns":
+      "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help":
+      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
+    "boq.no_quantities_hint_button":
+      'No quantities — press "Show all" above to surface every BIM property',
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title":
+      "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint":
+      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data":
+      "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder":
+      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc":
+      "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip":
+      "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
+    "boq.preset_already_applied":
+      "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint":
+      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc":
+      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4172,29 +4681,40 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources":
+      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1":
+      "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2":
+      "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3":
+      "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning":
+      "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped":
+      "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual":
+      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint":
+      "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip":
+      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle":
+      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint":
+      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4202,14 +4722,19 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc":
+      "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc":
+      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc":
+      "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc":
+      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning":
+      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4217,28 +4742,41 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Valuta",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom":
+      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint":
+      "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match":
+      "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge":
+      "Variant resource — multiple price options available",
     "boq.resource_name": "Naam",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate":
+      "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click":
+      "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base":
+      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Type",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip":
+      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default":
+      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked":
+      "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked":
+      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4246,19 +4784,25 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip":
+      "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip":
+      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog":
+      "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip":
+      "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip":
+      "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip":
+      "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4267,8 +4811,10 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources": "Search cost items to add as resources to position",
-    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources":
+      "Search cost items to add as resources to position",
+    "boq.search_catalog_resources":
+      "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4276,7 +4822,8 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error":
+      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4305,7 +4852,8 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint":
+      "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4316,9 +4864,11 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement":
+      "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title":
+      "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4326,20 +4876,25 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria":
+      "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked":
+      "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip":
+      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4356,48 +4911,64 @@ const resource = {
     "boq.variables_description": "Beschrijving",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help":
+      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Naam",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Type",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg":
+      "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip":
+      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip":
+      "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip":
+      "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip":
+      "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip":
+      "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc":
+      "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc":
+      "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg":
+      "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg":
+      "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc":
+      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty":
+      "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial":
+      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum":
+      "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Compliance",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle":
+      "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4428,8 +4999,10 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability": "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability":
+      "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp":
+      "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4443,9 +5016,11 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description":
+      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description":
+      "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4468,7 +5043,8 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body":
+      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -4476,7 +5052,8 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region":
+      "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -4494,23 +5071,30 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder":
+      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Zoeken",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading":
+      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
-    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline":
+      "Cost items are saved locally and available offline.",
+    "costs.description_placeholder":
+      "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above":
+      "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Apparatuur",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc":
+      "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer":
+      "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -4529,21 +5113,26 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed":
+      "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint":
+      "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint":
+      "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint": "Positions created with unit rates from cost database",
+    "costs.positions_created_hint":
+      "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
-    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": 'No regions match "{{q}}"',
+    "costs.region_filter_placeholder":
+      "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -4576,12 +5165,14 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip":
+      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding":
+      "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -4595,7 +5186,8 @@ const resource = {
     "files.activity.title": "Activiteit",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint":
+      "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Onbekende gebruiker",
@@ -4609,7 +5201,8 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle":
+      "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -4624,12 +5217,15 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural":
+      "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate": "This member already has access at this level.",
+    "files.permissions.error_duplicate":
+      "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle":
+      "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Wachtwoord",
@@ -4644,59 +5240,85 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed":
+      "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
-    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
-    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
-    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail":
+      "{{failed}} file(s) could not be deleted.",
+    "onboarding.mode_simple_desc":
+      "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_advanced_desc":
+      "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "project_intelligence.ai.cost_advisor_title":
+      "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc":
+      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title":
+      "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub":
+      "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub":
+      "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio":
+      "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub":
+      "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub":
+      "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration":
+      "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub":
+      "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint":
+      "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
+    "project_intelligence.chat_error":
+      "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt":
+      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact":
+      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub":
+      "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub":
+      "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin":
+      "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body":
+      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote":
+      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title":
+      "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc":
+      "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations":
+      "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -4705,18 +5327,24 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191":
+      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain":
+      "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc":
+      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt":
+      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Foto's",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc":
+      "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc":
+      "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -4736,7 +5364,8 @@ const resource = {
     "takeoff.markup.close": "Sluiten",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Opmerkingen",
-    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty":
+      "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -4746,7 +5375,8 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm":
+      "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Sluiten",
@@ -4756,8 +5386,10 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description":
+      "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc":
+      "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -4773,7 +5405,8 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle":
+      "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -4787,14 +5420,18 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
+    "finance.boq_tip_desc":
+      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
     "finance.boq_tip_title": "Tip:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint":
+      "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Budget",
-    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder":
+      "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation":
+      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Apparatuur",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -4808,8 +5445,10 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Valuta",
     "finance.direction": "Direction",
-    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file":
+      "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation":
+      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -4823,11 +5462,14 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result":
+      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder":
+      "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation":
+      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -4835,12 +5477,15 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc":
+      "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip":
+      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation":
+      "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -4871,15 +5516,19 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body":
+      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body":
+      "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body":
+      "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body":
+      "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Item toevoegen",
@@ -4900,7 +5549,8 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder": "Optional notes or special instructions...",
+    "procurement.notes_placeholder":
+      "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -4911,60 +5561,87 @@ const resource = {
     "procurement.subtotal": "Subtotal",
     "procurement.tax": "Tax",
     "procurement.total": "Total",
-    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help":
+      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "match_elements.info.button_aria": "How matching works",
     "match_elements.info.button_title": "How matching works",
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer": "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract":
+      "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search":
+      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist":
+      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save":
+      "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer":
+      "Saved sessions live in the list on this page.",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help":
+      "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help":
+      "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help":
+      "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help":
+      "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help":
+      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help":
+      "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail":
+      "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail":
+      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
+    "match_elements.vector_status_missing_detail":
+      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail":
+      "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail":
+      "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail":
+      "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help":
+      "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title":
+      "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail":
+      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail":
+      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title":
+      "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail":
+      "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail":
+      "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available":
+      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint":
+      "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -4982,12 +5659,17 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body":
+      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
-    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption":
+      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption":
+      "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after":
+      "After install, restart the backend.",
+    "match_elements.embedder_size_caption":
+      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -4998,8 +5680,10 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption":
+      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption":
+      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5040,14 +5724,18 @@ const resource = {
     "match_progress.title_running": "Match wordt uitgevoerd",
     "match_progress.title_done": "Match voltooid",
     "match_progress.title_error": "Match mislukt",
-    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running":
+      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done":
+      "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error":
+      "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Verstreken",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long": "Almost done — large projects can take a minute",
+    "match_progress.headline_long":
+      "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5057,7 +5745,8 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint":
+      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "Match mislukt",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5075,9 +5764,619 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Projectontwikkelaar",
-    "onboarding.company_property_developer_desc": "Teams voor vastgoedontwikkeling",
+    "onboarding.company_property_developer_desc":
+      "Teams voor vastgoedontwikkeling",
     "onboarding.explore_all_modules": "Alle {{count}} modules verkennen",
-  }
+    "boq.add_child_position": "Subpost toevoegen",
+    "boq.add_sub_section": "Subhoofdstuk toevoegen",
+    "boq.ai_no_answer":
+      "De assistent gaf geen antwoord. Herformuleer of probeer het opnieuw.",
+    "boq.compare_added": "Toegevoegd",
+    "boq.compare_against": "Vergelijken met",
+    "boq.compare_btn": "Vergelijken",
+    "boq.compare_btn_hint": "Vergelijk deze raming met een andere",
+    "boq.compare_col_delta": "Δ basis",
+    "boq.compare_col_line": "Regel",
+    "boq.compare_col_qty": "Hoev.",
+    "boq.compare_col_rate": "EP",
+    "boq.compare_error": "Kon deze ramingen niet vergelijken.",
+    "boq.compare_hide_unchanged": "Ongewijzigde regels verbergen",
+    "boq.compare_no_diff": "Geen verschillen tussen deze ramingen.",
+    "boq.compare_pick": "— Kies een raming —",
+    "boq.compare_qty": "Hoev.",
+    "boq.compare_rate": "EP",
+    "boq.compare_removed": "Verwijderd",
+    "boq.compare_select_hint":
+      "Kies hierboven een andere raming voor een regel-voor-regel-vergelijking.",
+    "boq.compare_unchanged": "Ongewijzigd",
+    "boq.compare_ct_added": "Toegevoegd",
+    "boq.compare_ct_removed": "Verwijderd",
+    "boq.compare_ct_qty_changed": "Hoev.",
+    "boq.compare_ct_rate_changed": "EP",
+    "boq.compare_ct_changed": "Gewijzigd",
+    "boq.compare_ct_unchanged": "Ongewijzigd",
+    "boq.model_link_action": "Modelkoppeling…",
+    "boq.model_link_aggregation": "Aggregatie",
+    "boq.model_link_agg_sum": "Som",
+    "boq.model_link_agg_max": "Max",
+    "boq.model_link_agg_min": "Min",
+    "boq.model_link_agg_count": "Aantal",
+    "boq.model_link_agg_first": "Eerste",
+    "boq.model_link_create": "Koppeling aanmaken",
+    "boq.model_link_created": "Modelkoppeling aangemaakt",
+    "boq.model_link_created_hint":
+      "De hoeveelheid is nog niet bijgewerkt — gebruik «Vernieuwen vanuit model» en daarna Toepassen om hem op te halen.",
+    "boq.model_link_delete": "Koppeling verwijderen",
+    "boq.model_link_delete_failed": "Modelkoppeling kon niet worden verwijderd",
+    "boq.model_link_deleted": "Modelkoppeling verwijderd",
+    "boq.model_link_elem_count": "{{count}} element(en)",
+    "boq.model_link_elements": "Elementen ({{selected}} geselecteerd)",
+    "boq.model_link_existing": "Bestaande koppelingen",
+    "boq.model_link_failed": "Modelkoppeling kon niet worden aangemaakt",
+    "boq.model_link_model": "BIM-model",
+    "boq.model_link_new": "Nieuwe koppeling",
+    "boq.model_link_no_elements": "Dit model heeft geen elementen.",
+    "boq.model_link_no_models": "Dit project heeft nog geen BIM-modellen.",
+    "boq.model_link_none": "Nog geen modelkoppelingen voor deze post.",
+    "boq.model_link_pick_field": "— Kies een hoeveelheid —",
+    "boq.model_link_pick_model": "— Kies een model —",
+    "boq.model_link_quantity_field": "Hoeveelheidveld",
+    "boq.model_link_status_active": "Gesynchroniseerd",
+    "boq.model_link_status_stale": "Verouderd",
+    "boq.model_link_status_broken": "Verbroken",
+    "boq.model_link_subtitle":
+      "Post {{ordinal}} — hoeveelheid koppelen aan BIM-modelelementen",
+    "boq.model_link_title": "Modelkoppeling",
+    "boq.model_link_version": "model v{{v}}",
+    "boq.model_review_all_synced":
+      "Alle gekoppelde hoeveelheden zijn gesynchroniseerd met het model.",
+    "boq.model_review_applied": "{{count}} hoeveelheidsupdate(s) toegepast",
+    "boq.model_review_apply": "{{count}} geselecteerde toepassen",
+    "boq.model_review_apply_failed": "Toepassen mislukt",
+    "boq.model_review_btn": "Model-sync",
+    "boq.model_review_btn_hint":
+      "Hoeveelheden opnieuw ophalen uit gekoppelde BIM-modellen",
+    "boq.model_review_hint":
+      "Herhaalt de gekoppelde hoeveelheden tegen de laatste modelversie. Niets verandert tot u op Toepassen klikt.",
+    "boq.model_review_missing": "{{count}} ontbreken",
+    "boq.model_review_no_links": "Geen modelkoppelingen in deze raming",
+    "boq.model_review_refresh": "Vernieuwen vanuit model",
+    "boq.model_review_refresh_failed": "Vernieuwen vanuit model mislukt",
+    "boq.model_review_run":
+      "Start een vernieuwing om modelgedreven wijzigingen te zien.",
+    "boq.model_review_title": "Modelhoeveelheden controleren",
+    "boq.position_added_edit_hint":
+      "Typ de omschrijving en gebruik Tab door eenheid, hoeveelheid en EP",
+    "boq.link_badge_instance":
+      "Gekoppelde instantie van code {{code}} — wijzigen van de definitie laat hem afwijken",
+    "boq.link_badge_master": "Master van code {{code}} — {{count}} gekoppeld",
+    "boq.link_master_badge": "Master",
+    "boq.link_propagated_msg":
+      "{{count}} gekoppelde post(en) bijgewerkt in dit project.",
+    "boq.link_propagated_title": "Definitie gepropageerd",
+    "boq.max_depth_reached_tooltip":
+      "Maximale nestingsdiepte van {{max}} niveaus bereikt — vereenvoudig de structuur of gebruik minder subniveaus.",
+    "boq.resource_link_propagated_msg":
+      "Gedeelde resource bijgewerkt op {{count}} andere post(en) in dit project.",
+    "boq.resource_link_propagated_title": "Resourcedefinitie gepropageerd",
+    "boq.link_role_instance": "Gekoppelde instantie",
+    "boq.link_role_master": "Master (referentiedefinitie)",
+    "boq.link_unlinked_msg":
+      "Uw wijziging heeft deze gekoppelde kopie aangepast, daarom volgt zij de gedeelde code niet meer. Als u geen afwijking wilde, herstel dan haar code.",
+    "boq.link_unlinked_title": "Post losgekoppeld van gedeelde code",
+    "boq.linked_positions_count":
+      "{{total}} posten delen deze code ({{instances}} gekoppelde instantie(s)). De master is de referentiedefinitie; wijzigingen worden gepropageerd naar elke instantie in dit project.",
+    "boq.linked_positions_error": "Kon gekoppelde posten niet laden.",
+    "boq.linked_positions_none":
+      "Deze post staat op zichzelf — geen andere post deelt zijn code.",
+    "boq.linked_positions_subtitle":
+      "Code {{code}} — bekeken vanuit post {{ordinal}}",
+    "boq.linked_positions_title": "Gekoppelde posten",
+    "boq.no_description": "(geen omschrijving)",
+    "boq.reuse_code_action": "Bestaande code hergebruiken…",
+    "boq.reuse_code_existing": "Bestaande codes: {{codes}}",
+    "boq.reuse_code_msg":
+      "Gekoppelde instantie aangemaakt — {{count}} posten delen deze code. De hoeveelheid is onafhankelijk te bewerken.",
+    "boq.reuse_code_prompt":
+      "Voer een bestaande code in om hem hier te hergebruiken (definitie en subposten worden gekopieerd; hoeveelheid blijft onafhankelijk):",
+    "boq.reuse_code_title": "Code {{code}} hergebruikt",
+    "boq.show_linked": "Gekoppelde posten tonen",
+    "boq.unlink_done_msg":
+      "Code {{code}} behouden. Deze post volgt de gedeelde code niet meer; haar waarden zijn bewaard.",
+    "boq.unlink_done_title": "Post losgekoppeld",
+    "boq.unlink_failed": "Loskoppelen van post mislukt",
+    "boq.unlink_this": "Deze post loskoppelen",
+    "login.github": "GitHub",
+    "login.github_sub": "Broncode",
+    "login.community": "Community",
+    "login.community_sub": "Hulp en overleg",
+    "login.brand_edit": "Logo aanpassen",
+    "login.brand_title": "White-label branding",
+    "login.brand_desc":
+      "Wordt weergegeven op dit aanmeldscherm en in de hele app. Alleen in deze browser opgeslagen.",
+    "login.brand_upload": "Logo uploaden",
+    "login.brand_name_ph": "Bedrijfsnaam",
+    "login.brand_reset": "Terug naar standaard",
+    "login.brand_too_big": "Afbeelding te groot (max. 512 KB).",
+    "login.brand_bad_type": "Kies een PNG-, JPG-, SVG- of WebP-afbeelding.",
+    "nav.project_route": "Projectroute",
+    "nav.phase_estimation": "Calculatie",
+    "nav.phase_planning": "Planning",
+    "nav.phase_execution": "Uitvoering",
+    "nav.phase_closure": "Kwaliteit en afsluiting",
+    "nav.clash_detection": "Clashdetectie",
+    "schedule_advanced.master_hint":
+      "Selecteer een hoofdplanning om die als werkplan in te stellen voor de tabbladen Fasen, Look-Ahead, Weekplanning en Beperkingen. Met de rijacties kunt u hem hernoemen, data en status wijzigen of verwijderen.",
+    "schedule_advanced.no_master_yet_desc":
+      "De hoofdplanning is het bovenliggende plan waarin alle fase-, look-ahead- en weekplanningen samenkomen. Maak er een aan om met pull-planning te starten — u kunt hem op elk moment hernoemen, data wijzigen of verwijderen.",
+    "schedule_advanced.active_selection": "Werkplan",
+    "schedule_advanced.master_status.active": "Actief",
+    "schedule_advanced.master_status.archived": "Gearchiveerd",
+    "schedule_advanced.edit_master": "Hoofdplanning bewerken",
+    "schedule_advanced.master_updated": "Hoofdplanning bijgewerkt",
+    "schedule_advanced.master_deleted": "Hoofdplanning verwijderd",
+    "schedule_advanced.delete_master_title": "Hoofdplanning verwijderen?",
+    "schedule_advanced.delete_master_message":
+      "«{{name}}» en alles eronder — faseplannen, look-aheads, weekplannen, toezeggingen en baselines — worden definitief verwijderd. Dit kan niet ongedaan worden gemaakt.",
+    "schedule_advanced.err_master_name_required":
+      "Naam van de hoofdplanning is verplicht.",
+    "schedule_advanced.master_name_placeholder": "bijv. Bouwhoofdplanning",
+    "schedule_advanced.master_status_hint":
+      "Archiveer een planning om de historie te bewaren zonder dat hij het werkplan is. Gearchiveerde plannen kunnen hier altijd worden geactiveerd.",
+    "schedule_advanced.master_notes_placeholder":
+      "Scope, contractreferentie, belangrijke mijlpalen…",
+    "files.cta.add_first_short": "Bestanden toevoegen",
+    "files.folder.files_count": "bestanden",
+    "files.folder.subfolders": "{{count}} mappen",
+    "files.folder.share": "{{pct}}% van totale opslag",
+    "notifications.safety.incident_created": "Veiligheidsincident gemeld",
+    "notifications.safety.incident_created_body":
+      "Incident {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation":
+      "Veiligheidswaarneming met hoog risico",
+    "notifications.safety.high_risk_body":
+      "Waarneming {{observation_number}} (risico {{risk_score}}): {{description}}",
+    "notifications.bi.alert.title": "Dashboardwaarschuwing geactiveerd",
+    "notifications.bi.alert.body":
+      "{{alert_name}} — {{kpi_code}} is {{value}} ({{condition}} drempel {{threshold}}).",
+    "notifications.bi.report.title": "Geplande rapportage klaar",
+    "notifications.bi.report.body":
+      "Rapport {{report_code}} gegenereerd met {{row_count}} regels.",
+    "notifications.supplier_catalogs.po.sent.title": "Inkooporder verzonden",
+    "notifications.supplier_catalogs.po.sent.body":
+      "Order verzonden aan leverancier {{vendor_id}} voor {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title":
+      "Factuur-uitzondering",
+    "notifications.supplier_catalogs.invoice.exception.body":
+      "Factuur van order {{po_id}} moet beoordeeld worden: {{reason}}",
+    "notifications.supplier_catalogs.stock.low.title": "Lage voorraad",
+    "notifications.supplier_catalogs.stock.low.body":
+      "{{sku}}: {{available_qty}} resterend, op of onder bestelpunt {{reorder_point}}.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title":
+      "Leverancier op zwarte lijst",
+    "notifications.supplier_catalogs.vendor.blacklisted.body":
+      "Leverancier {{code}} is op de zwarte lijst gezet: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title":
+      "Compliancedocument van leverancier verlopen",
+    "notifications.supplier_catalogs.kyc.expired.body":
+      "{{doc_type}} verlopen op {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title":
+      "Compliancedocument van leverancier verloopt",
+    "notifications.supplier_catalogs.kyc.expiring.body":
+      "{{doc_type}} verloopt op {{expires_on}} (nog {{days_until_expiry}} dagen).",
+    "notifications.resources.cert_expiring.title":
+      "Certificering verloopt binnenkort",
+    "notifications.resources.cert_expiring.body":
+      "{{resource_name}} — {{cert_type}} verloopt op {{valid_until}} (nog {{days_left}} dagen).",
+    "notifications.resources.assignment_proposed.title":
+      "Resource-inzet voorgesteld",
+    "notifications.resources.assignment_proposed.body":
+      "Voorgesteld voor taak {{task}} vanaf {{start}}.",
+    "notifications.resources.assignment_confirmed.title":
+      "Resource-inzet bevestigd",
+    "notifications.resources.assignment_confirmed.body":
+      "Inzet bevestigd voor taak {{task}}.",
+    "notifications.contracts.signed.title": "Contract ondertekend",
+    "notifications.contracts.signed.body":
+      "Contract {{code}} ondertekend voor {{value}} {{currency}}.",
+    "notifications.contracts.claim_submitted.title": "Contractclaim ingediend",
+    "notifications.contracts.claim_submitted.body":
+      "Claim ingediend voor {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.title": "Contractclaim betaald",
+    "notifications.contracts.claim_paid.body":
+      "Claim betaald: {{amount}} {{currency}}.",
+    "notifications.contracts.retention_released.title": "Inhouding vrijgegeven",
+    "notifications.contracts.retention_released.body":
+      "Contract {{contract_code}}: {{amount_released}} vrijgegeven, {{remaining}} resterend.",
+    "notifications.crm.lead_qualified.title": "Lead gekwalificeerd",
+    "notifications.crm.lead_qualified.body": "Lead {{name}} is gekwalificeerd.",
+    "notifications.crm.opportunity_won.title": "Opportunity gewonnen",
+    "notifications.crm.opportunity_won.body":
+      "{{name}} gewonnen — waarde {{value}}.",
+    "notifications.crm.opportunity_scored.title": "Opportunity gescoord",
+    "notifications.crm.opportunity_scored.body":
+      "{{title}} scoorde {{score}} (band {{band}}).",
+    "notifications.carbon.boq_position_assigned.title": "CO₂-factor toegewezen",
+    "notifications.carbon.boq_position_assigned.body":
+      "Post {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title": "Koper onder contract",
+    "notifications.property_dev.buyer_contracted.body":
+      "{{buyer}} onder contract voor kavel {{plot}}.",
+    "notifications.property_dev.handover_completed.title":
+      "Oplevering voltooid",
+    "notifications.property_dev.handover_completed.body":
+      "Oplevering van kavel {{plot}} voltooid.",
+    "notifications.property_dev.warranty_raised.title":
+      "Garantieclaim ingediend",
+    "notifications.property_dev.warranty_raised.body":
+      "{{category}}-garantieclaim ingediend voor kavel {{plot}}.",
+    "notifications.bid_management.invitation_sent.title":
+      "Aanbestedingsuitnodiging verzonden",
+    "notifications.bid_management.invitation_sent.body":
+      "Uitnodiging voor {{package}} verzonden, sluit {{due}}.",
+    "notifications.bid_management.awarded.title": "Gegund",
+    "notifications.bid_management.awarded.body":
+      "{{package}} gegund voor {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title":
+      "Planningsbeperking opgeheven",
+    "notifications.schedule_advanced.constraint_cleared.body":
+      "Taak {{task}} is niet meer geblokkeerd.",
+    "notifications.daily_diary.signed.title": "Dagrapport ondertekend",
+    "notifications.daily_diary.signed.body":
+      "Dagrapport van {{date}} is ondertekend.",
+    "notifications.service.ticket_dispatched.title": "Servicemelding ingedeeld",
+    "notifications.service.ticket_dispatched.body":
+      "Melding {{ticket_number}} ingedeeld (prioriteit {{priority}}).",
+    "notifications.service.ticket_resolved.title": "Servicemelding opgelost",
+    "notifications.service.ticket_resolved.body":
+      "Melding {{ticket_number}} is opgelost.",
+    "notifications.service.work_order_billed.title":
+      "Werkopdracht gefactureerd",
+    "notifications.service.work_order_billed.body":
+      "Werkopdracht {{wo_number}} gefactureerd voor {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.title":
+      "Prekwalificatie ingediend",
+    "notifications.subcontractors.prequal_submitted.body":
+      "{{subcontractor_name}} heeft een prekwalificatie ingediend.",
+    "notifications.subcontractors.payment_app_submitted.title":
+      "Betaalverzoek ingediend",
+    "notifications.subcontractors.payment_app_submitted.body":
+      "Verzoek {{application_number}} ingediend voor {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title":
+      "Inhouding onderaannemer vrijgegeven",
+    "notifications.subcontractors.retention_released.body":
+      "Inhouding vrijgegeven: {{amount}} {{currency}}.",
+    "notifications.equipment.assigned.title": "Materieel toegewezen",
+    "notifications.equipment.assigned.body":
+      "{{equipment_code}} toegewezen aan {{project_name}}.",
+    "notifications.equipment.damage_reported.title":
+      "Schade aan materieel gemeld",
+    "notifications.equipment.damage_reported.body":
+      "Schade gemeld aan {{equipment_code}} ({{severity}}).",
+    "notifications.portal.user_invited.title": "Portaalgebruiker uitgenodigd",
+    "notifications.portal.user_invited.body":
+      "{{portal_user_email}} uitgenodigd als {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer":
+      "Semantische vectorzoekfunctie is optioneel — verfijnt matches op betekenis, maar vereist een draaiende Qdrant-vectordatabase. Gebruik het paneel «Vectordatabase» hieronder om Qdrant native te starten of installeren (zonder Docker) en probeer opnieuw.",
+    "match_elements.vector_status_disconnected_fallback":
+      "U kunt nu toch doorgaan: het matchen valt automatisch terug op lexicale (trefwoord-) en regelgebaseerde score zolang de vector-DB offline is.",
+    "match_elements.vector_status_retry": "Verbinding opnieuw proberen",
+    "match_elements.vector_status_open_costs_long":
+      "Kostendatabase-tools openen",
+    "match_elements.pipeline.title": "Match-pipeline",
+    "match_elements.pipeline.subtitle":
+      "Zeven stappen van CAD-bestand naar geprijsde raming — elke stap is zichtbaar en instelbaar",
+    "match_elements.pipeline.done_suffix": "klaar",
+    "match_elements.pipeline.run_all": "Alle stappen uitvoeren",
+    "match_elements.pipeline.running_all": "Alles wordt uitgevoerd…",
+    "match_elements.pipeline.loading": "Pipeline laden…",
+    "match_elements.pipeline.load_failed": "Kon de pipeline niet laden.",
+    "match_elements.pipeline.loading_prompts": "Prompts laden…",
+    "match_elements.pipeline.run": "Uitvoeren",
+    "match_elements.pipeline.rerun": "Opnieuw uitvoeren",
+    "match_elements.pipeline.adjust": "Aanpassen",
+    "match_elements.pipeline.adjust_stage": "Stap aanpassen",
+    "match_elements.pipeline.rerun_from_here": "Vanaf hier opnieuw uitvoeren",
+    "match_elements.pipeline.status_pending": "Niet uitgevoerd",
+    "match_elements.pipeline.status_running": "Wordt uitgevoerd",
+    "match_elements.pipeline.status_done": "Klaar",
+    "match_elements.pipeline.status_error": "Fout",
+    "match_elements.pipeline.status_stale": "Opnieuw uitvoeren",
+    "match_elements.pipeline.status_skipped": "Overgeslagen",
+    "match_elements.pipeline.stale_hint":
+      "Een eerdere stap is gewijzigd — voer deze opnieuw uit om de uitvoer te vernieuwen.",
+    "match_elements.pipeline.llm_badge": "LLM",
+    "match_elements.pipeline.llm_tunable":
+      "LLM-versterkt — prompt is bewerkbaar",
+    "match_elements.pipeline.group_by": "Groeperen op sleutels",
+    "match_elements.pipeline.group_by_hint":
+      "Komma-gescheiden. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.method": "Methode",
+    "match_elements.pipeline.max_groups": "Max. groepen",
+    "match_elements.pipeline.llm_provider": "LLM-provider",
+    "match_elements.pipeline.prompt": "Prompt",
+    "match_elements.pipeline.system": "system",
+    "match_elements.pipeline.system_readonly":
+      "Systeem-prompt — alleen-lezen. Fork om te bewerken en op uw bedrijf af te stemmen.",
+    "match_elements.pipeline.system_prompt": "Systeem-prompt",
+    "match_elements.pipeline.user_template": "Gebruikerssjabloon",
+    "match_elements.pipeline.variables": "Variabelen die de stap invult:",
+    "match_elements.pipeline.fork": "Forken om te bewerken",
+    "match_elements.pipeline.duplicate": "Dupliceren",
+    "match_elements.pipeline.save_prompt": "Prompt opslaan",
+    "match_elements.pipeline.revert": "Terugzetten",
+    "match_elements.pipeline.run_failed": "Stap-uitvoering mislukt",
+    "match_elements.pipeline.intro_title": "Open de zichtbare match-pipeline",
+    "match_elements.pipeline.intro_blurb":
+      "Zeven stappen van CAD-bestand naar geprijsde raming — Converteren, Laden, Schema, Filteren, Groeperen, Matchen, Rollup. Elke stap is zichtbaar, uitgelegd en instelbaar (prompts, LLM-provider, groeperingssleutels).",
+    "match_elements.pipeline.intro_cta": "Pipeline openen",
+    "match_elements.pipeline.intro_resume": "Laatste sessie hervatten",
+    "match_elements.pipeline.busy_hint":
+      "Er loopt een stap — wacht tot deze klaar is voordat u een andere start.",
+    "match_elements.pipeline.step_convert": "Converteren",
+    "match_elements.pipeline.step_load": "Laden",
+    "match_elements.pipeline.step_schema": "Schema",
+    "match_elements.pipeline.step_filter": "Filteren",
+    "match_elements.pipeline.step_group": "Groeperen",
+    "match_elements.pipeline.step_match": "Matchen",
+    "match_elements.pipeline.step_rollup": "Rollup",
+    "clash.title": "Clashdetectie",
+    "clash.subtitle":
+      "Geometrische interferentie- en clearancecoördinatie over gefedereerde BIM-modellen — met clashmatrix en BCF-export.",
+    "clash.pick_project": "Project kiezen",
+    "clash.new_run": "Nieuwe clashrun",
+    "clash.models": "Modellen",
+    "clash.no_models": "Geen geparste BIM-modellen in dit project.",
+    "clash.tolerance": "Tolerantie (mm)",
+    "clash.clearance": "Clearance (mm)",
+    "clash.mode": "Testbereik",
+    "clash.mode_cross": "Alleen tussen disciplines",
+    "clash.mode_all": "Alle paren",
+    "clash.mode_sets": "Set A vs. set B (per type)",
+    "clash.sets_hint":
+      "Alleen paren worden getest waarbij één element in set A en het andere in set B zit — bijv. alle wanden (A) tegen alle leidingen (B).",
+    "clash.set_a": "Set A",
+    "clash.set_b": "Set B",
+    "clash.sets_required":
+      "Kies minstens één type of discipline voor set A en B.",
+    "clash.set_search": "Zoek typen / disciplines…",
+    "clash.set_empty": "Geen elementen — kies eerst een geparst model.",
+    "clash.disciplines": "Disciplines",
+    "clash.element_types": "Elementtypen",
+    "clash.run": "Clashdetectie uitvoeren",
+    "clash.history": "Runs-historie",
+    "clash.no_runs": "Nog geen runs.",
+    "clash.run_failed": "Clashrun mislukt",
+    "clash.run_done": "{{n}} clashes gevonden in {{e}} elementen",
+    "clash.status_failed": "Status kon niet worden bijgewerkt",
+    "clash.status_saved": "Status bijgewerkt",
+    "clash.bcf_done":
+      "{{n}} clash(es) naar BCF geëxporteerd ({{s}} overgeslagen)",
+    "clash.empty_title": "Geen clashrun geselecteerd",
+    "clash.empty_desc":
+      "Kies links de BIM-modellen en start clashdetectie om de coördinatiematrix te bouwen.",
+    "clash.kpi_total": "Totaal clashes",
+    "clash.kpi_hard": "Hard",
+    "clash.kpi_clearance": "Clearance",
+    "clash.kpi_open": "Open",
+    "clash.kpi_resolved": "Opgelost",
+    "clash.kpi_disciplines": "Disciplines",
+    "clash.kpi_matrix_cells": "Matrixcellen",
+    "clash.matrix_title": "Clashmatrix — discipline × discipline",
+    "clash.matrix_open": "{{n}} open",
+    "clash.clear_filter": "Filter wissen",
+    "clash.no_clashes": "Geen clashes — de modellen zijn schoon.",
+    "clash.no_clashes_title": "Geen clashes gedetecteerd",
+    "clash.no_match_title": "Geen clashes voldoen aan de filters",
+    "clash.no_match_desc": "Verbreed of wis de actieve filters.",
+    "clash.results_error": "Kon clashresultaten niet laden",
+    "clash.results_error_desc":
+      "De clashresultaten konden niet worden geladen. Dat betekent niet dat de modellen schoon zijn — probeer het opnieuw.",
+    "clash.retry": "Opnieuw proberen",
+    "clash.capped_notice":
+      "Eerste {{loaded}} van {{total}} clashes getoond — verfijn filters om het beoordelingsset te beperken.",
+    "clash.results": "Clashresultaten",
+    "clash.count_of": "{{shown}} van {{total}}",
+    "clash.search_ph": "Zoek op elementnaam…",
+    "clash.all_types": "Alle typen",
+    "clash.type_hard": "Hard",
+    "clash.type_clearance": "Clearance",
+    "clash.export_sel": "{{n}} naar BCF exporteren",
+    "clash.export_open": "Open → BCF exporteren",
+    "clash.export_row": "Deze clash naar BCF exporteren",
+    "clash.filter_status": "Status",
+    "clash.filter_min_pen": "Min. penetratie",
+    "clash.clear_all": "Alles wissen",
+    "clash.col_a": "Element A",
+    "clash.col_b": "Element B",
+    "clash.col_type": "Type",
+    "clash.col_penetration": "Penetratie",
+    "clash.col_distance": "Afstand",
+    "clash.col_status": "Status",
+    "clash.col_actions": "Acties",
+    "clash.select_all": "Alles op deze pagina selecteren",
+    "clash.select_row": "Clash selecteren",
+    "clash.bcf": "BCF",
+    "clash.isolate_3d": "In 3D isoleren",
+    "clash.isolate_3d_short": "3D",
+    "clash.n_selected": "{{n}} geselecteerd",
+    "clash.clear_selection": "Wissen",
+    "clash.clear_filter_short": "Wissen",
+    "clash.page_range": "{{from}}–{{to}} van {{total}}",
+    "clash.page_of": "Pag. {{p}} / {{n}}",
+    "clash.prev": "Vorige",
+    "clash.next": "Volgende",
+    "clash.status.new": "Nieuw",
+    "clash.status.active": "Actief",
+    "clash.status.reviewed": "Beoordeeld",
+    "clash.status.approved": "Goedgekeurd",
+    "clash.status.resolved": "Opgelost",
+    "clash.status.ignored": "Genegeerd",
+    "nav.pipelines": "Pipeline-builder",
+    "pipeline.untitled": "Naamloze pipeline",
+    "pipeline.empty.title": "Bouw uw eerste automatisering",
+    "pipeline.empty.description":
+      "Sleep een trigger en enkele stappen vanuit het palet links, verbind ze en klik op Uitvoeren.",
+    "pipeline.toast.saved": "Pipeline opgeslagen",
+    "pipeline.toast.save_failed": "Kon pipeline niet opslaan",
+    "pipeline.toast.run_failed": "Kon de run niet starten",
+    "pipeline.explain.coming_soon_title": "Deze pipeline uitleggen",
+    "pipeline.explain.coming_soon_body":
+      "De gewone-taalverhaalweergave komt in de volgende versie.",
+    "pipeline.tour.palette_title": "Kies uw stappen",
+    "pipeline.tour.palette_body":
+      "Sleep een stap hier naar het canvas, of klik om hem in het midden te plaatsen.",
+    "pipeline.tour.canvas_title": "Verbind de stappen",
+    "pipeline.tour.canvas_body":
+      "Sleep van een outputpunt naar de input van de volgende stap. Kleuren tonen het datatype.",
+    "pipeline.tour.run_title": "Uitvoeren",
+    "pipeline.tour.run_body":
+      "Druk op Uitvoeren om de pipeline te starten en elke stap live te zien oplichten.",
+    "pipeline.toolbar.aria": "Pipeline-werkbalk",
+    "pipeline.toolbar.undo": "Ongedaan maken",
+    "pipeline.toolbar.redo": "Opnieuw",
+    "pipeline.toolbar.fit": "Aanpassen aan venster",
+    "pipeline.toolbar.explain": "Deze pipeline uitleggen",
+    "pipeline.toolbar.issues": "{{count}} probleem(en)",
+    "pipeline.toolbar.save": "Opslaan",
+    "pipeline.toolbar.run": "Uitvoeren",
+    "pipeline.toolbar.stop": "Stoppen",
+    "pipeline.palette.title": "Stappen",
+    "pipeline.palette.aria": "Knooppuntpalet",
+    "pipeline.palette.expand": "Palet uitklappen",
+    "pipeline.palette.collapse": "Palet inklappen",
+    "pipeline.palette.search": "Stappen zoeken",
+    "pipeline.palette.search_ph": "Zoeken…",
+    "pipeline.palette.no_match": "Geen stappen komen overeen met «{{query}}»",
+    "pipeline.palette.none": "Geen knooppunttypen beschikbaar.",
+    "pipeline.palette.module_chip": "Raakt module {{module}}",
+    "pipeline.palette.writes": "schrijft",
+    "pipeline.palette.writes_chip":
+      "Deze stap schrijft gegevens — heeft een gate vooraf nodig",
+    "pipeline.palette.cat_trigger": "Bronnen / Triggers",
+    "pipeline.palette.cat_source": "Gegevens ophalen",
+    "pipeline.palette.cat_transform": "Transformeren",
+    "pipeline.palette.cat_gate": "Valideren",
+    "pipeline.palette.cat_ai": "AI",
+    "pipeline.palette.cat_action": "Acties / Uitvoer",
+    "pipeline.palette.cat_flow": "Flowbesturing",
+    "pipeline.inspector.aria": "Inspector",
+    "pipeline.inspector.expand": "Inspector uitklappen",
+    "pipeline.inspector.collapse": "Inspector inklappen",
+    "pipeline.inspector.tab_node": "Knooppunt",
+    "pipeline.inspector.tab_pipeline": "Pipeline",
+    "pipeline.inspector.context_node": "Stap bewerken",
+    "pipeline.inspector.context_pipeline": "Pipeline bewerken",
+    "pipeline.inspector.no_params": "Deze stap heeft geen instellingen.",
+    "pipeline.inspector.enabled": "Ingeschakeld",
+    "pipeline.inspector.choose": "Kiezen…",
+    "pipeline.inspector.duplicate": "Dupliceren",
+    "pipeline.inspector.delete": "Verwijderen",
+    "pipeline.inspector.name": "Naam",
+    "pipeline.inspector.name_ph": "Mijn automatisering",
+    "pipeline.inspector.description": "Omschrijving",
+    "pipeline.inspector.published": "Gepubliceerd (kan getriggerd worden)",
+    "pipeline.inspector.summary_stub":
+      "Hier verschijnt een samenvatting in gewone taal van deze pipeline. Gebruik «Deze pipeline uitleggen» voor de volledige versie.",
+    "pipeline.canvas.aria": "Canvas van de pipeline-editor",
+    "pipeline.canvas.hint":
+      "Sleep stappen uit het palet, verbind hun poorten en klik op Uitvoeren.",
+    "pipeline.canvas.legend_sr":
+      "Lijnkleur, vorm en streep coderen samen het datatype.",
+    "pipeline.connect.incompatible_title":
+      "Deze stappen kunnen niet worden verbonden",
+    "pipeline.connect.incompatible_body":
+      "Deze output is een {{from}}; deze input verwacht een {{to}}.",
+    "pipeline.node.rename": "Knooppunt hernoemen",
+    "pipeline.node.rename_hint": "Dubbelklik om te hernoemen",
+    "pipeline.node.ai_badge": "AI",
+    "pipeline.node.ai_confidence":
+      "AI-suggestie — controleer de betrouwbaarheidsscore",
+    "pipeline.node.help": "Wat dit knooppunt doet",
+    "pipeline.node.help_generic":
+      "Configureer deze stap in de inspector. Hij ontvangt gegevens van de vorige verbonden stap en geeft zijn resultaat door.",
+    "pipeline.node.collapse": "Inklappen",
+    "pipeline.node.expand": "Uitklappen",
+    "pipeline.node.more_params": "+{{count}} meer",
+    "pipeline.node.took_ms": "{{ms}} ms",
+    "pipeline.port.aria_input": "input: {{label}}, type {{type}}",
+    "pipeline.port.aria_output": "output: {{label}}, type {{type}}",
+    "pipeline.port.table": "Tabel / rijen",
+    "pipeline.port.file": "Bestand / document",
+    "pipeline.port.bim": "BIM-model",
+    "pipeline.port.number": "Getal",
+    "pipeline.port.boolean": "Booleaan / vlag",
+    "pipeline.port.any": "Willekeurig / passthrough",
+    "pipeline.port.error": "Fouttak",
+    "pipeline.dock.run": "Uitvoeren",
+    "pipeline.dock.expand": "Run-dock uitklappen",
+    "pipeline.dock.collapse": "Run-dock inklappen",
+    "pipeline.dock.idle": "Inactief",
+    "pipeline.dock.progress": "{{pct}}%",
+    "pipeline.dock.tab_run": "Run",
+    "pipeline.dock.tab_history": "Historie",
+    "pipeline.dock.no_steps":
+      "Voeg stappen toe en klik op Uitvoeren om gegevens door uw pipeline te zien stromen.",
+    "pipeline.dock.loading_history": "Runs-historie laden…",
+    "pipeline.dock.no_runs_title": "Nog geen runs",
+    "pipeline.dock.no_runs_desc":
+      "Klik op Uitvoeren om gegevens door uw pipeline te zien stromen.",
+    "pipeline.dock.manual": "Handmatig",
+    "pipeline.dock.queued_hint": "Wachten op een worker die de run oppakt…",
+    "pipeline.runstatus.pending": "In afwachting",
+    "pipeline.runstatus.queued": "In wachtrij",
+    "pipeline.runstatus.running": "Wordt uitgevoerd",
+    "pipeline.runstatus.started": "Wordt uitgevoerd",
+    "pipeline.runstatus.done": "Klaar",
+    "pipeline.runstatus.success": "Klaar",
+    "pipeline.runstatus.error": "Fout",
+    "pipeline.runstatus.failed": "Mislukt",
+    "pipeline.runstatus.skipped": "Overgeslagen",
+    "pipeline.runstatus.stale": "Opnieuw uitvoeren",
+    "pipeline.runstatus.paused": "Gepauzeerd",
+    "pipeline.runstatus.cancelled": "Geannuleerd",
+    "pipeline.trigger.manual": "Handmatig",
+    "pipeline.trigger.schedule": "Gepland",
+    "pipeline.trigger.event": "Gebeurtenis",
+    "pipeline.nodetype.trigger.manual": "Handmatige trigger",
+    "pipeline.nodetype.trigger.manual.desc":
+      "Start de pipeline via een REST-aanroep. Geen inputs.",
+    "pipeline.nodetype.source.project": "Project ophalen",
+    "pipeline.nodetype.source.project.desc":
+      "Laadt de id en naam van het gekoppelde project.",
+    "pipeline.nodetype.source.boq": "Raming-posten ophalen",
+    "pipeline.nodetype.source.boq.desc":
+      "Laadt alle raming-posten van het project als rijen (ids + kleine steekproef).",
+    "pipeline.nodetype.transform.filter": "Rijen filteren",
+    "pipeline.nodetype.transform.filter.desc":
+      "Behoudt alleen rijen die voldoen aan een eenvoudige veld/operator/waarde-test.",
+    "pipeline.nodetype.gate.validation": "Validatiegate",
+    "pipeline.nodetype.gate.validation.desc":
+      "Draait de validatiemotor over de rijen; stopt de run bij blokkerende fouten.",
+    "pipeline.nodetype.action.export.excel": "Naar Excel exporteren",
+    "pipeline.nodetype.action.export.excel.desc":
+      "Schrijft de rijen in een .xlsx (geeft een downloadreferentie; wijzigt de database niet).",
+    "pipeline.nodehelp.trigger.manual":
+      "Hier start de pipeline. Geen instellingen — verbind hem hierna met een gegevensstap.",
+    "pipeline.nodehelp.source.project":
+      "Laadt het project waaraan deze pipeline gekoppeld is. Laat de id leeg om die uit de URL te gebruiken.",
+    "pipeline.nodehelp.source.boq":
+      "Leest alle raming-posten van het project. Tussen de stappen reizen alleen ids en een kleine preview; de volledige gegevens blijven op de server.",
+    "pipeline.nodehelp.transform.filter":
+      "Behoudt alleen de rijen die de in de inspector ingestelde veld/operator/waarde-test passeren. Leeg veld = alles door.",
+    "pipeline.nodehelp.gate.validation":
+      "Draait de validatiemotor over de rijen. Bij blokkerende fouten stopt de run hier, zodat schrijfstappen erna nooit op foute gegevens werken.",
+    "pipeline.nodehelp.action.export.excel":
+      "Schrijft de binnenkomende rijen in een Excel-bestand en geeft een downloadreferentie terug. Wijzigt geen gegevens.",
+    "pipeline.param.source.project.project_id": "Project-id (optioneel)",
+    "pipeline.param.source.boq.project_id": "Project-id (optioneel)",
+    "pipeline.param.transform.filter.field": "Veld",
+    "pipeline.param.transform.filter.op": "Operator",
+    "pipeline.param.transform.filter.value": "Waarde",
+    "pipeline.param.gate.validation.rule_sets": "Regelsets",
+    "pipeline.param.action.export.excel.filename": "Bestandsnaam",
+    "pipeline.param.action.export.excel.columns": "Kolommen",
+  },
 } as { translation: Record<string, string> };
 
 export default resource;

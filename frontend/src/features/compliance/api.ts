@@ -6,7 +6,7 @@
 // Wraps the T13 NL → DSL builder endpoint plus the existing T08
 // compile/save endpoint so the React feature has a single import.
 
-import { apiGet, apiPost } from '@/shared/lib/api';
+import { apiGet, apiPost } from "@/shared/lib/api";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -20,7 +20,7 @@ export interface NlBuildResult {
   dsl_definition: Record<string, unknown>;
   dsl_yaml: string | null;
   confidence: number;
-  used_method: 'pattern' | 'ai' | 'fallback';
+  used_method: "pattern" | "ai" | "fallback";
   matched_pattern: string | null;
   errors: string[];
   suggestions: string[];
@@ -56,13 +56,13 @@ export interface DSLCompileResult {
 export async function parseNlToDsl(
   body: NlBuildRequest,
 ): Promise<NlBuildResult> {
-  return apiPost<NlBuildResult>('/v1/compliance/dsl/from-nl', body);
+  return apiPost<NlBuildResult>("/v1/compliance/dsl/from-nl", body);
 }
 
 /** List the supported NL → DSL patterns for the hints panel. */
 export async function listNlPatterns(): Promise<NlPattern[]> {
   const res = await apiGet<NlPatternsResponse>(
-    '/v1/compliance/dsl/nl-patterns',
+    "/v1/compliance/dsl/nl-patterns",
   );
   return res.items;
 }
@@ -72,7 +72,7 @@ export async function saveDslRule(
   definition_yaml: string,
   activate: boolean = true,
 ): Promise<DSLCompileResult> {
-  return apiPost<DSLCompileResult>('/v1/compliance/dsl/compile', {
+  return apiPost<DSLCompileResult>("/v1/compliance/dsl/compile", {
     definition_yaml,
     activate,
   });

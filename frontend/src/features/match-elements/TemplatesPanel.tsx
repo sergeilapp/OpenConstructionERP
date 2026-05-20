@@ -3,11 +3,11 @@
 //
 // Tenant-scoped match-template library (cross-project memory).
 
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { X, Trash2, Loader2, Library } from 'lucide-react';
-import { matchElementsApi } from './api';
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { X, Trash2, Loader2, Library } from "lucide-react";
+import { matchElementsApi } from "./api";
 
 interface Props {
   onClose: () => void;
@@ -17,30 +17,34 @@ export function TemplatesPanel({ onClose }: Props) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const listQ = useQuery({
-    queryKey: ['match-templates'],
+    queryKey: ["match-templates"],
     queryFn: matchElementsApi.listTemplates,
   });
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => matchElementsApi.deleteTemplate(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['match-templates'] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["match-templates"] }),
   });
 
   // Escape closes the slide-over.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.stopPropagation();
         onClose();
       }
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} aria-hidden />
+      <div
+        className="fixed inset-0 bg-black/30 z-40"
+        onClick={onClose}
+        aria-hidden
+      />
       <aside
         className="fixed top-0 right-0 bottom-0 w-full sm:w-[560px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-700"
         role="dialog"
@@ -50,17 +54,27 @@ export function TemplatesPanel({ onClose }: Props) {
         <header className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Library className="w-5 h-5 text-indigo-500" />
-            <h2 id="templates-panel-heading" className="text-base font-semibold">
-              {t('match_elements.templates.title', 'Template library')}
+            <h2
+              id="templates-panel-heading"
+              className="text-base font-semibold"
+            >
+              {t("match_elements.templates.title", "Template library")}
             </h2>
             <span className="text-xs text-slate-500">
-              {listQ.data ? t('match_elements.templates.count', '{{count}} signatures', { count: listQ.data.length }) : ''}
+              {listQ.data
+                ? t("match_elements.templates.count", "{{count}} signatures", {
+                    count: listQ.data.length,
+                  })
+                : ""}
             </span>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('match_elements.templates.close', 'Close template library')}
+            aria-label={t(
+              "match_elements.templates.close",
+              "Close template library",
+            )}
             className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <X className="w-5 h-5" />
@@ -71,14 +85,19 @@ export function TemplatesPanel({ onClose }: Props) {
           {listQ.isLoading && (
             <div className="text-center text-slate-500 py-8">
               <Loader2 className="w-5 h-5 animate-spin inline mr-2" />
-              {t('match_elements.templates.loading', 'Loading library…')}
+              {t("match_elements.templates.loading", "Loading library…")}
             </div>
           )}
           {listQ.data && listQ.data.length === 0 && (
             <div className="text-center text-slate-500 py-12 text-sm">
-              <p>{t('match_elements.templates.empty', 'No saved templates yet.')}</p>
+              <p>
+                {t("match_elements.templates.empty", "No saved templates yet.")}
+              </p>
               <p className="text-xs mt-2 opacity-70">
-                {t('match_elements.templates.empty_hint', 'Confirmed matches with "Save to library" enabled appear here and propagate to future projects.')}
+                {t(
+                  "match_elements.templates.empty_hint",
+                  'Confirmed matches with "Save to library" enabled appear here and propagate to future projects.',
+                )}
               </p>
             </div>
           )}
@@ -90,15 +109,28 @@ export function TemplatesPanel({ onClose }: Props) {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-medium truncate">
-                    {tpl.label ?? <span className="text-slate-400 italic">{t('match_elements.templates.unnamed', '(unnamed)')}</span>}
+                    {tpl.label ?? (
+                      <span className="text-slate-400 italic">
+                        {t("match_elements.templates.unnamed", "(unnamed)")}
+                      </span>
+                    )}
                   </div>
                   <div className="font-mono text-xs text-slate-500 truncate mt-0.5">
-                    {t('match_elements.templates.sig', 'sig: {{prefix}}…', { prefix: tpl.signature.slice(0, 16) })}
+                    {t("match_elements.templates.sig", "sig: {{prefix}}…", {
+                      prefix: tpl.signature.slice(0, 16),
+                    })}
                   </div>
                   <div className="text-xs text-slate-600 dark:text-slate-300 mt-1">
-                    {t('match_elements.templates.used', 'Used')} <strong className="tabular-nums">{tpl.use_count}</strong>×
+                    {t("match_elements.templates.used", "Used")}{" "}
+                    <strong className="tabular-nums">{tpl.use_count}</strong>×
                     {tpl.last_used_at && (
-                      <> · {t('match_elements.templates.last', 'last {{date}}', { date: new Date(tpl.last_used_at).toLocaleDateString() })}</>
+                      <>
+                        {" "}
+                        ·{" "}
+                        {t("match_elements.templates.last", "last {{date}}", {
+                          date: new Date(tpl.last_used_at).toLocaleDateString(),
+                        })}
+                      </>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-1 mt-1.5">
@@ -114,11 +146,22 @@ export function TemplatesPanel({ onClose }: Props) {
                 </div>
                 <button
                   onClick={() => {
-                    if (confirm(t('match_elements.templates.remove_confirm', 'Remove this template from the library?'))) deleteMut.mutate(tpl.id);
+                    if (
+                      confirm(
+                        t(
+                          "match_elements.templates.remove_confirm",
+                          "Remove this template from the library?",
+                        ),
+                      )
+                    )
+                      deleteMut.mutate(tpl.id);
                   }}
                   disabled={deleteMut.isPending}
                   className="p-1.5 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 disabled:opacity-50"
-                  title={t('match_elements.templates.remove_title', 'Remove from library')}
+                  title={t(
+                    "match_elements.templates.remove_title",
+                    "Remove from library",
+                  )}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -128,7 +171,10 @@ export function TemplatesPanel({ onClose }: Props) {
         </div>
 
         <footer className="px-4 py-3 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500">
-          {t('match_elements.templates.footer', 'Templates are tenant-scoped. Confirmed signatures auto-suggest matches in future projects.')}
+          {t(
+            "match_elements.templates.footer",
+            "Templates are tenant-scoped. Confirmed signatures auto-suggest matches in future projects.",
+          )}
         </footer>
       </aside>
     </>

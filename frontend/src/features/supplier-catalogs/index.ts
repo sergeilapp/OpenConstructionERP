@@ -1,1 +1,1 @@
-export { SupplierCatalogsPage } from './SupplierCatalogsPage';
+export { SupplierCatalogsPage } from "./SupplierCatalogsPage";

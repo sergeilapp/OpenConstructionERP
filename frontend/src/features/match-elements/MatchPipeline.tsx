@@ -10,9 +10,9 @@
 // Mounted above the classic toolset on the page; collapsing it returns
 // the user to the legacy single-shot flow without losing anything.
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
   ChevronsRight,
@@ -20,29 +20,29 @@ import {
   Loader2,
   PlayCircle,
   Workflow,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   matchElementsApi,
   type StageListResponse,
   type StageName,
   type StageState,
-} from './api';
-import { StageCard } from './StageCard';
-import { StageAdjustSheet } from './StageAdjustSheet';
+} from "./api";
+import { StageCard } from "./StageCard";
+import { StageAdjustSheet } from "./StageAdjustSheet";
 
 interface Props {
   sessionId: string;
 }
 
 const ORDER: StageName[] = [
-  'convert',
-  'load',
-  'schema',
-  'filter',
-  'group',
-  'match',
-  'rollup',
+  "convert",
+  "load",
+  "schema",
+  "filter",
+  "group",
+  "match",
+  "rollup",
 ];
 
 /**
@@ -64,12 +64,12 @@ export function PipelinePreview() {
         </span>
         <div className="min-w-0">
           <h3 className="text-sm font-bold text-content-primary truncate">
-            {t('match_elements.pipeline.title', 'Match pipeline')}
+            {t("match_elements.pipeline.title", "Match pipeline")}
           </h3>
           <p className="text-[11px] text-content-tertiary">
             {t(
-              'match_elements.pipeline.subtitle',
-              'Seven steps from CAD file to priced BoQ — every step is visible and tunable',
+              "match_elements.pipeline.subtitle",
+              "Seven steps from CAD file to priced BoQ — every step is visible and tunable",
             )}
           </p>
         </div>
@@ -90,9 +90,9 @@ export function PipelinePreview() {
         ))}
       </ol>
       <p className="px-3 py-2 text-[11px] text-content-tertiary">
-        {t('match_elements.pipeline.preview_hint', {
+        {t("match_elements.pipeline.preview_hint", {
           defaultValue:
-            'Pick a project and finish the quick setup below — these seven stages then run here, each visible and tunable.‌⁠‍',
+            "Pick a project and finish the quick setup below — these seven stages then run here, each visible and tunable.‌⁠‍",
         })}
       </p>
     </section>
@@ -108,7 +108,7 @@ export function MatchPipeline({ sessionId }: Props) {
   // flow — not the legacy toolset below it — is what the user lands on.
   const rootRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    rootRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     // Run once per session — re-scrolling on every refetch would be
     // hostile while the user is editing a downstream stage.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,11 +123,11 @@ export function MatchPipeline({ sessionId }: Props) {
   const [pipelineError, setPipelineError] = useState<string | null>(null);
 
   const stagesQ = useQuery<StageListResponse>({
-    queryKey: ['match-stages', sessionId],
+    queryKey: ["match-stages", sessionId],
     queryFn: () => matchElementsApi.listStages(sessionId),
     refetchInterval: (q) => {
       const data = q.state.data as StageListResponse | undefined;
-      const anyRunning = data?.stages.some((s) => s.status === 'running');
+      const anyRunning = data?.stages.some((s) => s.status === "running");
       return anyRunning || runAll ? 1200 : false;
     },
   });
@@ -143,8 +143,7 @@ export function MatchPipeline({ sessionId }: Props) {
     stages.find((s) => s.stage_name === name)?.title ?? name;
 
   const runOne = useMutation({
-    mutationFn: (name: StageName) =>
-      matchElementsApi.runStage(sessionId, name),
+    mutationFn: (name: StageName) => matchElementsApi.runStage(sessionId, name),
     onMutate: (name) => {
       setPipelineError(null);
       setRunningStage(name);
@@ -154,14 +153,14 @@ export function MatchPipeline({ sessionId }: Props) {
       // without this the click would look like it did nothing.
       setPipelineError(
         err?.message ??
-          t('match_elements.pipeline.run_failed', 'Stage run failed'),
+          t("match_elements.pipeline.run_failed", "Stage run failed"),
       );
     },
     onSettled: () => {
       setRunningStage(null);
-      qc.invalidateQueries({ queryKey: ['match-stages', sessionId] });
-      qc.invalidateQueries({ queryKey: ['match-groups', sessionId] });
-      qc.invalidateQueries({ queryKey: ['match-session', sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-stages", sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-groups", sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-session", sessionId] });
     },
   });
 
@@ -174,11 +173,12 @@ export function MatchPipeline({ sessionId }: Props) {
       for (const name of ORDER) {
         setRunningStage(name);
         const res = await matchElementsApi.runStage(sessionId, name);
-        qc.invalidateQueries({ queryKey: ['match-stages', sessionId] });
-        if (res.status === 'error') {
+        qc.invalidateQueries({ queryKey: ["match-stages", sessionId] });
+        if (res.status === "error") {
           setPipelineError(
-            t('match_elements.pipeline.run_all_stopped', {
-              defaultValue: 'Stopped at “{{stage}}” — fix that step, then run again.‌⁠‍',
+            t("match_elements.pipeline.run_all_stopped", {
+              defaultValue:
+                "Stopped at “{{stage}}” — fix that step, then run again.‌⁠‍",
               stage: titleOf(name),
             }),
           );
@@ -189,22 +189,22 @@ export function MatchPipeline({ sessionId }: Props) {
       setPipelineError(
         err instanceof Error
           ? err.message
-          : t('match_elements.pipeline.run_failed', 'Stage run failed'),
+          : t("match_elements.pipeline.run_failed", "Stage run failed"),
       );
     } finally {
       setRunningStage(null);
       setRunAll(false);
-      qc.invalidateQueries({ queryKey: ['match-stages', sessionId] });
-      qc.invalidateQueries({ queryKey: ['match-groups', sessionId] });
-      qc.invalidateQueries({ queryKey: ['match-session', sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-stages", sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-groups", sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-session", sessionId] });
     }
   };
 
-  const doneCount = stages.filter((s) => s.status === 'done').length;
+  const doneCount = stages.filter((s) => s.status === "done").length;
   // One stage at a time — concurrent runs would race the same session
   // rows in the DB (load/group both call rebuild_groups). Every run
   // trigger is gated on this.
-  const anyRunning = stages.some((s) => s.status === 'running');
+  const anyRunning = stages.some((s) => s.status === "running");
   const busy = runAll || runningStage != null || anyRunning;
 
   return (
@@ -223,17 +223,17 @@ export function MatchPipeline({ sessionId }: Props) {
           </span>
           <div className="min-w-0">
             <h3 className="text-sm font-bold text-content-primary truncate">
-              {t('match_elements.pipeline.title', 'Match pipeline')}
+              {t("match_elements.pipeline.title", "Match pipeline")}
             </h3>
             <p className="text-[11px] text-content-tertiary">
               {t(
-                'match_elements.pipeline.subtitle',
-                'Seven steps from CAD file to priced BoQ — every step is visible and tunable',
+                "match_elements.pipeline.subtitle",
+                "Seven steps from CAD file to priced BoQ — every step is visible and tunable",
               )}
               {stages.length > 0 && (
                 <span className="ml-1.5 font-semibold text-content-secondary">
-                  {doneCount}/{stages.length}{' '}
-                  {t('match_elements.pipeline.done_suffix', 'done')}
+                  {doneCount}/{stages.length}{" "}
+                  {t("match_elements.pipeline.done_suffix", "done")}
                 </span>
               )}
             </p>
@@ -246,8 +246,8 @@ export function MatchPipeline({ sessionId }: Props) {
             title={
               busy
                 ? t(
-                    'match_elements.pipeline.busy_hint',
-                    'A stage is running — wait for it to finish before starting another.',
+                    "match_elements.pipeline.busy_hint",
+                    "A stage is running — wait for it to finish before starting another.",
                   )
                 : undefined
             }
@@ -259,13 +259,13 @@ export function MatchPipeline({ sessionId }: Props) {
               <PlayCircle className="w-3.5 h-3.5" />
             )}
             {runAll
-              ? t('match_elements.pipeline.running_all', 'Running all…')
-              : t('match_elements.pipeline.run_all', 'Run all stages')}
+              ? t("match_elements.pipeline.running_all", "Running all…")
+              : t("match_elements.pipeline.run_all", "Run all stages")}
           </button>
           <button
             onClick={() => setExpanded((v) => !v)}
             className="p-1.5 rounded-lg hover:bg-surface-secondary text-content-tertiary"
-            aria-label={expanded ? 'Collapse' : 'Expand'}
+            aria-label={expanded ? "Collapse" : "Expand"}
           >
             {expanded ? (
               <ChevronUp className="w-4 h-4" />
@@ -284,7 +284,7 @@ export function MatchPipeline({ sessionId }: Props) {
       <ol className="flex items-center gap-1.5 flex-wrap px-3 py-2 border-b border-border">
         {ORDER.map((name, i) => {
           const st = stages.find((s) => s.stage_name === name);
-          const status = st?.status ?? 'pending';
+          const status = st?.status ?? "pending";
           return (
             <li
               key={name}
@@ -292,18 +292,17 @@ export function MatchPipeline({ sessionId }: Props) {
             >
               <span
                 className={`px-1.5 py-0.5 rounded border ${
-                  status === 'done'
-                    ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300/70 dark:border-emerald-700/50 text-emerald-800 dark:text-emerald-200'
-                    : status === 'running'
-                      ? 'bg-blue-50 dark:bg-blue-950/30 border-blue-300/70 dark:border-blue-700/50 text-blue-800 dark:text-blue-200'
-                      : status === 'error'
-                        ? 'bg-rose-50 dark:bg-rose-950/30 border-rose-300/70 dark:border-rose-700/50 text-rose-800 dark:text-rose-200'
-                        : 'bg-surface-secondary border-border text-content-tertiary'
+                  status === "done"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300/70 dark:border-emerald-700/50 text-emerald-800 dark:text-emerald-200"
+                    : status === "running"
+                      ? "bg-blue-50 dark:bg-blue-950/30 border-blue-300/70 dark:border-blue-700/50 text-blue-800 dark:text-blue-200"
+                      : status === "error"
+                        ? "bg-rose-50 dark:bg-rose-950/30 border-rose-300/70 dark:border-rose-700/50 text-rose-800 dark:text-rose-200"
+                        : "bg-surface-secondary border-border text-content-tertiary"
                 }`}
               >
-                {i + 1}.{' '}
-                {st?.title ??
-                  t(`match_elements.pipeline.step_${name}`, name)}
+                {i + 1}.{" "}
+                {st?.title ?? t(`match_elements.pipeline.step_${name}`, name)}
               </span>
               {i < ORDER.length - 1 && (
                 <ChevronsRight className="w-2.5 h-2.5 opacity-50 text-content-tertiary" />
@@ -319,14 +318,14 @@ export function MatchPipeline({ sessionId }: Props) {
           {stagesQ.isLoading ? (
             <div className="flex items-center gap-2 text-xs text-content-tertiary py-6 justify-center">
               <Loader2 className="w-4 h-4 animate-spin" />
-              {t('match_elements.pipeline.loading', 'Loading pipeline…')}
+              {t("match_elements.pipeline.loading", "Loading pipeline…")}
             </div>
           ) : stagesQ.isError ? (
             <div className="text-xs text-rose-600 dark:text-rose-400 py-4 text-center">
               {(stagesQ.error as Error)?.message ??
                 t(
-                  'match_elements.pipeline.load_failed',
-                  'Could not load the pipeline.',
+                  "match_elements.pipeline.load_failed",
+                  "Could not load the pipeline.",
                 )}
             </div>
           ) : (
@@ -342,7 +341,7 @@ export function MatchPipeline({ sessionId }: Props) {
                     onClick={() => setPipelineError(null)}
                     className="shrink-0 underline hover:no-underline"
                   >
-                    {t('common.dismiss', 'Dismiss')}
+                    {t("common.dismiss", "Dismiss")}
                   </button>
                 </div>
               )}
@@ -352,7 +351,9 @@ export function MatchPipeline({ sessionId }: Props) {
                   stage={s}
                   index={i}
                   isLast={i === stages.length - 1}
-                  running={runningStage === s.stage_name || s.status === 'running'}
+                  running={
+                    runningStage === s.stage_name || s.status === "running"
+                  }
                   busy={busy}
                   onRun={() => runOne.mutate(s.stage_name)}
                   onAdjust={() => setAdjust(s)}

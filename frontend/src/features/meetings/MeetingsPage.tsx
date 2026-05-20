@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams, Link } from 'react-router-dom';
-import clsx from 'clsx';
+import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams, Link } from "react-router-dom";
+import clsx from "clsx";
 import {
   CalendarDays,
   Search,
@@ -33,7 +33,7 @@ import {
   Paperclip,
   Download,
   FileText,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -45,17 +45,18 @@ import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { useCreateShortcut } from '@/shared/hooks/useCreateShortcut';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { apiGet, triggerDownload } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useAuthStore } from '@/stores/useAuthStore';
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { useCreateShortcut } from "@/shared/hooks/useCreateShortcut";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { apiGet, triggerDownload } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   fetchMeetings,
   createMeeting,
+  createSeries,
   updateMeeting,
   deleteMeeting,
   completeMeeting,
@@ -68,13 +69,16 @@ import {
   type MeetingType,
   type MeetingStatus,
   type CreateMeetingPayload,
+  type CreateSeriesPayload,
   type UpdateMeetingPayload,
   type AttendeeStatus,
   type ImportPreviewResponse,
   type ImportPreviewAttendee,
   type ImportPreviewActionItem,
   type MeetingAttachment,
-} from './api';
+} from "./api";
+import { AttendanceSection } from "./AttendanceSection";
+import { RecurringSeriesDialog } from "./RecurringSeriesDialog";
 
 /* -- Constants ------------------------------------------------------------- */
 
@@ -85,26 +89,26 @@ interface Project {
 
 const MEETING_TYPE_COLORS: Record<
   MeetingType,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  progress: 'blue',
-  design: 'neutral',
-  safety: 'error',
-  subcontractor: 'warning',
-  kickoff: 'success',
-  closeout: 'neutral',
+  progress: "blue",
+  design: "neutral",
+  safety: "error",
+  subcontractor: "warning",
+  kickoff: "success",
+  closeout: "neutral",
 };
 
 const STATUS_CONFIG: Record<
   MeetingStatus,
-  { variant: 'neutral' | 'blue' | 'success' | 'error' | 'warning'; cls: string }
+  { variant: "neutral" | "blue" | "success" | "error" | "warning"; cls: string }
 > = {
-  scheduled: { variant: 'blue', cls: '' },
-  in_progress: { variant: 'warning', cls: '' },
-  completed: { variant: 'success', cls: '' },
+  scheduled: { variant: "blue", cls: "" },
+  in_progress: { variant: "warning", cls: "" },
+  completed: { variant: "success", cls: "" },
   cancelled: {
-    variant: 'neutral',
-    cls: 'bg-surface-secondary text-content-secondary',
+    variant: "neutral",
+    cls: "bg-surface-secondary text-content-secondary",
   },
 };
 
@@ -115,15 +119,15 @@ const ATTENDEE_STATUS_ICON: Record<AttendeeStatus, React.ReactNode> = {
 };
 
 const inputCls =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 const MEETING_TYPES: MeetingType[] = [
-  'progress',
-  'design',
-  'safety',
-  'subcontractor',
-  'kickoff',
-  'closeout',
+  "progress",
+  "design",
+  "safety",
+  "subcontractor",
+  "kickoff",
+  "closeout",
 ];
 
 const MEETING_TYPE_CARD_CONFIG: Record<
@@ -133,42 +137,47 @@ const MEETING_TYPE_CARD_CONFIG: Record<
   progress: {
     icon: BarChart3,
     color:
-      'text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-950/30 dark:border-blue-800',
-    description: 'Regular project progress review',
+      "text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-950/30 dark:border-blue-800",
+    description: "Regular project progress review",
   },
   design: {
     icon: PenTool,
     color:
-      'text-purple-600 bg-purple-50 border-purple-200 dark:text-purple-400 dark:bg-purple-950/30 dark:border-purple-800',
-    description: 'Design coordination meeting',
+      "text-purple-600 bg-purple-50 border-purple-200 dark:text-purple-400 dark:bg-purple-950/30 dark:border-purple-800",
+    description: "Design coordination meeting",
   },
   safety: {
     icon: HardHat,
     color:
-      'text-red-600 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-950/30 dark:border-red-800',
-    description: 'Safety toolbox talk / review',
+      "text-red-600 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-950/30 dark:border-red-800",
+    description: "Safety toolbox talk / review",
   },
   subcontractor: {
     icon: Users,
     color:
-      'text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-950/30 dark:border-amber-800',
-    description: 'Subcontractor coordination',
+      "text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-950/30 dark:border-amber-800",
+    description: "Subcontractor coordination",
   },
   kickoff: {
     icon: Rocket,
     color:
-      'text-green-600 bg-green-50 border-green-200 dark:text-green-400 dark:bg-green-950/30 dark:border-green-800',
-    description: 'Project kickoff',
+      "text-green-600 bg-green-50 border-green-200 dark:text-green-400 dark:bg-green-950/30 dark:border-green-800",
+    description: "Project kickoff",
   },
   closeout: {
     icon: CheckCircle2,
     color:
-      'text-gray-600 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-800/50 dark:border-gray-700',
-    description: 'Project closeout / handover',
+      "text-gray-600 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-800/50 dark:border-gray-700",
+    description: "Project closeout / handover",
   },
 };
 
-const MEETING_STATUSES: MeetingStatus[] = ['scheduled', 'in_progress', 'completed', 'cancelled'];
+const MEETING_STATUSES: MeetingStatus[] = [
+  "scheduled",
+  "in_progress",
+  "completed",
+  "cancelled",
+];
 
 /* -- Create Meeting Modal -------------------------------------------------- */
 
@@ -186,18 +195,18 @@ interface MeetingFormData {
 const todayStr = () => {
   const now = new Date();
   // Format as YYYY-MM-DDTHH:mm for datetime-local
-  const pad = (n: number) => n.toString().padStart(2, '0');
+  const pad = (n: number) => n.toString().padStart(2, "0");
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
 };
 
 const EMPTY_FORM: MeetingFormData = {
-  title: '',
-  meeting_type: 'progress',
-  date: '',
-  location: '',
-  chairperson: '',
-  attendees: '',
-  minutes: '',
+  title: "",
+  meeting_type: "progress",
+  date: "",
+  location: "",
+  chairperson: "",
+  attendees: "",
+  minutes: "",
   attachments: [],
 };
 
@@ -240,8 +249,10 @@ function AttachmentDropzone({
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
           addToast({
-            type: 'error',
-            title: t('meetings.upload_failed', { defaultValue: 'Attachment upload failed‌⁠‍' }),
+            type: "error",
+            title: t("meetings.upload_failed", {
+              defaultValue: "Attachment upload failed‌⁠‍",
+            }),
             message: msg,
           });
         }
@@ -254,7 +265,7 @@ function AttachmentDropzone({
   return (
     <div>
       <label className="block text-sm font-medium text-content-primary mb-1.5">
-        {t('meetings.field_attachments', { defaultValue: 'Attachments‌⁠‍' })}
+        {t("meetings.field_attachments", { defaultValue: "Attachments‌⁠‍" })}
       </label>
 
       <div
@@ -270,15 +281,16 @@ function AttachmentDropzone({
           if (!disabled) void handleFiles(e.dataTransfer.files);
         }}
         className={clsx(
-          'border-2 border-dashed rounded-lg p-4 text-center transition-colors',
+          "border-2 border-dashed rounded-lg p-4 text-center transition-colors",
           dragOver
-            ? 'border-oe-blue bg-oe-blue-subtle'
-            : 'border-border-light hover:border-oe-blue hover:bg-surface-secondary',
-          (disabled || uploading) && 'opacity-60 pointer-events-none',
-          'cursor-pointer',
+            ? "border-oe-blue bg-oe-blue-subtle"
+            : "border-border-light hover:border-oe-blue hover:bg-surface-secondary",
+          (disabled || uploading) && "opacity-60 pointer-events-none",
+          "cursor-pointer",
         )}
         onClick={() => {
-          if (!disabled) document.getElementById('meeting-attachment-input')?.click();
+          if (!disabled)
+            document.getElementById("meeting-attachment-input")?.click();
         }}
       >
         <input
@@ -288,21 +300,23 @@ function AttachmentDropzone({
           className="hidden"
           onChange={(e) => {
             if (e.target.files) void handleFiles(e.target.files);
-            e.target.value = '';
+            e.target.value = "";
           }}
         />
         <div className="flex items-center justify-center gap-2 text-sm text-content-secondary">
           {uploading ? (
             <>
               <Loader2 size={16} className="animate-spin text-oe-blue" />
-              <span>{t('meetings.uploading', { defaultValue: 'Uploading...‌⁠‍' })}</span>
+              <span>
+                {t("meetings.uploading", { defaultValue: "Uploading...‌⁠‍" })}
+              </span>
             </>
           ) : (
             <>
               <Paperclip size={16} className="text-content-tertiary" />
               <span>
-                {t('meetings.dropzone_hint', {
-                  defaultValue: 'Drop files here or click to browse‌⁠‍',
+                {t("meetings.dropzone_hint", {
+                  defaultValue: "Drop files here or click to browse‌⁠‍",
                 })}
               </span>
             </>
@@ -318,7 +332,10 @@ function AttachmentDropzone({
               className="flex items-center gap-2 rounded-md border border-border-light bg-surface-secondary px-2 py-1.5 text-sm"
             >
               <FileText size={14} className="text-content-tertiary shrink-0" />
-              <span className="flex-1 truncate text-content-primary" title={att.name}>
+              <span
+                className="flex-1 truncate text-content-primary"
+                title={att.name}
+              >
                 {att.name}
               </span>
               <span className="text-xs text-content-tertiary tabular-nums shrink-0">
@@ -330,7 +347,9 @@ function AttachmentDropzone({
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:text-oe-blue hover:bg-surface-primary transition-colors shrink-0"
-                aria-label={t('common.download', { defaultValue: 'Download‌⁠‍' })}
+                aria-label={t("common.download", {
+                  defaultValue: "Download‌⁠‍",
+                })}
                 data-testid="meeting-attachment-download"
               >
                 <Download size={12} />
@@ -342,7 +361,7 @@ function AttachmentDropzone({
                   onRemove(att.id);
                 }}
                 className="flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:text-semantic-error hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0"
-                aria-label={t('common.remove', { defaultValue: 'Remove' })}
+                aria-label={t("common.remove", { defaultValue: "Remove" })}
                 data-testid="meeting-attachment-remove"
               >
                 <Trash2 size={12} />
@@ -369,11 +388,16 @@ function CreateMeetingModal({
   projectId: string;
 }) {
   const { t } = useTranslation();
-  const [form, setForm] = useState<MeetingFormData>({ ...EMPTY_FORM, date: todayStr() });
+  const [form, setForm] = useState<MeetingFormData>({
+    ...EMPTY_FORM,
+    date: todayStr(),
+  });
   const [touched, setTouched] = useState(false);
 
-  const set = <K extends keyof MeetingFormData>(key: K, value: MeetingFormData[K]) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const set = <K extends keyof MeetingFormData>(
+    key: K,
+    value: MeetingFormData[K],
+  ) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const titleError = touched && form.title.trim().length === 0;
   const dateError = touched && form.date.trim().length === 0;
@@ -390,11 +414,11 @@ function CreateMeetingModal({
       onClose={onClose}
       busy={isPending}
       size="xl"
-      title={t('meetings.new_meeting', { defaultValue: 'New Meeting' })}
+      title={t("meetings.new_meeting", { defaultValue: "New Meeting" })}
       subtitle={
         projectName
-          ? t('common.creating_in_project', {
-              defaultValue: 'In {{project}}',
+          ? t("common.creating_in_project", {
+              defaultValue: "In {{project}}",
               project: projectName,
             })
           : undefined
@@ -402,22 +426,30 @@ function CreateMeetingModal({
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
-          <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={isPending || !canSubmit}
+          >
             {isPending ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
             ) : (
               <Plus size={16} className="mr-1.5 shrink-0" />
             )}
-            <span>{t('meetings.create_meeting', { defaultValue: 'Create Meeting' })}</span>
+            <span>
+              {t("meetings.create_meeting", { defaultValue: "Create Meeting" })}
+            </span>
           </Button>
         </>
       }
     >
       {/* Meeting type tile picker */}
       <WideModalSection columns={1}>
-        <WideModalField label={t('meetings.field_type', { defaultValue: 'Meeting Type' })}>
+        <WideModalField
+          label={t("meetings.field_type", { defaultValue: "Meeting Type" })}
+        >
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {MEETING_TYPES.map((mt) => {
               const cfg = MEETING_TYPE_CARD_CONFIG[mt];
@@ -427,12 +459,12 @@ function CreateMeetingModal({
                 <button
                   key={mt}
                   type="button"
-                  onClick={() => set('meeting_type', mt)}
+                  onClick={() => set("meeting_type", mt)}
                   className={clsx(
-                    'flex flex-col items-center gap-1.5 rounded-lg border-2 px-2 py-2.5 text-center transition-all',
+                    "flex flex-col items-center gap-1.5 rounded-lg border-2 px-2 py-2.5 text-center transition-all",
                     selected
-                      ? cfg.color + ' ring-2 ring-oe-blue/30'
-                      : 'border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary',
+                      ? cfg.color + " ring-2 ring-oe-blue/30"
+                      : "border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary",
                   )}
                 >
                   <TypeIcon size={18} />
@@ -447,7 +479,8 @@ function CreateMeetingModal({
           </div>
           <p className="mt-1.5 text-xs text-content-quaternary">
             {t(`meetings.type_${form.meeting_type}_desc`, {
-              defaultValue: MEETING_TYPE_CARD_CONFIG[form.meeting_type].description,
+              defaultValue:
+                MEETING_TYPE_CARD_CONFIG[form.meeting_type].description,
             })}
           </p>
         </WideModalField>
@@ -455,42 +488,48 @@ function CreateMeetingModal({
 
       {/* Meeting details + Schedule combined into a two-column row */}
       <WideModalSection
-        title={t('meetings.section_details', { defaultValue: 'Meeting Details' })}
+        title={t("meetings.section_details", {
+          defaultValue: "Meeting Details",
+        })}
         columns={2}
       >
         <WideModalField
-          label={t('meetings.field_title', { defaultValue: 'Title' })}
+          label={t("meetings.field_title", { defaultValue: "Title" })}
           required
           span={2}
           error={
             titleError
-              ? t('meetings.title_required', { defaultValue: 'Title is required' })
+              ? t("meetings.title_required", {
+                  defaultValue: "Title is required",
+                })
               : undefined
           }
         >
           <input
             value={form.title}
             onChange={(e) => {
-              set('title', e.target.value);
+              set("title", e.target.value);
               setTouched(true);
             }}
-            placeholder={t('meetings.title_placeholder', {
-              defaultValue: 'e.g. Weekly Progress Meeting #12',
+            placeholder={t("meetings.title_placeholder", {
+              defaultValue: "e.g. Weekly Progress Meeting #12",
             })}
             className={clsx(
               inputCls,
               titleError &&
-                'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('meetings.field_date', { defaultValue: 'Date & Time' })}
+          label={t("meetings.field_date", { defaultValue: "Date & Time" })}
           required
           error={
             dateError
-              ? t('meetings.date_required', { defaultValue: 'Date is required' })
+              ? t("meetings.date_required", {
+                  defaultValue: "Date is required",
+                })
               : undefined
           }
         >
@@ -498,73 +537,79 @@ function CreateMeetingModal({
             type="datetime-local"
             value={form.date}
             onChange={(e) => {
-              set('date', e.target.value);
+              set("date", e.target.value);
               setTouched(true);
             }}
             className={clsx(
               inputCls,
               dateError &&
-                'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
           />
         </WideModalField>
 
-        <WideModalField label={t('meetings.field_location', { defaultValue: 'Location' })}>
+        <WideModalField
+          label={t("meetings.field_location", { defaultValue: "Location" })}
+        >
           <input
             value={form.location}
-            onChange={(e) => set('location', e.target.value)}
+            onChange={(e) => set("location", e.target.value)}
             className={inputCls}
-            placeholder={t('meetings.location_placeholder', {
-              defaultValue: 'e.g., Site office, Room 301, Online',
+            placeholder={t("meetings.location_placeholder", {
+              defaultValue: "e.g., Site office, Room 301, Online",
             })}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('meetings.field_chairperson', { defaultValue: 'Chairperson' })}
+          label={t("meetings.field_chairperson", {
+            defaultValue: "Chairperson",
+          })}
           span={2}
         >
           <input
             value={form.chairperson}
-            onChange={(e) => set('chairperson', e.target.value)}
+            onChange={(e) => set("chairperson", e.target.value)}
             className={inputCls}
-            placeholder={t('meetings.chairperson_placeholder', {
-              defaultValue: 'Meeting organizer',
+            placeholder={t("meetings.chairperson_placeholder", {
+              defaultValue: "Meeting organizer",
             })}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('meetings.field_attendees', { defaultValue: 'Attendees' })}
+          label={t("meetings.field_attendees", { defaultValue: "Attendees" })}
           span={2}
-          hint={t('meetings.attendees_hint', {
+          hint={t("meetings.attendees_hint", {
             defaultValue:
-              'Enter each attendee on a separate line. They will be added to the meeting.',
+              "Enter each attendee on a separate line. They will be added to the meeting.",
           })}
         >
           <textarea
             value={form.attendees}
-            onChange={(e) => set('attendees', e.target.value)}
+            onChange={(e) => set("attendees", e.target.value)}
             rows={3}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none"
-            placeholder={t('meetings.attendees_placeholder', {
-              defaultValue: 'One name per line',
+            placeholder={t("meetings.attendees_placeholder", {
+              defaultValue: "One name per line",
             })}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('meetings.field_minutes', { defaultValue: 'Description / Minutes' })}
+          label={t("meetings.field_minutes", {
+            defaultValue: "Description / Minutes",
+          })}
           span={2}
         >
           <textarea
             value={form.minutes}
-            onChange={(e) => set('minutes', e.target.value)}
+            onChange={(e) => set("minutes", e.target.value)}
             rows={8}
             maxLength={50000}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-vertical"
-            placeholder={t('meetings.minutes_placeholder', {
-              defaultValue: 'Meeting description, minutes, or notes...',
+            placeholder={t("meetings.minutes_placeholder", {
+              defaultValue: "Meeting description, minutes, or notes...",
             })}
             data-testid="meeting-minutes-input"
           />
@@ -579,7 +624,10 @@ function CreateMeetingModal({
           onAdd={(att) =>
             setForm((prev) => ({
               ...prev,
-              attachments: [...prev.attachments.filter((a) => a.id !== att.id), att],
+              attachments: [
+                ...prev.attachments.filter((a) => a.id !== att.id),
+                att,
+              ],
             }))
           }
           onRemove={(id) =>
@@ -614,21 +662,28 @@ function EditMeetingModal({
   const addToast = useToastStore((s) => s.addToast);
 
   const initialAttendees = useMemo(
-    () => (meeting.attendees ?? []).map((a) => a.name).filter(Boolean).join('\n'),
+    () =>
+      (meeting.attendees ?? [])
+        .map((a) => a.name)
+        .filter(Boolean)
+        .join("\n"),
     [meeting.attendees],
   );
 
   const initialForm = useMemo<MeetingFormData>(
     () => ({
-      title: meeting.title ?? '',
+      title: meeting.title ?? "",
       meeting_type: meeting.meeting_type,
       date: (meeting as unknown as { meeting_date?: string }).meeting_date
         ? String((meeting as unknown as { meeting_date?: string }).meeting_date)
-        : (meeting.date ?? ''),
-      location: meeting.location ?? '',
-      chairperson: meeting.chairperson ?? '',
+        : (meeting.date ?? ""),
+      location: meeting.location ?? "",
+      chairperson: meeting.chairperson ?? "",
       attendees: initialAttendees,
-      minutes: meeting.minutes ?? (meeting as unknown as { notes?: string }).notes ?? '',
+      minutes:
+        meeting.minutes ??
+        (meeting as unknown as { notes?: string }).notes ??
+        "",
       attachments: [],
     }),
     [meeting, initialAttendees],
@@ -665,8 +720,10 @@ function EditMeetingModal({
     };
   }, [meeting.document_ids]);
 
-  const set = <K extends keyof MeetingFormData>(key: K, value: MeetingFormData[K]) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const set = <K extends keyof MeetingFormData>(
+    key: K,
+    value: MeetingFormData[K],
+  ) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const titleError = touched && form.title.trim().length === 0;
   const dateError = touched && form.date.trim().length === 0;
@@ -678,19 +735,21 @@ function EditMeetingModal({
 
     const diff: UpdateMeetingPayload = {};
     if (form.title !== initialForm.title) diff.title = form.title;
-    if (form.meeting_type !== initialForm.meeting_type) diff.meeting_type = form.meeting_type;
+    if (form.meeting_type !== initialForm.meeting_type)
+      diff.meeting_type = form.meeting_type;
 
-    const normDate = form.date?.split('T')[0] || form.date;
-    const initDate = initialForm.date?.split('T')[0] || initialForm.date;
+    const normDate = form.date?.split("T")[0] || form.date;
+    const initDate = initialForm.date?.split("T")[0] || initialForm.date;
     if (normDate !== initDate) diff.meeting_date = normDate;
 
-    if (form.location !== initialForm.location) diff.location = form.location || '';
+    if (form.location !== initialForm.location)
+      diff.location = form.location || "";
     if (form.chairperson !== initialForm.chairperson)
       diff.chairperson_id = form.chairperson || undefined;
 
     if (form.attendees !== initialForm.attendees) {
       const list = form.attendees
-        .split('\n')
+        .split("\n")
         .map((s) => s.trim())
         .filter(Boolean);
       diff.attendees = list.map((name) => ({ name }));
@@ -707,8 +766,8 @@ function EditMeetingModal({
 
     if (Object.keys(diff).length === 0) {
       addToast({
-        type: 'info',
-        title: t('meetings.no_changes', { defaultValue: 'No changes to save' }),
+        type: "info",
+        title: t("meetings.no_changes", { defaultValue: "No changes to save" }),
       });
       onClose();
       return;
@@ -723,13 +782,13 @@ function EditMeetingModal({
       onClose={onClose}
       busy={isPending}
       size="xl"
-      title={t('meetings.edit_meeting', { defaultValue: 'Edit Meeting' })}
-      subtitle={`MTG-${String(meeting.meeting_number).padStart(3, '0')}`}
+      title={t("meetings.edit_meeting", { defaultValue: "Edit Meeting" })}
+      subtitle={`MTG-${String(meeting.meeting_number).padStart(3, "0")}`}
       className="data-[testid=edit-meeting-modal]"
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -742,14 +801,16 @@ function EditMeetingModal({
             ) : (
               <Edit3 size={16} className="mr-1.5 shrink-0" />
             )}
-            <span>{t('common.save', { defaultValue: 'Save' })}</span>
+            <span>{t("common.save", { defaultValue: "Save" })}</span>
           </Button>
         </>
       }
     >
       {/* Meeting type tile picker */}
       <WideModalSection columns={1}>
-        <WideModalField label={t('meetings.field_type', { defaultValue: 'Meeting Type' })}>
+        <WideModalField
+          label={t("meetings.field_type", { defaultValue: "Meeting Type" })}
+        >
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {MEETING_TYPES.map((mt) => {
               const cfg = MEETING_TYPE_CARD_CONFIG[mt];
@@ -759,12 +820,12 @@ function EditMeetingModal({
                 <button
                   key={mt}
                   type="button"
-                  onClick={() => set('meeting_type', mt)}
+                  onClick={() => set("meeting_type", mt)}
                   className={clsx(
-                    'flex flex-col items-center gap-1.5 rounded-lg border-2 px-2 py-2.5 text-center transition-all',
+                    "flex flex-col items-center gap-1.5 rounded-lg border-2 px-2 py-2.5 text-center transition-all",
                     selected
-                      ? cfg.color + ' ring-2 ring-oe-blue/30'
-                      : 'border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary',
+                      ? cfg.color + " ring-2 ring-oe-blue/30"
+                      : "border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary",
                   )}
                 >
                   <TypeIcon size={18} />
@@ -783,84 +844,92 @@ function EditMeetingModal({
       {/* Core meeting fields — title spans both, date + location share a row */}
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('meetings.field_title', { defaultValue: 'Title' })}
+          label={t("meetings.field_title", { defaultValue: "Title" })}
           required
           span={2}
           error={
             titleError
-              ? t('meetings.title_required', { defaultValue: 'Title is required' })
+              ? t("meetings.title_required", {
+                  defaultValue: "Title is required",
+                })
               : undefined
           }
         >
           <input
             value={form.title}
             onChange={(e) => {
-              set('title', e.target.value);
+              set("title", e.target.value);
               setTouched(true);
             }}
             className={clsx(
               inputCls,
               titleError &&
-                'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
             data-testid="edit-meeting-title"
           />
         </WideModalField>
 
         <WideModalField
-          label={t('meetings.field_date', { defaultValue: 'Date & Time' })}
+          label={t("meetings.field_date", { defaultValue: "Date & Time" })}
           required
           error={
             dateError
-              ? t('meetings.date_required', { defaultValue: 'Date is required' })
+              ? t("meetings.date_required", {
+                  defaultValue: "Date is required",
+                })
               : undefined
           }
         >
           <input
             type="date"
-            value={form.date?.split('T')[0] || form.date}
+            value={form.date?.split("T")[0] || form.date}
             onChange={(e) => {
-              set('date', e.target.value);
+              set("date", e.target.value);
               setTouched(true);
             }}
             className={clsx(
               inputCls,
               dateError &&
-                'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
           />
         </WideModalField>
 
-        <WideModalField label={t('meetings.field_location', { defaultValue: 'Location' })}>
+        <WideModalField
+          label={t("meetings.field_location", { defaultValue: "Location" })}
+        >
           <input
             value={form.location}
-            onChange={(e) => set('location', e.target.value)}
+            onChange={(e) => set("location", e.target.value)}
             className={inputCls}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('meetings.field_attendees', { defaultValue: 'Attendees' })}
+          label={t("meetings.field_attendees", { defaultValue: "Attendees" })}
           span={2}
         >
           <textarea
             value={form.attendees}
-            onChange={(e) => set('attendees', e.target.value)}
+            onChange={(e) => set("attendees", e.target.value)}
             rows={3}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none"
-            placeholder={t('meetings.attendees_placeholder', {
-              defaultValue: 'One name per line',
+            placeholder={t("meetings.attendees_placeholder", {
+              defaultValue: "One name per line",
             })}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('meetings.field_minutes', { defaultValue: 'Description / Minutes' })}
+          label={t("meetings.field_minutes", {
+            defaultValue: "Description / Minutes",
+          })}
           span={2}
         >
           <textarea
             value={form.minutes}
-            onChange={(e) => set('minutes', e.target.value)}
+            onChange={(e) => set("minutes", e.target.value)}
             rows={8}
             maxLength={50000}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-vertical"
@@ -878,7 +947,10 @@ function EditMeetingModal({
             onAdd={(att) =>
               setForm((prev) => ({
                 ...prev,
-                attachments: [...prev.attachments.filter((a) => a.id !== att.id), att],
+                attachments: [
+                  ...prev.attachments.filter((a) => a.id !== att.id),
+                  att,
+                ],
               }))
             }
             onRemove={(id) =>
@@ -893,7 +965,9 @@ function EditMeetingModal({
           <div className="flex items-center gap-2 text-sm text-content-tertiary">
             <Loader2 size={14} className="animate-spin" />
             <span>
-              {t('meetings.loading_attachments', { defaultValue: 'Loading attachments...' })}
+              {t("meetings.loading_attachments", {
+                defaultValue: "Loading attachments...",
+              })}
             </span>
           </div>
         )}
@@ -904,32 +978,32 @@ function EditMeetingModal({
 
 /* -- Import Summary Modal -------------------------------------------------- */
 
-const ACCEPTED_TRANSCRIPT_FORMATS = '.txt,.vtt,.srt,.docx,.pdf';
+const ACCEPTED_TRANSCRIPT_FORMATS = ".txt,.vtt,.srt,.docx,.pdf";
 
 const SOURCE_LABELS: Record<string, { label: string; cls: string }> = {
   teams: {
-    label: 'Microsoft Teams',
-    cls: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+    label: "Microsoft Teams",
+    cls: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
   },
   google_meet: {
-    label: 'Google Meet',
-    cls: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    label: "Google Meet",
+    cls: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
   },
   zoom: {
-    label: 'Zoom',
-    cls: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
+    label: "Zoom",
+    cls: "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400",
   },
   webex: {
-    label: 'Cisco Webex',
-    cls: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    label: "Cisco Webex",
+    cls: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   },
   other: {
-    label: 'Other',
-    cls: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+    label: "Other",
+    cls: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
   },
 };
 
-type ImportStep = 'upload' | 'processing' | 'preview';
+type ImportStep = "upload" | "processing" | "preview";
 
 function ImportSummaryModal({
   onClose,
@@ -946,73 +1020,96 @@ function ImportSummaryModal({
   const addToast = useToastStore((s) => s.addToast);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [step, setStep] = useState<ImportStep>('upload');
-  const [processingStage, setProcessingStage] = useState('');
-  const [previewData, setPreviewData] = useState<ImportPreviewResponse | null>(null);
+  const [step, setStep] = useState<ImportStep>("upload");
+  const [processingStage, setProcessingStage] = useState("");
+  const [previewData, setPreviewData] = useState<ImportPreviewResponse | null>(
+    null,
+  );
   const [previewError, setPreviewError] = useState<string | null>(null);
 
   // Editable preview state
-  const [editTitle, setEditTitle] = useState('');
-  const [editMeetingType, setEditMeetingType] = useState<MeetingType>('progress');
-  const [editAttendees, setEditAttendees] = useState<(ImportPreviewAttendee & { included: boolean })[]>([]);
-  const [editActionItems, setEditActionItems] = useState<(ImportPreviewActionItem & { included: boolean })[]>([]);
+  const [editTitle, setEditTitle] = useState("");
+  const [editMeetingType, setEditMeetingType] =
+    useState<MeetingType>("progress");
+  const [editAttendees, setEditAttendees] = useState<
+    (ImportPreviewAttendee & { included: boolean })[]
+  >([]);
+  const [editActionItems, setEditActionItems] = useState<
+    (ImportPreviewActionItem & { included: boolean })[]
+  >([]);
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setDragOver(false);
-      const file = e.dataTransfer.files[0];
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) setSelectedFile(file);
+  }, []);
+
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
       if (file) setSelectedFile(file);
     },
     [],
   );
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setSelectedFile(file);
-  }, []);
-
   const detectSource = (filename: string): string => {
     const lower = filename.toLowerCase();
-    if (lower.includes('teams') || lower.includes('microsoft')) return 'teams';
-    if (lower.includes('meet') || lower.includes('google')) return 'google_meet';
-    if (lower.includes('zoom')) return 'zoom';
-    if (lower.includes('webex') || lower.includes('cisco')) return 'webex';
-    return 'other';
+    if (lower.includes("teams") || lower.includes("microsoft")) return "teams";
+    if (lower.includes("meet") || lower.includes("google"))
+      return "google_meet";
+    if (lower.includes("zoom")) return "zoom";
+    if (lower.includes("webex") || lower.includes("cisco")) return "webex";
+    return "other";
   };
 
   // Preview extraction
   const handleExtractPreview = useCallback(async () => {
     if (!selectedFile || !projectId) return;
-    setStep('processing');
+    setStep("processing");
     setPreviewError(null);
-    setProcessingStage(t('meetings.stage_parsing', { defaultValue: 'Parsing transcript...' }));
+    setProcessingStage(
+      t("meetings.stage_parsing", { defaultValue: "Parsing transcript..." }),
+    );
     try {
       // Short delay to show the "Parsing" stage visually
       await new Promise((r) => setTimeout(r, 300));
-      setProcessingStage(t('meetings.stage_extracting', { defaultValue: 'Extracting with AI...' }));
+      setProcessingStage(
+        t("meetings.stage_extracting", {
+          defaultValue: "Extracting with AI...",
+        }),
+      );
       const data = await importMeetingSummaryPreview(projectId, selectedFile);
       setPreviewData(data);
       setEditTitle(data.title);
       setEditMeetingType(data.meeting_type as MeetingType);
-      setEditAttendees(
-        data.attendees.map((a) => ({ ...a, included: true })),
-      );
+      setEditAttendees(data.attendees.map((a) => ({ ...a, included: true })));
       setEditActionItems(
         data.action_items.map((a) => ({ ...a, included: true })),
       );
-      setProcessingStage(t('meetings.stage_done', { defaultValue: 'Done' }));
-      setStep('preview');
+      setProcessingStage(t("meetings.stage_done", { defaultValue: "Done" }));
+      setStep("preview");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : t('meetings.preview_extraction_failed', { defaultValue: 'Preview extraction failed' });
+      const msg =
+        err instanceof Error
+          ? err.message
+          : t("meetings.preview_extraction_failed", {
+              defaultValue: "Preview extraction failed",
+            });
       setPreviewError(msg);
-      setStep('upload');
-      addToast({ type: 'error', title: t('meetings.preview_failed', { defaultValue: 'Failed to preview meeting transcript' }), message: msg });
+      setStep("upload");
+      addToast({
+        type: "error",
+        title: t("meetings.preview_failed", {
+          defaultValue: "Failed to preview meeting transcript",
+        }),
+        message: msg,
+      });
     }
   }, [selectedFile, projectId, t, addToast]);
 
   const handleBackToUpload = useCallback(() => {
-    setStep('upload');
+    setStep("upload");
     setPreviewData(null);
     setPreviewError(null);
   }, []);
@@ -1035,39 +1132,51 @@ function ImportSummaryModal({
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
   const detectedSource = selectedFile ? detectSource(selectedFile.name) : null;
-  const sourceCfg = detectedSource ? SOURCE_LABELS[detectedSource] || SOURCE_LABELS.other : null;
+  const sourceCfg = detectedSource
+    ? SOURCE_LABELS[detectedSource] || SOURCE_LABELS.other
+    : null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg animate-fade-in">
-      <div className="w-full max-w-2xl bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4 max-h-[90vh] overflow-y-auto" role="dialog" aria-label={t('meetings.import_summary', { defaultValue: 'Import Meeting Summary' })}>
+      <div
+        className="w-full max-w-2xl bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4 max-h-[90vh] overflow-y-auto"
+        role="dialog"
+        aria-label={t("meetings.import_summary", {
+          defaultValue: "Import Meeting Summary",
+        })}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
           <div className="flex items-center gap-3">
-            {step === 'preview' && (
+            {step === "preview" && (
               <button
                 onClick={handleBackToUpload}
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
-                aria-label={t('common.back', { defaultValue: 'Back' })}
+                aria-label={t("common.back", { defaultValue: "Back" })}
               >
                 <ArrowLeft size={18} />
               </button>
             )}
             <h2 className="text-lg font-semibold text-content-primary">
-              {step === 'preview'
-                ? t('meetings.review_import', { defaultValue: 'Review Extracted Data' })
-                : t('meetings.import_summary', { defaultValue: 'Import Meeting Summary' })}
+              {step === "preview"
+                ? t("meetings.review_import", {
+                    defaultValue: "Review Extracted Data",
+                  })
+                : t("meetings.import_summary", {
+                    defaultValue: "Import Meeting Summary",
+                  })}
             </h2>
           </div>
           <button
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
           >
             <X size={18} />
@@ -1075,13 +1184,13 @@ function ImportSummaryModal({
         </div>
 
         {/* Step: Upload */}
-        {step === 'upload' && (
+        {step === "upload" && (
           <>
             <div className="px-6 py-4 space-y-4">
               <p className="text-sm text-content-secondary">
-                {t('meetings.import_description', {
+                {t("meetings.import_description", {
                   defaultValue:
-                    'Upload a meeting transcript from Microsoft Teams, Google Meet, Zoom, or any other source. AI will extract attendees, agenda, action items, and decisions.',
+                    "Upload a meeting transcript from Microsoft Teams, Google Meet, Zoom, or any other source. AI will extract attendees, agenda, action items, and decisions.",
                 })}
               </p>
 
@@ -1094,14 +1203,16 @@ function ImportSummaryModal({
                 onDragLeave={() => setDragOver(false)}
                 onDrop={handleDrop}
                 className={clsx(
-                  'border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer',
+                  "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
                   dragOver
-                    ? 'border-oe-blue bg-oe-blue-subtle'
+                    ? "border-oe-blue bg-oe-blue-subtle"
                     : selectedFile
-                      ? 'border-semantic-success bg-green-50 dark:bg-green-950/20'
-                      : 'border-border-light hover:border-oe-blue hover:bg-surface-secondary',
+                      ? "border-semantic-success bg-green-50 dark:bg-green-950/20"
+                      : "border-border-light hover:border-oe-blue hover:bg-surface-secondary",
                 )}
-                onClick={() => document.getElementById('transcript-file-input')?.click()}
+                onClick={() =>
+                  document.getElementById("transcript-file-input")?.click()
+                }
               >
                 <input
                   id="transcript-file-input"
@@ -1113,28 +1224,45 @@ function ImportSummaryModal({
 
                 {selectedFile ? (
                   <div className="space-y-2">
-                    <CheckCircle2 size={32} className="mx-auto text-semantic-success" />
-                    <p className="text-sm font-medium text-content-primary">{selectedFile.name}</p>
+                    <CheckCircle2
+                      size={32}
+                      className="mx-auto text-semantic-success"
+                    />
+                    <p className="text-sm font-medium text-content-primary">
+                      {selectedFile.name}
+                    </p>
                     <p className="text-xs text-content-tertiary">
                       {(selectedFile.size / 1024).toFixed(1)} KB
                     </p>
                     {sourceCfg && (
-                      <Badge variant="neutral" size="sm" className={sourceCfg.cls}>
-                        {t('meetings.detected_source', { defaultValue: 'Detected: {{source}}', source: sourceCfg.label })}
+                      <Badge
+                        variant="neutral"
+                        size="sm"
+                        className={sourceCfg.cls}
+                      >
+                        {t("meetings.detected_source", {
+                          defaultValue: "Detected: {{source}}",
+                          source: sourceCfg.label,
+                        })}
                       </Badge>
                     )}
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <Upload size={32} className="mx-auto text-content-tertiary" />
+                    <Upload
+                      size={32}
+                      className="mx-auto text-content-tertiary"
+                    />
                     <p className="text-sm font-medium text-content-secondary">
-                      {t('meetings.drop_transcript', {
-                        defaultValue: 'Drop transcript file here or click to browse',
+                      {t("meetings.drop_transcript", {
+                        defaultValue:
+                          "Drop transcript file here or click to browse",
                       })}
                     </p>
                     <p className="text-xs text-content-tertiary">
-                      {t('meetings.accepted_formats', {
-                        defaultValue: 'Accepted formats: .txt, .vtt, .srt, .docx, .pdf',
+                      {t("meetings.accepted_formats", {
+                        defaultValue:
+                          "Accepted formats: .txt, .vtt, .srt, .docx, .pdf",
                       })}
                     </p>
                   </div>
@@ -1144,7 +1272,10 @@ function ImportSummaryModal({
               {/* Error display */}
               {previewError && (
                 <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30 p-3">
-                  <AlertCircle size={16} className="text-semantic-error mt-0.5 shrink-0" />
+                  <AlertCircle
+                    size={16}
+                    className="text-semantic-error mt-0.5 shrink-0"
+                  />
                   <p className="text-sm text-semantic-error">{previewError}</p>
                 </div>
               )}
@@ -1152,11 +1283,18 @@ function ImportSummaryModal({
               {/* Format hints */}
               <div className="rounded-lg bg-surface-secondary p-3">
                 <p className="text-xs text-content-tertiary font-medium uppercase tracking-wide mb-2">
-                  {t('meetings.supported_sources', { defaultValue: 'Supported Sources' })}
+                  {t("meetings.supported_sources", {
+                    defaultValue: "Supported Sources",
+                  })}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {Object.values(SOURCE_LABELS).map((s) => (
-                    <Badge key={s.label} variant="neutral" size="sm" className={s.cls}>
+                    <Badge
+                      key={s.label}
+                      variant="neutral"
+                      size="sm"
+                      className={s.cls}
+                    >
                       {s.label}
                     </Badge>
                   ))}
@@ -1167,7 +1305,7 @@ function ImportSummaryModal({
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border-light">
               <Button variant="ghost" onClick={onClose}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
@@ -1175,46 +1313,64 @@ function ImportSummaryModal({
                 disabled={!selectedFile}
               >
                 <FileUp size={16} className="mr-1.5 shrink-0" />
-                <span>{t('meetings.extract_preview', { defaultValue: 'Extract & Preview' })}</span>
+                <span>
+                  {t("meetings.extract_preview", {
+                    defaultValue: "Extract & Preview",
+                  })}
+                </span>
               </Button>
             </div>
           </>
         )}
 
         {/* Step: Processing */}
-        {step === 'processing' && (
+        {step === "processing" && (
           <div className="px-6 py-12 flex flex-col items-center gap-4">
             <Loader2 size={40} className="animate-spin text-oe-blue" />
             <div className="text-center space-y-1">
-              <p className="text-sm font-medium text-content-primary">{processingStage}</p>
+              <p className="text-sm font-medium text-content-primary">
+                {processingStage}
+              </p>
               <p className="text-xs text-content-tertiary">
-                {t('meetings.processing_hint', { defaultValue: 'This may take a few seconds...' })}
+                {t("meetings.processing_hint", {
+                  defaultValue: "This may take a few seconds...",
+                })}
               </p>
             </div>
             {/* Processing stages indicator */}
             <div className="flex items-center gap-2 mt-2">
               {[
-                t('meetings.stage_parsing', { defaultValue: 'Parsing' }),
-                t('meetings.stage_ai', { defaultValue: 'AI Extract' }),
-                t('meetings.stage_done', { defaultValue: 'Done' }),
+                t("meetings.stage_parsing", { defaultValue: "Parsing" }),
+                t("meetings.stage_ai", { defaultValue: "AI Extract" }),
+                t("meetings.stage_done", { defaultValue: "Done" }),
               ].map((label, idx) => {
-                const currentIdx = processingStage.toLowerCase().includes('parsing')
+                const currentIdx = processingStage
+                  .toLowerCase()
+                  .includes("parsing")
                   ? 0
-                  : processingStage.toLowerCase().includes('extract') || processingStage.toLowerCase().includes('ai')
+                  : processingStage.toLowerCase().includes("extract") ||
+                      processingStage.toLowerCase().includes("ai")
                     ? 1
                     : 2;
                 const isActive = idx <= currentIdx;
                 return (
                   <React.Fragment key={label}>
                     {idx > 0 && (
-                      <div className={clsx('h-0.5 w-6 rounded', isActive ? 'bg-oe-blue' : 'bg-border-light')} />
+                      <div
+                        className={clsx(
+                          "h-0.5 w-6 rounded",
+                          isActive ? "bg-oe-blue" : "bg-border-light",
+                        )}
+                      />
                     )}
-                    <div className={clsx(
-                      'text-2xs px-2 py-0.5 rounded-full font-medium',
-                      isActive
-                        ? 'bg-oe-blue/10 text-oe-blue'
-                        : 'bg-surface-secondary text-content-tertiary',
-                    )}>
+                    <div
+                      className={clsx(
+                        "text-2xs px-2 py-0.5 rounded-full font-medium",
+                        isActive
+                          ? "bg-oe-blue/10 text-oe-blue"
+                          : "bg-surface-secondary text-content-tertiary",
+                      )}
+                    >
                       {label}
                     </div>
                   </React.Fragment>
@@ -1225,15 +1381,20 @@ function ImportSummaryModal({
         )}
 
         {/* Step: Preview */}
-        {step === 'preview' && previewData && (
+        {step === "preview" && previewData && (
           <>
             <div className="px-6 py-4 space-y-4 max-h-[60vh] overflow-y-auto">
               {/* AI indicator */}
               {previewData.ai_enhanced && (
                 <div className="flex items-center gap-2 rounded-lg bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 px-3 py-2">
-                  <Sparkles size={14} className="text-purple-600 dark:text-purple-400" />
+                  <Sparkles
+                    size={14}
+                    className="text-purple-600 dark:text-purple-400"
+                  />
                   <span className="text-xs font-medium text-purple-700 dark:text-purple-300">
-                    {t('meetings.ai_enhanced', { defaultValue: 'AI-enhanced extraction' })}
+                    {t("meetings.ai_enhanced", {
+                      defaultValue: "AI-enhanced extraction",
+                    })}
                   </span>
                 </div>
               )}
@@ -1242,18 +1403,19 @@ function ImportSummaryModal({
               {previewData.source && SOURCE_LABELS[previewData.source] && (
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-content-tertiary">
-                    {t('meetings.label_source', { defaultValue: 'Source:' })}
+                    {t("meetings.label_source", { defaultValue: "Source:" })}
                   </span>
                   <Badge
                     variant="neutral"
                     size="sm"
-                    className={SOURCE_LABELS[previewData.source]?.cls || ''}
+                    className={SOURCE_LABELS[previewData.source]?.cls || ""}
                   >
-                    {SOURCE_LABELS[previewData.source]?.label || previewData.source}
+                    {SOURCE_LABELS[previewData.source]?.label ||
+                      previewData.source}
                   </Badge>
                   <span className="text-xs text-content-tertiary ml-auto">
-                    {t('meetings.segments_count', {
-                      defaultValue: '{{count}} segments parsed',
+                    {t("meetings.segments_count", {
+                      defaultValue: "{{count}} segments parsed",
                       count: previewData.segments_parsed,
                     })}
                   </span>
@@ -1263,7 +1425,7 @@ function ImportSummaryModal({
               {/* Title (editable) */}
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1 uppercase tracking-wide">
-                  {t('meetings.field_title', { defaultValue: 'Title' })}
+                  {t("meetings.field_title", { defaultValue: "Title" })}
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -1278,18 +1440,21 @@ function ImportSummaryModal({
               {/* Meeting Type (editable) */}
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1 uppercase tracking-wide">
-                  {t('meetings.field_type', { defaultValue: 'Meeting Type' })}
+                  {t("meetings.field_type", { defaultValue: "Meeting Type" })}
                 </label>
                 <div className="relative">
                   <select
                     value={editMeetingType}
-                    onChange={(e) => setEditMeetingType(e.target.value as MeetingType)}
-                    className={inputCls + ' appearance-none pr-9'}
+                    onChange={(e) =>
+                      setEditMeetingType(e.target.value as MeetingType)
+                    }
+                    className={inputCls + " appearance-none pr-9"}
                   >
                     {MEETING_TYPES.map((mt) => (
                       <option key={mt} value={mt}>
                         {t(`meetings.type_${mt}`, {
-                          defaultValue: mt.charAt(0).toUpperCase() + mt.slice(1),
+                          defaultValue:
+                            mt.charAt(0).toUpperCase() + mt.slice(1),
                         })}
                       </option>
                     ))}
@@ -1304,12 +1469,12 @@ function ImportSummaryModal({
               {previewData.key_topics.length > 0 && (
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1.5 uppercase tracking-wide">
-                    {t('meetings.label_topics', { defaultValue: 'Key Topics' })}
+                    {t("meetings.label_topics", { defaultValue: "Key Topics" })}
                   </label>
                   <div className="flex flex-wrap gap-1.5">
                     {previewData.key_topics.map((topic) => (
                       <Badge key={topic} variant="blue" size="sm">
-                        {topic.length > 60 ? topic.slice(0, 60) + '...' : topic}
+                        {topic.length > 60 ? topic.slice(0, 60) + "..." : topic}
                       </Badge>
                     ))}
                   </div>
@@ -1320,15 +1485,18 @@ function ImportSummaryModal({
               {editAttendees.length > 0 && (
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1.5 uppercase tracking-wide">
-                    {t('meetings.label_attendees', { defaultValue: 'Attendees' })}
+                    {t("meetings.label_attendees", {
+                      defaultValue: "Attendees",
+                    })}
                     <span className="ml-1 text-content-tertiary font-normal">
-                      ({editAttendees.filter((a) => a.included).length}/{editAttendees.length})
+                      ({editAttendees.filter((a) => a.included).length}/
+                      {editAttendees.length})
                     </span>
                   </label>
                   <div className="rounded-lg border border-border-light divide-y divide-border-light">
                     {editAttendees.map((att, idx) => (
                       <label
-                        key={`${att.name}-${att.company || ''}-${idx}`}
+                        key={`${att.name}-${att.company || ""}-${idx}`}
                         className="flex items-center gap-3 px-3 py-2 hover:bg-surface-secondary/50 cursor-pointer transition-colors"
                       >
                         <input
@@ -1337,14 +1505,24 @@ function ImportSummaryModal({
                           onChange={() => handleToggleAttendee(idx)}
                           className="rounded border-border text-oe-blue focus:ring-oe-blue/30"
                         />
-                        <span className={clsx('text-sm flex-1', !att.included && 'text-content-tertiary line-through')}>
+                        <span
+                          className={clsx(
+                            "text-sm flex-1",
+                            !att.included &&
+                              "text-content-tertiary line-through",
+                          )}
+                        >
                           {att.name}
                         </span>
                         {att.company && (
-                          <span className="text-xs text-content-tertiary">{att.company}</span>
+                          <span className="text-xs text-content-tertiary">
+                            {att.company}
+                          </span>
                         )}
                         {att.role && (
-                          <span className="text-xs text-content-tertiary">({att.role})</span>
+                          <span className="text-xs text-content-tertiary">
+                            ({att.role})
+                          </span>
                         )}
                       </label>
                     ))}
@@ -1356,9 +1534,12 @@ function ImportSummaryModal({
               {editActionItems.length > 0 && (
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1.5 uppercase tracking-wide">
-                    {t('meetings.label_actions', { defaultValue: 'Action Items' })}
+                    {t("meetings.label_actions", {
+                      defaultValue: "Action Items",
+                    })}
                     <span className="ml-1 text-content-tertiary font-normal">
-                      ({editActionItems.filter((a) => a.included).length}/{editActionItems.length})
+                      ({editActionItems.filter((a) => a.included).length}/
+                      {editActionItems.length})
                     </span>
                   </label>
                   <div className="rounded-lg border border-blue-200 dark:border-blue-800 divide-y divide-blue-100 dark:divide-blue-900">
@@ -1366,8 +1547,8 @@ function ImportSummaryModal({
                       <div
                         key={`action-${ai.description?.slice(0, 30) || idx}-${idx}`}
                         className={clsx(
-                          'flex items-start gap-3 px-3 py-2.5 transition-colors',
-                          !ai.included && 'opacity-50',
+                          "flex items-start gap-3 px-3 py-2.5 transition-colors",
+                          !ai.included && "opacity-50",
                         )}
                       >
                         <input
@@ -1377,16 +1558,27 @@ function ImportSummaryModal({
                           className="rounded border-border text-oe-blue focus:ring-oe-blue/30 mt-0.5"
                         />
                         <div className="flex-1 min-w-0">
-                          <p className={clsx('text-sm text-content-primary', !ai.included && 'line-through')}>
+                          <p
+                            className={clsx(
+                              "text-sm text-content-primary",
+                              !ai.included && "line-through",
+                            )}
+                          >
                             {ai.description}
                           </p>
                           <div className="flex items-center gap-3 mt-0.5 text-xs text-content-tertiary">
                             <span>
-                              {t('meetings.action_owner', { defaultValue: 'Owner' })}: {ai.owner}
+                              {t("meetings.action_owner", {
+                                defaultValue: "Owner",
+                              })}
+                              : {ai.owner}
                             </span>
                             {ai.due_date && (
                               <span>
-                                {t('meetings.action_due', { defaultValue: 'Due' })}: {ai.due_date}
+                                {t("meetings.action_due", {
+                                  defaultValue: "Due",
+                                })}
+                                : {ai.due_date}
                               </span>
                             )}
                           </div>
@@ -1394,7 +1586,9 @@ function ImportSummaryModal({
                         <button
                           onClick={() => handleRemoveActionItem(idx)}
                           className="flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:text-semantic-error hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0 mt-0.5"
-                          aria-label={t('common.remove', { defaultValue: 'Remove' })}
+                          aria-label={t("common.remove", {
+                            defaultValue: "Remove",
+                          })}
                         >
                           <Trash2 size={12} />
                         </button>
@@ -1408,14 +1602,24 @@ function ImportSummaryModal({
               {previewData.decisions.length > 0 && (
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1.5 uppercase tracking-wide">
-                    {t('meetings.label_decisions', { defaultValue: 'Decisions' })}
+                    {t("meetings.label_decisions", {
+                      defaultValue: "Decisions",
+                    })}
                   </label>
                   <div className="rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-3 space-y-1.5">
                     {previewData.decisions.map((d, idx) => (
-                      <div key={`decision-${d.decision.slice(0, 30)}-${idx}`} className="flex items-start gap-2 text-sm">
-                        <CheckCircle2 size={14} className="text-semantic-success mt-0.5 shrink-0" />
+                      <div
+                        key={`decision-${d.decision.slice(0, 30)}-${idx}`}
+                        className="flex items-start gap-2 text-sm"
+                      >
+                        <CheckCircle2
+                          size={14}
+                          className="text-semantic-success mt-0.5 shrink-0"
+                        />
                         <div className="flex-1 min-w-0">
-                          <span className="text-content-primary">{d.decision}</span>
+                          <span className="text-content-primary">
+                            {d.decision}
+                          </span>
                           {d.made_by && (
                             <span className="text-xs text-content-tertiary ml-2">
                               ({d.made_by})
@@ -1432,11 +1636,11 @@ function ImportSummaryModal({
               {previewData.summary && (
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1 uppercase tracking-wide">
-                    {t('meetings.label_summary', { defaultValue: 'Summary' })}
+                    {t("meetings.label_summary", { defaultValue: "Summary" })}
                   </label>
                   <p className="text-sm text-content-secondary bg-surface-secondary rounded-lg p-3">
                     {previewData.summary.length > 500
-                      ? previewData.summary.slice(0, 500) + '...'
+                      ? previewData.summary.slice(0, 500) + "..."
                       : previewData.summary}
                   </p>
                 </div>
@@ -1446,13 +1650,14 @@ function ImportSummaryModal({
             {/* Footer */}
             <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-light">
               <p className="text-xs text-content-tertiary">
-                {t('meetings.review_hint', {
-                  defaultValue: 'Review the extracted data above before creating the meeting.',
+                {t("meetings.review_hint", {
+                  defaultValue:
+                    "Review the extracted data above before creating the meeting.",
                 })}
               </p>
               <div className="flex items-center gap-3 shrink-0">
                 <Button variant="ghost" onClick={onClose} disabled={isPending}>
-                  {t('common.cancel', { defaultValue: 'Cancel' })}
+                  {t("common.cancel", { defaultValue: "Cancel" })}
                 </Button>
                 <Button
                   variant="primary"
@@ -1460,11 +1665,18 @@ function ImportSummaryModal({
                   disabled={isPending || !selectedFile}
                 >
                   {isPending ? (
-                    <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+                    <Loader2
+                      size={16}
+                      className="mr-1.5 animate-spin shrink-0"
+                    />
                   ) : (
                     <Plus size={16} className="mr-1.5 shrink-0" />
                   )}
-                  <span>{t('meetings.create_meeting', { defaultValue: 'Create Meeting' })}</span>
+                  <span>
+                    {t("meetings.create_meeting", {
+                      defaultValue: "Create Meeting",
+                    })}
+                  </span>
                 </Button>
               </div>
             </div>
@@ -1479,20 +1691,20 @@ function ImportSummaryModal({
 
 async function downloadMeetingPdf(meetingId: string): Promise<void> {
   const token = useAuthStore.getState().accessToken;
-  const headers: Record<string, string> = { Accept: 'application/pdf' };
+  const headers: Record<string, string> = { Accept: "application/pdf" };
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(`/api/v1/meetings/${meetingId}/export/pdf/`, {
-    method: 'GET',
+    method: "GET",
     headers,
   });
   if (!response.ok) {
-    let detail = 'PDF export failed';
+    let detail = "PDF export failed";
     try {
       const body = await response.json();
-      detail = body.detail || 'PDF export failed';
+      detail = body.detail || "PDF export failed";
     } catch {
       // ignore parse error
     }
@@ -1500,8 +1712,9 @@ async function downloadMeetingPdf(meetingId: string): Promise<void> {
   }
 
   const blob = await response.blob();
-  const disposition = response.headers.get('Content-Disposition');
-  const filename = disposition?.match(/filename="?(.+)"?/)?.[1] || `meeting_${meetingId}.pdf`;
+  const disposition = response.headers.get("Content-Disposition");
+  const filename =
+    disposition?.match(/filename="?(.+)"?/)?.[1] || `meeting_${meetingId}.pdf`;
   triggerDownload(blob, filename);
 }
 
@@ -1527,32 +1740,33 @@ const MeetingRow = React.memo(function MeetingRow({
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const statusCfg = STATUS_CONFIG[meeting.status] ?? STATUS_CONFIG.scheduled;
-  const typeCfg = MEETING_TYPE_COLORS[meeting.meeting_type] ?? 'neutral';
+  const typeCfg = MEETING_TYPE_COLORS[meeting.meeting_type] ?? "neutral";
   const attendeeCount = meeting.attendees?.length ?? 0;
   const attachmentCount = meeting.document_ids?.length ?? 0;
-  const editLocked = meeting.status === 'completed' || meeting.status === 'cancelled';
+  const editLocked =
+    meeting.status === "completed" || meeting.status === "cancelled";
 
   return (
     <div className="border-b border-border-light last:border-b-0">
       {/* Main row */}
       <div
         className={clsx(
-          'flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-surface-secondary/50 transition-colors',
-          expanded && 'bg-surface-secondary/30',
+          "flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-surface-secondary/50 transition-colors",
+          expanded && "bg-surface-secondary/30",
         )}
         onClick={() => setExpanded((prev) => !prev)}
       >
         <ChevronRight
           size={14}
           className={clsx(
-            'text-content-tertiary transition-transform shrink-0',
-            expanded && 'rotate-90',
+            "text-content-tertiary transition-transform shrink-0",
+            expanded && "rotate-90",
           )}
         />
 
         {/* Meeting # */}
         <span className="text-sm font-mono font-semibold text-content-secondary w-20 shrink-0">
-          MTG-{String(meeting.meeting_number).padStart(3, '0')}
+          MTG-{String(meeting.meeting_number).padStart(3, "0")}
         </span>
 
         {/* Title */}
@@ -1564,7 +1778,8 @@ const MeetingRow = React.memo(function MeetingRow({
         <Badge variant={typeCfg} size="sm">
           {t(`meetings.type_${meeting.meeting_type}`, {
             defaultValue:
-              meeting.meeting_type.charAt(0).toUpperCase() + meeting.meeting_type.slice(1),
+              meeting.meeting_type.charAt(0).toUpperCase() +
+              meeting.meeting_type.slice(1),
           })}
         </Badge>
 
@@ -1575,13 +1790,13 @@ const MeetingRow = React.memo(function MeetingRow({
 
         {/* Chairperson */}
         <span className="text-xs text-content-tertiary w-28 truncate shrink-0 hidden lg:block">
-          {meeting.chairperson || '\u2014'}
+          {meeting.chairperson || "\u2014"}
         </span>
 
         {/* Status badge */}
         <Badge variant={statusCfg.variant} size="sm" className={statusCfg.cls}>
           {t(`meetings.status_${meeting.status}`, {
-            defaultValue: meeting.status.replace(/_/g, ' '),
+            defaultValue: meeting.status.replace(/_/g, " "),
           })}
         </Badge>
 
@@ -1595,11 +1810,14 @@ const MeetingRow = React.memo(function MeetingRow({
       {/* Expanded detail */}
       {expanded && (
         <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+          {/* Attendance check-in (Newforma-style) */}
+          <AttendanceSection meetingId={meeting.id} />
+
           {/* Attendees */}
           {meeting.attendees && meeting.attendees.length > 0 && (
             <div className="rounded-lg bg-surface-secondary p-3">
               <p className="text-xs text-content-tertiary mb-2 font-medium uppercase tracking-wide">
-                {t('meetings.label_attendees', { defaultValue: 'Attendees' })}
+                {t("meetings.label_attendees", { defaultValue: "Attendees" })}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {meeting.attendees.map((att) => (
@@ -1607,7 +1825,9 @@ const MeetingRow = React.memo(function MeetingRow({
                     {ATTENDEE_STATUS_ICON[att.status] ?? <Circle size={14} />}
                     <span className="text-content-primary">{att.name}</span>
                     {att.role && (
-                      <span className="text-xs text-content-tertiary">({att.role})</span>
+                      <span className="text-xs text-content-tertiary">
+                        ({att.role})
+                      </span>
                     )}
                   </div>
                 ))}
@@ -1619,7 +1839,7 @@ const MeetingRow = React.memo(function MeetingRow({
           {meeting.agenda_items && meeting.agenda_items.length > 0 && (
             <div className="rounded-lg bg-surface-secondary p-3">
               <p className="text-xs text-content-tertiary mb-2 font-medium uppercase tracking-wide">
-                {t('meetings.label_agenda', { defaultValue: 'Agenda' })}
+                {t("meetings.label_agenda", { defaultValue: "Agenda" })}
               </p>
               <ol className="space-y-1.5">
                 {meeting.agenda_items.map((item, idx) => (
@@ -1651,32 +1871,41 @@ const MeetingRow = React.memo(function MeetingRow({
           {meeting.action_items && meeting.action_items.length > 0 && (
             <div className="rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 p-3">
               <p className="text-xs text-blue-700 dark:text-blue-400 mb-2 font-medium uppercase tracking-wide">
-                {t('meetings.label_actions', { defaultValue: 'Action Items' })}
+                {t("meetings.label_actions", { defaultValue: "Action Items" })}
               </p>
               <div className="space-y-2">
                 {meeting.action_items.map((ai) => (
                   <div key={ai.id} className="flex items-start gap-2 text-sm">
                     {ai.completed ? (
-                      <CheckCircle2 size={14} className="text-semantic-success mt-0.5 shrink-0" />
+                      <CheckCircle2
+                        size={14}
+                        className="text-semantic-success mt-0.5 shrink-0"
+                      />
                     ) : (
-                      <Circle size={14} className="text-content-tertiary mt-0.5 shrink-0" />
+                      <Circle
+                        size={14}
+                        className="text-content-tertiary mt-0.5 shrink-0"
+                      />
                     )}
                     <div className="flex-1 min-w-0">
                       <span
                         className={clsx(
-                          'text-content-primary',
-                          ai.completed && 'line-through text-content-tertiary',
+                          "text-content-primary",
+                          ai.completed && "line-through text-content-tertiary",
                         )}
                       >
                         {ai.description}
                       </span>
                       <div className="flex items-center gap-3 mt-0.5 text-xs text-content-tertiary">
                         <span>
-                          {t('meetings.action_owner', { defaultValue: 'Owner' })}: {ai.owner}
+                          {t("meetings.action_owner", {
+                            defaultValue: "Owner",
+                          })}
+                          : {ai.owner}
                         </span>
                         {ai.due_date && (
                           <span>
-                            {t('meetings.action_due', { defaultValue: 'Due' })}:{' '}
+                            {t("meetings.action_due", { defaultValue: "Due" })}:{" "}
                             <DateDisplay value={ai.due_date} />
                           </span>
                         )}
@@ -1689,42 +1918,49 @@ const MeetingRow = React.memo(function MeetingRow({
           )}
 
           {/* Linked Tasks */}
-          {meeting.action_items && meeting.action_items.length > 0 && meeting.status === 'completed' && (
-            <div className="flex items-center gap-2">
-              <ListChecks size={14} className="text-content-tertiary" />
-              <span className="text-xs text-content-tertiary">
-                {t('meetings.linked_tasks', {
-                  defaultValue: '{{count}} tasks from action items',
-                  count: meeting.action_items.length,
-                })}
-              </span>
-              <Link
-                to={`/projects/${projectId}/tasks?meeting_id=${meeting.id}`}
-                className="text-xs font-medium text-oe-blue hover:underline"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {t('meetings.view_tasks', { defaultValue: 'View Tasks' })}
-              </Link>
-            </div>
-          )}
+          {meeting.action_items &&
+            meeting.action_items.length > 0 &&
+            meeting.status === "completed" && (
+              <div className="flex items-center gap-2">
+                <ListChecks size={14} className="text-content-tertiary" />
+                <span className="text-xs text-content-tertiary">
+                  {t("meetings.linked_tasks", {
+                    defaultValue: "{{count}} tasks from action items",
+                    count: meeting.action_items.length,
+                  })}
+                </span>
+                <Link
+                  to={`/projects/${projectId}/tasks?meeting_id=${meeting.id}`}
+                  className="text-xs font-medium text-oe-blue hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {t("meetings.view_tasks", { defaultValue: "View Tasks" })}
+                </Link>
+              </div>
+            )}
 
           {/* Minutes / Description */}
           {meeting.minutes && (
             <div className="rounded-lg bg-surface-secondary p-3">
               <p className="text-xs text-content-tertiary mb-2 font-medium uppercase tracking-wide">
-                {t('meetings.label_minutes', { defaultValue: 'Minutes' })}
+                {t("meetings.label_minutes", { defaultValue: "Minutes" })}
               </p>
-              <p className="text-sm text-content-primary whitespace-pre-wrap">{meeting.minutes}</p>
+              <p className="text-sm text-content-primary whitespace-pre-wrap">
+                {meeting.minutes}
+              </p>
             </div>
           )}
 
           {/* Attachments */}
           {attachmentCount > 0 && (
-            <div className="rounded-lg bg-surface-secondary p-3" data-testid="meeting-row-attachments">
+            <div
+              className="rounded-lg bg-surface-secondary p-3"
+              data-testid="meeting-row-attachments"
+            >
               <p className="text-xs text-content-tertiary mb-2 font-medium uppercase tracking-wide flex items-center gap-1">
                 <Paperclip size={12} />
-                {t('meetings.label_attachments', {
-                  defaultValue: 'Attachments ({{count}})',
+                {t("meetings.label_attachments", {
+                  defaultValue: "Attachments ({{count}})",
                   count: attachmentCount,
                 })}
               </p>
@@ -1740,7 +1976,9 @@ const MeetingRow = React.memo(function MeetingRow({
                     data-testid="meeting-row-attachment-chip"
                   >
                     <FileText size={10} />
-                    <span className="font-mono truncate max-w-[140px]">{docId.slice(0, 8)}</span>
+                    <span className="font-mono truncate max-w-[140px]">
+                      {docId.slice(0, 8)}
+                    </span>
                     <Download size={10} />
                   </a>
                 ))}
@@ -1750,7 +1988,8 @@ const MeetingRow = React.memo(function MeetingRow({
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-1 flex-wrap">
-            {(meeting.status === 'scheduled' || meeting.status === 'in_progress') && (
+            {(meeting.status === "scheduled" ||
+              meeting.status === "in_progress") && (
               <Button
                 variant="primary"
                 size="sm"
@@ -1760,7 +1999,9 @@ const MeetingRow = React.memo(function MeetingRow({
                 }}
               >
                 <CheckCircle2 size={14} className="mr-1.5" />
-                {t('meetings.action_complete', { defaultValue: 'Complete Meeting' })}
+                {t("meetings.action_complete", {
+                  defaultValue: "Complete Meeting",
+                })}
               </Button>
             )}
             <Button
@@ -1773,16 +2014,16 @@ const MeetingRow = React.memo(function MeetingRow({
               disabled={editLocked}
               title={
                 editLocked
-                  ? t('meetings.edit_locked', {
+                  ? t("meetings.edit_locked", {
                       defaultValue:
-                        'Cannot edit a completed or cancelled meeting',
+                        "Cannot edit a completed or cancelled meeting",
                     })
                   : undefined
               }
               data-testid="meeting-row-edit"
             >
               <Edit3 size={14} className="mr-1.5" />
-              {t('common.edit', { defaultValue: 'Edit' })}
+              {t("common.edit", { defaultValue: "Edit" })}
             </Button>
             <Button
               variant="secondary"
@@ -1794,7 +2035,7 @@ const MeetingRow = React.memo(function MeetingRow({
               data-testid="meeting-row-delete"
             >
               <Trash2 size={14} className="mr-1.5" />
-              {t('common.delete', { defaultValue: 'Delete' })}
+              {t("common.delete", { defaultValue: "Delete" })}
             </Button>
             <Button
               variant="secondary"
@@ -1810,7 +2051,7 @@ const MeetingRow = React.memo(function MeetingRow({
               ) : (
                 <FileDown size={14} className="mr-1.5" />
               )}
-              {t('meetings.export_pdf', { defaultValue: 'Export PDF' })}
+              {t("meetings.export_pdf", { defaultValue: "Export PDF" })}
             </Button>
           </div>
         </div>
@@ -1831,10 +2072,11 @@ export function MeetingsPage() {
   // State
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showSeriesModal, setShowSeriesModal] = useState(false);
   const [editingMeeting, setEditingMeeting] = useState<Meeting | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState<MeetingType | ''>('');
-  const [statusFilter, setStatusFilter] = useState<MeetingStatus | ''>('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<MeetingType | "">("");
+  const [statusFilter, setStatusFilter] = useState<MeetingStatus | "">("");
 
   // "n" shortcut → open new meeting form
   useCreateShortcut(
@@ -1844,13 +2086,13 @@ export function MeetingsPage() {
 
   // Data
   const { data: projects = [] } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 
-  const projectId = routeProjectId || activeProjectId || projects[0]?.id || '';
-  const projectName = projects.find((p) => p.id === projectId)?.name || '';
+  const projectId = routeProjectId || activeProjectId || projects[0]?.id || "";
+  const projectName = projects.find((p) => p.id === projectId)?.name || "";
 
   const {
     data: meetings = [],
@@ -1859,7 +2101,7 @@ export function MeetingsPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['meetings', projectId, typeFilter, statusFilter],
+    queryKey: ["meetings", projectId, typeFilter, statusFilter],
     queryFn: () =>
       fetchMeetings({
         project_id: projectId,
@@ -1884,15 +2126,17 @@ export function MeetingsPage() {
   // Stats
   const stats = useMemo(() => {
     const total = meetings.length;
-    const scheduled = meetings.filter((m) => m.status === 'scheduled').length;
-    const completed = meetings.filter((m) => m.status === 'completed').length;
-    const inProgress = meetings.filter((m) => m.status === 'in_progress').length;
+    const scheduled = meetings.filter((m) => m.status === "scheduled").length;
+    const completed = meetings.filter((m) => m.status === "completed").length;
+    const inProgress = meetings.filter(
+      (m) => m.status === "in_progress",
+    ).length;
     return { total, scheduled, completed, inProgress };
   }, [meetings]);
 
   // Invalidation
   const invalidateAll = useCallback(() => {
-    qc.invalidateQueries({ queryKey: ['meetings'] });
+    qc.invalidateQueries({ queryKey: ["meetings"] });
   }, [qc]);
 
   // Mutations
@@ -1900,17 +2144,46 @@ export function MeetingsPage() {
     mutationFn: (data: CreateMeetingPayload) => createMeeting(data),
     onSuccess: () => {
       invalidateAll();
-      qc.invalidateQueries({ queryKey: ['tasks'] });
+      qc.invalidateQueries({ queryKey: ["tasks"] });
       setShowCreateModal(false);
       addToast({
-        type: 'success',
-        title: t('meetings.created', { defaultValue: 'Meeting created successfully' }),
+        type: "success",
+        title: t("meetings.created", {
+          defaultValue: "Meeting created successfully",
+        }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('meetings.create_failed', { defaultValue: 'Failed to create meeting' }),
+        type: "error",
+        title: t("meetings.create_failed", {
+          defaultValue: "Failed to create meeting",
+        }),
+        message: e.message,
+      }),
+  });
+
+  // Newforma-style recurring series.
+  const createSeriesMut = useMutation({
+    mutationFn: (data: CreateSeriesPayload) => createSeries(data),
+    onSuccess: (res) => {
+      invalidateAll();
+      setShowSeriesModal(false);
+      const count = 1 + (res.occurrences?.length ?? 0);
+      addToast({
+        type: "success",
+        title: t("meetings.series_created", {
+          defaultValue: "Recurring series created — {{count}} meetings",
+          count,
+        }),
+      });
+    },
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("meetings.series_create_failed", {
+          defaultValue: "Failed to create series",
+        }),
         message: e.message,
       }),
   });
@@ -1922,14 +2195,18 @@ export function MeetingsPage() {
       invalidateAll();
       setEditingMeeting(null);
       addToast({
-        type: 'success',
-        title: t('meetings.updated', { defaultValue: 'Meeting updated successfully' }),
+        type: "success",
+        title: t("meetings.updated", {
+          defaultValue: "Meeting updated successfully",
+        }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('meetings.update_failed', { defaultValue: 'Failed to update meeting' }),
+        type: "error",
+        title: t("meetings.update_failed", {
+          defaultValue: "Failed to update meeting",
+        }),
         message: e.message,
       }),
   });
@@ -1939,14 +2216,16 @@ export function MeetingsPage() {
     onSuccess: () => {
       invalidateAll();
       addToast({
-        type: 'success',
-        title: t('meetings.deleted', { defaultValue: 'Meeting deleted' }),
+        type: "success",
+        title: t("meetings.deleted", { defaultValue: "Meeting deleted" }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('meetings.delete_failed', { defaultValue: 'Failed to delete meeting' }),
+        type: "error",
+        title: t("meetings.delete_failed", {
+          defaultValue: "Failed to delete meeting",
+        }),
         message: e.message,
       }),
   });
@@ -1955,34 +2234,46 @@ export function MeetingsPage() {
     mutationFn: (id: string) => completeMeeting(id),
     onSuccess: (data) => {
       invalidateAll();
-      qc.invalidateQueries({ queryKey: ['tasks'] });
+      qc.invalidateQueries({ queryKey: ["tasks"] });
       const actionCount = data?.action_items?.length ?? 0;
       addToast(
         {
-          type: 'success',
-          title: t('meetings.completed', { defaultValue: 'Meeting marked as completed' }),
-          message: actionCount > 0
-            ? t('meetings.tasks_created_count', {
-                defaultValue: 'Meeting completed. {{count}} tasks created from action items.',
-                count: actionCount,
-              })
-            : t('meetings.tasks_created', { defaultValue: 'Meeting completed. Action item tasks have been created.' }),
-          action: actionCount > 0
-            ? {
-                label: t('meetings.view_tasks', { defaultValue: 'View Tasks' }),
-                onClick: () => {
-                  window.location.href = '/tasks';
-                },
-              }
-            : undefined,
+          type: "success",
+          title: t("meetings.completed", {
+            defaultValue: "Meeting marked as completed",
+          }),
+          message:
+            actionCount > 0
+              ? t("meetings.tasks_created_count", {
+                  defaultValue:
+                    "Meeting completed. {{count}} tasks created from action items.",
+                  count: actionCount,
+                })
+              : t("meetings.tasks_created", {
+                  defaultValue:
+                    "Meeting completed. Action item tasks have been created.",
+                }),
+          action:
+            actionCount > 0
+              ? {
+                  label: t("meetings.view_tasks", {
+                    defaultValue: "View Tasks",
+                  }),
+                  onClick: () => {
+                    window.location.href = "/tasks";
+                  },
+                }
+              : undefined,
         },
         actionCount > 0 ? { duration: 8000 } : undefined,
       );
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('meetings.complete_failed', { defaultValue: 'Failed to complete meeting' }),
+        type: "error",
+        title: t("meetings.complete_failed", {
+          defaultValue: "Failed to complete meeting",
+        }),
         message: e.message,
       }),
   });
@@ -1991,13 +2282,17 @@ export function MeetingsPage() {
     mutationFn: (meetingId: string) => downloadMeetingPdf(meetingId),
     onSuccess: () =>
       addToast({
-        type: 'success',
-        title: t('meetings.export_success', { defaultValue: 'Meeting minutes exported as PDF' }),
+        type: "success",
+        title: t("meetings.export_success", {
+          defaultValue: "Meeting minutes exported as PDF",
+        }),
       }),
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('meetings.export_failed', { defaultValue: 'Failed to export meeting PDF' }),
+        type: "error",
+        title: t("meetings.export_failed", {
+          defaultValue: "Failed to export meeting PDF",
+        }),
         message: e.message,
       }),
   });
@@ -2006,17 +2301,21 @@ export function MeetingsPage() {
     mutationFn: (file: File) => importMeetingSummary(projectId, file),
     onSuccess: () => {
       invalidateAll();
-      qc.invalidateQueries({ queryKey: ['tasks'] });
+      qc.invalidateQueries({ queryKey: ["tasks"] });
       setShowImportModal(false);
       addToast({
-        type: 'success',
-        title: t('meetings.import_success', { defaultValue: 'Meeting imported successfully from transcript' }),
+        type: "success",
+        title: t("meetings.import_success", {
+          defaultValue: "Meeting imported successfully from transcript",
+        }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('meetings.import_failed', { defaultValue: 'Failed to import meeting transcript' }),
+        type: "error",
+        title: t("meetings.import_failed", {
+          defaultValue: "Failed to import meeting transcript",
+        }),
         message: e.message,
       }),
   });
@@ -2031,27 +2330,37 @@ export function MeetingsPage() {
   const handleCreateSubmit = useCallback(
     (formData: MeetingFormData) => {
       if (!projectId) {
-        addToast({ type: 'error', title: t('meetings.no_project_error', { defaultValue: 'No project selected' }), message: t('common.select_project_first', { defaultValue: 'Please select a project first' }) });
+        addToast({
+          type: "error",
+          title: t("meetings.no_project_error", {
+            defaultValue: "No project selected",
+          }),
+          message: t("common.select_project_first", {
+            defaultValue: "Please select a project first",
+          }),
+        });
         return;
       }
       const attendeesList = formData.attendees
-        .split('\n')
+        .split("\n")
         .map((s) => s.trim())
         .filter(Boolean);
       createMut.mutate({
         project_id: projectId,
         title: formData.title,
         meeting_type: formData.meeting_type,
-        meeting_date: formData.date?.split('T')[0] || formData.date,
+        meeting_date: formData.date?.split("T")[0] || formData.date,
         location: formData.location || undefined,
         chairperson_id: formData.chairperson || undefined,
-        attendees: attendeesList.length > 0
-          ? attendeesList.map((name) => ({ name }))
-          : undefined,
+        attendees:
+          attendeesList.length > 0
+            ? attendeesList.map((name) => ({ name }))
+            : undefined,
         minutes: formData.minutes || undefined,
-        document_ids: formData.attachments.length > 0
-          ? formData.attachments.map((a) => a.id)
-          : undefined,
+        document_ids:
+          formData.attachments.length > 0
+            ? formData.attachments.map((a) => a.id)
+            : undefined,
       });
     },
     [createMut, projectId, addToast, t],
@@ -2070,13 +2379,15 @@ export function MeetingsPage() {
   const handleDelete = useCallback(
     async (meeting: Meeting) => {
       const ok = await confirm({
-        title: t('meetings.confirm_delete_title', { defaultValue: 'Delete meeting?' }),
-        message: t('meetings.confirm_delete_msg', {
-          defaultValue:
-            'This meeting will be permanently deleted. Attached documents remain available in Documents.',
+        title: t("meetings.confirm_delete_title", {
+          defaultValue: "Delete meeting?",
         }),
-        confirmLabel: t('common.delete', { defaultValue: 'Delete' }),
-        variant: 'danger',
+        message: t("meetings.confirm_delete_msg", {
+          defaultValue:
+            "This meeting will be permanently deleted. Attached documents remain available in Documents.",
+        }),
+        confirmLabel: t("common.delete", { defaultValue: "Delete" }),
+        variant: "danger",
       });
       if (ok) deleteMut.mutate(meeting.id);
     },
@@ -2086,10 +2397,14 @@ export function MeetingsPage() {
   const handleComplete = useCallback(
     async (id: string) => {
       const ok = await confirm({
-        title: t('meetings.confirm_complete_title', { defaultValue: 'Complete meeting?' }),
-        message: t('meetings.confirm_complete_msg', { defaultValue: 'This meeting will be marked as completed.' }),
-        confirmLabel: t('meetings.mark_complete', { defaultValue: 'Complete' }),
-        variant: 'warning',
+        title: t("meetings.confirm_complete_title", {
+          defaultValue: "Complete meeting?",
+        }),
+        message: t("meetings.confirm_complete_msg", {
+          defaultValue: "This meeting will be marked as completed.",
+        }),
+        confirmLabel: t("meetings.mark_complete", { defaultValue: "Complete" }),
+        variant: "warning",
       });
       if (ok) completeMut.mutate(id);
     },
@@ -2108,9 +2423,11 @@ export function MeetingsPage() {
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-          ...(projectName ? [{ label: projectName, to: `/projects/${projectId}` }] : []),
-          { label: t('meetings.title', { defaultValue: 'Meetings' }) },
+          { label: t("nav.dashboard", { defaultValue: "Dashboard" }), to: "/" },
+          ...(projectName
+            ? [{ label: projectName, to: `/projects/${projectId}` }]
+            : []),
+          { label: t("meetings.title", { defaultValue: "Meetings" }) },
         ]}
         className="mb-4"
       />
@@ -2119,10 +2436,13 @@ export function MeetingsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-content-primary">
-            {t('meetings.page_title', { defaultValue: 'Meetings' })}
+            {t("meetings.page_title", { defaultValue: "Meetings" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('meetings.subtitle', { defaultValue: 'Schedule, track, and document project meetings with action items' })}
+            {t("meetings.subtitle", {
+              defaultValue:
+                "Schedule, track, and document project meetings with action items",
+            })}
           </p>
         </div>
 
@@ -2133,14 +2453,18 @@ export function MeetingsPage() {
               onChange={(e) => {
                 const p = projects.find((pr) => pr.id === e.target.value);
                 if (p) {
-                  useProjectContextStore.getState().setActiveProject(p.id, p.name);
+                  useProjectContextStore
+                    .getState()
+                    .setActiveProject(p.id, p.name);
                 }
               }}
-              aria-label={t('meetings.select_project_label', { defaultValue: 'Select project' })}
-              className={inputCls + ' !h-8 !text-xs max-w-[180px]'}
+              aria-label={t("meetings.select_project_label", {
+                defaultValue: "Select project",
+              })}
+              className={inputCls + " !h-8 !text-xs max-w-[180px]"}
             >
               <option value="" disabled>
-                {t('meetings.select_project', { defaultValue: 'Project...' })}
+                {t("meetings.select_project", { defaultValue: "Project..." })}
               </option>
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -2155,17 +2479,35 @@ export function MeetingsPage() {
             disabled={!projectId}
             icon={<FileUp size={16} />}
           >
-            {t('meetings.import_summary', { defaultValue: 'Import Summary' })}
+            {t("meetings.import_summary", { defaultValue: "Import Summary" })}
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setShowSeriesModal(true)}
+            disabled={!projectId}
+            icon={<CalendarDays size={14} />}
+            data-testid="meetings-new-series"
+          >
+            {t("meetings.create_recurring_series", {
+              defaultValue: "Create recurring series",
+            })}
           </Button>
           <Button
             variant="primary"
             size="sm"
             onClick={() => setShowCreateModal(true)}
             disabled={!projectId}
-            title={!projectId ? t('common.select_project_first', { defaultValue: 'Please select a project first' }) : undefined}
+            title={
+              !projectId
+                ? t("common.select_project_first", {
+                    defaultValue: "Please select a project first",
+                  })
+                : undefined
+            }
             icon={<Plus size={14} />}
           >
-            {t('meetings.new_meeting', { defaultValue: 'New Meeting' })}
+            {t("meetings.new_meeting", { defaultValue: "New Meeting" })}
           </Button>
         </div>
       </div>
@@ -2175,232 +2517,281 @@ export function MeetingsPage() {
         <div className="mb-4 flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800 px-4 py-3">
           <AlertTriangle size={18} className="text-amber-600 shrink-0" />
           <div>
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">{t('common.no_project_selected', { defaultValue: 'No project selected' })}</p>
-            <p className="text-xs text-amber-600 dark:text-amber-400">{t('common.select_project_hint', { defaultValue: 'Select a project from the header to view and manage items.' })}</p>
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+              {t("common.no_project_selected", {
+                defaultValue: "No project selected",
+              })}
+            </p>
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              {t("common.select_project_hint", {
+                defaultValue:
+                  "Select a project from the header to view and manage items.",
+              })}
+            </p>
           </div>
         </div>
       )}
 
       {projectId ? (
-      <>
-      {/* Cross-module links — action items flow into Tasks once a meeting
+        <>
+          {/* Cross-module links — action items flow into Tasks once a meeting
           is completed; surface that connection up front. */}
-      <div className="flex flex-wrap items-center gap-1.5 mb-4">
-        <span className="text-2xs text-content-tertiary uppercase tracking-wide me-1">
-          {t('meetings.connections_label', { defaultValue: 'Action items flow to' })}
-        </span>
-        <Link
-          to={`/projects/${projectId}/tasks`}
-          className="inline-flex items-center gap-1 rounded-full bg-oe-blue/10 px-2.5 py-1 text-xs font-medium text-oe-blue hover:bg-oe-blue/20 transition-colors"
-        >
-          <ListChecks size={13} />
-          {t('meetings.link_tasks', { defaultValue: 'Project Tasks' })}
-        </Link>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('meetings.stat_total', { defaultValue: 'Total Meetings' })}
-          </p>
-          <p className="text-2xl font-bold mt-1 tabular-nums text-content-primary">{stats.total}</p>
-        </Card>
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('meetings.stat_scheduled', { defaultValue: 'Scheduled' })}
-          </p>
-          <p className="text-2xl font-bold mt-1 tabular-nums text-oe-blue">{stats.scheduled}</p>
-        </Card>
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('meetings.stat_in_progress', { defaultValue: 'In Progress' })}
-          </p>
-          <p className="text-2xl font-bold mt-1 tabular-nums text-amber-500">{stats.inProgress}</p>
-        </Card>
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('meetings.stat_completed', { defaultValue: 'Completed' })}
-          </p>
-          <p className="text-2xl font-bold mt-1 tabular-nums text-semantic-success">
-            {stats.completed}
-          </p>
-        </Card>
-      </div>
-
-      {/* Toolbar */}
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
-        {/* Search */}
-        <div className="relative flex-1 max-w-sm">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
-          />
-          <input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('meetings.search_placeholder', {
-              defaultValue: 'Search meetings...',
-            })}
-            aria-label={t('meetings.search_placeholder', { defaultValue: 'Search meetings' })}
-            className={inputCls + ' pl-9'}
-          />
-        </div>
-
-        {/* Type filter */}
-        <div className="relative">
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as MeetingType | '')}
-            aria-label={t('meetings.filter_type', { defaultValue: 'Filter by type' })}
-            className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-44"
-          >
-            <option value="">
-              {t('meetings.filter_all_types', { defaultValue: 'All Types' })}
-            </option>
-            {MEETING_TYPES.map((mt) => (
-              <option key={mt} value={mt}>
-                {t(`meetings.type_${mt}`, {
-                  defaultValue: mt.charAt(0).toUpperCase() + mt.slice(1),
-                })}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
-            <ChevronDown size={14} />
-          </div>
-        </div>
-
-        {/* Status filter */}
-        <div className="relative">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as MeetingStatus | '')}
-            aria-label={t('meetings.filter_status', { defaultValue: 'Filter by status' })}
-            className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
-          >
-            <option value="">
-              {t('meetings.filter_all_statuses', { defaultValue: 'All Statuses' })}
-            </option>
-            {MEETING_STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {t(`meetings.status_${s}`, {
-                  defaultValue: s.replace(/_/g, ' '),
-                })}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
-            <ChevronDown size={14} />
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div>
-        {isLoading ? (
-          <SkeletonTable rows={5} columns={6} />
-        ) : isError ? (
-          <EmptyState
-            icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-            title={t('meetings.load_failed', {
-              defaultValue: 'Could not load meetings',
-            })}
-            description={
-              error instanceof Error
-                ? error.message
-                : t('meetings.load_failed_hint', {
-                    defaultValue:
-                      'Something went wrong fetching the meetings list. Please try again.',
-                  })
-            }
-            action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
-              onClick: () => refetch(),
-            }}
-          />
-        ) : filtered.length === 0 ? (
-          <EmptyState
-            icon={<CalendarDays size={28} strokeWidth={1.5} />}
-            title={
-              searchQuery || typeFilter || statusFilter
-                ? t('meetings.no_results', { defaultValue: 'No matching meetings' })
-                : t('meetings.no_meetings', { defaultValue: 'No meetings yet' })
-            }
-            description={
-              searchQuery || typeFilter || statusFilter
-                ? t('meetings.no_results_hint', {
-                    defaultValue: 'Try adjusting your search or filters to find what you are looking for.',
-                  })
-                : t('meetings.no_meetings_hint', {
-                    defaultValue: 'Schedule your first meeting to track attendance, decisions, and action items across your project.',
-                  })
-            }
-            action={
-              !searchQuery && !typeFilter && !statusFilter
-                ? {
-                    label: t('meetings.new_meeting', { defaultValue: 'New Meeting' }),
-                    onClick: () => setShowCreateModal(true),
-                  }
-                : undefined
-            }
-          />
-        ) : (
-          <>
-            <p className="mb-3 text-sm text-content-tertiary">
-              {t('meetings.showing_count', {
-                defaultValue: '{{count}} meetings',
-                count: filtered.length,
+          <div className="flex flex-wrap items-center gap-1.5 mb-4">
+            <span className="text-2xs text-content-tertiary uppercase tracking-wide me-1">
+              {t("meetings.connections_label", {
+                defaultValue: "Action items flow to",
               })}
-            </p>
-            <Card padding="none" className="overflow-x-auto">
-              {/* Table header */}
-              <div className="flex items-center gap-3 px-4 py-2.5 border-b border-border-light bg-surface-secondary/30 text-2xs font-medium text-content-tertiary uppercase tracking-wider min-w-[640px]">
-                <span className="w-5" />
-                <span className="w-20">#</span>
-                <span className="flex-1">
-                  {t('meetings.col_title', { defaultValue: 'Title' })}
-                </span>
-                <span className="w-24 text-center">
-                  {t('meetings.col_type', { defaultValue: 'Type' })}
-                </span>
-                <span className="w-24 hidden md:block">
-                  {t('meetings.col_date', { defaultValue: 'Date' })}
-                </span>
-                <span className="w-28 hidden lg:block">
-                  {t('meetings.col_chair', { defaultValue: 'Chairperson' })}
-                </span>
-                <span className="w-24 text-center">
-                  {t('meetings.col_status', { defaultValue: 'Status' })}
-                </span>
-                <span className="w-12 text-right">
-                  <Users size={12} className="inline" />
-                </span>
-              </div>
+            </span>
+            <Link
+              to={`/projects/${projectId}/tasks`}
+              className="inline-flex items-center gap-1 rounded-full bg-oe-blue/10 px-2.5 py-1 text-xs font-medium text-oe-blue hover:bg-oe-blue/20 transition-colors"
+            >
+              <ListChecks size={13} />
+              {t("meetings.link_tasks", { defaultValue: "Project Tasks" })}
+            </Link>
+          </div>
 
-              {/* Rows */}
-              {filtered.map((meeting) => (
-                <MeetingRow
-                  key={meeting.id}
-                  meeting={meeting}
-                  onComplete={handleComplete}
-                  onExportPdf={handleExportPdf}
-                  onEdit={(m) => setEditingMeeting(m)}
-                  onDelete={handleDelete}
-                  isExporting={exportPdfMut.isPending && exportPdfMut.variables === meeting.id}
-                  projectId={projectId}
-                />
-              ))}
+          {/* Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("meetings.stat_total", { defaultValue: "Total Meetings" })}
+              </p>
+              <p className="text-2xl font-bold mt-1 tabular-nums text-content-primary">
+                {stats.total}
+              </p>
             </Card>
-          </>
-        )}
-      </div>
-      </>
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("meetings.stat_scheduled", { defaultValue: "Scheduled" })}
+              </p>
+              <p className="text-2xl font-bold mt-1 tabular-nums text-oe-blue">
+                {stats.scheduled}
+              </p>
+            </Card>
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("meetings.stat_in_progress", {
+                  defaultValue: "In Progress",
+                })}
+              </p>
+              <p className="text-2xl font-bold mt-1 tabular-nums text-amber-500">
+                {stats.inProgress}
+              </p>
+            </Card>
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("meetings.stat_completed", { defaultValue: "Completed" })}
+              </p>
+              <p className="text-2xl font-bold mt-1 tabular-nums text-semantic-success">
+                {stats.completed}
+              </p>
+            </Card>
+          </div>
+
+          {/* Toolbar */}
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
+            {/* Search */}
+            <div className="relative flex-1 max-w-sm">
+              <Search
+                size={16}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+              />
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("meetings.search_placeholder", {
+                  defaultValue: "Search meetings...",
+                })}
+                aria-label={t("meetings.search_placeholder", {
+                  defaultValue: "Search meetings",
+                })}
+                className={inputCls + " pl-9"}
+              />
+            </div>
+
+            {/* Type filter */}
+            <div className="relative">
+              <select
+                value={typeFilter}
+                onChange={(e) =>
+                  setTypeFilter(e.target.value as MeetingType | "")
+                }
+                aria-label={t("meetings.filter_type", {
+                  defaultValue: "Filter by type",
+                })}
+                className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-44"
+              >
+                <option value="">
+                  {t("meetings.filter_all_types", {
+                    defaultValue: "All Types",
+                  })}
+                </option>
+                {MEETING_TYPES.map((mt) => (
+                  <option key={mt} value={mt}>
+                    {t(`meetings.type_${mt}`, {
+                      defaultValue: mt.charAt(0).toUpperCase() + mt.slice(1),
+                    })}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <ChevronDown size={14} />
+              </div>
+            </div>
+
+            {/* Status filter */}
+            <div className="relative">
+              <select
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(e.target.value as MeetingStatus | "")
+                }
+                aria-label={t("meetings.filter_status", {
+                  defaultValue: "Filter by status",
+                })}
+                className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
+              >
+                <option value="">
+                  {t("meetings.filter_all_statuses", {
+                    defaultValue: "All Statuses",
+                  })}
+                </option>
+                {MEETING_STATUSES.map((s) => (
+                  <option key={s} value={s}>
+                    {t(`meetings.status_${s}`, {
+                      defaultValue: s.replace(/_/g, " "),
+                    })}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <ChevronDown size={14} />
+              </div>
+            </div>
+          </div>
+
+          {/* Table */}
+          <div>
+            {isLoading ? (
+              <SkeletonTable rows={5} columns={6} />
+            ) : isError ? (
+              <EmptyState
+                icon={<AlertTriangle size={28} strokeWidth={1.5} />}
+                title={t("meetings.load_failed", {
+                  defaultValue: "Could not load meetings",
+                })}
+                description={
+                  error instanceof Error
+                    ? error.message
+                    : t("meetings.load_failed_hint", {
+                        defaultValue:
+                          "Something went wrong fetching the meetings list. Please try again.",
+                      })
+                }
+                action={{
+                  label: t("common.retry", { defaultValue: "Retry" }),
+                  onClick: () => refetch(),
+                }}
+              />
+            ) : filtered.length === 0 ? (
+              <EmptyState
+                icon={<CalendarDays size={28} strokeWidth={1.5} />}
+                title={
+                  searchQuery || typeFilter || statusFilter
+                    ? t("meetings.no_results", {
+                        defaultValue: "No matching meetings",
+                      })
+                    : t("meetings.no_meetings", {
+                        defaultValue: "No meetings yet",
+                      })
+                }
+                description={
+                  searchQuery || typeFilter || statusFilter
+                    ? t("meetings.no_results_hint", {
+                        defaultValue:
+                          "Try adjusting your search or filters to find what you are looking for.",
+                      })
+                    : t("meetings.no_meetings_hint", {
+                        defaultValue:
+                          "Schedule your first meeting to track attendance, decisions, and action items across your project.",
+                      })
+                }
+                action={
+                  !searchQuery && !typeFilter && !statusFilter
+                    ? {
+                        label: t("meetings.new_meeting", {
+                          defaultValue: "New Meeting",
+                        }),
+                        onClick: () => setShowCreateModal(true),
+                      }
+                    : undefined
+                }
+              />
+            ) : (
+              <>
+                <p className="mb-3 text-sm text-content-tertiary">
+                  {t("meetings.showing_count", {
+                    defaultValue: "{{count}} meetings",
+                    count: filtered.length,
+                  })}
+                </p>
+                <Card padding="none" className="overflow-x-auto">
+                  {/* Table header */}
+                  <div className="flex items-center gap-3 px-4 py-2.5 border-b border-border-light bg-surface-secondary/30 text-2xs font-medium text-content-tertiary uppercase tracking-wider min-w-[640px]">
+                    <span className="w-5" />
+                    <span className="w-20">#</span>
+                    <span className="flex-1">
+                      {t("meetings.col_title", { defaultValue: "Title" })}
+                    </span>
+                    <span className="w-24 text-center">
+                      {t("meetings.col_type", { defaultValue: "Type" })}
+                    </span>
+                    <span className="w-24 hidden md:block">
+                      {t("meetings.col_date", { defaultValue: "Date" })}
+                    </span>
+                    <span className="w-28 hidden lg:block">
+                      {t("meetings.col_chair", { defaultValue: "Chairperson" })}
+                    </span>
+                    <span className="w-24 text-center">
+                      {t("meetings.col_status", { defaultValue: "Status" })}
+                    </span>
+                    <span className="w-12 text-right">
+                      <Users size={12} className="inline" />
+                    </span>
+                  </div>
+
+                  {/* Rows */}
+                  {filtered.map((meeting) => (
+                    <MeetingRow
+                      key={meeting.id}
+                      meeting={meeting}
+                      onComplete={handleComplete}
+                      onExportPdf={handleExportPdf}
+                      onEdit={(m) => setEditingMeeting(m)}
+                      onDelete={handleDelete}
+                      isExporting={
+                        exportPdfMut.isPending &&
+                        exportPdfMut.variables === meeting.id
+                      }
+                      projectId={projectId}
+                    />
+                  ))}
+                </Card>
+              </>
+            )}
+          </div>
+        </>
       ) : (
         <EmptyState
           icon={<CalendarDays size={28} strokeWidth={1.5} />}
-          title={t('meetings.no_project', { defaultValue: 'No project selected' })}
-          description={t('meetings.select_project', { defaultValue: 'Select a project from the header to schedule meetings, track attendance, and manage action items.' })}
+          title={t("meetings.no_project", {
+            defaultValue: "No project selected",
+          })}
+          description={t("meetings.select_project", {
+            defaultValue:
+              "Select a project from the header to schedule meetings, track attendance, and manage action items.",
+          })}
         />
       )}
 
@@ -2414,6 +2805,15 @@ export function MeetingsPage() {
           projectId={projectId}
         />
       )}
+
+      {/* Recurring Series Modal */}
+      <RecurringSeriesDialog
+        open={showSeriesModal && !!projectId}
+        onClose={() => setShowSeriesModal(false)}
+        projectId={projectId}
+        isPending={createSeriesMut.isPending}
+        onSubmit={(payload) => createSeriesMut.mutate(payload)}
+      />
 
       {/* Edit Modal */}
       {editingMeeting && (

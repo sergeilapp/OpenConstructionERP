@@ -82,9 +82,7 @@ class AssemblyRepository:
             # Filter by tag in metadata JSON — uses LIKE on the JSON string
             # which works for both SQLite and PostgreSQL
             tag_pattern = f"%{tag.strip().lower()}%"
-            base = base.where(
-                Assembly.metadata_.cast(String).ilike(tag_pattern)
-            )
+            base = base.where(Assembly.metadata_.cast(String).ilike(tag_pattern))
 
         if project_id is not None:
             base = base.where(Assembly.project_id == project_id)
@@ -97,12 +95,7 @@ class AssemblyRepository:
         total = (await self.session.execute(count_stmt)).scalar_one()
 
         # Fetch — skip eager loading of components for list queries
-        stmt = (
-            base.options(noload(Assembly.components))
-            .order_by(Assembly.code)
-            .offset(offset)
-            .limit(limit)
-        )
+        stmt = base.options(noload(Assembly.components)).order_by(Assembly.code).offset(offset).limit(limit)
         result = await self.session.execute(stmt)
         assemblies = list(result.scalars().all())
 

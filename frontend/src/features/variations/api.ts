@@ -5,51 +5,51 @@
  * backend/app/modules/variations/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type NoticeStatus = 'issued' | 'acknowledged' | 'responded' | 'closed';
+export type NoticeStatus = "issued" | "acknowledged" | "responded" | "closed";
 export type NoticeRecipient =
-  | 'owner'
-  | 'contractor'
-  | 'architect'
-  | 'engineer'
-  | 'consultant';
+  | "owner"
+  | "contractor"
+  | "architect"
+  | "engineer"
+  | "consultant";
 export type VRStatus =
-  | 'draft'
-  | 'submitted'
-  | 'under_review'
-  | 'approved'
-  | 'rejected'
-  | 'converted_to_vo';
+  | "draft"
+  | "submitted"
+  | "under_review"
+  | "approved"
+  | "rejected"
+  | "converted_to_vo";
 export type VRClassification =
-  | 'scope_change'
-  | 'unforeseen'
-  | 'owner_change'
-  | 'design_dev'
-  | 'regulatory'
-  | 'other';
-export type VRUrgency = 'low' | 'med' | 'high';
-export type VOStatus = 'issued' | 'in_progress' | 'completed' | 'voided';
-export type DayworkStatus = 'draft' | 'signed' | 'disputed' | 'billed';
+  | "scope_change"
+  | "unforeseen"
+  | "owner_change"
+  | "design_dev"
+  | "regulatory"
+  | "other";
+export type VRUrgency = "low" | "med" | "high";
+export type VOStatus = "issued" | "in_progress" | "completed" | "voided";
+export type DayworkStatus = "draft" | "signed" | "disputed" | "billed";
 export type DisruptionStatus =
-  | 'draft'
-  | 'submitted'
-  | 'under_review'
-  | 'agreed'
-  | 'rejected';
+  | "draft"
+  | "submitted"
+  | "under_review"
+  | "agreed"
+  | "rejected";
 export type EotStatus =
-  | 'draft'
-  | 'submitted'
-  | 'under_review'
-  | 'granted'
-  | 'rejected';
+  | "draft"
+  | "submitted"
+  | "under_review"
+  | "granted"
+  | "rejected";
 export type EotCause =
-  | 'employer_caused'
-  | 'neutral'
-  | 'contractor_caused'
-  | 'concurrent';
+  | "employer_caused"
+  | "neutral"
+  | "contractor_caused"
+  | "concurrent";
 
 export interface Notice {
   id: string;
@@ -271,21 +271,24 @@ export function listNotices(params: {
   limit?: number;
 }): Promise<Notice[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<Notice[]>(`/v1/variations/notices/?${qs.toString()}`);
 }
 
 export function createNotice(data: CreateNoticePayload): Promise<Notice> {
-  return apiPost<Notice>('/v1/variations/notices/', data);
+  return apiPost<Notice>("/v1/variations/notices/", data);
 }
 
 export function acknowledgeNotice(id: string): Promise<Notice> {
   return apiPost<Notice>(`/v1/variations/notices/${id}/acknowledge`, {});
 }
 
-export function respondNotice(id: string, response_summary?: string): Promise<Notice> {
+export function respondNotice(
+  id: string,
+  response_summary?: string,
+): Promise<Notice> {
   return apiPost<Notice>(`/v1/variations/notices/${id}/respond`, {
     response_summary,
   });
@@ -314,36 +317,47 @@ export function listVariationRequests(params: {
   limit?: number;
 }): Promise<VariationRequest[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
-  return apiGet<VariationRequest[]>(`/v1/variations/variation-requests/?${qs.toString()}`);
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
+  return apiGet<VariationRequest[]>(
+    `/v1/variations/variation-requests/?${qs.toString()}`,
+  );
 }
 
 export function createVR(data: CreateVRPayload): Promise<VariationRequest> {
-  return apiPost<VariationRequest>('/v1/variations/variation-requests/', data);
+  return apiPost<VariationRequest>("/v1/variations/variation-requests/", data);
 }
 
 export function submitVR(id: string): Promise<VariationRequest> {
-  return apiPost<VariationRequest>(`/v1/variations/variation-requests/${id}/submit`, {});
+  return apiPost<VariationRequest>(
+    `/v1/variations/variation-requests/${id}/submit`,
+    {},
+  );
 }
 
 export function approveVR(
   id: string,
   decision_notes?: string,
 ): Promise<VariationRequest> {
-  return apiPost<VariationRequest>(`/v1/variations/variation-requests/${id}/approve`, {
-    decision_notes,
-  });
+  return apiPost<VariationRequest>(
+    `/v1/variations/variation-requests/${id}/approve`,
+    {
+      decision_notes,
+    },
+  );
 }
 
 export function rejectVR(
   id: string,
   decision_notes?: string,
 ): Promise<VariationRequest> {
-  return apiPost<VariationRequest>(`/v1/variations/variation-requests/${id}/reject`, {
-    decision_notes,
-  });
+  return apiPost<VariationRequest>(
+    `/v1/variations/variation-requests/${id}/reject`,
+    {
+      decision_notes,
+    },
+  );
 }
 
 export function convertVRToVO(
@@ -383,26 +397,37 @@ export function listVariationOrders(params: {
   limit?: number;
 }): Promise<VariationOrder[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
-  return apiGet<VariationOrder[]>(`/v1/variations/variation-orders/?${qs.toString()}`);
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
+  return apiGet<VariationOrder[]>(
+    `/v1/variations/variation-orders/?${qs.toString()}`,
+  );
 }
 
 export function createVO(data: CreateVOPayload): Promise<VariationOrder> {
-  return apiPost<VariationOrder>('/v1/variations/variation-orders/', data);
+  return apiPost<VariationOrder>("/v1/variations/variation-orders/", data);
 }
 
 export function startVO(id: string): Promise<VariationOrder> {
-  return apiPost<VariationOrder>(`/v1/variations/variation-orders/${id}/start`, {});
+  return apiPost<VariationOrder>(
+    `/v1/variations/variation-orders/${id}/start`,
+    {},
+  );
 }
 
 export function completeVO(id: string): Promise<VariationOrder> {
-  return apiPost<VariationOrder>(`/v1/variations/variation-orders/${id}/complete`, {});
+  return apiPost<VariationOrder>(
+    `/v1/variations/variation-orders/${id}/complete`,
+    {},
+  );
 }
 
 export function voidVO(id: string): Promise<VariationOrder> {
-  return apiPost<VariationOrder>(`/v1/variations/variation-orders/${id}/void`, {});
+  return apiPost<VariationOrder>(
+    `/v1/variations/variation-orders/${id}/void`,
+    {},
+  );
 }
 
 export function updateVO(
@@ -427,14 +452,18 @@ export function listDaywork(params: {
   limit?: number;
 }): Promise<DayworkSheet[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
-  return apiGet<DayworkSheet[]>(`/v1/variations/daywork-sheets/?${qs.toString()}`);
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
+  return apiGet<DayworkSheet[]>(
+    `/v1/variations/daywork-sheets/?${qs.toString()}`,
+  );
 }
 
-export function createDaywork(data: CreateDayworkPayload): Promise<DayworkSheet> {
-  return apiPost<DayworkSheet>('/v1/variations/daywork-sheets/', data);
+export function createDaywork(
+  data: CreateDayworkPayload,
+): Promise<DayworkSheet> {
+  return apiPost<DayworkSheet>("/v1/variations/daywork-sheets/", data);
 }
 
 export function signDaywork(id: string): Promise<DayworkSheet> {
@@ -442,7 +471,10 @@ export function signDaywork(id: string): Promise<DayworkSheet> {
 }
 
 export function disputeDaywork(id: string): Promise<DayworkSheet> {
-  return apiPost<DayworkSheet>(`/v1/variations/daywork-sheets/${id}/dispute`, {});
+  return apiPost<DayworkSheet>(
+    `/v1/variations/daywork-sheets/${id}/dispute`,
+    {},
+  );
 }
 
 export function billDaywork(id: string): Promise<DayworkSheet> {
@@ -468,18 +500,25 @@ export function listEoTClaims(params: {
   limit?: number;
 }): Promise<ExtensionOfTimeClaim[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
-  return apiGet<ExtensionOfTimeClaim[]>(`/v1/variations/eot-claims/?${qs.toString()}`);
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
+  return apiGet<ExtensionOfTimeClaim[]>(
+    `/v1/variations/eot-claims/?${qs.toString()}`,
+  );
 }
 
-export function createEoT(data: CreateEoTPayload): Promise<ExtensionOfTimeClaim> {
-  return apiPost<ExtensionOfTimeClaim>('/v1/variations/eot-claims/', data);
+export function createEoT(
+  data: CreateEoTPayload,
+): Promise<ExtensionOfTimeClaim> {
+  return apiPost<ExtensionOfTimeClaim>("/v1/variations/eot-claims/", data);
 }
 
 export function submitEoT(id: string): Promise<ExtensionOfTimeClaim> {
-  return apiPost<ExtensionOfTimeClaim>(`/v1/variations/eot-claims/${id}/submit`, {});
+  return apiPost<ExtensionOfTimeClaim>(
+    `/v1/variations/eot-claims/${id}/submit`,
+    {},
+  );
 }
 
 export function grantEoT(
@@ -487,19 +526,25 @@ export function grantEoT(
   granted_days: number,
   decision_notes?: string,
 ): Promise<ExtensionOfTimeClaim> {
-  return apiPost<ExtensionOfTimeClaim>(`/v1/variations/eot-claims/${id}/grant`, {
-    granted_days,
-    decision_notes,
-  });
+  return apiPost<ExtensionOfTimeClaim>(
+    `/v1/variations/eot-claims/${id}/grant`,
+    {
+      granted_days,
+      decision_notes,
+    },
+  );
 }
 
 export function rejectEoT(
   id: string,
   decision_notes?: string,
 ): Promise<ExtensionOfTimeClaim> {
-  return apiPost<ExtensionOfTimeClaim>(`/v1/variations/eot-claims/${id}/reject`, {
-    decision_notes,
-  });
+  return apiPost<ExtensionOfTimeClaim>(
+    `/v1/variations/eot-claims/${id}/reject`,
+    {
+      decision_notes,
+    },
+  );
 }
 
 export function updateEoT(
@@ -518,6 +563,10 @@ export function deleteEoT(id: string): Promise<void> {
 
 /* ── Dashboard ─────────────────────────────────────────────────────────── */
 
-export function projectDashboard(projectId: string): Promise<VariationDashboard> {
-  return apiGet<VariationDashboard>(`/v1/variations/dashboard/project/${projectId}`);
+export function projectDashboard(
+  projectId: string,
+): Promise<VariationDashboard> {
+  return apiGet<VariationDashboard>(
+    `/v1/variations/dashboard/project/${projectId}`,
+  );
 }

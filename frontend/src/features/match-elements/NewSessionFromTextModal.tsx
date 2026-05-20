@@ -6,11 +6,11 @@
 // a SourceElement; semantic search drives recall (BGE-M3 multilingual,
 // recall@10 ≈ 0.97 per the v3 bench).
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, X, FileText } from 'lucide-react';
-import { matchElementsApi, type MatchSession } from './api';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2, X, FileText } from "lucide-react";
+import { matchElementsApi, type MatchSession } from "./api";
 
 interface Props {
   projectId: string;
@@ -18,14 +18,18 @@ interface Props {
   onCreated: (session: MatchSession) => void;
 }
 
-export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props) {
+export function NewSessionFromTextModal({
+  projectId,
+  onClose,
+  onCreated,
+}: Props) {
   const { t } = useTranslation();
   const qc = useQueryClient();
-  const [name, setName] = useState('');
-  const [text, setText] = useState('');
+  const [name, setName] = useState("");
+  const [text, setText] = useState("");
 
   const lines = text
-    .split('\n')
+    .split("\n")
     .map((l) => l.trim())
     .filter(Boolean);
 
@@ -33,12 +37,12 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
     mutationFn: () =>
       matchElementsApi.createSession({
         project_id: projectId,
-        source: 'text',
+        source: "text",
         name: name.trim() || undefined,
         text_inputs: lines,
       }),
     onSuccess: (session) => {
-      qc.invalidateQueries({ queryKey: ['match-sessions', projectId] });
+      qc.invalidateQueries({ queryKey: ["match-sessions", projectId] });
       onCreated(session);
     },
   });
@@ -61,8 +65,8 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
             <FileText className="w-4 h-4 text-oe-blue" />
             <h2 className="text-sm font-semibold text-content-primary">
               {t(
-                'match_elements.new_text.title',
-                'New session — paste descriptions',
+                "match_elements.new_text.title",
+                "New session — paste descriptions",
               )}
             </h2>
           </div>
@@ -70,7 +74,7 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
             type="button"
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X className="w-4 h-4" />
           </button>
@@ -79,8 +83,8 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
         <div className="px-5 py-4 space-y-4">
           <p className="text-xs text-content-tertiary leading-relaxed">
             {t(
-              'match_elements.new_text.hint',
-              'One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.',
+              "match_elements.new_text.hint",
+              "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
             )}
           </p>
 
@@ -89,7 +93,10 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
               htmlFor="me-text-name"
               className="block text-xs font-medium text-content-secondary mb-1"
             >
-              {t('match_elements.new_text.name_label', 'Session name (optional)')}
+              {t(
+                "match_elements.new_text.name_label",
+                "Session name (optional)",
+              )}
             </label>
             <input
               id="me-text-name"
@@ -97,8 +104,8 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={t(
-                'match_elements.new_text.name_placeholder',
-                'e.g. Quick estimate Q3',
+                "match_elements.new_text.name_placeholder",
+                "e.g. Quick estimate Q3",
               )}
               className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-1.5 text-sm text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
             />
@@ -110,8 +117,8 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
               className="block text-xs font-medium text-content-secondary mb-1"
             >
               {t(
-                'match_elements.new_text.lines_label',
-                'Descriptions (one per line)',
+                "match_elements.new_text.lines_label",
+                "Descriptions (one per line)",
               )}
               <span className="ml-2 tabular-nums text-content-quaternary">
                 {lines.length}
@@ -124,8 +131,8 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
               rows={10}
               spellCheck={false}
               placeholder={t(
-                'match_elements.new_text.lines_placeholder',
-                'Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm',
+                "match_elements.new_text.lines_placeholder",
+                "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
               )}
               className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm font-mono text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 resize-y"
             />
@@ -144,7 +151,7 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
             onClick={onClose}
             className="px-3 py-1.5 text-xs text-content-secondary hover:text-content-primary"
           >
-            {t('common.cancel', { defaultValue: 'Cancel‌⁠‍' })}
+            {t("common.cancel", { defaultValue: "Cancel‌⁠‍" })}
           </button>
           <button
             type="button"
@@ -153,7 +160,7 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
             className="inline-flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-xs font-medium text-white hover:bg-oe-blue/90 disabled:opacity-50"
           >
             {mut.isPending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-            {t('match_elements.new_text.create', 'Create session')}
+            {t("match_elements.new_text.create", "Create session")}
           </button>
         </div>
       </div>

@@ -4,30 +4,30 @@
  * Backed by /api/v1/equipment/ — see backend/app/modules/equipment/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 export type EquipmentStatus =
-  | 'active'
-  | 'under_maintenance'
-  | 'decommissioned'
-  | 'reserved';
-export type Ownership = 'owned' | 'rented' | 'leased';
+  | "active"
+  | "under_maintenance"
+  | "decommissioned"
+  | "reserved";
+export type Ownership = "owned" | "rented" | "leased";
 export type WorkOrderStatus =
-  | 'scheduled'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled';
+  | "scheduled"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
 export type InspectionType =
-  | 'annual'
-  | 'quarterly'
-  | 'pre_use'
-  | 'monthly'
-  | 'weekly';
-export type InspectionResult = 'pass' | 'fail' | 'conditional';
-export type DamageSeverity = 'minor' | 'major' | 'critical';
-export type DamageStatus = 'reported' | 'under_repair' | 'repaired';
+  | "annual"
+  | "quarterly"
+  | "pre_use"
+  | "monthly"
+  | "weekly";
+export type InspectionResult = "pass" | "fail" | "conditional";
+export type DamageSeverity = "minor" | "major" | "critical";
+export type DamageStatus = "reported" | "under_repair" | "repaired";
 
 export interface Equipment {
   id: string;
@@ -135,6 +135,104 @@ export interface DamageReport {
   work_order_id?: string | null;
 }
 
+export interface EquipmentType {
+  id: string;
+  code: string;
+  name: string;
+  category: string;
+  default_service_interval_hours?: number | string | null;
+  default_service_interval_km?: number | string | null;
+  default_inspection_interval_days?: number | null;
+  description?: string | null;
+}
+
+export interface CreateEquipmentTypePayload {
+  code: string;
+  name: string;
+  category?: string;
+  default_service_interval_hours?: number;
+  default_service_interval_km?: number;
+  default_inspection_interval_days?: number;
+  description?: string;
+}
+
+export type UpdateEquipmentTypePayload = Partial<
+  Omit<CreateEquipmentTypePayload, "code">
+>;
+
+export interface CreateWorkOrderPayload {
+  equipment_id: string;
+  schedule_id?: string | null;
+  scheduled_for?: string | null;
+  status?: WorkOrderStatus;
+  technician_id?: string | null;
+  work_summary?: string | null;
+  cost?: number;
+  currency?: string;
+}
+
+export interface UpdateWorkOrderPayload {
+  scheduled_for?: string | null;
+  completed_at?: string | null;
+  status?: WorkOrderStatus;
+  technician_id?: string | null;
+  work_summary?: string | null;
+  cost?: number;
+  currency?: string;
+}
+
+export interface CreateInspectionPayload {
+  equipment_id: string;
+  inspection_type: InspectionType;
+  inspected_at: string;
+  valid_until: string;
+  inspector_name?: string | null;
+  result?: InspectionResult;
+  notes?: string | null;
+  certificate_url?: string | null;
+}
+
+export interface UpdateInspectionPayload {
+  inspection_type?: InspectionType;
+  inspected_at?: string;
+  valid_until?: string;
+  inspector_name?: string | null;
+  result?: InspectionResult;
+  notes?: string | null;
+  certificate_url?: string | null;
+}
+
+export interface CreateDamageReportPayload {
+  equipment_id: string;
+  reported_at: string;
+  reported_by?: string | null;
+  severity?: DamageSeverity;
+  description?: string;
+  photos?: string[];
+  repair_cost_estimate?: number;
+  currency?: string;
+}
+
+export interface UpdateDamageReportPayload {
+  severity?: DamageSeverity;
+  description?: string;
+  photos?: string[];
+  repair_cost_estimate?: number;
+  currency?: string;
+  status?: DamageStatus;
+}
+
+export interface TelemetryReadingPayload {
+  recorded_at: string;
+  fuel_level?: number;
+  hour_meter?: number;
+  odometer_km?: number;
+  lat?: number;
+  lng?: number;
+  engine_status?: string;
+  raw_payload?: Record<string, unknown>;
+}
+
 export interface EquipmentDashboard {
   equipment_id: string;
   code: string;
@@ -158,21 +256,23 @@ export function listEquipment(params?: {
   ownership?: string;
 }): Promise<Equipment[]> {
   const qs = new URLSearchParams();
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
-  if (params?.status) qs.set('status', params.status);
-  if (params?.type) qs.set('type', params.type);
-  if (params?.ownership) qs.set('ownership', params.ownership);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
+  if (params?.status) qs.set("status", params.status);
+  if (params?.type) qs.set("type", params.type);
+  if (params?.ownership) qs.set("ownership", params.ownership);
   const q = qs.toString();
-  return apiGet<Equipment[]>(`/v1/equipment/equipment/${q ? `?${q}` : ''}`);
+  return apiGet<Equipment[]>(`/v1/equipment/equipment/${q ? `?${q}` : ""}`);
 }
 
 export function getEquipment(id: string): Promise<Equipment> {
   return apiGet<Equipment>(`/v1/equipment/equipment/${id}`);
 }
 
-export function createEquipment(data: CreateEquipmentPayload): Promise<Equipment> {
-  return apiPost<Equipment>('/v1/equipment/equipment/', data);
+export function createEquipment(
+  data: CreateEquipmentPayload,
+): Promise<Equipment> {
+  return apiPost<Equipment>("/v1/equipment/equipment/", data);
 }
 
 export function updateEquipment(
@@ -190,6 +290,29 @@ export function getEquipmentDashboard(id: string): Promise<EquipmentDashboard> {
   return apiGet<EquipmentDashboard>(`/v1/equipment/equipment/${id}/dashboard`);
 }
 
+/* ── Equipment Types ──────────────────────────────────────────────────── */
+
+export function listTypes(): Promise<EquipmentType[]> {
+  return apiGet<EquipmentType[]>("/v1/equipment/types/");
+}
+
+export function createType(
+  data: CreateEquipmentTypePayload,
+): Promise<EquipmentType> {
+  return apiPost<EquipmentType>("/v1/equipment/types/", data);
+}
+
+export function updateType(
+  id: string,
+  data: UpdateEquipmentTypePayload,
+): Promise<EquipmentType> {
+  return apiPatch<EquipmentType>(`/v1/equipment/types/${id}`, data);
+}
+
+export function deleteType(id: string): Promise<void> {
+  return apiDelete(`/v1/equipment/types/${id}`);
+}
+
 /* ── Telemetry ────────────────────────────────────────────────────────── */
 
 export function listTelemetry(
@@ -197,10 +320,20 @@ export function listTelemetry(
   params?: { limit?: number },
 ): Promise<TelemetryReading[]> {
   const qs = new URLSearchParams();
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return apiGet<TelemetryReading[]>(
-    `/v1/equipment/equipment/${equipmentId}/telemetry${q ? `?${q}` : ''}`,
+    `/v1/equipment/equipment/${equipmentId}/telemetry${q ? `?${q}` : ""}`,
+  );
+}
+
+export function recordTelemetry(
+  equipmentId: string,
+  data: TelemetryReadingPayload,
+): Promise<TelemetryReading> {
+  return apiPost<TelemetryReading>(
+    `/v1/equipment/equipment/${equipmentId}/telemetry`,
+    data,
   );
 }
 
@@ -213,13 +346,49 @@ export function listMaintenanceWorkOrders(params?: {
   limit?: number;
 }): Promise<MaintenanceWorkOrder[]> {
   const qs = new URLSearchParams();
-  if (params?.equipment_id) qs.set('equipment_id', params.equipment_id);
-  if (params?.status) qs.set('status', params.status);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.equipment_id) qs.set("equipment_id", params.equipment_id);
+  if (params?.status) qs.set("status", params.status);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return apiGet<MaintenanceWorkOrder[]>(
-    `/v1/equipment/maintenance-work-orders/${q ? `?${q}` : ''}`,
+    `/v1/equipment/maintenance-work-orders/${q ? `?${q}` : ""}`,
+  );
+}
+
+export function createWorkOrder(
+  data: CreateWorkOrderPayload,
+): Promise<MaintenanceWorkOrder> {
+  return apiPost<MaintenanceWorkOrder>(
+    "/v1/equipment/maintenance-work-orders/",
+    data,
+  );
+}
+
+export function updateWorkOrder(
+  id: string,
+  data: UpdateWorkOrderPayload,
+): Promise<MaintenanceWorkOrder> {
+  return apiPatch<MaintenanceWorkOrder>(
+    `/v1/equipment/maintenance-work-orders/${id}`,
+    data,
+  );
+}
+
+export function deleteWorkOrder(id: string): Promise<void> {
+  return apiDelete(`/v1/equipment/maintenance-work-orders/${id}`);
+}
+
+export function completeWorkOrder(
+  id: string,
+  completedAt?: string,
+): Promise<MaintenanceWorkOrder> {
+  const qs = completedAt
+    ? `?completed_at=${encodeURIComponent(completedAt)}`
+    : "";
+  return apiPost<MaintenanceWorkOrder>(
+    `/v1/equipment/maintenance-work-orders/${id}/complete${qs}`,
+    {},
   );
 }
 
@@ -227,9 +396,26 @@ export function listMaintenanceWorkOrders(params?: {
 
 export function listInspections(equipmentId?: string): Promise<Inspection[]> {
   const qs = new URLSearchParams();
-  if (equipmentId) qs.set('equipment_id', equipmentId);
+  if (equipmentId) qs.set("equipment_id", equipmentId);
   const q = qs.toString();
-  return apiGet<Inspection[]>(`/v1/equipment/inspections/${q ? `?${q}` : ''}`);
+  return apiGet<Inspection[]>(`/v1/equipment/inspections/${q ? `?${q}` : ""}`);
+}
+
+export function createInspection(
+  data: CreateInspectionPayload,
+): Promise<Inspection> {
+  return apiPost<Inspection>("/v1/equipment/inspections/", data);
+}
+
+export function updateInspection(
+  id: string,
+  data: UpdateInspectionPayload,
+): Promise<Inspection> {
+  return apiPatch<Inspection>(`/v1/equipment/inspections/${id}`, data);
+}
+
+export function deleteInspection(id: string): Promise<void> {
+  return apiDelete(`/v1/equipment/inspections/${id}`);
 }
 
 /* ── Damage reports ─────────────────────────────────────────────────── */
@@ -241,12 +427,29 @@ export function listDamageReports(params?: {
   limit?: number;
 }): Promise<DamageReport[]> {
   const qs = new URLSearchParams();
-  if (params?.equipment_id) qs.set('equipment_id', params.equipment_id);
-  if (params?.status) qs.set('status', params.status);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.equipment_id) qs.set("equipment_id", params.equipment_id);
+  if (params?.status) qs.set("status", params.status);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return apiGet<DamageReport[]>(
-    `/v1/equipment/damage-reports/${q ? `?${q}` : ''}`,
+    `/v1/equipment/damage-reports/${q ? `?${q}` : ""}`,
   );
+}
+
+export function createDamageReport(
+  data: CreateDamageReportPayload,
+): Promise<DamageReport> {
+  return apiPost<DamageReport>("/v1/equipment/damage-reports/", data);
+}
+
+export function updateDamageReport(
+  id: string,
+  data: UpdateDamageReportPayload,
+): Promise<DamageReport> {
+  return apiPatch<DamageReport>(`/v1/equipment/damage-reports/${id}`, data);
+}
+
+export function deleteDamageReport(id: string): Promise<void> {
+  return apiDelete(`/v1/equipment/damage-reports/${id}`);
 }

@@ -1,14 +1,14 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Compliance-docs API client.
 
-import { apiDelete, apiGet, apiPatch, apiPost } from '@/shared/lib/api';
+import { apiDelete, apiGet, apiPatch, apiPost } from "@/shared/lib/api";
 import type {
   ComplianceDoc,
   ComplianceDocCreate,
   ComplianceDocUpdate,
-} from './types';
+} from "./types";
 
-const BASE = '/v1/compliance_docs';
+const BASE = "/v1/compliance_docs";
 
 export interface ListComplianceDocsParams {
   project_id: string;
@@ -20,8 +20,8 @@ export async function listComplianceDocs(
   params: ListComplianceDocsParams,
 ): Promise<ComplianceDoc[]> {
   const q = new URLSearchParams({ project_id: params.project_id });
-  if (params.status) q.set('status', params.status);
-  if (params.doc_type) q.set('doc_type', params.doc_type);
+  if (params.status) q.set("status", params.status);
+  if (params.doc_type) q.set("doc_type", params.doc_type);
   return apiGet<ComplianceDoc[]>(`${BASE}/?${q.toString()}`);
 }
 

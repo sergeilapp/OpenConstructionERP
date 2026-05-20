@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback } from "react";
 
 interface SwipeOptions {
   /** Minimum distance in px to count as a swipe (default: 50) */
@@ -23,12 +23,18 @@ export function useSwipeGesture<T extends HTMLElement = HTMLElement>({
   enabled = true,
 }: SwipeOptions) {
   const ref = useRef<T>(null);
-  const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
+  const touchStart = useRef<{ x: number; y: number; time: number } | null>(
+    null,
+  );
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
     const touch = e.touches[0];
     if (!touch) return;
-    touchStart.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+    touchStart.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
   }, []);
 
   const handleTouchEnd = useCallback(
@@ -42,7 +48,12 @@ export function useSwipeGesture<T extends HTMLElement = HTMLElement>({
       touchStart.current = null;
 
       // Must be primarily horizontal and within time limit
-      if (Math.abs(dx) < threshold || dt > maxTime || Math.abs(dy) > Math.abs(dx)) return;
+      if (
+        Math.abs(dx) < threshold ||
+        dt > maxTime ||
+        Math.abs(dy) > Math.abs(dx)
+      )
+        return;
 
       if (dx < 0 && onSwipeLeft) onSwipeLeft();
       if (dx > 0 && onSwipeRight) onSwipeRight();
@@ -54,11 +65,11 @@ export function useSwipeGesture<T extends HTMLElement = HTMLElement>({
     if (!enabled) return;
     const el = ref.current;
     if (!el) return;
-    el.addEventListener('touchstart', handleTouchStart, { passive: true });
-    el.addEventListener('touchend', handleTouchEnd, { passive: true });
+    el.addEventListener("touchstart", handleTouchStart, { passive: true });
+    el.addEventListener("touchend", handleTouchEnd, { passive: true });
     return () => {
-      el.removeEventListener('touchstart', handleTouchStart);
-      el.removeEventListener('touchend', handleTouchEnd);
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchend", handleTouchEnd);
     };
   }, [enabled, handleTouchStart, handleTouchEnd]);
 
@@ -87,7 +98,9 @@ export function useEdgeSwipe({
   onSwipeLeft?: () => void;
   enabled?: boolean;
 }) {
-  const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
+  const touchStart = useRef<{ x: number; y: number; time: number } | null>(
+    null,
+  );
 
   useEffect(() => {
     if (!enabled) return;
@@ -98,7 +111,11 @@ export function useEdgeSwipe({
       const fromLeftEdge = touch.clientX <= edgeWidth;
       const fromRightEdge = touch.clientX >= window.innerWidth - edgeWidth;
       if (fromLeftEdge || fromRightEdge) {
-        touchStart.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+        touchStart.current = {
+          x: touch.clientX,
+          y: touch.clientY,
+          time: Date.now(),
+        };
       }
     }
 
@@ -120,11 +137,13 @@ export function useEdgeSwipe({
       }
     }
 
-    document.addEventListener('touchstart', handleTouchStart, { passive: true });
-    document.addEventListener('touchend', handleTouchEnd, { passive: true });
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    document.addEventListener("touchend", handleTouchEnd, { passive: true });
     return () => {
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
   }, [enabled, edgeWidth, threshold, maxTime, onSwipeRight, onSwipeLeft]);
 }

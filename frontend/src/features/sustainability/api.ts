@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPut } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────── */
 
@@ -87,8 +87,10 @@ export function assignPositionCO2(positionId: string, epdId: string) {
 
 export function fetchEPDMaterials(category?: string, search?: string) {
   const params = new URLSearchParams();
-  if (category) params.set('category', category);
-  if (search) params.set('search', search);
+  if (category) params.set("category", category);
+  if (search) params.set("search", search);
   const qs = params.toString();
-  return apiGet<EPDMaterialsResponse>(`/v1/boq/epd-materials/${qs ? `?${qs}` : ''}`);
+  return apiGet<EPDMaterialsResponse>(
+    `/v1/boq/epd-materials/${qs ? `?${qs}` : ""}`,
+  );
 }

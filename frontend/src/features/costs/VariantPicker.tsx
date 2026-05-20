@@ -23,13 +23,19 @@
 //   * Apply does NOT auto-close — parent owns the close lifecycle so it
 //     can sequence multiple pickers in a multi-select flow.
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
-import { X, Search, ArrowUpDown, ChevronDown, ChevronRight } from 'lucide-react';
-import { Badge, Button, KvList, Kv, QtyTile } from '@/shared/ui';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import type { CostVariant, VariantStats } from './api';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import {
+  X,
+  Search,
+  ArrowUpDown,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
+import { Badge, Button, KvList, Kv, QtyTile } from "@/shared/ui";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import type { CostVariant, VariantStats } from "./api";
 
 /* ── Props ────────────────────────────────────────────────────────────── */
 
@@ -43,7 +49,7 @@ export interface VariantPickerProps {
    *  production default for new applies (matches CostX/iTWO behaviour);
    *  `"median"` is kept for the legacy panel that tags the median row in
    *  the cost-DB browser. */
-  defaultStrategy?: 'mean' | 'median';
+  defaultStrategy?: "mean" | "median";
   /** Anchor element used to position the popover.  When `null`, the
    *  popover renders centered on screen as a graceful fallback. */
   anchorEl: HTMLElement | null;
@@ -54,11 +60,11 @@ export interface VariantPickerProps {
    *  surfaces an extra footer button that applies the mean rate without
    *  forcing the user to pick a row.  The argument is the strategy that
    *  was honoured (passed up so the parent can stamp `variant_default`). */
-  onUseDefault?: (strategy: 'mean' | 'median') => void;
+  onUseDefault?: (strategy: "mean" | "median") => void;
   onClose: () => void;
 }
 
-type SortMode = 'default' | 'price_asc' | 'price_desc' | 'label';
+type SortMode = "default" | "price_asc" | "price_desc" | "label";
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 
@@ -66,8 +72,8 @@ type SortMode = 'default' | 'price_asc' | 'price_desc' | 'label';
 function formatPrice(value: number, currency: string): string {
   try {
     return new Intl.NumberFormat(getIntlLocale(), {
-      style: 'currency',
-      currency: currency || 'USD',
+      style: "currency",
+      currency: currency || "USD",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
@@ -84,13 +90,13 @@ function formatPrice(value: number, currency: string): string {
 function resolveDefaultIndex(
   variants: CostVariant[],
   stats: VariantStats,
-  strategy: 'mean' | 'median',
+  strategy: "mean" | "median",
   override?: number,
 ): number {
   if (override != null && override >= 0 && override < variants.length) {
     return override;
   }
-  const target = strategy === 'mean' ? stats.mean : stats.median;
+  const target = strategy === "mean" ? stats.mean : stats.median;
   const exactIdx = variants.findIndex((v) => Math.abs(v.price - target) < 0.01);
   if (exactIdx >= 0) return exactIdx;
   let bestIdx = 0;
@@ -117,13 +123,16 @@ function deltaVsMean(price: number, mean: number): number | null {
 /** Format the delta chip — keeps the sign explicit and rounds to whole %
  *  for visual stability. Returns "—" for zero-tolerant matches so we don't
  *  show "+0%" / "-0%" jitter. */
-function formatDelta(deltaPct: number | null): { text: string; tone: 'pos' | 'neg' | 'flat' } {
-  if (deltaPct === null) return { text: '—', tone: 'flat' };
-  if (Math.abs(deltaPct) < 0.5) return { text: '≈ avg', tone: 'flat' };
+function formatDelta(deltaPct: number | null): {
+  text: string;
+  tone: "pos" | "neg" | "flat";
+} {
+  if (deltaPct === null) return { text: "—", tone: "flat" };
+  if (Math.abs(deltaPct) < 0.5) return { text: "≈ avg", tone: "flat" };
   const rounded = Math.round(deltaPct);
   return {
-    text: `${rounded > 0 ? '+' : ''}${rounded}%`,
-    tone: rounded > 0 ? 'pos' : 'neg',
+    text: `${rounded > 0 ? "+" : ""}${rounded}%`,
+    tone: rounded > 0 ? "pos" : "neg",
   };
 }
 
@@ -132,7 +141,7 @@ function formatDelta(deltaPct: number | null): { text: string; tone: 'pos' | 'ne
  *  otherwise we fall back to the source `group` field, then to an empty
  *  string for ungrouped catalogs (which forces the flat-list code path). */
 function variantGroupKey(v: CostVariant): string {
-  return (v.group_localized || v.group || '').trim();
+  return (v.group_localized || v.group || "").trim();
 }
 
 /** Compute the median of a numeric array. Returns 0 for empty input so the
@@ -143,7 +152,7 @@ function medianOf(nums: number[]): number {
   const mid = Math.floor(sorted.length / 2);
   return sorted.length % 2 === 0
     ? ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2
-    : sorted[mid] ?? 0;
+    : (sorted[mid] ?? 0);
 }
 
 /* ── Component ────────────────────────────────────────────────────────── */
@@ -152,7 +161,7 @@ export function VariantPicker({
   variants,
   stats,
   defaultIndex,
-  defaultStrategy = 'mean',
+  defaultStrategy = "mean",
   anchorEl,
   unitLabel,
   currency,
@@ -170,8 +179,8 @@ export function VariantPicker({
   const [selectedIdx, setSelectedIdx] = useState<number>(() =>
     resolveDefaultIndex(variants, stats, defaultStrategy, defaultIndex),
   );
-  const [query, setQuery] = useState('');
-  const [sortMode, setSortMode] = useState<SortMode>('default');
+  const [query, setQuery] = useState("");
+  const [sortMode, setSortMode] = useState<SortMode>("default");
 
   /* ── Anchor tracking ─────────────────────────────────────────────── */
   //
@@ -190,32 +199,36 @@ export function VariantPicker({
     if (!anchorEl) return;
     const update = () => setAnchorRect(anchorEl.getBoundingClientRect());
     update();
-    window.addEventListener('resize', update);
+    window.addEventListener("resize", update);
     return () => {
-      window.removeEventListener('resize', update);
+      window.removeEventListener("resize", update);
     };
   }, [anchorEl]);
 
   /* ── Esc / outside-click ─────────────────────────────────────────── */
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         onClose();
       }
     }
-    document.addEventListener('keydown', handleKey, { capture: true });
-    return () => document.removeEventListener('keydown', handleKey, { capture: true });
+    document.addEventListener("keydown", handleKey, { capture: true });
+    return () =>
+      document.removeEventListener("keydown", handleKey, { capture: true });
   }, [onClose]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
         onClose();
       }
     }
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, [onClose]);
 
   /* ── Width / placement ───────────────────────────────────────────── */
@@ -224,10 +237,10 @@ export function VariantPicker({
   const style = useMemo<React.CSSProperties>(() => {
     if (!anchorRect) {
       return {
-        position: 'fixed',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
+        position: "fixed",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
         zIndex: 10000,
       };
     }
@@ -239,9 +252,9 @@ export function VariantPicker({
     );
     if (top + POPOVER_MAX_HEIGHT > window.innerHeight) {
       const flippedTop = Math.max(8, anchorRect.top - POPOVER_MAX_HEIGHT - 4);
-      return { position: 'fixed', left, top: flippedTop, zIndex: 10000 };
+      return { position: "fixed", left, top: flippedTop, zIndex: 10000 };
     }
-    return { position: 'fixed', left, top, zIndex: 10000 };
+    return { position: "fixed", left, top, zIndex: 10000 };
   }, [anchorRect]);
 
   /* ── Default chip — index in the original list ───────────────────── */
@@ -260,16 +273,16 @@ export function VariantPicker({
       : indexed;
     const sorted = [...filtered];
     switch (sortMode) {
-      case 'price_asc':
+      case "price_asc":
         sorted.sort((a, b) => a.v.price - b.v.price);
         break;
-      case 'price_desc':
+      case "price_desc":
         sorted.sort((a, b) => b.v.price - a.v.price);
         break;
-      case 'label':
+      case "label":
         sorted.sort((a, b) => a.v.label.localeCompare(b.v.label));
         break;
-      case 'default':
+      case "default":
       default:
         // Original CWICR order — leaves the canonical variant at index 0.
         break;
@@ -385,9 +398,9 @@ export function VariantPicker({
   };
 
   const defaultChipLabel =
-    defaultStrategy === 'mean'
-      ? t('costs.variant_default_mean_chip', { defaultValue: 'Average‌⁠‍' })
-      : t('costs.variant_default_median_chip', { defaultValue: 'Median‌⁠‍' });
+    defaultStrategy === "mean"
+      ? t("costs.variant_default_mean_chip", { defaultValue: "Average‌⁠‍" })
+      : t("costs.variant_default_median_chip", { defaultValue: "Median‌⁠‍" });
 
   /* ── Single variant row renderer ──────────────────────────────────
    *  Reused by both the flat-list and the accordion-grouped code paths.
@@ -409,16 +422,17 @@ export function VariantPicker({
     //   3. ``v.label`` alone — terminal fallback for CWICR rows whose
     //      abstract resource has no separate common_start (the label
     //      already carries the full display text on its own).
-    const csTrim = (stats.common_start || '').trim();
-    const lblTrim = (v.label || '').trim();
+    const csTrim = (stats.common_start || "").trim();
+    const lblTrim = (v.label || "").trim();
     const labelStartsWithCs =
       csTrim.length > 0 &&
       lblTrim.length > 0 &&
       lblTrim.toLowerCase().startsWith(csTrim.toLowerCase());
-    const composed = (v.full_label || '').trim()
-      || (csTrim && lblTrim && !labelStartsWithCs
-          ? `${csTrim} ${lblTrim}`.trim()
-          : lblTrim);
+    const composed =
+      (v.full_label || "").trim() ||
+      (csTrim && lblTrim && !labelStartsWithCs
+        ? `${csTrim} ${lblTrim}`.trim()
+        : lblTrim);
     return (
       <button
         key={`${v.index}-${originalIdx}`}
@@ -428,15 +442,15 @@ export function VariantPicker({
         onClick={() => setSelectedIdx(originalIdx)}
         className={`w-full flex items-start gap-3 px-4 py-3 text-left border-b border-border-light/50 last:border-b-0 transition-colors ${
           isSel
-            ? 'bg-oe-blue-subtle/20 ring-1 ring-inset ring-oe-blue/30'
-            : 'hover:bg-surface-secondary/60'
+            ? "bg-oe-blue-subtle/20 ring-1 ring-inset ring-oe-blue/30"
+            : "hover:bg-surface-secondary/60"
         }`}
         data-testid={`variant-row-${originalIdx}`}
       >
         {/* Radio circle */}
         <span
           className={`mt-1 h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
-            isSel ? 'border-oe-blue' : 'border-content-quaternary'
+            isSel ? "border-oe-blue" : "border-content-quaternary"
           }`}
         >
           {isSel && <span className="h-2 w-2 rounded-full bg-oe-blue" />}
@@ -463,22 +477,22 @@ export function VariantPicker({
             )}
             <span
               className={
-                delta.tone === 'pos'
-                  ? 'inline-flex items-center rounded-full bg-amber-500/15 px-1.5 py-0.5 text-2xs font-semibold text-amber-700 dark:text-amber-300 tabular-nums'
-                  : delta.tone === 'neg'
-                  ? 'inline-flex items-center rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-2xs font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums'
-                  : 'inline-flex items-center rounded-full bg-surface-tertiary px-1.5 py-0.5 text-2xs font-medium text-content-secondary tabular-nums'
+                delta.tone === "pos"
+                  ? "inline-flex items-center rounded-full bg-amber-500/15 px-1.5 py-0.5 text-2xs font-semibold text-amber-700 dark:text-amber-300 tabular-nums"
+                  : delta.tone === "neg"
+                    ? "inline-flex items-center rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-2xs font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums"
+                    : "inline-flex items-center rounded-full bg-surface-tertiary px-1.5 py-0.5 text-2xs font-medium text-content-secondary tabular-nums"
               }
-              title={t('costs.variant_delta_tooltip', {
-                defaultValue: 'Difference vs the average rate‌⁠‍',
+              title={t("costs.variant_delta_tooltip", {
+                defaultValue: "Difference vs the average rate‌⁠‍",
               })}
             >
               {delta.text}
             </span>
             {v.price_per_unit != null && (
               <span className="text-2xs text-content-tertiary tabular-nums">
-                {t('costs.variant_per_unit', { defaultValue: 'Per unit‌⁠‍' })}
-                {': '}
+                {t("costs.variant_per_unit", { defaultValue: "Per unit‌⁠‍" })}
+                {": "}
                 {v.price_per_unit.toLocaleString(undefined, {
                   maximumFractionDigits: 4,
                 })}
@@ -490,9 +504,9 @@ export function VariantPicker({
         {/* Price tile */}
         <div className="shrink-0">
           <QtyTile
-            label={t('costs.rate', { defaultValue: 'Rate' })}
+            label={t("costs.rate", { defaultValue: "Rate" })}
             value={v.price}
-            unit={`${currency}${unitLabel ? `/${unitLabel}` : ''}`}
+            unit={`${currency}${unitLabel ? `/${unitLabel}` : ""}`}
           />
         </div>
       </button>
@@ -504,12 +518,14 @@ export function VariantPicker({
       ref={popoverRef}
       role="dialog"
       aria-modal="true"
-      aria-label={t('costs.choose_variant', { defaultValue: 'Choose price variant‌⁠‍' })}
+      aria-label={t("costs.choose_variant", {
+        defaultValue: "Choose price variant‌⁠‍",
+      })}
       className="bg-surface-elevated border border-border-light dark:border-border-dark
                  rounded-xl shadow-2xl flex flex-col overflow-hidden"
       style={{
         ...style,
-        width: 'min(520px, calc(100vw - 16px))',
+        width: "min(520px, calc(100vw - 16px))",
         maxHeight: POPOVER_MAX_HEIGHT,
       }}
       onClick={(e) => e.stopPropagation()}
@@ -519,13 +535,15 @@ export function VariantPicker({
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-light bg-surface-secondary/30 shrink-0">
         <div className="flex items-baseline gap-2 min-w-0">
           <span className="text-sm font-semibold text-content-primary truncate">
-            {t('costs.choose_variant', { defaultValue: 'Choose price variant' })}
+            {t("costs.choose_variant", {
+              defaultValue: "Choose price variant",
+            })}
           </span>
           <span className="text-2xs text-content-tertiary tabular-nums shrink-0">
             {variants.length === 1
-              ? t('costs.variant_count_one', { defaultValue: '1 option' })
-              : t('costs.variant_count_n', {
-                  defaultValue: '{{count}} options',
+              ? t("costs.variant_count_one", { defaultValue: "1 option" })
+              : t("costs.variant_count_n", {
+                  defaultValue: "{{count}} options",
                   count: variants.length,
                 })}
           </span>
@@ -533,7 +551,7 @@ export function VariantPicker({
         <button
           type="button"
           onClick={onClose}
-          aria-label={t('common.close', { defaultValue: 'Close' })}
+          aria-label={t("common.close", { defaultValue: "Close" })}
           className="h-6 w-6 flex items-center justify-center rounded text-content-tertiary
                      hover:text-content-primary hover:bg-surface-tertiary transition-colors"
         >
@@ -553,7 +571,9 @@ export function VariantPicker({
       {stats.common_start && (
         <div className="px-4 py-2.5 border-b border-border-light bg-oe-blue-subtle/20 shrink-0">
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-0.5">
-            {t('costs.variant_common_base', { defaultValue: 'Material / Resource' })}
+            {t("costs.variant_common_base", {
+              defaultValue: "Material / Resource",
+            })}
           </div>
           <div className="text-sm font-semibold text-content-primary leading-snug break-words">
             {stats.common_start}
@@ -565,13 +585,15 @@ export function VariantPicker({
       <div className="px-4 py-3 border-b border-border-light bg-surface-secondary/20 shrink-0">
         <KvList>
           <Kv
-            label={t('costs.variant_min', { defaultValue: 'Min' })}
+            label={t("costs.variant_min", { defaultValue: "Min" })}
             value={
-              <span className="tabular-nums">{formatPrice(stats.min, currency)}</span>
+              <span className="tabular-nums">
+                {formatPrice(stats.min, currency)}
+              </span>
             }
           />
           <Kv
-            label={t('costs.variant_mean', { defaultValue: 'Avg' })}
+            label={t("costs.variant_mean", { defaultValue: "Avg" })}
             value={
               <span className="tabular-nums font-medium">
                 {formatPrice(stats.mean, currency)}
@@ -579,15 +601,19 @@ export function VariantPicker({
             }
           />
           <Kv
-            label={t('costs.variant_median', { defaultValue: 'Median' })}
+            label={t("costs.variant_median", { defaultValue: "Median" })}
             value={
-              <span className="tabular-nums">{formatPrice(stats.median, currency)}</span>
+              <span className="tabular-nums">
+                {formatPrice(stats.median, currency)}
+              </span>
             }
           />
           <Kv
-            label={t('costs.variant_max', { defaultValue: 'Max' })}
+            label={t("costs.variant_max", { defaultValue: "Max" })}
             value={
-              <span className="tabular-nums">{formatPrice(stats.max, currency)}</span>
+              <span className="tabular-nums">
+                {formatPrice(stats.max, currency)}
+              </span>
             }
           />
         </KvList>
@@ -602,8 +628,8 @@ export function VariantPicker({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={t('costs.variant_search_placeholder', {
-                defaultValue: 'Filter variants by keyword…',
+              placeholder={t("costs.variant_search_placeholder", {
+                defaultValue: "Filter variants by keyword…",
               })}
               className="flex-1 min-w-0 bg-transparent text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none"
             />
@@ -614,19 +640,21 @@ export function VariantPicker({
               value={sortMode}
               onChange={(e) => setSortMode(e.target.value as SortMode)}
               className="bg-transparent text-2xs text-content-secondary focus:outline-none cursor-pointer"
-              title={t('costs.variant_sort', { defaultValue: 'Sort variants' })}
+              title={t("costs.variant_sort", { defaultValue: "Sort variants" })}
             >
               <option value="default">
-                {t('costs.variant_sort_default', { defaultValue: 'Default' })}
+                {t("costs.variant_sort_default", { defaultValue: "Default" })}
               </option>
               <option value="price_asc">
-                {t('costs.variant_sort_price_asc', { defaultValue: 'Price ↑' })}
+                {t("costs.variant_sort_price_asc", { defaultValue: "Price ↑" })}
               </option>
               <option value="price_desc">
-                {t('costs.variant_sort_price_desc', { defaultValue: 'Price ↓' })}
+                {t("costs.variant_sort_price_desc", {
+                  defaultValue: "Price ↓",
+                })}
               </option>
               <option value="label">
-                {t('costs.variant_sort_label', { defaultValue: 'Name A→Z' })}
+                {t("costs.variant_sort_label", { defaultValue: "Name A→Z" })}
               </option>
             </select>
           </div>
@@ -646,47 +674,58 @@ export function VariantPicker({
       <div
         className="flex-1 overflow-y-auto"
         role="radiogroup"
-        aria-label={t('costs.choose_variant', { defaultValue: 'Choose price variant' })}
+        aria-label={t("costs.choose_variant", {
+          defaultValue: "Choose price variant",
+        })}
       >
         {displayRows.length === 0 ? (
           <div className="px-6 py-8 text-center text-xs text-content-tertiary">
-            {t('costs.variant_no_match', {
-              defaultValue: 'No variants match your filter.',
+            {t("costs.variant_no_match", {
+              defaultValue: "No variants match your filter.",
             })}
           </div>
         ) : !isGrouped ? (
-          displayRows.map(({ v, originalIdx }) => renderVariantRow(v, originalIdx))
+          displayRows.map(({ v, originalIdx }) =>
+            renderVariantRow(v, originalIdx),
+          )
         ) : (
           groups.map((g) => {
             const isOpen = expandedKeys.has(g.key);
             const groupLabel =
               g.label ||
-              t('costs.variant_group_other', { defaultValue: 'Other' });
+              t("costs.variant_group_other", { defaultValue: "Other" });
             const countLabel =
               g.totalCount === 1
-                ? t('costs.variant_group_count_one', {
-                    defaultValue: '1 variant',
+                ? t("costs.variant_group_count_one", {
+                    defaultValue: "1 variant",
                   })
-                : t('costs.variant_group_count_n', {
-                    defaultValue: '{{count}} variants',
+                : t("costs.variant_group_count_n", {
+                    defaultValue: "{{count}} variants",
                     count: g.totalCount,
                   });
             return (
-              <div key={g.key || '__empty__'} className="border-b border-border-light/50 last:border-b-0">
+              <div
+                key={g.key || "__empty__"}
+                className="border-b border-border-light/50 last:border-b-0"
+              >
                 <button
                   type="button"
                   onClick={() => toggleGroup(g.key)}
                   aria-expanded={isOpen}
-                  aria-controls={`variant-group-body-${g.key || '__empty__'}`}
-                  data-testid={`variant-group-header-${g.key || '__empty__'}`}
+                  aria-controls={`variant-group-body-${g.key || "__empty__"}`}
+                  data-testid={`variant-group-header-${g.key || "__empty__"}`}
                   className={`w-full flex items-center gap-2 px-4 py-2.5 text-left
                               bg-surface-secondary/40 hover:bg-surface-secondary/70
                               transition-colors ${
-                                isOpen ? '' : 'border-b border-transparent'
+                                isOpen ? "" : "border-b border-transparent"
                               }`}
                 >
                   <span className="shrink-0 text-content-tertiary">
-                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                    {isOpen ? (
+                      <ChevronDown size={14} />
+                    ) : (
+                      <ChevronRight size={14} />
+                    )}
                   </span>
                   <span className="text-sm font-semibold text-content-primary truncate">
                     {groupLabel}
@@ -695,19 +734,21 @@ export function VariantPicker({
                     · {countLabel}
                   </span>
                   <span className="ml-auto text-2xs text-content-tertiary tabular-nums shrink-0">
-                    {t('costs.variant_group_median_chip', {
-                      defaultValue: 'median {{price}}',
+                    {t("costs.variant_group_median_chip", {
+                      defaultValue: "median {{price}}",
                       price: formatPrice(g.medianPrice, currency),
                     })}
                   </span>
                 </button>
                 {isOpen && (
                   <div
-                    id={`variant-group-body-${g.key || '__empty__'}`}
+                    id={`variant-group-body-${g.key || "__empty__"}`}
                     role="group"
                     aria-label={groupLabel}
                   >
-                    {g.rows.map(({ v, originalIdx }) => renderVariantRow(v, originalIdx))}
+                    {g.rows.map(({ v, originalIdx }) =>
+                      renderVariantRow(v, originalIdx),
+                    )}
                   </div>
                 )}
               </div>
@@ -724,21 +765,25 @@ export function VariantPicker({
             onClick={handleUseDefault}
             className="text-2xs text-oe-blue hover:underline font-medium"
             data-testid="variant-picker-use-default"
-            title={t('costs.variant_use_default_tooltip', {
+            title={t("costs.variant_use_default_tooltip", {
               defaultValue:
-                'Apply the average rate without picking a specific variant. You can refine later by clicking the row.',
+                "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
             })}
           >
-            {defaultStrategy === 'mean'
-              ? t('costs.variant_use_average', { defaultValue: 'Use average rate' })
-              : t('costs.variant_use_median', { defaultValue: 'Use median rate' })}
+            {defaultStrategy === "mean"
+              ? t("costs.variant_use_average", {
+                  defaultValue: "Use average rate",
+                })
+              : t("costs.variant_use_median", {
+                  defaultValue: "Use median rate",
+                })}
           </button>
         ) : (
           <span aria-hidden="true" />
         )}
         <div className="flex items-center gap-2">
           <Button variant="secondary" size="sm" onClick={onClose}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -747,7 +792,7 @@ export function VariantPicker({
             disabled={!chosen}
             data-testid="variant-picker-apply"
           >
-            {t('common.apply', { defaultValue: 'Apply' })}
+            {t("common.apply", { defaultValue: "Apply" })}
           </Button>
         </div>
       </div>

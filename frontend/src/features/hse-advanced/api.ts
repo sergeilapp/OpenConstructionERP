@@ -4,16 +4,37 @@
  * Endpoints are prefixed with /v1/hse-advanced/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* -- Shared types --------------------------------------------------------- */
 
-export type InvestigationStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
-export type IncidentSeverity = 'minor' | 'moderate' | 'major' | 'severe' | 'critical';
-export type PermitStatus = 'draft' | 'pending' | 'active' | 'expired' | 'closed' | 'cancelled';
-export type CAPAStatus = 'open' | 'in_progress' | 'completed' | 'verified' | 'closed' | 'overdue';
-export type AuditStatus = 'planned' | 'in_progress' | 'completed' | 'cancelled';
-export type CertificationStatus = 'valid' | 'expiring' | 'expired';
+export type InvestigationStatus =
+  | "pending"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
+export type IncidentSeverity =
+  | "minor"
+  | "moderate"
+  | "major"
+  | "severe"
+  | "critical";
+export type PermitStatus =
+  | "draft"
+  | "pending"
+  | "active"
+  | "expired"
+  | "closed"
+  | "cancelled";
+export type CAPAStatus =
+  | "open"
+  | "in_progress"
+  | "completed"
+  | "verified"
+  | "closed"
+  | "overdue";
+export type AuditStatus = "planned" | "in_progress" | "completed" | "cancelled";
+export type CertificationStatus = "valid" | "expiring" | "expired";
 
 /* -- Incident Investigation ----------------------------------------------- */
 
@@ -152,7 +173,7 @@ export interface PPEIssue {
 
 /* -- Safety Audit & Findings --------------------------------------------- */
 
-export type FindingSeverity = 'observation' | 'minor' | 'major' | 'critical';
+export type FindingSeverity = "observation" | "minor" | "major" | "critical";
 
 export interface SafetyAuditFinding {
   id: string;
@@ -220,7 +241,7 @@ export interface SafetyCertification {
 
 /* -- Endpoints ------------------------------------------------------------ */
 
-const BASE = '/v1/hse-advanced';
+const BASE = "/v1/hse-advanced";
 
 export const fetchInvestigations = (projectId: string) =>
   apiGet<IncidentInvestigation[] | { items: IncidentInvestigation[] }>(
@@ -231,13 +252,19 @@ export const fetchInvestigation = (id: string) =>
   apiGet<IncidentInvestigation>(`${BASE}/investigations/${id}`);
 
 export const createInvestigation = (
-  payload: Partial<IncidentInvestigation> & { project_id: string; title: string },
+  payload: Partial<IncidentInvestigation> & {
+    project_id: string;
+    title: string;
+  },
 ) => apiPost<IncidentInvestigation>(`${BASE}/investigations/`, payload);
 
-export const updateInvestigation = (id: string, payload: Partial<IncidentInvestigation>) =>
-  apiPatch<IncidentInvestigation>(`${BASE}/investigations/${id}`, payload);
+export const updateInvestigation = (
+  id: string,
+  payload: Partial<IncidentInvestigation>,
+) => apiPatch<IncidentInvestigation>(`${BASE}/investigations/${id}`, payload);
 
-export const deleteInvestigation = (id: string) => apiDelete(`${BASE}/investigations/${id}`);
+export const deleteInvestigation = (id: string) =>
+  apiDelete(`${BASE}/investigations/${id}`);
 
 export const fetchJSAs = (projectId: string) =>
   apiGet<JobSafetyAnalysis[] | { items: JobSafetyAnalysis[] }>(
@@ -249,10 +276,13 @@ export const createJSA = (
 ) => apiPost<JobSafetyAnalysis>(`${BASE}/jsa/`, payload);
 
 export const fetchPermits = (projectId: string) =>
-  apiGet<PermitToWork[] | { items: PermitToWork[] }>(`${BASE}/permits/?project_id=${projectId}`);
+  apiGet<PermitToWork[] | { items: PermitToWork[] }>(
+    `${BASE}/permits/?project_id=${projectId}`,
+  );
 
-export const createPermit = (payload: Partial<PermitToWork> & { project_id: string; title: string }) =>
-  apiPost<PermitToWork>(`${BASE}/permits/`, payload);
+export const createPermit = (
+  payload: Partial<PermitToWork> & { project_id: string; title: string },
+) => apiPost<PermitToWork>(`${BASE}/permits/`, payload);
 
 export const fetchToolboxTalks = (projectId: string) =>
   apiGet<ToolboxTalk[] | { items: ToolboxTalk[] }>(
@@ -267,17 +297,26 @@ export const fetchToolboxTopics = () =>
   apiGet<ToolboxTopic[] | { items: ToolboxTopic[] }>(`${BASE}/toolbox-topics/`);
 
 export const fetchPPEIssues = (projectId: string) =>
-  apiGet<PPEIssue[] | { items: PPEIssue[] }>(`${BASE}/ppe-issues/?project_id=${projectId}`);
+  apiGet<PPEIssue[] | { items: PPEIssue[] }>(
+    `${BASE}/ppe-issues/?project_id=${projectId}`,
+  );
 
 export const createPPEIssue = (
-  payload: Partial<PPEIssue> & { project_id: string; issued_to_name: string; item_type: string },
+  payload: Partial<PPEIssue> & {
+    project_id: string;
+    issued_to_name: string;
+    item_type: string;
+  },
 ) => apiPost<PPEIssue>(`${BASE}/ppe-issues/`, payload);
 
 export const fetchAudits = (projectId: string) =>
-  apiGet<SafetyAudit[] | { items: SafetyAudit[] }>(`${BASE}/audits/?project_id=${projectId}`);
+  apiGet<SafetyAudit[] | { items: SafetyAudit[] }>(
+    `${BASE}/audits/?project_id=${projectId}`,
+  );
 
-export const createAudit = (payload: Partial<SafetyAudit> & { project_id: string; title: string }) =>
-  apiPost<SafetyAudit>(`${BASE}/audits/`, payload);
+export const createAudit = (
+  payload: Partial<SafetyAudit> & { project_id: string; title: string },
+) => apiPost<SafetyAudit>(`${BASE}/audits/`, payload);
 
 export const fetchCAPAs = (projectId: string) =>
   apiGet<CorrectiveAction[] | { items: CorrectiveAction[] }>(
@@ -285,12 +324,87 @@ export const fetchCAPAs = (projectId: string) =>
   );
 
 export const createCAPA = (
-  payload: Partial<CorrectiveAction> & { project_id: string; title: string; description: string },
+  payload: Partial<CorrectiveAction> & {
+    project_id: string;
+    title: string;
+    description: string;
+  },
 ) => apiPost<CorrectiveAction>(`${BASE}/capas/`, payload);
 
 export const fetchCertifications = (projectId: string) =>
   apiGet<SafetyCertification[] | { items: SafetyCertification[] }>(
     `${BASE}/certifications/?project_id=${projectId}`,
+  );
+
+/* -- OSHA 300 CSV + slim corrective-action FSM (T6 / v3086) --------------- */
+
+/** Strict FSM target states for the slim incident-scoped CorrectiveAction. */
+export type CATargetStatus = "pending" | "in_progress" | "verified" | "closed";
+
+export interface CATransitionRequest {
+  to_status: CATargetStatus;
+  verification_notes?: string;
+}
+
+export interface CorrectiveActionRow {
+  id: string;
+  incident_id: string;
+  description: string;
+  assigned_to_user_id?: string | null;
+  due_date?: string | null;
+  status: CATargetStatus;
+  verified_by_user_id?: string | null;
+  verified_at?: string | null;
+  verification_notes?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Trigger an OSHA Form 300 CSV download for a project + calendar year.
+ *
+ * The endpoint streams ``text/csv; charset=utf-8`` with a
+ * ``Content-Disposition: attachment`` header, so we hand the URL to the
+ * browser via a synthetic ``<a download>`` click rather than going
+ * through ``apiGet``: that lets the browser show its own save dialog and
+ * respect the server-supplied filename.
+ */
+export function downloadOsha300Csv(projectId: string, year: number): void {
+  const url = `/api${BASE}/osha-300-log.csv?project_id=${encodeURIComponent(
+    projectId,
+  )}&year=${encodeURIComponent(String(year))}`;
+  const a = document.createElement("a");
+  a.href = url;
+  a.rel = "noopener";
+  // Suggested filename — the server's Content-Disposition wins when the
+  // browser honours it, but this keeps in-page text readable.
+  a.download = `osha-300-${year}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+export const fetchCorrectiveActions = (params: {
+  projectId?: string;
+  incidentId?: string;
+  status?: CATargetStatus;
+}) => {
+  const qs = new URLSearchParams();
+  if (params.projectId) qs.set("project_id", params.projectId);
+  if (params.incidentId) qs.set("incident_id", params.incidentId);
+  if (params.status) qs.set("status", params.status);
+  return apiGet<CorrectiveActionRow[] | { items: CorrectiveActionRow[] }>(
+    `${BASE}/corrective-actions/?${qs.toString()}`,
+  );
+};
+
+export const transitionCorrectiveAction = (
+  caId: string,
+  body: CATransitionRequest,
+) =>
+  apiPost<CorrectiveActionRow>(
+    `${BASE}/corrective-actions/${caId}/transition`,
+    body,
   );
 
 /* -- Helpers -------------------------------------------------------------- */
@@ -301,7 +415,15 @@ export function daysUntil(dateStr: string | null | undefined): number | null {
   const target = new Date(dateStr);
   if (Number.isNaN(target.getTime())) return null;
   const now = new Date();
-  const target0 = new Date(target.getFullYear(), target.getMonth(), target.getDate()).getTime();
-  const today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const target0 = new Date(
+    target.getFullYear(),
+    target.getMonth(),
+    target.getDate(),
+  ).getTime();
+  const today0 = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
   return Math.round((target0 - today0) / 86_400_000);
 }

@@ -10,11 +10,11 @@
  * user re-calibrates.
  */
 
-import type { CalibrationState, CalibrationUnit } from './calibration';
+import type { CalibrationState, CalibrationUnit } from "./calibration";
 
 /** Key prefix. Exported so tests and devtools can vacuum old entries
  *  without sprinkling magic strings around the codebase. */
-export const CALIBRATION_KEY_PREFIX = 'dwg-cal';
+export const CALIBRATION_KEY_PREFIX = "dwg-cal";
 
 /** Build the canonical localStorage key from its three parts. Layout
  *  defaults to ``"__default__"`` when the drawing has a single layout,
@@ -25,37 +25,37 @@ export function calibrationKey(
   filename: string,
   layout: string | null | undefined,
 ): string {
-  const l = layout && layout.length > 0 ? layout : '__default__';
+  const l = layout && layout.length > 0 ? layout : "__default__";
   return `${CALIBRATION_KEY_PREFIX}:${projectId}:${filename}:${l}`;
 }
 
 const VALID_UNITS: ReadonlySet<CalibrationUnit> = new Set([
-  'm',
-  'mm',
-  'ft',
-  'in',
+  "m",
+  "mm",
+  "ft",
+  "in",
 ]);
 
 /** Load a calibration by key. Returns ``null`` when missing, malformed,
  *  or when ``localStorage`` is unavailable (SSR / privacy-mode). */
 export function loadCalibration(key: string): CalibrationState | null {
   try {
-    if (typeof localStorage === 'undefined') return null;
+    if (typeof localStorage === "undefined") return null;
     const raw = localStorage.getItem(key);
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') return null;
+    if (!parsed || typeof parsed !== "object") return null;
     const obj = parsed as Record<string, unknown>;
     const upp = obj.unitsPerPixel;
     const unit = obj.unit;
     const ts = obj.calibratedAt;
     if (
-      typeof upp !== 'number' ||
+      typeof upp !== "number" ||
       !Number.isFinite(upp) ||
       upp <= 0 ||
-      typeof unit !== 'string' ||
+      typeof unit !== "string" ||
       !VALID_UNITS.has(unit as CalibrationUnit) ||
-      typeof ts !== 'number'
+      typeof ts !== "number"
     ) {
       return null;
     }
@@ -66,13 +66,13 @@ export function loadCalibration(key: string): CalibrationState | null {
     };
     if (Array.isArray(obj.pointA) && obj.pointA.length === 2) {
       const [x, y] = obj.pointA as unknown[];
-      if (typeof x === 'number' && typeof y === 'number') {
+      if (typeof x === "number" && typeof y === "number") {
         state.pointA = [x, y];
       }
     }
     if (Array.isArray(obj.pointB) && obj.pointB.length === 2) {
       const [x, y] = obj.pointB as unknown[];
-      if (typeof x === 'number' && typeof y === 'number') {
+      if (typeof x === "number" && typeof y === "number") {
         state.pointB = [x, y];
       }
     }
@@ -90,7 +90,7 @@ export function saveCalibration(
   state: CalibrationState | null,
 ): void {
   try {
-    if (typeof localStorage === 'undefined') return;
+    if (typeof localStorage === "undefined") return;
     if (state === null) {
       localStorage.removeItem(key);
       return;

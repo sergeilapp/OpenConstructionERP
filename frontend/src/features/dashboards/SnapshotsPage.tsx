@@ -6,10 +6,10 @@
  * frozen parquet dataset that later tasks (T02 auto-chart, T03
  * autocomplete, T04 filters, …) analyse.
  */
-import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import {
   Plus,
   Layers,
@@ -17,7 +17,7 @@ import {
   FolderOpen,
   FileSpreadsheet,
   Boxes,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   Badge,
@@ -26,30 +26,30 @@ import {
   Card,
   EmptyState,
   Skeleton,
-} from '@/shared/ui';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useToastStore } from '@/stores/useToastStore';
+} from "@/shared/ui";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useToastStore } from "@/stores/useToastStore";
 
 import {
   deleteSnapshot,
   listSnapshots,
   type Snapshot,
   type SnapshotSummary,
-} from './api';
-import { SnapshotCreateModal } from './SnapshotCreateModal';
+} from "./api";
+import { SnapshotCreateModal } from "./SnapshotCreateModal";
 
 function formatNumber(n: number): string {
-  return new Intl.NumberFormat('en-US').format(n);
+  return new Intl.NumberFormat("en-US").format(n);
 }
 
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(iso).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   } catch {
     return iso;
@@ -66,7 +66,7 @@ export function SnapshotsPage() {
   const [createOpen, setCreateOpen] = useState(false);
 
   const snapshotsQuery = useQuery({
-    queryKey: ['dashboards-snapshots', activeProjectId],
+    queryKey: ["dashboards-snapshots", activeProjectId],
     queryFn: () => listSnapshots(activeProjectId!),
     enabled: !!activeProjectId,
   });
@@ -75,18 +75,20 @@ export function SnapshotsPage() {
     mutationFn: (snapshotId: string) => deleteSnapshot(snapshotId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['dashboards-snapshots', activeProjectId],
+        queryKey: ["dashboards-snapshots", activeProjectId],
       });
       toast({
-        type: 'success',
-        title: t('dashboards.snapshot_deleted', { defaultValue: 'Snapshot deleted‌⁠‍' }),
+        type: "success",
+        title: t("dashboards.snapshot_deleted", {
+          defaultValue: "Snapshot deleted‌⁠‍",
+        }),
       });
     },
     onError: (err: Error) => {
       toast({
-        type: 'error',
-        title: t('dashboards.snapshot_delete_failed', {
-          defaultValue: 'Failed to delete snapshot‌⁠‍',
+        type: "error",
+        title: t("dashboards.snapshot_delete_failed", {
+          defaultValue: "Failed to delete snapshot‌⁠‍",
         }),
         message: err.message,
       });
@@ -97,10 +99,12 @@ export function SnapshotsPage() {
     (snap: Snapshot) => {
       setCreateOpen(false);
       toast({
-        type: 'success',
-        title: t('dashboards.snapshot_created', { defaultValue: 'Snapshot created‌⁠‍' }),
-        message: t('dashboards.snapshot_created_detail', {
-          defaultValue: '{{entities}} entities · {{categories}} categories‌⁠‍',
+        type: "success",
+        title: t("dashboards.snapshot_created", {
+          defaultValue: "Snapshot created‌⁠‍",
+        }),
+        message: t("dashboards.snapshot_created_detail", {
+          defaultValue: "{{entities}} entities · {{categories}} categories‌⁠‍",
           entities: formatNumber(snap.total_entities),
           categories: formatNumber(snap.total_categories),
         }),
@@ -114,14 +118,20 @@ export function SnapshotsPage() {
       <div className="space-y-4 p-4">
         <EmptyState
           icon={<FolderOpen className="h-10 w-10 text-neutral-500" />}
-          title={t('dashboards.no_project_title', { defaultValue: 'Select a project first‌⁠‍' })}
-          description={t('dashboards.no_project_desc', {
+          title={t("dashboards.no_project_title", {
+            defaultValue: "Select a project first‌⁠‍",
+          })}
+          description={t("dashboards.no_project_desc", {
             defaultValue:
-              'Snapshots are scoped to a project. Pick one from the Projects page to continue.',
+              "Snapshots are scoped to a project. Pick one from the Projects page to continue.",
           })}
           action={
             <Link to="/projects">
-              <Button>{t('common.browse_projects', { defaultValue: 'Browse projects' })}</Button>
+              <Button>
+                {t("common.browse_projects", {
+                  defaultValue: "Browse projects",
+                })}
+              </Button>
             </Link>
           }
         />
@@ -135,8 +145,11 @@ export function SnapshotsPage() {
     <div className="space-y-4 p-4" data-testid="dashboards-snapshots-page">
       <Breadcrumb
         items={[
-          { label: t('common.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-          { label: t('dashboards.snapshots', { defaultValue: 'Dashboards' }) },
+          {
+            label: t("common.dashboard", { defaultValue: "Dashboard" }),
+            to: "/",
+          },
+          { label: t("dashboards.snapshots", { defaultValue: "Dashboards" }) },
         ]}
       />
 
@@ -144,7 +157,9 @@ export function SnapshotsPage() {
         <div>
           <h1 className="flex items-center gap-2 text-lg font-semibold text-neutral-100">
             <Layers className="h-5 w-5 text-oe-blue" />
-            {t('dashboards.snapshots_title', { defaultValue: 'Data snapshots' })}
+            {t("dashboards.snapshots_title", {
+              defaultValue: "Data snapshots",
+            })}
           </h1>
           <p className="text-sm text-neutral-400">
             {activeProjectName || activeProjectId}
@@ -155,7 +170,7 @@ export function SnapshotsPage() {
           data-testid="dashboards-new-snapshot-btn"
         >
           <Plus className="mr-1 h-4 w-4" />
-          {t('dashboards.new_snapshot', { defaultValue: 'New snapshot' })}
+          {t("dashboards.new_snapshot", { defaultValue: "New snapshot" })}
         </Button>
       </header>
 
@@ -170,34 +185,36 @@ export function SnapshotsPage() {
       {snapshotsQuery.isError && (
         <Card>
           <div className="p-4 text-sm text-rose-300">
-            {t('dashboards.snapshots_load_failed', {
-              defaultValue: 'Could not load snapshots.',
+            {t("dashboards.snapshots_load_failed", {
+              defaultValue: "Could not load snapshots.",
             })}
           </div>
         </Card>
       )}
 
-      {!snapshotsQuery.isLoading && !snapshotsQuery.isError && snapshots.length === 0 && (
-        <EmptyState
-          icon={<Boxes className="h-10 w-10 text-neutral-500" />}
-          title={t('dashboards.no_snapshots_title', {
-            defaultValue: 'No snapshots yet',
-          })}
-          description={t('dashboards.no_snapshots_desc', {
-            defaultValue:
-              'Upload IFC, RVT, DWG or DGN files to freeze a parquet dataset that later dashboards can query.',
-          })}
-          action={
-            <Button
-              onClick={() => setCreateOpen(true)}
-              data-testid="dashboards-empty-new-snapshot-btn"
-            >
-              <Plus className="mr-1 h-4 w-4" />
-              {t('dashboards.new_snapshot', { defaultValue: 'New snapshot' })}
-            </Button>
-          }
-        />
-      )}
+      {!snapshotsQuery.isLoading &&
+        !snapshotsQuery.isError &&
+        snapshots.length === 0 && (
+          <EmptyState
+            icon={<Boxes className="h-10 w-10 text-neutral-500" />}
+            title={t("dashboards.no_snapshots_title", {
+              defaultValue: "No snapshots yet",
+            })}
+            description={t("dashboards.no_snapshots_desc", {
+              defaultValue:
+                "Upload IFC, RVT, DWG or DGN files to freeze a parquet dataset that later dashboards can query.",
+            })}
+            action={
+              <Button
+                onClick={() => setCreateOpen(true)}
+                data-testid="dashboards-empty-new-snapshot-btn"
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                {t("dashboards.new_snapshot", { defaultValue: "New snapshot" })}
+              </Button>
+            }
+          />
+        )}
 
       {snapshots.length > 0 && (
         <div className="grid gap-3 md:grid-cols-2">
@@ -206,7 +223,9 @@ export function SnapshotsPage() {
               key={s.id}
               snapshot={s}
               onDelete={() => deleteMutation.mutate(s.id)}
-              deleting={deleteMutation.isPending && deleteMutation.variables === s.id}
+              deleting={
+                deleteMutation.isPending && deleteMutation.variables === s.id
+              }
             />
           ))}
         </div>
@@ -232,7 +251,10 @@ interface SnapshotCardProps {
 function SnapshotCard({ snapshot, onDelete, deleting }: SnapshotCardProps) {
   const { t } = useTranslation();
   return (
-    <Card className="overflow-hidden" data-testid={`snapshot-card-${snapshot.id}`}>
+    <Card
+      className="overflow-hidden"
+      data-testid={`snapshot-card-${snapshot.id}`}
+    >
       <div className="flex flex-col gap-3 p-4">
         <div className="flex items-start justify-between gap-2">
           <div>
@@ -257,7 +279,7 @@ function SnapshotCard({ snapshot, onDelete, deleting }: SnapshotCardProps) {
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="rounded bg-neutral-800/60 px-2 py-1">
             <div className="text-neutral-500">
-              {t('dashboards.entities', { defaultValue: 'Entities' })}
+              {t("dashboards.entities", { defaultValue: "Entities" })}
             </div>
             <div className="tabular-nums font-medium text-neutral-100">
               {formatNumber(snapshot.total_entities)}
@@ -265,7 +287,7 @@ function SnapshotCard({ snapshot, onDelete, deleting }: SnapshotCardProps) {
           </div>
           <div className="rounded bg-neutral-800/60 px-2 py-1">
             <div className="text-neutral-500">
-              {t('dashboards.categories', { defaultValue: 'Categories' })}
+              {t("dashboards.categories", { defaultValue: "Categories" })}
             </div>
             <div className="tabular-nums font-medium text-neutral-100">
               {formatNumber(snapshot.total_categories)}

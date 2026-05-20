@@ -1,15 +1,22 @@
 /** Modal wizard for importing a project bundle (.ocep). */
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { X, Loader2, Upload, ChevronLeft, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import clsx from 'clsx';
-import { apiGet } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { validateImport, commitImport } from '../api';
-import type { ImportMode, ImportPreview, ImportResult } from '../types';
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  X,
+  Loader2,
+  Upload,
+  ChevronLeft,
+  AlertTriangle,
+  CheckCircle2,
+} from "lucide-react";
+import clsx from "clsx";
+import { apiGet } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { validateImport, commitImport } from "../api";
+import type { ImportMode, ImportPreview, ImportResult } from "../types";
 
 interface ImportWizardProps {
   open: boolean;
@@ -22,14 +29,15 @@ interface ProjectListItem {
 }
 
 function fmtBytes(bytes: number): string {
-  if (!bytes) return '0 B';
+  if (!bytes) return "0 B";
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
-type Step = 'pick' | 'validate' | 'mode' | 'result';
+type Step = "pick" | "validate" | "mode" | "result";
 
 export function ImportWizard({ open, onClose }: ImportWizardProps) {
   const { t } = useTranslation();
@@ -37,12 +45,12 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
   const addToast = useToastStore((s) => s.addToast);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [step, setStep] = useState<Step>('pick');
+  const [step, setStep] = useState<Step>("pick");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
-  const [mode, setMode] = useState<ImportMode>('new_project');
-  const [targetProjectId, setTargetProjectId] = useState<string>('');
-  const [newProjectName, setNewProjectName] = useState<string>('');
+  const [mode, setMode] = useState<ImportMode>("new_project");
+  const [targetProjectId, setTargetProjectId] = useState<string>("");
+  const [newProjectName, setNewProjectName] = useState<string>("");
   const [committing, setCommitting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -50,20 +58,23 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
   // Project list — only fetched while the modal is open and the user is on
   // a step where they need to pick a target project.
   const { data: projects } = useQuery({
-    queryKey: ['file-manager-projects-list'],
-    queryFn: () => apiGet<ProjectListItem[]>('/v1/projects/'),
-    enabled: open && step === 'mode' && (mode === 'merge_into_existing' || mode === 'replace_existing'),
+    queryKey: ["file-manager-projects-list"],
+    queryFn: () => apiGet<ProjectListItem[]>("/v1/projects/"),
+    enabled:
+      open &&
+      step === "mode" &&
+      (mode === "merge_into_existing" || mode === "replace_existing"),
     staleTime: 30_000,
   });
 
   useEffect(() => {
     if (!open) {
-      setStep('pick');
+      setStep("pick");
       setFile(null);
       setPreview(null);
-      setMode('new_project');
-      setTargetProjectId('');
-      setNewProjectName('');
+      setMode("new_project");
+      setTargetProjectId("");
+      setNewProjectName("");
       setCommitting(false);
       setResult(null);
       setError(null);
@@ -73,10 +84,10 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
   if (!open) return null;
@@ -84,15 +95,15 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
   async function handleFile(f: File) {
     setFile(f);
     setError(null);
-    setStep('validate');
+    setStep("validate");
     try {
       const p = await validateImport(f);
       setPreview(p);
       setNewProjectName(`${p.manifest.project_name} (imported)`);
-      setStep('mode');
+      setStep("mode");
     } catch (e) {
       setError((e as Error).message);
-      setStep('pick');
+      setStep("pick");
     }
   }
 
@@ -104,14 +115,18 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
       const r = await commitImport({
         file,
         mode,
-        targetProjectId: mode === 'new_project' ? undefined : targetProjectId || undefined,
-        newProjectName: mode === 'new_project' && newProjectName ? newProjectName : undefined,
+        targetProjectId:
+          mode === "new_project" ? undefined : targetProjectId || undefined,
+        newProjectName:
+          mode === "new_project" && newProjectName ? newProjectName : undefined,
       });
       setResult(r);
-      setStep('result');
+      setStep("result");
       addToast({
-        type: 'success',
-        title: t('files.import.success_title', { defaultValue: 'Bundle imported‌⁠‍' }),
+        type: "success",
+        title: t("files.import.success_title", {
+          defaultValue: "Bundle imported‌⁠‍",
+        }),
       });
     } catch (e) {
       setError((e as Error).message);
@@ -121,20 +136,28 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
   }
 
   const modeLabels: Record<ImportMode, string> = {
-    new_project: t('files.import.mode_new', { defaultValue: 'Create a new project‌⁠‍' }),
-    merge_into_existing: t('files.import.mode_merge', { defaultValue: 'Merge into existing project‌⁠‍' }),
-    replace_existing: t('files.import.mode_replace', { defaultValue: 'Replace existing project‌⁠‍' }),
+    new_project: t("files.import.mode_new", {
+      defaultValue: "Create a new project‌⁠‍",
+    }),
+    merge_into_existing: t("files.import.mode_merge", {
+      defaultValue: "Merge into existing project‌⁠‍",
+    }),
+    replace_existing: t("files.import.mode_replace", {
+      defaultValue: "Replace existing project‌⁠‍",
+    }),
   };
 
   const modeHints: Record<ImportMode, string> = {
-    new_project: t('files.import.mode_new_hint', {
-      defaultValue: 'Safest. New IDs everywhere; nothing in your workspace changes.‌⁠‍',
+    new_project: t("files.import.mode_new_hint", {
+      defaultValue:
+        "Safest. New IDs everywhere; nothing in your workspace changes.‌⁠‍",
     }),
-    merge_into_existing: t('files.import.mode_merge_hint', {
-      defaultValue: 'Adds rows to a chosen project. Existing IDs are skipped.',
+    merge_into_existing: t("files.import.mode_merge_hint", {
+      defaultValue: "Adds rows to a chosen project. Existing IDs are skipped.",
     }),
-    replace_existing: t('files.import.mode_replace_hint', {
-      defaultValue: 'Wipes the chosen project\'s bundle-managed rows, then imports. Destructive.',
+    replace_existing: t("files.import.mode_replace_hint", {
+      defaultValue:
+        "Wipes the chosen project's bundle-managed rows, then imports. Destructive.",
     }),
   };
 
@@ -151,12 +174,12 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-border-light">
           <h2 className="text-sm font-semibold text-content-primary">
-            {t('files.import.title', { defaultValue: 'Import project bundle' })}
+            {t("files.import.title", { defaultValue: "Import project bundle" })}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-7 w-7 items-center justify-center rounded text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
           >
             <X size={15} />
@@ -164,11 +187,12 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          {step === 'pick' && (
+          {step === "pick" && (
             <>
               <p className="text-xs text-content-secondary">
-                {t('files.import.intro', {
-                  defaultValue: 'Select a .ocep bundle exported from this or any other workspace.',
+                {t("files.import.intro", {
+                  defaultValue:
+                    "Select a .ocep bundle exported from this or any other workspace.",
                 })}
               </p>
               <button
@@ -178,10 +202,14 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
               >
                 <Upload size={20} className="text-content-tertiary" />
                 <span className="text-sm font-medium">
-                  {t('files.import.select_file', { defaultValue: 'Choose .ocep file' })}
+                  {t("files.import.select_file", {
+                    defaultValue: "Choose .ocep file",
+                  })}
                 </span>
                 <span className="text-2xs text-content-tertiary">
-                  {t('files.import.drop_hint', { defaultValue: 'Click to browse' })}
+                  {t("files.import.drop_hint", {
+                    defaultValue: "Click to browse",
+                  })}
                 </span>
               </button>
               <input
@@ -203,40 +231,54 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
             </>
           )}
 
-          {step === 'validate' && (
+          {step === "validate" && (
             <div className="py-10 flex flex-col items-center gap-3 text-content-tertiary">
               <Loader2 size={20} className="animate-spin" />
               <p className="text-xs">
-                {t('files.import.validating', { defaultValue: 'Validating bundle…' })}
+                {t("files.import.validating", {
+                  defaultValue: "Validating bundle…",
+                })}
               </p>
             </div>
           )}
 
-          {step === 'mode' && preview && file && (
+          {step === "mode" && preview && file && (
             <>
               <div className="rounded-lg border border-border-light p-3 space-y-1.5">
                 <Stat
-                  label={t('files.import.stat_project', { defaultValue: 'Source project' })}
+                  label={t("files.import.stat_project", {
+                    defaultValue: "Source project",
+                  })}
                   value={preview.manifest.project_name}
                 />
                 <Stat
-                  label={t('files.import.stat_scope', { defaultValue: 'Scope' })}
+                  label={t("files.import.stat_scope", {
+                    defaultValue: "Scope",
+                  })}
                   value={preview.manifest.scope}
                 />
                 <Stat
-                  label={t('files.import.stat_size', { defaultValue: 'Bundle size' })}
+                  label={t("files.import.stat_size", {
+                    defaultValue: "Bundle size",
+                  })}
                   value={fmtBytes(preview.bundle_size_bytes)}
                 />
                 <Stat
-                  label={t('files.import.stat_attachments', { defaultValue: 'Attachments' })}
+                  label={t("files.import.stat_attachments", {
+                    defaultValue: "Attachments",
+                  })}
                   value={
                     preview.has_attachments
                       ? `${preview.manifest.attachment_count} (${fmtBytes(preview.manifest.attachment_total_bytes)})`
-                      : t('files.import.no_attachments', { defaultValue: 'None' })
+                      : t("files.import.no_attachments", {
+                          defaultValue: "None",
+                        })
                   }
                 />
                 <Stat
-                  label={t('files.import.stat_format', { defaultValue: 'Format' })}
+                  label={t("files.import.stat_format", {
+                    defaultValue: "Format",
+                  })}
                   value={`${preview.manifest.format} ${preview.manifest.format_version}`}
                 />
               </div>
@@ -254,19 +296,27 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
 
               <div>
                 <h3 className="text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1.5">
-                  {t('files.import.choose_mode', { defaultValue: 'Import mode' })}
+                  {t("files.import.choose_mode", {
+                    defaultValue: "Import mode",
+                  })}
                 </h3>
                 <div className="space-y-2">
-                  {(['new_project', 'merge_into_existing', 'replace_existing'] as ImportMode[]).map((m) => (
+                  {(
+                    [
+                      "new_project",
+                      "merge_into_existing",
+                      "replace_existing",
+                    ] as ImportMode[]
+                  ).map((m) => (
                     <label
                       key={m}
                       className={clsx(
-                        'flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
+                        "flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
                         mode === m
-                          ? m === 'replace_existing'
-                            ? 'border-semantic-error bg-semantic-error/5'
-                            : 'border-oe-blue bg-oe-blue/5'
-                          : 'border-border-light hover:bg-surface-secondary',
+                          ? m === "replace_existing"
+                            ? "border-semantic-error bg-semantic-error/5"
+                            : "border-oe-blue bg-oe-blue/5"
+                          : "border-border-light hover:bg-surface-secondary",
                       )}
                     >
                       <input
@@ -281,17 +331,21 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
                         <div className="text-sm font-medium text-content-primary">
                           {modeLabels[m]}
                         </div>
-                        <p className="text-xs text-content-tertiary mt-0.5">{modeHints[m]}</p>
+                        <p className="text-xs text-content-tertiary mt-0.5">
+                          {modeHints[m]}
+                        </p>
                       </div>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {mode === 'new_project' && (
+              {mode === "new_project" && (
                 <div>
                   <label className="block text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1">
-                    {t('files.import.rename', { defaultValue: 'New project name (optional)' })}
+                    {t("files.import.rename", {
+                      defaultValue: "New project name (optional)",
+                    })}
                   </label>
                   <input
                     type="text"
@@ -302,10 +356,13 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
                 </div>
               )}
 
-              {(mode === 'merge_into_existing' || mode === 'replace_existing') && (
+              {(mode === "merge_into_existing" ||
+                mode === "replace_existing") && (
                 <div>
                   <label className="block text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1">
-                    {t('files.import.target_project', { defaultValue: 'Target project' })}
+                    {t("files.import.target_project", {
+                      defaultValue: "Target project",
+                    })}
                   </label>
                   <select
                     value={targetProjectId}
@@ -313,7 +370,9 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
                     className="w-full h-9 px-2 text-sm rounded-lg border border-border-light bg-surface-primary text-content-primary focus:outline-none focus:border-oe-blue focus:ring-2 focus:ring-oe-blue/20"
                   >
                     <option value="">
-                      {t('files.import.pick_project', { defaultValue: '— pick a project —' })}
+                      {t("files.import.pick_project", {
+                        defaultValue: "— pick a project —",
+                      })}
                     </option>
                     {(projects ?? []).map((p) => (
                       <option key={p.id} value={p.id}>
@@ -324,13 +383,13 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
                 </div>
               )}
 
-              {mode === 'replace_existing' && (
+              {mode === "replace_existing" && (
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-semantic-error/10 border border-semantic-error/30 text-semantic-error text-xs">
                   <AlertTriangle size={14} className="shrink-0 mt-0.5" />
                   <p>
-                    {t('files.import.destructive_warn', {
+                    {t("files.import.destructive_warn", {
                       defaultValue:
-                        'This will permanently delete the bundle-managed rows in the target project before importing. Cannot be undone.',
+                        "This will permanently delete the bundle-managed rows in the target project before importing. Cannot be undone.",
                     })}
                   </p>
                 </div>
@@ -345,35 +404,46 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
             </>
           )}
 
-          {step === 'result' && result && (
+          {step === "result" && result && (
             <>
               <div className="flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 size={18} />
                 <span className="text-sm font-semibold">
-                  {t('files.import.result_done', { defaultValue: 'Import complete' })}
+                  {t("files.import.result_done", {
+                    defaultValue: "Import complete",
+                  })}
                 </span>
               </div>
               <div className="rounded-lg border border-border-light overflow-hidden">
                 <div className="grid grid-cols-2">
                   <div className="px-3 py-2 border-r border-border-light">
                     <div className="text-2xs uppercase tracking-wide text-content-tertiary">
-                      {t('files.import.imported', { defaultValue: 'Imported' })}
+                      {t("files.import.imported", { defaultValue: "Imported" })}
                     </div>
                     <div className="text-lg font-semibold text-content-primary tabular-nums">
-                      {Object.values(result.imported_counts).reduce((a, b) => a + b, 0)}
+                      {Object.values(result.imported_counts).reduce(
+                        (a, b) => a + b,
+                        0,
+                      )}
                     </div>
                   </div>
                   <div className="px-3 py-2">
                     <div className="text-2xs uppercase tracking-wide text-content-tertiary">
-                      {t('files.import.skipped', { defaultValue: 'Skipped' })}
+                      {t("files.import.skipped", { defaultValue: "Skipped" })}
                     </div>
                     <div className="text-lg font-semibold text-content-primary tabular-nums">
-                      {Object.values(result.skipped_counts).reduce((a, b) => a + b, 0)}
+                      {Object.values(result.skipped_counts).reduce(
+                        (a, b) => a + b,
+                        0,
+                      )}
                     </div>
                   </div>
                 </div>
                 <div className="border-t border-border-light px-3 py-2 text-xs text-content-tertiary">
-                  {t('files.import.stat_attachments', { defaultValue: 'Attachments' })}:{' '}
+                  {t("files.import.stat_attachments", {
+                    defaultValue: "Attachments",
+                  })}
+                  :{" "}
                   <span className="text-content-primary font-medium tabular-nums">
                     {result.attachment_count}
                   </span>
@@ -392,18 +462,18 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
         </div>
 
         <div className="px-5 py-3 border-t border-border-light flex items-center gap-2">
-          {step === 'mode' && (
+          {step === "mode" && (
             <button
               type="button"
               onClick={() => {
-                setStep('pick');
+                setStep("pick");
                 setFile(null);
                 setPreview(null);
               }}
               className="inline-flex items-center gap-1 h-9 px-3 text-xs font-medium rounded-lg text-content-secondary hover:bg-surface-secondary"
             >
               <ChevronLeft size={12} />
-              {t('common.back', { defaultValue: 'Back' })}
+              {t("common.back", { defaultValue: "Back" })}
             </button>
           )}
           <div className="ms-auto flex items-center gap-2">
@@ -412,30 +482,32 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
               onClick={onClose}
               className="h-9 px-4 text-xs font-medium rounded-lg text-content-secondary hover:bg-surface-secondary"
             >
-              {step === 'result'
-                ? t('common.close', { defaultValue: 'Close' })
-                : t('common.cancel', { defaultValue: 'Cancel' })}
+              {step === "result"
+                ? t("common.close", { defaultValue: "Close" })
+                : t("common.cancel", { defaultValue: "Cancel" })}
             </button>
-            {step === 'mode' && (
+            {step === "mode" && (
               <button
                 type="button"
                 onClick={handleCommit}
                 disabled={
                   committing ||
-                  ((mode === 'merge_into_existing' || mode === 'replace_existing') && !targetProjectId)
+                  ((mode === "merge_into_existing" ||
+                    mode === "replace_existing") &&
+                    !targetProjectId)
                 }
                 className={clsx(
-                  'inline-flex items-center gap-2 h-9 px-4 text-xs font-medium rounded-lg text-white disabled:opacity-50',
-                  mode === 'replace_existing'
-                    ? 'bg-semantic-error hover:opacity-90'
-                    : 'bg-oe-blue hover:bg-oe-blue-hover',
+                  "inline-flex items-center gap-2 h-9 px-4 text-xs font-medium rounded-lg text-white disabled:opacity-50",
+                  mode === "replace_existing"
+                    ? "bg-semantic-error hover:opacity-90"
+                    : "bg-oe-blue hover:bg-oe-blue-hover",
                 )}
               >
                 {committing && <Loader2 size={12} className="animate-spin" />}
-                {t('files.import.confirm', { defaultValue: 'Import' })}
+                {t("files.import.confirm", { defaultValue: "Import" })}
               </button>
             )}
-            {step === 'result' && result && (
+            {step === "result" && result && (
               <button
                 type="button"
                 onClick={() => {
@@ -444,7 +516,9 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
                 }}
                 className="inline-flex items-center gap-2 h-9 px-4 text-xs font-medium rounded-lg bg-oe-blue text-white hover:bg-oe-blue-hover"
               >
-                {t('files.import.open_imported', { defaultValue: 'Open imported project' })}
+                {t("files.import.open_imported", {
+                  defaultValue: "Open imported project",
+                })}
               </button>
             )}
           </div>

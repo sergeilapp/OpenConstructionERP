@@ -45,24 +45,24 @@ export const METERS_PER_INCH = 0.0254;
  */
 export function presetScale(ratio: number): ScaleConfig {
   if (!Number.isFinite(ratio) || ratio <= 0) {
-    return { pixelsPerUnit: 0, unitLabel: 'm', invalid: true };
+    return { pixelsPerUnit: 0, unitLabel: "m", invalid: true };
   }
   return {
     pixelsPerUnit: PDF_POINTS_PER_INCH / (METERS_PER_INCH * ratio),
-    unitLabel: 'm',
+    unitLabel: "m",
   };
 }
 
 /** Common architectural scales */
 export const COMMON_SCALES: { label: string; ratio: number }[] = [
-  { label: '1:10', ratio: 10 },
-  { label: '1:20', ratio: 20 },
-  { label: '1:25', ratio: 25 },
-  { label: '1:50', ratio: 50 },
-  { label: '1:100', ratio: 100 },
-  { label: '1:200', ratio: 200 },
-  { label: '1:500', ratio: 500 },
-  { label: '1:1000', ratio: 1000 },
+  { label: "1:10", ratio: 10 },
+  { label: "1:20", ratio: 20 },
+  { label: "1:25", ratio: 25 },
+  { label: "1:50", ratio: 50 },
+  { label: "1:100", ratio: 100 },
+  { label: "1:200", ratio: 200 },
+  { label: "1:500", ratio: 500 },
+  { label: "1:1000", ratio: 1000 },
 ];
 
 /** Calculate distance between two points in pixels */
@@ -76,10 +76,7 @@ export function pixelDistance(
 }
 
 /** Convert pixel distance to real-world distance */
-export function toRealDistance(
-  pixelDist: number,
-  scale: ScaleConfig,
-): number {
+export function toRealDistance(pixelDist: number, scale: ScaleConfig): number {
   if (scale.pixelsPerUnit <= 0) return 0;
   return pixelDist / scale.pixelsPerUnit;
 }
@@ -99,12 +96,9 @@ export function polygonAreaPixels(points: { x: number; y: number }[]): number {
 }
 
 /** Convert pixel area to real-world area */
-export function toRealArea(
-  pixelArea: number,
-  scale: ScaleConfig,
-): number {
+export function toRealArea(pixelArea: number, scale: ScaleConfig): number {
   if (scale.pixelsPerUnit <= 0) return 0;
-  return pixelArea / (scale.pixelsPerUnit ** 2);
+  return pixelArea / scale.pixelsPerUnit ** 2;
 }
 
 /** Calculate perimeter of a polygon in pixels */
@@ -132,7 +126,7 @@ export function polygonPerimeterPixels(
  *  rather than being collapsed to zero or hidden (D-TKC-007): an
  *  estimator measuring small details still needs to read the number. */
 export function formatMeasurement(value: number, unit: string): string {
-  if (!Number.isFinite(value) || value <= 0) return '';
+  if (!Number.isFinite(value) || value <= 0) return "";
   if (value < 0.001) return `${value.toPrecision(2)} ${unit}`;
   if (value < 1) return `${value.toFixed(4)} ${unit}`;
   if (value < 100) return `${value.toFixed(2)} ${unit}`;
@@ -167,16 +161,16 @@ export function deriveScale(
     // line into "28 346 m" with no indication. Return an explicitly
     // invalid scale so downstream maths yields nothing and the viewer
     // forces the user to recalibrate (D-TKC-010).
-    return { pixelsPerUnit: 0, unitLabel: 'm', invalid: true };
+    return { pixelsPerUnit: 0, unitLabel: "m", invalid: true };
   }
   return {
     pixelsPerUnit: pixelLength / realLength,
-    unitLabel: 'm',
+    unitLabel: "m",
   };
 }
 
 /** Calibration units supported by the two-click calibration dialog. */
-export type CalibrationUnit = 'm' | 'mm' | 'ft' | 'in';
+export type CalibrationUnit = "m" | "mm" | "ft" | "in";
 
 /** Conversion factors from each supported calibration unit to meters. */
 export const UNIT_TO_METERS: Readonly<Record<CalibrationUnit, number>> = {
@@ -217,5 +211,5 @@ export function ratioFromScale(scale: ScaleConfig): number {
 /** Format a derived scale as "1:50" for a status badge. */
 export function formatScaleRatio(scale: ScaleConfig): string {
   const ratio = ratioFromScale(scale);
-  return ratio > 0 ? `1:${ratio}` : '—';
+  return ratio > 0 ? `1:${ratio}` : "—";
 }

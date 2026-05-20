@@ -4,20 +4,20 @@
  * All endpoints are prefixed with /v1/cde/.
  */
 
-import { apiGet, apiPost } from '@/shared/lib/api';
+import { apiGet, apiPost } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type CDEState = 'wip' | 'shared' | 'published' | 'archived';
+export type CDEState = "wip" | "shared" | "published" | "archived";
 
 export type CDEDiscipline =
-  | 'architecture'
-  | 'structural'
-  | 'mep'
-  | 'civil'
-  | 'landscape'
-  | 'interior'
-  | 'other';
+  | "architecture"
+  | "structural"
+  | "mep"
+  | "civil"
+  | "landscape"
+  | "interior"
+  | "other";
 
 export interface CDERevision {
   id: string;
@@ -62,7 +62,7 @@ export interface CDEContainer {
 
 export interface CDEContainerFilters {
   project_id?: string;
-  state?: CDEState | '';
+  state?: CDEState | "";
 }
 
 export interface CreateCDEContainerPayload {
@@ -124,19 +124,19 @@ export async function fetchCDEContainers(
   filters?: CDEContainerFilters,
 ): Promise<CDEContainer[]> {
   const params = new URLSearchParams();
-  if (filters?.project_id) params.set('project_id', filters.project_id);
-  if (filters?.state) params.set('state', filters.state);
+  if (filters?.project_id) params.set("project_id", filters.project_id);
+  if (filters?.state) params.set("state", filters.state);
   const qs = params.toString();
   // Trailing slash matches FastAPI route exactly — without it we hit a
   // 307 redirect that some proxies rewrite without forwarding the auth
   // header, which surfaces as an empty list in the UI.
-  return apiGet<CDEContainer[]>(`/v1/cde/containers/${qs ? `?${qs}` : ''}`);
+  return apiGet<CDEContainer[]>(`/v1/cde/containers/${qs ? `?${qs}` : ""}`);
 }
 
 export async function createCDEContainer(
   data: CreateCDEContainerPayload,
 ): Promise<CDEContainer> {
-  return apiPost<CDEContainer>('/v1/cde/containers/', data);
+  return apiPost<CDEContainer>("/v1/cde/containers/", data);
 }
 
 export async function transitionContainer(
@@ -146,7 +146,9 @@ export async function transitionContainer(
   return apiPost<CDEContainer>(`/v1/cde/containers/${id}/transition/`, data);
 }
 
-export async function fetchContainerRevisions(id: string): Promise<CDERevision[]> {
+export async function fetchContainerRevisions(
+  id: string,
+): Promise<CDERevision[]> {
   return apiGet<CDERevision[]>(`/v1/cde/containers/${id}/revisions/`);
 }
 
@@ -162,17 +164,22 @@ export async function createContainerRevision(
   containerId: string,
   data: CreateRevisionPayload,
 ): Promise<CDERevision> {
-  return apiPost<CDERevision>(`/v1/cde/containers/${containerId}/revisions/`, data);
+  return apiPost<CDERevision>(
+    `/v1/cde/containers/${containerId}/revisions/`,
+    data,
+  );
 }
 
 export async function fetchSuitabilityCodes(): Promise<SuitabilityCodesResponse> {
-  return apiGet<SuitabilityCodesResponse>('/v1/cde/suitability-codes/');
+  return apiGet<SuitabilityCodesResponse>("/v1/cde/suitability-codes/");
 }
 
 export async function fetchContainerHistory(
   containerId: string,
 ): Promise<StateTransitionEntry[]> {
-  return apiGet<StateTransitionEntry[]>(`/v1/cde/containers/${containerId}/history/`);
+  return apiGet<StateTransitionEntry[]>(
+    `/v1/cde/containers/${containerId}/history/`,
+  );
 }
 
 export async function fetchContainerTransmittals(

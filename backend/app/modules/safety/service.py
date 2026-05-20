@@ -96,9 +96,7 @@ class SafetyService:
             from app.modules.notifications.service import NotificationService
             from app.modules.projects.models import Project
 
-            result = await self.session.execute(
-                select(Project.owner_id).where(Project.id == data.project_id)
-            )
+            result = await self.session.execute(select(Project.owner_id).where(Project.id == data.project_id))
             owner_id = result.scalar_one_or_none()
             if owner_id:
                 notif_svc = NotificationService(self.session)
@@ -175,8 +173,7 @@ class SafetyService:
             fields["incident_date"] = canonicalize_incident_date(fields["incident_date"])
         if "corrective_actions" in fields and fields["corrective_actions"] is not None:
             fields["corrective_actions"] = [
-                entry.model_dump() if hasattr(entry, "model_dump") else entry
-                for entry in fields["corrective_actions"]
+                entry.model_dump() if hasattr(entry, "model_dump") else entry for entry in fields["corrective_actions"]
             ]
 
         if not fields:
@@ -203,9 +200,7 @@ class SafetyService:
 
         Emits ``safety.observation.high_risk`` event when risk_score > 15.
         """
-        observation_number = await self.observation_repo.next_observation_number(
-            data.project_id
-        )
+        observation_number = await self.observation_repo.next_observation_number(data.project_id)
         risk_score = data.severity * data.likelihood
 
         observation = SafetyObservation(
@@ -240,9 +235,7 @@ class SafetyService:
                 from app.modules.notifications.service import NotificationService
                 from app.modules.projects.models import Project
 
-                result = await self.session.execute(
-                    select(Project.owner_id).where(Project.id == data.project_id)
-                )
+                result = await self.session.execute(select(Project.owner_id).where(Project.id == data.project_id))
                 owner_id = result.scalar_one_or_none()
                 if owner_id:
                     notif_svc = NotificationService(self.session)
@@ -369,9 +362,7 @@ class SafetyService:
         from sqlalchemy import select
 
         # Fetch all incidents
-        inc_result = await self.session.execute(
-            select(SafetyIncident).where(SafetyIncident.project_id == project_id)
-        )
+        inc_result = await self.session.execute(select(SafetyIncident).where(SafetyIncident.project_id == project_id))
         incidents = list(inc_result.scalars().all())
 
         # Fetch all observations
@@ -495,9 +486,7 @@ class SafetyService:
         from app.modules.safety.schemas import SafetyTrendEntry
 
         # Fetch incidents
-        inc_result = await self.session.execute(
-            select(SafetyIncident).where(SafetyIncident.project_id == project_id)
-        )
+        inc_result = await self.session.execute(select(SafetyIncident).where(SafetyIncident.project_id == project_id))
         incidents = list(inc_result.scalars().all())
 
         # Fetch observations

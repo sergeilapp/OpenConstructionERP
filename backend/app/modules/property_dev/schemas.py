@@ -42,9 +42,7 @@ class DevelopmentUpdate(BaseModel):
     name: str | None = Field(default=None, max_length=255)
     location_address: str | None = None
     total_plots: int | None = Field(default=None, ge=0)
-    sales_phase: str | None = Field(
-        default=None, pattern=r"^(planning|launch|sales|handover|closed)$"
-    )
+    sales_phase: str | None = Field(default=None, pattern=r"^(planning|launch|sales|handover|closed)$")
     launch_date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     completion_date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     marketing_brief: str | None = None
@@ -206,12 +204,8 @@ class PlotCreate(BaseModel):
         default="planned",
         pattern=r"^(planned|reserved|under_construction|ready|sold|handed_over)$",
     )
-    reservation_deadline: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
-    construction_status_percent: Decimal = Field(
-        default=Decimal("0"), ge=0, le=100
-    )
+    reservation_deadline: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    construction_status_percent: Decimal = Field(default=Decimal("0"), ge=0, le=100)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -231,9 +225,7 @@ class PlotUpdate(BaseModel):
         default=None,
         pattern=r"^(planned|reserved|under_construction|ready|sold|handed_over)$",
     )
-    reservation_deadline: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
+    reservation_deadline: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     construction_status_percent: Decimal | None = Field(default=None, ge=0, le=100)
     metadata: dict[str, Any] | None = None
 
@@ -271,9 +263,7 @@ class PlotReserveRequest(BaseModel):
     email: str = Field(default="", max_length=255)
     phone: str | None = Field(default=None, max_length=40)
     language: str = Field(default="en", max_length=10)
-    reservation_deadline: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
+    reservation_deadline: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -437,15 +427,9 @@ class BuyerUpdate(BaseModel):
     )
     contract_value: Decimal | None = Field(default=None, ge=0)
     currency: str | None = Field(default=None, max_length=8)
-    contract_signed_at: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
-    deposit_paid_at: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
-    freeze_deadline: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
+    contract_signed_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    deposit_paid_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    freeze_deadline: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     metadata: dict[str, Any] | None = None
 
 
@@ -525,9 +509,7 @@ class BuyerSelectionCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
 
     buyer_id: UUID
-    status: str = Field(
-        default="draft", pattern=r"^(draft|submitted|locked|cancelled)$"
-    )
+    status: str = Field(default="draft", pattern=r"^(draft|submitted|locked|cancelled)$")
     notes: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -537,9 +519,7 @@ class BuyerSelectionUpdate(BaseModel):
 
     model_config = ConfigDict(str_strip_whitespace=True)
 
-    status: str | None = Field(
-        default=None, pattern=r"^(draft|submitted|locked|cancelled)$"
-    )
+    status: str | None = Field(default=None, pattern=r"^(draft|submitted|locked|cancelled)$")
     notes: str | None = None
     metadata: dict[str, Any] | None = None
 
@@ -612,9 +592,7 @@ class HandoverUpdate(BaseModel):
     completed_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     snag_count_at_handover: int | None = Field(default=None, ge=0)
     final_check_passed: bool | None = None
-    keys_handed_over_at: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
+    keys_handed_over_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     customer_signature_ref: str | None = Field(default=None, max_length=255)
     notes: str | None = None
     metadata: dict[str, Any] | None = None
@@ -646,9 +624,7 @@ class HandoverCompleteRequest(BaseModel):
 
     completed_at: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$")
     customer_signature_ref: str = Field(..., min_length=1, max_length=255)
-    keys_handed_over_at: str | None = Field(
-        default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"
-    )
+    keys_handed_over_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     final_check_passed: bool = True
     snag_count_at_handover: int = Field(default=0, ge=0)
     notes: str | None = None
@@ -661,13 +637,9 @@ class SnagCreate(BaseModel):
 
     handover_id: UUID
     location_in_plot: str | None = Field(default=None, max_length=255)
-    severity: str = Field(
-        default="minor", pattern=r"^(cosmetic|minor|major|safety)$"
-    )
+    severity: str = Field(default="minor", pattern=r"^(cosmetic|minor|major|safety)$")
     description: str = Field(..., min_length=1)
-    status: str = Field(
-        default="open", pattern=r"^(open|in_progress|fixed|wont_fix)$"
-    )
+    status: str = Field(default="open", pattern=r"^(open|in_progress|fixed|wont_fix)$")
     reported_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -678,13 +650,9 @@ class SnagUpdate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
 
     location_in_plot: str | None = Field(default=None, max_length=255)
-    severity: str | None = Field(
-        default=None, pattern=r"^(cosmetic|minor|major|safety)$"
-    )
+    severity: str | None = Field(default=None, pattern=r"^(cosmetic|minor|major|safety)$")
     description: str | None = Field(default=None, min_length=1)
-    status: str | None = Field(
-        default=None, pattern=r"^(open|in_progress|fixed|wont_fix)$"
-    )
+    status: str | None = Field(default=None, pattern=r"^(open|in_progress|fixed|wont_fix)$")
     fixed_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     fix_notes: str | None = None
     metadata: dict[str, Any] | None = None
@@ -720,9 +688,7 @@ class WarrantyClaimCreate(BaseModel):
     plot_id: UUID
     buyer_id: UUID
     raised_at: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
-    category: str = Field(
-        default="defect", pattern=r"^(defect|snag|service)$"
-    )
+    category: str = Field(default="defect", pattern=r"^(defect|snag|service)$")
     description: str = Field(..., min_length=1)
     status: str = Field(
         default="raised",
@@ -737,9 +703,7 @@ class WarrantyClaimUpdate(BaseModel):
 
     model_config = ConfigDict(str_strip_whitespace=True)
 
-    category: str | None = Field(
-        default=None, pattern=r"^(defect|snag|service)$"
-    )
+    category: str | None = Field(default=None, pattern=r"^(defect|snag|service)$")
     description: str | None = Field(default=None, min_length=1)
     status: str | None = Field(
         default=None,
@@ -816,7 +780,9 @@ class DevelopmentDashboard(BaseModel):
 # ── Handover docs ───────────────────────────────────────────────────────
 
 
-_HANDOVER_DOC_TYPES = r"^(warranty|manual|key_receipt|hs_file|epc|nhbc|inspection_cert|certificate_completion|insurance|other)$"
+_HANDOVER_DOC_TYPES = (
+    r"^(warranty|manual|key_receipt|hs_file|epc|nhbc|inspection_cert|certificate_completion|insurance|other)$"
+)
 
 
 class HandoverDocCreate(BaseModel):
@@ -858,9 +824,7 @@ class HandoverDocResponse(BaseModel):
     is_required: bool = False
     is_delivered: bool = False
     delivered_at: str | None = None
-    metadata: dict[str, Any] = Field(
-        default_factory=dict, validation_alias="metadata_"
-    )
+    metadata: dict[str, Any] = Field(default_factory=dict, validation_alias="metadata_")
     created_at: datetime
     updated_at: datetime
 

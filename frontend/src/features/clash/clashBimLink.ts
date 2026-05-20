@@ -26,18 +26,18 @@ export interface ClashLinkInput {
 
 /** Build the `/projects/:pid/bim/:mid?...` deep-link for a clash result. */
 export function buildClashBimLink(input: ClashLinkInput): string {
-  const ids = [input.aElementId, input.bElementId].filter(Boolean).join(',');
+  const ids = [input.aElementId, input.bElementId].filter(Boolean).join(",");
   const base = `/projects/${input.projectId}/bim/${input.modelId}`;
   if (!ids) return base;
   const q = new URLSearchParams();
-  q.set('isolate', ids);
-  q.set('clash', '1');
+  q.set("isolate", ids);
+  q.set("clash", "1");
   if (
     Number.isFinite(input.cx) &&
     Number.isFinite(input.cy) &&
     Number.isFinite(input.cz)
   ) {
-    q.set('focus', `${input.cx},${input.cy},${input.cz}`);
+    q.set("focus", `${input.cx},${input.cy},${input.cz}`);
   }
   return `${base}?${q.toString()}`;
 }
@@ -58,13 +58,13 @@ export interface ParsedClashDeepLink {
 export function parseClashDeepLink(
   params: URLSearchParams,
 ): ParsedClashDeepLink {
-  const isolate = params.get('isolate') ?? '';
-  const ids = isolate.split(',').filter((id) => id.length > 0);
-  const isClash = params.get('clash') === '1';
+  const isolate = params.get("isolate") ?? "";
+  const ids = isolate.split(",").filter((id) => id.length > 0);
+  const isClash = params.get("clash") === "1";
   let focus: { x: number; y: number; z: number } | null = null;
-  const focusParam = params.get('focus');
+  const focusParam = params.get("focus");
   if (focusParam) {
-    const parts = focusParam.split(',').map((s) => Number.parseFloat(s));
+    const parts = focusParam.split(",").map((s) => Number.parseFloat(s));
     if (parts.length === 3 && parts.every((n) => Number.isFinite(n))) {
       focus = { x: parts[0]!, y: parts[1]!, z: parts[2]! };
     }

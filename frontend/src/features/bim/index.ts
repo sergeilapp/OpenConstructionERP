@@ -1,1 +1,1 @@
-export { BIMPage } from './BIMPage';
+export { BIMPage } from "./BIMPage";

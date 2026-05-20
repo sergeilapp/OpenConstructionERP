@@ -16,11 +16,11 @@
  *     /projects/{id}. A won deal still flows on to bid/contracts.
  */
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   DndContext,
   PointerSensor,
@@ -31,7 +31,7 @@ import {
   DragOverlay,
   type DragStartEvent,
   type DragEndEvent,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   LayoutGrid,
   List as ListIcon,
@@ -52,7 +52,7 @@ import {
   GripVertical,
   CheckCircle2,
   XCircle,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -60,19 +60,19 @@ import {
   EmptyState,
   Breadcrumb,
   SkeletonTable,
-} from '@/shared/ui';
+} from "@/shared/ui";
 import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui/WideModal';
-import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { PipelineBanner } from './PipelineBanner';
-import { useToastStore } from '@/stores/useToastStore';
-import { getErrorMessage } from '@/shared/lib/api';
-import { fetchContacts, type Contact } from '@/features/contacts/api';
-import { projectsApi, type Project } from '@/features/projects/api';
+} from "@/shared/ui/WideModal";
+import { MoneyDisplay } from "@/shared/ui/MoneyDisplay";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { PipelineBanner } from "./PipelineBanner";
+import { useToastStore } from "@/stores/useToastStore";
+import { getErrorMessage } from "@/shared/lib/api";
+import { fetchContacts, type Contact } from "@/features/contacts/api";
+import { projectsApi, type Project } from "@/features/projects/api";
 import {
   listAccounts,
   listLeads,
@@ -98,47 +98,53 @@ import {
   type LeadSource,
   type OpportunityStatus,
   type ActivityKind,
-} from './api';
+} from "./api";
 
-type View = 'pipeline' | 'list' | 'leads' | 'activities';
+type View = "pipeline" | "list" | "leads" | "activities";
 
 const LEAD_STATUS_VARIANT: Record<
   LeadStatus,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  new: 'neutral',
-  qualifying: 'warning',
-  qualified: 'success',
-  disqualified: 'error',
-  converted: 'blue',
+  new: "neutral",
+  qualifying: "warning",
+  qualified: "success",
+  disqualified: "error",
+  converted: "blue",
 };
 
 const OPP_STATUS_VARIANT: Record<
   OpportunityStatus,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  open: 'blue',
-  won: 'success',
-  lost: 'error',
-  abandoned: 'neutral',
+  open: "blue",
+  won: "success",
+  lost: "error",
+  abandoned: "neutral",
 };
 
 const LEAD_SOURCES: LeadSource[] = [
-  'web',
-  'referral',
-  'event',
-  'cold_outreach',
-  'inbound',
+  "web",
+  "referral",
+  "event",
+  "cold_outreach",
+  "inbound",
 ];
 
-const ACTIVITY_KINDS: ActivityKind[] = ['call', 'meeting', 'email', 'task', 'note'];
+const ACTIVITY_KINDS: ActivityKind[] = [
+  "call",
+  "meeting",
+  "email",
+  "task",
+  "note",
+];
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 function toNum(v: number | string | null | undefined): number {
   if (v === null || v === undefined) return 0;
-  const n = typeof v === 'string' ? Number(v) : v;
+  const n = typeof v === "string" ? Number(v) : v;
   return Number.isFinite(n) ? n : 0;
 }
 
@@ -147,10 +153,10 @@ function todayIso(): string {
 }
 
 function contactLabel(c: Contact | undefined): string {
-  if (!c) return '';
+  if (!c) return "";
   return (
     c.company_name ||
-    [c.first_name, c.last_name].filter(Boolean).join(' ') ||
+    [c.first_name, c.last_name].filter(Boolean).join(" ") ||
     c.primary_email ||
     c.id
   );
@@ -160,8 +166,8 @@ function contactLabel(c: Contact | undefined): string {
 
 export function CRMPage() {
   const { t } = useTranslation();
-  const [view, setView] = useState<View>('pipeline');
-  const [search, setSearch] = useState('');
+  const [view, setView] = useState<View>("pipeline");
+  const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedOpportunityId, setSelectedOpportunityId] = useState<
     string | null
@@ -169,27 +175,27 @@ export function CRMPage() {
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
 
   const accountsQ = useQuery({
-    queryKey: ['crm', 'accounts'],
+    queryKey: ["crm", "accounts"],
     queryFn: () => listAccounts({ limit: 200 }),
   });
   const stagesQ = useQuery({
-    queryKey: ['crm', 'pipeline-stages'],
+    queryKey: ["crm", "pipeline-stages"],
     queryFn: () => listPipelineStages(),
   });
   const oppsQ = useQuery({
-    queryKey: ['crm', 'opportunities'],
+    queryKey: ["crm", "opportunities"],
     queryFn: () => listOpportunities({ limit: 500 }),
-    enabled: view === 'pipeline' || view === 'list',
+    enabled: view === "pipeline" || view === "list",
   });
   const leadsQ = useQuery({
-    queryKey: ['crm', 'leads'],
+    queryKey: ["crm", "leads"],
     queryFn: () => listLeads({ limit: 200 }),
-    enabled: view === 'leads',
+    enabled: view === "leads",
   });
   const activitiesQ = useQuery({
-    queryKey: ['crm', 'activities'],
+    queryKey: ["crm", "activities"],
     queryFn: () => listActivities({ limit: 200 }),
-    enabled: view === 'activities',
+    enabled: view === "activities",
   });
 
   const stagesSorted = useMemo<PipelineStage[]>(
@@ -216,7 +222,7 @@ export function CRMPage() {
       if (!searchLc) return true;
       return (
         o.title.toLowerCase().includes(searchLc) ||
-        (accountsById[o.account_id]?.name || '')
+        (accountsById[o.account_id]?.name || "")
           .toLowerCase()
           .includes(searchLc)
       );
@@ -228,7 +234,7 @@ export function CRMPage() {
       if (!searchLc) return true;
       return (
         l.contact_name.toLowerCase().includes(searchLc) ||
-        (l.contact_email || '').toLowerCase().includes(searchLc)
+        (l.contact_email || "").toLowerCase().includes(searchLc)
       );
     });
   }, [leadsQ.data, searchLc]);
@@ -238,70 +244,72 @@ export function CRMPage() {
       if (!searchLc) return true;
       return (
         a.subject.toLowerCase().includes(searchLc) ||
-        (a.body || '').toLowerCase().includes(searchLc)
+        (a.body || "").toLowerCase().includes(searchLc)
       );
     });
   }, [activitiesQ.data, searchLc]);
 
   const loading =
-    ((view === 'pipeline' || view === 'list') &&
+    ((view === "pipeline" || view === "list") &&
       (oppsQ.isLoading || stagesQ.isLoading || accountsQ.isLoading)) ||
-    (view === 'leads' && leadsQ.isLoading) ||
-    (view === 'activities' && activitiesQ.isLoading);
+    (view === "leads" && leadsQ.isLoading) ||
+    (view === "activities" && activitiesQ.isLoading);
 
   const activeError =
-    view === 'pipeline' || view === 'list'
+    view === "pipeline" || view === "list"
       ? (oppsQ.error ?? stagesQ.error ?? accountsQ.error)
-      : view === 'leads'
+      : view === "leads"
         ? leadsQ.error
-        : view === 'activities'
+        : view === "activities"
           ? activitiesQ.error
           : null;
   const isError = !loading && Boolean(activeError);
 
   const TABS: { id: View; label: string; icon: React.ElementType }[] = [
     {
-      id: 'pipeline',
-      label: t('crm.tab_pipeline', { defaultValue: 'Pipeline' }),
+      id: "pipeline",
+      label: t("crm.tab_pipeline", { defaultValue: "Pipeline" }),
       icon: LayoutGrid,
     },
     {
-      id: 'list',
-      label: t('crm.tab_deals', { defaultValue: 'Deals' }),
+      id: "list",
+      label: t("crm.tab_deals", { defaultValue: "Deals" }),
       icon: ListIcon,
     },
     {
-      id: 'leads',
-      label: t('crm.tab_leads', { defaultValue: 'Leads' }),
+      id: "leads",
+      label: t("crm.tab_leads", { defaultValue: "Leads" }),
       icon: UserPlus,
     },
     {
-      id: 'activities',
-      label: t('crm.tab_activities', { defaultValue: 'Activities' }),
+      id: "activities",
+      label: t("crm.tab_activities", { defaultValue: "Activities" }),
       icon: ActivityIcon,
     },
   ];
 
   const newLabel =
-    view === 'leads'
-      ? t('crm.new_lead', { defaultValue: 'New Lead' })
-      : view === 'activities'
-        ? t('crm.new_activity', { defaultValue: 'New Activity' })
-        : t('crm.new_deal', { defaultValue: 'New Deal' });
+    view === "leads"
+      ? t("crm.new_lead", { defaultValue: "New Lead" })
+      : view === "activities"
+        ? t("crm.new_activity", { defaultValue: "New Activity" })
+        : t("crm.new_deal", { defaultValue: "New Deal" });
 
   return (
     <div className="space-y-4">
-      <Breadcrumb items={[{ label: t('crm.title', { defaultValue: 'CRM' }) }]} />
+      <Breadcrumb
+        items={[{ label: t("crm.title", { defaultValue: "CRM" }) }]}
+      />
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('crm.title', { defaultValue: 'CRM' })}
+            {t("crm.title", { defaultValue: "CRM" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('crm.subtitle_amo', {
+            {t("crm.subtitle_amo", {
               defaultValue:
-                'Drag deals across the pipeline, log activity in a click. People come from Contacts, won deals link to Projects.',
+                "Drag deals across the pipeline, log activity in a click. People come from Contacts, won deals link to Projects.",
             })}
           </p>
         </div>
@@ -315,26 +323,26 @@ export function CRMPage() {
       </div>
 
       <PipelineBanner
-        intro={t('crm.pipeline_intro', {
+        intro={t("crm.pipeline_intro", {
           defaultValue:
-            'CRM is the front of the commercial pipeline: qualify a lead, then move the deal stage by stage. A won deal links to its project and flows on to bid packages and contracts.',
+            "CRM is the front of the commercial pipeline: qualify a lead, then move the deal stage by stage. A won deal links to its project and flows on to bid packages and contracts.",
         })}
         steps={[
           {
-            label: t('crm.step_crm', { defaultValue: 'CRM (lead → deal)' }),
+            label: t("crm.step_crm", { defaultValue: "CRM (lead → deal)" }),
             current: true,
           },
           {
-            label: t('crm.step_bid', { defaultValue: 'Bid Management' }),
-            to: '/bid-management',
+            label: t("crm.step_bid", { defaultValue: "Bid Management" }),
+            to: "/bid-management",
           },
           {
-            label: t('crm.step_contract', { defaultValue: 'Contracts' }),
-            to: '/contracts',
+            label: t("crm.step_contract", { defaultValue: "Contracts" }),
+            to: "/contracts",
           },
           {
-            label: t('crm.step_variations', { defaultValue: 'Variations' }),
-            to: '/variations',
+            label: t("crm.step_variations", { defaultValue: "Variations" }),
+            to: "/variations",
           },
         ]}
       />
@@ -351,13 +359,13 @@ export function CRMPage() {
                 type="button"
                 onClick={() => {
                   setView(it.id);
-                  setSearch('');
+                  setSearch("");
                 }}
                 className={clsx(
-                  'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                  "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
                   active
-                    ? 'bg-surface-primary text-oe-blue shadow-sm'
-                    : 'text-content-secondary hover:text-content-primary',
+                    ? "bg-surface-primary text-oe-blue shadow-sm"
+                    : "text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -373,10 +381,10 @@ export function CRMPage() {
           />
           <input
             type="text"
-            placeholder={t('common.search', { defaultValue: 'Search…' })}
+            placeholder={t("common.search", { defaultValue: "Search…" })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, "pl-8")}
           />
         </div>
       </div>
@@ -390,13 +398,13 @@ export function CRMPage() {
         <Card padding="none">
           <EmptyState
             icon={<AlertTriangle size={22} />}
-            title={t('crm.load_failed', {
-              defaultValue: 'Could not load CRM data',
+            title={t("crm.load_failed", {
+              defaultValue: "Could not load CRM data",
             })}
             description={getErrorMessage(activeError)}
           />
         </Card>
-      ) : view === 'pipeline' ? (
+      ) : view === "pipeline" ? (
         <PipelineBoard
           stages={stagesSorted}
           opportunities={filteredOpps}
@@ -404,7 +412,7 @@ export function CRMPage() {
           onSelect={setSelectedOpportunityId}
           onCreate={() => setCreateOpen(true)}
         />
-      ) : view === 'list' ? (
+      ) : view === "list" ? (
         <Card padding="none">
           <DealsTable
             rows={filteredOpps}
@@ -414,7 +422,7 @@ export function CRMPage() {
             onCreate={() => setCreateOpen(true)}
           />
         </Card>
-      ) : view === 'leads' ? (
+      ) : view === "leads" ? (
         <Card padding="none">
           <LeadsTable
             rows={filteredLeads}
@@ -464,10 +472,11 @@ export function CRMPage() {
 /* ═══════════════ Pipeline board (Kanban, drag-and-drop) ═══════════════ */
 
 function stageAccent(stage: PipelineStage): string {
-  if (stage.color && /^#?[0-9a-fA-F]{3,8}$/.test(stage.color)) return stage.color;
-  if (stage.is_won) return '#22c55e';
-  if (stage.is_lost) return '#ef4444';
-  return '#38bdf8';
+  if (stage.color && /^#?[0-9a-fA-F]{3,8}$/.test(stage.color))
+    return stage.color;
+  if (stage.is_won) return "#22c55e";
+  if (stage.is_lost) return "#ef4444";
+  return "#38bdf8";
 }
 
 function PipelineBoard({
@@ -494,7 +503,7 @@ function PipelineBoard({
 
   // Only open deals move through stages; closed deals are read-only here.
   const openOpps = useMemo(
-    () => opportunities.filter((o) => o.status === 'open'),
+    () => opportunities.filter((o) => o.status === "open"),
     [opportunities],
   );
 
@@ -511,15 +520,15 @@ function PipelineBoard({
     mutationFn: ({ id, toStageId }: { id: string; toStageId: string }) =>
       moveOpportunityStage(id, { to_stage_id: toStageId }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm', 'opportunities'] });
+      qc.invalidateQueries({ queryKey: ["crm", "opportunities"] });
       addToast({
-        type: 'success',
-        title: t('crm.stage_moved', { defaultValue: 'Stage updated' }),
+        type: "success",
+        title: t("crm.stage_moved", { defaultValue: "Stage updated" }),
       });
     },
     onError: (err) => {
-      qc.invalidateQueries({ queryKey: ['crm', 'opportunities'] });
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      qc.invalidateQueries({ queryKey: ["crm", "opportunities"] });
+      addToast({ type: "error", title: getErrorMessage(err) });
     },
   });
 
@@ -542,12 +551,15 @@ function PipelineBoard({
       const targetStage = stages.find((s) => s.id === overId);
       // Final won/lost stages must go through the win/lose flow — block
       // the drop and tell the user (mirrors the backend guard).
-      if (targetStage && targetStage.is_final && (targetStage.is_won || targetStage.is_lost)) {
+      if (
+        targetStage &&
+        targetStage.is_final &&
+        (targetStage.is_won || targetStage.is_lost)
+      ) {
         addToast({
-          type: 'info',
-          title: t('crm.use_close_flow', {
-            defaultValue:
-              'Open the deal and use Win / Lose to close it.',
+          type: "info",
+          title: t("crm.use_close_flow", {
+            defaultValue: "Open the deal and use Win / Lose to close it.",
           }),
         });
         return;
@@ -562,10 +574,10 @@ function PipelineBoard({
       <Card padding="none">
         <EmptyState
           icon={<LayoutGrid size={22} />}
-          title={t('crm.no_stages', { defaultValue: 'No pipeline stages' })}
-          description={t('crm.no_stages_desc', {
+          title={t("crm.no_stages", { defaultValue: "No pipeline stages" })}
+          description={t("crm.no_stages_desc", {
             defaultValue:
-              'Pipeline stages are not configured yet. Seed data or add a stage to start.',
+              "Pipeline stages are not configured yet. Seed data or add a stage to start.",
           })}
         />
       </Card>
@@ -599,11 +611,11 @@ function PipelineBoard({
               {items.length === 0 ? (
                 <p className="px-1 py-6 text-center text-xs text-content-tertiary">
                   {isClosingStage
-                    ? t('crm.close_via_drawer', {
-                        defaultValue: 'Close deals from the deal view',
+                    ? t("crm.close_via_drawer", {
+                        defaultValue: "Close deals from the deal view",
                       })
-                    : t('crm.drop_here', {
-                        defaultValue: 'Drop a deal here',
+                    : t("crm.drop_here", {
+                        defaultValue: "Drop a deal here",
                       })}
                 </p>
               ) : (
@@ -611,7 +623,7 @@ function PipelineBoard({
                   <DealCard
                     key={o.id}
                     opp={o}
-                    accountName={accountsById[o.account_id]?.name || ''}
+                    accountName={accountsById[o.account_id]?.name || ""}
                     onClick={() => onSelect(o.id)}
                   />
                 ))
@@ -626,7 +638,7 @@ function PipelineBoard({
             className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border-light px-3 py-3 text-sm text-content-secondary hover:border-oe-blue hover:text-oe-blue transition-colors"
           >
             <Plus size={14} />
-            {t('crm.new_deal', { defaultValue: 'New Deal' })}
+            {t("crm.new_deal", { defaultValue: "New Deal" })}
           </button>
         </div>
       </div>
@@ -635,7 +647,7 @@ function PipelineBoard({
         {activeOpp ? (
           <DealCard
             opp={activeOpp}
-            accountName={accountsById[activeOpp.account_id]?.name || ''}
+            accountName={accountsById[activeOpp.account_id]?.name || ""}
             dragging
           />
         ) : null}
@@ -683,8 +695,10 @@ function StageColumn({
       <div
         ref={setNodeRef}
         className={clsx(
-          'flex-1 space-y-2 rounded-b-xl border border-border-light bg-surface-secondary/40 p-2 min-h-[140px] transition-colors',
-          isOver && droppable && 'bg-oe-blue/10 ring-2 ring-inset ring-oe-blue/40',
+          "flex-1 space-y-2 rounded-b-xl border border-border-light bg-surface-secondary/40 p-2 min-h-[140px] transition-colors",
+          isOver &&
+            droppable &&
+            "bg-oe-blue/10 ring-2 ring-inset ring-oe-blue/40",
         )}
       >
         {children}
@@ -711,9 +725,9 @@ function DealCard({
     <div
       ref={setNodeRef}
       className={clsx(
-        'group rounded-lg border border-border-light bg-surface-primary p-2.5 shadow-sm',
-        (isDragging || dragging) && 'opacity-60',
-        dragging && 'ring-2 ring-oe-blue/40 cursor-grabbing',
+        "group rounded-lg border border-border-light bg-surface-primary p-2.5 shadow-sm",
+        (isDragging || dragging) && "opacity-60",
+        dragging && "ring-2 ring-oe-blue/40 cursor-grabbing",
       )}
     >
       <div className="flex items-start gap-1.5">
@@ -776,13 +790,13 @@ function DealsTable({
     return (
       <EmptyState
         icon={<ListIcon size={22} />}
-        title={t('crm.empty_deals', { defaultValue: 'No deals yet' })}
-        description={t('crm.empty_deals_desc', {
+        title={t("crm.empty_deals", { defaultValue: "No deals yet" })}
+        description={t("crm.empty_deals_desc", {
           defaultValue:
-            'Create a deal and drag it through the pipeline: qualification → proposal → negotiation → won.',
+            "Create a deal and drag it through the pipeline: qualification → proposal → negotiation → won.",
         })}
         action={{
-          label: t('crm.new_deal', { defaultValue: 'New Deal' }),
+          label: t("crm.new_deal", { defaultValue: "New Deal" }),
           onClick: onCreate,
         }}
       />
@@ -794,22 +808,22 @@ function DealsTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.title_col', { defaultValue: 'Deal' })}
+              {t("crm.title_col", { defaultValue: "Deal" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.account', { defaultValue: 'Account' })}
+              {t("crm.account", { defaultValue: "Account" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.stage', { defaultValue: 'Stage' })}
+              {t("crm.stage", { defaultValue: "Stage" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.status', { defaultValue: 'Status' })}
+              {t("crm.status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('crm.value', { defaultValue: 'Value' })}
+              {t("crm.value", { defaultValue: "Value" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('crm.weighted', { defaultValue: 'Weighted' })}
+              {t("crm.weighted", { defaultValue: "Weighted" })}
             </th>
           </tr>
         </thead>
@@ -826,13 +840,11 @@ function DealsTable({
                   {r.title}
                 </td>
                 <td className="px-4 py-2 text-content-secondary">
-                  {accountsById[r.account_id]?.name || '—'}
+                  {accountsById[r.account_id]?.name || "—"}
                 </td>
                 <td className="px-4 py-2">
                   {stage ? (
-                    <span
-                      className="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-border-light"
-                    >
+                    <span className="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-border-light">
                       <span
                         className="h-2 w-2 rounded-full"
                         style={{ backgroundColor: stageAccent(stage) }}
@@ -889,13 +901,13 @@ function LeadsTable({
     return (
       <EmptyState
         icon={<UserPlus size={22} />}
-        title={t('crm.empty_leads', { defaultValue: 'No leads yet' })}
-        description={t('crm.empty_leads_desc', {
+        title={t("crm.empty_leads", { defaultValue: "No leads yet" })}
+        description={t("crm.empty_leads_desc", {
           defaultValue:
-            'Leads are inbound enquiries — qualify them, then convert to deals.',
+            "Leads are inbound enquiries — qualify them, then convert to deals.",
         })}
         action={{
-          label: t('crm.new_lead', { defaultValue: 'New Lead' }),
+          label: t("crm.new_lead", { defaultValue: "New Lead" }),
           onClick: onCreate,
         }}
       />
@@ -907,19 +919,19 @@ function LeadsTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.contact', { defaultValue: 'Contact' })}
+              {t("crm.contact", { defaultValue: "Contact" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.account', { defaultValue: 'Account' })}
+              {t("crm.account", { defaultValue: "Account" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.source', { defaultValue: 'Source' })}
+              {t("crm.source", { defaultValue: "Source" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.status', { defaultValue: 'Status' })}
+              {t("crm.status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.created', { defaultValue: 'Created' })}
+              {t("crm.created", { defaultValue: "Created" })}
             </th>
           </tr>
         </thead>
@@ -933,14 +945,14 @@ function LeadsTable({
               <td className="px-4 py-2">
                 <div className="font-medium">{r.contact_name}</div>
                 <div className="text-xs text-content-tertiary">
-                  {r.contact_email || r.contact_phone || ''}
+                  {r.contact_email || r.contact_phone || ""}
                 </div>
               </td>
               <td className="px-4 py-2 text-content-secondary">
-                {r.account_id ? accountsById[r.account_id]?.name || '—' : '—'}
+                {r.account_id ? accountsById[r.account_id]?.name || "—" : "—"}
               </td>
               <td className="px-4 py-2 text-xs text-content-secondary capitalize">
-                {r.source.replace(/_/g, ' ')}
+                {r.source.replace(/_/g, " ")}
               </td>
               <td className="px-4 py-2">
                 <Badge variant={LEAD_STATUS_VARIANT[r.status]} dot>
@@ -972,13 +984,13 @@ function ActivitiesTable({
     return (
       <EmptyState
         icon={<ActivityIcon size={22} />}
-        title={t('crm.empty_activities', { defaultValue: 'No activities yet' })}
-        description={t('crm.empty_activities_desc', {
+        title={t("crm.empty_activities", { defaultValue: "No activities yet" })}
+        description={t("crm.empty_activities_desc", {
           defaultValue:
-            'Log calls, meetings, emails and tasks tied to deals or leads.',
+            "Log calls, meetings, emails and tasks tied to deals or leads.",
         })}
         action={{
-          label: t('crm.new_activity', { defaultValue: 'New Activity' }),
+          label: t("crm.new_activity", { defaultValue: "New Activity" }),
           onClick: onCreate,
         }}
       />
@@ -990,16 +1002,16 @@ function ActivitiesTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.kind', { defaultValue: 'Kind' })}
+              {t("crm.kind", { defaultValue: "Kind" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.subject', { defaultValue: 'Subject' })}
+              {t("crm.subject", { defaultValue: "Subject" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.due', { defaultValue: 'Due' })}
+              {t("crm.due", { defaultValue: "Due" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('crm.outcome', { defaultValue: 'Outcome' })}
+              {t("crm.outcome", { defaultValue: "Outcome" })}
             </th>
           </tr>
         </thead>
@@ -1013,13 +1025,13 @@ function ActivitiesTable({
                 {r.kind}
               </td>
               <td className="px-4 py-2 font-medium truncate max-w-[360px]">
-                {r.subject || '—'}
+                {r.subject || "—"}
               </td>
               <td className="px-4 py-2 text-xs text-content-secondary">
-                {r.due_at ? <DateDisplay value={r.due_at} /> : '—'}
+                {r.due_at ? <DateDisplay value={r.due_at} /> : "—"}
               </td>
               <td className="px-4 py-2 text-xs text-content-secondary">
-                {r.outcome || '—'}
+                {r.outcome || "—"}
               </td>
             </tr>
           ))}
@@ -1049,18 +1061,18 @@ function DealDrawer({
   const addToast = useToastStore((s) => s.addToast);
   const opp = opportunities.find((o) => o.id === opportunityId);
 
-  const [loseReason, setLoseReason] = useState('');
-  const [noteText, setNoteText] = useState('');
+  const [loseReason, setLoseReason] = useState("");
+  const [noteText, setNoteText] = useState("");
   const [linkOpen, setLinkOpen] = useState(false);
 
   const activitiesQ = useQuery({
-    queryKey: ['crm', 'activities', 'opp', opportunityId],
+    queryKey: ["crm", "activities", "opp", opportunityId],
     queryFn: () => listActivities({ opportunity_id: opportunityId, limit: 50 }),
   });
 
   // Resolve the linked Contact through the Contacts module (no local copy).
   const contactQ = useQuery({
-    queryKey: ['contacts', 'one', opp?.primary_contact_id],
+    queryKey: ["contacts", "one", opp?.primary_contact_id],
     queryFn: () =>
       fetchContacts({ limit: 500 }).then(
         (cs) => cs.find((c) => c.id === opp?.primary_contact_id) ?? null,
@@ -1070,7 +1082,7 @@ function DealDrawer({
 
   // Resolve the linked Project through the Projects module.
   const projectQ = useQuery({
-    queryKey: ['projects', 'one', opp?.project_id],
+    queryKey: ["projects", "one", opp?.project_id],
     queryFn: () =>
       projectsApi
         .get(opp!.project_id as string)
@@ -1080,35 +1092,35 @@ function DealDrawer({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   const moveMut = useMutation({
     mutationFn: (toStageId: string) =>
       moveOpportunityStage(opportunityId, { to_stage_id: toStageId }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm', 'opportunities'] });
+      qc.invalidateQueries({ queryKey: ["crm", "opportunities"] });
       addToast({
-        type: 'success',
-        title: t('crm.stage_moved', { defaultValue: 'Stage updated' }),
+        type: "success",
+        title: t("crm.stage_moved", { defaultValue: "Stage updated" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const winMut = useMutation({
     mutationFn: () => winOpportunity(opportunityId, { won_at: todayIso() }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm', 'opportunities'] });
+      qc.invalidateQueries({ queryKey: ["crm", "opportunities"] });
       addToast({
-        type: 'success',
-        title: t('crm.opportunity_won', { defaultValue: 'Deal won' }),
+        type: "success",
+        title: t("crm.opportunity_won", { defaultValue: "Deal won" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const loseMut = useMutation({
@@ -1118,13 +1130,13 @@ function DealDrawer({
         lost_at: todayIso(),
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm', 'opportunities'] });
+      qc.invalidateQueries({ queryKey: ["crm", "opportunities"] });
       addToast({
-        type: 'success',
-        title: t('crm.opportunity_lost', { defaultValue: 'Deal lost' }),
+        type: "success",
+        title: t("crm.opportunity_lost", { defaultValue: "Deal lost" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const noteMut = useMutation({
@@ -1132,21 +1144,21 @@ function DealDrawer({
       createActivity({
         opportunity_id: opportunityId,
         account_id: opp?.account_id ?? null,
-        kind: 'note',
+        kind: "note",
         subject: noteText.trim().slice(0, 80),
         body: noteText.trim(),
       }),
     onSuccess: () => {
-      setNoteText('');
+      setNoteText("");
       qc.invalidateQueries({
-        queryKey: ['crm', 'activities', 'opp', opportunityId],
+        queryKey: ["crm", "activities", "opp", opportunityId],
       });
       addToast({
-        type: 'success',
-        title: t('crm.note_added', { defaultValue: 'Note added' }),
+        type: "success",
+        title: t("crm.note_added", { defaultValue: "Note added" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   if (!opp) return null;
@@ -1159,8 +1171,8 @@ function DealDrawer({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t('crm.opportunity_detail', {
-          defaultValue: 'Deal: {{title}}',
+        aria-label={t("crm.opportunity_detail", {
+          defaultValue: "Deal: {{title}}",
           title: opp.title,
         })}
         className="relative h-full w-full max-w-2xl overflow-y-auto bg-surface-elevated shadow-xl"
@@ -1174,14 +1186,14 @@ function DealDrawer({
                 {opp.status}
               </Badge>
               <span className="truncate text-xs text-content-tertiary">
-                {accountsById[opp.account_id]?.name || ''}
+                {accountsById[opp.account_id]?.name || ""}
               </span>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="rounded p-1 hover:bg-surface-secondary"
           >
             <X size={16} />
@@ -1192,7 +1204,7 @@ function DealDrawer({
           {/* KPIs */}
           <div className="grid grid-cols-3 gap-3">
             <KPI
-              label={t('crm.value', { defaultValue: 'Value' })}
+              label={t("crm.value", { defaultValue: "Value" })}
               value={
                 <MoneyDisplay
                   amount={toNum(opp.estimated_value)}
@@ -1201,7 +1213,7 @@ function DealDrawer({
               }
             />
             <KPI
-              label={t('crm.weighted', { defaultValue: 'Weighted' })}
+              label={t("crm.weighted", { defaultValue: "Weighted" })}
               value={
                 <MoneyDisplay
                   amount={toNum(opp.weighted_value)}
@@ -1210,7 +1222,7 @@ function DealDrawer({
               }
             />
             <KPI
-              label={t('crm.probability', { defaultValue: 'Probability' })}
+              label={t("crm.probability", { defaultValue: "Probability" })}
               value={`${opp.probability_percent}%`}
             />
           </div>
@@ -1218,40 +1230,39 @@ function DealDrawer({
           {/* Pipeline stepper — one click moves stage */}
           <Card padding="sm">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-              {t('crm.pipeline', { defaultValue: 'Pipeline' })}
+              {t("crm.pipeline", { defaultValue: "Pipeline" })}
             </p>
             <div className="flex flex-wrap items-center gap-1">
               {stages.map((s, idx) => {
                 const isCurrent = s.id === opp.stage_id;
                 const isPast = currentIdx >= 0 && idx < currentIdx;
-                const isClosing =
-                  s.is_final && (s.is_won || s.is_lost);
+                const isClosing = s.is_final && (s.is_won || s.is_lost);
                 const bg = isCurrent
                   ? s.is_won
-                    ? 'bg-emerald-500 text-white ring-emerald-500'
+                    ? "bg-emerald-500 text-white ring-emerald-500"
                     : s.is_lost
-                      ? 'bg-rose-500 text-white ring-rose-500'
-                      : 'bg-oe-blue text-white ring-oe-blue'
+                      ? "bg-rose-500 text-white ring-rose-500"
+                      : "bg-oe-blue text-white ring-oe-blue"
                   : isPast
-                    ? 'bg-surface-secondary text-content-secondary ring-border-light'
-                    : 'bg-transparent text-content-tertiary ring-border-light';
+                    ? "bg-surface-secondary text-content-secondary ring-border-light"
+                    : "bg-transparent text-content-tertiary ring-border-light";
                 return (
                   <div key={s.id} className="flex items-center gap-1">
                     <button
                       type="button"
                       disabled={
-                        opp.status !== 'open' ||
+                        opp.status !== "open" ||
                         isCurrent ||
                         isClosing ||
                         moveMut.isPending
                       }
                       onClick={() => moveMut.mutate(s.id)}
                       className={clsx(
-                        'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium ring-1 ring-inset transition-colors',
+                        "inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium ring-1 ring-inset transition-colors",
                         bg,
-                        opp.status === 'open' && !isCurrent && !isClosing
-                          ? 'hover:opacity-80 cursor-pointer'
-                          : 'cursor-default',
+                        opp.status === "open" && !isCurrent && !isClosing
+                          ? "hover:opacity-80 cursor-pointer"
+                          : "cursor-default",
                       )}
                     >
                       {s.name}
@@ -1271,7 +1282,7 @@ function DealDrawer({
           {/* Linked Contact (from Contacts module) + Project */}
           <Card padding="sm">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-              {t('crm.linked', { defaultValue: 'Linked records' })}
+              {t("crm.linked", { defaultValue: "Linked records" })}
             </p>
             <div className="space-y-2">
               {/* Contact */}
@@ -1279,7 +1290,7 @@ function DealDrawer({
                 <User size={15} className="mt-0.5 text-content-tertiary" />
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] uppercase tracking-wide text-content-tertiary">
-                    {t('crm.contact', { defaultValue: 'Contact' })}
+                    {t("crm.contact", { defaultValue: "Contact" })}
                   </p>
                   {opp.primary_contact_id ? (
                     contactQ.isLoading ? (
@@ -1307,16 +1318,16 @@ function DealDrawer({
                           to="/contacts"
                           className="mt-1 inline-flex items-center gap-1 text-xs text-oe-blue hover:underline"
                         >
-                          {t('crm.open_in_contacts', {
-                            defaultValue: 'Open in Contacts',
+                          {t("crm.open_in_contacts", {
+                            defaultValue: "Open in Contacts",
                           })}
                           <ArrowRight size={11} />
                         </Link>
                       </>
                     ) : (
                       <p className="text-sm text-content-tertiary">
-                        {t('crm.contact_unavailable', {
-                          defaultValue: 'Linked contact not accessible',
+                        {t("crm.contact_unavailable", {
+                          defaultValue: "Linked contact not accessible",
                         })}
                       </p>
                     )
@@ -1326,8 +1337,8 @@ function DealDrawer({
                       onClick={() => setLinkOpen(true)}
                       className="text-sm text-oe-blue hover:underline"
                     >
-                      {t('crm.attach_contact', {
-                        defaultValue: '+ Attach a contact',
+                      {t("crm.attach_contact", {
+                        defaultValue: "+ Attach a contact",
                       })}
                     </button>
                   )}
@@ -1342,7 +1353,7 @@ function DealDrawer({
                 />
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] uppercase tracking-wide text-content-tertiary">
-                    {t('crm.project', { defaultValue: 'Project' })}
+                    {t("crm.project", { defaultValue: "Project" })}
                   </p>
                   {opp.project_id ? (
                     projectQ.isLoading ? (
@@ -1357,8 +1368,8 @@ function DealDrawer({
                       </Link>
                     ) : (
                       <p className="text-sm text-content-tertiary">
-                        {t('crm.project_unavailable', {
-                          defaultValue: 'Linked project not accessible',
+                        {t("crm.project_unavailable", {
+                          defaultValue: "Linked project not accessible",
                         })}
                       </p>
                     )
@@ -1368,23 +1379,22 @@ function DealDrawer({
                       onClick={() => setLinkOpen(true)}
                       className="text-sm text-oe-blue hover:underline"
                     >
-                      {t('crm.attach_project', {
-                        defaultValue: '+ Link a project',
+                      {t("crm.attach_project", {
+                        defaultValue: "+ Link a project",
                       })}
                     </button>
                   )}
                 </div>
               </div>
             </div>
-            {(linkOpen ||
-              (!opp.primary_contact_id && !opp.project_id)) && (
+            {(linkOpen || (!opp.primary_contact_id && !opp.project_id)) && (
               <div className="mt-2">
                 <LinkRecordsForm
                   opp={opp}
                   onLinked={() => {
                     setLinkOpen(false);
                     qc.invalidateQueries({
-                      queryKey: ['crm', 'opportunities'],
+                      queryKey: ["crm", "opportunities"],
                     });
                   }}
                 />
@@ -1393,10 +1403,10 @@ function DealDrawer({
           </Card>
 
           {/* Close the deal */}
-          {opp.status === 'open' && (
+          {opp.status === "open" && (
             <Card padding="sm">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-                {t('crm.close_deal', { defaultValue: 'Close the deal' })}
+                {t("crm.close_deal", { defaultValue: "Close the deal" })}
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 <Button
@@ -1405,17 +1415,17 @@ function DealDrawer({
                   onClick={() => winMut.mutate()}
                   loading={winMut.isPending}
                 >
-                  {t('crm.win', { defaultValue: 'Win' })}
+                  {t("crm.win", { defaultValue: "Win" })}
                 </Button>
                 <div className="flex flex-1 gap-1 max-w-md">
                   <input
                     value={loseReason}
                     onChange={(e) => setLoseReason(e.target.value)}
-                    aria-label={t('crm.lose_reason', {
-                      defaultValue: 'Loss reason code',
+                    aria-label={t("crm.lose_reason", {
+                      defaultValue: "Loss reason code",
                     })}
-                    placeholder={t('crm.lose_reason', {
-                      defaultValue: 'Loss reason code',
+                    placeholder={t("crm.lose_reason", {
+                      defaultValue: "Loss reason code",
                     })}
                     className={inputCls}
                   />
@@ -1426,33 +1436,33 @@ function DealDrawer({
                     loading={loseMut.isPending}
                     disabled={!loseReason.trim()}
                   >
-                    {t('crm.lose', { defaultValue: 'Lose' })}
+                    {t("crm.lose", { defaultValue: "Lose" })}
                   </Button>
                 </div>
               </div>
             </Card>
           )}
 
-          {opp.status === 'won' && (
+          {opp.status === "won" && (
             <Card padding="sm">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-                {t('crm.next_step', { defaultValue: 'Next step' })}
+                {t("crm.next_step", { defaultValue: "Next step" })}
               </p>
               <p className="mb-2 text-sm text-content-secondary">
-                {t('crm.won_next_hint', {
+                {t("crm.won_next_hint", {
                   defaultValue:
-                    'Deal won. Take it forward by issuing bid packages, then formalising the award as a contract.',
+                    "Deal won. Take it forward by issuing bid packages, then formalising the award as a contract.",
                 })}
               </p>
               <div className="flex flex-wrap gap-2">
                 <Link to="/bid-management">
                   <Button variant="secondary" icon={<ArrowRight size={14} />}>
-                    {t('crm.go_bid', { defaultValue: 'Bid Management' })}
+                    {t("crm.go_bid", { defaultValue: "Bid Management" })}
                   </Button>
                 </Link>
                 <Link to="/contracts">
                   <Button variant="ghost" icon={<ArrowRight size={14} />}>
-                    {t('crm.go_contracts', { defaultValue: 'Contracts' })}
+                    {t("crm.go_contracts", { defaultValue: "Contracts" })}
                   </Button>
                 </Link>
               </div>
@@ -1462,7 +1472,7 @@ function DealDrawer({
           {(opp.description || opp.notes) && (
             <Card padding="sm">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-                {t('crm.description', { defaultValue: 'Description' })}
+                {t("crm.description", { defaultValue: "Description" })}
               </p>
               <p className="whitespace-pre-wrap text-sm">
                 {opp.description || opp.notes}
@@ -1473,7 +1483,7 @@ function DealDrawer({
           {/* Quick activity / notes */}
           <Card padding="sm">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-              {t('crm.activities', { defaultValue: 'Activity' })}
+              {t("crm.activities", { defaultValue: "Activity" })}
               <span className="ml-2 normal-case text-content-tertiary">
                 ({(activitiesQ.data ?? []).length})
               </span>
@@ -1484,15 +1494,15 @@ function DealDrawer({
                 onChange={(e) => setNoteText(e.target.value)}
                 onKeyDown={(e) => {
                   if (
-                    e.key === 'Enter' &&
+                    e.key === "Enter" &&
                     noteText.trim() &&
                     !noteMut.isPending
                   ) {
                     noteMut.mutate();
                   }
                 }}
-                placeholder={t('crm.add_note_ph', {
-                  defaultValue: 'Log a quick note, then press Enter…',
+                placeholder={t("crm.add_note_ph", {
+                  defaultValue: "Log a quick note, then press Enter…",
                 })}
                 className={inputCls}
               />
@@ -1503,15 +1513,15 @@ function DealDrawer({
                 loading={noteMut.isPending}
                 disabled={!noteText.trim()}
               >
-                {t('crm.log', { defaultValue: 'Log' })}
+                {t("crm.log", { defaultValue: "Log" })}
               </Button>
             </div>
             {activitiesQ.isLoading ? (
               <SkeletonTable rows={3} columns={2} />
             ) : (activitiesQ.data ?? []).length === 0 ? (
               <p className="py-1 text-sm text-content-tertiary">
-                {t('crm.no_activities', {
-                  defaultValue: 'No activities logged yet.',
+                {t("crm.no_activities", {
+                  defaultValue: "No activities logged yet.",
                 })}
               </p>
             ) : (
@@ -1525,9 +1535,7 @@ function DealDrawer({
                       {a.kind}
                     </span>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">
-                        {a.subject || '—'}
-                      </p>
+                      <p className="text-sm font-medium">{a.subject || "—"}</p>
                       {a.body && a.body !== a.subject && (
                         <p className="mt-0.5 whitespace-pre-wrap text-xs text-content-secondary">
                           {a.body}
@@ -1560,15 +1568,15 @@ function LinkRecordsForm({
 }) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
-  const [contactId, setContactId] = useState(opp.primary_contact_id ?? '');
-  const [projectId, setProjectId] = useState(opp.project_id ?? '');
+  const [contactId, setContactId] = useState(opp.primary_contact_id ?? "");
+  const [projectId, setProjectId] = useState(opp.project_id ?? "");
 
   const contactsQ = useQuery({
-    queryKey: ['contacts', 'picker'],
+    queryKey: ["contacts", "picker"],
     queryFn: () => fetchContacts({ limit: 500 }),
   });
   const projectsQ = useQuery({
-    queryKey: ['projects', 'picker'],
+    queryKey: ["projects", "picker"],
     queryFn: () => projectsApi.list(),
   });
 
@@ -1580,19 +1588,19 @@ function LinkRecordsForm({
       }),
     onSuccess: () => {
       addToast({
-        type: 'success',
-        title: t('crm.link_saved', { defaultValue: 'Links updated' }),
+        type: "success",
+        title: t("crm.link_saved", { defaultValue: "Links updated" }),
       });
       onLinked();
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   return (
     <div className="space-y-2 rounded-lg border border-border-light bg-surface-secondary/40 p-3">
       <div>
         <p className="mb-1 text-[11px] uppercase tracking-wide text-content-tertiary">
-          {t('crm.contact', { defaultValue: 'Contact' })}
+          {t("crm.contact", { defaultValue: "Contact" })}
         </p>
         <select
           value={contactId}
@@ -1600,7 +1608,7 @@ function LinkRecordsForm({
           className={inputCls}
         >
           <option value="">
-            {t('crm.no_contact', { defaultValue: '— No contact —' })}
+            {t("crm.no_contact", { defaultValue: "— No contact —" })}
           </option>
           {(contactsQ.data ?? []).map((c) => (
             <option key={c.id} value={c.id}>
@@ -1611,7 +1619,7 @@ function LinkRecordsForm({
       </div>
       <div>
         <p className="mb-1 text-[11px] uppercase tracking-wide text-content-tertiary">
-          {t('crm.project', { defaultValue: 'Project' })}
+          {t("crm.project", { defaultValue: "Project" })}
         </p>
         <select
           value={projectId}
@@ -1619,7 +1627,7 @@ function LinkRecordsForm({
           className={inputCls}
         >
           <option value="">
-            {t('crm.no_project', { defaultValue: '— No project —' })}
+            {t("crm.no_project", { defaultValue: "— No project —" })}
           </option>
           {(projectsQ.data ?? []).map((p) => (
             <option key={p.id} value={p.id}>
@@ -1634,7 +1642,7 @@ function LinkRecordsForm({
         onClick={() => saveMut.mutate()}
         loading={saveMut.isPending}
       >
-        {t('crm.save_links', { defaultValue: 'Save links' })}
+        {t("crm.save_links", { defaultValue: "Save links" })}
       </Button>
     </div>
   );
@@ -1657,44 +1665,44 @@ function LeadDrawer({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const lead = leads.find((l) => l.id === leadId);
-  const [notes, setNotes] = useState(lead?.qualification_notes ?? '');
+  const [notes, setNotes] = useState(lead?.qualification_notes ?? "");
 
   useEffect(() => {
-    setNotes(lead?.qualification_notes ?? '');
+    setNotes(lead?.qualification_notes ?? "");
   }, [lead?.id, lead?.qualification_notes]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   const qualifyMut = useMutation({
     mutationFn: () => qualifyLead(leadId, { qualification_notes: notes }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm', 'leads'] });
+      qc.invalidateQueries({ queryKey: ["crm", "leads"] });
       addToast({
-        type: 'success',
-        title: t('crm.lead_qualified', { defaultValue: 'Lead qualified' }),
+        type: "success",
+        title: t("crm.lead_qualified", { defaultValue: "Lead qualified" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const disqualifyMut = useMutation({
     mutationFn: () => disqualifyLead(leadId),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm', 'leads'] });
+      qc.invalidateQueries({ queryKey: ["crm", "leads"] });
       addToast({
-        type: 'success',
-        title: t('crm.lead_disqualified', {
-          defaultValue: 'Lead disqualified',
+        type: "success",
+        title: t("crm.lead_disqualified", {
+          defaultValue: "Lead disqualified",
         }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   if (!lead) return null;
@@ -1705,8 +1713,8 @@ function LeadDrawer({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t('crm.lead_detail', {
-          defaultValue: 'Lead: {{name}}',
+        aria-label={t("crm.lead_detail", {
+          defaultValue: "Lead: {{name}}",
           name: lead.contact_name,
         })}
         className="relative h-full w-full max-w-lg overflow-y-auto bg-surface-elevated shadow-xl"
@@ -1722,7 +1730,7 @@ function LeadDrawer({
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="rounded p-1 hover:bg-surface-secondary"
           >
             <X size={16} />
@@ -1732,45 +1740,45 @@ function LeadDrawer({
         <div className="space-y-4 p-5">
           <div className="grid grid-cols-2 gap-3 text-sm">
             <Field
-              label={t('crm.email', { defaultValue: 'Email' })}
-              value={lead.contact_email || '—'}
+              label={t("crm.email", { defaultValue: "Email" })}
+              value={lead.contact_email || "—"}
             />
             <Field
-              label={t('crm.phone', { defaultValue: 'Phone' })}
-              value={lead.contact_phone || '—'}
+              label={t("crm.phone", { defaultValue: "Phone" })}
+              value={lead.contact_phone || "—"}
             />
             <Field
-              label={t('crm.source', { defaultValue: 'Source' })}
+              label={t("crm.source", { defaultValue: "Source" })}
               value={
                 <span className="capitalize">
-                  {lead.source.replace(/_/g, ' ')}
+                  {lead.source.replace(/_/g, " ")}
                 </span>
               }
             />
             <Field
-              label={t('crm.account', { defaultValue: 'Account' })}
+              label={t("crm.account", { defaultValue: "Account" })}
               value={
                 lead.account_id
                   ? accountsById[lead.account_id]?.name || lead.account_id
-                  : '—'
+                  : "—"
               }
             />
           </div>
 
-          {(lead.status === 'new' || lead.status === 'qualifying') && (
+          {(lead.status === "new" || lead.status === "qualifying") && (
             <Card padding="sm">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-                {t('crm.qualify_lead', { defaultValue: 'Qualify lead' })}
+                {t("crm.qualify_lead", { defaultValue: "Qualify lead" })}
               </p>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={4}
-                placeholder={t('crm.qualification_notes', {
+                placeholder={t("crm.qualification_notes", {
                   defaultValue:
-                    'Notes — budget, authority, need, timeline, fit, …',
+                    "Notes — budget, authority, need, timeline, fit, …",
                 })}
-                className={clsx(inputCls, 'h-auto py-2')}
+                className={clsx(inputCls, "h-auto py-2")}
               />
               <div className="mt-2 flex gap-2">
                 <Button
@@ -1779,7 +1787,7 @@ function LeadDrawer({
                   onClick={() => qualifyMut.mutate()}
                   loading={qualifyMut.isPending}
                 >
-                  {t('crm.qualify', { defaultValue: 'Qualify' })}
+                  {t("crm.qualify", { defaultValue: "Qualify" })}
                 </Button>
                 <Button
                   variant="ghost"
@@ -1787,7 +1795,7 @@ function LeadDrawer({
                   onClick={() => disqualifyMut.mutate()}
                   loading={disqualifyMut.isPending}
                 >
-                  {t('crm.disqualify', { defaultValue: 'Disqualify' })}
+                  {t("crm.disqualify", { defaultValue: "Disqualify" })}
                 </Button>
               </div>
             </Card>
@@ -1796,7 +1804,7 @@ function LeadDrawer({
           {lead.qualification_notes && (
             <Card padding="sm">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-content-secondary">
-                {t('crm.notes', { defaultValue: 'Notes' })}
+                {t("crm.notes", { defaultValue: "Notes" })}
               </p>
               <p className="whitespace-pre-wrap text-sm">
                 {lead.qualification_notes}
@@ -1864,54 +1872,54 @@ function CreateModal({
   const [busy, setBusy] = useState(false);
 
   // 'pipeline' and 'list' both create a deal.
-  const kind: 'deal' | 'lead' | 'activity' =
-    view === 'leads' ? 'lead' : view === 'activities' ? 'activity' : 'deal';
+  const kind: "deal" | "lead" | "activity" =
+    view === "leads" ? "lead" : view === "activities" ? "activity" : "deal";
 
   const contactsQ = useQuery({
-    queryKey: ['contacts', 'picker'],
+    queryKey: ["contacts", "picker"],
     queryFn: () => fetchContacts({ limit: 500 }),
-    enabled: kind === 'deal',
+    enabled: kind === "deal",
   });
   const projectsQ = useQuery({
-    queryKey: ['projects', 'picker'],
+    queryKey: ["projects", "picker"],
     queryFn: () => projectsApi.list(),
-    enabled: kind === 'deal',
+    enabled: kind === "deal",
   });
 
   const [leadForm, setLeadForm] = useState({
-    contact_name: '',
-    contact_email: '',
-    contact_phone: '',
-    account_id: '',
-    source: 'inbound' as LeadSource,
+    contact_name: "",
+    contact_email: "",
+    contact_phone: "",
+    account_id: "",
+    source: "inbound" as LeadSource,
   });
 
   const [dealForm, setDealForm] = useState({
-    account_id: accounts[0]?.id || '',
-    new_account_name: '',
-    title: '',
-    estimated_value: '0',
-    currency: 'EUR',
-    probability_percent: '20',
-    stage_id: stages[0]?.id || '',
-    expected_close_date: '',
-    primary_contact_id: '',
-    project_id: '',
+    account_id: accounts[0]?.id || "",
+    new_account_name: "",
+    title: "",
+    estimated_value: "0",
+    currency: "EUR",
+    probability_percent: "20",
+    stage_id: stages[0]?.id || "",
+    expected_close_date: "",
+    primary_contact_id: "",
+    project_id: "",
   });
 
   const [actForm, setActForm] = useState({
-    kind: 'note' as ActivityKind,
-    subject: '',
-    body: '',
-    due_at: '',
+    kind: "note" as ActivityKind,
+    subject: "",
+    body: "",
+    due_at: "",
   });
 
   const submit = async () => {
     setBusy(true);
     try {
-      if (kind === 'deal') {
-        if (!dealForm.title.trim()) throw new Error('Title required');
-        if (!dealForm.stage_id) throw new Error('Stage required');
+      if (kind === "deal") {
+        if (!dealForm.title.trim()) throw new Error("Title required");
+        if (!dealForm.stage_id) throw new Error("Stage required");
         let accountId = dealForm.account_id;
         // Minimal-click: if no account chosen but a name was typed,
         // spin up an account inline so the user never leaves the modal.
@@ -1920,14 +1928,14 @@ function CreateModal({
             name: dealForm.new_account_name.trim(),
           });
           accountId = acc.id;
-          qc.invalidateQueries({ queryKey: ['crm', 'accounts'] });
+          qc.invalidateQueries({ queryKey: ["crm", "accounts"] });
         }
-        if (!accountId) throw new Error('Account required');
+        if (!accountId) throw new Error("Account required");
         await createOpportunity({
           account_id: accountId,
           title: dealForm.title.trim(),
           estimated_value: Number(dealForm.estimated_value) || 0,
-          currency: dealForm.currency || 'EUR',
+          currency: dealForm.currency || "EUR",
           probability_percent: Number(dealForm.probability_percent) || 0,
           stage_id: dealForm.stage_id,
           expected_close_date: dealForm.expected_close_date || null,
@@ -1935,13 +1943,13 @@ function CreateModal({
           project_id: dealForm.project_id || null,
         });
         addToast({
-          type: 'success',
-          title: t('crm.deal_created', { defaultValue: 'Deal created' }),
+          type: "success",
+          title: t("crm.deal_created", { defaultValue: "Deal created" }),
         });
-        qc.invalidateQueries({ queryKey: ['crm', 'opportunities'] });
-      } else if (kind === 'lead') {
+        qc.invalidateQueries({ queryKey: ["crm", "opportunities"] });
+      } else if (kind === "lead") {
         if (!leadForm.contact_name.trim())
-          throw new Error('Contact name required');
+          throw new Error("Contact name required");
         await createLead({
           contact_name: leadForm.contact_name.trim(),
           contact_email: leadForm.contact_email || undefined,
@@ -1950,10 +1958,10 @@ function CreateModal({
           source: leadForm.source,
         });
         addToast({
-          type: 'success',
-          title: t('crm.lead_created', { defaultValue: 'Lead created' }),
+          type: "success",
+          title: t("crm.lead_created", { defaultValue: "Lead created" }),
         });
-        qc.invalidateQueries({ queryKey: ['crm', 'leads'] });
+        qc.invalidateQueries({ queryKey: ["crm", "leads"] });
       } else {
         await createActivity({
           kind: actForm.kind,
@@ -1962,39 +1970,39 @@ function CreateModal({
           due_at: actForm.due_at || null,
         });
         addToast({
-          type: 'success',
-          title: t('crm.activity_created', {
-            defaultValue: 'Activity created',
+          type: "success",
+          title: t("crm.activity_created", {
+            defaultValue: "Activity created",
           }),
         });
-        qc.invalidateQueries({ queryKey: ['crm', 'activities'] });
+        qc.invalidateQueries({ queryKey: ["crm", "activities"] });
       }
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
   };
 
   const title =
-    kind === 'deal'
-      ? t('crm.new_deal', { defaultValue: 'New Deal' })
-      : kind === 'lead'
-        ? t('crm.new_lead', { defaultValue: 'New Lead' })
-        : t('crm.new_activity', { defaultValue: 'New Activity' });
+    kind === "deal"
+      ? t("crm.new_deal", { defaultValue: "New Deal" })
+      : kind === "lead"
+        ? t("crm.new_lead", { defaultValue: "New Lead" })
+        : t("crm.new_activity", { defaultValue: "New Activity" });
 
   return (
     <WideModal
       open
       onClose={onClose}
       title={title}
-      size={kind === 'deal' ? 'xl' : 'lg'}
+      size={kind === "deal" ? "xl" : "lg"}
       busy={busy}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -2002,19 +2010,19 @@ function CreateModal({
             loading={busy}
             icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
           >
-            {t('common.create', { defaultValue: 'Create' })}
+            {t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
-      {kind === 'deal' && (
+      {kind === "deal" && (
         <>
           <WideModalSection
-            title={t('crm.section_basic', { defaultValue: 'Deal' })}
+            title={t("crm.section_basic", { defaultValue: "Deal" })}
             columns={2}
           >
             <WideModalField
-              label={t('crm.title_col', { defaultValue: 'Title' })}
+              label={t("crm.title_col", { defaultValue: "Title" })}
               required
               span={2}
             >
@@ -2027,7 +2035,7 @@ function CreateModal({
               />
             </WideModalField>
             <WideModalField
-              label={t('crm.account', { defaultValue: 'Account' })}
+              label={t("crm.account", { defaultValue: "Account" })}
             >
               <select
                 value={dealForm.account_id}
@@ -2037,8 +2045,8 @@ function CreateModal({
                 className={inputCls}
               >
                 <option value="">
-                  {t('crm.account_new', {
-                    defaultValue: '— New account below —',
+                  {t("crm.account_new", {
+                    defaultValue: "— New account below —",
                   })}
                 </option>
                 {accounts.map((a) => (
@@ -2049,8 +2057,8 @@ function CreateModal({
               </select>
             </WideModalField>
             <WideModalField
-              label={t('crm.account_name', {
-                defaultValue: 'Or new account name',
+              label={t("crm.account_name", {
+                defaultValue: "Or new account name",
               })}
             >
               <input
@@ -2068,12 +2076,12 @@ function CreateModal({
           </WideModalSection>
 
           <WideModalSection
-            title={t('crm.section_value', {
-              defaultValue: 'Value & pipeline',
+            title={t("crm.section_value", {
+              defaultValue: "Value & pipeline",
             })}
             columns={2}
           >
-            <WideModalField label={t('crm.value', { defaultValue: 'Value' })}>
+            <WideModalField label={t("crm.value", { defaultValue: "Value" })}>
               <input
                 type="number"
                 value={dealForm.estimated_value}
@@ -2087,7 +2095,7 @@ function CreateModal({
               />
             </WideModalField>
             <WideModalField
-              label={t('crm.currency', { defaultValue: 'Currency' })}
+              label={t("crm.currency", { defaultValue: "Currency" })}
             >
               <input
                 value={dealForm.currency}
@@ -2098,7 +2106,7 @@ function CreateModal({
                 maxLength={8}
               />
             </WideModalField>
-            <WideModalField label={t('crm.stage', { defaultValue: 'Stage' })}>
+            <WideModalField label={t("crm.stage", { defaultValue: "Stage" })}>
               <select
                 value={dealForm.stage_id}
                 onChange={(e) =>
@@ -2115,7 +2123,7 @@ function CreateModal({
               </select>
             </WideModalField>
             <WideModalField
-              label={t('crm.probability', { defaultValue: 'Probability %' })}
+              label={t("crm.probability", { defaultValue: "Probability %" })}
             >
               <input
                 type="number"
@@ -2132,8 +2140,8 @@ function CreateModal({
               />
             </WideModalField>
             <WideModalField
-              label={t('crm.expected_close', {
-                defaultValue: 'Expected close',
+              label={t("crm.expected_close", {
+                defaultValue: "Expected close",
               })}
               span={2}
             >
@@ -2152,13 +2160,13 @@ function CreateModal({
           </WideModalSection>
 
           <WideModalSection
-            title={t('crm.section_links', {
-              defaultValue: 'Link records (from Contacts & Projects)',
+            title={t("crm.section_links", {
+              defaultValue: "Link records (from Contacts & Projects)",
             })}
             columns={2}
           >
             <WideModalField
-              label={t('crm.contact', { defaultValue: 'Contact' })}
+              label={t("crm.contact", { defaultValue: "Contact" })}
             >
               <select
                 value={dealForm.primary_contact_id}
@@ -2171,7 +2179,7 @@ function CreateModal({
                 className={inputCls}
               >
                 <option value="">
-                  {t('crm.no_contact', { defaultValue: '— No contact —' })}
+                  {t("crm.no_contact", { defaultValue: "— No contact —" })}
                 </option>
                 {(contactsQ.data ?? []).map((c) => (
                   <option key={c.id} value={c.id}>
@@ -2181,7 +2189,7 @@ function CreateModal({
               </select>
             </WideModalField>
             <WideModalField
-              label={t('crm.project', { defaultValue: 'Project' })}
+              label={t("crm.project", { defaultValue: "Project" })}
             >
               <select
                 value={dealForm.project_id}
@@ -2191,7 +2199,7 @@ function CreateModal({
                 className={inputCls}
               >
                 <option value="">
-                  {t('crm.no_project', { defaultValue: '— No project —' })}
+                  {t("crm.no_project", { defaultValue: "— No project —" })}
                 </option>
                 {(projectsQ.data ?? []).map((p) => (
                   <option key={p.id} value={p.id}>
@@ -2204,10 +2212,10 @@ function CreateModal({
         </>
       )}
 
-      {kind === 'lead' && (
+      {kind === "lead" && (
         <WideModalSection columns={2}>
           <WideModalField
-            label={t('crm.contact_name', { defaultValue: 'Contact name' })}
+            label={t("crm.contact_name", { defaultValue: "Contact name" })}
             required
             span={2}
           >
@@ -2219,7 +2227,7 @@ function CreateModal({
               className={inputCls}
             />
           </WideModalField>
-          <WideModalField label={t('crm.email', { defaultValue: 'Email' })}>
+          <WideModalField label={t("crm.email", { defaultValue: "Email" })}>
             <input
               type="email"
               value={leadForm.contact_email}
@@ -2229,7 +2237,7 @@ function CreateModal({
               className={inputCls}
             />
           </WideModalField>
-          <WideModalField label={t('crm.phone', { defaultValue: 'Phone' })}>
+          <WideModalField label={t("crm.phone", { defaultValue: "Phone" })}>
             <input
               value={leadForm.contact_phone}
               onChange={(e) =>
@@ -2238,9 +2246,7 @@ function CreateModal({
               className={inputCls}
             />
           </WideModalField>
-          <WideModalField
-            label={t('crm.account', { defaultValue: 'Account' })}
-          >
+          <WideModalField label={t("crm.account", { defaultValue: "Account" })}>
             <select
               value={leadForm.account_id}
               onChange={(e) =>
@@ -2256,9 +2262,7 @@ function CreateModal({
               ))}
             </select>
           </WideModalField>
-          <WideModalField
-            label={t('crm.source', { defaultValue: 'Source' })}
-          >
+          <WideModalField label={t("crm.source", { defaultValue: "Source" })}>
             <select
               value={leadForm.source}
               onChange={(e) =>
@@ -2271,7 +2275,7 @@ function CreateModal({
             >
               {LEAD_SOURCES.map((s) => (
                 <option key={s} value={s}>
-                  {s.replace(/_/g, ' ')}
+                  {s.replace(/_/g, " ")}
                 </option>
               ))}
             </select>
@@ -2279,9 +2283,9 @@ function CreateModal({
         </WideModalSection>
       )}
 
-      {kind === 'activity' && (
+      {kind === "activity" && (
         <WideModalSection columns={2}>
-          <WideModalField label={t('crm.kind', { defaultValue: 'Kind' })}>
+          <WideModalField label={t("crm.kind", { defaultValue: "Kind" })}>
             <select
               value={actForm.kind}
               onChange={(e) =>
@@ -2299,7 +2303,7 @@ function CreateModal({
               ))}
             </select>
           </WideModalField>
-          <WideModalField label={t('crm.due', { defaultValue: 'Due' })}>
+          <WideModalField label={t("crm.due", { defaultValue: "Due" })}>
             <input
               type="date"
               value={actForm.due_at}
@@ -2310,7 +2314,7 @@ function CreateModal({
             />
           </WideModalField>
           <WideModalField
-            label={t('crm.subject', { defaultValue: 'Subject' })}
+            label={t("crm.subject", { defaultValue: "Subject" })}
             span={2}
           >
             <input
@@ -2322,16 +2326,14 @@ function CreateModal({
             />
           </WideModalField>
           <WideModalField
-            label={t('crm.body', { defaultValue: 'Body' })}
+            label={t("crm.body", { defaultValue: "Body" })}
             span={2}
           >
             <textarea
               value={actForm.body}
-              onChange={(e) =>
-                setActForm({ ...actForm, body: e.target.value })
-              }
+              onChange={(e) => setActForm({ ...actForm, body: e.target.value })}
               rows={4}
-              className={clsx(inputCls, 'h-auto py-2')}
+              className={clsx(inputCls, "h-auto py-2")}
             />
           </WideModalField>
         </WideModalSection>

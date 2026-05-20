@@ -1,1 +1,1 @@
-export { VariationsPage } from './VariationsPage';
+export { VariationsPage } from "./VariationsPage";

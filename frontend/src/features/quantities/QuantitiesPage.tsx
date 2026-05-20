@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   Sparkles,
   FileSearch,
@@ -23,15 +23,15 @@ import {
   FileText,
   Clock,
   Star,
-} from 'lucide-react';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { isModuleLoaded } from '@/shared/lib/moduleProbe';
-import { Breadcrumb } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+} from "lucide-react";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import { isModuleLoaded } from "@/shared/lib/moduleProbe";
+import { Breadcrumb } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 import {
   fetchConverterVersionCheck,
   type ConverterVersionCheck,
-} from '../bim/api';
+} from "../bim/api";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -86,7 +86,7 @@ interface InstallResult {
 
 // ── localStorage helpers (legacy — kept for migration, prefer API status) ──
 
-const INSTALLED_CONVERTERS_KEY = 'oe_installed_converters';
+const INSTALLED_CONVERTERS_KEY = "oe_installed_converters";
 
 function getInstalledConverters(): string[] {
   try {
@@ -101,7 +101,10 @@ function addInstalledConverter(id: string): void {
   try {
     const current = getInstalledConverters();
     if (!current.includes(id)) {
-      localStorage.setItem(INSTALLED_CONVERTERS_KEY, JSON.stringify([...current, id]));
+      localStorage.setItem(
+        INSTALLED_CONVERTERS_KEY,
+        JSON.stringify([...current, id]),
+      );
     }
   } catch {
     /* localStorage unavailable */
@@ -123,88 +126,91 @@ function removeInstalledConverter(id: string): void {
 // ── Static data ──────────────────────────────────────────────────────────
 
 const GITHUB_RELEASES_URL =
-  'https://github.com/datadrivenconstruction/ddc-community-toolkit/releases';
+  "https://github.com/datadrivenconstruction/ddc-community-toolkit/releases";
 
 const methods: MethodCard[] = [
   {
-    titleKey: 'quantities.method_ai_title',
-    descriptionKey: 'quantities.method_ai_desc',
+    titleKey: "quantities.method_ai_title",
+    descriptionKey: "quantities.method_ai_desc",
     icon: Sparkles,
     gradient:
-      'from-violet-500/10 to-blue-500/10 hover:from-violet-500/15 hover:to-blue-500/15',
-    iconBg: 'bg-gradient-to-br from-violet-500 to-blue-500',
-    route: '/ai-estimate',
-    badgeKey: 'quantities.badge_ai',
-    badgeColor: 'bg-gradient-to-r from-violet-500 to-blue-500 text-white',
+      "from-violet-500/10 to-blue-500/10 hover:from-violet-500/15 hover:to-blue-500/15",
+    iconBg: "bg-gradient-to-br from-violet-500 to-blue-500",
+    route: "/ai-estimate",
+    badgeKey: "quantities.badge_ai",
+    badgeColor: "bg-gradient-to-r from-violet-500 to-blue-500 text-white",
     available: true,
   },
   {
-    titleKey: 'quantities.method_pdf_title',
-    descriptionKey: 'quantities.method_pdf_desc',
+    titleKey: "quantities.method_pdf_title",
+    descriptionKey: "quantities.method_pdf_desc",
     icon: FileSearch,
     gradient:
-      'from-blue-500/10 to-cyan-500/10 hover:from-blue-500/15 hover:to-cyan-500/15',
-    iconBg: 'bg-gradient-to-br from-blue-500 to-cyan-500',
-    route: '/takeoff',
+      "from-blue-500/10 to-cyan-500/10 hover:from-blue-500/15 hover:to-cyan-500/15",
+    iconBg: "bg-gradient-to-br from-blue-500 to-cyan-500",
+    route: "/takeoff",
     available: true,
   },
   {
-    titleKey: 'quantities.method_cad_title',
-    descriptionKey: 'quantities.method_cad_desc',
+    titleKey: "quantities.method_cad_title",
+    descriptionKey: "quantities.method_cad_desc",
     icon: Box,
     gradient:
-      'from-emerald-500/10 to-teal-500/10 hover:from-emerald-500/15 hover:to-teal-500/15',
-    iconBg: 'bg-gradient-to-br from-emerald-500 to-teal-500',
-    route: '/data-explorer',
-    badgeKey: 'quantities.badge_cad',
+      "from-emerald-500/10 to-teal-500/10 hover:from-emerald-500/15 hover:to-teal-500/15",
+    iconBg: "bg-gradient-to-br from-emerald-500 to-teal-500",
+    route: "/data-explorer",
+    badgeKey: "quantities.badge_cad",
     badgeColor:
-      'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+      "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
     available: true,
   },
 ];
 
 const steps = [
   {
-    num: '1',
-    titleKey: 'quantities.step1_title',
-    descKey: 'quantities.step1_desc',
+    num: "1",
+    titleKey: "quantities.step1_title",
+    descKey: "quantities.step1_desc",
     icon: Upload,
   },
   {
-    num: '2',
-    titleKey: 'quantities.step2_title',
-    descKey: 'quantities.step2_desc',
+    num: "2",
+    titleKey: "quantities.step2_title",
+    descKey: "quantities.step2_desc",
     icon: Ruler,
   },
   {
-    num: '3',
-    titleKey: 'quantities.step3_title',
-    descKey: 'quantities.step3_desc',
+    num: "3",
+    titleKey: "quantities.step3_title",
+    descKey: "quantities.step3_desc",
     icon: Layers3,
   },
 ];
 
 // Color map for converter cards
-const CONVERTER_COLORS: Record<string, { bg: string; border: string; icon: string }> = {
+const CONVERTER_COLORS: Record<
+  string,
+  { bg: string; border: string; icon: string }
+> = {
   dwg: {
-    bg: 'from-red-500/8 to-orange-500/8',
-    border: 'border-red-200 dark:border-red-900/30',
-    icon: 'bg-gradient-to-br from-red-500 to-orange-500',
+    bg: "from-red-500/8 to-orange-500/8",
+    border: "border-red-200 dark:border-red-900/30",
+    icon: "bg-gradient-to-br from-red-500 to-orange-500",
   },
   rvt: {
-    bg: 'from-blue-500/8 to-indigo-500/8',
-    border: 'border-blue-200 dark:border-blue-900/30',
-    icon: 'bg-gradient-to-br from-blue-500 to-indigo-500',
+    bg: "from-blue-500/8 to-indigo-500/8",
+    border: "border-blue-200 dark:border-blue-900/30",
+    icon: "bg-gradient-to-br from-blue-500 to-indigo-500",
   },
   ifc: {
-    bg: 'from-emerald-500/8 to-green-500/8',
-    border: 'border-emerald-200 dark:border-emerald-900/30',
-    icon: 'bg-gradient-to-br from-emerald-500 to-green-500',
+    bg: "from-emerald-500/8 to-green-500/8",
+    border: "border-emerald-200 dark:border-emerald-900/30",
+    icon: "bg-gradient-to-br from-emerald-500 to-green-500",
   },
   dgn: {
-    bg: 'from-purple-500/8 to-violet-500/8',
-    border: 'border-purple-200 dark:border-purple-900/30',
-    icon: 'bg-gradient-to-br from-purple-500 to-violet-500',
+    bg: "from-purple-500/8 to-violet-500/8",
+    border: "border-purple-200 dark:border-purple-900/30",
+    icon: "bg-gradient-to-br from-purple-500 to-violet-500",
   },
 };
 
@@ -233,11 +239,16 @@ function ConverterCard({
   /** Per-converter row from `/api/system/converters/version-check`. Carries
    *  the locally computed git-blob SHA, the upstream SHA, the
    *  `is_outdated` flag, and a `html_url` deep-link to the GitHub blob. */
-  versionEntry?: ConverterVersionCheck['converters'][0];
+  versionEntry?: ConverterVersionCheck["converters"][0];
   disabled: boolean;
 }) {
   const { t } = useTranslation();
-  const colors = CONVERTER_COLORS[converter.id] ?? CONVERTER_COLORS['dwg'] ?? { bg: 'from-gray-500/8 to-gray-500/8', border: 'border-gray-200', icon: 'bg-gray-500' };
+  const colors = CONVERTER_COLORS[converter.id] ??
+    CONVERTER_COLORS["dwg"] ?? {
+      bg: "from-gray-500/8 to-gray-500/8",
+      border: "border-gray-200",
+      icon: "bg-gray-500",
+    };
   const installed = converter.installed;
   const updateAvailable = installed && Boolean(versionEntry?.is_outdated);
   const installedShortSha = versionEntry?.installed_sha
@@ -250,16 +261,16 @@ function ConverterCard({
   return (
     <div
       className={clsx(
-        'group relative flex flex-col rounded-xl border p-5 transition-all duration-200',
+        "group relative flex flex-col rounded-xl border p-5 transition-all duration-200",
         installed
-          ? 'border-emerald-300 dark:border-emerald-800/50 bg-gradient-to-br from-emerald-500/5 to-teal-500/5'
+          ? "border-emerald-300 dark:border-emerald-800/50 bg-gradient-to-br from-emerald-500/5 to-teal-500/5"
           : clsx(
-              'bg-gradient-to-br',
+              "bg-gradient-to-br",
               colors.bg,
               colors.border,
-              'ring-2 ring-oe-blue/30 animate-pulse-border',
+              "ring-2 ring-oe-blue/30 animate-pulse-border",
             ),
-        disabled && !installing ? 'opacity-40 pointer-events-none' : '',
+        disabled && !installing ? "opacity-40 pointer-events-none" : "",
       )}
     >
       {/* Recommended badge for uninstalled converters */}
@@ -267,7 +278,7 @@ function ConverterCard({
         <div className="absolute -top-2.5 left-4 z-10">
           <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2.5 py-0.5 text-2xs font-bold text-white shadow-sm">
             <Star size={10} />
-            {t('quantities.recommended', { defaultValue: 'Recommended‌⁠‍' })}
+            {t("quantities.recommended", { defaultValue: "Recommended‌⁠‍" })}
           </span>
         </div>
       )}
@@ -277,32 +288,38 @@ function ConverterCard({
         {installing ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-2xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             <Loader2 size={10} className="animate-spin" />
-            {t('quantities.converter_installing', { defaultValue: 'Installing...‌⁠‍' })}
+            {t("quantities.converter_installing", {
+              defaultValue: "Installing...‌⁠‍",
+            })}
           </span>
         ) : installed && updateAvailable ? (
           <span
             className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2 py-0.5 text-2xs font-semibold text-sky-700 dark:bg-sky-900/30 dark:text-sky-400"
-            title={t('quantities.converter_update_tooltip', {
+            title={t("quantities.converter_update_tooltip", {
               defaultValue:
-                'A newer build is available on GitHub (installed: {{installed}}, latest: {{latest}}).',
-              installed: installedShortSha ?? '?',
-              latest: latestShortSha ?? '?',
+                "A newer build is available on GitHub (installed: {{installed}}, latest: {{latest}}).",
+              installed: installedShortSha ?? "?",
+              latest: latestShortSha ?? "?",
             })}
           >
             <Download size={10} />
-            {t('quantities.converter_update_available', {
-              defaultValue: 'Update available‌⁠‍',
+            {t("quantities.converter_update_available", {
+              defaultValue: "Update available‌⁠‍",
             })}
           </span>
         ) : installed ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-2xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
             <CheckCircle2 size={10} />
-            {t('quantities.converter_installed', { defaultValue: 'Installed‌⁠‍' })}
+            {t("quantities.converter_installed", {
+              defaultValue: "Installed‌⁠‍",
+            })}
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-2xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
             <Download size={10} />
-            {t('quantities.converter_available', { defaultValue: 'Available‌⁠‍' })}
+            {t("quantities.converter_available", {
+              defaultValue: "Available‌⁠‍",
+            })}
           </span>
         )}
       </div>
@@ -310,16 +327,22 @@ function ConverterCard({
       {/* Icon */}
       <div
         className={clsx(
-          'flex h-10 w-10 items-center justify-center rounded-lg text-white',
-          installed ? 'bg-gradient-to-br from-emerald-500 to-teal-500' : colors.icon,
+          "flex h-10 w-10 items-center justify-center rounded-lg text-white",
+          installed
+            ? "bg-gradient-to-br from-emerald-500 to-teal-500"
+            : colors.icon,
         )}
       >
         <FileInput size={20} strokeWidth={1.75} />
       </div>
 
       {/* Name + engine */}
-      <h3 className="mt-3 text-sm font-semibold text-content-primary">{converter.name}</h3>
-      <p className="mt-0.5 text-2xs text-content-quaternary">{converter.engine}</p>
+      <h3 className="mt-3 text-sm font-semibold text-content-primary">
+        {converter.name}
+      </h3>
+      <p className="mt-0.5 text-2xs text-content-quaternary">
+        {converter.engine}
+      </p>
 
       {/* Description */}
       <p className="mt-2 text-xs text-content-tertiary leading-relaxed line-clamp-2">
@@ -352,14 +375,15 @@ function ConverterCard({
               v {installedShortSha}
               {updateAvailable && latestShortSha && (
                 <span className="text-sky-600 dark:text-sky-400">
-                  {' '}→ {latestShortSha}
+                  {" "}
+                  → {latestShortSha}
                 </span>
               )}
             </>
           ) : (
             <>v{converter.version}</>
-          )}{' '}
-          &middot;{' '}
+          )}{" "}
+          &middot;{" "}
           {converter.size_mb >= 1024
             ? `${(converter.size_mb / 1024).toFixed(1)} GB`
             : `${converter.size_mb} MB`}
@@ -374,9 +398,9 @@ function ConverterCard({
                   onUpdate();
                 }}
                 disabled={installing || disabled}
-                title={t('quantities.update_tooltip', {
+                title={t("quantities.update_tooltip", {
                   defaultValue:
-                    'Re-download the converter from GitHub and overwrite the installed binary.',
+                    "Re-download the converter from GitHub and overwrite the installed binary.",
                 })}
                 className="inline-flex items-center gap-1 rounded bg-sky-50 dark:bg-sky-900/20 px-2 py-1 text-2xs font-medium text-sky-700 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
@@ -386,8 +410,8 @@ function ConverterCard({
                   <Download size={10} />
                 )}
                 {installing
-                  ? t('quantities.updating', { defaultValue: 'Updating…‌⁠‍' })
-                  : t('quantities.update_now', { defaultValue: 'Update‌⁠‍' })}
+                  ? t("quantities.updating", { defaultValue: "Updating…‌⁠‍" })
+                  : t("quantities.update_now", { defaultValue: "Update‌⁠‍" })}
               </button>
               <button
                 onClick={(e) => {
@@ -410,7 +434,7 @@ function ConverterCard({
               className="inline-flex items-center gap-1 rounded bg-red-50 dark:bg-red-900/20 px-2 py-1 text-2xs font-medium text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
             >
               <Trash2 size={10} />
-              {t('quantities.uninstall', { defaultValue: 'Uninstall‌⁠‍' })}
+              {t("quantities.uninstall", { defaultValue: "Uninstall‌⁠‍" })}
             </button>
           ) : (
             <button
@@ -426,14 +450,14 @@ function ConverterCard({
               ) : (
                 <Download size={10} />
               )}
-              {t('quantities.install_with_size', {
-                defaultValue: 'Install ({{size}} MB)',
+              {t("quantities.install_with_size", {
+                defaultValue: "Install ({{size}} MB)",
                 size: converter.size_mb,
               })}
             </button>
           )}
           <span className="inline-flex items-center gap-1 rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-2xs font-medium text-content-secondary">
-            {t('quantities.module_label', { defaultValue: 'Module' })}
+            {t("quantities.module_label", { defaultValue: "Module" })}
           </span>
         </div>
       </div>
@@ -463,10 +487,16 @@ function InstallProgressPanel({
   // Phase-based progress simulation
   const phase = elapsed < 5 ? 0 : elapsed < 15 ? 1 : elapsed < 30 ? 2 : 3;
   const phaseLabels = [
-    t('quantities.phase_downloading', { defaultValue: 'Downloading from GitHub...' }),
-    t('quantities.phase_extracting', { defaultValue: 'Extracting converter files...' }),
-    t('quantities.phase_verifying', { defaultValue: 'Verifying executable...' }),
-    t('quantities.phase_finalizing', { defaultValue: 'Finalizing...' }),
+    t("quantities.phase_downloading", {
+      defaultValue: "Downloading from GitHub...",
+    }),
+    t("quantities.phase_extracting", {
+      defaultValue: "Extracting converter files...",
+    }),
+    t("quantities.phase_verifying", {
+      defaultValue: "Verifying executable...",
+    }),
+    t("quantities.phase_finalizing", { defaultValue: "Finalizing..." }),
   ];
   const progressPct = error
     ? 100
@@ -506,21 +536,22 @@ function InstallProgressPanel({
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-semibold text-content-primary">
                 {error
-                  ? t('quantities.install_failed', {
-                      defaultValue: 'Installation failed',
+                  ? t("quantities.install_failed", {
+                      defaultValue: "Installation failed",
                     })
                   : result
-                    ? t('quantities.install_success', {
-                        defaultValue: 'Converter installed successfully',
+                    ? t("quantities.install_success", {
+                        defaultValue: "Converter installed successfully",
                       })
-                    : t('quantities.installing_converter', {
+                    : t("quantities.installing_converter", {
                         defaultValue: `Installing ${converterName}...`,
                         name: converterName,
                       })}
               </h3>
               {installing && (
                 <span className="text-xs text-oe-blue font-mono tabular-nums">
-                  {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, '0')}
+                  {Math.floor(elapsed / 60)}:
+                  {String(elapsed % 60).padStart(2, "0")}
                 </span>
               )}
             </div>
@@ -528,12 +559,13 @@ function InstallProgressPanel({
               {error
                 ? error
                 : result
-                  ? t('quantities.install_ready', {
-                      defaultValue: 'Converter is ready to use for CAD/BIM file processing.',
-                    })
-                  : t('quantities.install_downloading', {
+                  ? t("quantities.install_ready", {
                       defaultValue:
-                        'Installing converter module. This is a one-time setup.',
+                        "Converter is ready to use for CAD/BIM file processing.",
+                    })
+                  : t("quantities.install_downloading", {
+                      defaultValue:
+                        "Installing converter module. This is a one-time setup.",
                     })}
             </p>
           </div>
@@ -551,12 +583,12 @@ function InstallProgressPanel({
         <div className="mb-3">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-medium text-content-secondary">
-              {error ? 'Failed' : result ? 'Complete' : phaseLabels[phase]}
+              {error ? "Failed" : result ? "Complete" : phaseLabels[phase]}
             </span>
             <span
               className={clsx(
-                'text-xs font-semibold tabular-nums',
-                error ? 'text-red-500' : 'text-oe-blue',
+                "text-xs font-semibold tabular-nums",
+                error ? "text-red-500" : "text-oe-blue",
               )}
             >
               {Math.round(progressPct)}%
@@ -565,12 +597,12 @@ function InstallProgressPanel({
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-surface-secondary">
             <div
               className={clsx(
-                'h-full rounded-full transition-all duration-1000 ease-out',
+                "h-full rounded-full transition-all duration-1000 ease-out",
                 error
-                  ? 'bg-red-500'
+                  ? "bg-red-500"
                   : result
-                    ? 'bg-semantic-success'
-                    : 'bg-gradient-to-r from-oe-blue via-blue-400 to-oe-blue bg-[length:200%_100%] animate-shimmer',
+                    ? "bg-semantic-success"
+                    : "bg-gradient-to-r from-oe-blue via-blue-400 to-oe-blue bg-[length:200%_100%] animate-shimmer",
               )}
               style={{ width: `${progressPct}%` }}
             />
@@ -580,28 +612,32 @@ function InstallProgressPanel({
         {/* Phase steps */}
         {installing && (
           <div className="flex items-center gap-1 text-2xs">
-            {['Download', 'Extract', 'Verify', 'Done'].map((label, i) => (
+            {["Download", "Extract", "Verify", "Done"].map((label, i) => (
               <div key={label} className="flex items-center gap-1">
                 <div
                   className={clsx(
-                    'h-1.5 w-1.5 rounded-full',
+                    "h-1.5 w-1.5 rounded-full",
                     i < phase
-                      ? 'bg-semantic-success'
+                      ? "bg-semantic-success"
                       : i === phase
-                        ? 'bg-oe-blue animate-pulse'
-                        : 'bg-surface-tertiary',
+                        ? "bg-oe-blue animate-pulse"
+                        : "bg-surface-tertiary",
                   )}
                 />
                 <span
                   className={
                     i <= phase
-                      ? 'text-content-secondary font-medium'
-                      : 'text-content-quaternary'
+                      ? "text-content-secondary font-medium"
+                      : "text-content-quaternary"
                   }
                 >
                   {label}
                 </span>
-                {i < 3 && <span className="text-content-quaternary mx-0.5">&middot;</span>}
+                {i < 3 && (
+                  <span className="text-content-quaternary mx-0.5">
+                    &middot;
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -611,17 +647,23 @@ function InstallProgressPanel({
         {result && (
           <div className="mt-3 grid grid-cols-2 gap-2">
             <div className="rounded-lg bg-semantic-success-bg/50 px-3 py-2 text-center">
-              <div className="text-sm font-bold text-semantic-success">{converterName}</div>
+              <div className="text-sm font-bold text-semantic-success">
+                {converterName}
+              </div>
               <div className="text-2xs text-semantic-success/70">
-                {t('quantities.result_installed', { defaultValue: 'installed' })}
+                {t("quantities.result_installed", {
+                  defaultValue: "installed",
+                })}
               </div>
             </div>
             <div className="rounded-lg bg-surface-secondary px-3 py-2 text-center">
               <div className="text-sm font-bold text-content-primary">
-                {t('quantities.result_ready', { defaultValue: 'Ready' })}
+                {t("quantities.result_ready", { defaultValue: "Ready" })}
               </div>
               <div className="text-2xs text-content-tertiary">
-                {t('quantities.result_use_cad', { defaultValue: 'Use in AI Estimate → CAD/BIM' })}
+                {t("quantities.result_use_cad", {
+                  defaultValue: "Use in AI Estimate → CAD/BIM",
+                })}
               </div>
             </div>
           </div>
@@ -632,18 +674,23 @@ function InstallProgressPanel({
       <div className="px-5 py-3 bg-surface-secondary/50 border-t border-border-light">
         <div className="flex items-center gap-4 text-2xs text-content-tertiary">
           <span className="flex items-center gap-1">
-            <HardDrive size={10} /> {t('quantities.module_label', { defaultValue: 'Module' })}
+            <HardDrive size={10} />{" "}
+            {t("quantities.module_label", { defaultValue: "Module" })}
           </span>
           <span className="flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> {t('quantities.open_source', { defaultValue: 'Open Source' })}
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />{" "}
+            {t("quantities.open_source", { defaultValue: "Open Source" })}
           </span>
           <span className="flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-blue-400" /> {t('quantities.free_label', { defaultValue: 'Free' })}
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />{" "}
+            {t("quantities.free_label", { defaultValue: "Free" })}
           </span>
           <span className="ml-auto font-medium text-content-secondary">
             {result
-              ? t('quantities.info_ready', { defaultValue: 'Ready to use' })
-              : t('quantities.info_onetime', { defaultValue: 'One-time install' })}
+              ? t("quantities.info_ready", { defaultValue: "Ready to use" })
+              : t("quantities.info_onetime", {
+                  defaultValue: "One-time install",
+                })}
           </span>
         </div>
       </div>
@@ -672,11 +719,13 @@ function InstalledConvertersTable({
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('quantities.installed_converters', { defaultValue: 'Installed Converters' })}
+            {t("quantities.installed_converters", {
+              defaultValue: "Installed Converters",
+            })}
           </h3>
           <p className="text-2xs text-content-quaternary mt-0.5">
-            {t('quantities.installed_count', {
-              defaultValue: '{{count}} converter(s) detected',
+            {t("quantities.installed_count", {
+              defaultValue: "{{count}} converter(s) detected",
               count: installed.length,
             })}
           </p>
@@ -687,24 +736,29 @@ function InstalledConvertersTable({
           <thead>
             <tr className="border-b border-border-light text-left text-xs text-content-tertiary">
               <th className="pb-2 pr-4 font-medium">
-                {t('quantities.table_converter', { defaultValue: 'Converter' })}
+                {t("quantities.table_converter", { defaultValue: "Converter" })}
               </th>
               <th className="pb-2 pr-4 font-medium">
-                {t('quantities.table_formats', { defaultValue: 'Formats' })}
+                {t("quantities.table_formats", { defaultValue: "Formats" })}
               </th>
               <th className="pb-2 pr-4 font-medium">
-                {t('quantities.table_status', { defaultValue: 'Status' })}
+                {t("quantities.table_status", { defaultValue: "Status" })}
               </th>
               <th className="pb-2 pr-4 font-medium">
-                {t('quantities.table_version', { defaultValue: 'Version' })}
+                {t("quantities.table_version", { defaultValue: "Version" })}
               </th>
               <th className="pb-2 font-medium w-20"></th>
             </tr>
           </thead>
           <tbody>
             {installed.map((c) => (
-              <tr key={c.id} className="border-b border-border-light last:border-0">
-                <td className="py-2.5 pr-4 font-medium text-content-primary">{c.name}</td>
+              <tr
+                key={c.id}
+                className="border-b border-border-light last:border-0"
+              >
+                <td className="py-2.5 pr-4 font-medium text-content-primary">
+                  {c.name}
+                </td>
                 <td className="py-2.5 pr-4">
                   <div className="flex flex-wrap gap-1">
                     {c.extensions.map((ext) => (
@@ -721,7 +775,9 @@ function InstalledConvertersTable({
                   <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 size={12} />
                     <span className="text-xs">
-                      {t('quantities.status_loaded', { defaultValue: 'Loaded' })}
+                      {t("quantities.status_loaded", {
+                        defaultValue: "Loaded",
+                      })}
                     </span>
                   </span>
                 </td>
@@ -762,15 +818,15 @@ export function QuantitiesPage() {
   // When disabled, the converters/documents endpoints 404; gating the
   // queries on this avoids the noisy network-panel logs.
   const { data: takeoffLoaded } = useQuery({
-    queryKey: ['module-loaded', 'oe_takeoff'],
-    queryFn: () => isModuleLoaded('oe_takeoff'),
+    queryKey: ["module-loaded", "oe_takeoff"],
+    queryFn: () => isModuleLoaded("oe_takeoff"),
     staleTime: Infinity,
   });
 
   // Converter data from API
   const { data: convertersData } = useQuery<ConvertersResponse>({
-    queryKey: ['takeoff', 'converters'],
-    queryFn: () => apiGet<ConvertersResponse>('/v1/takeoff/converters/'),
+    queryKey: ["takeoff", "converters"],
+    queryFn: () => apiGet<ConvertersResponse>("/v1/takeoff/converters/"),
     staleTime: 30_000,
     enabled: takeoffLoaded === true,
   });
@@ -780,21 +836,24 @@ export function QuantitiesPage() {
   // result for 6 h to stay clear of the unauth'd GitHub rate limit so a
   // 30-minute client staleTime is conservative.
   const { data: versionCheck } = useQuery<ConverterVersionCheck | null>({
-    queryKey: ['bim-converters-version-check'],
+    queryKey: ["bim-converters-version-check"],
     queryFn: fetchConverterVersionCheck,
     staleTime: 30 * 60 * 1000,
     enabled: takeoffLoaded === true,
   });
 
-  const versionByExt: Record<string, ConverterVersionCheck['converters'][0] | undefined> = {};
+  const versionByExt: Record<
+    string,
+    ConverterVersionCheck["converters"][0] | undefined
+  > = {};
   for (const v of versionCheck?.converters ?? []) {
     versionByExt[v.id] = v;
   }
 
   // Recent documents from API
   const { data: documents } = useQuery({
-    queryKey: ['takeoff', 'documents'],
-    queryFn: () => apiGet<TakeoffDocument[]>('/v1/takeoff/documents/'),
+    queryKey: ["takeoff", "documents"],
+    queryFn: () => apiGet<TakeoffDocument[]>("/v1/takeoff/documents/"),
     enabled: takeoffLoaded === true,
   });
 
@@ -807,7 +866,9 @@ export function QuantitiesPage() {
   const [localInstalled, setLocalInstalled] = useState<Set<string>>(
     () => new Set(getInstalledConverters()),
   );
-  const [installResult, setInstallResult] = useState<InstallResult | null>(null);
+  const [installResult, setInstallResult] = useState<InstallResult | null>(
+    null,
+  );
   const [installError, setInstallError] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [uninstalling, setUninstalling] = useState<string | null>(null);
@@ -832,7 +893,7 @@ export function QuantitiesPage() {
       setInstallError(null);
 
       try {
-        const qs = opts.force ? '?force=true' : '';
+        const qs = opts.force ? "?force=true" : "";
         const data = await apiPost<InstallResult>(
           `/v1/takeoff/converters/${converter.id}/install/${qs}`,
         );
@@ -842,7 +903,7 @@ export function QuantitiesPage() {
         setInstallResult(data);
 
         addToast({
-          type: 'success',
+          type: "success",
           title: opts.force
             ? `${converter.name} updated`
             : `${converter.name} installed`,
@@ -852,15 +913,17 @@ export function QuantitiesPage() {
         // Refresh converter status + version-check from API. Without the
         // version-check invalidation the "Update available" badge would
         // linger until the 6-h server cache TTL expired.
-        queryClient.invalidateQueries({ queryKey: ['takeoff', 'converters'] });
-        queryClient.invalidateQueries({ queryKey: ['bim-converters'] });
-        queryClient.invalidateQueries({ queryKey: ['bim-converters-version-check'] });
+        queryClient.invalidateQueries({ queryKey: ["takeoff", "converters"] });
+        queryClient.invalidateQueries({ queryKey: ["bim-converters"] });
+        queryClient.invalidateQueries({
+          queryKey: ["bim-converters-version-check"],
+        });
       } catch (err: unknown) {
         const detail =
-          err instanceof Error ? err.message : 'Failed to install converter';
+          err instanceof Error ? err.message : "Failed to install converter";
         setInstallError(detail);
         addToast({
-          type: 'error',
+          type: "error",
           title: `Failed to install ${converter.name}`,
           message: detail,
         });
@@ -894,17 +957,17 @@ export function QuantitiesPage() {
         removeInstalledConverter(converterId);
 
         addToast({
-          type: 'success',
+          type: "success",
           title: `${name} uninstalled`,
-          message: 'Converter has been removed.',
+          message: "Converter has been removed.",
         });
 
-        queryClient.invalidateQueries({ queryKey: ['takeoff', 'converters'] });
+        queryClient.invalidateQueries({ queryKey: ["takeoff", "converters"] });
       } catch (err: unknown) {
         const detail =
-          err instanceof Error ? err.message : 'Failed to uninstall converter';
+          err instanceof Error ? err.message : "Failed to uninstall converter";
         addToast({
-          type: 'error',
+          type: "error",
           title: `Failed to uninstall ${name}`,
           message: detail,
         });
@@ -922,20 +985,26 @@ export function QuantitiesPage() {
 
   // Get the name of the currently installing converter
   const installingConverterName =
-    converters.find((c) => c.id === installing)?.name ?? installing ?? '';
+    converters.find((c) => c.id === installing)?.name ?? installing ?? "";
 
   return (
     <div className="w-full space-y-8 animate-fade-in">
-      <Breadcrumb items={[{ label: t('nav.dashboard', 'Dashboard'), to: '/' }, { label: t('nav.quantities', 'Quantity Takeoff') }]} className="mb-4" />
+      <Breadcrumb
+        items={[
+          { label: t("nav.dashboard", "Dashboard"), to: "/" },
+          { label: t("nav.quantities", "Quantity Takeoff") },
+        ]}
+        className="mb-4"
+      />
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-content-primary">
-          {t('quantities.title', { defaultValue: 'Quantity Takeoff' })}
+          {t("quantities.title", { defaultValue: "Quantity Takeoff" })}
         </h1>
         <p className="mt-1 text-sm text-content-tertiary">
-          {t('quantities.subtitle', {
+          {t("quantities.subtitle", {
             defaultValue:
-              'Collect project quantities — from AI text input, PDF drawings, or CAD/BIM models',
+              "Collect project quantities — from AI text input, PDF drawings, or CAD/BIM models",
           })}
         </p>
       </div>
@@ -950,16 +1019,16 @@ export function QuantitiesPage() {
               onClick={() => method.available && navigate(method.route)}
               disabled={!method.available}
               className={clsx(
-                'group relative flex flex-col rounded-xl border border-border-light p-6 text-left transition-all duration-200',
+                "group relative flex flex-col rounded-xl border border-border-light p-6 text-left transition-all duration-200",
                 method.available
                   ? `bg-gradient-to-br ${method.gradient} cursor-pointer hover:shadow-md hover:border-oe-blue/30`
-                  : 'opacity-60 cursor-not-allowed bg-surface-secondary',
+                  : "opacity-60 cursor-not-allowed bg-surface-secondary",
               )}
             >
               {method.badgeKey && (
                 <span
                   className={clsx(
-                    'absolute top-3 right-3 inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-semibold',
+                    "absolute top-3 right-3 inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-semibold",
                     method.badgeColor,
                   )}
                 >
@@ -969,7 +1038,7 @@ export function QuantitiesPage() {
 
               <div
                 className={clsx(
-                  'flex h-12 w-12 items-center justify-center rounded-xl text-white',
+                  "flex h-12 w-12 items-center justify-center rounded-xl text-white",
                   method.iconBg,
                 )}
               >
@@ -985,7 +1054,7 @@ export function QuantitiesPage() {
 
               {method.available && (
                 <div className="mt-4 flex items-center gap-1 text-sm font-medium text-oe-blue opacity-0 transition-opacity group-hover:opacity-100">
-                  {t('quantities.open', { defaultValue: 'Open' })}
+                  {t("quantities.open", { defaultValue: "Open" })}
                   <ArrowRight size={14} />
                 </div>
               )}
@@ -997,7 +1066,7 @@ export function QuantitiesPage() {
       {/* How it works */}
       <div className="rounded-xl border border-border-light bg-surface-primary p-6">
         <h2 className="text-lg font-semibold text-content-primary">
-          {t('quantities.how_it_works', { defaultValue: 'How it works' })}
+          {t("quantities.how_it_works", { defaultValue: "How it works" })}
         </h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {steps.map((step) => (
@@ -1009,7 +1078,9 @@ export function QuantitiesPage() {
                 <p className="text-sm font-medium text-content-primary">
                   {t(step.titleKey)}
                 </p>
-                <p className="mt-0.5 text-xs text-content-tertiary">{t(step.descKey)}</p>
+                <p className="mt-0.5 text-xs text-content-tertiary">
+                  {t(step.descKey)}
+                </p>
               </div>
             </div>
           ))}
@@ -1027,33 +1098,38 @@ export function QuantitiesPage() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-semibold text-content-primary">
-                  {t('quantities.converters_title', {
-                    defaultValue: 'CAD/BIM Converter Modules',
+                  {t("quantities.converters_title", {
+                    defaultValue: "CAD/BIM Converter Modules",
                   })}
                 </h2>
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-2xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                  {installedCount}/{totalCount} {t('quantities.installed_label', { defaultValue: 'installed' })}
+                  {installedCount}/{totalCount}{" "}
+                  {t("quantities.installed_label", {
+                    defaultValue: "installed",
+                  })}
                 </span>
               </div>
               <p className="mt-0.5 text-xs text-content-quaternary">
-                {t('quantities.converters_author', {
-                  defaultValue: 'DDC Community · Open Source · Free',
+                {t("quantities.converters_author", {
+                  defaultValue: "DDC Community · Open Source · Free",
                 })}
               </p>
             </div>
           </div>
           <p className="mt-3 text-sm text-content-secondary leading-relaxed">
-            {t('quantities.converters_desc', {
+            {t("quantities.converters_desc", {
               defaultValue:
-                'Install converter modules to extract elements, quantities, and geometry from CAD/BIM files. Each module handles a specific file format and transforms it into structured data for AI-powered cost estimation.',
+                "Install converter modules to extract elements, quantities, and geometry from CAD/BIM files. Each module handles a specific file format and transforms it into structured data for AI-powered cost estimation.",
             })}
           </p>
           <button
-            onClick={() => navigate('/data-explorer')}
+            onClick={() => navigate("/data-explorer")}
             className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-oe-blue/10 px-3 py-1.5 text-xs font-medium text-oe-blue hover:bg-oe-blue/20 transition-colors"
           >
             <Box size={14} />
-            {t('quantities.go_to_cad_takeoff', { defaultValue: 'Go to CAD/BIM Takeoff' })}
+            {t("quantities.go_to_cad_takeoff", {
+              defaultValue: "Go to CAD/BIM Takeoff",
+            })}
             <ArrowRight size={12} />
           </button>
         </div>
@@ -1078,15 +1154,20 @@ export function QuantitiesPage() {
         {/* Fallback when API hasn't loaded yet — show skeleton cards */}
         {converters.length === 0 && (
           <div className="grid gap-3 sm:grid-cols-2">
-            {['dwg', 'rvt', 'ifc', 'dgn'].map((id) => {
-              const colors = CONVERTER_COLORS[id] ?? CONVERTER_COLORS['dwg'] ?? { bg: 'from-gray-500/8 to-gray-500/8', border: 'border-gray-200', icon: 'bg-gray-500' };
+            {["dwg", "rvt", "ifc", "dgn"].map((id) => {
+              const colors = CONVERTER_COLORS[id] ??
+                CONVERTER_COLORS["dwg"] ?? {
+                  bg: "from-gray-500/8 to-gray-500/8",
+                  border: "border-gray-200",
+                  icon: "bg-gray-500",
+                };
               return (
                 <div
                   key={id}
                   className={clsx(
-                    'rounded-xl border p-5 animate-pulse',
+                    "rounded-xl border p-5 animate-pulse",
                     colors.border,
-                    'bg-gradient-to-br',
+                    "bg-gradient-to-br",
                     colors.bg,
                   )}
                 >
@@ -1106,8 +1187,8 @@ export function QuantitiesPage() {
             installing={installing !== null}
             converterName={
               installResult
-                ? converters.find((c) => c.id === installResult.converter_id)?.name ??
-                  installResult.converter_id
+                ? (converters.find((c) => c.id === installResult.converter_id)
+                    ?.name ?? installResult.converter_id)
                 : installingConverterName
             }
             elapsed={elapsed}
@@ -1128,8 +1209,8 @@ export function QuantitiesPage() {
         <div className="flex flex-wrap items-center gap-3 text-xs text-content-quaternary px-1">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 size={11} />
-            {t('quantities.modules_managed', {
-              defaultValue: 'Modules are managed automatically by the platform',
+            {t("quantities.modules_managed", {
+              defaultValue: "Modules are managed automatically by the platform",
             })}
           </span>
           <a
@@ -1139,8 +1220,8 @@ export function QuantitiesPage() {
             className="inline-flex items-center gap-1 text-xs text-content-tertiary hover:text-oe-blue transition-colors"
           >
             <ExternalLink size={11} />
-            {t('quantities.source_code', {
-              defaultValue: 'Source code',
+            {t("quantities.source_code", {
+              defaultValue: "Source code",
             })}
           </a>
         </div>
@@ -1151,20 +1232,23 @@ export function QuantitiesPage() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold text-content-primary">
-              {t('quantities.manual_title', { defaultValue: 'Quick Manual Entry' })}
+              {t("quantities.manual_title", {
+                defaultValue: "Quick Manual Entry",
+              })}
             </h2>
             <p className="mt-0.5 text-sm text-content-tertiary">
-              {t('quantities.manual_desc', {
-                defaultValue: 'Need to add quantities directly? Go to the BOQ Editor.',
+              {t("quantities.manual_desc", {
+                defaultValue:
+                  "Need to add quantities directly? Go to the BOQ Editor.",
               })}
             </p>
           </div>
           <button
-            onClick={() => navigate('/boq')}
+            onClick={() => navigate("/boq")}
             className="flex items-center gap-2 rounded-lg bg-oe-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-oe-blue-dark"
           >
             <MessageSquareText size={16} />
-            {t('quantities.open_boq', { defaultValue: 'Open BOQ Editor' })}
+            {t("quantities.open_boq", { defaultValue: "Open BOQ Editor" })}
           </button>
         </div>
       </div>
@@ -1178,11 +1262,13 @@ export function QuantitiesPage() {
             </div>
             <div>
               <h2 className="text-lg font-semibold text-content-primary">
-                {t('quantities.recent_documents_title', { defaultValue: 'Recent Documents' })}
+                {t("quantities.recent_documents_title", {
+                  defaultValue: "Recent Documents",
+                })}
               </h2>
               <p className="text-xs text-content-quaternary">
-                {t('quantities.recent_documents_count', {
-                  defaultValue: '{{count}} document(s) uploaded',
+                {t("quantities.recent_documents_count", {
+                  defaultValue: "{{count}} document(s) uploaded",
                   count: documents?.length ?? 0,
                 })}
               </p>
@@ -1198,10 +1284,17 @@ export function QuantitiesPage() {
                 className="flex items-center justify-between rounded-lg border border-border-light px-4 py-3 hover:bg-surface-secondary transition-colors"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <FileText size={16} className="shrink-0 text-content-quaternary" />
+                  <FileText
+                    size={16}
+                    className="shrink-0 text-content-quaternary"
+                  />
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-content-primary truncate">
-                      {doc.name ?? doc.filename ?? t('quantities.unnamed_document', { defaultValue: 'Unnamed document' })}
+                      {doc.name ??
+                        doc.filename ??
+                        t("quantities.unnamed_document", {
+                          defaultValue: "Unnamed document",
+                        })}
                     </p>
                     <div className="flex items-center gap-2 text-2xs text-content-quaternary">
                       {doc.created_at && (
@@ -1225,14 +1318,18 @@ export function QuantitiesPage() {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <FileText size={32} className="text-content-quaternary mb-3" />
             <p className="text-sm text-content-tertiary">
-              {t('quantities.no_documents', { defaultValue: 'No documents uploaded yet' })}
+              {t("quantities.no_documents", {
+                defaultValue: "No documents uploaded yet",
+              })}
             </p>
             <button
-              onClick={() => navigate('/takeoff')}
+              onClick={() => navigate("/takeoff")}
               className="mt-3 flex items-center gap-2 rounded-lg bg-oe-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-oe-blue-dark"
             >
               <Upload size={16} />
-              {t('quantities.upload_document', { defaultValue: 'Upload Document' })}
+              {t("quantities.upload_document", {
+                defaultValue: "Upload Document",
+              })}
             </button>
           </div>
         )}

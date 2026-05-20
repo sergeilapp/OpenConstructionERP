@@ -7,8 +7,8 @@
  * with volume/area/length aggregates and linked BOQ positions.
  */
 
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Bookmark,
   ChevronDown,
@@ -24,22 +24,22 @@ import {
   Box,
   Ruler,
   Layers,
-} from 'lucide-react';
-import type { BIMElementGroup } from './api';
-import { updateElementGroup } from './api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
+} from "lucide-react";
+import type { BIMElementGroup } from "./api";
+import { updateElementGroup } from "./api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
 
 /* ── Constants ──────────────────────────────────────────────────────────── */
 
 const GROUP_COLORS = [
-  '#2979ff',
-  '#4caf50',
-  '#ff9800',
-  '#f44336',
-  '#9c27b0',
-  '#00bcd4',
-  '#795548',
-  '#607d8b',
+  "#2979ff",
+  "#4caf50",
+  "#ff9800",
+  "#f44336",
+  "#9c27b0",
+  "#00bcd4",
+  "#795548",
+  "#607d8b",
 ];
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
@@ -104,11 +104,15 @@ export default function BIMGroupsPanel({
   void _projectId;
   const { t } = useTranslation();
   const [panelExpanded, setPanelExpanded] = useState(true);
-  const [expandedGroupIds, setExpandedGroupIds] = useState<Set<string>>(new Set());
+  const [expandedGroupIds, setExpandedGroupIds] = useState<Set<string>>(
+    new Set(),
+  );
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [renamingGroupId, setRenamingGroupId] = useState<string | null>(null);
-  const [renameValue, setRenameValue] = useState('');
-  const [colorPickerGroupId, setColorPickerGroupId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [colorPickerGroupId, setColorPickerGroupId] = useState<string | null>(
+    null,
+  );
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const renameInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,7 +134,9 @@ export default function BIMGroupsPanel({
       let vol = 0;
       let area = 0;
       let len = 0;
-      const memberIds = Array.isArray(group.member_element_ids) ? group.member_element_ids : [];
+      const memberIds = Array.isArray(group.member_element_ids)
+        ? group.member_element_ids
+        : [];
       for (const elId of memberIds) {
         const el = elementMap.get(elId);
         if (el?.quantities) {
@@ -151,7 +157,9 @@ export default function BIMGroupsPanel({
     for (const group of savedGroups) {
       const links: GroupBOQLink[] = [];
       const seen = new Set<string>();
-      const memberIds = Array.isArray(group.member_element_ids) ? group.member_element_ids : [];
+      const memberIds = Array.isArray(group.member_element_ids)
+        ? group.member_element_ids
+        : [];
       for (const elId of memberIds) {
         const el = elementMap.get(elId);
         if (el?.boq_links?.length) {
@@ -160,8 +168,8 @@ export default function BIMGroupsPanel({
               seen.add(link.boq_position_id);
               links.push({
                 positionId: link.boq_position_id,
-                ordinal: link.boq_position_ordinal || '',
-                description: link.boq_position_description || '',
+                ordinal: link.boq_position_ordinal || "",
+                description: link.boq_position_description || "",
                 total: 0,
               });
             }
@@ -190,12 +198,15 @@ export default function BIMGroupsPanel({
   useEffect(() => {
     if (!contextMenu) return;
     const handler = (e: MouseEvent) => {
-      if (contextMenuRef.current && !contextMenuRef.current.contains(e.target as Node)) {
+      if (
+        contextMenuRef.current &&
+        !contextMenuRef.current.contains(e.target as Node)
+      ) {
         setContextMenu(null);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [contextMenu]);
 
   // Focus rename input when it appears
@@ -206,20 +217,20 @@ export default function BIMGroupsPanel({
     }
   }, [renamingGroupId]);
 
-  const handleContextMenu = useCallback((e: React.MouseEvent, groupId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setContextMenu({ groupId, x: e.clientX, y: e.clientY });
-  }, []);
-
-  const handleStartRename = useCallback(
-    (group: BIMElementGroup) => {
-      setRenamingGroupId(group.id);
-      setRenameValue(group.name);
-      setContextMenu(null);
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent, groupId: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setContextMenu({ groupId, x: e.clientX, y: e.clientY });
     },
     [],
   );
+
+  const handleStartRename = useCallback((group: BIMElementGroup) => {
+    setRenamingGroupId(group.id);
+    setRenameValue(group.name);
+    setContextMenu(null);
+  }, []);
 
   const handleConfirmRename = useCallback(
     async (groupId: string) => {
@@ -255,20 +266,24 @@ export default function BIMGroupsPanel({
 
   const handleExportCSV = useCallback(
     (group: BIMElementGroup) => {
-      const rows: string[] = ['id,name,element_type,storey'];
-      const memberIds = Array.isArray(group.member_element_ids) ? group.member_element_ids : [];
+      const rows: string[] = ["id,name,element_type,storey"];
+      const memberIds = Array.isArray(group.member_element_ids)
+        ? group.member_element_ids
+        : [];
       for (const elId of memberIds) {
         const el = elementMap.get(elId);
         if (el) {
-          const name = (el.name || '').replace(/,/g, ';');
-          rows.push(`${el.id},${name},${el.element_type || ''},${el.storey || ''}`);
+          const name = (el.name || "").replace(/,/g, ";");
+          rows.push(
+            `${el.id},${name},${el.element_type || ""},${el.storey || ""}`,
+          );
         }
       }
-      const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+      const blob = new Blob([rows.join("\n")], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `${group.name.replace(/\s+/g, '_')}.csv`;
+      a.download = `${group.name.replace(/\s+/g, "_")}.csv`;
       a.click();
       URL.revokeObjectURL(url);
       setContextMenu(null);
@@ -278,7 +293,8 @@ export default function BIMGroupsPanel({
 
   /** Format a number with locale separators and 1 decimal place. */
   const fmt = useCallback(
-    (n: number): string => n.toLocaleString(undefined, { maximumFractionDigits: 1 }),
+    (n: number): string =>
+      n.toLocaleString(undefined, { maximumFractionDigits: 1 }),
     [],
   );
 
@@ -295,7 +311,7 @@ export default function BIMGroupsPanel({
         <div className="flex items-center gap-1.5">
           <Bookmark size={12} className="text-oe-blue" />
           <span className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-            {t('bim.saved_groups', { defaultValue: 'Saved groups‌⁠‍' })}
+            {t("bim.saved_groups", { defaultValue: "Saved groups‌⁠‍" })}
           </span>
           <span className="text-[10px] text-content-quaternary tabular-nums">
             ({savedGroups.length})
@@ -315,7 +331,10 @@ export default function BIMGroupsPanel({
             const quantities = groupQuantities.get(group.id);
             const boqLinks = groupBOQLinks.get(group.id) ?? [];
             const hasQuantities =
-              quantities && (quantities.volume > 0 || quantities.area > 0 || quantities.length > 0);
+              quantities &&
+              (quantities.volume > 0 ||
+                quantities.area > 0 ||
+                quantities.length > 0);
             const isRenaming = renamingGroupId === group.id;
             const showColorPicker = colorPickerGroupId === group.id;
 
@@ -335,13 +354,17 @@ export default function BIMGroupsPanel({
                     onClick={() => toggleGroupExpanded(group.id)}
                     className="shrink-0 p-0.5 rounded text-content-quaternary hover:text-content-secondary"
                   >
-                    {isExpanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+                    {isExpanded ? (
+                      <ChevronDown size={10} />
+                    ) : (
+                      <ChevronRight size={10} />
+                    )}
                   </button>
 
                   {/* Color dot */}
                   <span
                     className="inline-block h-2.5 w-2.5 rounded-full shrink-0"
-                    style={{ background: group.color || '#2979ff' }}
+                    style={{ background: group.color || "#2979ff" }}
                   />
 
                   {/* Name (or rename input) */}
@@ -353,8 +376,8 @@ export default function BIMGroupsPanel({
                       onChange={(e) => setRenameValue(e.target.value)}
                       onBlur={() => handleConfirmRename(group.id)}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleConfirmRename(group.id);
-                        if (e.key === 'Escape') setRenamingGroupId(null);
+                        if (e.key === "Enter") handleConfirmRename(group.id);
+                        if (e.key === "Escape") setRenamingGroupId(null);
                       }}
                       className="flex-1 min-w-0 text-[11px] px-1 py-0.5 rounded border border-oe-blue bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
                     />
@@ -363,8 +386,8 @@ export default function BIMGroupsPanel({
                       type="button"
                       onClick={() => onIsolateGroup(group)}
                       className="flex-1 min-w-0 text-left text-[11px] font-medium text-content-primary truncate"
-                      title={t('bim.groups_click_isolate', {
-                        defaultValue: 'Click to isolate in 3D‌⁠‍',
+                      title={t("bim.groups_click_isolate", {
+                        defaultValue: "Click to isolate in 3D‌⁠‍",
                       })}
                     >
                       {group.name}
@@ -381,7 +404,10 @@ export default function BIMGroupsPanel({
                     type="button"
                     onClick={(e) => handleContextMenu(e, group.id)}
                     className="shrink-0 p-0.5 rounded text-content-quaternary hover:text-content-secondary opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ opacity: contextMenu?.groupId === group.id ? 1 : undefined }}
+                    style={{
+                      opacity:
+                        contextMenu?.groupId === group.id ? 1 : undefined,
+                    }}
                   >
                     <MoreVertical size={11} />
                   </button>
@@ -396,13 +422,13 @@ export default function BIMGroupsPanel({
                         {quantities.volume > 0 && (
                           <span className="inline-flex items-center gap-0.5">
                             <Box size={9} className="opacity-60" />
-                            {fmt(quantities.volume)} m{'\u00B3'}
+                            {fmt(quantities.volume)} m{"\u00B3"}
                           </span>
                         )}
                         {quantities.area > 0 && (
                           <span className="inline-flex items-center gap-0.5">
                             <Layers size={9} className="opacity-60" />
-                            {fmt(quantities.area)} m{'\u00B2'}
+                            {fmt(quantities.area)} m{"\u00B2"}
                           </span>
                         )}
                         {quantities.length > 0 && (
@@ -424,9 +450,11 @@ export default function BIMGroupsPanel({
                           >
                             <Link2 size={9} className="text-oe-blue shrink-0" />
                             <span className="text-content-secondary truncate">
-                              {t('bim.groups_boq_label', { defaultValue: 'BOQ' })}{' '}
+                              {t("bim.groups_boq_label", {
+                                defaultValue: "BOQ",
+                              })}{" "}
                               {link.ordinal || link.positionId.slice(0, 8)}
-                              {link.description ? ` - ${link.description}` : ''}
+                              {link.description ? ` - ${link.description}` : ""}
                             </span>
                             <button
                               type="button"
@@ -436,7 +464,7 @@ export default function BIMGroupsPanel({
                               }}
                               className="shrink-0 ml-auto inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-medium text-oe-blue hover:bg-oe-blue/10 transition-colors"
                             >
-                              {t('bim.groups_open', { defaultValue: 'Open' })}
+                              {t("bim.groups_open", { defaultValue: "Open" })}
                               <ExternalLink size={8} />
                             </button>
                           </div>
@@ -445,7 +473,9 @@ export default function BIMGroupsPanel({
                     ) : (
                       <div className="flex items-center gap-1 px-1 text-[10px] text-content-quaternary">
                         <span>
-                          {t('bim.groups_not_linked', { defaultValue: 'Not linked to BOQ‌⁠‍' })}
+                          {t("bim.groups_not_linked", {
+                            defaultValue: "Not linked to BOQ‌⁠‍",
+                          })}
                         </span>
                         <button
                           type="button"
@@ -456,7 +486,9 @@ export default function BIMGroupsPanel({
                           className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-medium text-oe-blue hover:bg-oe-blue/10 transition-colors"
                         >
                           <Plus size={8} />
-                          {t('bim.groups_link_boq', { defaultValue: 'Link BOQ‌⁠‍' })}
+                          {t("bim.groups_link_boq", {
+                            defaultValue: "Link BOQ‌⁠‍",
+                          })}
                         </button>
                       </div>
                     )}
@@ -470,9 +502,9 @@ export default function BIMGroupsPanel({
                             type="button"
                             onClick={() => handleColorChange(group.id, c)}
                             className={`h-4 w-4 rounded-full border-2 transition-transform hover:scale-125 ${
-                              (group.color || '#2979ff') === c
-                                ? 'border-content-primary scale-110'
-                                : 'border-transparent'
+                              (group.color || "#2979ff") === c
+                                ? "border-content-primary scale-110"
+                                : "border-transparent"
                             }`}
                             style={{ background: c }}
                             title={c}
@@ -494,8 +526,8 @@ export default function BIMGroupsPanel({
               className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md border border-dashed border-border-light text-[10px] text-content-tertiary hover:text-oe-blue hover:border-oe-blue/40 transition-colors"
             >
               <Plus size={10} />
-              {t('bim.groups_new_from_selection', {
-                defaultValue: 'New group from selection‌⁠‍',
+              {t("bim.groups_new_from_selection", {
+                defaultValue: "New group from selection‌⁠‍",
               })}
             </button>
           )}
@@ -520,7 +552,7 @@ export default function BIMGroupsPanel({
                   className="w-full flex items-center gap-2 px-3 py-1.5 text-[11px] text-content-primary hover:bg-surface-secondary"
                 >
                   <Pencil size={11} />
-                  {t('bim.groups_rename', { defaultValue: 'Rename' })}
+                  {t("bim.groups_rename", { defaultValue: "Rename" })}
                 </button>
                 <button
                   type="button"
@@ -529,14 +561,18 @@ export default function BIMGroupsPanel({
                       prev === group.id ? null : group.id,
                     );
                     if (!expandedGroupIds.has(group.id)) {
-                      setExpandedGroupIds((prev) => new Set([...prev, group.id]));
+                      setExpandedGroupIds(
+                        (prev) => new Set([...prev, group.id]),
+                      );
                     }
                     setContextMenu(null);
                   }}
                   className="w-full flex items-center gap-2 px-3 py-1.5 text-[11px] text-content-primary hover:bg-surface-secondary"
                 >
                   <Palette size={11} />
-                  {t('bim.groups_change_color', { defaultValue: 'Change color' })}
+                  {t("bim.groups_change_color", {
+                    defaultValue: "Change color",
+                  })}
                 </button>
                 <button
                   type="button"
@@ -544,7 +580,7 @@ export default function BIMGroupsPanel({
                   className="w-full flex items-center gap-2 px-3 py-1.5 text-[11px] text-content-primary hover:bg-surface-secondary"
                 >
                   <Download size={11} />
-                  {t('bim.groups_export_csv', { defaultValue: 'Export CSV' })}
+                  {t("bim.groups_export_csv", { defaultValue: "Export CSV" })}
                 </button>
                 <div className="my-1 border-t border-border-light" />
                 <button
@@ -556,7 +592,7 @@ export default function BIMGroupsPanel({
                   className="w-full flex items-center gap-2 px-3 py-1.5 text-[11px] text-rose-600 hover:bg-rose-50"
                 >
                   <Trash2 size={11} />
-                  {t('bim.groups_delete', { defaultValue: 'Delete' })}
+                  {t("bim.groups_delete", { defaultValue: "Delete" })}
                 </button>
               </>
             );

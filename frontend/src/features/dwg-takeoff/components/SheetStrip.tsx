@@ -16,9 +16,9 @@
  * each at the scale of paper-space sheets).
  */
 
-import { useEffect, useRef } from 'react';
-import clsx from 'clsx';
-import type { DxfEntity } from '../api';
+import { useEffect, useRef } from "react";
+import clsx from "clsx";
+import type { DxfEntity } from "../api";
 
 interface Props {
   layouts: string[];
@@ -48,7 +48,7 @@ export function SheetStrip({
   // the map by name rather than filtering the whole array per thumb.
   const byLayout = new Map<string, DxfEntity[]>();
   for (const e of entities) {
-    const key = e.layout ?? '__default__';
+    const key = e.layout ?? "__default__";
     const arr = byLayout.get(key);
     if (arr) arr.push(e);
     else byLayout.set(key, [e]);
@@ -69,20 +69,20 @@ export function SheetStrip({
             type="button"
             onClick={() => onLayoutChange(layout)}
             data-testid={`dwg-sheet-strip-item-${layout}`}
-            data-active={isActive ? 'true' : 'false'}
+            data-active={isActive ? "true" : "false"}
             className={clsx(
-              'group flex flex-col items-center gap-1 rounded-md border p-1 transition-colors flex-shrink-0',
+              "group flex flex-col items-center gap-1 rounded-md border p-1 transition-colors flex-shrink-0",
               isActive
-                ? 'border-oe-blue bg-oe-blue/10'
-                : 'border-border hover:border-oe-blue/50 hover:bg-surface-secondary',
+                ? "border-oe-blue bg-oe-blue/10"
+                : "border-border hover:border-oe-blue/50 hover:bg-surface-secondary",
             )}
           >
             <SheetThumb entities={layoutEnts} />
             <div className="flex w-full items-center justify-between gap-2 px-0.5">
               <span
                 className={clsx(
-                  'max-w-[110px] truncate text-[10px] font-medium',
-                  isActive ? 'text-oe-blue' : 'text-foreground',
+                  "max-w-[110px] truncate text-[10px] font-medium",
+                  isActive ? "text-oe-blue" : "text-foreground",
                 )}
                 title={layout}
               >
@@ -109,7 +109,7 @@ function SheetThumb({ entities }: { entities: DxfEntity[] }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
@@ -138,7 +138,7 @@ function SheetThumb({ entities }: { entities: DxfEntity[] }) {
       if (e.vertices) {
         for (const v of e.vertices) expand(v.x, v.y);
       }
-      if (e.start && typeof e.radius === 'number') {
+      if (e.start && typeof e.radius === "number") {
         expand(e.start.x - e.radius, e.start.y - e.radius);
         expand(e.start.x + e.radius, e.start.y + e.radius);
       }
@@ -147,7 +147,7 @@ function SheetThumb({ entities }: { entities: DxfEntity[] }) {
     if (!isFinite(minX) || maxX === minX || maxY === minY) {
       // Empty or degenerate — show a small dashed placeholder so the
       // thumbnail isn't visually blank, but don't try to render geometry.
-      ctx.strokeStyle = '#cbd5e1';
+      ctx.strokeStyle = "#cbd5e1";
       ctx.setLineDash([3, 3]);
       ctx.strokeRect(4, 4, THUMB_W - 8, THUMB_H - 8);
       ctx.setLineDash([]);
@@ -171,12 +171,12 @@ function SheetThumb({ entities }: { entities: DxfEntity[] }) {
       THUMB_H - (offsetY + (y - minY) * scale),
     ];
 
-    ctx.strokeStyle = '#475569';
+    ctx.strokeStyle = "#475569";
     ctx.lineWidth = 0.6;
     ctx.beginPath();
     for (const e of entities) {
       switch (e.type) {
-        case 'LINE': {
+        case "LINE": {
           if (!e.start || !e.end) break;
           const [ax, ay] = project(e.start.x, e.start.y);
           const [bx, by] = project(e.end.x, e.end.y);
@@ -184,7 +184,7 @@ function SheetThumb({ entities }: { entities: DxfEntity[] }) {
           ctx.lineTo(bx, by);
           break;
         }
-        case 'LWPOLYLINE': {
+        case "LWPOLYLINE": {
           if (!e.vertices || e.vertices.length < 2) break;
           const [x0, y0] = project(e.vertices[0]!.x, e.vertices[0]!.y);
           ctx.moveTo(x0, y0);
@@ -197,9 +197,9 @@ function SheetThumb({ entities }: { entities: DxfEntity[] }) {
           }
           break;
         }
-        case 'ARC':
-        case 'CIRCLE': {
-          if (!e.start || typeof e.radius !== 'number') break;
+        case "ARC":
+        case "CIRCLE": {
+          if (!e.start || typeof e.radius !== "number") break;
           const [cx, cy] = project(e.start.x, e.start.y);
           const r = e.radius * scale;
           if (r <= 0.3) break;

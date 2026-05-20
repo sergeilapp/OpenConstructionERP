@@ -1,23 +1,58 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
-  FolderPlus, FolderOpen, ArrowRight, MoreHorizontal, Copy, Trash2, Archive, ArchiveRestore, ExternalLink,
-  Search, ChevronDown, ArrowUpDown, Star, Map as MapIcon, CloudSun,
-  Building2, DollarSign, Euro, PoundSterling, Globe2, MapPin, Layers, AlertTriangle,
-} from 'lucide-react';
-import { formatDistanceToNowStrict, isValid as isValidDate, parseISO } from 'date-fns';
-import { Button, Card, Badge, EmptyState, SkeletonGrid, Breadcrumb, ProjectMap, ProjectWeather, FileTypeChips, type LatLng } from '@/shared/ui';
-import { useWidgetSettingsStore } from '@/stores/useWidgetSettingsStore';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import { projectsApi, type Project } from './api';
-import { apiGet, apiPatch, apiDelete } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
-import { CreateProjectModal } from './CreateProjectPage';
-import { BIMConverterStatusBanner } from '../bim/BIMConverterStatusBanner';
+  FolderPlus,
+  FolderOpen,
+  ArrowRight,
+  MoreHorizontal,
+  Copy,
+  Trash2,
+  Archive,
+  ArchiveRestore,
+  ExternalLink,
+  Search,
+  ChevronDown,
+  ArrowUpDown,
+  Star,
+  Map as MapIcon,
+  CloudSun,
+  Building2,
+  DollarSign,
+  Euro,
+  PoundSterling,
+  Globe2,
+  MapPin,
+  Layers,
+  AlertTriangle,
+} from "lucide-react";
+import {
+  formatDistanceToNowStrict,
+  isValid as isValidDate,
+  parseISO,
+} from "date-fns";
+import {
+  Button,
+  Card,
+  Badge,
+  EmptyState,
+  SkeletonGrid,
+  Breadcrumb,
+  ProjectMap,
+  ProjectWeather,
+  FileTypeChips,
+  type LatLng,
+} from "@/shared/ui";
+import { useWidgetSettingsStore } from "@/stores/useWidgetSettingsStore";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import { projectsApi, type Project } from "./api";
+import { apiGet, apiPatch, apiDelete } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useLocalStorage } from "@/shared/hooks/useLocalStorage";
+import { CreateProjectModal } from "./CreateProjectPage";
+import { BIMConverterStatusBanner } from "../bim/BIMConverterStatusBanner";
 
 interface ProjectBOQStats {
   projectId: string;
@@ -26,8 +61,8 @@ interface ProjectBOQStats {
   hasError?: boolean;
 }
 
-type SortOption = 'name_asc' | 'newest' | 'oldest' | 'value';
-type StatusFilter = 'all' | 'active' | 'archived';
+type SortOption = "name_asc" | "newest" | "oldest" | "value";
+type StatusFilter = "all" | "active" | "archived";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -36,21 +71,25 @@ const ITEMS_PER_PAGE = 12;
 // "no country-specific standards or city names in default UI" rule.
 // Avatar colours cycle through a palette indexed by region string.
 const REGION_AVATAR_PALETTE = [
-  'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
-  'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300',
-  'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300',
+  "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
+  "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+  "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+  "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300",
+  "bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300",
 ];
 
 function getRegionAvatarClass(region?: string): string {
-  if (!region) return 'bg-oe-blue-subtle text-oe-blue';
+  if (!region) return "bg-oe-blue-subtle text-oe-blue";
   // Stable hash → palette index so the same region always renders the same colour.
   let h = 0;
-  for (let i = 0; i < region.length; i++) h = (h * 31 + region.charCodeAt(i)) >>> 0;
-  return REGION_AVATAR_PALETTE[h % REGION_AVATAR_PALETTE.length] ?? 'bg-oe-blue-subtle text-oe-blue';
+  for (let i = 0; i < region.length; i++)
+    h = (h * 31 + region.charCodeAt(i)) >>> 0;
+  return (
+    REGION_AVATAR_PALETTE[h % REGION_AVATAR_PALETTE.length] ??
+    "bg-oe-blue-subtle text-oe-blue"
+  );
 }
 
 const currencyFmt = new Intl.NumberFormat(getIntlLocale(), {
@@ -68,26 +107,29 @@ export function ProjectsPage() {
     const state = location.state as { openCreateModal?: boolean } | null;
     if (state?.openCreateModal) {
       setCreateModalOpen(true);
-      window.history.replaceState({}, '');
+      window.history.replaceState({}, "");
     }
   }, [location.state]);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useLocalStorage('oe_projects_filters', {
-    status: 'all' as StatusFilter,
-    region: 'all',
-    sort: 'newest' as SortOption,
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useLocalStorage("oe_projects_filters", {
+    status: "all" as StatusFilter,
+    region: "all",
+    sort: "newest" as SortOption,
   });
   const statusFilter = filters.status;
   const regionFilter = filters.region;
   const sortOption = filters.sort;
-  const setStatusFilter = (v: StatusFilter) => setFilters((p) => ({ ...p, status: v }));
-  const setRegionFilter = (v: string) => setFilters((p) => ({ ...p, region: v }));
-  const setSortOption = (v: SortOption) => setFilters((p) => ({ ...p, sort: v }));
+  const setStatusFilter = (v: StatusFilter) =>
+    setFilters((p) => ({ ...p, status: v }));
+  const setRegionFilter = (v: string) =>
+    setFilters((p) => ({ ...p, region: v }));
+  const setSortOption = (v: SortOption) =>
+    setFilters((p) => ({ ...p, sort: v }));
   const [page, setPage] = useState(1);
 
   const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects'],
+    queryKey: ["projects"],
     queryFn: projectsApi.list,
     staleTime: 5 * 60_000,
   });
@@ -96,8 +138,9 @@ export function ProjectsPage() {
      served by one aggregate endpoint so the cards don't fan out N
      requests. Used to show "has BIM / drawings / docs" chips. */
   const { data: fileTypesByProject } = useQuery({
-    queryKey: ['projects-file-types'],
-    queryFn: () => apiGet<Record<string, string[]>>('/v1/documents/file-types-by-project/'),
+    queryKey: ["projects-file-types"],
+    queryFn: () =>
+      apiGet<Record<string, string[]>>("/v1/documents/file-types-by-project/"),
     staleTime: 60_000,
   });
 
@@ -115,13 +158,15 @@ export function ProjectsPage() {
     progress_pct?: number;
   }
   const projectIdsKey = useMemo(
-    () => (projects ? projects.map((p) => p.id).join(',') : ''),
+    () => (projects ? projects.map((p) => p.id).join(",") : ""),
     [projects],
   );
   const { data: boqStats, error: boqStatsError } = useQuery({
-    queryKey: ['projects-dashboard-cards', projectIdsKey],
+    queryKey: ["projects-dashboard-cards", projectIdsKey],
     queryFn: async () => {
-      const cards = await apiGet<DashboardCard[]>('/v1/projects/dashboard/cards/');
+      const cards = await apiGet<DashboardCard[]>(
+        "/v1/projects/dashboard/cards/",
+      );
       const cardMap = new Map(cards.map((c) => [c.id, c]));
       return (projects ?? []).map((p) => {
         const c = cardMap.get(p.id);
@@ -140,7 +185,8 @@ export function ProjectsPage() {
   // Show a persistent warning if BOQ stats failed to load at the top level
   useEffect(() => {
     if (boqStatsError) {
-      if (import.meta.env.DEV) console.error('BOQ stats query failed:', boqStatsError);
+      if (import.meta.env.DEV)
+        console.error("BOQ stats query failed:", boqStatsError);
     }
   }, [boqStatsError]);
 
@@ -168,12 +214,12 @@ export function ProjectsPage() {
     }
 
     // Status filter
-    if (statusFilter !== 'all') {
+    if (statusFilter !== "all") {
       list = list.filter((p) => p.status === statusFilter);
     }
 
     // Region filter
-    if (regionFilter !== 'all') {
+    if (regionFilter !== "all") {
       list = list.filter((p) => p.region === regionFilter);
     }
 
@@ -181,8 +227,8 @@ export function ProjectsPage() {
     // so the US and German demo projects anchor the top of the list,
     // then fall through to the user-selected sort option.
     const localePriority = (p: Project): number => {
-      if (p.locale === 'en') return 0;
-      if (p.locale === 'de') return 1;
+      if (p.locale === "en") return 0;
+      if (p.locale === "de") return 1;
       return 2;
     };
     list.sort((a, b) => {
@@ -195,13 +241,17 @@ export function ProjectsPage() {
       if (aLoc !== bLoc) return aLoc - bLoc;
 
       switch (sortOption) {
-        case 'name_asc':
+        case "name_asc":
           return a.name.localeCompare(b.name);
-        case 'newest':
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-        case 'oldest':
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        case 'value': {
+        case "newest":
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+        case "oldest":
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+        case "value": {
           const aVal = boqStatsMap.get(a.id)?.totalValue ?? 0;
           const bVal = boqStatsMap.get(b.id)?.totalValue ?? 0;
           return bVal - aVal;
@@ -212,7 +262,15 @@ export function ProjectsPage() {
     });
 
     return list;
-  }, [projects, searchQuery, statusFilter, regionFilter, sortOption, boqStatsMap, pinnedIds]);
+  }, [
+    projects,
+    searchQuery,
+    statusFilter,
+    regionFilter,
+    sortOption,
+    boqStatsMap,
+    pinnedIds,
+  ]);
 
   // Reset page when filters change
   useEffect(() => {
@@ -231,10 +289,16 @@ export function ProjectsPage() {
   const stats = useMemo(() => {
     if (!projects) return null;
     const totalProjects = projects.length;
-    const activeProjects = projects.filter((p) => p.status === 'active').length;
-    const archivedProjects = projects.filter((p) => p.status === 'archived').length;
-    const totalBoqs = boqStats ? boqStats.reduce((s, b) => s + b.boqCount, 0) : 0;
-    const totalValue = boqStats ? boqStats.reduce((s, b) => s + b.totalValue, 0) : 0;
+    const activeProjects = projects.filter((p) => p.status === "active").length;
+    const archivedProjects = projects.filter(
+      (p) => p.status === "archived",
+    ).length;
+    const totalBoqs = boqStats
+      ? boqStats.reduce((s, b) => s + b.boqCount, 0)
+      : 0;
+    const totalValue = boqStats
+      ? boqStats.reduce((s, b) => s + b.totalValue, 0)
+      : 0;
     const avgValue =
       boqStats && activeProjects > 0 ? totalValue / activeProjects : 0;
     const largestValue = boqStats
@@ -245,7 +309,7 @@ export function ProjectsPage() {
     const regions = new Set(projects.map((p) => p.region).filter(Boolean));
     const currencies = new Set(projects.map((p) => p.currency).filter(Boolean));
 
-    const BIM_EXTS = new Set(['rvt', 'ifc', 'skp', 'nwc', 'nwd', 'dgn']);
+    const BIM_EXTS = new Set(["rvt", "ifc", "skp", "nwc", "nwd", "dgn"]);
     const bimProjectCount = fileTypesByProject
       ? projects.filter((p) =>
           (fileTypesByProject[p.id] ?? []).some((ext) =>
@@ -265,7 +329,7 @@ export function ProjectsPage() {
       avgBoqsPerProject,
       regionCount: regions.size,
       currencyCount: currencies.size,
-      primaryCurrency: currencies.size === 1 ? [...currencies][0] : '',
+      primaryCurrency: currencies.size === 1 ? [...currencies][0] : "",
       bimProjectCount,
     };
   }, [projects, boqStats, fileTypesByProject]);
@@ -280,35 +344,56 @@ export function ProjectsPage() {
   // Available region filter values — only regions actually present in the
   // user's project list (no globally hard-coded country/region inventory).
   const availableRegions = useMemo(() => {
-    if (!projects) return ['all'];
+    if (!projects) return ["all"];
     const set = new Set<string>();
     for (const p of projects) if (p.region) set.add(p.region);
-    return ['all', ...Array.from(set).sort()];
+    return ["all", ...Array.from(set).sort()];
   }, [projects]);
 
   /* ── Sort labels ──────────────────────────────────────────────────── */
 
   const sortOptions: { value: SortOption; label: string }[] = [
-    { value: 'name_asc', label: t('projects.sort_name', { defaultValue: 'Name A-Z‌⁠‍' }) },
-    { value: 'newest', label: t('projects.sort_newest', { defaultValue: 'Newest‌⁠‍' }) },
-    { value: 'oldest', label: t('projects.sort_oldest', { defaultValue: 'Oldest‌⁠‍' }) },
-    { value: 'value', label: t('projects.sort_value', { defaultValue: 'Value' }) },
+    {
+      value: "name_asc",
+      label: t("projects.sort_name", { defaultValue: "Name A-Z‌⁠‍" }),
+    },
+    {
+      value: "newest",
+      label: t("projects.sort_newest", { defaultValue: "Newest‌⁠‍" }),
+    },
+    {
+      value: "oldest",
+      label: t("projects.sort_oldest", { defaultValue: "Oldest‌⁠‍" }),
+    },
+    {
+      value: "value",
+      label: t("projects.sort_value", { defaultValue: "Value" }),
+    },
   ];
 
   return (
     <div className="w-full animate-fade-in">
-      <Breadcrumb items={[{ label: t('nav.dashboard', 'Dashboard'), to: '/' }, { label: t('nav.projects', 'Projects') }]} className="mb-4" />
+      <Breadcrumb
+        items={[
+          { label: t("nav.dashboard", "Dashboard"), to: "/" },
+          { label: t("nav.projects", "Projects") },
+        ]}
+        className="mb-4"
+      />
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-content-primary">{t('projects.title')}</h1>
+          <h1 className="text-2xl font-bold text-content-primary">
+            {t("projects.title")}
+          </h1>
           <p className="mt-1 text-sm text-content-secondary">
             {projects
-              ? t('projects.subtitle_count', {
-                  defaultValue: 'Manage your construction estimation projects ({{count}} total)‌⁠‍',
+              ? t("projects.subtitle_count", {
+                  defaultValue:
+                    "Manage your construction estimation projects ({{count}} total)‌⁠‍",
                   count: projects.length,
                 })
-              : t('common.loading', { defaultValue: 'Loading...‌⁠‍' })}
+              : t("common.loading", { defaultValue: "Loading...‌⁠‍" })}
           </p>
         </div>
         <Button
@@ -316,7 +401,7 @@ export function ProjectsPage() {
           icon={<FolderPlus size={16} />}
           onClick={() => setCreateModalOpen(true)}
         >
-          {t('projects.new_project')}
+          {t("projects.new_project")}
         </Button>
       </div>
 
@@ -328,22 +413,22 @@ export function ProjectsPage() {
             {/* 1. Total Projects */}
             <div className="rounded-xl bg-surface-elevated border border-border-light p-3">
               <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-                {t('projects.stats_total', { defaultValue: 'Total Projects' })}
+                {t("projects.stats_total", { defaultValue: "Total Projects" })}
               </div>
               <div className="mt-1 text-xl font-bold text-content-primary tabular-nums leading-none">
                 {stats.totalProjects}
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-1">
                 <Badge variant="success" size="sm" dot>
-                  {t('projects.stats_active', {
-                    defaultValue: '{{count}} active',
+                  {t("projects.stats_active", {
+                    defaultValue: "{{count}} active",
                     count: stats.activeProjects,
                   })}
                 </Badge>
                 {stats.archivedProjects > 0 && (
                   <Badge variant="neutral" size="sm" dot>
-                    {t('projects.stats_archived', {
-                      defaultValue: '{{count}} archived',
+                    {t("projects.stats_archived", {
+                      defaultValue: "{{count}} archived",
                       count: stats.archivedProjects,
                     })}
                   </Badge>
@@ -354,30 +439,34 @@ export function ProjectsPage() {
             {/* 2. Total BOQs */}
             <div className="rounded-xl bg-surface-elevated border border-border-light p-3">
               <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-                {t('projects.stats_boqs', { defaultValue: 'Total BOQs' })}
+                {t("projects.stats_boqs", { defaultValue: "Total BOQs" })}
               </div>
               <div className="mt-1 text-xl font-bold text-content-primary tabular-nums leading-none">
-                {boqStats ? stats.totalBoqs.toLocaleString() : (
+                {boqStats ? (
+                  stats.totalBoqs.toLocaleString()
+                ) : (
                   <span className="inline-block h-5 w-10 animate-pulse rounded bg-surface-tertiary" />
                 )}
               </div>
               <div className="mt-2 text-2xs text-content-tertiary">
                 {boqStats && stats.totalProjects > 0
-                  ? t('projects.stats_boqs_per_project', {
-                      defaultValue: '{{avg}} per project',
+                  ? t("projects.stats_boqs_per_project", {
+                      defaultValue: "{{avg}} per project",
                       avg: stats.avgBoqsPerProject.toFixed(1),
                     })
-                  : ''}
+                  : ""}
               </div>
             </div>
 
             {/* 3. Total Value */}
             <div className="rounded-xl bg-surface-elevated border border-border-light p-3">
               <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-                {t('projects.stats_value', { defaultValue: 'Total Value' })}
+                {t("projects.stats_value", { defaultValue: "Total Value" })}
               </div>
               <div className="mt-1 text-xl font-bold text-content-primary tabular-nums leading-none">
-                {boqStats ? formatBigValue(stats.totalValue) : (
+                {boqStats ? (
+                  formatBigValue(stats.totalValue)
+                ) : (
                   <span className="inline-block h-5 w-16 animate-pulse rounded bg-surface-tertiary" />
                 )}
               </div>
@@ -385,35 +474,36 @@ export function ProjectsPage() {
                 {stats.currencyCount === 1 && stats.primaryCurrency
                   ? stats.primaryCurrency
                   : stats.currencyCount > 1
-                    ? t('projects.stats_currencies', {
-                        defaultValue: '{{count}} currencies',
+                    ? t("projects.stats_currencies", {
+                        defaultValue: "{{count}} currencies",
                         count: stats.currencyCount,
                       })
-                    : ''}
+                    : ""}
               </div>
             </div>
 
             {/* 4. Avg Project Size */}
             <div className="rounded-xl bg-surface-elevated border border-border-light p-3">
               <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-                {t('projects.stats_avg', { defaultValue: 'Avg Project Size' })}
+                {t("projects.stats_avg", { defaultValue: "Avg Project Size" })}
               </div>
               <div className="mt-1 text-xl font-bold text-content-primary tabular-nums leading-none">
-                {boqStats ? formatBigValue(stats.avgValue) : (
+                {boqStats ? (
+                  formatBigValue(stats.avgValue)
+                ) : (
                   <span className="inline-block h-5 w-16 animate-pulse rounded bg-surface-tertiary" />
                 )}
               </div>
               <div className="mt-2 text-2xs text-content-tertiary">
                 {boqStats && stats.largestValue > 0
-                  ? t('projects.stats_largest', {
-                      defaultValue: 'Largest {{value}}',
+                  ? t("projects.stats_largest", {
+                      defaultValue: "Largest {{value}}",
                       value: formatBigValue(stats.largestValue),
                     })
-                  : ''}
+                  : ""}
               </div>
             </div>
           </div>
-
         </>
       )}
 
@@ -430,10 +520,12 @@ export function ProjectsPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('projects.search_placeholder', {
-                  defaultValue: 'Search projects...',
+                placeholder={t("projects.search_placeholder", {
+                  defaultValue: "Search projects...",
                 })}
-                aria-label={t('projects.search_placeholder', { defaultValue: 'Search projects...' })}
+                aria-label={t("projects.search_placeholder", {
+                  defaultValue: "Search projects...",
+                })}
                 className="h-10 w-full rounded-lg border border-border bg-surface-primary pl-10 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
               />
             </div>
@@ -442,17 +534,19 @@ export function ProjectsPage() {
             <div className="relative">
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+                onChange={(e) =>
+                  setStatusFilter(e.target.value as StatusFilter)
+                }
                 className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-36"
               >
                 <option value="all">
-                  {t('projects.filter_all', { defaultValue: 'All' })}
+                  {t("projects.filter_all", { defaultValue: "All" })}
                 </option>
                 <option value="active">
-                  {t('projects.filter_active', { defaultValue: 'Active' })}
+                  {t("projects.filter_active", { defaultValue: "Active" })}
                 </option>
                 <option value="archived">
-                  {t('projects.filter_archived', { defaultValue: 'Archived' })}
+                  {t("projects.filter_archived", { defaultValue: "Archived" })}
                 </option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
@@ -469,8 +563,10 @@ export function ProjectsPage() {
               >
                 {availableRegions.map((r) => (
                   <option key={r} value={r}>
-                    {r === 'all'
-                      ? t('projects.filter_all_regions', { defaultValue: 'All Regions' })
+                    {r === "all"
+                      ? t("projects.filter_all_regions", {
+                          defaultValue: "All Regions",
+                        })
                       : r}
                   </option>
                 ))}
@@ -488,8 +584,8 @@ export function ProjectsPage() {
                   onClick={() => setSortOption(opt.value)}
                   className={`flex items-center gap-1 rounded-md px-2 py-1.5 text-2xs font-medium transition-colors ${
                     sortOption === opt.value
-                      ? 'bg-oe-blue-subtle text-oe-blue'
-                      : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary'
+                      ? "bg-oe-blue-subtle text-oe-blue"
+                      : "text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary"
                   }`}
                 >
                   {opt.label}
@@ -507,12 +603,15 @@ export function ProjectsPage() {
       {/* Results */}
       {isLoading ? (
         <SkeletonGrid items={3} />
-      ) : filtered.length === 0 && (searchQuery || statusFilter !== 'all' || regionFilter !== 'all') ? (
+      ) : filtered.length === 0 &&
+        (searchQuery || statusFilter !== "all" || regionFilter !== "all") ? (
         <EmptyState
           icon={<Search size={28} strokeWidth={1.5} />}
-          title={t('projects.no_results', { defaultValue: 'No matching projects' })}
-          description={t('projects.no_results_hint', {
-            defaultValue: 'Try adjusting your search or filters',
+          title={t("projects.no_results", {
+            defaultValue: "No matching projects",
+          })}
+          description={t("projects.no_results_hint", {
+            defaultValue: "Try adjusting your search or filters",
           })}
         />
       ) : !projects || projects.length === 0 ? (
@@ -530,13 +629,17 @@ export function ProjectsPage() {
               project is for. */}
           <EmptyState
             icon={<FolderOpen size={28} strokeWidth={1.5} />}
-            title={t('projects.no_projects', { defaultValue: 'No projects yet' })}
-            description={t('projects.no_projects_description', {
+            title={t("projects.no_projects", {
+              defaultValue: "No projects yet",
+            })}
+            description={t("projects.no_projects_description", {
               defaultValue:
-                'Projects organize your estimates, documents, and team. Create your first project to get started with cost estimation.',
+                "Projects organize your estimates, documents, and team. Create your first project to get started with cost estimation.",
             })}
             action={{
-              label: t('projects.create_first', { defaultValue: 'Create your first project' }),
+              label: t("projects.create_first", {
+                defaultValue: "Create your first project",
+              }),
               onClick: () => setCreateModalOpen(true),
             }}
           />
@@ -551,7 +654,7 @@ export function ProjectsPage() {
                 boqStats={boqStatsMap.get(project.id)}
                 fileTypes={fileTypesByProject?.[project.id] ?? []}
                 style={{ animationDelay: `${50 + i * 30}ms` }}
-                onDeleted={() => setStatusFilter('active')}
+                onDeleted={() => setStatusFilter("active")}
               />
             ))}
           </div>
@@ -564,7 +667,7 @@ export function ProjectsPage() {
                   onClick={() => setPage(1)}
                   disabled={page === 1}
                   className="rounded-lg border border-border-light px-3 py-2 text-sm font-medium text-content-secondary hover:bg-surface-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                  title={t('common.first_page', { defaultValue: 'First page' })}
+                  title={t("common.first_page", { defaultValue: "First page" })}
                 >
                   &laquo;
                 </button>
@@ -573,28 +676,41 @@ export function ProjectsPage() {
                   disabled={page === 1}
                   className="rounded-lg border border-border-light px-4 py-2 text-sm font-medium text-content-secondary hover:bg-surface-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
-                  {t('common.previous', { defaultValue: 'Previous' })}
+                  {t("common.previous", { defaultValue: "Previous" })}
                 </button>
 
                 {/* Page numbers */}
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
-                  .reduce<(number | 'dots')[]>((acc, p, i, arr) => {
-                    if (i > 0 && arr[i - 1] !== undefined && p - (arr[i - 1] as number) > 1) acc.push('dots');
+                  .filter(
+                    (p) =>
+                      p === 1 || p === totalPages || Math.abs(p - page) <= 1,
+                  )
+                  .reduce<(number | "dots")[]>((acc, p, i, arr) => {
+                    if (
+                      i > 0 &&
+                      arr[i - 1] !== undefined &&
+                      p - (arr[i - 1] as number) > 1
+                    )
+                      acc.push("dots");
                     acc.push(p);
                     return acc;
                   }, [])
                   .map((item, i) =>
-                    item === 'dots' ? (
-                      <span key={`dots-${i}`} className="px-1 text-content-quaternary">...</span>
+                    item === "dots" ? (
+                      <span
+                        key={`dots-${i}`}
+                        className="px-1 text-content-quaternary"
+                      >
+                        ...
+                      </span>
                     ) : (
                       <button
                         key={item}
                         onClick={() => setPage(item as number)}
                         className={`rounded-lg min-w-[40px] py-2 text-sm font-semibold transition-colors ${
                           page === item
-                            ? 'bg-oe-blue text-white shadow-sm'
-                            : 'border border-border-light text-content-secondary hover:bg-surface-secondary'
+                            ? "bg-oe-blue text-white shadow-sm"
+                            : "border border-border-light text-content-secondary hover:bg-surface-secondary"
                         }`}
                       >
                         {item}
@@ -607,28 +723,31 @@ export function ProjectsPage() {
                   disabled={page === totalPages}
                   className="rounded-lg border border-border-light px-4 py-2 text-sm font-medium text-content-secondary hover:bg-surface-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
-                  {t('common.next', { defaultValue: 'Next' })}
+                  {t("common.next", { defaultValue: "Next" })}
                 </button>
                 <button
                   onClick={() => setPage(totalPages)}
                   disabled={page === totalPages}
                   className="rounded-lg border border-border-light px-3 py-2 text-sm font-medium text-content-secondary hover:bg-surface-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                  title={t('common.last_page', { defaultValue: 'Last page' })}
+                  title={t("common.last_page", { defaultValue: "Last page" })}
                 >
                   &raquo;
                 </button>
               </div>
             )}
             <p className="text-sm text-content-tertiary">
-              {t('projects.showing_of', {
-                defaultValue: '{{from}}–{{to}} of {{filtered}} projects',
+              {t("projects.showing_of", {
+                defaultValue: "{{from}}–{{to}} of {{filtered}} projects",
                 from: (page - 1) * ITEMS_PER_PAGE + 1,
                 to: Math.min(page * ITEMS_PER_PAGE, filtered.length),
                 filtered: filtered.length,
               })}
-              {(searchQuery || statusFilter !== 'all' || regionFilter !== 'all') && filtered.length !== (projects?.length ?? 0)
-                ? ` (${t('projects.filtered_from', { defaultValue: 'filtered from {{total}}', total: projects?.length ?? 0 })})`
-                : ''}
+              {(searchQuery ||
+                statusFilter !== "all" ||
+                regionFilter !== "all") &&
+              filtered.length !== (projects?.length ?? 0)
+                ? ` (${t("projects.filtered_from", { defaultValue: "filtered from {{total}}", total: projects?.length ?? 0 })})`
+                : ""}
             </p>
           </div>
         </>
@@ -672,32 +791,35 @@ function ProjectCard({
         setMenuOpen(false);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
   // Close dropdown on Escape key
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false);
+      if (e.key === "Escape") setMenuOpen(false);
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [menuOpen]);
 
   const deleteMutation = useMutation({
     mutationFn: () => apiDelete(`/v1/projects/${project.id}`),
     onSuccess: () => {
       setConfirmDelete(false);
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-      addToast({ type: 'success', title: t('projects.deleted', 'Project deleted successfully') });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      addToast({
+        type: "success",
+        title: t("projects.deleted", "Project deleted successfully"),
+      });
       onDeleted?.();
     },
     onError: (e: Error) => {
       addToast({
-        type: 'error',
-        title: t('projects.delete_failed', 'Failed to delete project'),
+        type: "error",
+        title: t("projects.delete_failed", "Failed to delete project"),
         message: e.message,
       });
     },
@@ -706,61 +828,80 @@ function ProjectCard({
   const duplicateMutation = useMutation({
     mutationFn: () => projectsApi.duplicate(project.id),
     onSuccess: (newProject) => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-      addToast({ type: 'success', title: t('projects.duplicated', 'Project duplicated successfully') });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      addToast({
+        type: "success",
+        title: t("projects.duplicated", "Project duplicated successfully"),
+      });
       navigate(`/projects/${newProject.id}`);
     },
     onError: (e: Error) => {
       addToast({
-        type: 'error',
-        title: t('projects.duplicate_failed', 'Failed to duplicate project'),
+        type: "error",
+        title: t("projects.duplicate_failed", "Failed to duplicate project"),
         message: e.message,
       });
     },
   });
 
   const archiveMutation = useMutation({
-    mutationFn: () => apiPatch(`/v1/projects/${project.id}`, { status: 'archived' }),
+    mutationFn: () =>
+      apiPatch(`/v1/projects/${project.id}`, { status: "archived" }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-      addToast({ type: 'success', title: t('toasts.project_archived', { defaultValue: 'Project archived successfully' }) });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      addToast({
+        type: "success",
+        title: t("toasts.project_archived", {
+          defaultValue: "Project archived successfully",
+        }),
+      });
     },
     onError: (error: Error) => {
-      addToast({ type: 'error', title: t('toasts.archive_failed', { defaultValue: 'Failed to archive project' }), message: error.message });
+      addToast({
+        type: "error",
+        title: t("toasts.archive_failed", {
+          defaultValue: "Failed to archive project",
+        }),
+        message: error.message,
+      });
     },
   });
 
   const restoreMutation = useMutation({
     mutationFn: () => projectsApi.restore(project.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       addToast({
-        type: 'success',
-        title: t('toasts.project_restored', { defaultValue: 'Project restored' }),
+        type: "success",
+        title: t("toasts.project_restored", {
+          defaultValue: "Project restored",
+        }),
       });
     },
     onError: (error: Error) => {
       addToast({
-        type: 'error',
-        title: t('toasts.restore_failed', { defaultValue: 'Failed to restore project' }),
+        type: "error",
+        title: t("toasts.restore_failed", {
+          defaultValue: "Failed to restore project",
+        }),
         message: error.message,
       });
     },
   });
 
   const standardLabels: Record<string, string> = {
-    din276: 'DIN 276',
-    nrm: 'NRM',
-    masterformat: 'MasterFormat',
+    din276: "DIN 276",
+    nrm: "NRM",
+    masterformat: "MasterFormat",
   };
 
   // Currency symbol icon — falls back to neutral DollarSign for unknown codes
   // so we never render an empty chip. Tabular currency labels still appear
   // alongside the icon for unambiguous reading.
   const CurrencyIcon =
-    project.currency === 'EUR'
+    project.currency === "EUR"
       ? Euro
-      : project.currency === 'GBP'
+      : project.currency === "GBP"
         ? PoundSterling
         : DollarSign;
 
@@ -774,9 +915,10 @@ function ProjectCard({
     modifiedDate && isValidDate(modifiedDate)
       ? formatDistanceToNowStrict(modifiedDate, { addSuffix: true })
       : null;
-  const absoluteModified = modifiedDate && isValidDate(modifiedDate)
-    ? modifiedDate.toLocaleDateString(getIntlLocale())
-    : '';
+  const absoluteModified =
+    modifiedDate && isValidDate(modifiedDate)
+      ? modifiedDate.toLocaleDateString(getIntlLocale())
+      : "";
 
   // Variations marker — rendered only when project metadata exposes a
   // non-zero count. Acts as a passive warning chip; clicking the card
@@ -784,7 +926,7 @@ function ProjectCard({
   const openVariations = (() => {
     const meta = project.metadata as Record<string, unknown> | undefined;
     const v = meta?.open_variations;
-    return typeof v === 'number' && v > 0 ? v : 0;
+    return typeof v === "number" && v > 0 ? v : 0;
   })();
 
   const mapEnabled = useWidgetSettingsStore((s) => s.projectMapEnabled);
@@ -814,7 +956,7 @@ function ProjectCard({
             country={project.address?.country}
             label={[project.address?.city, project.address?.country]
               .filter(Boolean)
-              .join(', ')}
+              .join(", ")}
             className="rounded-none border-none"
             onResolved={setCardCoords}
           />
@@ -822,13 +964,15 @@ function ProjectCard({
       )}
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
-          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold ring-1 ring-inset ring-white/40 dark:ring-white/5 shadow-sm transition-transform duration-normal ease-oe group-hover:scale-105 ${getRegionAvatarClass(project.region)}`}>
+          <div
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold ring-1 ring-inset ring-white/40 dark:ring-white/5 shadow-sm transition-transform duration-normal ease-oe group-hover:scale-105 ${getRegionAvatarClass(project.region)}`}
+          >
             {project.name.charAt(0).toUpperCase()}
           </div>
           <div className="flex items-center gap-1.5">
-            {project.status === 'archived' && (
+            {project.status === "archived" && (
               <Badge variant="neutral" size="sm">
-                {t('projects.status_archived', { defaultValue: 'Archived' })}
+                {t("projects.status_archived", { defaultValue: "Archived" })}
               </Badge>
             )}
             <PinButton projectId={project.id} />
@@ -858,7 +1002,7 @@ function ProjectCard({
               }}
               className="flex w-full items-center gap-2 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
             >
-              <ExternalLink size={14} /> {t('common.open', 'Open')}
+              <ExternalLink size={14} /> {t("common.open", "Open")}
             </button>
             <button
               onClick={() => {
@@ -867,9 +1011,9 @@ function ProjectCard({
               }}
               className="flex w-full items-center gap-2 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
             >
-              <Copy size={14} /> {t('common.duplicate', 'Duplicate')}
+              <Copy size={14} /> {t("common.duplicate", "Duplicate")}
             </button>
-            {project.status === 'archived' ? (
+            {project.status === "archived" ? (
               <button
                 onClick={() => {
                   restoreMutation.mutate();
@@ -878,7 +1022,8 @@ function ProjectCard({
                 disabled={restoreMutation.isPending}
                 className="flex w-full items-center gap-2 px-3 py-2 text-sm text-content-secondary hover:bg-surface-secondary transition-colors disabled:opacity-60"
               >
-                <ArchiveRestore size={14} /> {t('common.restore', { defaultValue: 'Restore' })}
+                <ArchiveRestore size={14} />{" "}
+                {t("common.restore", { defaultValue: "Restore" })}
               </button>
             ) : (
               <button
@@ -889,7 +1034,7 @@ function ProjectCard({
                 disabled={archiveMutation.isPending}
                 className="flex w-full items-center gap-2 px-3 py-2 text-sm text-content-secondary hover:bg-surface-secondary transition-colors disabled:opacity-60"
               >
-                <Archive size={14} /> {t('common.archive', 'Archive')}
+                <Archive size={14} /> {t("common.archive", "Archive")}
               </button>
             )}
             <div className="h-px bg-border-light" />
@@ -900,7 +1045,7 @@ function ProjectCard({
               }}
               className="flex w-full items-center gap-2 px-3 py-2 text-sm text-semantic-error hover:bg-semantic-error-bg transition-colors"
             >
-              <Trash2 size={14} /> {t('common.delete', 'Delete')}
+              <Trash2 size={14} /> {t("common.delete", "Delete")}
             </button>
           </div>
         )}
@@ -916,7 +1061,7 @@ function ProjectCard({
                 <Trash2 size={18} className="text-semantic-error" />
               </div>
               <p className="text-sm font-semibold text-content-primary mb-1">
-                {t('projects.confirm_delete', 'Delete this project?')}
+                {t("projects.confirm_delete", "Delete this project?")}
               </p>
               <p className="text-xs text-content-tertiary mb-4 max-w-[200px] mx-auto">
                 {project.name}
@@ -928,10 +1073,14 @@ function ProjectCard({
                   onClick={() => deleteMutation.mutate()}
                   loading={deleteMutation.isPending}
                 >
-                  {t('common.delete', 'Delete')}
+                  {t("common.delete", "Delete")}
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => setConfirmDelete(false)}>
-                  {t('common.cancel', 'Cancel')}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setConfirmDelete(false)}
+                >
+                  {t("common.cancel", "Cancel")}
                 </Button>
               </div>
             </div>
@@ -949,7 +1098,8 @@ function ProjectCard({
         <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
           <span className="inline-flex items-center gap-1 rounded-full border border-oe-blue/20 bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue">
             <Building2 size={11} strokeWidth={2.25} />
-            {standardLabels[project.classification_standard] ?? project.classification_standard}
+            {standardLabels[project.classification_standard] ??
+              project.classification_standard}
           </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-secondary">
             <CurrencyIcon size={11} strokeWidth={2.25} />
@@ -978,7 +1128,7 @@ function ProjectCard({
         <div className="relative px-5 pb-3">
           <div className="rounded-xl border border-border-light bg-gradient-to-br from-oe-blue-subtle/60 via-surface-elevated to-surface-elevated px-4 py-3">
             <div className="text-[10px] font-medium uppercase tracking-wider text-content-tertiary">
-              {t('projects.card_total_value', { defaultValue: 'Total value' })}
+              {t("projects.card_total_value", { defaultValue: "Total value" })}
             </div>
             <div className="mt-0.5 flex items-baseline gap-1.5">
               <span className="text-xl font-bold tabular-nums text-content-primary">
@@ -1015,16 +1165,14 @@ function ProjectCard({
               <span className="inline-flex items-center gap-1 rounded-md bg-surface-secondary px-1.5 py-0.5 text-2xs font-medium text-content-secondary">
                 <Layers size={10} strokeWidth={2.25} />
                 <span className="tabular-nums">{boqStats.boqCount}</span>
-                <span>
-                  {t('projects.boq_short', { defaultValue: 'BOQs' })}
-                </span>
+                <span>{t("projects.boq_short", { defaultValue: "BOQs" })}</span>
               </span>
             )}
             {openVariations > 0 && (
               <span
                 className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-2xs font-semibold text-amber-700 ring-1 ring-amber-200/60 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-500/20"
-                title={t('projects.card_open_variations', {
-                  defaultValue: 'Open variations',
+                title={t("projects.card_open_variations", {
+                  defaultValue: "Open variations",
                 })}
               >
                 <AlertTriangle size={10} strokeWidth={2.25} />
@@ -1059,8 +1207,8 @@ function WidgetToggles() {
   const btn = (active: boolean) =>
     `flex items-center gap-1 rounded-md px-2 py-1.5 text-2xs font-medium transition-colors ${
       active
-        ? 'bg-oe-blue-subtle text-oe-blue'
-        : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary'
+        ? "bg-oe-blue-subtle text-oe-blue"
+        : "text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary"
     }`;
 
   return (
@@ -1069,19 +1217,23 @@ function WidgetToggles() {
         type="button"
         onClick={toggleMap}
         className={btn(mapEnabled)}
-        title={t('widget_settings.toggle_map', { defaultValue: 'Toggle project map' })}
+        title={t("widget_settings.toggle_map", {
+          defaultValue: "Toggle project map",
+        })}
       >
         <MapIcon size={12} />
-        {t('widget_settings.map', { defaultValue: 'Map' })}
+        {t("widget_settings.map", { defaultValue: "Map" })}
       </button>
       <button
         type="button"
         onClick={toggleWeather}
         className={btn(weatherEnabled)}
-        title={t('widget_settings.toggle_weather', { defaultValue: 'Toggle weather forecast' })}
+        title={t("widget_settings.toggle_weather", {
+          defaultValue: "Toggle weather forecast",
+        })}
       >
         <CloudSun size={12} />
-        {t('widget_settings.weather', { defaultValue: 'Weather' })}
+        {t("widget_settings.weather", { defaultValue: "Weather" })}
       </button>
     </div>
   );
@@ -1090,23 +1242,24 @@ function WidgetToggles() {
 function PinButton({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const togglePinned = useProjectContextStore((s) => s.togglePinned);
-  const isPinned = useProjectContextStore((s) => s.pinnedProjectIds.includes(projectId));
+  const isPinned = useProjectContextStore((s) =>
+    s.pinnedProjectIds.includes(projectId),
+  );
 
   return (
     <button
       className={`flex h-7 w-7 min-h-[44px] min-w-[44px] items-center justify-center rounded-md transition-colors ${
         isPinned
-          ? 'text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10'
-          : 'text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary'
+          ? "text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10"
+          : "text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary"
       }`}
       onClick={(e) => {
         e.stopPropagation();
         togglePinned(projectId);
       }}
-      title={isPinned ? t('common.unpin', 'Unpin') : t('common.pin', 'Pin')}
+      title={isPinned ? t("common.unpin", "Unpin") : t("common.pin", "Pin")}
     >
-      <Star size={14} fill={isPinned ? 'currentColor' : 'none'} />
+      <Star size={14} fill={isPinned ? "currentColor" : "none"} />
     </button>
   );
 }
-

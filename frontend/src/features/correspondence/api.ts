@@ -4,13 +4,13 @@
  * All endpoints are prefixed with /v1/correspondence/.
  */
 
-import { apiDelete, apiGet, apiPatch, apiPost } from '@/shared/lib/api';
+import { apiDelete, apiGet, apiPatch, apiPost } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type CorrespondenceDirection = 'incoming' | 'outgoing';
+export type CorrespondenceDirection = "incoming" | "outgoing";
 
-export type CorrespondenceType = 'letter' | 'email' | 'notice' | 'memo';
+export type CorrespondenceType = "letter" | "email" | "notice" | "memo";
 
 export interface Correspondence {
   id: string;
@@ -37,8 +37,8 @@ export interface Correspondence {
 
 export interface CorrespondenceFilters {
   project_id?: string;
-  direction?: CorrespondenceDirection | '';
-  type?: CorrespondenceType | '';
+  direction?: CorrespondenceDirection | "";
+  type?: CorrespondenceType | "";
 }
 
 export interface CreateCorrespondencePayload {
@@ -71,7 +71,10 @@ export interface UpdateCorrespondencePayload {
  */
 type CorrespondenceWire = Omit<
   Correspondence,
-  'to_contact_ids' | 'linked_document_ids' | 'linked_transmittal_id' | 'linked_rfi_id'
+  | "to_contact_ids"
+  | "linked_document_ids"
+  | "linked_transmittal_id"
+  | "linked_rfi_id"
 > & {
   to_contact_ids?: string[] | null;
   linked_document_ids?: string[] | null;
@@ -95,12 +98,12 @@ export async function fetchCorrespondence(
   filters?: CorrespondenceFilters,
 ): Promise<Correspondence[]> {
   const params = new URLSearchParams();
-  if (filters?.project_id) params.set('project_id', filters.project_id);
-  if (filters?.direction) params.set('direction', filters.direction);
-  if (filters?.type) params.set('type', filters.type);
+  if (filters?.project_id) params.set("project_id", filters.project_id);
+  if (filters?.direction) params.set("direction", filters.direction);
+  if (filters?.type) params.set("type", filters.type);
   const qs = params.toString();
   const rows = await apiGet<CorrespondenceWire[]>(
-    `/v1/correspondence/${qs ? `?${qs}` : ''}`,
+    `/v1/correspondence/${qs ? `?${qs}` : ""}`,
   );
   return rows.map(normaliseCorrespondence);
 }
@@ -108,7 +111,7 @@ export async function fetchCorrespondence(
 export async function createCorrespondence(
   data: CreateCorrespondencePayload,
 ): Promise<Correspondence> {
-  const row = await apiPost<CorrespondenceWire>('/v1/correspondence/', data);
+  const row = await apiPost<CorrespondenceWire>("/v1/correspondence/", data);
   return normaliseCorrespondence(row);
 }
 
@@ -116,7 +119,10 @@ export async function updateCorrespondence(
   id: string,
   data: UpdateCorrespondencePayload,
 ): Promise<Correspondence> {
-  const row = await apiPatch<CorrespondenceWire>(`/v1/correspondence/${id}`, data);
+  const row = await apiPatch<CorrespondenceWire>(
+    `/v1/correspondence/${id}`,
+    data,
+  );
   return normaliseCorrespondence(row);
 }
 

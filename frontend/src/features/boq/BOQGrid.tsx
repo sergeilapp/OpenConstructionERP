@@ -1,8 +1,16 @@
-import { useState, useMemo, useCallback, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { AgGridReact } from 'ag-grid-react';
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { AgGridReact } from "ag-grid-react";
 import type {
   GridApi,
   CellValueChangedEvent,
@@ -19,9 +27,9 @@ import type {
   IsFullWidthRowParams,
   RowHeightParams,
   CellContextMenuEvent,
-} from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+} from "ag-grid-community";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import {
   Plus,
   Database,
@@ -43,7 +51,7 @@ import {
   Cuboid,
   Link2,
   Link2Off,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   type Position,
@@ -53,19 +61,19 @@ import {
   isSection,
   getPositionDepth,
   DEFAULT_MAX_NESTING_DEPTH,
-} from './api';
+} from "./api";
 import {
   acquireLock as acquireCollabLock,
   releaseLock as releaseCollabLock,
   type CollabLock,
-} from '@/features/collab_locks';
-import { getColumnDefs, getCustomColumnDefs } from './grid/columnDefs';
-import type { FormulaVariable } from './grid/formula';
+} from "@/features/collab_locks";
+import { getColumnDefs, getCustomColumnDefs } from "./grid/columnDefs";
+import type { FormulaVariable } from "./grid/formula";
 import {
   FormulaCellEditor,
   AutocompleteCellEditor,
   UnitCellEditor,
-} from './grid/cellEditors';
+} from "./grid/cellEditors";
 import {
   ActionsCellRenderer,
   ExpandCellRenderer,
@@ -80,25 +88,25 @@ import {
   DescriptionCellRenderer,
   type ContextMenuTarget,
   type FullGridContext,
-} from './grid/cellRenderers';
-import { countComments } from './CommentDrawer';
+} from "./grid/cellRenderers";
+import { countComments } from "./CommentDrawer";
 import {
   convertToBase,
   fmtWithCurrency,
   getUnitsForLocale,
   resourceAwareTotalInBase,
   saveCustomUnit,
-} from './boqHelpers';
-import { RESOURCE_TYPES, getResourceTypeLabel } from './boqResourceTypes';
-import { CURRENCY_GROUPS } from '@/features/projects/CreateProjectPage';
-import { useToastStore } from '@/stores/useToastStore';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import { VariantPicker } from '@/features/costs/VariantPicker';
-import type { CostVariant, VariantStats } from '@/features/costs/api';
+} from "./boqHelpers";
+import { RESOURCE_TYPES, getResourceTypeLabel } from "./boqResourceTypes";
+import { CURRENCY_GROUPS } from "@/features/projects/CreateProjectPage";
+import { useToastStore } from "@/stores/useToastStore";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import { VariantPicker } from "@/features/costs/VariantPicker";
+import type { CostVariant, VariantStats } from "@/features/costs/api";
 
 /* ── Column width persistence ─────────────────────────────────────── */
 
-const COLUMN_WIDTHS_KEY = 'oe_boq_column_widths';
+const COLUMN_WIDTHS_KEY = "oe_boq_column_widths";
 
 function loadColumnWidths(): Record<string, number> {
   try {
@@ -121,10 +129,18 @@ function saveColumnWidths(widths: Record<string, number>): void {
 /* ── Clipboard: fields that cannot be pasted into ─────────────────── */
 
 /** Columns that are computed or read-only — paste is suppressed for these. */
-const PASTE_PROTECTED_FIELDS = new Set(['total', '_actions', '_drag', '_checkbox', '_expand', '_bim_link', '_bim_qty']);
+const PASTE_PROTECTED_FIELDS = new Set([
+  "total",
+  "_actions",
+  "_drag",
+  "_checkbox",
+  "_expand",
+  "_bim_link",
+  "_bim_qty",
+]);
 
 /** Numeric column fields — pasted text must be parsed to a number. */
-const NUMERIC_FIELDS = new Set(['quantity', 'unit_rate']);
+const NUMERIC_FIELDS = new Set(["quantity", "unit_rate"]);
 
 /**
  * Parse a pasted string into a number. Handles thousand separators
@@ -135,28 +151,32 @@ export function parseClipboardNumber(raw: string): number {
   // Strip leading/trailing whitespace
   let cleaned = raw.trim();
   // Remove common currency symbols / prefixes that users may copy from spreadsheets
-  cleaned = cleaned.replace(/^[€$£¥₹₽Fr.C\$A\$NZ\$zł₺Kčkr]+/i, '').trim();
+  cleaned = cleaned.replace(/^[€$£¥₹₽Fr.C\$A\$NZ\$zł₺Kčkr]+/i, "").trim();
   // If both comma and period are present, the last one is the decimal separator
-  const hasComma = cleaned.includes(',');
-  const hasPeriod = cleaned.includes('.');
+  const hasComma = cleaned.includes(",");
+  const hasPeriod = cleaned.includes(".");
   if (hasComma && hasPeriod) {
-    if (cleaned.lastIndexOf(',') > cleaned.lastIndexOf('.')) {
+    if (cleaned.lastIndexOf(",") > cleaned.lastIndexOf(".")) {
       // e.g. "1.234,56" → period is thousand sep, comma is decimal
-      cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+      cleaned = cleaned.replace(/\./g, "").replace(",", ".");
     } else {
       // e.g. "1,234.56" → comma is thousand sep, period is decimal
-      cleaned = cleaned.replace(/,/g, '');
+      cleaned = cleaned.replace(/,/g, "");
     }
   } else if (hasComma && !hasPeriod) {
     // Could be "1,5" (decimal) or "1,000" (thousand sep).
     // Heuristic: if exactly 3 digits after the last comma, treat as thousand sep.
-    const parts = cleaned.split(',');
-    const lastPart = parts[parts.length - 1] ?? '';
-    if (parts.length === 2 && lastPart.length === 3 && (parts[0] ?? '').length <= 3) {
+    const parts = cleaned.split(",");
+    const lastPart = parts[parts.length - 1] ?? "";
+    if (
+      parts.length === 2 &&
+      lastPart.length === 3 &&
+      (parts[0] ?? "").length <= 3
+    ) {
       // Ambiguous — but "1,000" is more likely thousand-separated in BOQ context
-      cleaned = cleaned.replace(/,/g, '');
+      cleaned = cleaned.replace(/,/g, "");
     } else {
-      cleaned = cleaned.replace(',', '.');
+      cleaned = cleaned.replace(",", ".");
     }
   }
   return parseFloat(cleaned);
@@ -213,7 +233,7 @@ interface ResourceRow {
   /** Currently-applied variant marker (mirrors the resource's ``variant`` key). */
   _resourceVariant?: { label: string; price: number; index: number };
   /** Auto-default strategy when the user accepted mean / median (no explicit pick). */
-  _resourceVariantDefault?: 'mean' | 'median';
+  _resourceVariantDefault?: "mean" | "median";
   /** Frozen snapshot stamped by the backend; surfaced for hover tooltips. */
   _resourceVariantSnapshot?: Record<string, unknown>;
   id: string;
@@ -294,13 +314,21 @@ export interface ManualResource {
 
 export interface BOQGridProps {
   positions: Position[];
-  onUpdatePosition: (id: string, data: UpdatePositionData, oldData: UpdatePositionData) => void;
+  onUpdatePosition: (
+    id: string,
+    data: UpdatePositionData,
+    oldData: UpdatePositionData,
+  ) => void;
   onDeletePosition: (id: string) => void;
   onAddPosition: (sectionId?: string) => void;
   onSelectSuggestion: (positionId: string, item: CostAutocompleteItem) => void;
   onSaveToDatabase: (positionId: string) => void;
   onAddComment?: (positionId: string) => void;
-  onFormulaApplied: (positionId: string, formula: string, result: number) => void;
+  onFormulaApplied: (
+    positionId: string,
+    formula: string,
+    result: number,
+  ) => void;
   onReorderSections?: (fromId: string, toId: string) => void;
   onReorderPositions?: (reorderedIds: string[]) => void;
   onDeleteSection?: (sectionId: string) => void;
@@ -343,12 +371,26 @@ export interface BOQGridProps {
    */
   onActiveRowChange?: (positionId: string | null) => void;
   onRemoveResource?: (positionId: string, resourceIndex: number) => void;
-  onUpdateResource?: (positionId: string, resourceIndex: number, field: string, value: number | string) => void;
-  onUpdateResourceFields?: (positionId: string, resourceIndex: number, fields: Record<string, number | string>) => void;
+  onUpdateResource?: (
+    positionId: string,
+    resourceIndex: number,
+    field: string,
+    value: number | string,
+  ) => void;
+  onUpdateResourceFields?: (
+    positionId: string,
+    resourceIndex: number,
+    fields: Record<string, number | string>,
+  ) => void;
   /** Per-resource custom-field write — stored at
    *  ``parent.metadata.resources[i].metadata.custom_fields[fieldName]`` so a
    *  resource can carry its own supplier / lead time / QC inspector etc. */
-  onUpdateResourceCustomField?: (positionId: string, resourceIndex: number, fieldName: string, value: number | string) => void;
+  onUpdateResourceCustomField?: (
+    positionId: string,
+    resourceIndex: number,
+    fieldName: string,
+    value: number | string,
+  ) => void;
   onSaveResourceToCatalog?: (positionId: string, resourceIndex: number) => void;
   /**
    * Save the variant-header synthetic row to the user's catalog under a
@@ -356,7 +398,10 @@ export interface BOQGridProps {
    * standard ``onSaveResourceToCatalog`` can't reach it — this dedicated
    * handler reads the chosen variant off the position metadata directly.
    */
-  onSaveVariantHeaderToCatalog?: (positionId: string, customName: string) => void;
+  onSaveVariantHeaderToCatalog?: (
+    positionId: string,
+    customName: string,
+  ) => void;
   onOpenCostDbForPosition?: (positionId: string) => void;
   onOpenCatalogForPosition?: (positionId: string) => void;
   /**
@@ -365,7 +410,11 @@ export interface BOQGridProps {
    * ``/positions/{id}/resources/{idx}/variant/`` server-side. Optional —
    * when omitted, the row's re-pick pill is hidden (graceful degrade).
    */
-  onRepickResourceVariant?: (positionId: string, resourceIndex: number, variantCode: string) => void;
+  onRepickResourceVariant?: (
+    positionId: string,
+    resourceIndex: number,
+    variantCode: string,
+  ) => void;
   onAddManualResource?: (positionId: string, resource: ManualResource) => void;
   /**
    * Issue #133 — project-wide resource-code lookup. When the user types a
@@ -412,18 +461,24 @@ export interface BOQGridProps {
   onClassify?: (positionId: string) => void;
   onCheckAnomalies?: () => void;
   /** Map of position_id → anomaly info, populated from anomaly check */
-  anomalyMap?: Map<string, { severity: string; message: string; suggestion: number }>;
+  anomalyMap?: Map<
+    string,
+    { severity: string; message: string; suggestion: number }
+  >;
   /** Apply the suggested rate from an anomaly to a position */
-  onApplyAnomalySuggestion?: (positionId: string, suggestedRate: number) => void;
+  onApplyAnomalySuggestion?: (
+    positionId: string,
+    suggestedRate: number,
+  ) => void;
   /** Save a BOQ position as a reusable assembly */
   onSaveAsAssembly?: (positionId: string) => void;
   /** Custom column definitions from BOQ metadata */
-  customColumns?: import('./grid/columnDefs').CustomColumnDef[];
+  customColumns?: import("./grid/columnDefs").CustomColumnDef[];
   /**
    * BOQ-scoped named variables ($GFA, $LABOR_RATE, …). Used by `calculated`
    * custom columns; safe to omit when no calculated columns are defined.
    */
-  boqVariables?: import('./api').BOQVariable[];
+  boqVariables?: import("./api").BOQVariable[];
   /** First ready BIM model ID for the project (used for mini 3D preview in ordinal badge). */
   bimModelId?: string | null;
   /** Highlight linked BIM elements in the 3D viewer (triggered from ordinal badge click). */
@@ -446,60 +501,63 @@ export interface BOQGridHandle {
 
 /* ── Component ─────────────────────────────────────────────────────── */
 
-const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
-  positions,
-  onUpdatePosition,
-  onDeletePosition,
-  onAddPosition,
-  onSelectSuggestion: _onSelectSuggestion,
-  onSaveToDatabase,
-  onAddComment,
-  onFormulaApplied,
-  onReorderSections,
-  onReorderPositions,
-  onDeleteSection,
-  collapsedSections,
-  onToggleSection,
-  highlightPositionId,
-  currencySymbol,
-  currencyCode,
-  fxRates,
-  displayCurrency,
-  onOpenFxRateSettings,
-  locale,
-  footerRows,
-  onSelectionChanged,
-  onActiveRowChange,
-  onRemoveResource,
-  onUpdateResource,
-  onUpdateResourceFields,
-  onUpdateResourceCustomField,
-  onSaveResourceToCatalog,
-  onSaveVariantHeaderToCatalog,
-  onOpenCostDbForPosition,
-  onOpenCatalogForPosition,
-  onRepickResourceVariant,
-  onAddManualResource,
-  onLookupResourceByCode,
-  onDuplicatePosition,
-  onReuseCode,
-  onAddChildPosition,
-  onAddSubSection,
-  maxNestingDepth = DEFAULT_MAX_NESTING_DEPTH,
-  onShowLinks,
-  onUnlinkPosition,
-  onModelLink,
-  onSuggestRate,
-  onClassify,
-  // onCheckAnomalies is consumed by BOQToolbar, not directly by the grid
-  anomalyMap,
-  onApplyAnomalySuggestion,
-  onSaveAsAssembly,
-  customColumns,
-  boqVariables,
-  bimModelId,
-  onHighlightBIMElements,
-}, ref) {
+const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid(
+  {
+    positions,
+    onUpdatePosition,
+    onDeletePosition,
+    onAddPosition,
+    onSelectSuggestion: _onSelectSuggestion,
+    onSaveToDatabase,
+    onAddComment,
+    onFormulaApplied,
+    onReorderSections,
+    onReorderPositions,
+    onDeleteSection,
+    collapsedSections,
+    onToggleSection,
+    highlightPositionId,
+    currencySymbol,
+    currencyCode,
+    fxRates,
+    displayCurrency,
+    onOpenFxRateSettings,
+    locale,
+    footerRows,
+    onSelectionChanged,
+    onActiveRowChange,
+    onRemoveResource,
+    onUpdateResource,
+    onUpdateResourceFields,
+    onUpdateResourceCustomField,
+    onSaveResourceToCatalog,
+    onSaveVariantHeaderToCatalog,
+    onOpenCostDbForPosition,
+    onOpenCatalogForPosition,
+    onRepickResourceVariant,
+    onAddManualResource,
+    onLookupResourceByCode,
+    onDuplicatePosition,
+    onReuseCode,
+    onAddChildPosition,
+    onAddSubSection,
+    maxNestingDepth = DEFAULT_MAX_NESTING_DEPTH,
+    onShowLinks,
+    onUnlinkPosition,
+    onModelLink,
+    onSuggestRate,
+    onClassify,
+    // onCheckAnomalies is consumed by BOQToolbar, not directly by the grid
+    anomalyMap,
+    onApplyAnomalySuggestion,
+    onSaveAsAssembly,
+    customColumns,
+    boqVariables,
+    bimModelId,
+    onHighlightBIMElements,
+  },
+  ref,
+) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const gridRef = useRef<AgGridReact>(null);
@@ -513,18 +571,17 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
   // still fire and call gridApiRef.current.refreshCells on a torn-down grid,
   // which produces silent errors in long-lived sessions. Clearing them in a
   // cleanup effect closes that window.
-  const pendingGridRefreshesRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
-  const scheduleGridRefresh = useCallback(
-    (columns: string[]) => {
-      const id = setTimeout(() => {
-        pendingGridRefreshesRef.current.delete(id);
-        gridApiRef.current?.stopEditing();
-        gridApiRef.current?.refreshCells({ columns, force: true });
-      }, 0);
-      pendingGridRefreshesRef.current.add(id);
-    },
-    [],
+  const pendingGridRefreshesRef = useRef<Set<ReturnType<typeof setTimeout>>>(
+    new Set(),
   );
+  const scheduleGridRefresh = useCallback((columns: string[]) => {
+    const id = setTimeout(() => {
+      pendingGridRefreshesRef.current.delete(id);
+      gridApiRef.current?.stopEditing();
+      gridApiRef.current?.refreshCells({ columns, force: true });
+    }, 0);
+    pendingGridRefreshesRef.current.add(id);
+  }, []);
   useEffect(() => {
     return () => {
       pendingGridRefreshesRef.current.forEach((id) => clearTimeout(id));
@@ -582,7 +639,11 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
 
   const showContextMenu = useCallback(
-    (e: React.MouseEvent, type: ContextMenuTarget, data: Record<string, unknown>) => {
+    (
+      e: React.MouseEvent,
+      type: ContextMenuTarget,
+      data: Record<string, unknown>,
+    ) => {
       e.preventDefault();
       // Position adjusted to not overflow viewport
       const x = Math.min(e.clientX, window.innerWidth - 220);
@@ -622,9 +683,9 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
     [rowTier, maxNestingDepth],
   );
 
-  const depthCapTooltip = t('boq.max_depth_reached_tooltip', {
+  const depthCapTooltip = t("boq.max_depth_reached_tooltip", {
     defaultValue:
-      'Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.',
+      "Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.",
     max: maxNestingDepth,
   });
 
@@ -646,29 +707,42 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
      *  insert-existing vs change-code prompt instead of submitting. */
     collision?: ResourceCodeMatch | null;
   }
-  const [manualResourceDialog, setManualResourceDialog] = useState<ManualResourceDialogState | null>(null);
+  const [manualResourceDialog, setManualResourceDialog] =
+    useState<ManualResourceDialogState | null>(null);
   const manualResNameRef = useRef<HTMLInputElement>(null);
   const manualResCodeRef = useRef<HTMLInputElement>(null);
 
   /* ── Expanded resource positions ─────────────────────────────────── */
-  const [expandedPositions, setExpandedPositions] = useState<Set<string>>(new Set());
+  const [expandedPositions, setExpandedPositions] = useState<Set<string>>(
+    new Set(),
+  );
 
-  const toggleResources = useCallback((positionId: string) => {
-    // Stop any active cell editing to prevent ordinal cell staying in edit mode
-    gridApiRef.current?.stopEditing();
+  const toggleResources = useCallback(
+    (positionId: string) => {
+      // Stop any active cell editing to prevent ordinal cell staying in edit mode
+      gridApiRef.current?.stopEditing();
 
-    setExpandedPositions((prev) => {
-      const next = new Set(prev);
-      if (next.has(positionId)) {
-        next.delete(positionId);
-      } else {
-        next.add(positionId);
-      }
-      return next;
-    });
-    // Force AG Grid to refresh ordinal cells so chevron state updates
-    scheduleGridRefresh(['ordinal', '_expand', 'description', 'quantity', 'unit_rate', 'total']);
-  }, [scheduleGridRefresh]);
+      setExpandedPositions((prev) => {
+        const next = new Set(prev);
+        if (next.has(positionId)) {
+          next.delete(positionId);
+        } else {
+          next.add(positionId);
+        }
+        return next;
+      });
+      // Force AG Grid to refresh ordinal cells so chevron state updates
+      scheduleGridRefresh([
+        "ordinal",
+        "_expand",
+        "description",
+        "quantity",
+        "unit_rate",
+        "total",
+      ]);
+    },
+    [scheduleGridRefresh],
+  );
 
   /* ── Variant-picker auto-open signal ──────────────────────────────
    *  Triggered by the position-description "V" icon.  We ensure the
@@ -693,12 +767,22 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // Same refresh-cells dance as toggleResources so the new resource
       // rows mount on the next tick — the row's mount-time effect then
       // sees the signal and opens the picker.
-      scheduleGridRefresh(['ordinal', '_expand', 'description', 'quantity', 'unit_rate', 'total']);
+      scheduleGridRefresh([
+        "ordinal",
+        "_expand",
+        "description",
+        "quantity",
+        "unit_rate",
+        "total",
+      ]);
     },
     [scheduleGridRefresh],
   );
 
-  const clearOpenVariantPicker = useCallback(() => setOpenVariantPickerSignal(null), []);
+  const clearOpenVariantPicker = useCallback(
+    () => setOpenVariantPickerSignal(null),
+    [],
+  );
 
   /* ── Position-level variant picker ────────────────────────────────
    *  Legacy CWICR position-mode applies stash the variant catalog on
@@ -724,7 +808,14 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         return next;
       });
       setPositionVariantPicker({ positionId, anchorEl });
-      scheduleGridRefresh(['ordinal', '_expand', 'description', 'quantity', 'unit_rate', 'total']);
+      scheduleGridRefresh([
+        "ordinal",
+        "_expand",
+        "description",
+        "quantity",
+        "unit_rate",
+        "total",
+      ]);
     },
     [scheduleGridRefresh],
   );
@@ -751,7 +842,11 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       const oldMeta = (pos.metadata ?? {}) as Record<string, unknown>;
       const newMeta: Record<string, unknown> = {
         ...oldMeta,
-        variant: { label: chosen.label, price: chosen.price, index: chosen.index },
+        variant: {
+          label: chosen.label,
+          price: chosen.price,
+          index: chosen.index,
+        },
       };
       delete (newMeta as { variant_default?: unknown }).variant_default;
       onUpdatePosition?.(
@@ -786,15 +881,19 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
 
       if (fields.quantity != null) newVariant.quantity = fields.quantity;
       if (fields.unit_rate != null) newVariant.price = fields.unit_rate;
-      if (typeof newVariant.label !== 'string') newVariant.label = 'manual';
-      if (typeof newVariant.index !== 'number') newVariant.index = -1;
+      if (typeof newVariant.label !== "string") newVariant.label = "manual";
+      if (typeof newVariant.index !== "number") newVariant.index = -1;
 
       // Materialize / update the variant as a real entry in resources[].
-      const oldResources = ((oldMeta.resources as Array<Record<string, unknown>>) ?? []).slice();
+      const oldResources = (
+        (oldMeta.resources as Array<Record<string, unknown>>) ?? []
+      ).slice();
       const variantsList = oldMeta.cost_item_variants as
-        | Array<Record<string, unknown>> | undefined;
+        | Array<Record<string, unknown>>
+        | undefined;
       const variantStats = oldMeta.cost_item_variant_stats as
-        | { common_start?: string; unit?: string; unit_localized?: string } | undefined;
+        | { common_start?: string; unit?: string; unit_localized?: string }
+        | undefined;
 
       // Identify the existing variant resource by the variant marker, NOT
       // by code/name (the chosen variant label changes between picks). We
@@ -805,19 +904,28 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       );
 
       const variantQty =
-        typeof newVariant.quantity === 'number' ? (newVariant.quantity as number) : 1;
+        typeof newVariant.quantity === "number"
+          ? (newVariant.quantity as number)
+          : 1;
       const variantRate =
-        typeof newVariant.price === 'number' ? (newVariant.price as number) : 0;
-      const commonStart = (variantStats?.common_start || '').trim();
-      const variantLabel = String(newVariant.label || '').trim();
-      const composedName = [commonStart, variantLabel].filter(Boolean).join(' ').trim()
-        || (pos.description || 'Variant');
+        typeof newVariant.price === "number" ? (newVariant.price as number) : 0;
+      const commonStart = (variantStats?.common_start || "").trim();
+      const variantLabel = String(newVariant.label || "").trim();
+      const composedName =
+        [commonStart, variantLabel].filter(Boolean).join(" ").trim() ||
+        pos.description ||
+        "Variant";
 
       const variantResource: Record<string, unknown> = {
         name: composedName,
-        code: (oldMeta.cost_item_code as string) || '',
-        type: 'material',
-        unit: (variantStats?.unit_localized || variantStats?.unit || pos.unit || 'pcs').trim(),
+        code: (oldMeta.cost_item_code as string) || "",
+        type: "material",
+        unit: (
+          variantStats?.unit_localized ||
+          variantStats?.unit ||
+          pos.unit ||
+          "pcs"
+        ).trim(),
         quantity: variantQty,
         unit_rate: variantRate,
         total: Math.round(variantQty * variantRate * 100) / 100,
@@ -831,7 +939,10 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       };
 
       if (variantResIdx >= 0) {
-        oldResources[variantResIdx] = { ...oldResources[variantResIdx], ...variantResource };
+        oldResources[variantResIdx] = {
+          ...oldResources[variantResIdx],
+          ...variantResource,
+        };
       } else {
         oldResources.push(variantResource);
       }
@@ -841,7 +952,8 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // with triggered_by_resources). Keeps the displayed total consistent
       // with the resource panel before the server roundtrip.
       const newUnitRate = oldResources.reduce(
-        (sum, r) => sum + ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0),
+        (sum, r) =>
+          sum + ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0),
         0,
       );
       const newUnitRateRounded = Math.round(newUnitRate * 10000) / 10000;
@@ -851,7 +963,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         variant: newVariant,
         resources: oldResources,
       };
-      if ('variant_default' in newMeta) {
+      if ("variant_default" in newMeta) {
         delete newMeta.variant_default;
       }
 
@@ -865,74 +977,86 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
   );
 
   /* ── Imperative handle for parent components ───────────────────── */
-  useImperativeHandle(ref, () => ({
-    clearSelection: () => {
-      gridApiRef.current?.deselectAll();
-    },
-    beginEditDescription: (positionId: string) => {
-      // Open a freshly-added leaf row directly in inline edit on its
-      // Description cell. Two-phase, because:
-      //  • the row only exists after the post-add refetch (poll for it);
-      //  • AG Grid won't edit a row that is virtualised out of the DOM,
-      //    so we must ensureNodeVisible, let the scroll/render settle on
-      //    a later tick, THEN startEditingCell (calling it synchronously
-      //    after ensureNodeVisible is a silent no-op — getEditingCells()
-      //    stays empty);
-      //  • `stopEditingWhenCellsLoseFocus` is on, so DOM focus still
-      //    sitting on the "Add" button tears a fresh editor down — pull
-      //    focus into the editor input once it has mounted.
-      let attempts = 0;
-      const MAX = 30;
-      const step = (): void => {
-        if (attempts++ > MAX) return; // give up → click-to-edit fallback
-        const api = gridApiRef.current;
-        if (!api) { window.setTimeout(step, 150); return; }
-        // Always RE-RESOLVE by id: invalidateAll() can trigger a second
-        // refetch that rebuilds the row model, so any rowIndex captured
-        // on an earlier tick is stale and startEditingCell would no-op.
-        const node = api.getRowNode(positionId);
-        const rowIndex = node?.rowIndex;
-        if (
-          !node ||
-          typeof rowIndex !== 'number' ||
-          rowIndex < 0 ||
-          node.data?._isSection ||
-          node.data?._isFooter
-        ) {
-          window.setTimeout(step, 150);
-          return;
-        }
-        // Edit only succeeds once the row is actually rendered into the
-        // DOM (AG Grid virtualises far rows). Ensure it is visible, then
-        // confirm the cell element exists before starting the editor.
-        api.ensureNodeVisible(node, 'middle');
-        const cell = document.querySelector(
-          `.ag-row[row-id="${positionId}"] .ag-cell[col-id="description"]`,
-        );
-        if (!cell) { window.setTimeout(step, 120); return; }
-        api.setFocusedCell(rowIndex, 'description');
-        api.startEditingCell({ rowIndex, colKey: 'description' });
-        if (api.getEditingCells().length === 0) {
-          // Still mid-scroll/rebuild — retry the whole cycle.
-          window.setTimeout(step, 150);
-          return;
-        }
-        // `stopEditingWhenCellsLoseFocus` is on: focus still on the
-        // toast / "Add" button would tear the fresh editor down — pull
-        // focus into the editor input once it has mounted.
-        window.requestAnimationFrame(() => {
-          const editor = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(
-            '.ag-cell.ag-cell-inline-editing input, .ag-cell.ag-cell-inline-editing textarea',
-          );
-          if (editor) {
-            editor.focus();
-            editor.select?.();
+  useImperativeHandle(
+    ref,
+    () => ({
+      clearSelection: () => {
+        gridApiRef.current?.deselectAll();
+      },
+      beginEditDescription: (positionId: string) => {
+        // Open a freshly-added leaf row directly in inline edit on its
+        // Description cell. Two-phase, because:
+        //  • the row only exists after the post-add refetch (poll for it);
+        //  • AG Grid won't edit a row that is virtualised out of the DOM,
+        //    so we must ensureNodeVisible, let the scroll/render settle on
+        //    a later tick, THEN startEditingCell (calling it synchronously
+        //    after ensureNodeVisible is a silent no-op — getEditingCells()
+        //    stays empty);
+        //  • `stopEditingWhenCellsLoseFocus` is on, so DOM focus still
+        //    sitting on the "Add" button tears a fresh editor down — pull
+        //    focus into the editor input once it has mounted.
+        let attempts = 0;
+        const MAX = 30;
+        const step = (): void => {
+          if (attempts++ > MAX) return; // give up → click-to-edit fallback
+          const api = gridApiRef.current;
+          if (!api) {
+            window.setTimeout(step, 150);
+            return;
           }
-        });
-      };
-      step();
-    },
-  }), []);
+          // Always RE-RESOLVE by id: invalidateAll() can trigger a second
+          // refetch that rebuilds the row model, so any rowIndex captured
+          // on an earlier tick is stale and startEditingCell would no-op.
+          const node = api.getRowNode(positionId);
+          const rowIndex = node?.rowIndex;
+          if (
+            !node ||
+            typeof rowIndex !== "number" ||
+            rowIndex < 0 ||
+            node.data?._isSection ||
+            node.data?._isFooter
+          ) {
+            window.setTimeout(step, 150);
+            return;
+          }
+          // Edit only succeeds once the row is actually rendered into the
+          // DOM (AG Grid virtualises far rows). Ensure it is visible, then
+          // confirm the cell element exists before starting the editor.
+          api.ensureNodeVisible(node, "middle");
+          const cell = document.querySelector(
+            `.ag-row[row-id="${positionId}"] .ag-cell[col-id="description"]`,
+          );
+          if (!cell) {
+            window.setTimeout(step, 120);
+            return;
+          }
+          api.setFocusedCell(rowIndex, "description");
+          api.startEditingCell({ rowIndex, colKey: "description" });
+          if (api.getEditingCells().length === 0) {
+            // Still mid-scroll/rebuild — retry the whole cycle.
+            window.setTimeout(step, 150);
+            return;
+          }
+          // `stopEditingWhenCellsLoseFocus` is on: focus still on the
+          // toast / "Add" button would tear the fresh editor down — pull
+          // focus into the editor input once it has mounted.
+          window.requestAnimationFrame(() => {
+            const editor = document.querySelector<
+              HTMLInputElement | HTMLTextAreaElement
+            >(
+              ".ag-cell.ag-cell-inline-editing input, .ag-cell.ag-cell-inline-editing textarea",
+            );
+            if (editor) {
+              editor.focus();
+              editor.select?.();
+            }
+          });
+        };
+        step();
+      },
+    }),
+    [],
+  );
 
   const fmt = useMemo(
     () =>
@@ -945,15 +1069,79 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
 
   /* ── Context for column formatters + section group + resources + actions */
   const gridContext = useMemo(
-    () => ({
+    () =>
+      ({
+        currencySymbol,
+        currencyCode,
+        fxRates: fxRates ?? [],
+        // Issue #88 — display-currency view-only override. The
+        // `totalFormatter` in columnDefs reads this and reformats every
+        // aggregate (footer rows, section subtotals, per-position totals)
+        // through the configured rate. Null when the user is on base.
+        displayCurrency: displayCurrency ?? null,
+        onOpenFxRateSettings,
+        locale,
+        fmt,
+        t,
+        collapsedSections,
+        onToggleSection,
+        onAddPosition,
+        onAddSubSection,
+        expandedPositions,
+        onToggleResources: toggleResources,
+        onRemoveResource: onRemoveResource ?? (() => {}),
+        onUpdateResource: onUpdateResource ?? (() => {}),
+        onUpdateResourceFields,
+        onSaveResourceToCatalog: onSaveResourceToCatalog ?? (() => {}),
+        onSaveVariantHeaderToCatalog,
+        onOpenCostDbForPosition: onOpenCostDbForPosition ?? (() => {}),
+        onOpenCatalogForPosition: onOpenCatalogForPosition ?? (() => {}),
+        onRepickResourceVariant,
+        openVariantPickerFor: openVariantPickerSignal,
+        onClearOpenVariantPicker: clearOpenVariantPicker,
+        onOpenVariantPickerFor: openVariantPickerFor,
+        onOpenPositionVariantPicker: openPositionVariantPicker,
+        onUpdateVariantHeader,
+        onDeletePosition,
+        onSaveToDatabase,
+        onAddComment: onAddComment ?? (() => {}),
+        onAddManualResource: (positionId: string) => {
+          setManualResourceDialog({
+            positionId,
+            name: "",
+            type: "material",
+            unit: "m²",
+            quantity: "1",
+            unitRate: "0",
+            currency: "", // empty ⇒ use project base currency
+            code: "",
+          });
+          setTimeout(() => manualResNameRef.current?.focus(), 50);
+        },
+        onDuplicatePosition: onDuplicatePosition ?? (() => {}),
+        onShowContextMenu: showContextMenu,
+        anomalyMap,
+        onApplyAnomalySuggestion,
+        bimModelId,
+        onUpdatePosition,
+        onHighlightBIMElements,
+        onDeleteSection: onDeleteSection ?? (() => {}),
+        onReorderSections: onReorderSections ?? (() => {}),
+        // Issue #90: FormulaCellEditor reads onFormulaApplied via context
+        // because the Quantity column doesn't supply cellEditorParams.
+        onFormulaApplied,
+        // v2.9.29 — full-width resource rows iterate `customColumns` to
+        // render slots aligned with regional-preset columns; reading
+        // `positions` lets the renderer surface per-resource custom_fields
+        // values without a network round-trip.
+        positions,
+        customColumns,
+      }) as FullGridContext,
+    [
       currencySymbol,
       currencyCode,
-      fxRates: fxRates ?? [],
-      // Issue #88 — display-currency view-only override. The
-      // `totalFormatter` in columnDefs reads this and reformats every
-      // aggregate (footer rows, section subtotals, per-position totals)
-      // through the configured rate. Null when the user is on base.
-      displayCurrency: displayCurrency ?? null,
+      fxRates,
+      displayCurrency,
       onOpenFxRateSettings,
       locale,
       fmt,
@@ -963,75 +1151,62 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       onAddPosition,
       onAddSubSection,
       expandedPositions,
-      onToggleResources: toggleResources,
-      onRemoveResource: onRemoveResource ?? (() => {}),
-      onUpdateResource: onUpdateResource ?? (() => {}),
+      toggleResources,
+      onRemoveResource,
+      onUpdateResource,
       onUpdateResourceFields,
-      onSaveResourceToCatalog: onSaveResourceToCatalog ?? (() => {}),
+      onSaveResourceToCatalog,
       onSaveVariantHeaderToCatalog,
-      onOpenCostDbForPosition: onOpenCostDbForPosition ?? (() => {}),
-      onOpenCatalogForPosition: onOpenCatalogForPosition ?? (() => {}),
+      onOpenCostDbForPosition,
+      onOpenCatalogForPosition,
       onRepickResourceVariant,
-      openVariantPickerFor: openVariantPickerSignal,
-      onClearOpenVariantPicker: clearOpenVariantPicker,
-      onOpenVariantPickerFor: openVariantPickerFor,
-      onOpenPositionVariantPicker: openPositionVariantPicker,
+      openVariantPickerSignal,
+      openVariantPickerFor,
+      clearOpenVariantPicker,
+      openPositionVariantPicker,
       onUpdateVariantHeader,
       onDeletePosition,
       onSaveToDatabase,
-      onAddComment: onAddComment ?? (() => {}),
-      onAddManualResource: (positionId: string) => {
-        setManualResourceDialog({
-          positionId, name: '', type: 'material', unit: 'm²', quantity: '1', unitRate: '0',
-          currency: '', // empty ⇒ use project base currency
-          code: '',
-        });
-        setTimeout(() => manualResNameRef.current?.focus(), 50);
-      },
-      onDuplicatePosition: onDuplicatePosition ?? (() => {}),
-      onShowContextMenu: showContextMenu,
+      onAddComment,
+      onDuplicatePosition,
+      showContextMenu,
       anomalyMap,
       onApplyAnomalySuggestion,
       bimModelId,
       onUpdatePosition,
       onHighlightBIMElements,
-      onDeleteSection: onDeleteSection ?? (() => {}),
-      onReorderSections: onReorderSections ?? (() => {}),
-      // Issue #90: FormulaCellEditor reads onFormulaApplied via context
-      // because the Quantity column doesn't supply cellEditorParams.
+      onDeleteSection,
+      onReorderSections,
       onFormulaApplied,
-      // v2.9.29 — full-width resource rows iterate `customColumns` to
-      // render slots aligned with regional-preset columns; reading
-      // `positions` lets the renderer surface per-resource custom_fields
-      // values without a network round-trip.
       positions,
       customColumns,
-    }) as FullGridContext,
-    [currencySymbol, currencyCode, fxRates, displayCurrency, onOpenFxRateSettings, locale, fmt, t, collapsedSections, onToggleSection, onAddPosition, onAddSubSection,
-     expandedPositions, toggleResources, onRemoveResource, onUpdateResource, onUpdateResourceFields,
-     onSaveResourceToCatalog, onSaveVariantHeaderToCatalog, onOpenCostDbForPosition, onOpenCatalogForPosition, onRepickResourceVariant,
-     openVariantPickerSignal, openVariantPickerFor, clearOpenVariantPicker, openPositionVariantPicker, onUpdateVariantHeader,
-     onDeletePosition, onSaveToDatabase, onAddComment,
-     onDuplicatePosition, showContextMenu, anomalyMap, onApplyAnomalySuggestion, bimModelId,
-     onUpdatePosition, onHighlightBIMElements, onDeleteSection, onReorderSections, onFormulaApplied,
-     positions, customColumns],
+    ],
   );
 
   /* ── Column defs (standard + custom) ─────────────────────────────── */
   const columnDefs = useMemo(() => {
-    const defs = getColumnDefs({ currencySymbol, currencyCode, locale, fmt, t, displayCurrency: displayCurrency ?? null });
+    const defs = getColumnDefs({
+      currencySymbol,
+      currencyCode,
+      locale,
+      fmt,
+      t,
+      displayCurrency: displayCurrency ?? null,
+    });
     // Override ordinal column with custom renderer
-    const ordinalCol = defs.find((c) => c.field === 'ordinal');
+    const ordinalCol = defs.find((c) => c.field === "ordinal");
     if (ordinalCol) {
       ordinalCol.cellRenderer = OrdinalCellRenderer;
-      ordinalCol.cellRendererSelector = (params: { data?: { _isSection?: boolean; _isFooter?: boolean } }) => {
+      ordinalCol.cellRendererSelector = (params: {
+        data?: { _isSection?: boolean; _isFooter?: boolean };
+      }) => {
         if (params.data?._isSection || params.data?._isFooter) return undefined;
         return { component: OrdinalCellRenderer };
       };
     }
     // Insert custom columns before _actions column
     if (customColumns && customColumns.length > 0) {
-      const actionsIdx = defs.findIndex((c) => c.field === '_actions');
+      const actionsIdx = defs.findIndex((c) => c.field === "_actions");
       // v2.7.0/E — `calculated` columns evaluate user-authored formulas
       // against the live positions list + BOQ variables. We project the
       // BOQ-level variables map (UPPER_SNAKE keyed) into the engine's
@@ -1042,7 +1217,10 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       const variablesMap = new Map<string, FormulaVariable>();
       if (boqVariables) {
         for (const v of boqVariables) {
-          variablesMap.set(v.name.toUpperCase(), { type: v.type, value: v.value });
+          variablesMap.set(v.name.toUpperCase(), {
+            type: v.type,
+            value: v.value,
+          });
         }
       }
       const customDefs = getCustomColumnDefs(customColumns, {
@@ -1056,7 +1234,17 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       }
     }
     return defs;
-  }, [currencySymbol, currencyCode, locale, fmt, t, customColumns, positions, boqVariables, displayCurrency]);
+  }, [
+    currencySymbol,
+    currencyCode,
+    locale,
+    fmt,
+    t,
+    customColumns,
+    positions,
+    boqVariables,
+    displayCurrency,
+  ]);
 
   /* ── Calculated-column refresh on positions change ──────────────────
    * AG Grid re-runs `valueGetter` on every refresh; for cross-position
@@ -1067,7 +1255,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
     if (!gridApiRef.current) return;
     if (!customColumns || customColumns.length === 0) return;
     const calculatedCols = customColumns
-      .filter((c) => c.column_type === 'calculated')
+      .filter((c) => c.column_type === "calculated")
       .map((c) => `custom_${c.name}`);
     if (calculatedCols.length === 0) return;
     gridApiRef.current.refreshCells({ columns: calculatedCols, force: true });
@@ -1100,220 +1288,240 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
    * subtotal / per-position total reformats in lock-step. */
   useEffect(() => {
     if (!gridApiRef.current) return;
-    gridApiRef.current.refreshCells({ columns: ['total'], force: true });
+    gridApiRef.current.refreshCells({ columns: ["total"], force: true });
     gridApiRef.current.refreshHeader();
   }, [displayCurrency?.code, displayCurrency?.rate]);
 
   /* ── Helper: insert resource sub-rows after an expanded position ── */
-  const insertResourceRows = useCallback((rows: GridRow[], pos: Position, depth = 0) => {
-    // Shallow-copy so attaching the tree-depth marker never mutates the
-    // React Query-cached Position object (Issue #136).
-    rows.push({ ...pos, _depth: depth } as GridRow);
+  const insertResourceRows = useCallback(
+    (rows: GridRow[], pos: Position, depth = 0) => {
+      // Shallow-copy so attaching the tree-depth marker never mutates the
+      // React Query-cached Position object (Issue #136).
+      rows.push({ ...pos, _depth: depth } as GridRow);
 
-    if (!expandedPositions.has(pos.id)) return;
+      if (!expandedPositions.has(pos.id)) return;
 
-    const meta = (pos.metadata ?? {}) as Record<string, unknown>;
+      const meta = (pos.metadata ?? {}) as Record<string, unknown>;
 
-    // Synthetic variant-header row — only for positions that carry
-    // ``cost_item_variants`` at position level (legacy CWICR position-mode).
-    // Acts as the "variant resource" the user expects to see among the
-    // components: V badge prominent, click → reopen position-level picker.
-    const posVariants = meta.cost_item_variants as Array<{
-      index: number; label: string; price: number;
-    }> | undefined;
-    const posVariantStats = meta.cost_item_variant_stats as
-      | { common_start?: string; unit?: string; unit_localized?: string }
-      | undefined;
-    const posChosenVariant = meta.variant as
-      | { label?: string; price?: number; index?: number; quantity?: number }
-      | undefined;
-    const hasPositionLevelVariants = Array.isArray(posVariants) && posVariants.length >= 2;
-    // When the resources list already carries one or more entries with their
-    // own ``available_variants``, those entries render their own per-resource
-    // picker pill in EditableResourceRow and the position-level synthetic
-    // header would just duplicate them. Suppress the header in that case so
-    // a position can host MANY variant resources cleanly — each resource
-    // line is its own variant with its own picker. (User spec 2026-04-30:
-    // "у позиции может быть много вариативных ресурсов".)
-    const resourcesArr = (meta.resources as Array<Record<string, unknown>> | undefined) ?? [];
-    const hasResourceLevelVariants = resourcesArr.some((r) => {
-      const av = r?.available_variants;
-      return Array.isArray(av) && av.length >= 2;
-    });
-    if (hasPositionLevelVariants && !hasResourceLevelVariants) {
-      // Variant header name = ONLY the abstract base
-      // (``price_abstract_resource_common_start``). NEVER fall back to
-      // the position description — the variant resource must carry its
-      // own catalog identity, not duplicate the parent position's text.
-      // When ``common_start`` wasn't captured (legacy / pre-v2.6.30
-      // imports) we leave it empty so the synthetic row only shows the
-      // chosen variant label (or the "Variant" chip when nothing's picked).
-      const headerName =
-        (posVariantStats?.common_start && posVariantStats.common_start.trim()) || '';
-      const headerRow: VariantHeaderRow = {
-        _isVariantHeader: true,
+      // Synthetic variant-header row — only for positions that carry
+      // ``cost_item_variants`` at position level (legacy CWICR position-mode).
+      // Acts as the "variant resource" the user expects to see among the
+      // components: V badge prominent, click → reopen position-level picker.
+      const posVariants = meta.cost_item_variants as
+        | Array<{
+            index: number;
+            label: string;
+            price: number;
+          }>
+        | undefined;
+      const posVariantStats = meta.cost_item_variant_stats as
+        | { common_start?: string; unit?: string; unit_localized?: string }
+        | undefined;
+      const posChosenVariant = meta.variant as
+        | { label?: string; price?: number; index?: number; quantity?: number }
+        | undefined;
+      const hasPositionLevelVariants =
+        Array.isArray(posVariants) && posVariants.length >= 2;
+      // When the resources list already carries one or more entries with their
+      // own ``available_variants``, those entries render their own per-resource
+      // picker pill in EditableResourceRow and the position-level synthetic
+      // header would just duplicate them. Suppress the header in that case so
+      // a position can host MANY variant resources cleanly — each resource
+      // line is its own variant with its own picker. (User spec 2026-04-30:
+      // "у позиции может быть много вариативных ресурсов".)
+      const resourcesArr =
+        (meta.resources as Array<Record<string, unknown>> | undefined) ?? [];
+      const hasResourceLevelVariants = resourcesArr.some((r) => {
+        const av = r?.available_variants;
+        return Array.isArray(av) && av.length >= 2;
+      });
+      if (hasPositionLevelVariants && !hasResourceLevelVariants) {
+        // Variant header name = ONLY the abstract base
+        // (``price_abstract_resource_common_start``). NEVER fall back to
+        // the position description — the variant resource must carry its
+        // own catalog identity, not duplicate the parent position's text.
+        // When ``common_start`` wasn't captured (legacy / pre-v2.6.30
+        // imports) we leave it empty so the synthetic row only shows the
+        // chosen variant label (or the "Variant" chip when nothing's picked).
+        const headerName =
+          (posVariantStats?.common_start &&
+            posVariantStats.common_start.trim()) ||
+          "";
+        const headerRow: VariantHeaderRow = {
+          _isVariantHeader: true,
+          _parentPositionId: pos.id,
+          _variantHeaderName: headerName,
+          _variantHeaderChosenLabel: posChosenVariant?.label ?? null,
+          _variantHeaderChosenPrice:
+            typeof posChosenVariant?.price === "number"
+              ? posChosenVariant.price
+              : null,
+          _variantHeaderCount: posVariants!.length,
+          _variantHeaderCurrency:
+            (meta.currency as string | undefined) || currencyCode,
+          // Variant resource qty is stored INDEPENDENTLY of the position qty
+          // (per the user's spec: "Объём вариативного ресурса никак не
+          // связан с объёмом позиции"). When ``metadata.variant.quantity``
+          // hasn't been set (legacy pre-decouple imports OR brand-new pick),
+          // default to 1 — the per-unit norm convention used by every other
+          // resource line. Falling back to ``pos.quantity`` here was the bug
+          // that made the variant row APPEAR to track the position's qty.
+          _variantHeaderQty:
+            typeof posChosenVariant?.quantity === "number"
+              ? posChosenVariant.quantity
+              : 1,
+          // Unit is sourced from the variant catalog itself (the average /
+          // baseline value the CWICR row was estimated against), not from
+          // the position. Falls back to the position unit when the variant
+          // catalog doesn't carry one (older imports).
+          _variantHeaderUnit:
+            (posVariantStats?.unit_localized &&
+              posVariantStats.unit_localized.trim()) ||
+            (posVariantStats?.unit && posVariantStats.unit.trim()) ||
+            (pos.unit ?? ""),
+          id: `${pos.id}_variant_header`,
+          description: "",
+          ordinal: "",
+          unit: "",
+          quantity: 0,
+          unit_rate: 0,
+          total: 0,
+        };
+        rows.push(headerRow as GridRow);
+      }
+
+      const resources = (pos.metadata?.resources ?? []) as Array<{
+        name: string;
+        code?: string;
+        type: string;
+        unit: string;
+        quantity: number;
+        unit_rate: number;
+        total?: number;
+        currency?: string;
+        // CWICR variant fields (v2.6.26+) — surfaced to EditableResourceRow
+        // so the re-pick pill can render and the user's explicit pick can
+        // be marked vs an auto-default.
+        available_variants?: Array<Record<string, unknown>>;
+        available_variant_stats?: Record<string, unknown>;
+        variant?: { label: string; price: number; index: number };
+        variant_default?: "mean" | "median";
+        variant_snapshot?: Record<string, unknown>;
+      }>;
+      if (resources.length === 0) return;
+
+      // Variant-catalog dedupe at render time. Two scenarios collapse here:
+      //
+      //   1. CWICR ships two components with the same ``resource_code`` (e.g.
+      //      KADX_KATO_KAKASA_KATO has two rows under KALI-RI-KATO-KANE with
+      //      identical 3-variant catalogs).
+      //   2. The cost item's TOP-LEVEL variant catalog was persisted as a
+      //      synthetic extra resource AND one of its components already carries
+      //      the same 8-variant catalog (real BG_SOFIA shape — рате surfaces
+      //      "Стоманени конструкции" both as the cost item's variants and as
+      //      component[0]).
+      //
+      // Both manifest as multiple resource rows showing identical ▾N pills.
+      // Strip ``available_variants`` from every row whose catalog already
+      // appeared on an earlier row (matched by either ``resource_code`` or by
+      // variant-label-set hash) so only ONE picker is rendered per unique
+      // catalog. ``BOQModals.tsx`` does the same dedupe at apply-time, but
+      // legacy positions persisted before that landed need this safety net.
+      const variantPrimaryByCode = new Map<string, number>();
+      const variantPrimaryByHash = new Map<string, number>();
+
+      let resTotal = 0;
+      for (let i = 0; i < resources.length; i++) {
+        const r = resources[i]!;
+        const rTotal = r.total ?? r.quantity * r.unit_rate;
+        // Issue #111 (skolodi follow-up) — the per-position resource
+        // subtotal (``_positionResourceTotal``, rendered on the
+        // "Add resource" row) is one of the TWO places the contributor
+        // circled where a USD-priced resource in an ARS project showed
+        // its raw foreign number as if it were base. Convert each
+        // resource's contribution via its own currency before summing so
+        // the subtotal is stated in the project base currency. Resource
+        // currency wins; absent ⇒ project base (no conversion).
+        const rCcy = (r.currency || "").trim() || currencyCode;
+        resTotal += convertToBase(rTotal, rCcy, currencyCode, fxRates ?? null);
+
+        const hasVariantCatalog =
+          Array.isArray(r.available_variants) &&
+          r.available_variants.length >= 2;
+        let variantsForThisRow = r.available_variants;
+        let variantStatsForThisRow = r.available_variant_stats;
+        if (hasVariantCatalog) {
+          const code = (r.code || "").trim();
+          const labelHash = (r.available_variants ?? [])
+            .map((v) => ((v as { label?: string }).label || "").trim())
+            .join("|");
+          const codePrimary = code ? variantPrimaryByCode.get(code) : undefined;
+          const hashPrimary = labelHash
+            ? variantPrimaryByHash.get(labelHash)
+            : undefined;
+          if (codePrimary !== undefined && codePrimary !== i) {
+            variantsForThisRow = undefined;
+            variantStatsForThisRow = undefined;
+          } else if (hashPrimary !== undefined && hashPrimary !== i) {
+            variantsForThisRow = undefined;
+            variantStatsForThisRow = undefined;
+          } else {
+            if (code) variantPrimaryByCode.set(code, i);
+            if (labelHash) variantPrimaryByHash.set(labelHash, i);
+          }
+        }
+
+        const resRow: ResourceRow = {
+          _isResource: true,
+          _parentPositionId: pos.id,
+          _resourceIndex: i,
+          _resourceName: r.name,
+          _resourceType: r.type || "other",
+          _resourceUnit: r.unit,
+          _resourceQty: r.quantity,
+          _resourceRate: r.unit_rate,
+          _resourceCurrency: r.currency,
+          _resourceCode: r.code,
+          _resourceAvailableVariants: variantsForThisRow,
+          _resourceAvailableVariantStats: variantStatsForThisRow,
+          _resourceVariant: r.variant,
+          _resourceVariantDefault: r.variant_default,
+          _resourceVariantSnapshot: r.variant_snapshot,
+          id: `${pos.id}_res_${i}`,
+          description: r.name,
+          ordinal: "",
+          unit: r.unit,
+          quantity: r.quantity,
+          unit_rate: r.unit_rate,
+          total: rTotal,
+        };
+        rows.push(resRow as GridRow);
+      }
+
+      // "Add resource" row at the bottom
+      const addRow: AddResourceRow = {
+        _isAddResource: true,
         _parentPositionId: pos.id,
-        _variantHeaderName: headerName,
-        _variantHeaderChosenLabel: posChosenVariant?.label ?? null,
-        _variantHeaderChosenPrice: typeof posChosenVariant?.price === 'number'
-          ? posChosenVariant.price
-          : null,
-        _variantHeaderCount: posVariants!.length,
-        _variantHeaderCurrency: (meta.currency as string | undefined) || currencyCode,
-        // Variant resource qty is stored INDEPENDENTLY of the position qty
-        // (per the user's spec: "Объём вариативного ресурса никак не
-        // связан с объёмом позиции"). When ``metadata.variant.quantity``
-        // hasn't been set (legacy pre-decouple imports OR brand-new pick),
-        // default to 1 — the per-unit norm convention used by every other
-        // resource line. Falling back to ``pos.quantity`` here was the bug
-        // that made the variant row APPEAR to track the position's qty.
-        _variantHeaderQty:
-          typeof posChosenVariant?.quantity === 'number'
-            ? posChosenVariant.quantity
-            : 1,
-        // Unit is sourced from the variant catalog itself (the average /
-        // baseline value the CWICR row was estimated against), not from
-        // the position. Falls back to the position unit when the variant
-        // catalog doesn't carry one (older imports).
-        _variantHeaderUnit:
-          (posVariantStats?.unit_localized && posVariantStats.unit_localized.trim()) ||
-          (posVariantStats?.unit && posVariantStats.unit.trim()) ||
-          (pos.unit ?? ''),
-        id: `${pos.id}_variant_header`,
-        description: '',
-        ordinal: '',
-        unit: '',
+        _positionResourceTotal: resTotal,
+        id: `${pos.id}_add_res`,
+        description: "",
+        ordinal: "",
+        unit: "",
         quantity: 0,
         unit_rate: 0,
         total: 0,
       };
-      rows.push(headerRow as GridRow);
-    }
-
-    const resources = (pos.metadata?.resources ?? []) as Array<{
-      name: string; code?: string; type: string;
-      unit: string; quantity: number; unit_rate: number; total?: number;
-      currency?: string;
-      // CWICR variant fields (v2.6.26+) — surfaced to EditableResourceRow
-      // so the re-pick pill can render and the user's explicit pick can
-      // be marked vs an auto-default.
-      available_variants?: Array<Record<string, unknown>>;
-      available_variant_stats?: Record<string, unknown>;
-      variant?: { label: string; price: number; index: number };
-      variant_default?: 'mean' | 'median';
-      variant_snapshot?: Record<string, unknown>;
-    }>;
-    if (resources.length === 0) return;
-
-    // Variant-catalog dedupe at render time. Two scenarios collapse here:
-    //
-    //   1. CWICR ships two components with the same ``resource_code`` (e.g.
-    //      KADX_KATO_KAKASA_KATO has two rows under KALI-RI-KATO-KANE with
-    //      identical 3-variant catalogs).
-    //   2. The cost item's TOP-LEVEL variant catalog was persisted as a
-    //      synthetic extra resource AND one of its components already carries
-    //      the same 8-variant catalog (real BG_SOFIA shape — рате surfaces
-    //      "Стоманени конструкции" both as the cost item's variants and as
-    //      component[0]).
-    //
-    // Both manifest as multiple resource rows showing identical ▾N pills.
-    // Strip ``available_variants`` from every row whose catalog already
-    // appeared on an earlier row (matched by either ``resource_code`` or by
-    // variant-label-set hash) so only ONE picker is rendered per unique
-    // catalog. ``BOQModals.tsx`` does the same dedupe at apply-time, but
-    // legacy positions persisted before that landed need this safety net.
-    const variantPrimaryByCode = new Map<string, number>();
-    const variantPrimaryByHash = new Map<string, number>();
-
-    let resTotal = 0;
-    for (let i = 0; i < resources.length; i++) {
-      const r = resources[i]!;
-      const rTotal = r.total ?? r.quantity * r.unit_rate;
-      // Issue #111 (skolodi follow-up) — the per-position resource
-      // subtotal (``_positionResourceTotal``, rendered on the
-      // "Add resource" row) is one of the TWO places the contributor
-      // circled where a USD-priced resource in an ARS project showed
-      // its raw foreign number as if it were base. Convert each
-      // resource's contribution via its own currency before summing so
-      // the subtotal is stated in the project base currency. Resource
-      // currency wins; absent ⇒ project base (no conversion).
-      const rCcy = (r.currency || '').trim() || currencyCode;
-      resTotal += convertToBase(rTotal, rCcy, currencyCode, fxRates ?? null);
-
-      const hasVariantCatalog =
-        Array.isArray(r.available_variants) && r.available_variants.length >= 2;
-      let variantsForThisRow = r.available_variants;
-      let variantStatsForThisRow = r.available_variant_stats;
-      if (hasVariantCatalog) {
-        const code = (r.code || '').trim();
-        const labelHash = (r.available_variants ?? [])
-          .map((v) => ((v as { label?: string }).label || '').trim())
-          .join('|');
-        const codePrimary = code ? variantPrimaryByCode.get(code) : undefined;
-        const hashPrimary = labelHash
-          ? variantPrimaryByHash.get(labelHash)
-          : undefined;
-        if (codePrimary !== undefined && codePrimary !== i) {
-          variantsForThisRow = undefined;
-          variantStatsForThisRow = undefined;
-        } else if (hashPrimary !== undefined && hashPrimary !== i) {
-          variantsForThisRow = undefined;
-          variantStatsForThisRow = undefined;
-        } else {
-          if (code) variantPrimaryByCode.set(code, i);
-          if (labelHash) variantPrimaryByHash.set(labelHash, i);
-        }
-      }
-
-      const resRow: ResourceRow = {
-        _isResource: true,
-        _parentPositionId: pos.id,
-        _resourceIndex: i,
-        _resourceName: r.name,
-        _resourceType: r.type || 'other',
-        _resourceUnit: r.unit,
-        _resourceQty: r.quantity,
-        _resourceRate: r.unit_rate,
-        _resourceCurrency: r.currency,
-        _resourceCode: r.code,
-        _resourceAvailableVariants: variantsForThisRow,
-        _resourceAvailableVariantStats: variantStatsForThisRow,
-        _resourceVariant: r.variant,
-        _resourceVariantDefault: r.variant_default,
-        _resourceVariantSnapshot: r.variant_snapshot,
-        id: `${pos.id}_res_${i}`,
-        description: r.name,
-        ordinal: '',
-        unit: r.unit,
-        quantity: r.quantity,
-        unit_rate: r.unit_rate,
-        total: rTotal,
-      };
-      rows.push(resRow as GridRow);
-    }
-
-    // "Add resource" row at the bottom
-    const addRow: AddResourceRow = {
-      _isAddResource: true,
-      _parentPositionId: pos.id,
-      _positionResourceTotal: resTotal,
-      id: `${pos.id}_add_res`,
-      description: '',
-      ordinal: '',
-      unit: '',
-      quantity: 0,
-      unit_rate: 0,
-      total: 0,
-    };
-    rows.push(addRow as GridRow);
-    // ``fxRates`` added (Issue #111) — the resource subtotal now depends
-    // on the project FX table, so an FX-rate edit must recompute it.
-  }, [expandedPositions, currencyCode, fxRates]);
+      rows.push(addRow as GridRow);
+      // ``fxRates`` added (Issue #111) — the resource subtotal now depends
+      // on the project FX table, so an FX-rate edit must recompute it.
+    },
+    [expandedPositions, currencyCode, fxRates],
+  );
 
   /* ── Build row data from positions ────────────────────────────── */
   const rowData: GridRow[] = useMemo(() => {
     const num = (v: unknown): number => {
-      const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
+      const n = typeof v === "number" ? v : parseFloat(String(v ?? ""));
       return Number.isFinite(n) ? n : 0;
     };
 
@@ -1402,7 +1610,8 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
 
   /* ── Row ID ───────────────────────────────────────────────────── */
   const getRowId = useCallback(
-    (params: GetRowIdParams) => params.data?.id ?? params.data?._footerType ?? '',
+    (params: GetRowIdParams) =>
+      params.data?.id ?? params.data?._footerType ?? "",
     [],
   );
 
@@ -1411,22 +1620,32 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
     const classes: string[] = [];
     if (params.data?._isSection) {
       classes.push(
-        'oe-section-group-row',
-        'bg-surface-secondary/70',
-        'border-t-2',
-        'border-border',
-        'font-bold',
+        "oe-section-group-row",
+        "bg-surface-secondary/70",
+        "border-t-2",
+        "border-border",
+        "font-bold",
       );
     }
     if (params.data?._isFooter) {
-      classes.push('bg-surface-tertiary/50', 'border-t', 'border-border');
+      classes.push("bg-surface-tertiary/50", "border-t", "border-border");
     }
-    if (params.data?._isResource || params.data?._isAddResource || params.data?._isVariantHeader) {
-      classes.push('oe-resource-row');
+    if (
+      params.data?._isResource ||
+      params.data?._isAddResource ||
+      params.data?._isVariantHeader
+    ) {
+      classes.push("oe-resource-row");
     }
     // Add 'group' to regular position rows so hover actions (save/delete) appear on hover
-    if (!params.data?._isSection && !params.data?._isFooter && !params.data?._isResource && !params.data?._isAddResource && !params.data?._isVariantHeader) {
-      classes.push('group');
+    if (
+      !params.data?._isSection &&
+      !params.data?._isFooter &&
+      !params.data?._isResource &&
+      !params.data?._isAddResource &&
+      !params.data?._isVariantHeader
+    ) {
+      classes.push("group");
 
       // Highlight unpriced positions (unit_rate is 0/empty) so the user can
       // see at a glance what still needs work. Skip resource sub-rows and
@@ -1434,15 +1653,17 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       const rate = Number(params.data?.unit_rate ?? 0);
       const qty = Number(params.data?.quantity ?? 0);
       if ((!rate || rate === 0) && qty > 0) {
-        classes.push('oe-unpriced-row');
+        classes.push("oe-unpriced-row");
       }
 
       // Validation status left-border accent for quick scanning
-      const validationStatus = params.data?.validation_status as string | undefined;
-      if (validationStatus === 'errors') {
-        classes.push('boq-row-error');
-      } else if (validationStatus === 'warnings') {
-        classes.push('boq-row-warning');
+      const validationStatus = params.data?.validation_status as
+        | string
+        | undefined;
+      if (validationStatus === "errors") {
+        classes.push("boq-row-error");
+      } else if (validationStatus === "warnings") {
+        classes.push("boq-row-warning");
       }
 
       // CWICR abstract-resource left-edge accent. We give the row a 4px
@@ -1452,28 +1673,35 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       //   • Auto default     → amber (matches the "default · refine" pill)
       // Only applied when no validation accent is already winning, so an
       // erroring row keeps its red bar instead of being recoloured.
-      if (validationStatus !== 'errors' && validationStatus !== 'warnings') {
-        const meta = params.data?.metadata as Record<string, unknown> | undefined;
+      if (validationStatus !== "errors" && validationStatus !== "warnings") {
+        const meta = params.data?.metadata as
+          | Record<string, unknown>
+          | undefined;
         if (meta) {
-          if (meta.variant && typeof meta.variant === 'object') {
-            classes.push('boq-row-variant');
-          } else if (meta.variant_default === 'mean' || meta.variant_default === 'median') {
-            classes.push('boq-row-variant-default');
+          if (meta.variant && typeof meta.variant === "object") {
+            classes.push("boq-row-variant");
+          } else if (
+            meta.variant_default === "mean" ||
+            meta.variant_default === "median"
+          ) {
+            classes.push("boq-row-variant-default");
           }
         }
       }
     }
-    return classes.join(' ');
+    return classes.join(" ");
   }, []);
 
   /* ── Full-width row: sections + resource sub-rows ─────────────── */
-  const isFullWidthRow = useCallback(
-    (params: IsFullWidthRowParams) => {
-      const d = params.rowNode.data;
-      return !!d?._isSection || !!d?._isResource || !!d?._isAddResource || !!d?._isVariantHeader;
-    },
-    [],
-  );
+  const isFullWidthRow = useCallback((params: IsFullWidthRowParams) => {
+    const d = params.rowNode.data;
+    return (
+      !!d?._isSection ||
+      !!d?._isResource ||
+      !!d?._isAddResource ||
+      !!d?._isVariantHeader
+    );
+  }, []);
 
   const getRowHeight = useCallback((params: RowHeightParams) => {
     if (params.data?._isSection) return 38;
@@ -1494,7 +1722,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // edits on the same row piggy-back on the existing lock.
       const positionId = event.data?.id;
       if (
-        typeof positionId !== 'string' ||
+        typeof positionId !== "string" ||
         positionId.length === 0 ||
         event.data?._isSection ||
         event.data?._isFooter
@@ -1508,7 +1736,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         return;
       }
       rowLockPendingRef.current.add(positionId);
-      acquireCollabLock('boq_position', positionId, 60)
+      acquireCollabLock("boq_position", positionId, 60)
         .then((result) => {
           rowLockPendingRef.current.delete(positionId);
           if (result.ok) {
@@ -1531,13 +1759,13 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
             // ignore — the user may have already blurred
           }
           addToast({
-            type: 'warning',
-            title: t('collab_locks.lock_conflict_title', {
-              defaultValue: 'Someone is editing this‌⁠‍',
+            type: "warning",
+            title: t("collab_locks.lock_conflict_title", {
+              defaultValue: "Someone is editing this‌⁠‍",
             }),
-            message: t('collab_locks.lock_conflict_toast', {
+            message: t("collab_locks.lock_conflict_toast", {
               defaultValue:
-                'Locked by {{name}}. Try again in {{seconds}} seconds.‌⁠‍',
+                "Locked by {{name}}. Try again in {{seconds}} seconds.‌⁠‍",
               name: result.conflict.current_holder_name,
               seconds: result.conflict.remaining_seconds,
             }),
@@ -1557,7 +1785,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
   const onCellEditingStopped = useCallback(
     (event: CellEditingStoppedEvent) => {
       const positionId = event.data?.id;
-      if (typeof positionId !== 'string' || positionId.length === 0) return;
+      if (typeof positionId !== "string" || positionId.length === 0) return;
       // Release on stop — the user has either committed or cancelled
       // the edit.  If they immediately start editing another cell on
       // the same row, onCellEditingStarted will re-acquire.
@@ -1581,9 +1809,9 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // we write to `metadata.custom_fields` comes from `colId`, not
       // from string-stripping `field` — so two columns can never
       // alias onto the same key.
-      const colId = event.column?.getColId() ?? colDef.colId ?? '';
-      if (typeof colId === 'string' && colId.startsWith('custom_')) {
-        const colName = colId.slice('custom_'.length);
+      const colId = event.column?.getColId() ?? colDef.colId ?? "";
+      if (typeof colId === "string" && colId.startsWith("custom_")) {
+        const colName = colId.slice("custom_".length);
         if (!colName) return;
         if (oldValue === newValue) return;
         // Resource sub-row: route through the per-resource custom-field
@@ -1604,11 +1832,16 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
           return;
         }
         const meta = (data.metadata as Record<string, unknown>) ?? {};
-        const cf = (meta.custom_fields as Record<string, unknown> | undefined) ?? {};
+        const cf =
+          (meta.custom_fields as Record<string, unknown> | undefined) ?? {};
         const customFields = { ...cf, [colName]: newValue };
         const updatedMeta = { ...meta, custom_fields: customFields };
         const oldMeta = { ...meta, custom_fields: { ...cf } };
-        onUpdatePosition(data.id, { metadata: updatedMeta }, { metadata: oldMeta });
+        onUpdatePosition(
+          data.id,
+          { metadata: updatedMeta },
+          { metadata: oldMeta },
+        );
         return;
       }
 
@@ -1621,7 +1854,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // still emits the event's ``newValue`` from the editor's
       // (possibly stale) ``getValue()`` — so for the unit column we
       // trust the post-setter value on ``data`` instead.
-      if (field === 'unit') {
+      if (field === "unit") {
         newValue = (data as Record<string, unknown>).unit;
       }
 
@@ -1635,9 +1868,11 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // position) — same convention as CostX, Candy, iTWO, ProEst —
       // so changing position qty must NOT touch resource qty/rate or
       // unit_rate. Backend re-derives total = qty × unit_rate.
-      if (field === 'quantity') {
-        const parsedNew = typeof newValue === 'number' ? newValue : parseFloat(newValue) || 0;
-        const parsedOld = typeof oldValue === 'number' ? oldValue : parseFloat(oldValue) || 0;
+      if (field === "quantity") {
+        const parsedNew =
+          typeof newValue === "number" ? newValue : parseFloat(newValue) || 0;
+        const parsedOld =
+          typeof oldValue === "number" ? oldValue : parseFloat(oldValue) || 0;
         update.quantity = parsedNew;
         old.quantity = parsedOld;
       }
@@ -1678,14 +1913,27 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         });
 
         // If parent changed, update position's parent_id first
-        if (newParentId && movedData.parent_id !== newParentId && onUpdatePosition) {
-          onUpdatePosition(movedData.id, { parent_id: newParentId }, { parent_id: movedData.parent_id });
+        if (
+          newParentId &&
+          movedData.parent_id !== newParentId &&
+          onUpdatePosition
+        ) {
+          onUpdatePosition(
+            movedData.id,
+            { parent_id: newParentId },
+            { parent_id: movedData.parent_id },
+          );
         }
 
         // Collect the current row order from the grid (excluding footer and section rows)
         const reorderedIds: string[] = [];
         api.forEachNode((node) => {
-          if (node.data && !node.data._isFooter && !node.data._isSection && node.data.id) {
+          if (
+            node.data &&
+            !node.data._isFooter &&
+            !node.data._isSection &&
+            node.data.id
+          ) {
             reorderedIds.push(node.data.id);
           }
         });
@@ -1729,7 +1977,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
     const api = gridApiRef.current;
     const rowNode = api.getRowNode(highlightPositionId);
     if (rowNode) {
-      api.ensureNodeVisible(rowNode, 'middle');
+      api.ensureNodeVisible(rowNode, "middle");
       api.flashCells({ rowNodes: [rowNode] });
     }
   }, [highlightPositionId]);
@@ -1741,7 +1989,10 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       const api = event.api;
       const selectedRows = api.getSelectedRows();
       const ids = selectedRows
-        .filter((row: Record<string, unknown>) => row.id && !row._isFooter && !row._isSection)
+        .filter(
+          (row: Record<string, unknown>) =>
+            row.id && !row._isFooter && !row._isSection,
+        )
         .map((row: Record<string, unknown>) => row.id as string);
       onSelectionChanged(ids);
     },
@@ -1775,14 +2026,26 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       sortable: false,
       suppressMovable: true,
       suppressHeaderMenuButton: true,
-      cellClass: 'text-content-primary',
-      headerClass: 'oe-header-centered',
+      cellClass: "text-content-primary",
+      headerClass: "oe-header-centered",
     }),
     [],
   );
 
   /* ── Tab navigation: skip non-editable cells (Drag, Total, Actions) */
-  const NON_EDITABLE_FIELDS = useMemo(() => new Set(['_drag', '_checkbox', 'total', '_actions', '_expand', '_bim_link', '_bim_qty']), []);
+  const NON_EDITABLE_FIELDS = useMemo(
+    () =>
+      new Set([
+        "_drag",
+        "_checkbox",
+        "total",
+        "_actions",
+        "_expand",
+        "_bim_link",
+        "_bim_qty",
+      ]),
+    [],
+  );
 
   const tabToNextCell = useCallback(
     (params: TabToNextCellParams): CellPosition | boolean => {
@@ -1806,9 +2069,13 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // Search across columns (and rows if we wrap around)
       for (let attempts = 0; attempts < allColumns.length * 2; attempts++) {
         const col = allColumns[colIdx];
-        const colId = col?.getColId() ?? '';
+        const colId = col?.getColId() ?? "";
         if (col && !NON_EDITABLE_FIELDS.has(colId)) {
-          return { rowIndex, column: col, rowPinned: nextCellPosition.rowPinned };
+          return {
+            rowIndex,
+            column: col,
+            rowPinned: nextCellPosition.rowPinned,
+          };
         }
 
         colIdx += step;
@@ -1847,7 +2114,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
    */
   const formatCellForClipboard = useCallback(
     (value: unknown, _colId: string): string => {
-      if (value == null) return '';
+      if (value == null) return "";
       return String(value);
     },
     [],
@@ -1862,7 +2129,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       if (PASTE_PROTECTED_FIELDS.has(colId)) return false;
       if (data._isFooter) return false;
       // Section rows only allow description editing
-      if (data._isSection) return colId === 'description';
+      if (data._isSection) return colId === "description";
       return true;
     },
     [],
@@ -1873,7 +2140,12 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
    * Returns true if the paste was applied, false if it was rejected.
    */
   const applyCellPaste = useCallback(
-    (api: GridApi, rowIndex: number, colId: string, rawClipboard: string): boolean => {
+    (
+      api: GridApi,
+      rowIndex: number,
+      colId: string,
+      rawClipboard: string,
+    ): boolean => {
       const rowNode = api.getDisplayedRowAtIndex(rowIndex);
       if (!rowNode?.data?.id) return false;
 
@@ -1915,7 +2187,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // Don't intercept when a cell editor is active — let the editor handle clipboard natively
       if (api.getEditingCells().length > 0) return;
 
-      if (e.key === 'c' || e.key === 'C') {
+      if (e.key === "c" || e.key === "C") {
         /* ── COPY ───────────────────────────────────────────────── */
         const focusedCell = api.getFocusedCell();
         if (!focusedCell) return;
@@ -1940,7 +2212,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         }
 
         e.preventDefault();
-      } else if (e.key === 'v' || e.key === 'V') {
+      } else if (e.key === "v" || e.key === "V") {
         /* ── PASTE ──────────────────────────────────────────────── */
         const focusedCell = api.getFocusedCell();
         if (!focusedCell) return;
@@ -1958,7 +2230,9 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         e.preventDefault();
 
         // Split clipboard into rows (newline) and columns (tab) for multi-cell paste
-        const clipboardRows = clipboardText.split(/\r?\n/).filter((row) => row.length > 0);
+        const clipboardRows = clipboardText
+          .split(/\r?\n/)
+          .filter((row) => row.length > 0);
         const allColumns = api.getAllDisplayedColumns();
         const startColIdx = allColumns.findIndex(
           (col) => col.getColId() === focusedCell.column.getColId(),
@@ -1972,14 +2246,19 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
           const targetRowIdx = focusedCell.rowIndex + rowOffset;
           if (targetRowIdx >= totalRowCount) break;
 
-          const cells = clipboardRows[rowOffset]!.split('\t');
+          const cells = clipboardRows[rowOffset]!.split("\t");
           for (let colOffset = 0; colOffset < cells.length; colOffset++) {
             const targetColIdx = startColIdx + colOffset;
             if (targetColIdx >= allColumns.length) break;
 
             const targetCol = allColumns[targetColIdx]!;
             const targetColId = targetCol.getColId();
-            const applied = applyCellPaste(api, targetRowIdx, targetColId, cells[colOffset] ?? '');
+            const applied = applyCellPaste(
+              api,
+              targetRowIdx,
+              targetColId,
+              cells[colOffset] ?? "",
+            );
             if (applied) pastedCount++;
           }
         }
@@ -1987,16 +2266,19 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         if (pastedCount === 0) {
           addToast(
             {
-              type: 'error',
-              title: t('boq.paste_failed', { defaultValue: 'Could not paste — invalid data or read-only cells‌⁠‍' }),
+              type: "error",
+              title: t("boq.paste_failed", {
+                defaultValue:
+                  "Could not paste — invalid data or read-only cells‌⁠‍",
+              }),
             },
             { duration: 3000 },
           );
         } else {
           addToast(
             {
-              type: 'success',
-              title: t('boq.value_pasted', { defaultValue: 'Value pasted‌⁠‍' }),
+              type: "success",
+              title: t("boq.value_pasted", { defaultValue: "Value pasted‌⁠‍" }),
             },
             { duration: 2000 },
           );
@@ -2004,13 +2286,17 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
           // Flash pasted cells for visual feedback
           const flashRowNodes = [];
           const flashColumns = [];
-          for (let rowOffset = 0; rowOffset < clipboardRows.length; rowOffset++) {
+          for (
+            let rowOffset = 0;
+            rowOffset < clipboardRows.length;
+            rowOffset++
+          ) {
             const targetRowIdx = focusedCell.rowIndex + rowOffset;
             if (targetRowIdx >= totalRowCount) break;
             const rowNode = api.getDisplayedRowAtIndex(targetRowIdx);
             if (rowNode) flashRowNodes.push(rowNode);
 
-            const cells = clipboardRows[rowOffset]!.split('\t');
+            const cells = clipboardRows[rowOffset]!.split("\t");
             for (let colOffset = 0; colOffset < cells.length; colOffset++) {
               const targetColIdx = startColIdx + colOffset;
               if (targetColIdx >= allColumns.length) break;
@@ -2022,32 +2308,127 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
             api.flashCells({ rowNodes: flashRowNodes, columns: flashColumns });
           }
         }
+      } else if (e.key === "d" || e.key === "D") {
+        /* ── v3.12.0 Stream A — Ctrl+D fill down ──────────────────── */
+        // Copy the focused cell's value to every other selected row in
+        // the SAME column. Mirrors the spreadsheet idiom; AG-Grid does
+        // not define Ctrl+D so this never overrides a built-in.
+        const focusedCell = api.getFocusedCell();
+        if (!focusedCell) return;
+        const colId = focusedCell.column.getColId();
+        if (PASTE_PROTECTED_FIELDS.has(colId)) return;
+        const sourceValue = getCellRawValue(api, focusedCell.rowIndex, colId);
+        if (sourceValue === undefined) return;
+
+        const selectedNodes = api.getSelectedNodes();
+        const targets = selectedNodes.filter((node) => {
+          const d = node.data as Record<string, unknown> | undefined;
+          return d && d.id && !d._isFooter && !d._isSection && !d._isResource;
+        });
+        if (targets.length === 0) return;
+
+        e.preventDefault();
+        let filled = 0;
+        for (const node of targets) {
+          const data = node.data as Record<string, unknown>;
+          if (data[colId] === sourceValue) continue;
+          if (!isCellPasteable(data, colId)) continue;
+          const update: UpdatePositionData = {
+            [colId]: sourceValue,
+          } as UpdatePositionData;
+          const old: UpdatePositionData = {
+            [colId]: data[colId],
+          } as UpdatePositionData;
+          onUpdatePosition(data.id as string, update, old);
+          filled++;
+        }
+        if (filled > 0) {
+          api.flashCells({
+            rowNodes: targets,
+            columns: [focusedCell.column],
+          });
+          addToast(
+            {
+              type: "success",
+              title: t("boq.fill_down_done", {
+                defaultValue: "Filled down to {{count}} rows‌⁠‍",
+                count: String(filled),
+              } as Record<string, string>),
+            },
+            { duration: 2000 },
+          );
+        }
+      } else if (e.key === ";" || e.key === ":") {
+        /* ── v3.12.0 Stream A — Ctrl+; insert today (ISO YYYY-MM-DD) ─ */
+        // Inserts only into custom-column date cells (built-in numeric
+        // columns reject non-numeric pastes anyway). Free of AG-Grid
+        // built-ins.
+        const focusedCell = api.getFocusedCell();
+        if (!focusedCell) return;
+        const colId = focusedCell.column.getColId();
+        if (PASTE_PROTECTED_FIELDS.has(colId)) return;
+        if (NUMERIC_FIELDS.has(colId)) return;
+        const rowNode = api.getDisplayedRowAtIndex(focusedCell.rowIndex);
+        if (!rowNode?.data?.id) return;
+        const data = rowNode.data as Record<string, unknown>;
+        if (!isCellPasteable(data, colId)) return;
+
+        const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        if (data[colId] === today) return;
+
+        e.preventDefault();
+        const update: UpdatePositionData = {
+          [colId]: today,
+        } as UpdatePositionData;
+        const old: UpdatePositionData = {
+          [colId]: data[colId],
+        } as UpdatePositionData;
+        onUpdatePosition(data.id as string, update, old);
+        api.flashCells({
+          rowNodes: [rowNode],
+          columns: [focusedCell.column],
+        });
+        addToast(
+          {
+            type: "success",
+            title: t("boq.date_inserted", {
+              defaultValue: "Inserted today ({{date}})‌⁠‍",
+              date: today,
+            } as Record<string, string>),
+          },
+          { duration: 1500 },
+        );
       }
     };
 
-    wrapper.addEventListener('keydown', handleKeyDown);
-    return () => wrapper.removeEventListener('keydown', handleKeyDown);
-  }, [getCellRawValue, formatCellForClipboard, applyCellPaste, addToast, t]);
+    wrapper.addEventListener("keydown", handleKeyDown);
+    return () => wrapper.removeEventListener("keydown", handleKeyDown);
+  }, [
+    getCellRawValue,
+    formatCellForClipboard,
+    applyCellPaste,
+    addToast,
+    t,
+    isCellPasteable,
+    onUpdatePosition,
+  ]);
 
   /* ── Right-click on AG Grid cells → context menu ──────────────── */
-  const onCellContextMenu = useCallback(
-    (event: CellContextMenuEvent) => {
-      const data = event.data;
-      if (!data) return;
-      const e = event.event as MouseEvent;
-      if (!e) return;
-      e.preventDefault();
-      let type: ContextMenuTarget = 'position';
-      if (data._isSection) type = 'section';
-      else if (data._isFooter) type = 'footer';
-      else if (data._isResource) type = 'resource';
-      else if (data._isAddResource) type = 'addResource';
-      const x = Math.min(e.clientX, window.innerWidth - 220);
-      const y = Math.min(e.clientY, window.innerHeight - 300);
-      setContextMenu({ x, y, type, data });
-    },
-    [],
-  );
+  const onCellContextMenu = useCallback((event: CellContextMenuEvent) => {
+    const data = event.data;
+    if (!data) return;
+    const e = event.event as MouseEvent;
+    if (!e) return;
+    e.preventDefault();
+    let type: ContextMenuTarget = "position";
+    if (data._isSection) type = "section";
+    else if (data._isFooter) type = "footer";
+    else if (data._isResource) type = "resource";
+    else if (data._isAddResource) type = "addResource";
+    const x = Math.min(e.clientX, window.innerWidth - 220);
+    const y = Math.min(e.clientY, window.innerHeight - 300);
+    setContextMenu({ x, y, type, data });
+  }, []);
 
   /* ── Manual resource dialog submit ────────────────────────────── */
 
@@ -2057,8 +2438,16 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
   const finalizeManualResource = useCallback(
     (override?: Partial<ManualResource> & { code?: string }) => {
       if (!manualResourceDialog) return;
-      const { positionId, name, type, unit, quantity, unitRate, currency, code } =
-        manualResourceDialog;
+      const {
+        positionId,
+        name,
+        type,
+        unit,
+        quantity,
+        unitRate,
+        currency,
+        code,
+      } = manualResourceDialog;
       const effType = override?.type ?? type;
       const effUnit = (override?.unit ?? unit).trim();
       const effCurrency = override?.currency ?? currency;
@@ -2068,12 +2457,11 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // catalogue/variant-imported master can itself carry a blank ``name``.
       // Never silently drop the resource: fall back to the code, then the
       // unit, so it always lands in the смета.
-      const effName =
-        (override?.name ?? name).trim() || effCode || effUnit;
+      const effName = (override?.name ?? name).trim() || effCode || effUnit;
       if (!effName) return;
-      const qty = parseFloat(quantity.replace(',', '.')) || 1;
+      const qty = parseFloat(quantity.replace(",", ".")) || 1;
       const rate =
-        override?.unit_rate ?? (parseFloat(unitRate.replace(',', '.')) || 0);
+        override?.unit_rate ?? (parseFloat(unitRate.replace(",", ".")) || 0);
       // Persist user-typed units so they show up next time app-wide.
       if (effUnit) saveCustomUnit(effUnit);
       onAddManualResource?.(positionId, {
@@ -2089,7 +2477,14 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       setExpandedPositions((prev) => new Set(prev).add(positionId));
       setTimeout(() => {
         gridApiRef.current?.refreshCells({
-          columns: ['ordinal', '_expand', 'description', 'quantity', 'unit_rate', 'total'],
+          columns: [
+            "ordinal",
+            "_expand",
+            "description",
+            "quantity",
+            "unit_rate",
+            "total",
+          ],
           force: true,
         });
       }, 0);
@@ -2159,7 +2554,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
   const ALL_CURRENCY_OPTIONS = useMemo(
     () =>
       CURRENCY_GROUPS.flatMap((g) => g.options).filter(
-        (o) => o.value !== '__custom__',
+        (o) => o.value !== "__custom__",
       ),
     [],
   );
@@ -2176,10 +2571,10 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
           // stop truncating before the description column has to give up
           // width. Two tiers — see index.css for the exact rules.
           columnDefs.length >= 18
-            ? 'oe-header-xs'
+            ? "oe-header-xs"
             : columnDefs.length >= 13
-              ? 'oe-header-dense'
-              : ''
+              ? "oe-header-dense"
+              : ""
         }`}
         // Cap the grid at the visible viewport so AG Grid's internal
         // horizontal scrollbar (which sits at the BOTTOM of the
@@ -2189,7 +2584,12 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         // columns were added to overflow horizontally there was no way
         // to scroll right and see them. `min(...)` keeps a sensible
         // tall view on big screens and shrinks on small ones.
-        style={{ height: 'min(calc(100vh - 48px), 1100px)', minHeight: 480, width: '100%', minWidth: 0 }}
+        style={{
+          height: "min(calc(100vh - 48px), 1100px)",
+          minHeight: 480,
+          width: "100%",
+          minWidth: 0,
+        }}
       >
         <AgGridReact
           ref={gridRef}
@@ -2230,7 +2630,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
             if (!data || data._isSection || data._isFooter) return;
 
             // Click on unit_rate/total cell with resources → expand resources
-            if ((field === 'unit_rate' || field === 'total')) {
+            if (field === "unit_rate" || field === "total") {
               const meta = (data.metadata ?? {}) as Record<string, unknown>;
               const res = meta.resources;
               if (Array.isArray(res) && res.length > 0) {
@@ -2269,12 +2669,16 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
           onGridReady={onGridReady}
           onCellContextMenu={onCellContextMenu}
           rowSelection={{
-            mode: 'multiRow',
+            mode: "multiRow",
             checkboxes: true,
             headerCheckbox: true,
-            selectAll: 'filtered',
+            selectAll: "filtered",
             enableClickSelection: false,
-            isRowSelectable: (node: { data?: Record<string, unknown> }) => !node.data?._isFooter && !node.data?._isSection && !node.data?._isResource && !node.data?._isAddResource,
+            isRowSelectable: (node: { data?: Record<string, unknown> }) =>
+              !node.data?._isFooter &&
+              !node.data?._isSection &&
+              !node.data?._isResource &&
+              !node.data?._isAddResource,
           }}
           onSelectionChanged={handleSelectionChanged}
           rowDragManaged
@@ -2303,497 +2707,785 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       </div>
 
       {/* ── Context Menu (portal) ──────────────────────────────────── */}
-      {contextMenu && createPortal(
-        <>
-          {/* Backdrop */}
-          <div className="fixed inset-0 z-[9998]" onClick={closeContextMenu} onContextMenu={(e) => { e.preventDefault(); closeContextMenu(); }} />
-          {/* Menu — flip to the left if it would overflow the viewport (Bug 11). */}
-          <div
-            className="fixed z-[9999] min-w-[200px] rounded-lg border border-border-light bg-surface-elevated shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100"
-            style={(() => {
-              const MENU_WIDTH = 240;
-              const MENU_HEIGHT_EST = 360;
-              const overflowX = contextMenu.x + MENU_WIDTH > window.innerWidth - 8;
-              const overflowY = contextMenu.y + MENU_HEIGHT_EST > window.innerHeight - 8;
-              const left = overflowX
-                ? Math.max(8, contextMenu.x - MENU_WIDTH)
-                : contextMenu.x;
-              const top = overflowY
-                ? Math.max(8, contextMenu.y - MENU_HEIGHT_EST)
-                : contextMenu.y;
-              return { left, top };
-            })()}
-          >
-            {/* — Position context menu — */}
-            {contextMenu.type === 'position' && (() => {
-              const d = contextMenu.data as Record<string, unknown>;
-              const meta = d.metadata as Record<string, unknown> | undefined;
-              const hasResources = Array.isArray(meta?.resources) && (meta!.resources as unknown[]).length > 0;
-              const isExpanded = expandedPositions.has(d.id as string);
-              const cmtCount = countComments(meta);
-              const costItemId = meta?.cost_item_id as string | undefined;
-              return <>
-                {/* Resources section */}
-                {hasResources && (
-                  <CtxItem icon={isExpanded ? <ChevronDown size={14}/> : <ChevronRight size={14}/>}
-                    label={isExpanded ? t('boq.collapse_resources', { defaultValue: 'Collapse Resources‌⁠‍' }) : t('boq.expand_resources', { defaultValue: 'Expand Resources' })}
-                    onClick={() => { toggleResources(d.id as string); closeContextMenu(); }}
-                  />
-                )}
-                <CtxItem icon={<Plus size={14}/>}
-                  label={t('boq.add_resource_manual', { defaultValue: 'Add Resource' })}
-                  onClick={() => {
-                    gridContext.onAddManualResource(d.id as string);
-                    closeContextMenu();
-                  }}
-                />
-                <CtxItem icon={<Database size={14}/>}
-                  label={t('boq.add_from_database', { defaultValue: 'Add from Database' })}
-                  onClick={() => { onOpenCostDbForPosition?.(d.id as string); closeContextMenu(); }}
-                />
-                <CtxItem icon={<Boxes size={14}/>}
-                  label={t('boq.add_from_catalog', { defaultValue: 'Pick from Catalog' })}
-                  onClick={() => { onOpenCatalogForPosition?.(d.id as string); closeContextMenu(); }}
-                />
-                <CtxSeparator />
-                <CtxItem icon={<Copy size={14}/>}
-                  label={t('boq.duplicate_position', { defaultValue: 'Duplicate Position' })}
-                  onClick={() => { onDuplicatePosition?.(d.id as string); closeContextMenu(); }}
-                />
-                {/* ── Issue #136: nest a child Partida under this one ── */}
-                {onAddChildPosition && (() => {
-                  const capped = childWouldExceedCap(d.id as string);
+      {contextMenu &&
+        createPortal(
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 z-[9998]"
+              onClick={closeContextMenu}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                closeContextMenu();
+              }}
+            />
+            {/* Menu — flip to the left if it would overflow the viewport (Bug 11). */}
+            <div
+              className="fixed z-[9999] min-w-[200px] rounded-lg border border-border-light bg-surface-elevated shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100"
+              style={(() => {
+                const MENU_WIDTH = 240;
+                const MENU_HEIGHT_EST = 360;
+                const overflowX =
+                  contextMenu.x + MENU_WIDTH > window.innerWidth - 8;
+                const overflowY =
+                  contextMenu.y + MENU_HEIGHT_EST > window.innerHeight - 8;
+                const left = overflowX
+                  ? Math.max(8, contextMenu.x - MENU_WIDTH)
+                  : contextMenu.x;
+                const top = overflowY
+                  ? Math.max(8, contextMenu.y - MENU_HEIGHT_EST)
+                  : contextMenu.y;
+                return { left, top };
+              })()}
+            >
+              {/* — Position context menu — */}
+              {contextMenu.type === "position" &&
+                (() => {
+                  const d = contextMenu.data as Record<string, unknown>;
+                  const meta = d.metadata as
+                    | Record<string, unknown>
+                    | undefined;
+                  const hasResources =
+                    Array.isArray(meta?.resources) &&
+                    (meta!.resources as unknown[]).length > 0;
+                  const isExpanded = expandedPositions.has(d.id as string);
+                  const cmtCount = countComments(meta);
+                  const costItemId = meta?.cost_item_id as string | undefined;
                   return (
-                    <CtxItem icon={<Plus size={14}/>}
-                      label={t('boq.add_child_position', { defaultValue: 'Add Child Partida' })}
-                      disabled={capped}
-                      title={capped ? depthCapTooltip : undefined}
-                      onClick={() => { onAddChildPosition(d.id as string); closeContextMenu(); }}
-                    />
-                  );
-                })()}
-                {/* ── Feature 1: live model→quantity binding ───────── */}
-                {onModelLink && (
-                  <CtxItem icon={<Cuboid size={14} className="text-oe-blue"/>}
-                    label={t('boq.model_link_action', { defaultValue: 'Model link…' })}
-                    onClick={() => { onModelLink(d.id as string); closeContextMenu(); }}
-                  />
-                )}
-                {/* ── Issue #127: reuse / linked-positions ──────────── */}
-                {onReuseCode && (
-                  <CtxItem icon={<Link2 size={14}/>}
-                    label={t('boq.reuse_code_action', { defaultValue: 'Reuse Existing Code…' })}
-                    onClick={() => { onReuseCode(d.parent_id as string | undefined); closeContextMenu(); }}
-                  />
-                )}
-                {(d.link_role === 'master' || d.link_role === 'instance') && (
-                  <>
-                    {onShowLinks && (
-                      <CtxItem icon={<Link2 size={14}/>}
-                        label={t('boq.show_linked', { defaultValue: 'Show Linked Positions' })}
-                        onClick={() => { onShowLinks(d.id as string); closeContextMenu(); }}
+                    <>
+                      {/* Resources section */}
+                      {hasResources && (
+                        <CtxItem
+                          icon={
+                            isExpanded ? (
+                              <ChevronDown size={14} />
+                            ) : (
+                              <ChevronRight size={14} />
+                            )
+                          }
+                          label={
+                            isExpanded
+                              ? t("boq.collapse_resources", {
+                                  defaultValue: "Collapse Resources‌⁠‍",
+                                })
+                              : t("boq.expand_resources", {
+                                  defaultValue: "Expand Resources",
+                                })
+                          }
+                          onClick={() => {
+                            toggleResources(d.id as string);
+                            closeContextMenu();
+                          }}
+                        />
+                      )}
+                      <CtxItem
+                        icon={<Plus size={14} />}
+                        label={t("boq.add_resource_manual", {
+                          defaultValue: "Add Resource",
+                        })}
+                        onClick={() => {
+                          gridContext.onAddManualResource(d.id as string);
+                          closeContextMenu();
+                        }}
                       />
-                    )}
-                    {onUnlinkPosition && (
-                      <CtxItem icon={<Link2Off size={14}/>}
-                        label={t('boq.unlink_this', { defaultValue: 'Unlink this position‌⁠‍' })}
-                        onClick={() => { onUnlinkPosition(d.id as string); closeContextMenu(); }}
+                      <CtxItem
+                        icon={<Database size={14} />}
+                        label={t("boq.add_from_database", {
+                          defaultValue: "Add from Database",
+                        })}
+                        onClick={() => {
+                          onOpenCostDbForPosition?.(d.id as string);
+                          closeContextMenu();
+                        }}
                       />
-                    )}
-                  </>
-                )}
-                <CtxItem icon={<MessageSquare size={14}/>}
-                  label={cmtCount > 0
-                    ? t('boq.view_comments', { defaultValue: 'Comments ({{count}})', count: cmtCount })
-                    : t('boq.add_comment', { defaultValue: 'Add Comment' })
-                  }
-                  onClick={() => { gridContext.onAddComment(d.id as string); closeContextMenu(); }}
-                />
-                <CtxItem icon={<BookmarkPlus size={14}/>}
-                  label={t('boq.save_to_database', { defaultValue: 'Save to Catalog' })}
-                  onClick={() => { onSaveToDatabase(d.id as string); closeContextMenu(); }}
-                />
-                {onSaveAsAssembly && (
-                  <CtxItem icon={<Layers size={14}/>}
-                    label={t('boq.save_as_assembly', { defaultValue: 'Save as Assembly' })}
-                    onClick={() => { onSaveAsAssembly(d.id as string); closeContextMenu(); }}
-                  />
-                )}
-                {costItemId && (
-                  <CtxItem icon={<ExternalLink size={14}/>}
-                    label={t('boq.view_in_cost_db', { defaultValue: 'View in Cost Database' })}
-                    onClick={() => { navigate(`/costs?highlight=${costItemId}`); closeContextMenu(); }}
-                  />
-                )}
-                {(() => {
-                  const cadIds = d.cad_element_ids as string[] | undefined;
-                  const bimIds = Array.isArray(cadIds) ? cadIds.filter((x) => typeof x === 'string' && x.length > 0) : [];
-                  if (bimIds.length === 0) return null;
-                  return (
-                    <CtxItem icon={<Cuboid size={14}/>}
-                      label={t('boq.view_in_bim', { defaultValue: 'View in BIM 3D ({{count}})', count: bimIds.length })}
-                      onClick={() => {
-                        if (bimIds.length === 1) {
-                          navigate(`/bim?element=${encodeURIComponent(bimIds[0]!)}&isolate=${encodeURIComponent(bimIds[0]!)}`);
-                        } else {
-                          navigate(`/bim?isolate=${bimIds.map((id) => encodeURIComponent(id)).join(',')}`);
+                      <CtxItem
+                        icon={<Boxes size={14} />}
+                        label={t("boq.add_from_catalog", {
+                          defaultValue: "Pick from Catalog",
+                        })}
+                        onClick={() => {
+                          onOpenCatalogForPosition?.(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                      <CtxSeparator />
+                      <CtxItem
+                        icon={<Copy size={14} />}
+                        label={t("boq.duplicate_position", {
+                          defaultValue: "Duplicate Position",
+                        })}
+                        onClick={() => {
+                          onDuplicatePosition?.(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                      {/* ── Issue #136: nest a child Partida under this one ── */}
+                      {onAddChildPosition &&
+                        (() => {
+                          const capped = childWouldExceedCap(d.id as string);
+                          return (
+                            <CtxItem
+                              icon={<Plus size={14} />}
+                              label={t("boq.add_child_position", {
+                                defaultValue: "Add Child Partida",
+                              })}
+                              disabled={capped}
+                              title={capped ? depthCapTooltip : undefined}
+                              onClick={() => {
+                                onAddChildPosition(d.id as string);
+                                closeContextMenu();
+                              }}
+                            />
+                          );
+                        })()}
+                      {/* ── Feature 1: live model→quantity binding ───────── */}
+                      {onModelLink && (
+                        <CtxItem
+                          icon={<Cuboid size={14} className="text-oe-blue" />}
+                          label={t("boq.model_link_action", {
+                            defaultValue: "Model link…",
+                          })}
+                          onClick={() => {
+                            onModelLink(d.id as string);
+                            closeContextMenu();
+                          }}
+                        />
+                      )}
+                      {/* ── Issue #127: reuse / linked-positions ──────────── */}
+                      {onReuseCode && (
+                        <CtxItem
+                          icon={<Link2 size={14} />}
+                          label={t("boq.reuse_code_action", {
+                            defaultValue: "Reuse Existing Code…",
+                          })}
+                          onClick={() => {
+                            onReuseCode(d.parent_id as string | undefined);
+                            closeContextMenu();
+                          }}
+                        />
+                      )}
+                      {(d.link_role === "master" ||
+                        d.link_role === "instance") && (
+                        <>
+                          {onShowLinks && (
+                            <CtxItem
+                              icon={<Link2 size={14} />}
+                              label={t("boq.show_linked", {
+                                defaultValue: "Show Linked Positions",
+                              })}
+                              onClick={() => {
+                                onShowLinks(d.id as string);
+                                closeContextMenu();
+                              }}
+                            />
+                          )}
+                          {onUnlinkPosition && (
+                            <CtxItem
+                              icon={<Link2Off size={14} />}
+                              label={t("boq.unlink_this", {
+                                defaultValue: "Unlink this position‌⁠‍",
+                              })}
+                              onClick={() => {
+                                onUnlinkPosition(d.id as string);
+                                closeContextMenu();
+                              }}
+                            />
+                          )}
+                        </>
+                      )}
+                      <CtxItem
+                        icon={<MessageSquare size={14} />}
+                        label={
+                          cmtCount > 0
+                            ? t("boq.view_comments", {
+                                defaultValue: "Comments ({{count}})",
+                                count: cmtCount,
+                              })
+                            : t("boq.add_comment", {
+                                defaultValue: "Add Comment",
+                              })
                         }
-                        closeContextMenu();
-                      }}
-                    />
+                        onClick={() => {
+                          gridContext.onAddComment(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                      <CtxItem
+                        icon={<BookmarkPlus size={14} />}
+                        label={t("boq.save_to_database", {
+                          defaultValue: "Save to Catalog",
+                        })}
+                        onClick={() => {
+                          onSaveToDatabase(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                      {onSaveAsAssembly && (
+                        <CtxItem
+                          icon={<Layers size={14} />}
+                          label={t("boq.save_as_assembly", {
+                            defaultValue: "Save as Assembly",
+                          })}
+                          onClick={() => {
+                            onSaveAsAssembly(d.id as string);
+                            closeContextMenu();
+                          }}
+                        />
+                      )}
+                      {costItemId && (
+                        <CtxItem
+                          icon={<ExternalLink size={14} />}
+                          label={t("boq.view_in_cost_db", {
+                            defaultValue: "View in Cost Database",
+                          })}
+                          onClick={() => {
+                            navigate(`/costs?highlight=${costItemId}`);
+                            closeContextMenu();
+                          }}
+                        />
+                      )}
+                      {(() => {
+                        const cadIds = d.cad_element_ids as
+                          | string[]
+                          | undefined;
+                        const bimIds = Array.isArray(cadIds)
+                          ? cadIds.filter(
+                              (x) => typeof x === "string" && x.length > 0,
+                            )
+                          : [];
+                        if (bimIds.length === 0) return null;
+                        return (
+                          <CtxItem
+                            icon={<Cuboid size={14} />}
+                            label={t("boq.view_in_bim", {
+                              defaultValue: "View in BIM 3D ({{count}})",
+                              count: bimIds.length,
+                            })}
+                            onClick={() => {
+                              if (bimIds.length === 1) {
+                                navigate(
+                                  `/bim?element=${encodeURIComponent(bimIds[0]!)}&isolate=${encodeURIComponent(bimIds[0]!)}`,
+                                );
+                              } else {
+                                navigate(
+                                  `/bim?isolate=${bimIds.map((id) => encodeURIComponent(id)).join(",")}`,
+                                );
+                              }
+                              closeContextMenu();
+                            }}
+                          />
+                        );
+                      })()}
+                      {/* ── AI features ─────────────────────────────────── */}
+                      <CtxSeparator />
+                      <CtxGroupLabel label="AI" />
+                      <CtxItem
+                        icon={
+                          <TrendingUp size={14} className="text-violet-500" />
+                        }
+                        label={t("boq.suggest_rate", {
+                          defaultValue: "Suggest Rate",
+                        })}
+                        onClick={() => {
+                          onSuggestRate?.(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                      <CtxItem
+                        icon={<Tag size={14} className="text-violet-500" />}
+                        label={t("boq.suggest_classification", {
+                          defaultValue: "Classify",
+                        })}
+                        onClick={() => {
+                          onClassify?.(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                      {anomalyMap?.has(d.id as string) &&
+                        (() => {
+                          const anomaly = anomalyMap.get(d.id as string)!;
+                          return (
+                            <CtxItem
+                              icon={
+                                <AlertTriangle
+                                  size={14}
+                                  className="text-amber-500"
+                                />
+                              }
+                              label={`${anomaly.message.slice(0, 35)}... → Apply ${anomaly.suggestion}`}
+                              onClick={() => {
+                                onApplyAnomalySuggestion?.(
+                                  d.id as string,
+                                  anomaly.suggestion,
+                                );
+                                closeContextMenu();
+                              }}
+                            />
+                          );
+                        })()}
+                      <CtxSeparator />
+                      <CtxItem
+                        icon={<Trash2 size={14} />}
+                        label={t("common.delete", { defaultValue: "Delete" })}
+                        danger
+                        onClick={() => {
+                          onDeletePosition(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                    </>
                   );
                 })()}
-                {/* ── AI features ─────────────────────────────────── */}
-                <CtxSeparator />
-                <CtxGroupLabel label="AI" />
-                <CtxItem icon={<TrendingUp size={14} className="text-violet-500"/>}
-                  label={t('boq.suggest_rate', { defaultValue: 'Suggest Rate' })}
-                  onClick={() => { onSuggestRate?.(d.id as string); closeContextMenu(); }}
-                />
-                <CtxItem icon={<Tag size={14} className="text-violet-500"/>}
-                  label={t('boq.suggest_classification', { defaultValue: 'Classify' })}
-                  onClick={() => { onClassify?.(d.id as string); closeContextMenu(); }}
-                />
-                {anomalyMap?.has(d.id as string) && (() => {
-                  const anomaly = anomalyMap.get(d.id as string)!;
+
+              {/* — Resource context menu — */}
+              {contextMenu.type === "resource" &&
+                (() => {
+                  const d = contextMenu.data;
+                  const posId = d._parentPositionId as string;
+                  const resIdx = d._resourceIndex as number;
                   return (
-                    <CtxItem icon={<AlertTriangle size={14} className="text-amber-500"/>}
-                      label={`${anomaly.message.slice(0, 35)}... → Apply ${anomaly.suggestion}`}
-                      onClick={() => {
-                        onApplyAnomalySuggestion?.(d.id as string, anomaly.suggestion);
-                        closeContextMenu();
-                      }}
-                    />
+                    <>
+                      <CtxItem
+                        icon={<BookmarkPlus size={14} />}
+                        label={t("boq.save_to_catalog", {
+                          defaultValue: "Save to Catalog",
+                        })}
+                        onClick={() => {
+                          gridContext.onSaveResourceToCatalog(posId, resIdx);
+                          closeContextMenu();
+                        }}
+                      />
+                      <CtxSeparator />
+                      <CtxItem
+                        icon={<X size={14} />}
+                        label={t("boq.remove_resource", {
+                          defaultValue: "Remove Resource",
+                        })}
+                        danger
+                        onClick={() => {
+                          gridContext.onRemoveResource(posId, resIdx);
+                          closeContextMenu();
+                        }}
+                      />
+                    </>
                   );
                 })()}
-                <CtxSeparator />
-                <CtxItem icon={<Trash2 size={14}/>}
-                  label={t('common.delete', { defaultValue: 'Delete' })}
-                  danger
-                  onClick={() => { onDeletePosition(d.id as string); closeContextMenu(); }}
-                />
-              </>;
-            })()}
 
-            {/* — Resource context menu — */}
-            {contextMenu.type === 'resource' && (() => {
-              const d = contextMenu.data;
-              const posId = d._parentPositionId as string;
-              const resIdx = d._resourceIndex as number;
-              return <>
-                <CtxItem icon={<BookmarkPlus size={14}/>}
-                  label={t('boq.save_to_catalog', { defaultValue: 'Save to Catalog' })}
-                  onClick={() => { gridContext.onSaveResourceToCatalog(posId, resIdx); closeContextMenu(); }}
-                />
-                <CtxSeparator />
-                <CtxItem icon={<X size={14}/>}
-                  label={t('boq.remove_resource', { defaultValue: 'Remove Resource' })}
-                  danger
-                  onClick={() => { gridContext.onRemoveResource(posId, resIdx); closeContextMenu(); }}
-                />
-              </>;
-            })()}
+              {/* — Section context menu — */}
+              {contextMenu.type === "section" &&
+                (() => {
+                  const d = contextMenu.data;
+                  const isCollapsed = collapsedSections.has(d.id as string);
+                  const sectionCapped = childWouldExceedCap(d.id as string);
+                  return (
+                    <>
+                      <CtxItem
+                        icon={<Plus size={14} />}
+                        label={t("boq.add_position", {
+                          defaultValue: "Add Position",
+                        })}
+                        disabled={sectionCapped}
+                        title={sectionCapped ? depthCapTooltip : undefined}
+                        onClick={() => {
+                          onAddPosition(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                      {onAddSubSection && (
+                        <CtxItem
+                          icon={<Plus size={14} />}
+                          label={t("boq.add_sub_section", {
+                            defaultValue: "Add Sub-section",
+                          })}
+                          disabled={sectionCapped}
+                          title={sectionCapped ? depthCapTooltip : undefined}
+                          onClick={() => {
+                            onAddSubSection(d.id as string);
+                            closeContextMenu();
+                          }}
+                        />
+                      )}
+                      {onReuseCode && (
+                        <CtxItem
+                          icon={<Link2 size={14} />}
+                          label={t("boq.reuse_code_action", {
+                            defaultValue: "Reuse Existing Code…",
+                          })}
+                          onClick={() => {
+                            onReuseCode(d.id as string);
+                            closeContextMenu();
+                          }}
+                        />
+                      )}
+                      <CtxItem
+                        icon={
+                          isCollapsed ? (
+                            <ChevronDown size={14} />
+                          ) : (
+                            <ChevronRight size={14} />
+                          )
+                        }
+                        label={
+                          isCollapsed
+                            ? t("boq.expand_section", {
+                                defaultValue: "Expand Section",
+                              })
+                            : t("boq.collapse_section", {
+                                defaultValue: "Collapse Section",
+                              })
+                        }
+                        onClick={() => {
+                          onToggleSection(d.id as string);
+                          closeContextMenu();
+                        }}
+                      />
+                    </>
+                  );
+                })()}
 
-            {/* — Section context menu — */}
-            {contextMenu.type === 'section' && (() => {
-              const d = contextMenu.data;
-              const isCollapsed = collapsedSections.has(d.id as string);
-              const sectionCapped = childWouldExceedCap(d.id as string);
-              return <>
-                <CtxItem icon={<Plus size={14}/>}
-                  label={t('boq.add_position', { defaultValue: 'Add Position' })}
-                  disabled={sectionCapped}
-                  title={sectionCapped ? depthCapTooltip : undefined}
-                  onClick={() => { onAddPosition(d.id as string); closeContextMenu(); }}
-                />
-                {onAddSubSection && (
-                  <CtxItem icon={<Plus size={14}/>}
-                    label={t('boq.add_sub_section', { defaultValue: 'Add Sub-section' })}
-                    disabled={sectionCapped}
-                    title={sectionCapped ? depthCapTooltip : undefined}
-                    onClick={() => { onAddSubSection(d.id as string); closeContextMenu(); }}
-                  />
-                )}
-                {onReuseCode && (
-                  <CtxItem icon={<Link2 size={14}/>}
-                    label={t('boq.reuse_code_action', { defaultValue: 'Reuse Existing Code…' })}
-                    onClick={() => { onReuseCode(d.id as string); closeContextMenu(); }}
-                  />
-                )}
-                <CtxItem icon={isCollapsed ? <ChevronDown size={14}/> : <ChevronRight size={14}/>}
-                  label={isCollapsed ? t('boq.expand_section', { defaultValue: 'Expand Section' }) : t('boq.collapse_section', { defaultValue: 'Collapse Section' })}
-                  onClick={() => { onToggleSection(d.id as string); closeContextMenu(); }}
-                />
-              </>;
-            })()}
-
-            {/* — Add Resource row context menu — */}
-            {contextMenu.type === 'addResource' && (() => {
-              const posId = contextMenu.data._parentPositionId as string;
-              return <>
-                <CtxItem icon={<Plus size={14}/>}
-                  label={t('boq.add_resource_manual', { defaultValue: 'Add Resource' })}
-                  onClick={() => { gridContext.onAddManualResource(posId); closeContextMenu(); }}
-                />
-                <CtxItem icon={<Database size={14}/>}
-                  label={t('boq.add_from_database', { defaultValue: 'Add from Database' })}
-                  onClick={() => { onOpenCostDbForPosition?.(posId); closeContextMenu(); }}
-                />
-                <CtxItem icon={<Boxes size={14}/>}
-                  label={t('boq.add_from_catalog', { defaultValue: 'Pick from Catalog' })}
-                  onClick={() => { onOpenCatalogForPosition?.(posId); closeContextMenu(); }}
-                />
-              </>;
-            })()}
-          </div>
-        </>,
-        document.body,
-      )}
+              {/* — Add Resource row context menu — */}
+              {contextMenu.type === "addResource" &&
+                (() => {
+                  const posId = contextMenu.data._parentPositionId as string;
+                  return (
+                    <>
+                      <CtxItem
+                        icon={<Plus size={14} />}
+                        label={t("boq.add_resource_manual", {
+                          defaultValue: "Add Resource",
+                        })}
+                        onClick={() => {
+                          gridContext.onAddManualResource(posId);
+                          closeContextMenu();
+                        }}
+                      />
+                      <CtxItem
+                        icon={<Database size={14} />}
+                        label={t("boq.add_from_database", {
+                          defaultValue: "Add from Database",
+                        })}
+                        onClick={() => {
+                          onOpenCostDbForPosition?.(posId);
+                          closeContextMenu();
+                        }}
+                      />
+                      <CtxItem
+                        icon={<Boxes size={14} />}
+                        label={t("boq.add_from_catalog", {
+                          defaultValue: "Pick from Catalog",
+                        })}
+                        onClick={() => {
+                          onOpenCatalogForPosition?.(posId);
+                          closeContextMenu();
+                        }}
+                      />
+                    </>
+                  );
+                })()}
+            </div>
+          </>,
+          document.body,
+        )}
 
       {/* ── Manual Resource Dialog ─────────────────────────────────── */}
-      {manualResourceDialog && createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setManualResourceDialog(null)}>
+      {manualResourceDialog &&
+        createPortal(
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="boq-manual-resource-title"
-            className="bg-surface-elevated rounded-xl border border-border-light shadow-lg w-[380px] p-5 animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            onClick={() => setManualResourceDialog(null)}
           >
-            <h3 id="boq-manual-resource-title" className="text-sm font-semibold text-content-primary mb-4 flex items-center gap-2">
-              <Wrench size={16} className="text-oe-blue" />
-              {t('boq.add_resource_manual', { defaultValue: 'Add Resource' })}
-            </h3>
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="boq-manual-resource-title"
+              className="bg-surface-elevated rounded-xl border border-border-light shadow-lg w-[380px] p-5 animate-scale-in"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3
+                id="boq-manual-resource-title"
+                className="text-sm font-semibold text-content-primary mb-4 flex items-center gap-2"
+              >
+                <Wrench size={16} className="text-oe-blue" />
+                {t("boq.add_resource_manual", { defaultValue: "Add Resource" })}
+              </h3>
 
-            {/* Issue #133 — code-collision prompt: insert the existing
+              {/* Issue #133 — code-collision prompt: insert the existing
                 resource, or change the code and create a new one. */}
-            {manualResourceDialog.collision && (
-              <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 dark:border-amber-700/60 dark:bg-amber-900/20 p-3">
-                <p className="text-[11px] text-content-primary mb-1 font-medium">
-                  {t('boq.resource_code_in_use', {
-                    defaultValue: "Code '{{code}}' is already in use",
-                    code: manualResourceDialog.collision.code,
-                  })}
-                </p>
-                <p className="text-[11px] text-content-secondary mb-2">
-                  <span className="font-medium text-content-primary">
-                    {manualResourceDialog.collision.name || manualResourceDialog.collision.code}
-                  </span>
-                  {manualResourceDialog.collision.position_ordinal ||
-                  manualResourceDialog.collision.position_description
-                    ? ` (${
-                        manualResourceDialog.collision.position_ordinal ||
-                        manualResourceDialog.collision.position_description
-                      })`
-                    : ''}
-                  {'. '}
-                  {t('boq.resource_code_in_use_detail', {
-                    defaultValue:
-                      'Insert that existing resource, or change the code to create a new one?',
-                  })}
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleInsertExistingResource}
-                    className="h-7 px-3 rounded-md text-[11px] font-medium text-white bg-oe-blue hover:bg-oe-blue-hover transition-colors"
-                  >
-                    {t('boq.resource_insert_existing', { defaultValue: 'Insert existing' })}
-                  </button>
-                  <button
-                    onClick={handleChangeResourceCode}
-                    className="h-7 px-3 rounded-md text-[11px] font-medium text-content-secondary bg-surface-secondary hover:bg-surface-tertiary transition-colors"
-                  >
-                    {t('boq.resource_change_code', { defaultValue: 'Change code' })}
-                  </button>
+              {manualResourceDialog.collision && (
+                <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 dark:border-amber-700/60 dark:bg-amber-900/20 p-3">
+                  <p className="text-[11px] text-content-primary mb-1 font-medium">
+                    {t("boq.resource_code_in_use", {
+                      defaultValue: "Code '{{code}}' is already in use",
+                      code: manualResourceDialog.collision.code,
+                    })}
+                  </p>
+                  <p className="text-[11px] text-content-secondary mb-2">
+                    <span className="font-medium text-content-primary">
+                      {manualResourceDialog.collision.name ||
+                        manualResourceDialog.collision.code}
+                    </span>
+                    {manualResourceDialog.collision.position_ordinal ||
+                    manualResourceDialog.collision.position_description
+                      ? ` (${
+                          manualResourceDialog.collision.position_ordinal ||
+                          manualResourceDialog.collision.position_description
+                        })`
+                      : ""}
+                    {". "}
+                    {t("boq.resource_code_in_use_detail", {
+                      defaultValue:
+                        "Insert that existing resource, or change the code to create a new one?",
+                    })}
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleInsertExistingResource}
+                      className="h-7 px-3 rounded-md text-[11px] font-medium text-white bg-oe-blue hover:bg-oe-blue-hover transition-colors"
+                    >
+                      {t("boq.resource_insert_existing", {
+                        defaultValue: "Insert existing",
+                      })}
+                    </button>
+                    <button
+                      onClick={handleChangeResourceCode}
+                      className="h-7 px-3 rounded-md text-[11px] font-medium text-content-secondary bg-surface-secondary hover:bg-surface-tertiary transition-colors"
+                    >
+                      {t("boq.resource_change_code", {
+                        defaultValue: "Change code",
+                      })}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Name */}
-            <label className="block text-[11px] font-medium text-content-secondary mb-1">
-              {t('boq.resource_name', { defaultValue: 'Name' })} *
-            </label>
-            <input
-              ref={manualResNameRef}
-              type="text"
-              value={manualResourceDialog.name}
-              onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, name: e.target.value })}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleManualResourceSubmit(); if (e.key === 'Escape') setManualResourceDialog(null); }}
-              className="w-full mb-3 h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue focus:ring-1 focus:ring-oe-blue/30"
-              placeholder={t('boq.resource_name_placeholder', { defaultValue: 'e.g. Concrete C30/37' })}
-            />
+              {/* Name */}
+              <label className="block text-[11px] font-medium text-content-secondary mb-1">
+                {t("boq.resource_name", { defaultValue: "Name" })} *
+              </label>
+              <input
+                ref={manualResNameRef}
+                type="text"
+                value={manualResourceDialog.name}
+                onChange={(e) =>
+                  setManualResourceDialog({
+                    ...manualResourceDialog,
+                    name: e.target.value,
+                  })
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleManualResourceSubmit();
+                  if (e.key === "Escape") setManualResourceDialog(null);
+                }}
+                className="w-full mb-3 h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue focus:ring-1 focus:ring-oe-blue/30"
+                placeholder={t("boq.resource_name_placeholder", {
+                  defaultValue: "e.g. Concrete C30/37",
+                })}
+              />
 
-            {/* Code (Issue #133) — reusable resource code. Typing a code
+              {/* Code (Issue #133) — reusable resource code. Typing a code
                 already used in the project triggers the reuse prompt. */}
-            <label className="block text-[11px] font-medium text-content-secondary mb-1">
-              {t('boq.resource_code', { defaultValue: 'Code' })}
-              <span className="text-content-tertiary font-normal ml-1">
-                ({t('common.optional', { defaultValue: 'optional' })})
-              </span>
-            </label>
-            <input
-              ref={manualResCodeRef}
-              type="text"
-              value={manualResourceDialog.code}
-              onChange={(e) =>
-                setManualResourceDialog({
-                  ...manualResourceDialog,
-                  code: e.target.value,
-                  // Editing the code invalidates a prior collision verdict.
-                  collision: null,
-                })
-              }
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleManualResourceSubmit();
-                if (e.key === 'Escape') setManualResourceDialog(null);
-              }}
-              className="w-full mb-3 h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue focus:ring-1 focus:ring-oe-blue/30"
-              placeholder={t('boq.resource_code_placeholder', {
-                defaultValue: 'e.g. MAT-001 — reuse an existing code to link',
-              })}
-            />
+              <label className="block text-[11px] font-medium text-content-secondary mb-1">
+                {t("boq.resource_code", { defaultValue: "Code" })}
+                <span className="text-content-tertiary font-normal ml-1">
+                  ({t("common.optional", { defaultValue: "optional" })})
+                </span>
+              </label>
+              <input
+                ref={manualResCodeRef}
+                type="text"
+                value={manualResourceDialog.code}
+                onChange={(e) =>
+                  setManualResourceDialog({
+                    ...manualResourceDialog,
+                    code: e.target.value,
+                    // Editing the code invalidates a prior collision verdict.
+                    collision: null,
+                  })
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleManualResourceSubmit();
+                  if (e.key === "Escape") setManualResourceDialog(null);
+                }}
+                className="w-full mb-3 h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue focus:ring-1 focus:ring-oe-blue/30"
+                placeholder={t("boq.resource_code_placeholder", {
+                  defaultValue: "e.g. MAT-001 — reuse an existing code to link",
+                })}
+              />
 
-            {/* Type + Unit row */}
-            <div className="flex gap-2 mb-3">
-              <div className="flex-1">
-                <label className="block text-[11px] font-medium text-content-secondary mb-1">
-                  {t('boq.resource_type', { defaultValue: 'Type' })}
-                </label>
-                <select
-                  value={manualResourceDialog.type}
-                  onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, type: e.target.value })}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
-                >
-                  {RESOURCE_TYPES.map((rt) => (
-                    <option key={rt.value} value={rt.value}>
-                      {getResourceTypeLabel(rt.value, t)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="w-24">
-                <label className="block text-[11px] font-medium text-content-secondary mb-1">
-                  {t('boq.unit', { defaultValue: 'Unit' })}
-                </label>
-                <input
-                  type="text"
-                  list="resource-units"
-                  value={manualResourceDialog.unit}
-                  onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, unit: e.target.value })}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
-                />
-                <datalist id="resource-units">
-                  {COMMON_UNITS.map((u) => <option key={u} value={u} />)}
-                </datalist>
-              </div>
-            </div>
-
-            {/* Quantity + Rate + Currency row */}
-            <div className="flex gap-2 mb-3">
-              <div className="flex-1">
-                <label className="block text-[11px] font-medium text-content-secondary mb-1">
-                  {t('boq.quantity', { defaultValue: 'Quantity' })}
-                </label>
-                <input
-                  type="text"
-                  value={manualResourceDialog.quantity}
-                  onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, quantity: e.target.value })}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-[11px] font-medium text-content-secondary mb-1">
-                  {t('boq.unit_rate', { defaultValue: 'Unit Rate' })}
-                </label>
-                <input
-                  type="text"
-                  value={manualResourceDialog.unitRate}
-                  onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, unitRate: e.target.value })}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleManualResourceSubmit(); }}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
-                />
-              </div>
-              <div className="w-24">
-                <label className="block text-[11px] font-medium text-content-secondary mb-1">
-                  {t('boq.resource_currency', { defaultValue: 'Currency' })}
-                </label>
-                <select
-                  value={manualResourceDialog.currency || currencyCode}
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    setManualResourceDialog({
-                      ...manualResourceDialog,
-                      currency: v === currencyCode ? '' : v,
-                    });
-                  }}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
-                  title={t('boq.resource_currency_hint', {
-                    defaultValue: 'Currency for this resource. Defaults to project base currency.',
-                  })}
-                >
-                  {/* Base currency always first */}
-                  <option value={currencyCode}>{currencyCode}</option>
-                  {/* Project FX template currencies */}
-                  {(fxRates ?? [])
-                    .filter((fx) => fx.currency !== currencyCode)
-                    .map((fx) => (
-                      <option key={`fx-${fx.currency}`} value={fx.currency}>
-                        {fx.currency}
+              {/* Type + Unit row */}
+              <div className="flex gap-2 mb-3">
+                <div className="flex-1">
+                  <label className="block text-[11px] font-medium text-content-secondary mb-1">
+                    {t("boq.resource_type", { defaultValue: "Type" })}
+                  </label>
+                  <select
+                    value={manualResourceDialog.type}
+                    onChange={(e) =>
+                      setManualResourceDialog({
+                        ...manualResourceDialog,
+                        type: e.target.value,
+                      })
+                    }
+                    className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
+                  >
+                    {RESOURCE_TYPES.map((rt) => (
+                      <option key={rt.value} value={rt.value}>
+                        {getResourceTypeLabel(rt.value, t)}
                       </option>
                     ))}
-                  {/* All other ISO currencies (collapsed list) */}
-                  {ALL_CURRENCY_OPTIONS
-                    .filter(
+                  </select>
+                </div>
+                <div className="w-24">
+                  <label className="block text-[11px] font-medium text-content-secondary mb-1">
+                    {t("boq.unit", { defaultValue: "Unit" })}
+                  </label>
+                  <input
+                    type="text"
+                    list="resource-units"
+                    value={manualResourceDialog.unit}
+                    onChange={(e) =>
+                      setManualResourceDialog({
+                        ...manualResourceDialog,
+                        unit: e.target.value,
+                      })
+                    }
+                    className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
+                  />
+                  <datalist id="resource-units">
+                    {COMMON_UNITS.map((u) => (
+                      <option key={u} value={u} />
+                    ))}
+                  </datalist>
+                </div>
+              </div>
+
+              {/* Quantity + Rate + Currency row */}
+              <div className="flex gap-2 mb-3">
+                <div className="flex-1">
+                  <label className="block text-[11px] font-medium text-content-secondary mb-1">
+                    {t("boq.quantity", { defaultValue: "Quantity" })}
+                  </label>
+                  <input
+                    type="text"
+                    value={manualResourceDialog.quantity}
+                    onChange={(e) =>
+                      setManualResourceDialog({
+                        ...manualResourceDialog,
+                        quantity: e.target.value,
+                      })
+                    }
+                    className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-[11px] font-medium text-content-secondary mb-1">
+                    {t("boq.unit_rate", { defaultValue: "Unit Rate" })}
+                  </label>
+                  <input
+                    type="text"
+                    value={manualResourceDialog.unitRate}
+                    onChange={(e) =>
+                      setManualResourceDialog({
+                        ...manualResourceDialog,
+                        unitRate: e.target.value,
+                      })
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleManualResourceSubmit();
+                    }}
+                    className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
+                  />
+                </div>
+                <div className="w-24">
+                  <label className="block text-[11px] font-medium text-content-secondary mb-1">
+                    {t("boq.resource_currency", { defaultValue: "Currency" })}
+                  </label>
+                  <select
+                    value={manualResourceDialog.currency || currencyCode}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setManualResourceDialog({
+                        ...manualResourceDialog,
+                        currency: v === currencyCode ? "" : v,
+                      });
+                    }}
+                    className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
+                    title={t("boq.resource_currency_hint", {
+                      defaultValue:
+                        "Currency for this resource. Defaults to project base currency.",
+                    })}
+                  >
+                    {/* Base currency always first */}
+                    <option value={currencyCode}>{currencyCode}</option>
+                    {/* Project FX template currencies */}
+                    {(fxRates ?? [])
+                      .filter((fx) => fx.currency !== currencyCode)
+                      .map((fx) => (
+                        <option key={`fx-${fx.currency}`} value={fx.currency}>
+                          {fx.currency}
+                        </option>
+                      ))}
+                    {/* All other ISO currencies (collapsed list) */}
+                    {ALL_CURRENCY_OPTIONS.filter(
                       (c) =>
                         c.value !== currencyCode &&
                         !(fxRates ?? []).some((fx) => fx.currency === c.value),
-                    )
-                    .map((c) => (
-                      <option key={`all-${c.value}`} value={c.value}>{c.value}</option>
+                    ).map((c) => (
+                      <option key={`all-${c.value}`} value={c.value}>
+                        {c.value}
+                      </option>
                     ))}
-                </select>
+                  </select>
+                </div>
+              </div>
+
+              {/* Total preview */}
+              <div className="flex items-center justify-between mb-4 px-1">
+                <span className="text-[11px] text-content-tertiary">
+                  {t("boq.total", { defaultValue: "Total" })}
+                </span>
+                <span className="text-sm font-bold text-content-primary tabular-nums">
+                  {fmtWithCurrency(
+                    (parseFloat(
+                      manualResourceDialog.quantity.replace(",", "."),
+                    ) || 0) *
+                      (parseFloat(
+                        manualResourceDialog.unitRate.replace(",", "."),
+                      ) || 0),
+                    locale,
+                    currencyCode,
+                  )}
+                </span>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => setManualResourceDialog(null)}
+                  className="h-8 px-3 rounded-md text-xs font-medium text-content-secondary bg-surface-secondary hover:bg-surface-tertiary transition-colors"
+                >
+                  {t("common.cancel", { defaultValue: "Cancel" })}
+                </button>
+                <button
+                  onClick={handleManualResourceSubmit}
+                  disabled={
+                    !manualResourceDialog.name.trim() ||
+                    !!manualResourceDialog.checkingCode ||
+                    !!manualResourceDialog.collision
+                  }
+                  className="h-8 px-4 rounded-md text-xs font-medium text-white bg-oe-blue hover:bg-oe-blue-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  {manualResourceDialog.checkingCode
+                    ? t("boq.resource_checking_code", {
+                        defaultValue: "Checking…",
+                      })
+                    : t("boq.add_resource", { defaultValue: "Add Resource" })}
+                </button>
               </div>
             </div>
-
-            {/* Total preview */}
-            <div className="flex items-center justify-between mb-4 px-1">
-              <span className="text-[11px] text-content-tertiary">{t('boq.total', { defaultValue: 'Total' })}</span>
-              <span className="text-sm font-bold text-content-primary tabular-nums">
-                {fmtWithCurrency(
-                  (parseFloat(manualResourceDialog.quantity.replace(',', '.')) || 0) *
-                  (parseFloat(manualResourceDialog.unitRate.replace(',', '.')) || 0),
-                  locale,
-                  currencyCode,
-                )}
-              </span>
-            </div>
-
-            {/* Actions */}
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => setManualResourceDialog(null)}
-                className="h-8 px-3 rounded-md text-xs font-medium text-content-secondary bg-surface-secondary hover:bg-surface-tertiary transition-colors"
-              >
-                {t('common.cancel', { defaultValue: 'Cancel' })}
-              </button>
-              <button
-                onClick={handleManualResourceSubmit}
-                disabled={
-                  !manualResourceDialog.name.trim() ||
-                  !!manualResourceDialog.checkingCode ||
-                  !!manualResourceDialog.collision
-                }
-                className="h-8 px-4 rounded-md text-xs font-medium text-white bg-oe-blue hover:bg-oe-blue-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                {manualResourceDialog.checkingCode
-                  ? t('boq.resource_checking_code', { defaultValue: 'Checking…' })
-                  : t('boq.add_resource', { defaultValue: 'Add Resource' })}
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body,
-      )}
+          </div>,
+          document.body,
+        )}
 
       {/* ── Position-level Variant Picker ─────────────────────────────
        *   Renders only when the description-cell "V" icon was clicked
@@ -2804,24 +3496,30 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
        *   via ``onUpdatePosition``. */}
       {(() => {
         if (!positionVariantPicker) return null;
-        const pos = positions.find((p) => p.id === positionVariantPicker.positionId);
+        const pos = positions.find(
+          (p) => p.id === positionVariantPicker.positionId,
+        );
         if (!pos) return null;
         const meta = (pos.metadata ?? {}) as Record<string, unknown>;
         const variants = meta.cost_item_variants as CostVariant[] | undefined;
         const stats = meta.cost_item_variant_stats as VariantStats | undefined;
-        if (!Array.isArray(variants) || variants.length < 2 || !stats) return null;
+        if (!Array.isArray(variants) || variants.length < 2 || !stats)
+          return null;
         const currency = (meta.currency as string | undefined) || currencyCode;
-        const currentVariant = (meta as { variant?: { index?: number } }).variant;
+        const currentVariant = (meta as { variant?: { index?: number } })
+          .variant;
         return (
           <VariantPicker
             variants={variants}
             stats={stats}
             anchorEl={positionVariantPicker.anchorEl}
-            unitLabel={pos.unit || ''}
+            unitLabel={pos.unit || ""}
             currency={currency}
             defaultStrategy="mean"
             defaultIndex={
-              typeof currentVariant?.index === 'number' ? currentVariant.index : undefined
+              typeof currentVariant?.index === "number"
+                ? currentVariant.index
+                : undefined
             }
             onApply={applyPositionVariant}
             onClose={closePositionVariantPicker}
@@ -2834,7 +3532,14 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
 
 /* ── Context menu sub-components ─────────────────────────────────── */
 
-function CtxItem({ icon, label, onClick, danger, disabled, title }: {
+function CtxItem({
+  icon,
+  label,
+  onClick,
+  danger,
+  disabled,
+  title,
+}: {
   icon: React.ReactNode;
   label: string;
   onClick: () => void;
@@ -2852,13 +3557,17 @@ function CtxItem({ icon, label, onClick, danger, disabled, title }: {
       aria-disabled={disabled || undefined}
       className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-xs text-left transition-colors ${
         disabled
-          ? 'text-content-tertiary opacity-50 cursor-not-allowed'
+          ? "text-content-tertiary opacity-50 cursor-not-allowed"
           : danger
-          ? 'text-semantic-error hover:bg-semantic-error-bg'
-          : 'text-content-primary hover:bg-surface-tertiary'
+            ? "text-semantic-error hover:bg-semantic-error-bg"
+            : "text-content-primary hover:bg-surface-tertiary"
       }`}
     >
-      <span className={`shrink-0 ${danger && !disabled ? '' : 'text-content-tertiary'}`}>{icon}</span>
+      <span
+        className={`shrink-0 ${danger && !disabled ? "" : "text-content-tertiary"}`}
+      >
+        {icon}
+      </span>
       {label}
     </button>
   );
@@ -2872,7 +3581,9 @@ function CtxGroupLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-1.5 px-3 py-1 select-none">
       <Sparkles size={10} className="text-violet-500" />
-      <span className="text-[10px] font-semibold text-violet-500 uppercase tracking-wider">{label}</span>
+      <span className="text-[10px] font-semibold text-violet-500 uppercase tracking-wider">
+        {label}
+      </span>
     </div>
   );
 }

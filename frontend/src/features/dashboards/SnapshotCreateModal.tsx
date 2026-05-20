@@ -5,17 +5,17 @@
  * Backend validates format + size + label uniqueness and returns a
  * {@link SnapshotError} envelope on structured failures.
  */
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { UploadCloud, X, FileCog, Trash2 } from 'lucide-react';
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { UploadCloud, X, FileCog, Trash2 } from "lucide-react";
 
-import { Button, Input } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+import { Button, Input } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 
-import { createSnapshot, type Snapshot, type SnapshotError } from './api';
+import { createSnapshot, type Snapshot, type SnapshotError } from "./api";
 
-const SUPPORTED_EXTENSIONS = ['ifc', 'rvt', 'dwg', 'dgn'] as const;
+const SUPPORTED_EXTENSIONS = ["ifc", "rvt", "dwg", "dgn"] as const;
 const MAX_BYTES = 200 * 1024 * 1024;
 const MAX_FILES = 16;
 
@@ -35,18 +35,24 @@ export function SnapshotCreateModal({
   const toast = useToastStore((s) => s.addToast);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [label, setLabel] = useState('');
+  const [label, setLabel] = useState("");
   const [files, setFiles] = useState<File[]>([]);
 
   const invalidFiles = useMemo(() => {
     return files
       .map((f, i) => {
-        const ext = f.name.split('.').pop()?.toLowerCase() ?? '';
-        const badExt = !SUPPORTED_EXTENSIONS.includes(ext as (typeof SUPPORTED_EXTENSIONS)[number]);
+        const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
+        const badExt = !SUPPORTED_EXTENSIONS.includes(
+          ext as (typeof SUPPORTED_EXTENSIONS)[number],
+        );
         const badSize = f.size > MAX_BYTES;
         return badExt || badSize ? { index: i, badExt, badSize } : null;
       })
-      .filter(Boolean) as Array<{ index: number; badExt: boolean; badSize: boolean }>;
+      .filter(Boolean) as Array<{
+      index: number;
+      badExt: boolean;
+      badSize: boolean;
+    }>;
   }, [files]);
 
   const canSubmit =
@@ -58,14 +64,16 @@ export function SnapshotCreateModal({
   const mutation = useMutation({
     mutationFn: () => createSnapshot({ projectId, label: label.trim(), files }),
     onSuccess: (snap) => {
-      queryClient.invalidateQueries({ queryKey: ['dashboards-snapshots', projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboards-snapshots", projectId],
+      });
       onCreated(snap);
     },
     onError: (err: Error & { snapshotError?: SnapshotError }) => {
       toast({
-        type: 'error',
-        title: t('dashboards.snapshot_create_failed', {
-          defaultValue: 'Snapshot upload failed‌⁠‍',
+        type: "error",
+        title: t("dashboards.snapshot_create_failed", {
+          defaultValue: "Snapshot upload failed‌⁠‍",
         }),
         message: err.snapshotError?.message ?? err.message,
       });
@@ -104,7 +112,9 @@ export function SnapshotCreateModal({
       <div className="w-full max-w-lg rounded-lg border border-border-light bg-surface-primary shadow-xl">
         <div className="flex items-center justify-between border-b border-border-light px-5 py-3">
           <h2 className="text-sm font-semibold text-content-primary">
-            {t('dashboards.create_snapshot', { defaultValue: 'Create snapshot‌⁠‍' })}
+            {t("dashboards.create_snapshot", {
+              defaultValue: "Create snapshot‌⁠‍",
+            })}
           </h2>
           <button
             type="button"
@@ -119,14 +129,14 @@ export function SnapshotCreateModal({
         <div className="space-y-4 px-5 py-4">
           <label className="block text-sm">
             <span className="mb-1 block text-xs font-medium text-content-tertiary">
-              {t('dashboards.snapshot_label', { defaultValue: 'Label' })}
+              {t("dashboards.snapshot_label", { defaultValue: "Label" })}
             </span>
             <Input
               data-testid="snapshot-label-input"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              placeholder={t('dashboards.snapshot_label_ph', {
-                defaultValue: 'e.g. Issued-for-tender 2026-04‌⁠‍',
+              placeholder={t("dashboards.snapshot_label_ph", {
+                defaultValue: "e.g. Issued-for-tender 2026-04‌⁠‍",
               })}
               maxLength={200}
             />
@@ -135,7 +145,9 @@ export function SnapshotCreateModal({
           <div>
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs font-medium text-content-tertiary">
-                {t('dashboards.snapshot_files', { defaultValue: 'CAD / BIM files‌⁠‍' })}
+                {t("dashboards.snapshot_files", {
+                  defaultValue: "CAD / BIM files‌⁠‍",
+                })}
               </span>
               <span className="text-xs text-content-tertiary">
                 {files.length} / {MAX_FILES}
@@ -148,8 +160,8 @@ export function SnapshotCreateModal({
               data-testid="snapshot-pick-files"
             >
               <UploadCloud className="h-4 w-4" />
-              {t('dashboards.snapshot_drop_hint', {
-                defaultValue: 'Select IFC / RVT / DWG / DGN files‌⁠‍',
+              {t("dashboards.snapshot_drop_hint", {
+                defaultValue: "Select IFC / RVT / DWG / DGN files‌⁠‍",
               })}
             </button>
             <input
@@ -171,8 +183,8 @@ export function SnapshotCreateModal({
                       key={`${f.name}-${i}`}
                       className={`flex items-center gap-2 rounded border px-2 py-1 text-xs ${
                         bad
-                          ? 'border-rose-400/50 bg-rose-50 text-rose-700'
-                          : 'border-border-light bg-surface-secondary text-content-secondary'
+                          ? "border-rose-400/50 bg-rose-50 text-rose-700"
+                          : "border-border-light bg-surface-secondary text-content-secondary"
                       }`}
                     >
                       <FileCog className="h-3 w-3 text-content-tertiary" />
@@ -196,9 +208,9 @@ export function SnapshotCreateModal({
 
             {invalidFiles.length > 0 && (
               <p className="mt-2 text-xs text-rose-600">
-                {t('dashboards.snapshot_invalid_hint', {
+                {t("dashboards.snapshot_invalid_hint", {
                   defaultValue:
-                    'Remove unsupported or oversized files (IFC/RVT/DWG/DGN only, ≤ 200 MB each).',
+                    "Remove unsupported or oversized files (IFC/RVT/DWG/DGN only, ≤ 200 MB each).",
                 })}
               </p>
             )}
@@ -206,8 +218,12 @@ export function SnapshotCreateModal({
         </div>
 
         <div className="flex justify-end gap-2 border-t border-border-light px-5 py-3">
-          <Button variant="ghost" onClick={onClose} disabled={mutation.isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+          <Button
+            variant="ghost"
+            onClick={onClose}
+            disabled={mutation.isPending}
+          >
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             onClick={submit}
@@ -215,8 +231,12 @@ export function SnapshotCreateModal({
             data-testid="snapshot-submit"
           >
             {mutation.isPending
-              ? t('dashboards.snapshot_uploading', { defaultValue: 'Uploading…' })
-              : t('dashboards.snapshot_create', { defaultValue: 'Create snapshot' })}
+              ? t("dashboards.snapshot_uploading", {
+                  defaultValue: "Uploading…",
+                })
+              : t("dashboards.snapshot_create", {
+                  defaultValue: "Create snapshot",
+                })}
           </Button>
         </div>
       </div>

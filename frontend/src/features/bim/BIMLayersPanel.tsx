@@ -5,11 +5,11 @@
  * slider. Changes are pushed into the Zustand store `useBIMViewerStore`; the
  * BIMViewer reads them and forwards to ElementManager.setCategoryOpacity.
  */
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Eye, EyeOff } from 'lucide-react';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import { useBIMViewerStore } from '@/stores/useBIMViewerStore';
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Eye, EyeOff } from "lucide-react";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import { useBIMViewerStore } from "@/stores/useBIMViewerStore";
 
 interface BIMLayersPanelProps {
   elements: BIMElementData[];
@@ -21,12 +21,14 @@ export default function BIMLayersPanel({ elements }: BIMLayersPanelProps) {
   const hiddenCategories = useBIMViewerStore((s) => s.hiddenCategories);
   const setCategoryOpacity = useBIMViewerStore((s) => s.setCategoryOpacity);
   const setCategoryHidden = useBIMViewerStore((s) => s.setCategoryHidden);
-  const resetCategoryOverrides = useBIMViewerStore((s) => s.resetCategoryOverrides);
+  const resetCategoryOverrides = useBIMViewerStore(
+    (s) => s.resetCategoryOverrides,
+  );
 
   const categoryCounts = useMemo(() => {
     const map = new Map<string, number>();
     for (const el of elements) {
-      const k = el.element_type || 'Unknown';
+      const k = el.element_type || "Unknown";
       map.set(k, (map.get(k) ?? 0) + 1);
     }
     return [...map.entries()].sort((a, b) => b[1] - a[1]);
@@ -36,14 +38,14 @@ export default function BIMLayersPanel({ elements }: BIMLayersPanelProps) {
     <div className="flex flex-col gap-2 p-3">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wide">
-          {t('bim.layers_title', { defaultValue: 'Layers‌⁠‍' })}
+          {t("bim.layers_title", { defaultValue: "Layers‌⁠‍" })}
         </h3>
         <button
           type="button"
           onClick={resetCategoryOverrides}
           className="text-[11px] text-oe-blue hover:underline"
         >
-          {t('bim.layers_reset', { defaultValue: 'Reset' })}
+          {t("bim.layers_reset", { defaultValue: "Reset" })}
         </button>
       </div>
       <div className="flex flex-col gap-1.5">
@@ -62,12 +64,12 @@ export default function BIMLayersPanel({ elements }: BIMLayersPanelProps) {
                   aria-pressed={!hidden}
                   aria-label={
                     hidden
-                      ? t('bim.layers_show_category', {
-                          defaultValue: 'Show {{category}}‌⁠‍',
+                      ? t("bim.layers_show_category", {
+                          defaultValue: "Show {{category}}‌⁠‍",
                           category,
                         })
-                      : t('bim.layers_hide_category', {
-                          defaultValue: 'Hide {{category}}‌⁠‍',
+                      : t("bim.layers_hide_category", {
+                          defaultValue: "Hide {{category}}‌⁠‍",
                           category,
                         })
                   }
@@ -95,8 +97,8 @@ export default function BIMLayersPanel({ elements }: BIMLayersPanelProps) {
                   onChange={(e) =>
                     setCategoryOpacity(category, Number(e.target.value) / 100)
                   }
-                  aria-label={t('bim.layers_opacity', {
-                    defaultValue: '{{category}} opacity‌⁠‍',
+                  aria-label={t("bim.layers_opacity", {
+                    defaultValue: "{{category}} opacity‌⁠‍",
                     category,
                   })}
                   className="flex-1 accent-oe-blue"

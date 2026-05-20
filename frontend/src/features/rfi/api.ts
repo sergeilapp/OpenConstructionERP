@@ -4,13 +4,13 @@
  * All endpoints are prefixed with /v1/rfi/.
  */
 
-import { apiGet, apiPost } from '@/shared/lib/api';
+import { apiGet, apiPost } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type RFIStatus = 'draft' | 'open' | 'answered' | 'closed' | 'void';
+export type RFIStatus = "draft" | "open" | "answered" | "closed" | "void";
 
-export type RFIPriority = 'low' | 'normal' | 'high' | 'critical';
+export type RFIPriority = "low" | "normal" | "high" | "critical";
 
 /**
  * Common construction disciplines for an RFI. Kept as a constant so the
@@ -20,13 +20,13 @@ export type RFIPriority = 'low' | 'normal' | 'high' | 'critical';
  * land without a migration — this list is only what the frontend offers.
  */
 export const RFI_DISCIPLINES = [
-  'architectural',
-  'structural',
-  'mep',
-  'electrical',
-  'plumbing',
-  'civil',
-  'landscape',
+  "architectural",
+  "structural",
+  "mep",
+  "electrical",
+  "plumbing",
+  "civil",
+  "landscape",
 ] as const;
 
 export type RFIDiscipline = (typeof RFI_DISCIPLINES)[number];
@@ -69,7 +69,7 @@ export interface RFI {
 
 export interface RFIFilters {
   project_id?: string;
-  status?: RFIStatus | '';
+  status?: RFIStatus | "";
   search?: string;
   offset?: number;
   limit?: number;
@@ -114,24 +114,32 @@ export async function getRFI(id: string): Promise<RFI> {
 
 export async function fetchRFIs(filters?: RFIFilters): Promise<RFI[]> {
   const params = new URLSearchParams();
-  if (filters?.project_id) params.set('project_id', filters.project_id);
-  if (filters?.status) params.set('status', filters.status);
-  if (filters?.search && filters.search.trim()) params.set('search', filters.search.trim());
-  if (typeof filters?.offset === 'number') params.set('offset', String(filters.offset));
-  if (typeof filters?.limit === 'number') params.set('limit', String(filters.limit));
+  if (filters?.project_id) params.set("project_id", filters.project_id);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.search && filters.search.trim())
+    params.set("search", filters.search.trim());
+  if (typeof filters?.offset === "number")
+    params.set("offset", String(filters.offset));
+  if (typeof filters?.limit === "number")
+    params.set("limit", String(filters.limit));
   const qs = params.toString();
-  return apiGet<RFI[]>(`/v1/rfi/${qs ? `?${qs}` : ''}`);
+  return apiGet<RFI[]>(`/v1/rfi/${qs ? `?${qs}` : ""}`);
 }
 
 export async function fetchRFIStats(projectId: string): Promise<RFIStats> {
-  return apiGet<RFIStats>(`/v1/rfi/stats/?project_id=${encodeURIComponent(projectId)}`);
+  return apiGet<RFIStats>(
+    `/v1/rfi/stats/?project_id=${encodeURIComponent(projectId)}`,
+  );
 }
 
 export async function createRFI(data: CreateRFIPayload): Promise<RFI> {
-  return apiPost<RFI>('/v1/rfi/', data);
+  return apiPost<RFI>("/v1/rfi/", data);
 }
 
-export async function respondToRFI(id: string, data: RespondRFIPayload): Promise<RFI> {
+export async function respondToRFI(
+  id: string,
+  data: RespondRFIPayload,
+): Promise<RFI> {
   return apiPost<RFI>(`/v1/rfi/${id}/respond/`, data);
 }
 

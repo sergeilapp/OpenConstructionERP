@@ -132,18 +132,10 @@ async def resource_dashboard(
     payload = await service.resource_dashboard(resource_id)
     return ResourceDashboardResponse(
         resource=ResourceResponse.model_validate(payload["resource"]),
-        active_assignments=[
-            AssignmentResponse.model_validate(a) for a in payload["active_assignments"]
-        ],
-        upcoming_assignments=[
-            AssignmentResponse.model_validate(a) for a in payload["upcoming_assignments"]
-        ],
-        certifications=[
-            CertificationResponse.model_validate(c) for c in payload["certifications"]
-        ],
-        skills=[
-            ResourceSkillResponse.model_validate(s) for s in payload["skills"]
-        ],
+        active_assignments=[AssignmentResponse.model_validate(a) for a in payload["active_assignments"]],
+        upcoming_assignments=[AssignmentResponse.model_validate(a) for a in payload["upcoming_assignments"]],
+        certifications=[CertificationResponse.model_validate(c) for c in payload["certifications"]],
+        skills=[ResourceSkillResponse.model_validate(s) for s in payload["skills"]],
         expiring_certifications_count=payload["expiring_certifications_count"],
         utilization_30d=payload["utilization_30d"],
     )
@@ -222,9 +214,7 @@ async def attach_skill(
     return ResourceSkillResponse.model_validate(link)
 
 
-@router.get(
-    "/resources/{resource_id}/skills", response_model=list[ResourceSkillResponse]
-)
+@router.get("/resources/{resource_id}/skills", response_model=list[ResourceSkillResponse])
 async def list_resource_skills(
     resource_id: uuid.UUID,
     _perm: None = Depends(RequirePermission("resources.read")),
@@ -234,9 +224,7 @@ async def list_resource_skills(
     return [ResourceSkillResponse.model_validate(r) for r in rows]
 
 
-@router.delete(
-    "/resources/{resource_id}/skills/{skill_id}", status_code=204
-)
+@router.delete("/resources/{resource_id}/skills/{skill_id}", status_code=204)
 async def detach_skill(
     resource_id: uuid.UUID,
     skill_id: uuid.UUID,
@@ -259,9 +247,7 @@ async def list_certifications_for_resource(
     return [CertificationResponse.model_validate(r) for r in rows]
 
 
-@router.get(
-    "/certifications/expiring", response_model=list[CertificationResponse]
-)
+@router.get("/certifications/expiring", response_model=list[CertificationResponse])
 async def list_expiring_certifications(
     days: int = Query(default=60, ge=1, le=365),
     _perm: None = Depends(RequirePermission("resources.read")),
@@ -271,9 +257,7 @@ async def list_expiring_certifications(
     return [CertificationResponse.model_validate(r) for r in rows]
 
 
-@router.post(
-    "/certifications/", response_model=CertificationResponse, status_code=201
-)
+@router.post("/certifications/", response_model=CertificationResponse, status_code=201)
 async def create_certification(
     data: CertificationCreate,
     _perm: None = Depends(RequirePermission("resources.create")),
@@ -316,9 +300,7 @@ async def delete_certification(
 # ── AvailabilityWindow ─────────────────────────────────────────────────
 
 
-@router.get(
-    "/availability/", response_model=list[AvailabilityWindowResponse]
-)
+@router.get("/availability/", response_model=list[AvailabilityWindowResponse])
 async def list_windows(
     resource_id: uuid.UUID = Query(...),
     start_at: datetime | None = Query(default=None),
@@ -326,15 +308,11 @@ async def list_windows(
     _perm: None = Depends(RequirePermission("resources.read")),
     service: ResourcesService = Depends(_get_service),
 ) -> list[AvailabilityWindowResponse]:
-    rows = await service.list_windows(
-        resource_id, start_at=start_at, end_at=end_at
-    )
+    rows = await service.list_windows(resource_id, start_at=start_at, end_at=end_at)
     return [AvailabilityWindowResponse.model_validate(r) for r in rows]
 
 
-@router.post(
-    "/availability/", response_model=AvailabilityWindowResponse, status_code=201
-)
+@router.post("/availability/", response_model=AvailabilityWindowResponse, status_code=201)
 async def create_window(
     data: AvailabilityWindowCreate,
     _perm: None = Depends(RequirePermission("resources.create")),
@@ -344,9 +322,7 @@ async def create_window(
     return AvailabilityWindowResponse.model_validate(window)
 
 
-@router.get(
-    "/availability/{window_id}", response_model=AvailabilityWindowResponse
-)
+@router.get("/availability/{window_id}", response_model=AvailabilityWindowResponse)
 async def get_window(
     window_id: uuid.UUID,
     _perm: None = Depends(RequirePermission("resources.read")),
@@ -356,9 +332,7 @@ async def get_window(
     return AvailabilityWindowResponse.model_validate(window)
 
 
-@router.patch(
-    "/availability/{window_id}", response_model=AvailabilityWindowResponse
-)
+@router.patch("/availability/{window_id}", response_model=AvailabilityWindowResponse)
 async def update_window(
     window_id: uuid.UUID,
     data: AvailabilityWindowUpdate,
@@ -478,9 +452,7 @@ async def delete_assignment(
     await service.delete_assignment(assignment_id)
 
 
-@router.post(
-    "/assignments/{assignment_id}/confirm", response_model=AssignmentResponse
-)
+@router.post("/assignments/{assignment_id}/confirm", response_model=AssignmentResponse)
 async def confirm_assignment(
     assignment_id: uuid.UUID,
     _perm: None = Depends(RequirePermission("resources.confirm_assignment")),
@@ -490,9 +462,7 @@ async def confirm_assignment(
     return AssignmentResponse.model_validate(assignment)
 
 
-@router.post(
-    "/assignments/{assignment_id}/complete", response_model=AssignmentResponse
-)
+@router.post("/assignments/{assignment_id}/complete", response_model=AssignmentResponse)
 async def complete_assignment(
     assignment_id: uuid.UUID,
     actual_end: datetime | None = Query(default=None),
@@ -503,9 +473,7 @@ async def complete_assignment(
     return AssignmentResponse.model_validate(assignment)
 
 
-@router.post(
-    "/assignments/{assignment_id}/cancel", response_model=AssignmentResponse
-)
+@router.post("/assignments/{assignment_id}/cancel", response_model=AssignmentResponse)
 async def cancel_assignment(
     assignment_id: uuid.UUID,
     reason: str = Query(default=""),
@@ -528,9 +496,7 @@ async def list_requests(
     _perm: None = Depends(RequirePermission("resources.read")),
     service: ResourcesService = Depends(_get_service),
 ) -> list[ResourceRequestResponse]:
-    items, _ = await service.list_requests(
-        project_id, offset=offset, limit=limit, request_status=status_filter
-    )
+    items, _ = await service.list_requests(project_id, offset=offset, limit=limit, request_status=status_filter)
     return [ResourceRequestResponse.model_validate(i) for i in items]
 
 
@@ -588,9 +554,7 @@ async def fulfill_request(
     service: ResourcesService = Depends(_get_service),
 ) -> AssignmentResponse:
     try:
-        assignment = await service.fulfill_request(
-            request_id, payload, user_id=user_id
-        )
+        assignment = await service.fulfill_request(request_id, payload, user_id=user_id)
     except ResourceConflictError as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -684,9 +648,7 @@ async def board(
         entries=[
             BoardEntry(
                 resource=ResourceResponse.model_validate(e["resource"]),
-                assignments=[
-                    AssignmentResponse.model_validate(a) for a in e["assignments"]
-                ],
+                assignments=[AssignmentResponse.model_validate(a) for a in e["assignments"]],
             )
             for e in entries
         ],
@@ -711,8 +673,7 @@ async def board_conflicts(
             resource_id=r["resource_id"],
             resource_name=r["resource_name"],
             conflicts=[
-                c if isinstance(c, ConflictDetail) else ConflictDetail.model_validate(c)
-                for c in r["conflicts"]
+                c if isinstance(c, ConflictDetail) else ConflictDetail.model_validate(c) for c in r["conflicts"]
             ],
         )
         for r in rows
@@ -865,6 +826,4 @@ async def import_timecards(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="default_status must be one of completed|confirmed|proposed",
         )
-    return await service.import_timecards(
-        rows, default_status=default_status, user_id=user_id
-    )
+    return await service.import_timecards(rows, default_status=default_status, user_id=user_id)

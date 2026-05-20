@@ -2,35 +2,47 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  "translation": {
-    "about.ai_desc": "OpenConstructionERP, isteğe bağlı yapay zeka destekli araçlar içerir — metin açıklamalarından hızlı tahmin, akıllı maliyet önerileri ve metraj sohbet asistanı. Bu özellikler, tercih ettiğiniz sağlayıcıdan (Anthropic, OpenAI, Google) bir API anahtarı gerektirir. Yapay zeka her zaman isteğe bağlıdır: yalnızca yapılandırdığınızda etkinleşir ve hangi verilerin gönderileceğine siz karar verirsiniz. API anahtarı olmadan diğer tüm özellikler tamamen çevrimdışı çalışır.",
+  translation: {
+    "about.ai_desc":
+      "OpenConstructionERP, isteğe bağlı yapay zeka destekli araçlar içerir — metin açıklamalarından hızlı tahmin, akıllı maliyet önerileri ve metraj sohbet asistanı. Bu özellikler, tercih ettiğiniz sağlayıcıdan (Anthropic, OpenAI, Google) bir API anahtarı gerektirir. Yapay zeka her zaman isteğe bağlıdır: yalnızca yapılandırdığınızda etkinleşir ve hangi verilerin gönderileceğine siz karar verirsiniz. API anahtarı olmadan diğer tüm özellikler tamamen çevrimdışı çalışır.",
     "about.ai_title": "Yapay zeka özellikleri hakkında",
     "about.cap.boq": "Keşif Özeti",
-    "about.cap.boq_desc": "Hiyerarşik bölümler, pozisyonlar, imalat analizleri, kâr ve genel giderler (genel giderler, kâr, KDV) ve otomatik toplamlarla ayrıntılı metraj oluşturun. DIN 276, NRM 1/2, MasterFormat ve özel sınıflandırma sistemlerini destekler.",
+    "about.cap.boq_desc":
+      "Hiyerarşik bölümler, pozisyonlar, imalat analizleri, kâr ve genel giderler (genel giderler, kâr, KDV) ve otomatik toplamlarla ayrıntılı metraj oluşturun. DIN 276, NRM 1/2, MasterFormat ve özel sınıflandırma sistemlerini destekler.",
     "about.cap.catalog": "Kaynak Kataloğu",
-    "about.cap.catalog_desc": "7.000'den fazla kaynak — malzemeler, ekipmanlar, işçilik, operatörler ve yardımcı giderler. Katalog kalemlerinden yeniden kullanılabilir imalat analizleri (bileşik birim fiyatlar) oluşturun ve bunları doğrudan metraj pozisyonlarına uygulayın.",
+    "about.cap.catalog_desc":
+      "7.000'den fazla kaynak — malzemeler, ekipmanlar, işçilik, operatörler ve yardımcı giderler. Katalog kalemlerinden yeniden kullanılabilir imalat analizleri (bileşik birim fiyatlar) oluşturun ve bunları doğrudan metraj pozisyonlarına uygulayın.",
     "about.cap.costmodel": "5B Maliyet Modeli",
-    "about.cap.costmodel_desc": "Kazanılmış Değer Yönetimi (SPI, CPI), S-eğrisi görselleştirmesi, nakit akışı projeksiyonları, maliyet anlık görüntüleri ve bilinçli karar verme için varsayımsal senaryo modellemesi ile bütçeleri zaman içinde takip edin.",
+    "about.cap.costmodel_desc":
+      "Kazanılmış Değer Yönetimi (SPI, CPI), S-eğrisi görselleştirmesi, nakit akışı projeksiyonları, maliyet anlık görüntüleri ve bilinçli karar verme için varsayımsal senaryo modellemesi ile bütçeleri zaman içinde takip edin.",
     "about.cap.costs": "Maliyet Veritabanları",
-    "about.cap.costs_desc": "DACH, İngiltere, Kuzey Amerika, Orta Doğu ve daha fazlasını kapsayan 11 bölgesel veritabanında 55.000'den fazla maliyet kalemi. Kendi birim fiyatlarınızı ekleyin, Excel'den içe aktarın veya sıfırdan özel bir veritabanı oluşturun.",
+    "about.cap.costs_desc":
+      "DACH, İngiltere, Kuzey Amerika, Orta Doğu ve daha fazlasını kapsayan 11 bölgesel veritabanında 55.000'den fazla maliyet kalemi. Kendi birim fiyatlarınızı ekleyin, Excel'den içe aktarın veya sıfırdan özel bir veritabanı oluşturun.",
     "about.cap.import": "İçe ve Dışa Aktarma",
-    "about.cap.import_desc": "GAEB XML (X83), Excel ve CSV içe/dışa aktarma için tam destek. Profesyonel PDF raporları oluşturun. Mevcut araç ve iş akışlarınızla sorunsuz entegrasyon.",
+    "about.cap.import_desc":
+      "GAEB XML (X83), Excel ve CSV içe/dışa aktarma için tam destek. Profesyonel PDF raporları oluşturun. Mevcut araç ve iş akışlarınızla sorunsuz entegrasyon.",
     "about.cap.schedule": "4B İş Programı",
-    "about.cap.schedule_desc": "CPM kritik yol hesaplaması, etkileşimli Gantt şemaları, Monte Carlo risk analizi, kaynak ataması ve metrajınızdan otomatik faaliyet oluşturma ile proje iş programları oluşturun.",
+    "about.cap.schedule_desc":
+      "CPM kritik yol hesaplaması, etkileşimli Gantt şemaları, Monte Carlo risk analizi, kaynak ataması ve metrajınızdan otomatik faaliyet oluşturma ile proje iş programları oluşturun.",
     "about.cap.tendering": "İhale ve Teklifler",
-    "about.cap.tendering_desc": "Kapsam ve pozisyonlarla ihale paketleri oluşturun, taşeronlara dağıtın, teklifleri toplayın ve fiyat aynasında yan yana karşılaştırın, verilere dayalı ihale kararları alın.",
+    "about.cap.tendering_desc":
+      "Kapsam ve pozisyonlarla ihale paketleri oluşturun, taşeronlara dağıtın, teklifleri toplayın ve fiyat aynasında yan yana karşılaştırın, verilere dayalı ihale kararları alın.",
     "about.cap.validation": "Kalite Doğrulama",
-    "about.cap.validation_desc": "Yerleşik kalite motoru eksik miktarları, sıfır fiyatları, mükerrer pozisyonları, sınıflandırma uyumluluğunu ve birim fiyat anomalilerini otomatik olarak kontrol eder — trafik ışığı kontrol paneli ile.",
+    "about.cap.validation_desc":
+      "Yerleşik kalite motoru eksik miktarları, sıfır fiyatları, mükerrer pozisyonları, sınıflandırma uyumluluğunu ve birim fiyat anomalilerini otomatik olarak kontrol eder — trafik ışığı kontrol paneli ile.",
     "about.capabilities_title": "Neler yapabilirsiniz",
     "about.close": "Anladım",
-    "about.intro": "OpenConstructionERP, inşaat maliyet yönetimi için modern bir platformdur. Keşif özeti oluşturmaktan ihale ve teklif karşılaştırmasına kadar tüm tahmin iş akışını kapsar. Dünya genelindeki profesyoneller için tasarlanmış olup uluslararası standartları destekler ve 20 dilde çalışır.",
-    "about.intro2": "Geleneksel ticari çözümlerin aksine, OpenConstructionERP tamamen bilgisayarınızda çalışır. Proje verileriniz asla bilgisayarınızdan ayrılmaz — tam sahiplik ve kontrol sizdedir. Kaynak kodu açık ve denetlenebilirdir, böylece yazılımın tam olarak ne yaptığını her zaman bilirsiniz.",
+    "about.intro":
+      "OpenConstructionERP, inşaat maliyet yönetimi için modern bir platformdur. Keşif özeti oluşturmaktan ihale ve teklif karşılaştırmasına kadar tüm tahmin iş akışını kapsar. Dünya genelindeki profesyoneller için tasarlanmış olup uluslararası standartları destekler ve 20 dilde çalışır.",
+    "about.intro2":
+      "Geleneksel ticari çözümlerin aksine, OpenConstructionERP tamamen bilgisayarınızda çalışır. Proje verileriniz asla bilgisayarınızdan ayrılmaz — tam sahiplik ve kontrol sizdedir. Kaynak kodu açık ve denetlenebilirdir, böylece yazılımın tam olarak ne yaptığını her zaman bilirsiniz.",
     "about.numbers_title": "Rakamlarla platform",
     "about.stat.costs": "Maliyet kalemi",
     "about.stat.free": "Ücretsiz ve açık kaynak",
     "about.stat.languages": "Dil",
     "about.stat.regions": "Bölgesel veritabanı",
-    "about.title": "Profesyonel inşaat maliyet tahmini — ücretsiz ve açık kaynak",
+    "about.title":
+      "Profesyonel inşaat maliyet tahmini — ücretsiz ve açık kaynak",
     "about.who.architects": "Mimarlar ve mühendisler",
     "about.who.contractors": "Ana yükleniciler",
     "about.who.developers": "Gayrimenkul geliştiriciler",
@@ -41,11 +53,15 @@ const resource = {
     "about.who.qsurveyor": "Metraj mühendisleri",
     "about.who.students": "Öğrenciler ve eğitimciler",
     "about.who.subs": "Taşeronlar",
-    "about.who_desc": "OpenConstructionERP, inşaat maliyet yönetiminde yer alan herkes için tasarlanmıştır — ister konut projelerinde ister büyük ölçekli altyapıda, kurum içi veya danışman olarak çalışın.",
+    "about.who_desc":
+      "OpenConstructionERP, inşaat maliyet yönetiminde yer alan herkes için tasarlanmıştır — ister konut projelerinde ister büyük ölçekli altyapıda, kurum içi veya danışman olarak çalışın.",
     "about.who_title": "Kimler için",
-    "about.why_1": "İnşaat maliyet verileri, bir şirketin sahip olduğu en değerli varlıklardan biridir. Tescilli yazılımlarla verileriniz genellikle kontrol edemediğiniz formatlara kilitlenir. Satıcı fiyatları artırır, koşulları değiştirir veya ürünü durdurursa — yılların emeğine erişiminizi kaybedebilirsiniz.",
-    "about.why_2": "OpenConstructionERP farklı bir yaklaşım benimser. Verileriniz kendi donanımınızda açık formatlarda (SQLite, JSON, CSV) saklanır. Her şeyi istediğiniz zaman dışa aktarabilirsiniz. Kaynak kodu AGPL-3.0 kapsamında kamuya açık olarak denetlenebilir, bu nedenle gizli veri aktarımı, telemetri ve sürpriz yoktur.",
-    "about.why_3": "Platform modülerdir — yalnızca ihtiyacınız olanı kurun. Topluluk modülleri, çekirdeği şişirmeden işlevselliği genişletir. Ve yerel olarak çalıştığı için çevrimdışı çalışır ve büyük projelerde bile hızlı performans gösterir.",
+    "about.why_1":
+      "İnşaat maliyet verileri, bir şirketin sahip olduğu en değerli varlıklardan biridir. Tescilli yazılımlarla verileriniz genellikle kontrol edemediğiniz formatlara kilitlenir. Satıcı fiyatları artırır, koşulları değiştirir veya ürünü durdurursa — yılların emeğine erişiminizi kaybedebilirsiniz.",
+    "about.why_2":
+      "OpenConstructionERP farklı bir yaklaşım benimser. Verileriniz kendi donanımınızda açık formatlarda (SQLite, JSON, CSV) saklanır. Her şeyi istediğiniz zaman dışa aktarabilirsiniz. Kaynak kodu AGPL-3.0 kapsamında kamuya açık olarak denetlenebilir, bu nedenle gizli veri aktarımı, telemetri ve sürpriz yoktur.",
+    "about.why_3":
+      "Platform modülerdir — yalnızca ihtiyacınız olanı kurun. Topluluk modülleri, çekirdeği şişirmeden işlevselliği genişletir. Ve yerel olarak çalıştığı için çevrimdışı çalışır ve büyük projelerde bile hızlı performans gösterir.",
     "about.why_title": "Açık kaynak neden önemli",
     "ai.analyze_photo": "Fotoğraf Analiz Et",
     "ai.area": "Alan (m²)",
@@ -53,7 +69,8 @@ const resource = {
     "ai.boq_name_placeholder": "Bu metraj için ad...",
     "ai.boq_saved": "Metraj başarıyla kaydedildi",
     "ai.building_type": "Yapı Türü",
-    "ai.cad_info": "CAD/BIM dosyaları (.rvt, .ifc, .dwg, .dgn) DDC dönüştürücünün kurulu olmasını gerektirir. Elemanlar çıkarılacak ve maliyet tahmini oluşturmak için kullanılacaktır. Dönüştürücüleri GitHub'dan indirip ~/.openestimator/converters/ dizinine yerleştirin.",
+    "ai.cad_info":
+      "CAD/BIM dosyaları (.rvt, .ifc, .dwg, .dgn) DDC dönüştürücünün kurulu olmasını gerektirir. Elemanlar çıkarılacak ve maliyet tahmini oluşturmak için kullanılacaktır. Dönüştürücüleri GitHub'dan indirip ~/.openestimator/converters/ dizinine yerleştirin.",
     "ai.choose_project": "-- Proje seçin --",
     "ai.col_description": "Açıklama",
     "ai.col_pos": "Poz",
@@ -74,7 +91,8 @@ const resource = {
     "ai.estimate_failed": "Tahmin başarısız oldu",
     "ai.estimate_subtitle": "Herhangi bir kaynaktan tahmin oluşturun",
     "ai.estimate_title": "Yapay Zeka Tahmini",
-    "ai.excel_hint": "En iyi şu sütunlarla çalışır: Açıklama, Birim, Miktar, Birim Fiyat.",
+    "ai.excel_hint":
+      "En iyi şu sütunlarla çalışır: Açıklama, Birim, Miktar, Birim Fiyat.",
     "ai.export_coming_soon": "Dışa aktarma yakında",
     "ai.export_pdf": "PDF Dışa Aktar",
     "ai.extract_estimate": "Çıkar ve Tahmin Et",
@@ -89,9 +107,12 @@ const resource = {
     "ai.location_placeholder": "ör. İstanbul",
     "ai.new_estimate": "Yeni Tahmin",
     "ai.parse_import": "Ayrıştır ve İçe Aktar",
-    "ai.paste_info": "Sekme ile ayrılmış, noktalı virgül veya virgülle ayrılmış verileri otomatik algılar. Yapay zeka verilerinizi ayrıştırıp tahmin kalemlerine dönüştürür.",
-    "ai.paste_placeholder": "Metraj verilerinizi buraya yapıştırın (Excel, Word veya herhangi bir tablodan)...\n\nÖrnek:\nPoz\tAçıklama\tBirim\tMiktar\tBirim Fiyat\n01.01\tKazı işleri\tm3\t250\t18,50\n01.02\tBeton C30/37\tm3\t120\t145,00\n01.03\tDonatı BSt 500\tkg\t12000\t1,85",
-    "ai.pdf_hint": "Metraj belgeleri, şartnameler veya çizimleri PDF formatında yükleyin.",
+    "ai.paste_info":
+      "Sekme ile ayrılmış, noktalı virgül veya virgülle ayrılmış verileri otomatik algılar. Yapay zeka verilerinizi ayrıştırıp tahmin kalemlerine dönüştürür.",
+    "ai.paste_placeholder":
+      "Metraj verilerinizi buraya yapıştırın (Excel, Word veya herhangi bir tablodan)...\n\nÖrnek:\nPoz\tAçıklama\tBirim\tMiktar\tBirim Fiyat\n01.01\tKazı işleri\tm3\t250\t18,50\n01.02\tBeton C30/37\tm3\t120\t145,00\n01.03\tDonatı BSt 500\tkg\t12000\t1,85",
+    "ai.pdf_hint":
+      "Metraj belgeleri, şartnameler veya çizimleri PDF formatında yükleyin.",
     "ai.powered_by": "{{model}} tarafından desteklenmektedir",
     "ai.results": "Tahmin Sonuçları",
     "ai.save": "Kaydet",
@@ -99,7 +120,8 @@ const resource = {
     "ai.save_failed": "Metraj kaydedilemedi",
     "ai.save_to_boq": "Metraj Olarak Kaydet",
     "ai.select_project": "Proje Seçin",
-    "ai.setup_required_desc": "Metin, fotoğraf, PDF ve CAD dosyalarından tahmin oluşturmak için Anthropic Claude, OpenAI veya Google Gemini API anahtarınızı ekleyin.",
+    "ai.setup_required_desc":
+      "Metin, fotoğraf, PDF ve CAD dosyalarından tahmin oluşturmak için Anthropic Claude, OpenAI veya Google Gemini API anahtarınızı ekleyin.",
     "ai.setup_required_title": "Başlamak için yapay zekanızı bağlayın",
     "ai.standard_label": "Standart",
     "ai.supported_formats": "Desteklenen formatlar: {{formats}}",
@@ -121,14 +143,18 @@ const resource = {
     "ai.building_mixed": "Karma kullanım",
     "ai.standard_auto": "Otomatik algılama",
     "ai.currency_auto": "Otomatik",
-    "ai.try_again": "Lütfen tekrar deneyin veya yapay zeka ayarlarınızı kontrol edin.",
+    "ai.try_again":
+      "Lütfen tekrar deneyin veya yapay zeka ayarlarınızı kontrol edin.",
     "ai.advisor_title": "AI Maliyet Danışmanı",
-    "ai.advisor_desc": "Maliyetler, malzemeler ve fiyatlar hakkında sorular sorun — veritabanınızdan ve AI bilgisinden",
+    "ai.advisor_desc":
+      "Maliyetler, malzemeler ve fiyatlar hakkında sorular sorun — veritabanınızdan ve AI bilgisinden",
     "ai.advisor_empty": "İnşaat maliyetleri hakkında bir şey sorun",
-    "ai.advisor_placeholder": "Maliyetler, malzemeler, fiyatlar hakkında sorun...",
+    "ai.advisor_placeholder":
+      "Maliyetler, malzemeler, fiyatlar hakkında sorun...",
     "ai.advisor_sources": "Kaynaklar:",
     "ai.advisor_error": "AI Danışman Hatası",
-    "ai.advisor_unavailable": "Yanıt alınamadı. Lütfen AI ayarlarını kontrol edin.",
+    "ai.advisor_unavailable":
+      "Yanıt alınamadı. Lütfen AI ayarlarını kontrol edin.",
     "ai.advisor_q1": "Metrekare sıva ortalama maliyeti nedir?",
     "ai.advisor_q2": "Bölgeye göre beton fiyatlarını karşılaştır",
     "ai.advisor_q3": "Çelik için daha ucuz alternatifler öner",
@@ -136,11 +162,14 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Profesyonel inşaat maliyet tahmin platformu",
     "assemblies.assemblies_found": "imalat analizi",
-    "assemblies.description": "Yaygın inşaat elemanları için yeniden kullanılabilir maliyet tarifleri",
-    "assemblies.what_are_assemblies": "İmalat analizleri, birden fazla kaynağı (malzeme, işçilik, ekipman) tek bir bileşik birim fiyatta birleştiren yeniden kullanılabilir maliyet tarifleridir. Örneğin, bir \"Betonarme Duvar\" imalat analizi beton, donatı, kalıp ve işçilik içerir. Bileşen maliyetlerini otomatik doldurmak için imalat analizlerini metraj pozisyonlarına uygulayın.",
+    "assemblies.description":
+      "Yaygın inşaat elemanları için yeniden kullanılabilir maliyet tarifleri",
+    "assemblies.what_are_assemblies":
+      'İmalat analizleri, birden fazla kaynağı (malzeme, işçilik, ekipman) tek bir bileşik birim fiyatta birleştiren yeniden kullanılabilir maliyet tarifleridir. Örneğin, bir "Betonarme Duvar" imalat analizi beton, donatı, kalıp ve işçilik içerir. Bileşen maliyetlerini otomatik doldurmak için imalat analizlerini metraj pozisyonlarına uygulayın.',
     "assemblies.new_assembly": "Yeni İmalat Analizi",
     "assemblies.no_results": "İmalat analizi bulunamadı",
-    "assemblies.no_results_hint": "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
+    "assemblies.no_results_hint":
+      "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
     "assemblies.title": "İmalat Analizleri",
     "auth.back_to_login": "Girişe dön",
     "auth.check_email": "E-postanızı kontrol edin",
@@ -150,13 +179,15 @@ const resource = {
     "auth.create_account": "Hesap oluştur",
     "auth.email": "E-posta",
     "auth.forgot_password": "Şifrenizi mi unuttunuz?",
-    "auth.forgot_subtitle": "E-postanızı girin, size sıfırlama bağlantısı gönderelim.",
+    "auth.forgot_subtitle":
+      "E-postanızı girin, size sıfırlama bağlantısı gönderelim.",
     "auth.full_name": "Ad Soyad",
     "auth.full_name_placeholder": "Ahmet Yılmaz",
     "auth.has_account": "Zaten hesabınız var mı?",
     "auth.invalid_credentials": "Geçersiz e-posta veya şifre",
     "auth.login": "Giriş yap",
-    "auth.login_subtitle": "Çalışma alanınıza erişmek için kimlik bilgilerinizi girin",
+    "auth.login_subtitle":
+      "Çalışma alanınıza erişmek için kimlik bilgilerinizi girin",
     "auth.logout": "Çıkış Yap",
     "auth.no_account": "Hesabınız yok mu?",
     "auth.password": "Şifre",
@@ -171,7 +202,8 @@ const resource = {
     "auth.register_title": "Hesap oluştur",
     "auth.remember_me": "30 gün boyunca beni hatırla",
     "auth.reset_error": "Sıfırlama isteği işlenemedi. Lütfen tekrar deneyin.",
-    "auth.reset_sent": "Bu e-posta için bir hesap varsa, kısa süre içinde şifre sıfırlama bağlantısı alacaksınız.",
+    "auth.reset_sent":
+      "Bu e-posta için bir hesap varsa, kısa süre içinde şifre sıfırlama bağlantısı alacaksınız.",
     "auth.send_reset_link": "Sıfırlama bağlantısı gönder",
     "auth.server_error": "Sunucuya bağlanılamıyor. Lütfen tekrar deneyin.",
     "auth.sign_in": "Giriş yap",
@@ -183,7 +215,8 @@ const resource = {
     "boq.aace_methodology": "Metodoloji",
     "boq.aace_metrics": "Sınıflandırma Metrikleri",
     "boq.aace_positions": "Pozisyonlar",
-    "boq.aace_reference": "AACE International Tavsiye Edilen Uygulama 18R-97'ye dayalıdır. Sınıflandırma, metraj tamlık metriklerinden otomatik algılanır.",
+    "boq.aace_reference":
+      "AACE International Tavsiye Edilen Uygulama 18R-97'ye dayalıdır. Sınıflandırma, metraj tamlık metriklerinden otomatik algılanır.",
     "boq.aace_to": "ile",
     "boq.aace_with_classification": "Sınıflandırma ile",
     "boq.aace_with_rates": "Birim fiyatlı",
@@ -196,20 +229,24 @@ const resource = {
     "boq.add_n_positions": "{{count}} kalem metraja ekle",
     "boq.add_position": "Pozisyon Ekle",
     "boq.add_resource": "Ekle",
-    "boq.add_resource_hint": "Eklemek için Enter, iptal için Escape tuşuna basın",
+    "boq.add_resource_hint":
+      "Eklemek için Enter, iptal için Escape tuşuna basın",
     "boq.add_section": "Bölüm Ekle",
     "boq.add_selected": "Seçilenleri metraja ekle",
     "boq.adding": "Ekleniyor...",
     "boq.ai_assistant": "Yapay Zeka Asistanı",
-    "boq.ai_chat_error": "Yapay zeka isteği başarısız oldu. Lütfen tekrar deneyin.",
-    "boq.ai_hint": "Metraj pozisyonları oluşturmamı isteyin. Örneğin: \"5 katlı bir ofis binası için MEP kalemleri ekle\"",
+    "boq.ai_chat_error":
+      "Yapay zeka isteği başarısız oldu. Lütfen tekrar deneyin.",
+    "boq.ai_hint":
+      'Metraj pozisyonları oluşturmamı isteyin. Örneğin: "5 katlı bir ofis binası için MEP kalemleri ekle"',
     "boq.ai_placeholder": "Oluşturulacak pozisyonları tanımlayın...",
     "boq.ai_welcome": "Metraj pozisyonları oluşturmamı isteyin. Örneğin: ",
     "boq.all_projects": "Tüm projeler",
     "boq.all_statuses": "Tüm durumlar",
     "boq.area_m2": "Alan (m²)",
     "boq.back_to_project": "Projeye dön",
-    "boq.toolbar_hint": "Bölümler ve pozisyonlar eklemek, maliyet veritabanı veya imalat analizlerinden içe aktarmak, GAEB/PDF/Excel'e dışa aktarmak veya yapay zeka tahmini çalıştırmak için araç çubuğunu kullanın. Net = pozisyon toplamlarının toplamı. Kâr ve giderler yüzde olarak uygulanır. Genel Toplam = Net + Kâr ve Giderler + KDV.",
+    "boq.toolbar_hint":
+      "Bölümler ve pozisyonlar eklemek, maliyet veritabanı veya imalat analizlerinden içe aktarmak, GAEB/PDF/Excel'e dışa aktarmak veya yapay zeka tahmini çalıştırmak için araç çubuğunu kullanın. Net = pozisyon toplamlarının toplamı. Kâr ve giderler yüzde olarak uygulanır. Genel Toplam = Net + Kâr ve Giderler + KDV.",
     "boq.boq_created": "Metraj oluşturuldu",
     "boq.boq_name": "Metraj Adı",
     "boq.cancel_compare": "Karşılaştırmayı İptal Et",
@@ -242,7 +279,8 @@ const resource = {
     "boq.cost_risk_contingency": "Yedek Ödenek (P80 - P50)",
     "boq.cost_risk_distribution": "Maliyet Dağılımı",
     "boq.cost_risk_drivers": "Başlıca Risk Etkenleri",
-    "boq.cost_risk_empty": "Monte Carlo simülasyonunu çalıştırmak için maliyetli pozisyonlar ekleyin.",
+    "boq.cost_risk_empty":
+      "Monte Carlo simülasyonunu çalıştırmak için maliyetli pozisyonlar ekleyin.",
     "boq.cost_risk_iterations": "İterasyon",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Monte Carlo simülasyonu çalıştırılıyor...",
@@ -268,7 +306,8 @@ const resource = {
     "boq.markup_bond": "Teminat",
     "boq.markup_other": "Diğer",
     "boq.template_applied": "Bölgesel şablon uygulandı",
-    "boq.confirm_replace_markups": "Bu mevcut karları değiştirecek. Devam edilsin mi?",
+    "boq.confirm_replace_markups":
+      "Bu mevcut karları değiştirecek. Devam edilsin mi?",
     "boq.no_markups": "Henüz kar yok. Ekleyin veya şablon uygulayın.",
     "boq.new_markup": "Yeni kar",
     "boq.markup_added": "Kar eklendi",
@@ -282,7 +321,8 @@ const resource = {
     "boq.duplicate_failed": "Çoğaltma başarısız oldu",
     "boq.duplicated": "Metraj çoğaltıldı",
     "boq.editor": "Metraj Editörü",
-    "boq.empty_section": "Bu bölümde kalem yok. Eklemek için \"Pozisyon Ekle\"ye tıklayın.",
+    "boq.empty_section":
+      'Bu bölümde kalem yok. Eklemek için "Pozisyon Ekle"ye tıklayın.',
     "boq.enter_description": "Açıklama girin...",
     "boq.estimated_total": "Tahmini toplam",
     "boq.estimates": "tahminler",
@@ -313,10 +353,12 @@ const resource = {
     "boq.new_estimate": "Yeni Tahmin",
     "boq.no_activity": "Henüz etkinlik yok. Değişiklikler burada görünecek.",
     "boq.no_boqs": "Henüz tahmin yok",
-    "boq.no_boqs_hint": "Önce bir proje oluşturun, ardından keşif özeti ekleyin",
+    "boq.no_boqs_hint":
+      "Önce bir proje oluşturun, ardından keşif özeti ekleyin",
     "boq.no_items_found": "Eşleşen kalem bulunamadı",
     "boq.no_positions": "Henüz pozisyon yok. Başlamak için bir bölüm ekleyin.",
-    "boq.no_resources": "Kaynak atanmamış. Otomatik doldurmak için otomatik tamamlama önerilerinden ⚡ simgeli bir maliyet kalemi seçin.",
+    "boq.no_resources":
+      "Kaynak atanmamış. Otomatik doldurmak için otomatik tamamlama önerilerinden ⚡ simgeli bir maliyet kalemi seçin.",
     "boq.no_results": "Eşleşen tahmin yok",
     "boq.no_results_hint": "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
     "boq.no_section": "Bölüm yok (üst düzey)",
@@ -337,7 +379,8 @@ const resource = {
     "boq.quality_descriptions": "Açıklamalar dolduruldu",
     "boq.quality_fair": "Orta",
     "boq.quality_great": "Harika",
-    "boq.quality_hint": "%100'e ulaşmak ve tahmin doğruluğunu sağlamak için tüm alanları doldurun.",
+    "boq.quality_hint":
+      "%100'e ulaşmak ve tahmin doğruluğunu sağlamak için tüm alanları doldurun.",
     "boq.quality_markups": "Kâr ve giderler eklendi",
     "boq.quality_missing": "Eksik",
     "boq.quality_needs_work": "İyileştirme gerekli",
@@ -348,15 +391,18 @@ const resource = {
     "boq.quick_add_position": "Pozisyon Ekle",
     "boq.quick_add_position_desc": "Mevcut bölüme boş bir pozisyon ekle",
     "boq.quick_add_section": "Bölüm Ekle",
-    "boq.quick_add_section_desc": "Pozisyonları düzenlemek için yeni bir bölüm oluştur",
+    "boq.quick_add_section_desc":
+      "Pozisyonları düzenlemek için yeni bir bölüm oluştur",
     "boq.quick_import_costs": "Maliyet Veritabanından İçe Aktar",
-    "boq.quick_import_costs_desc": "Maliyet veritabanından kalemleri gözatın ve seçin",
+    "boq.quick_import_costs_desc":
+      "Maliyet veritabanından kalemleri gözatın ve seçin",
     "boq.quick_use_template": "Şablon Kullan",
     "boq.quick_use_template_desc": "Hazır bir tahmin şablonundan başla",
     "boq.recalculate": "Yeniden Hesapla",
     "boq.recalculate_complete": "Yeniden hesaplama tamamlandı",
     "boq.recalculate_failed": "Yeniden hesaplama başarısız oldu",
-    "boq.recalculate_summary": "Yeniden hesaplandı: {{sections}} bölüm, {{positions}} pozisyon",
+    "boq.recalculate_summary":
+      "Yeniden hesaplandı: {{sections}} bölüm, {{positions}} pozisyon",
     "boq.recent_activity": "Son Etkinlik",
     "boq.redo": "Yinele (Ctrl+Y)",
     "boq.redone": "Yinelendi",
@@ -416,7 +462,8 @@ const resource = {
     "boq.sections": "bölüm",
     "boq.select_project": "Proje seçin...",
     "boq.sensitivity_base_total": "Temel Toplam",
-    "boq.sensitivity_empty": "Duyarlılık analizini görmek için maliyetli pozisyonlar ekleyin.",
+    "boq.sensitivity_empty":
+      "Duyarlılık analizini görmek için maliyetli pozisyonlar ekleyin.",
     "boq.sensitivity_impact_high": "Etki (+)",
     "boq.sensitivity_impact_low": "Etki (-)",
     "boq.sensitivity_overrun": "Maliyet artışı",
@@ -427,16 +474,21 @@ const resource = {
     "boq.show_all_activity": "Tüm etkinliği göster...",
     "boq.showing_estimates": "{{shown}} / {{total}} tahmin",
     "boq.start_building": "Tahminizi oluşturmaya başlayın",
-    "boq.start_building_desc": "Profesyonel bir keşif özeti oluşturmak için bu adımları izleyin",
+    "boq.start_building_desc":
+      "Profesyonel bir keşif özeti oluşturmak için bu adımları izleyin",
     "boq.status": "Durum",
     "boq.step_add_positions": "Pozisyon ekle",
-    "boq.step_add_positions_desc": "Her bölüme açıklamalı ve birimli satır kalemleri ekleyin",
+    "boq.step_add_positions_desc":
+      "Her bölüme açıklamalı ve birimli satır kalemleri ekleyin",
     "boq.step_add_sections": "Bölüm ekle",
-    "boq.step_add_sections_desc": "Tahminizi bölümlere ayırın (ör. Temel, Duvarlar, Çatı)",
+    "boq.step_add_sections_desc":
+      "Tahminizi bölümlere ayırın (ör. Temel, Duvarlar, Çatı)",
     "boq.step_review": "Toplamları gözden geçir",
-    "boq.step_review_desc": "Genel giderler ve kâr için kâr/gider ekleyin, ardından genel toplamı gözden geçirin",
+    "boq.step_review_desc":
+      "Genel giderler ve kâr için kâr/gider ekleyin, ardından genel toplamı gözden geçirin",
     "boq.step_set_quantities": "Miktarları belirle",
-    "boq.step_set_quantities_desc": "Toplamları hesaplamak için her pozisyon için miktar ve birim fiyat girin",
+    "boq.step_set_quantities_desc":
+      "Toplamları hesaplamak için her pozisyon için miktar ve birim fiyat girin",
     "boq.subtotal": "Ara Toplam",
     "boq.sync_rate": "Birim fiyat senkronize et",
     "boq.table_label": "Keşif özeti pozisyonları",
@@ -444,13 +496,20 @@ const resource = {
     "boq.template_error": "Şablondan metraj oluşturulamadı",
     "boq.templates": "Metraj Şablonları",
     "boq.templates_coming_soon": "Şablonlar yakında",
-    "boq.templates_coming_soon_desc": "Şablon seçici gelecek bir güncellemede kullanılabilir olacaktır.",
-    "boq.templates_subtitle": "Yapı türünüz için profesyonel bir şablonla başlayın. Bir şablon seçin, alanı belirleyin ve anında eksiksiz bir metraj oluşturun.",
-    "boq.tip_autocomplete": "Tüm pozisyonlar için açıklamaları doldurun — maliyet veritabanından öneriler görmek için yazmaya başlayın",
-    "boq.tip_markups": "Tablonun altındaki Kâr ve Giderler bölümünü kullanarak genel giderler ve kâr ekleyin",
-    "boq.tip_menu": "Pozisyon eklemek veya silmek için bölümdeki (...) menüsüne tıklayın",
-    "boq.tip_sections": "Tahminizi düzenlemek için bölümler ekleyin (ör. Temel, Duvarlar, Çatı)",
-    "boq.tip_tab": "Alanlar arasında geçiş yapmak için Tab, değişiklikleri kaydetmek için Enter tuşunu kullanın",
+    "boq.templates_coming_soon_desc":
+      "Şablon seçici gelecek bir güncellemede kullanılabilir olacaktır.",
+    "boq.templates_subtitle":
+      "Yapı türünüz için profesyonel bir şablonla başlayın. Bir şablon seçin, alanı belirleyin ve anında eksiksiz bir metraj oluşturun.",
+    "boq.tip_autocomplete":
+      "Tüm pozisyonlar için açıklamaları doldurun — maliyet veritabanından öneriler görmek için yazmaya başlayın",
+    "boq.tip_markups":
+      "Tablonun altındaki Kâr ve Giderler bölümünü kullanarak genel giderler ve kâr ekleyin",
+    "boq.tip_menu":
+      "Pozisyon eklemek veya silmek için bölümdeki (...) menüsüne tıklayın",
+    "boq.tip_sections":
+      "Tahminizi düzenlemek için bölümler ekleyin (ör. Temel, Duvarlar, Çatı)",
+    "boq.tip_tab":
+      "Alanlar arasında geçiş yapmak için Tab, değişiklikleri kaydetmek için Enter tuşunu kullanın",
     "boq.tips_title": "İpuçları",
     "boq.mvp.title": "Malzemeleri seç",
     "boq.mvp.subtitle_one": "{{count}} kaynak seçim gerektiriyor",
@@ -513,16 +572,20 @@ const resource = {
     "catalog.copy": "Kopyala",
     "catalog.create_assembly": "İmalat Analizi Oluştur",
     "catalog.create_resource": "Özel Kaynak Ekle",
-    "catalog.create_resource_desc": "Kataloğunuz için yeni bir kaynak oluşturun",
+    "catalog.create_resource_desc":
+      "Kataloğunuz için yeni bir kaynak oluşturun",
     "catalog.creating": "Oluşturuluyor...",
     "catalog.delete_failed": "Silme başarısız oldu",
     "catalog.delete_region": "Bölgeyi Sil",
-    "catalog.empty_hint": "Kaynakları doldurmak için bölgesel bir katalog içe aktarın veya maliyet kalemlerinden çıkarın.",
-    "catalog.empty_with_regions": "Mevcut filtrelerle eşleşen kaynak yok. Tür veya bölgeyi değiştirmeyi deneyin.",
+    "catalog.empty_hint":
+      "Kaynakları doldurmak için bölgesel bir katalog içe aktarın veya maliyet kalemlerinden çıkarın.",
+    "catalog.empty_with_regions":
+      "Mevcut filtrelerle eşleşen kaynak yok. Tür veya bölgeyi değiştirmeyi deneyin.",
     "catalog.import": "İçe Aktar",
     "catalog.import_failed": "İçe aktarma başarısız oldu",
     "catalog.import_region": "Bölge içe aktar",
-    "catalog.import_regions_desc": "CWICR bölgesel veritabanlarından hazır kaynak kataloglarını indirin",
+    "catalog.import_regions_desc":
+      "CWICR bölgesel veritabanlarından hazır kaynak kataloglarını indirin",
     "catalog.import_regions_title": "Kaynak Kataloğu İçe Aktar",
     "catalog.import_success": "İçe aktarma tamamlandı",
     "catalog.importing": "İçe aktarılıyor...",
@@ -531,10 +594,12 @@ const resource = {
     "catalog.loaded": "Yüklendi",
     "catalog.my_catalog": "Kataloğum",
     "catalog.my_catalog_empty": "Kataloğunuz boş",
-    "catalog.my_catalog_empty_desc": "Kendi malzeme, ekipman ve işçilik birim fiyatlarınızı ekleyin. Özel kaynaklar imalat analizlerinde kullanılabilir ve metraj pozisyonlarına uygulanabilir.",
+    "catalog.my_catalog_empty_desc":
+      "Kendi malzeme, ekipman ve işçilik birim fiyatlarınızı ekleyin. Özel kaynaklar imalat analizlerinde kullanılabilir ve metraj pozisyonlarına uygulanabilir.",
     "catalog.name": "Ad",
     "catalog.no_results": "Kaynak bulunamadı",
-    "catalog.no_results_hint": "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
+    "catalog.no_results_hint":
+      "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
     "catalog.of": "/",
     "catalog.price_avg": "Fiyat (ort.)",
     "catalog.price_range": "Fiyat Aralığı",
@@ -548,7 +613,8 @@ const resource = {
     "catalog.resources_imported": "kaynak içe aktarıldı",
     "catalog.resources_removed": "kaynak kaldırıldı",
     "catalog.search_hint": "Malzeme, ekipman, işçilik ve operatörleri gözatın",
-    "catalog.what_is_catalog": "Bölgeye göre düzenlenmiş malzeme, işçilik, ekipman ve operatör birim fiyatları. Modüllerden bölgesel kataloglar kurun, ardından imalat analizleri oluşturmak veya kalemleri doğrudan metraj pozisyonlarına eklemek için kullanın.",
+    "catalog.what_is_catalog":
+      "Bölgeye göre düzenlenmiş malzeme, işçilik, ekipman ve operatör birim fiyatları. Modüllerden bölgesel kataloglar kurun, ardından imalat analizleri oluşturmak veya kalemleri doğrudan metraj pozisyonlarına eklemek için kullanın.",
     "catalog.search_in": "İçinde ara",
     "catalog.search_placeholder": "Ad veya koda göre ara...",
     "catalog.selected": "seçildi",
@@ -573,12 +639,14 @@ const resource = {
     "command_palette.action_run_validation": "Doğrulama Çalıştır",
     "command_palette.action_import_database": "Veritabanı İçe Aktar",
     "error.something_wrong": "Bir hata oluştu",
-    "error.unexpected_error": "Bu sayfayı oluştururken beklenmeyen bir hata oluştu. Sayfayı yeniden yüklemeyi veya kontrol paneline dönmeyi deneyebilirsiniz.",
+    "error.unexpected_error":
+      "Bu sayfayı oluştururken beklenmeyen bir hata oluştu. Sayfayı yeniden yüklemeyi veya kontrol paneline dönmeyi deneyebilirsiniz.",
     "error.details": "Hata ayrıntıları",
     "error.try_again": "Tekrar dene",
     "error.go_dashboard": "Kontrol Paneline Git",
     "error.not_found": "Sayfa bulunamadı",
-    "error.not_found_desc": "Aradığınız sayfa mevcut değil veya taşınmış. URL'yi kontrol edin veya kontrol paneline dönün.",
+    "error.not_found_desc":
+      "Aradığınız sayfa mevcut değil veya taşınmış. URL'yi kontrol edin veya kontrol paneline dönün.",
     "error.go_back": "Geri dön",
     "common.archive": "Arşivle",
     "common.back": "Geri",
@@ -615,7 +683,8 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Maliyet / m²",
     "costmodel.benchmark_current_cost": "Mevcut: {{value}}/m²",
-    "costmodel.benchmark_enter_area": "m² başına maliyet kıyaslama karşılaştırmasını görmek için proje alanını girin",
+    "costmodel.benchmark_enter_area":
+      "m² başına maliyet kıyaslama karşılaştırmasını görmek için proje alanını girin",
     "costmodel.benchmark_per_m2": "/m²",
     "costmodel.benchmark_project_area": "Proje Alanı (m²)",
     "costmodel.benchmark_project_type": "Proje Türü",
@@ -659,7 +728,8 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Durum",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint": "Bütçe dahilinde tamamlamak için ileriye dönük {{tcpi}} CPI'ye ihtiyacınız var",
+    "costmodel.evm_tcpi_hint":
+      "Bütçe dahilinde tamamlamak için ileriye dönük {{tcpi}} CPI'ye ihtiyacınız var",
     "costmodel.evm_time_elapsed": "Geçen Süre",
     "costmodel.evm_title": "Kazanılmış Değer Analizi",
     "costmodel.evm_unknown": "Bilinmiyor",
@@ -679,7 +749,8 @@ const resource = {
     "costmodel.s_curve": "S-Eğrisi (EVM)",
     "costmodel.s_curve_chart": "S-Eğrisi Grafiği",
     "costmodel.title": "5B Maliyet Modeli",
-    "costmodel.what_is_5d": "5B maliyet yönetimi, projenize zaman içinde maliyet takibi ekler. S-eğrisi grafikleriyle bütçe ile gerçekleşen harcamayı izleyin, Kazanılmış Değer takibi yapın (SPI = program verimliliği, CPI = maliyet verimliliği — her ikisi de >= 1.0 sağlıklı demektir) ve sonuçları tahmin etmek için varsayımsal senaryolar çalıştırın.",
+    "costmodel.what_is_5d":
+      "5B maliyet yönetimi, projenize zaman içinde maliyet takibi ekler. S-eğrisi grafikleriyle bütçe ile gerçekleşen harcamayı izleyin, Kazanılmış Değer takibi yapın (SPI = program verimliliği, CPI = maliyet verimliliği — her ikisi de >= 1.0 sağlıklı demektir) ve sonuçları tahmin etmek için varsayımsal senaryolar çalıştırın.",
     "costmodel.total": "Toplam",
     "costmodel.total_budget": "Toplam Bütçe",
     "costmodel.variance": "Sapma",
@@ -694,7 +765,8 @@ const resource = {
     "costmodel.whatif_material": "Malzeme Maliyeti",
     "costmodel.whatif_original_bac": "Orijinal BAC",
     "costmodel.whatif_reset": "Sıfırla",
-    "costmodel.whatif_scenario_name": "Varsayım: M{{material}}% İ{{labor}}% S{{duration}}%",
+    "costmodel.whatif_scenario_name":
+      "Varsayım: M{{material}}% İ{{labor}}% S{{duration}}%",
     "costmodel.whatif_title": "Varsayımsal Senaryolar",
     "costs.add_database": "İçe Aktar",
     "costs.add_item": "Kalem Ekle",
@@ -716,7 +788,8 @@ const resource = {
     "costs.copy_rate": "Birim fiyat kopyala",
     "costs.create": "Kalem Oluştur",
     "costs.create_item": "Özel Maliyet Kalemi Ekle",
-    "costs.create_item_desc": "Bu proje için kendi maliyet kaleminizi oluşturun",
+    "costs.create_item_desc":
+      "Bu proje için kendi maliyet kaleminizi oluşturun",
     "costs.creating": "Oluşturuluyor...",
     "costs.currency": "Para Birimi",
     "costs.delete_failed": "Silme başarısız oldu",
@@ -732,18 +805,22 @@ const resource = {
     "costs.import_and_more": "ve {{count}} hata daha",
     "costs.import_another": "Başka Dosya İçe Aktar",
     "costs.import_click_to_change": "Farklı bir dosya seçmek için tıklayın",
-    "costs.import_columns_hint": "Sütunlar otomatik algılanır. Kabul edilen başlıklar: Kod, Açıklama, Birim, Birim Fiyat/Fiyat/Maliyet, Para Birimi, DIN 276/Sınıflandırma.",
+    "costs.import_columns_hint":
+      "Sütunlar otomatik algılanır. Kabul edilen başlıklar: Kod, Açıklama, Birim, Birim Fiyat/Fiyat/Maliyet, Para Birimi, DIN 276/Sınıflandırma.",
     "costs.import_complete": "İçe Aktarma Tamamlandı",
     "costs.import_database": "Veritabanı İçe Aktar",
     "costs.import_drop_here": "Dosyanızı buraya bırakın",
-    "costs.import_drop_or_click": "Dosyanızı buraya bırakın veya gözatmak için tıklayın",
+    "costs.import_drop_or_click":
+      "Dosyanızı buraya bırakın veya gözatmak için tıklayın",
     "costs.import_error_details": "Hata ayrıntıları",
     "costs.import_errors": "Hatalar",
     "costs.import_failed": "İçe aktarma başarısız oldu",
     "costs.import_file_too_large": "Dosya çok büyük",
-    "costs.import_first_hint": "Aramaya başlamak için 55.000'den fazla kalemle bölgesel maliyet veritabanı içe aktarın.",
+    "costs.import_first_hint":
+      "Aramaya başlamak için 55.000'den fazla kalemle bölgesel maliyet veritabanı içe aktarın.",
     "costs.import_format_csv": "Aynı sütunlarla CSV (.csv)",
-    "costs.import_format_excel": "Sütunlar: Kod, Açıklama, Birim, Birim Fiyat ile Excel (.xlsx)",
+    "costs.import_format_excel":
+      "Sütunlar: Kod, Açıklama, Birim, Birim Fiyat ile Excel (.xlsx)",
     "costs.import_formats_title": "Desteklenen formatlar",
     "costs.import_go_to_database": "Maliyet Veritabanına Git",
     "costs.import_imported": "İçe aktarıldı",
@@ -752,9 +829,11 @@ const resource = {
     "costs.import_row": "Satır",
     "costs.import_rows_processed": "satır işlendi",
     "costs.import_skipped": "Atlanan",
-    "costs.import_subtitle": "Bir birim fiyat listesi yükleyin veya kendi dosyanızı yükleyin.",
+    "costs.import_subtitle":
+      "Bir birim fiyat listesi yükleyin veya kendi dosyanızı yükleyin.",
     "costs.import_success": "İçe aktarma tamamlandı",
-    "costs.import_supported_hint": "Lütfen bir Excel (.xlsx) veya CSV (.csv) dosyası yükleyin.",
+    "costs.import_supported_hint":
+      "Lütfen bir Excel (.xlsx) veya CSV (.csv) dosyası yükleyin.",
     "costs.import_title": "Maliyet Veritabanı İçe Aktar",
     "costs.import_unsupported_format": "Desteklenmeyen dosya formatı",
     "costs.indexing_failed": "Dizin oluşturma başarısız oldu",
@@ -763,7 +842,8 @@ const resource = {
     "costs.items_copied": "{{count}} kalem panoya kopyalandı",
     "costs.load_more": "Daha fazla yükle",
     "costs.loaded_databases": "Yüklü Veritabanları",
-    "costs.no_boqs_helper": "Bu projede metraj yok. Önce metraj editöründe bir tane oluşturun.",
+    "costs.no_boqs_helper":
+      "Bu projede metraj yok. Önce metraj editöründe bir tane oluşturun.",
     "costs.no_database_loaded": "Veritabanı yüklenmedi",
     "costs.no_results": "Maliyet kalemi bulunamadı",
     "costs.no_results_hint": "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
@@ -775,16 +855,19 @@ const resource = {
     "costs.region_cleared": "Bölge temizlendi",
     "costs.results_found": "sonuç bulundu",
     "costs.search_hint": "Açıklama veya koda göre maliyet kalemi arayın",
-    "costs.what_is_cost_db": "Malzeme, işçilik ve ekipman için birim fiyatlar ve bileşik fiyatlar. Modüllerden bölgesel veritabanları (CWICR, BKI, RSMeans) içe aktarın veya özel birim fiyatlar ekleyin. Doğal dil sorguları için Yapay Zeka Anlamsal Aramayı etkinleştirin.",
+    "costs.what_is_cost_db":
+      "Malzeme, işçilik ve ekipman için birim fiyatlar ve bileşik fiyatlar. Modüllerden bölgesel veritabanları (CWICR, BKI, RSMeans) içe aktarın veya özel birim fiyatlar ekleyin. Doğal dil sorguları için Yapay Zeka Anlamsal Aramayı etkinleştirin.",
     "costs.search_placeholder": "Açıklama veya koda göre ara...",
-    "costs.semantic_placeholder": "Neye ihtiyacınız olduğunu tanımlayın (Yapay zeka benzerini bulur)...",
+    "costs.semantic_placeholder":
+      "Neye ihtiyacınız olduğunu tanımlayın (Yapay zeka benzerini bulur)...",
     "costs.showing": "Gösterilen",
     "costs.title": "Maliyet Veritabanı",
     "costs.yes_clear_all": "Evet, Tümünü Temizle",
     "dashboard.add_api_keys": "API Anahtarları Ekle",
     "dashboard.ai_providers": "Yapay Zeka Sağlayıcıları",
     "dashboard.analytics": "Analitik",
-    "dashboard.kpi_hint": "Tüm projelerin özeti. Değerler, tahmin ve iş programı faaliyetleri eklendikçe güncellenir.",
+    "dashboard.kpi_hint":
+      "Tüm projelerin özeti. Değerler, tahmin ve iş programı faaliyetleri eklendikçe güncellenir.",
     "dashboard.api_server": "API Sunucusu",
     "dashboard.boq_status": "Metraj Durumu",
     "dashboard.completed": "Tamamlandı",
@@ -815,15 +898,20 @@ const resource = {
     "dashboard.recent_projects": "Son Projeler",
     "dashboard.show_shortcuts": "Klavye kısayollarını göster",
     "dashboard.step_ai_search": "Yapay Zeka Aramayı Etkinleştir",
-    "dashboard.step_ai_search_desc": "Anlamsal maliyet eşleştirme için vektör gömmeleri oluşturun",
+    "dashboard.step_ai_search_desc":
+      "Anlamsal maliyet eşleştirme için vektör gömmeleri oluşturun",
     "dashboard.step_build_boq": "Metrajınızı Oluşturun",
-    "dashboard.step_build_boq_desc": "Yapay zeka desteğiyle keşif özeti oluşturun",
+    "dashboard.step_build_boq_desc":
+      "Yapay zeka desteğiyle keşif özeti oluşturun",
     "dashboard.step_connect_ai": "Yapay Zeka Bağla",
-    "dashboard.step_connect_ai_desc": "Yapay zeka destekli tahmin için API anahtarlarınızı ekleyin",
+    "dashboard.step_connect_ai_desc":
+      "Yapay zeka destekli tahmin için API anahtarlarınızı ekleyin",
     "dashboard.step_create_project": "Proje Oluştur",
-    "dashboard.step_create_project_desc": "İlk inşaat maliyet tahmin projenizi başlatın",
+    "dashboard.step_create_project_desc":
+      "İlk inşaat maliyet tahmin projenizi başlatın",
     "dashboard.step_load_db": "Maliyet Veritabanı Yükle",
-    "dashboard.step_load_db_desc": "55.000'den fazla kalemle bölgesel birim fiyat verileri içe aktarın",
+    "dashboard.step_load_db_desc":
+      "55.000'den fazla kalemle bölgesel birim fiyat verileri içe aktarın",
     "dashboard.subtitle": "İnşaat maliyet tahmin çalışma alanınız",
     "dashboard.subtitle_2": "İnşaat projeleriniz için akıllı kaynak planlaması",
     "dashboard.system_status": "Sistem Durumu",
@@ -838,16 +926,19 @@ const resource = {
     "demo.install": "Kur",
     "demo.install_error": "Demo projesi kurulamadı. Lütfen tekrar deneyin.",
     "demo.installing": "Kuruluyor...",
-    "demo.modal_subtitle": "Metraj, iş programı, bütçe ve ihale içeren eksiksiz bir proje kurun",
+    "demo.modal_subtitle":
+      "Metraj, iş programı, bütçe ve ihale içeren eksiksiz bir proje kurun",
     "demo.modal_title": "Demo Projesi İçe Aktar",
     "documents.title": "Belgeler",
-    "documents.subtitle": "Proje dosyalarını yükleyin ve yönetin — çizimler, sözleşmeler, şartnameler",
+    "documents.subtitle":
+      "Proje dosyalarını yükleyin ve yönetin — çizimler, sözleşmeler, şartnameler",
     "documents.upload": "Dosya Yükle",
     "documents.uploaded": "Yüklendi",
     "documents.upload_failed": "Yükleme başarısız",
     "documents.upload_skipped": "Dosya atlandı",
     "documents.file_too_large": "{{name}} 100 MB sınırını aşıyor",
-    "documents.upload_summary": "Yükleme tamamlandı: {{success}} yüklendi, {{failed}} başarısız",
+    "documents.upload_summary":
+      "Yükleme tamamlandı: {{success}} yüklendi, {{failed}} başarısız",
     "documents.delete_failed": "Silme başarısız",
     "documents.deleted": "Belge silindi",
     "documents.download": "İndir",
@@ -859,11 +950,14 @@ const resource = {
     "documents.no_results_hint": "Farklı bir arama terimi deneyin",
     "documents.clear_search": "Aramayı temizle",
     "documents.drop_hint": "Dosyaları buraya sürükleyin veya Yükle'ye tıklayın",
-    "documents.drop_hint_types": "PDF, resimler, Excel, DWG, IFC — herhangi bir dosya türü",
+    "documents.drop_hint_types":
+      "PDF, resimler, Excel, DWG, IFC — herhangi bir dosya türü",
     "documents.empty": "Henüz belge yok",
-    "documents.empty_hint": "İlk dosyanızı yükleyin — çizimler, sözleşmeler, fotoğraflar veya herhangi bir proje belgesi.",
+    "documents.empty_hint":
+      "İlk dosyanızı yükleyin — çizimler, sözleşmeler, fotoğraflar veya herhangi bir proje belgesi.",
     "documents.select_project": "Bir proje seçin",
-    "documents.select_project_hint": "Önce başlıktaki proje değiştiricisini kullanarak bir proje seçin.",
+    "documents.select_project_hint":
+      "Önce başlıktaki proje değiştiricisini kullanarak bir proje seçin.",
     "documents.sort_date": "Tarihe göre",
     "documents.sort_name": "Ada göre",
     "documents.sort_size": "Boyuta göre",
@@ -877,33 +971,45 @@ const resource = {
     "documents.cat_correspondence": "Yazışma",
     "documents.cat_other": "Diğer",
     "login.benefit.ai": "Yapay zeka destekli tahmin",
-    "login.benefit.ai_desc": "Güvenilirlik puanları ile akıllı öneriler. Siz karar verin, yapay zeka yardımcı olsun.",
+    "login.benefit.ai_desc":
+      "Güvenilirlik puanları ile akıllı öneriler. Siz karar verin, yapay zeka yardımcı olsun.",
     "login.benefit.allinone": "Metraj + 4B + 5B + İhale",
-    "login.benefit.allinone_desc": "Maliyet tahmininden teklif karşılaştırmasına tek bir araçta eksiksiz iş akışı.",
+    "login.benefit.allinone_desc":
+      "Maliyet tahmininden teklif karşılaştırmasına tek bir araçta eksiksiz iş akışı.",
     "login.benefit.free": "Herkes için ücretsiz",
-    "login.benefit.free_desc": "Lisans ücreti yok. Sınır yok. Maliyet uzmanları tarafından, maliyet uzmanları için geliştirildi.",
+    "login.benefit.free_desc":
+      "Lisans ücreti yok. Sınır yok. Maliyet uzmanları tarafından, maliyet uzmanları için geliştirildi.",
     "login.benefit.local": "Verileriniz bilgisayarınızda kalır",
-    "login.benefit.local_desc": "Bulut yok. Üçüncü taraf sunucu yok. Proje verileriniz üzerinde tam kontrol.",
+    "login.benefit.local_desc":
+      "Bulut yok. Üçüncü taraf sunucu yok. Proje verileriniz üzerinde tam kontrol.",
     "login.benefit.open_source": "%100 açık kaynak",
-    "login.benefit.open_source_desc": "Şeffaf kod. Satıcı bağımlılığı yok. Her şeyi istediğiniz zaman dışa aktarın.",
+    "login.benefit.open_source_desc":
+      "Şeffaf kod. Satıcı bağımlılığı yok. Her şeyi istediğiniz zaman dışa aktarın.",
     "login.benefit.standards": "Uluslararası standartlar",
-    "login.benefit.standards_desc": "Dünya genelinde 11 bölgesel veritabanında 55.000'den fazla maliyet kalemi.",
-    "login.hero_desc": "Profesyonel metraj, 4B iş programı, 5B maliyet modeli ve ihale — hepsi tek bir açık kaynak platformda.",
+    "login.benefit.standards_desc":
+      "Dünya genelinde 11 bölgesel veritabanında 55.000'den fazla maliyet kalemi.",
+    "login.hero_desc":
+      "Profesyonel metraj, 4B iş programı, 5B maliyet modeli ve ihale — hepsi tek bir açık kaynak platformda.",
     "login.hero_highlight": "yeniden tasarlandı",
     "login.hero_title": "İnşaat maliyet tahmini,",
     "login.open_source_badge": "İlk açık kaynak inşaat ERP",
     "dashboard.open_source_badge": "İlk açık kaynak inşaat ERP",
     "login.learn_more": "Platform hakkında daha fazla bilgi edinin",
-    "login.privacy": "Tüm veriler bilgisayarınızda yerel olarak işlenir ve saklanır. Hiçbir şey harici sunuculara gönderilmez. Verileriniz her zaman size aittir.",
-    "login.privacy_ai": "Yerleşik yapay zeka araçlarını kullanırsanız, yapılandırdığınız yapay zeka sağlayıcısına (OpenAI, Anthropic vb.) bazı veriler gönderilebilir. Hangi sağlayıcıyı kullanacağınızı ve hangi verileri paylaşacağınızı siz kontrol edersiniz.",
+    "login.privacy":
+      "Tüm veriler bilgisayarınızda yerel olarak işlenir ve saklanır. Hiçbir şey harici sunuculara gönderilmez. Verileriniz her zaman size aittir.",
+    "login.privacy_ai":
+      "Yerleşik yapay zeka araçlarını kullanırsanız, yapılandırdığınız yapay zeka sağlayıcısına (OpenAI, Anthropic vb.) bazı veriler gönderilebilir. Hangi sağlayıcıyı kullanacağınızı ve hangi verileri paylaşacağınızı siz kontrol edersiniz.",
     "marketplace.active": "Aktif",
     "marketplace.available": "Mevcut Modüller",
     "marketplace.builtin": "Yerleşik",
-    "marketplace.builtin_message": "Bu modül kurulumunuza dahildir ve kullanıma hazırdır.",
+    "marketplace.builtin_message":
+      "Bu modül kurulumunuza dahildir ve kullanıma hazırdır.",
     "marketplace.catalog_imported": "Katalog içe aktarıldı",
-    "marketplace.catalog_imported_message": "{{region}} için {{imported}} kaynak içe aktarıldı, {{skipped}} atlandı.",
+    "marketplace.catalog_imported_message":
+      "{{region}} için {{imported}} kaynak içe aktarıldı, {{skipped}} atlandı.",
     "marketplace.demo_installed": "Demo kuruldu",
-    "marketplace.demo_installed_message": "{{name}} tam metraj, iş programı, bütçe ve ihale ile oluşturuldu.",
+    "marketplace.demo_installed_message":
+      "{{name}} tam metraj, iş programı, bütçe ve ihale ile oluşturuldu.",
     "marketplace.free": "Ücretsiz",
     "marketplace.import_failed": "İçe aktarma başarısız oldu",
     "marketplace.imported": "İçe aktarıldı",
@@ -912,7 +1018,8 @@ const resource = {
     "marketplace.install_failed": "Kurulum başarısız oldu",
     "marketplace.installed_modules": "Kurulu Çekirdek Modüller",
     "marketplace.installing": "Kuruluyor...",
-    "marketplace.language_activated": "Dil paketi etkinleştirildi. Dili Ayarlardan değiştirin.",
+    "marketplace.language_activated":
+      "Dil paketi etkinleştirildi. Dili Ayarlardan değiştirin.",
     "marketplace.language_already_included": "Bu dil zaten dahildir.",
     "marketplace.manage": "Yönet",
     "marketplace.module_disabled": "{{name}} devre dışı bırakıldı",
@@ -920,18 +1027,22 @@ const resource = {
     "marketplace.my_modules": "Kurulu Modüller",
     "marketplace.no_region_mapping": "{{id}} için bölge eşleşmesi yok",
     "marketplace.no_results": "Modül bulunamadı",
-    "marketplace.no_results_hint": "Aramanızı veya kategori filtrenizi ayarlamayı deneyin.",
+    "marketplace.no_results_hint":
+      "Aramanızı veya kategori filtrenizi ayarlamayı deneyin.",
     "marketplace.rules": "kural",
     "marketplace.search_placeholder": "Modül ara...",
-    "marketplace.subtitle": "Maliyet veritabanları, yapay zeka araçları, CAD dönüştürücüler ve daha fazlası için eklentilere göz atın ve kurun.",
-    "marketplace.description": "OpenEstimate'i bölgesel maliyet veritabanları, kaynak katalogları (CWICR), yapay zeka için vektör arama dizinleri, dil paketleri, demo projeleri ve entegrasyonlarla genişletin. Etkinleştirmek için bir modül kurun — istediğiniz zaman kaldırın.",
+    "marketplace.subtitle":
+      "Maliyet veritabanları, yapay zeka araçları, CAD dönüştürücüler ve daha fazlası için eklentilere göz atın ve kurun.",
+    "marketplace.description":
+      "OpenEstimate'i bölgesel maliyet veritabanları, kaynak katalogları (CWICR), yapay zeka için vektör arama dizinleri, dil paketleri, demo projeleri ve entegrasyonlarla genişletin. Etkinleştirmek için bir modül kurun — istediğiniz zaman kaldırın.",
     "marketplace.title": "Modül Mağazası",
     "marketplace.uninstall": "Kaldır",
     "marketplace.unknown_region": "Bilinmeyen bölge",
     "marketplace.validation_rule_sets": "Doğrulama Kural Setleri",
     "marketplace.validation_rules_active": "doğrulama kuralı aktif",
     "marketplace.vector_index": "Vektör Dizini",
-    "marketplace.vector_index_hint": "Önce maliyet veritabanını içe aktarın, ardından vektörleri oluşturun.",
+    "marketplace.vector_index_hint":
+      "Önce maliyet veritabanını içe aktarın, ardından vektörleri oluşturun.",
     "modules.title": "Modüller",
     "files.title": "Proje dosyaları",
     "files.empty": "Filtrelerinize uyan dosya yok.",
@@ -980,20 +1091,27 @@ const resource = {
     "files.toast.copied": "Kopyalandı",
     "files.toast.copy_failed": "Kopyalanamadı",
     "files.no_project_title": "Etkin proje yok",
-    "files.no_project_desc": "Tüm belgelerini, fotoğraflarını, BIM ve DWG dosyalarını tek bir yerde görmek için panelden bir proje seçin.",
+    "files.no_project_desc":
+      "Tüm belgelerini, fotoğraflarını, BIM ve DWG dosyalarını tek bir yerde görmek için panelden bir proje seçin.",
     "files.go_to_projects": "Projelere git",
     "files.export.title": "Proje paketini dışa aktar",
-    "files.export.intro": "Neyi dahil edeceğinizi seçin. Küçük paketler hızlı aktarılır; büyük paketler daha çok veri korur.",
+    "files.export.intro":
+      "Neyi dahil edeceğinizi seçin. Küçük paketler hızlı aktarılır; büyük paketler daha çok veri korur.",
     "files.export.scope_metadata": "Yalnızca meta veri",
-    "files.export.scope_metadata_hint": "E-postaya uygun. Metrajlar, tablolar ve bağlantılar — ek yok.",
+    "files.export.scope_metadata_hint":
+      "E-postaya uygun. Metrajlar, tablolar ve bağlantılar — ek yok.",
     "files.export.scope_documents": "Belgeler",
-    "files.export.scope_documents_hint": "Yüklenmiş belgeleri ve fotoğrafları küçük resimleriyle birlikte ekler.",
+    "files.export.scope_documents_hint":
+      "Yüklenmiş belgeleri ve fotoğrafları küçük resimleriyle birlikte ekler.",
     "files.export.scope_bim": "BIM modelleri",
-    "files.export.scope_bim_hint": "BIM modellerini, elemanları ve standart geometriyi ekler.",
+    "files.export.scope_bim_hint":
+      "BIM modellerini, elemanları ve standart geometriyi ekler.",
     "files.export.scope_dwg": "DWG çizimleri",
-    "files.export.scope_dwg_hint": "DWG çizimlerini, sürümlerini ve ilgili paftaları ekler.",
+    "files.export.scope_dwg_hint":
+      "DWG çizimlerini, sürümlerini ve ilgili paftaları ekler.",
     "files.export.scope_full": "Tüm proje",
-    "files.export.scope_full_hint": "Her şey — tüm ekler dahil eksiksiz taşıma paketi.",
+    "files.export.scope_full_hint":
+      "Her şey — tüm ekler dahil eksiksiz taşıma paketi.",
     "files.export.stat_scope": "Kapsam",
     "files.export.stat_attachments": "Ekler",
     "files.export.stat_size": "Tahmini boyut",
@@ -1001,10 +1119,12 @@ const resource = {
     "files.export.tables": "Tablolar",
     "files.export.preview_btn": "Önizleme",
     "files.export.download_btn": "Paketi indir",
-    "files.export.large_warn": "Büyük paket — dışa aktarım sırasında bu sekmeyi açık tutun.",
+    "files.export.large_warn":
+      "Büyük paket — dışa aktarım sırasında bu sekmeyi açık tutun.",
     "files.export.success_title": "Paket indirildi",
     "files.import.title": "Proje paketini içe aktar",
-    "files.import.intro": "Bu veya başka bir çalışma alanından dışa aktarılmış bir .ocep paketi seçin.",
+    "files.import.intro":
+      "Bu veya başka bir çalışma alanından dışa aktarılmış bir .ocep paketi seçin.",
     "files.import.select_file": ".ocep dosyası seç",
     "files.import.drop_hint": "Göz atmak için tıklayın",
     "files.import.validating": "Paket doğrulanıyor…",
@@ -1016,15 +1136,19 @@ const resource = {
     "files.import.stat_format": "Biçim",
     "files.import.choose_mode": "İçe aktarma modu",
     "files.import.mode_new": "Yeni proje oluştur",
-    "files.import.mode_new_hint": "En güvenli. Her yerde yeni kimlikler; çalışma alanınızda hiçbir şey değişmez.",
+    "files.import.mode_new_hint":
+      "En güvenli. Her yerde yeni kimlikler; çalışma alanınızda hiçbir şey değişmez.",
     "files.import.mode_merge": "Mevcut projeyle birleştir",
-    "files.import.mode_merge_hint": "Seçili projeye satır ekler. Mevcut kimlikler atlanır.",
+    "files.import.mode_merge_hint":
+      "Seçili projeye satır ekler. Mevcut kimlikler atlanır.",
     "files.import.mode_replace": "Mevcut projeyi değiştir",
-    "files.import.mode_replace_hint": "Seçili projenin paketten gelen satırlarını siler ve sonra içe aktarır. Yıkıcıdır.",
+    "files.import.mode_replace_hint":
+      "Seçili projenin paketten gelen satırlarını siler ve sonra içe aktarır. Yıkıcıdır.",
     "files.import.rename": "Yeni proje adı (isteğe bağlı)",
     "files.import.target_project": "Hedef proje",
     "files.import.pick_project": "— bir proje seçin —",
-    "files.import.destructive_warn": "Bu işlem, içe aktarmadan önce hedef projedeki paket-tabanlı satırları kalıcı olarak siler. Geri alınamaz.",
+    "files.import.destructive_warn":
+      "Bu işlem, içe aktarmadan önce hedef projedeki paket-tabanlı satırları kalıcı olarak siler. Geri alınamaz.",
     "files.import.confirm": "İçe aktar",
     "files.import.result_done": "İçe aktarma tamamlandı",
     "files.import.imported": "İçe aktarıldı",
@@ -1044,7 +1168,8 @@ const resource = {
     "files.email.paste_into_email": "Örnek e-posta gövdesi",
     "files.email.open_mail_client": "E-posta istemcisini aç",
     "files.email.sample_subject": "Dosya: {{name}}",
-    "files.email.sample_body": "Merhaba,\n\nİstediğiniz dosya — {{name}} ({{size}}).\nİndirme bağlantısı ({{expires}} tarihinde sona erer):\n{{url}}\n\n— OpenConstructionERP üzerinden gönderildi",
+    "files.email.sample_body":
+      "Merhaba,\n\nİstediğiniz dosya — {{name}} ({{size}}).\nİndirme bağlantısı ({{expires}} tarihinde sona erer):\n{{url}}\n\n— OpenConstructionERP üzerinden gönderildi",
     "files.title_all": "Tüm dosyalar",
     "files.empty_category": "Henüz {{category}} yok",
     "files.cta.add_first": "İlk {{category}} öğenizi ekleyin",
@@ -1058,7 +1183,8 @@ const resource = {
     "files.upload_browse": "Dosyalara göz at",
     "files.upload_no_project": "Etkin proje yok",
     "files.upload_too_large": "Dosyalar çok büyük",
-    "files.upload_too_large_msg": "{{count}} dosya 100 MB sınırını aştığı için atlandı.",
+    "files.upload_too_large_msg":
+      "{{count}} dosya 100 MB sınırını aştığı için atlandı.",
     "files.upload_queued": "{{count}} dosya kuyruğa alındı",
     "files.uploading": "Yükleniyor…",
     "files.uploaded": "Yüklendi",
@@ -1100,7 +1226,8 @@ const resource = {
     "files.share.revoking": "İptal ediliyor…",
     "files.share.title": "Parola korumalı paylaşım bağlantısı",
     "files.share.url_label": "Paylaşım URL'si",
-    "files.tile.tooltip": "{{name}} — {{module}} içinde açmak için çift tıklayın",
+    "files.tile.tooltip":
+      "{{name}} — {{module}} içinde açmak için çift tıklayın",
     "nav.5d_cost_model": "5B Maliyet Modeli",
     "nav.assemblies": "İmalat Analizleri",
     "nav.boq": "Keşif Özeti",
@@ -1125,13 +1252,17 @@ const resource = {
     "nav.bi_dashboards": "BI Panoları",
     "nav.match_elements": "Eleman Eşleştirme → Maliyet",
     "nav.group_operations": "Saha Operasyonları",
-    "nav.group_operations_desc": "Günlük saha operasyonları — servis biletleri, ekipman, günlük, alt yüklenici portalı, kaynaklar",
+    "nav.group_operations_desc":
+      "Günlük saha operasyonları — servis biletleri, ekipman, günlük, alt yüklenici portalı, kaynaklar",
     "nav.group_commercial": "Ticari",
-    "nav.group_commercial_desc": "Ticari pipeline — CRM, sözleşmeler, teklifler, değişiklikler, tedarikçiler, gayrimenkul",
+    "nav.group_commercial_desc":
+      "Ticari pipeline — CRM, sözleşmeler, teklifler, değişiklikler, tedarikçiler, gayrimenkul",
     "nav.group_bi": "Analitik",
-    "nav.group_bi_desc": "Veri ambarı projeksiyonları üzerine kurulu BI panoları",
+    "nav.group_bi_desc":
+      "Veri ambarı projeksiyonları üzerine kurulu BI panoları",
     "nav.group_estimation": "Tahmin",
-    "nav.group_estimation_desc": "Temel araçlar: projeler, metraj, maliyetler ve imalat analizleri",
+    "nav.group_estimation_desc":
+      "Temel araçlar: projeler, metraj, maliyetler ve imalat analizleri",
     "nav.group_databases": "Veritabanları",
     "nav.group_takeoff": "Metraj",
     "nav.group_cad_bim": "CAD / BIM & BI",
@@ -1145,7 +1276,8 @@ const resource = {
     "nav.group_procurement": "Tedarik",
     "nav.group_procurement_desc": "Teklif yönetimi, ihale ve raporlar",
     "nav.group_tools": "Araçlar",
-    "nav.group_tools_desc": "Doğrulama, uyumluluk kontrolü ve sürdürülebilirlik",
+    "nav.group_tools_desc":
+      "Doğrulama, uyumluluk kontrolü ve sürdürülebilirlik",
     "nav.mode_advanced": "Gelişmiş",
     "nav.mode_pro_badge": "PRO",
     "nav.mode_simple": "Basit",
@@ -1194,8 +1326,10 @@ const resource = {
     "requirements.notes": "Notlar",
     "requirements.notes_placeholder": "Ek notlar veya bağlam...",
     "requirements.import_text": "Metinden İçe Aktar",
-    "requirements.import_text_desc": "Gereksinim özelliklerini yapıştırın. Her satır şu formatta olmalıdır: varlık | öznitelik | kısıt_türü | değer | birim | kategori | öncelik",
-    "requirements.import_placeholder": "duvar | kalınlık | min | 200 | mm | yapısal | zorunlu\nçatı | u_değeri | max | 0,20 | W/m²K | ısıl | zorunlu",
+    "requirements.import_text_desc":
+      "Gereksinim özelliklerini yapıştırın. Her satır şu formatta olmalıdır: varlık | öznitelik | kısıt_türü | değer | birim | kategori | öncelik",
+    "requirements.import_placeholder":
+      "duvar | kalınlık | min | 200 | mm | yapısal | zorunlu\nçatı | u_değeri | max | 0,20 | W/m²K | ısıl | zorunlu",
     "requirements.set_created": "Gereksinim seti oluşturuldu",
     "requirements.new_set": "Yeni Gereksinim Seti",
     "requirements.set_name_placeholder": "örn.: Yapısal Gereksinimler Aşama 1",
@@ -1214,33 +1348,40 @@ const resource = {
     "requirements.all_priorities": "Tüm Öncelikler",
     "requirements.all_statuses": "Tüm Durumlar",
     "requirements.no_sets": "Gereksinim seti yok",
-    "requirements.no_sets_desc": "Proje gereksinimlerini ve kalite kapılarını tanımlamaya başlamak için bir gereksinim seti oluşturun.",
+    "requirements.no_sets_desc":
+      "Proje gereksinimlerini ve kalite kapılarını tanımlamaya başlamak için bir gereksinim seti oluşturun.",
     "requirements.empty": "Henüz gereksinim yok",
-    "requirements.empty_desc": "Projeniz için Varlık-Öznitelik-Kısıt üçlüleri tanımlamak üzere gereksinimler ekleyin.",
+    "requirements.empty_desc":
+      "Projeniz için Varlık-Öznitelik-Kısıt üçlüleri tanımlamak üzere gereksinimler ekleyin.",
     "requirements.no_match": "Filtrelerinizle eşleşen gereksinim yok.",
     "requirements.constraint": "Kısıt",
     "requirements.confidence": "Güven",
     "requirements.source": "Kaynak",
     "requirements.showing": "{{count}} gereksinim",
     "requirements.of_total": "{{total}} toplam",
-    "requirements.confirm_delete_set": "Bu gereksinim seti ve tüm gereksinimleri silinsin mi?",
+    "requirements.confirm_delete_set":
+      "Bu gereksinim seti ve tüm gereksinimleri silinsin mi?",
     "requirements.delete_set": "Seti Sil",
     "requirements.and_more": "ve {{count}} tane daha...",
     "requirements.click_to_upload_csv": "CSV dosyası yüklemek için tıklayın",
     "requirements.click_to_upload_json": "JSON dosyası yüklemek için tıklayın",
     "requirements.csv_loaded": "CSV'den {{count}} satır yüklendi",
-    "requirements.csv_parse_error": "CSV şu başlıklara sahip olmalıdır: entity, attribute, constraint_value",
+    "requirements.csv_parse_error":
+      "CSV şu başlıklara sahip olmalıdır: entity, attribute, constraint_value",
     "requirements.export": "Dışa Aktar",
     "requirements.export_csv": "CSV Dışa Aktar",
     "requirements.export_excel": "Excel Dışa Aktar",
     "requirements.export_json": "JSON Dışa Aktar",
     "requirements.exported": "Gereksinimler dışa aktarıldı",
     "requirements.import_count": "{{count}} gereksinim içe aktarılıyor...",
-    "requirements.import_csv_desc": "Şu sütunlara sahip bir CSV dosyası yükleyin: entity, attribute, constraint_value",
-    "requirements.import_json_desc": "Gereksinim nesnelerinin JSON dizisini yükleyin",
+    "requirements.import_csv_desc":
+      "Şu sütunlara sahip bir CSV dosyası yükleyin: entity, attribute, constraint_value",
+    "requirements.import_json_desc":
+      "Gereksinim nesnelerinin JSON dizisini yükleyin",
     "requirements.import_requirements": "Gereksinimleri İçe Aktar",
     "requirements.json_loaded": "JSON'den {{count}} öğe yüklendi",
-    "requirements.json_parse_error": "JSON, entity, attribute, constraint_value içeren nesneler dizisi olmalıdır",
+    "requirements.json_parse_error":
+      "JSON, entity, attribute, constraint_value içeren nesneler dizisi olmalıdır",
     "requirements.preview": "Önizleme",
     "requirements.regex_hint": "Bir düzenli ifade deseni girin, örn. ^F[0-9]+$",
     "requirements.regex_invalid": "Geçersiz desen",
@@ -1294,11 +1435,13 @@ const resource = {
     "markups.col_measurement": "Ölçüm",
     "markups.col_date": "Tarih",
     "markups.empty_title": "İşaretleme bulunamadı",
-    "markups.empty_desc": "Proje belgelerinizdeki işaretlemeler ve açıklamalar burada görünecektir.",
+    "markups.empty_desc":
+      "Proje belgelerinizdeki işaretlemeler ve açıklamalar burada görünecektir.",
     "markups.action_resolve": "Çöz",
     "markups.action_archive": "Arşivle",
     "markups.add_markup": "İşaretleme Ekle",
-    "markups.add_first": "Belgelere açıklama eklemeye başlamak için ilk işaretlemenizi ekleyin",
+    "markups.add_first":
+      "Belgelere açıklama eklemeye başlamak için ilk işaretlemenizi ekleyin",
     "markups.active": "Aktif",
     "markups.all_documents": "Tüm Belgeler",
     "markups.clear_filters": "Filtreleri temizle",
@@ -1316,7 +1459,8 @@ const resource = {
     "markups.measurement_unit": "Birim",
     "markups.measurement_value": "Değer",
     "markups.no_document": "Belge yok",
-    "markups.no_project_desc": "İşaretlemeleri görüntülemek ve yönetmek için bir proje seçin",
+    "markups.no_project_desc":
+      "İşaretlemeleri görüntülemek ve yönetmek için bir proje seçin",
     "markups.no_project_title": "Proje seçilmedi",
     "markups.page": "Sayfa",
     "markups.resolved": "Çözüldü",
@@ -1337,7 +1481,8 @@ const resource = {
     "punch.stat_overdue": "Gecikmiş",
     "punch.add_item": "Eksiklik Ekle",
     "punch.field_title": "Başlık",
-    "punch.title_placeholder": "örn. Kat 3 geçişinde eksik yangın sızdırmazlığı",
+    "punch.title_placeholder":
+      "örn. Kat 3 geçişinde eksik yangın sızdırmazlığı",
     "punch.field_description": "Açıklama",
     "punch.description_placeholder": "Sorun hakkında ayrıntı sağlayın...",
     "punch.field_priority": "Öncelik",
@@ -1375,7 +1520,8 @@ const resource = {
     "punch.all_assignees": "Tüm Sorumlular",
     "punch.kanban_empty": "Kalem yok",
     "punch.empty_title": "Eksiklik kalemi yok",
-    "punch.empty_desc": "Kusurları, eksiklikleri ve bekleyen işleri takip etmek için eksiklik kalemleri oluşturun.",
+    "punch.empty_desc":
+      "Kusurları, eksiklikleri ve bekleyen işleri takip etmek için eksiklik kalemleri oluşturun.",
     "punch.col_title": "Başlık",
     "punch.col_priority": "Öncelik",
     "punch.col_status": "Durum",
@@ -1394,9 +1540,11 @@ const resource = {
     "punch.action_verify": "Doğrula",
     "punch.action_reopen": "Yeniden Aç",
     "punch.action_close": "Kapat",
-    "punch.no_project_desc": "Eksiklik kalemlerini yönetmek için bir proje seçin",
+    "punch.no_project_desc":
+      "Eksiklik kalemlerini yönetmek için bir proje seçin",
     "punch.no_project_title": "Proje seçilmedi",
-    "punch.no_results_desc": "Filtrelerinizi veya arama kriterlerinizi ayarlamayı deneyin",
+    "punch.no_results_desc":
+      "Filtrelerinizi veya arama kriterlerinizi ayarlamayı deneyin",
     "punch.no_results_title": "Eşleşen öğe yok",
     "punch.select_project": "Proje seçin...",
     "punch.title_required": "Başlık gereklidir",
@@ -1441,11 +1589,13 @@ const resource = {
     "field_reports.total": "Toplam Raporlar",
     "field_reports.workforce_hours": "Çalışma Saatleri",
     "field_reports.empty": "Henüz rapor yok",
-    "field_reports.empty_desc": "İnşaat ilerlemesini belgelemeye başlamak için ilk günlük raporunuzu oluşturun",
+    "field_reports.empty_desc":
+      "İnşaat ilerlemesini belgelemeye başlamak için ilk günlük raporunuzu oluşturun",
     "nav.photos": "Proje Fotoğrafları",
     "photos.title": "Proje Fotoğrafları",
     "photos.upload": "Fotoğraf Yükle",
-    "photos.upload_hint": "Fotoğrafları sürükleyip bırakın veya göz atmak için tıklayın",
+    "photos.upload_hint":
+      "Fotoğrafları sürükleyip bırakın veya göz atmak için tıklayın",
     "photos.caption": "Başlık",
     "photos.category": "Kategori",
     "photos.cat_site": "Şantiye",
@@ -1460,22 +1610,26 @@ const resource = {
     "photos.grid": "Izgara",
     "photos.timeline": "Zaman Çizelgesi",
     "photos.empty": "Henüz fotoğraf yok",
-    "photos.empty_desc": "İlerlemeyi belgelemek için şantiye fotoğrafları yükleyin",
+    "photos.empty_desc":
+      "İlerlemeyi belgelemek için şantiye fotoğrafları yükleyin",
     "photos.delete_confirm": "Bu fotoğraf silinsin mi?",
     "photos.edit": "Fotoğrafı Düzenle",
     "onboarding.ai_feature_1": "Metin açıklamalarından tahmin oluşturun",
     "onboarding.ai_feature_2": "Bina fotoğraflarını analiz edin",
     "onboarding.ai_feature_3": "PDF belgelerini otomatik ayrıştırın",
     "onboarding.ai_saved": "Yapay zeka ayarları kaydedildi",
-    "onboarding.ai_subtitle": "Akıllı özellikler için bir yapay zeka sağlayıcısı bağlayın:",
+    "onboarding.ai_subtitle":
+      "Akıllı özellikler için bir yapay zeka sağlayıcısı bağlayın:",
     "onboarding.ai_test_error": "Test başarısız oldu",
     "onboarding.ai_test_failed": "Bağlantı başarısız oldu",
     "onboarding.ai_test_success": "Bağlantı başarılı!",
     "onboarding.ai_title": "Yapay Zeka Sağlayıcısı (İsteğe Bağlı)",
     "onboarding.api_key": "API Anahtarı",
     "onboarding.api_key_placeholder": "API anahtarınızı buraya yapıştırın...",
-    "onboarding.cost_db_hint": "Daha sonra Maliyet Veritabanı → İçe Aktar bölümünden daha fazla veritabanı ekleyebilirsiniz.",
-    "onboarding.cost_db_subtitle": "Doğru tahminler için bir birim fiyat listesi yükleyin. Bölgenizi seçin:",
+    "onboarding.cost_db_hint":
+      "Daha sonra Maliyet Veritabanı → İçe Aktar bölümünden daha fazla veritabanı ekleyebilirsiniz.",
+    "onboarding.cost_db_subtitle":
+      "Doğru tahminler için bir birim fiyat listesi yükleyin. Bölgenizi seçin:",
     "onboarding.cost_db_title": "Maliyet Veritabanı",
     "onboarding.create_error": "Proje oluşturulamadı",
     "onboarding.create_project": "Oluştur ve Tahmine Başla",
@@ -1485,7 +1639,8 @@ const resource = {
     "onboarding.get_started": "Başlayın",
     "onboarding.items_loaded": "kalem yüklendi",
     "onboarding.loading_database": "Veritabanı içe aktarılıyor...",
-    "onboarding.loading_database_hint": "~55.000 kalem yükleniyor. Bu 1-3 dakika sürer.",
+    "onboarding.loading_database_hint":
+      "~55.000 kalem yükleniyor. Bu 1-3 dakika sürer.",
     "onboarding.project_created": "Proje oluşturuldu!",
     "onboarding.project_created_msg": "Çalışma alanınız hazır.",
     "onboarding.project_error": "Proje oluşturulamadı",
@@ -1501,7 +1656,8 @@ const resource = {
     "onboarding.test_connection": "Bağlantıyı Test Et",
     "onboarding.testing": "Test ediliyor...",
     "onboarding.welcome_hint": "Ücretsiz ve açık kaynak. Kredi kartı gerekmez.",
-    "onboarding.welcome_subtitle": "Profesyonel inşaat maliyet tahmin platformu.\nBirkaç basit adımda çalışma alanınızı kurun.",
+    "onboarding.welcome_subtitle":
+      "Profesyonel inşaat maliyet tahmin platformu.\nBirkaç basit adımda çalışma alanınızı kurun.",
     "onboarding.welcome_title": "OpenConstructionERP'ya Hoş Geldiniz",
     "onboarding.tour_step": "Tur adımı",
     "onboarding.step_label": "Adım",
@@ -1510,15 +1666,20 @@ const resource = {
     "onboarding.next": "İleri",
     "onboarding.finish": "Bitir",
     "onboarding.step1.title": "Gezinme Kenar Çubuğu",
-    "onboarding.step1.description": "Kenar çubuğu tüm modüllere hızlı erişim sağlar: projeler, tahminler, maliyet veritabanları, iş programları ve daha fazlası.",
+    "onboarding.step1.description":
+      "Kenar çubuğu tüm modüllere hızlı erişim sağlar: projeler, tahminler, maliyet veritabanları, iş programları ve daha fazlası.",
     "onboarding.step2.title": "Projeler",
-    "onboarding.step2.description": "İlk projenizi oluşturarak buradan başlayın. Her proje metrajları, iş programlarını ve belgeleri tek bir yerde tutar.",
+    "onboarding.step2.description":
+      "İlk projenizi oluşturarak buradan başlayın. Her proje metrajları, iş programlarını ve belgeleri tek bir yerde tutar.",
     "onboarding.step3.title": "Keşif Özeti",
-    "onboarding.step3.description": "Metraj editörüyle ayrıntılı tahminler oluşturun — hiyerarşik pozisyonlar, imalat analizleri ve gerçek zamanlı maliyet hesaplama.",
+    "onboarding.step3.description":
+      "Metraj editörüyle ayrıntılı tahminler oluşturun — hiyerarşik pozisyonlar, imalat analizleri ve gerçek zamanlı maliyet hesaplama.",
     "onboarding.step4.title": "Maliyet Veritabanları",
-    "onboarding.step4.description": "9 dilde 55.000'den fazla pozisyon içeren yerleşik CWICR dahil maliyet birim fiyat veritabanlarını gözatın ve yönetin.",
+    "onboarding.step4.description":
+      "9 dilde 55.000'den fazla pozisyon içeren yerleşik CWICR dahil maliyet birim fiyat veritabanlarını gözatın ve yönetin.",
     "onboarding.step5.title": "Basit / Gelişmiş Mod",
-    "onboarding.step5.description": "Basit mod (temel araçlar) ve Gelişmiş mod (ihale ve iş programı dahil tüm özellikler) arasında geçiş yapın.",
+    "onboarding.step5.description":
+      "Basit mod (temel araçlar) ve Gelişmiş mod (ihale ve iş programı dahil tüm özellikler) arasında geçiş yapın.",
     "projects.4d_schedule": "4B İş Programı",
     "projects.5d_budget": "5B Bütçe",
     "projects.active": "aktif",
@@ -1550,19 +1711,26 @@ const resource = {
     "projects.name_placeholder": "ör. Şehir Merkezi Ofis Kulesi",
     "projects.new_boq": "Yeni Metraj",
     "projects.new_project": "Yeni Proje",
-    "projects.create_hint": "Bölge, mevcut maliyet veritabanlarını ve KDV oranlarını belirler. Sınıflandırma standardı maliyet yapısını tanımlar: DACH ülkeleri için DIN 276, İngiltere için NRM, ABD/Kanada için MasterFormat, Okyanusya için UniFormat. Para birimi metrajdaki tüm fiyatlandırmayı belirler.",
+    "projects.create_hint":
+      "Bölge, mevcut maliyet veritabanlarını ve KDV oranlarını belirler. Sınıflandırma standardı maliyet yapısını tanımlar: DACH ülkeleri için DIN 276, İngiltere için NRM, ABD/Kanada için MasterFormat, Okyanusya için UniFormat. Para birimi metrajdaki tüm fiyatlandırmayı belirler.",
     "projects.no_boqs": "Henüz metraj yok",
-    "projects.no_boqs_desc": "Bu proje için maliyet tahminine başlamak üzere bir keşif özeti oluşturun.",
+    "projects.no_boqs_desc":
+      "Bu proje için maliyet tahminine başlamak üzere bir keşif özeti oluşturun.",
     "projects.no_budget": "Bütçe verisi yok",
-    "projects.no_budget_desc": "Planlanan ve gerçekleşen maliyetleri takip etmek için 5B maliyet modeli oluşturun.",
+    "projects.no_budget_desc":
+      "Planlanan ve gerçekleşen maliyetleri takip etmek için 5B maliyet modeli oluşturun.",
     "projects.no_projects": "Henüz proje yok",
-    "projects.no_projects_description": "İlk inşaat maliyet tahmin projenizi oluşturun",
+    "projects.no_projects_description":
+      "İlk inşaat maliyet tahmin projenizi oluşturun",
     "projects.no_results": "Eşleşen proje yok",
-    "projects.no_results_hint": "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
+    "projects.no_results_hint":
+      "Aramanızı veya filtrelerinizi ayarlamayı deneyin",
     "projects.no_schedules": "Henüz iş programı yok",
-    "projects.no_schedules_desc": "Proje zaman çizelgelerini yönetmek için bir iş programı oluşturun.",
+    "projects.no_schedules_desc":
+      "Proje zaman çizelgelerini yönetmek için bir iş programı oluşturun.",
     "projects.no_tenders": "İhale paketi yok",
-    "projects.no_tenders_desc": "Bu proje için ihale sürecini yönetmek üzere ihale paketleri oluşturun.",
+    "projects.no_tenders_desc":
+      "Bu proje için ihale sürecini yönetmek üzere ihale paketleri oluşturun.",
     "projects.not_found": "Proje bulunamadı",
     "projects.not_found_desc": "Aradığınız proje mevcut değil veya silinmiş.",
     "projects.of": "/",
@@ -1577,7 +1745,8 @@ const resource = {
     "projects.projects_label": "proje",
     "projects.region": "Bölge",
     "projects.regional_factor": "Bölgesel Katsayı",
-    "projects.regional_factor_hint": "Tüm birim fiyatları bu katsayıyla çarpın (ör. İstanbul = 1,12, Ankara = 1,05)",
+    "projects.regional_factor_hint":
+      "Tüm birim fiyatları bu katsayıyla çarpın (ör. İstanbul = 1,12, Ankara = 1,05)",
     "projects.remaining": "Kalan",
     "projects.schedule_subtitle": "Proje iş programları ve zaman çizelgesi",
     "projects.search_placeholder": "Proje ara...",
@@ -1604,51 +1773,66 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Yakında",
     "quantities.how_it_works": "Nasıl çalışır",
-    "quantities.manual_desc": "Miktarları doğrudan mı eklemeniz gerekiyor? Metraj Editörüne gidin.",
+    "quantities.manual_desc":
+      "Miktarları doğrudan mı eklemeniz gerekiyor? Metraj Editörüne gidin.",
     "quantities.manual_title": "Hızlı Manuel Giriş",
-    "quantities.method_ai_desc": "Yapınızı tanımlayın, yapay zeka tahmini hacimler ve maliyetlerle bir keşif özeti oluşturacaktır.",
+    "quantities.method_ai_desc":
+      "Yapınızı tanımlayın, yapay zeka tahmini hacimler ve maliyetlerle bir keşif özeti oluşturacaktır.",
     "quantities.method_ai_title": "Yapay Zeka Metin Girişi",
-    "quantities.method_cad_desc": "DWG, RVT, IFC veya DGN dosyalarını içe aktarın ve miktarları doğrudan 3B geometriden çıkarın.",
+    "quantities.method_cad_desc":
+      "DWG, RVT, IFC veya DGN dosyalarını içe aktarın ve miktarları doğrudan 3B geometriden çıkarın.",
     "quantities.method_cad_title": "CAD / BIM Modelleri",
-    "quantities.method_pdf_desc": "İnşaat çizimlerini (PDF) yükleyin ve yapay zeka destekli metraj çıkarma ile miktarları otomatik olarak çıkarın.",
+    "quantities.method_pdf_desc":
+      "İnşaat çizimlerini (PDF) yükleyin ve yapay zeka destekli metraj çıkarma ile miktarları otomatik olarak çıkarın.",
     "quantities.method_pdf_title": "PDF Çizimler",
     "quantities.open": "Aç",
     "quantities.open_boq": "Metraj Editörünü Aç",
-    "quantities.step1_desc": "Giriş yönteminizi seçin: metin, PDF veya CAD modeli.",
+    "quantities.step1_desc":
+      "Giriş yönteminizi seçin: metin, PDF veya CAD modeli.",
     "quantities.step1_title": "Yükleyin veya tanımlayın",
-    "quantities.step2_desc": "Yapay zekamız girdinizi analiz eder ve yapılandırılmış miktarları çıkarır.",
+    "quantities.step2_desc":
+      "Yapay zekamız girdinizi analiz eder ve yapılandırılmış miktarları çıkarır.",
     "quantities.step2_title": "Yapay zeka miktarları çıkarır",
     "quantities.step3_desc": "Sonuçları doğrulayın ve keşif özetinize ekleyin.",
     "quantities.step3_title": "Gözden geçir ve metraja ekle",
-    "quantities.subtitle": "Proje miktarlarını toplayın — yapay zeka metin girişi, PDF çizimler veya CAD/BIM modellerinden",
+    "quantities.subtitle":
+      "Proje miktarlarını toplayın — yapay zeka metin girişi, PDF çizimler veya CAD/BIM modellerinden",
     "quantities.converter_title": "CAD/BIM Dönüşümü Nasıl Çalışır",
-    "quantities.converter_desc": "CAD/BIM dosyalarınızı (.rvt, .ifc, .dwg, .dgn) yükleyin, DDC dönüştürücü tüm elemanları yapılandırılmış bir tabloya çıkarır — duvarlar, döşemeler, kolonlar, kapılar, pencereler — hesaplanmış hacimler, alanlar ve miktarlarla. Yapay zeka daha sonra bu elemanları maliyet kalemlerine eşler ve otomatik olarak eksiksiz bir metraj oluşturur.",
+    "quantities.converter_desc":
+      "CAD/BIM dosyalarınızı (.rvt, .ifc, .dwg, .dgn) yükleyin, DDC dönüştürücü tüm elemanları yapılandırılmış bir tabloya çıkarır — duvarlar, döşemeler, kolonlar, kapılar, pencereler — hesaplanmış hacimler, alanlar ve miktarlarla. Yapay zeka daha sonra bu elemanları maliyet kalemlerine eşler ve otomatik olarak eksiksiz bir metraj oluşturur.",
     "quantities.download_converters": "DDC Dönüştürücüleri İndir",
     "quantities.converter_path": "Şuraya kurun: ~/.openestimator/converters/",
     "quantities.title": "Metraj Çıkarma",
     "reports.5d_report": "5B Maliyet Raporu",
-    "reports.5d_report_desc": "S-eğrisi ve maliyet tahmini ile bütçe - gerçekleşen analizi.",
+    "reports.5d_report_desc":
+      "S-eğrisi ve maliyet tahmini ile bütçe - gerçekleşen analizi.",
     "reports.boq_report": "Metraj Raporu",
-    "reports.boq_report_desc": "Bölümler, pozisyonlar, kâr/giderler ve toplamlarla tam keşif özeti. PDF veya Excel olarak mevcuttur.",
+    "reports.boq_report_desc":
+      "Bölümler, pozisyonlar, kâr/giderler ve toplamlarla tam keşif özeti. PDF veya Excel olarak mevcuttur.",
     "reports.coming_soon": "Yakında",
     "reports.cost_report": "Maliyet Raporu",
-    "reports.cost_report_desc": "Özet grafikler ve ayrıntılı maliyet analizi ile kategoriye göre maliyet dağılımı.",
+    "reports.cost_report_desc":
+      "Özet grafikler ve ayrıntılı maliyet analizi ile kategoriye göre maliyet dağılımı.",
     "reports.download_error": "Rapor oluşturulamadı",
     "reports.download_format": "{{format}} İndir",
     "reports.download_success": "Rapor başarıyla indirildi",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc": "GAEB X83 ihale dışa aktarması — DACH inşaat pazarı için standart değişim formatı.",
+    "reports.gaeb_xml_desc":
+      "GAEB X83 ihale dışa aktarması — DACH inşaat pazarı için standart değişim formatı.",
     "reports.no_boqs": "Bu projede metraj yok",
     "reports.no_projects": "Mevcut proje yok",
     "reports.schedule_report": "İş Programı Raporu",
-    "reports.schedule_report_desc": "Proje zaman çizelgesi, kilometre taşları ve kritik yol ile Gantt şeması.",
+    "reports.schedule_report_desc":
+      "Proje zaman çizelgesi, kilometre taşları ve kritik yol ile Gantt şeması.",
     "reports.select_boq_first": "Lütfen önce bir proje ve metraj seçin",
     "reports.select_project_first": "Lütfen önce bir proje seçin",
     "reports.subtitle": "Projeleriniz için profesyonel raporlar oluşturun",
-    "reports.guide_desc": "Metraj Raporu = toplamlarla ayrıntılı keşif özeti. Maliyet Raporu = kategoriye göre maliyet dağılımı. GAEB XML = taşeron değişimi için Alman ihale formatı (.x83). Doğrulama = uyumluluk kontrol sonuçları. İş Programı = Gantt faaliyetleri özeti. 5B = bütçe - gerçekleşen maliyet eğrileri.",
+    "reports.guide_desc":
+      "Metraj Raporu = toplamlarla ayrıntılı keşif özeti. Maliyet Raporu = kategoriye göre maliyet dağılımı. GAEB XML = taşeron değişimi için Alman ihale formatı (.x83). Doğrulama = uyumluluk kontrol sonuçları. İş Programı = Gantt faaliyetleri özeti. 5B = bütçe - gerçekleşen maliyet eğrileri.",
     "reports.title": "Raporlar",
     "reports.validation_report": "Doğrulama Raporu",
-    "reports.validation_report_desc": "DIN 276, NRM veya MasterFormat standartlarına göre uyumluluk kontrol raporu.",
+    "reports.validation_report_desc":
+      "DIN 276, NRM veya MasterFormat standartlarına göre uyumluluk kontrol raporu.",
     "schedule.activity": "Faaliyet",
     "schedule.activity_name": "Faaliyet Adı",
     "schedule.activity_name_placeholder": "ör. Temel İşleri",
@@ -1659,7 +1843,8 @@ const resource = {
     "schedule.buffer": "Tampon",
     "schedule.calculate_cpm": "Kritik Yol",
     "schedule.completed": "Tamamlandı",
-    "schedule.cpm_result": "Kritik Yol: {{duration}} gün, {{count}} kritik faaliyet",
+    "schedule.cpm_result":
+      "Kritik Yol: {{duration}} gün, {{count}} kritik faaliyet",
     "schedule.create_activity": "Faaliyet Oluştur",
     "schedule.create_schedule": "İş Programı Oluştur",
     "schedule.critical_path": "Kritik Yol",
@@ -1674,32 +1859,39 @@ const resource = {
     "schedule.fifty_pct_confidence": "%50 güvenilirlik",
     "schedule.generate": "Oluştur",
     "schedule.generate_from_boq": "Metrajdan Oluştur",
-    "schedule.generate_from_boq_description": "İş programı faaliyetlerini otomatik oluşturmak için bir metraj seçin. Maliyet orantılı sürelerde her metraj bölümü için bir faaliyet oluşturulacaktır.",
+    "schedule.generate_from_boq_description":
+      "İş programı faaliyetlerini otomatik oluşturmak için bir metraj seçin. Maliyet orantılı sürelerde her metraj bölümü için bir faaliyet oluşturulacaktır.",
     "schedule.in_progress": "Devam Ediyor",
     "schedule.mean_label": "Ortalama (kritik yol)",
     "schedule.ninetyfive_pct_confidence": "%95 güvenilirlik",
     "schedule.no_activities": "Henüz faaliyet yok",
-    "schedule.no_activities_hint": "Proje iş programınızı oluşturmak için faaliyetler ekleyin",
+    "schedule.no_activities_hint":
+      "Proje iş programınızı oluşturmak için faaliyetler ekleyin",
     "schedule.no_boqs_available": "Bu proje için mevcut metraj yok.",
     "schedule.no_dates": "Tarih belirlenmedi",
     "schedule.no_projects": "Mevcut proje yok",
-    "schedule.no_projects_hint": "Önce bir proje oluşturun, ardından iş programları ekleyin",
+    "schedule.no_projects_hint":
+      "Önce bir proje oluşturun, ardından iş programları ekleyin",
     "schedule.no_schedules": "Henüz iş programı yok",
-    "schedule.no_schedules_hint": "Proje zaman çizelgenizi planlamaya başlamak için bir iş programı oluşturun",
+    "schedule.no_schedules_hint":
+      "Proje zaman çizelgenizi planlamaya başlamak için bir iş programı oluşturun",
     "schedule.planned_duration": "Planlanan süre",
     "schedule.project_schedules": "Bu projenin iş programları",
     "schedule.risk_analysis": "Risk Analizi (PERT)",
     "schedule.risk_analysis_btn": "Risk Analizi",
     "schedule.schedule_name": "İş Programı Adı",
     "schedule.schedule_name_placeholder": "ör. Ana İnşaat İş Programı",
-    "schedule.select_project": "İnşaat iş programını görüntülemek ve yönetmek için bir proje seçin",
+    "schedule.select_project":
+      "İnşaat iş programını görüntülemek ve yönetmek için bir proje seçin",
     "schedule.start": "Başlangıç",
     "schedule.start_date": "Başlangıç Tarihi",
     "schedule.status_active": "aktif",
     "schedule.status_draft": "taslak",
     "schedule.std_dev_label": "Std. sapma",
-    "schedule.subtitle": "İnşaat iş programını görüntülemek ve yönetmek için bir proje seçin",
-    "schedule.what_is_4d": "4B iş programı, metraj pozisyonlarınızı proje zaman çizelgesine bağlar. Faaliyetler oluşturun, bağımlılıkları ayarlayın ve ilerlemeyi Gantt şemasında görselleştirin. Kritik yol analizi, proje bitiş tarihini doğrudan etkileyen faaliyetleri vurgular. Faaliyet türleri: Görev = iş kalemi, Kilometre taşı = sıfır süreli kontrol noktası, Özet = gruplama başlığı.",
+    "schedule.subtitle":
+      "İnşaat iş programını görüntülemek ve yönetmek için bir proje seçin",
+    "schedule.what_is_4d":
+      "4B iş programı, metraj pozisyonlarınızı proje zaman çizelgesine bağlar. Faaliyetler oluşturun, bağımlılıkları ayarlayın ve ilerlemeyi Gantt şemasında görselleştirin. Kritik yol analizi, proje bitiş tarihini doğrudan etkileyen faaliyetleri vurgular. Faaliyet türleri: Görev = iş kalemi, Kilometre taşı = sıfır süreli kontrol noktası, Özet = gruplama başlığı.",
     "schedule.title": "4B İş Programı",
     "schedule.total_activities": "Toplam",
     "schedule.type_milestone": "Kilometre Taşı",
@@ -1715,14 +1907,17 @@ const resource = {
     "settings.active": "Aktif",
     "settings.ai_api_key": "API Anahtarı",
     "settings.ai_connected": "Bağlandı",
-    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — inşaat maliyet tahmini için en iyi",
+    "settings.ai_desc_anthropic":
+      "Claude 3.5 Sonnet / Opus — inşaat maliyet tahmini için en iyi",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — çok modlu yetenekler",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — geniş destek",
     "settings.ai_error": "Bağlantı hatası",
     "settings.ai_get_key": "API anahtarı alın",
-    "settings.ai_key_hint": "API anahtarınız şifrelenerek güvenli bir şekilde saklanır. Asla paylaşılmaz.",
+    "settings.ai_key_hint":
+      "API anahtarınız şifrelenerek güvenli bir şekilde saklanır. Asla paylaşılmaz.",
     "settings.ai_key_placeholder": "API anahtarınızı girin...",
-    "settings.ai_key_placeholder_existing": "Mevcut anahtarı değiştirmek için yeni anahtar girin...",
+    "settings.ai_key_placeholder_existing":
+      "Mevcut anahtarı değiştirmek için yeni anahtar girin...",
     "settings.ai_key_set": "Anahtar yapılandırıldı",
     "settings.ai_last_tested": "(son test: {{time}})",
     "settings.ai_not_configured": "Yapılandırılmadı",
@@ -1731,7 +1926,8 @@ const resource = {
     "settings.ai_save_btn": "Ayarları Kaydet",
     "settings.ai_save_error": "Ayarlar kaydedilemedi",
     "settings.ai_saved": "Yapay zeka ayarları kaydedildi",
-    "settings.ai_subtitle": "Tahmin ve analiz için yapay zeka sağlayıcınızı seçin",
+    "settings.ai_subtitle":
+      "Tahmin ve analiz için yapay zeka sağlayıcınızı seçin",
     "settings.ai_test": "Bağlantıyı Test Et",
     "settings.ai_test_error": "Test başarısız oldu",
     "settings.ai_test_failed": "Bağlantı başarısız oldu",
@@ -1753,7 +1949,8 @@ const resource = {
     "settings.sign_out": "Çıkış Yap",
     "settings.status": "Durum",
     "settings.subtitle": "Hesabınızı ve tercihlerinizi yönetin",
-    "settings.ai_guidance": "Yapay zeka özellikleri (tahmin, metraj çıkarma analizi, anlamsal arama) bir API anahtarı gerektirir. En iyi doğruluk için Anthropic Claude önerilir. Anahtarlar şifrelenerek saklanır ve sunucunuzdan asla ayrılmaz.",
+    "settings.ai_guidance":
+      "Yapay zeka özellikleri (tahmin, metraj çıkarma analizi, anlamsal arama) bir API anahtarı gerektirir. En iyi doğruluk için Anthropic Claude önerilir. Anahtarlar şifrelenerek saklanır ve sunucunuzdan asla ayrılmaz.",
     "settings.theme_dark": "Koyu",
     "settings.theme_light": "Açık",
     "settings.theme_system": "Sistem",
@@ -1762,7 +1959,8 @@ const resource = {
     "shortcuts.cancel_editing": "Düzenlemeyi iptal et",
     "shortcuts.command_palette": "Komut Paleti",
     "shortcuts.confirm_next_row": "Onayla / Sonraki satır",
-    "shortcuts.footer_hint": "Giriş alanlarına odaklanıldığında kısayollar devre dışı bırakılır.",
+    "shortcuts.footer_hint":
+      "Giriş alanlarına odaklanıldığında kısayollar devre dışı bırakılır.",
     "shortcuts.group.actions": "İşlemler",
     "shortcuts.group.boq_editor": "Metraj Editörü",
     "shortcuts.group.general": "Genel",
@@ -1788,38 +1986,47 @@ const resource = {
     "shortcuts.separator_then": "sonra",
     "shortcuts.show_help": "Bu iletişim kutusunu göster",
     "shortcuts.title": "Klavye Kısayolları",
-    "errors.bad_request": "İstek işlenemedi. Lütfen girdilerinizi kontrol edin.",
-    "errors.unauthorized": "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
+    "errors.bad_request":
+      "İstek işlenemedi. Lütfen girdilerinizi kontrol edin.",
+    "errors.unauthorized":
+      "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
     "errors.forbidden": "Bu işlem için izniniz yok.",
     "errors.not_found": "İstenen öğe bulunamadı.",
     "errors.conflict": "Mevcut verilerle çakışıyor — yenileyip tekrar deneyin.",
-    "errors.payload_too_large": "Dosya çok büyük. Daha küçük bir dosya deneyin.",
-    "errors.validation": "Bazı alanlar geçersiz. Lütfen girdilerinizi gözden geçirin.",
+    "errors.payload_too_large":
+      "Dosya çok büyük. Daha küçük bir dosya deneyin.",
+    "errors.validation":
+      "Bazı alanlar geçersiz. Lütfen girdilerinizi gözden geçirin.",
     "errors.rate_limit": "Çok fazla istek. Lütfen biraz bekleyin.",
     "errors.server": "Sunucu hatası. Lütfen tekrar deneyin.",
-    "errors.unavailable": "Sunucu geçici olarak kullanılamıyor. Lütfen kısa süre sonra tekrar deneyin.",
+    "errors.unavailable":
+      "Sunucu geçici olarak kullanılamıyor. Lütfen kısa süre sonra tekrar deneyin.",
     "errors.client": "İstek tamamlanamadı.",
     "errors.unknown": "Bir hata oluştu. Lütfen tekrar deneyin.",
     "errors.network": "Sunucuya ulaşılamadı. Bağlantınızı kontrol edin.",
-    "errors.timeout": "İstek çok uzun sürdü ve iptal edildi. Lütfen tekrar deneyin.",
+    "errors.timeout":
+      "İstek çok uzun sürdü ve iptal edildi. Lütfen tekrar deneyin.",
     "shortcuts.undo": "Geri Al",
     "sustainability.area": "Alan (m2)",
     "sustainability.benchmark": "Kıyaslama",
     "sustainability.boq": "Metraj",
     "sustainability.breakdown_title": "Malzemeye Göre Dağılım",
     "sustainability.calculate": "Hesapla",
-    "sustainability.empty_desc": "Yukarıdan bir proje ve metraj seçin, ardından malzeme türlerine göre CO2 emisyonlarını analiz etmek için Hesapla'ya tıklayın.",
+    "sustainability.empty_desc":
+      "Yukarıdan bir proje ve metraj seçin, ardından malzeme türlerine göre CO2 emisyonlarını analiz etmek için Hesapla'ya tıklayın.",
     "sustainability.empty_title": "CO2 ayak izi analizi",
     "sustainability.export_pdf": "CO2 Raporu PDF Dışa Aktar",
     "sustainability.material": "Malzeme",
-    "sustainability.no_area": "m2 başına kıyaslamayı görmek için proje alanını girin",
+    "sustainability.no_area":
+      "m2 başına kıyaslamayı görmek için proje alanını girin",
     "sustainability.positions_matched": "pozisyon eşleşti",
     "sustainability.project": "Proje",
     "sustainability.project_area": "proje",
     "sustainability.rating": "Derecelendirme",
     "sustainability.select_boq": "-- Metraj seçin --",
     "sustainability.select_project": "-- Proje seçin --",
-    "sustainability.subtitle": "CO2 ayak izini analiz etmek için proje ve metraj seçin",
+    "sustainability.subtitle":
+      "CO2 ayak izini analiz etmek için proje ve metraj seçin",
     "sustainability.title": "Sürdürülebilirlik / CO2",
     "sustainability.total_co2": "Toplam CO2",
     "takeoff.add_selected_to_boq": "{{count}} kalemi metraja ekle",
@@ -1841,7 +2048,8 @@ const resource = {
     "takeoff.just_now": "Az önce",
     "takeoff.minutes_ago": "{{count}} dk önce",
     "takeoff.no_documents": "Belge yüklenmedi",
-    "takeoff.no_documents_description": "Yapay zeka ile miktar çıkarmaya başlamak için PDF inşaat çizimlerini yükleyin.",
+    "takeoff.no_documents_description":
+      "Yapay zeka ile miktar çıkarmaya başlamak için PDF inşaat çizimlerini yükleyin.",
     "takeoff.pages": "sayfa",
     "takeoff.pdf_limit": "{{size}}MB'a kadar .pdf dosyaları",
     "takeoff.quick_measurements": "Hızlı Ölçümler",
@@ -1849,14 +2057,16 @@ const resource = {
     "takeoff.select_all": "Tümünü seç",
     "takeoff.select_boq": "Keşif Özeti",
     "takeoff.select_boq_placeholder": "Bir metraj seçin...",
-    "takeoff.select_boq_to_add": "Ölçümleri eklemek için yukarıdan bir proje ve metraj seçin.",
+    "takeoff.select_boq_to_add":
+      "Ölçümleri eklemek için yukarıdan bir proje ve metraj seçin.",
     "takeoff.select_items_hint": "Metraja eklemek için kalemleri seçin",
     "takeoff.select_project": "Proje",
     "takeoff.select_project_first": "Önce bir proje seçin",
     "takeoff.select_project_placeholder": "Bir proje seçin...",
     "takeoff.selected": "seçildi",
     "takeoff.subtitle": "Miktar çıkarmak için inşaat çizimlerini yükleyin",
-    "takeoff.workflow_desc": "PDF çizim yükleyin → Yapay zeka sayfaları analiz eder ve miktarlarıyla birlikte elemanları çıkarır (duvarlar, döşemeler, kapılar vb.) → Sonuçları gözden geçirin ve düzenleyin → Seçilen kalemleri metrajınıza ekleyin. Güvenilirlik puanları: yeşil (>%80) = yüksek güvenilirlik, sarı (%50-80) = gözden geçirme önerilir, kırmızı (<%50) = manuel doğrulama gerekli.",
+    "takeoff.workflow_desc":
+      "PDF çizim yükleyin → Yapay zeka sayfaları analiz eder ve miktarlarıyla birlikte elemanları çıkarır (duvarlar, döşemeler, kapılar vb.) → Sonuçları gözden geçirin ve düzenleyin → Seçilen kalemleri metrajınıza ekleyin. Güvenilirlik puanları: yeşil (>%80) = yüksek güvenilirlik, sarı (%50-80) = gözden geçirme önerilir, kırmızı (<%50) = manuel doğrulama gerekli.",
     "takeoff.summary": "Özet",
     "takeoff.title": "PDF Metraj Çıkarma",
     "takeoff.total_quantity": "toplam",
@@ -1871,7 +2081,8 @@ const resource = {
     "tendering.award": "İhale Et",
     "tendering.award_bid": "Bu teklifi kabul et",
     "tendering.bid_comparison": "Teklif Karşılaştırması",
-    "tendering.bid_comparison_chart_label": "Teklif toplamlarını karşılaştıran çubuk grafik",
+    "tendering.bid_comparison_chart_label":
+      "Teklif toplamlarını karşılaştıran çubuk grafik",
     "tendering.bid_totals_chart": "Teklif Toplamları Genel Bakış",
     "tendering.bids_count": "teklif",
     "tendering.bids_received": "Alınan Teklifler",
@@ -1907,7 +2118,8 @@ const resource = {
     "tendering.source_boq": "Kaynak Metraj",
     "tendering.submit_bid": "Teklif Ver",
     "tendering.title": "İhale",
-    "tendering.workflow_desc": "İhale iş akışı: Taslak (paketi hazırla) → Gönderildi (teklif verenlere gönder) → Toplama (teklifleri al) → Değerlendirme (teklifleri yan yana karşılaştır) → İhale Edildi (kazananı seç). Bir metrajdan paket oluşturun, taşeron tekliflerini ekleyin, ardından en iyi teklifi belirlemek için karşılaştırma tablosunu kullanın. Yan yana analiz görmek için 2+ teklif ekleyin.",
+    "tendering.workflow_desc":
+      "İhale iş akışı: Taslak (paketi hazırla) → Gönderildi (teklif verenlere gönder) → Toplama (teklifleri al) → Değerlendirme (teklifleri yan yana karşılaştır) → İhale Edildi (kazananı seç). Bir metrajdan paket oluşturun, taşeron tekliflerini ekleyin, ardından en iyi teklifi belirlemek için karşılaştırma tablosunu kullanın. Yan yana analiz görmek için 2+ teklif ekleyin.",
     "tendering.total": "TOPLAM",
     "tendering.total_amount": "Toplam Tutar",
     "tendering.vs_budget": "bütçeye karşı",
@@ -1967,7 +2179,8 @@ const resource = {
     "cde.label_revisions": "Revizyon Geçmişi",
     "cde.new_container": "Yeni Konteyner",
     "cde.no_containers": "Henüz konteyner yok",
-    "cde.no_containers_hint": "Başlamak için ilk belge konteynerinizi oluşturun.",
+    "cde.no_containers_hint":
+      "Başlamak için ilk belge konteynerinizi oluşturun.",
     "cde.no_results": "Eşleşen konteyner yok",
     "cde.no_results_hint": "Arama veya filtrelerinizi ayarlamayı deneyin.",
     "cde.no_revisions": "Revizyon kaydedilmedi",
@@ -2060,7 +2273,8 @@ const resource = {
     "correspondence.no_entries": "Henüz yazışma yok",
     "correspondence.no_entries_hint": "Başlamak için ilk yazışmayı kaydedin.",
     "correspondence.no_results": "Eşleşen kayıt yok",
-    "correspondence.no_results_hint": "Arama veya filtrelerinizi ayarlamayı deneyin.",
+    "correspondence.no_results_hint":
+      "Arama veya filtrelerinizi ayarlamayı deneyin.",
     "correspondence.notes_placeholder": "Ek notlar...",
     "correspondence.page_title": "Yazışma Günlüğü",
     "correspondence.search_placeholder": "Yazışma ara...",
@@ -2103,14 +2317,19 @@ const resource = {
     "finance.mark_paid": "Ödenmiş İşaretle",
     "finance.method": "Method",
     "finance.no_budgets": "Bütçe tanımlanmadı",
-    "finance.no_budgets_desc": "Tanımlandıktan sonra bütçe kalemleri burada görünecektir.",
+    "finance.no_budgets_desc":
+      "Tanımlandıktan sonra bütçe kalemleri burada görünecektir.",
     "finance.no_evm": "EVM verisi yok",
-    "finance.no_evm_desc": "Anlık görüntüler alındıktan sonra kazanılmış değer verileri görünecektir.",
+    "finance.no_evm_desc":
+      "Anlık görüntüler alındıktan sonra kazanılmış değer verileri görünecektir.",
     "finance.no_invoices": "Fatura yok",
-    "finance.no_invoices_desc": "Oluşturulduktan sonra faturalar burada görünecektir.",
+    "finance.no_invoices_desc":
+      "Oluşturulduktan sonra faturalar burada görünecektir.",
     "finance.no_payments": "Ödeme yok",
-    "finance.no_payments_desc": "Kaydedildikten sonra ödemeler burada görünecektir.",
-    "finance.no_project": "Finansal verileri görüntülemek için bir proje seçin.",
+    "finance.no_payments_desc":
+      "Kaydedildikten sonra ödemeler burada görünecektir.",
+    "finance.no_project":
+      "Finansal verileri görüntülemek için bir proje seçin.",
     "finance.on_track": "Yolunda",
     "finance.original": "Original",
     "finance.payable": "Payable",
@@ -2161,7 +2380,8 @@ const resource = {
     "inspections.no_inspections": "Henüz denetim yok",
     "inspections.no_inspections_hint": "Başlamak için ilk denetimi planlayın.",
     "inspections.no_results": "Eşleşen denetim yok",
-    "inspections.no_results_hint": "Arama veya filtrelerinizi ayarlamayı deneyin.",
+    "inspections.no_results_hint":
+      "Arama veya filtrelerinizi ayarlamayı deneyin.",
     "inspections.page_title": "Inspections",
     "inspections.search_placeholder": "Denetim ara...",
     "inspections.select_project": "Project...",
@@ -2261,15 +2481,19 @@ const resource = {
     "notifications.title": "Bildirimler",
     "notifications.unread": "Unread",
     "notifications.boq.created.title": "Metraj listesi oluşturuldu",
-    "notifications.boq.created.body": "Metraj listeniz '{{boq_name}}' kaydedildi.",
+    "notifications.boq.created.body":
+      "Metraj listeniz '{{boq_name}}' kaydedildi.",
     "notifications.meeting.action_assigned.title": "Size eylem maddesi atandı",
-    "notifications.meeting.action_assigned.body": "{{meeting_number}} numaralı toplantıdan: {{description}}",
+    "notifications.meeting.action_assigned.body":
+      "{{meeting_number}} numaralı toplantıdan: {{description}}",
     "notifications.cde.state_transitioned.title": "Belge durumu değişti",
-    "notifications.cde.state_transitioned.body": "Konteyner '{{new_state}}' durumuna geçti.",
+    "notifications.cde.state_transitioned.body":
+      "Konteyner '{{new_state}}' durumuna geçti.",
     "notifications.rfi.assigned.title": "Size RFI atandı",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI'ye yanıt verildi",
-    "notifications.rfi.responded.body": "Talebiniz {{code}} ({{title}}) yanıtlandı.",
+    "notifications.rfi.responded.body":
+      "Talebiniz {{code}} ({{title}}) yanıtlandı.",
     "notifications.risk.assigned.title": "Size risk atandı",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal incelenmeyi bekliyor",
@@ -2277,25 +2501,33 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal onaylandı",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal reddedildi",
-    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Sebep: {{reason}}",
-    "notifications.submittal.revise_resubmit.title": "Submittal revize edilmeli",
-    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Sebep: {{reason}}",
+    "notifications.submittal.rejected.body":
+      "{{code}} ({{title}}). Sebep: {{reason}}",
+    "notifications.submittal.revise_resubmit.title":
+      "Submittal revize edilmeli",
+    "notifications.submittal.revise_resubmit.body":
+      "{{code}} ({{title}}). Sebep: {{reason}}",
     "notifications.transmittal.issued.title": "Size transmittal düzenlendi",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal onaylandı",
-    "notifications.transmittal.acknowledged.body": "Alıcı {{code}} ({{title}}) belgesini onayladı.",
+    "notifications.transmittal.acknowledged.body":
+      "Alıcı {{code}} ({{title}}) belgesini onayladı.",
     "notifications.transmittal.responded.title": "Transmittal yanıtlandı",
-    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body":
+      "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Teslimat Tarihi",
     "procurement.goods_receipts": "Mal Kabul Belgesi",
     "procurement.gr_ref": "MK Ref.",
     "procurement.issue_date": "Düzenleme Tarihi",
     "procurement.no_gr": "Mal kabul belgesi yok",
-    "procurement.no_gr_desc": "Kaydedildikten sonra mal kabul belgeleri burada görünecektir.",
+    "procurement.no_gr_desc":
+      "Kaydedildikten sonra mal kabul belgeleri burada görünecektir.",
     "procurement.no_po": "Satın alma siparişi yok",
-    "procurement.no_po_desc": "Oluşturulduktan sonra satın alma siparişleri burada görünecektir.",
-    "procurement.no_project": "Satın alma verilerini görüntülemek için bir proje seçin.",
+    "procurement.no_po_desc":
+      "Oluşturulduktan sonra satın alma siparişleri burada görünecektir.",
+    "procurement.no_project":
+      "Satın alma verilerini görüntülemek için bir proje seçin.",
     "procurement.po_number": "PO #",
     "procurement.po_ref": "SS Ref.",
     "procurement.purchase_orders": "Satın Alma Siparişleri",
@@ -2304,7 +2536,8 @@ const resource = {
     "procurement.search_gr": "Mal kabul belgesi ara...",
     "procurement.search_po": "Satın alma siparişi ara...",
     "procurement.select_project": "Project...",
-    "procurement.subtitle": "Satın alma siparişlerini ve mal kabul belgelerini yönetin",
+    "procurement.subtitle":
+      "Satın alma siparişlerini ve mal kabul belgelerini yönetin",
     "procurement.title": "Tedarik",
     "procurement.vendor": "Vendor",
     "reporting.generate_report": "Rapor oluştur",
@@ -2359,10 +2592,13 @@ const resource = {
     "safety.incident_number": "Incident #",
     "safety.incidents": "Incidents",
     "safety.no_incidents": "Kayıtlı olay yok",
-    "safety.no_incidents_desc": "Bildirildikten sonra olaylar burada görünecektir.",
+    "safety.no_incidents_desc":
+      "Bildirildikten sonra olaylar burada görünecektir.",
     "safety.no_observations": "Kayıtlı gözlem yok",
-    "safety.no_observations_desc": "Bildirildikten sonra gözlemler burada görünecektir.",
-    "safety.no_project": "Güvenlik verilerini görüntülemek için bir proje seçin.",
+    "safety.no_observations_desc":
+      "Bildirildikten sonra gözlemler burada görünecektir.",
+    "safety.no_project":
+      "Güvenlik verilerini görüntülemek için bir proje seçin.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observations",
     "safety.risk_critical": "Critical",
@@ -2384,22 +2620,28 @@ const resource = {
     "settings.edit_profile": "Profil adını düzenle",
     "settings.full_name": "Ad soyad",
     "settings.imperial": "İngiliz (ft, lb)",
-    "settings.interface_mode_subtitle": "Gezintide hangi özelliklerin görüneceğini kontrol edin",
+    "settings.interface_mode_subtitle":
+      "Gezintide hangi özelliklerin görüneceğini kontrol edin",
     "settings.interface_mode_title": "Arayüz Modu",
     "settings.measurement_system": "Ölçüm Sistemi",
     "settings.metric": "Metrik (m, kg)",
-    "settings.mode_advanced_detail": "Tüm modüller ve özellikler görünür, tam profesyonel araç seti.",
-    "settings.mode_simple_detail": "Odaklanmış çalışma için sade arayüz, temel keşif araçları.",
-    "settings.modules_link_desc": "Modüller bölümünde bireysel modülleri etkinleştirin, devre dışı bırakın ve yapılandırın.",
+    "settings.mode_advanced_detail":
+      "Tüm modüller ve özellikler görünür, tam profesyonel araç seti.",
+    "settings.mode_simple_detail":
+      "Odaklanmış çalışma için sade arayüz, temel keşif araçları.",
+    "settings.modules_link_desc":
+      "Modüller bölümünde bireysel modülleri etkinleştirin, devre dışı bırakın ve yapılandırın.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "Sayı Biçimi",
     "settings.paper_size": "Kağıt Boyutu",
     "settings.preferences_error": "Tercihler kaydedilemedi",
     "settings.preferences_saved": "Tercihler kaydedildi",
-    "settings.regional_subtitle": "Biçimler, birimler ve yerelleştirme tercihleri",
+    "settings.regional_subtitle":
+      "Biçimler, birimler ve yerelleştirme tercihleri",
     "settings.regional_title": "Bölgesel ayarlar",
     "settings.restart_onboarding": "Kurulum Sihirbazını Aç",
-    "settings.setup_wizard_subtitle": "Dil değiştirmek, veritabanları, kataloglar veya demo projeler yüklemek için başlangıç kurulumunu yeniden çalıştırın",
+    "settings.setup_wizard_subtitle":
+      "Dil değiştirmek, veritabanları, kataloglar veya demo projeler yüklemek için başlangıç kurulumunu yeniden çalıştırın",
     "settings.setup_wizard_title": "Kurulum Sihirbazı",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -2424,7 +2666,8 @@ const resource = {
     "settings.tm_show_more": "Daha fazla göster ({{remaining}} kaldı)",
     "settings.tm_total_keys": "Toplam anahtar",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle": "Geçerli dil için çevirileri görüntüleyin ve özelleştirin",
+    "settings.translation_manager_subtitle":
+      "Geçerli dil için çevirileri görüntüleyin ve özelleştirin",
     "settings.translation_manager_title": "Çeviri Yöneticisi",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -2453,9 +2696,11 @@ const resource = {
     "submittals.label_title": "Title",
     "submittals.new_submittal": "Yeni Onay Belgesi",
     "submittals.no_results": "Eşleşen onay belgesi yok",
-    "submittals.no_results_hint": "Arama veya filtrelerinizi ayarlamayı deneyin.",
+    "submittals.no_results_hint":
+      "Arama veya filtrelerinizi ayarlamayı deneyin.",
     "submittals.no_submittals": "Henüz onay belgesi yok",
-    "submittals.no_submittals_hint": "Başlamak için ilk onay belgesini oluşturun.",
+    "submittals.no_submittals_hint":
+      "Başlamak için ilk onay belgesini oluşturun.",
     "submittals.page_title": "Submittals",
     "submittals.review_title": "Onay Belgesini İncele",
     "submittals.reviewed": "Onay belgesi incelendi",
@@ -2524,9 +2769,11 @@ const resource = {
     "transmittals.label_recipients": "Recipients",
     "transmittals.new_transmittal": "Yeni İletim Yazısı",
     "transmittals.no_results": "Eşleşen iletim yazısı yok",
-    "transmittals.no_results_hint": "Arama veya filtrelerinizi ayarlamayı deneyin.",
+    "transmittals.no_results_hint":
+      "Arama veya filtrelerinizi ayarlamayı deneyin.",
     "transmittals.no_transmittals": "Henüz iletim yazısı yok",
-    "transmittals.no_transmittals_hint": "Başlamak için ilk iletim yazısını oluşturun.",
+    "transmittals.no_transmittals_hint":
+      "Başlamak için ilk iletim yazısını oluşturun.",
     "transmittals.page_title": "Transmittals",
     "transmittals.recipients_placeholder": "Alıcı adları girin...",
     "transmittals.search_placeholder": "İletim yazısı ara...",
@@ -2571,16 +2818,22 @@ const resource = {
     "costs.variant_per_unit": "Birim başına",
     "dashboard.activity": "Son Aktiviteler",
     "modules.cat_regional": "Bölgesel Standartlar",
-    "modules.cat_regional_desc": "Ülkeye özgü BOQ içe/dışa aktarma formatları ve sınıflandırma standartları",
+    "modules.cat_regional_desc":
+      "Ülkeye özgü BOQ içe/dışa aktarma formatları ve sınıflandırma standartları",
     "modules.community_title": "Kendi Modülünü Oluştur",
-    "modules.community_desc": "OpenConstructionERP modüler bir eklenti mimarisine sahiptir. Herkes özel modüller oluşturabilir — maliyet veritabanları, bölgesel standartlar, CAD dönüştürücüler, analiz panoları, dış sistem entegrasyonları veya diğer işlevler. Modülünüz bu bölümde görünecek ve herhangi bir kullanıcı tarafından kurulabilecektir.",
+    "modules.community_desc":
+      "OpenConstructionERP modüler bir eklenti mimarisine sahiptir. Herkes özel modüller oluşturabilir — maliyet veritabanları, bölgesel standartlar, CAD dönüştürücüler, analiz panoları, dış sistem entegrasyonları veya diğer işlevler. Modülünüz bu bölümde görünecek ve herhangi bir kullanıcı tarafından kurulabilecektir.",
     "modules.community_type_data": "Veri Modülleri",
-    "modules.community_type_data_desc": "Bölgesel maliyet veritabanları, kaynak katalogları, malzeme kütüphaneleri, sınıflandırma standartları (DIN, NRM, SNIP vb.)",
+    "modules.community_type_data_desc":
+      "Bölgesel maliyet veritabanları, kaynak katalogları, malzeme kütüphaneleri, sınıflandırma standartları (DIN, NRM, SNIP vb.)",
     "modules.community_type_integration": "Entegrasyonlar",
-    "modules.community_type_integration_desc": "SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera veya herhangi bir harici sistemle API üzerinden bağlanın",
+    "modules.community_type_integration_desc":
+      "SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera veya herhangi bir harici sistemle API üzerinden bağlanın",
     "modules.community_type_tools": "Araçlar & Analitik",
-    "modules.community_type_tools_desc": "Özel raporlar, panolar, hesap makineleri, format dönüştürücüler, AI modelleri veya özel inşaat araçları",
-    "modules.community_how": "Her modül, manifest.py dosyasına sahip bir Python paketidir. Modülünüzü oluşturun, yerel olarak test edin ve toplulukla paylaşın. Sadece bir fikriniz varsa — bize metin açıklama gönderin, oluşturmanıza yardımcı olalım.",
+    "modules.community_type_tools_desc":
+      "Özel raporlar, panolar, hesap makineleri, format dönüştürücüler, AI modelleri veya özel inşaat araçları",
+    "modules.community_how":
+      "Her modül, manifest.py dosyasına sahip bir Python paketidir. Modülünüzü oluşturun, yerel olarak test edin ve toplulukla paylaşın. Sadece bir fikriniz varsa — bize metin açıklama gönderin, oluşturmanıza yardımcı olalım.",
     "modules.community_submit_email": "E-posta ile Modül Gönder",
     "modules.community_submit_github": "GitHub'da Öner",
     "modules.community_telegram": "Telegram'da Tartış",
@@ -2602,13 +2855,16 @@ const resource = {
     "bim.loading_geometry": "3D geometri yükleniyor…",
     "bim.loading_finalising": "Sahne sonlandırılıyor…",
     "bim.loading_streaming": "Geometri sunucudan akıtılıyor…",
-    "bim.loading_parsing": "3D geometri ayrıştırılıyor — büyük modeller (>50 MB) için 20-60 sn sürebilir; sayfayı yenilemeyin",
-    "bim.loading_navigate_hint": "Diğer sayfalara gidebilirsiniz — yükleme arka planda devam edecek",
+    "bim.loading_parsing":
+      "3D geometri ayrıştırılıyor — büyük modeller (>50 MB) için 20-60 sn sürebilir; sayfayı yenilemeyin",
+    "bim.loading_navigate_hint":
+      "Diğer sayfalara gidebilirsiniz — yükleme arka planda devam edecek",
     "bim.no_models": "Henüz model yüklenmedi",
     "bim.no_project": "Proje seçilmedi",
     "bim.no_project_desc": "BIM modellerini görüntülemek için bir proje seçin.",
     "bim.select_model": "Model seç",
-    "bim.select_model_desc": "3D görselleştirme için listeden bir BIM modeli seçin.",
+    "bim.select_model_desc":
+      "3D görselleştirme için listeden bir BIM modeli seçin.",
     "bim.search_elements": "Eleman ara...",
     "bim.no_search_results": "Eşleşen eleman yok",
     "bim.load_error": "Model elemanları yüklenemedi",
@@ -2676,20 +2932,27 @@ const resource = {
     "onboarding.step_modules": "Modüller",
     "onboarding.step_mode": "Mod",
     "onboarding.company_type_title": "Şirket türünüz nedir?",
-    "onboarding.company_type_subtitle": "İş akışınız için en uygun modül setini önceden yapılandıracağız.",
+    "onboarding.company_type_subtitle":
+      "İş akışınız için en uygun modül setini önceden yapılandıracağız.",
     "onboarding.company_general_contractor": "Genel Müteahhit",
-    "onboarding.company_general_contractor_desc": "Projeleri inşa ediyoruz — keşif, satın alma, saha yönetimi",
+    "onboarding.company_general_contractor_desc":
+      "Projeleri inşa ediyoruz — keşif, satın alma, saha yönetimi",
     "onboarding.company_estimator": "Keşif / Maliyet Danışmanı",
-    "onboarding.company_estimator_desc": "Maliyet keşfi ve metraj üzerine odaklanıyoruz",
+    "onboarding.company_estimator_desc":
+      "Maliyet keşfi ve metraj üzerine odaklanıyoruz",
     "onboarding.company_project_management": "Proje Yönetim Firması",
-    "onboarding.company_project_management_desc": "Büyük projeleri yönetiyoruz — planlama, iletişim, belgeler",
+    "onboarding.company_project_management_desc":
+      "Büyük projeleri yönetiyoruz — planlama, iletişim, belgeler",
     "onboarding.company_architecture": "Mimarlık / Mühendislik Bürosu",
-    "onboarding.company_architecture_desc": "Bina tasarlıyoruz — BIM, belgeler, CDE",
+    "onboarding.company_architecture_desc":
+      "Bina tasarlıyoruz — BIM, belgeler, CDE",
     "onboarding.company_full_enterprise": "Tam Kurumsal",
-    "onboarding.company_full_enterprise_desc": "Her şeye ihtiyacımız var — tam inşaat yaşam döngüsü",
+    "onboarding.company_full_enterprise_desc":
+      "Her şeye ihtiyacımız var — tam inşaat yaşam döngüsü",
     "onboarding.modules_label": "modül",
     "onboarding.modules_title": "Modüllerinizi İnceleyin",
-    "onboarding.modules_subtitle": "Şirket türünüze göre önceden seçildi. Herhangi bir modülü açıp kapatabilirsiniz.",
+    "onboarding.modules_subtitle":
+      "Şirket türünüze göre önceden seçildi. Herhangi bir modülü açıp kapatabilirsiniz.",
     "onboarding.modules_active": "modül aktif",
     "onboarding.mod_group_core": "Temel Keşif",
     "onboarding.mod_group_takeoff": "Metraj & AI",
@@ -2700,10 +2963,13 @@ const resource = {
     "onboarding.mod_group_quality": "Kalite & Güvenlik",
     "onboarding.mod_group_field": "Saha",
     "onboarding.mod_group_analytics": "Analitik & Ekstralar",
-    "onboarding.mod_boq_desc": "Hiyerarşik kalemlerle metraj ve keşif düzenleyici",
+    "onboarding.mod_boq_desc":
+      "Hiyerarşik kalemlerle metraj ve keşif düzenleyici",
     "onboarding.mod_projects_desc": "Proje yönetimi ve organizasyon",
-    "onboarding.mod_costs_desc": "Maliyet veritabanları ve birim fiyat yönetimi",
-    "onboarding.mod_assemblies_desc": "Bileşik birim fiyat tarifleri ve şablonlar",
+    "onboarding.mod_costs_desc":
+      "Maliyet veritabanları ve birim fiyat yönetimi",
+    "onboarding.mod_assemblies_desc":
+      "Bileşik birim fiyat tarifleri ve şablonlar",
     "onboarding.mod_catalog_desc": "Malzeme, işçilik, ekipman kataloğu",
     "onboarding.mod_templates_desc": "Yeniden kullanılabilir BOQ şablonları",
     "onboarding.mod_validation_desc": "Kalite kuralları ve uyumluluk denetimi",
@@ -2717,7 +2983,8 @@ const resource = {
     "onboarding.mod_5d_desc": "Kazanılmış değer takibi ile 5D maliyet modeli",
     "onboarding.mod_tasks_desc": "Görev yönetimi ve atamalar",
     "onboarding.mod_finance_desc": "Bütçe takibi ve finansal genel bakış",
-    "onboarding.mod_procurement_desc": "Satın alma siparişleri ve tedarikçi yönetimi",
+    "onboarding.mod_procurement_desc":
+      "Satın alma siparişleri ve tedarikçi yönetimi",
     "onboarding.mod_tendering_desc": "İhale paketleri ve teklif iş akışları",
     "onboarding.mod_changeorders_desc": "Değişiklik emri takibi ve onayı",
     "onboarding.mod_contacts_desc": "Kişi rehberi ve ekipler",
@@ -2744,22 +3011,29 @@ const resource = {
     "onboarding.mod_cost_benchmark_desc": "Maliyet kıyaslama analizi",
     "onboarding.mod_collaboration_desc": "Gerçek zamanlı işbirliği araçları",
     "support.button_label": "Bizi destekleyin",
-    "support.button_tooltip": "Projeyi destekleyin — yıldız verin, paylaşın veya örnek olay gönderin",
+    "support.button_tooltip":
+      "Projeyi destekleyin — yıldız verin, paylaşın veya örnek olay gönderin",
     "support.button_aria": "Bizi destekleyin",
     "support.modal_title": "OpenConstructionERP'nin büyümesine yardım edin",
-    "support.modal_subtitle": "Bunu açık kaynak olarak geliştiriyor ve her özelliği ücretsiz sunuyoruz. Sizin küçük birkaç eyleminiz geliştirmeyi sürdürmemizi sağlıyor — hiçbir maliyeti yok ama büyük fark yaratıyor.",
+    "support.modal_subtitle":
+      "Bunu açık kaynak olarak geliştiriyor ve her özelliği ücretsiz sunuyoruz. Sizin küçük birkaç eyleminiz geliştirmeyi sürdürmemizi sağlıyor — hiçbir maliyeti yok ama büyük fark yaratıyor.",
     "support.action_star_title": "GitHub'da yıldız verin",
-    "support.action_star_body": "30 saniye. Yıldızlar, yeni inşaat ekiplerinin projeyi keşfetmesinin ve bir sonraki sürüm için zaman ayırmamızın yolu.",
+    "support.action_star_body":
+      "30 saniye. Yıldızlar, yeni inşaat ekiplerinin projeyi keşfetmesinin ve bir sonraki sürüm için zaman ayırmamızın yolu.",
     "support.action_share_title": "Ekibiniz veya ağınızla paylaşın",
-    "support.action_share_body": "LinkedIn veya X / Twitter'da tek bir gönderi, onlarca metraj uzmanı, planlamacı ve BIM yöneticisine ulaşır. Açık kaynak inşaat yazılımını duyurmamıza yardım edin.",
+    "support.action_share_body":
+      "LinkedIn veya X / Twitter'da tek bir gönderi, onlarca metraj uzmanı, planlamacı ve BIM yöneticisine ulaşır. Açık kaynak inşaat yazılımını duyurmamıza yardım edin.",
     "support.share_twitter": "X'te paylaş",
     "support.share_linkedin": "LinkedIn'de paylaş",
     "support.share_copy": "Metni + bağlantıyı kopyala",
     "support.share_copied": "Kopyalandı!",
-    "support.action_case_study_title": "Bir örnek olay, video veya makaleniz var mı?",
+    "support.action_case_study_title":
+      "Bir örnek olay, video veya makaleniz var mı?",
     "support.action_case_study_tag": "Biz yaygınlaştırırız",
-    "support.action_case_study_body": "OpenConstructionERP'i nasıl kullandığınızı bize gösterin — video, örnek olay, LinkedIn yazısı. Bağlantıyı doğrudan gönderebilir veya gönderinizde @DataDrivenConstruction'ı etiketleyebilirsiniz — fark eder ve bültenimiz ve sosyal kanallarımız aracılığıyla yeniden paylaşırız; orada on binlerce inşaat profesyoneli ve kıdemli sektör uzmanı çalışmamızı takip eder. Bağlantılar için e-posta: ",
-    "support.thanks": "Teşekkürler. Her yıldız, paylaşım ve hikaye bu projeyi gerçekten ayakta tutuyor — inşaat topluluğu için ❤️ ile yapıldı.",
+    "support.action_case_study_body":
+      "OpenConstructionERP'i nasıl kullandığınızı bize gösterin — video, örnek olay, LinkedIn yazısı. Bağlantıyı doğrudan gönderebilir veya gönderinizde @DataDrivenConstruction'ı etiketleyebilirsiniz — fark eder ve bültenimiz ve sosyal kanallarımız aracılığıyla yeniden paylaşırız; orada on binlerce inşaat profesyoneli ve kıdemli sektör uzmanı çalışmamızı takip eder. Bağlantılar için e-posta: ",
+    "support.thanks":
+      "Teşekkürler. Her yıldız, paylaşım ve hikaye bu projeyi gerçekten ayakta tutuyor — inşaat topluluğu için ❤️ ile yapıldı.",
     "onboarding.mod_group_estimation": "Keşif & Metraj",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM ve 3D",
@@ -2772,128 +3046,185 @@ const resource = {
     "onboarding.mod_group_regional": "Bölgesel Paketler",
     "onboarding.mod_group_platform": "Platform",
     "onboarding.mod_cost_match": "Maliyet Eşleştirme",
-    "onboarding.mod_cost_match_desc": "BOQ pozisyonlarını maliyet veritabanı kalemleriyle otomatik eşleştirme",
+    "onboarding.mod_cost_match_desc":
+      "BOQ pozisyonlarını maliyet veritabanı kalemleriyle otomatik eşleştirme",
     "onboarding.mod_match": "Eleman Eşleştirme",
-    "onboarding.mod_match_desc": "BIM/CAD elemanlarını BOQ pozisyonları ve birim fiyatlarla eşleştirme",
+    "onboarding.mod_match_desc":
+      "BIM/CAD elemanlarını BOQ pozisyonları ve birim fiyatlarla eşleştirme",
     "onboarding.mod_dwg_takeoff": "DWG Metraj",
-    "onboarding.mod_dwg_takeoff_desc": "DWG çizimlerinden doğrudan metraj çıkarma",
+    "onboarding.mod_dwg_takeoff_desc":
+      "DWG çizimlerinden doğrudan metraj çıkarma",
     "onboarding.mod_cad": "CAD İçe Aktarma",
-    "onboarding.mod_cad_desc": "DDC cad2data hattı üzerinden DWG/DGN/RVT/IFC içe aktarma",
+    "onboarding.mod_cad_desc":
+      "DDC cad2data hattı üzerinden DWG/DGN/RVT/IFC içe aktarma",
     "onboarding.mod_bim_requirements": "BIM Gereksinimleri",
-    "onboarding.mod_bim_requirements_desc": "Model gereksinimlerini tanımlama ve doğrulama (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc":
+      "Model gereksinimlerini tanımlama ve doğrulama (IDS / EIR)",
     "onboarding.mod_match_elements": "Elemanları Eşleştir",
-    "onboarding.mod_match_elements_desc": "Güven puanlarıyla AI destekli BIM-maliyet eleman eşleştirmesi",
+    "onboarding.mod_match_elements_desc":
+      "Güven puanlarıyla AI destekli BIM-maliyet eleman eşleştirmesi",
     "onboarding.mod_opencde_api": "OpenCDE API",
-    "onboarding.mod_opencde_api_desc": "BCF + Belgeler + Foundation için OpenCDE uyumlu API",
+    "onboarding.mod_opencde_api_desc":
+      "BCF + Belgeler + Foundation için OpenCDE uyumlu API",
     "onboarding.mod_erp_chat": "ERP Sohbet",
-    "onboarding.mod_erp_chat_desc": "Tam ERP bağlamıyla uygulama içi AI sohbet asistanı",
+    "onboarding.mod_erp_chat_desc":
+      "Tam ERP bağlamıyla uygulama içi AI sohbet asistanı",
     "onboarding.mod_compliance_ai": "Uyumluluk AI",
-    "onboarding.mod_compliance_ai_desc": "LLM destekli regülasyon uyumluluk kontrolleri",
+    "onboarding.mod_compliance_ai_desc":
+      "LLM destekli regülasyon uyumluluk kontrolleri",
     "onboarding.mod_schedule_advanced": "Gelişmiş Planlama",
-    "onboarding.mod_schedule_advanced_desc": "Haftalık öngörüler ve PPC ile Last Planner System",
+    "onboarding.mod_schedule_advanced_desc":
+      "Haftalık öngörüler ve PPC ile Last Planner System",
     "onboarding.mod_eac": "EAC Motoru",
     "onboarding.mod_eac_desc": "Yuvarlanan tahminlerle Estimate at Completion",
     "onboarding.mod_bid_management": "Teklif Yönetimi",
-    "onboarding.mod_bid_management_desc": "Çıkan teklifleri, fiyat stratejilerini, kazanma/kaybetme takibini yönetin",
+    "onboarding.mod_bid_management_desc":
+      "Çıkan teklifleri, fiyat stratejilerini, kazanma/kaybetme takibini yönetin",
     "onboarding.mod_contracts": "Sözleşmeler",
-    "onboarding.mod_contracts_desc": "Sözleşme tipi motoru (FIDIC, NEC, JCT, götürü, T&M)",
+    "onboarding.mod_contracts_desc":
+      "Sözleşme tipi motoru (FIDIC, NEC, JCT, götürü, T&M)",
     "onboarding.mod_variations": "Değişiklikler",
-    "onboarding.mod_variations_desc": "Saha ölçüm değişiklikleri ve onay iş akışı",
+    "onboarding.mod_variations_desc":
+      "Saha ölçüm değişiklikleri ve onay iş akışı",
     "onboarding.mod_crm": "CRM",
-    "onboarding.mod_crm_desc": "Satış pipeline'ı, lead'ler, fırsatlar, hesaplar",
+    "onboarding.mod_crm_desc":
+      "Satış pipeline'ı, lead'ler, fırsatlar, hesaplar",
     "onboarding.mod_supplier_catalogs": "Tedarikçi Katalogları",
-    "onboarding.mod_supplier_catalogs_desc": "Canlı tedarikçi fiyat akışları ve tedarikçi yönetimi",
+    "onboarding.mod_supplier_catalogs_desc":
+      "Canlı tedarikçi fiyat akışları ve tedarikçi yönetimi",
     "onboarding.mod_property_dev": "Gayrimenkul Geliştirme",
-    "onboarding.mod_property_dev_desc": "Arazi, faz, satış karması, geliştiriciler için fizibilite",
+    "onboarding.mod_property_dev_desc":
+      "Arazi, faz, satış karması, geliştiriciler için fizibilite",
     "onboarding.mod_service": "Servis & Bakım",
-    "onboarding.mod_service_desc": "Teslim sonrası servis talepleri, garantiler, bakım",
+    "onboarding.mod_service_desc":
+      "Teslim sonrası servis talepleri, garantiler, bakım",
     "onboarding.mod_equipment": "Ekipman & Filo",
-    "onboarding.mod_equipment_desc": "Makine, alet, araç — kullanım, bakım, kira oranları",
+    "onboarding.mod_equipment_desc":
+      "Makine, alet, araç — kullanım, bakım, kira oranları",
     "onboarding.mod_resources": "Kaynaklar",
-    "onboarding.mod_resources_desc": "İşgücü, malzeme, ekipman kaynak planlaması",
+    "onboarding.mod_resources_desc":
+      "İşgücü, malzeme, ekipman kaynak planlaması",
     "onboarding.mod_daily_diary": "Şantiye Günlüğü",
-    "onboarding.mod_daily_diary_desc": "Hava, ekipler, ekipman, fotoğraflarla günlük şantiye defteri",
+    "onboarding.mod_daily_diary_desc":
+      "Hava, ekipler, ekipman, fotoğraflarla günlük şantiye defteri",
     "onboarding.mod_subcontractors": "Taşeronlar",
-    "onboarding.mod_subcontractors_desc": "Taşeron işe başlatma, sözleşmeler, ödemeler, performans",
+    "onboarding.mod_subcontractors_desc":
+      "Taşeron işe başlatma, sözleşmeler, ödemeler, performans",
     "onboarding.mod_portal": "Müşteri Portalı",
-    "onboarding.mod_portal_desc": "Sınırlı erişimli müşteri ve iş ortakları için harici portal",
+    "onboarding.mod_portal_desc":
+      "Sınırlı erişimli müşteri ve iş ortakları için harici portal",
     "onboarding.mod_notifications": "Bildirimler",
-    "onboarding.mod_notifications_desc": "Uygulama içi, e-posta ve webhook bildirimleri",
+    "onboarding.mod_notifications_desc":
+      "Uygulama içi, e-posta ve webhook bildirimleri",
     "onboarding.mod_hse_advanced": "Gelişmiş HSE",
-    "onboarding.mod_hse_advanced_desc": "Gelişmiş İSG ve çevre — toolbox talk, JHA, denetim",
+    "onboarding.mod_hse_advanced_desc":
+      "Gelişmiş İSG ve çevre — toolbox talk, JHA, denetim",
     "onboarding.mod_qms": "Kalite Yönetim Sistemi",
-    "onboarding.mod_qms_desc": "ISO 9001 uyumlu QMS — prosedürler, denetimler, KPI'lar",
+    "onboarding.mod_qms_desc":
+      "ISO 9001 uyumlu QMS — prosedürler, denetimler, KPI'lar",
     "onboarding.mod_compliance": "Uyumluluk DSL",
-    "onboarding.mod_compliance_desc": "Uyumluluk için code-as-rules alana özgü dil",
+    "onboarding.mod_compliance_desc":
+      "Uyumluluk için code-as-rules alana özgü dil",
     "onboarding.mod_compliance_docs": "Uyumluluk Belgeleri",
-    "onboarding.mod_compliance_docs_desc": "Sertifika kütüphanesi, geçerlilik takibi, yenileme hatırlatmaları",
+    "onboarding.mod_compliance_docs_desc":
+      "Sertifika kütüphanesi, geçerlilik takibi, yenileme hatırlatmaları",
     "onboarding.mod_carbon": "Karbon & ESG",
-    "onboarding.mod_carbon_desc": "Gömülü + operasyonel karbon, ESG raporlaması, EN 15978",
+    "onboarding.mod_carbon_desc":
+      "Gömülü + operasyonel karbon, ESG raporlaması, EN 15978",
     "onboarding.mod_bi_dashboards": "BI Panoları",
-    "onboarding.mod_bi_dashboards_desc": "Drill-down ile etkileşimli modüller arası analitik",
+    "onboarding.mod_bi_dashboards_desc":
+      "Drill-down ile etkileşimli modüller arası analitik",
     "onboarding.mod_enterprise_workflows": "Kurumsal İş Akışları",
-    "onboarding.mod_enterprise_workflows_desc": "Büyük organizasyonlar için FSM tabanlı özel onay iş akışları",
+    "onboarding.mod_enterprise_workflows_desc":
+      "Büyük organizasyonlar için FSM tabanlı özel onay iş akışları",
     "onboarding.mod_full_evm": "Tam EVM",
-    "onboarding.mod_full_evm_desc": "Tam Kazanılmış Değer Yönetimi — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc":
+      "Tam Kazanılmış Değer Yönetimi — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ & İhale",
-    "onboarding.mod_rfq_bidding_desc": "Çok turlu RFQ iş akışları, kapalı zarf ihaleleri, e-açık artırmalar",
+    "onboarding.mod_rfq_bidding_desc":
+      "Çok turlu RFQ iş akışları, kapalı zarf ihaleleri, e-açık artırmalar",
     "onboarding.mod_integrations": "Entegrasyonlar",
-    "onboarding.mod_integrations_desc": "n8n üzerinden Webhooks, SAP, Procore, MS Project",
+    "onboarding.mod_integrations_desc":
+      "n8n üzerinden Webhooks, SAP, Procore, MS Project",
     "onboarding.mod_dach_pack": "Bölgesel Paket — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc": "DACH (DE/AT/CH) için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_dach_pack_desc":
+      "DACH (DE/AT/CH) için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_uk_pack": "Bölgesel Paket — Birleşik Krallık",
-    "onboarding.mod_uk_pack_desc": "Birleşik Krallık için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_uk_pack_desc":
+      "Birleşik Krallık için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_us_pack": "Bölgesel Paket — Amerika Birleşik Devletleri",
-    "onboarding.mod_us_pack_desc": "Amerika Birleşik Devletleri için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_us_pack_desc":
+      "Amerika Birleşik Devletleri için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_india_pack": "Bölgesel Paket — Hindistan",
-    "onboarding.mod_india_pack_desc": "Hindistan için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_india_pack_desc":
+      "Hindistan için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_middle_east_pack": "Bölgesel Paket — Orta Doğu ve GCC",
-    "onboarding.mod_middle_east_pack_desc": "Orta Doğu ve GCC için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_middle_east_pack_desc":
+      "Orta Doğu ve GCC için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_latam_pack": "Bölgesel Paket — Latin Amerika",
-    "onboarding.mod_latam_pack_desc": "Latin Amerika için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_latam_pack_desc":
+      "Latin Amerika için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_asia_pac_pack": "Bölgesel Paket — Asya-Pasifik",
-    "onboarding.mod_asia_pac_pack_desc": "Asya-Pasifik için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_asia_pac_pack_desc":
+      "Asya-Pasifik için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_russia_pack": "Bölgesel Paket — Rusya ve BDT",
-    "onboarding.mod_russia_pack_desc": "Rusya ve BDT için standartlar, sınıflandırmalar, para birimleri, formatlar",
+    "onboarding.mod_russia_pack_desc":
+      "Rusya ve BDT için standartlar, sınıflandırmalar, para birimleri, formatlar",
     "onboarding.mod_users": "Kullanıcılar & Auth",
-    "onboarding.mod_users_desc": "Kullanıcı hesapları, roller, JWT, API anahtarları",
+    "onboarding.mod_users_desc":
+      "Kullanıcı hesapları, roller, JWT, API anahtarları",
     "onboarding.mod_teams": "Ekipler",
-    "onboarding.mod_teams_desc": "Ekip gruplama, görünürlük kapsamı, proje atama",
+    "onboarding.mod_teams_desc":
+      "Ekip gruplama, görünürlük kapsamı, proje atama",
     "onboarding.mod_uploads": "Yüklemeler",
-    "onboarding.mod_uploads_desc": "Sürdürülebilir büyük dosya doğrudan yüklemeleri",
+    "onboarding.mod_uploads_desc":
+      "Sürdürülebilir büyük dosya doğrudan yüklemeleri",
     "onboarding.mod_jobs": "Arka Plan İşleri",
-    "onboarding.mod_jobs_desc": "İçe aktarmalar, dışa aktarmalar, CV hatları için worker kuyrukları",
+    "onboarding.mod_jobs_desc":
+      "İçe aktarmalar, dışa aktarmalar, CV hatları için worker kuyrukları",
     "onboarding.mod_search": "Anlamsal Arama",
-    "onboarding.mod_search_desc": "BOQ, belgeler, çizimler genelinde vektör + sözcüksel arama",
+    "onboarding.mod_search_desc":
+      "BOQ, belgeler, çizimler genelinde vektör + sözcüksel arama",
     "onboarding.mod_backup": "Yedekleme & Geri Yükleme",
-    "onboarding.mod_backup_desc": "Belirli zamana geri yükleme ile otomatik yedeklemeler",
+    "onboarding.mod_backup_desc":
+      "Belirli zamana geri yükleme ile otomatik yedeklemeler",
     "onboarding.mod_admin": "Yönetici Konsolu",
-    "onboarding.mod_admin_desc": "Operatör endpoint'leri, QA hatları, sistem bakımı",
+    "onboarding.mod_admin_desc":
+      "Operatör endpoint'leri, QA hatları, sistem bakımı",
     "onboarding.mod_i18n_foundation": "i18n Temeli",
-    "onboarding.mod_i18n_foundation_desc": "Lazy locale chunk'larıyla 27 dilli i18n çalışma zamanı",
+    "onboarding.mod_i18n_foundation_desc":
+      "Lazy locale chunk'larıyla 27 dilli i18n çalışma zamanı",
     "onboarding.mod_collaboration_locks": "İşbirliği Kilitleri",
-    "onboarding.mod_collaboration_locks_desc": "Çok kullanıcılı düzenleme için iyimser ve kötümser kilitleme",
+    "onboarding.mod_collaboration_locks_desc":
+      "Çok kullanıcılı düzenleme için iyimser ve kötümser kilitleme",
     "onboarding.mod_architecture_map": "Mimari Harita",
-    "onboarding.mod_architecture_map_desc": "Sistem mimarisinin etkileşimli görsel haritası",
+    "onboarding.mod_architecture_map_desc":
+      "Sistem mimarisinin etkileşimli görsel haritası",
     "onboarding.mod_dashboards": "Panolar",
     "onboarding.mod_dashboards_desc": "Proje başına ve portföy panoları",
     "onboarding.mode_title": "Arayüz Modunu Seç",
-    "onboarding.mode_subtitle": "Modlar arasında istediğiniz zaman Ayarlar'dan geçiş yapabilirsiniz.",
+    "onboarding.mode_subtitle":
+      "Modlar arasında istediğiniz zaman Ayarlar'dan geçiş yapabilirsiniz.",
     "onboarding.mode_simple": "Basit",
     "onboarding.mode_advanced": "Gelişmiş",
     "onboarding.summary_company": "Şirket Türü",
     "onboarding.summary_modules": "Aktif Modüller",
     "onboarding.summary_mode": "Arayüz Modu",
     "reports.cash_flow": "Nakit Akışı Tahmini",
-    "reports.cash_flow_desc": "S-eğrisi planlanan ve gerçekleşen harcama karşılaştırmalı aylık nakit akışı projeksiyonu.",
+    "reports.cash_flow_desc":
+      "S-eğrisi planlanan ve gerçekleşen harcama karşılaştırmalı aylık nakit akışı projeksiyonu.",
     "reports.change_order_register": "Değişiklik Emri Kaydı",
-    "reports.change_order_register_desc": "Kümülatif maliyet ve takvim etkisiyle kapsam değişikliklerinin tam kaydı.",
+    "reports.change_order_register_desc":
+      "Kümülatif maliyet ve takvim etkisiyle kapsam değişikliklerinin tam kaydı.",
     "reports.tender_comparison": "İhale Karşılaştırması",
-    "reports.tender_comparison_desc": "Sapma analiziyle taşeron tekliflerinin yan yana karşılaştırması.",
+    "reports.tender_comparison_desc":
+      "Sapma analiziyle taşeron tekliflerinin yan yana karşılaştırması.",
     "reports.risk_register": "Risk Kaydı",
-    "reports.risk_register_desc": "Olasılık, etki, puanlar ve azaltma planlarıyla risk matrisi.",
+    "reports.risk_register_desc":
+      "Olasılık, etki, puanlar ve azaltma planlarıyla risk matrisi.",
     "reports.progress_report": "İlerleme Raporu",
-    "reports.progress_report_desc": "Tek raporda EVM performansı, takvim durumu ve en önemli riskler.",
+    "reports.progress_report_desc":
+      "Tek raporda EVM performansı, takvim durumu ve en önemli riskler.",
     "reports.preset_monthly": "Aylık İlerleme",
     "reports.preset_client": "Müşteri Sunumu",
     "reports.preset_audit": "Denetim Raporu",
@@ -2910,20 +3241,24 @@ const resource = {
     "cde.suitability_none": "— Yok —",
     "cde.view_history": "Geçmiş",
     "cde.history_title": "Durum geçiş geçmişi",
-    "cde.history_empty": "Henüz durum geçişi yok — denetim izini başlatmak için konteyneri yükseltin.",
+    "cde.history_empty":
+      "Henüz durum geçişi yok — denetim izini başlatmak için konteyneri yükseltin.",
     "cde.history_by_role": "Tarafından: {{role}}",
     "cde.history_signature": "İmzalayan: {{signer}}",
     "cde.gate_label": "Kapı {{code}}",
     "cde.transmittals_badge": "{{count}} iletim yazısı",
-    "cde.transmittals_badge_aria": "Bu konteynere bağlı {{count}} iletim yazısı",
+    "cde.transmittals_badge_aria":
+      "Bu konteynere bağlı {{count}} iletim yazısı",
     "cde.transmittals_drawer_title": "Bu konteyneri taşıyan iletim yazıları",
     "cde.approval_modal_title": "Kapı B onay imzası",
-    "cde.approval_modal_body": "{{code}}'u SHARED'dan PUBLISHED'a yükseltmek imzalı onay gerektirir (ISO 19650). İmzanız ve yorumlarınız denetim günlüğüne kaydedilir.",
+    "cde.approval_modal_body":
+      "{{code}}'u SHARED'dan PUBLISHED'a yükseltmek imzalı onay gerektirir (ISO 19650). İmzanız ve yorumlarınız denetim günlüğüne kaydedilir.",
     "cde.approval_field_signature": "İmza",
     "cde.approval_field_comments": "Yorumlar",
     "cde.approval_signature_placeholder": "Ad soyad / baş harfler",
     "cde.approval_signature_required": "İmza gereklidir",
-    "cde.approval_comments_placeholder": "Denetim izi için isteğe bağlı notlar...",
+    "cde.approval_comments_placeholder":
+      "Denetim izi için isteğe bağlı notlar...",
     "cde.approval_submit": "İmzala ve yayınla",
     "transmittals.field_link_revision": "CDE Revizyonu Bağla",
     "transmittals.picker_select_container": "Konteyner seçin…",
@@ -2960,7 +3295,8 @@ const resource = {
     "users.role_viewer_desc": "Salt okunur erişim",
     "integrations.add_another": "Başka Ekle",
     "integrations.calendar": "Takvim",
-    "integrations.calendar_desc": "Google/Outlook Takvim'e abone ol (iCal akışı)",
+    "integrations.calendar_desc":
+      "Google/Outlook Takvim'e abone ol (iCal akışı)",
     "integrations.coming_soon": "Yakında",
     "integrations.confirm_disconnect": "Bu entegrasyonu bağlantıyı kes?",
     "integrations.connect": "Bağlan",
@@ -2974,10 +3310,13 @@ const resource = {
     "integrations.email_desc": "E-posta bildirimleri al (SMTP)",
     "integrations.setup_steps": "Kurulum talimatları",
     "integrations.slack": "Slack",
-    "integrations.slack_desc": "Incoming Webhook üzerinden Slack'e bildirim gönder",
-    "integrations.subtitle": "Proje bildirimlerini favori araçlarınızda almak için harici servislere bağlanın.",
+    "integrations.slack_desc":
+      "Incoming Webhook üzerinden Slack'e bildirim gönder",
+    "integrations.subtitle":
+      "Proje bildirimlerini favori araçlarınızda almak için harici servislere bağlanın.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc": "Incoming Webhook üzerinden Teams kanalınıza bildirim gönder",
+    "integrations.teams_desc":
+      "Incoming Webhook üzerinden Teams kanalınıza bildirim gönder",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Telegram botu üzerinden bildirim al",
     "integrations.test": "Test Et",
@@ -3024,7 +3363,8 @@ const resource = {
     "common.previous": "Önceki",
     "common.project": "Proje",
     "common.quantity": "Miktar",
-    "common.rate_limit_wait": "Lütfen tekrar denemeden önce {{seconds}} saniye bekleyin.",
+    "common.rate_limit_wait":
+      "Lütfen tekrar denemeden önce {{seconds}} saniye bekleyin.",
     "common.recommended": "Önerilen",
     "common.region": "Bölge",
     "common.remove": "Kaldır",
@@ -3054,7 +3394,8 @@ const resource = {
     "dashboard.import_existing_boq": "Mevcut BOQ İçe Aktar",
     "dashboard.import_existing_boq_desc": "Mevcut belgeden AI ile keşif yapın",
     "dashboard.install_demo": "Demo Proje Kur",
-    "dashboard.install_demo_desc": "Gerçekçi verilerle önceden oluşturulmuş konut projesi",
+    "dashboard.install_demo_desc":
+      "Gerçekçi verilerle önceden oluşturulmuş konut projesi",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "doğrulama çalıştır",
     "dashboard.over_budget": "bütçe aşımı",
@@ -3063,14 +3404,19 @@ const resource = {
     "dashboard.quick_start": "Hızlı Keşif Başlat",
     "dashboard.run_setup": "Kurulum Sihirbazını Çalıştır",
     "dashboard.total_budget_all": "Toplam Bütçe",
-    "dashboard.welcome_body": "Bu proje topluluk tarafından oluşturulup sürdürülmektedir. Desteğiniz yeni özellikler eklememize, bölgesel veritabanları geliştirmemize ve herkese ücretsiz sunmaya devam etmemize yardımcı olur.",
+    "dashboard.welcome_body":
+      "Bu proje topluluk tarafından oluşturulup sürdürülmektedir. Desteğiniz yeni özellikler eklememize, bölgesel veritabanları geliştirmemize ve herkese ücretsiz sunmaya devam etmemize yardımcı olur.",
     "dashboard.welcome_consult": "Profesyonel Danışmanlık",
-    "dashboard.welcome_consult_desc": "Dünya genelinde özel dağıtım, eğitim ve kurumsal çözümler",
-    "dashboard.welcome_desc": "Demo proje kurarak veya kendiniz oluşturarak başlayın.",
+    "dashboard.welcome_consult_desc":
+      "Dünya genelinde özel dağıtım, eğitim ve kurumsal çözümler",
+    "dashboard.welcome_desc":
+      "Demo proje kurarak veya kendiniz oluşturarak başlayın.",
     "dashboard.welcome_sponsor": "Sponsor Ol",
-    "dashboard.welcome_sponsor_desc": "Yeni özellikleri finanse edin ve projeyi herkes için ücretsiz tutun",
+    "dashboard.welcome_sponsor_desc":
+      "Yeni özellikleri finanse edin ve projeyi herkes için ücretsiz tutun",
     "dashboard.welcome_star": "GitHub'da Yıldız Ver",
-    "dashboard.welcome_star_desc": "Projeyi başkalarının keşfetmesine yardımcı olun — 2 saniye sürer",
+    "dashboard.welcome_star_desc":
+      "Projeyi başkalarının keşfetmesine yardımcı olun — 2 saniye sürer",
     "dashboard.welcome_start": "Başla",
     "dashboard.welcome_sub": "Ücretsiz & açık kaynak inşaat maliyet keşfi",
     "dashboard.welcome_title": "OpenConstructionERP'ye Hoş Geldiniz",
@@ -3091,7 +3437,8 @@ const resource = {
     "analytics.col_status": "Durum",
     "analytics.col_variance": "Sapma",
     "analytics.col_variance_pct": "Sap. %",
-    "analytics.empty_description": "Projeler arası analitiği görmek için bütçeli projeler oluşturun.",
+    "analytics.empty_description":
+      "Projeler arası analitiği görmek için bütçeli projeler oluşturun.",
     "analytics.empty_title": "Henüz analitik veri yok",
     "analytics.export_csv": "CSV Dışa Aktar",
     "analytics.filter_region": "Bölgeye göre filtrele",
@@ -3114,25 +3461,30 @@ const resource = {
     "analytics.total_projects": "Toplam Proje",
     "analytics.with_budget": "{{count}} bütçeli",
     "backup.confirm_replace_btn": "Tüm Verileri Değiştir",
-    "backup.confirm_replace_message": "Bu işlem mevcut tüm verileri yedek içeriğiyle değiştirecektir. Bu işlem geri alınamaz.",
+    "backup.confirm_replace_message":
+      "Bu işlem mevcut tüm verileri yedek içeriğiyle değiştirecektir. Bu işlem geri alınamaz.",
     "backup.confirm_replace_title": "Tüm veriler değiştirilsin mi?",
     "backup.drop_zone_hint": ".zip yedek dosyası",
-    "backup.drop_zone_label": "Yedek dosyasını buraya bırakın veya göz atmak için tıklayın",
+    "backup.drop_zone_label":
+      "Yedek dosyasını buraya bırakın veya göz atmak için tıklayın",
     "backup.export_btn": "Yedek Oluştur",
-    "backup.export_desc": "Tüm verilerinizin tam yedeğini ZIP dosyası olarak indirin.",
+    "backup.export_desc":
+      "Tüm verilerinizin tam yedeğini ZIP dosyası olarak indirin.",
     "backup.export_error": "Dışa aktarma başarısız",
     "backup.export_success": "Yedek oluşturuldu",
     "backup.export_success_detail": "Yedek dosyanız indirildi.",
     "backup.export_title": "Yedek Oluştur",
     "backup.exporting": "Yedek oluşturuluyor...",
-    "backup.import_desc": "Daha önce dışa aktarılmış yedek dosyasından verileri geri yükleyin.",
+    "backup.import_desc":
+      "Daha önce dışa aktarılmış yedek dosyasından verileri geri yükleyin.",
     "backup.import_title": "Yedekten Geri Yükle",
     "backup.incompatible": "Uyumsuz yedek sürümü",
     "backup.invalid_file": "Geçersiz dosya",
     "backup.mode_merge": "Birleştir (yenileri ekle, mevcutları koru)",
     "backup.mode_replace": "Değiştir (her şeyin üzerine yaz)",
     "backup.record_counts": "Kayıt sayıları",
-    "backup.replace_warning": "Uyarı: Değiştirme modu mevcut tüm verileri silecektir.",
+    "backup.replace_warning":
+      "Uyarı: Değiştirme modu mevcut tüm verileri silecektir.",
     "backup.restore_btn": "Geri Yükle",
     "backup.restore_error": "Geri yükleme hatası",
     "backup.restore_failed": "Geri yükleme başarısız",
@@ -3151,7 +3503,8 @@ const resource = {
     "changeorders.add_item": "Kalem Ekle",
     "changeorders.all_statuses": "Tüm Durumlar",
     "changeorders.approve": "Onayla",
-    "changeorders.approve_confirm": "Bu değişiklik emri onaylansın mı? Maliyet etkisi proje bütçesine uygulanacaktır.",
+    "changeorders.approve_confirm":
+      "Bu değişiklik emri onaylansın mı? Maliyet etkisi proje bütçesine uygulanacaktır.",
     "changeorders.approved": "Değişiklik emri onaylandı",
     "changeorders.approved_at": "Onaylandı",
     "changeorders.approved_impact": "Onaylanan Etki",
@@ -3163,24 +3516,28 @@ const resource = {
     "changeorders.delete_item_confirm": "Bu kalem silinsin mi?",
     "changeorders.deleted": "Değişiklik emri silindi",
     "changeorders.empty": "Değişiklik emri yok",
-    "changeorders.empty_desc": "Maliyet ve takvim etkisiyle kapsam değişikliklerini takip etmek için değişiklik emri oluşturun",
+    "changeorders.empty_desc":
+      "Maliyet ve takvim etkisiyle kapsam değişikliklerini takip etmek için değişiklik emri oluşturun",
     "changeorders.export_csv": "CSV Dışa Aktar",
     "changeorders.filter_status": "Duruma göre filtrele",
     "changeorders.item_added": "Kalem eklendi",
     "changeorders.item_deleted": "Kalem silindi",
     "changeorders.items": "Kalemler",
-    "changeorders.load_error": "Değişiklik emirleri yüklenemedi. Lütfen tekrar deneyin.",
+    "changeorders.load_error":
+      "Değişiklik emirleri yüklenemedi. Lütfen tekrar deneyin.",
     "changeorders.new": "Yeni Değişiklik Emri",
     "changeorders.new_qty": "Yeni Miktar",
     "changeorders.new_rate": "Yeni Birim Fiyat",
     "changeorders.no_items": "Henüz kalem yok",
-    "changeorders.no_items_desc": "Kapsam değişikliğini tanımlamak için kalemler ekleyin",
+    "changeorders.no_items_desc":
+      "Kapsam değişikliğini tanımlamak için kalemler ekleyin",
     "changeorders.of_total": "/",
     "changeorders.orig_qty": "Özgün Miktar",
     "changeorders.orig_rate": "Özgün Birim Fiyat",
     "changeorders.pending": "Beklemede",
     "changeorders.pending_approval": "Onay bekleniyor",
-    "changeorders.pending_approval_hint": "Yalnızca yöneticiler ve adminler onaylayabilir.",
+    "changeorders.pending_approval_hint":
+      "Yalnızca yöneticiler ve adminler onaylayabilir.",
     "changeorders.reason": "Neden",
     "changeorders.reject": "Reddet",
     "changeorders.reject_confirm": "Bu değişiklik emri reddedilsin mi?",
@@ -3196,10 +3553,12 @@ const resource = {
     "changeorders.status_submitted": "Gönderildi",
     "changeorders.status_under_review": "İncelemede",
     "changeorders.submit": "Gönder",
-    "changeorders.submit_confirm": "Bu değişiklik emri inceleme için gönderilsin mi? Bu işlem geri alınamaz.",
+    "changeorders.submit_confirm":
+      "Bu değişiklik emri inceleme için gönderilsin mi? Bu işlem geri alınamaz.",
     "changeorders.submitted": "Değişiklik emri gönderildi",
     "changeorders.submitted_at": "Gönderildi",
-    "changeorders.subtitle": "Maliyet ve takvim etkisiyle kapsam değişikliklerini takip edin",
+    "changeorders.subtitle":
+      "Maliyet ve takvim etkisiyle kapsam değişikliklerini takip edin",
     "changeorders.title_placeholder": "örn. Ek temel çalışması",
     "changeorders.total": "Toplam Emir",
     "changeorders.type": "Tür",
@@ -3208,7 +3567,8 @@ const resource = {
     "changeorders.type_removed": "Kaldırıldı",
     "changeorders.unit_placeholder": "m2, m3, adet...",
     "changeorders.workflow": "İş Akışı",
-    "changeorders.workflow_desc": "Değişiklik emri iş akışı: Taslak (kapsam değişikliği hazırla) → Gönderildi (incelemeye gönder) → Onaylandı veya Reddedildi. Her emir maliyet etkisini ve takvim etkisini gün olarak takip eder. Nelerin değiştiğini — özgün ve yeni miktarlar ve birim fiyatlar — ayrıntılandırmak için kalemler ekleyin. Maliyet farkı otomatik olarak hesaplanır.",
+    "changeorders.workflow_desc":
+      "Değişiklik emri iş akışı: Taslak (kapsam değişikliği hazırla) → Gönderildi (incelemeye gönder) → Onaylandı veya Reddedildi. Her emir maliyet etkisini ve takvim etkisini gün olarak takip eder. Nelerin değiştiğini — özgün ve yeni miktarlar ve birim fiyatlar — ayrıntılandırmak için kalemler ekleyin. Maliyet farkı otomatik olarak hesaplanır.",
     "explorer.analysis_name": "Ad",
     "explorer.apply_pivot": "Uygula",
     "explorer.bar": "Çubuk",
@@ -3224,8 +3584,10 @@ const resource = {
     "explorer.conversion_complete": "Dönüştürme tamamlandı",
     "explorer.conversion_failed": "Dönüştürme başarısız",
     "explorer.converters": "CAD Dönüştürücüler",
-    "explorer.converters_desc": "BIM eleman verisi çıkarmak için DDC Community dönüştürücüler",
-    "explorer.converters_external_hint": "CAD dönüştürücüler sunucunuzda DDC cad2data araçlarının kurulu olmasını gerektirir",
+    "explorer.converters_desc":
+      "BIM eleman verisi çıkarmak için DDC Community dönüştürücüler",
+    "explorer.converters_external_hint":
+      "CAD dönüştürücüler sunucunuzda DDC cad2data araçlarının kurulu olmasını gerektirir",
     "explorer.converting": "{{name}} dönüştürülüyor...",
     "explorer.converting_msg": "Dönüştürülüyor...",
     "explorer.count": "Sayı",
@@ -3234,7 +3596,8 @@ const resource = {
     "explorer.create_boq_title": "Pivottan BOQ Oluştur",
     "explorer.create_positions": "{{count}} Kalem Oluştur",
     "explorer.data_completeness": "Veri Bütünlüğü",
-    "explorer.delete_session_confirm": "Bu analiz silinsin mi? Bu işlem geri alınamaz.",
+    "explorer.delete_session_confirm":
+      "Bu analiz silinsin mi? Bu işlem geri alınamaz.",
     "explorer.documents": "Belgeler",
     "explorer.done": "Dönüştürme tamamlandı! Yükleniyor...",
     "explorer.drop_cad": "Keşfetmek için CAD/BIM dosyası bırakın",
@@ -3249,7 +3612,8 @@ const resource = {
     "explorer.heatmap": "Değer ısı haritasını aç/kapat",
     "explorer.heatmap_short": "Isı Haritası",
     "explorer.installed": "kuruldu",
-    "explorer.invalid_format": "Desteklenmeyen dosya formatı. RVT, IFC, DWG veya DGN kullanın.",
+    "explorer.invalid_format":
+      "Desteklenmeyen dosya formatı. RVT, IFC, DWG veya DGN kullanın.",
     "explorer.like_describe": "df.describe() gibi",
     "explorer.max": "Maks",
     "explorer.mean": "Ortalama",
@@ -3260,7 +3624,8 @@ const resource = {
     "explorer.no_chart_data": "Grafik verisi yok",
     "explorer.no_groups": "Grup bulunamadı. Farklı sütunlar deneyin.",
     "explorer.non_null": "Dolu",
-    "explorer.or_click": "veya göz atmak için tıklayın — veri tablosu, pivot, grafikler & istatistikler",
+    "explorer.or_click":
+      "veya göz atmak için tıklayın — veri tablosu, pivot, grafikler & istatistikler",
     "explorer.page_of": "Sayfa {{page}} / {{total}}",
     "explorer.page_summary": "Sayfa toplamları:",
     "explorer.pie": "Pasta",
@@ -3269,22 +3634,27 @@ const resource = {
     "explorer.powered_by": "Güçlendiren",
     "explorer.project": "Proje",
     "explorer.recent_models": "Son Modeller",
-    "explorer.requires_external": "Harici araç — kurulum talimatları için tıklayın",
+    "explorer.requires_external":
+      "Harici araç — kurulum talimatları için tıklayın",
     "explorer.rows": "satır",
     "explorer.save_analysis": "Analizi Kaydet",
     "explorer.save_as_bim": "BIM Modeli Olarak Kaydet",
     "explorer.save_permanently": "Kalıcı Olarak Kaydet",
     "explorer.save_to_project": "Projeye Kaydet (BIM Hub)",
     "explorer.save_to_project_btn": "Projeye Kaydet",
-    "explorer.save_to_project_desc": "Seçilen projede tüm çıkarılan elemanlarla bir BIM modeli oluşturur.",
+    "explorer.save_to_project_desc":
+      "Seçilen projede tüm çıkarılan elemanlarla bir BIM modeli oluşturur.",
     "explorer.saved": "Analiz kalıcı olarak kaydedildi",
     "explorer.saved_to_project": "BIM Hub'a Kaydedildi",
-    "explorer.saved_to_project_msg": "Elemanlar BIM Hub'a kaydedildi. BIM Görüntüleyici'de görüntüleyin.",
+    "explorer.saved_to_project_msg":
+      "Elemanlar BIM Hub'a kaydedildi. BIM Görüntüleyici'de görüntüleyin.",
     "explorer.search_all": "Tüm sütunlarda ara...",
-    "explorer.select_columns_for_chart": "Grafik oluşturmak için grupla ve değer sütunlarını seçin.",
+    "explorer.select_columns_for_chart":
+      "Grafik oluşturmak için grupla ve değer sütunlarını seçin.",
     "explorer.select_project": "Proje seçin...",
     "explorer.selected": "seçildi",
-    "explorer.session_expired_desc": "CAD oturumları 24 saat geçerlidir. Devam etmek için dosyanızı tekrar yükleyin.",
+    "explorer.session_expired_desc":
+      "CAD oturumları 24 saat geçerlidir. Devam etmek için dosyanızı tekrar yükleyin.",
     "explorer.session_expired_title": "Oturum sona erdi veya bulunamadı",
     "explorer.setup_guide": "Kurulum Kılavuzu",
     "explorer.sparse_columns": "Seyrek (<%10)",
@@ -3304,7 +3674,8 @@ const resource = {
     "explorer.visible_columns": "Görünür Sütunlar",
     "explorer.active_filters": "Aktif filtreler",
     "explorer.clear_all_filters": "Tümünü temizle",
-    "explorer.no_active_filters": "Sekmeler arasında filtre uygulamak için herhangi bir grafik çubuğuna veya dilimine tıklayın.",
+    "explorer.no_active_filters":
+      "Sekmeler arasında filtre uygulamak için herhangi bir grafik çubuğuna veya dilimine tıklayın.",
     "explorer.line": "Çizgi",
     "explorer.scatter": "Dağılım",
     "explorer.format": "Biçim",
@@ -3319,7 +3690,8 @@ const resource = {
     "explorer.save_view": "Görünümü kaydet",
     "explorer.save_view_prompt": "Bu görünümü adlandırın",
     "explorer.saved_views": "Kaydedilmiş görünümler",
-    "explorer.no_saved_views": "Henüz kaydedilmiş görünüm yok. Filtrelerinizi, grafik ve pivot yapılandırmanızı sonrası için kaydedin.",
+    "explorer.no_saved_views":
+      "Henüz kaydedilmiş görünüm yok. Filtrelerinizi, grafik ve pivot yapılandırmanızı sonrası için kaydedin.",
     "explorer.load_view": "Yükle",
     "explorer.delete_view": "Sil",
     "explorer.view_saved": "Görünüm kaydedildi",
@@ -3328,7 +3700,8 @@ const resource = {
     "explorer.drill_down_empty": "Bu dilimle eşleşen satır yok.",
     "explorer.close": "Kapat",
     "explorer.showing_rows": "{{count}} satır gösteriliyor",
-    "explorer.chart_click_hint": "Çapraz filtreleme için bir çubuk / dilim / noktaya tıklayın",
+    "explorer.chart_click_hint":
+      "Çapraz filtreleme için bir çubuk / dilim / noktaya tıklayın",
     "fieldreports.add_trade": "İş kolu ekle",
     "fieldreports.all_statuses": "Tüm Durumlar",
     "fieldreports.all_types": "Tüm Türler",
@@ -3351,12 +3724,15 @@ const resource = {
     "fieldreports.delays_placeholder": "Yaşanan gecikmeleri açıklayın...",
     "fieldreports.deleted": "Saha raporu silindi",
     "fieldreports.deliveries": "Teslimatlar",
-    "fieldreports.deliveries_placeholder": "Teslim edilen malzeme veya ekipman...",
+    "fieldreports.deliveries_placeholder":
+      "Teslim edilen malzeme veya ekipman...",
     "fieldreports.download_template": "İçe aktarma şablonunu indir",
-    "fieldreports.drop_file": "Excel veya CSV dosyasını buraya bırakın veya göz atmak için tıklayın",
+    "fieldreports.drop_file":
+      "Excel veya CSV dosyasını buraya bırakın veya göz atmak için tıklayın",
     "fieldreports.edit_report": "Saha Raporunu Düzenle",
     "fieldreports.empty": "Henüz saha raporu yok",
-    "fieldreports.empty_desc": "Saha aktivitelerini takip etmek için ilk günlük saha raporunuzu oluşturun.",
+    "fieldreports.empty_desc":
+      "Saha aktivitelerini takip etmek için ilk günlük saha raporunuzu oluşturun.",
     "fieldreports.export": "Dışa Aktar",
     "fieldreports.export_failed": "Dışa aktarma başarısız",
     "fieldreports.export_pdf": "PDF Dışa Aktar",
@@ -3368,20 +3744,24 @@ const resource = {
     "fieldreports.import": "İçe Aktar",
     "fieldreports.import_btn": "İçe Aktar",
     "fieldreports.import_reports": "Saha Raporlarını İçe Aktar",
-    "fieldreports.import_result": "İçe aktarıldı: {{imported}}, Atlandı: {{skipped}}, Hata: {{errors}}",
+    "fieldreports.import_result":
+      "İçe aktarıldı: {{imported}}, Atlandı: {{skipped}}, Hata: {{errors}}",
     "fieldreports.list_view": "Liste",
     "fieldreports.new_report": "Yeni Rapor",
     "fieldreports.no_match": "Eşleşen rapor yok",
-    "fieldreports.no_match_desc": "Durum veya tür filtrelerinizi ayarlamayı deneyin.",
+    "fieldreports.no_match_desc":
+      "Durum veya tür filtrelerinizi ayarlamayı deneyin.",
     "fieldreports.no_project": "Proje seçin",
-    "fieldreports.no_project_desc": "Saha raporlarını görüntülemek için kenar çubuğundan bir proje seçin.",
+    "fieldreports.no_project_desc":
+      "Saha raporlarını görüntülemek için kenar çubuğundan bir proje seçin.",
     "fieldreports.notes": "Notlar",
     "fieldreports.notes_placeholder": "Ek notlar veya gözlemler...",
     "fieldreports.report_date": "Tarih",
     "fieldreports.report_type": "Rapor Türü",
     "fieldreports.row_error": "Satır {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Güvenlik Olayları",
-    "fieldreports.safety_placeholder": "Güvenlik olaylarını veya ramak kala durumları bildirin...",
+    "fieldreports.safety_placeholder":
+      "Güvenlik olaylarını veya ramak kala durumları bildirin...",
     "fieldreports.show_errors": "Hata ayrıntılarını göster",
     "fieldreports.stat_approved": "Onaylandı",
     "fieldreports.stat_draft": "Taslak",
@@ -3404,7 +3784,8 @@ const resource = {
     "fieldreports.wind": "Rüzgar",
     "fieldreports.wind_placeholder": "örn. 15 km/sa KD",
     "fieldreports.work_performed": "Yapılan İşler",
-    "fieldreports.work_performed_placeholder": "Bugün tamamlanan iş faaliyetlerini açıklayın...",
+    "fieldreports.work_performed_placeholder":
+      "Bugün tamamlanan iş faaliyetlerini açıklayın...",
     "fieldreports.workers": "işçi",
     "fieldreports.workforce_section": "İşgücü",
     "risk.all_categories": "Tüm Kategoriler",
@@ -3416,17 +3797,20 @@ const resource = {
     "risk.contingency": "Acil Durum Planı",
     "risk.created": "Risk oluşturuldu",
     "risk.critical": "Kritik (16-25)",
-    "risk.delete_message": "Bu risk kalıcı olarak kaldırılacaktır. Bu işlem geri alınamaz.",
+    "risk.delete_message":
+      "Bu risk kalıcı olarak kaldırılacaktır. Bu işlem geri alınamaz.",
     "risk.delete_title": "Riski Sil",
     "risk.deleted": "Risk silindi",
-    "risk.disclaimer": "Monte Carlo simülasyonu yalnızca olasılıksal tahminler sunar. Sonuçlar girdi varsayımlarına bağlıdır.",
+    "risk.disclaimer":
+      "Monte Carlo simülasyonu yalnızca olasılıksal tahminler sunar. Sonuçlar girdi varsayımlarına bağlıdır.",
     "risk.dist": "Dağılım",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Üçgen",
     "risk.dist_uniform": "Düzgün",
     "risk.distribution": "Maliyet Dağılımı (Histogram)",
     "risk.empty": "Kayıtlı risk yok",
-    "risk.empty_desc": "Potansiyel sorunları ve azaltma stratejilerini takip etmek için risk ekleyin",
+    "risk.empty_desc":
+      "Potansiyel sorunları ve azaltma stratejilerini takip etmek için risk ekleyin",
     "risk.export_csv": "CSV Dışa Aktar",
     "risk.exposure": "Toplam Maruziyet",
     "risk.heatmap": "Risk Matrisi",
@@ -3499,11 +3883,14 @@ const resource = {
     "toasts.schedule_generated": "BOQ'dan takvim oluşturuldu",
     "toasts.status_updated": "Durum güncellendi",
     "toasts.update_failed": "Güncelleme başarısız",
-    "bim.cad_processing_note": "Büyük dosyalar için işlem birkaç dakika sürebilir",
+    "bim.cad_processing_note":
+      "Büyük dosyalar için işlem birkaç dakika sürebilir",
     "bim.cad_upload_queued": "CAD dosyası işleme kuyruğuna alındı",
     "bim.cad_upload_success": "CAD dosyası yüklendi",
-    "bim.cad_upload_success_desc": "Dosya başarıyla yüklendi. İşlem kısa süre içinde başlayacaktır.",
-    "bim.confirm_delete_model": "\"{{name}}\" silinsin mi? Tüm elemanlar kaldırılacaktır.",
+    "bim.cad_upload_success_desc":
+      "Dosya başarıyla yüklendi. İşlem kısa süre içinde başlayacaktır.",
+    "bim.confirm_delete_model":
+      '"{{name}}" silinsin mi? Tüm elemanlar kaldırılacaktır.',
     "bim.disc_architecture": "Mimarlık",
     "bim.disc_civil": "İnşaat",
     "bim.disc_electrical": "Elektrik",
@@ -3515,22 +3902,30 @@ const resource = {
     "bim.disc_structural": "Yapısal",
     "bim.discipline_label": "Disiplin",
     "bim.getting_started": "BIM Görüntüleyici",
-    "bim.getting_started_desc": "3D bina modellerini görselleştirmek için CAD dönüştürücünüzden eleman verisi (CSV/Excel) ve isteğe bağlı 3D geometri (DAE) yükleyin. Elemanlar miktar doğrulaması için BOQ kalemleriyle ilişkilendirilebilir.",
+    "bim.getting_started_desc":
+      "3D bina modellerini görselleştirmek için CAD dönüştürücünüzden eleman verisi (CSV/Excel) ve isteğe bağlı 3D geometri (DAE) yükleyin. Elemanlar miktar doğrulaması için BOQ kalemleriyle ilişkilendirilebilir.",
     "bim.hide_upload": "Kapat",
     "bim.landing_drop_here": "Dosyanızı buraya bırakın",
-    "bim.landing_feat_3d_desc": "Kat filtreleme, disiplin renklendirme ve eleman seçimiyle interaktif Three.js görüntüleyici.",
+    "bim.landing_feat_3d_desc":
+      "Kat filtreleme, disiplin renklendirme ve eleman seçimiyle interaktif Three.js görüntüleyici.",
     "bim.landing_feat_3d_title": "3D Görselleştirme",
-    "bim.landing_feat_boq_desc": "Otomatik miktar doğrulaması ve 5D metraj için BIM elemanlarını maliyet kalemleriyle ilişkilendirin.",
+    "bim.landing_feat_boq_desc":
+      "Otomatik miktar doğrulaması ve 5D metraj için BIM elemanlarını maliyet kalemleriyle ilişkilendirin.",
     "bim.landing_feat_boq_title": "BOQ Bağlantısı",
-    "bim.landing_feat_compare_desc": "Eklenen, kaldırılan ve değiştirilen elemanları otomatik olarak tespit etmek için sürümleri karşılaştırın.",
+    "bim.landing_feat_compare_desc":
+      "Eklenen, kaldırılan ve değiştirilen elemanları otomatik olarak tespit etmek için sürümleri karşılaştırın.",
     "bim.landing_feat_compare_title": "Model Karşılaştırma",
-    "bim.landing_feat_extract_desc": "Duvarlar, döşemeler, kolonlar, kirişler, MEP — özellikler, alanlar, hacimler ve sınıflandırmayla.",
+    "bim.landing_feat_extract_desc":
+      "Duvarlar, döşemeler, kolonlar, kirişler, MEP — özellikler, alanlar, hacimler ve sınıflandırmayla.",
     "bim.landing_feat_extract_title": "Eleman Çıkarma",
-    "bim.landing_feat_format_desc": "IFC anında işlenir. RVT ise DDC cad2data üzerinden. Önceden dönüştürülmüş veriler için CSV/Excel.",
+    "bim.landing_feat_format_desc":
+      "IFC anında işlenir. RVT ise DDC cad2data üzerinden. Önceden dönüştürülmüş veriler için CSV/Excel.",
     "bim.landing_feat_format_title": "Format Bağımsız",
-    "bim.landing_feat_qty_desc": "Alan, hacim ve uzunluk çıkarmak için kurallar tanımlayın — tüm modele tek seferde uygulayın.",
+    "bim.landing_feat_qty_desc":
+      "Alan, hacim ve uzunluk çıkarmak için kurallar tanımlayın — tüm modele tek seferde uygulayın.",
     "bim.landing_feat_qty_title": "Metraj Haritaları",
-    "bim.landing_hero_subtitle": "Bina elemanlarını görselleştirmek, miktarları çıkarmak ve Metraj ile Keşfinize bağlamak için IFC veya Revit dosyaları yükleyin.",
+    "bim.landing_hero_subtitle":
+      "Bina elemanlarını görselleştirmek, miktarları çıkarmak ve Metraj ile Keşfinize bağlamak için IFC veya Revit dosyaları yükleyin.",
     "bim.landing_hero_title": "BIM 3D Görüntüleyici",
     "bim.landing_processing": "İşleniyor...",
     "bim.landing_size_hint": "IFC, Revit, CSV veya Excel · Maks 500 MB",
@@ -3541,11 +3936,14 @@ const resource = {
     "bim.model_name_placeholder": "örn. Bina A — Mimarlık",
     "bim.no_models_hint_upload": "Başlamak için BIM verisi yükleyin.",
     "bim.overlay_delete_btn": "Sil",
-    "bim.overlay_error_desc": "Elemanlar çıkarılamadı. Önce IFC'ye dönüştürmeyi veya verileri manuel olarak yüklemeyi deneyin.",
+    "bim.overlay_error_desc":
+      "Elemanlar çıkarılamadı. Önce IFC'ye dönüştürmeyi veya verileri manuel olarak yüklemeyi deneyin.",
     "bim.overlay_error_title": "İşlem Başarısız",
-    "bim.overlay_needs_converter_desc": "{{format}} dosyaları çıkarma için DDC cad2data gerektirir. Önce IFC'ye dönüştürün veya önceden dönüştürülmüş veriler yükleyin.",
+    "bim.overlay_needs_converter_desc":
+      "{{format}} dosyaları çıkarma için DDC cad2data gerektirir. Önce IFC'ye dönüştürün veya önceden dönüştürülmüş veriler yükleyin.",
     "bim.overlay_needs_converter_title": "Dönüştürücü Gerekli",
-    "bim.overlay_processing_desc": "{{format}} dosyanızdan elemanlar çıkarılıyor. Bu biraz zaman alabilir.",
+    "bim.overlay_processing_desc":
+      "{{format}} dosyanızdan elemanlar çıkarılıyor. Bu biraz zaman alabilir.",
     "bim.overlay_processing_title": "Model İşleniyor...",
     "bim.overlay_upload_converted_btn": "Dönüştürülmüş Veri Yükle",
     "bim.show_upload": "BIM Verisi Yükle",
@@ -3563,11 +3961,13 @@ const resource = {
     "bim.upload_btn": "Yükle",
     "bim.upload_cad_hint": "Desteklenen: RVT, IFC, DWG, DGN",
     "bim.upload_cad_label": "CAD / BIM Dosyası",
-    "bim.upload_cad_note": "Sunucuda DDC dönüştürücülerin kurulu olmasını gerektirir",
+    "bim.upload_cad_note":
+      "Sunucuda DDC dönüştürücülerin kurulu olmasını gerektirir",
     "bim.upload_data_columns": "Tespit edilen sütunlar",
     "bim.upload_data_hint": "CAD dönüştürücüden CSV veya Excel",
     "bim.upload_data_label": "Eleman Verisi (zorunlu)",
-    "bim.upload_desc_full": "Eleman verisi ve isteğe bağlı 3D geometri yükleyin",
+    "bim.upload_desc_full":
+      "Eleman verisi ve isteğe bağlı 3D geometri yükleyin",
     "bim.upload_failed": "Yükleme başarısız",
     "bim.upload_geo_hint": "3D görselleştirme için DAE (Collada) formatı",
     "bim.upload_geo_label": "3D Geometri (isteğe bağlı)",
@@ -3578,21 +3978,25 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D Geometri",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle": "Zaten dönüştürdünüz mü? Veri + geometriyi ayrı ayrı yükleyin",
+    "bim.upload_advanced_mode_toggle":
+      "Zaten dönüştürdünüz mü? Veri + geometriyi ayrı ayrı yükleyin",
     "bim.upload_depth_label": "Dönüştürme derinliği",
     "bim.upload_depth_standard": "Standart · ana kategoriler (hızlı)",
     "bim.upload_depth_medium": "Orta · genişletilmiş kategoriler (dengeli)",
     "bim.upload_depth_complete": "Tam · tüm kategoriler (yavaş)",
-    "bim.upload_depth_help": "Kaç Revit kategorisinin çıkarılacağını kontrol eder. Eleman kimlikleri ve tam özellikler her zaman korunur.",
+    "bim.upload_depth_help":
+      "Kaç Revit kategorisinin çıkarılacağını kontrol eder. Eleman kimlikleri ve tam özellikler her zaman korunur.",
     "bim.upload_discipline_label": "Disiplin",
     "bim.upload_drop_here": "Dosyayı buraya bırakın",
-    "bim.upload_generate_pdf_label": "Proje sayfalarını PDF olarak da dışa aktar (arka planda)",
+    "bim.upload_generate_pdf_label":
+      "Proje sayfalarını PDF olarak da dışa aktar (arka planda)",
     "bim.upload_model_name_label": "Model Adı",
     "bim.upload_model_name_placeholder": "örn. Bina A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "Model Yükle",
     "bim.upload_remove_file": "Kaldır",
-    "bim.upload_rvt_note": "Not: RVT dosyaları DDC cad2data gerektirir. IFC kullanmayı düşünün.",
+    "bim.upload_rvt_note":
+      "Not: RVT dosyaları DDC cad2data gerektirir. IFC kullanmayı düşünün.",
     "bim.upload_simple_mode_toggle": "Basit moda geç",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc) · Maks 500 MB",
     "bim.upload_success_desc": "Model başarıyla yüklendi.",
@@ -3617,7 +4021,8 @@ const resource = {
     "modules.disabled": "{{name}} devre dışı",
     "modules.disabled_label": "Devre Dışı",
     "modules.enabled": "{{name}} etkin",
-    "modules.page_subtitle": "Platform modüllerini etkinleştirin, devre dışı bırakın ve yönetin",
+    "modules.page_subtitle":
+      "Platform modüllerini etkinleştirin, devre dışı bırakın ve yönetin",
     "modules.page_title": "Modüller & Market",
     "modules.required_by": "Gerektiren: {{deps}}",
     "modules.required_by_short": "{{count}} modül tarafından gerekli",
@@ -3652,7 +4057,8 @@ const resource = {
     "reporting.invoices_month": "Ödenecek Fatura (Ay)",
     "reporting.invoices_week": "Ödenecek Fatura (Hafta)",
     "reporting.no_boqs": "Bu projede BOQ yok",
-    "reporting.no_finance_data": "Bu proje için finansal veri mevcut değil. Önce fatura ve bütçe oluşturun.",
+    "reporting.no_finance_data":
+      "Bu proje için finansal veri mevcut değil. Önce fatura ve bütçe oluşturun.",
     "reporting.no_projects": "Proje bulunamadı",
     "reporting.no_safety_data": "Bu proje için güvenlik verisi mevcut değil.",
     "reporting.observations": "Gözlemler",
@@ -3678,7 +4084,8 @@ const resource = {
     "reporting.schedule_progress": "Takvim İlerlemesi",
     "reporting.schedule_summary": "Takvim Özeti",
     "reporting.select_project": "Proje",
-    "reporting.select_project_prompt": "Panoyu görüntülemek için bir proje seçin",
+    "reporting.select_project_prompt":
+      "Panoyu görüntülemek için bir proje seçin",
     "reporting.spi": "Takvim SPI",
     "reporting.subtitle": "Raporlama Panoları",
     "reporting.today_activities": "Toplam Aktivite",
@@ -3693,7 +4100,8 @@ const resource = {
     "settings.tm_showing": "{{total}} anahtardan {{count}} gösteriliyor",
     "punch.stat_avg_close": "Ort. Kapanma Günü",
     "match_elements.title": "Elemanları Eşle",
-    "match_elements.subtitle": "BIM elemanlarını → CWICR pozisyonlarına eşle. BIM aktif; DWG / PDF / Fotoğraf sonraki fazlarda gelecek.",
+    "match_elements.subtitle":
+      "BIM elemanlarını → CWICR pozisyonlarına eşle. BIM aktif; DWG / PDF / Fotoğraf sonraki fazlarda gelecek.",
     "match_elements.select_project": "Proje seç…",
     "match_elements.source.bim_live": "BIM (aktif)",
     "match_elements.library": "Kütüphane",
@@ -3706,9 +4114,11 @@ const resource = {
     "match_elements.detail": "Detay",
     "match_elements.no_match": "Eşleşme yok…",
     "match_elements.loading_groups": "Gruplar yükleniyor…",
-    "match_elements.no_groups": "Henüz grup yok — bu projeyi doldurmak için bir BIM modeli içe aktarın.",
+    "match_elements.no_groups":
+      "Henüz grup yok — bu projeyi doldurmak için bir BIM modeli içe aktarın.",
     "match_elements.loading_detail": "Detay yükleniyor…",
-    "match_elements.footer": "Faz A.10–A.12 — çoklu seçim toplu işlemler, eşik tabanlı onay, eşleşme yok akışı ve kiracı şablon kütüphanesi aktif. Sürüklenebilir çipler ve 3D vurgulama Faz B'de gelecek.",
+    "match_elements.footer":
+      "Faz A.10–A.12 — çoklu seçim toplu işlemler, eşik tabanlı onay, eşleşme yok akışı ve kiracı şablon kütüphanesi aktif. Sürüklenebilir çipler ve 3D vurgulama Faz B'de gelecek.",
     "match_elements.aria.select_all": "Tüm görünür grupları seç",
     "match_elements.aria.select_group": "{{key}} seç",
     "match_elements.col.group": "Grup",
@@ -3735,36 +4145,50 @@ const resource = {
     "match_elements.action.confirm_selected": "{{count}} onayla ≥ {{thr}}",
     "match_elements.action.confirm_all": "Tümünü onayla ≥ {{thr}}",
     "match_elements.action.skip_n": "{{count}} atla (belirlenecek)",
-    "match_elements.busy.run_selected": "Seçili {{count}} öğede {{method}} eşleyici çalışıyor…",
-    "match_elements.busy.run_all": "Tüm gruplarda {{method}} eşleyici çalışıyor…",
-    "match_elements.busy.bulk_confirm_selected": "Seçili {{count}} toplu onaylanıyor ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all": "Eşleşmeler toplu onaylanıyor ≥ {{thr}}…",
-    "match_elements.busy.mark_tbd": "{{count}} grup belirlenecek olarak işaretleniyor…",
+    "match_elements.busy.run_selected":
+      "Seçili {{count}} öğede {{method}} eşleyici çalışıyor…",
+    "match_elements.busy.run_all":
+      "Tüm gruplarda {{method}} eşleyici çalışıyor…",
+    "match_elements.busy.bulk_confirm_selected":
+      "Seçili {{count}} toplu onaylanıyor ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all":
+      "Eşleşmeler toplu onaylanıyor ≥ {{thr}}…",
+    "match_elements.busy.mark_tbd":
+      "{{count}} grup belirlenecek olarak işaretleniyor…",
     "match_elements.alert.confirmed": "{{count}} grup onaylandı",
-    "match_elements.alert.marked_tbd": "{{count}} grup belirlenecek olarak işaretlendi",
+    "match_elements.alert.marked_tbd":
+      "{{count}} grup belirlenecek olarak işaretlendi",
     "match_elements.detail.elements_count": "{{count}} eleman",
-    "match_elements.detail.no_matchers_run": "Bu grup için henüz eşleyici çalıştırılmadı.",
-    "match_elements.detail.use_action_bar": "Yukarıdaki işlem çubuğu düğmelerini kullanın.",
+    "match_elements.detail.no_matchers_run":
+      "Bu grup için henüz eşleyici çalıştırılmadı.",
+    "match_elements.detail.use_action_bar":
+      "Yukarıdaki işlem çubuğu düğmelerini kullanın.",
     "match_elements.detail.col.code": "Kod",
     "match_elements.detail.col.description": "Açıklama",
     "match_elements.detail.col.unit_rate": "Birim · Fiyat",
     "match_elements.detail.col.conf": "Güv.",
     "match_elements.detail.confirm": "Onayla",
-    "match_elements.detail.element_ids_count": "{{count}} eleman ID'si. 3D vurgulama Faz A.12'de.",
+    "match_elements.detail.element_ids_count":
+      "{{count}} eleman ID'si. 3D vurgulama Faz A.12'de.",
     "match_elements.detail.and_more": "…ve {{count}} daha",
     "match_elements.detail.building_preview": "Önizleme oluşturuluyor…",
-    "match_elements.detail.auto_loaded_resources": "Otomatik yüklenen kaynaklar:",
-    "match_elements.detail.confirm_first": "Keşif önizlemesini görmek için önce bir eşleşmeyi onaylayın.",
+    "match_elements.detail.auto_loaded_resources":
+      "Otomatik yüklenen kaynaklar:",
+    "match_elements.detail.confirm_first":
+      "Keşif önizlemesini görmek için önce bir eşleşmeyi onaylayın.",
     "match_elements.tab.methods": "Eşleşme adayları",
     "match_elements.tab.elements": "Elemanlar ({{count}})",
     "match_elements.tab.apply": "Uygulama önizlemesi",
     "match_elements.no_match.heading": "Eşleşme yok — işlem seç",
     "match_elements.no_match.custom.title": "Özel pozisyon oluştur",
-    "match_elements.no_match.custom.sub": "Açıklama, birim ve fiyat ile projeye özel pozisyon ekle.",
+    "match_elements.no_match.custom.sub":
+      "Açıklama, birim ve fiyat ile projeye özel pozisyon ekle.",
     "match_elements.no_match.rfq.title": "İhaleye gönder",
-    "match_elements.no_match.rfq.sub": "İhale için işaretle — taşeronlardan teklif iste.",
+    "match_elements.no_match.rfq.sub":
+      "İhale için işaretle — taşeronlardan teklif iste.",
     "match_elements.no_match.tbd.title": "Belirlenecek olarak işaretle",
-    "match_elements.no_match.tbd.sub": "Grubu beklet; daha sonra incele. Çözülene kadar BOQ toplamlarından dışlanır.",
+    "match_elements.no_match.tbd.sub":
+      "Grubu beklet; daha sonra incele. Çözülene kadar BOQ toplamlarından dışlanır.",
     "match_elements.no_match.placeholder.description": "Pozisyon açıklaması",
     "match_elements.no_match.placeholder.unit": "Birim",
     "match_elements.no_match.placeholder.rate": "Birim fiyat",
@@ -3774,38 +4198,49 @@ const resource = {
     "match_elements.templates.count": "{{count}} imza",
     "match_elements.templates.loading": "Kütüphane yükleniyor…",
     "match_elements.templates.empty": "Henüz kayıtlı şablon yok.",
-    "match_elements.templates.empty_hint": "«Kütüphaneye kaydet» etkin onaylanmış eşleşmeler burada görünür ve gelecek projelere yayılır.",
+    "match_elements.templates.empty_hint":
+      "«Kütüphaneye kaydet» etkin onaylanmış eşleşmeler burada görünür ve gelecek projelere yayılır.",
     "match_elements.templates.unnamed": "(adsız)",
     "match_elements.templates.sig": "imza: {{prefix}}…",
     "match_elements.templates.used": "Kullanıldı",
     "match_elements.templates.last": "son {{date}}",
-    "match_elements.templates.remove_confirm": "Bu şablon kütüphaneden kaldırılsın mı?",
+    "match_elements.templates.remove_confirm":
+      "Bu şablon kütüphaneden kaldırılsın mı?",
     "match_elements.templates.remove_title": "Kütüphaneden kaldır",
-    "match_elements.templates.footer": "Şablonlar kiracı kapsamlıdır. Onaylanmış imzalar gelecek projelerde otomatik olarak eşleşmeleri önerir.",
+    "match_elements.templates.footer":
+      "Şablonlar kiracı kapsamlıdır. Onaylanmış imzalar gelecek projelerde otomatik olarak eşleşmeleri önerir.",
     "match_elements.no_project_title": "Aktif proje seçilmedi.",
-    "match_elements.no_project_hint": "Open the project picker in the header, or visit",
+    "match_elements.no_project_hint":
+      "Open the project picker in the header, or visit",
     "match_elements.active_project": "Aktif proje",
     "match_elements.loading_sessions": "Loading sessions…",
-    "match_elements.no_prior_sessions": "No prior matching sessions for this project.",
+    "match_elements.no_prior_sessions":
+      "No prior matching sessions for this project.",
     "match_elements.session_default_name": "Session {{id}}",
     "match_elements.new_session": "Yeni oturum",
     "match_elements.new_text.button": "Metinden",
-    "match_elements.new_text.button_title": "Açıklamaları yapıştırın — her satıra bir tane",
+    "match_elements.new_text.button_title":
+      "Açıklamaları yapıştırın — her satıra bir tane",
     "match_elements.new_text.title": "Yeni oturum — açıklamaları yapıştırın",
-    "match_elements.new_text.hint": "Her satıra bir kalem. Her satır bir gruba dönüşür; anlamsal arama en yakın CWICR birim fiyatlarını bulur. Herhangi bir dil — çok dilli kodlayıcı diller arası sorguları işler.",
+    "match_elements.new_text.hint":
+      "Her satıra bir kalem. Her satır bir gruba dönüşür; anlamsal arama en yakın CWICR birim fiyatlarını bulur. Herhangi bir dil — çok dilli kodlayıcı diller arası sorguları işler.",
     "match_elements.new_text.name_label": "Oturum adı (isteğe bağlı)",
     "match_elements.new_text.name_placeholder": "örn. Hızlı tahmin Ç3",
     "match_elements.new_text.lines_label": "Açıklamalar (her satıra bir tane)",
-    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder":
+      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Oturum oluştur",
     "match_elements.new_excel.button": "Excel Birim Fiyat'tan",
     "match_elements.new_excel.button_title": ".xlsx Birim Fiyat Cetveli yükle",
     "match_elements.new_excel.title": "Excel Birim Fiyat'tan yeni oturum",
-    "match_elements.new_excel.hint": "En az bir « Açıklama » sütunu olan bir .xlsx yükleyin (veya yerelleştirilmiş eşdeğeri — Description, Beschreibung, Описание, Descripción, 描述 vb.). İsteğe bağlı sütunlar: Miktar, Birim, Kod, Kategori. Ondalık virgüllü miktarlar tanınır.",
+    "match_elements.new_excel.hint":
+      "En az bir « Açıklama » sütunu olan bir .xlsx yükleyin (veya yerelleştirilmiş eşdeğeri — Description, Beschreibung, Описание, Descripción, 描述 vb.). İsteğe bağlı sütunlar: Miktar, Birim, Kod, Kategori. Ondalık virgüllü miktarlar tanınır.",
     "match_elements.new_excel.name_label": "Oturum adı (isteğe bağlı)",
     "match_elements.new_excel.name_placeholder": "örn. İhale BFC rev 3",
-    "match_elements.new_excel.drop": ".xlsx dosyanızı buraya bırakın veya gözatmak için tıklayın",
-    "match_elements.new_excel.format_hint": "Yalnızca .xlsx · çok dilli başlıklar destekleniyor",
+    "match_elements.new_excel.drop":
+      ".xlsx dosyanızı buraya bırakın veya gözatmak için tıklayın",
+    "match_elements.new_excel.format_hint":
+      "Yalnızca .xlsx · çok dilli başlıklar destekleniyor",
     "match_elements.new_excel.create": "Yükle ve oturum oluştur",
     "match_elements.legend_label": "Confidence",
     "match_elements.legend_high": "Yüksek",
@@ -3813,16 +4248,21 @@ const resource = {
     "match_elements.legend_low": "Düşük",
     "match_elements.col.suggested": "Suggested cost",
     "match_elements.subtractive_hint": "Subtractive / non-billable",
-    "match_elements.detail.opening_warning": "host has openings but gross == net (IFC export bug)",
-    "match_elements.detail.candidate_no_id": "Candidate has no DB id — cannot confirm",
+    "match_elements.detail.opening_warning":
+      "host has openings but gross == net (IFC export bug)",
+    "match_elements.detail.candidate_no_id":
+      "Candidate has no DB id — cannot confirm",
     "match_elements.detail.apply_total": "Toplam",
     "match_elements.auto_confirm_threshold": "Auto-confirm threshold",
-    "match_elements.auto_confirm_help": "Suggested matches at or above this score auto-confirm.",
+    "match_elements.auto_confirm_help":
+      "Suggested matches at or above this score auto-confirm.",
     "match_elements.use_net": "Use net quantities (deduct openings)",
-    "match_elements.use_net_help": "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
+    "match_elements.use_net_help":
+      "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
     "match_elements.trade_filter": "Filter by trade",
     "match_elements.stage_label": "İnşaat aşaması",
-    "match_elements.stage_help": "Eşleşmeleri tek bir OmniClass aşamasına sabitleyin. Tüm aşamalarda aramak için boş bırakın.",
+    "match_elements.stage_help":
+      "Eşleşmeleri tek bir OmniClass aşamasına sabitleyin. Tüm aşamalarda aramak için boş bırakın.",
     "match_elements.stage_any": "Tüm aşamalar",
     "match_elements.stage.02_Demolition": "Yıkım",
     "match_elements.stage.03_Earthwork": "Hafriyat işleri",
@@ -3838,14 +4278,17 @@ const resource = {
     "match_elements.stage.13_Sitework": "Çevre düzenlemesi",
     "match_elements.group_by": "Grupla",
     "match_elements.group_by_empty": "En az bir öznitelik seçin",
-    "match_elements.group_by_active": "{{count}} aktif · kaldırmak için tıklayın",
+    "match_elements.group_by_active":
+      "{{count}} aktif · kaldırmak için tıklayın",
     "match_elements.group_by_remove": "Gruplamadan kaldırmak için tıklayın",
     "match_elements.group_by_sample": "ör.",
     "match_elements.loading_attributes": "Yükleniyor…",
     "match_elements.action.apply": "Apply to BOQ ({{n}})",
-    "match_elements.action.apply_title": "Write confirmed matches to the project BOQ",
+    "match_elements.action.apply_title":
+      "Write confirmed matches to the project BOQ",
     "match_elements.busy.applying": "Applying confirmed groups to BOQ…",
-    "match_elements.alert.applied": "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
+    "match_elements.alert.applied":
+      "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visible",
     "match_elements.selected_count": "{{n}} selected",
     "match_elements.trade.architectural": "Architectural",
@@ -3860,10 +4303,12 @@ const resource = {
     "nav.add_module": "Modül ekle",
     "nav.add_module_hint": "Kendi modülünü oluştur · geliştirici kılavuzu",
     "nav.request_custom_module": "Özel modül talep et",
-    "nav.request_custom_module_hint": "Eksik bir şey mi var? Ne gerektiğini bize söyleyin",
+    "nav.request_custom_module_hint":
+      "Eksik bir şey mi var? Ne gerektiğini bize söyleyin",
     "modules.dev_guide": "Modül oluştur — geliştirici kılavuzu",
     "boq.accept": "Kabul Et",
-    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions":
+      "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Sütun ekle",
@@ -3885,54 +4330,68 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip":
+      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle":
+      "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic":
+      "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary":
+      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg":
+      "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs":
+      "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection":
+      "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc":
+      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle":
+      "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle":
+      "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer":
+      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip":
+      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count":
+      "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip":
+      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -3946,22 +4405,27 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available":
+      "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message":
+      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed":
+      "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title":
+      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip":
+      "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -3988,19 +4452,22 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
+    "boq.column_delete_confirm":
+      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
+    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint":
+      "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
+    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options": "Select column needs at least one option",
+    "boq.column_select_needs_options":
+      "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Tür",
@@ -4020,13 +4487,17 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query": "Enter a description to search the cost database",
+    "boq.cost_finder_no_query":
+      "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder":
+      "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip":
+      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error":
+      "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4036,8 +4507,10 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint":
+      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle":
+      "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4046,7 +4519,8 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint":
+      "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Bütçe",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4059,28 +4533,35 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc":
+      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc":
+      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
+    "boq.grand_total_conversion_tooltip_v2":
+      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint":
+      "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint":
+      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint":
+      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout":
+      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4091,13 +4572,16 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count":
+      "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm":
+      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip":
+      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4108,7 +4592,8 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint":
+      "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4118,52 +4603,64 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns":
+      "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help":
+      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
+    "boq.no_quantities_hint_button":
+      'No quantities — press "Show all" above to surface every BIM property',
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title":
+      "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint":
+      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data":
+      "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder":
+      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc":
+      "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip":
+      "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
+    "boq.preset_already_applied":
+      "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint":
+      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc":
+      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4172,29 +4669,40 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources":
+      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1":
+      "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2":
+      "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3":
+      "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning":
+      "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped":
+      "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual":
+      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint":
+      "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip":
+      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle":
+      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint":
+      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4202,14 +4710,19 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc":
+      "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc":
+      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc":
+      "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc":
+      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning":
+      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4217,28 +4730,41 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Para Birimi",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom":
+      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint":
+      "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match":
+      "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge":
+      "Variant resource — multiple price options available",
     "boq.resource_name": "Ad",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate":
+      "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click":
+      "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base":
+      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Tür",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip":
+      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default":
+      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked":
+      "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked":
+      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4246,19 +4772,25 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip":
+      "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip":
+      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog":
+      "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip":
+      "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip":
+      "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip":
+      "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4267,8 +4799,10 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources": "Search cost items to add as resources to position",
-    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources":
+      "Search cost items to add as resources to position",
+    "boq.search_catalog_resources":
+      "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4276,7 +4810,8 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error":
+      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4305,7 +4840,8 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint":
+      "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4316,9 +4852,11 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement":
+      "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title":
+      "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4326,20 +4864,25 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria":
+      "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked":
+      "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip":
+      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4356,48 +4899,64 @@ const resource = {
     "boq.variables_description": "Açıklama",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help":
+      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Ad",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Tür",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg":
+      "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip":
+      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip":
+      "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip":
+      "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip":
+      "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip":
+      "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc":
+      "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc":
+      "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg":
+      "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg":
+      "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc":
+      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty":
+      "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial":
+      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum":
+      "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Uyumluluk",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle":
+      "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4428,8 +4987,10 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability": "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability":
+      "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp":
+      "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4443,9 +5004,11 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description":
+      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description":
+      "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4468,7 +5031,8 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body":
+      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -4476,7 +5040,8 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region":
+      "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -4494,23 +5059,30 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder":
+      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Ara",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading":
+      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
-    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline":
+      "Cost items are saved locally and available offline.",
+    "costs.description_placeholder":
+      "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above":
+      "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Ekipman",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc":
+      "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer":
+      "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -4529,21 +5101,26 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed":
+      "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint":
+      "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint":
+      "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint": "Positions created with unit rates from cost database",
+    "costs.positions_created_hint":
+      "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
-    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": 'No regions match "{{q}}"',
+    "costs.region_filter_placeholder":
+      "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -4576,12 +5153,14 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip":
+      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding":
+      "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -4595,7 +5174,8 @@ const resource = {
     "files.activity.title": "Etkinlik",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint":
+      "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Bilinmeyen kullanıcı",
@@ -4609,7 +5189,8 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle":
+      "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -4624,12 +5205,15 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural":
+      "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate": "This member already has access at this level.",
+    "files.permissions.error_duplicate":
+      "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle":
+      "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Şifre",
@@ -4644,59 +5228,85 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed":
+      "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
-    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
-    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
-    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail":
+      "{{failed}} file(s) could not be deleted.",
+    "onboarding.mode_simple_desc":
+      "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_advanced_desc":
+      "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "project_intelligence.ai.cost_advisor_title":
+      "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc":
+      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title":
+      "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub":
+      "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub":
+      "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio":
+      "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub":
+      "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub":
+      "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration":
+      "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub":
+      "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint":
+      "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
+    "project_intelligence.chat_error":
+      "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt":
+      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact":
+      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub":
+      "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub":
+      "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin":
+      "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body":
+      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote":
+      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title":
+      "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc":
+      "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations":
+      "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -4705,18 +5315,24 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191":
+      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain":
+      "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc":
+      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt":
+      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Fotoğraflar",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc":
+      "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc":
+      "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -4736,7 +5352,8 @@ const resource = {
     "takeoff.markup.close": "Kapat",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Yorumlar",
-    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty":
+      "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -4746,7 +5363,8 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm":
+      "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Kapat",
@@ -4756,8 +5374,10 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description":
+      "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc":
+      "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -4773,7 +5393,8 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle":
+      "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -4787,14 +5408,18 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
+    "finance.boq_tip_desc":
+      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
     "finance.boq_tip_title": "İpucu:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint":
+      "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Bütçe",
-    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder":
+      "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation":
+      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Ekipman",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -4808,8 +5433,10 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Para Birimi",
     "finance.direction": "Direction",
-    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file":
+      "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation":
+      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -4823,11 +5450,14 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result":
+      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder":
+      "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation":
+      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -4835,12 +5465,15 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc":
+      "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip":
+      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation":
+      "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -4871,15 +5504,19 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body":
+      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body":
+      "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body":
+      "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body":
+      "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Öğe Ekle",
@@ -4900,7 +5537,8 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder": "Optional notes or special instructions...",
+    "procurement.notes_placeholder":
+      "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -4911,60 +5549,87 @@ const resource = {
     "procurement.subtotal": "Subtotal",
     "procurement.tax": "Tax",
     "procurement.total": "Total",
-    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help":
+      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "match_elements.info.button_aria": "How matching works",
     "match_elements.info.button_title": "How matching works",
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer": "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract":
+      "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search":
+      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist":
+      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save":
+      "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer":
+      "Saved sessions live in the list on this page.",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help":
+      "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help":
+      "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help":
+      "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help":
+      "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help":
+      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help":
+      "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail":
+      "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail":
+      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
+    "match_elements.vector_status_missing_detail":
+      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail":
+      "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail":
+      "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail":
+      "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help":
+      "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title":
+      "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail":
+      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail":
+      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title":
+      "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail":
+      "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail":
+      "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available":
+      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint":
+      "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -4982,12 +5647,17 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body":
+      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
-    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption":
+      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption":
+      "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after":
+      "After install, restart the backend.",
+    "match_elements.embedder_size_caption":
+      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -4998,8 +5668,10 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption":
+      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption":
+      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5040,14 +5712,18 @@ const resource = {
     "match_progress.title_running": "Eşleştirme devam ediyor",
     "match_progress.title_done": "Eşleşme tamamlandı",
     "match_progress.title_error": "Eşleşme başarısız",
-    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running":
+      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done":
+      "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error":
+      "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Geçen süre",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long": "Almost done — large projects can take a minute",
+    "match_progress.headline_long":
+      "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5057,7 +5733,8 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint":
+      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "Eşleşme başarısız",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5075,9 +5752,617 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Gayrimenkul Geliştirici",
-    "onboarding.company_property_developer_desc": "Gayrimenkul geliştirme ekipleri",
+    "onboarding.company_property_developer_desc":
+      "Gayrimenkul geliştirme ekipleri",
     "onboarding.explore_all_modules": "Tüm {{count}} modülü keşfedin",
-  }
+    "boq.add_child_position": "Alt kalem ekle",
+    "boq.add_sub_section": "Alt bölüm ekle",
+    "boq.ai_no_answer":
+      "Asistan bir cevap döndürmedi. Lütfen yeniden ifade edin veya tekrar deneyin.",
+    "boq.compare_added": "Eklendi",
+    "boq.compare_against": "Şununla karşılaştır",
+    "boq.compare_btn": "Karşılaştır",
+    "boq.compare_btn_hint": "Bu keşfi başka bir metraj listesi ile karşılaştır",
+    "boq.compare_col_delta": "Δ taban",
+    "boq.compare_col_line": "Satır",
+    "boq.compare_col_qty": "Miktar",
+    "boq.compare_col_rate": "Birim fiyat",
+    "boq.compare_error": "Bu metraj listeleri karşılaştırılamadı.",
+    "boq.compare_hide_unchanged": "Değişmeyen satırları gizle",
+    "boq.compare_no_diff": "Bu metraj listeleri arasında fark yok.",
+    "boq.compare_pick": "— Bir metraj listesi seçin —",
+    "boq.compare_qty": "Miktar",
+    "boq.compare_rate": "Birim fiyat",
+    "boq.compare_removed": "Kaldırıldı",
+    "boq.compare_select_hint":
+      "Satır satır farkı görmek için yukarıda başka bir metraj listesi seçin.",
+    "boq.compare_unchanged": "Değişmedi",
+    "boq.compare_ct_added": "Eklendi",
+    "boq.compare_ct_removed": "Kaldırıldı",
+    "boq.compare_ct_qty_changed": "Miktar",
+    "boq.compare_ct_rate_changed": "Birim fiyat",
+    "boq.compare_ct_changed": "Değişti",
+    "boq.compare_ct_unchanged": "Değişmedi",
+    "boq.model_link_action": "Model bağlantısı…",
+    "boq.model_link_aggregation": "Toplulaştırma",
+    "boq.model_link_agg_sum": "Toplam",
+    "boq.model_link_agg_max": "En yüksek",
+    "boq.model_link_agg_min": "En düşük",
+    "boq.model_link_agg_count": "Adet",
+    "boq.model_link_agg_first": "İlk",
+    "boq.model_link_create": "Bağlantı oluştur",
+    "boq.model_link_created": "Model bağlantısı oluşturuldu",
+    "boq.model_link_created_hint":
+      "Miktar henüz güncellenmedi — «Modelden yenile» ve ardından Uygula ile çekin.",
+    "boq.model_link_delete": "Bağlantıyı sil",
+    "boq.model_link_delete_failed": "Model bağlantısı kaldırılamadı",
+    "boq.model_link_deleted": "Model bağlantısı kaldırıldı",
+    "boq.model_link_elem_count": "{{count}} eleman",
+    "boq.model_link_elements": "Elemanlar ({{selected}} seçili)",
+    "boq.model_link_existing": "Mevcut bağlantılar",
+    "boq.model_link_failed": "Model bağlantısı oluşturulamadı",
+    "boq.model_link_model": "BIM modeli",
+    "boq.model_link_new": "Yeni bağlantı",
+    "boq.model_link_no_elements": "Bu modelde eleman yok.",
+    "boq.model_link_no_models": "Bu projede henüz BIM modeli yok.",
+    "boq.model_link_none": "Bu kalem için henüz model bağlantısı yok.",
+    "boq.model_link_pick_field": "— Bir miktar seçin —",
+    "boq.model_link_pick_model": "— Bir model seçin —",
+    "boq.model_link_quantity_field": "Miktar alanı",
+    "boq.model_link_status_active": "Senkronize",
+    "boq.model_link_status_stale": "Eski",
+    "boq.model_link_status_broken": "Kopuk",
+    "boq.model_link_subtitle":
+      "Kalem {{ordinal}} — miktarını BIM modeli elemanlarına bağlayın",
+    "boq.model_link_title": "Model bağlantısı",
+    "boq.model_link_version": "model v{{v}}",
+    "boq.model_review_all_synced": "Bağlı tüm miktarlar model ile senkronize.",
+    "boq.model_review_applied": "{{count}} miktar güncellemesi uygulandı",
+    "boq.model_review_apply": "Seçili {{count}} kalemi uygula",
+    "boq.model_review_apply_failed": "Uygulama başarısız",
+    "boq.model_review_btn": "Model senk.",
+    "boq.model_review_btn_hint":
+      "Bağlı BIM modellerinden miktarları yeniden çek",
+    "boq.model_review_hint":
+      "Bağlı miktarları en son model sürümüne göre yeniden hesaplar. Uygula tuşuna basana kadar hiçbir şey değişmez.",
+    "boq.model_review_missing": "{{count}} eksik",
+    "boq.model_review_no_links": "Bu metraj listesinde model bağlantısı yok",
+    "boq.model_review_refresh": "Modelden yenile",
+    "boq.model_review_refresh_failed": "Modelden yenileme başarısız",
+    "boq.model_review_run":
+      "Modelden gelen değişiklikleri görmek için bir yenileme çalıştırın.",
+    "boq.model_review_title": "Model miktar incelemesi",
+    "boq.position_added_edit_hint":
+      "Açıklamayı yazın, ardından Tab ile birim, miktar ve birim fiyat alanlarına geçin",
+    "boq.link_badge_instance":
+      "{{code}} kodunun bağlı kopyası — tanımı değiştirmek onu ayrıştırır",
+    "boq.link_badge_master": "{{code}} kodunun ana kaydı — {{count}} bağlı",
+    "boq.link_master_badge": "Ana",
+    "boq.link_propagated_msg": "Bu projede {{count}} bağlı kalem güncellendi.",
+    "boq.link_propagated_title": "Tanım yayıldı",
+    "boq.max_depth_reached_tooltip":
+      "Maksimum yuvalama derinliği {{max}} seviyeye ulaşıldı — yapıyı düzleştirin veya daha az alt seviye kullanın.",
+    "boq.resource_link_propagated_msg":
+      "Bu projedeki {{count}} diğer kalemde paylaşılan kaynak güncellendi.",
+    "boq.resource_link_propagated_title": "Kaynak tanımı yayıldı",
+    "boq.link_role_instance": "Bağlı kopya",
+    "boq.link_role_master": "Ana (resmi tanım)",
+    "boq.link_unlinked_msg":
+      "Düzenlemeniz bu bağlı kopyayı değiştirdi, artık paylaşılan kodu izlemiyor. Ayrıştırma kasıtlı değilse kodu eski haline getirin.",
+    "boq.link_unlinked_title": "Kalem paylaşılan koddan ayrıldı",
+    "boq.linked_positions_count":
+      "{{total}} kalem bu kodu paylaşıyor ({{instances}} bağlı kopya). Ana kayıt resmi tanımdır; düzenlenmesi projedeki tüm kopyalara yayılır.",
+    "boq.linked_positions_error": "Bağlı kalemler yüklenemedi.",
+    "boq.linked_positions_none":
+      "Bu kalem bağımsızdır — kodunu paylaşan başka kalem yok.",
+    "boq.linked_positions_subtitle":
+      "Kod {{code}} — {{ordinal}} kaleminden görüntüleniyor",
+    "boq.linked_positions_title": "Bağlı kalemler",
+    "boq.no_description": "(açıklama yok)",
+    "boq.reuse_code_action": "Var olan kodu yeniden kullan…",
+    "boq.reuse_code_existing": "Var olan kodlar: {{codes}}",
+    "boq.reuse_code_msg":
+      "Bağlı kopya oluşturuldu — {{count}} kalem bu kodu paylaşıyor. Miktar bağımsız olarak düzenlenebilir.",
+    "boq.reuse_code_prompt":
+      "Burada yeniden kullanmak için var olan bir kod girin (tanım ve alt kalemler kopyalanır; miktar bağımsız kalır):",
+    "boq.reuse_code_title": "{{code}} kodu yeniden kullanıldı",
+    "boq.show_linked": "Bağlı kalemleri göster",
+    "boq.unlink_done_msg":
+      "{{code}} kodu korundu. Bu kalem artık paylaşılan kodu izlemiyor; değerleri korundu.",
+    "boq.unlink_done_title": "Kalem ayrıldı",
+    "boq.unlink_failed": "Kalem ayrılamadı",
+    "boq.unlink_this": "Bu kalemi ayır",
+    "login.github": "GitHub",
+    "login.github_sub": "Kaynak kodu",
+    "login.community": "Topluluk",
+    "login.community_sub": "Yardım al ve tartış",
+    "login.brand_edit": "Logoyu özelleştir",
+    "login.brand_title": "White-label markalama",
+    "login.brand_desc":
+      "Bu giriş ekranında ve uygulama genelinde gösterilir. Yalnızca bu tarayıcıda saklanır.",
+    "login.brand_upload": "Logo yükle",
+    "login.brand_name_ph": "Şirket adı",
+    "login.brand_reset": "Varsayılana sıfırla",
+    "login.brand_too_big": "Görsel çok büyük (en fazla 512 KB).",
+    "login.brand_bad_type": "Lütfen PNG, JPG, SVG veya WebP görseli seçin.",
+    "nav.project_route": "Proje rotası",
+    "nav.phase_estimation": "Keşif",
+    "nav.phase_planning": "Planlama",
+    "nav.phase_execution": "Yapım",
+    "nav.phase_closure": "Kalite ve Kapanış",
+    "nav.clash_detection": "Çakışma Tespiti",
+    "schedule_advanced.master_hint":
+      "Ana programı, Fazlar, Look-Ahead, Haftalık ve Kısıtlar sekmeleri için çalışma planı yapmak üzere seçin. Adını değiştirmek, planlanan tarihleri ve durumunu güncellemek veya silmek için satır işlemlerini kullanın.",
+    "schedule_advanced.no_master_yet_desc":
+      "Ana program, tüm faz planları, look-ahead ve haftalık iş planlarının birleştiği en üst seviyedeki plandır. Pull planlamayı başlatmak için bir tane oluşturun — adı, tarihleri değiştirebilir veya istediğiniz zaman silebilirsiniz.",
+    "schedule_advanced.active_selection": "Çalışma planı",
+    "schedule_advanced.master_status.active": "Etkin",
+    "schedule_advanced.master_status.archived": "Arşivlendi",
+    "schedule_advanced.edit_master": "Ana programı düzenle",
+    "schedule_advanced.master_updated": "Ana program güncellendi",
+    "schedule_advanced.master_deleted": "Ana program silindi",
+    "schedule_advanced.delete_master_title": "Ana program silinsin mi?",
+    "schedule_advanced.delete_master_message":
+      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
+    "schedule_advanced.err_master_name_required": "Ana program adı gereklidir.",
+    "schedule_advanced.master_name_placeholder": "örn. İnşaat ana programı",
+    "schedule_advanced.master_status_hint":
+      "Bir programı çalışma planı olmaksızın geçmişini korumak için arşivleyin. Arşivlenmiş programlar buradan istenildiği zaman yeniden etkinleştirilebilir.",
+    "schedule_advanced.master_notes_placeholder":
+      "Kapsam, sözleşme referansı, ana kilometre taşları…",
+    "files.cta.add_first_short": "Dosya ekle",
+    "files.folder.files_count": "dosya",
+    "files.folder.subfolders": "{{count}} klasör",
+    "files.folder.share": "Toplam depolamanın %{{pct}}'i",
+    "notifications.safety.incident_created": "İş güvenliği olayı bildirildi",
+    "notifications.safety.incident_created_body":
+      "Olay {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation":
+      "Yüksek riskli iş güvenliği gözlemi",
+    "notifications.safety.high_risk_body":
+      "Gözlem {{observation_number}} (risk {{risk_score}}): {{description}}",
+    "notifications.bi.alert.title": "Dashboard uyarısı tetiklendi",
+    "notifications.bi.alert.body":
+      "{{alert_name}} — {{kpi_code}} değeri {{value}} (eşik {{threshold}} {{condition}}).",
+    "notifications.bi.report.title": "Planlanmış rapor hazır",
+    "notifications.bi.report.body":
+      "{{report_code}} raporu {{row_count}} satırla oluşturuldu.",
+    "notifications.supplier_catalogs.po.sent.title":
+      "Satınalma siparişi gönderildi",
+    "notifications.supplier_catalogs.po.sent.body":
+      "{{vendor_id}} tedarikçisine {{total}} {{currency}} tutarında satınalma siparişi gönderildi.",
+    "notifications.supplier_catalogs.invoice.exception.title":
+      "Fatura istisnası",
+    "notifications.supplier_catalogs.invoice.exception.body":
+      "{{po_id}} siparişine ait fatura incelenmeli: {{reason}}",
+    "notifications.supplier_catalogs.stock.low.title": "Düşük stok uyarısı",
+    "notifications.supplier_catalogs.stock.low.body":
+      "{{sku}}: {{available_qty}} kaldı, yeniden sipariş noktası {{reorder_point}} altında veya seviyesinde.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title":
+      "Tedarikçi kara listeye alındı",
+    "notifications.supplier_catalogs.vendor.blacklisted.body":
+      "{{code}} tedarikçisi kara listeye alındı: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title":
+      "Tedarikçi uyum belgesi süresi doldu",
+    "notifications.supplier_catalogs.kyc.expired.body":
+      "{{doc_type}} belgesinin süresi {{expires_on}} tarihinde doldu.",
+    "notifications.supplier_catalogs.kyc.expiring.title":
+      "Tedarikçi uyum belgesi süresi dolmak üzere",
+    "notifications.supplier_catalogs.kyc.expiring.body":
+      "{{doc_type}} {{expires_on}} tarihinde dolacak ({{days_until_expiry}} gün kaldı).",
+    "notifications.resources.cert_expiring.title":
+      "Sertifika süresi dolmak üzere",
+    "notifications.resources.cert_expiring.body":
+      "{{resource_name}} — {{cert_type}} {{valid_until}} tarihinde dolacak ({{days_left}} gün kaldı).",
+    "notifications.resources.assignment_proposed.title":
+      "Kaynak ataması önerildi",
+    "notifications.resources.assignment_proposed.body":
+      "{{task}} görevi için {{start}} başlangıçlı önerildi.",
+    "notifications.resources.assignment_confirmed.title":
+      "Kaynak ataması onaylandı",
+    "notifications.resources.assignment_confirmed.body":
+      "{{task}} görevine atama onaylandı.",
+    "notifications.contracts.signed.title": "Sözleşme imzalandı",
+    "notifications.contracts.signed.body":
+      "{{code}} sözleşmesi {{value}} {{currency}} bedelle imzalandı.",
+    "notifications.contracts.claim_submitted.title": "Sözleşme talebi sunuldu",
+    "notifications.contracts.claim_submitted.body":
+      "{{amount}} {{currency}} tutarında talep sunuldu.",
+    "notifications.contracts.claim_paid.title": "Sözleşme talebi ödendi",
+    "notifications.contracts.claim_paid.body":
+      "Talep ödemesi: {{amount}} {{currency}}.",
+    "notifications.contracts.retention_released.title":
+      "Stopaj serbest bırakıldı",
+    "notifications.contracts.retention_released.body":
+      "Sözleşme {{contract_code}}: {{amount_released}} serbest, kalan {{remaining}}.",
+    "notifications.crm.lead_qualified.title": "Müşteri adayı nitelendirildi",
+    "notifications.crm.lead_qualified.body":
+      "{{name}} müşteri adayı nitelendirildi.",
+    "notifications.crm.opportunity_won.title": "Fırsat kazanıldı",
+    "notifications.crm.opportunity_won.body":
+      "{{name}} kazanıldı — değer {{value}}.",
+    "notifications.crm.opportunity_scored.title": "Fırsat puanlandı",
+    "notifications.crm.opportunity_scored.body":
+      "{{title}} {{score}} puan aldı (band {{band}}).",
+    "notifications.carbon.boq_position_assigned.title":
+      "Karbon katsayısı atandı",
+    "notifications.carbon.boq_position_assigned.body":
+      "BOQ kalemi {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title": "Alıcı sözleşmelendi",
+    "notifications.property_dev.buyer_contracted.body":
+      "{{buyer}} {{plot}} parseli için sözleşme yaptı.",
+    "notifications.property_dev.handover_completed.title": "Teslim tamamlandı",
+    "notifications.property_dev.handover_completed.body":
+      "{{plot}} parseli teslimi tamamlandı.",
+    "notifications.property_dev.warranty_raised.title": "Garanti talebi açıldı",
+    "notifications.property_dev.warranty_raised.body":
+      "{{plot}} parseli için {{category}} garanti talebi açıldı.",
+    "notifications.bid_management.invitation_sent.title":
+      "İhale daveti gönderildi",
+    "notifications.bid_management.invitation_sent.body":
+      "{{package}} paketi için davet gönderildi, son tarih {{due}}.",
+    "notifications.bid_management.awarded.title": "İhale verildi",
+    "notifications.bid_management.awarded.body":
+      "{{package}} {{amount}} bedelle verildi.",
+    "notifications.schedule_advanced.constraint_cleared.title":
+      "Program kısıtı kaldırıldı",
+    "notifications.schedule_advanced.constraint_cleared.body":
+      "{{task}} görevi artık engelli değil.",
+    "notifications.daily_diary.signed.title": "Şantiye günlüğü imzalandı",
+    "notifications.daily_diary.signed.body": "{{date}} günlüğü imzalandı.",
+    "notifications.service.ticket_dispatched.title":
+      "Servis çağrısı sevk edildi",
+    "notifications.service.ticket_dispatched.body":
+      "{{ticket_number}} çağrısı sevk edildi (öncelik {{priority}}).",
+    "notifications.service.ticket_resolved.title": "Servis çağrısı çözüldü",
+    "notifications.service.ticket_resolved.body":
+      "{{ticket_number}} çağrısı çözüldü.",
+    "notifications.service.work_order_billed.title": "İş emri faturalandırıldı",
+    "notifications.service.work_order_billed.body":
+      "{{wo_number}} iş emri {{amount}} {{currency}} olarak faturalandırıldı.",
+    "notifications.subcontractors.prequal_submitted.title":
+      "Ön yeterlik sunuldu",
+    "notifications.subcontractors.prequal_submitted.body":
+      "{{subcontractor_name}} ön yeterlik sundu.",
+    "notifications.subcontractors.payment_app_submitted.title":
+      "Hakediş başvurusu sunuldu",
+    "notifications.subcontractors.payment_app_submitted.body":
+      "{{application_number}} başvurusu {{net_amount}} {{currency}} tutarında sunuldu.",
+    "notifications.subcontractors.retention_released.title":
+      "Taşeron stopajı serbest bırakıldı",
+    "notifications.subcontractors.retention_released.body":
+      "{{amount}} {{currency}} stopaj serbest bırakıldı.",
+    "notifications.equipment.assigned.title": "Ekipman atandı",
+    "notifications.equipment.assigned.body":
+      "{{equipment_code}} {{project_name}} projesine atandı.",
+    "notifications.equipment.damage_reported.title":
+      "Ekipman hasarı bildirildi",
+    "notifications.equipment.damage_reported.body":
+      "{{equipment_code}} hasarı bildirildi ({{severity}}).",
+    "notifications.portal.user_invited.title":
+      "Portal kullanıcısı davet edildi",
+    "notifications.portal.user_invited.body":
+      "{{portal_user_email}} {{portal_role}} olarak davet edildi.",
+    "match_elements.vector_status_disconnected_explainer":
+      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
+    "match_elements.vector_status_disconnected_fallback":
+      "Şimdi de devam edebilirsiniz: vektör veritabanı çevrimdışıyken eşleşme otomatik olarak sözcüksel (anahtar kelime) ve kural tabanlı puanlamaya geri döner.",
+    "match_elements.vector_status_retry": "Bağlantıyı yeniden dene",
+    "match_elements.vector_status_open_costs_long":
+      "Birim fiyat veritabanı araçlarını aç",
+    "match_elements.pipeline.title": "Eşleşme pipeline'ı",
+    "match_elements.pipeline.subtitle":
+      "CAD dosyasından fiyatlandırılmış metraj listesine yedi adım — her adım görünür ve ayarlanabilir",
+    "match_elements.pipeline.done_suffix": "tamam",
+    "match_elements.pipeline.run_all": "Tüm aşamaları çalıştır",
+    "match_elements.pipeline.running_all": "Tümü çalışıyor…",
+    "match_elements.pipeline.loading": "Pipeline yükleniyor…",
+    "match_elements.pipeline.load_failed": "Pipeline yüklenemedi.",
+    "match_elements.pipeline.loading_prompts": "Prompt'lar yükleniyor…",
+    "match_elements.pipeline.run": "Çalıştır",
+    "match_elements.pipeline.rerun": "Yeniden çalıştır",
+    "match_elements.pipeline.adjust": "Ayarla",
+    "match_elements.pipeline.adjust_stage": "Aşamayı ayarla",
+    "match_elements.pipeline.rerun_from_here": "Buradan yeniden çalıştır",
+    "match_elements.pipeline.status_pending": "Çalıştırılmadı",
+    "match_elements.pipeline.status_running": "Çalışıyor",
+    "match_elements.pipeline.status_done": "Tamam",
+    "match_elements.pipeline.status_error": "Hata",
+    "match_elements.pipeline.status_stale": "Yeniden çalıştır",
+    "match_elements.pipeline.status_skipped": "Atlandı",
+    "match_elements.pipeline.stale_hint":
+      "Önceki bir aşama değişti — çıktısını yenilemek için bu adımı yeniden çalıştırın.",
+    "match_elements.pipeline.llm_badge": "LLM",
+    "match_elements.pipeline.llm_tunable":
+      "LLM destekli — prompt düzenlenebilir",
+    "match_elements.pipeline.group_by": "Anahtarlara göre grupla",
+    "match_elements.pipeline.group_by_hint":
+      "Virgülle ayrılmış. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.method": "Yöntem",
+    "match_elements.pipeline.max_groups": "En fazla grup",
+    "match_elements.pipeline.llm_provider": "LLM sağlayıcı",
+    "match_elements.pipeline.prompt": "Prompt",
+    "match_elements.pipeline.system": "system",
+    "match_elements.pipeline.system_readonly":
+      "Sistem prompt'u — salt okunur. Düzenlemek ve şirketinize göre uyarlamak için forkla.",
+    "match_elements.pipeline.system_prompt": "Sistem prompt'u",
+    "match_elements.pipeline.user_template": "Kullanıcı şablonu",
+    "match_elements.pipeline.variables": "Bu aşamanın doldurduğu değişkenler:",
+    "match_elements.pipeline.fork": "Düzenlemek için forkla",
+    "match_elements.pipeline.duplicate": "Çoğalt",
+    "match_elements.pipeline.save_prompt": "Prompt'u kaydet",
+    "match_elements.pipeline.revert": "Geri al",
+    "match_elements.pipeline.run_failed": "Aşama çalıştırması başarısız",
+    "match_elements.pipeline.intro_title": "Görünür eşleşme pipeline'ını aç",
+    "match_elements.pipeline.intro_blurb":
+      "CAD dosyasından fiyatlı metraj listesine yedi adım — Dönüştür, Yükle, Şema, Filtre, Grup, Eşleştir, Toplulaştır. Her adım görünür, açıklanmış ve ayarlanabilirdir (prompt, LLM sağlayıcı, grup anahtarları).",
+    "match_elements.pipeline.intro_cta": "Pipeline'ı aç",
+    "match_elements.pipeline.intro_resume": "Son oturumu sürdür",
+    "match_elements.pipeline.busy_hint":
+      "Bir aşama çalışıyor — başka birini başlatmadan önce bitmesini bekleyin.",
+    "match_elements.pipeline.step_convert": "Dönüştür",
+    "match_elements.pipeline.step_load": "Yükle",
+    "match_elements.pipeline.step_schema": "Şema",
+    "match_elements.pipeline.step_filter": "Filtre",
+    "match_elements.pipeline.step_group": "Grup",
+    "match_elements.pipeline.step_match": "Eşleştir",
+    "match_elements.pipeline.step_rollup": "Toplulaştır",
+    "clash.title": "Çakışma Tespiti",
+    "clash.subtitle":
+      "Birleştirilmiş BIM modelleri arasında geometrik girişim ve açıklık koordinasyonu — çakışma matrisi ve BCF dışa aktarımı ile.",
+    "clash.pick_project": "Bir proje seçin",
+    "clash.new_run": "Yeni çakışma kontrolü",
+    "clash.models": "Modeller",
+    "clash.no_models": "Bu projede ayrıştırılmış BIM modeli yok.",
+    "clash.tolerance": "Tolerans (mm)",
+    "clash.clearance": "Açıklık (mm)",
+    "clash.mode": "Test kapsamı",
+    "clash.mode_cross": "Yalnızca disiplinler arası",
+    "clash.mode_all": "Tüm çiftler",
+    "clash.mode_sets": "Küme A - Küme B (türe göre)",
+    "clash.sets_hint":
+      "Yalnızca bir elemanı Küme A'da ve diğeri Küme B'de olan çiftler test edilir — örn. tüm duvarlar (A) tüm borulara (B) karşı.",
+    "clash.set_a": "Küme A",
+    "clash.set_b": "Küme B",
+    "clash.sets_required":
+      "Küme A ve Küme B için en az bir tür veya disiplin seçin.",
+    "clash.set_search": "Tür / disiplin ara…",
+    "clash.set_empty": "Eleman yok — önce ayrıştırılmış bir model seçin.",
+    "clash.disciplines": "Disiplinler",
+    "clash.element_types": "Eleman türleri",
+    "clash.run": "Çakışma tespitini çalıştır",
+    "clash.history": "Çalıştırma geçmişi",
+    "clash.no_runs": "Henüz çalıştırma yok.",
+    "clash.run_failed": "Çakışma çalıştırması başarısız",
+    "clash.run_done": "{{e}} elemanda {{n}} çakışma bulundu",
+    "clash.status_failed": "Durum güncellenemedi",
+    "clash.status_saved": "Durum güncellendi",
+    "clash.bcf_done": "{{n}} çakışma BCF'ye dışa aktarıldı ({{s}} atlandı)",
+    "clash.empty_title": "Seçili çakışma çalıştırması yok",
+    "clash.empty_desc":
+      "Solda BIM modellerini seçin ve koordinasyon matrisini oluşturmak için çakışma tespitini çalıştırın.",
+    "clash.kpi_total": "Toplam çakışma",
+    "clash.kpi_hard": "Sert",
+    "clash.kpi_clearance": "Açıklık",
+    "clash.kpi_open": "Açık",
+    "clash.kpi_resolved": "Çözüldü",
+    "clash.kpi_disciplines": "Disiplin",
+    "clash.kpi_matrix_cells": "Matris hücresi",
+    "clash.matrix_title": "Çakışma matrisi — disiplin × disiplin",
+    "clash.matrix_open": "{{n}} açık",
+    "clash.clear_filter": "Filtreyi temizle",
+    "clash.no_clashes": "Çakışma yok — modeller temiz.",
+    "clash.no_clashes_title": "Çakışma tespit edilmedi",
+    "clash.no_match_title": "Filtrelere uyan çakışma yok",
+    "clash.no_match_desc":
+      "Aktif filtreleri genişletmeyi veya temizlemeyi deneyin.",
+    "clash.results_error": "Çakışma sonuçları yüklenemedi",
+    "clash.results_error_desc":
+      "Çakışma sonuçları yüklenemedi. Bu, modellerin temiz olduğu anlamına gelmez — lütfen yeniden deneyin.",
+    "clash.retry": "Yeniden dene",
+    "clash.capped_notice":
+      "{{total}} çakışmanın ilk {{loaded}} tanesi gösteriliyor — inceleme kümesini daraltmak için filtreleri iyileştirin.",
+    "clash.results": "Çakışma sonuçları",
+    "clash.count_of": "{{total}} / {{shown}}",
+    "clash.search_ph": "Eleman adı ara…",
+    "clash.all_types": "Tüm türler",
+    "clash.type_hard": "Sert",
+    "clash.type_clearance": "Açıklık",
+    "clash.export_sel": "{{n}} kalemi BCF'ye aktar",
+    "clash.export_open": "Açıkları BCF'ye aktar",
+    "clash.export_row": "Bu çakışmayı BCF'ye aktar",
+    "clash.filter_status": "Durum",
+    "clash.filter_min_pen": "Min girinim",
+    "clash.clear_all": "Tümünü temizle",
+    "clash.col_a": "Eleman A",
+    "clash.col_b": "Eleman B",
+    "clash.col_type": "Tür",
+    "clash.col_penetration": "Girinim",
+    "clash.col_distance": "Mesafe",
+    "clash.col_status": "Durum",
+    "clash.col_actions": "Eylemler",
+    "clash.select_all": "Sayfadaki tümünü seç",
+    "clash.select_row": "Çakışmayı seç",
+    "clash.bcf": "BCF",
+    "clash.isolate_3d": "3D'de izole et",
+    "clash.isolate_3d_short": "3D",
+    "clash.n_selected": "{{n}} seçildi",
+    "clash.clear_selection": "Temizle",
+    "clash.clear_filter_short": "Temizle",
+    "clash.page_range": "{{total}} / {{from}}–{{to}}",
+    "clash.page_of": "Sayfa {{p}} / {{n}}",
+    "clash.prev": "Önceki",
+    "clash.next": "Sonraki",
+    "clash.status.new": "Yeni",
+    "clash.status.active": "Aktif",
+    "clash.status.reviewed": "İncelendi",
+    "clash.status.approved": "Onaylandı",
+    "clash.status.resolved": "Çözüldü",
+    "clash.status.ignored": "Yok sayıldı",
+    "nav.pipelines": "Pipeline Oluşturucu",
+    "pipeline.untitled": "Başlıksız pipeline",
+    "pipeline.empty.title": "İlk otomasyonunuzu oluşturun",
+    "pipeline.empty.description":
+      "Soldaki paletten bir tetikleyici ve birkaç adım sürükleyin, bağlayın ve Çalıştır'a basın.",
+    "pipeline.toast.saved": "Pipeline kaydedildi",
+    "pipeline.toast.save_failed": "Pipeline kaydedilemedi",
+    "pipeline.toast.run_failed": "Çalıştırma başlatılamadı",
+    "pipeline.explain.coming_soon_title": "Bu pipeline'ı açıkla",
+    "pipeline.explain.coming_soon_body":
+      "Sade dilde anlatı görünümü bir sonraki sürümde geliyor.",
+    "pipeline.tour.palette_title": "Adımlarınızı seçin",
+    "pipeline.tour.palette_body":
+      "Buradan bir adımı tuvale sürükleyin veya ortaya bırakmak için üzerine tıklayın.",
+    "pipeline.tour.canvas_title": "Adımları bağlayın",
+    "pipeline.tour.canvas_body":
+      "Bir adımın çıkış noktasından sonraki adımın girişine sürükleyin. Renkler veri türünü gösterir.",
+    "pipeline.tour.run_title": "Çalıştır",
+    "pipeline.tour.run_body":
+      "Pipeline'ı yürütmek ve her adımın canlı yandığını görmek için Çalıştır'a basın.",
+    "pipeline.toolbar.aria": "Pipeline araç çubuğu",
+    "pipeline.toolbar.undo": "Geri al",
+    "pipeline.toolbar.redo": "Yinele",
+    "pipeline.toolbar.fit": "Görünüme sığdır",
+    "pipeline.toolbar.explain": "Bu pipeline'ı açıkla",
+    "pipeline.toolbar.issues": "{{count}} sorun",
+    "pipeline.toolbar.save": "Kaydet",
+    "pipeline.toolbar.run": "Çalıştır",
+    "pipeline.toolbar.stop": "Durdur",
+    "pipeline.palette.title": "Adımlar",
+    "pipeline.palette.aria": "Düğüm paleti",
+    "pipeline.palette.expand": "Paleti genişlet",
+    "pipeline.palette.collapse": "Paleti daralt",
+    "pipeline.palette.search": "Adım ara",
+    "pipeline.palette.search_ph": "Ara…",
+    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.none": "Kullanılabilir düğüm türü yok.",
+    "pipeline.palette.module_chip": "{{module}} modülünü etkiler",
+    "pipeline.palette.writes": "yazar",
+    "pipeline.palette.writes_chip":
+      "Bu adım veri yazar — öncesinde bir gate gerekir",
+    "pipeline.palette.cat_trigger": "Kaynaklar / Tetikleyiciler",
+    "pipeline.palette.cat_source": "Veri al",
+    "pipeline.palette.cat_transform": "Dönüştür",
+    "pipeline.palette.cat_gate": "Doğrula",
+    "pipeline.palette.cat_ai": "AI",
+    "pipeline.palette.cat_action": "Eylemler / Çıkışlar",
+    "pipeline.palette.cat_flow": "Akış denetimi",
+    "pipeline.inspector.aria": "Inspector",
+    "pipeline.inspector.expand": "Inspector'ı genişlet",
+    "pipeline.inspector.collapse": "Inspector'ı daralt",
+    "pipeline.inspector.tab_node": "Düğüm",
+    "pipeline.inspector.tab_pipeline": "Pipeline",
+    "pipeline.inspector.context_node": "Adım düzenleniyor",
+    "pipeline.inspector.context_pipeline": "Pipeline düzenleniyor",
+    "pipeline.inspector.no_params": "Bu adımın yapılandırılacak ayarı yok.",
+    "pipeline.inspector.enabled": "Etkin",
+    "pipeline.inspector.choose": "Seç…",
+    "pipeline.inspector.duplicate": "Çoğalt",
+    "pipeline.inspector.delete": "Sil",
+    "pipeline.inspector.name": "Ad",
+    "pipeline.inspector.name_ph": "Otomasyonum",
+    "pipeline.inspector.description": "Açıklama",
+    "pipeline.inspector.published": "Yayımlandı (tetiklenebilir)",
+    "pipeline.inspector.summary_stub":
+      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.canvas.aria": "Pipeline editör tuvali",
+    "pipeline.canvas.hint":
+      "Paletten adımları sürükleyin, portlarını bağlayın ve Çalıştır'a basın.",
+    "pipeline.canvas.legend_sr":
+      "Kenar rengi, şekli ve çizgi tipi birlikte veri türünü kodlar.",
+    "pipeline.connect.incompatible_title": "Bu adımlar bağlanamaz",
+    "pipeline.connect.incompatible_body":
+      "Bu çıktı {{from}}; o giriş ise {{to}} bekliyor.",
+    "pipeline.node.rename": "Düğümü yeniden adlandır",
+    "pipeline.node.rename_hint": "Yeniden adlandırmak için çift tıklayın",
+    "pipeline.node.ai_badge": "AI",
+    "pipeline.node.ai_confidence": "AI önerisi — güven puanını inceleyin",
+    "pipeline.node.help": "Bu düğüm ne yapar",
+    "pipeline.node.help_generic":
+      "Bu adımı Inspector'da yapılandırın. Bağlı önceki adımdan veri alır ve sonucunu sonrakine aktarır.",
+    "pipeline.node.collapse": "Daralt",
+    "pipeline.node.expand": "Genişlet",
+    "pipeline.node.more_params": "+{{count}} daha",
+    "pipeline.node.took_ms": "{{ms}} ms",
+    "pipeline.port.aria_input": "giriş: {{label}}, tür {{type}}",
+    "pipeline.port.aria_output": "çıkış: {{label}}, tür {{type}}",
+    "pipeline.port.table": "Tablo / satırlar",
+    "pipeline.port.file": "Dosya / belge",
+    "pipeline.port.bim": "BIM modeli",
+    "pipeline.port.number": "Sayı",
+    "pipeline.port.boolean": "Boolean / bayrak",
+    "pipeline.port.any": "Herhangi / pasthrough",
+    "pipeline.port.error": "Hata dalı",
+    "pipeline.dock.run": "Çalıştır",
+    "pipeline.dock.expand": "Çalıştırma dock'unu genişlet",
+    "pipeline.dock.collapse": "Çalıştırma dock'unu daralt",
+    "pipeline.dock.idle": "Boşta",
+    "pipeline.dock.progress": "%{{pct}}",
+    "pipeline.dock.tab_run": "Çalıştır",
+    "pipeline.dock.tab_history": "Geçmiş",
+    "pipeline.dock.no_steps":
+      "Adım ekleyin ve verinin pipeline'ınız boyunca akışını görmek için Çalıştır'a basın.",
+    "pipeline.dock.loading_history": "Çalıştırma geçmişi yükleniyor…",
+    "pipeline.dock.no_runs_title": "Henüz çalıştırma yok",
+    "pipeline.dock.no_runs_desc":
+      "Verinin pipeline'ınız boyunca akışını görmek için Çalıştır'a basın.",
+    "pipeline.dock.manual": "Elle",
+    "pipeline.dock.queued_hint":
+      "Bir worker'ın çalıştırmayı almasını bekliyor…",
+    "pipeline.runstatus.pending": "Bekliyor",
+    "pipeline.runstatus.queued": "Kuyrukta",
+    "pipeline.runstatus.running": "Çalışıyor",
+    "pipeline.runstatus.started": "Çalışıyor",
+    "pipeline.runstatus.done": "Tamam",
+    "pipeline.runstatus.success": "Tamam",
+    "pipeline.runstatus.error": "Hata",
+    "pipeline.runstatus.failed": "Başarısız",
+    "pipeline.runstatus.skipped": "Atlandı",
+    "pipeline.runstatus.stale": "Yeniden çalıştır",
+    "pipeline.runstatus.paused": "Duraklatıldı",
+    "pipeline.runstatus.cancelled": "İptal edildi",
+    "pipeline.trigger.manual": "Elle",
+    "pipeline.trigger.schedule": "Zamanlanmış",
+    "pipeline.trigger.event": "Olay",
+    "pipeline.nodetype.trigger.manual": "Elle tetikleyici",
+    "pipeline.nodetype.trigger.manual.desc":
+      "REST çağrısı ile pipeline'ı başlatın. Giriş yok.",
+    "pipeline.nodetype.source.project": "Proje al",
+    "pipeline.nodetype.source.project.desc":
+      "Bağlı projenin id'sini + adını yükle.",
+    "pipeline.nodetype.source.boq": "BOQ kalemlerini al",
+    "pipeline.nodetype.source.boq.desc":
+      "Projenin tüm BOQ kalemlerini satır olarak yükle (id'ler + küçük örnek).",
+    "pipeline.nodetype.transform.filter": "Satırları filtrele",
+    "pipeline.nodetype.transform.filter.desc":
+      "Yalnızca basit alan/operatör/değer testine uyan satırları tut.",
+    "pipeline.nodetype.gate.validation": "Doğrulama gate'i",
+    "pipeline.nodetype.gate.validation.desc":
+      "Satırlar üzerinde doğrulama motorunu çalıştır; engelleyici hatalarda çalıştırmayı durdur.",
+    "pipeline.nodetype.action.export.excel": "Excel'e aktar",
+    "pipeline.nodetype.action.export.excel.desc":
+      "Satırları .xlsx dosyasına yaz (indirme referansı döner; veritabanını değiştirmez).",
+    "pipeline.nodehelp.trigger.manual":
+      "Pipeline burada başlar. Ayarı yoktur — sonra bir veri adımına bağlayın.",
+    "pipeline.nodehelp.source.project":
+      "Bu pipeline'ın bağlı olduğu projeyi yükler. Sayfa URL'sindekini kullanmak için project id'yi boş bırakın.",
+    "pipeline.nodehelp.source.boq":
+      "Projenin her BOQ kalemini okur. Adımlar arasında yalnızca id'ler ve küçük bir önizleme aktarılır; tam veri sunucuda kalır.",
+    "pipeline.nodehelp.transform.filter":
+      "Inspector'da ayarladığınız alan/operatör/değer testine uyan satırları tutar. Alanı boş bırakırsanız tümü geçer.",
+    "pipeline.nodehelp.gate.validation":
+      "Satırlar üzerinde doğrulama motorunu çalıştırır. Engelleyici hatalar varsa çalıştırma burada durur, böylece sonraki yazma adımları kötü veri üzerinde işlem yapmaz.",
+    "pipeline.nodehelp.action.export.excel":
+      "Gelen satırları Excel dosyasına yazar ve bir indirme referansı döndürür. Veriyi değiştirmez.",
+    "pipeline.param.source.project.project_id": "Project id (isteğe bağlı)",
+    "pipeline.param.source.boq.project_id": "Project id (isteğe bağlı)",
+    "pipeline.param.transform.filter.field": "Alan",
+    "pipeline.param.transform.filter.op": "Operatör",
+    "pipeline.param.transform.filter.value": "Değer",
+    "pipeline.param.gate.validation.rule_sets": "Kural setleri",
+    "pipeline.param.action.export.excel.filename": "Dosya adı",
+    "pipeline.param.action.export.excel.columns": "Sütunlar",
+  },
 } as { translation: Record<string, string> };
 
 export default resource;

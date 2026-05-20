@@ -40,18 +40,10 @@ class Invoice(Base):
     currency_code: Mapped[str] = mapped_column(String(10), nullable=False, default="")
     # Phase 2e: money columns back to NUMERIC on PG while staying VARCHAR
     # on SQLite for dev-DB compatibility. Python always sees ``Decimal``.
-    amount_subtotal: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
-    tax_amount: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
-    retention_amount: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
-    amount_total: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
+    amount_subtotal: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
+    tax_amount: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
+    retention_amount: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
+    amount_total: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
     tax_config_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="draft", index=True)
     payment_terms_days: Mapped[str | None] = mapped_column(String(10), nullable=True)
@@ -95,16 +87,10 @@ class InvoiceLineItem(Base):
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     # Quantity / rate / amount: wider scale so quantities like 1.234567
     # don't round-trip as "1.23". The PG type becomes NUMERIC(18, 6).
-    quantity: Mapped[Decimal] = mapped_column(
-        MoneyType(scale=6), nullable=False, default=Decimal("1")
-    )
+    quantity: Mapped[Decimal] = mapped_column(MoneyType(scale=6), nullable=False, default=Decimal("1"))
     unit: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    unit_rate: Mapped[Decimal] = mapped_column(
-        MoneyType(scale=6), nullable=False, default=Decimal("0")
-    )
-    amount: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
+    unit_rate: Mapped[Decimal] = mapped_column(MoneyType(scale=6), nullable=False, default=Decimal("0"))
+    amount: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
     wbs_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     cost_category: Mapped[str | None] = mapped_column(String(100), nullable=True)
     sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -130,9 +116,7 @@ class Payment(Base):
     payment_date: Mapped[str] = mapped_column(String(20), nullable=False)
     amount: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False)
     currency_code: Mapped[str] = mapped_column(String(10), nullable=False, default="")
-    exchange_rate_snapshot: Mapped[Decimal] = mapped_column(
-        MoneyType(scale=6), nullable=False, default=Decimal("1")
-    )
+    exchange_rate_snapshot: Mapped[Decimal] = mapped_column(MoneyType(scale=6), nullable=False, default=Decimal("1"))
     reference: Mapped[str | None] = mapped_column(String(255), nullable=True)
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
         "metadata",
@@ -153,9 +137,7 @@ class ProjectBudget(Base):
     """Budget line for a project, optionally scoped by WBS and cost category."""
 
     __tablename__ = "oe_finance_budget"
-    __table_args__ = (
-        UniqueConstraint("project_id", "wbs_id", "category", name="uq_finance_budget_proj_wbs_cat"),
-    )
+    __table_args__ = (UniqueConstraint("project_id", "wbs_id", "category", name="uq_finance_budget_proj_wbs_cat"),)
 
     project_id: Mapped[uuid.UUID] = mapped_column(
         GUID(),
@@ -169,27 +151,20 @@ class ProjectBudget(Base):
         # currency from the project context so per-project rollups don't
         # silently bias toward EUR. server_default preserved for backfill
         # safety on rows inserted via raw SQL paths during migration.
-        String(3), nullable=False, default="", server_default=""
+        String(3),
+        nullable=False,
+        default="",
+        server_default="",
     )
     # Phase 2d pilot: money columns now return Decimal in Python.
     # On PostgreSQL this emits NUMERIC(18, 2); on the existing SQLite
     # dev DBs the physical column stays VARCHAR(50), so no destructive
     # migration is required — MoneyType normalises both ends.
-    original_budget: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
-    revised_budget: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
-    committed: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
-    actual: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
-    forecast_final: Mapped[Decimal] = mapped_column(
-        MoneyType(), nullable=False, default=Decimal("0")
-    )
+    original_budget: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
+    revised_budget: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
+    committed: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
+    actual: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
+    forecast_final: Mapped[Decimal] = mapped_column(MoneyType(), nullable=False, default=Decimal("0"))
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
         "metadata",
         JSON,

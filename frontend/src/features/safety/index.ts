@@ -1,1 +1,1 @@
-export { SafetyPage } from './SafetyPage';
+export { SafetyPage } from "./SafetyPage";

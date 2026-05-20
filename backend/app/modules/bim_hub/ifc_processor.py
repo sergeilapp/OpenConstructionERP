@@ -31,30 +31,66 @@ logger = logging.getLogger(__name__)
 # IFC entity types we care about — includes IFC2x3, IFC4, and IFC4x3 civil types
 _ELEMENT_TYPES = {
     # ── Structural / architectural (IFC2x3+) ──
-    "IFCWALL", "IFCWALLSTANDARDCASE", "IFCSLAB", "IFCCOLUMN", "IFCBEAM",
-    "IFCDOOR", "IFCWINDOW", "IFCROOF", "IFCSTAIR", "IFCRAILING",
-    "IFCCURTAINWALL", "IFCPLATE", "IFCMEMBER", "IFCFOOTING",
-    "IFCPILE", "IFCBUILDINGELEMENTPROXY",
+    "IFCWALL",
+    "IFCWALLSTANDARDCASE",
+    "IFCSLAB",
+    "IFCCOLUMN",
+    "IFCBEAM",
+    "IFCDOOR",
+    "IFCWINDOW",
+    "IFCROOF",
+    "IFCSTAIR",
+    "IFCRAILING",
+    "IFCCURTAINWALL",
+    "IFCPLATE",
+    "IFCMEMBER",
+    "IFCFOOTING",
+    "IFCPILE",
+    "IFCBUILDINGELEMENTPROXY",
     # ── MEP ──
-    "IFCFLOWSEGMENT", "IFCFLOWTERMINAL", "IFCFLOWFITTING",
-    "IFCDISTRIBUTIONELEMENT", "IFCFURNISHINGELEMENT",
-    "IFCCOVERING", "IFCSPACE",
+    "IFCFLOWSEGMENT",
+    "IFCFLOWTERMINAL",
+    "IFCFLOWFITTING",
+    "IFCDISTRIBUTIONELEMENT",
+    "IFCFURNISHINGELEMENT",
+    "IFCCOVERING",
+    "IFCSPACE",
     # ── Civil infrastructure (IFC4x3 + common proxies) ──
-    "IFCALIGNMENT", "IFCALIGNMENTHORIZONTAL", "IFCALIGNMENTVERTICAL",
-    "IFCALIGNMENTSEGMENT", "IFCALIGNMENTCANT",
-    "IFCBRIDGE", "IFCBRIDGEPART",
-    "IFCROAD", "IFCROADPART",
-    "IFCRAILWAY", "IFCRAILWAYPART",
-    "IFCFACILITY", "IFCFACILITYPART",
-    "IFCPAVEMENT", "IFCKERB", "IFCCOURSE",
-    "IFCEARTHWORKSFILL", "IFCEARTHWORKSCUT", "IFCEARTHWORKSELEMENT",
-    "IFCREINFORCEDSOIL", "IFCGEOTECHNICELEMENT", "IFCGEOTECHNICSTRATUM",
-    "IFCDEEPFOUNDATION", "IFCCAISSONFOOTING",
-    "IFCBEARING", "IFCTENDON", "IFCTENDONANCHOR", "IFCTENDONCONDUIT",
-    "IFCSURFACEFEATURE", "IFCVOIDINGELEMENT",
+    "IFCALIGNMENT",
+    "IFCALIGNMENTHORIZONTAL",
+    "IFCALIGNMENTVERTICAL",
+    "IFCALIGNMENTSEGMENT",
+    "IFCALIGNMENTCANT",
+    "IFCBRIDGE",
+    "IFCBRIDGEPART",
+    "IFCROAD",
+    "IFCROADPART",
+    "IFCRAILWAY",
+    "IFCRAILWAYPART",
+    "IFCFACILITY",
+    "IFCFACILITYPART",
+    "IFCPAVEMENT",
+    "IFCKERB",
+    "IFCCOURSE",
+    "IFCEARTHWORKSFILL",
+    "IFCEARTHWORKSCUT",
+    "IFCEARTHWORKSELEMENT",
+    "IFCREINFORCEDSOIL",
+    "IFCGEOTECHNICELEMENT",
+    "IFCGEOTECHNICSTRATUM",
+    "IFCDEEPFOUNDATION",
+    "IFCCAISSONFOOTING",
+    "IFCBEARING",
+    "IFCTENDON",
+    "IFCTENDONANCHOR",
+    "IFCTENDONCONDUIT",
+    "IFCSURFACEFEATURE",
+    "IFCVOIDINGELEMENT",
     # ── Generic / catch-all ──
-    "IFCCIVILELEMENT", "IFCGEOGRAPHICELEMENT",
-    "IFCTRANSPORTELEMENT", "IFCVIRTUALELEMENT",
+    "IFCCIVILELEMENT",
+    "IFCGEOGRAPHICELEMENT",
+    "IFCTRANSPORTELEMENT",
+    "IFCVIRTUALELEMENT",
     "IFCEXTERNALSPATIALELEMENT",
 }
 
@@ -95,6 +131,7 @@ def _decode_step_string(s: str) -> str:
     s = s.replace(_STEP_DOUBLE_QUOTE_PLACEHOLDER, "'")
     if "\\" not in s:
         return s
+
     # \X2\…\X0\ — UTF-16BE block (greedy until terminator)
     def _x2(match: "re.Match[str]") -> str:
         hexstr = match.group(1)
@@ -102,20 +139,123 @@ def _decode_step_string(s: str) -> str:
             return bytes.fromhex(hexstr).decode("utf-16-be", errors="replace")
         except ValueError:
             return match.group(0)
+
     s = re.sub(r"\\X2\\([0-9A-Fa-f]+)\\X0\\", _x2, s)
+
     # \X\NN — Latin-1 (single byte)
     def _x1(match: "re.Match[str]") -> str:
         try:
             return bytes.fromhex(match.group(1)).decode("latin-1", errors="replace")
         except ValueError:
             return match.group(0)
+
     s = re.sub(r"\\X\\([0-9A-Fa-f]{2})", _x1, s)
+
     # \S\X — Latin-1 high-bit (ASCII char + 0x80)
     def _ss(match: "re.Match[str]") -> str:
         ch = match.group(1)
         return chr(ord(ch) | 0x80) if len(ch) == 1 else match.group(0)
+
     s = re.sub(r"\\S\\(.)", _ss, s)
     return s
+
+
+# ── Last-conversion failure context ───────────────────────────────────────
+#
+# The DDC subprocess can fail for many reasons (Wine crash, RVT version too
+# new, license probe failed). When that happens, ``_try_cad2data`` returns
+# None — and historically the caller had no way to know WHY. The router
+# then shipped a generic "Converter Required" message that didn't help the
+# user diagnose anything.
+#
+# We now stash the last failure's structured context here so the router can
+# pick it up and surface it to the frontend (in ``model.error_message`` and
+# ``model.metadata_``). Module-level state is fine because conversions are
+# serialised per upload — the data is consumed immediately after the call.
+_LAST_DDC_FAILURE: dict[str, Any] = {}
+
+
+def last_ddc_failure() -> dict[str, Any]:
+    """‌⁠‍Return the most recent DDC conversion failure context, if any.
+
+    Keys are best-effort and may be missing:
+      * ``reason`` — short tag: ``timeout`` / ``nonzero_exit`` / ``empty_output``
+      * ``exit_code`` — int from the subprocess (may be missing on timeout)
+      * ``stderr`` — last ~2 KB of stderr from the converter (decoded utf-8)
+      * ``rvt_info`` — dict from ``read_rvt_revit_version`` (RVT only)
+      * ``converter_info`` — dict from ``detect_converter_version``
+      * ``extension`` — the file ext that failed (``rvt`` / ``ifc`` / …)
+
+    Returns an empty dict if there has been no failure since startup.
+    """
+    return dict(_LAST_DDC_FAILURE)
+
+
+def _record_ddc_failure(
+    extension: str,
+    reason: str,
+    *,
+    exit_code: int | None = None,
+    stderr: bytes | str = b"",
+    ifc_path: Path | None = None,
+) -> None:
+    """‌⁠‍Update the module-level failure record with everything the router
+    needs to render an actionable error message."""
+    try:
+        from app.modules.boq.cad_import import (
+            detect_converter_version as _detect,
+        )
+        from app.modules.boq.cad_import import (
+            read_rvt_revit_version as _read_rvt,
+        )
+
+        rvt_info: dict[str, str | None] = {}
+        if extension == "rvt" and ifc_path is not None and ifc_path.exists():
+            rvt_info = _read_rvt(ifc_path)
+        conv_info = _detect(extension)
+    except Exception:  # noqa: BLE001 — diagnostics must never raise
+        rvt_info = {}
+        conv_info = {}
+
+    stderr_text = stderr.decode("utf-8", errors="replace") if isinstance(stderr, (bytes, bytearray)) else str(stderr)
+    # Keep the tail (where the actual error usually lives, not the boot
+    # noise) up to 2 KB.
+    stderr_tail = stderr_text[-2048:].strip()
+
+    _LAST_DDC_FAILURE.clear()
+    _LAST_DDC_FAILURE.update(
+        extension=extension,
+        reason=reason,
+        exit_code=exit_code,
+        stderr=stderr_tail,
+        rvt_info=rvt_info,
+        converter_info=conv_info,
+    )
+    logger.warning(
+        "DDC failure recorded: ext=%s reason=%s rc=%s rvt=%s converter=%s",
+        extension,
+        reason,
+        exit_code,
+        rvt_info.get("app_name") or rvt_info.get("format"),
+        conv_info.get("version"),
+    )
+
+
+def _detect_converter_version_safe(extension: str) -> dict[str, str | None]:
+    """‌⁠‍Best-effort wrapper around ``detect_converter_version``.
+
+    Used by the ``_try_cad2data`` success path to attach a DDC version stamp
+    to the BIM result. Re-exports the same dict shape as the underlying
+    helper: ``{"version": str | None, "source": str | None,
+    "binary_path": str | None}``. Never raises — diagnostics must not block
+    a successful import.
+    """
+    try:
+        from app.modules.boq.cad_import import detect_converter_version
+
+        return detect_converter_version(extension)
+    except Exception:  # noqa: BLE001
+        return {"version": None, "source": None, "binary_path": None}
 
 
 def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "standard") -> dict[str, Any] | None:
@@ -144,6 +284,7 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
         converter = find_converter(ext)
         if converter:
             import subprocess
+
             logger.info("Using DDC Community Converter: %s", converter)
             output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -198,11 +339,20 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
                     rc, _stdout, stderr = fut_xlsx.result()
                 except subprocess.TimeoutExpired:
                     logger.error("DDC Excel pass timed out for %s", ifc_path.name)
+                    _record_ddc_failure(ext, "timeout", ifc_path=ifc_path)
                     return None
                 if rc != 0:
                     logger.warning(
                         "DDC Excel pass exit %d: %s",
-                        rc, stderr.decode(errors="replace")[:300],
+                        rc,
+                        stderr.decode(errors="replace")[:300],
+                    )
+                    _record_ddc_failure(
+                        ext,
+                        "nonzero_exit",
+                        exit_code=rc,
+                        stderr=stderr,
+                        ifc_path=ifc_path,
                     )
                     return None
 
@@ -216,15 +366,30 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
                             break
                 if not excel_path:
                     logger.warning("DDC Excel pass produced no output file in %s", output_dir)
+                    _record_ddc_failure(
+                        ext,
+                        "no_output_file",
+                        exit_code=rc,
+                        stderr=stderr,
+                        ifc_path=ifc_path,
+                    )
                     return None
 
                 raw_elements = parse_cad_excel(excel_path)
                 if not raw_elements:
                     logger.warning("DDC Excel pass produced empty file")
+                    _record_ddc_failure(
+                        ext,
+                        "empty_output",
+                        exit_code=rc,
+                        stderr=stderr,
+                        ifc_path=ifc_path,
+                    )
                     return None
                 logger.info(
                     "DDC converter extracted %d raw rows from %s",
-                    len(raw_elements), ifc_path.name,
+                    len(raw_elements),
+                    ifc_path.name,
                 )
 
                 try:
@@ -244,14 +409,30 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
             else:
                 logger.warning(
                     "DDC COLLADA pass failed (rc=%s, stderr=%s) — using box fallback",
-                    rc2, stderr2.decode(errors="replace")[:200] if stderr2 else "",
+                    rc2,
+                    stderr2.decode(errors="replace")[:200] if stderr2 else "",
                 )
 
-            return _excel_elements_to_bim_result(
+            result_excel = _excel_elements_to_bim_result(
                 raw_elements,
                 output_dir,
                 real_dae_path=real_dae_path,
             )
+            # Surface the converter version so the frontend can render a
+            # "Processed with DDC v{X}" badge on the model card (Stream D
+            # / v3.12.0). Detection is best-effort and never raises —
+            # missing values silently degrade to ``None`` and the badge
+            # hides. See ``detect_converter_version`` for the dpkg /
+            # parent-dir resolution logic.
+            try:
+                conv_info = _detect_converter_version_safe(ext)
+                if conv_info.get("version"):
+                    result_excel["converter_version"] = conv_info["version"]
+                if conv_info.get("source"):
+                    result_excel["converter_source"] = conv_info["source"]
+            except Exception:  # noqa: BLE001 — diagnostics must never block import
+                pass
+            return result_excel
     except ImportError:
         logger.debug("cad_import module not available")
     except Exception as e:
@@ -271,7 +452,9 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
 
         result = subprocess.run(
             [cad2data_bin, str(ifc_path), "--output-dir", str(output_dir), "--format", "csv,dae"],
-            capture_output=True, text=True, timeout=300,
+            capture_output=True,
+            text=True,
+            timeout=300,
         )
         if result.returncode != 0:
             logger.warning("cad2data failed: %s", result.stderr[:500])
@@ -308,20 +491,23 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
                             except ValueError:
                                 pass
 
-                    elements.append({
-                        "stable_id": row.get("global_id", row.get("id", str(len(elements)))),
-                        "element_type": row.get("type", "Unknown"),
-                        "name": row.get("name", ""),
-                        "storey": storey or None,
-                        "discipline": discipline,
-                        "properties": {
-                        k: v for k, v in row.items()
-                        if k not in ("global_id", "id", "type", "name", "storey", "discipline")
-                    },
-                        "quantities": quantities,
-                        "geometry_hash": hashlib.md5(str(row).encode()).hexdigest()[:16],
-                        "bounding_box": None,
-                    })
+                    elements.append(
+                        {
+                            "stable_id": row.get("global_id", row.get("id", str(len(elements)))),
+                            "element_type": row.get("type", "Unknown"),
+                            "name": row.get("name", ""),
+                            "storey": storey or None,
+                            "discipline": discipline,
+                            "properties": {
+                                k: v
+                                for k, v in row.items()
+                                if k not in ("global_id", "id", "type", "name", "storey", "discipline")
+                            },
+                            "quantities": quantities,
+                            "geometry_hash": hashlib.md5(str(row).encode()).hexdigest()[:16],
+                            "bounding_box": None,
+                        }
+                    )
 
         has_geometry = dae_path.exists()
         # Validate the DAE file BEFORE the expensive trimesh GLB conversion.
@@ -336,7 +522,8 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
             if not ok:
                 logger.warning(
                     "Produced DAE failed validation (%s): %s — dropping geometry path",
-                    dae_path.name, reason,
+                    dae_path.name,
+                    reason,
                 )
                 has_geometry = False
 
@@ -352,11 +539,12 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
                 if not ok:
                     logger.warning(
                         "Produced GLB failed validation (%s): %s — dropping GLB path",
-                        glb_path.name, reason,
+                        glb_path.name,
+                        reason,
                     )
                     glb_path = None
 
-        return {
+        result_cad2data: dict[str, Any] = {
             "elements": elements,
             "storeys": sorted(storeys_set),
             "disciplines": sorted(disciplines_set),
@@ -369,6 +557,18 @@ def _try_cad2data(ifc_path: Path, output_dir: Path, *, conversion_depth: str = "
             "geometry_quality": "real" if has_geometry else "placeholder",
             "raw_elements": csv_raw_rows,
         }
+        # Same converter-version stamp the DDC RvtExporter / IfcExporter
+        # success path applies — keeps the frontend badge consistent
+        # regardless of which DDC method handled the file.
+        try:
+            conv_info = _detect_converter_version_safe(ext)
+            if conv_info.get("version"):
+                result_cad2data["converter_version"] = conv_info["version"]
+            if conv_info.get("source"):
+                result_cad2data["converter_source"] = conv_info["source"]
+        except Exception:  # noqa: BLE001
+            pass
+        return result_cad2data
     except Exception as e:
         logger.warning("cad2data error: %s", e)
         return None
@@ -401,65 +601,136 @@ def _excel_elements_to_bim_result(
     # dimensions, analytical model, model groups, revisions, schedules,
     # legends, and other non-physical Revit categories.
     SKIP_CATEGORIES: set[str | None] = {
-        None, "",
+        None,
+        "",
         # Views, sheets, materials, settings
-        "ost_materials", "ost_sunstudy", "ost_views", "ost_viewports",
-        "ost_grids", "ost_levels", "ost_sheets", "ost_titleblocks",
-        "ost_phases", "ost_previewlegendcomponents", "ost_designoptions",
-        "ost_paramelemelectricalloadclassification", "ost_hvac_load_space_types",
-        "ost_hvac_load_building_types", "ost_filldrawcolor", "ost_filllinepattern",
+        "ost_materials",
+        "ost_sunstudy",
+        "ost_views",
+        "ost_viewports",
+        "ost_grids",
+        "ost_levels",
+        "ost_sheets",
+        "ost_titleblocks",
+        "ost_phases",
+        "ost_previewlegendcomponents",
+        "ost_designoptions",
+        "ost_paramelemelectricalloadclassification",
+        "ost_hvac_load_space_types",
+        "ost_hvac_load_building_types",
+        "ost_filldrawcolor",
+        "ost_filllinepattern",
         # Annotations, tags, dimensions
-        "ost_dimensions", "ost_textnotes", "ost_genericannotation",
-        "ost_doortags", "ost_windowtags", "ost_roomtags", "ost_walltags",
-        "ost_areatags", "ost_keynotetags", "ost_materialtags",
-        "ost_areaschemelines", "ost_sketchlines", "ost_weakdims",
-        "ost_detailcomponents", "ost_colorfilllegends", "ost_colorfillschema",
-        "ost_spotdimensions", "ost_spotcoordinates", "ost_spotslopes",
-        "ost_spotelevsymbols", "ost_callouts", "ost_callouthead", "ost_calloutheads",
-        "ost_elevationmarks", "ost_sectionmarks", "ost_sectionbox",
-        "ost_scopeboxes", "ost_referencepoints", "ost_referenceplane",
-        "ost_referenceline", "ost_gridheads", "ost_levelheads",
-        "ost_matchline", "ost_viewportlabel",
+        "ost_dimensions",
+        "ost_textnotes",
+        "ost_genericannotation",
+        "ost_doortags",
+        "ost_windowtags",
+        "ost_roomtags",
+        "ost_walltags",
+        "ost_areatags",
+        "ost_keynotetags",
+        "ost_materialtags",
+        "ost_areaschemelines",
+        "ost_sketchlines",
+        "ost_weakdims",
+        "ost_detailcomponents",
+        "ost_colorfilllegends",
+        "ost_colorfillschema",
+        "ost_spotdimensions",
+        "ost_spotcoordinates",
+        "ost_spotslopes",
+        "ost_spotelevsymbols",
+        "ost_callouts",
+        "ost_callouthead",
+        "ost_calloutheads",
+        "ost_elevationmarks",
+        "ost_sectionmarks",
+        "ost_sectionbox",
+        "ost_scopeboxes",
+        "ost_referencepoints",
+        "ost_referenceplane",
+        "ost_referenceline",
+        "ost_gridheads",
+        "ost_levelheads",
+        "ost_matchline",
+        "ost_viewportlabel",
         # Detail & drafting
-        "ost_detailitems", "ost_lines", "ost_clines",
-        "ost_rasterimages", "ost_schedulegraphics",
-        "ost_tilepatterns", "ost_divisionrules",
+        "ost_detailitems",
+        "ost_lines",
+        "ost_clines",
+        "ost_rasterimages",
+        "ost_schedulegraphics",
+        "ost_tilepatterns",
+        "ost_divisionrules",
         # Revision clouds & tags
-        "ost_revisionclouds", "ost_revisioncloudtags",
-        "ost_revisions", "ost_revisionnumberingsequences",
+        "ost_revisionclouds",
+        "ost_revisioncloudtags",
+        "ost_revisions",
+        "ost_revisionnumberingsequences",
         # Analytical / structural analysis
-        "ost_analyticalnodes", "ost_analyticalmember", "ost_analyticalsurface",
-        "ost_analyticalfloor", "ost_analyticalwall",
-        "ost_analyticalpipeconnections", "ost_linksanalytical",
-        "ost_loadcases", "ost_constraints",
+        "ost_analyticalnodes",
+        "ost_analyticalmember",
+        "ost_analyticalsurface",
+        "ost_analyticalfloor",
+        "ost_analyticalwall",
+        "ost_analyticalpipeconnections",
+        "ost_linksanalytical",
+        "ost_loadcases",
+        "ost_constraints",
         # Model groups, design options, arrays
-        "ost_iosmodelgroups", "ost_iosdetailgroups", "ost_editcuts",
-        "ost_iossketchgrid", "ost_iosgeolocations", "ost_iosgeosite",
+        "ost_iosmodelgroups",
+        "ost_iosdetailgroups",
+        "ost_editcuts",
+        "ost_iossketchgrid",
+        "ost_iosgeolocations",
+        "ost_iosgeosite",
         "ost_iosarrays",
         # Schedules, legends
-        "ost_schedules", "ost_legendcomponents",
+        "ost_schedules",
+        "ost_legendcomponents",
         # Profile / reference / misc
-        "ost_profilefamilies", "ost_profileplane",
-        "ost_referenceviewersymbol", "ost_multireferenceannotations",
+        "ost_profilefamilies",
+        "ost_profileplane",
+        "ost_referenceviewersymbol",
+        "ost_multireferenceannotations",
         "ost_sectionheads",
         # Project / system info (not physical)
-        "ost_projectinformation", "ost_projectbasepoint",
-        "ost_sharedbasepoint", "ost_coordinatesystem",
-        "ost_eaconstructions", "ost_covertype",
+        "ost_projectinformation",
+        "ost_projectbasepoint",
+        "ost_sharedbasepoint",
+        "ost_coordinatesystem",
+        "ost_eaconstructions",
+        "ost_covertype",
         # Topography / site context (huge meshes that obscure the building)
-        "ost_topography", "ost_toposurface", "ost_topo",
-        "ost_site", "ost_sitepad", "ost_siteregion",
-        "ost_buildingpad", "ost_pad",
-        "ost_entourage", "ost_planting",
+        "ost_topography",
+        "ost_toposurface",
+        "ost_topo",
+        "ost_site",
+        "ost_sitepad",
+        "ost_siteregion",
+        "ost_buildingpad",
+        "ost_pad",
+        "ost_entourage",
+        "ost_planting",
         # IFC spatial/project types (from DDC IfcExporter — not physical elements)
-        "ifcproject", "ifcsite", "ifcbuilding", "ifcbuildingstorey",
-        "ifcownerhistory", "ifcapplication", "ifcpersonandorganization",
-        "ifcperson", "ifcorganization", "ifcunitassignment",
+        "ifcproject",
+        "ifcsite",
+        "ifcbuilding",
+        "ifcbuildingstorey",
+        "ifcownerhistory",
+        "ifcapplication",
+        "ifcpersonandorganization",
+        "ifcperson",
+        "ifcorganization",
+        "ifcunitassignment",
         "ifcgeometricrepresentationcontext",
         # HVAC schedules / load (analytical, not physical)
-        "ost_hvacloadschedules", "ost_hvac_load_schedules",
+        "ost_hvacloadschedules",
+        "ost_hvac_load_schedules",
         # Room/area separation (lines, not geometry)
-        "ost_roomseparationlines", "ost_areaschemes",
+        "ost_roomseparationlines",
+        "ost_areaschemes",
     }
 
     elements: list[dict[str, Any]] = []
@@ -552,20 +823,29 @@ def _excel_elements_to_bim_result(
         # DDC Excel columns have exact names; we map them all.
         quantities: dict[str, float] = {}
         for src_key, dest_key in (
-            ("length", "Length"), ("area", "Area"), ("volume", "Volume"),
-            ("width", "Width"), ("height", "Height"), ("thickness", "Thickness"),
-            ("perimeter", "Perimeter"), ("count", "Count"),
-            ("gross area", "Gross Area"), ("gross volume", "Gross Volume"),
-            ("floor area", "Floor Area"), ("floor volume", "Floor Volume"),
+            ("length", "Length"),
+            ("area", "Area"),
+            ("volume", "Volume"),
+            ("width", "Width"),
+            ("height", "Height"),
+            ("thickness", "Thickness"),
+            ("perimeter", "Perimeter"),
+            ("count", "Count"),
+            ("gross area", "Gross Area"),
+            ("gross volume", "Gross Volume"),
+            ("floor area", "Floor Area"),
+            ("floor volume", "Floor Volume"),
             ("surface area", "Surface Area"),
-            ("cut length", "Cut Length"), ("unconnected height", "Unconnected Height"),
+            ("cut length", "Cut Length"),
+            ("unconnected height", "Unconnected Height"),
             # DDC IfcExporter uses [BaseQuantities] prefix
             ("[basequantities] length", "Length"),
             ("[basequantities] width", "Width"),
             ("[basequantities] height", "Height"),
             ("[basequantities] area", "Area"),
             ("[basequantities] volume", "Volume"),
-            ("overallwidth", "Width"), ("overallheight", "Height"),
+            ("overallwidth", "Width"),
+            ("overallheight", "Height"),
         ):
             val = lc_row.get(src_key)
             if val is None:
@@ -579,11 +859,7 @@ def _excel_elements_to_bim_result(
 
         # Stable ID — prefer Revit uniqueid, fall back to type ifcguid, then row index
         stable_id = str(
-            lc_row.get("uniqueid")
-            or lc_row.get("type ifcguid")
-            or lc_row.get("globalid")
-            or lc_row.get("id")
-            or i
+            lc_row.get("uniqueid") or lc_row.get("type ifcguid") or lc_row.get("globalid") or lc_row.get("id") or i
         )
 
         # mesh_ref — numeric Revit ElementId that matches the DAE <node id="...">.
@@ -610,19 +886,35 @@ def _excel_elements_to_bim_result(
         # destroys data the user explicitly asked to preserve.
         DUPLICATE_PROP_KEYS = {
             # Already in stable_id
-            "id", "uniqueid", "globalid", "type ifcguid",
+            "id",
+            "uniqueid",
+            "globalid",
+            "type ifcguid",
             # Already in element_type
             "category",
             # Already in top-level name
             "name",
             # Already in quantities map (BuiltIn measurement params)
-            "length", "area", "volume", "width", "height", "thickness",
-            "perimeter", "count",
-            "gross area", "gross volume", "floor area", "floor volume",
-            "surface area", "cut length", "unconnected height",
+            "length",
+            "area",
+            "volume",
+            "width",
+            "height",
+            "thickness",
+            "perimeter",
+            "count",
+            "gross area",
+            "gross volume",
+            "floor area",
+            "floor volume",
+            "surface area",
+            "cut length",
+            "unconnected height",
             # IFC BaseQuantities mirrors of the above
-            "[basequantities] length", "[basequantities] width",
-            "[basequantities] height", "[basequantities] area",
+            "[basequantities] length",
+            "[basequantities] width",
+            "[basequantities] height",
+            "[basequantities] area",
             "[basequantities] volume",
         }
         properties: dict[str, str] = {}
@@ -656,18 +948,26 @@ def _excel_elements_to_bim_result(
         # ENSURE critical DDC columns are stored in properties under clean keys,
         # even if the generic property loop above missed them (capped, filtered, etc.).
         _KEY_DDC_COLUMNS = {
-            "level": "level", "base constraint": "base_constraint",
-            "base level": "base_level", "top level": "top_level",
+            "level": "level",
+            "base constraint": "base_constraint",
+            "base level": "base_level",
+            "top level": "top_level",
             "top constraint": "top_constraint",
-            "fire rating": "fire_rating", "material": "material",
-            "phase": "phase", "phase created": "phase_created",
+            "fire rating": "fire_rating",
+            "material": "material",
+            "phase": "phase",
+            "phase created": "phase_created",
             "assembly code": "assembly_code",
             "assembly description": "assembly_description",
-            "type mark": "type_mark", "mark": "mark",
-            "structural": "structural", "function": "function",
+            "type mark": "type_mark",
+            "mark": "mark",
+            "structural": "structural",
+            "function": "function",
             "family and type": "family_and_type",
-            "cost": "cost", "keynote": "keynote",
-            "comments": "comments", "description": "description",
+            "cost": "cost",
+            "keynote": "keynote",
+            "comments": "comments",
+            "description": "description",
             "type comments": "type_comments",
         }
         for ddc_key, prop_key in _KEY_DDC_COLUMNS.items():
@@ -684,9 +984,17 @@ def _excel_elements_to_bim_result(
         # Priority order: critical DDC/hierarchy keys win, then remaining
         # properties by insertion order (stable output across runs).
         _PRIORITY_KEYS = (
-            "category", "family", "type_name", "level",
-            "material", "fire_rating", "phase",
-            "assembly_code", "assembly_description", "mark", "type_mark",
+            "category",
+            "family",
+            "type_name",
+            "level",
+            "material",
+            "fire_rating",
+            "phase",
+            "assembly_code",
+            "assembly_description",
+            "mark",
+            "type_mark",
         )
         if len(properties) > 30:
             priority = {k: properties[k] for k in _PRIORITY_KEYS if k in properties}
@@ -700,18 +1008,20 @@ def _excel_elements_to_bim_result(
                 extras[k] = v
             properties = {**priority, **extras}
 
-        elements.append({
-            "stable_id": stable_id,
-            "element_type": etype,
-            "name": name,
-            "storey": storey or None,
-            "discipline": discipline,
-            "properties": properties,
-            "quantities": quantities,
-            "geometry_hash": hashlib.md5(f"{stable_id}:{etype}:{name}".encode()).hexdigest()[:16],
-            "bounding_box": bbox,
-            "mesh_ref": mesh_ref,
-        })
+        elements.append(
+            {
+                "stable_id": stable_id,
+                "element_type": etype,
+                "name": name,
+                "storey": storey or None,
+                "discipline": discipline,
+                "properties": properties,
+                "quantities": quantities,
+                "geometry_hash": hashlib.md5(f"{stable_id}:{etype}:{name}".encode()).hexdigest()[:16],
+                "bounding_box": bbox,
+                "mesh_ref": mesh_ref,
+            }
+        )
 
     # Geometry: prefer the real Revit COLLADA from the second DDC pass.
     # Fall back to the simplified box-grid only when the real .dae is missing.
@@ -722,7 +1032,8 @@ def _excel_elements_to_bim_result(
         geometry_path = real_dae_path
         logger.info(
             "Using real Revit COLLADA geometry: %s (%d KB)",
-            real_dae_path.name, real_dae_path.stat().st_size // 1024,
+            real_dae_path.name,
+            real_dae_path.stat().st_size // 1024,
         )
     elif elements:
         try:
@@ -744,7 +1055,8 @@ def _excel_elements_to_bim_result(
         if not ok:
             logger.warning(
                 "Generated DAE failed validation (%s): %s — dropping geometry path",
-                geometry_path.name, reason,
+                geometry_path.name,
+                reason,
             )
             geometry_path = None
         else:
@@ -754,7 +1066,8 @@ def _excel_elements_to_bim_result(
                 if not ok:
                     logger.warning(
                         "Generated GLB failed validation (%s): %s — dropping GLB path",
-                        glb_path.name, reason,
+                        glb_path.name,
+                        reason,
                     )
                     glb_path = None
 
@@ -762,9 +1075,7 @@ def _excel_elements_to_bim_result(
     # If validation nuked the real DAE path above, ``geometry_path`` will
     # be None even though ``real_dae_path`` originally existed, so we
     # treat that as placeholder for the purpose of the metadata flag.
-    is_real = bool(
-        real_dae_path and real_dae_path.exists() and geometry_path == real_dae_path
-    )
+    is_real = bool(real_dae_path and real_dae_path.exists() and geometry_path == real_dae_path)
     if not is_real:
         # When DDC produced an Excel pass but no real .dae, we generated
         # placeholder boxes — tag the elements so downstream consumers can
@@ -817,10 +1128,7 @@ def _dae_element_bboxes(
         return element_bboxes, element_to_shape
 
     ns = {"c": _COLLADA_NS}
-    geoms = {
-        g.get("id", ""): g
-        for g in tree.findall(".//c:library_geometries/c:geometry", ns)
-    }
+    geoms = {g.get("id", ""): g for g in tree.findall(".//c:library_geometries/c:geometry", ns)}
 
     def _shape_bbox(
         shape_id: str,
@@ -899,6 +1207,7 @@ def _validate_geometry_file(geom_path: Path) -> tuple[bool, str]:
             if head[:4] != b"glTF":
                 return False, f"GLB magic mismatch (got {head[:4]!r})"
             import struct
+
             version = struct.unpack("<I", head[4:8])[0]
             if version != 2:
                 return False, f"unsupported GLB version {version}"
@@ -971,8 +1280,7 @@ def _convert_dae_to_glb(dae_path: Path, output_dir: Path) -> Path | None:
         dae_size = 0
     if dae_size > MAX_DAE_FOR_GLB_BYTES:
         logger.info(
-            "DAE is %d MB (>%d MB threshold) — skipping GLB conversion "
-            "and serving DAE directly to avoid trimesh OOM",
+            "DAE is %d MB (>%d MB threshold) — skipping GLB conversion and serving DAE directly to avoid trimesh OOM",
             dae_size // (1024 * 1024),
             MAX_DAE_FOR_GLB_BYTES // (1024 * 1024),
         )
@@ -1101,8 +1409,7 @@ def _convert_dae_to_glb(dae_path: Path, output_dir: Path) -> Path | None:
                         matched += 1
 
                 logger.info(
-                    "GLB post-process: bbox-matched %d/%d mesh nodes to "
-                    "DAE element ids (of %d DAE elements)",
+                    "GLB post-process: bbox-matched %d/%d mesh nodes to DAE element ids (of %d DAE elements)",
                     matched,
                     total_mesh_nodes,
                     len(element_bboxes),
@@ -1232,9 +1539,7 @@ def process_ifc_file(
                 "id": eid,
                 "type": etype,
                 "args_raw": args_str,
-                "strings": [
-                    _decode_step_string(s) for s in _STRING_RE.findall(args_str)
-                ],
+                "strings": [_decode_step_string(s) for s in _STRING_RE.findall(args_str)],
             }
 
     logger.info("Parsed %d IFC entities", len(entities))
@@ -1263,8 +1568,7 @@ def process_ifc_file(
         )
     elif not unit_ctx.is_canonical:
         logger.info(
-            "IFC text-fallback: declared units rescaled to canonical SI "
-            "(unit_system=%s, length_scale=%.6g)",
+            "IFC text-fallback: declared units rescaled to canonical SI (unit_system=%s, length_scale=%.6g)",
             unit_ctx.unit_system,
             unit_ctx.scale_for.get("LENGTHUNIT", 1.0),
         )
@@ -1318,26 +1622,28 @@ def process_ifc_file(
 
             geo_hash = hashlib.md5(f"{global_id}:{ifc_type}:{name}".encode()).hexdigest()[:16]
 
-            elements.append({
-                "stable_id": global_id,
-                "element_type": simplified_type,
-                "name": name or simplified_type,
-                "storey": storey or None,
-                "discipline": discipline,
-                "properties": {"ifc_type": ifc_type, "ifc_id": eid},
-                "quantities": quantities,
-                # Audit C2 — propagate the unit-assignment probe result
-                # so downstream code (validation rules, BOQ aggregator,
-                # frontend viewer) can decide whether to trust these
-                # numbers. True when units are not canonical SI metres
-                # OR when no LENGTHUNIT row is declared at all.
-                "unit_uncertain": unit_uncertain,
-                "geometry_hash": geo_hash,
-                # Both bbox and mesh_ref are populated post-loop from the
-                # placeholder COLLADA we generate (node id = "n{index}").
-                "bounding_box": None,
-                "mesh_ref": None,
-            })
+            elements.append(
+                {
+                    "stable_id": global_id,
+                    "element_type": simplified_type,
+                    "name": name or simplified_type,
+                    "storey": storey or None,
+                    "discipline": discipline,
+                    "properties": {"ifc_type": ifc_type, "ifc_id": eid},
+                    "quantities": quantities,
+                    # Audit C2 — propagate the unit-assignment probe result
+                    # so downstream code (validation rules, BOQ aggregator,
+                    # frontend viewer) can decide whether to trust these
+                    # numbers. True when units are not canonical SI metres
+                    # OR when no LENGTHUNIT row is declared at all.
+                    "unit_uncertain": unit_uncertain,
+                    "geometry_hash": geo_hash,
+                    # Both bbox and mesh_ref are populated post-loop from the
+                    # placeholder COLLADA we generate (node id = "n{index}").
+                    "bounding_box": None,
+                    "mesh_ref": None,
+                }
+            )
 
     # Try to extract real placement coordinates from IFC before generating geometry
     _extract_placements(elements, entities)
@@ -1356,7 +1662,9 @@ def process_ifc_file(
 
     logger.info(
         "IFC text-parsed: %d elements, %d storeys, %d disciplines",
-        len(elements), len(storeys_set), len(disciplines_set),
+        len(elements),
+        len(storeys_set),
+        len(disciplines_set),
     )
 
     # Tag every element with `is_placeholder=True` so downstream consumers
@@ -1434,41 +1742,58 @@ def process_ifc_file(
 
 # IFC unit-type tokens (per ISO 16739-1 IfcUnitEnum + IfcDerivedUnitEnum).
 _IFC_UNIT_TYPES: tuple[str, ...] = (
-    "LENGTHUNIT", "AREAUNIT", "VOLUMEUNIT", "MASSUNIT",
-    "TIMEUNIT", "PLANEANGLEUNIT", "SOLIDANGLEUNIT",
+    "LENGTHUNIT",
+    "AREAUNIT",
+    "VOLUMEUNIT",
+    "MASSUNIT",
+    "TIMEUNIT",
+    "PLANEANGLEUNIT",
+    "SOLIDANGLEUNIT",
     # PLANEANGLEUNIT is the spec spelling; ANGLEUNIT is a common shorthand
     # that some exporters (older Tekla) emit. We accept both.
     "ANGLEUNIT",
-    "TEMPERATUREUNIT", "THERMODYNAMICTEMPERATUREUNIT",
-    "ELECTRICCURRENTUNIT", "AMOUNTOFSUBSTANCEUNIT",
-    "LUMINOUSINTENSITYUNIT", "FREQUENCYUNIT",
-    "ENERGYUNIT", "FORCEUNIT", "PRESSUREUNIT", "POWERUNIT",
+    "TEMPERATUREUNIT",
+    "THERMODYNAMICTEMPERATUREUNIT",
+    "ELECTRICCURRENTUNIT",
+    "AMOUNTOFSUBSTANCEUNIT",
+    "LUMINOUSINTENSITYUNIT",
+    "FREQUENCYUNIT",
+    "ENERGYUNIT",
+    "FORCEUNIT",
+    "PRESSUREUNIT",
+    "POWERUNIT",
     # Derived-unit enum values
-    "VOLUMETRICFLOWRATEUNIT", "MASSDENSITYUNIT", "LINEARVELOCITYUNIT",
-    "DYNAMICVISCOSITYUNIT", "ACCELERATIONUNIT", "ANGULARVELOCITYUNIT",
-    "MOMENTOFINERTIAUNIT", "HEATFLUXDENSITYUNIT", "HEATINGVALUEUNIT",
+    "VOLUMETRICFLOWRATEUNIT",
+    "MASSDENSITYUNIT",
+    "LINEARVELOCITYUNIT",
+    "DYNAMICVISCOSITYUNIT",
+    "ACCELERATIONUNIT",
+    "ANGULARVELOCITYUNIT",
+    "MOMENTOFINERTIAUNIT",
+    "HEATFLUXDENSITYUNIT",
+    "HEATINGVALUEUNIT",
 )
 
 # SI prefix multipliers (per ISO 80000-1).  An IfcSIUnit with no Prefix
 # token ($) maps to the unity entry under ``""``.
 _SI_PREFIX_FACTOR: dict[str, float] = {
-    "":      1.0,
-    "EXA":   1e18,
-    "PETA":  1e15,
-    "TERA":  1e12,
-    "GIGA":  1e9,
-    "MEGA":  1e6,
-    "KILO":  1e3,
+    "": 1.0,
+    "EXA": 1e18,
+    "PETA": 1e15,
+    "TERA": 1e12,
+    "GIGA": 1e9,
+    "MEGA": 1e6,
+    "KILO": 1e3,
     "HECTO": 1e2,
-    "DECA":  1e1,
-    "DECI":  1e-1,
+    "DECA": 1e1,
+    "DECI": 1e-1,
     "CENTI": 1e-2,
     "MILLI": 1e-3,
     "MICRO": 1e-6,
-    "NANO":  1e-9,
-    "PICO":  1e-12,
+    "NANO": 1e-9,
+    "PICO": 1e-12,
     "FEMTO": 1e-15,
-    "ATTO":  1e-18,
+    "ATTO": 1e-18,
 }
 
 # Imperial / customary conversion factors (canonical SI exponent = 1).
@@ -1488,116 +1813,116 @@ _SI_PREFIX_FACTOR: dict[str, float] = {
 # Aliases (FT vs FOOT, etc.) handle exporter inconsistency.
 _CONVERSION_BASED_FACTORS: dict[str, float] = {
     # ── Length ──
-    "INCH":     0.0254,
-    "INCHES":   0.0254,
-    "IN":       0.0254,
-    "FOOT":     0.3048,
-    "FT":       0.3048,
-    "FEET":     0.3048,
-    "YARD":     0.9144,
-    "YD":       0.9144,
-    "MILE":     1609.344,
-    "MILES":    1609.344,
+    "INCH": 0.0254,
+    "INCHES": 0.0254,
+    "IN": 0.0254,
+    "FOOT": 0.3048,
+    "FT": 0.3048,
+    "FEET": 0.3048,
+    "YARD": 0.9144,
+    "YD": 0.9144,
+    "MILE": 1609.344,
+    "MILES": 1609.344,
     "NAUTICALMILE": 1852.0,
     # ── Area ──
-    "SQUAREINCH":   0.00064516,
-    "SQUAREFOOT":   0.09290304,
-    "SQ FT":        0.09290304,
-    "SQFT":         0.09290304,
-    "SQUAREYARD":   0.83612736,
-    "ACRE":         4046.8564224,
-    "SQUAREMILE":   2589988.110336,
+    "SQUAREINCH": 0.00064516,
+    "SQUAREFOOT": 0.09290304,
+    "SQ FT": 0.09290304,
+    "SQFT": 0.09290304,
+    "SQUAREYARD": 0.83612736,
+    "ACRE": 4046.8564224,
+    "SQUAREMILE": 2589988.110336,
     # ── Volume ──
-    "CUBICINCH":    0.000016387064,
-    "CUBICFOOT":    0.028316846592,
-    "CU FT":        0.028316846592,
-    "CUFT":         0.028316846592,
-    "CUBICYARD":    0.764554857984,
-    "CU YD":        0.764554857984,
-    "CUYD":         0.764554857984,
-    "GALLON":       0.003785411784,   # US liquid gallon
-    "USGALLON":     0.003785411784,
-    "UKGALLON":     0.00454609,
-    "LITRE":        0.001,
-    "LITER":        0.001,
+    "CUBICINCH": 0.000016387064,
+    "CUBICFOOT": 0.028316846592,
+    "CU FT": 0.028316846592,
+    "CUFT": 0.028316846592,
+    "CUBICYARD": 0.764554857984,
+    "CU YD": 0.764554857984,
+    "CUYD": 0.764554857984,
+    "GALLON": 0.003785411784,  # US liquid gallon
+    "USGALLON": 0.003785411784,
+    "UKGALLON": 0.00454609,
+    "LITRE": 0.001,
+    "LITER": 0.001,
     # ── Mass ──
-    "POUND":        0.45359237,
-    "LB":           0.45359237,
-    "LBS":          0.45359237,
-    "OUNCE":        0.028349523125,
-    "OZ":           0.028349523125,
-    "TONNE":        1000.0,
-    "TON":          907.18474,     # US short ton (ISO default)
-    "STONE":        6.35029318,
+    "POUND": 0.45359237,
+    "LB": 0.45359237,
+    "LBS": 0.45359237,
+    "OUNCE": 0.028349523125,
+    "OZ": 0.028349523125,
+    "TONNE": 1000.0,
+    "TON": 907.18474,  # US short ton (ISO default)
+    "STONE": 6.35029318,
     # ── Plane angle ──
-    "DEGREE":       0.0174532925199432957692,    # π/180
-    "DEG":          0.0174532925199432957692,
-    "GRADIAN":      0.0157079632679489661923,    # π/200
+    "DEGREE": 0.0174532925199432957692,  # π/180
+    "DEG": 0.0174532925199432957692,
+    "GRADIAN": 0.0157079632679489661923,  # π/200
     # ── Time ──
-    "MINUTE":       60.0,
-    "MIN":          60.0,
-    "HOUR":         3600.0,
-    "HR":           3600.0,
-    "DAY":          86400.0,
-    "WEEK":         604800.0,
-    "YEAR":         31557600.0,    # Julian year (365.25 d)
+    "MINUTE": 60.0,
+    "MIN": 60.0,
+    "HOUR": 3600.0,
+    "HR": 3600.0,
+    "DAY": 86400.0,
+    "WEEK": 604800.0,
+    "YEAR": 31557600.0,  # Julian year (365.25 d)
     # ── Temperature offsets are handled separately; here are scale-only
     # entries used for differences (ΔT). Absolute conversions need a
     # bias term that is dimension-specific and is applied at quantity
     # extraction, not here.
-    "FAHRENHEIT":   0.5555555555555556,   # 5/9 (scale only — bias 32 °F → 0 °C handled at extract)
-    "RANKINE":      0.5555555555555556,   # 5/9
+    "FAHRENHEIT": 0.5555555555555556,  # 5/9 (scale only — bias 32 °F → 0 °C handled at extract)
+    "RANKINE": 0.5555555555555556,  # 5/9
     # ── Pressure ──
-    "PSI":          6894.757293168,
+    "PSI": 6894.757293168,
     "POUNDPERSQUAREINCH": 6894.757293168,
-    "BAR":          100000.0,
-    "ATMOSPHERE":   101325.0,
-    "ATM":          101325.0,
-    "TORR":         133.322387415,
-    "MMHG":         133.322387415,
+    "BAR": 100000.0,
+    "ATMOSPHERE": 101325.0,
+    "ATM": 101325.0,
+    "TORR": 133.322387415,
+    "MMHG": 133.322387415,
     # ── Energy ──
-    "BTU":          1055.05585262,
+    "BTU": 1055.05585262,
     "BRITISHTHERMALUNIT": 1055.05585262,
-    "CALORIE":      4.184,
-    "CAL":          4.184,
-    "KILOCALORIE":  4184.0,
-    "KCAL":         4184.0,
+    "CALORIE": 4.184,
+    "CAL": 4.184,
+    "KILOCALORIE": 4184.0,
+    "KCAL": 4184.0,
     "KILOWATTHOUR": 3600000.0,
-    "KWH":          3600000.0,
+    "KWH": 3600000.0,
     # ── Power ──
-    "HORSEPOWER":   745.6998715822702,
-    "HP":           745.6998715822702,
+    "HORSEPOWER": 745.6998715822702,
+    "HP": 745.6998715822702,
     # ── Force ──
-    "POUNDFORCE":   4.4482216152605,
-    "LBF":          4.4482216152605,
-    "KIP":          4448.2216152605,
+    "POUNDFORCE": 4.4482216152605,
+    "LBF": 4.4482216152605,
+    "KIP": 4448.2216152605,
 }
 
 # Map an IfcUnitEnum token to a tuple of (BOQ-relevant SI base unit, …)
 # we report as the canonical destination so the metadata block can label
 # what the scale-table is converting INTO.
 _CANONICAL_SI_BASE: dict[str, str] = {
-    "LENGTHUNIT":        "m",
-    "AREAUNIT":          "m^2",
-    "VOLUMEUNIT":        "m^3",
-    "MASSUNIT":          "kg",
-    "TIMEUNIT":          "s",
-    "PLANEANGLEUNIT":    "rad",
-    "ANGLEUNIT":         "rad",
-    "SOLIDANGLEUNIT":    "sr",
-    "TEMPERATUREUNIT":   "K",
+    "LENGTHUNIT": "m",
+    "AREAUNIT": "m^2",
+    "VOLUMEUNIT": "m^3",
+    "MASSUNIT": "kg",
+    "TIMEUNIT": "s",
+    "PLANEANGLEUNIT": "rad",
+    "ANGLEUNIT": "rad",
+    "SOLIDANGLEUNIT": "sr",
+    "TEMPERATUREUNIT": "K",
     "THERMODYNAMICTEMPERATUREUNIT": "K",
-    "FREQUENCYUNIT":     "Hz",
-    "ENERGYUNIT":        "J",
-    "FORCEUNIT":         "N",
-    "PRESSUREUNIT":      "Pa",
-    "POWERUNIT":         "W",
+    "FREQUENCYUNIT": "Hz",
+    "ENERGYUNIT": "J",
+    "FORCEUNIT": "N",
+    "PRESSUREUNIT": "Pa",
+    "POWERUNIT": "W",
     "ELECTRICCURRENTUNIT": "A",
     "LUMINOUSINTENSITYUNIT": "cd",
     "AMOUNTOFSUBSTANCEUNIT": "mol",
-    "MASSDENSITYUNIT":   "kg/m^3",
+    "MASSDENSITYUNIT": "kg/m^3",
     "LINEARVELOCITYUNIT": "m/s",
-    "ACCELERATIONUNIT":  "m/s^2",
+    "ACCELERATIONUNIT": "m/s^2",
     "ANGULARVELOCITYUNIT": "rad/s",
     "VOLUMETRICFLOWRATEUNIT": "m^3/s",
     "DYNAMICVISCOSITYUNIT": "Pa.s",
@@ -1607,13 +1932,13 @@ _CANONICAL_SI_BASE: dict[str, str] = {
 # IFCQUANTITY* → IfcUnitEnum dimension lookup.  Drives which scale we
 # apply when rolling a value into the canonical element output.
 _QUANTITY_KIND_TO_UNIT: dict[str, str] = {
-    "IFCQUANTITYLENGTH":  "LENGTHUNIT",
-    "IFCQUANTITYAREA":    "AREAUNIT",
-    "IFCQUANTITYVOLUME":  "VOLUMEUNIT",
-    "IFCQUANTITYWEIGHT":  "MASSUNIT",
-    "IFCQUANTITYTIME":    "TIMEUNIT",
-    "IFCQUANTITYCOUNT":   "",          # dimensionless — no scale
-    "IFCQUANTITYNUMBER":  "",
+    "IFCQUANTITYLENGTH": "LENGTHUNIT",
+    "IFCQUANTITYAREA": "AREAUNIT",
+    "IFCQUANTITYVOLUME": "VOLUMEUNIT",
+    "IFCQUANTITYWEIGHT": "MASSUNIT",
+    "IFCQUANTITYTIME": "TIMEUNIT",
+    "IFCQUANTITYCOUNT": "",  # dimensionless — no scale
+    "IFCQUANTITYNUMBER": "",
 }
 
 
@@ -1698,7 +2023,7 @@ def _resolve_ifc_si_unit(ent: dict[str, Any]) -> tuple[str, float, str] | None:
         exponent = 2
     elif name_raw in ("CUBIC_METRE", "CUBICMETRE"):
         exponent = 3
-    scale = prefix_factor ** exponent
+    scale = prefix_factor**exponent
     label_prefix = prefix_name.lower() if prefix_name else ""
     label = f"{label_prefix}{name_raw.lower().replace('_', '')}"
     return unit_type_raw, scale, label
@@ -1866,7 +2191,7 @@ def _resolve_derived_unit(
                 unit_label = r[2]
         if unit_scale is None or unit_scale <= 0:
             continue
-        composite_scale *= unit_scale ** exponent
+        composite_scale *= unit_scale**exponent
         sign = "" if exponent >= 0 else "-"
         label_pieces.append(f"{unit_label}^{sign}{abs(exponent)}")
 
@@ -1905,8 +2230,12 @@ class UnitContext:
     """
 
     __slots__ = (
-        "scale_for", "label_for", "unit_system",
-        "currency_code", "is_canonical", "had_assignment",
+        "scale_for",
+        "label_for",
+        "unit_system",
+        "currency_code",
+        "is_canonical",
+        "had_assignment",
     )
 
     def __init__(self) -> None:
@@ -2158,9 +2487,13 @@ def _extract_quantities_for_element(
             if not q_ent:
                 continue
             if q_ent["type"] not in (
-                "IFCQUANTITYLENGTH", "IFCQUANTITYAREA",
-                "IFCQUANTITYVOLUME", "IFCQUANTITYWEIGHT", "IFCQUANTITYCOUNT",
-                "IFCQUANTITYTIME", "IFCQUANTITYNUMBER",
+                "IFCQUANTITYLENGTH",
+                "IFCQUANTITYAREA",
+                "IFCQUANTITYVOLUME",
+                "IFCQUANTITYWEIGHT",
+                "IFCQUANTITYCOUNT",
+                "IFCQUANTITYTIME",
+                "IFCQUANTITYNUMBER",
             ):
                 continue
             q_strings = q_ent["strings"]
@@ -2200,15 +2533,49 @@ def _classify_discipline(ifc_type: str) -> str:
     # Check architecture first — curtainwall contains "wall" so must precede structural
     if any(x in t for x in ["door", "window", "curtainwall", "covering", "furnishing"]):
         return "architecture"
-    if any(x in t for x in ["wall", "slab", "column", "beam", "footing", "pile", "stair", "railing", "roof",
-                             "plate", "member", "tendon", "bearing"]):
+    if any(
+        x in t
+        for x in [
+            "wall",
+            "slab",
+            "column",
+            "beam",
+            "footing",
+            "pile",
+            "stair",
+            "railing",
+            "roof",
+            "plate",
+            "member",
+            "tendon",
+            "bearing",
+        ]
+    ):
         return "structural"
     if any(x in t for x in ["flow", "distribution", "pipe", "duct", "cable"]):
         return "mep"
-    if any(x in t for x in ["alignment", "road", "railway", "bridge", "pavement", "kerb", "course",
-                             "earthworks", "civil", "facility", "geographic", "geotechnic",
-                             "caisson", "deepfoundation", "surfacefeature", "transport",
-                             "reinforcedsoil"]):
+    if any(
+        x in t
+        for x in [
+            "alignment",
+            "road",
+            "railway",
+            "bridge",
+            "pavement",
+            "kerb",
+            "course",
+            "earthworks",
+            "civil",
+            "facility",
+            "geographic",
+            "geotechnic",
+            "caisson",
+            "deepfoundation",
+            "surfacefeature",
+            "transport",
+            "reinforcedsoil",
+        ]
+    ):
         return "civil"
     if "space" in t:
         return "architecture"
@@ -2282,7 +2649,9 @@ def _extract_placements(
                 except ValueError as exc:
                     logger.debug(
                         "IFC placement skipped: malformed 3D coordinate at #%d (%r): %s",
-                        eid, nums[:3], exc,
+                        eid,
+                        nums[:3],
+                        exc,
                     )
             elif len(nums) == 2:
                 try:
@@ -2290,7 +2659,9 @@ def _extract_placements(
                 except ValueError as exc:
                     logger.debug(
                         "IFC placement skipped: malformed 2D coordinate at #%d (%r): %s",
-                        eid, nums[:2], exc,
+                        eid,
+                        nums[:2],
+                        exc,
                     )
 
     # Build IfcAxis2Placement3D → location point
@@ -2356,10 +2727,10 @@ def _assign_logical_grid_positions(elements: list[dict[str, Any]]) -> None:
     The result is a recognisable building silhouette: floors stacked
     vertically, trades separated horizontally, elements in reading order.
     """
-    STOREY_HEIGHT = 3.5   # metres between storey base planes
+    STOREY_HEIGHT = 3.5  # metres between storey base planes
     DISCIPLINE_SPACING = 6.0  # Y gap between discipline lanes
-    ELEM_SPACING = 2.5        # X gap between elements in a lane
-    MAX_PER_ROW = 25          # wrap to next sub-row after this many
+    ELEM_SPACING = 2.5  # X gap between elements in a lane
+    MAX_PER_ROW = 25  # wrap to next sub-row after this many
 
     # Discover unique storeys in the order they appear, then sort
     storey_order: list[str] = []
@@ -2414,25 +2785,25 @@ def _assign_logical_grid_positions(elements: list[dict[str, Any]]) -> None:
 # as a building rather than a uniform grid of identical rectangles.
 _PLACEHOLDER_EXTENTS_BY_IFC_TYPE: dict[str, tuple[float, float, float]] = {
     # length, width, height
-    "IFCSPACE":              (4.0, 4.0, 3.0),
-    "IFCWALL":               (3.0, 0.24, 2.7),
-    "IFCWALLSTANDARDCASE":   (3.0, 0.24, 2.7),
-    "IFCSLAB":               (5.0, 5.0, 0.3),
-    "IFCROOF":               (5.0, 5.0, 0.3),
-    "IFCFLOOR":              (5.0, 5.0, 0.3),
-    "IFCCOVERING":           (3.0, 3.0, 0.05),
-    "IFCDOOR":               (0.9, 0.1, 2.1),
-    "IFCWINDOW":             (1.2, 0.1, 1.5),
-    "IFCCOLUMN":             (0.4, 0.4, 3.0),
-    "IFCBEAM":               (4.0, 0.3, 0.5),
-    "IFCSTAIR":              (3.0, 1.2, 3.0),
-    "IFCSTAIRFLIGHT":        (3.0, 1.2, 1.5),
-    "IFCRAILING":            (2.0, 0.05, 1.0),
-    "IFCFURNISHINGELEMENT":  (1.0, 0.6, 0.8),
+    "IFCSPACE": (4.0, 4.0, 3.0),
+    "IFCWALL": (3.0, 0.24, 2.7),
+    "IFCWALLSTANDARDCASE": (3.0, 0.24, 2.7),
+    "IFCSLAB": (5.0, 5.0, 0.3),
+    "IFCROOF": (5.0, 5.0, 0.3),
+    "IFCFLOOR": (5.0, 5.0, 0.3),
+    "IFCCOVERING": (3.0, 3.0, 0.05),
+    "IFCDOOR": (0.9, 0.1, 2.1),
+    "IFCWINDOW": (1.2, 0.1, 1.5),
+    "IFCCOLUMN": (0.4, 0.4, 3.0),
+    "IFCBEAM": (4.0, 0.3, 0.5),
+    "IFCSTAIR": (3.0, 1.2, 3.0),
+    "IFCSTAIRFLIGHT": (3.0, 1.2, 1.5),
+    "IFCRAILING": (2.0, 0.05, 1.0),
+    "IFCFURNISHINGELEMENT": (1.0, 0.6, 0.8),
     "IFCBUILDINGELEMENTPROXY": (1.0, 1.0, 1.0),
-    "IFCCURTAINWALL":        (5.0, 0.1, 3.0),
-    "IFCMEMBER":             (2.0, 0.1, 0.1),
-    "IFCPLATE":              (1.0, 1.0, 0.05),
+    "IFCCURTAINWALL": (5.0, 0.1, 3.0),
+    "IFCMEMBER": (2.0, 0.1, 0.1),
+    "IFCPLATE": (1.0, 1.0, 0.05),
 }
 
 _PLACEHOLDER_DEFAULT_EXTENTS: tuple[float, float, float] = (1.0, 0.3, 3.0)
@@ -2445,7 +2816,8 @@ def _placeholder_default_extents(ifc_type_upper: str) -> tuple[float, float, flo
     is preserved for any ifc_type not listed above.
     """
     return _PLACEHOLDER_EXTENTS_BY_IFC_TYPE.get(
-        ifc_type_upper, _PLACEHOLDER_DEFAULT_EXTENTS,
+        ifc_type_upper,
+        _PLACEHOLDER_DEFAULT_EXTENTS,
     )
 
 
@@ -2538,8 +2910,14 @@ def _generate_collada_boxes(
         mesh_el = ET.SubElement(geom, "mesh")
 
         verts = [
-            (0, 0, 0), (ln, 0, 0), (ln, w, 0), (0, w, 0),
-            (0, 0, h), (ln, 0, h), (ln, w, h), (0, w, h),
+            (0, 0, 0),
+            (ln, 0, 0),
+            (ln, w, 0),
+            (0, w, 0),
+            (0, 0, h),
+            (ln, 0, h),
+            (ln, w, h),
+            (0, w, h),
         ]
         pos_str = " ".join(f"{v[0]:.4f} {v[1]:.4f} {v[2]:.4f}" for v in verts)
 
@@ -2609,7 +2987,8 @@ def _extract_revit_element_id(lc_row: dict[str, Any]) -> int | None:
         except (TypeError, ValueError) as exc:
             logger.debug(
                 "DDC id column not numeric (%r) — trying UniqueId fallback: %s",
-                raw, exc,
+                raw,
+                exc,
             )
 
     # 2) UniqueId -> hex element id
@@ -2621,7 +3000,8 @@ def _extract_revit_element_id(lc_row: dict[str, Any]) -> int | None:
         except ValueError as exc:
             logger.debug(
                 "UniqueId tail not hex (%r) — trying alternate columns: %s",
-                last, exc,
+                last,
+                exc,
             )
 
     # 3) Alternate column names used by other CAD tools.

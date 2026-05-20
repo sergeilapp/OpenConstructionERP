@@ -1,7 +1,7 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   Search,
   Plus,
@@ -27,7 +27,7 @@ import {
   Trash2,
   Info,
   AlertTriangle,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -39,10 +39,10 @@ import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { useCreateShortcut } from '@/shared/hooks/useCreateShortcut';
-import { useToastStore } from '@/stores/useToastStore';
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { useCreateShortcut } from "@/shared/hooks/useCreateShortcut";
+import { useToastStore } from "@/stores/useToastStore";
 import {
   fetchContacts,
   fetchContactTags,
@@ -57,88 +57,127 @@ import {
   type PrequalificationStatus,
   type CreateContactPayload,
   type ImportResult,
-} from './api';
+} from "./api";
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
 const CONTACT_TYPES: ContactType[] = [
-  'customer',
-  'lead',
-  'client',
-  'subcontractor',
-  'supplier',
-  'consultant',
+  "customer",
+  "lead",
+  "client",
+  "subcontractor",
+  "supplier",
+  "consultant",
 ];
 
 /* Tag-prefix → display group used by the CRM chip strip. The order
  * defines the row order rendered in the UI. */
 const TAG_GROUPS: { prefix: string; label: string }[] = [
-  { prefix: 'group:', label: 'Tier' },
-  { prefix: 'topic:', label: 'Topic' },
-  { prefix: 'lang:', label: 'Language' },
-  { prefix: 'country:', label: 'Country' },
-  { prefix: 'inbox:', label: 'Inbox' },
-  { prefix: 'consent:', label: 'Consent' },
+  { prefix: "group:", label: "Tier" },
+  { prefix: "topic:", label: "Topic" },
+  { prefix: "lang:", label: "Language" },
+  { prefix: "country:", label: "Country" },
+  { prefix: "inbox:", label: "Inbox" },
+  { prefix: "consent:", label: "Consent" },
 ];
 
 /* Cap per group so the strip stays scannable at 6.6K contacts. */
 const TAG_GROUP_CAP = 8;
 
-const LS_INFO_DISMISSED = 'oe_contacts_info_dismissed';
+const LS_INFO_DISMISSED = "oe_contacts_info_dismissed";
 
-const TYPE_BADGE_VARIANT: Record<ContactType, 'blue' | 'warning' | 'success' | 'neutral'> = {
-  client: 'blue',
-  subcontractor: 'warning',
-  supplier: 'success',
-  consultant: 'neutral',
-  internal: 'neutral',
-  lead: 'warning',
-  customer: 'success',
+const TYPE_BADGE_VARIANT: Record<
+  ContactType,
+  "blue" | "warning" | "success" | "neutral"
+> = {
+  client: "blue",
+  subcontractor: "warning",
+  supplier: "success",
+  consultant: "neutral",
+  internal: "neutral",
+  lead: "warning",
+  customer: "success",
 };
 
 const PREQUAL_CONFIG: Record<
   PrequalificationStatus,
-  { icon: React.ElementType; cls: string; labelKey: string; defaultLabel: string }
+  {
+    icon: React.ElementType;
+    cls: string;
+    labelKey: string;
+    defaultLabel: string;
+  }
 > = {
   pending: {
     icon: Clock,
-    cls: 'text-amber-500',
-    labelKey: 'contacts.prequal_pending',
-    defaultLabel: 'Pending',
+    cls: "text-amber-500",
+    labelKey: "contacts.prequal_pending",
+    defaultLabel: "Pending",
   },
   approved: {
     icon: ShieldCheck,
-    cls: 'text-green-600 dark:text-green-400',
-    labelKey: 'contacts.prequal_approved',
-    defaultLabel: 'Approved',
+    cls: "text-green-600 dark:text-green-400",
+    labelKey: "contacts.prequal_approved",
+    defaultLabel: "Approved",
   },
   expired: {
     icon: ShieldAlert,
-    cls: 'text-orange-500',
-    labelKey: 'contacts.prequal_expired',
-    defaultLabel: 'Expired',
+    cls: "text-orange-500",
+    labelKey: "contacts.prequal_expired",
+    defaultLabel: "Expired",
   },
   rejected: {
     icon: ShieldX,
-    cls: 'text-semantic-error',
-    labelKey: 'contacts.prequal_rejected',
-    defaultLabel: 'Rejected',
+    cls: "text-semantic-error",
+    labelKey: "contacts.prequal_rejected",
+    defaultLabel: "Rejected",
   },
 };
 
 const inputCls =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 /* ── Add Contact Modal ─────────────────────────────────────────────────── */
 
-const TYPE_CARD_CONFIG: Record<ContactType, { icon: React.ElementType; color: string }> = {
-  client: { icon: Users, color: 'text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-950/30 dark:border-blue-800' },
-  subcontractor: { icon: HardHat, color: 'text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-950/30 dark:border-amber-800' },
-  supplier: { icon: Truck, color: 'text-green-600 bg-green-50 border-green-200 dark:text-green-400 dark:bg-green-950/30 dark:border-green-800' },
-  consultant: { icon: Briefcase, color: 'text-gray-600 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-800/50 dark:border-gray-700' },
-  internal: { icon: Users, color: 'text-indigo-600 bg-indigo-50 border-indigo-200 dark:text-indigo-400 dark:bg-indigo-950/30 dark:border-indigo-800' },
-  lead: { icon: User, color: 'text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-950/30 dark:border-amber-800' },
-  customer: { icon: Users, color: 'text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-950/30 dark:border-emerald-800' },
+const TYPE_CARD_CONFIG: Record<
+  ContactType,
+  { icon: React.ElementType; color: string }
+> = {
+  client: {
+    icon: Users,
+    color:
+      "text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-950/30 dark:border-blue-800",
+  },
+  subcontractor: {
+    icon: HardHat,
+    color:
+      "text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-950/30 dark:border-amber-800",
+  },
+  supplier: {
+    icon: Truck,
+    color:
+      "text-green-600 bg-green-50 border-green-200 dark:text-green-400 dark:bg-green-950/30 dark:border-green-800",
+  },
+  consultant: {
+    icon: Briefcase,
+    color:
+      "text-gray-600 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-800/50 dark:border-gray-700",
+  },
+  internal: {
+    icon: Users,
+    color:
+      "text-indigo-600 bg-indigo-50 border-indigo-200 dark:text-indigo-400 dark:bg-indigo-950/30 dark:border-indigo-800",
+  },
+  lead: {
+    icon: User,
+    color:
+      "text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-950/30 dark:border-amber-800",
+  },
+  customer: {
+    icon: Users,
+    color:
+      "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-950/30 dark:border-emerald-800",
+  },
 };
 
 interface ContactFormData {
@@ -159,20 +198,20 @@ interface ContactFormData {
 }
 
 const EMPTY_FORM: ContactFormData = {
-  company_name: '',
-  legal_name: '',
-  vat_number: '',
-  first_name: '',
-  last_name: '',
-  contact_type: 'client',
-  email: '',
-  phone: '',
-  website: '',
-  country: '',
-  address: '',
-  payment_terms: '30',
-  prequalification_status: 'pending',
-  notes: '',
+  company_name: "",
+  legal_name: "",
+  vat_number: "",
+  first_name: "",
+  last_name: "",
+  contact_type: "client",
+  email: "",
+  phone: "",
+  website: "",
+  country: "",
+  address: "",
+  payment_terms: "30",
+  prequalification_status: "pending",
+  notes: "",
 };
 
 function AddContactModal({
@@ -192,21 +231,37 @@ function AddContactModal({
   const [form, setForm] = useState<ContactFormData>(initialData || EMPTY_FORM);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const set = <K extends keyof ContactFormData>(key: K, value: ContactFormData[K]) => {
+  const set = <K extends keyof ContactFormData>(
+    key: K,
+    value: ContactFormData[K],
+  ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
-    if (errors[key]) setErrors((prev) => { const next = { ...prev }; delete next[key]; return next; });
+    if (errors[key])
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
   };
 
-  const canSubmit = form.company_name.trim().length > 0 || form.first_name.trim().length > 0 || form.last_name.trim().length > 0;
+  const canSubmit =
+    form.company_name.trim().length > 0 ||
+    form.first_name.trim().length > 0 ||
+    form.last_name.trim().length > 0;
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
     const hasName = form.first_name.trim() || form.last_name.trim();
     if (!form.company_name.trim() && !hasName) {
-      e.company_name = t('contacts.company_or_name_required', { defaultValue: 'Company name or contact name is required‌⁠‍' });
+      e.company_name = t("contacts.company_or_name_required", {
+        defaultValue: "Company name or contact name is required‌⁠‍",
+      });
     }
     if (form.country.trim() && form.country.trim().length !== 2) {
-      e.country = t('contacts.country_code_invalid', { defaultValue: 'Country code must be exactly 2 letters (ISO 3166-1 alpha-2, e.g. DE, US, GB)‌⁠‍' });
+      e.country = t("contacts.country_code_invalid", {
+        defaultValue:
+          "Country code must be exactly 2 letters (ISO 3166-1 alpha-2, e.g. DE, US, GB)‌⁠‍",
+      });
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -225,15 +280,19 @@ function AddContactModal({
       size="xl"
       title={
         isEdit
-          ? t('contacts.edit_contact', { defaultValue: 'Edit Contact‌⁠‍' })
-          : t('contacts.add_contact', { defaultValue: 'Add Contact' })
+          ? t("contacts.edit_contact", { defaultValue: "Edit Contact‌⁠‍" })
+          : t("contacts.add_contact", { defaultValue: "Add Contact" })
       }
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
-          <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={isPending || !canSubmit}
+          >
             {isPending ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
             ) : (
@@ -241,8 +300,10 @@ function AddContactModal({
             )}
             <span>
               {isEdit
-                ? t('contacts.save_contact', { defaultValue: 'Save Changes' })
-                : t('contacts.create_contact', { defaultValue: 'Create Contact' })}
+                ? t("contacts.save_contact", { defaultValue: "Save Changes" })
+                : t("contacts.create_contact", {
+                    defaultValue: "Create Contact",
+                  })}
             </span>
           </Button>
         </>
@@ -251,7 +312,7 @@ function AddContactModal({
       {/* Contact type picker — 4-wide tile row */}
       <WideModalSection columns={1}>
         <WideModalField
-          label={t('contacts.field_type', { defaultValue: 'Contact Type' })}
+          label={t("contacts.field_type", { defaultValue: "Contact Type" })}
           required
         >
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
@@ -263,12 +324,12 @@ function AddContactModal({
                 <button
                   key={ct}
                   type="button"
-                  onClick={() => set('contact_type', ct)}
+                  onClick={() => set("contact_type", ct)}
                   className={clsx(
-                    'flex flex-col items-center gap-1.5 rounded-lg border-2 px-3 py-3 text-center transition-all',
+                    "flex flex-col items-center gap-1.5 rounded-lg border-2 px-3 py-3 text-center transition-all",
                     selected
-                      ? cfg.color + ' ring-2 ring-oe-blue/30'
-                      : 'border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary',
+                      ? cfg.color + " ring-2 ring-oe-blue/30"
+                      : "border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary",
                   )}
                 >
                   <TypeIcon size={20} />
@@ -286,102 +347,127 @@ function AddContactModal({
 
       {/* Company */}
       <WideModalSection
-        title={t('contacts.section_company', { defaultValue: 'Company' })}
+        title={t("contacts.section_company", { defaultValue: "Company" })}
         columns={2}
       >
         <WideModalField
-          label={t('contacts.field_company', { defaultValue: 'Company Name' })}
+          label={t("contacts.field_company", { defaultValue: "Company Name" })}
           required
           span={2}
           error={errors.company_name}
         >
           <input
             value={form.company_name}
-            onChange={(e) => set('company_name', e.target.value)}
-            placeholder={t('contacts.company_placeholder', {
-              defaultValue: 'e.g. Acme Construction Ltd.',
+            onChange={(e) => set("company_name", e.target.value)}
+            placeholder={t("contacts.company_placeholder", {
+              defaultValue: "e.g. Acme Construction Ltd.",
             })}
             className={clsx(
               inputCls,
               errors.company_name &&
-                'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
           />
         </WideModalField>
 
-        <WideModalField label={t('contacts.field_legal_name', { defaultValue: 'Legal Name' })}>
+        <WideModalField
+          label={t("contacts.field_legal_name", { defaultValue: "Legal Name" })}
+        >
           <input
             value={form.legal_name}
-            onChange={(e) => set('legal_name', e.target.value)}
+            onChange={(e) => set("legal_name", e.target.value)}
             className={inputCls}
-            placeholder={t('contacts.legal_name_placeholder', { defaultValue: 'Registered legal entity name' })}
+            placeholder={t("contacts.legal_name_placeholder", {
+              defaultValue: "Registered legal entity name",
+            })}
           />
         </WideModalField>
 
-        <WideModalField label={t('contacts.field_vat', { defaultValue: 'VAT / Tax ID' })}>
+        <WideModalField
+          label={t("contacts.field_vat", { defaultValue: "VAT / Tax ID" })}
+        >
           <input
             value={form.vat_number}
-            onChange={(e) => set('vat_number', e.target.value)}
+            onChange={(e) => set("vat_number", e.target.value)}
             className={inputCls}
-            placeholder={t('contacts.vat_placeholder', { defaultValue: 'e.g. DE123456789' })}
+            placeholder={t("contacts.vat_placeholder", {
+              defaultValue: "e.g. DE123456789",
+            })}
           />
         </WideModalField>
       </WideModalSection>
 
       {/* Person */}
       <WideModalSection
-        title={t('contacts.section_person', { defaultValue: 'Contact Person' })}
+        title={t("contacts.section_person", { defaultValue: "Contact Person" })}
         columns={2}
       >
-        <WideModalField label={t('contacts.field_first_name', { defaultValue: 'First Name' })}>
+        <WideModalField
+          label={t("contacts.field_first_name", { defaultValue: "First Name" })}
+        >
           <input
             value={form.first_name}
-            onChange={(e) => set('first_name', e.target.value)}
+            onChange={(e) => set("first_name", e.target.value)}
             className={inputCls}
-            placeholder={t('contacts.first_name_placeholder', { defaultValue: 'John' })}
+            placeholder={t("contacts.first_name_placeholder", {
+              defaultValue: "John",
+            })}
           />
         </WideModalField>
 
-        <WideModalField label={t('contacts.field_last_name', { defaultValue: 'Last Name' })}>
+        <WideModalField
+          label={t("contacts.field_last_name", { defaultValue: "Last Name" })}
+        >
           <input
             value={form.last_name}
-            onChange={(e) => set('last_name', e.target.value)}
+            onChange={(e) => set("last_name", e.target.value)}
             className={inputCls}
-            placeholder={t('contacts.last_name_placeholder', { defaultValue: 'Doe' })}
+            placeholder={t("contacts.last_name_placeholder", {
+              defaultValue: "Doe",
+            })}
           />
         </WideModalField>
       </WideModalSection>
 
       {/* Contact details */}
       <WideModalSection
-        title={t('contacts.section_contact', { defaultValue: 'Contact Details' })}
+        title={t("contacts.section_contact", {
+          defaultValue: "Contact Details",
+        })}
         columns={2}
       >
-        <WideModalField label={t('contacts.field_email', { defaultValue: 'Email' })}>
+        <WideModalField
+          label={t("contacts.field_email", { defaultValue: "Email" })}
+        >
           <input
             type="email"
             value={form.email}
-            onChange={(e) => set('email', e.target.value)}
+            onChange={(e) => set("email", e.target.value)}
             className={inputCls}
             placeholder="name@company.com"
           />
         </WideModalField>
 
-        <WideModalField label={t('contacts.field_phone', { defaultValue: 'Phone' })}>
+        <WideModalField
+          label={t("contacts.field_phone", { defaultValue: "Phone" })}
+        >
           <input
             type="tel"
             value={form.phone}
-            onChange={(e) => set('phone', e.target.value)}
+            onChange={(e) => set("phone", e.target.value)}
             className={inputCls}
             placeholder="+49 170 1234567"
           />
         </WideModalField>
 
-        <WideModalField label={t('contacts.field_website', { defaultValue: 'Website' })} span={2}>
+        <WideModalField
+          label={t("contacts.field_website", { defaultValue: "Website" })}
+          span={2}
+        >
           <input
             type="url"
             value={form.website}
-            onChange={(e) => set('website', e.target.value)}
+            onChange={(e) => set("website", e.target.value)}
             className={inputCls}
             placeholder="https://www.example.com"
           />
@@ -390,37 +476,46 @@ function AddContactModal({
 
       {/* Address */}
       <WideModalSection
-        title={t('contacts.section_address', { defaultValue: 'Address' })}
+        title={t("contacts.section_address", { defaultValue: "Address" })}
         columns={2}
       >
         <WideModalField
-          label={t('contacts.field_country', { defaultValue: 'Country' })}
+          label={t("contacts.field_country", { defaultValue: "Country" })}
           error={errors.country}
         >
           <input
             value={form.country}
             onChange={(e) =>
-              set('country', e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 2))
+              set(
+                "country",
+                e.target.value
+                  .toUpperCase()
+                  .replace(/[^A-Z]/g, "")
+                  .slice(0, 2),
+              )
             }
             maxLength={2}
             className={clsx(
               inputCls,
-              errors.country && 'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+              errors.country &&
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
-            placeholder={t('contacts.country_placeholder', {
-              defaultValue: 'e.g. DE, US, GB',
+            placeholder={t("contacts.country_placeholder", {
+              defaultValue: "e.g. DE, US, GB",
             })}
           />
         </WideModalField>
 
-        <WideModalField label={t('contacts.field_address', { defaultValue: 'Address' })}>
+        <WideModalField
+          label={t("contacts.field_address", { defaultValue: "Address" })}
+        >
           <textarea
             value={form.address}
-            onChange={(e) => set('address', e.target.value)}
+            onChange={(e) => set("address", e.target.value)}
             rows={2}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none"
-            placeholder={t('contacts.address_placeholder', {
-              defaultValue: 'Street address, City, ZIP / Postal code',
+            placeholder={t("contacts.address_placeholder", {
+              defaultValue: "Street address, City, ZIP / Postal code",
             })}
           />
         </WideModalField>
@@ -428,60 +523,73 @@ function AddContactModal({
 
       {/* Payment & Status */}
       <WideModalSection
-        title={t('contacts.section_payment', { defaultValue: 'Payment & Status' })}
+        title={t("contacts.section_payment", {
+          defaultValue: "Payment & Status",
+        })}
         columns={2}
       >
         <WideModalField
-          label={t('contacts.field_payment_terms', { defaultValue: 'Payment Terms' })}
+          label={t("contacts.field_payment_terms", {
+            defaultValue: "Payment Terms",
+          })}
         >
           <div className="flex items-center gap-2">
-            {['30', '45', '60'].map((days) => (
+            {["30", "45", "60"].map((days) => (
               <button
                 key={days}
                 type="button"
-                onClick={() => set('payment_terms', days)}
+                onClick={() => set("payment_terms", days)}
                 className={clsx(
-                  'flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-all text-center',
+                  "flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-all text-center",
                   form.payment_terms === days
-                    ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue ring-1 ring-oe-blue/30'
-                    : 'border-border text-content-tertiary hover:border-border-light hover:text-content-secondary',
+                    ? "border-oe-blue bg-oe-blue-subtle text-oe-blue ring-1 ring-oe-blue/30"
+                    : "border-border text-content-tertiary hover:border-border-light hover:text-content-secondary",
                 )}
               >
-                {days} {t('contacts.days', { defaultValue: 'days' })}
+                {days} {t("contacts.days", { defaultValue: "days" })}
               </button>
             ))}
           </div>
         </WideModalField>
 
-        <WideModalField label={t('contacts.field_prequal', { defaultValue: 'Prequalification' })}>
+        <WideModalField
+          label={t("contacts.field_prequal", {
+            defaultValue: "Prequalification",
+          })}
+        >
           <select
             value={form.prequalification_status}
             onChange={(e) =>
-              set('prequalification_status', e.target.value as PrequalificationStatus)
+              set(
+                "prequalification_status",
+                e.target.value as PrequalificationStatus,
+              )
             }
             className={inputCls}
           >
-            {(Object.keys(PREQUAL_CONFIG) as PrequalificationStatus[]).map((ps) => (
-              <option key={ps} value={ps}>
-                {t(PREQUAL_CONFIG[ps].labelKey, {
-                  defaultValue: PREQUAL_CONFIG[ps].defaultLabel,
-                })}
-              </option>
-            ))}
+            {(Object.keys(PREQUAL_CONFIG) as PrequalificationStatus[]).map(
+              (ps) => (
+                <option key={ps} value={ps}>
+                  {t(PREQUAL_CONFIG[ps].labelKey, {
+                    defaultValue: PREQUAL_CONFIG[ps].defaultLabel,
+                  })}
+                </option>
+              ),
+            )}
           </select>
         </WideModalField>
 
         <WideModalField
-          label={t('contacts.field_notes', { defaultValue: 'Notes' })}
+          label={t("contacts.field_notes", { defaultValue: "Notes" })}
           span={2}
         >
           <textarea
             value={form.notes}
-            onChange={(e) => set('notes', e.target.value)}
+            onChange={(e) => set("notes", e.target.value)}
             rows={2}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none"
-            placeholder={t('contacts.notes_placeholder', {
-              defaultValue: 'Additional notes...',
+            placeholder={t("contacts.notes_placeholder", {
+              defaultValue: "Additional notes...",
             })}
           />
         </WideModalField>
@@ -522,7 +630,11 @@ function ImportContactsModal({
       setResult(res);
       onSuccess(res);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : t('contacts.import_failed', { defaultValue: 'Import failed' }));
+      setError(
+        err instanceof Error
+          ? err.message
+          : t("contacts.import_failed", { defaultValue: "Import failed" }),
+      );
     } finally {
       setIsPending(false);
     }
@@ -530,23 +642,29 @@ function ImportContactsModal({
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg animate-fade-in">
-      <div className="w-full max-w-lg bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4 max-h-[90vh] overflow-y-auto" role="dialog" aria-label={t('contacts.import_contacts', { defaultValue: 'Import Contacts' })}>
+      <div
+        className="w-full max-w-lg bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4 max-h-[90vh] overflow-y-auto"
+        role="dialog"
+        aria-label={t("contacts.import_contacts", {
+          defaultValue: "Import Contacts",
+        })}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
           <h2 className="text-lg font-semibold text-content-primary">
-            {t('contacts.import_contacts', { defaultValue: 'Import Contacts' })}
+            {t("contacts.import_contacts", { defaultValue: "Import Contacts" })}
           </h2>
           <button
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
           >
             <X size={18} />
@@ -564,15 +682,15 @@ function ImportContactsModal({
             onDragLeave={() => setDragActive(false)}
             onDrop={handleDrop}
             className={clsx(
-              'flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors cursor-pointer',
+              "flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors cursor-pointer",
               dragActive
-                ? 'border-oe-blue bg-oe-blue-subtle/20'
-                : 'border-border hover:border-oe-blue/50',
+                ? "border-oe-blue bg-oe-blue-subtle/20"
+                : "border-border hover:border-oe-blue/50",
             )}
             onClick={() => {
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = '.xlsx,.csv,.xls';
+              const input = document.createElement("input");
+              input.type = "file";
+              input.accept = ".xlsx,.csv,.xls";
               input.onchange = (e) => {
                 const f = (e.target as HTMLInputElement).files?.[0];
                 if (f) setFile(f);
@@ -584,12 +702,13 @@ function ImportContactsModal({
             <p className="text-sm text-content-secondary text-center">
               {file
                 ? file.name
-                : t('contacts.drop_file', {
-                    defaultValue: 'Drop Excel or CSV file here, or click to browse',
+                : t("contacts.drop_file", {
+                    defaultValue:
+                      "Drop Excel or CSV file here, or click to browse",
                   })}
             </p>
             <p className="text-xs text-content-quaternary mt-1">
-              {t('contacts.file_types', { defaultValue: '.xlsx, .csv' })}
+              {t("contacts.file_types", { defaultValue: ".xlsx, .csv" })}
             </p>
           </div>
 
@@ -602,7 +721,9 @@ function ImportContactsModal({
             className="flex items-center gap-1.5 text-xs text-oe-blue hover:underline"
           >
             <FileDown size={13} />
-            {t('contacts.download_template', { defaultValue: 'Download import template' })}
+            {t("contacts.download_template", {
+              defaultValue: "Download import template",
+            })}
           </button>
 
           {/* Error */}
@@ -616,8 +737,9 @@ function ImportContactsModal({
           {result && (
             <div className="rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-3 text-sm text-content-primary space-y-1">
               <p>
-                {t('contacts.import_result', {
-                  defaultValue: 'Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}',
+                {t("contacts.import_result", {
+                  defaultValue:
+                    "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
                   imported: result.imported,
                   skipped: result.skipped,
                   errors: result.errors.length,
@@ -626,13 +748,15 @@ function ImportContactsModal({
               {result.errors.length > 0 && (
                 <details className="text-xs text-content-tertiary">
                   <summary className="cursor-pointer">
-                    {t('contacts.show_errors', { defaultValue: 'Show error details' })}
+                    {t("contacts.show_errors", {
+                      defaultValue: "Show error details",
+                    })}
                   </summary>
                   <ul className="mt-1 space-y-0.5 max-h-32 overflow-y-auto">
                     {result.errors.slice(0, 20).map((err) => (
                       <li key={`row-${err.row}`}>
-                        {t('contacts.row_error', {
-                          defaultValue: 'Row {{row}}: {{error}}',
+                        {t("contacts.row_error", {
+                          defaultValue: "Row {{row}}: {{error}}",
                           row: err.row,
                           error: err.error,
                         })}
@@ -649,8 +773,8 @@ function ImportContactsModal({
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border-light">
           <Button variant="ghost" onClick={onClose}>
             {result
-              ? t('common.close', { defaultValue: 'Close' })
-              : t('common.cancel', { defaultValue: 'Cancel' })}
+              ? t("common.close", { defaultValue: "Close" })
+              : t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           {!result && (
             <Button
@@ -663,7 +787,9 @@ function ImportContactsModal({
               ) : (
                 <Upload size={16} className="mr-1.5" />
               )}
-              <span>{t('contacts.import_btn', { defaultValue: 'Import' })}</span>
+              <span>
+                {t("contacts.import_btn", { defaultValue: "Import" })}
+              </span>
             </Button>
           )}
         </div>
@@ -684,10 +810,17 @@ const ContactCard = React.memo(function ContactCard({
   onDelete: (id: string) => void;
 }) {
   const { t } = useTranslation();
-  const prequal = PREQUAL_CONFIG[contact.prequalification_status as PrequalificationStatus] ?? PREQUAL_CONFIG.pending;
+  const prequal =
+    PREQUAL_CONFIG[contact.prequalification_status as PrequalificationStatus] ??
+    PREQUAL_CONFIG.pending;
   const PrequalIcon = prequal.icon;
-  const displayName = contact.company_name || [contact.first_name, contact.last_name].filter(Boolean).join(' ') || '—';
-  const personName = [contact.first_name, contact.last_name].filter(Boolean).join(' ');
+  const displayName =
+    contact.company_name ||
+    [contact.first_name, contact.last_name].filter(Boolean).join(" ") ||
+    "—";
+  const personName = [contact.first_name, contact.last_name]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <Card className="p-4 animate-card-in hover:shadow-md transition-shadow group">
@@ -698,7 +831,9 @@ const ContactCard = React.memo(function ContactCard({
           onClick={() => onEdit(contact)}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onEdit(contact); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") onEdit(contact);
+          }}
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue font-bold text-sm shrink-0">
             {displayName.charAt(0).toUpperCase()}
@@ -708,14 +843,21 @@ const ContactCard = React.memo(function ContactCard({
               {displayName}
             </h3>
             {personName && contact.company_name && (
-              <p className="text-xs text-content-secondary truncate">{personName}</p>
+              <p className="text-xs text-content-secondary truncate">
+                {personName}
+              </p>
             )}
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          <Badge variant={TYPE_BADGE_VARIANT[contact.contact_type] ?? 'neutral'} size="sm">
+          <Badge
+            variant={TYPE_BADGE_VARIANT[contact.contact_type] ?? "neutral"}
+            size="sm"
+          >
             {t(`contacts.type_${contact.contact_type}`, {
-              defaultValue: contact.contact_type.charAt(0).toUpperCase() + contact.contact_type.slice(1),
+              defaultValue:
+                contact.contact_type.charAt(0).toUpperCase() +
+                contact.contact_type.slice(1),
             })}
           </Badge>
           <div className="flex items-center gap-0 opacity-0 group-hover:opacity-100 transition-opacity ml-1">
@@ -724,7 +866,7 @@ const ContactCard = React.memo(function ContactCard({
               size="sm"
               onClick={() => onEdit(contact)}
               className="!p-1 text-content-quaternary hover:text-oe-blue h-auto"
-              title={t('common.edit', { defaultValue: 'Edit' })}
+              title={t("common.edit", { defaultValue: "Edit" })}
             >
               <Pencil size={12} />
             </Button>
@@ -733,7 +875,7 @@ const ContactCard = React.memo(function ContactCard({
               size="sm"
               onClick={() => onDelete(contact.id)}
               className="!p-1 text-content-quaternary hover:text-red-500 h-auto"
-              title={t('common.delete', { defaultValue: 'Delete' })}
+              title={t("common.delete", { defaultValue: "Delete" })}
             >
               <Trash2 size={12} />
             </Button>
@@ -763,11 +905,16 @@ const ContactCard = React.memo(function ContactCard({
           {contact.country_code && (
             <>
               <CountryFlag code={contact.country_code} size={14} />
-              <span className="text-xs text-content-tertiary">{contact.country_code}</span>
+              <span className="text-xs text-content-tertiary">
+                {contact.country_code}
+              </span>
             </>
           )}
         </div>
-        <div className={clsx('flex items-center gap-1 text-xs', prequal.cls)} title={t(prequal.labelKey, { defaultValue: prequal.defaultLabel })}>
+        <div
+          className={clsx("flex items-center gap-1 text-xs", prequal.cls)}
+          title={t(prequal.labelKey, { defaultValue: prequal.defaultLabel })}
+        >
           <PrequalIcon size={13} />
           <span className="hidden sm:inline">
             {t(prequal.labelKey, { defaultValue: prequal.defaultLabel })}
@@ -789,12 +936,12 @@ export function ContactsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState<ContactType | ''>('');
-  const [countryFilter, setCountryFilter] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<ContactType | "">("");
+  const [countryFilter, setCountryFilter] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [infoDismissed, setInfoDismissed] = useState(
-    () => localStorage.getItem(LS_INFO_DISMISSED) === '1',
+    () => localStorage.getItem(LS_INFO_DISMISSED) === "1",
   );
 
   // "n" shortcut → open new contact form
@@ -811,7 +958,7 @@ export function ContactsPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['contacts', typeFilter, selectedTags],
+    queryKey: ["contacts", typeFilter, selectedTags],
     queryFn: () =>
       fetchContacts({
         contact_type: typeFilter || undefined,
@@ -825,7 +972,7 @@ export function ContactsPage() {
 
   // CRM tag facets — feeds the chip strip above the search bar.
   const { data: tagFacets = [] } = useQuery({
-    queryKey: ['contacts', 'tags'],
+    queryKey: ["contacts", "tags"],
     queryFn: fetchContactTags,
     staleTime: 60_000,
   });
@@ -833,20 +980,26 @@ export function ContactsPage() {
   /* Group facets by prefix and cap per group so the chip strip stays
    * scannable. Tags without a known prefix bucket land under "Other". */
   const groupedFacets = useMemo(() => {
-    const buckets = new Map<string, { tag: string; count: number; label: string }[]>();
+    const buckets = new Map<
+      string,
+      { tag: string; count: number; label: string }[]
+    >();
     for (const def of TAG_GROUPS) {
       buckets.set(def.label, []);
     }
-    buckets.set('Other', []);
+    buckets.set("Other", []);
 
     for (const facet of tagFacets) {
       const group = TAG_GROUPS.find((g) => facet.tag.startsWith(g.prefix));
       const label = group ? facet.tag.slice(group.prefix.length) : facet.tag;
-      const target = buckets.get(group?.label ?? 'Other')!;
+      const target = buckets.get(group?.label ?? "Other")!;
       target.push({ tag: facet.tag, count: facet.count, label });
     }
     return Array.from(buckets.entries())
-      .map(([label, items]) => ({ label, items: items.slice(0, TAG_GROUP_CAP) }))
+      .map(([label, items]) => ({
+        label,
+        items: items.slice(0, TAG_GROUP_CAP),
+      }))
       .filter((g) => g.items.length > 0);
   }, [tagFacets]);
 
@@ -863,15 +1016,17 @@ export function ContactsPage() {
       const q = searchQuery.toLowerCase();
       list = list.filter(
         (c) =>
-          (c.company_name || '').toLowerCase().includes(q) ||
-          (c.first_name || '').toLowerCase().includes(q) ||
-          (c.last_name || '').toLowerCase().includes(q) ||
-          (c.primary_email || '').toLowerCase().includes(q),
+          (c.company_name || "").toLowerCase().includes(q) ||
+          (c.first_name || "").toLowerCase().includes(q) ||
+          (c.last_name || "").toLowerCase().includes(q) ||
+          (c.primary_email || "").toLowerCase().includes(q),
       );
     }
     if (countryFilter.trim()) {
       const cf = countryFilter.toLowerCase();
-      list = list.filter((c) => (c.country_code || '').toLowerCase().includes(cf));
+      list = list.filter((c) =>
+        (c.country_code || "").toLowerCase().includes(cf),
+      );
     }
     return list;
   }, [contacts, searchQuery, countryFilter]);
@@ -889,17 +1044,21 @@ export function ContactsPage() {
   const createMut = useMutation({
     mutationFn: (data: CreateContactPayload) => createContact(data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['contacts'] });
+      qc.invalidateQueries({ queryKey: ["contacts"] });
       setShowAddModal(false);
       addToast({
-        type: 'success',
-        title: t('contacts.created', { defaultValue: 'Contact created successfully' }),
+        type: "success",
+        title: t("contacts.created", {
+          defaultValue: "Contact created successfully",
+        }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('contacts.create_failed', { defaultValue: 'Failed to create contact' }),
+        type: "error",
+        title: t("contacts.create_failed", {
+          defaultValue: "Failed to create contact",
+        }),
         message: e.message,
       }),
   });
@@ -909,35 +1068,50 @@ export function ContactsPage() {
     mutationFn: exportContacts,
     onSuccess: () =>
       addToast({
-        type: 'success',
-        title: t('contacts.export_success', { defaultValue: 'Contacts exported successfully' }),
-        message: t('contacts.export_success_msg', { defaultValue: 'Excel file has been downloaded.' }),
+        type: "success",
+        title: t("contacts.export_success", {
+          defaultValue: "Contacts exported successfully",
+        }),
+        message: t("contacts.export_success_msg", {
+          defaultValue: "Excel file has been downloaded.",
+        }),
       }),
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('contacts.export_failed', { defaultValue: 'Failed to export contacts' }),
+        type: "error",
+        title: t("contacts.export_failed", {
+          defaultValue: "Failed to export contacts",
+        }),
         message: e.message,
       }),
   });
 
   // Edit mutation
   const editMut = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateContactPayload> }) =>
-      updateContact(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<CreateContactPayload>;
+    }) => updateContact(id, data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['contacts'] });
+      qc.invalidateQueries({ queryKey: ["contacts"] });
       setShowAddModal(false);
       setEditingContact(null);
       addToast({
-        type: 'success',
-        title: t('contacts.updated', { defaultValue: 'Contact updated successfully' }),
+        type: "success",
+        title: t("contacts.updated", {
+          defaultValue: "Contact updated successfully",
+        }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('contacts.update_failed', { defaultValue: 'Failed to update contact' }),
+        type: "error",
+        title: t("contacts.update_failed", {
+          defaultValue: "Failed to update contact",
+        }),
         message: e.message,
       }),
   });
@@ -946,40 +1120,47 @@ export function ContactsPage() {
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteContact(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['contacts'] });
+      qc.invalidateQueries({ queryKey: ["contacts"] });
       addToast({
-        type: 'success',
-        title: t('contacts.deleted', { defaultValue: 'Contact deleted' }),
+        type: "success",
+        title: t("contacts.deleted", { defaultValue: "Contact deleted" }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('contacts.delete_failed', { defaultValue: 'Failed to delete contact' }),
+        type: "error",
+        title: t("contacts.delete_failed", {
+          defaultValue: "Failed to delete contact",
+        }),
         message: e.message,
       }),
   });
 
   const { confirm, ...confirmProps } = useConfirm();
 
-  const formDataFromContact = useCallback((c: Contact): ContactFormData => ({
-    company_name: c.company_name || '',
-    legal_name: c.legal_name || '',
-    vat_number: c.vat_number || '',
-    first_name: c.first_name || '',
-    last_name: c.last_name || '',
-    contact_type: c.contact_type,
-    email: c.primary_email || '',
-    phone: c.primary_phone || '',
-    website: c.website || '',
-    country: c.country_code || '',
-    address: c.address && typeof c.address === 'object' && 'text' in c.address
-      ? String(c.address.text)
-      : '',
-    payment_terms: c.payment_terms_days || '30',
-    prequalification_status: (c.prequalification_status as PrequalificationStatus) || 'pending',
-    notes: c.notes || '',
-  }), []);
+  const formDataFromContact = useCallback(
+    (c: Contact): ContactFormData => ({
+      company_name: c.company_name || "",
+      legal_name: c.legal_name || "",
+      vat_number: c.vat_number || "",
+      first_name: c.first_name || "",
+      last_name: c.last_name || "",
+      contact_type: c.contact_type,
+      email: c.primary_email || "",
+      phone: c.primary_phone || "",
+      website: c.website || "",
+      country: c.country_code || "",
+      address:
+        c.address && typeof c.address === "object" && "text" in c.address
+          ? String(c.address.text)
+          : "",
+      payment_terms: c.payment_terms_days || "30",
+      prequalification_status:
+        (c.prequalification_status as PrequalificationStatus) || "pending",
+      notes: c.notes || "",
+    }),
+    [],
+  );
 
   const handleEditContact = useCallback((contact: Contact) => {
     setEditingContact(contact);
@@ -989,10 +1170,14 @@ export function ContactsPage() {
   const handleDeleteContact = useCallback(
     async (id: string) => {
       const ok = await confirm({
-        title: t('contacts.confirm_delete_title', { defaultValue: 'Delete contact?' }),
-        message: t('contacts.confirm_delete_msg', { defaultValue: 'This contact will be permanently deleted.' }),
-        confirmLabel: t('common.delete', { defaultValue: 'Delete' }),
-        variant: 'danger',
+        title: t("contacts.confirm_delete_title", {
+          defaultValue: "Delete contact?",
+        }),
+        message: t("contacts.confirm_delete_msg", {
+          defaultValue: "This contact will be permanently deleted.",
+        }),
+        confirmLabel: t("common.delete", { defaultValue: "Delete" }),
+        variant: "danger",
       });
       if (ok) deleteMut.mutate(id);
     },
@@ -1039,7 +1224,8 @@ export function ContactsPage() {
           country_code: formData.country || undefined,
           address: formData.address ? { text: formData.address } : undefined,
           payment_terms_days: formData.payment_terms || undefined,
-          prequalification_status: formData.prequalification_status || undefined,
+          prequalification_status:
+            formData.prequalification_status || undefined,
           notes: formData.notes || undefined,
         },
       });
@@ -1052,8 +1238,8 @@ export function ContactsPage() {
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-          { label: t('contacts.title', { defaultValue: 'Contacts' }) },
+          { label: t("nav.dashboard", { defaultValue: "Dashboard" }), to: "/" },
+          { label: t("contacts.title", { defaultValue: "Contacts" }) },
         ]}
         className="mb-4"
       />
@@ -1062,10 +1248,13 @@ export function ContactsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-content-primary">
-            {t('contacts.page_title', { defaultValue: 'Contacts Directory' })}
+            {t("contacts.page_title", { defaultValue: "Contacts Directory" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('contacts.subtitle', { defaultValue: 'Manage clients, subcontractors, suppliers, and consultants' })}
+            {t("contacts.subtitle", {
+              defaultValue:
+                "Manage clients, subcontractors, suppliers, and consultants",
+            })}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -1082,7 +1271,7 @@ export function ContactsPage() {
             onClick={() => exportMut.mutate()}
             disabled={exportMut.isPending}
           >
-            {t('contacts.export', { defaultValue: 'Export' })}
+            {t("contacts.export", { defaultValue: "Export" })}
           </Button>
           <Button
             variant="secondary"
@@ -1090,7 +1279,7 @@ export function ContactsPage() {
             icon={<Upload size={14} />}
             onClick={() => setShowImportModal(true)}
           >
-            {t('contacts.import', { defaultValue: 'Import' })}
+            {t("contacts.import", { defaultValue: "Import" })}
           </Button>
           <Button
             variant="primary"
@@ -1098,7 +1287,7 @@ export function ContactsPage() {
             onClick={() => setShowAddModal(true)}
             icon={<Plus size={14} />}
           >
-            {t('contacts.new_contact', { defaultValue: 'New Contact' })}
+            {t("contacts.new_contact", { defaultValue: "New Contact" })}
           </Button>
         </div>
       </div>
@@ -1110,27 +1299,29 @@ export function ContactsPage() {
           <button
             onClick={() => {
               setInfoDismissed(true);
-              localStorage.setItem(LS_INFO_DISMISSED, '1');
+              localStorage.setItem(LS_INFO_DISMISSED, "1");
             }}
             className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded text-blue-400 hover:text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/40 dark:hover:text-blue-200 transition-colors"
-            aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+            aria-label={t("common.dismiss", { defaultValue: "Dismiss" })}
           >
             <X size={14} />
           </button>
           <div className="flex items-center gap-2 mb-1">
             <Info size={16} />
             <span className="font-semibold">
-              {t('contacts.info_title', { defaultValue: 'About the Contacts Directory' })}
+              {t("contacts.info_title", {
+                defaultValue: "About the Contacts Directory",
+              })}
             </span>
           </div>
           <p className="text-xs pr-6">
-            {t('contacts.info_body', {
+            {t("contacts.info_body", {
               defaultValue:
-                'A single, shared address book for every organisation and person on your projects — clients, subcontractors, suppliers, and consultants. Prequalification status flags who is approved to bid or be awarded work.',
-            })}{' '}
-            {t('contacts.info_link_hint', {
+                "A single, shared address book for every organisation and person on your projects — clients, subcontractors, suppliers, and consultants. Prequalification status flags who is approved to bid or be awarded work.",
+            })}{" "}
+            {t("contacts.info_link_hint", {
               defaultValue:
-                'Contacts are reused across the platform: as RFI / submittal ball-in-court, transmittal recipients, correspondence parties, and tender invitees. Keep this list clean and everything downstream stays consistent.',
+                "Contacts are reused across the platform: as RFI / submittal ball-in-court, transmittal recipients, correspondence parties, and tender invitees. Keep this list clean and everything downstream stays consistent.",
             })}
           </p>
         </div>
@@ -1145,7 +1336,7 @@ export function ContactsPage() {
           <div className="flex flex-col gap-2 p-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wide text-content-tertiary">
-                {t('contacts.filter_by_tag', { defaultValue: 'Quick filter' })}
+                {t("contacts.filter_by_tag", { defaultValue: "Quick filter" })}
               </span>
               {selectedTags.length > 0 && (
                 <button
@@ -1153,15 +1344,18 @@ export function ContactsPage() {
                   onClick={() => setSelectedTags([])}
                   className="text-xs font-medium text-oe-blue hover:underline"
                 >
-                  {t('contacts.clear_tags', {
-                    defaultValue: 'Clear ({{n}})',
+                  {t("contacts.clear_tags", {
+                    defaultValue: "Clear ({{n}})",
                     n: selectedTags.length,
                   })}
                 </button>
               )}
             </div>
             {groupedFacets.map((group) => (
-              <div key={group.label} className="flex flex-wrap items-center gap-1.5">
+              <div
+                key={group.label}
+                className="flex flex-wrap items-center gap-1.5"
+              >
                 <span className="mr-1 w-16 shrink-0 text-[11px] font-medium uppercase tracking-wide text-content-tertiary">
                   {group.label}
                 </span>
@@ -1174,17 +1368,17 @@ export function ContactsPage() {
                       onClick={() => toggleTag(item.tag)}
                       aria-pressed={active}
                       className={clsx(
-                        'h-7 rounded-full border px-2.5 text-xs font-medium transition-colors',
+                        "h-7 rounded-full border px-2.5 text-xs font-medium transition-colors",
                         active
-                          ? 'border-oe-blue bg-oe-blue text-white'
-                          : 'border-border bg-surface-primary text-content-secondary hover:border-border-light hover:text-content-primary',
+                          ? "border-oe-blue bg-oe-blue text-white"
+                          : "border-border bg-surface-primary text-content-secondary hover:border-border-light hover:text-content-primary",
                       )}
                     >
                       {item.label}
                       <span
                         className={clsx(
-                          'ml-1.5 text-[10px]',
-                          active ? 'text-white/80' : 'text-content-tertiary',
+                          "ml-1.5 text-[10px]",
+                          active ? "text-white/80" : "text-content-tertiary",
                         )}
                       >
                         {item.count}
@@ -1210,8 +1404,8 @@ export function ContactsPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('contacts.search_placeholder', {
-                defaultValue: 'Search contacts...',
+              placeholder={t("contacts.search_placeholder", {
+                defaultValue: "Search contacts...",
               })}
               className="h-10 w-full rounded-lg border border-border bg-surface-primary pl-10 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
             />
@@ -1225,23 +1419,25 @@ export function ContactsPage() {
               the >6 entries should collapse behind a "More (N)" chip. */}
           <div
             role="group"
-            aria-label={t('contacts.filter_by_type', { defaultValue: 'Filter by contact type' })}
+            aria-label={t("contacts.filter_by_type", {
+              defaultValue: "Filter by contact type",
+            })}
             data-testid="contacts-type-chips"
             className="flex flex-wrap items-center gap-1.5"
           >
             <button
               type="button"
               data-testid="contacts-type-chip-all"
-              onClick={() => setTypeFilter('')}
-              aria-pressed={typeFilter === ''}
+              onClick={() => setTypeFilter("")}
+              aria-pressed={typeFilter === ""}
               className={clsx(
-                'h-8 px-3 rounded-full border text-xs font-medium transition-colors',
-                typeFilter === ''
-                  ? 'border-oe-blue bg-oe-blue text-white'
-                  : 'border-border bg-surface-primary text-content-secondary hover:border-border-light hover:text-content-primary',
+                "h-8 px-3 rounded-full border text-xs font-medium transition-colors",
+                typeFilter === ""
+                  ? "border-oe-blue bg-oe-blue text-white"
+                  : "border-border bg-surface-primary text-content-secondary hover:border-border-light hover:text-content-primary",
               )}
             >
-              {t('contacts.filter_all_types', { defaultValue: 'All Types' })}
+              {t("contacts.filter_all_types", { defaultValue: "All Types" })}
             </button>
             {CONTACT_TYPES.map((ct) => {
               const active = typeFilter === ct;
@@ -1250,13 +1446,13 @@ export function ContactsPage() {
                   key={ct}
                   type="button"
                   data-testid={`contacts-type-chip-${ct}`}
-                  onClick={() => setTypeFilter(active ? '' : ct)}
+                  onClick={() => setTypeFilter(active ? "" : ct)}
                   aria-pressed={active}
                   className={clsx(
-                    'h-8 px-3 rounded-full border text-xs font-medium transition-colors',
+                    "h-8 px-3 rounded-full border text-xs font-medium transition-colors",
                     active
-                      ? 'border-oe-blue bg-oe-blue text-white'
-                      : 'border-border bg-surface-primary text-content-secondary hover:border-border-light hover:text-content-primary',
+                      ? "border-oe-blue bg-oe-blue text-white"
+                      : "border-border bg-surface-primary text-content-secondary hover:border-border-light hover:text-content-primary",
                   )}
                 >
                   {t(`contacts.type_${ct}`, {
@@ -1275,7 +1471,9 @@ export function ContactsPage() {
               className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-36"
             >
               <option value="">
-                {t('contacts.filter_all_countries', { defaultValue: 'All Countries' })}
+                {t("contacts.filter_all_countries", {
+                  defaultValue: "All Countries",
+                })}
               </option>
               {countries.map((c) => (
                 <option key={c} value={c}>
@@ -1309,19 +1507,19 @@ export function ContactsPage() {
         ) : isError ? (
           <EmptyState
             icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-            title={t('contacts.load_failed', {
-              defaultValue: 'Could not load contacts',
+            title={t("contacts.load_failed", {
+              defaultValue: "Could not load contacts",
             })}
             description={
               error instanceof Error
                 ? error.message
-                : t('contacts.load_failed_hint', {
+                : t("contacts.load_failed_hint", {
                     defaultValue:
-                      'Something went wrong fetching the directory. Please try again.',
+                      "Something went wrong fetching the directory. Please try again.",
                   })
             }
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: () => refetch(),
             }}
           />
@@ -1329,17 +1527,26 @@ export function ContactsPage() {
           <EmptyState
             icon={<Building2 size={28} strokeWidth={1.5} />}
             title={
-              searchQuery || typeFilter || countryFilter || selectedTags.length > 0
-                ? t('contacts.no_results', { defaultValue: 'No matching contacts' })
-                : t('contacts.no_contacts', { defaultValue: 'No contacts yet' })
+              searchQuery ||
+              typeFilter ||
+              countryFilter ||
+              selectedTags.length > 0
+                ? t("contacts.no_results", {
+                    defaultValue: "No matching contacts",
+                  })
+                : t("contacts.no_contacts", { defaultValue: "No contacts yet" })
             }
             description={
-              searchQuery || typeFilter || countryFilter || selectedTags.length > 0
-                ? t('contacts.no_results_hint', {
-                    defaultValue: 'Try adjusting your search or filters',
+              searchQuery ||
+              typeFilter ||
+              countryFilter ||
+              selectedTags.length > 0
+                ? t("contacts.no_results_hint", {
+                    defaultValue: "Try adjusting your search or filters",
                   })
-                : t('contacts.no_contacts_hint', {
-                    defaultValue: 'Your contacts directory stores clients, subcontractors, and suppliers. Import from CSV or add them manually to build your network.',
+                : t("contacts.no_contacts_hint", {
+                    defaultValue:
+                      "Your contacts directory stores clients, subcontractors, and suppliers. Import from CSV or add them manually to build your network.",
                   })
             }
             action={
@@ -1347,7 +1554,9 @@ export function ContactsPage() {
                 ? {
                     /* Empty-state copy unified per Probe-D P2-11 —
                        "Create your first {entity}" pattern. */
-                    label: t('contacts.create_first', { defaultValue: 'Create your first contact' }),
+                    label: t("contacts.create_first", {
+                      defaultValue: "Create your first contact",
+                    }),
                     onClick: () => setShowAddModal(true),
                   }
                 : undefined
@@ -1356,8 +1565,8 @@ export function ContactsPage() {
         ) : (
           <>
             <p className="mb-4 text-sm text-content-tertiary">
-              {t('contacts.showing_count', {
-                defaultValue: '{{count}} contacts',
+              {t("contacts.showing_count", {
+                defaultValue: "{{count}} contacts",
                 count: filtered.length,
               })}
             </p>
@@ -1378,10 +1587,15 @@ export function ContactsPage() {
       {/* Add / Edit Modal */}
       {showAddModal && (
         <AddContactModal
-          onClose={() => { setShowAddModal(false); setEditingContact(null); }}
+          onClose={() => {
+            setShowAddModal(false);
+            setEditingContact(null);
+          }}
           onSubmit={editingContact ? handleEditSubmit : handleCreateSubmit}
           isPending={editingContact ? editMut.isPending : createMut.isPending}
-          initialData={editingContact ? formDataFromContact(editingContact) : null}
+          initialData={
+            editingContact ? formDataFromContact(editingContact) : null
+          }
           isEdit={!!editingContact}
         />
       )}
@@ -1391,7 +1605,7 @@ export function ContactsPage() {
         <ImportContactsModal
           onClose={() => setShowImportModal(false)}
           onSuccess={() => {
-            qc.invalidateQueries({ queryKey: ['contacts'] });
+            qc.invalidateQueries({ queryKey: ["contacts"] });
           }}
         />
       )}

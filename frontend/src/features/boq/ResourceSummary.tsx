@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
   ChevronRight,
@@ -12,25 +12,36 @@ import {
   Layers,
   BookmarkPlus,
   Check,
-} from 'lucide-react';
-import { boqApi, type ResourceSummaryItem, type ResourceSummaryResponse } from './api';
-import { apiPost } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { getResourceTypeLabel } from './boqResourceTypes';
-import { VariantPicker } from '@/features/costs/VariantPicker';
-import type { CostVariant } from '@/features/costs/api';
+} from "lucide-react";
+import {
+  boqApi,
+  type ResourceSummaryItem,
+  type ResourceSummaryResponse,
+} from "./api";
+import { apiPost } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { getResourceTypeLabel } from "./boqResourceTypes";
+import { VariantPicker } from "@/features/costs/VariantPicker";
+import type { CostVariant } from "@/features/costs/api";
 
 /* ── Constants ──────────────────────────────────────────────────────── */
 
-const RESOURCE_TYPE_FILTERS = ['all', 'material', 'labor', 'equipment', 'subcontractor', 'other'] as const;
+const RESOURCE_TYPE_FILTERS = [
+  "all",
+  "material",
+  "labor",
+  "equipment",
+  "subcontractor",
+  "other",
+] as const;
 type ResourceTypeFilter = (typeof RESOURCE_TYPE_FILTERS)[number];
 
 const TYPE_BADGE_STYLES: Record<string, string> = {
-  material: 'bg-blue-500/10 text-blue-600',
-  labor: 'bg-amber-500/10 text-amber-600',
-  equipment: 'bg-violet-500/10 text-violet-600',
-  subcontractor: 'bg-rose-500/10 text-rose-600',
-  other: 'bg-gray-500/10 text-gray-600',
+  material: "bg-blue-500/10 text-blue-600",
+  labor: "bg-amber-500/10 text-amber-600",
+  equipment: "bg-violet-500/10 text-violet-600",
+  subcontractor: "bg-rose-500/10 text-rose-600",
+  other: "bg-gray-500/10 text-gray-600",
 };
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
@@ -52,20 +63,26 @@ function createRSFormatter(locale: string) {
 
 /* ── Component ───────────────────────────────────────────────────────── */
 
-export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; locale?: string }) {
+export function ResourceSummary({
+  boqId,
+  locale = "de-DE",
+}: {
+  boqId: string;
+  locale?: string;
+}) {
   const { t } = useTranslation();
   const fmt = useMemo(() => createRSFormatter(locale), [locale]);
   const [collapsed, setCollapsed] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [typeFilter, setTypeFilter] = useState<ResourceTypeFilter>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState<ResourceTypeFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   // Issue #106 — Pareto / ABC analysis sort modes.
   // 'cost' = the canonical order the backend returns (descending total_cost).
   // 'name' = ascending alphabetical.
   // 'abc'  = same shape as 'cost' but the user's intent is "show me the
   //          80/15/5 split" so we keep it descending and the UI lights up
   //          the A/B/C class boundaries with separator rules.
-  const [sortBy, setSortBy] = useState<'cost' | 'name' | 'abc'>('cost');
+  const [sortBy, setSortBy] = useState<"cost" | "name" | "abc">("cost");
   const [savedResources, setSavedResources] = useState<Set<string>>(new Set());
   const [savingResource, setSavingResource] = useState<string | null>(null);
   const addToast = useToastStore((s) => s.addToast);
@@ -79,46 +96,58 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
         const code = `MY-${resource.type.toUpperCase().slice(0, 3)}-${Date.now().toString(36).toUpperCase()}`;
 
         // Read project & BOQ info from React Query cache
-        const boqData = queryClient.getQueryData<{ name?: string; project_id?: string }>(['boq', boqId]);
+        const boqData = queryClient.getQueryData<{
+          name?: string;
+          project_id?: string;
+        }>(["boq", boqId]);
         const projectData = boqData?.project_id
-          ? queryClient.getQueryData<{ name?: string }>(['project', boqData.project_id])
+          ? queryClient.getQueryData<{ name?: string }>([
+              "project",
+              boqData.project_id,
+            ])
           : undefined;
 
-        await apiPost('/v1/catalog/', {
+        await apiPost("/v1/catalog/", {
           resource_code: code,
           name: resource.name,
           resource_type: resource.type,
-          category: resource.type.charAt(0).toUpperCase() + resource.type.slice(1),
+          category:
+            resource.type.charAt(0).toUpperCase() + resource.type.slice(1),
           unit: resource.unit,
           base_price: resource.avg_unit_rate,
           min_price: resource.avg_unit_rate,
           max_price: resource.avg_unit_rate,
-          currency: 'EUR',
-          source: 'boq_import',
-          region: 'CUSTOM',
+          currency: "EUR",
+          source: "boq_import",
+          region: "CUSTOM",
           specifications: {
             total_quantity: resource.total_quantity,
             total_cost: resource.total_cost,
             positions_used: resource.positions_used,
-            source_project_name: projectData?.name || '',
-            source_project_id: boqData?.project_id || '',
-            source_boq_name: boqData?.name || '',
-            source_boq_id: boqId || '',
+            source_project_name: projectData?.name || "",
+            source_project_id: boqData?.project_id || "",
+            source_boq_name: boqData?.name || "",
+            source_boq_id: boqId || "",
             saved_at: new Date().toISOString(),
           },
           metadata: {},
         });
         setSavedResources((prev) => new Set(prev).add(key));
         addToast({
-          type: 'success',
-          title: t('boq.rs_saved_to_catalog', { defaultValue: 'Saved to catalog‌⁠‍' }),
+          type: "success",
+          title: t("boq.rs_saved_to_catalog", {
+            defaultValue: "Saved to catalog‌⁠‍",
+          }),
           message: resource.name,
         });
       } catch (err: unknown) {
-        const detail = err instanceof Error ? err.message : t('boq.rs_save_failed', { defaultValue: 'Failed to save‌⁠‍' });
+        const detail =
+          err instanceof Error
+            ? err.message
+            : t("boq.rs_save_failed", { defaultValue: "Failed to save‌⁠‍" });
         addToast({
-          type: 'error',
-          title: t('boq.rs_save_failed', { defaultValue: 'Save failed‌⁠‍' }),
+          type: "error",
+          title: t("boq.rs_save_failed", { defaultValue: "Save failed‌⁠‍" }),
           message: detail,
         });
       } finally {
@@ -141,30 +170,36 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
       try {
         await Promise.all(
           refs.map((ref) =>
-            boqApi.repickResourceVariant(ref.position_id, ref.resource_idx, chosen.label),
+            boqApi.repickResourceVariant(
+              ref.position_id,
+              ref.resource_idx,
+              chosen.label,
+            ),
           ),
         );
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['boq-resource-summary', boqId] }),
-          queryClient.invalidateQueries({ queryKey: ['boq', boqId] }),
+          queryClient.invalidateQueries({
+            queryKey: ["boq-resource-summary", boqId],
+          }),
+          queryClient.invalidateQueries({ queryKey: ["boq", boqId] }),
         ]);
         addToast({
-          type: 'success',
-          title: t('boq.variant_resource_repicked', {
-            defaultValue: 'Variant updated: {{label}}‌⁠‍',
+          type: "success",
+          title: t("boq.variant_resource_repicked", {
+            defaultValue: "Variant updated: {{label}}‌⁠‍",
             label: chosen.label,
           }),
-          message: t('boq.rs_variant_applied_to_n', {
-            defaultValue: 'Applied to {{count}} position(s)‌⁠‍',
+          message: t("boq.rs_variant_applied_to_n", {
+            defaultValue: "Applied to {{count}} position(s)‌⁠‍",
             count: refs.length,
           }),
         });
       } catch (err) {
-        const detail = err instanceof Error ? err.message : '';
+        const detail = err instanceof Error ? err.message : "";
         addToast({
-          type: 'error',
-          title: t('boq.variant_resource_repick_failed', {
-            defaultValue: 'Variant re-pick failed',
+          type: "error",
+          title: t("boq.variant_resource_repick_failed", {
+            defaultValue: "Variant re-pick failed",
           }),
           message: detail,
         });
@@ -174,7 +209,7 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
   );
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['boq-resource-summary', boqId],
+    queryKey: ["boq-resource-summary", boqId],
     queryFn: () => boqApi.getResourceSummary(boqId),
     enabled: !!boqId,
   });
@@ -190,14 +225,15 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
   const filteredResources = useMemo(() => {
     let items = summary.resources;
 
-    if (typeFilter !== 'all') {
+    if (typeFilter !== "all") {
       items = items.filter((r) => r.type === typeFilter);
     }
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       items = items.filter(
-        (r) => r.name.toLowerCase().includes(q) || r.type.toLowerCase().includes(q),
+        (r) =>
+          r.name.toLowerCase().includes(q) || r.type.toLowerCase().includes(q),
       );
     }
 
@@ -205,10 +241,12 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
     // by descending total_cost (so abc_class assignments stay consistent),
     // so we only need to override when the user picks 'name'.  We slice
     // before sorting so we don't mutate the cached query data in place.
-    if (sortBy === 'name') {
-      items = items.slice().sort((a, b) =>
-        a.name.localeCompare(b.name, locale, { sensitivity: 'base' }),
-      );
+    if (sortBy === "name") {
+      items = items
+        .slice()
+        .sort((a, b) =>
+          a.name.localeCompare(b.name, locale, { sensitivity: "base" }),
+        );
     }
 
     return items;
@@ -222,25 +260,25 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
 
   const typeFilterLabel = (filter: ResourceTypeFilter): string => {
     switch (filter) {
-      case 'all':
-        return t('boq.rs_all', { defaultValue: 'All' });
-      case 'material':
-        return t('boq.rs_material', { defaultValue: 'Material' });
-      case 'labor':
-        return t('boq.rs_labor', { defaultValue: 'Labor' });
-      case 'equipment':
-        return t('boq.rs_equipment', { defaultValue: 'Equipment' });
-      case 'subcontractor':
-        return t('boq.rs_subcontractor', { defaultValue: 'Subcontractor' });
-      case 'other':
-        return t('boq.rs_other', { defaultValue: 'Other' });
+      case "all":
+        return t("boq.rs_all", { defaultValue: "All" });
+      case "material":
+        return t("boq.rs_material", { defaultValue: "Material" });
+      case "labor":
+        return t("boq.rs_labor", { defaultValue: "Labor" });
+      case "equipment":
+        return t("boq.rs_equipment", { defaultValue: "Equipment" });
+      case "subcontractor":
+        return t("boq.rs_subcontractor", { defaultValue: "Subcontractor" });
+      case "other":
+        return t("boq.rs_other", { defaultValue: "Other" });
       default:
         return filter;
     }
   };
 
   const typeCount = (filter: ResourceTypeFilter): number => {
-    if (filter === 'all') return summary.total_resources;
+    if (filter === "all") return summary.total_resources;
     return summary.by_type[filter]?.count ?? 0;
   };
 
@@ -252,13 +290,15 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
       <button
         onClick={() => setCollapsed((prev) => !prev)}
         aria-expanded={!collapsed}
-        aria-label={t('boq.resource_summary', { defaultValue: 'Resource Summary' })}
+        aria-label={t("boq.resource_summary", {
+          defaultValue: "Resource Summary",
+        })}
         className="flex w-full items-center justify-between px-4 py-3 hover:bg-surface-secondary/50 transition-colors"
       >
         <div className="flex items-center gap-2.5">
           <Layers size={15} className="text-oe-blue" />
           <span className="text-xs font-semibold text-content-primary">
-            {t('boq.resource_summary', { defaultValue: 'Resource Summary' })}
+            {t("boq.resource_summary", { defaultValue: "Resource Summary" })}
           </span>
           <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-oe-blue/10 px-1.5 text-2xs font-medium text-oe-blue tabular-nums">
             {summary.total_resources}
@@ -272,7 +312,8 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                   key={type}
                   className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium ${TYPE_BADGE_STYLES[type] || TYPE_BADGE_STYLES.other}`}
                 >
-                  {info.count} {typeFilterLabel(type as ResourceTypeFilter).toLowerCase()}
+                  {info.count}{" "}
+                  {typeFilterLabel(type as ResourceTypeFilter).toLowerCase()}
                 </span>
               ))}
             </div>
@@ -295,7 +336,9 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                 className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 ${TYPE_BADGE_STYLES[type] || TYPE_BADGE_STYLES.other}`}
               >
                 {TYPE_ICONS[type] || TYPE_ICONS.other}
-                <span className="text-xs font-semibold tabular-nums">{info.count}</span>
+                <span className="text-xs font-semibold tabular-nums">
+                  {info.count}
+                </span>
                 <span className="text-xs">
                   {typeFilterLabel(type as ResourceTypeFilter)}
                 </span>
@@ -310,35 +353,44 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
           <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-t border-border-light/50">
             {/* Type filter tabs */}
             <div className="flex items-center gap-1">
-              {RESOURCE_TYPE_FILTERS
-                .filter((f) => f === 'all' || typeCount(f) > 0)
-                .map((filter) => (
-                  <button
-                    key={filter}
-                    onClick={() => setTypeFilter(filter)}
-                    className={`px-2.5 py-1 rounded-md text-2xs font-medium transition-colors ${
-                      typeFilter === filter
-                        ? 'bg-oe-blue text-white'
-                        : 'text-content-secondary hover:bg-surface-secondary'
-                    }`}
-                  >
-                    {typeFilterLabel(filter)}
-                    {typeCount(filter) > 0 && (
-                      <span className="ml-1 tabular-nums">({typeCount(filter)})</span>
-                    )}
-                  </button>
-                ))}
+              {RESOURCE_TYPE_FILTERS.filter(
+                (f) => f === "all" || typeCount(f) > 0,
+              ).map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setTypeFilter(filter)}
+                  className={`px-2.5 py-1 rounded-md text-2xs font-medium transition-colors ${
+                    typeFilter === filter
+                      ? "bg-oe-blue text-white"
+                      : "text-content-secondary hover:bg-surface-secondary"
+                  }`}
+                >
+                  {typeFilterLabel(filter)}
+                  {typeCount(filter) > 0 && (
+                    <span className="ml-1 tabular-nums">
+                      ({typeCount(filter)})
+                    </span>
+                  )}
+                </button>
+              ))}
             </div>
 
             {/* Search */}
             <div className="ml-auto relative">
-              <Search size={13} className="absolute left-2 top-1/2 -translate-y-1/2 text-content-quaternary" />
+              <Search
+                size={13}
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-content-quaternary"
+              />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('boq.rs_search', { defaultValue: 'Search resources...' })}
-                aria-label={t('boq.rs_search', { defaultValue: 'Search resources...' })}
+                placeholder={t("boq.rs_search", {
+                  defaultValue: "Search resources...",
+                })}
+                aria-label={t("boq.rs_search", {
+                  defaultValue: "Search resources...",
+                })}
                 className="w-44 pl-7 pr-2 py-1 text-2xs rounded-md border border-border-light bg-surface-primary text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
               />
             </div>
@@ -348,21 +400,27 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <span className="text-xs text-content-tertiary">
-                {t('common.loading', { defaultValue: 'Loading...' })}
+                {t("common.loading", { defaultValue: "Loading..." })}
               </span>
             </div>
           ) : isError ? (
             <div className="flex items-center justify-center py-8">
               <span className="text-xs text-content-secondary">
-                {t('boq.rs_error', { defaultValue: 'Failed to load resource summary.' })}
+                {t("boq.rs_error", {
+                  defaultValue: "Failed to load resource summary.",
+                })}
               </span>
             </div>
           ) : filteredResources.length === 0 ? (
             <div className="flex items-center justify-center py-6">
               <span className="text-xs text-content-tertiary">
                 {searchQuery
-                  ? t('boq.rs_no_results', { defaultValue: 'No resources match your search' })
-                  : t('boq.rs_no_resources', { defaultValue: 'No resources in this category' })}
+                  ? t("boq.rs_no_results", {
+                      defaultValue: "No resources match your search",
+                    })
+                  : t("boq.rs_no_resources", {
+                      defaultValue: "No resources in this category",
+                    })}
               </span>
             </div>
           ) : (
@@ -370,7 +428,9 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
               {(() => {
                 const PREVIEW_COUNT = 4;
                 const canExpand = filteredResources.length > PREVIEW_COUNT;
-                const visibleResources = expanded ? filteredResources : filteredResources.slice(0, PREVIEW_COUNT);
+                const visibleResources = expanded
+                  ? filteredResources
+                  : filteredResources.slice(0, PREVIEW_COUNT);
                 const hiddenCount = filteredResources.length - PREVIEW_COUNT;
 
                 return (
@@ -384,37 +444,49 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                           <th className="px-4 py-2 text-left font-medium">
                             <button
                               type="button"
-                              onClick={() => setSortBy(sortBy === 'name' ? 'cost' : 'name')}
+                              onClick={() =>
+                                setSortBy(sortBy === "name" ? "cost" : "name")
+                              }
                               className="inline-flex items-center gap-1 hover:text-content-secondary transition-colors"
-                              aria-pressed={sortBy === 'name'}
+                              aria-pressed={sortBy === "name"}
                             >
-                              {t('boq.rs_col_name', { defaultValue: 'Name' })}
-                              {sortBy === 'name' && <span aria-hidden="true">↑</span>}
+                              {t("boq.rs_col_name", { defaultValue: "Name" })}
+                              {sortBy === "name" && (
+                                <span aria-hidden="true">↑</span>
+                              )}
                             </button>
                           </th>
                           <th className="px-3 py-2 text-left font-medium w-24">
-                            {t('boq.rs_col_type', { defaultValue: 'Type' })}
+                            {t("boq.rs_col_type", { defaultValue: "Type" })}
                           </th>
                           <th className="px-3 py-2 text-center font-medium w-16">
-                            {t('boq.rs_col_unit', { defaultValue: 'Unit' })}
+                            {t("boq.rs_col_unit", { defaultValue: "Unit" })}
                           </th>
                           <th className="px-3 py-2 text-right font-medium w-24">
-                            {t('boq.rs_col_total_qty', { defaultValue: 'Total Qty' })}
+                            {t("boq.rs_col_total_qty", {
+                              defaultValue: "Total Qty",
+                            })}
                           </th>
                           <th className="px-3 py-2 text-right font-medium w-24">
-                            {t('boq.rs_col_avg_rate', { defaultValue: 'Avg Rate' })}
+                            {t("boq.rs_col_avg_rate", {
+                              defaultValue: "Avg Rate",
+                            })}
                           </th>
                           {/* Sortable cost header — toggles back to 'cost'
                               from any other mode. Default sort. */}
                           <th className="px-3 py-2 text-right font-medium w-28">
                             <button
                               type="button"
-                              onClick={() => setSortBy('cost')}
+                              onClick={() => setSortBy("cost")}
                               className="inline-flex items-center gap-1 hover:text-content-secondary transition-colors"
-                              aria-pressed={sortBy === 'cost'}
+                              aria-pressed={sortBy === "cost"}
                             >
-                              {t('boq.rs_col_total_cost', { defaultValue: 'Total Cost' })}
-                              {sortBy === 'cost' && <span aria-hidden="true">↓</span>}
+                              {t("boq.rs_col_total_cost", {
+                                defaultValue: "Total Cost",
+                              })}
+                              {sortBy === "cost" && (
+                                <span aria-hidden="true">↓</span>
+                              )}
                             </button>
                           </th>
                           {/* Issue #106 — ABC% column. Click toggles 'abc' /
@@ -425,20 +497,26 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                           <th className="px-3 py-2 text-right font-medium w-20">
                             <button
                               type="button"
-                              onClick={() => setSortBy(sortBy === 'abc' ? 'cost' : 'abc')}
+                              onClick={() =>
+                                setSortBy(sortBy === "abc" ? "cost" : "abc")
+                              }
                               className="inline-flex items-center gap-1 hover:text-content-secondary transition-colors"
-                              aria-pressed={sortBy === 'abc'}
-                              title={t('boq.rs_col_abc_tooltip', {
+                              aria-pressed={sortBy === "abc"}
+                              title={t("boq.rs_col_abc_tooltip", {
                                 defaultValue:
-                                  'Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.',
+                                  "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
                               })}
                             >
-                              {t('boq.rs_col_abc', { defaultValue: 'ABC %' })}
-                              {sortBy === 'abc' && <span aria-hidden="true">↓</span>}
+                              {t("boq.rs_col_abc", { defaultValue: "ABC %" })}
+                              {sortBy === "abc" && (
+                                <span aria-hidden="true">↓</span>
+                              )}
                             </button>
                           </th>
                           <th className="px-3 py-2 text-center font-medium w-16">
-                            {t('boq.rs_col_positions', { defaultValue: 'Pos.' })}
+                            {t("boq.rs_col_positions", {
+                              defaultValue: "Pos.",
+                            })}
                           </th>
                           <th className="px-2 py-2 text-center font-medium w-10">
                             <BookmarkPlus size={12} className="inline" />
@@ -452,9 +530,12 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                           // separator above the first row of each bucket to
                           // visualise the 80/15/5 split. We compare the
                           // previous row's class to detect the boundary.
-                          const prevClass = idx > 0 ? visibleResources[idx - 1]?.abc_class ?? null : null;
+                          const prevClass =
+                            idx > 0
+                              ? (visibleResources[idx - 1]?.abc_class ?? null)
+                              : null;
                           const showAbcDivider =
-                            sortBy === 'abc' &&
+                            sortBy === "abc" &&
                             expanded &&
                             !!res.abc_class &&
                             prevClass != null &&
@@ -465,7 +546,9 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                               resource={res}
                               fmt={fmt}
                               onSaveToCatalog={handleSaveToCatalog}
-                              isSaved={savedResources.has(`${res.type}:${res.name}`)}
+                              isSaved={savedResources.has(
+                                `${res.type}:${res.name}`,
+                              )}
                               onRepickVariant={handleRepickVariant}
                               abcDividerAbove={showAbcDivider}
                             />
@@ -476,10 +559,13 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                         <tfoot>
                           <tr className="border-t border-border bg-surface-secondary/30">
                             <td className="px-4 py-2 text-xs font-semibold text-content-primary">
-                              {t('boq.rs_total', { defaultValue: 'Total' })}
+                              {t("boq.rs_total", { defaultValue: "Total" })}
                               <span className="ml-1 text-content-tertiary font-normal">
-                                ({filteredResources.length}{' '}
-                                {t('boq.rs_resources', { defaultValue: 'resources' })})
+                                ({filteredResources.length}{" "}
+                                {t("boq.rs_resources", {
+                                  defaultValue: "resources",
+                                })}
+                                )
                               </span>
                             </td>
                             <td />
@@ -488,7 +574,10 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                             <td />
                             <td className="px-3 py-2 text-right text-xs font-bold text-content-primary tabular-nums">
                               {fmt.format(
-                                filteredResources.reduce((sum, r) => sum + r.total_cost, 0),
+                                filteredResources.reduce(
+                                  (sum, r) => sum + r.total_cost,
+                                  0,
+                                ),
                               )}
                             </td>
                             <td className="px-3 py-2 text-right text-xs font-bold text-content-primary tabular-nums">
@@ -498,7 +587,10 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                                   much budget the current filter selection
                                   covers. */}
                               {filteredResources
-                                .reduce((sum, r) => sum + (r.abc_percentage ?? 0), 0)
+                                .reduce(
+                                  (sum, r) => sum + (r.abc_percentage ?? 0),
+                                  0,
+                                )
                                 .toFixed(1)}
                               %
                             </td>
@@ -511,7 +603,7 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
 
                     {/* Fade overlay + expand/collapse button */}
                     {canExpand && (
-                      <div className={`relative ${!expanded ? '-mt-8' : ''}`}>
+                      <div className={`relative ${!expanded ? "-mt-8" : ""}`}>
                         {!expanded && (
                           <div className="absolute inset-x-0 -top-10 h-14 bg-gradient-to-t from-surface-elevated via-surface-elevated/80 to-transparent pointer-events-none" />
                         )}
@@ -523,13 +615,20 @@ export function ResourceSummary({ boqId, locale = 'de-DE' }: { boqId: string; lo
                             {expanded ? (
                               <>
                                 <ChevronDown size={12} className="rotate-180" />
-                                {t('boq.rs_show_less', { defaultValue: 'Show less' })}
+                                {t("boq.rs_show_less", {
+                                  defaultValue: "Show less",
+                                })}
                               </>
                             ) : (
                               <>
                                 <ChevronDown size={12} />
-                                {t('boq.rs_show_all', { defaultValue: 'Show all {{count}} resources', count: filteredResources.length })}
-                                <span className="text-content-tertiary">+{hiddenCount}</span>
+                                {t("boq.rs_show_all", {
+                                  defaultValue: "Show all {{count}} resources",
+                                  count: filteredResources.length,
+                                })}
+                                <span className="text-content-tertiary">
+                                  +{hiddenCount}
+                                </span>
                               </>
                             )}
                           </button>
@@ -567,7 +666,8 @@ function ResourceRow({
   abcDividerAbove?: boolean;
 }) {
   const { t } = useTranslation();
-  const badgeStyle = TYPE_BADGE_STYLES[resource.type] || TYPE_BADGE_STYLES.other;
+  const badgeStyle =
+    TYPE_BADGE_STYLES[resource.type] || TYPE_BADGE_STYLES.other;
 
   /* ── Variant re-pick (mirrors EditableResourceRow on the BOQ grid) ───
    *  Variants are intrinsic to one abstract resource — a swap here fans
@@ -576,7 +676,8 @@ function ResourceRow({
    *  flips together.  No-op when fewer than 2 variants are cached. */
   const variants = resource.available_variants ?? null;
   const stats = resource.variant_stats ?? null;
-  const hasVariants = Array.isArray(variants) && variants.length >= 2 && stats != null;
+  const hasVariants =
+    Array.isArray(variants) && variants.length >= 2 && stats != null;
   const refs = resource.position_refs ?? [];
   const canRepick = hasVariants && refs.length > 0;
 
@@ -594,38 +695,43 @@ function ResourceRow({
 
   // Mixed pick across positions → softer label so user knows the swap
   // will overwrite divergent picks.
-  const isMixed = resource.current_variant_label === '__mixed__';
+  const isMixed = resource.current_variant_label === "__mixed__";
   const explicitLabel =
-    resource.current_variant_label && !isMixed ? resource.current_variant_label : null;
+    resource.current_variant_label && !isMixed
+      ? resource.current_variant_label
+      : null;
 
   // Tone follows the BOQ grid convention: blue = explicit pick, amber =
   // auto-default, none = unset.
-  let pillTone: 'blue' | 'amber' | 'gray' = 'gray';
-  if (explicitLabel) pillTone = 'blue';
-  else if (resource.variant_default) pillTone = 'amber';
-  else if (isMixed) pillTone = 'amber';
+  let pillTone: "blue" | "amber" | "gray" = "gray";
+  if (explicitLabel) pillTone = "blue";
+  else if (resource.variant_default) pillTone = "amber";
+  else if (isMixed) pillTone = "amber";
 
   const pillClass =
-    pillTone === 'blue'
-      ? 'bg-oe-blue-subtle/50 text-oe-blue ring-1 ring-oe-blue/30 hover:bg-oe-blue-subtle'
-      : pillTone === 'amber'
-      ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30 hover:bg-amber-500/25'
-      : 'bg-surface-tertiary text-content-secondary ring-1 ring-border-light hover:bg-surface-tertiary/80';
+    pillTone === "blue"
+      ? "bg-oe-blue-subtle/50 text-oe-blue ring-1 ring-oe-blue/30 hover:bg-oe-blue-subtle"
+      : pillTone === "amber"
+        ? "bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30 hover:bg-amber-500/25"
+        : "bg-surface-tertiary text-content-secondary ring-1 ring-border-light hover:bg-surface-tertiary/80";
 
   const pillLabel = (() => {
     if (isMixed) {
-      return t('boq.rs_variant_pill_mixed', {
-        defaultValue: 'Mixed · {{count}} options',
+      return t("boq.rs_variant_pill_mixed", {
+        defaultValue: "Mixed · {{count}} options",
         count: variants?.length ?? 0,
       });
     }
     if (explicitLabel) {
       // Truncate long CWICR labels so they don't blow up the cell.
-      const short = explicitLabel.length > 28 ? `${explicitLabel.slice(0, 26)}…` : explicitLabel;
+      const short =
+        explicitLabel.length > 28
+          ? `${explicitLabel.slice(0, 26)}…`
+          : explicitLabel;
       return short;
     }
-    return t('boq.rs_variant_pill_options', {
-      defaultValue: '▾ {{count}} options',
+    return t("boq.rs_variant_pill_options", {
+      defaultValue: "▾ {{count}} options",
       count: variants?.length ?? 0,
     });
   })();
@@ -636,36 +742,38 @@ function ResourceRow({
   const abcClass = resource.abc_class ?? null;
   const abcPct = resource.abc_percentage ?? 0;
   const abcBadgeClass =
-    abcClass === 'A'
-      ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 ring-1 ring-rose-500/30'
-      : abcClass === 'B'
-      ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30'
-      : abcClass === 'C'
-      ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30'
-      : 'bg-surface-tertiary text-content-tertiary ring-1 ring-border-light';
+    abcClass === "A"
+      ? "bg-rose-500/15 text-rose-700 dark:text-rose-300 ring-1 ring-rose-500/30"
+      : abcClass === "B"
+        ? "bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30"
+        : abcClass === "C"
+          ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30"
+          : "bg-surface-tertiary text-content-tertiary ring-1 ring-border-light";
 
   return (
     <tr
       className={`hover:bg-surface-secondary/40 transition-colors group ${
         abcDividerAbove
-          ? 'border-t-2 border-content-tertiary/40'
-          : 'border-t border-border-light/30'
+          ? "border-t-2 border-content-tertiary/40"
+          : "border-t border-border-light/30"
       }`}
     >
-      <td className="px-4 py-2 text-content-primary font-medium">{resource.name}</td>
+      <td className="px-4 py-2 text-content-primary font-medium">
+        {resource.name}
+      </td>
       <td className="px-3 py-2">
         {hasVariants ? (
           <span
-            title={t('boq.resource_type_variant_tooltip', {
+            title={t("boq.resource_type_variant_tooltip", {
               defaultValue:
-                'Variant resource — pick from {{base}} catalog. Click to reclassify resource type.',
+                "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
               base: getResourceTypeLabel(resource.type, t),
             })}
             className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium
                        bg-gradient-to-br from-violet-500 to-purple-600 text-white
                        ring-1 ring-violet-300/40 shadow-[0_1px_3px_rgba(139,92,246,0.45)]"
           >
-            {t('boq.resource_type_variant_chip', { defaultValue: 'Variant' })}
+            {t("boq.resource_type_variant_chip", { defaultValue: "Variant" })}
           </span>
         ) : (
           <span
@@ -697,20 +805,21 @@ function ResourceRow({
                 className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium transition-colors ${pillClass}`}
                 title={
                   isMixed
-                    ? t('boq.rs_variant_pill_mixed_tooltip', {
+                    ? t("boq.rs_variant_pill_mixed_tooltip", {
                         defaultValue:
-                          'Different variants picked across positions. Click to choose one for all.',
+                          "Different variants picked across positions. Click to choose one for all.",
                       })
                     : explicitLabel
-                    ? t('boq.rs_variant_pill_picked_tooltip', {
-                        defaultValue: 'Variant: {{label}}. Click to switch (applies to all positions).',
-                        label: explicitLabel,
-                      })
-                    : t('boq.rs_variant_pill_unset_tooltip', {
-                        defaultValue:
-                          '{{count}} priced variants available. Click to pick one for all positions.',
-                        count: variants?.length ?? 0,
-                      })
+                      ? t("boq.rs_variant_pill_picked_tooltip", {
+                          defaultValue:
+                            "Variant: {{label}}. Click to switch (applies to all positions).",
+                          label: explicitLabel,
+                        })
+                      : t("boq.rs_variant_pill_unset_tooltip", {
+                          defaultValue:
+                            "{{count}} priced variants available. Click to pick one for all positions.",
+                          count: variants?.length ?? 0,
+                        })
                 }
                 data-testid={`rs-variant-pill-${resource.type}-${resource.name}`}
               >
@@ -722,8 +831,8 @@ function ResourceRow({
                   stats={stats}
                   anchorEl={pillRef.current}
                   unitLabel={resource.unit}
-                  currency={resource.currency || 'EUR'}
-                  defaultStrategy={resource.variant_default ?? 'mean'}
+                  currency={resource.currency || "EUR"}
+                  defaultStrategy={resource.variant_default ?? "mean"}
                   onApply={handleApply}
                   onClose={closePicker}
                 />
@@ -740,13 +849,13 @@ function ResourceRow({
           className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold ${abcBadgeClass}`}
           title={
             abcClass
-              ? t('boq.rs_abc_pill_tooltip', {
+              ? t("boq.rs_abc_pill_tooltip", {
                   defaultValue:
-                    'Class {{cls}} · {{pct}}% of project resource cost',
+                    "Class {{cls}} · {{pct}}% of project resource cost",
                   cls: abcClass,
                   pct: abcPct.toFixed(2),
                 })
-              : ''
+              : ""
           }
         >
           {abcClass && <span className="font-bold">{abcClass}</span>}
@@ -764,7 +873,9 @@ function ResourceRow({
         ) : (
           <button
             onClick={() => onSaveToCatalog(resource)}
-            title={t('boq.rs_save_to_catalog', { defaultValue: 'Save to My Catalog' })}
+            title={t("boq.rs_save_to_catalog", {
+              defaultValue: "Save to My Catalog",
+            })}
             className="inline-flex items-center justify-center h-6 w-6 rounded-md text-content-tertiary opacity-0 group-hover:opacity-100 hover:text-oe-blue hover:bg-oe-blue-subtle/40 transition-all"
           >
             <BookmarkPlus size={13} />

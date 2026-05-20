@@ -17,8 +17,8 @@
  * - 16k+ elements tested
  */
 
-import { useMemo, useState, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useMemo, useState, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Search,
   Layers,
@@ -39,21 +39,21 @@ import {
   Focus,
   Check,
   Plus,
-} from 'lucide-react';
-import type { BIMElementGroup } from './api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import { getCategoryColor } from '@/shared/ui/BIMViewer/ElementManager';
+} from "lucide-react";
+import type { BIMElementGroup } from "./api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import { getCategoryColor } from "@/shared/ui/BIMViewer/ElementManager";
 import {
   bucketOf,
   isNoiseCategory,
   prettifyCategoryName,
   BUCKETS,
   type BIMCategoryBucket,
-} from './bimCategoryTaxonomy';
+} from "./bimCategoryTaxonomy";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
-export type GroupBy = 'storey' | 'type';
+export type GroupBy = "storey" | "type";
 
 /** Top-level grouping mode for the type filter section.
  *
@@ -70,9 +70,9 @@ export type GroupBy = 'storey' | 'type';
  *                groups.  Useful when you want a quick overview but
  *                hides the raw category names.
  */
-export type GroupingMode = 'category' | 'typename' | 'buckets';
+export type GroupingMode = "category" | "typename" | "buckets";
 
-export type BIMModelFormat = 'rvt' | 'ifc' | 'other';
+export type BIMModelFormat = "rvt" | "ifc" | "other";
 
 export interface BIMFilterState {
   search: string;
@@ -127,7 +127,7 @@ interface BIMFilterPanelProps {
    *  BIMPage.handleSmartFilter which sets the same predicate as the
    *  in-viewport health stats banner. */
   onSmartFilter?: (
-    filterId: 'errors' | 'warnings' | 'unlinked_boq' | 'has_tasks' | 'has_docs',
+    filterId: "errors" | "warnings" | "unlinked_boq" | "has_tasks" | "has_docs",
   ) => void;
   /** Active isolation set in the viewer.  When non-null, the panel
    *  narrows its "visible" calculations (counts, type/storey buckets,
@@ -150,28 +150,28 @@ function detectModelFormat(
   modelFormat: string | undefined,
   elements: BIMElementData[],
 ): BIMModelFormat {
-  const fmt = (modelFormat || '').toLowerCase();
-  if (fmt.includes('rvt') || fmt.includes('revit')) return 'rvt';
-  if (fmt.includes('ifc')) return 'ifc';
+  const fmt = (modelFormat || "").toLowerCase();
+  if (fmt.includes("rvt") || fmt.includes("revit")) return "rvt";
+  if (fmt.includes("ifc")) return "ifc";
 
   // Fallback: inspect first element
   const first = elements[0];
   if (first) {
-    if (first.element_type?.toLowerCase().startsWith('ifc')) return 'ifc';
+    if (first.element_type?.toLowerCase().startsWith("ifc")) return "ifc";
     const props = (first.properties || {}) as Record<string, unknown>;
     // If properties.category exists with a non-IFC value, it is likely Revit
     if (
-      typeof props.category === 'string' &&
+      typeof props.category === "string" &&
       props.category &&
-      !props.category.toLowerCase().startsWith('ifc')
+      !props.category.toLowerCase().startsWith("ifc")
     ) {
-      return 'rvt';
+      return "rvt";
     }
-    if (Object.keys(props).some((k) => k.toLowerCase().includes('revit'))) {
-      return 'rvt';
+    if (Object.keys(props).some((k) => k.toLowerCase().includes("revit"))) {
+      return "rvt";
     }
   }
-  return 'other';
+  return "other";
 }
 
 /**
@@ -187,7 +187,7 @@ function detectModelFormat(
  * `element_type` is the single source of truth for the category axis.
  */
 function getTypeKey(el: BIMElementData, _format: BIMModelFormat): string {
-  return el.element_type || el.category || 'Unknown';
+  return el.element_type || el.category || "Unknown";
 }
 
 /**
@@ -207,17 +207,23 @@ function getTypeNameKey(el: BIMElementData): string {
   // Prefer explicit type_name from the promoted alias, then fall back
   // to family, then el.name, then generic property lookup.
   const typeName =
-    typeof props.type_name === 'string' && props.type_name ? props.type_name : null;
-  const family = typeof props.family === 'string' && props.family ? props.family : null;
+    typeof props.type_name === "string" && props.type_name
+      ? props.type_name
+      : null;
+  const family =
+    typeof props.family === "string" && props.family ? props.family : null;
 
   if (typeName) return typeName;
   if (family) return family;
-  if (el.name && el.name !== 'None' && el.name !== '') return el.name;
+  if (el.name && el.name !== "None" && el.name !== "") return el.name;
 
   const cand =
-    props['Family'] ?? props['family and type'] ?? props['Type'] ?? props['type'];
-  if (typeof cand === 'string' && cand !== '' && cand !== 'None') return cand;
-  return 'Unspecified';
+    props["Family"] ??
+    props["family and type"] ??
+    props["Type"] ??
+    props["type"];
+  if (typeof cand === "string" && cand !== "" && cand !== "None") return cand;
+  return "Unspecified";
 }
 
 /**
@@ -252,7 +258,7 @@ function parseStorey(raw: string, count: number): ParsedStorey {
     return {
       raw,
       level: -Number(basement[1]),
-      label: trimmed.replace(/^[^-]*-\s*/, '') || trimmed,
+      label: trimmed.replace(/^[^-]*-\s*/, "") || trimmed,
       count,
     };
   }
@@ -265,7 +271,9 @@ function parseStorey(raw: string, count: number): ParsedStorey {
   const numberMatch =
     /^(\d{1,3})(?:\s*[-–:.]\s*(.*))?$/.exec(trimmed) ||
     /^level\s+(\d{1,3})(?:\s*[-–:.]\s*(.*))?$/i.exec(trimmed) ||
-    /^(?:floor|fl|etage|stockwerk)\s+(\d{1,3})(?:\s*[-–:.]\s*(.*))?$/i.exec(trimmed);
+    /^(?:floor|fl|etage|stockwerk)\s+(\d{1,3})(?:\s*[-–:.]\s*(.*))?$/i.exec(
+      trimmed,
+    );
   if (numberMatch) {
     const level = Number(numberMatch[1]);
     const labelPart = numberMatch[2]?.trim();
@@ -281,10 +289,10 @@ function parseStorey(raw: string, count: number): ParsedStorey {
 
 /** Format a level number for display in the chip badge. */
 function formatLevelBadge(level: number | null): string {
-  if (level === null) return '';
+  if (level === null) return "";
   if (level < 0) return `B${Math.abs(level)}`;
-  if (level === 0) return 'G';
-  return String(level).padStart(2, '0');
+  if (level === 0) return "G";
+  return String(level).padStart(2, "0");
 }
 
 // ── Component ────────────────────────────────────────────────────────────
@@ -315,16 +323,16 @@ export default function BIMFilterPanel({
   );
 
   const [state, setState] = useState<BIMFilterState>({
-    search: '',
+    search: "",
     storeys: new Set(),
     types: new Set(),
     buildingsOnly: true,
-    groupBy: 'type',
+    groupBy: "type",
   });
   /** Top-level grouping selector — defaults to "By Category" because
    *  it works equally well for Revit (categories) and IFC (entities)
    *  with zero curation. */
-  const [groupingMode, setGroupingMode] = useState<GroupingMode>('category');
+  const [groupingMode, setGroupingMode] = useState<GroupingMode>("category");
   /** Which Category headers in the "By Type Name" view are expanded. */
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
     () => new Set(),
@@ -333,9 +341,9 @@ export default function BIMFilterPanel({
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   /** Which bucket sections in the Types panel are currently expanded.
    *  Real building buckets are open by default, noise buckets are closed. */
-  const [expandedBuckets, setExpandedBuckets] = useState<Set<BIMCategoryBucket>>(
-    () => new Set(['structure', 'envelope', 'openings', 'mep']),
-  );
+  const [expandedBuckets, setExpandedBuckets] = useState<
+    Set<BIMCategoryBucket>
+  >(() => new Set(["structure", "envelope", "openings", "mep"]));
   /** Whether the "Saved Groups" section at the top of the panel is expanded. */
   const [groupsExpanded, setGroupsExpanded] = useState(true);
   /** ID of the saved group whose filter is currently applied (if any) — used
@@ -350,35 +358,90 @@ export default function BIMFilterPanel({
   // so the displayed filter does not match the applied filter.
   useEffect(() => {
     setState({
-      search: '',
+      search: "",
       storeys: new Set(),
       types: new Set(),
       buildingsOnly: true,
-      groupBy: 'type',
+      groupBy: "type",
     });
     setExpandedCategories(new Set());
     setExpandedGroups(new Set());
-    setExpandedBuckets(new Set(['structure', 'envelope', 'openings', 'mep']));
+    setExpandedBuckets(new Set(["structure", "envelope", "openings", "mep"]));
     setActiveGroupId(null);
   }, [modelId]);
 
+  // ── window.__oeBimFilter bridge (v3.12.0 / Stream D) ─────────────────
+  // Saved-views need to capture the panel's filter state without forcing
+  // BIMPage to lift it (the panel owns transient UI state — search box,
+  // checkbox sets, etc.). We expose a tiny imperative bridge with the
+  // same shape as ``window.__oeBim`` so the right-panel can call
+  // ``window.__oeBimFilter.get()`` / ``.set(...)`` from anywhere in the
+  // tree. Sets are serialised as arrays so the snapshot survives JSON.
+  useEffect(() => {
+    const w = window as unknown as {
+      __oeBimFilter?: {
+        get: () => {
+          search: string;
+          storeys: string[];
+          types: string[];
+          buildingsOnly: boolean;
+        };
+        set: (snapshot: {
+          search?: string;
+          storeys?: string[];
+          types?: string[];
+          buildingsOnly?: boolean;
+        }) => void;
+      };
+    };
+    w.__oeBimFilter = {
+      get: () => ({
+        search: state.search,
+        storeys: Array.from(state.storeys),
+        types: Array.from(state.types),
+        buildingsOnly: state.buildingsOnly,
+      }),
+      set: (snapshot) => {
+        setState((prev) => ({
+          ...prev,
+          search: snapshot.search ?? prev.search,
+          storeys: snapshot.storeys ? new Set(snapshot.storeys) : prev.storeys,
+          types: snapshot.types ? new Set(snapshot.types) : prev.types,
+          buildingsOnly:
+            snapshot.buildingsOnly !== undefined
+              ? snapshot.buildingsOnly
+              : prev.buildingsOnly,
+        }));
+        // Clear active group highlight — the user is explicitly restoring
+        // a saved view, not applying a saved group.
+        setActiveGroupId(null);
+      },
+    };
+    return () => {
+      if (w.__oeBimFilter) delete w.__oeBimFilter;
+    };
+  }, [state.search, state.storeys, state.types, state.buildingsOnly]);
+
   /** Apply a saved group's `filter_criteria` to the panel state.  Converts
    *  the BIMGroupFilterCriteria array shape into the panel's Set shape. */
-  const applyGroupAsFilter = useCallback((group: BIMElementGroup) => {
-    const fc = group.filter_criteria || {};
-    const toSet = (v: string | string[] | undefined): Set<string> => {
-      if (!v) return new Set();
-      return new Set(Array.isArray(v) ? v : [v]);
-    };
-    setState((prev) => ({
-      ...prev,
-      search: typeof fc.name_contains === 'string' ? fc.name_contains : '',
-      storeys: toSet(fc.storey),
-      types: toSet(fc.element_type),
-    }));
-    setActiveGroupId(group.id);
-    onApplyGroup?.(group);
-  }, [onApplyGroup]);
+  const applyGroupAsFilter = useCallback(
+    (group: BIMElementGroup) => {
+      const fc = group.filter_criteria || {};
+      const toSet = (v: string | string[] | undefined): Set<string> => {
+        if (!v) return new Set();
+        return new Set(Array.isArray(v) ? v : [v]);
+      };
+      setState((prev) => ({
+        ...prev,
+        search: typeof fc.name_contains === "string" ? fc.name_contains : "",
+        storeys: toSet(fc.storey),
+        types: toSet(fc.element_type),
+      }));
+      setActiveGroupId(group.id);
+      onApplyGroup?.(group);
+    },
+    [onApplyGroup],
+  );
 
   /** Smart-filter chip counts — computed once per `elements` change so the
    *  chips can show how many elements would be selected by each filter
@@ -391,8 +454,8 @@ export default function BIMFilterPanel({
     let hasTasks = 0;
     let hasDocs = 0;
     for (const el of elements) {
-      if (el.validation_status === 'error') errors++;
-      else if (el.validation_status === 'warning') warnings++;
+      if (el.validation_status === "error") errors++;
+      else if (el.validation_status === "warning") warnings++;
       if ((el.boq_links?.length ?? 0) === 0) unlinkedBoq++;
       if ((el.linked_tasks?.length ?? 0) > 0) hasTasks++;
       if ((el.linked_documents?.length ?? 0) > 0) hasDocs++;
@@ -450,8 +513,9 @@ export default function BIMFilterPanel({
           agg = { volume: 0, area: 0, length: 0 };
           typeQty.set(tpe, agg);
         }
-        agg.volume += q.Volume ?? q.volume_m3 ?? q['Gross Volume'] ?? 0;
-        agg.area += q.Area ?? q.area_m2 ?? q['Gross Area'] ?? q['Surface Area'] ?? 0;
+        agg.volume += q.Volume ?? q.volume_m3 ?? q["Gross Volume"] ?? 0;
+        agg.area +=
+          q.Area ?? q.area_m2 ?? q["Gross Area"] ?? q["Surface Area"] ?? 0;
         agg.length += q.Length ?? q.length_m ?? 0;
       }
 
@@ -481,7 +545,9 @@ export default function BIMFilterPanel({
       total: number;
       types: Array<[string, number]>;
     }> = [];
-    for (const meta of Object.values(BUCKETS).sort((a, b) => a.order - b.order)) {
+    for (const meta of Object.values(BUCKETS).sort(
+      (a, b) => a.order - b.order,
+    )) {
       const types = byBucket.get(meta.id);
       if (!types || types.size === 0) continue;
       orderedBuckets.push({
@@ -556,17 +622,17 @@ export default function BIMFilterPanel({
         if (search) {
           const elProps = (el.properties || {}) as Record<string, unknown>;
           const propCat =
-            typeof elProps.category === 'string' ? elProps.category : '';
+            typeof elProps.category === "string" ? elProps.category : "";
           const hay = (
-            (el.name || '') +
-            ' ' +
-            (el.element_type || '') +
-            ' ' +
-            (el.category || '') +
-            ' ' +
+            (el.name || "") +
+            " " +
+            (el.element_type || "") +
+            " " +
+            (el.category || "") +
+            " " +
             propCat +
-            ' ' +
-            (el.storey || '')
+            " " +
+            (el.storey || "")
           ).toLowerCase();
           if (!hay.includes(search)) return false;
         }
@@ -584,25 +650,22 @@ export default function BIMFilterPanel({
   }, [state, applyFilters]);
 
   // ── Handlers ───────────────────────────────────────────────────────
-  const toggleSet = useCallback(
-    (key: 'storeys' | 'types', value: string) => {
-      setState((prev) => {
-        const next = new Set(prev[key]);
-        if (next.has(value)) next.delete(value);
-        else next.add(value);
-        return { ...prev, [key]: next };
-      });
-      // Manual filter change drops the "applied group" highlight — the
-      // filter is no longer 1:1 with the group's filter_criteria.
-      setActiveGroupId(null);
-    },
-    [],
-  );
+  const toggleSet = useCallback((key: "storeys" | "types", value: string) => {
+    setState((prev) => {
+      const next = new Set(prev[key]);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return { ...prev, [key]: next };
+    });
+    // Manual filter change drops the "applied group" highlight — the
+    // filter is no longer 1:1 with the group's filter_criteria.
+    setActiveGroupId(null);
+  }, []);
 
   const clearAll = useCallback(() => {
     setState((prev) => ({
       ...prev,
-      search: '',
+      search: "",
       storeys: new Set(),
       types: new Set(),
     }));
@@ -661,18 +724,18 @@ export default function BIMFilterPanel({
       if (isolationSet && !isolationSet.has(el.id)) return false;
       const tpe = getTypeKey(el, format);
       if (state.buildingsOnly && isNoiseCategory(tpe)) return false;
-      if (state.storeys.size > 0 && !state.storeys.has(el.storey || '—'))
+      if (state.storeys.size > 0 && !state.storeys.has(el.storey || "—"))
         return false;
       if (state.types.size > 0 && !state.types.has(tpe)) return false;
       if (search) {
         const hay = (
-          (el.name || '') +
-          ' ' +
-          (el.element_type || '') +
-          ' ' +
-          (el.category || '') +
-          ' ' +
-          (el.storey || '')
+          (el.name || "") +
+          " " +
+          (el.element_type || "") +
+          " " +
+          (el.category || "") +
+          " " +
+          (el.storey || "")
         ).toLowerCase();
         if (!hay.includes(search)) return false;
       }
@@ -684,29 +747,33 @@ export default function BIMFilterPanel({
     const groups = new Map<string, BIMElementData[]>();
     for (const el of visibleElements) {
       const key: string =
-        state.groupBy === 'storey' ? el.storey || '—' : getTypeKey(el, format);
+        state.groupBy === "storey" ? el.storey || "—" : getTypeKey(el, format);
       const arr = groups.get(key);
       if (arr) arr.push(el);
       else groups.set(key, [el]);
     }
     // Sort groups by size (biggest first)
-    return Array.from(groups.entries()).sort((a, b) => b[1].length - a[1].length);
+    return Array.from(groups.entries()).sort(
+      (a, b) => b[1].length - a[1].length,
+    );
   }, [visibleElements, state.groupBy, format]);
 
   // Label for the types section changes depending on model format
   const typesSectionTitle =
-    format === 'rvt'
-      ? t('bim.filter_revit_categories', { defaultValue: 'Revit Categories‌⁠‍' })
-      : format === 'ifc'
-        ? t('bim.filter_ifc_entities', { defaultValue: 'IFC Entities‌⁠‍' })
-        : t('bim.filter_types', { defaultValue: 'Element Types‌⁠‍' });
+    format === "rvt"
+      ? t("bim.filter_revit_categories", {
+          defaultValue: "Revit Categories‌⁠‍",
+        })
+      : format === "ifc"
+        ? t("bim.filter_ifc_entities", { defaultValue: "IFC Entities‌⁠‍" })
+        : t("bim.filter_types", { defaultValue: "Element Types‌⁠‍" });
 
   const typeGroupLabel =
-    format === 'rvt'
-      ? t('bim.filter_group_category', { defaultValue: 'by Category‌⁠‍' })
-      : format === 'ifc'
-        ? t('bim.filter_group_entity', { defaultValue: 'by Entity‌⁠‍' })
-        : t('bim.filter_group_type', { defaultValue: 'by Type' });
+    format === "rvt"
+      ? t("bim.filter_group_category", { defaultValue: "by Category‌⁠‍" })
+      : format === "ifc"
+        ? t("bim.filter_group_entity", { defaultValue: "by Entity‌⁠‍" })
+        : t("bim.filter_group_type", { defaultValue: "by Type" });
 
   return (
     <div
@@ -718,9 +785,9 @@ export default function BIMFilterPanel({
         <div className="flex items-center gap-2">
           <Layers size={16} className="text-content-tertiary" />
           <h2 className="text-sm font-semibold text-content-primary">
-            {t('bim.filter_title', { defaultValue: 'Filter & Group' })}
+            {t("bim.filter_title", { defaultValue: "Filter & Group" })}
           </h2>
-          {format !== 'other' && (
+          {format !== "other" && (
             <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-surface-secondary text-content-tertiary border border-border-light">
               {format}
             </span>
@@ -730,8 +797,8 @@ export default function BIMFilterPanel({
           <button
             onClick={onClose}
             className="p-1 rounded-md text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            title={t('common.close', { defaultValue: 'Close' })}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            title={t("common.close", { defaultValue: "Close" })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={14} />
           </button>
@@ -747,14 +814,20 @@ export default function BIMFilterPanel({
       {isolatedIds && isolatedIds.length > 0 && (
         <div className="px-4 py-2 border-b border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/30 shrink-0">
           <div className="flex items-center gap-2">
-            <Focus size={14} className="text-amber-600 dark:text-amber-400 shrink-0" />
+            <Focus
+              size={14}
+              className="text-amber-600 dark:text-amber-400 shrink-0"
+            />
             <div className="min-w-0 flex-1">
               <div className="text-[11px] font-semibold text-amber-800 dark:text-amber-200">
-                {t('bim.isolation_active', { defaultValue: 'Isolation active' })}
+                {t("bim.isolation_active", {
+                  defaultValue: "Isolation active",
+                })}
               </div>
               <div className="text-[10px] text-amber-700/90 dark:text-amber-300/80 tabular-nums">
-                {t('bim.isolation_scope', {
-                  defaultValue: '{{n}} of {{total}} elements visible in viewport',
+                {t("bim.isolation_scope", {
+                  defaultValue:
+                    "{{n}} of {{total}} elements visible in viewport",
                   n: isolatedIds.length,
                   total: elements.length,
                 })}
@@ -765,12 +838,13 @@ export default function BIMFilterPanel({
                 type="button"
                 onClick={onClearIsolation}
                 className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold bg-white dark:bg-amber-900/50 text-amber-700 dark:text-amber-200 border border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-900/70 transition-colors"
-                title={t('bim.isolation_clear_title', {
-                  defaultValue: 'Exit isolation — show all model elements again',
+                title={t("bim.isolation_clear_title", {
+                  defaultValue:
+                    "Exit isolation — show all model elements again",
                 })}
               >
                 <X size={10} />
-                {t('bim.isolation_clear', { defaultValue: 'Clear' })}
+                {t("bim.isolation_clear", { defaultValue: "Clear" })}
               </button>
             )}
           </div>
@@ -787,20 +861,24 @@ export default function BIMFilterPanel({
           <input
             type="text"
             value={state.search}
-            onChange={(e) => setState((p) => ({ ...p, search: e.target.value }))}
-            placeholder={t('bim.filter_search_placeholder', {
-              defaultValue: 'Search name, type, level…',
+            onChange={(e) =>
+              setState((p) => ({ ...p, search: e.target.value }))
+            }
+            placeholder={t("bim.filter_search_placeholder", {
+              defaultValue: "Search name, type, level…",
             })}
-            aria-label={t('bim.filter_search_placeholder', {
-              defaultValue: 'Search name, type, level…',
+            aria-label={t("bim.filter_search_placeholder", {
+              defaultValue: "Search name, type, level…",
             })}
             className="w-full ps-8 pe-8 py-1.5 text-xs rounded-md bg-surface-secondary border border-border-light focus:outline-none focus:ring-1 focus:ring-oe-blue focus:border-oe-blue"
           />
           {state.search && (
             <button
-              onClick={() => setState((p) => ({ ...p, search: '' }))}
+              onClick={() => setState((p) => ({ ...p, search: "" }))}
               className="absolute end-2 top-1/2 -translate-y-1/2 text-content-quaternary hover:text-content-primary"
-              aria-label={t('bim.filter_clear_search', { defaultValue: 'Clear search' })}
+              aria-label={t("bim.filter_clear_search", {
+                defaultValue: "Clear search",
+              })}
             >
               <X size={12} />
             </button>
@@ -812,24 +890,53 @@ export default function BIMFilterPanel({
           <div className="mt-2 px-2.5 py-1.5 rounded-md bg-oe-blue/5 border border-oe-blue/15 text-[11px] font-medium text-oe-blue">
             {(() => {
               const parts: string[] = [];
-              parts.push(t('bim.filter_summary_showing', { defaultValue: 'Showing {{count}}', count: visibleElements.length }));
+              parts.push(
+                t("bim.filter_summary_showing", {
+                  defaultValue: "Showing {{count}}",
+                  count: visibleElements.length,
+                }),
+              );
               if (state.types.size === 1) {
                 const typeName = prettifyCategoryName([...state.types][0]!);
                 parts.push(typeName);
               } else if (state.types.size > 1) {
-                parts.push(t('bim.filter_summary_types', { defaultValue: 'types ({{count}})', count: state.types.size }));
+                parts.push(
+                  t("bim.filter_summary_types", {
+                    defaultValue: "types ({{count}})",
+                    count: state.types.size,
+                  }),
+                );
               } else {
-                parts.push(t('bim.filter_summary_elements', { defaultValue: 'elements' }));
+                parts.push(
+                  t("bim.filter_summary_elements", {
+                    defaultValue: "elements",
+                  }),
+                );
               }
               if (state.storeys.size === 1) {
-                parts.push(t('bim.filter_summary_on_level', { defaultValue: 'on {{level}}', level: [...state.storeys][0] }));
+                parts.push(
+                  t("bim.filter_summary_on_level", {
+                    defaultValue: "on {{level}}",
+                    level: [...state.storeys][0],
+                  }),
+                );
               } else if (state.storeys.size > 1) {
-                parts.push(t('bim.filter_summary_across_levels', { defaultValue: 'across {{count}} levels', count: state.storeys.size }));
+                parts.push(
+                  t("bim.filter_summary_across_levels", {
+                    defaultValue: "across {{count}} levels",
+                    count: state.storeys.size,
+                  }),
+                );
               }
               if (state.search) {
-                parts.push(t('bim.filter_summary_matching', { defaultValue: 'matching "{{query}}"', query: state.search }));
+                parts.push(
+                  t("bim.filter_summary_matching", {
+                    defaultValue: 'matching "{{query}}"',
+                    query: state.search,
+                  }),
+                );
               }
-              return parts.join(' ');
+              return parts.join(" ");
             })()}
           </div>
         )}
@@ -840,18 +947,19 @@ export default function BIMFilterPanel({
             {isolationSet ? (
               <>
                 <span className="inline-flex items-center gap-1 mr-1 px-1 py-0.5 rounded bg-oe-blue/10 text-oe-blue text-[10px] font-semibold">
-                  {t('bim.isolated', { defaultValue: 'Isolated' })}
+                  {t("bim.isolated", { defaultValue: "Isolated" })}
                 </span>
-                {t('bim.filter_visible_in_isolation', {
-                  defaultValue: '{{visible}} of {{isolated}} isolated ({{total}} total)',
+                {t("bim.filter_visible_in_isolation", {
+                  defaultValue:
+                    "{{visible}} of {{isolated}} isolated ({{total}} total)",
                   visible: visibleElements.length,
                   isolated: isolationSet.size,
                   total: elements.length,
                 })}
               </>
             ) : (
-              t('bim.filter_visible_count', {
-                defaultValue: '{{visible}} of {{total}} visible',
+              t("bim.filter_visible_count", {
+                defaultValue: "{{visible}} of {{total}} visible",
                 visible: visibleElements.length,
                 total: elements.length,
               })
@@ -859,7 +967,7 @@ export default function BIMFilterPanel({
           </span>
           {hasActiveFilters && (
             <button onClick={clearAll} className="text-oe-blue hover:underline">
-              {t('bim.filter_clear', { defaultValue: 'Clear all' })}
+              {t("bim.filter_clear", { defaultValue: "Clear all" })}
             </button>
           )}
         </div>
@@ -875,13 +983,13 @@ export default function BIMFilterPanel({
                 type="button"
                 onClick={onQuickTakeoff}
                 className="flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 text-[11px] font-medium rounded-md bg-oe-blue text-white hover:bg-oe-blue-dark transition-colors"
-                title={t('bim.quick_takeoff_title', {
-                  defaultValue: 'Create a BOQ position from the current filter',
+                title={t("bim.quick_takeoff_title", {
+                  defaultValue: "Create a BOQ position from the current filter",
                 })}
               >
                 <Link2 size={11} />
-                {t('bim.quick_takeoff', {
-                  defaultValue: 'Link {{count}} to BOQ',
+                {t("bim.quick_takeoff", {
+                  defaultValue: "Link {{count}} to BOQ",
                   count: visibleElements.length,
                 })}
               </button>
@@ -891,12 +999,12 @@ export default function BIMFilterPanel({
                 type="button"
                 onClick={() => onSaveAsGroup(state, visibleElements)}
                 className="inline-flex items-center justify-center gap-1.5 px-2 py-1.5 text-[11px] font-medium rounded-md border border-oe-blue/40 text-oe-blue bg-oe-blue/5 hover:bg-oe-blue/10 transition-colors"
-                title={t('bim.save_as_group_title', {
-                  defaultValue: 'Save the current filter as a named group',
+                title={t("bim.save_as_group_title", {
+                  defaultValue: "Save the current filter as a named group",
                 })}
               >
                 <Bookmark size={11} />
-                {t('bim.save_as_group', { defaultValue: 'Save as group' })}
+                {t("bim.save_as_group", { defaultValue: "Save as group" })}
               </button>
             )}
             {/* Export filtered elements as CSV */}
@@ -904,37 +1012,56 @@ export default function BIMFilterPanel({
               type="button"
               onClick={() => {
                 // Build CSV from visible elements
-                const headers = ['id', 'name', 'element_type', 'discipline', 'storey', 'category'];
+                const headers = [
+                  "id",
+                  "name",
+                  "element_type",
+                  "discipline",
+                  "storey",
+                  "category",
+                ];
                 // Collect quantity keys from all visible elements
                 const qtyKeys = new Set<string>();
                 for (const el of visibleElements) {
-                  if (el.quantities) for (const k of Object.keys(el.quantities)) qtyKeys.add(k);
+                  if (el.quantities)
+                    for (const k of Object.keys(el.quantities)) qtyKeys.add(k);
                 }
                 const qtyArr = [...qtyKeys].sort();
                 const allHeaders = [...headers, ...qtyArr];
                 const escCsv = (v: unknown) => {
-                  const s = v == null ? '' : String(v);
-                  return s.includes(',') || s.includes('"') || s.includes('\n')
+                  const s = v == null ? "" : String(v);
+                  return s.includes(",") || s.includes('"') || s.includes("\n")
                     ? `"${s.replace(/"/g, '""')}"`
                     : s;
                 };
                 const rows = visibleElements.map((el) => {
-                  const base = [el.id, el.name, el.element_type, el.discipline, el.storey ?? '', el.category ?? ''];
-                  const qtyVals = qtyArr.map((k) => (el.quantities?.[k] ?? ''));
-                  return [...base, ...qtyVals].map(escCsv).join(',');
+                  const base = [
+                    el.id,
+                    el.name,
+                    el.element_type,
+                    el.discipline,
+                    el.storey ?? "",
+                    el.category ?? "",
+                  ];
+                  const qtyVals = qtyArr.map((k) => el.quantities?.[k] ?? "");
+                  return [...base, ...qtyVals].map(escCsv).join(",");
                 });
-                const csv = [allHeaders.map(escCsv).join(','), ...rows].join('\n');
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const csv = [allHeaders.map(escCsv).join(","), ...rows].join(
+                  "\n",
+                );
+                const blob = new Blob([csv], {
+                  type: "text/csv;charset=utf-8;",
+                });
                 const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
+                const a = document.createElement("a");
                 a.href = url;
                 a.download = `bim_elements_${visibleElements.length}.csv`;
                 a.click();
                 URL.revokeObjectURL(url);
               }}
               className="inline-flex items-center justify-center gap-1.5 px-2 py-1.5 text-[11px] font-medium rounded-md border border-border-light text-content-secondary hover:bg-surface-secondary transition-colors"
-              title={t('bim.export_csv_title', {
-                defaultValue: 'Export {{count}} filtered elements as CSV',
+              title={t("bim.export_csv_title", {
+                defaultValue: "Export {{count}} filtered elements as CSV",
                 count: visibleElements.length,
               })}
             >
@@ -953,15 +1080,15 @@ export default function BIMFilterPanel({
             {smartFilterCounts.errors > 0 && (
               <button
                 type="button"
-                onClick={() => onSmartFilter('errors')}
+                onClick={() => onSmartFilter("errors")}
                 className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium rounded border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors"
-                title={t('bim.smart_filter_errors_title', {
-                  defaultValue: 'Show only elements with validation errors',
+                title={t("bim.smart_filter_errors_title", {
+                  defaultValue: "Show only elements with validation errors",
                 })}
               >
                 <AlertOctagon size={10} />
-                {t('bim.smart_filter_errors_chip', {
-                  defaultValue: 'Errors {{count}}',
+                {t("bim.smart_filter_errors_chip", {
+                  defaultValue: "Errors {{count}}",
                   count: smartFilterCounts.errors,
                 })}
               </button>
@@ -969,15 +1096,15 @@ export default function BIMFilterPanel({
             {smartFilterCounts.warnings > 0 && (
               <button
                 type="button"
-                onClick={() => onSmartFilter('warnings')}
+                onClick={() => onSmartFilter("warnings")}
                 className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium rounded border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
-                title={t('bim.smart_filter_warnings_title', {
-                  defaultValue: 'Show only elements with validation warnings',
+                title={t("bim.smart_filter_warnings_title", {
+                  defaultValue: "Show only elements with validation warnings",
                 })}
               >
                 <AlertTriangle size={10} />
-                {t('bim.smart_filter_warnings_chip', {
-                  defaultValue: 'Warnings {{count}}',
+                {t("bim.smart_filter_warnings_chip", {
+                  defaultValue: "Warnings {{count}}",
                   count: smartFilterCounts.warnings,
                 })}
               </button>
@@ -985,15 +1112,16 @@ export default function BIMFilterPanel({
             {smartFilterCounts.unlinkedBoq > 0 && (
               <button
                 type="button"
-                onClick={() => onSmartFilter('unlinked_boq')}
+                onClick={() => onSmartFilter("unlinked_boq")}
                 className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                title={t('bim.smart_filter_unlinked_boq_title', {
-                  defaultValue: 'Show only elements not linked to any BOQ position',
+                title={t("bim.smart_filter_unlinked_boq_title", {
+                  defaultValue:
+                    "Show only elements not linked to any BOQ position",
                 })}
               >
                 <Unlink size={10} />
-                {t('bim.smart_filter_unlinked_chip', {
-                  defaultValue: 'Unlinked {{count}}',
+                {t("bim.smart_filter_unlinked_chip", {
+                  defaultValue: "Unlinked {{count}}",
                   count: smartFilterCounts.unlinkedBoq,
                 })}
               </button>
@@ -1001,15 +1129,15 @@ export default function BIMFilterPanel({
             {smartFilterCounts.hasTasks > 0 && (
               <button
                 type="button"
-                onClick={() => onSmartFilter('has_tasks')}
+                onClick={() => onSmartFilter("has_tasks")}
                 className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium rounded border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors"
-                title={t('bim.smart_filter_has_tasks_title', {
-                  defaultValue: 'Show only elements that have linked tasks',
+                title={t("bim.smart_filter_has_tasks_title", {
+                  defaultValue: "Show only elements that have linked tasks",
                 })}
               >
                 <CheckSquare size={10} />
-                {t('bim.smart_filter_has_tasks_chip', {
-                  defaultValue: 'Tasks {{count}}',
+                {t("bim.smart_filter_has_tasks_chip", {
+                  defaultValue: "Tasks {{count}}",
                   count: smartFilterCounts.hasTasks,
                 })}
               </button>
@@ -1017,15 +1145,15 @@ export default function BIMFilterPanel({
             {smartFilterCounts.hasDocs > 0 && (
               <button
                 type="button"
-                onClick={() => onSmartFilter('has_docs')}
+                onClick={() => onSmartFilter("has_docs")}
                 className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium rounded border border-violet-200 dark:border-violet-900/60 bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/40 transition-colors"
-                title={t('bim.smart_filter_has_docs_title', {
-                  defaultValue: 'Show only elements with linked documents',
+                title={t("bim.smart_filter_has_docs_title", {
+                  defaultValue: "Show only elements with linked documents",
                 })}
               >
                 <FileText size={10} />
-                {t('bim.smart_filter_has_docs_chip', {
-                  defaultValue: 'Docs {{count}}',
+                {t("bim.smart_filter_has_docs_chip", {
+                  defaultValue: "Docs {{count}}",
                   count: smartFilterCounts.hasDocs,
                 })}
               </button>
@@ -1037,8 +1165,8 @@ export default function BIMFilterPanel({
         <label className="flex items-center justify-between mt-2 text-[11px] text-content-secondary cursor-pointer select-none">
           <span className="flex items-center gap-1.5">
             <Package size={11} className="text-content-tertiary" />
-            {t('bim.filter_buildings_only', {
-              defaultValue: 'Building elements only',
+            {t("bim.filter_buildings_only", {
+              defaultValue: "Building elements only",
             })}
           </span>
           <button
@@ -1049,12 +1177,12 @@ export default function BIMFilterPanel({
               setState((p) => ({ ...p, buildingsOnly: !p.buildingsOnly }))
             }
             className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${
-              state.buildingsOnly ? 'bg-oe-blue' : 'bg-surface-tertiary'
+              state.buildingsOnly ? "bg-oe-blue" : "bg-surface-tertiary"
             }`}
           >
             <span
               className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                state.buildingsOnly ? 'translate-x-3.5' : 'translate-x-0.5'
+                state.buildingsOnly ? "translate-x-3.5" : "translate-x-0.5"
               }`}
             />
           </button>
@@ -1077,7 +1205,7 @@ export default function BIMFilterPanel({
               <div className="flex items-center gap-1.5">
                 <Bookmark size={12} className="text-oe-blue" />
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-                  {t('bim.saved_groups', { defaultValue: 'Saved groups' })}
+                  {t("bim.saved_groups", { defaultValue: "Saved groups" })}
                 </span>
                 <span className="text-[10px] text-content-quaternary tabular-nums">
                   {savedGroups.length}
@@ -1098,8 +1226,8 @@ export default function BIMFilterPanel({
                       key={g.id}
                       className={`group flex items-center gap-1 px-1.5 py-1 rounded transition-colors ${
                         active
-                          ? 'bg-oe-blue/10 border border-oe-blue/40'
-                          : 'border border-transparent hover:bg-surface-secondary'
+                          ? "bg-oe-blue/10 border border-oe-blue/40"
+                          : "border border-transparent hover:bg-surface-secondary"
                       }`}
                     >
                       <button
@@ -1108,18 +1236,20 @@ export default function BIMFilterPanel({
                         className="flex-1 flex items-center gap-1.5 min-w-0 text-left"
                         title={
                           g.description ||
-                          t('bim.apply_group_title', {
-                            defaultValue: 'Apply this group as a filter',
+                          t("bim.apply_group_title", {
+                            defaultValue: "Apply this group as a filter",
                           })
                         }
                       >
                         <span
                           className="inline-block h-2 w-2 rounded-full shrink-0"
-                          style={{ background: g.color || '#2979ff' }}
+                          style={{ background: g.color || "#2979ff" }}
                         />
                         <span
                           className={`text-[11px] truncate ${
-                            active ? 'font-medium text-oe-blue' : 'text-content-primary'
+                            active
+                              ? "font-medium text-oe-blue"
+                              : "text-content-primary"
                           }`}
                         >
                           {g.name}
@@ -1136,8 +1266,8 @@ export default function BIMFilterPanel({
                             onLinkGroupToBOQ(g);
                           }}
                           className="opacity-0 group-hover:opacity-100 p-1 rounded text-content-tertiary hover:text-oe-blue hover:bg-surface-primary"
-                          title={t('bim.group_link_boq', {
-                            defaultValue: 'Link this group to BOQ',
+                          title={t("bim.group_link_boq", {
+                            defaultValue: "Link this group to BOQ",
                           })}
                         >
                           <Link2 size={10} />
@@ -1151,7 +1281,9 @@ export default function BIMFilterPanel({
                             onDeleteGroup(g);
                           }}
                           className="opacity-0 group-hover:opacity-100 p-1 rounded text-content-tertiary hover:text-rose-600 hover:bg-rose-50"
-                          title={t('bim.group_delete', { defaultValue: 'Delete group' })}
+                          title={t("bim.group_delete", {
+                            defaultValue: "Delete group",
+                          })}
                         >
                           <Trash2 size={10} />
                         </button>
@@ -1167,7 +1299,7 @@ export default function BIMFilterPanel({
         {/* Storeys — sorted by parsed level number (B2 → G → 01 → 02 → …)
             with a small level badge on each chip. */}
         <FilterSection
-          title={t('bim.filter_levels', { defaultValue: 'Levels' })}
+          title={t("bim.filter_levels", { defaultValue: "Levels" })}
           icon={<Layers size={12} />}
           action={
             counts.storeys.length > 0 && state.storeys.size > 0 ? (
@@ -1176,7 +1308,7 @@ export default function BIMFilterPanel({
                 onClick={() => setState((p) => ({ ...p, storeys: new Set() }))}
                 className="text-[10px] text-content-tertiary hover:text-oe-blue"
               >
-                {t('bim.filter_all_levels', { defaultValue: 'All levels' })}
+                {t("bim.filter_all_levels", { defaultValue: "All levels" })}
               </button>
             ) : null
           }
@@ -1188,22 +1320,22 @@ export default function BIMFilterPanel({
               <button
                 key={s.raw}
                 type="button"
-                onClick={() => toggleSet('storeys', s.raw)}
+                onClick={() => toggleSet("storeys", s.raw)}
                 className={`w-full flex items-center gap-2 px-2 py-1 rounded text-[11px] transition-colors ${
                   active
-                    ? 'bg-oe-blue/10 text-oe-blue font-medium'
-                    : 'text-content-secondary hover:bg-surface-secondary'
+                    ? "bg-oe-blue/10 text-oe-blue font-medium"
+                    : "text-content-secondary hover:bg-surface-secondary"
                 }`}
                 title={s.raw}
               >
                 <span
                   className={`inline-flex items-center justify-center min-w-[22px] h-[18px] px-1 rounded text-[9px] font-bold tabular-nums ${
                     active
-                      ? 'bg-oe-blue text-white'
-                      : 'bg-surface-secondary text-content-tertiary border border-border-light'
+                      ? "bg-oe-blue text-white"
+                      : "bg-surface-secondary text-content-tertiary border border-border-light"
                   }`}
                 >
-                  {badge || '·'}
+                  {badge || "·"}
                 </span>
                 <span className="flex-1 truncate text-left">{s.label}</span>
                 <span className="text-[10px] text-content-quaternary tabular-nums shrink-0">
@@ -1215,7 +1347,9 @@ export default function BIMFilterPanel({
           {/* fallback message tweaked for the renamed "Levels" label */}
           {counts.storeys.length === 0 && (
             <div className="text-[10px] text-content-quaternary italic">
-              {t('bim.filter_no_levels', { defaultValue: 'No levels detected in this model' })}
+              {t("bim.filter_no_levels", {
+                defaultValue: "No levels detected in this model",
+              })}
             </div>
           )}
         </FilterSection>
@@ -1235,7 +1369,7 @@ export default function BIMFilterPanel({
                 onClick={() => setState((p) => ({ ...p, types: new Set() }))}
                 className="text-[10px] text-content-tertiary hover:text-oe-blue"
               >
-                {t('bim.filter_clear_types', { defaultValue: 'Clear types' })}
+                {t("bim.filter_clear_types", { defaultValue: "Clear types" })}
               </button>
             ) : null
           }
@@ -1245,25 +1379,31 @@ export default function BIMFilterPanel({
             {(
               [
                 {
-                  id: 'category' as const,
-                  label: t('bim.group_by_category', { defaultValue: 'Category' }),
-                  title: t('bim.group_by_category_title', {
+                  id: "category" as const,
+                  label: t("bim.group_by_category", {
+                    defaultValue: "Category",
+                  }),
+                  title: t("bim.group_by_category_title", {
                     defaultValue:
-                      'Flat list of every Revit category / IFC entity, sorted by count',
+                      "Flat list of every Revit category / IFC entity, sorted by count",
                   }),
                 },
                 {
-                  id: 'typename' as const,
-                  label: t('bim.group_by_typename', { defaultValue: 'Type Name' }),
-                  title: t('bim.group_by_typename_title', {
-                    defaultValue: 'Category → Type Name hierarchy (Revit Browser style)',
+                  id: "typename" as const,
+                  label: t("bim.group_by_typename", {
+                    defaultValue: "Type Name",
+                  }),
+                  title: t("bim.group_by_typename_title", {
+                    defaultValue:
+                      "Category → Type Name hierarchy (Revit Browser style)",
                   }),
                 },
                 {
-                  id: 'buckets' as const,
-                  label: t('bim.group_by_bucket', { defaultValue: 'Buckets' }),
-                  title: t('bim.group_by_bucket_title', {
-                    defaultValue: 'Semantic buckets (Structure / Envelope / MEP / …)',
+                  id: "buckets" as const,
+                  label: t("bim.group_by_bucket", { defaultValue: "Buckets" }),
+                  title: t("bim.group_by_bucket_title", {
+                    defaultValue:
+                      "Semantic buckets (Structure / Envelope / MEP / …)",
                   }),
                 },
               ] as const
@@ -1275,8 +1415,8 @@ export default function BIMFilterPanel({
                 title={opt.title}
                 className={`flex-1 py-0.5 text-[10px] font-medium rounded transition-colors ${
                   groupingMode === opt.id
-                    ? 'bg-oe-blue text-white'
-                    : 'text-content-tertiary hover:text-content-primary'
+                    ? "bg-oe-blue text-white"
+                    : "text-content-tertiary hover:text-content-primary"
                 }`}
               >
                 {opt.label}
@@ -1292,22 +1432,24 @@ export default function BIMFilterPanel({
               visible but never crowd out the real building elements.
               Works across every project regardless of which categories
               the source CAD tool emits. */}
-          {groupingMode === 'category' && (
+          {groupingMode === "category" && (
             <CategoryFlatList
               types={counts.types}
               typeQty={counts.typeQty}
               activeSet={state.types}
-              onToggle={(n) => toggleSet('types', n)}
+              onToggle={(n) => toggleSet("types", n)}
               t={t}
             />
           )}
 
           {/* ── Mode 2: By Type Name — Category → Type Name hierarchy ─ */}
-          {groupingMode === 'typename' && (
+          {groupingMode === "typename" && (
             <div className="space-y-1">
               {counts.categoriesWithTypes.length === 0 ? (
                 <div className="text-[10px] text-content-quaternary italic px-1">
-                  {t('bim.filter_no_types', { defaultValue: 'No element types detected' })}
+                  {t("bim.filter_no_types", {
+                    defaultValue: "No element types detected",
+                  })}
                 </div>
               ) : (
                 counts.categoriesWithTypes.map(({ category, total, types }) => {
@@ -1332,13 +1474,19 @@ export default function BIMFilterPanel({
                           className="flex items-center gap-1 min-w-0 flex-1 text-left"
                         >
                           {isOpen ? (
-                            <ChevronDown size={11} className="text-content-tertiary shrink-0" />
+                            <ChevronDown
+                              size={11}
+                              className="text-content-tertiary shrink-0"
+                            />
                           ) : (
-                            <ChevronRight size={11} className="text-content-tertiary shrink-0" />
+                            <ChevronRight
+                              size={11}
+                              className="text-content-tertiary shrink-0"
+                            />
                           )}
                           <span
                             className={`text-[11px] font-semibold truncate ${
-                              active ? 'text-oe-blue' : 'text-content-primary'
+                              active ? "text-oe-blue" : "text-content-primary"
                             }`}
                             title={category}
                           >
@@ -1350,19 +1498,27 @@ export default function BIMFilterPanel({
                         </button>
                         <button
                           type="button"
-                          onClick={() => toggleSet('types', category)}
+                          onClick={() => toggleSet("types", category)}
                           className={`text-[10px] px-1.5 py-0.5 rounded shrink-0 ${
                             active
-                              ? 'bg-oe-blue text-white'
-                              : 'text-content-tertiary hover:text-oe-blue hover:bg-surface-primary'
+                              ? "bg-oe-blue text-white"
+                              : "text-content-tertiary hover:text-oe-blue hover:bg-surface-primary"
                           }`}
                           title={
                             active
-                              ? t('bim.deselect_category', { defaultValue: 'Deselect category' })
-                              : t('bim.select_category', { defaultValue: 'Filter by this category' })
+                              ? t("bim.deselect_category", {
+                                  defaultValue: "Deselect category",
+                                })
+                              : t("bim.select_category", {
+                                  defaultValue: "Filter by this category",
+                                })
                           }
                         >
-                          {active ? <Check size={11} strokeWidth={2.5} /> : <Plus size={11} strokeWidth={2} />}
+                          {active ? (
+                            <Check size={11} strokeWidth={2.5} />
+                          ) : (
+                            <Plus size={11} strokeWidth={2} />
+                          )}
                         </button>
                       </div>
                       {isOpen && (
@@ -1373,18 +1529,18 @@ export default function BIMFilterPanel({
                               <li key={typeName}>
                                 <button
                                   type="button"
-                                  onClick={() => toggleSet('types', typeName)}
+                                  onClick={() => toggleSet("types", typeName)}
                                   className={`w-full flex items-center justify-between gap-1 px-1.5 py-0.5 rounded text-[10px] text-left transition-colors ${
                                     typeActive
-                                      ? 'bg-oe-blue/10 text-oe-blue font-medium'
-                                      : 'text-content-secondary hover:bg-surface-primary'
+                                      ? "bg-oe-blue/10 text-oe-blue font-medium"
+                                      : "text-content-secondary hover:bg-surface-primary"
                                   }`}
                                   title={typeName}
                                 >
-                                  <span className="truncate">
-                                    {typeName}
-                                  </span>
-                                  <span className={`tabular-nums shrink-0 ${typeActive ? 'text-oe-blue' : 'text-content-quaternary'}`}>
+                                  <span className="truncate">{typeName}</span>
+                                  <span
+                                    className={`tabular-nums shrink-0 ${typeActive ? "text-oe-blue" : "text-content-quaternary"}`}
+                                  >
                                     {count.toLocaleString()}
                                   </span>
                                 </button>
@@ -1401,7 +1557,7 @@ export default function BIMFilterPanel({
           )}
 
           {/* ── Mode 3: Buckets — semantic groups ─────────────────────── */}
-          {groupingMode === 'buckets' && (
+          {groupingMode === "buckets" && (
             <div className="space-y-1">
               {counts.buckets
                 .filter(({ bucket }) =>
@@ -1424,11 +1580,19 @@ export default function BIMFilterPanel({
                           className="flex items-center gap-1.5 min-w-0 flex-1 text-left"
                         >
                           {isOpen ? (
-                            <ChevronDown size={11} className="text-content-tertiary shrink-0" />
+                            <ChevronDown
+                              size={11}
+                              className="text-content-tertiary shrink-0"
+                            />
                           ) : (
-                            <ChevronRight size={11} className="text-content-tertiary shrink-0" />
+                            <ChevronRight
+                              size={11}
+                              className="text-content-tertiary shrink-0"
+                            />
                           )}
-                          <span className={`text-[11px] font-semibold ${meta.color} truncate`}>
+                          <span
+                            className={`text-[11px] font-semibold ${meta.color} truncate`}
+                          >
                             {meta.label}
                           </span>
                           <span className="text-[10px] text-content-quaternary tabular-nums shrink-0">
@@ -1441,13 +1605,19 @@ export default function BIMFilterPanel({
                           className="text-[10px] px-1.5 py-0.5 rounded text-content-tertiary hover:text-oe-blue hover:bg-surface-primary"
                           title={
                             allOn
-                              ? t('bim.filter_bucket_clear', { defaultValue: 'Clear bucket' })
-                              : t('bim.filter_bucket_select_all', {
-                                  defaultValue: 'Select all in bucket',
+                              ? t("bim.filter_bucket_clear", {
+                                  defaultValue: "Clear bucket",
+                                })
+                              : t("bim.filter_bucket_select_all", {
+                                  defaultValue: "Select all in bucket",
                                 })
                           }
                         >
-                          {allOn ? <Check size={11} strokeWidth={2.5} /> : <Plus size={11} strokeWidth={2} />}
+                          {allOn ? (
+                            <Check size={11} strokeWidth={2.5} />
+                          ) : (
+                            <Plus size={11} strokeWidth={2} />
+                          )}
                         </button>
                       </div>
                       {isOpen && (
@@ -1460,7 +1630,7 @@ export default function BIMFilterPanel({
                                 label={prettifyCategoryName(name)}
                                 count={count}
                                 active={active}
-                                onClick={() => toggleSet('types', name)}
+                                onClick={() => toggleSet("types", name)}
                               />
                             );
                           })}
@@ -1471,7 +1641,9 @@ export default function BIMFilterPanel({
                 })}
               {counts.buckets.length === 0 && (
                 <div className="text-[10px] text-content-quaternary italic px-1">
-                  {t('bim.filter_no_types', { defaultValue: 'No element types detected' })}
+                  {t("bim.filter_no_types", {
+                    defaultValue: "No element types detected",
+                  })}
                 </div>
               )}
             </div>
@@ -1482,7 +1654,7 @@ export default function BIMFilterPanel({
         <div className="border-t border-border-light">
           <div className="px-4 py-2.5 flex items-center justify-between bg-surface-secondary">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-              {t('bim.filter_explorer', { defaultValue: 'Element Explorer' })}
+              {t("bim.filter_explorer", { defaultValue: "Element Explorer" })}
             </span>
             <select
               value={state.groupBy}
@@ -1492,7 +1664,7 @@ export default function BIMFilterPanel({
               className="text-[10px] py-0.5 px-1.5 rounded border border-border-light bg-surface-primary text-content-secondary focus:outline-none focus:ring-1 focus:ring-oe-blue"
             >
               <option value="storey">
-                {t('bim.filter_group_level', { defaultValue: 'by Level' })}
+                {t("bim.filter_group_level", { defaultValue: "by Level" })}
               </option>
               <option value="type">{typeGroupLabel}</option>
             </select>
@@ -1538,7 +1710,7 @@ export default function BIMFilterPanel({
                             className="w-full text-left ps-9 pe-3 py-0.5 text-[11px] text-content-secondary hover:text-content-primary hover:bg-surface-secondary truncate block"
                             title={el.name}
                           >
-                            {el.name || el.element_type || '—'}
+                            {el.name || el.element_type || "—"}
                           </button>
                         </li>
                       ))}
@@ -1554,8 +1726,8 @@ export default function BIMFilterPanel({
             })}
             {groupedElements.length === 0 && (
               <div className="px-4 py-4 text-[11px] text-content-quaternary text-center">
-                {t('bim.filter_no_results', {
-                  defaultValue: 'No elements match filters',
+                {t("bim.filter_no_results", {
+                  defaultValue: "No elements match filters",
                 })}
               </div>
             )}
@@ -1581,7 +1753,7 @@ export default function BIMFilterPanel({
  */
 /** Format a quantity value for compact display (e.g. 1234.5 -> "1,235") */
 function fmtQty(val: number): string {
-  if (val === 0) return '';
+  if (val === 0) return "";
   if (val >= 1000) return Math.round(val).toLocaleString();
   if (val >= 10) return val.toFixed(1);
   return val.toFixed(2);
@@ -1598,7 +1770,7 @@ function CategoryFlatList({
   typeQty: Map<string, { volume: number; area: number; length: number }>;
   activeSet: Set<string>;
   onToggle: (name: string) => void;
-  t: ReturnType<typeof useTranslation>['t'];
+  t: ReturnType<typeof useTranslation>["t"];
 }) {
   const [otherExpanded, setOtherExpanded] = useState(false);
 
@@ -1613,7 +1785,9 @@ function CategoryFlatList({
   if (types.length === 0) {
     return (
       <div className="text-[10px] text-content-quaternary italic px-1">
-        {t('bim.filter_no_types', { defaultValue: 'No element types detected' })}
+        {t("bim.filter_no_types", {
+          defaultValue: "No element types detected",
+        })}
       </div>
     );
   }
@@ -1629,7 +1803,8 @@ function CategoryFlatList({
             // Build a compact quantity summary string
             const qtyParts: string[] = [];
             if (agg) {
-              if (agg.volume > 0) qtyParts.push(`${fmtQty(agg.volume)} m\u00B3`);
+              if (agg.volume > 0)
+                qtyParts.push(`${fmtQty(agg.volume)} m\u00B3`);
               if (agg.area > 0) qtyParts.push(`${fmtQty(agg.area)} m\u00B2`);
               if (agg.length > 0) qtyParts.push(`${fmtQty(agg.length)} m`);
             }
@@ -1640,7 +1815,9 @@ function CategoryFlatList({
                 count={count}
                 active={active}
                 onClick={() => onToggle(name)}
-                subtitle={qtyParts.length > 0 ? qtyParts.join(' | ') : undefined}
+                subtitle={
+                  qtyParts.length > 0 ? qtyParts.join(" | ") : undefined
+                }
                 colorDot={getCategoryColor(name)}
               />
             );
@@ -1663,8 +1840,8 @@ function CategoryFlatList({
                 <ChevronRight size={11} className="text-content-tertiary" />
               )}
               <span className="text-[10px] font-medium text-content-tertiary uppercase tracking-wider">
-                {t('bim.category_annotations_analytical', {
-                  defaultValue: 'Annotations & analytical',
+                {t("bim.category_annotations_analytical", {
+                  defaultValue: "Annotations & analytical",
                 })}
               </span>
             </div>
@@ -1742,8 +1919,8 @@ function FilterChip({
       onClick={onClick}
       className={`w-full flex items-center justify-between gap-2 px-2 py-1 rounded text-[11px] transition-colors ${
         active
-          ? 'bg-oe-blue/10 text-oe-blue font-medium'
-          : 'text-content-secondary hover:bg-surface-secondary'
+          ? "bg-oe-blue/10 text-oe-blue font-medium"
+          : "text-content-secondary hover:bg-surface-secondary"
       }`}
       title={subtitle}
     >
@@ -1751,7 +1928,9 @@ function FilterChip({
         {colorDot != null ? (
           <span
             className="inline-block w-2 h-2 rounded-full shrink-0 ring-1 ring-black/10"
-            style={{ backgroundColor: `#${colorDot.toString(16).padStart(6, '0')}` }}
+            style={{
+              backgroundColor: `#${colorDot.toString(16).padStart(6, "0")}`,
+            }}
           />
         ) : active ? (
           <Eye size={10} className="shrink-0" />

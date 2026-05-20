@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
-import clsx from 'clsx';
+import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { AlertTriangle, Trash2, Loader2 } from "lucide-react";
+import clsx from "clsx";
 
 export interface ConfirmDialogProps {
   open: boolean;
@@ -11,7 +11,7 @@ export interface ConfirmDialogProps {
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
-  variant?: 'danger' | 'warning';
+  variant?: "danger" | "warning";
   loading?: boolean;
 }
 
@@ -23,7 +23,7 @@ export function ConfirmDialog({
   message,
   confirmLabel,
   cancelLabel,
-  variant = 'danger',
+  variant = "danger",
   loading = false,
 }: ConfirmDialogProps) {
   const { t } = useTranslation();
@@ -31,24 +31,25 @@ export function ConfirmDialog({
   const confirmRef = useRef<HTMLButtonElement>(null);
 
   const resolvedConfirmLabel =
-    confirmLabel ?? t('confirm_dialog.delete', { defaultValue: 'Delete‌⁠‍' });
+    confirmLabel ?? t("confirm_dialog.delete", { defaultValue: "Delete‌⁠‍" });
   const resolvedCancelLabel =
-    cancelLabel ?? t('confirm_dialog.cancel', { defaultValue: 'Cancel‌⁠‍' });
+    cancelLabel ?? t("confirm_dialog.cancel", { defaultValue: "Cancel‌⁠‍" });
 
   // Close on Escape key
   useEffect(() => {
     if (!open) return;
 
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         e.stopPropagation();
         onCancel();
       }
     };
 
-    document.addEventListener('keydown', handler, { capture: true });
-    return () => document.removeEventListener('keydown', handler, { capture: true });
+    document.addEventListener("keydown", handler, { capture: true });
+    return () =>
+      document.removeEventListener("keydown", handler, { capture: true });
   }, [open, onCancel]);
 
   // Close on backdrop click
@@ -61,8 +62,8 @@ export function ConfirmDialog({
       }
     };
 
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [open, onCancel]);
 
   // Focus the confirm button when dialog opens
@@ -74,7 +75,7 @@ export function ConfirmDialog({
 
   if (!open) return null;
 
-  const isDanger = variant === 'danger';
+  const isDanger = variant === "danger";
 
   const Icon = isDanger ? Trash2 : AlertTriangle;
 
@@ -92,11 +93,11 @@ export function ConfirmDialog({
         aria-describedby="confirm-dialog-message"
         tabIndex={-1}
         className={clsx(
-          'relative z-10 w-full max-w-sm mx-4',
-          'rounded-2xl border border-border-light',
-          'bg-surface-elevated shadow-xl',
-          'animate-scale-in',
-          'focus:outline-none',
+          "relative z-10 w-full max-w-sm mx-4",
+          "rounded-2xl border border-border-light",
+          "bg-surface-elevated shadow-xl",
+          "animate-scale-in",
+          "focus:outline-none",
         )}
       >
         {/* Body */}
@@ -104,17 +105,19 @@ export function ConfirmDialog({
           {/* Icon */}
           <div
             className={clsx(
-              'mx-auto flex h-11 w-11 items-center justify-center rounded-full mb-4',
+              "mx-auto flex h-11 w-11 items-center justify-center rounded-full mb-4",
               isDanger
-                ? 'bg-semantic-error/10 text-semantic-error'
-                : 'bg-semantic-warning/10 text-semantic-warning',
+                ? "bg-semantic-error/10 text-semantic-error"
+                : "bg-semantic-warning/10 text-semantic-warning",
             )}
           >
             <Icon size={20} />
           </div>
 
           {/* Title */}
-          <h2 className="text-base font-semibold text-content-primary text-center">{title}</h2>
+          <h2 className="text-base font-semibold text-content-primary text-center">
+            {title}
+          </h2>
 
           {/* Message */}
           <p
@@ -132,13 +135,13 @@ export function ConfirmDialog({
             onClick={onCancel}
             disabled={loading}
             className={clsx(
-              'flex-1 rounded-lg px-4 py-2.5',
-              'text-sm font-medium transition-all',
-              'bg-surface-primary text-content-primary',
-              'border border-border',
-              'hover:bg-surface-secondary active:bg-surface-tertiary',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-2',
-              'disabled:opacity-40 disabled:pointer-events-none',
+              "flex-1 rounded-lg px-4 py-2.5",
+              "text-sm font-medium transition-all",
+              "bg-surface-primary text-content-primary",
+              "border border-border",
+              "hover:bg-surface-secondary active:bg-surface-tertiary",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-2",
+              "disabled:opacity-40 disabled:pointer-events-none",
             )}
           >
             {resolvedCancelLabel}
@@ -150,18 +153,18 @@ export function ConfirmDialog({
             disabled={loading}
             data-testid="confirm-dialog-confirm"
             className={clsx(
-              'flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5',
-              'text-sm font-medium transition-all',
-              'text-content-inverse',
+              "flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5",
+              "text-sm font-medium transition-all",
+              "text-content-inverse",
               isDanger
-                ? 'bg-semantic-error hover:opacity-90 active:opacity-80'
-                : 'bg-semantic-warning hover:opacity-90 active:opacity-80',
-              'shadow-xs hover:shadow-md',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                ? "bg-semantic-error hover:opacity-90 active:opacity-80"
+                : "bg-semantic-warning hover:opacity-90 active:opacity-80",
+              "shadow-xs hover:shadow-md",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               isDanger
-                ? 'focus-visible:ring-semantic-error'
-                : 'focus-visible:ring-semantic-warning',
-              'disabled:opacity-40 disabled:pointer-events-none',
+                ? "focus-visible:ring-semantic-error"
+                : "focus-visible:ring-semantic-warning",
+              "disabled:opacity-40 disabled:pointer-events-none",
             )}
           >
             {loading && <Loader2 size={14} className="animate-spin" />}

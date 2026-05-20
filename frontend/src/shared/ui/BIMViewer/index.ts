@@ -1,35 +1,51 @@
-export { BIMViewer, DisciplineToggle } from './BIMViewer';
-export type { BIMViewerProps, BIMViewMode } from './BIMViewer';
+export { BIMViewer, DisciplineToggle } from "./BIMViewer";
+export type { BIMViewerProps, BIMViewMode } from "./BIMViewer";
 
-export { SceneManager } from './SceneManager';
-export type { Viewpoint as SceneViewpoint } from './SceneManager';
+export { SceneManager } from "./SceneManager";
+export type { Viewpoint as SceneViewpoint, ViewPreset } from "./SceneManager";
 
-export { ElementManager } from './ElementManager';
-export type { BIMElementData, BIMModelData, BIMBoundingBox } from './ElementManager';
+export { CameraTween, easeInOutCubic } from "./CameraTween";
+export type { CameraState } from "./CameraTween";
 
-export { SelectionManager } from './SelectionManager';
-export type { SelectionCallbacks } from './SelectionManager';
+export { default as BIMViewCube } from "./BIMViewCube";
+export type { BIMViewCubeProps } from "./BIMViewCube";
 
-export { MeasureManager } from './MeasureManager';
-export type { Measurement, MeasureState, MeasureKind } from './MeasureManager';
+export {
+  ElementManager,
+  CATEGORICAL_12,
+  FIRE_RATING_PALETTE,
+  colorForPropertyValue,
+  resolveElementProperty,
+} from "./ElementManager";
+export type {
+  BIMElementData,
+  BIMModelData,
+  BIMBoundingBox,
+  ColorByPropertyConfig,
+  ColorByPropertyPalette,
+  PropertyValueCount,
+} from "./ElementManager";
 
-export { ClipManager } from './ClipManager';
+export { SelectionManager } from "./SelectionManager";
+export type { SelectionCallbacks } from "./SelectionManager";
+
+export { MeasureManager } from "./MeasureManager";
+export type { Measurement, MeasureState, MeasureKind } from "./MeasureManager";
+
+export { ClipManager } from "./ClipManager";
 export type {
   ClipMode,
   ClipAxis,
   ClipBoxExtent,
   ClipPlaneState,
-} from './ClipManager';
+} from "./ClipManager";
 
-export {
-  deriveGeometry,
-  deriveRelations,
-} from './canonicalElementDetails';
+export { deriveGeometry, deriveRelations } from "./canonicalElementDetails";
 export type {
   CanonicalGeometry,
   CanonicalRelation,
   CanonicalBBox,
-} from './canonicalElementDetails';
+} from "./canonicalElementDetails";
 
 export {
   distance3,
@@ -37,8 +53,8 @@ export {
   polygonPerimeter3,
   angleBetween3,
   centroid3,
-} from './measureMath';
-export type { Vec3 } from './measureMath';
+} from "./measureMath";
+export type { Vec3 } from "./measureMath";
 
 export {
   addViewpoint,
@@ -46,5 +62,12 @@ export {
   removeViewpoint,
   renameViewpoint,
   getViewpoint,
-} from './SavedViewsStore';
-export type { Viewpoint } from './SavedViewsStore';
+  setViewpointScreenshot,
+  restoreView,
+  DEFAULT_RESTORE_DURATION_MS,
+} from "./SavedViewsStore";
+export type {
+  Viewpoint,
+  SavedBIMFilterState,
+  BIMClipState,
+} from "./SavedViewsStore";

@@ -12,23 +12,23 @@
  * those live on a different session token system and have their own UI.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 export type PortalRole =
-  | 'client'
-  | 'investor'
-  | 'consultant'
-  | 'subcontractor'
-  | 'supplier'
-  | 'building_user';
+  | "client"
+  | "investor"
+  | "consultant"
+  | "subcontractor"
+  | "supplier"
+  | "building_user";
 
-export type PortalUserStatus = 'invited' | 'active' | 'suspended' | 'expired';
+export type PortalUserStatus = "invited" | "active" | "suspended" | "expired";
 
-export type AccessPermission = 'view' | 'comment' | 'submit' | 'sign';
+export type AccessPermission = "view" | "comment" | "submit" | "sign";
 
-export type AccessAction = 'view' | 'download' | 'sign';
+export type AccessAction = "view" | "download" | "sign";
 
 export interface PortalUser {
   id: string;
@@ -119,12 +119,12 @@ export function listPortalUsers(params?: {
   status?: string;
 }): Promise<PortalUserList> {
   const qs = new URLSearchParams();
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
-  if (params?.portal_role) qs.set('portal_role', params.portal_role);
-  if (params?.status) qs.set('status', params.status);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
+  if (params?.portal_role) qs.set("portal_role", params.portal_role);
+  if (params?.status) qs.set("status", params.status);
   const q = qs.toString();
-  return apiGet<PortalUserList>(`/v1/portal/admin/users${q ? `?${q}` : ''}`);
+  return apiGet<PortalUserList>(`/v1/portal/admin/users${q ? `?${q}` : ""}`);
 }
 
 export function getPortalUser(id: string): Promise<PortalUser> {
@@ -132,23 +132,29 @@ export function getPortalUser(id: string): Promise<PortalUser> {
 }
 
 export function invitePortalUser(data: InvitePayload): Promise<InviteResponse> {
-  return apiPost<InviteResponse>('/v1/portal/admin/users/invite', data);
+  return apiPost<InviteResponse>("/v1/portal/admin/users/invite", data);
 }
 
-export function patchPortalUser(id: string, data: UserPatch): Promise<PortalUser> {
+export function patchPortalUser(
+  id: string,
+  data: UserPatch,
+): Promise<PortalUser> {
   return apiPatch<PortalUser>(`/v1/portal/admin/users/${id}`, data);
 }
 
 export function suspendPortalUser(id: string): Promise<PortalUser> {
-  return patchPortalUser(id, { status: 'suspended' });
+  return patchPortalUser(id, { status: "suspended" });
 }
 
 export function reactivatePortalUser(id: string): Promise<PortalUser> {
-  return patchPortalUser(id, { status: 'active' });
+  return patchPortalUser(id, { status: "active" });
 }
 
 export function resendInvite(id: string): Promise<InviteResponse> {
-  return apiPost<InviteResponse>(`/v1/portal/admin/users/${id}/resend-invite`, {});
+  return apiPost<InviteResponse>(
+    `/v1/portal/admin/users/${id}/resend-invite`,
+    {},
+  );
 }
 
 /* ── Access rules ──────────────────────────────────────────────────────── */
@@ -160,18 +166,18 @@ export function listAccessRules(params?: {
   limit?: number;
 }): Promise<AccessRuleList> {
   const qs = new URLSearchParams();
-  if (params?.portal_user_id) qs.set('portal_user_id', params.portal_user_id);
-  if (params?.resource_type) qs.set('resource_type', params.resource_type);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.portal_user_id) qs.set("portal_user_id", params.portal_user_id);
+  if (params?.resource_type) qs.set("resource_type", params.resource_type);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return apiGet<AccessRuleList>(
-    `/v1/portal/admin/access-rules${q ? `?${q}` : ''}`,
+    `/v1/portal/admin/access-rules${q ? `?${q}` : ""}`,
   );
 }
 
 export function grantAccess(data: AccessRuleCreate): Promise<AccessRule> {
-  return apiPost<AccessRule>('/v1/portal/admin/access-rules', data);
+  return apiPost<AccessRule>("/v1/portal/admin/access-rules", data);
 }
 
 export function revokeAccess(ruleId: string): Promise<void> {
@@ -187,12 +193,12 @@ export function listDocumentAccessLog(params?: {
   limit?: number;
 }): Promise<DocumentAccessLogEntry[]> {
   const qs = new URLSearchParams();
-  if (params?.portal_user_id) qs.set('portal_user_id', params.portal_user_id);
-  if (params?.document_type) qs.set('document_type', params.document_type);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.portal_user_id) qs.set("portal_user_id", params.portal_user_id);
+  if (params?.document_type) qs.set("document_type", params.document_type);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return apiGet<DocumentAccessLogEntry[]>(
-    `/v1/portal/admin/document-access-log${q ? `?${q}` : ''}`,
+    `/v1/portal/admin/document-access-log${q ? `?${q}` : ""}`,
   );
 }

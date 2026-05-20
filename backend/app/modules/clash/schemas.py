@@ -72,6 +72,96 @@ class ClashSelectionSet(BaseModel):
 CLASH_TYPES = ("hard", "clearance", "both")
 
 
+class ClashRule(BaseModel):
+    """Wave A4 — one per-discipline-pair tolerance override row.
+
+    A *rule* is the Navisworks-style "rules tab" entry: a coordination
+    discipline pair (e.g. ``Structural`` × ``Mechanical``) plus a
+    discipline-specific tolerance the engine should use *instead* of the
+    run-wide :attr:`ClashRun.tolerance_m` when both elements of a
+    candidate pair fall on that axis. The pair match is symmetric:
+    ``(A, B)`` and ``(B, A)`` resolve to the same rule.
+
+    ``severity_override`` lets a coordinator stamp every result for the
+    pair with a fixed severity (e.g. "Pipe × Beam is always *high*"),
+    bypassing the geometry-derived ladder. Empty / ``None`` → keep the
+    engine value. ``enabled=False`` keeps the row visible but inert —
+    the engine ignores it (handy for parking a tuning iteration without
+    losing the row). ``id`` is a stable client-generated identifier so
+    React lists can ``key`` cleanly; the backend never indexes it.
+    """
+
+    id: str = Field(..., max_length=64)
+    discipline_a: str = Field(..., max_length=64)
+    discipline_b: str = Field(..., max_length=64)
+    tolerance_m: float = Field(..., ge=0.0, le=10.0)
+    severity_override: str | None = Field(default=None, max_length=16)
+    enabled: bool = Field(default=True)
+
+
+class ClashRuleList(BaseModel):
+    """Replace the full rule set of a run (PATCH /runs/{id}/rules/ body).
+
+    A flat list keeps the PATCH idempotent — clients always send the
+    full desired state. Order matters: the first matching enabled rule
+    wins (``_apply_rules`` short-circuits on the first match).
+    """
+
+    rules: list[ClashRule] = Field(default_factory=list, max_length=500)
+
+
+class ClashClusterRead(BaseModel):
+    """Wave A4 — one spatial cluster of clashes within a run.
+
+    Returned by ``GET /runs/{id}/clusters/`` so the frontend chip group
+    can render ``"Cluster N · <label> (n)"`` without a per-result join.
+    ``label`` is the heuristic ``"<disc_a> × <disc_b> — Level <s>"``
+    string the service derives from the cluster's member rows.
+
+    ``dominant_disciplines`` is the unique discipline pair the label was
+    built from (used by the chip palette to colour clusters by trade);
+    ``storey`` is the dominant storey index when the cluster's member
+    rows resolved one, else ``None``. Both are advisory — the UI never
+    falls over on absence.
+    """
+
+    model_config = ConfigDict(from_attributes=True)
+
+    cluster_id: int
+    label: str = ""
+    size: int = 0
+    dominant_disciplines: list[str] = Field(default_factory=list, max_length=2)
+    storey: int | None = None
+
+
+class ClashFalsePositiveRequest(BaseModel):
+    """Mark a clash as a false positive — Wave A4 FP feedback loop.
+
+    ``reason`` is a short, free-text triage note the coordinator picks
+    from a small picker (or types). Persisted to the result's history
+    audit trail so the FP-suggestion engine can later mine the corpus
+    for shared discipline pairs.
+    """
+
+    reason: str = Field(..., min_length=1, max_length=500)
+
+
+class ClashRuleSuggestion(BaseModel):
+    """A proposed rule, derived from this run's recorded false positives.
+
+    Returned by ``GET /runs/{id}/rule-suggestions/`` when ``N+`` false
+    positives share a discipline pair. ``rule`` is the proposed
+    :class:`ClashRule` row (with a fresh ``id``); ``reason`` explains
+    *why* the system suggests it ("3 false positives on Mechanical ×
+    Structural — bump tolerance to 0.05 m"). Empty when there is no
+    confident proposal.
+    """
+
+    rule: ClashRule | None = None
+    reason: str = ""
+    fp_count: int = 0
+
+
 class ClashRunCreate(BaseModel):
     """‌⁠‍Configure + launch a clash run."""
 
@@ -79,8 +169,7 @@ class ClashRunCreate(BaseModel):
     description: str | None = Field(
         default=None,
         max_length=2000,
-        description="Free-text note so a run is identifiable in history "
-        "(scope, intent, reviewer). Optional.",
+        description="Free-text note so a run is identifiable in history (scope, intent, reviewer). Optional.",
     )
     model_ids: list[uuid.UUID] = Field(
         ...,
@@ -102,11 +191,15 @@ class ClashRunCreate(BaseModel):
         "same file'). Skipped — has no effect — on a single-model run.",
     )
     tolerance_m: float = Field(
-        default=0.01, ge=0.0, le=10.0,
+        default=0.01,
+        ge=0.0,
+        le=10.0,
         description="Hard-clash interpenetration threshold in metres.",
     )
     clearance_m: float = Field(
-        default=0.0, ge=0.0, le=50.0,
+        default=0.0,
+        ge=0.0,
+        le=50.0,
         description="Proximity threshold in metres (0 disables the soft pass).",
     )
     mode: str = Field(
@@ -131,6 +224,15 @@ class ClashRunCreate(BaseModel):
         "forward from the most recent prior completed run of this "
         "project that shares a model, matching clashes by their stable "
         "signature. Keeps coordination state across re-runs.",
+    )
+    rules: list[ClashRule] = Field(
+        default_factory=list,
+        max_length=500,
+        description="Wave A4 — per-discipline-pair tolerance overrides "
+        "the engine consults during the broad phase. The first matching "
+        "enabled rule (symmetric on the pair) swaps in its tolerance "
+        "and stamps the result severity. Empty → run-wide tolerance "
+        "alone (legacy behaviour).",
     )
 
 
@@ -187,20 +289,43 @@ class ClashCategoriesResponse(BaseModel):
     group_by: str = "type"
     groups: list[ClashCategoryItem] = Field(default_factory=list)
     available_group_by: list[str] = Field(default_factory=list)
-    available_properties: list[ClashPropertyFacet] = Field(
-        default_factory=list
-    )
+    available_properties: list[ClashPropertyFacet] = Field(default_factory=list)
     element_types: list[ClashCategoryItem] = Field(default_factory=list)
     disciplines: list[ClashCategoryItem] = Field(default_factory=list)
 
 
 class ClashComment(BaseModel):
-    """One threaded triage note on a clash result."""
+    """One threaded triage note on a clash result.
+
+    ``reply_to`` carries the ``ts`` of a parent comment when this one is
+    a reply (Wave A3 threading). It is purely additive — legacy flat
+    comments simply omit it (``None``) and render at the top level.
+    """
 
     author: str = ""
     author_id: str | None = None
     ts: str = ""
     text: str = ""
+    # ``ts`` of the parent comment when this is a reply. ``None`` (the
+    # default) → top-level comment.
+    reply_to: str | None = None
+
+
+class ClashHistoryEntry(BaseModel):
+    """One audit-log entry on a clash result (Wave A3 activity tab).
+
+    Appended every time a triage field changes (status / severity /
+    assigned_to / due_date) or a new comment is added. ``actor`` is the
+    user id of the caller; ``ts`` is ISO-8601 UTC. ``before`` / ``after``
+    are best-effort string snapshots — ``None`` when there was no prior
+    value or the event has no natural pair (e.g. ``comment_add``).
+    """
+
+    ts: str = ""
+    actor: str = ""
+    field: str = ""
+    before: str | None = None
+    after: str | None = None
 
 
 class ClashResultResponse(BaseModel):
@@ -236,22 +361,45 @@ class ClashResultResponse(BaseModel):
     assigned_to: str | None
     due_date: str | None = None
     comments: list[ClashComment] = Field(default_factory=list)
+    # Wave A3 — collaboration state. ``watchers`` is the user-id list
+    # subscribed to this clash (fan-out target on triage/comment events).
+    # ``history`` is the audit trail rendered in the DetailPanel Activity
+    # tab. Both default to empty so legacy payloads / older backends
+    # still validate cleanly.
+    watchers: list[str] = Field(default_factory=list)
+    history: list[ClashHistoryEntry] = Field(default_factory=list)
+    # Wave A2 — open-ended advisory annotations (engine-derived,
+    # non-authoritative). Currently ``{"severity_suggestion": "<sev>"}``
+    # on deep hard clashes — the UI shows a "Suggested" chip. Defaults to
+    # ``{}`` so older payloads always type-check.
+    meta: dict = Field(default_factory=dict)
+    # Wave A4 — run-scoped spatial cluster id (DBSCAN over centroids).
+    # ``None`` marks DBSCAN noise / legacy rows.
+    cluster_id: int | None = None
     bcf_topic_guid: str | None
 
 
 class ClashAddComment(BaseModel):
     """Append a triage note. ``author``/``author_id`` are optional —
-    when omitted they resolve from the request's auth context."""
+    when omitted they resolve from the request's auth context.
+
+    ``reply_to`` is the ``ts`` of an existing comment when this one
+    threads under it (Wave A3). ``None``/omitted → top-level comment.
+    """
 
     text: str = Field(..., min_length=1, max_length=5000)
     author: str | None = Field(default=None, max_length=255)
     author_id: str | None = Field(default=None, max_length=64)
+    reply_to: str | None = Field(default=None, max_length=64)
 
 
 class ClashResultUpdate(BaseModel):
-    """Triage a clash — status, assignee, due date and/or a new comment."""
+    """Triage a clash — status, severity, assignee, due date and/or a new comment."""
 
     status: str | None = Field(default=None)
+    # Reclassify the coordination urgency. The engine seeds a value from
+    # geometry; the user has final say (Wave A2 bulk-set / accept-suggestion).
+    severity: str | None = Field(default=None)
     assigned_to: str | None = Field(default=None)
     due_date: str | None = Field(default=None, max_length=20)
     add_comment: ClashAddComment | None = Field(default=None)
@@ -321,6 +469,10 @@ class ClashRunResponse(BaseModel):
     element_count: int
     total_clashes: int
     summary: ClashRunSummary
+    # Wave A4 — per-discipline-pair tolerance overrides on this run.
+    # Always present on the response (empty list when no rules were
+    # configured), so the rule editor never has to special-case absence.
+    rules: list[ClashRule] = Field(default_factory=list)
     created_by: str
     created_at: datetime
     completed_at: datetime | None
@@ -368,6 +520,27 @@ class ClashBCFExportResponse(BaseModel):
     skipped: int
 
 
+class ClashBCFImportResponse(BaseModel):
+    """Outcome of a BCF round-trip import.
+
+    ``matched`` is the number of topics whose recomputed signature
+    matched an existing :class:`ClashResult`; ``unmatched`` is the
+    number of topics with no signature hit (logged, ignored). ``errors``
+    is the count of structural parse problems the codec reported.
+    """
+
+    matched: int
+    unmatched: int
+    errors: int = 0
+
+
+class ClashWatchResponse(BaseModel):
+    """Watcher-list snapshot returned by watch / unwatch."""
+
+    watchers: list[str] = Field(default_factory=list)
+    watching: bool = False
+
+
 class ClashResultSummary(BaseModel):
     """Compact clash row used by the run-to-run comparison."""
 
@@ -411,3 +584,70 @@ class ClashCompareResponse(BaseModel):
     resolved: list[ClashResultSummary] = Field(default_factory=list)
     persistent: list[ClashPersistentPair] = Field(default_factory=list)
     stats: ClashCompareStats
+
+
+class ClashApplyRuleRequest(BaseModel):
+    """Wave A4 — POST body for ``/runs/{id}/apply-rule-suggestion``.
+
+    Identifies the discipline pair the coordinator wants to widen plus
+    the proposed tolerance. The endpoint appends a fresh
+    :class:`ClashRule` row to ``run.rules`` and re-evaluates the run's
+    existing results: any hard clash on the pair whose ``penetration_m``
+    now sits at or below ``tolerance_m`` is flipped to ``status='ignored'``
+    (with an audit-trail entry). Symmetric on the pair.
+    """
+
+    discipline_a: str = Field(..., max_length=64, min_length=1)
+    discipline_b: str = Field(..., max_length=64, min_length=1)
+    tolerance_m: float = Field(..., ge=0.0, le=10.0)
+
+
+class ClashApplyRuleResponse(BaseModel):
+    """Outcome of ``POST /runs/{id}/apply-rule-suggestion``.
+
+    ``rule_added`` is ``False`` only when the new rule would have been a
+    duplicate of an existing entry (symmetric pair + same tolerance); the
+    re-evaluation pass still runs and ``results_affected`` is the number
+    of clash rows whose status was flipped to ``ignored``.
+    """
+
+    rule_added: bool
+    results_affected: int
+
+
+class ClashDisciplinePairStat(BaseModel):
+    """One discipline×discipline coordination grid cell — KPI projection.
+
+    Mirrors :class:`ClashMatrixCell` but adds ``open_share`` (``open_count
+    / count``, 0..1) so the dashboard can render the "top clashing pairs"
+    table without recomputing the ratio client-side. Zero ``count`` is
+    impossible (the aggregator skips empty cells), so ``open_share`` is
+    always well-defined.
+    """
+
+    a: str
+    b: str
+    count: int
+    open_count: int
+    open_share: float
+
+
+class ClashKpiResponse(BaseModel):
+    """Dashboard projection for ``GET /runs/{id}/kpi``.
+
+    All counts respect every clash in the run (no pagination). ``mttr_hours``
+    is the average wall-clock delta from a row's first ``status='new'``
+    history entry (or ``created_at`` fallback) to its first transition
+    *out* of ``new`` into ``resolved`` — ``None`` when no row has a
+    qualifying transition yet. ``top_clashing_pairs`` is the top five
+    discipline pairs by total ``count`` (ties broken by ``open_count``
+    desc, then pair alphabetic for determinism).
+    """
+
+    total: int
+    by_status: dict[str, int] = Field(default_factory=dict)
+    by_severity: dict[str, int] = Field(default_factory=dict)
+    by_type: dict[str, int] = Field(default_factory=dict)
+    by_discipline_pair: list[ClashDisciplinePairStat] = Field(default_factory=list)
+    mttr_hours: float | None = None
+    top_clashing_pairs: list[ClashDisciplinePairStat] = Field(default_factory=list)

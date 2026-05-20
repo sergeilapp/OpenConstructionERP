@@ -10,54 +10,54 @@
  * aliases at the bottom so any in-flight call sites still type-check.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Enums / unions ───────────────────────────────────────────────────── */
 
 export type ContractType =
-  | 'lump_sum'
-  | 'gmp'
-  | 'cost_plus'
-  | 'tm'
-  | 'unit_price'
-  | 'design_build'
-  | 'combination';
+  | "lump_sum"
+  | "gmp"
+  | "cost_plus"
+  | "tm"
+  | "unit_price"
+  | "design_build"
+  | "combination";
 
-export type CounterpartyType = 'client' | 'subcontractor';
+export type CounterpartyType = "client" | "subcontractor";
 
 export type ContractStatus =
-  | 'draft'
-  | 'active'
-  | 'suspended'
-  | 'completed'
-  | 'terminated';
+  | "draft"
+  | "active"
+  | "suspended"
+  | "completed"
+  | "terminated";
 
 export type RetentionReleaseEvent =
-  | 'practical_completion'
-  | 'final_account'
-  | 'handover';
+  | "practical_completion"
+  | "final_account"
+  | "handover";
 
 export type ContractLineType =
-  | 'work'
-  | 'material'
-  | 'labor'
-  | 'fee'
-  | 'contingency'
-  | 'allowance';
+  | "work"
+  | "material"
+  | "labor"
+  | "fee"
+  | "contingency"
+  | "allowance";
 
 export type ClaimStatus =
-  | 'draft'
-  | 'submitted'
-  | 'approved'
-  | 'certified'
-  | 'paid'
-  | 'rejected';
+  | "draft"
+  | "submitted"
+  | "approved"
+  | "certified"
+  | "paid"
+  | "rejected";
 
-export type FinalAccountStatus = 'draft' | 'agreed' | 'disputed' | 'closed';
+export type FinalAccountStatus = "draft" | "agreed" | "disputed" | "closed";
 
-export type FeeType = 'percent_of_cost' | 'fixed' | 'sliding_scale';
+export type FeeType = "percent_of_cost" | "fixed" | "sliding_scale";
 
-export type OverrunResponsibility = 'contractor' | 'shared' | 'owner';
+export type OverrunResponsibility = "contractor" | "shared" | "owner";
 
 /* ── Domain models ────────────────────────────────────────────────────── */
 
@@ -193,7 +193,7 @@ export interface LDClauseItem {
   currency: string;
   max_amount: number | string | null;
   milestone_id: string | null;
-  enforcement_status: 'active' | 'waived';
+  enforcement_status: "active" | "waived";
   created_at: string;
   updated_at: string;
 }
@@ -241,7 +241,9 @@ export interface ContractCreatePayload {
   metadata?: Record<string, unknown>;
 }
 
-export type ContractUpdatePayload = Partial<Omit<ContractCreatePayload, 'project_id'>>;
+export type ContractUpdatePayload = Partial<
+  Omit<ContractCreatePayload, "project_id">
+>;
 
 export interface ContractLineCreatePayload {
   contract_id: string;
@@ -284,9 +286,9 @@ export interface FinalAccountCreatePayload {
 
 export interface ContractFilters {
   project_id: string;
-  status?: ContractStatus | '';
-  contract_type?: ContractType | '';
-  counterparty_type?: CounterpartyType | '';
+  status?: ContractStatus | "";
+  contract_type?: ContractType | "";
+  counterparty_type?: CounterpartyType | "";
   offset?: number;
   limit?: number;
 }
@@ -304,7 +306,7 @@ async function safeGetList<T>(path: string): Promise<T[]> {
     const res = await apiGet<T[] | { items: T[] }>(path);
     return normaliseList(res);
   } catch (err: unknown) {
-    if (err && typeof err === 'object' && 'status' in err) {
+    if (err && typeof err === "object" && "status" in err) {
       const status = (err as { status: number }).status;
       if (status === 404 || status === 501) return [];
     }
@@ -314,14 +316,17 @@ async function safeGetList<T>(path: string): Promise<T[]> {
 
 /* ── Contracts ────────────────────────────────────────────────────────── */
 
-export function listContracts(filters: ContractFilters): Promise<ContractItem[]> {
+export function listContracts(
+  filters: ContractFilters,
+): Promise<ContractItem[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', filters.project_id);
-  if (filters.status) qs.set('status', filters.status);
-  if (filters.contract_type) qs.set('contract_type', filters.contract_type);
-  if (filters.counterparty_type) qs.set('counterparty_type', filters.counterparty_type);
-  if (filters.offset !== undefined) qs.set('offset', String(filters.offset));
-  if (filters.limit !== undefined) qs.set('limit', String(filters.limit));
+  qs.set("project_id", filters.project_id);
+  if (filters.status) qs.set("status", filters.status);
+  if (filters.contract_type) qs.set("contract_type", filters.contract_type);
+  if (filters.counterparty_type)
+    qs.set("counterparty_type", filters.counterparty_type);
+  if (filters.offset !== undefined) qs.set("offset", String(filters.offset));
+  if (filters.limit !== undefined) qs.set("limit", String(filters.limit));
   return safeGetList<ContractItem>(`/v1/contracts/contracts/?${qs.toString()}`);
 }
 
@@ -329,8 +334,10 @@ export function getContract(id: string): Promise<ContractItem> {
   return apiGet<ContractItem>(`/v1/contracts/contracts/${id}`);
 }
 
-export function createContract(data: ContractCreatePayload): Promise<ContractItem> {
-  return apiPost<ContractItem>('/v1/contracts/contracts/', data);
+export function createContract(
+  data: ContractCreatePayload,
+): Promise<ContractItem> {
+  return apiPost<ContractItem>("/v1/contracts/contracts/", data);
 }
 
 export function updateContract(
@@ -367,30 +374,37 @@ export function getContractDashboard(id: string): Promise<ContractDashboard> {
 /* ── Contract lines (SoV) ─────────────────────────────────────────────── */
 
 export function listContractLines(contractId: string): Promise<ContractLine[]> {
-  return safeGetList<ContractLine>(`/v1/contracts/contracts/${contractId}/lines`);
+  return safeGetList<ContractLine>(
+    `/v1/contracts/contracts/${contractId}/lines`,
+  );
 }
 
 export function createContractLine(
   contractId: string,
   data: ContractLineCreatePayload,
 ): Promise<ContractLine> {
-  return apiPost<ContractLine>(`/v1/contracts/contracts/${contractId}/lines`, data);
+  return apiPost<ContractLine>(
+    `/v1/contracts/contracts/${contractId}/lines`,
+    data,
+  );
 }
 
 /* ── Progress claims ──────────────────────────────────────────────────── */
 
 export function listProgressClaims(params: {
   contract_id: string;
-  status?: ClaimStatus | '';
+  status?: ClaimStatus | "";
   offset?: number;
   limit?: number;
 }): Promise<ProgressClaimItem[]> {
   const qs = new URLSearchParams();
-  qs.set('contract_id', params.contract_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
-  return safeGetList<ProgressClaimItem>(`/v1/contracts/progress-claims/?${qs.toString()}`);
+  qs.set("contract_id", params.contract_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
+  return safeGetList<ProgressClaimItem>(
+    `/v1/contracts/progress-claims/?${qs.toString()}`,
+  );
 }
 
 export function getProgressClaim(id: string): Promise<ProgressClaimItem> {
@@ -400,36 +414,55 @@ export function getProgressClaim(id: string): Promise<ProgressClaimItem> {
 export function createProgressClaim(
   data: ProgressClaimCreatePayload,
 ): Promise<ProgressClaimItem> {
-  return apiPost<ProgressClaimItem>('/v1/contracts/progress-claims/', data);
+  return apiPost<ProgressClaimItem>("/v1/contracts/progress-claims/", data);
 }
 
 export function submitClaim(id: string): Promise<ProgressClaimItem> {
-  return apiPost<ProgressClaimItem>(`/v1/contracts/progress-claims/${id}/submit`, {});
+  return apiPost<ProgressClaimItem>(
+    `/v1/contracts/progress-claims/${id}/submit`,
+    {},
+  );
 }
 
 export function approveClaim(id: string): Promise<ProgressClaimItem> {
-  return apiPost<ProgressClaimItem>(`/v1/contracts/progress-claims/${id}/approve`, {});
+  return apiPost<ProgressClaimItem>(
+    `/v1/contracts/progress-claims/${id}/approve`,
+    {},
+  );
 }
 
 export function certifyClaim(id: string): Promise<ProgressClaimItem> {
-  return apiPost<ProgressClaimItem>(`/v1/contracts/progress-claims/${id}/certify`, {});
+  return apiPost<ProgressClaimItem>(
+    `/v1/contracts/progress-claims/${id}/certify`,
+    {},
+  );
 }
 
 export function rejectClaim(id: string): Promise<ProgressClaimItem> {
-  return apiPost<ProgressClaimItem>(`/v1/contracts/progress-claims/${id}/reject`, {});
+  return apiPost<ProgressClaimItem>(
+    `/v1/contracts/progress-claims/${id}/reject`,
+    {},
+  );
 }
 
 export function markClaimPaid(id: string): Promise<ProgressClaimItem> {
-  return apiPost<ProgressClaimItem>(`/v1/contracts/progress-claims/${id}/mark-paid`, {});
+  return apiPost<ProgressClaimItem>(
+    `/v1/contracts/progress-claims/${id}/mark-paid`,
+    {},
+  );
 }
 
 export function listClaimLines(claimId: string): Promise<ProgressClaimLine[]> {
-  return safeGetList<ProgressClaimLine>(`/v1/contracts/progress-claims/${claimId}/lines`);
+  return safeGetList<ProgressClaimLine>(
+    `/v1/contracts/progress-claims/${claimId}/lines`,
+  );
 }
 
 /* ── Retention schedule ───────────────────────────────────────────────── */
 
-export function getRetentionSchedule(scheduleId: string): Promise<RetentionScheduleItem> {
+export function getRetentionSchedule(
+  scheduleId: string,
+): Promise<RetentionScheduleItem> {
   return apiGet<RetentionScheduleItem>(
     `/v1/contracts/retention-schedules/${scheduleId}`,
   );
@@ -443,7 +476,9 @@ export function getFeeStructure(feeId: string): Promise<FeeStructureItem> {
 
 /* ── Gainshare ────────────────────────────────────────────────────────── */
 
-export function getGainshareConfig(configId: string): Promise<GainshareConfigurationItem> {
+export function getGainshareConfig(
+  configId: string,
+): Promise<GainshareConfigurationItem> {
   return apiGet<GainshareConfigurationItem>(
     `/v1/contracts/gainshare-configurations/${configId}`,
   );
@@ -464,7 +499,7 @@ export function getFinalAccount(accountId: string): Promise<FinalAccountItem> {
 export function createFinalAccount(
   data: FinalAccountCreatePayload,
 ): Promise<FinalAccountItem> {
-  return apiPost<FinalAccountItem>('/v1/contracts/final-accounts/', data);
+  return apiPost<FinalAccountItem>("/v1/contracts/final-accounts/", data);
 }
 
 export function closeContract(
@@ -480,7 +515,9 @@ export function closeContract(
 /* ── Type configurations ──────────────────────────────────────────────── */
 
 export function listTypeConfigurations(): Promise<ContractTypeConfiguration[]> {
-  return safeGetList<ContractTypeConfiguration>('/v1/contracts/type-configurations/');
+  return safeGetList<ContractTypeConfiguration>(
+    "/v1/contracts/type-configurations/",
+  );
 }
 
 /* ── Back-compat aliases (old skeleton names) ─────────────────────────── */

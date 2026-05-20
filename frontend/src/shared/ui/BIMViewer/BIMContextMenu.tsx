@@ -7,8 +7,8 @@
  * hardcoded English.
  */
 
-import { useEffect, useRef, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ZoomIn,
   Clipboard,
@@ -22,8 +22,9 @@ import {
   Palette,
   SlidersHorizontal,
   Search,
-} from 'lucide-react';
-import type { BIMElementData } from './ElementManager';
+  RotateCcw,
+} from "lucide-react";
+import type { BIMElementData } from "./ElementManager";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -47,9 +48,16 @@ export interface BIMContextMenuActions {
   onCreateTask?: () => void;
   onIsolate?: () => void;
   onHide?: () => void;
+  /** W6.6 — restore visibility of all elements that were hidden via
+   *  `Hide selected` or `Isolate selection`. Disabled in the menu when
+   *  nothing is hidden. */
+  onShowAll?: () => void;
   onColorByCategory?: () => void;
   onShowInFilterPanel?: () => void;
   onShowSimilar?: () => void;
+  /** W6.6 — true when at least one element is currently hidden by
+   *  hide/isolate. Used to enable/disable the "Show all" menu item. */
+  hasHidden?: boolean;
 }
 
 interface BIMContextMenuProps {
@@ -64,30 +72,30 @@ interface BIMContextMenuProps {
 function categorySummary(elements: BIMElementData[]): string {
   const counts = new Map<string, number>();
   for (const el of elements) {
-    const cat = el.element_type || 'Unknown';
+    const cat = el.element_type || "Unknown";
     counts.set(cat, (counts.get(cat) ?? 0) + 1);
   }
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
     .map(([cat, n]) => `${cat} (${n})`)
-    .join(', ');
+    .join(", ");
 }
 
 /** Format a volume / area number for the header line. */
 function fmtQty(el: BIMElementData): string | null {
   const q = el.quantities;
   if (!q) return null;
-  const vol = q['volume'] ?? q['Volume'];
-  if (typeof vol === 'number' && vol > 0) {
+  const vol = q["volume"] ?? q["Volume"];
+  if (typeof vol === "number" && vol > 0) {
     return `${vol.toLocaleString(undefined, { maximumFractionDigits: 2 })} m\u00B3`;
   }
-  const area = q['area'] ?? q['Area'];
-  if (typeof area === 'number' && area > 0) {
+  const area = q["area"] ?? q["Area"];
+  if (typeof area === "number" && area > 0) {
     return `${area.toLocaleString(undefined, { maximumFractionDigits: 2 })} m\u00B2`;
   }
-  const len = q['length'] ?? q['Length'];
-  if (typeof len === 'number' && len > 0) {
+  const len = q["length"] ?? q["Length"];
+  if (typeof len === "number" && len > 0) {
     return `${len.toLocaleString(undefined, { maximumFractionDigits: 2 })} m`;
   }
   return null;
@@ -95,7 +103,11 @@ function fmtQty(el: BIMElementData): string | null {
 
 /* ── Component ─────────────────────────────────────────────────────────── */
 
-export function BIMContextMenu({ menu, actions, onClose }: BIMContextMenuProps) {
+export function BIMContextMenu({
+  menu,
+  actions,
+  onClose,
+}: BIMContextMenuProps) {
   const { t } = useTranslation();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -115,7 +127,7 @@ export function BIMContextMenu({ menu, actions, onClose }: BIMContextMenuProps) 
   // Close on Escape
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     },
     [onClose],
   );
@@ -125,13 +137,13 @@ export function BIMContextMenu({ menu, actions, onClose }: BIMContextMenuProps) 
 
   useEffect(() => {
     // Use capture so we catch the event before other click handlers
-    document.addEventListener('mousedown', handleClickOutside, true);
-    document.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('scroll', handleScroll, true);
+    document.addEventListener("mousedown", handleClickOutside, true);
+    document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("scroll", handleScroll, true);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside, true);
-      document.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('scroll', handleScroll, true);
+      document.removeEventListener("mousedown", handleClickOutside, true);
+      document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, [handleClickOutside, handleKeyDown, handleScroll]);
 
@@ -149,8 +161,8 @@ export function BIMContextMenu({ menu, actions, onClose }: BIMContextMenuProps) 
         {isMulti ? (
           <>
             <div className="text-xs font-bold text-content-primary">
-              {t('bim.ctx_multi_header', {
-                defaultValue: '{{count}} elements selected‌⁠‍',
+              {t("bim.ctx_multi_header", {
+                defaultValue: "{{count}} elements selected‌⁠‍",
                 count,
               })}
             </div>
@@ -184,13 +196,21 @@ export function BIMContextMenu({ menu, actions, onClose }: BIMContextMenuProps) 
           <>
             <MenuItem
               icon={ZoomIn}
-              label={t('bim.ctx_zoom', { defaultValue: 'Zoom to element‌⁠‍' })}
-              onClick={() => { actions.onZoomToElement?.(); onClose(); }}
+              label={t("bim.ctx_zoom", { defaultValue: "Zoom to element‌⁠‍" })}
+              onClick={() => {
+                actions.onZoomToElement?.();
+                onClose();
+              }}
             />
             <MenuItem
               icon={Clipboard}
-              label={t('bim.ctx_copy_props', { defaultValue: 'Copy properties‌⁠‍' })}
-              onClick={() => { actions.onCopyProperties?.(); onClose(); }}
+              label={t("bim.ctx_copy_props", {
+                defaultValue: "Copy properties‌⁠‍",
+              })}
+              onClick={() => {
+                actions.onCopyProperties?.();
+                onClose();
+              }}
             />
             <MenuDivider />
           </>
@@ -201,68 +221,126 @@ export function BIMContextMenu({ menu, actions, onClose }: BIMContextMenuProps) 
           icon={Plus}
           label={
             isMulti
-              ? t('bim.ctx_add_n_boq', {
-                  defaultValue: 'Add {{count}} to BOQ‌⁠‍',
+              ? t("bim.ctx_add_n_boq", {
+                  defaultValue: "Add {{count}} to BOQ‌⁠‍",
                   count,
                 })
-              : t('bim.ctx_add_boq', { defaultValue: 'Add to BOQ‌⁠‍' })
+              : t("bim.ctx_add_boq", { defaultValue: "Add to BOQ‌⁠‍" })
           }
-          onClick={() => { actions.onAddToBOQ?.(); onClose(); }}
+          onClick={() => {
+            actions.onAddToBOQ?.();
+            onClose();
+          }}
         />
         {!isMulti && (
           <>
             <MenuItem
               icon={Ruler}
-              label={t('bim.ctx_quantity_rule', { defaultValue: 'Create quantity rule' })}
-              onClick={() => { actions.onCreateQuantityRule?.(); onClose(); }}
+              label={t("bim.ctx_quantity_rule", {
+                defaultValue: "Create quantity rule",
+              })}
+              onClick={() => {
+                actions.onCreateQuantityRule?.();
+                onClose();
+              }}
             />
             <MenuItem
               icon={Paperclip}
-              label={t('bim.ctx_link_doc', { defaultValue: 'Link to document' })}
-              onClick={() => { actions.onLinkDocument?.(); onClose(); }}
+              label={t("bim.ctx_link_doc", {
+                defaultValue: "Link to document",
+              })}
+              onClick={() => {
+                actions.onLinkDocument?.();
+                onClose();
+              }}
             />
             <MenuItem
               icon={CalendarPlus}
-              label={t('bim.ctx_link_activity', { defaultValue: 'Link to schedule activity' })}
-              onClick={() => { actions.onLinkActivity?.(); onClose(); }}
+              label={t("bim.ctx_link_activity", {
+                defaultValue: "Link to schedule activity",
+              })}
+              onClick={() => {
+                actions.onLinkActivity?.();
+                onClose();
+              }}
             />
             <MenuItem
               icon={ListTodo}
-              label={t('bim.ctx_create_task', { defaultValue: 'Create task / issue' })}
-              onClick={() => { actions.onCreateTask?.(); onClose(); }}
+              label={t("bim.ctx_create_task", {
+                defaultValue: "Create task / issue",
+              })}
+              onClick={() => {
+                actions.onCreateTask?.();
+                onClose();
+              }}
             />
           </>
         )}
 
         <MenuDivider />
 
-        {/* Group 3: Visibility */}
+        {/* Group 3: Visibility — labelled "Solo Mode" (W6.6 Stream C) so the
+            hide / isolate / show-all triad reads as one feature. */}
+        <MenuGroupHeader
+          label={t("bim.solo_mode.group_header", { defaultValue: "Solo Mode" })}
+        />
         <MenuItem
           icon={Eye}
           label={
             isMulti
-              ? t('bim.ctx_isolate_selection', { defaultValue: 'Isolate selection' })
-              : t('bim.ctx_isolate', { defaultValue: 'Isolate (hide all others)' })
+              ? t("bim.ctx_isolate_selection", {
+                  defaultValue: "Isolate selection",
+                })
+              : t("bim.ctx_isolate", {
+                  defaultValue: "Isolate (hide all others)",
+                })
           }
-          onClick={() => { actions.onIsolate?.(); onClose(); }}
+          onClick={() => {
+            actions.onIsolate?.();
+            onClose();
+          }}
+          testId="bim-ctx-isolate"
         />
         <MenuItem
           icon={EyeOff}
           label={
             isMulti
-              ? t('bim.ctx_hide_selection', { defaultValue: 'Hide selection' })
-              : t('bim.ctx_hide', { defaultValue: 'Hide element' })
+              ? t("bim.ctx_hide_selection", { defaultValue: "Hide selection" })
+              : t("bim.ctx_hide", { defaultValue: "Hide element" })
           }
-          onClick={() => { actions.onHide?.(); onClose(); }}
+          onClick={() => {
+            actions.onHide?.();
+            onClose();
+          }}
+          testId="bim-ctx-hide"
         />
         <MenuItem
           icon={Palette}
           label={
             isMulti
-              ? t('bim.ctx_color_selection', { defaultValue: 'Color selection' })
-              : t('bim.ctx_color_category', { defaultValue: 'Color by category' })
+              ? t("bim.ctx_color_selection", {
+                  defaultValue: "Color selection",
+                })
+              : t("bim.ctx_color_category", {
+                  defaultValue: "Color by category",
+                })
           }
-          onClick={() => { actions.onColorByCategory?.(); onClose(); }}
+          onClick={() => {
+            actions.onColorByCategory?.();
+            onClose();
+          }}
+        />
+        {/* W6.6 — restore visibility of all hidden elements. Disabled when
+            nothing is hidden so the menu doesn't lie. */}
+        <MenuItem
+          icon={RotateCcw}
+          label={t("bim.ctx_show_all", { defaultValue: "Show all‌⁠‍" })}
+          onClick={() => {
+            actions.onShowAll?.();
+            onClose();
+          }}
+          disabled={!actions.hasHidden}
+          testId="bim-ctx-show-all"
         />
 
         <MenuDivider />
@@ -270,14 +348,24 @@ export function BIMContextMenu({ menu, actions, onClose }: BIMContextMenuProps) 
         {/* Group 4: Navigation */}
         <MenuItem
           icon={SlidersHorizontal}
-          label={t('bim.ctx_show_filter', { defaultValue: 'Show in filter panel' })}
-          onClick={() => { actions.onShowInFilterPanel?.(); onClose(); }}
+          label={t("bim.ctx_show_filter", {
+            defaultValue: "Show in filter panel",
+          })}
+          onClick={() => {
+            actions.onShowInFilterPanel?.();
+            onClose();
+          }}
         />
         {!isMulti && (
           <MenuItem
             icon={Search}
-            label={t('bim.ctx_show_similar', { defaultValue: 'Show similar elements' })}
-            onClick={() => { actions.onShowSimilar?.(); onClose(); }}
+            label={t("bim.ctx_show_similar", {
+              defaultValue: "Show similar elements",
+            })}
+            onClick={() => {
+              actions.onShowSimilar?.();
+              onClose();
+            }}
           />
         )}
       </div>
@@ -292,17 +380,21 @@ function MenuItem({
   label,
   onClick,
   disabled = false,
+  testId,
 }: {
   icon: React.ElementType;
   label: string;
   onClick: () => void;
   disabled?: boolean;
+  testId?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
+      aria-disabled={disabled || undefined}
+      data-testid={testId}
       className="flex items-center gap-2.5 w-full px-3 py-1.5 text-xs text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors disabled:opacity-40 disabled:pointer-events-none"
     >
       <Icon size={13} className="shrink-0 text-content-tertiary" />
@@ -313,6 +405,17 @@ function MenuItem({
 
 function MenuDivider() {
   return <div className="my-1 mx-2 border-t border-border-light" />;
+}
+
+/** Small section header rendered between groups (e.g. "Solo Mode"). Uses
+ *  the same tiny-uppercase styling as the right-panel section headers so
+ *  the menu reads as one design language. */
+function MenuGroupHeader({ label }: { label: string }) {
+  return (
+    <div className="px-3 pt-1.5 pb-0.5 text-[9px] font-semibold uppercase tracking-wider text-content-tertiary">
+      {label}
+    </div>
+  );
 }
 
 /* ── Position hook ────────────────────────────────────────────────────── */
@@ -327,8 +430,8 @@ function useMenuPosition(
   // For the first render we just use the raw position, which is good enough
   // since the menu is small and React will repaint almost instantly.
   const padding = 8;
-  const vw = typeof window !== 'undefined' ? window.innerWidth : 1920;
-  const vh = typeof window !== 'undefined' ? window.innerHeight : 1080;
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1920;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 1080;
 
   let left = x;
   let top = y;

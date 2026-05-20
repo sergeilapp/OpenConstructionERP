@@ -65,7 +65,7 @@ def _build_system_prompt(role: str, language: str, standard: str) -> str:
 def _build_context_prompt(state: ProjectState, score: ProjectScore) -> str:
     """‌⁠‍Serialize project state into a token-efficient prompt context."""
     lines = [
-        f"Project: \"{state.project_name}\" | Type: {state.project_type or 'unspecified'} "
+        f'Project: "{state.project_name}" | Type: {state.project_type or "unspecified"} '
         f"| Standard: {state.standard or 'unspecified'} | Region: {state.region or 'unspecified'} "
         f"| Currency: {state.currency or 'unspecified'}",
         f"Overall Score: {score.overall:.0f}/100 (Grade {score.overall_grade})",
@@ -74,9 +74,7 @@ def _build_context_prompt(state: ProjectState, score: ProjectScore) -> str:
 
     # Domain scores
     lines.append("DOMAIN SCORES:")
-    for domain, dscore in sorted(
-        score.domain_scores.items(), key=lambda x: -x[1]
-    ):
+    for domain, dscore in sorted(score.domain_scores.items(), key=lambda x: -x[1]):
         bar = "#" * int(dscore / 10) + "." * (10 - int(dscore / 10))
         lines.append(f"  {domain:12s} [{bar}] {dscore:.0f}%")
     lines.append("")
@@ -86,9 +84,7 @@ def _build_context_prompt(state: ProjectState, score: ProjectScore) -> str:
         lines.append("CRITICAL GAPS:")
         for gap in score.critical_gaps:
             count_str = f" ({gap.affected_count} items)" if gap.affected_count else ""
-            lines.append(
-                f"  [{gap.severity.upper()}] {gap.domain}: {gap.title}{count_str}"
-            )
+            lines.append(f"  [{gap.severity.upper()}] {gap.domain}: {gap.title}{count_str}")
             lines.append(f"    Impact: {gap.impact}")
         lines.append("")
 
@@ -127,15 +123,10 @@ async def _get_ai_settings(session: AsyncSession) -> Any:
     try:
         from sqlalchemy import text
 
-        row = (
-            await session.execute(
-                text("SELECT * FROM oe_ai_settings LIMIT 1")
-            )
-        ).first()
+        row = (await session.execute(text("SELECT * FROM oe_ai_settings LIMIT 1"))).first()
         return row
     except Exception:
         return None
-
 
 
 async def _resolve_provider(session: AsyncSession) -> tuple[str, str, str | None] | None:
@@ -181,7 +172,6 @@ async def generate_recommendations(
     if provider_info:
         try:
             from app.modules.ai.ai_client import call_ai
-
 
             provider, api_key, model_override = provider_info
             system = _build_system_prompt(role, language, state.standard)
@@ -229,7 +219,6 @@ async def explain_gap(
     if provider_info:
         try:
             from app.modules.ai.ai_client import call_ai
-
 
             provider, api_key, model_override = provider_info
             system = (
@@ -305,9 +294,7 @@ async def _retrieve_relevant_chunks(
         snippet = hit.snippet or hit.text or ""
         if len(snippet) > 280:
             snippet = snippet[:277].rstrip() + "…"
-        lines.append(
-            f"- [{hit.module}] {hit.title} (score {hit.score:.2f}): {snippet}"
-        )
+        lines.append(f"- [{hit.module}] {hit.title} (score {hit.score:.2f}): {snippet}")
     return "\n".join(lines)
 
 
@@ -337,7 +324,6 @@ async def answer_question(
         try:
             from app.modules.ai.ai_client import call_ai
 
-
             provider, api_key, model_override = provider_info
             system = _build_system_prompt(role, language, state.standard)
             context = _build_context_prompt(state, score)
@@ -346,9 +332,7 @@ async def answer_question(
             # turns the advisor from a structured-stats summarizer into a
             # genuine RAG agent — answers stay anchored in real evidence
             # instead of hallucinating from the structured project state alone.
-            project_id = (
-                str(getattr(state, "project_id", "")) or None
-            )
+            project_id = str(getattr(state, "project_id", "")) or None
             rag_context = await _retrieve_relevant_chunks(question, project_id)
             prompt_parts = [f"Project context:\n{context}"]
             if rag_context:
@@ -388,10 +372,7 @@ def _generate_fallback_recommendations(
     """Generate rule-based recommendations when no LLM is available."""
     lines: list[str] = []
 
-    lines.append(
-        f"Project \"{state.project_name}\" scores {score.overall:.0f}/100 "
-        f"(Grade {score.overall_grade})."
-    )
+    lines.append(f'Project "{state.project_name}" scores {score.overall:.0f}/100 (Grade {score.overall_grade}).')
     lines.append("")
 
     if not score.critical_gaps:

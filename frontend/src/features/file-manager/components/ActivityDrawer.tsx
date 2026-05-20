@@ -20,9 +20,9 @@
  *     is the source-of-truth and missing keys fall back gracefully.
  */
 
-import { useEffect, useMemo, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 import {
   Activity,
   AlertCircle,
@@ -34,11 +34,11 @@ import {
   User,
   X,
   type LucideIcon,
-} from 'lucide-react';
-import clsx from 'clsx';
+} from "lucide-react";
+import clsx from "clsx";
 
-import { apiGet } from '@/shared/lib/api';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
+import { apiGet } from "@/shared/lib/api";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
 
 // ── Types ────────────────────────────────────────────────────────────
 
@@ -59,7 +59,9 @@ export interface ActivityEvent {
  * The future envelope ``{items, total}`` is also accepted in case the
  * backend is upgraded ahead of the frontend.
  */
-type ActivityResponse = ActivityEvent[] | { items: ActivityEvent[]; total: number };
+type ActivityResponse =
+  | ActivityEvent[]
+  | { items: ActivityEvent[]; total: number };
 
 interface ActivityDrawerProps {
   /** Document id whose timeline we should fetch. ``null`` keeps the drawer closed. */
@@ -83,16 +85,18 @@ const ACTION_ICON: Record<string, LucideIcon> = {
 };
 
 const ACTION_CHIP: Record<string, string> = {
-  uploaded: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-  renamed: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  downloaded: 'bg-surface-secondary text-content-secondary',
-  deleted: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
-  cde_state_changed: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  uploaded:
+    "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300",
+  renamed: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+  downloaded: "bg-surface-secondary text-content-secondary",
+  deleted: "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300",
+  cde_state_changed:
+    "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
 };
 
 // ── Bucketing ────────────────────────────────────────────────────────
 
-type DateBucket = 'today' | 'yesterday' | 'earlier';
+type DateBucket = "today" | "yesterday" | "earlier";
 
 /** Bucket an ISO date string into Today / Yesterday / Earlier — same
     pattern as ``NotificationBell.bucketFor`` so the two surfaces feel
@@ -100,12 +104,16 @@ type DateBucket = 'today' | 'yesterday' | 'earlier';
 function bucketFor(dateStr: string): DateBucket {
   const created = new Date(dateStr);
   const now = new Date();
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
   const startOfYesterday = startOfToday - 24 * 60 * 60 * 1000;
   const t = created.getTime();
-  if (t >= startOfToday) return 'today';
-  if (t >= startOfYesterday) return 'yesterday';
-  return 'earlier';
+  if (t >= startOfToday) return "today";
+  if (t >= startOfYesterday) return "yesterday";
+  return "earlier";
 }
 
 // ── Metadata snippets ────────────────────────────────────────────────
@@ -114,21 +122,21 @@ function bucketFor(dateStr: string): DateBucket {
     Returns an empty string when nothing useful can be extracted so the
     UI just shows the chip + actor + timestamp. */
 function formatMeta(action: string, meta: Record<string, unknown>): string {
-  if (action === 'renamed') {
-    const oldName = typeof meta.old === 'string' ? meta.old : '';
-    const newName = typeof meta.new === 'string' ? meta.new : '';
+  if (action === "renamed") {
+    const oldName = typeof meta.old === "string" ? meta.old : "";
+    const newName = typeof meta.new === "string" ? meta.new : "";
     if (oldName && newName) return `${oldName} → ${newName}`;
   }
-  if (action === 'cde_state_changed') {
-    const oldState = typeof meta.old === 'string' ? meta.old : 'wip';
-    const newState = typeof meta.new === 'string' ? meta.new : '';
+  if (action === "cde_state_changed") {
+    const oldState = typeof meta.old === "string" ? meta.old : "wip";
+    const newState = typeof meta.new === "string" ? meta.new : "";
     if (newState) return `${oldState} → ${newState}`;
   }
-  if (action === 'uploaded' || action === 'deleted') {
-    const name = typeof meta.name === 'string' ? meta.name : '';
+  if (action === "uploaded" || action === "deleted") {
+    const name = typeof meta.name === "string" ? meta.name : "";
     return name;
   }
-  return '';
+  return "";
 }
 
 /** Pick the best label for the actor — explicit email wins, otherwise
@@ -151,16 +159,12 @@ export function ActivityDrawer({
   const panelRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch,
-    isFetching,
-  } = useQuery({
-    queryKey: ['document-activity', documentId],
+  const { data, isLoading, isError, refetch, isFetching } = useQuery({
+    queryKey: ["document-activity", documentId],
     queryFn: () =>
-      apiGet<ActivityResponse>(`/v1/documents/${documentId}/activity/?limit=100`),
+      apiGet<ActivityResponse>(
+        `/v1/documents/${documentId}/activity/?limit=100`,
+      ),
     /* Only run when we actually have a document id AND the drawer is
        open. Keeps the React Query cache from filling with stale entries
        when the user merely browses files without opening the drawer. */
@@ -188,17 +192,16 @@ export function ActivityDrawer({
     return buckets;
   }, [events]);
 
-  const totalCount =
-    data && !Array.isArray(data) ? data.total : events.length;
+  const totalCount = data && !Array.isArray(data) ? data.total : events.length;
 
   // Escape-to-close.
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
   // Initial focus on the close button so keyboard users land somewhere sane.
@@ -206,8 +209,8 @@ export function ActivityDrawer({
     if (open) closeBtnRef.current?.focus();
   }, [open]);
 
-  const unknownActorLabel = t('files.activity.actor_unknown', {
-    defaultValue: 'Unknown user‌⁠‍',
+  const unknownActorLabel = t("files.activity.actor_unknown", {
+    defaultValue: "Unknown user‌⁠‍",
   });
 
   return (
@@ -219,8 +222,10 @@ export function ActivityDrawer({
         aria-hidden="true"
         onClick={onClose}
         className={clsx(
-          'fixed inset-0 z-40 bg-black/30 transition-opacity duration-200',
-          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+          "fixed inset-0 z-40 bg-black/30 transition-opacity duration-200",
+          open
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none",
         )}
       />
 
@@ -232,11 +237,11 @@ export function ActivityDrawer({
         aria-labelledby="activity-drawer-title"
         data-testid="activity-drawer"
         className={clsx(
-          'fixed top-0 right-0 z-50 h-full w-[360px] max-w-[100vw]',
-          'border-s border-border-light bg-surface-elevated shadow-xl',
-          'transition-transform duration-200 ease-oe',
-          'flex flex-col',
-          open ? 'translate-x-0' : 'translate-x-full',
+          "fixed top-0 right-0 z-50 h-full w-[360px] max-w-[100vw]",
+          "border-s border-border-light bg-surface-elevated shadow-xl",
+          "transition-transform duration-200 ease-oe",
+          "flex flex-col",
+          open ? "translate-x-0" : "translate-x-full",
         )}
       >
         {/* Header */}
@@ -247,7 +252,7 @@ export function ActivityDrawer({
               className="flex items-center gap-1.5 text-sm font-semibold text-content-primary"
             >
               <Activity size={14} strokeWidth={2} />
-              {t('files.activity.title', { defaultValue: 'Activity‌⁠‍' })}
+              {t("files.activity.title", { defaultValue: "Activity‌⁠‍" })}
               {totalCount > 0 && (
                 <span className="text-2xs font-normal text-content-quaternary tabular-nums">
                   ({totalCount})
@@ -267,7 +272,7 @@ export function ActivityDrawer({
             ref={closeBtnRef}
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-content-tertiary hover:bg-surface-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
           >
             <X size={14} />
@@ -290,16 +295,16 @@ export function ActivityDrawer({
           ) : events.length === 0 ? (
             <ActivityEmptyState />
           ) : (
-            (['today', 'yesterday', 'earlier'] as const).map((bucket) => {
+            (["today", "yesterday", "earlier"] as const).map((bucket) => {
               const rows = grouped[bucket];
               if (rows.length === 0) return null;
               const bucketLabel = t(`files.activity.bucket.${bucket}`, {
                 defaultValue:
-                  bucket === 'today'
-                    ? 'Today'
-                    : bucket === 'yesterday'
-                    ? 'Yesterday'
-                    : 'Earlier',
+                  bucket === "today"
+                    ? "Today"
+                    : bucket === "yesterday"
+                      ? "Yesterday"
+                      : "Earlier",
               });
               return (
                 <section key={bucket} data-testid={`activity-bucket-${bucket}`}>
@@ -336,11 +341,12 @@ function ActivityRow({
 }) {
   const { t } = useTranslation();
   const Icon = ACTION_ICON[event.action] ?? Activity;
-  const chip = ACTION_CHIP[event.action] ?? 'bg-surface-secondary text-content-secondary';
+  const chip =
+    ACTION_CHIP[event.action] ?? "bg-surface-secondary text-content-secondary";
   const summary = formatMeta(event.action, event.meta ?? {});
   const actor = actorLabel(event, unknownActorLabel);
   const actionLabel = t(`files.activity.action.${event.action}`, {
-    defaultValue: event.action.replace(/_/g, ' '),
+    defaultValue: event.action.replace(/_/g, " "),
   });
 
   // Absolute timestamp for the hover title — the DateDisplay component
@@ -368,7 +374,7 @@ function ActivityRow({
         <div className="flex flex-wrap items-center gap-1.5">
           <span
             className={clsx(
-              'inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide',
+              "inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide",
               chip,
             )}
           >
@@ -398,7 +404,11 @@ function ActivityRow({
 
 function ActivitySkeleton() {
   return (
-    <div className="space-y-3 p-4" aria-busy="true" data-testid="activity-loading">
+    <div
+      className="space-y-3 p-4"
+      aria-busy="true"
+      data-testid="activity-loading"
+    >
       {[0, 1, 2, 3].map((i) => (
         <div key={i} className="flex items-start gap-2.5">
           <div className="h-7 w-7 shrink-0 animate-pulse rounded-md bg-surface-secondary" />
@@ -415,21 +425,21 @@ function ActivitySkeleton() {
 function ActivityEmptyState() {
   const { t } = useTranslation();
   return (
-    <div
-      className="px-6 py-12 text-center"
-      data-testid="activity-empty"
-    >
+    <div className="px-6 py-12 text-center" data-testid="activity-empty">
       <Activity
         size={24}
         strokeWidth={1.5}
         className="mx-auto mb-2 text-content-quaternary"
       />
       <p className="text-xs font-medium text-content-secondary">
-        {t('files.activity.empty_title', { defaultValue: 'No activity yet‌⁠‍' })}
+        {t("files.activity.empty_title", {
+          defaultValue: "No activity yet‌⁠‍",
+        })}
       </p>
       <p className="mt-1 text-2xs text-content-tertiary">
-        {t('files.activity.empty_hint', {
-          defaultValue: 'Uploads, renames, and other changes will show up here.‌⁠‍',
+        {t("files.activity.empty_hint", {
+          defaultValue:
+            "Uploads, renames, and other changes will show up here.‌⁠‍",
         })}
       </p>
     </div>
@@ -445,23 +455,20 @@ function ActivityErrorState({
 }) {
   const { t } = useTranslation();
   return (
-    <div
-      className="px-6 py-12 text-center"
-      data-testid="activity-error"
-    >
+    <div className="px-6 py-12 text-center" data-testid="activity-error">
       <AlertCircle
         size={22}
         strokeWidth={1.75}
         className="mx-auto mb-2 text-semantic-error"
       />
       <p className="text-xs font-medium text-content-secondary">
-        {t('files.activity.error_title', {
+        {t("files.activity.error_title", {
           defaultValue: "Couldn't load activity‌⁠‍",
         })}
       </p>
       <p className="mt-1 text-2xs text-content-tertiary">
-        {t('files.activity.error_hint', {
-          defaultValue: 'Check your connection and try again.',
+        {t("files.activity.error_hint", {
+          defaultValue: "Check your connection and try again.",
         })}
       </p>
       <button
@@ -472,8 +479,8 @@ function ActivityErrorState({
         className="mt-3 inline-flex items-center gap-1 rounded-md border border-border-light px-2.5 py-1 text-2xs font-medium text-content-primary hover:bg-surface-secondary disabled:opacity-50"
       >
         {retrying
-          ? t('common.loading', { defaultValue: 'Loading…' })
-          : t('common.retry', { defaultValue: 'Try again' })}
+          ? t("common.loading", { defaultValue: "Loading…" })
+          : t("common.retry", { defaultValue: "Try again" })}
       </button>
     </div>
   );

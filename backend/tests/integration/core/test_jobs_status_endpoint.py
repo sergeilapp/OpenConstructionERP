@@ -77,7 +77,9 @@ async def test_get_job_returns_404_for_unknown_id(client) -> None:
 
 @pytest.mark.asyncio
 async def test_get_job_returns_status_after_eager_dispatch(
-    client, session_factory, eager_celery,
+    client,
+    session_factory,
+    eager_celery,
 ) -> None:
     def noop(job_run, payload):
         return {"done": True}
@@ -85,7 +87,8 @@ async def test_get_job_returns_status_after_eager_dispatch(
     register_handler("status_endpoint.noop", noop)
 
     with patch(
-        "app.core.jobs_tasks._get_session_factory", return_value=session_factory,
+        "app.core.jobs_tasks._get_session_factory",
+        return_value=session_factory,
     ):
         jr = await submit_job(
             kind="status_endpoint.noop",
@@ -107,7 +110,9 @@ async def test_get_job_returns_status_after_eager_dispatch(
 
 @pytest.mark.asyncio
 async def test_list_jobs_supports_kind_filter(
-    client, session_factory, eager_celery,
+    client,
+    session_factory,
+    eager_celery,
 ) -> None:
     def noop(job_run, payload):
         return {}
@@ -115,13 +120,18 @@ async def test_list_jobs_supports_kind_filter(
     register_handler("status_endpoint.noop", noop)
 
     with patch(
-        "app.core.jobs_tasks._get_session_factory", return_value=session_factory,
+        "app.core.jobs_tasks._get_session_factory",
+        return_value=session_factory,
     ):
         await submit_job(
-            kind="status_endpoint.noop", payload={}, session_factory=session_factory,
+            kind="status_endpoint.noop",
+            payload={},
+            session_factory=session_factory,
         )
         await submit_job(
-            kind="status_endpoint.noop", payload={}, session_factory=session_factory,
+            kind="status_endpoint.noop",
+            payload={},
+            session_factory=session_factory,
         )
 
     resp = await client.get("/api/v1/jobs?kind=status_endpoint.noop&limit=10")
@@ -142,7 +152,8 @@ async def test_list_jobs_clamps_limit_to_max(client, session_factory) -> None:
 
 @pytest.mark.asyncio
 async def test_cancel_pending_job_marks_cancelled(
-    client, session_factory,
+    client,
+    session_factory,
 ) -> None:
     """Cancel on a still-pending job must transition status to 'cancelled'."""
     # Submit but do NOT enable eager mode → JobRun stays pending.
@@ -162,7 +173,9 @@ async def test_cancel_pending_job_marks_cancelled(
 
 @pytest.mark.asyncio
 async def test_cancel_already_succeeded_job_is_noop(
-    client, session_factory, eager_celery,
+    client,
+    session_factory,
+    eager_celery,
 ) -> None:
     """Cancel on a finished job is a 200 no-op (status unchanged)."""
 
@@ -172,7 +185,8 @@ async def test_cancel_already_succeeded_job_is_noop(
     register_handler("status_endpoint.noop", noop)
 
     with patch(
-        "app.core.jobs_tasks._get_session_factory", return_value=session_factory,
+        "app.core.jobs_tasks._get_session_factory",
+        return_value=session_factory,
     ):
         jr = await submit_job(
             kind="status_endpoint.noop",

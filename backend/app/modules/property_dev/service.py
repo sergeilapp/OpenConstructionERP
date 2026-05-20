@@ -304,9 +304,7 @@ def can_modify_selection(buyer: Any, today: date) -> bool:
     return today < deadline
 
 
-def derive_plot_construction_progress(
-    plot_id: uuid.UUID, work_packages: Iterable[dict[str, Any]]
-) -> Decimal:
+def derive_plot_construction_progress(plot_id: uuid.UUID, work_packages: Iterable[dict[str, Any]]) -> Decimal:
     """Return overall construction % for a plot from a work-package list.
 
     Each work package is expected to be a dict with ``plot_id``, ``weight``
@@ -374,8 +372,7 @@ _DEPOSIT_FORFEITURE_RULES: dict[str, tuple[Decimal, str, str]] = {
     "US": (
         Decimal("1.00"),
         "Uniform Land Transactions Act (state-by-state)",
-        "Earnest money typically forfeited on buyer default; "
-        "state-specific overrides may reduce amount.",
+        "Earnest money typically forfeited on buyer default; state-specific overrides may reduce amount.",
     ),
     "DE": (
         Decimal("0.00"),
@@ -386,22 +383,19 @@ _DEPOSIT_FORFEITURE_RULES: dict[str, tuple[Decimal, str, str]] = {
     "FR": (
         Decimal("1.00"),
         "Code civil Art. 1590 — arrhes",
-        "Buyer forfeits arrhes on rescission; seller delivers 2x arrhes "
-        "if seller withdraws.",
+        "Buyer forfeits arrhes on rescission; seller delivers 2x arrhes if seller withdraws.",
     ),
     "AU": (
         Decimal("1.00"),
         "Conveyancing Act (state-by-state) — typically 10% deposit",
-        "Buyer forfeits deposit on default after cooling-off (typically "
-        "5 business days).",
+        "Buyer forfeits deposit on default after cooling-off (typically 5 business days).",
     ),
 }
 
 _DEFAULT_FORFEITURE_RULE: tuple[Decimal, str, str] = (
     Decimal("1.00"),
     "Generic common-law forfeiture",
-    "No jurisdiction-specific rule loaded; full deposit forfeited "
-    "on buyer-initiated cancellation (generic default).",
+    "No jurisdiction-specific rule loaded; full deposit forfeited on buyer-initiated cancellation (generic default).",
 )
 
 
@@ -428,10 +422,7 @@ def compute_deposit_forfeiture(
             "forfeited_amount": Decimal("0"),
             "refundable_amount": amount,
             "rule_citation": "Pre-contract / cooling-off period",
-            "rule_summary": (
-                "Cancellation before contract exchange — full refund "
-                "regardless of jurisdiction."
-            ),
+            "rule_summary": ("Cancellation before contract exchange — full refund regardless of jurisdiction."),
         }
 
     rule = _DEPOSIT_FORFEITURE_RULES.get(code, _DEFAULT_FORFEITURE_RULE)
@@ -492,23 +483,19 @@ def compute_residual_appraisal(
     prof_pct = Decimal(str(developer_profit_target_pct or 0))
     cont_pct = Decimal(str(contingency_pct or 0))
 
-    professional_fees = (cc * pf_pct / Decimal("100"))
-    contingency = (cc * cont_pct / Decimal("100"))
-    sales_costs = (gdv * sc_pct / Decimal("100"))
-    developer_profit = (gdv * prof_pct / Decimal("100"))
+    professional_fees = cc * pf_pct / Decimal("100")
+    contingency = cc * cont_pct / Decimal("100")
+    sales_costs = gdv * sc_pct / Decimal("100")
+    developer_profit = gdv * prof_pct / Decimal("100")
 
-    total_costs_excl_land = (
-        cc + professional_fees + contingency + fin + sales_costs + developer_profit
-    )
+    total_costs_excl_land = cc + professional_fees + contingency + fin + sales_costs + developer_profit
     residual_land_value = gdv - total_costs_excl_land
 
     q = Decimal("0.01")
     pct_q = Decimal("0.0001")
     total_dev_cost = cc + professional_fees + contingency + fin + sales_costs
     # Profit metrics use the developer-profit line as the numerator.
-    profit_on_cost = (
-        (developer_profit / total_dev_cost) if total_dev_cost > 0 else Decimal("0")
-    )
+    profit_on_cost = (developer_profit / total_dev_cost) if total_dev_cost > 0 else Decimal("0")
     profit_on_gdv = (developer_profit / gdv) if gdv > 0 else Decimal("0")
 
     viable = residual_land_value >= 0
@@ -621,9 +608,7 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="Development not found")
         return obj
 
-    async def update_development(
-        self, dev_id: uuid.UUID, data: DevelopmentUpdate
-    ) -> Development:
+    async def update_development(self, dev_id: uuid.UUID, data: DevelopmentUpdate) -> Development:
         await self.get_development(dev_id)
         fields = _dump(data)
         await self.developments.update_fields(dev_id, **fields)
@@ -660,9 +645,7 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="HouseType not found")
         return obj
 
-    async def update_house_type(
-        self, ht_id: uuid.UUID, data: HouseTypeUpdate
-    ) -> HouseType:
+    async def update_house_type(self, ht_id: uuid.UUID, data: HouseTypeUpdate) -> HouseType:
         await self.get_house_type(ht_id)
         await self.house_types.update_fields(ht_id, **_dump(data))
         return await self.get_house_type(ht_id)
@@ -673,9 +656,7 @@ class PropertyDevService:
 
     # ── Variant ─────────────────────────────────────────────────────────
 
-    async def create_variant(
-        self, data: HouseTypeVariantCreate
-    ) -> HouseTypeVariant:
+    async def create_variant(self, data: HouseTypeVariantCreate) -> HouseTypeVariant:
         obj = HouseTypeVariant(
             house_type_id=data.house_type_id,
             code=data.code,
@@ -692,9 +673,7 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="Variant not found")
         return obj
 
-    async def update_variant(
-        self, v_id: uuid.UUID, data: HouseTypeVariantUpdate
-    ) -> HouseTypeVariant:
+    async def update_variant(self, v_id: uuid.UUID, data: HouseTypeVariantUpdate) -> HouseTypeVariant:
         await self.get_variant(v_id)
         await self.variants.update_fields(v_id, **_dump(data))
         return await self.get_variant(v_id)
@@ -734,9 +713,7 @@ class PropertyDevService:
         fields = _dump(data)
         new_status = fields.get("status")
         if new_status:
-            _ensure_transition(
-                "plot", plot.status, new_status, allowed_plot_transitions
-            )
+            _ensure_transition("plot", plot.status, new_status, allowed_plot_transitions)
         await self.plots.update_fields(plot_id, **fields)
         return await self.get_plot(plot_id)
 
@@ -744,9 +721,7 @@ class PropertyDevService:
         await self.get_plot(plot_id)
         await self.plots.delete(plot_id)
 
-    async def reserve_plot(
-        self, plot_id: uuid.UUID, data: PlotReserveRequest
-    ) -> tuple[Plot, Buyer]:
+    async def reserve_plot(self, plot_id: uuid.UUID, data: PlotReserveRequest) -> tuple[Plot, Buyer]:
         """Reserve a plot for a buyer.
 
         Raises:
@@ -763,11 +738,9 @@ class PropertyDevService:
         # ``Buyer.plot_id`` UNIQUE constraint would otherwise raise an
         # opaque IntegrityError at flush. Surface a clean 409 instead.
         existing_buyer = await self.buyers.get_for_plot(plot_id)
-        if (
-            existing_buyer is not None
-            and data.buyer_id is not None
-            and existing_buyer.id != data.buyer_id
-        ) or (existing_buyer is not None and data.buyer_id is None):
+        if (existing_buyer is not None and data.buyer_id is not None and existing_buyer.id != data.buyer_id) or (
+            existing_buyer is not None and data.buyer_id is None
+        ):
             raise HTTPException(
                 status_code=409,
                 detail="Plot is already assigned to a buyer",
@@ -790,9 +763,7 @@ class PropertyDevService:
             if buyer.status not in {"lead", "reserved"}:
                 raise HTTPException(
                     status_code=409,
-                    detail=(
-                        f"Buyer in status '{buyer.status}' cannot reserve a plot"
-                    ),
+                    detail=(f"Buyer in status '{buyer.status}' cannot reserve a plot"),
                 )
             # If the buyer was reserved against another plot, release that
             # plot back to ``planned`` so it does not stay orphaned in
@@ -800,12 +771,8 @@ class PropertyDevService:
             if buyer.plot_id is not None and buyer.plot_id != plot_id:
                 old_plot = await self.plots.get_by_id(buyer.plot_id)
                 if old_plot is not None and old_plot.status == "reserved":
-                    await self.plots.update_fields(
-                        buyer.plot_id, status="planned", reservation_deadline=None
-                    )
-            await self.buyers.update_fields(
-                buyer.id, plot_id=plot_id, status="reserved"
-            )
+                    await self.plots.update_fields(buyer.plot_id, status="planned", reservation_deadline=None)
+            await self.buyers.update_fields(buyer.id, plot_id=plot_id, status="reserved")
             buyer = await self.buyers.get_by_id(buyer.id)
         else:
             buyer = Buyer(
@@ -832,9 +799,7 @@ class PropertyDevService:
 
     # ── Option Group / Option ───────────────────────────────────────────
 
-    async def create_option_group(
-        self, data: BuyerOptionGroupCreate
-    ) -> BuyerOptionGroup:
+    async def create_option_group(self, data: BuyerOptionGroupCreate) -> BuyerOptionGroup:
         obj = BuyerOptionGroup(
             development_id=data.development_id,
             code=data.code,
@@ -854,9 +819,7 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="OptionGroup not found")
         return obj
 
-    async def update_option_group(
-        self, g_id: uuid.UUID, data: BuyerOptionGroupUpdate
-    ) -> BuyerOptionGroup:
+    async def update_option_group(self, g_id: uuid.UUID, data: BuyerOptionGroupUpdate) -> BuyerOptionGroup:
         await self.get_option_group(g_id)
         await self.option_groups.update_fields(g_id, **_dump(data))
         return await self.get_option_group(g_id)
@@ -888,9 +851,7 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="Option not found")
         return obj
 
-    async def update_option(
-        self, o_id: uuid.UUID, data: BuyerOptionUpdate
-    ) -> BuyerOption:
+    async def update_option(self, o_id: uuid.UUID, data: BuyerOptionUpdate) -> BuyerOption:
         await self.get_option(o_id)
         await self.options.update_fields(o_id, **_dump(data))
         return await self.get_option(o_id)
@@ -928,9 +889,7 @@ class PropertyDevService:
         fields = _dump(data)
         new_status = fields.get("status")
         if new_status:
-            _ensure_transition(
-                "buyer", buyer.status, new_status, allowed_buyer_transitions
-            )
+            _ensure_transition("buyer", buyer.status, new_status, allowed_buyer_transitions)
         await self.buyers.update_fields(b_id, **fields)
         return await self.get_buyer(b_id)
 
@@ -938,20 +897,14 @@ class PropertyDevService:
         await self.get_buyer(b_id)
         await self.buyers.delete(b_id)
 
-    async def convert_buyer_to_contracted(
-        self, buyer_id: uuid.UUID, data: BuyerContractRequest
-    ) -> Buyer:
+    async def convert_buyer_to_contracted(self, buyer_id: uuid.UUID, data: BuyerContractRequest) -> Buyer:
         """Walk a buyer up the lead → reserved → contracted path."""
         buyer = await self.get_buyer(buyer_id)
         if buyer.status == "lead":
-            _ensure_transition(
-                "buyer", buyer.status, "reserved", allowed_buyer_transitions
-            )
+            _ensure_transition("buyer", buyer.status, "reserved", allowed_buyer_transitions)
             await self.buyers.update_fields(buyer_id, status="reserved")
             buyer.status = "reserved"
-        _ensure_transition(
-            "buyer", buyer.status, "contracted", allowed_buyer_transitions
-        )
+        _ensure_transition("buyer", buyer.status, "contracted", allowed_buyer_transitions)
 
         fields: dict[str, Any] = {
             "status": "contracted",
@@ -985,9 +938,7 @@ class PropertyDevService:
 
         return contracted
 
-    async def cancel_buyer(
-        self, buyer_id: uuid.UUID, data: BuyerCancelRequest
-    ) -> tuple[Buyer, dict[str, Any]]:
+    async def cancel_buyer(self, buyer_id: uuid.UUID, data: BuyerCancelRequest) -> tuple[Buyer, dict[str, Any]]:
         """Cancel a buyer and compute deposit forfeiture per jurisdiction.
 
         Returns ``(buyer, forfeiture_breakdown)``. Updates the buyer's
@@ -1008,11 +959,7 @@ class PropertyDevService:
 
         # Pre-contract cancellations get full refund regardless of jurisdiction.
         cancelled_pre_contract = buyer.status in {"lead", "reserved"}
-        jurisdiction = (
-            data.jurisdiction_override.upper()
-            if data.jurisdiction_override
-            else (buyer.jurisdiction or "")
-        )
+        jurisdiction = data.jurisdiction_override.upper() if data.jurisdiction_override else (buyer.jurisdiction or "")
         forfeiture = compute_deposit_forfeiture(
             buyer.deposit_amount or Decimal("0"),
             jurisdiction,
@@ -1037,9 +984,7 @@ class PropertyDevService:
         if buyer.plot_id:
             plot = await self.plots.get_by_id(buyer.plot_id)
             if plot is not None and plot.status == "reserved":
-                await self.plots.update_fields(
-                    buyer.plot_id, status="planned", reservation_deadline=None
-                )
+                await self.plots.update_fields(buyer.plot_id, status="planned", reservation_deadline=None)
             elif plot is not None and plot.status == "sold":
                 await self.plots.update_fields(buyer.plot_id, status="ready")
 
@@ -1061,9 +1006,7 @@ class PropertyDevService:
 
     # ── Selection ───────────────────────────────────────────────────────
 
-    async def create_selection(
-        self, data: BuyerSelectionCreate
-    ) -> BuyerSelection:
+    async def create_selection(self, data: BuyerSelectionCreate) -> BuyerSelection:
         obj = BuyerSelection(
             buyer_id=data.buyer_id,
             status=data.status,
@@ -1078,16 +1021,12 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="Selection not found")
         return obj
 
-    async def update_selection(
-        self, s_id: uuid.UUID, data: BuyerSelectionUpdate
-    ) -> BuyerSelection:
+    async def update_selection(self, s_id: uuid.UUID, data: BuyerSelectionUpdate) -> BuyerSelection:
         sel = await self.get_selection(s_id)
         fields = _dump(data)
         new_status = fields.get("status")
         if new_status:
-            _ensure_transition(
-                "selection", sel.status, new_status, allowed_selection_transitions
-            )
+            _ensure_transition("selection", sel.status, new_status, allowed_selection_transitions)
         await self.selections.update_fields(s_id, **fields)
         return await self.get_selection(s_id)
 
@@ -1095,9 +1034,7 @@ class PropertyDevService:
         await self.get_selection(s_id)
         await self.selections.delete(s_id)
 
-    async def add_selection_item(
-        self, selection_id: uuid.UUID, data: BuyerSelectionItemCreate
-    ) -> BuyerSelectionItem:
+    async def add_selection_item(self, selection_id: uuid.UUID, data: BuyerSelectionItemCreate) -> BuyerSelectionItem:
         sel = await self.get_selection(selection_id)
         if sel.status in {"locked", "cancelled"}:
             raise HTTPException(
@@ -1110,11 +1047,7 @@ class PropertyDevService:
                 status_code=409,
                 detail="Option is no longer available",
             )
-        unit_price = (
-            data.unit_price_snapshot
-            if data.unit_price_snapshot is not None
-            else option.price_delta
-        )
+        unit_price = data.unit_price_snapshot if data.unit_price_snapshot is not None else option.price_delta
         item = BuyerSelectionItem(
             selection_id=selection_id,
             option_id=data.option_id,
@@ -1148,24 +1081,16 @@ class PropertyDevService:
         await self.selection_items.delete(item_id)
         await self._recompute_selection_total(item.selection_id)
 
-    async def _recompute_selection_total(
-        self, selection_id: uuid.UUID
-    ) -> Decimal:
+    async def _recompute_selection_total(self, selection_id: uuid.UUID) -> Decimal:
         items = await self.selection_items.list_for_selection(selection_id)
         total = compute_buyer_selection_total(items)
-        await self.selections.update_fields(
-            selection_id, total_options_value=total
-        )
+        await self.selections.update_fields(selection_id, total_options_value=total)
         return total
 
     async def submit_selection(self, selection_id: uuid.UUID) -> BuyerSelection:
         sel = await self.get_selection(selection_id)
-        _ensure_transition(
-            "selection", sel.status, "submitted", allowed_selection_transitions
-        )
-        await self.selections.update_fields(
-            selection_id, status="submitted", submitted_at=_today_iso()
-        )
+        _ensure_transition("selection", sel.status, "submitted", allowed_selection_transitions)
+        await self.selections.update_fields(selection_id, status="submitted", submitted_at=_today_iso())
         return await self.get_selection(selection_id)
 
     async def lock_selection(self, selection_id: uuid.UUID) -> BuyerSelection:
@@ -1175,12 +1100,8 @@ class PropertyDevService:
         if sel.status == "locked":
             return sel
         if sel.status not in {"draft", "submitted"}:
-            _ensure_transition(
-                "selection", sel.status, "locked", allowed_selection_transitions
-            )
-        await self.selections.update_fields(
-            selection_id, status="locked", locked_at=_today_iso()
-        )
+            _ensure_transition("selection", sel.status, "locked", allowed_selection_transitions)
+        await self.selections.update_fields(selection_id, status="locked", locked_at=_today_iso())
         locked = await self.get_selection(selection_id)
         event_bus.publish_detached(
             "property_dev.selection.locked",
@@ -1194,18 +1115,14 @@ class PropertyDevService:
         )
         return locked
 
-    async def submit_for_production(
-        self, buyer_id: uuid.UUID
-    ) -> BuyerSelection:
+    async def submit_for_production(self, buyer_id: uuid.UUID) -> BuyerSelection:
         """Flag every line in the buyer's locked selection as
         ``included_in_production`` so downstream procurement can pick it up.
         """
         buyer = await self.get_buyer(buyer_id)
         sel = await self.selections.current_selection_for_buyer(buyer_id)
         if sel is None:
-            raise HTTPException(
-                status_code=404, detail="No selection for buyer"
-            )
+            raise HTTPException(status_code=404, detail="No selection for buyer")
         if sel.status != "locked":
             raise HTTPException(
                 status_code=409,
@@ -1213,9 +1130,7 @@ class PropertyDevService:
             )
         items = await self.selection_items.list_for_selection(sel.id)
         for item in items:
-            await self.selection_items.update_fields(
-                item.id, included_in_production=True
-            )
+            await self.selection_items.update_fields(item.id, included_in_production=True)
 
         event_bus.publish_detached(
             "property_dev.selection.submitted_for_production",
@@ -1248,9 +1163,7 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="Handover not found")
         return obj
 
-    async def update_handover(
-        self, h_id: uuid.UUID, data: HandoverUpdate
-    ) -> Handover:
+    async def update_handover(self, h_id: uuid.UUID, data: HandoverUpdate) -> Handover:
         await self.get_handover(h_id)
         await self.handovers.update_fields(h_id, **_dump(data))
         return await self.get_handover(h_id)
@@ -1259,9 +1172,7 @@ class PropertyDevService:
         await self.get_handover(h_id)
         await self.handovers.delete(h_id)
 
-    async def complete_handover(
-        self, h_id: uuid.UUID, data: HandoverCompleteRequest
-    ) -> Handover:
+    async def complete_handover(self, h_id: uuid.UUID, data: HandoverCompleteRequest) -> Handover:
         handover = await self.get_handover(h_id)
         if handover.completed_at:
             return handover
@@ -1335,24 +1246,16 @@ class PropertyDevService:
         await self.get_snag(s_id)
         await self.snags.delete(s_id)
 
-    async def mark_snag_fixed(
-        self, s_id: uuid.UUID, *, fix_notes: str | None = None
-    ) -> Snag:
+    async def mark_snag_fixed(self, s_id: uuid.UUID, *, fix_notes: str | None = None) -> Snag:
         snag = await self.get_snag(s_id)
         if snag.status == "fixed":
             return snag
-        await self.snags.update_fields(
-            s_id, status="fixed", fixed_at=_today_iso(), fix_notes=fix_notes
-        )
+        await self.snags.update_fields(s_id, status="fixed", fixed_at=_today_iso(), fix_notes=fix_notes)
         return await self.get_snag(s_id)
 
-    async def mark_snag_wont_fix(
-        self, s_id: uuid.UUID, *, fix_notes: str | None = None
-    ) -> Snag:
+    async def mark_snag_wont_fix(self, s_id: uuid.UUID, *, fix_notes: str | None = None) -> Snag:
         await self.get_snag(s_id)
-        await self.snags.update_fields(
-            s_id, status="wont_fix", fix_notes=fix_notes
-        )
+        await self.snags.update_fields(s_id, status="wont_fix", fix_notes=fix_notes)
         return await self.get_snag(s_id)
 
     # ── Warranty ────────────────────────────────────────────────────────
@@ -1390,16 +1293,12 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="WarrantyClaim not found")
         return obj
 
-    async def update_warranty(
-        self, w_id: uuid.UUID, data: WarrantyClaimUpdate
-    ) -> WarrantyClaim:
+    async def update_warranty(self, w_id: uuid.UUID, data: WarrantyClaimUpdate) -> WarrantyClaim:
         claim = await self.get_warranty(w_id)
         fields = _dump(data)
         new_status = fields.get("status")
         if new_status:
-            _ensure_transition(
-                "warranty", claim.status, new_status, allowed_warranty_transitions
-            )
+            _ensure_transition("warranty", claim.status, new_status, allowed_warranty_transitions)
         await self.warranty.update_fields(w_id, **fields)
         return await self.get_warranty(w_id)
 
@@ -1409,57 +1308,35 @@ class PropertyDevService:
 
     async def warranty_accept(self, w_id: uuid.UUID) -> WarrantyClaim:
         claim = await self.get_warranty(w_id)
-        _ensure_transition(
-            "warranty", claim.status, "accepted", allowed_warranty_transitions
-        )
-        await self.warranty.update_fields(
-            w_id, status="accepted", accepted_at=_today_iso()
-        )
+        _ensure_transition("warranty", claim.status, "accepted", allowed_warranty_transitions)
+        await self.warranty.update_fields(w_id, status="accepted", accepted_at=_today_iso())
         return await self.get_warranty(w_id)
 
     async def warranty_reject(self, w_id: uuid.UUID) -> WarrantyClaim:
         claim = await self.get_warranty(w_id)
-        _ensure_transition(
-            "warranty", claim.status, "rejected", allowed_warranty_transitions
-        )
+        _ensure_transition("warranty", claim.status, "rejected", allowed_warranty_transitions)
         await self.warranty.update_fields(w_id, status="rejected")
         return await self.get_warranty(w_id)
 
     async def warranty_close(self, w_id: uuid.UUID) -> WarrantyClaim:
         claim = await self.get_warranty(w_id)
-        _ensure_transition(
-            "warranty", claim.status, "closed", allowed_warranty_transitions
-        )
-        await self.warranty.update_fields(
-            w_id, status="closed", closed_at=_today_iso()
-        )
+        _ensure_transition("warranty", claim.status, "closed", allowed_warranty_transitions)
+        await self.warranty.update_fields(w_id, status="closed", closed_at=_today_iso())
         return await self.get_warranty(w_id)
 
     # ── Dashboards ──────────────────────────────────────────────────────
 
-    async def development_sales_dashboard(
-        self, dev_id: uuid.UUID
-    ) -> dict[str, Any]:
+    async def development_sales_dashboard(self, dev_id: uuid.UUID) -> dict[str, Any]:
         dev = await self.get_development(dev_id)
         plots_by_status = await self.plots.count_for_development_by_status(dev_id)
         buyers_by_status = await self.buyers.count_for_development_by_status(dev_id)
-        contracted_value = await self.buyers.sum_contract_value(
-            dev_id, status_in=["contracted", "completed"]
-        )
+        contracted_value = await self.buyers.sum_contract_value(dev_id, status_in=["contracted", "completed"])
         open_snags = await self.snags.count_open_for_development(dev_id)
         open_warranty = await self.warranty.count_open_for_development(dev_id)
-        completed_handovers, scheduled_handovers = (
-            await self.handovers.count_progress_for_development(dev_id)
-        )
+        completed_handovers, scheduled_handovers = await self.handovers.count_progress_for_development(dev_id)
         total_plots = sum(plots_by_status.values()) or 0
-        sold = plots_by_status.get("sold", 0) + plots_by_status.get(
-            "handed_over", 0
-        )
-        sell_through = (
-            Decimal(sold) / Decimal(total_plots) * Decimal("100")
-            if total_plots
-            else Decimal("0")
-        )
+        sold = plots_by_status.get("sold", 0) + plots_by_status.get("handed_over", 0)
+        sell_through = Decimal(sold) / Decimal(total_plots) * Decimal("100") if total_plots else Decimal("0")
         return {
             "development_id": dev.id,
             "total_plots": total_plots,
@@ -1475,9 +1352,7 @@ class PropertyDevService:
 
     # ── Handover docs ───────────────────────────────────────────────────
 
-    async def create_handover_doc(
-        self, data: HandoverDocCreate
-    ) -> HandoverDoc:
+    async def create_handover_doc(self, data: HandoverDocCreate) -> HandoverDoc:
         await self.get_handover(data.handover_id)
         obj = HandoverDoc(
             handover_id=data.handover_id,
@@ -1497,9 +1372,7 @@ class PropertyDevService:
             raise HTTPException(status_code=404, detail="HandoverDoc not found")
         return obj
 
-    async def update_handover_doc(
-        self, doc_id: uuid.UUID, data: HandoverDocUpdate
-    ) -> HandoverDoc:
+    async def update_handover_doc(self, doc_id: uuid.UUID, data: HandoverDocUpdate) -> HandoverDoc:
         doc = await self.get_handover_doc(doc_id)
         fields = _dump(data)
         # Stamp delivered_at when flipping is_delivered → True.
@@ -1538,14 +1411,12 @@ class PropertyDevService:
         # Stable column order for the UI.
         column_order = ("lead", "reserved", "contracted", "completed", "cancelled")
         columns: dict[str, dict[str, Any]] = {
-            s: {"status": s, "buyers": [], "count": 0, "total_value": Decimal("0")}
-            for s in column_order
+            s: {"status": s, "buyers": [], "count": 0, "total_value": Decimal("0")} for s in column_order
         }
         for buyer, plot in rows:
             col = columns.setdefault(
                 buyer.status,
-                {"status": buyer.status, "buyers": [], "count": 0,
-                 "total_value": Decimal("0")},
+                {"status": buyer.status, "buyers": [], "count": 0, "total_value": Decimal("0")},
             )
             col["buyers"].append(
                 {
@@ -1577,7 +1448,9 @@ class PropertyDevService:
         """Upcoming reservation + freeze + contract deadlines."""
         await self.get_development(dev_id)
         rows = await self.pipeline.reservation_calendar(
-            dev_id, period_start, period_end,
+            dev_id,
+            period_start,
+            period_end,
         )
         entries: list[dict[str, Any]] = []
         for plot, buyer in rows:
@@ -1648,9 +1521,7 @@ class PropertyDevService:
                     contract_buyer_count += 1
                 if buyer.status in {"reserved", "contracted"}:
                     deposits_held += Decimal(str(buyer.deposit_amount or 0))
-                deposits_forfeited += Decimal(
-                    str(buyer.deposit_forfeited or 0)
-                )
+                deposits_forfeited += Decimal(str(buyer.deposit_forfeited or 0))
             if plot is not None and plot.status == "sold":
                 plot_count_sold += 1
             if plot is not None and plot.status == "handed_over":
@@ -1660,9 +1531,9 @@ class PropertyDevService:
         # the count of *sold plots* (mismatched populations: a contracted
         # buyer's plot is usually still under construction, not "sold").
         avg_sale = (
-            (contract_revenue_total / Decimal(contract_buyer_count))
-            .quantize(Decimal("0.01"))
-            if contract_buyer_count else Decimal("0")
+            (contract_revenue_total / Decimal(contract_buyer_count)).quantize(Decimal("0.01"))
+            if contract_buyer_count
+            else Decimal("0")
         )
         open_warranty = await self.warranty.count_open_for_development(dev_id)
         open_snags = await self.snags.count_open_for_development(dev_id)

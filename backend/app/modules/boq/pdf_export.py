@@ -505,8 +505,7 @@ def _build_cover_page(
             Paragraph(
                 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prepared by: "
-                + html.escape(prepared_by, quote=True),
+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prepared by: " + html.escape(prepared_by, quote=True),
                 styles["subtitle"],
             )
         )

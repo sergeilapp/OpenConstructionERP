@@ -41,13 +41,19 @@ class DwgDrawing(Base):
     # two-point tool land here too, so the server has a single source of
     # truth instead of scattering ratios across client localStorage.
     scale_denominator: Mapped[float] = mapped_column(
-        Float, nullable=False, default=1.0, server_default="1.0",
+        Float,
+        nullable=False,
+        default=1.0,
+        server_default="1.0",
     )
     # Which scale mode the user last used. Kept so the UI returns to
     # the same tab on reload instead of defaulting back to presets.
     # Values: "preset" | "calibrated" | "per_annotation".
     scale_mode: Mapped[str] = mapped_column(
-        String(30), nullable=False, default="preset", server_default="preset",
+        String(30),
+        nullable=False,
+        default="preset",
+        server_default="preset",
     )
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
         "metadata",
@@ -58,9 +64,7 @@ class DwgDrawing(Base):
     )
     created_by: Mapped[str] = mapped_column(String(255), nullable=False, default="")
 
-    __table_args__ = (
-        Index("ix_dwg_drawing_project_status", "project_id", "status"),
-    )
+    __table_args__ = (Index("ix_dwg_drawing_project_status", "project_id", "status"),)
 
     def __repr__(self) -> str:
         return f"<DwgDrawing {self.name} ({self.file_format}) [{self.status}]>"
@@ -201,9 +205,7 @@ class DwgEntityGroup(Base):
     )
     created_by: Mapped[str] = mapped_column(String(255), nullable=False, default="")
 
-    __table_args__ = (
-        Index("ix_dwg_entity_group_drawing", "drawing_id"),
-    )
+    __table_args__ = (Index("ix_dwg_entity_group_drawing", "drawing_id"),)
 
     def __repr__(self) -> str:
         return f"<DwgEntityGroup {self.name} drawing={self.drawing_id} n={len(self.entity_ids or [])}>"

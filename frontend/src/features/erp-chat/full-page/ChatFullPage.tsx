@@ -1,21 +1,21 @@
-import { useCallback } from 'react';
-import { Group, Panel, Separator } from 'react-resizable-panels';
-import type { Layout } from 'react-resizable-panels';
-import './chat-tokens.css';
-import { useChatFullPage } from './useChatFullPage';
-import ChatLeftPanel from './left/ChatLeftPanel';
-import DataRightPanel from './right/DataRightPanel';
-import AIConfigBanner from './AIConfigBanner';
-import { useThemeStore } from '@/stores/useThemeStore';
+import { useCallback } from "react";
+import { Group, Panel, Separator } from "react-resizable-panels";
+import type { Layout } from "react-resizable-panels";
+import "./chat-tokens.css";
+import { useChatFullPage } from "./useChatFullPage";
+import ChatLeftPanel from "./left/ChatLeftPanel";
+import DataRightPanel from "./right/DataRightPanel";
+import AIConfigBanner from "./AIConfigBanner";
+import { useThemeStore } from "@/stores/useThemeStore";
 
-const PANEL_STORAGE_KEY = 'chat-panel-sizes';
+const PANEL_STORAGE_KEY = "chat-panel-sizes";
 
 function loadSavedLayout(): Layout | undefined {
   try {
     const raw = localStorage.getItem(PANEL_STORAGE_KEY);
     if (!raw) return undefined;
     const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
       return parsed as Layout;
     }
     return undefined;
@@ -24,8 +24,8 @@ function loadSavedLayout(): Layout | undefined {
   }
 }
 
-const LEFT_PANEL_ID = 'chat-left';
-const RIGHT_PANEL_ID = 'chat-right';
+const LEFT_PANEL_ID = "chat-left";
+const RIGHT_PANEL_ID = "chat-right";
 
 export default function ChatFullPage() {
   const {
@@ -65,12 +65,12 @@ export default function ChatFullPage() {
       className="-mx-4 sm:-mx-7 -mt-6 -mb-6 border-l border-border-light"
       data-chat-theme={resolvedTheme}
       style={{
-        height: 'calc(100vh - 56px)',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'var(--chat-bg)',
-        color: 'var(--chat-text-primary)',
-        overflow: 'hidden',
+        height: "calc(100vh - 56px)",
+        display: "flex",
+        flexDirection: "column",
+        background: "var(--chat-bg)",
+        color: "var(--chat-text-primary)",
+        overflow: "hidden",
       }}
     >
       {/* The redundant chat-specific top bar ("ERP AI Assistant" + back +
@@ -80,7 +80,7 @@ export default function ChatFullPage() {
           bar (left panel). */}
       <AIConfigBanner />
 
-      <div style={{ flex: 1, overflow: 'hidden' }}>
+      <div style={{ flex: 1, overflow: "hidden" }}>
         <Group
           orientation="horizontal"
           onLayoutChanged={handleLayoutChanged}
@@ -105,17 +105,13 @@ export default function ChatFullPage() {
           <Separator
             style={{
               width: 4,
-              background: 'var(--chat-border)',
-              cursor: 'col-resize',
-              transition: 'background 0.15s',
+              background: "var(--chat-border)",
+              cursor: "col-resize",
+              transition: "background 0.15s",
             }}
           />
 
-          <Panel
-            id={RIGHT_PANEL_ID}
-            defaultSize="62%"
-            minSize="40%"
-          >
+          <Panel id={RIGHT_PANEL_ID} defaultSize="62%" minSize="40%">
             <DataRightPanel
               entries={dataPanelEntries}
               activeIndex={activePanelIndex}

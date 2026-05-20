@@ -7,21 +7,25 @@
  * use a lightweight approach).
  */
 
-import type { ExchangePosition, ColumnMapping, ImportParseResult } from './templateTypes';
+import type {
+  ExchangePosition,
+  ColumnMapping,
+  ImportParseResult,
+} from "./templateTypes";
 
 /** Parse CSV text into rows. */
 function parseCSV(text: string): string[][] {
   const lines = text.split(/\r?\n/).filter((l) => l.trim());
   return lines.map((line) => {
     const cells: string[] = [];
-    let current = '';
+    let current = "";
     let inQuotes = false;
     for (const ch of line) {
       if (ch === '"') {
         inQuotes = !inQuotes;
-      } else if ((ch === ',' || ch === ';' || ch === '\t') && !inQuotes) {
+      } else if ((ch === "," || ch === ";" || ch === "\t") && !inQuotes) {
         cells.push(current.trim());
-        current = '';
+        current = "";
       } else {
         current += ch;
       }
@@ -37,17 +41,26 @@ export function detectColumns(headers: string[]): ColumnMapping {
   const lower = headers.map((h) => h.toLowerCase().trim());
 
   for (let i = 0; i < lower.length; i++) {
-    const h = lower[i] ?? '';
+    const h = lower[i] ?? "";
     if (!h) continue;
     const col = String(i);
     if (/^(ordinal|pos|no\.?|item|ref|code)$/i.test(h)) mapping.ordinal = col;
-    else if (/^(description|desc|text|bezeichnung|libellé|désignation)$/i.test(h)) mapping.description = col;
+    else if (
+      /^(description|desc|text|bezeichnung|libellé|désignation)$/i.test(h)
+    )
+      mapping.description = col;
     else if (/^(unit|uom|einheit|unité)$/i.test(h)) mapping.unit = col;
     else if (/^(qty|quantity|menge|quantité)$/i.test(h)) mapping.quantity = col;
-    else if (/^(rate|unit.?rate|price|ep|einheitspreis|prix.?unitaire)$/i.test(h)) mapping.unitRate = col;
-    else if (/^(total|amount|gp|gesamtpreis|montant)$/i.test(h)) mapping.total = col;
-    else if (/^(section|group|trade|lot|gewerk)$/i.test(h)) mapping.section = col;
-    else if (/^(class|classification|code|nrm|masterformat|din)$/i.test(h)) mapping.classification = col;
+    else if (
+      /^(rate|unit.?rate|price|ep|einheitspreis|prix.?unitaire)$/i.test(h)
+    )
+      mapping.unitRate = col;
+    else if (/^(total|amount|gp|gesamtpreis|montant)$/i.test(h))
+      mapping.total = col;
+    else if (/^(section|group|trade|lot|gewerk)$/i.test(h))
+      mapping.section = col;
+    else if (/^(class|classification|code|nrm|masterformat|din)$/i.test(h))
+      mapping.classification = col;
   }
 
   return mapping;
@@ -58,15 +71,15 @@ export function detectColumns(headers: string[]): ColumnMapping {
  * Handles both US (1,500.00) and EU (1.500,00) conventions.
  */
 function parseNum(raw: string): number {
-  const s = raw.replace(/[^\d.,\-]/g, '');
+  const s = raw.replace(/[^\d.,\-]/g, "");
   if (!s) return 0;
   // Detect European format: digits.digits,digits (dot = thousands, comma = decimal)
   if (/\d\.\d{3}(,|$)/.test(s)) {
     // European: remove dots (thousands sep), replace comma with dot (decimal)
-    return parseFloat(s.replace(/\./g, '').replace(',', '.')) || 0;
+    return parseFloat(s.replace(/\./g, "").replace(",", ".")) || 0;
   }
   // Otherwise treat comma as decimal separator (e.g., "25,50")
-  return parseFloat(s.replace(',', '.')) || 0;
+  return parseFloat(s.replace(",", ".")) || 0;
 }
 
 /** Parse a CSV/TSV file into ExchangePositions using the given column mapping. */
@@ -86,32 +99,34 @@ export function parseSpreadsheetData(
 
     const getCol = (key: keyof ColumnMapping): string => {
       const colIdx = mapping[key];
-      if (colIdx == null) return '';
-      return row[parseInt(colIdx, 10)] ?? '';
+      if (colIdx == null) return "";
+      return row[parseInt(colIdx, 10)] ?? "";
     };
 
-    const description = getCol('description');
+    const description = getCol("description");
     if (!description) continue; // skip rows without description
 
-    const qty = parseNum(getCol('quantity'));
-    const rate = parseNum(getCol('unitRate'));
-    const rawTotal = getCol('total');
+    const qty = parseNum(getCol("quantity"));
+    const rate = parseNum(getCol("unitRate"));
+    const rawTotal = getCol("total");
     const total = rawTotal ? parseNum(rawTotal) || qty * rate : qty * rate;
 
     positions.push({
-      ordinal: getCol('ordinal') || String(i + 1),
+      ordinal: getCol("ordinal") || String(i + 1),
       description,
-      unit: getCol('unit') || 'pcs',
+      unit: getCol("unit") || "pcs",
       quantity: qty,
       unitRate: rate,
       total,
-      section: getCol('section') || undefined,
-      classification: getCol('classification') ? { code: getCol('classification') } : undefined,
+      section: getCol("section") || undefined,
+      classification: getCol("classification")
+        ? { code: getCol("classification") }
+        : undefined,
     });
   }
 
   if (positions.length === 0) {
-    errors.push('No valid positions found in the file.');
+    errors.push("No valid positions found in the file.");
   }
 
   return {
@@ -134,7 +149,11 @@ export async function parseExcelFile(
   const rows = parseCSV(text);
 
   if (rows.length < 2) {
-    return { positions: [], warnings: [], errors: ['File is empty or has insufficient data.'] };
+    return {
+      positions: [],
+      warnings: [],
+      errors: ["File is empty or has insufficient data."],
+    };
   }
 
   const mapping = overrideMapping ?? detectColumns(rows[0]!);

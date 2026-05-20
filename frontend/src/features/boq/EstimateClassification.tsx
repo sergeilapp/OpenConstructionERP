@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { ChevronDown, ChevronUp, Info } from 'lucide-react';
-import { boqApi } from './api';
-import { ApiError } from '@/shared/lib/api';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, ChevronUp, Info } from "lucide-react";
+import { boqApi } from "./api";
+import { ApiError } from "@/shared/lib/api";
 
 /* ── Class color & style mapping ──────────────────────────────────────── */
 
@@ -17,48 +17,48 @@ interface ClassStyle {
 
 const CLASS_STYLES: Record<number, ClassStyle> = {
   5: {
-    bg: 'bg-semantic-error-bg',
-    text: 'text-semantic-error',
-    border: 'border-semantic-error/30',
-    ring: 'ring-semantic-error/20',
-    barColor: 'bg-semantic-error',
+    bg: "bg-semantic-error-bg",
+    text: "text-semantic-error",
+    border: "border-semantic-error/30",
+    ring: "ring-semantic-error/20",
+    barColor: "bg-semantic-error",
   },
   4: {
-    bg: 'bg-semantic-warning-bg',
-    text: 'text-[#b45309]',
-    border: 'border-semantic-warning/30',
-    ring: 'ring-semantic-warning/20',
-    barColor: 'bg-semantic-warning',
+    bg: "bg-semantic-warning-bg",
+    text: "text-[#b45309]",
+    border: "border-semantic-warning/30",
+    ring: "ring-semantic-warning/20",
+    barColor: "bg-semantic-warning",
   },
   3: {
-    bg: 'bg-amber-50 dark:bg-amber-950/30',
-    text: 'text-amber-700 dark:text-amber-400',
-    border: 'border-amber-300/40',
-    ring: 'ring-amber-200/30',
-    barColor: 'bg-amber-500',
+    bg: "bg-amber-50 dark:bg-amber-950/30",
+    text: "text-amber-700 dark:text-amber-400",
+    border: "border-amber-300/40",
+    ring: "ring-amber-200/30",
+    barColor: "bg-amber-500",
   },
   2: {
-    bg: 'bg-oe-blue-subtle',
-    text: 'text-oe-blue',
-    border: 'border-oe-blue/30',
-    ring: 'ring-oe-blue/20',
-    barColor: 'bg-oe-blue',
+    bg: "bg-oe-blue-subtle",
+    text: "text-oe-blue",
+    border: "border-oe-blue/30",
+    ring: "ring-oe-blue/20",
+    barColor: "bg-oe-blue",
   },
   1: {
-    bg: 'bg-semantic-success-bg',
-    text: 'text-semantic-success',
-    border: 'border-semantic-success/30',
-    ring: 'ring-semantic-success/20',
-    barColor: 'bg-semantic-success',
+    bg: "bg-semantic-success-bg",
+    text: "text-semantic-success",
+    border: "border-semantic-success/30",
+    ring: "ring-semantic-success/20",
+    barColor: "bg-semantic-success",
   },
 };
 
 const DEFAULT_CLASS_STYLE: ClassStyle = {
-  bg: 'bg-semantic-error-bg',
-  text: 'text-semantic-error',
-  border: 'border-semantic-error/30',
-  ring: 'ring-semantic-error/20',
-  barColor: 'bg-semantic-error',
+  bg: "bg-semantic-error-bg",
+  text: "text-semantic-error",
+  border: "border-semantic-error/30",
+  ring: "ring-semantic-error/20",
+  barColor: "bg-semantic-error",
 };
 
 function getClassStyle(cls: number): ClassStyle {
@@ -77,8 +77,8 @@ function AccuracyBar({
   style: ClassStyle;
 }) {
   // Parse percentage strings like "-50%" and "+100%"
-  const lowNum = parseInt(low.replace('%', ''), 10);
-  const highNum = parseInt(high.replace('%', ''), 10);
+  const lowNum = parseInt(low.replace("%", ""), 10);
+  const highNum = parseInt(high.replace("%", ""), 10);
 
   // Map to 0-100 scale: -50% maps to 0, +100% maps to 100
   // We use a range of -50 to +100 as the full scale
@@ -86,8 +86,14 @@ function AccuracyBar({
   const scaleMax = 100;
   const range = scaleMax - scaleMin;
 
-  const leftPct = Math.max(0, Math.min(100, ((lowNum - scaleMin) / range) * 100));
-  const rightPct = Math.max(0, Math.min(100, ((highNum - scaleMin) / range) * 100));
+  const leftPct = Math.max(
+    0,
+    Math.min(100, ((lowNum - scaleMin) / range) * 100),
+  );
+  const rightPct = Math.max(
+    0,
+    Math.min(100, ((highNum - scaleMin) / range) * 100),
+  );
   const barWidth = rightPct - leftPct;
 
   // Center marker position (0% = project estimate)
@@ -110,7 +116,10 @@ function AccuracyBar({
       {/* Right label */}
       <span
         className="absolute top-0.5 text-2xs font-mono font-medium"
-        style={{ left: `${Math.min(rightPct - 1, 95)}%`, transform: 'translateX(-100%)' }}
+        style={{
+          left: `${Math.min(rightPct - 1, 95)}%`,
+          transform: "translateX(-100%)",
+        }}
       >
         <span className={style.text}>{high}</span>
       </span>
@@ -122,7 +131,7 @@ function AccuracyBar({
       {/* Bottom tick labels */}
       <span
         className="absolute bottom-0 text-[9px] text-content-tertiary font-mono"
-        style={{ left: `${centerPct}%`, transform: 'translateX(-50%)' }}
+        style={{ left: `${centerPct}%`, transform: "translateX(-50%)" }}
       >
         0%
       </span>
@@ -149,7 +158,10 @@ function DefinitionBar({
       />
       <div
         className={`absolute top-0 bottom-0 ${style.barColor} rounded-full`}
-        style={{ left: `${low}%`, width: `${Math.min(high - low, (high + low) / 2 - low)}%` }}
+        style={{
+          left: `${low}%`,
+          width: `${Math.min(high - low, (high + low) / 2 - low)}%`,
+        }}
       />
     </div>
   );
@@ -196,7 +208,7 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
   const [expanded, setExpanded] = useState(false);
 
   const { data: classification, isLoading } = useQuery({
-    queryKey: ['boq-classification', boqId],
+    queryKey: ["boq-classification", boqId],
     queryFn: () => boqApi.getClassification(boqId),
     enabled: !!boqId,
     retry: (failCount, error) => {
@@ -241,7 +253,7 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-semibold text-content-primary">
-                {t('boq.aace_class', { defaultValue: 'AACE Class‌⁠‍' })}{' '}
+                {t("boq.aace_class", { defaultValue: "AACE Class‌⁠‍" })}{" "}
                 {classification.estimate_class}
               </h3>
               <span className={`text-xs font-medium ${style.text}`}>
@@ -249,15 +261,17 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
               </span>
             </div>
             <p className="text-xs text-content-tertiary mt-0.5">
-              {t('boq.aace_accuracy', { defaultValue: 'Accuracy‌⁠‍' })}:{' '}
+              {t("boq.aace_accuracy", { defaultValue: "Accuracy‌⁠‍" })}:{" "}
               <span className="font-mono font-medium text-content-secondary">
                 {classification.accuracy_low} / {classification.accuracy_high}
               </span>
-              {' · '}
-              {t('boq.aace_definition', { defaultValue: 'Definition‌⁠‍' })}:{' '}
+              {" · "}
+              {t("boq.aace_definition", {
+                defaultValue: "Definition‌⁠‍",
+              })}:{" "}
               <span className="font-mono font-medium text-content-secondary">
-                {classification.definition_level_low}%{' '}
-                {t('boq.aace_to', { defaultValue: 'to' })}{' '}
+                {classification.definition_level_low}%{" "}
+                {t("boq.aace_to", { defaultValue: "to" })}{" "}
                 {classification.definition_level_high}%
               </span>
             </p>
@@ -279,7 +293,9 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
           {/* Accuracy range visualization */}
           <div>
             <div className="text-xs font-medium text-content-secondary mb-2">
-              {t('boq.aace_accuracy_range', { defaultValue: 'Accuracy Range‌⁠‍' })}
+              {t("boq.aace_accuracy_range", {
+                defaultValue: "Accuracy Range‌⁠‍",
+              })}
             </div>
             <AccuracyBar
               low={classification.accuracy_low}
@@ -292,10 +308,13 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
           <div>
             <div className="flex items-center justify-between text-xs mb-1.5">
               <span className="font-medium text-content-secondary">
-                {t('boq.aace_definition_level', { defaultValue: 'Definition Level‌⁠‍' })}
+                {t("boq.aace_definition_level", {
+                  defaultValue: "Definition Level‌⁠‍",
+                })}
               </span>
               <span className="font-mono text-content-primary">
-                {classification.definition_level_low}% - {classification.definition_level_high}%
+                {classification.definition_level_low}% -{" "}
+                {classification.definition_level_high}%
               </span>
             </div>
             <DefinitionBar
@@ -310,7 +329,7 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
             <Info size={14} className="text-content-tertiary shrink-0 mt-0.5" />
             <div>
               <div className="text-xs font-medium text-content-secondary mb-0.5">
-                {t('boq.aace_methodology', { defaultValue: 'Methodology' })}
+                {t("boq.aace_methodology", { defaultValue: "Methodology" })}
               </div>
               <p className="text-xs text-content-tertiary leading-relaxed">
                 {classification.methodology}
@@ -321,29 +340,37 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
           {/* Metrics breakdown */}
           <div>
             <div className="text-xs font-medium text-content-secondary mb-2">
-              {t('boq.aace_metrics', { defaultValue: 'Classification Metrics' })}
+              {t("boq.aace_metrics", {
+                defaultValue: "Classification Metrics",
+              })}
             </div>
             <div className="space-y-2">
               <MetricRow
-                label={t('boq.aace_positions', { defaultValue: 'Positions' })}
+                label={t("boq.aace_positions", { defaultValue: "Positions" })}
                 value={metrics.total_positions}
                 total={metrics.total_positions}
                 pct={metrics.total_positions > 0 ? 100 : 0}
               />
               <MetricRow
-                label={t('boq.aace_with_rates', { defaultValue: 'With unit rates' })}
+                label={t("boq.aace_with_rates", {
+                  defaultValue: "With unit rates",
+                })}
                 value={metrics.positions_with_rates}
                 total={metrics.total_positions}
                 pct={metrics.rate_completeness_pct}
               />
               <MetricRow
-                label={t('boq.aace_with_resources', { defaultValue: 'Fully resourced' })}
+                label={t("boq.aace_with_resources", {
+                  defaultValue: "Fully resourced",
+                })}
                 value={metrics.positions_with_resources}
                 total={metrics.total_positions}
                 pct={metrics.resource_completeness_pct}
               />
               <MetricRow
-                label={t('boq.aace_with_classification', { defaultValue: 'With classification' })}
+                label={t("boq.aace_with_classification", {
+                  defaultValue: "With classification",
+                })}
                 value={metrics.positions_with_classification}
                 total={metrics.total_positions}
                 pct={metrics.classification_completeness_pct}
@@ -353,9 +380,9 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
 
           {/* AACE reference note */}
           <p className="text-[10px] text-content-tertiary leading-relaxed">
-            {t('boq.aace_reference', {
+            {t("boq.aace_reference", {
               defaultValue:
-                'Based on AACE International Recommended Practice 18R-97. Classification is auto-detected from BOQ completeness metrics.',
+                "Based on AACE International Recommended Practice 18R-97. Classification is auto-detected from BOQ completeness metrics.",
             })}
           </p>
         </div>

@@ -16,10 +16,10 @@
  * must still allow read-only viewing.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useToastStore } from '@/stores/useToastStore';
-import i18n from '@/app/i18n';
+import { useToastStore } from "@/stores/useToastStore";
+import i18n from "@/app/i18n";
 
 import {
   acquireLock as apiAcquire,
@@ -27,15 +27,15 @@ import {
   releaseLock as apiRelease,
   type CollabLock,
   type CollabLockConflict,
-} from './api';
+} from "./api";
 
 export type EntityLockState =
-  | 'idle'
-  | 'acquiring'
-  | 'held'
-  | 'conflict'
-  | 'released'
-  | 'error';
+  | "idle"
+  | "acquiring"
+  | "held"
+  | "conflict"
+  | "released"
+  | "error";
 
 export interface UseEntityLockOptions {
   /** If true, call `acquire()` on mount / entity change. */
@@ -73,7 +73,7 @@ export function useEntityLock(
     heartbeatIntervalMs = DEFAULT_HEARTBEAT_MS,
   } = opts;
 
-  const [state, setState] = useState<EntityLockState>('idle');
+  const [state, setState] = useState<EntityLockState>("idle");
   const [lock, setLock] = useState<CollabLock | null>(null);
   const [conflict, setConflict] = useState<CollabLockConflict | null>(null);
 
@@ -107,15 +107,15 @@ export function useEntityLock(
           clearHeartbeat();
           lockRef.current = null;
           setLock(null);
-          setState('error');
+          setState("error");
           addToast({
-            type: 'warning',
-            title: i18n.t('collab_locks.heartbeat_lost_title', {
-              defaultValue: 'Lock lost‌⁠‍',
+            type: "warning",
+            title: i18n.t("collab_locks.heartbeat_lost_title", {
+              defaultValue: "Lock lost‌⁠‍",
             }),
-            message: i18n.t('collab_locks.heartbeat_lost_toast', {
+            message: i18n.t("collab_locks.heartbeat_lost_toast", {
               defaultValue:
-                'Your editing lock was lost due to a connection issue. Save your work and re-acquire the lock.‌⁠‍',
+                "Your editing lock was lost due to a connection issue. Save your work and re-acquire the lock.‌⁠‍",
             }),
           });
         }
@@ -126,14 +126,14 @@ export function useEntityLock(
 
   const acquire = useCallback(async () => {
     if (entityId === null) return;
-    setState('acquiring');
+    setState("acquiring");
     setConflict(null);
     try {
       const result = await apiAcquire(entityType, entityId, ttlSeconds);
       if (result.ok) {
         lockRef.current = result.lock;
         setLock(result.lock);
-        setState('held');
+        setState("held");
         // Extend by roughly 2× the heartbeat interval so a missed
         // heartbeat does not immediately expire the lock.
         startHeartbeat(Math.max(30, Math.ceil(heartbeatIntervalMs / 500)));
@@ -141,30 +141,30 @@ export function useEntityLock(
         setConflict(result.conflict);
         setLock(null);
         lockRef.current = null;
-        setState('conflict');
+        setState("conflict");
         addToast({
-          type: 'warning',
-          title: i18n.t('collab_locks.lock_conflict_title', {
-            defaultValue: 'Someone is editing this‌⁠‍',
+          type: "warning",
+          title: i18n.t("collab_locks.lock_conflict_title", {
+            defaultValue: "Someone is editing this‌⁠‍",
           }),
-          message: i18n.t('collab_locks.lock_conflict_toast', {
+          message: i18n.t("collab_locks.lock_conflict_toast", {
             defaultValue:
-              'Locked by {{name}}. Try again in {{seconds}} seconds.‌⁠‍',
+              "Locked by {{name}}. Try again in {{seconds}} seconds.‌⁠‍",
             name: result.conflict.current_holder_name,
             seconds: result.conflict.remaining_seconds,
           }),
         });
       }
     } catch {
-      setState('error');
+      setState("error");
       addToast({
-        type: 'error',
-        title: i18n.t('collab_locks.lock_error_title', {
-          defaultValue: 'Collaboration service unavailable‌⁠‍',
+        type: "error",
+        title: i18n.t("collab_locks.lock_error_title", {
+          defaultValue: "Collaboration service unavailable‌⁠‍",
         }),
-        message: i18n.t('collab_locks.lock_error_toast', {
+        message: i18n.t("collab_locks.lock_error_toast", {
           defaultValue:
-            'Could not reach the lock service. You can still edit, but changes may conflict with other users.',
+            "Could not reach the lock service. You can still edit, but changes may conflict with other users.",
         }),
       });
     }
@@ -183,7 +183,7 @@ export function useEntityLock(
     lockRef.current = null;
     setLock(null);
     setConflict(null);
-    setState('released');
+    setState("released");
     if (current === null) return;
     try {
       await apiRelease(current.id);

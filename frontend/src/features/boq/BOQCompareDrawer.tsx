@@ -11,14 +11,14 @@
  * Pure read. Every string is i18n; numbers use locale-aware formatting.
  */
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { X, GitCompare, Loader2, ArrowRight } from 'lucide-react';
-import clsx from 'clsx';
-import { Badge } from '@/shared/ui';
-import { boqApi } from './api';
-import { CHANGE_VARIANT, filterCompareRows, showsPair } from './compareHelpers';
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { X, GitCompare, Loader2, ArrowRight } from "lucide-react";
+import clsx from "clsx";
+import { Badge } from "@/shared/ui";
+import { boqApi } from "./api";
+import { CHANGE_VARIANT, filterCompareRows, showsPair } from "./compareHelpers";
 
 export interface BOQCompareDrawerProps {
   /** The BOQ acting as the comparison baseline (reference frame). */
@@ -35,25 +35,25 @@ export function BOQCompareDrawer({
   onClose,
 }: BOQCompareDrawerProps) {
   const { t } = useTranslation();
-  const [otherId, setOtherId] = useState<string>('');
+  const [otherId, setOtherId] = useState<string>("");
   const [hideUnchanged, setHideUnchanged] = useState(true);
 
   // Close on Escape (mirrors VersionHistoryDrawer).
   useEffect(() => {
     if (!isOpen) return;
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         onClose();
       }
     }
-    document.addEventListener('keydown', handleKeyDown, { capture: true });
+    document.addEventListener("keydown", handleKeyDown, { capture: true });
     return () =>
-      document.removeEventListener('keydown', handleKeyDown, { capture: true });
+      document.removeEventListener("keydown", handleKeyDown, { capture: true });
   }, [isOpen, onClose]);
 
   const { data: boqs } = useQuery({
-    queryKey: ['boqs', projectId],
+    queryKey: ["boqs", projectId],
     queryFn: () => boqApi.list(projectId),
     enabled: isOpen && !!projectId,
   });
@@ -69,7 +69,7 @@ export function BOQCompareDrawer({
     isError,
     error,
   } = useQuery({
-    queryKey: ['boq-compare', boqId, otherId],
+    queryKey: ["boq-compare", boqId, otherId],
     queryFn: () => boqApi.compareBoqs(boqId, otherId),
     enabled: isOpen && !!boqId && !!otherId,
     retry: false,
@@ -81,7 +81,7 @@ export function BOQCompareDrawer({
   );
   const fmt = useCallback(
     (v: string | null) => {
-      if (v == null || v === '') return '—';
+      if (v == null || v === "") return "—";
       const n = Number(v);
       return Number.isFinite(n) ? numberFmt.format(n) : v;
     },
@@ -97,11 +97,17 @@ export function BOQCompareDrawer({
 
   return (
     <div className="fixed inset-y-0 right-0 z-50 flex">
-      <div className="fixed inset-0 bg-black/20" onClick={onClose} aria-hidden="true" />
+      <div
+        className="fixed inset-0 bg-black/20"
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t('boq.compare_title', { defaultValue: 'Compare estimates‌⁠‍' })}
+        aria-label={t("boq.compare_title", {
+          defaultValue: "Compare estimates‌⁠‍",
+        })}
         className="relative ml-auto flex h-full w-[560px] flex-col bg-surface-elevated border-l border-border shadow-2xl animate-slide-in-right"
       >
         {/* Header */}
@@ -109,12 +115,12 @@ export function BOQCompareDrawer({
           <div className="flex items-center gap-2">
             <GitCompare size={16} className="text-oe-blue" />
             <h3 className="text-sm font-semibold text-content-primary">
-              {t('boq.compare_title', { defaultValue: 'Compare estimates‌⁠‍' })}
+              {t("boq.compare_title", { defaultValue: "Compare estimates‌⁠‍" })}
             </h3>
           </div>
           <button
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={16} />
@@ -125,7 +131,7 @@ export function BOQCompareDrawer({
         <div className="border-b border-border p-3 space-y-2">
           <label className="block">
             <span className="block text-2xs font-medium text-content-secondary mb-1">
-              {t('boq.compare_against', { defaultValue: 'Compare against‌⁠‍' })}
+              {t("boq.compare_against", { defaultValue: "Compare against‌⁠‍" })}
             </span>
             <select
               value={otherId}
@@ -133,7 +139,7 @@ export function BOQCompareDrawer({
               className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
             >
               <option value="">
-                {t('boq.compare_pick', { defaultValue: '— Select a BOQ —‌⁠‍' })}
+                {t("boq.compare_pick", { defaultValue: "— Select a BOQ —‌⁠‍" })}
               </option>
               {otherChoices.map((b) => (
                 <option key={b.id} value={b.id}>
@@ -149,8 +155,8 @@ export function BOQCompareDrawer({
               onChange={(e) => setHideUnchanged(e.target.checked)}
               className="accent-oe-blue"
             />
-            {t('boq.compare_hide_unchanged', {
-              defaultValue: 'Hide unchanged lines‌⁠‍',
+            {t("boq.compare_hide_unchanged", {
+              defaultValue: "Hide unchanged lines‌⁠‍",
             })}
           </label>
         </div>
@@ -160,22 +166,23 @@ export function BOQCompareDrawer({
           <div className="border-b border-border px-4 py-3">
             <div className="flex flex-wrap gap-1.5 mb-2">
               <Badge variant="success" size="sm">
-                {t('boq.compare_added', { defaultValue: 'Added' })}: {cmp.summary.added}
+                {t("boq.compare_added", { defaultValue: "Added" })}:{" "}
+                {cmp.summary.added}
               </Badge>
               <Badge variant="error" size="sm">
-                {t('boq.compare_removed', { defaultValue: 'Removed' })}:{' '}
+                {t("boq.compare_removed", { defaultValue: "Removed" })}:{" "}
                 {cmp.summary.removed}
               </Badge>
               <Badge variant="warning" size="sm">
-                {t('boq.compare_qty', { defaultValue: 'Qty' })}:{' '}
+                {t("boq.compare_qty", { defaultValue: "Qty" })}:{" "}
                 {cmp.summary.qty_changed}
               </Badge>
               <Badge variant="warning" size="sm">
-                {t('boq.compare_rate', { defaultValue: 'Rate' })}:{' '}
+                {t("boq.compare_rate", { defaultValue: "Rate" })}:{" "}
                 {cmp.summary.rate_changed}
               </Badge>
               <Badge variant="neutral" size="sm">
-                {t('boq.compare_unchanged', { defaultValue: 'Unchanged' })}:{' '}
+                {t("boq.compare_unchanged", { defaultValue: "Unchanged" })}:{" "}
                 {cmp.summary.unchanged}
               </Badge>
             </div>
@@ -196,13 +203,13 @@ export function BOQCompareDrawer({
                 return (
                   <span
                     className={clsx(
-                      'ml-1 font-medium',
+                      "ml-1 font-medium",
                       d > 0
-                        ? 'text-emerald-600 dark:text-emerald-400'
-                        : 'text-red-600 dark:text-red-400',
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-600 dark:text-red-400",
                     )}
                   >
-                    {d > 0 ? '+' : ''}
+                    {d > 0 ? "+" : ""}
                     {fmt(cmp.summary.direct_cost_delta_base)}
                   </span>
                 );
@@ -217,31 +224,35 @@ export function BOQCompareDrawer({
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
               <GitCompare size={32} className="text-content-quaternary mb-3" />
               <p className="text-sm text-content-secondary">
-                {t('boq.compare_select_hint', {
-                  defaultValue: 'Pick another BOQ above to see a line-by-line diff.',
+                {t("boq.compare_select_hint", {
+                  defaultValue:
+                    "Pick another BOQ above to see a line-by-line diff.",
                 })}
               </p>
             </div>
           ) : isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 size={20} className="animate-spin text-content-tertiary" />
+              <Loader2
+                size={20}
+                className="animate-spin text-content-tertiary"
+              />
             </div>
           ) : isError ? (
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
               <p className="text-sm text-semantic-error">
-                {t('boq.compare_error', {
-                  defaultValue: 'Could not compare these BOQs.',
+                {t("boq.compare_error", {
+                  defaultValue: "Could not compare these BOQs.",
                 })}
               </p>
               <p className="text-2xs text-content-tertiary mt-1">
-                {error instanceof Error ? error.message : ''}
+                {error instanceof Error ? error.message : ""}
               </p>
             </div>
           ) : visibleRows.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
               <p className="text-sm text-content-secondary">
-                {t('boq.compare_no_diff', {
-                  defaultValue: 'No differences between these BOQs.',
+                {t("boq.compare_no_diff", {
+                  defaultValue: "No differences between these BOQs.",
                 })}
               </p>
             </div>
@@ -250,16 +261,16 @@ export function BOQCompareDrawer({
               <thead className="sticky top-0 bg-surface-elevated border-b border-border-light">
                 <tr className="text-2xs text-content-tertiary text-left">
                   <th className="px-3 py-2 font-medium">
-                    {t('boq.compare_col_line', { defaultValue: 'Line' })}
+                    {t("boq.compare_col_line", { defaultValue: "Line" })}
                   </th>
                   <th className="px-2 py-2 font-medium text-right">
-                    {t('boq.compare_col_qty', { defaultValue: 'Qty' })}
+                    {t("boq.compare_col_qty", { defaultValue: "Qty" })}
                   </th>
                   <th className="px-2 py-2 font-medium text-right">
-                    {t('boq.compare_col_rate', { defaultValue: 'Rate' })}
+                    {t("boq.compare_col_rate", { defaultValue: "Rate" })}
                   </th>
                   <th className="px-2 py-2 font-medium text-right">
-                    {t('boq.compare_col_delta', { defaultValue: 'Δ base' })}
+                    {t("boq.compare_col_delta", { defaultValue: "Δ base" })}
                   </th>
                 </tr>
               </thead>
@@ -290,7 +301,7 @@ export function BOQCompareDrawer({
                         </p>
                       </td>
                       <td className="px-2 py-2 align-top text-right font-mono text-2xs">
-                        {showsPair(r.change_type, 'qty') ? (
+                        {showsPair(r.change_type, "qty") ? (
                           <span>
                             <span className="text-content-tertiary">
                               {fmt(r.old_quantity)}
@@ -307,7 +318,7 @@ export function BOQCompareDrawer({
                         )}
                       </td>
                       <td className="px-2 py-2 align-top text-right font-mono text-2xs">
-                        {showsPair(r.change_type, 'rate') ? (
+                        {showsPair(r.change_type, "rate") ? (
                           <span>
                             <span className="text-content-tertiary">
                               {fmt(r.old_unit_rate)}
@@ -325,17 +336,17 @@ export function BOQCompareDrawer({
                       </td>
                       <td
                         className={clsx(
-                          'px-2 py-2 align-top text-right font-mono text-2xs font-medium',
+                          "px-2 py-2 align-top text-right font-mono text-2xs font-medium",
                           Number.isFinite(d) && d > 0
-                            ? 'text-emerald-600 dark:text-emerald-400'
+                            ? "text-emerald-600 dark:text-emerald-400"
                             : Number.isFinite(d) && d < 0
-                              ? 'text-red-600 dark:text-red-400'
-                              : 'text-content-tertiary',
+                              ? "text-red-600 dark:text-red-400"
+                              : "text-content-tertiary",
                         )}
                       >
                         {Number.isFinite(d) && d !== 0
-                          ? `${d > 0 ? '+' : ''}${fmt(r.total_delta_base)}`
-                          : '—'}
+                          ? `${d > 0 ? "+" : ""}${fmt(r.total_delta_base)}`
+                          : "—"}
                       </td>
                     </tr>
                   );

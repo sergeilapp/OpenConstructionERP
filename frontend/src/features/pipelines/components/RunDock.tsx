@@ -7,15 +7,15 @@
  * (reverse-chronological run list rendered as-is from the API). No runs yet →
  * `EmptyState`. Screen-reader live region announces progress.
  */
-import clsx from 'clsx';
-import { ChevronDown, ChevronUp, Inbox } from 'lucide-react';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import clsx from "clsx";
+import { ChevronDown, ChevronUp, Inbox } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { DateDisplay, EmptyState, StatusDot } from '@/shared/ui';
+import { DateDisplay, EmptyState, StatusDot } from "@/shared/ui";
 
-import { usePipelineStore } from '../usePipelineStore';
-import type { PipelineRunSummary, RunStatus } from '../api';
+import { usePipelineStore } from "../usePipelineStore";
+import type { PipelineRunSummary, RunStatus } from "../api";
 
 export interface RunDockProps {
   runs: PipelineRunSummary[];
@@ -27,21 +27,21 @@ export interface RunDockProps {
 
 function statusTone(
   status: RunStatus | null | undefined,
-): 'success' | 'error' | 'warning' | 'neutral' {
-  if (status === 'done' || status === 'success') return 'success';
-  if (status === 'error' || status === 'failed') return 'error';
+): "success" | "error" | "warning" | "neutral" {
+  if (status === "done" || status === "success") return "success";
+  if (status === "error" || status === "failed") return "error";
   // The owning JobRun reports `started`/`pending`; the per-node states
   // report `running`/`queued`. Treat all in-flight states as the same
   // "working" tone so the live dot is amber the whole time, not grey.
   if (
-    status === 'running' ||
-    status === 'started' ||
-    status === 'queued' ||
-    status === 'pending' ||
-    status === 'paused'
+    status === "running" ||
+    status === "started" ||
+    status === "queued" ||
+    status === "pending" ||
+    status === "paused"
   )
-    return 'warning';
-  return 'neutral';
+    return "warning";
+  return "neutral";
 }
 
 export function RunDock({
@@ -52,7 +52,7 @@ export function RunDock({
   testId,
 }: RunDockProps) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<'run' | 'history'>('run');
+  const [tab, setTab] = useState<"run" | "history">("run");
   const run = usePipelineStore((s) => s.run);
   const nodes = usePipelineStore((s) => s.nodes);
 
@@ -60,8 +60,8 @@ export function RunDock({
 
   return (
     <div
-      data-testid={testId ?? 'pipeline-run-dock'}
-      data-expanded={expanded ? 'true' : 'false'}
+      data-testid={testId ?? "pipeline-run-dock"}
+      data-expanded={expanded ? "true" : "false"}
       className="flex shrink-0 flex-col border-t border-border bg-surface-primary"
       style={{ height: expanded ? 280 : 32 }}
     >
@@ -73,8 +73,12 @@ export function RunDock({
           aria-expanded={expanded}
           aria-label={
             expanded
-              ? t('pipeline.dock.collapse', { defaultValue: 'Collapse run dock‌⁠‍' })
-              : t('pipeline.dock.expand', { defaultValue: 'Expand run dock‌⁠‍' })
+              ? t("pipeline.dock.collapse", {
+                  defaultValue: "Collapse run dock‌⁠‍",
+                })
+              : t("pipeline.dock.expand", {
+                  defaultValue: "Expand run dock‌⁠‍",
+                })
           }
           className="flex items-center gap-1.5 rounded px-1 py-0.5 font-medium text-content-secondary hover:bg-surface-secondary"
         >
@@ -83,7 +87,7 @@ export function RunDock({
           ) : (
             <ChevronUp size={14} aria-hidden="true" />
           )}
-          {t('pipeline.dock.run', { defaultValue: 'Run' })}
+          {t("pipeline.dock.run", { defaultValue: "Run" })}
         </button>
         <span aria-hidden="true" className="h-4 w-px bg-border" />
         <span
@@ -91,26 +95,26 @@ export function RunDock({
           aria-live="polite"
           data-testid="pipeline-run-status"
         >
-          <StatusDot variant={tone} pulse={tone === 'warning'} />
+          <StatusDot variant={tone} pulse={tone === "warning"} />
           {run.status
             ? t(`pipeline.runstatus.${run.status}`, {
                 defaultValue: String(run.status),
               })
-            : t('pipeline.dock.idle', { defaultValue: 'Idle' })}
-          {run.status && run.status !== 'done' && run.status !== 'success' && (
+            : t("pipeline.dock.idle", { defaultValue: "Idle" })}
+          {run.status && run.status !== "done" && run.status !== "success" && (
             <span className="tabular-nums text-content-tertiary">
-              {t('pipeline.dock.progress', {
-                defaultValue: '{{pct}}%‌⁠‍',
+              {t("pipeline.dock.progress", {
+                defaultValue: "{{pct}}%‌⁠‍",
                 pct: Math.round(run.progress),
               })}
             </span>
           )}
         </span>
-        {(run.status === 'queued' || run.status === 'pending') &&
+        {(run.status === "queued" || run.status === "pending") &&
           run.progress === 0 && (
             <span className="truncate text-content-tertiary">
-              {t('pipeline.dock.queued_hint', {
-                defaultValue: 'Waiting for a worker to pick up the run…',
+              {t("pipeline.dock.queued_hint", {
+                defaultValue: "Waiting for a worker to pick up the run…",
               })}
             </span>
           )}
@@ -125,35 +129,35 @@ export function RunDock({
             role="tablist"
             className="flex shrink-0 gap-1 border-b border-border px-3 py-1.5"
           >
-            {(['run', 'history'] as const).map((k) => (
+            {(["run", "history"] as const).map((k) => (
               <button
                 key={k}
                 role="tab"
                 aria-selected={tab === k}
                 onClick={() => setTab(k)}
                 className={clsx(
-                  'rounded px-2 py-1 text-xs font-medium',
+                  "rounded px-2 py-1 text-xs font-medium",
                   tab === k
-                    ? 'bg-oe-blue/10 text-oe-blue'
-                    : 'text-content-tertiary hover:text-content-secondary',
+                    ? "bg-oe-blue/10 text-oe-blue"
+                    : "text-content-tertiary hover:text-content-secondary",
                 )}
               >
-                {k === 'run'
-                  ? t('pipeline.dock.tab_run', { defaultValue: 'Run' })
-                  : t('pipeline.dock.tab_history', {
-                      defaultValue: 'History‌⁠‍',
+                {k === "run"
+                  ? t("pipeline.dock.tab_run", { defaultValue: "Run" })
+                  : t("pipeline.dock.tab_history", {
+                      defaultValue: "History‌⁠‍",
                     })}
               </button>
             ))}
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
-            {tab === 'run' ? (
+            {tab === "run" ? (
               nodes.length === 0 ? (
                 <p className="py-6 text-center text-xs text-content-tertiary">
-                  {t('pipeline.dock.no_steps', {
+                  {t("pipeline.dock.no_steps", {
                     defaultValue:
-                      'Add steps and press Run to watch data flow through your pipeline.‌⁠‍',
+                      "Add steps and press Run to watch data flow through your pipeline.‌⁠‍",
                   })}
                 </p>
               ) : (
@@ -178,14 +182,14 @@ export function RunDock({
                             ? t(`pipeline.runstatus.${ns.status}`, {
                                 defaultValue: String(ns.status),
                               })
-                            : t('pipeline.runstatus.pending', {
-                                defaultValue: 'Pending',
+                            : t("pipeline.runstatus.pending", {
+                                defaultValue: "Pending",
                               })}
                         </span>
-                        {typeof ns?.took_ms === 'number' && (
+                        {typeof ns?.took_ms === "number" && (
                           <span className="tabular-nums text-content-tertiary">
-                            {t('pipeline.node.took_ms', {
-                              defaultValue: '{{ms}} ms',
+                            {t("pipeline.node.took_ms", {
+                              defaultValue: "{{ms}} ms",
                               ms: ns.took_ms,
                             })}
                           </span>
@@ -197,19 +201,19 @@ export function RunDock({
               )
             ) : runsLoading ? (
               <p className="py-6 text-center text-xs text-content-tertiary">
-                {t('pipeline.dock.loading_history', {
-                  defaultValue: 'Loading run history…',
+                {t("pipeline.dock.loading_history", {
+                  defaultValue: "Loading run history…",
                 })}
               </p>
             ) : runs.length === 0 ? (
               <EmptyState
                 icon={<Inbox size={22} aria-hidden="true" />}
-                title={t('pipeline.dock.no_runs_title', {
-                  defaultValue: 'No runs yet',
+                title={t("pipeline.dock.no_runs_title", {
+                  defaultValue: "No runs yet",
                 })}
-                description={t('pipeline.dock.no_runs_desc', {
+                description={t("pipeline.dock.no_runs_desc", {
                   defaultValue:
-                    'Press Run to see data flow through your pipeline.',
+                    "Press Run to see data flow through your pipeline.",
                 })}
               />
             ) : (
@@ -217,7 +221,7 @@ export function RunDock({
                 {runs.map((r) => {
                   const rt = statusTone(r.status);
                   const triggerType =
-                    r.trigger && typeof r.trigger === 'object'
+                    r.trigger && typeof r.trigger === "object"
                       ? r.trigger.type
                       : undefined;
                   return (
@@ -231,8 +235,8 @@ export function RunDock({
                           ? t(`pipeline.trigger.${triggerType}`, {
                               defaultValue: triggerType,
                             })
-                          : t('pipeline.dock.manual', {
-                              defaultValue: 'Manual',
+                          : t("pipeline.dock.manual", {
+                              defaultValue: "Manual",
                             })}
                       </span>
                       <span className="text-content-tertiary">
@@ -240,7 +244,7 @@ export function RunDock({
                           ? t(`pipeline.runstatus.${r.status}`, {
                               defaultValue: String(r.status),
                             })
-                          : ''}
+                          : ""}
                       </span>
                       {r.started_at && (
                         <span className="ms-auto text-content-tertiary">

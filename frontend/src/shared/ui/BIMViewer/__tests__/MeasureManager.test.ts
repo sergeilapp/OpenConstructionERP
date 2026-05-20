@@ -1,18 +1,18 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import * as THREE from 'three';
-import { MeasureManager } from '../MeasureManager';
-import type { SceneManager } from '../SceneManager';
-import type { ElementManager } from '../ElementManager';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import * as THREE from "three";
+import { MeasureManager } from "../MeasureManager";
+import type { SceneManager } from "../SceneManager";
+import type { ElementManager } from "../ElementManager";
 
 /**
  * Lightweight stand-ins for SceneManager / ElementManager so we can exercise
  * the MeasureManager state machine without booting WebGL.
  */
 function makeFakeCanvas(): HTMLCanvasElement {
-  const canvas = document.createElement('canvas');
-  const host = document.createElement('div');
-  host.style.width = '400px';
-  host.style.height = '300px';
+  const canvas = document.createElement("canvas");
+  const host = document.createElement("div");
+  host.style.width = "400px";
+  host.style.height = "300px";
   host.appendChild(canvas);
   // jsdom doesn't implement getBoundingClientRect in a useful way, stub it.
   canvas.getBoundingClientRect = () =>
@@ -57,7 +57,7 @@ function makeFakes() {
   return { canvas, sceneMgr, elementMgr, mesh, scene };
 }
 
-describe('MeasureManager', () => {
+describe("MeasureManager", () => {
   let fakes: ReturnType<typeof makeFakes>;
   let mgr: MeasureManager;
 
@@ -68,71 +68,71 @@ describe('MeasureManager', () => {
 
   afterEach(() => {
     mgr.dispose();
-    document.body.innerHTML = '';
+    document.body.innerHTML = "";
   });
 
-  it('starts in idle state and does not listen before activation', () => {
-    expect(mgr.state).toBe('idle');
+  it("starts in idle state and does not listen before activation", () => {
+    expect(mgr.state).toBe("idle");
     expect(mgr.active).toBe(false);
   });
 
-  it('transitions idle → awaiting-first on activation', () => {
+  it("transitions idle → awaiting-first on activation", () => {
     mgr.setActive(true);
     expect(mgr.active).toBe(true);
-    expect(mgr.state).toBe('awaiting-first');
+    expect(mgr.state).toBe("awaiting-first");
   });
 
-  it('transitions awaiting-first → awaiting-second → awaiting-first on two clicks', () => {
+  it("transitions awaiting-first → awaiting-second → awaiting-first on two clicks", () => {
     mgr.setActive(true);
     // Raycast the plane mesh — we can't easily simulate full pointer events in
     // jsdom so call the internal path via dispatched events.
     const fire = (x: number, y: number) => {
       fakes.canvas.dispatchEvent(
-        new PointerEvent('pointerdown', { clientX: x, clientY: y, button: 0 }),
+        new PointerEvent("pointerdown", { clientX: x, clientY: y, button: 0 }),
       );
       fakes.canvas.dispatchEvent(
-        new PointerEvent('pointerup', { clientX: x, clientY: y, button: 0 }),
+        new PointerEvent("pointerup", { clientX: x, clientY: y, button: 0 }),
       );
     };
     fire(200, 150);
     // After the first successful click we expect awaiting-second.
     // If raycasting misses in jsdom, the MeasureManager stays in
     // awaiting-first — assert the invariant that state is one of the two.
-    expect(['awaiting-first', 'awaiting-second']).toContain(mgr.state);
+    expect(["awaiting-first", "awaiting-second"]).toContain(mgr.state);
     fire(180, 130);
-    expect(['awaiting-first', 'awaiting-second']).toContain(mgr.state);
+    expect(["awaiting-first", "awaiting-second"]).toContain(mgr.state);
   });
 
-  it('handleKeyDown(Escape) cancels a pending measurement', () => {
+  it("handleKeyDown(Escape) cancels a pending measurement", () => {
     mgr.setActive(true);
     // Force into awaiting-second by setting _pendingPoint via a cast.
     (mgr as unknown as { _pendingPoint: THREE.Vector3 })._pendingPoint =
       new THREE.Vector3(0, 0, 0);
-    (mgr as unknown as { _state: string })._state = 'awaiting-second';
+    (mgr as unknown as { _state: string })._state = "awaiting-second";
     const handled = mgr.handleKeyDown(
-      new KeyboardEvent('keydown', { key: 'Escape' }),
+      new KeyboardEvent("keydown", { key: "Escape" }),
     );
     expect(handled).toBe(true);
-    expect(mgr.state).toBe('awaiting-first');
+    expect(mgr.state).toBe("awaiting-first");
   });
 
-  it('handleKeyDown(Escape) disables the whole tool when idle-but-active', () => {
+  it("handleKeyDown(Escape) disables the whole tool when idle-but-active", () => {
     mgr.setActive(true);
     expect(mgr.active).toBe(true);
     const handled = mgr.handleKeyDown(
-      new KeyboardEvent('keydown', { key: 'Escape' }),
+      new KeyboardEvent("keydown", { key: "Escape" }),
     );
     expect(handled).toBe(true);
     expect(mgr.active).toBe(false);
-    expect(mgr.state).toBe('idle');
+    expect(mgr.state).toBe("idle");
   });
 
-  it('clearAll resets the list and drops any pending point', () => {
+  it("clearAll resets the list and drops any pending point", () => {
     mgr.setActive(true);
     (mgr as unknown as { _pendingPoint: THREE.Vector3 })._pendingPoint =
       new THREE.Vector3(1, 0, 0);
     mgr.clearAll();
     expect(mgr.getMeasurements()).toHaveLength(0);
-    expect(mgr.state).toBe('awaiting-first');
+    expect(mgr.state).toBe("awaiting-first");
   });
 });

@@ -6,20 +6,28 @@
  */
 
 export type FileKind =
-  | 'document'
-  | 'photo'
-  | 'sheet'
-  | 'bim_model'
-  | 'dwg_drawing'
-  | 'takeoff'
-  | 'report'
-  | 'markup';
+  | "document"
+  | "photo"
+  | "sheet"
+  | "bim_model"
+  | "dwg_drawing"
+  | "takeoff"
+  | "report"
+  | "markup";
 
-export type StorageBackend = 'local' | 's3';
+export type StorageBackend = "local" | "s3";
 
-export type BundleScope = 'metadata_only' | 'documents' | 'bim' | 'dwg' | 'full';
+export type BundleScope =
+  | "metadata_only"
+  | "documents"
+  | "bim"
+  | "dwg"
+  | "full";
 
-export type ImportMode = 'new_project' | 'merge_into_existing' | 'replace_existing';
+export type ImportMode =
+  | "new_project"
+  | "merge_into_existing"
+  | "replace_existing";
 
 export interface FileRow {
   id: string;
@@ -44,7 +52,7 @@ export interface FileRow {
 export interface FileTreeNode {
   id: string;
   label: string;
-  kind: 'category' | 'type' | 'folder' | 'trash';
+  kind: "category" | "type" | "folder" | "trash";
   file_count: number;
   total_bytes: number;
   physical_path: string | null;
@@ -173,7 +181,7 @@ export interface ShareLinkAccessResponse {
 
 /* ── Folder permissions ──────────────────────────────────────────────── */
 
-export type FolderRole = 'viewer' | 'editor' | 'owner';
+export type FolderRole = "viewer" | "editor" | "owner";
 
 export interface FolderPermissionRow {
   id: string;
@@ -202,7 +210,7 @@ export interface FileFilters {
   category?: FileKind;
   extension?: string;
   q?: string;
-  sort?: 'modified' | 'name' | 'size' | 'kind';
+  sort?: "modified" | "name" | "size" | "kind";
   limit?: number;
   offset?: number;
 }

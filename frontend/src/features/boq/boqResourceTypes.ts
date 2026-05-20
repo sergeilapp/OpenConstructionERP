@@ -25,14 +25,38 @@ export interface ResourceTypeOption {
  * editable inline AND in the dialog.
  */
 export const RESOURCE_TYPES: ResourceTypeOption[] = [
-  { value: 'material', i18nKey: 'boq.resource_type_material', fallback: 'Material' },
-  { value: 'labor', i18nKey: 'boq.resource_type_labor', fallback: 'Labor' },
-  { value: 'equipment', i18nKey: 'boq.resource_type_equipment', fallback: 'Equipment' },
-  { value: 'operator', i18nKey: 'boq.resource_type_operator', fallback: 'Operator' },
-  { value: 'subcontractor', i18nKey: 'boq.resource_type_subcontractor', fallback: 'Subcontractor' },
-  { value: 'electricity', i18nKey: 'boq.resource_type_electricity', fallback: 'Electricity' },
-  { value: 'composite', i18nKey: 'boq.resource_type_composite', fallback: 'Composite' },
-  { value: 'other', i18nKey: 'boq.resource_type_other', fallback: 'Other' },
+  {
+    value: "material",
+    i18nKey: "boq.resource_type_material",
+    fallback: "Material",
+  },
+  { value: "labor", i18nKey: "boq.resource_type_labor", fallback: "Labor" },
+  {
+    value: "equipment",
+    i18nKey: "boq.resource_type_equipment",
+    fallback: "Equipment",
+  },
+  {
+    value: "operator",
+    i18nKey: "boq.resource_type_operator",
+    fallback: "Operator",
+  },
+  {
+    value: "subcontractor",
+    i18nKey: "boq.resource_type_subcontractor",
+    fallback: "Subcontractor",
+  },
+  {
+    value: "electricity",
+    i18nKey: "boq.resource_type_electricity",
+    fallback: "Electricity",
+  },
+  {
+    value: "composite",
+    i18nKey: "boq.resource_type_composite",
+    fallback: "Composite",
+  },
+  { value: "other", i18nKey: "boq.resource_type_other", fallback: "Other" },
 ];
 
 /**
@@ -54,7 +78,7 @@ const RESOURCE_TYPE_KEY_MAP: Record<string, string> = Object.freeze(
  * not a known canonical type so that translations always succeed.
  */
 export function getResourceTypeI18nKey(value: string): string {
-  return RESOURCE_TYPE_KEY_MAP[value] ?? 'boq.resource_type_other';
+  return RESOURCE_TYPE_KEY_MAP[value] ?? "boq.resource_type_other";
 }
 
 /**

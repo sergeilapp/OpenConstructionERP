@@ -1,9 +1,16 @@
-import React, { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { ErrorInfo, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import i18n from '@/app/i18n';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, {
+  Component,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { ErrorInfo, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import i18n from "@/app/i18n";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Table2,
   DollarSign,
@@ -35,22 +42,29 @@ import {
   HardHat,
   Calendar,
   Image as ImageIcon,
-} from 'lucide-react';
+} from "lucide-react";
 import {
-  Button, Card, CardHeader, Badge, Skeleton, EmptyState, Breadcrumb,
-  ProjectMap, ProjectWeather,
-} from '@/shared/ui';
-import { useWidgetSettingsStore } from '@/stores/useWidgetSettingsStore';
-import { apiGet, apiPatch, ApiError } from '@/shared/lib/api';
-import clsx from 'clsx';
-import { projectsApi, type Project } from './api';
-import { PhotosTab } from './PhotosTab';
-import { CompliancePage } from '@/features/compliance-docs/CompliancePage';
-import { TeamStrip } from './components/TeamStrip';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useRecentStore } from '@/stores/useRecentStore';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useToastStore } from '@/stores/useToastStore';
+  Button,
+  Card,
+  CardHeader,
+  Badge,
+  Skeleton,
+  EmptyState,
+  Breadcrumb,
+  ProjectMap,
+  ProjectWeather,
+} from "@/shared/ui";
+import { useWidgetSettingsStore } from "@/stores/useWidgetSettingsStore";
+import { apiGet, apiPatch, ApiError } from "@/shared/lib/api";
+import clsx from "clsx";
+import { projectsApi, type Project } from "./api";
+import { PhotosTab } from "./PhotosTab";
+import { CompliancePage } from "@/features/compliance-docs/CompliancePage";
+import { TeamStrip } from "./components/TeamStrip";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useRecentStore } from "@/stores/useRecentStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToastStore } from "@/stores/useToastStore";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -88,10 +102,15 @@ interface PositionSummary {
 interface ImportResult {
   imported: number;
   skipped?: number;
-  errors: { row?: number; item?: string; error: string; data?: Record<string, string> }[];
+  errors: {
+    row?: number;
+    item?: string;
+    error: string;
+    data?: Record<string, string>;
+  }[];
   total_rows?: number;
   total_items?: number;
-  method?: 'direct' | 'ai' | 'cad_ai';
+  method?: "direct" | "ai" | "cad_ai";
   model_used?: string | null;
   cad_format?: string;
   cad_elements?: number;
@@ -101,7 +120,14 @@ interface ImportResult {
 // Tab types
 // ---------------------------------------------------------------------------
 
-type ProjectTab = 'dashboard' | 'overview' | 'schedule' | 'budget' | 'tendering' | 'photos' | 'compliance';
+type ProjectTab =
+  | "dashboard"
+  | "overview"
+  | "schedule"
+  | "budget"
+  | "tendering"
+  | "photos"
+  | "compliance";
 
 interface ScheduleItem {
   id: string;
@@ -155,27 +181,30 @@ async function fetchBoqDetail(boqId: string): Promise<BOQDetail> {
   return apiGet<BOQDetail>(`/v1/boq/boqs/${boqId}`);
 }
 
-async function smartImportFile(boqId: string, file: File): Promise<ImportResult> {
+async function smartImportFile(
+  boqId: string,
+  file: File,
+): Promise<ImportResult> {
   const form = new FormData();
-  form.append('file', file);
+  form.append("file", file);
   const res = await fetch(`/api/v1/boq/boqs/${boqId}/import/smart/`, {
-    method: 'POST',
+    method: "POST",
     headers: getAuthHeaders(),
     body: form,
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(body.detail || 'Import failed');
+    throw new Error(body.detail || "Import failed");
   }
   return res.json();
 }
 
-function formatCurrency(value: number, currency = 'EUR'): string {
+function formatCurrency(value: number, currency = "EUR"): string {
   // Validate currency code — must be 3 uppercase ASCII letters (ISO 4217)
-  const safeCurrency = /^[A-Z]{3}$/.test(currency) ? currency : 'EUR';
+  const safeCurrency = /^[A-Z]{3}$/.test(currency) ? currency : "EUR";
   try {
     return new Intl.NumberFormat(i18n.language, {
-      style: 'currency',
+      style: "currency",
       currency: safeCurrency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -185,25 +214,28 @@ function formatCurrency(value: number, currency = 'EUR'): string {
   }
 }
 
-function formatDate(iso: string, locale = 'en-US'): string {
+function formatDate(iso: string, locale = "en-US"): string {
   return new Date(iso).toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 }
 
-const statusVariant: Record<string, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  draft: 'neutral',
-  active: 'blue',
-  final: 'success',
-  archived: 'warning',
+const statusVariant: Record<
+  string,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  draft: "neutral",
+  active: "blue",
+  final: "success",
+  archived: "warning",
 };
 
 const standardLabels: Record<string, string> = {
-  din276: 'DIN 276',
-  nrm: 'NRM',
-  masterformat: 'MasterFormat',
+  din276: "DIN 276",
+  nrm: "NRM",
+  masterformat: "MasterFormat",
 };
 
 // ---------------------------------------------------------------------------
@@ -220,7 +252,7 @@ interface NextStep {
   label: string;
   description: string;
   to: string;
-  variant: 'primary' | 'success';
+  variant: "primary" | "success";
 }
 
 /**
@@ -240,12 +272,14 @@ function computeProjectHealth(
   projectId: string,
   boqs: BOQSummary[] | undefined,
   boqDetails: BOQDetail[] | undefined,
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
 ): { checks: HealthCheck[]; nextStep: NextStep | null; completeness: number } {
   // Find the largest BOQ to use as the deep-link target for "next step" actions
   const largestBoq =
     boqDetails && boqDetails.length > 0
-      ? [...boqDetails].sort((a, b) => b.positions.length - a.positions.length)[0]
+      ? [...boqDetails].sort(
+          (a, b) => b.positions.length - a.positions.length,
+        )[0]
       : null;
 
   let unpricedCount = 0;
@@ -258,8 +292,8 @@ function computeProjectHealth(
       for (const pos of detail.positions) {
         totalPositions++;
         if (!pos.unit_rate || pos.unit_rate === 0) unpricedCount++;
-        if (pos.validation_status === 'error') errorCount++;
-        if (pos.validation_status && pos.validation_status !== 'pending') {
+        if (pos.validation_status === "error") errorCount++;
+        if (pos.validation_status && pos.validation_status !== "pending") {
           validatedCount++;
         }
       }
@@ -273,11 +307,39 @@ function computeProjectHealth(
   const noErrors = validationRun && errorCount === 0;
 
   const checks: HealthCheck[] = [
-    { key: 'has_boq', label: t('projects.health_has_boq', { defaultValue: 'BOQ created‌⁠‍' }), done: hasBoq },
-    { key: 'has_positions', label: t('projects.health_has_positions', { defaultValue: 'Positions added‌⁠‍' }), done: hasPositions },
-    { key: 'all_priced', label: t('projects.health_all_priced', { defaultValue: 'All positions priced‌⁠‍' }), done: allPriced },
-    { key: 'validation_run', label: t('projects.health_validation_run', { defaultValue: 'Validation run‌⁠‍' }), done: validationRun },
-    { key: 'no_errors', label: t('projects.health_no_errors', { defaultValue: 'No validation errors‌⁠‍' }), done: noErrors },
+    {
+      key: "has_boq",
+      label: t("projects.health_has_boq", { defaultValue: "BOQ created‌⁠‍" }),
+      done: hasBoq,
+    },
+    {
+      key: "has_positions",
+      label: t("projects.health_has_positions", {
+        defaultValue: "Positions added‌⁠‍",
+      }),
+      done: hasPositions,
+    },
+    {
+      key: "all_priced",
+      label: t("projects.health_all_priced", {
+        defaultValue: "All positions priced‌⁠‍",
+      }),
+      done: allPriced,
+    },
+    {
+      key: "validation_run",
+      label: t("projects.health_validation_run", {
+        defaultValue: "Validation run‌⁠‍",
+      }),
+      done: validationRun,
+    },
+    {
+      key: "no_errors",
+      label: t("projects.health_no_errors", {
+        defaultValue: "No validation errors‌⁠‍",
+      }),
+      done: noErrors,
+    },
   ];
 
   const doneCount = checks.filter((c) => c.done).length;
@@ -287,65 +349,79 @@ function computeProjectHealth(
   let nextStep: NextStep | null = null;
   if (!hasBoq) {
     nextStep = {
-      label: t('projects.health_action_create_boq', { defaultValue: 'Create BOQ' }),
-      description: t('projects.health_next_create_boq', {
-        defaultValue: 'Start by creating your first Bill of Quantities for this project.',
+      label: t("projects.health_action_create_boq", {
+        defaultValue: "Create BOQ",
+      }),
+      description: t("projects.health_next_create_boq", {
+        defaultValue:
+          "Start by creating your first Bill of Quantities for this project.",
       }),
       to: `/projects/${projectId}/boq/new`,
-      variant: 'primary',
+      variant: "primary",
     };
   } else if (!hasPositions && largestBoq) {
     nextStep = {
-      label: t('projects.health_action_add_positions', { defaultValue: 'Add positions' }),
-      description: t('projects.health_next_add_positions', {
-        defaultValue: 'Open the BOQ editor and add your first positions — manually, from Excel, or with AI.',
+      label: t("projects.health_action_add_positions", {
+        defaultValue: "Add positions",
+      }),
+      description: t("projects.health_next_add_positions", {
+        defaultValue:
+          "Open the BOQ editor and add your first positions — manually, from Excel, or with AI.",
       }),
       to: `/boq/${largestBoq.id}`,
-      variant: 'primary',
+      variant: "primary",
     };
   } else if (!allPriced && largestBoq) {
     nextStep = {
-      label: t('projects.health_action_price_positions', {
-        defaultValue: 'Price {{count}} positions',
+      label: t("projects.health_action_price_positions", {
+        defaultValue: "Price {{count}} positions",
         count: unpricedCount,
       }),
-      description: t('projects.health_next_price_positions', {
-        defaultValue: '{{count}} positions are missing unit rates. Add prices manually or pick from the cost catalog.',
+      description: t("projects.health_next_price_positions", {
+        defaultValue:
+          "{{count}} positions are missing unit rates. Add prices manually or pick from the cost catalog.",
         count: unpricedCount,
       }),
       to: `/boq/${largestBoq.id}`,
-      variant: 'primary',
+      variant: "primary",
     };
   } else if (!validationRun) {
     nextStep = {
-      label: t('projects.health_action_run_validation', { defaultValue: 'Run validation' }),
-      description: t('projects.health_next_run_validation', {
-        defaultValue: 'Check your BOQ against classification and quality rules to catch issues early.',
+      label: t("projects.health_action_run_validation", {
+        defaultValue: "Run validation",
       }),
-      to: '/validation',
-      variant: 'primary',
+      description: t("projects.health_next_run_validation", {
+        defaultValue:
+          "Check your BOQ against classification and quality rules to catch issues early.",
+      }),
+      to: "/validation",
+      variant: "primary",
     };
   } else if (!noErrors) {
     nextStep = {
-      label: t('projects.health_action_fix_errors', {
-        defaultValue: 'Fix {{count}} errors',
+      label: t("projects.health_action_fix_errors", {
+        defaultValue: "Fix {{count}} errors",
         count: errorCount,
       }),
-      description: t('projects.health_next_fix_errors', {
-        defaultValue: '{{count}} positions have validation errors. Resolve them to clean the project.',
+      description: t("projects.health_next_fix_errors", {
+        defaultValue:
+          "{{count}} positions have validation errors. Resolve them to clean the project.",
         count: errorCount,
       }),
-      to: '/validation',
-      variant: 'primary',
+      to: "/validation",
+      variant: "primary",
     };
   } else {
     nextStep = {
-      label: t('projects.health_action_export', { defaultValue: 'Export & report' }),
-      description: t('projects.health_next_export', {
-        defaultValue: 'Project is ready. Export to GAEB, Excel, or PDF — or distribute as a tender package.',
+      label: t("projects.health_action_export", {
+        defaultValue: "Export & report",
       }),
-      to: '/reports',
-      variant: 'success',
+      description: t("projects.health_next_export", {
+        defaultValue:
+          "Project is ready. Export to GAEB, Excel, or PDF — or distribute as a tender package.",
+      }),
+      to: "/reports",
+      variant: "success",
     };
   }
 
@@ -365,11 +441,14 @@ function computeProjectHealth(
    project saved as "Construction" or "construction-phase" still highlights
    the right step. Unmatched values fall back to a single chip. */
 const PHASE_STEPS = [
-  { key: 'planning', match: ['planning', 'pre', 'feasibility'] },
-  { key: 'design', match: ['design', 'concept', 'detailed'] },
-  { key: 'procurement', match: ['procurement', 'tender', 'bidding'] },
-  { key: 'construction', match: ['construction', 'execution', 'build'] },
-  { key: 'closeout', match: ['closeout', 'handover', 'commission', 'turnover'] },
+  { key: "planning", match: ["planning", "pre", "feasibility"] },
+  { key: "design", match: ["design", "concept", "detailed"] },
+  { key: "procurement", match: ["procurement", "tender", "bidding"] },
+  { key: "construction", match: ["construction", "execution", "build"] },
+  {
+    key: "closeout",
+    match: ["closeout", "handover", "commission", "turnover"],
+  },
 ] as const;
 
 function ProjectPhaseRibbon({ phase }: { phase: string | null }) {
@@ -377,14 +456,16 @@ function ProjectPhaseRibbon({ phase }: { phase: string | null }) {
   if (!phase || !phase.trim()) return null;
 
   const norm = phase.toLowerCase();
-  const activeIdx = PHASE_STEPS.findIndex((s) => s.match.some((m) => norm.includes(m)));
+  const activeIdx = PHASE_STEPS.findIndex((s) =>
+    s.match.some((m) => norm.includes(m)),
+  );
 
   // Unknown phase — show single chip instead of a fake stepper.
   if (activeIdx < 0) {
     return (
       <div className="mb-4 flex items-center gap-2 rounded-lg border border-border-light bg-surface-secondary px-3 py-2 text-xs">
         <span className="font-medium uppercase tracking-wider text-content-tertiary">
-          {t('projects.phase_label', { defaultValue: 'Phase' })}
+          {t("projects.phase_label", { defaultValue: "Phase" })}
         </span>
         <span className="font-semibold text-content-primary">{phase}</span>
       </div>
@@ -406,22 +487,22 @@ function ProjectPhaseRibbon({ phase }: { phase: string | null }) {
                 <span
                   className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold tabular-nums ${
                     isActive
-                      ? 'bg-oe-blue text-white ring-2 ring-oe-blue/30'
+                      ? "bg-oe-blue text-white ring-2 ring-oe-blue/30"
                       : isPast
-                        ? 'bg-oe-blue/20 text-oe-blue'
-                        : 'bg-surface-tertiary text-content-quaternary'
+                        ? "bg-oe-blue/20 text-oe-blue"
+                        : "bg-surface-tertiary text-content-quaternary"
                   }`}
-                  aria-current={isActive ? 'step' : undefined}
+                  aria-current={isActive ? "step" : undefined}
                 >
-                  {isPast ? '✓' : idx + 1}
+                  {isPast ? "✓" : idx + 1}
                 </span>
                 <span
                   className={`text-xs font-medium whitespace-nowrap ${
                     isActive
-                      ? 'text-content-primary'
+                      ? "text-content-primary"
                       : isPast
-                        ? 'text-content-secondary'
-                        : 'text-content-quaternary'
+                        ? "text-content-secondary"
+                        : "text-content-quaternary"
                   }`}
                 >
                   {label}
@@ -430,7 +511,7 @@ function ProjectPhaseRibbon({ phase }: { phase: string | null }) {
               {idx < PHASE_STEPS.length - 1 && (
                 <div
                   className={`h-px flex-1 min-w-[12px] ${
-                    idx < activeIdx ? 'bg-oe-blue/40' : 'bg-border-light'
+                    idx < activeIdx ? "bg-oe-blue/40" : "bg-border-light"
                   }`}
                   aria-hidden="true"
                 />
@@ -478,8 +559,8 @@ function ProjectLocationPanel({ project }: { project: Project }) {
       }),
     onSuccess: () => {
       setPersisted(true);
-      queryClient.invalidateQueries({ queryKey: ['project', project.id] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ["project", project.id] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
   });
 
@@ -496,7 +577,7 @@ function ProjectLocationPanel({ project }: { project: Project }) {
     project.address?.country,
   ]
     .filter(Boolean)
-    .join(', ');
+    .join(", ");
 
   const handleResolved = (coords: { lat: number; lng: number }) => {
     setResolved(coords);
@@ -508,10 +589,10 @@ function ProjectLocationPanel({ project }: { project: Project }) {
   return (
     <div
       className={clsx(
-        'mb-4 grid gap-3 items-stretch',
+        "mb-4 grid gap-3 items-stretch",
         mapEnabled && weatherEnabled
-          ? 'grid-cols-1 lg:grid-cols-[3fr_2fr]'
-          : 'grid-cols-1',
+          ? "grid-cols-1 lg:grid-cols-[3fr_2fr]"
+          : "grid-cols-1",
       )}
     >
       {mapEnabled && (
@@ -529,7 +610,7 @@ function ProjectLocationPanel({ project }: { project: Project }) {
             // to match the (now 3-row) weather block. When the map is
             // shown alone, fall back to a fixed height so it doesn't
             // collapse to zero.
-            weatherEnabled ? 'h-full min-h-[20rem]' : 'h-[32rem]',
+            weatherEnabled ? "h-full min-h-[20rem]" : "h-[32rem]",
           )}
         />
       )}
@@ -562,10 +643,10 @@ function ProjectHealthBar({
 
   // Color-code the progress ring based on completeness
   const ringColor = isComplete
-    ? 'text-emerald-500'
+    ? "text-emerald-500"
     : completeness >= 0.6
-    ? 'text-oe-blue'
-    : 'text-amber-500';
+      ? "text-oe-blue"
+      : "text-amber-500";
 
   return (
     <Card padding="md" className="h-full flex flex-col justify-center">
@@ -595,7 +676,9 @@ function ProjectHealthBar({
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-sm font-bold text-content-primary tabular-nums">{percent}%</span>
+            <span className="text-sm font-bold text-content-primary tabular-nums">
+              {percent}%
+            </span>
           </div>
         </div>
 
@@ -603,19 +686,22 @@ function ProjectHealthBar({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-              {t('projects.health_label', { defaultValue: 'Project Health' })}
+              {t("projects.health_label", { defaultValue: "Project Health" })}
             </span>
             <span className="text-2xs text-content-quaternary">·</span>
             <span className="text-2xs text-content-tertiary tabular-nums">
-              {doneCount}/{checks.length} {t('projects.health_complete', { defaultValue: 'complete' })}
+              {doneCount}/{checks.length}{" "}
+              {t("projects.health_complete", { defaultValue: "complete" })}
             </span>
           </div>
           {nextStep && (
             <p className="text-sm text-content-primary truncate">
               <span className="font-semibold">
-                {t('projects.health_next', { defaultValue: 'Next:' })}
-              </span>{' '}
-              <span className="text-content-secondary">{nextStep.description}</span>
+                {t("projects.health_next", { defaultValue: "Next:" })}
+              </span>{" "}
+              <span className="text-content-secondary">
+                {nextStep.description}
+              </span>
             </p>
           )}
           {/* Checkpoint dots — hover shows label */}
@@ -623,9 +709,13 @@ function ProjectHealthBar({
             {checks.map((check) => (
               <div
                 key={check.key}
-                title={check.label + (check.done ? ' (done)' : '')}
+                title={check.label + (check.done ? " (done)" : "")}
                 className={`h-1.5 flex-1 max-w-[60px] rounded-full transition-colors ${
-                  check.done ? (isComplete ? 'bg-emerald-500' : 'bg-oe-blue') : 'bg-surface-secondary'
+                  check.done
+                    ? isComplete
+                      ? "bg-emerald-500"
+                      : "bg-oe-blue"
+                    : "bg-surface-secondary"
                 }`}
               />
             ))}
@@ -635,7 +725,7 @@ function ProjectHealthBar({
         {/* Next action button */}
         {nextStep && (
           <Button
-            variant={nextStep.variant === 'success' ? 'secondary' : 'primary'}
+            variant={nextStep.variant === "success" ? "secondary" : "primary"}
             size="sm"
             onClick={() => navigate(nextStep.to)}
             className="shrink-0"
@@ -652,19 +742,19 @@ function SummaryCard({
   label,
   value,
   icon,
-  variant = 'default',
+  variant = "default",
   subtitle,
 }: {
   label: string;
   value: string;
   icon: React.ReactNode;
-  variant?: 'default' | 'success' | 'blue';
+  variant?: "default" | "success" | "blue";
   subtitle?: string;
 }) {
   const bgMap = {
-    default: 'bg-surface-secondary text-content-tertiary',
-    success: 'bg-semantic-success-bg text-semantic-success',
-    blue: 'bg-oe-blue-subtle text-oe-blue',
+    default: "bg-surface-secondary text-content-tertiary",
+    success: "bg-semantic-success-bg text-semantic-success",
+    blue: "bg-oe-blue-subtle text-oe-blue",
   };
 
   return (
@@ -678,7 +768,9 @@ function SummaryCard({
             {value}
           </p>
           {subtitle && (
-            <p className="text-2xs text-content-secondary tabular-nums truncate">{subtitle}</p>
+            <p className="text-2xs text-content-secondary tabular-nums truncate">
+              {subtitle}
+            </p>
           )}
         </div>
         <div
@@ -718,7 +810,7 @@ function DropZone({
       const file = e.target.files?.[0];
       if (file) onFileSelect(file);
       // Reset input so re-selecting the same file triggers change
-      e.target.value = '';
+      e.target.value = "";
     },
     [onFileSelect],
   );
@@ -735,8 +827,8 @@ function DropZone({
       className={`
         flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed
         px-6 py-10 text-center cursor-pointer transition-all duration-200
-        ${dragOver ? 'border-oe-blue bg-oe-blue-subtle/30 scale-[1.01]' : 'border-border-light hover:border-content-tertiary hover:bg-surface-secondary'}
-        ${disabled ? 'opacity-50 pointer-events-none' : ''}
+        ${dragOver ? "border-oe-blue bg-oe-blue-subtle/30 scale-[1.01]" : "border-border-light hover:border-content-tertiary hover:bg-surface-secondary"}
+        ${disabled ? "opacity-50 pointer-events-none" : ""}
       `}
     >
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-secondary">
@@ -744,10 +836,15 @@ function DropZone({
       </div>
       <div>
         <p className="text-sm font-medium text-content-primary">
-          {t('import.drop_or_browse', { defaultValue: 'Drop your file here, or click to browse' })}
+          {t("import.drop_or_browse", {
+            defaultValue: "Drop your file here, or click to browse",
+          })}
         </p>
         <p className="mt-1 text-xs text-content-tertiary">
-          {t('import.supported_formats', { defaultValue: 'Supports Excel, CSV, PDF, photos, and CAD/BIM files (Revit, IFC, DWG, DGN)' })}
+          {t("import.supported_formats", {
+            defaultValue:
+              "Supports Excel, CSV, PDF, photos, and CAD/BIM files (Revit, IFC, DWG, DGN)",
+          })}
         </p>
       </div>
       <input
@@ -779,8 +876,17 @@ function ImportDialog({
   const [result, setResult] = useState<ImportResult | null>(null);
 
   const SUPPORTED_EXTENSIONS = [
-    '.xlsx', '.csv', '.pdf', '.jpg', '.jpeg', '.png', '.tiff',
-    '.rvt', '.ifc', '.dwg', '.dgn',
+    ".xlsx",
+    ".csv",
+    ".pdf",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".tiff",
+    ".rvt",
+    ".ifc",
+    ".dwg",
+    ".dgn",
   ];
 
   const mutation = useMutation({
@@ -788,10 +894,17 @@ function ImportDialog({
     onSuccess: (data) => {
       setResult(data);
       onSuccess();
-      addToast({ type: 'success', title: t('toasts.import_success', { defaultValue: 'Import completed' }) });
+      addToast({
+        type: "success",
+        title: t("toasts.import_success", { defaultValue: "Import completed" }),
+      });
     },
     onError: (error: Error) => {
-      addToast({ type: 'error', title: t('toasts.import_failed', { defaultValue: 'Import failed' }), message: error.message });
+      addToast({
+        type: "error",
+        title: t("toasts.import_failed", { defaultValue: "Import failed" }),
+        message: error.message,
+      });
     },
   });
 
@@ -829,15 +942,20 @@ function ImportDialog({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-semibold text-content-primary">
-                {t('import.import_document', { defaultValue: 'Import Document' })}
+                {t("import.import_document", {
+                  defaultValue: "Import Document",
+                })}
               </h2>
               <span className="inline-flex items-center gap-1 rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue">
                 <Sparkles size={10} />
-                {t('import.ai_powered', { defaultValue: 'AI-powered' })}
+                {t("import.ai_powered", { defaultValue: "AI-powered" })}
               </span>
             </div>
             <p className="mt-0.5 text-sm text-content-secondary">
-              {t('import.into_boq', { defaultValue: 'Into: {{name}}', name: boqName })}
+              {t("import.into_boq", {
+                defaultValue: "Into: {{name}}",
+                name: boqName,
+              })}
             </p>
           </div>
           <button
@@ -852,7 +970,10 @@ function ImportDialog({
         <div className="px-6 py-4">
           {!result ? (
             <>
-              <DropZone onFileSelect={handleFileSelect} disabled={mutation.isPending} />
+              <DropZone
+                onFileSelect={handleFileSelect}
+                disabled={mutation.isPending}
+              />
 
               {selectedFile && (
                 <div className="mt-4 flex items-center gap-3 rounded-lg bg-surface-secondary px-4 py-3">
@@ -885,20 +1006,30 @@ function ImportDialog({
 
               {mutation.isError && (
                 <div className="mt-3 flex items-start gap-2 rounded-lg bg-semantic-error-bg px-4 py-3">
-                  <AlertCircle size={16} className="shrink-0 mt-0.5 text-semantic-error" />
+                  <AlertCircle
+                    size={16}
+                    className="shrink-0 mt-0.5 text-semantic-error"
+                  />
                   <div className="text-sm text-semantic-error">
                     {(() => {
                       const msg =
                         mutation.error instanceof Error
                           ? mutation.error.message
-                          : 'Import failed. Please try again.';
+                          : "Import failed. Please try again.";
                       // Show a link when DDC converter is not found
-                      if (msg.includes('DDC converter') || msg.includes('no DDC converter')) {
+                      if (
+                        msg.includes("DDC converter") ||
+                        msg.includes("no DDC converter")
+                      ) {
                         return (
                           <div className="space-y-1.5">
-                            <p>{t('import.cad_converter_missing', { defaultValue: 'CAD converter not installed.' })}</p>
+                            <p>
+                              {t("import.cad_converter_missing", {
+                                defaultValue: "CAD converter not installed.",
+                              })}
+                            </p>
                             <p className="text-xs text-semantic-error/80">
-                              Download DDC converters from{' '}
+                              Download DDC converters from{" "}
                               <a
                                 href="https://github.com/datadrivenconstruction/ddc-community-toolkit/releases"
                                 target="_blank"
@@ -906,10 +1037,12 @@ function ImportDialog({
                                 className="underline font-medium hover:text-semantic-error"
                               >
                                 GitHub
-                              </a>{' '}
-                              and place .exe files in{' '}
+                              </a>{" "}
+                              and place .exe files in{" "}
                               <code className="bg-semantic-error/10 px-1 rounded">
-                                {navigator.platform?.startsWith('Win') ? '%USERPROFILE%\\.openestimator\\converters\\' : '~/.openestimator/converters/'}
+                                {navigator.platform?.startsWith("Win")
+                                  ? "%USERPROFILE%\\.openestimator\\converters\\"
+                                  : "~/.openestimator/converters/"}
                               </code>
                             </p>
                           </div>
@@ -925,37 +1058,53 @@ function ImportDialog({
             <div className="space-y-4">
               {/* Success summary */}
               <div className="flex items-center gap-3 rounded-lg bg-semantic-success-bg px-4 py-3">
-                <CheckCircle2 size={20} className="shrink-0 text-semantic-success" />
+                <CheckCircle2
+                  size={20}
+                  className="shrink-0 text-semantic-success"
+                />
                 <div>
-                  <p className="text-sm font-medium text-semantic-success">{t('import.complete', { defaultValue: 'Import complete' })}</p>
+                  <p className="text-sm font-medium text-semantic-success">
+                    {t("import.complete", { defaultValue: "Import complete" })}
+                  </p>
                   <p className="text-xs text-semantic-success/80">
-                    {t('import.positions_imported', { defaultValue: '{{count}} positions imported', count: result.imported })}
-                    {(result.skipped ?? 0) > 0 && `, ${t('import.rows_skipped', { defaultValue: '{{count}} rows skipped', count: result.skipped })}`}
+                    {t("import.positions_imported", {
+                      defaultValue: "{{count}} positions imported",
+                      count: result.imported,
+                    })}
+                    {(result.skipped ?? 0) > 0 &&
+                      `, ${t("import.rows_skipped", { defaultValue: "{{count}} rows skipped", count: result.skipped })}`}
                   </p>
                 </div>
-                {(result.method === 'ai' || result.method === 'cad_ai') && (
+                {(result.method === "ai" || result.method === "cad_ai") && (
                   <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue">
                     <Sparkles size={10} />
-                    {result.method === 'cad_ai'
-                      ? `CAD + ${result.model_used ?? 'AI'}`
-                      : (result.model_used ?? 'AI')}
+                    {result.method === "cad_ai"
+                      ? `CAD + ${result.model_used ?? "AI"}`
+                      : (result.model_used ?? "AI")}
                   </span>
                 )}
-                {result.method === 'direct' && (
+                {result.method === "direct" && (
                   <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-tertiary">
-                    {t('import.method_direct', { defaultValue: 'Direct' })}
+                    {t("import.method_direct", { defaultValue: "Direct" })}
                   </span>
                 )}
               </div>
 
               {/* CAD info banner */}
-              {result.method === 'cad_ai' && result.cad_elements != null && (
+              {result.method === "cad_ai" && result.cad_elements != null && (
                 <div className="flex items-center gap-2 rounded-lg bg-oe-blue-subtle/50 px-4 py-2.5 text-xs text-oe-blue">
                   <span className="font-medium">
-                    {t('import.cad_elements_count', { defaultValue: '{{count}} CAD elements', count: result.cad_elements })}
+                    {t("import.cad_elements_count", {
+                      defaultValue: "{{count}} CAD elements",
+                      count: result.cad_elements,
+                    })}
                   </span>
                   <span className="text-oe-blue/60">
-                    {t('import.cad_extracted', { defaultValue: 'extracted from .{{format}} file via DDC converter', format: result.cad_format })}
+                    {t("import.cad_extracted", {
+                      defaultValue:
+                        "extracted from .{{format}} file via DDC converter",
+                      format: result.cad_format,
+                    })}
                   </span>
                 </div>
               )}
@@ -963,9 +1112,11 @@ function ImportDialog({
               {/* Stats grid */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="rounded-lg bg-surface-secondary px-3 py-2 text-center">
-                  <p className="text-lg font-bold text-content-primary">{result.imported}</p>
+                  <p className="text-lg font-bold text-content-primary">
+                    {result.imported}
+                  </p>
                   <p className="text-2xs text-content-tertiary uppercase tracking-wide">
-                    {t('import.stat_imported', { defaultValue: 'Imported' })}
+                    {t("import.stat_imported", { defaultValue: "Imported" })}
                   </p>
                 </div>
                 <div className="rounded-lg bg-surface-secondary px-3 py-2 text-center">
@@ -973,23 +1124,40 @@ function ImportDialog({
                     {result.total_items ?? result.total_rows ?? 0}
                   </p>
                   <p className="text-2xs text-content-tertiary uppercase tracking-wide">
-                    {t('import.stat_total_items', { defaultValue: 'Total items' })}
+                    {t("import.stat_total_items", {
+                      defaultValue: "Total items",
+                    })}
                   </p>
                 </div>
                 <div className="rounded-lg bg-surface-secondary px-3 py-2 text-center">
-                  <p className="text-lg font-bold text-content-primary">{result.errors.length}</p>
-                  <p className="text-2xs text-content-tertiary uppercase tracking-wide">{t('import.stat_errors', { defaultValue: 'Errors' })}</p>
+                  <p className="text-lg font-bold text-content-primary">
+                    {result.errors.length}
+                  </p>
+                  <p className="text-2xs text-content-tertiary uppercase tracking-wide">
+                    {t("import.stat_errors", { defaultValue: "Errors" })}
+                  </p>
                 </div>
               </div>
 
               {/* Error details */}
               {result.errors.length > 0 && (
                 <div className="rounded-lg border border-semantic-error/20 bg-semantic-error-bg/50 px-4 py-3">
-                  <p className="text-xs font-medium text-semantic-error mb-2">{t('import.error_details', { defaultValue: 'Error details:' })}</p>
+                  <p className="text-xs font-medium text-semantic-error mb-2">
+                    {t("import.error_details", {
+                      defaultValue: "Error details:",
+                    })}
+                  </p>
                   <div className="max-h-32 overflow-y-auto space-y-1">
                     {result.errors.map((err, i) => (
-                      <p key={`${err.row || err.item || ''}-${i}`} className="text-xs text-semantic-error/80">
-                        {err.row ? `${t('import.error_row', { defaultValue: 'Row {{row}}', row: err.row })}: ` : err.item ? `${err.item}: ` : ''}
+                      <p
+                        key={`${err.row || err.item || ""}-${i}`}
+                        className="text-xs text-semantic-error/80"
+                      >
+                        {err.row
+                          ? `${t("import.error_row", { defaultValue: "Row {{row}}", row: err.row })}: `
+                          : err.item
+                            ? `${err.item}: `
+                            : ""}
                         {err.error}
                       </p>
                     ))}
@@ -1004,8 +1172,12 @@ function ImportDialog({
         <div className="flex items-center justify-end gap-3 px-6 pb-6 pt-2">
           {!result ? (
             <>
-              <Button variant="ghost" onClick={onClose} disabled={mutation.isPending}>
-                {t('common.cancel')}
+              <Button
+                variant="ghost"
+                onClick={onClose}
+                disabled={mutation.isPending}
+              >
+                {t("common.cancel")}
               </Button>
               <Button
                 variant="primary"
@@ -1014,12 +1186,12 @@ function ImportDialog({
                 disabled={!selectedFile}
                 loading={mutation.isPending}
               >
-                {t('common.import')}
+                {t("common.import")}
               </Button>
             </>
           ) : (
             <Button variant="primary" onClick={onClose}>
-              {t('common.done', { defaultValue: 'Done' })}
+              {t("common.done", { defaultValue: "Done" })}
             </Button>
           )}
         </div>
@@ -1042,7 +1214,10 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-class TabErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class TabErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -1053,7 +1228,8 @@ class TabErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState>
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
-    if (import.meta.env.DEV) console.error('[TabErrorBoundary] Caught error:', error, info);
+    if (import.meta.env.DEV)
+      console.error("[TabErrorBoundary] Caught error:", error, info);
   }
 
   private handleRetry = (): void => {
@@ -1066,18 +1242,23 @@ class TabErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState>
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <AlertTriangle className="text-semantic-warning mb-3" size={32} />
           <h3 className="text-base font-semibold text-content-primary">
-            {this.props.fallbackTitle || i18n.t('common.something_went_wrong', { defaultValue: 'Something went wrong' })}
+            {this.props.fallbackTitle ||
+              i18n.t("common.something_went_wrong", {
+                defaultValue: "Something went wrong",
+              })}
           </h3>
           <p className="mt-1 text-sm text-content-secondary max-w-md">
             {this.props.fallbackDescription ||
-              i18n.t('common.unable_to_load', { defaultValue: 'Unable to load this section. Please try again.' })}
+              i18n.t("common.unable_to_load", {
+                defaultValue: "Unable to load this section. Please try again.",
+              })}
           </p>
           <button
             onClick={this.handleRetry}
             className="mt-4 inline-flex items-center gap-2 rounded-lg bg-surface-secondary px-4 py-2 text-sm font-medium text-content-primary hover:bg-surface-tertiary transition-colors"
           >
             <RefreshCw size={14} />
-            {i18n.t('common.retry', { defaultValue: 'Retry' })}
+            {i18n.t("common.retry", { defaultValue: "Retry" })}
           </button>
         </div>
       );
@@ -1091,7 +1272,12 @@ class TabErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState>
 // Main Page
 // ---------------------------------------------------------------------------
 
-const INITIAL_PROJECT_EDIT_FORM = { name: '', description: '', region: '', currency: '' };
+const INITIAL_PROJECT_EDIT_FORM = {
+  name: "",
+  description: "",
+  region: "",
+  currency: "",
+};
 
 export function ProjectDetailPage() {
   const { t } = useTranslation();
@@ -1105,24 +1291,39 @@ export function ProjectDetailPage() {
     boqName: string;
   } | null>(null);
 
-  const [activeTab, setActiveTab] = useState<ProjectTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<ProjectTab>("dashboard");
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState(INITIAL_PROJECT_EDIT_FORM);
 
   const setActiveProject = useProjectContextStore((s) => s.setActiveProject);
 
   const updateMutation = useMutation({
-    mutationFn: (data: { name: string; description?: string; region?: string; currency?: string }) =>
-      projectsApi.update(projectId!, data),
+    mutationFn: (data: {
+      name: string;
+      description?: string;
+      region?: string;
+      currency?: string;
+    }) => projectsApi.update(projectId!, data),
     onSuccess: (updated) => {
-      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       setActiveProject(projectId!, updated.name);
       setIsEditing(false);
-      addToast({ type: 'success', title: t('toasts.project_updated', { defaultValue: 'Project updated successfully' }) });
+      addToast({
+        type: "success",
+        title: t("toasts.project_updated", {
+          defaultValue: "Project updated successfully",
+        }),
+      });
     },
     onError: (error: Error) => {
-      addToast({ type: 'error', title: t('toasts.project_update_failed', { defaultValue: 'Failed to update project' }), message: error.message });
+      addToast({
+        type: "error",
+        title: t("toasts.project_update_failed", {
+          defaultValue: "Failed to update project",
+        }),
+        message: error.message,
+      });
     },
   });
 
@@ -1134,32 +1335,40 @@ export function ProjectDetailPage() {
     error: projectQueryError,
     refetch: refetchProject,
   } = useQuery({
-    queryKey: ['project', projectId],
+    queryKey: ["project", projectId],
     queryFn: () => projectsApi.get(projectId!),
     enabled: !!projectId,
     // Retry on network errors (1x) but not on 4xx — a real 404 shouldn't
     // spin while the user waits.
     retry: (count, err) => {
-      if (err instanceof ApiError && err.status >= 400 && err.status < 500) return false;
+      if (err instanceof ApiError && err.status >= 400 && err.status < 500)
+        return false;
       return navigator.onLine && count < 1;
     },
-    networkMode: 'offlineFirst',
+    networkMode: "offlineFirst",
   });
 
   // Distinguish "the project is truly gone" (404 from server) from
   // "we can't reach the server right now" (offline or 5xx). Only the
   // 404 case should clear sidebar recents — otherwise a transient
   // network blip wipes the user's navigation history.
-  const is404 = projectQueryError instanceof ApiError && projectQueryError.status === 404;
+  const is404 =
+    projectQueryError instanceof ApiError && projectQueryError.status === 404;
   const isServerError =
     projectQueryError instanceof ApiError && projectQueryError.status >= 500;
   const isOffline =
-    projectError && !is404 && !isServerError && typeof navigator !== 'undefined' && !navigator.onLine;
+    projectError &&
+    !is404 &&
+    !isServerError &&
+    typeof navigator !== "undefined" &&
+    !navigator.onLine;
   const isNetworkError = projectError && !is404 && !isServerError && !isOffline;
 
   // Auto-clean stale references only when the project is actually gone.
   const clearProject = useProjectContextStore((s) => s.clearProject);
-  const activeProjectIdInStore = useProjectContextStore((s) => s.activeProjectId);
+  const activeProjectIdInStore = useProjectContextStore(
+    (s) => s.activeProjectId,
+  );
   const recentItems = useRecentStore((s) => s.items);
   const clearRecent = useRecentStore((s) => s.clearRecent);
   useEffect(() => {
@@ -1170,11 +1379,21 @@ export function ProjectDetailPage() {
       clearRecent();
       remaining.forEach((it) => {
         useRecentStore.getState().addRecent({
-          type: it.type, id: it.id, title: it.title, url: it.url,
+          type: it.type,
+          id: it.id,
+          title: it.title,
+          url: it.url,
         });
       });
     }
-  }, [is404, projectId, activeProjectIdInStore, clearProject, recentItems, clearRecent]);
+  }, [
+    is404,
+    projectId,
+    activeProjectIdInStore,
+    clearProject,
+    recentItems,
+    clearRecent,
+  ]);
 
   const addRecent = useRecentStore((s) => s.addRecent);
 
@@ -1183,7 +1402,7 @@ export function ProjectDetailPage() {
     if (project && projectId) {
       setActiveProject(projectId, project.name);
       addRecent({
-        type: 'project',
+        type: "project",
         id: projectId,
         title: project.name,
         url: `/projects/${projectId}`,
@@ -1193,19 +1412,24 @@ export function ProjectDetailPage() {
 
   // Fetch BOQ list
   const { data: boqs, isLoading: boqsLoading } = useQuery({
-    queryKey: ['boqs', projectId],
+    queryKey: ["boqs", projectId],
     queryFn: () => fetchBoqs(projectId!),
     enabled: !!projectId,
   });
 
   // Fetch details for each BOQ (positions count, grand total)
   const { data: boqDetails } = useQuery({
-    queryKey: ['boqDetails', projectId, boqs?.map((b) => b.id)],
+    queryKey: ["boqDetails", projectId, boqs?.map((b) => b.id)],
     queryFn: async () => {
       if (!boqs || boqs.length === 0) return [];
-      const results = await Promise.allSettled(boqs.map((b) => fetchBoqDetail(b.id)));
+      const results = await Promise.allSettled(
+        boqs.map((b) => fetchBoqDetail(b.id)),
+      );
       return results
-        .filter((r): r is PromiseFulfilledResult<BOQDetail> => r.status === 'fulfilled')
+        .filter(
+          (r): r is PromiseFulfilledResult<BOQDetail> =>
+            r.status === "fulfilled",
+        )
         .map((r) => r.value);
     },
     enabled: !!boqs && boqs.length > 0,
@@ -1231,16 +1455,17 @@ export function ProjectDetailPage() {
       totalBudget += detail.grand_total;
       totalPositions += detail.positions.length;
       for (const pos of detail.positions) {
-        if (pos.validation_status && pos.validation_status !== 'pending') {
+        if (pos.validation_status && pos.validation_status !== "pending") {
           validatedCount++;
-          if (pos.validation_status === 'passed') {
+          if (pos.validation_status === "passed") {
             passedCount++;
           }
         }
       }
     }
 
-    const avgValidationScore = validatedCount > 0 ? passedCount / validatedCount : 0;
+    const avgValidationScore =
+      validatedCount > 0 ? passedCount / validatedCount : 0;
 
     return {
       totalBudget,
@@ -1262,35 +1487,42 @@ export function ProjectDetailPage() {
   }, [boqDetails]);
 
   const handleImportSuccess = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ['boqs', projectId] });
-    queryClient.invalidateQueries({ queryKey: ['boqDetails', projectId] });
+    queryClient.invalidateQueries({ queryKey: ["boqs", projectId] });
+    queryClient.invalidateQueries({ queryKey: ["boqDetails", projectId] });
   }, [queryClient, projectId]);
 
   // ── Tab data queries ──────────────────────────────────────────────────
 
   const { data: schedules, isLoading: schedulesLoading } = useQuery({
-    queryKey: ['schedules', projectId],
-    queryFn: () => apiGet<ScheduleItem[]>(`/v1/schedule/schedules/?project_id=${projectId}`),
-    enabled: !!projectId && activeTab === 'schedule',
+    queryKey: ["schedules", projectId],
+    queryFn: () =>
+      apiGet<ScheduleItem[]>(`/v1/schedule/schedules/?project_id=${projectId}`),
+    enabled: !!projectId && activeTab === "schedule",
   });
 
   const { data: budgetDashboard, isLoading: budgetLoading } = useQuery({
-    queryKey: ['budget', projectId],
-    queryFn: () => apiGet<BudgetDashboard>(`/v1/costmodel/projects/${projectId}/5d/dashboard/`),
-    enabled: !!projectId && activeTab === 'budget',
+    queryKey: ["budget", projectId],
+    queryFn: () =>
+      apiGet<BudgetDashboard>(
+        `/v1/costmodel/projects/${projectId}/5d/dashboard/`,
+      ),
+    enabled: !!projectId && activeTab === "budget",
   });
 
   const { data: tenderPackages, isLoading: tenderingLoading } = useQuery({
-    queryKey: ['tenderPackages', projectId],
-    queryFn: () => apiGet<TenderPackage[]>(`/v1/tendering/packages/?project_id=${projectId}`),
-    enabled: !!projectId && activeTab === 'tendering',
+    queryKey: ["tenderPackages", projectId],
+    queryFn: () =>
+      apiGet<TenderPackage[]>(
+        `/v1/tendering/packages/?project_id=${projectId}`,
+      ),
+    enabled: !!projectId && activeTab === "tendering",
   });
 
   // Unified dashboard data
   const { data: dashboardData, isLoading: dashboardLoading } = useQuery({
-    queryKey: ['project-dashboard', projectId],
+    queryKey: ["project-dashboard", projectId],
     queryFn: () => projectsApi.dashboard(projectId!),
-    enabled: !!projectId && activeTab === 'dashboard',
+    enabled: !!projectId && activeTab === "dashboard",
     staleTime: 30_000,
   });
 
@@ -1317,23 +1549,27 @@ export function ProjectDetailPage() {
         <EmptyState
           title={
             isOffline
-              ? t('projects.offline_title', { defaultValue: 'You appear to be offline' })
-              : t('projects.network_error_title', { defaultValue: "Can't reach the server" })
+              ? t("projects.offline_title", {
+                  defaultValue: "You appear to be offline",
+                })
+              : t("projects.network_error_title", {
+                  defaultValue: "Can't reach the server",
+                })
           }
           description={
             isOffline
-              ? t('projects.offline_desc', {
+              ? t("projects.offline_desc", {
                   defaultValue:
                     "We'll load this project as soon as your connection returns. Your sidebar bookmarks are kept intact.",
                 })
-              : t('projects.network_error_desc', {
+              : t("projects.network_error_desc", {
                   defaultValue:
-                    'The server is not responding right now. This does not mean the project is deleted — try again in a moment.',
+                    "The server is not responding right now. This does not mean the project is deleted — try again in a moment.",
                 })
           }
           action={
             <Button variant="primary" onClick={() => refetchProject()}>
-              {t('common.retry', { defaultValue: 'Retry' })}
+              {t("common.retry", { defaultValue: "Retry" })}
             </Button>
           }
         />
@@ -1346,14 +1582,16 @@ export function ProjectDetailPage() {
     return (
       <div className="w-full">
         <EmptyState
-          title={t('projects.not_found', { defaultValue: 'Project not found' })}
-          description={t('projects.not_found_desc', {
+          title={t("projects.not_found", { defaultValue: "Project not found" })}
+          description={t("projects.not_found_desc", {
             defaultValue:
-              'The project you are looking for does not exist or has been deleted. Stale bookmarks have been cleared — pick an active project below.',
+              "The project you are looking for does not exist or has been deleted. Stale bookmarks have been cleared — pick an active project below.",
           })}
           action={
-            <Button variant="primary" onClick={() => navigate('/projects')}>
-              {t('projects.browse_projects', { defaultValue: 'Browse projects' })}
+            <Button variant="primary" onClick={() => navigate("/projects")}>
+              {t("projects.browse_projects", {
+                defaultValue: "Browse projects",
+              })}
             </Button>
           }
         />
@@ -1361,7 +1599,7 @@ export function ProjectDetailPage() {
     );
   }
 
-  const currency = project.currency || 'EUR';
+  const currency = project.currency || "EUR";
 
   return (
     <div className="w-full animate-fade-in">
@@ -1369,7 +1607,7 @@ export function ProjectDetailPage() {
       <Breadcrumb
         className="mb-4"
         items={[
-          { label: t('projects.title', 'Projects'), to: '/projects' },
+          { label: t("projects.title", "Projects"), to: "/projects" },
           { label: project.name },
         ]}
       />
@@ -1382,123 +1620,157 @@ export function ProjectDetailPage() {
           keeps their outer borders aligned; the inner Health content
           vertically centers so the ring doesn't hug the top. */}
       <div className="mb-4 grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-3 items-stretch">
-      {/* ── Project Info Card ───────────────────────────────────────────── */}
-      <Card padding="md" className="h-full">
-        <div className="flex items-start justify-between">
-          <div className="flex-1 min-w-0">
-            {isEditing ? (
-              <div className="space-y-3">
-                <input
-                  value={editForm.name}
-                  onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))}
-                  className="w-full text-2xl font-bold text-content-primary bg-transparent border-b-2 border-oe-blue focus:outline-none pb-1"
-                  placeholder={t('projects.project_name', 'Project name')}
-                  autoFocus
-                />
-                <textarea
-                  value={editForm.description}
-                  onChange={(e) => setEditForm((f) => ({ ...f, description: e.target.value }))}
-                  className="w-full text-sm text-content-secondary bg-surface-secondary rounded-lg p-2 border border-border-light focus:outline-none focus:ring-2 focus:ring-oe-blue/30 resize-none"
-                  rows={2}
-                  placeholder={t('projects.description', 'Description')}
-                />
-                <div className="flex items-center gap-3">
+        {/* ── Project Info Card ───────────────────────────────────────────── */}
+        <Card padding="md" className="h-full">
+          <div className="flex items-start justify-between">
+            <div className="flex-1 min-w-0">
+              {isEditing ? (
+                <div className="space-y-3">
                   <input
-                    value={editForm.region}
-                    onChange={(e) => setEditForm((f) => ({ ...f, region: e.target.value }))}
-                    className="text-sm bg-surface-secondary rounded-lg px-3 py-1.5 border border-border-light focus:outline-none focus:ring-2 focus:ring-oe-blue/30 w-40"
-                    placeholder={t('projects.region', 'Region')}
-                  />
-                  <input
-                    value={editForm.currency}
-                    onChange={(e) => setEditForm((f) => ({ ...f, currency: e.target.value.toUpperCase() }))}
-                    className="text-sm bg-surface-secondary rounded-lg px-3 py-1.5 border border-border-light focus:outline-none focus:ring-2 focus:ring-oe-blue/30 w-24 uppercase"
-                    placeholder="EUR"
-                    maxLength={3}
-                  />
-                  <Button
-                    size="sm"
-                    onClick={() =>
-                      updateMutation.mutate({
-                        name: editForm.name,
-                        description: editForm.description,
-                        region: editForm.region,
-                        currency: editForm.currency,
-                      })
+                    value={editForm.name}
+                    onChange={(e) =>
+                      setEditForm((f) => ({ ...f, name: e.target.value }))
                     }
-                    disabled={!editForm.name.trim() || updateMutation.isPending}
-                  >
-                    <Save size={14} className="mr-1" />
-                    {t('common.save')}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setIsEditing(false)}
-                  >
-                    {t('common.cancel')}
-                  </Button>
+                    className="w-full text-2xl font-bold text-content-primary bg-transparent border-b-2 border-oe-blue focus:outline-none pb-1"
+                    placeholder={t("projects.project_name", "Project name")}
+                    autoFocus
+                  />
+                  <textarea
+                    value={editForm.description}
+                    onChange={(e) =>
+                      setEditForm((f) => ({
+                        ...f,
+                        description: e.target.value,
+                      }))
+                    }
+                    className="w-full text-sm text-content-secondary bg-surface-secondary rounded-lg p-2 border border-border-light focus:outline-none focus:ring-2 focus:ring-oe-blue/30 resize-none"
+                    rows={2}
+                    placeholder={t("projects.description", "Description")}
+                  />
+                  <div className="flex items-center gap-3">
+                    <input
+                      value={editForm.region}
+                      onChange={(e) =>
+                        setEditForm((f) => ({ ...f, region: e.target.value }))
+                      }
+                      className="text-sm bg-surface-secondary rounded-lg px-3 py-1.5 border border-border-light focus:outline-none focus:ring-2 focus:ring-oe-blue/30 w-40"
+                      placeholder={t("projects.region", "Region")}
+                    />
+                    <input
+                      value={editForm.currency}
+                      onChange={(e) =>
+                        setEditForm((f) => ({
+                          ...f,
+                          currency: e.target.value.toUpperCase(),
+                        }))
+                      }
+                      className="text-sm bg-surface-secondary rounded-lg px-3 py-1.5 border border-border-light focus:outline-none focus:ring-2 focus:ring-oe-blue/30 w-24 uppercase"
+                      placeholder="EUR"
+                      maxLength={3}
+                    />
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        updateMutation.mutate({
+                          name: editForm.name,
+                          description: editForm.description,
+                          region: editForm.region,
+                          currency: editForm.currency,
+                        })
+                      }
+                      disabled={
+                        !editForm.name.trim() || updateMutation.isPending
+                      }
+                    >
+                      <Save size={14} className="mr-1" />
+                      {t("common.save")}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setIsEditing(false)}
+                    >
+                      {t("common.cancel")}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <>
-                <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-content-primary">{project.name}</h1>
-                  <Badge variant={statusVariant[project.status] ?? 'neutral'} size="md" dot>
-                    {t(`projects.${project.status}`, { defaultValue: project.status })}
-                  </Badge>
-                  <button
-                    onClick={() => {
-                      setEditForm({
-                        name: project.name,
-                        description: project.description || '',
-                        region: project.region || '',
-                        currency: project.currency || 'EUR',
-                      });
-                      setIsEditing(true);
-                    }}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary transition-colors"
-                    title={t('common.edit')}
-                  >
-                    <Pencil size={14} />
-                  </button>
-                  <button
-                    onClick={() => navigate(`/projects/${project.id}/settings`)}
-                    className="flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-xs text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary transition-colors"
-                    title={t('project.settings.title', { defaultValue: 'Project Settings' })}
-                  >
-                    <ClipboardList size={13} />
-                    {t('project.settings.link', { defaultValue: 'Settings' })}
-                  </button>
-                </div>
-                {project.description && (
-                  <p className="mt-2 text-sm text-content-secondary max-w-2xl leading-relaxed">
-                    {project.description}
-                  </p>
-                )}
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <Badge variant="blue" size="sm">
-                    {standardLabels[project.classification_standard] ??
-                      project.classification_standard}
-                  </Badge>
-                  <Badge variant="neutral" size="sm">
-                    {currency}
-                  </Badge>
-                  <Badge variant="neutral" size="sm">
-                    {project.region}
-                  </Badge>
-                  <span className="text-xs text-content-tertiary ml-2">
-                    {t('projects.created', { date: formatDate(project.created_at, i18n.language) })}
-                  </span>
-                </div>
-              </>
-            )}
+              ) : (
+                <>
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-2xl font-bold text-content-primary">
+                      {project.name}
+                    </h1>
+                    <Badge
+                      variant={statusVariant[project.status] ?? "neutral"}
+                      size="md"
+                      dot
+                    >
+                      {t(`projects.${project.status}`, {
+                        defaultValue: project.status,
+                      })}
+                    </Badge>
+                    <button
+                      onClick={() => {
+                        setEditForm({
+                          name: project.name,
+                          description: project.description || "",
+                          region: project.region || "",
+                          currency: project.currency || "EUR",
+                        });
+                        setIsEditing(true);
+                      }}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary transition-colors"
+                      title={t("common.edit")}
+                    >
+                      <Pencil size={14} />
+                    </button>
+                    <button
+                      onClick={() =>
+                        navigate(`/projects/${project.id}/settings`)
+                      }
+                      className="flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-xs text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary transition-colors"
+                      title={t("project.settings.title", {
+                        defaultValue: "Project Settings",
+                      })}
+                    >
+                      <ClipboardList size={13} />
+                      {t("project.settings.link", { defaultValue: "Settings" })}
+                    </button>
+                  </div>
+                  {project.description && (
+                    <p className="mt-2 text-sm text-content-secondary max-w-2xl leading-relaxed">
+                      {project.description}
+                    </p>
+                  )}
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <Badge variant="blue" size="sm">
+                      {standardLabels[project.classification_standard] ??
+                        project.classification_standard}
+                    </Badge>
+                    <Badge variant="neutral" size="sm">
+                      {currency}
+                    </Badge>
+                    <Badge variant="neutral" size="sm">
+                      {project.region}
+                    </Badge>
+                    <span className="text-xs text-content-tertiary ml-2">
+                      {t("projects.created", {
+                        date: formatDate(project.created_at, i18n.language),
+                      })}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
 
-      {/* Health block moves into the top grid (right column). */}
-      <ProjectHealthBar projectId={projectId!} boqs={boqs} boqDetails={boqDetails} />
+        {/* Health block moves into the top grid (right column). */}
+        <ProjectHealthBar
+          projectId={projectId!}
+          boqs={boqs}
+          boqDetails={boqDetails}
+        />
       </div>
 
       {/* ── Location map + weather (toggleable in widget settings) ───────── */}
@@ -1520,15 +1792,16 @@ export function ProjectDetailPage() {
             const token = useAuthStore.getState().accessToken;
             if (!token) return false;
             try {
-              const parts = token.split('.');
+              const parts = token.split(".");
               if (parts.length !== 3) return false;
-              const payload = parts[1]!.replace(/-/g, '+').replace(/_/g, '/');
-              const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+              const payload = parts[1]!.replace(/-/g, "+").replace(/_/g, "/");
+              const padded =
+                payload + "=".repeat((4 - (payload.length % 4)) % 4);
               const json = JSON.parse(atob(padded)) as {
                 sub?: string;
                 role?: string;
               };
-              if (json.role === 'admin') return true;
+              if (json.role === "admin") return true;
               return !!json.sub && json.sub === project.owner_id;
             } catch {
               return false;
@@ -1541,14 +1814,17 @@ export function ProjectDetailPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
         {(() => {
           const areaMatch = project.description?.match(/(\d[\d.,]*)\s*m[²2]/i);
-          const area = areaMatch ? parseFloat((areaMatch[1] ?? '0').replace(',', '')) : null;
-          const costPerM2 = area && stats.totalBudget > 0 ? stats.totalBudget / area : null;
+          const area = areaMatch
+            ? parseFloat((areaMatch[1] ?? "0").replace(",", ""))
+            : null;
+          const costPerM2 =
+            area && stats.totalBudget > 0 ? stats.totalBudget / area : null;
           const costPerM2Str = costPerM2
             ? `${formatCurrency(costPerM2, currency)}/m\u00b2`
             : undefined;
           return (
             <SummaryCard
-              label={t('boq.grand_total')}
+              label={t("boq.grand_total")}
               value={formatCurrency(stats.totalBudget, currency)}
               icon={<DollarSign size={20} strokeWidth={1.75} />}
               variant="blue"
@@ -1562,33 +1838,61 @@ export function ProjectDetailPage() {
           icon={<Table2 size={20} strokeWidth={1.75} />}
         />
         <SummaryCard
-          label={t('projects.positions')}
+          label={t("projects.positions")}
           value={String(stats.totalPositions)}
           icon={<Layers size={20} strokeWidth={1.75} />}
         />
         <SummaryCard
-          label={t('validation.score')}
+          label={t("validation.score")}
           value={
             stats.avgValidationScore > 0
               ? `${(stats.avgValidationScore * 100).toFixed(0)}%`
-              : 'N/A'
+              : "N/A"
           }
           icon={<ShieldCheck size={20} strokeWidth={1.75} />}
-          variant={stats.avgValidationScore >= 0.8 ? 'success' : 'default'}
+          variant={stats.avgValidationScore >= 0.8 ? "success" : "default"}
         />
       </div>
 
       {/* ── Tab Bar ──────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1 mb-4 border-b border-border-light">
-        {([
-          { key: 'dashboard' as ProjectTab, label: t('projects.dashboard', { defaultValue: 'Dashboard' }), icon: <LayoutDashboard size={15} /> },
-          { key: 'overview' as ProjectTab, label: t('projects.overview'), icon: <Table2 size={15} /> },
-          { key: 'schedule' as ProjectTab, label: t('projects.4d_schedule'), icon: <CalendarClock size={15} /> },
-          { key: 'budget' as ProjectTab, label: t('projects.5d_budget'), icon: <Wallet size={15} /> },
-          { key: 'tendering' as ProjectTab, label: t('projects.tendering'), icon: <Gavel size={15} /> },
-          { key: 'photos' as ProjectTab, label: t('projects.photos.tab_label', { defaultValue: 'Photos' }), icon: <ImageIcon size={15} /> },
-          { key: 'compliance' as ProjectTab, label: t('compliance.tab_label', { defaultValue: 'Compliance' }), icon: <ShieldCheck size={15} /> },
-        ]).map((tab) => (
+        {[
+          {
+            key: "dashboard" as ProjectTab,
+            label: t("projects.dashboard", { defaultValue: "Dashboard" }),
+            icon: <LayoutDashboard size={15} />,
+          },
+          {
+            key: "overview" as ProjectTab,
+            label: t("projects.overview"),
+            icon: <Table2 size={15} />,
+          },
+          {
+            key: "schedule" as ProjectTab,
+            label: t("projects.4d_schedule"),
+            icon: <CalendarClock size={15} />,
+          },
+          {
+            key: "budget" as ProjectTab,
+            label: t("projects.5d_budget"),
+            icon: <Wallet size={15} />,
+          },
+          {
+            key: "tendering" as ProjectTab,
+            label: t("projects.tendering"),
+            icon: <Gavel size={15} />,
+          },
+          {
+            key: "photos" as ProjectTab,
+            label: t("projects.photos.tab_label", { defaultValue: "Photos" }),
+            icon: <ImageIcon size={15} />,
+          },
+          {
+            key: "compliance" as ProjectTab,
+            label: t("compliance.tab_label", { defaultValue: "Compliance" }),
+            icon: <ShieldCheck size={15} />,
+          },
+        ].map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
@@ -1596,8 +1900,8 @@ export function ProjectDetailPage() {
               flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all
               ${
                 activeTab === tab.key
-                  ? 'border-oe-blue text-oe-blue'
-                  : 'border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary'
+                  ? "border-oe-blue text-oe-blue"
+                  : "border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
               }
             `}
           >
@@ -1610,13 +1914,18 @@ export function ProjectDetailPage() {
       {/* ── Tab Content ──────────────────────────────────────────────────── */}
 
       {/* Dashboard Tab — Unified KPI view */}
-      {activeTab === 'dashboard' && (
+      {activeTab === "dashboard" && (
         <TabErrorBoundary fallbackTitle="Dashboard data failed to load">
           {dashboardLoading ? (
             <div className="space-y-4">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <Skeleton key={i} height={88} className="w-full" rounded="lg" />
+                  <Skeleton
+                    key={i}
+                    height={88}
+                    className="w-full"
+                    rounded="lg"
+                  />
                 ))}
               </div>
               <Skeleton height={120} className="w-full" rounded="lg" />
@@ -1630,28 +1939,57 @@ export function ProjectDetailPage() {
               {/* KPI Cards Row */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Budget consumed */}
-                <Card padding="md" className="relative overflow-hidden">
+                <Card
+                  padding="md"
+                  hoverable
+                  className="relative overflow-hidden cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={t("projects.dash_budget_consumed", {
+                    defaultValue: "Budget Consumed",
+                  })}
+                  onClick={() => setActiveTab("budget")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActiveTab("budget");
+                    }
+                  }}
+                >
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-xs font-medium text-content-tertiary uppercase tracking-wide">
-                        {t('projects.dash_budget_consumed', { defaultValue: 'Budget Consumed' })}
+                        {t("projects.dash_budget_consumed", {
+                          defaultValue: "Budget Consumed",
+                        })}
                       </p>
                       <p className="mt-0.5 text-xl font-bold text-content-primary tabular-nums leading-tight">
-                        {parseFloat(dashboardData.budget.consumed_pct).toFixed(1)}%
+                        {parseFloat(dashboardData.budget.consumed_pct).toFixed(
+                          1,
+                        )}
+                        %
                       </p>
                       <p className="text-xs text-content-secondary mt-1 tabular-nums">
-                        {formatCurrency(parseFloat(dashboardData.budget.actual), currency)}{' '}
-                        {t('projects.dash_of', { defaultValue: 'of' })}{' '}
-                        {formatCurrency(parseFloat(dashboardData.budget.revised), currency)}
+                        {formatCurrency(
+                          parseFloat(dashboardData.budget.actual),
+                          currency,
+                        )}{" "}
+                        {t("projects.dash_of", { defaultValue: "of" })}{" "}
+                        {formatCurrency(
+                          parseFloat(dashboardData.budget.revised),
+                          currency,
+                        )}
                       </p>
                     </div>
-                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                      dashboardData.budget.warning_level === 'critical'
-                        ? 'bg-semantic-error-bg text-semantic-error'
-                        : dashboardData.budget.warning_level === 'warning'
-                        ? 'bg-amber-100 text-amber-600'
-                        : 'bg-oe-blue-subtle text-oe-blue'
-                    }`}>
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                        dashboardData.budget.warning_level === "critical"
+                          ? "bg-semantic-error-bg text-semantic-error"
+                          : dashboardData.budget.warning_level === "warning"
+                            ? "bg-amber-100 text-amber-600"
+                            : "bg-oe-blue-subtle text-oe-blue"
+                      }`}
+                    >
                       <DollarSign size={20} strokeWidth={1.75} />
                     </div>
                   </div>
@@ -1661,32 +1999,61 @@ export function ProjectDetailPage() {
                       className="h-full rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min(parseFloat(dashboardData.budget.consumed_pct), 100)}%`,
-                        background: dashboardData.budget.warning_level === 'critical'
-                          ? 'var(--oe-error, #dc2626)'
-                          : dashboardData.budget.warning_level === 'warning'
-                          ? '#ca8a04'
-                          : 'var(--oe-blue)',
+                        background:
+                          dashboardData.budget.warning_level === "critical"
+                            ? "var(--oe-error, #dc2626)"
+                            : dashboardData.budget.warning_level === "warning"
+                              ? "#ca8a04"
+                              : "var(--oe-blue)",
                       }}
                     />
                   </div>
                 </Card>
 
                 {/* Schedule progress */}
-                <Card padding="md">
+                <Card
+                  padding="md"
+                  hoverable
+                  className="cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={t("projects.dash_schedule_progress", {
+                    defaultValue: "Schedule Progress",
+                  })}
+                  onClick={() => setActiveTab("schedule")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActiveTab("schedule");
+                    }
+                  }}
+                >
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-xs font-medium text-content-tertiary uppercase tracking-wide">
-                        {t('projects.dash_schedule_progress', { defaultValue: 'Schedule Progress' })}
+                        {t("projects.dash_schedule_progress", {
+                          defaultValue: "Schedule Progress",
+                        })}
                       </p>
                       <p className="mt-0.5 text-xl font-bold text-content-primary tabular-nums leading-tight">
-                        {parseFloat(dashboardData.schedule.progress_pct).toFixed(1)}%
+                        {parseFloat(
+                          dashboardData.schedule.progress_pct,
+                        ).toFixed(1)}
+                        %
                       </p>
                       <p className="text-xs text-content-secondary mt-1">
-                        {dashboardData.schedule.completed}/{dashboardData.schedule.total_activities}{' '}
-                        {t('projects.dash_activities', { defaultValue: 'activities' })}
+                        {dashboardData.schedule.completed}/
+                        {dashboardData.schedule.total_activities}{" "}
+                        {t("projects.dash_activities", {
+                          defaultValue: "activities",
+                        })}
                         {dashboardData.schedule.delayed > 0 && (
                           <span className="text-semantic-error ml-1">
-                            ({dashboardData.schedule.delayed} {t('projects.dash_delayed', { defaultValue: 'delayed' })})
+                            ({dashboardData.schedule.delayed}{" "}
+                            {t("projects.dash_delayed", {
+                              defaultValue: "delayed",
+                            })}
+                            )
                           </span>
                         )}
                       </p>
@@ -1698,39 +2065,86 @@ export function ProjectDetailPage() {
                 </Card>
 
                 {/* Quality score */}
-                <Card padding="md">
+                <Card
+                  padding="md"
+                  hoverable
+                  className="cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={t("projects.dash_quality", {
+                    defaultValue: "Quality Score",
+                  })}
+                  onClick={() => navigate("/validation")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate("/validation");
+                    }
+                  }}
+                >
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-xs font-medium text-content-tertiary uppercase tracking-wide">
-                        {t('projects.dash_quality', { defaultValue: 'Quality Score' })}
+                        {t("projects.dash_quality", {
+                          defaultValue: "Quality Score",
+                        })}
                       </p>
                       <p className="mt-0.5 text-xl font-bold text-content-primary tabular-nums leading-tight">
-                        {(parseFloat(dashboardData.quality.validation_score) * 100).toFixed(0)}%
+                        {(
+                          parseFloat(dashboardData.quality.validation_score) *
+                          100
+                        ).toFixed(0)}
+                        %
                       </p>
                       <p className="text-xs text-content-secondary mt-1">
                         {dashboardData.quality.open_defects > 0
-                          ? `${dashboardData.quality.open_defects} ${t('projects.dash_open_defects', { defaultValue: 'open defects' })}`
-                          : t('projects.dash_no_defects', { defaultValue: 'No open defects' })}
+                          ? `${dashboardData.quality.open_defects} ${t("projects.dash_open_defects", { defaultValue: "open defects" })}`
+                          : t("projects.dash_no_defects", {
+                              defaultValue: "No open defects",
+                            })}
                       </p>
                     </div>
-                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                      parseFloat(dashboardData.quality.validation_score) >= 0.8
-                        ? 'bg-semantic-success-bg text-semantic-success'
-                        : parseFloat(dashboardData.quality.validation_score) >= 0.5
-                        ? 'bg-amber-100 text-amber-600'
-                        : 'bg-surface-secondary text-content-tertiary'
-                    }`}>
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                        parseFloat(dashboardData.quality.validation_score) >=
+                        0.8
+                          ? "bg-semantic-success-bg text-semantic-success"
+                          : parseFloat(
+                                dashboardData.quality.validation_score,
+                              ) >= 0.5
+                            ? "bg-amber-100 text-amber-600"
+                            : "bg-surface-secondary text-content-tertiary"
+                      }`}
+                    >
                       <ShieldCheck size={20} strokeWidth={1.75} />
                     </div>
                   </div>
                 </Card>
 
                 {/* Open items count */}
-                <Card padding="md">
+                <Card
+                  padding="md"
+                  hoverable
+                  className="cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={t("projects.dash_open_items", {
+                    defaultValue: "Open Items",
+                  })}
+                  onClick={() => navigate("/tasks")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate("/tasks");
+                    }
+                  }}
+                >
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-xs font-medium text-content-tertiary uppercase tracking-wide">
-                        {t('projects.dash_open_items', { defaultValue: 'Open Items' })}
+                        {t("projects.dash_open_items", {
+                          defaultValue: "Open Items",
+                        })}
                       </p>
                       <p className="mt-0.5 text-xl font-bold text-content-primary tabular-nums leading-tight">
                         {dashboardData.communication.open_rfis +
@@ -1739,8 +2153,9 @@ export function ProjectDetailPage() {
                           dashboardData.quality.ncrs_open}
                       </p>
                       <p className="text-xs text-content-secondary mt-1">
-                        {dashboardData.communication.open_rfis} RFIs,{' '}
-                        {dashboardData.communication.open_tasks} {t('projects.dash_tasks', { defaultValue: 'tasks' })}
+                        {dashboardData.communication.open_rfis} RFIs,{" "}
+                        {dashboardData.communication.open_tasks}{" "}
+                        {t("projects.dash_tasks", { defaultValue: "tasks" })}
                       </p>
                     </div>
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#7c3aed]/10 text-[#7c3aed]">
@@ -1751,20 +2166,46 @@ export function ProjectDetailPage() {
               </div>
 
               {/* Budget section — horizontal stacked bar */}
-              <Card padding="md">
+              <Card
+                padding="md"
+                hoverable
+                className="cursor-pointer"
+                role="button"
+                tabIndex={0}
+                aria-label={t("projects.dash_budget_overview", {
+                  defaultValue: "Budget Overview",
+                })}
+                onClick={() => setActiveTab("budget")}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setActiveTab("budget");
+                  }
+                }}
+              >
                 <div className="flex items-center gap-2 mb-4">
                   <DollarSign size={16} className="text-content-tertiary" />
                   <h3 className="text-sm font-semibold text-content-primary">
-                    {t('projects.dash_budget_overview', { defaultValue: 'Budget Overview' })}
+                    {t("projects.dash_budget_overview", {
+                      defaultValue: "Budget Overview",
+                    })}
                   </h3>
-                  {dashboardData.budget.warning_level !== 'normal' && (
+                  {dashboardData.budget.warning_level !== "normal" && (
                     <Badge
-                      variant={dashboardData.budget.warning_level === 'critical' ? 'error' : 'warning'}
+                      variant={
+                        dashboardData.budget.warning_level === "critical"
+                          ? "error"
+                          : "warning"
+                      }
                       size="sm"
                     >
-                      {dashboardData.budget.warning_level === 'critical'
-                        ? t('projects.dash_over_budget', { defaultValue: 'Over Budget' })
-                        : t('projects.dash_at_risk', { defaultValue: 'At Risk' })}
+                      {dashboardData.budget.warning_level === "critical"
+                        ? t("projects.dash_over_budget", {
+                            defaultValue: "Over Budget",
+                          })
+                        : t("projects.dash_at_risk", {
+                            defaultValue: "At Risk",
+                          })}
                     </Badge>
                   )}
                 </div>
@@ -1772,26 +2213,37 @@ export function ProjectDetailPage() {
                   {/* Stacked bar */}
                   <div className="relative h-8 w-full rounded-lg bg-surface-secondary overflow-hidden">
                     {(() => {
-                      const forecast = parseFloat(dashboardData.budget.forecast) || 1;
+                      const forecast =
+                        parseFloat(dashboardData.budget.forecast) || 1;
                       const actual = parseFloat(dashboardData.budget.actual);
-                      const committed = parseFloat(dashboardData.budget.committed);
-                      const original = parseFloat(dashboardData.budget.original);
+                      const committed = parseFloat(
+                        dashboardData.budget.committed,
+                      );
+                      const original = parseFloat(
+                        dashboardData.budget.original,
+                      );
                       return (
                         <>
                           <div
                             className="absolute inset-y-0 left-0 bg-oe-blue/20 rounded-lg"
-                            style={{ width: `${Math.min((original / forecast) * 100, 100)}%` }}
-                            title={`${t('projects.dash_original', { defaultValue: 'Original' })}: ${formatCurrency(original, currency)}`}
+                            style={{
+                              width: `${Math.min((original / forecast) * 100, 100)}%`,
+                            }}
+                            title={`${t("projects.dash_original", { defaultValue: "Original" })}: ${formatCurrency(original, currency)}`}
                           />
                           <div
                             className="absolute inset-y-0 left-0 bg-oe-blue/40 rounded-l-lg"
-                            style={{ width: `${Math.min((committed / forecast) * 100, 100)}%` }}
-                            title={`${t('projects.dash_committed', { defaultValue: 'Committed' })}: ${formatCurrency(committed, currency)}`}
+                            style={{
+                              width: `${Math.min((committed / forecast) * 100, 100)}%`,
+                            }}
+                            title={`${t("projects.dash_committed", { defaultValue: "Committed" })}: ${formatCurrency(committed, currency)}`}
                           />
                           <div
                             className="absolute inset-y-0 left-0 bg-oe-blue rounded-l-lg"
-                            style={{ width: `${Math.min((actual / forecast) * 100, 100)}%` }}
-                            title={`${t('projects.dash_actual', { defaultValue: 'Actual' })}: ${formatCurrency(actual, currency)}`}
+                            style={{
+                              width: `${Math.min((actual / forecast) * 100, 100)}%`,
+                            }}
+                            title={`${t("projects.dash_actual", { defaultValue: "Actual" })}: ${formatCurrency(actual, currency)}`}
                           />
                         </>
                       );
@@ -1801,19 +2253,46 @@ export function ProjectDetailPage() {
                   <div className="flex flex-wrap items-center gap-4 text-xs text-content-secondary">
                     <span className="flex items-center gap-1.5">
                       <span className="h-2.5 w-2.5 rounded-sm bg-oe-blue" />
-                      {t('projects.dash_actual', { defaultValue: 'Actual' })}: {formatCurrency(parseFloat(dashboardData.budget.actual), currency)}
+                      {t("projects.dash_actual", {
+                        defaultValue: "Actual",
+                      })}:{" "}
+                      {formatCurrency(
+                        parseFloat(dashboardData.budget.actual),
+                        currency,
+                      )}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span className="h-2.5 w-2.5 rounded-sm bg-oe-blue/40" />
-                      {t('projects.dash_committed', { defaultValue: 'Committed' })}: {formatCurrency(parseFloat(dashboardData.budget.committed), currency)}
+                      {t("projects.dash_committed", {
+                        defaultValue: "Committed",
+                      })}
+                      :{" "}
+                      {formatCurrency(
+                        parseFloat(dashboardData.budget.committed),
+                        currency,
+                      )}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span className="h-2.5 w-2.5 rounded-sm bg-oe-blue/20" />
-                      {t('projects.dash_original', { defaultValue: 'Original' })}: {formatCurrency(parseFloat(dashboardData.budget.original), currency)}
+                      {t("projects.dash_original", {
+                        defaultValue: "Original",
+                      })}
+                      :{" "}
+                      {formatCurrency(
+                        parseFloat(dashboardData.budget.original),
+                        currency,
+                      )}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span className="h-2.5 w-2.5 rounded-sm border border-content-tertiary" />
-                      {t('projects.dash_forecast', { defaultValue: 'Forecast' })}: {formatCurrency(parseFloat(dashboardData.budget.forecast), currency)}
+                      {t("projects.dash_forecast", {
+                        defaultValue: "Forecast",
+                      })}
+                      :{" "}
+                      {formatCurrency(
+                        parseFloat(dashboardData.budget.forecast),
+                        currency,
+                      )}
                     </span>
                   </div>
                 </div>
@@ -1822,20 +2301,54 @@ export function ProjectDetailPage() {
               {/* Middle row: Schedule + Open Items */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 {/* Schedule section */}
-                <Card padding="md">
+                <Card
+                  padding="md"
+                  hoverable
+                  className="cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={t("projects.dash_schedule", {
+                    defaultValue: "Schedule",
+                  })}
+                  onClick={() => setActiveTab("schedule")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActiveTab("schedule");
+                    }
+                  }}
+                >
                   <div className="flex items-center gap-2 mb-3">
-                    <CalendarClock size={16} className="text-content-tertiary" />
+                    <CalendarClock
+                      size={16}
+                      className="text-content-tertiary"
+                    />
                     <h3 className="text-sm font-semibold text-content-primary">
-                      {t('projects.dash_schedule', { defaultValue: 'Schedule' })}
+                      {t("projects.dash_schedule", {
+                        defaultValue: "Schedule",
+                      })}
                     </h3>
                   </div>
                   <div className="flex items-center gap-6">
                     {/* Progress ring */}
                     <div className="relative shrink-0">
                       <svg className="h-20 w-20 -rotate-90" viewBox="0 0 80 80">
-                        <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="7" className="text-surface-secondary" />
                         <circle
-                          cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="7"
+                          cx="40"
+                          cy="40"
+                          r="34"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="7"
+                          className="text-surface-secondary"
+                        />
+                        <circle
+                          cx="40"
+                          cy="40"
+                          r="34"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="7"
                           strokeLinecap="round"
                           strokeDasharray={`${(parseFloat(dashboardData.schedule.progress_pct) / 100) * 213.63} 213.63`}
                           className="text-oe-blue transition-all duration-500"
@@ -1843,39 +2356,71 @@ export function ProjectDetailPage() {
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-base font-bold text-content-primary tabular-nums">
-                          {parseFloat(dashboardData.schedule.progress_pct).toFixed(0)}%
+                          {parseFloat(
+                            dashboardData.schedule.progress_pct,
+                          ).toFixed(0)}
+                          %
                         </span>
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-content-secondary">{t('projects.dash_completed', { defaultValue: 'Completed' })}</span>
-                        <span className="font-medium text-content-primary tabular-nums">{dashboardData.schedule.completed}</span>
+                        <span className="text-content-secondary">
+                          {t("projects.dash_completed", {
+                            defaultValue: "Completed",
+                          })}
+                        </span>
+                        <span className="font-medium text-content-primary tabular-nums">
+                          {dashboardData.schedule.completed}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-content-secondary">{t('projects.dash_in_progress', { defaultValue: 'In Progress' })}</span>
-                        <span className="font-medium text-content-primary tabular-nums">{dashboardData.schedule.in_progress}</span>
+                        <span className="text-content-secondary">
+                          {t("projects.dash_in_progress", {
+                            defaultValue: "In Progress",
+                          })}
+                        </span>
+                        <span className="font-medium text-content-primary tabular-nums">
+                          {dashboardData.schedule.in_progress}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-content-secondary">{t('projects.dash_delayed', { defaultValue: 'Delayed' })}</span>
-                        <span className={`font-medium tabular-nums ${dashboardData.schedule.delayed > 0 ? 'text-semantic-error' : 'text-content-primary'}`}>
+                        <span className="text-content-secondary">
+                          {t("projects.dash_delayed", {
+                            defaultValue: "Delayed",
+                          })}
+                        </span>
+                        <span
+                          className={`font-medium tabular-nums ${dashboardData.schedule.delayed > 0 ? "text-semantic-error" : "text-content-primary"}`}
+                        >
                           {dashboardData.schedule.delayed}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-content-secondary">{t('projects.dash_critical_path', { defaultValue: 'Critical Path' })}</span>
-                        <span className="font-medium text-content-primary tabular-nums">{dashboardData.schedule.critical_activities}</span>
+                        <span className="text-content-secondary">
+                          {t("projects.dash_critical_path", {
+                            defaultValue: "Critical Path",
+                          })}
+                        </span>
+                        <span className="font-medium text-content-primary tabular-nums">
+                          {dashboardData.schedule.critical_activities}
+                        </span>
                       </div>
                       {dashboardData.schedule.next_milestone && (
                         <div className="mt-2 pt-2 border-t border-border-light">
                           <p className="text-2xs text-content-tertiary uppercase tracking-wider">
-                            {t('projects.dash_next_milestone', { defaultValue: 'Next Milestone' })}
+                            {t("projects.dash_next_milestone", {
+                              defaultValue: "Next Milestone",
+                            })}
                           </p>
                           <p className="text-xs font-medium text-content-primary mt-0.5">
                             {dashboardData.schedule.next_milestone.name}
                           </p>
                           <p className="text-2xs text-content-tertiary">
-                            {formatDate(dashboardData.schedule.next_milestone.date, i18n.language)}
+                            {formatDate(
+                              dashboardData.schedule.next_milestone.date,
+                              i18n.language,
+                            )}
                           </p>
                         </div>
                       )}
@@ -1886,78 +2431,136 @@ export function ProjectDetailPage() {
                 {/* Open Items Grid */}
                 <Card padding="md">
                   <div className="flex items-center gap-2 mb-3">
-                    <MessageSquare size={16} className="text-content-tertiary" />
+                    <MessageSquare
+                      size={16}
+                      className="text-content-tertiary"
+                    />
                     <h3 className="text-sm font-semibold text-content-primary">
-                      {t('projects.dash_open_items_detail', { defaultValue: 'Open Items' })}
+                      {t("projects.dash_open_items_detail", {
+                        defaultValue: "Open Items",
+                      })}
                     </h3>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     {[
                       {
-                        label: t('projects.dash_rfis', { defaultValue: 'RFIs' }),
+                        label: t("projects.dash_rfis", {
+                          defaultValue: "RFIs",
+                        }),
                         count: dashboardData.communication.open_rfis,
                         alert: dashboardData.communication.overdue_rfis,
-                        alertLabel: t('projects.dash_overdue', { defaultValue: 'overdue' }),
+                        alertLabel: t("projects.dash_overdue", {
+                          defaultValue: "overdue",
+                        }),
                         icon: <MessageSquare size={14} />,
-                        color: 'text-oe-blue',
-                        bg: 'bg-oe-blue-subtle',
+                        color: "text-oe-blue",
+                        bg: "bg-oe-blue-subtle",
+                        to: "/rfi",
                       },
                       {
-                        label: t('projects.dash_submittals', { defaultValue: 'Submittals' }),
+                        label: t("projects.dash_submittals", {
+                          defaultValue: "Submittals",
+                        }),
                         count: dashboardData.communication.open_submittals,
                         icon: <FileCheck size={14} />,
-                        color: 'text-[#7c3aed]',
-                        bg: 'bg-[#7c3aed]/10',
+                        color: "text-[#7c3aed]",
+                        bg: "bg-[#7c3aed]/10",
+                        to: "/submittals",
                       },
                       {
-                        label: t('projects.dash_tasks', { defaultValue: 'Tasks' }),
+                        label: t("projects.dash_tasks", {
+                          defaultValue: "Tasks",
+                        }),
                         count: dashboardData.communication.open_tasks,
                         icon: <ClipboardList size={14} />,
-                        color: 'text-[#0891b2]',
-                        bg: 'bg-[#0891b2]/10',
+                        color: "text-[#0891b2]",
+                        bg: "bg-[#0891b2]/10",
+                        to: "/tasks",
                       },
                       {
-                        label: t('projects.dash_ncrs', { defaultValue: 'NCRs' }),
+                        label: t("projects.dash_ncrs", {
+                          defaultValue: "NCRs",
+                        }),
                         count: dashboardData.quality.ncrs_open,
                         icon: <AlertTriangle size={14} />,
-                        color: dashboardData.quality.ncrs_open > 0 ? 'text-semantic-error' : 'text-content-tertiary',
-                        bg: dashboardData.quality.ncrs_open > 0 ? 'bg-semantic-error-bg' : 'bg-surface-secondary',
+                        color:
+                          dashboardData.quality.ncrs_open > 0
+                            ? "text-semantic-error"
+                            : "text-content-tertiary",
+                        bg:
+                          dashboardData.quality.ncrs_open > 0
+                            ? "bg-semantic-error-bg"
+                            : "bg-surface-secondary",
+                        to: "/punchlist",
                       },
                     ].map((item) => (
-                      <div key={item.label} className="rounded-lg border border-border-light p-3">
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() => navigate(item.to)}
+                        className="rounded-lg border border-border-light p-3 text-left transition-all hover:border-oe-blue/40 hover:bg-surface-secondary hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                        aria-label={`${item.label}: ${item.count}`}
+                      >
                         <div className="flex items-center gap-2 mb-2">
-                          <div className={`flex h-6 w-6 items-center justify-center rounded-md ${item.bg} ${item.color}`}>
+                          <div
+                            className={`flex h-6 w-6 items-center justify-center rounded-md ${item.bg} ${item.color}`}
+                          >
                             {item.icon}
                           </div>
-                          <span className="text-xs text-content-secondary">{item.label}</span>
+                          <span className="text-xs text-content-secondary">
+                            {item.label}
+                          </span>
                         </div>
-                        <p className="text-lg font-bold text-content-primary tabular-nums">{item.count}</p>
-                        {'alert' in item && item.alert != null && item.alert > 0 && (
-                          <p className="text-2xs text-semantic-error mt-0.5">
-                            {item.alert} {item.alertLabel}
-                          </p>
-                        )}
-                      </div>
+                        <p className="text-lg font-bold text-content-primary tabular-nums">
+                          {item.count}
+                        </p>
+                        {"alert" in item &&
+                          item.alert != null &&
+                          item.alert > 0 && (
+                            <p className="text-2xs text-semantic-error mt-0.5">
+                              {item.alert} {item.alertLabel}
+                            </p>
+                          )}
+                      </button>
                     ))}
                   </div>
                   {/* Procurement summary */}
                   <div className="mt-3 pt-3 border-t border-border-light">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Package size={14} className="text-content-tertiary" />
-                      <span className="text-xs font-medium text-content-secondary">
-                        {t('projects.dash_procurement', { defaultValue: 'Procurement' })}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4 text-xs text-content-secondary">
-                      <span>
-                        <strong className="text-content-primary">{dashboardData.procurement.active_pos}</strong>{' '}
-                        {t('projects.dash_active_pos', { defaultValue: 'active POs' })}
-                      </span>
-                      <span>
-                        <strong className="text-content-primary">{dashboardData.procurement.pending_delivery}</strong>{' '}
-                        {t('projects.dash_pending_delivery', { defaultValue: 'pending delivery' })}
-                      </span>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/procurement")}
+                      className="block w-full text-left rounded-md transition-colors hover:bg-surface-secondary -mx-2 px-2 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                      aria-label={t("projects.dash_procurement", {
+                        defaultValue: "Procurement",
+                      })}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <Package size={14} className="text-content-tertiary" />
+                        <span className="text-xs font-medium text-content-secondary">
+                          {t("projects.dash_procurement", {
+                            defaultValue: "Procurement",
+                          })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-4 text-xs text-content-secondary">
+                        <span>
+                          <strong className="text-content-primary">
+                            {dashboardData.procurement.active_pos}
+                          </strong>{" "}
+                          {t("projects.dash_active_pos", {
+                            defaultValue: "active POs",
+                          })}
+                        </span>
+                        <span>
+                          <strong className="text-content-primary">
+                            {dashboardData.procurement.pending_delivery}
+                          </strong>{" "}
+                          {t("projects.dash_pending_delivery", {
+                            defaultValue: "pending delivery",
+                          })}
+                        </span>
+                      </div>
+                    </button>
                   </div>
                 </Card>
               </div>
@@ -1970,42 +2573,79 @@ export function ProjectDetailPage() {
                     <div className="flex items-center gap-2">
                       <Activity size={16} className="text-content-tertiary" />
                       <h3 className="text-sm font-semibold text-content-primary">
-                        {t('projects.dash_recent_activity', { defaultValue: 'Recent Activity' })}
+                        {t("projects.dash_recent_activity", {
+                          defaultValue: "Recent Activity",
+                        })}
                       </h3>
                     </div>
                   </div>
                   {dashboardData.recent_activity.length === 0 ? (
                     <div className="px-5 pb-5">
                       <p className="text-xs text-content-tertiary text-center py-6">
-                        {t('projects.dash_no_activity', { defaultValue: 'No recent activity in this project.' })}
+                        {t("projects.dash_no_activity", {
+                          defaultValue: "No recent activity in this project.",
+                        })}
                       </p>
                     </div>
                   ) : (
                     <div className="divide-y divide-border-light">
                       {dashboardData.recent_activity.map((item, idx) => {
                         const typeLabels: Record<string, string> = {
-                          rfi_created: 'RFI',
-                          task_created: t('projects.dash_task', { defaultValue: 'Task' }),
-                          change_order: t('projects.dash_change_order', { defaultValue: 'Change Order' }),
-                          document_uploaded: t('projects.dash_document', { defaultValue: 'Document' }),
-                          punch_item: t('projects.dash_punch_item', { defaultValue: 'Punch Item' }),
-                          field_report: t('projects.dash_field_report', { defaultValue: 'Field Report' }),
+                          rfi_created: "RFI",
+                          task_created: t("projects.dash_task", {
+                            defaultValue: "Task",
+                          }),
+                          change_order: t("projects.dash_change_order", {
+                            defaultValue: "Change Order",
+                          }),
+                          document_uploaded: t("projects.dash_document", {
+                            defaultValue: "Document",
+                          }),
+                          punch_item: t("projects.dash_punch_item", {
+                            defaultValue: "Punch Item",
+                          }),
+                          field_report: t("projects.dash_field_report", {
+                            defaultValue: "Field Report",
+                          }),
                         };
                         const typeColors: Record<string, string> = {
-                          rfi_created: 'bg-oe-blue-subtle text-oe-blue',
-                          task_created: 'bg-[#0891b2]/10 text-[#0891b2]',
-                          change_order: 'bg-amber-100 text-amber-600',
-                          document_uploaded: 'bg-[#7c3aed]/10 text-[#7c3aed]',
-                          punch_item: 'bg-semantic-error-bg text-semantic-error',
-                          field_report: 'bg-semantic-success-bg text-semantic-success',
+                          rfi_created: "bg-oe-blue-subtle text-oe-blue",
+                          task_created: "bg-[#0891b2]/10 text-[#0891b2]",
+                          change_order: "bg-amber-100 text-amber-600",
+                          document_uploaded: "bg-[#7c3aed]/10 text-[#7c3aed]",
+                          punch_item:
+                            "bg-semantic-error-bg text-semantic-error",
+                          field_report:
+                            "bg-semantic-success-bg text-semantic-success",
                         };
+                        const typeRoutes: Record<string, string> = {
+                          rfi_created: "/rfi",
+                          task_created: "/tasks",
+                          change_order: "/changeorders",
+                          document_uploaded: "/files",
+                          punch_item: "/punchlist",
+                          field_report: "/field-reports",
+                        };
+                        const to = typeRoutes[item.type] ?? "/dashboard";
                         return (
-                          <div key={`${item.type}-${item.title.slice(0, 30)}-${idx}`} className="flex items-center gap-3 px-5 py-3">
-                            <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-2xs font-bold ${typeColors[item.type] || 'bg-surface-secondary text-content-tertiary'}`}>
-                              {(typeLabels[item.type] || item.type).charAt(0).toUpperCase()}
+                          <button
+                            key={`${item.type}-${item.title.slice(0, 30)}-${idx}`}
+                            type="button"
+                            onClick={() => navigate(to)}
+                            className="flex items-center gap-3 px-5 py-3 w-full text-left transition-colors hover:bg-surface-secondary focus:outline-none focus-visible:bg-surface-secondary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oe-blue/40"
+                            aria-label={`${typeLabels[item.type] || item.type}: ${item.title}`}
+                          >
+                            <div
+                              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-2xs font-bold ${typeColors[item.type] || "bg-surface-secondary text-content-tertiary"}`}
+                            >
+                              {(typeLabels[item.type] || item.type)
+                                .charAt(0)
+                                .toUpperCase()}
                             </div>
                             <div className="min-w-0 flex-1">
-                              <p className="text-sm text-content-primary truncate">{item.title}</p>
+                              <p className="text-sm text-content-primary truncate">
+                                {item.title}
+                              </p>
                               <p className="text-2xs text-content-tertiary">
                                 {typeLabels[item.type] || item.type}
                               </p>
@@ -2013,127 +2653,190 @@ export function ProjectDetailPage() {
                             <span className="text-2xs text-content-tertiary shrink-0 tabular-nums">
                               {formatDate(item.date, i18n.language)}
                             </span>
-                          </div>
+                          </button>
                         );
                       })}
                     </div>
                   )}
                 </Card>
 
-                {/* Quick Actions */}
-                <Card padding="md">
+                {/* Quick Actions — flex column so the card stretches to match
+                    Recent Activity height; Documents stats are pushed to the
+                    bottom via mt-auto. */}
+                <Card padding="md" className="h-full flex flex-col">
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles size={16} className="text-content-tertiary" />
                     <h3 className="text-sm font-semibold text-content-primary">
-                      {t('projects.dash_quick_actions', { defaultValue: 'Quick Actions' })}
+                      {t("projects.dash_quick_actions", {
+                        defaultValue: "Quick Actions",
+                      })}
                     </h3>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<Plus size={14} />}
                       onClick={() => navigate(`/projects/${projectId}/boq/new`)}
                     >
-                      {t('projects.new_boq', { defaultValue: 'New BOQ' })}
+                      {t("projects.new_boq", { defaultValue: "New BOQ" })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<MessageSquare size={14} />}
-                      onClick={() => navigate('/rfi')}
+                      onClick={() => navigate("/rfi")}
                     >
-                      {t('projects.dash_new_rfi', { defaultValue: 'New RFI' })}
+                      {t("projects.dash_new_rfi", { defaultValue: "New RFI" })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<ClipboardList size={14} />}
-                      onClick={() => navigate('/tasks')}
+                      onClick={() => navigate("/tasks")}
                     >
-                      {t('projects.dash_new_task', { defaultValue: 'New Task' })}
+                      {t("projects.dash_new_task", {
+                        defaultValue: "New Task",
+                      })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<ShieldCheck size={14} />}
-                      onClick={() => navigate('/validation')}
+                      onClick={() => navigate("/validation")}
                     >
-                      {t('projects.dash_run_validation', { defaultValue: 'Run Validation' })}
+                      {t("projects.dash_run_validation", {
+                        defaultValue: "Run Validation",
+                      })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<FileSpreadsheet size={14} />}
-                      onClick={() => navigate('/reports')}
+                      onClick={() => navigate("/reports")}
                     >
-                      {t('projects.dash_generate_report', { defaultValue: 'Generate Report' })}
+                      {t("projects.dash_generate_report", {
+                        defaultValue: "Generate Report",
+                      })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<FolderOpen size={14} />}
-                      onClick={() => navigate('/documents')}
+                      onClick={() => navigate("/documents")}
                     >
-                      {t('projects.dash_documents_link', { defaultValue: 'Documents' })}
+                      {t("projects.dash_documents_link", {
+                        defaultValue: "Documents",
+                      })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<Calendar size={14} />}
-                      onClick={() => navigate('/schedule')}
+                      onClick={() => navigate("/schedule")}
                     >
-                      {t('projects.dash_schedule_link', { defaultValue: 'Schedule' })}
+                      {t("projects.dash_schedule_link", {
+                        defaultValue: "Schedule",
+                      })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<Wallet size={14} />}
-                      onClick={() => navigate('/finance')}
+                      onClick={() => navigate("/finance")}
                     >
-                      {t('projects.dash_finance_link', { defaultValue: 'Finance' })}
+                      {t("projects.dash_finance_link", {
+                        defaultValue: "Finance",
+                      })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<HardHat size={14} />}
-                      onClick={() => navigate('/safety')}
+                      onClick={() => navigate("/safety")}
                     >
-                      {t('projects.dash_safety_link', { defaultValue: 'Safety' })}
+                      {t("projects.dash_safety_link", {
+                        defaultValue: "Safety",
+                      })}
                     </Button>
                     <Button
                       variant="secondary"
-                      size="sm"
+                      size="md"
                       className="w-full justify-start"
                       icon={<Package size={14} />}
-                      onClick={() => navigate('/procurement')}
+                      onClick={() => navigate("/procurement")}
                     >
-                      {t('projects.dash_procurement_link', { defaultValue: 'Procurement' })}
+                      {t("projects.dash_procurement_link", {
+                        defaultValue: "Procurement",
+                      })}
                     </Button>
                   </div>
-                  {/* Document stats */}
-                  <div className="mt-4 pt-3 border-t border-border-light">
-                    <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider mb-2">
-                      {t('projects.dash_documents', { defaultValue: 'Documents' })}
-                    </p>
-                    <div className="flex items-center gap-3 text-xs text-content-secondary">
-                      <span><strong className="text-content-primary">{dashboardData.documents.total}</strong> {t('projects.dash_total', { defaultValue: 'total' })}</span>
-                      <span><strong className="text-content-primary">{dashboardData.documents.published}</strong> {t('projects.dash_published', { defaultValue: 'published' })}</span>
-                      {dashboardData.documents.pending_transmittals > 0 && (
-                        <span className="text-amber-600">
-                          <strong>{dashboardData.documents.pending_transmittals}</strong> {t('projects.dash_pending', { defaultValue: 'pending' })}
+                  {/* Document stats — pushed to the bottom via mt-auto so the
+                      Quick Actions card visually balances against Recent
+                      Activity height. Numbers promoted to text-lg for parity
+                      with the activity-feed weight. */}
+                  <div className="mt-auto pt-4">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/files")}
+                      className="block w-full text-left rounded-lg border border-border-light bg-surface-secondary/40 transition-colors hover:bg-surface-secondary hover:border-border px-3 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                      aria-label={t("projects.dash_documents", {
+                        defaultValue: "Documents",
+                      })}
+                    >
+                      <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <FolderOpen
+                          size={12}
+                          className="text-content-quaternary"
+                        />
+                        {t("projects.dash_documents", {
+                          defaultValue: "Documents",
+                        })}
+                      </p>
+                      <div className="flex items-center gap-4 text-xs text-content-secondary">
+                        <span className="flex flex-col">
+                          <strong className="text-lg leading-none text-content-primary">
+                            {dashboardData.documents.total}
+                          </strong>
+                          <span className="mt-0.5 text-2xs text-content-tertiary uppercase tracking-wide">
+                            {t("projects.dash_total", {
+                              defaultValue: "total",
+                            })}
+                          </span>
                         </span>
-                      )}
-                    </div>
+                        <span className="flex flex-col">
+                          <strong className="text-lg leading-none text-content-primary">
+                            {dashboardData.documents.published}
+                          </strong>
+                          <span className="mt-0.5 text-2xs text-content-tertiary uppercase tracking-wide">
+                            {t("projects.dash_published", {
+                              defaultValue: "published",
+                            })}
+                          </span>
+                        </span>
+                        {dashboardData.documents.pending_transmittals > 0 && (
+                          <span className="flex flex-col">
+                            <strong className="text-lg leading-none text-amber-600">
+                              {dashboardData.documents.pending_transmittals}
+                            </strong>
+                            <span className="mt-0.5 text-2xs text-amber-700/80 uppercase tracking-wide">
+                              {t("projects.dash_pending", {
+                                defaultValue: "pending",
+                              })}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    </button>
                   </div>
                 </Card>
               </div>
@@ -2141,20 +2844,25 @@ export function ProjectDetailPage() {
           ) : (
             <EmptyState
               icon={<LayoutDashboard size={28} strokeWidth={1.5} />}
-              title={t('projects.dash_empty', { defaultValue: 'No dashboard data' })}
-              description={t('projects.dash_empty_desc', { defaultValue: 'Start adding BOQs, schedules, and documents to see project KPIs here.' })}
+              title={t("projects.dash_empty", {
+                defaultValue: "No dashboard data",
+              })}
+              description={t("projects.dash_empty_desc", {
+                defaultValue:
+                  "Start adding BOQs, schedules, and documents to see project KPIs here.",
+              })}
             />
           )}
         </TabErrorBoundary>
       )}
 
       {/* Overview Tab — BOQ List */}
-      {activeTab === 'overview' && (
+      {activeTab === "overview" && (
         <Card padding="none">
           <div className="px-6 pt-6 pb-2">
             <CardHeader
-              title={t('boq.title')}
-              subtitle={t('projects.boqs_for_project')}
+              title={t("boq.title")}
+              subtitle={t("projects.boqs_for_project")}
               action={
                 <div className="flex items-center gap-2">
                   <Button
@@ -2163,7 +2871,7 @@ export function ProjectDetailPage() {
                     icon={<Table2 size={14} />}
                     onClick={() => navigate(`/projects/${projectId}/boq/new`)}
                   >
-                    {t('projects.new_boq')}
+                    {t("projects.new_boq")}
                   </Button>
                 </div>
               }
@@ -2181,8 +2889,8 @@ export function ProjectDetailPage() {
               <div className="px-6 pb-6">
                 <EmptyState
                   icon={<Table2 size={28} strokeWidth={1.5} />}
-                  title={t('projects.no_boqs')}
-                  description={t('projects.no_boqs_desc')}
+                  title={t("projects.no_boqs")}
+                  description={t("projects.no_boqs_desc")}
                   action={
                     <Button
                       variant="primary"
@@ -2190,7 +2898,7 @@ export function ProjectDetailPage() {
                       icon={<Table2 size={14} />}
                       onClick={() => navigate(`/projects/${projectId}/boq/new`)}
                     >
-                      {t('projects.create_boq')}
+                      {t("projects.create_boq")}
                     </Button>
                   }
                 />
@@ -2224,7 +2932,9 @@ export function ProjectDetailPage() {
                           {boq.name}
                         </div>
                         <div className="mt-0.5 flex items-center gap-3 text-xs text-content-tertiary">
-                          <span>{posCount} {t('projects.positions').toLowerCase()}</span>
+                          <span>
+                            {posCount} {t("projects.positions").toLowerCase()}
+                          </span>
                           <span className="text-border">|</span>
                           <span className="font-medium tabular-nums">
                             {formatCurrency(grandTotal, currency)}
@@ -2243,20 +2953,31 @@ export function ProjectDetailPage() {
 
                       {/* Actions */}
                       <div className="flex items-center gap-2">
-                        <Badge variant={statusVariant[boq.status] ?? 'neutral'} size="sm">
+                        <Badge
+                          variant={statusVariant[boq.status] ?? "neutral"}
+                          size="sm"
+                        >
                           {boq.status}
                         </Badge>
                         <Button
                           variant="ghost"
                           size="sm"
                           icon={<Upload size={14} />}
-                          title={t('boq.import_tooltip', { defaultValue: 'Import GAEB, Excel, or CSV into this BOQ' })}
+                          title={t("boq.import_tooltip", {
+                            defaultValue:
+                              "Import GAEB, Excel, or CSV into this BOQ",
+                          })}
                           onClick={(e) => {
                             e.stopPropagation();
-                            setImportTarget({ boqId: boq.id, boqName: boq.name });
+                            setImportTarget({
+                              boqId: boq.id,
+                              boqName: boq.name,
+                            });
                           }}
                         >
-                          {t('boq.import_file', { defaultValue: 'Import File' })}
+                          {t("boq.import_file", {
+                            defaultValue: "Import File",
+                          })}
                         </Button>
                       </div>
                     </div>
@@ -2269,206 +2990,283 @@ export function ProjectDetailPage() {
       )}
 
       {/* 4D Schedule Tab */}
-      {activeTab === 'schedule' && (
+      {activeTab === "schedule" && (
         <TabErrorBoundary fallbackTitle="Schedule data failed to load">
-        <Card padding="lg">
-          <CardHeader title={t('projects.4d_schedule')} subtitle={t('projects.schedule_subtitle', { defaultValue: 'Project schedules and timeline' })} />
-          <div className="mt-4">
-            {schedulesLoading ? (
-              <div className="space-y-3">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} height={56} className="w-full" />
-                ))}
-              </div>
-            ) : !schedules || schedules.length === 0 ? (
-              <EmptyState
-                icon={<CalendarClock size={28} strokeWidth={1.5} />}
-                title={t('projects.no_schedules', { defaultValue: 'No schedules yet' })}
-                description={t('projects.no_schedules_desc', { defaultValue: 'Create a schedule to manage project timelines.' })}
-              />
-            ) : (
-              <div className="divide-y divide-border-light rounded-lg border border-border-light">
-                {schedules.map((sched) => (
-                  <div key={sched.id} className="flex items-center gap-4 px-5 py-3.5">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-secondary">
-                      <CalendarClock size={16} className="text-content-tertiary" />
+          <Card padding="lg">
+            <CardHeader
+              title={t("projects.4d_schedule")}
+              subtitle={t("projects.schedule_subtitle", {
+                defaultValue: "Project schedules and timeline",
+              })}
+            />
+            <div className="mt-4">
+              {schedulesLoading ? (
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <Skeleton key={i} height={56} className="w-full" />
+                  ))}
+                </div>
+              ) : !schedules || schedules.length === 0 ? (
+                <EmptyState
+                  icon={<CalendarClock size={28} strokeWidth={1.5} />}
+                  title={t("projects.no_schedules", {
+                    defaultValue: "No schedules yet",
+                  })}
+                  description={t("projects.no_schedules_desc", {
+                    defaultValue:
+                      "Create a schedule to manage project timelines.",
+                  })}
+                />
+              ) : (
+                <div className="divide-y divide-border-light rounded-lg border border-border-light">
+                  {schedules.map((sched) => (
+                    <div
+                      key={sched.id}
+                      className="flex items-center gap-4 px-5 py-3.5"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-secondary">
+                        <CalendarClock
+                          size={16}
+                          className="text-content-tertiary"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-content-primary truncate">
+                          {sched.name}
+                        </p>
+                        <p className="text-xs text-content-tertiary">
+                          {formatDate(sched.created_at, i18n.language)}
+                        </p>
+                      </div>
+                      <Badge
+                        variant={statusVariant[sched.status] ?? "neutral"}
+                        size="sm"
+                      >
+                        {sched.status}
+                      </Badge>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-content-primary truncate">
-                        {sched.name}
-                      </p>
-                      <p className="text-xs text-content-tertiary">{formatDate(sched.created_at, i18n.language)}</p>
-                    </div>
-                    <Badge variant={statusVariant[sched.status] ?? 'neutral'} size="sm">
-                      {sched.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
         </TabErrorBoundary>
       )}
 
       {/* 5D Budget Tab */}
-      {activeTab === 'budget' && (
+      {activeTab === "budget" && (
         <TabErrorBoundary fallbackTitle="Budget data failed to load">
-        <Card padding="lg">
-          <CardHeader title={t('projects.5d_budget')} subtitle={t('projects.budget_subtitle', { defaultValue: 'Cost model and budget tracking' })} />
-          <div className="mt-4">
-            {budgetLoading ? (
-              <div className="space-y-3">
-                <Skeleton height={88} className="w-full" />
-                <Skeleton height={200} className="w-full" />
-              </div>
-            ) : !budgetDashboard ? (
-              <EmptyState
-                icon={<Wallet size={28} strokeWidth={1.5} />}
-                title={t('projects.no_budget', { defaultValue: 'No budget data' })}
-                description={t('projects.no_budget_desc', { defaultValue: 'Set up a 5D cost model to track planned vs actual costs.' })}
-              />
-            ) : (
-              <div className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <SummaryCard
-                    label={t('projects.total_budget', { defaultValue: 'Total Budget' })}
-                    value={formatCurrency(budgetDashboard.total_budget ?? 0, currency)}
-                    icon={<DollarSign size={18} strokeWidth={1.75} />}
-                    variant="blue"
-                  />
-                  <SummaryCard
-                    label={t('projects.total_spent', { defaultValue: 'Total Spent' })}
-                    value={formatCurrency(budgetDashboard.total_actual ?? budgetDashboard.total_spent ?? 0, currency)}
-                    icon={<DollarSign size={18} strokeWidth={1.75} />}
-                  />
-                  <SummaryCard
-                    label={t('projects.remaining', { defaultValue: 'Remaining' })}
-                    value={formatCurrency(
-                      budgetDashboard.remaining ?? (budgetDashboard.total_budget ?? 0) - (budgetDashboard.total_actual ?? 0),
-                      currency,
-                    )}
-                    icon={<DollarSign size={18} strokeWidth={1.75} />}
-                    variant={
-                      (budgetDashboard.remaining ?? (budgetDashboard.total_budget ?? 0) - (budgetDashboard.total_actual ?? 0)) >= 0
-                        ? 'success'
-                        : 'default'
-                    }
-                  />
+          <Card padding="lg">
+            <CardHeader
+              title={t("projects.5d_budget")}
+              subtitle={t("projects.budget_subtitle", {
+                defaultValue: "Cost model and budget tracking",
+              })}
+            />
+            <div className="mt-4">
+              {budgetLoading ? (
+                <div className="space-y-3">
+                  <Skeleton height={88} className="w-full" />
+                  <Skeleton height={200} className="w-full" />
                 </div>
-                {(budgetDashboard.items?.length ?? 0) > 0 && (
-                  <div className="rounded-lg border border-border-light overflow-hidden">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border-light bg-surface-tertiary text-left">
-                          <th className="px-4 py-2.5 font-medium text-content-secondary">{t('common.item', { defaultValue: 'Item' })}</th>
-                          <th className="px-4 py-2.5 font-medium text-content-secondary text-right">
-                            {t('projects.planned', { defaultValue: 'Planned' })}
-                          </th>
-                          <th className="px-4 py-2.5 font-medium text-content-secondary text-right">
-                            {t('projects.actual', { defaultValue: 'Actual' })}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border-light">
-                        {budgetDashboard.items!.map((item) => (
-                          <tr key={item.name} className="hover:bg-surface-secondary transition-colors">
-                            <td className="px-4 py-2.5 text-content-primary">{item.name}</td>
-                            <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
-                              {formatCurrency(item.planned ?? 0, currency)}
-                            </td>
-                            <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
-                              {formatCurrency(item.actual ?? 0, currency)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+              ) : !budgetDashboard ? (
+                <EmptyState
+                  icon={<Wallet size={28} strokeWidth={1.5} />}
+                  title={t("projects.no_budget", {
+                    defaultValue: "No budget data",
+                  })}
+                  description={t("projects.no_budget_desc", {
+                    defaultValue:
+                      "Set up a 5D cost model to track planned vs actual costs.",
+                  })}
+                />
+              ) : (
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <SummaryCard
+                      label={t("projects.total_budget", {
+                        defaultValue: "Total Budget",
+                      })}
+                      value={formatCurrency(
+                        budgetDashboard.total_budget ?? 0,
+                        currency,
+                      )}
+                      icon={<DollarSign size={18} strokeWidth={1.75} />}
+                      variant="blue"
+                    />
+                    <SummaryCard
+                      label={t("projects.total_spent", {
+                        defaultValue: "Total Spent",
+                      })}
+                      value={formatCurrency(
+                        budgetDashboard.total_actual ??
+                          budgetDashboard.total_spent ??
+                          0,
+                        currency,
+                      )}
+                      icon={<DollarSign size={18} strokeWidth={1.75} />}
+                    />
+                    <SummaryCard
+                      label={t("projects.remaining", {
+                        defaultValue: "Remaining",
+                      })}
+                      value={formatCurrency(
+                        budgetDashboard.remaining ??
+                          (budgetDashboard.total_budget ?? 0) -
+                            (budgetDashboard.total_actual ?? 0),
+                        currency,
+                      )}
+                      icon={<DollarSign size={18} strokeWidth={1.75} />}
+                      variant={
+                        (budgetDashboard.remaining ??
+                          (budgetDashboard.total_budget ?? 0) -
+                            (budgetDashboard.total_actual ?? 0)) >= 0
+                          ? "success"
+                          : "default"
+                      }
+                    />
                   </div>
-                )}
-              </div>
-            )}
-          </div>
-        </Card>
+                  {(budgetDashboard.items?.length ?? 0) > 0 && (
+                    <div className="rounded-lg border border-border-light overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border-light bg-surface-tertiary text-left">
+                            <th className="px-4 py-2.5 font-medium text-content-secondary">
+                              {t("common.item", { defaultValue: "Item" })}
+                            </th>
+                            <th className="px-4 py-2.5 font-medium text-content-secondary text-right">
+                              {t("projects.planned", {
+                                defaultValue: "Planned",
+                              })}
+                            </th>
+                            <th className="px-4 py-2.5 font-medium text-content-secondary text-right">
+                              {t("projects.actual", { defaultValue: "Actual" })}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border-light">
+                          {budgetDashboard.items!.map((item) => (
+                            <tr
+                              key={item.name}
+                              className="hover:bg-surface-secondary transition-colors"
+                            >
+                              <td className="px-4 py-2.5 text-content-primary">
+                                {item.name}
+                              </td>
+                              <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
+                                {formatCurrency(item.planned ?? 0, currency)}
+                              </td>
+                              <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
+                                {formatCurrency(item.actual ?? 0, currency)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </Card>
         </TabErrorBoundary>
       )}
 
       {/* Tendering Tab */}
-      {activeTab === 'tendering' && (
+      {activeTab === "tendering" && (
         <TabErrorBoundary fallbackTitle="Tendering data failed to load">
-        <Card padding="lg">
-          <CardHeader
-            title={t('projects.tendering')}
-            subtitle={t('projects.tendering_subtitle', { defaultValue: 'Tender packages and bid management' })}
-            action={
-              <Button
-                variant="ghost"
-                size="sm"
-                icon={<ExternalLink size={14} />}
-                iconPosition="right"
-                onClick={() => navigate('/tendering')}
-              >
-                {t('projects.open_tendering', { defaultValue: 'Open Tendering' })}
-              </Button>
-            }
-          />
-          <div className="mt-4">
-            {tenderingLoading ? (
-              <div className="space-y-3">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} height={56} className="w-full" />
-                ))}
-              </div>
-            ) : !tenderPackages || tenderPackages.length === 0 ? (
-              <EmptyState
-                icon={<Gavel size={28} strokeWidth={1.5} />}
-                title={t('projects.no_tenders', { defaultValue: 'No tender packages' })}
-                description={t('projects.no_tenders_desc', { defaultValue: 'Create tender packages to manage bidding for this project.' })}
-                action={
-                  <Button
-                    variant="primary"
-                    size="md"
-                    icon={<Plus size={16} />}
-                    onClick={() => navigate('/tendering')}
-                  >
-                    {t('tendering.new_package', { defaultValue: 'New Tender Package' })}
-                  </Button>
-                }
-              />
-            ) : (
-              <div className="divide-y divide-border-light rounded-lg border border-border-light">
-                {tenderPackages.map((pkg) => (
-                  <div key={pkg.id} className="flex items-center gap-4 px-5 py-3.5">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-secondary">
-                      <Gavel size={16} className="text-content-tertiary" />
+          <Card padding="lg">
+            <CardHeader
+              title={t("projects.tendering")}
+              subtitle={t("projects.tendering_subtitle", {
+                defaultValue: "Tender packages and bid management",
+              })}
+              action={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon={<ExternalLink size={14} />}
+                  iconPosition="right"
+                  onClick={() => navigate("/tendering")}
+                >
+                  {t("projects.open_tendering", {
+                    defaultValue: "Open Tendering",
+                  })}
+                </Button>
+              }
+            />
+            <div className="mt-4">
+              {tenderingLoading ? (
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <Skeleton key={i} height={56} className="w-full" />
+                  ))}
+                </div>
+              ) : !tenderPackages || tenderPackages.length === 0 ? (
+                <EmptyState
+                  icon={<Gavel size={28} strokeWidth={1.5} />}
+                  title={t("projects.no_tenders", {
+                    defaultValue: "No tender packages",
+                  })}
+                  description={t("projects.no_tenders_desc", {
+                    defaultValue:
+                      "Create tender packages to manage bidding for this project.",
+                  })}
+                  action={
+                    <Button
+                      variant="primary"
+                      size="md"
+                      icon={<Plus size={16} />}
+                      onClick={() => navigate("/tendering")}
+                    >
+                      {t("tendering.new_package", {
+                        defaultValue: "New Tender Package",
+                      })}
+                    </Button>
+                  }
+                />
+              ) : (
+                <div className="divide-y divide-border-light rounded-lg border border-border-light">
+                  {tenderPackages.map((pkg) => (
+                    <div
+                      key={pkg.id}
+                      className="flex items-center gap-4 px-5 py-3.5"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-secondary">
+                        <Gavel size={16} className="text-content-tertiary" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-content-primary truncate">
+                          {pkg.name}
+                        </p>
+                        <p className="text-xs text-content-tertiary">
+                          {formatDate(pkg.created_at, i18n.language)}
+                        </p>
+                      </div>
+                      <Badge
+                        variant={statusVariant[pkg.status] ?? "neutral"}
+                        size="sm"
+                      >
+                        {pkg.status}
+                      </Badge>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-content-primary truncate">
-                        {pkg.name}
-                      </p>
-                      <p className="text-xs text-content-tertiary">{formatDate(pkg.created_at, i18n.language)}</p>
-                    </div>
-                    <Badge variant={statusVariant[pkg.status] ?? 'neutral'} size="sm">
-                      {pkg.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
         </TabErrorBoundary>
       )}
 
       {/* Photos Tab — gallery of all photo uploads for the project */}
-      {activeTab === 'photos' && (
+      {activeTab === "photos" && (
         <TabErrorBoundary fallbackTitle="Photos failed to load">
           <PhotosTab projectId={projectId ?? null} />
         </TabErrorBoundary>
       )}
 
       {/* Compliance Tab — insurance / permits / bonds / certifications tracker */}
-      {activeTab === 'compliance' && (
+      {activeTab === "compliance" && (
         <TabErrorBoundary fallbackTitle="Compliance failed to load">
           <CompliancePage projectId={projectId ?? null} />
         </TabErrorBoundary>

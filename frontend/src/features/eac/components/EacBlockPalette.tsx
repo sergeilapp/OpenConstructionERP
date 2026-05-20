@@ -9,148 +9,153 @@
  * React's controlled state; we don't need an external debounce because filter
  * cost is O(n) over a few dozen items.
  */
-import clsx from 'clsx';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import clsx from "clsx";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { useMemo, useState } from "react";
 
-import { DraggablePaletteItem, type PaletteItem } from './DraggablePaletteItem';
-import type { PaletteCategory } from '../types';
+import { DraggablePaletteItem, type PaletteItem } from "./DraggablePaletteItem";
+import type { PaletteCategory } from "../types";
 
 /** Title shown above each category section. */
 const CATEGORY_TITLES: Record<PaletteCategory, string> = {
-  selectors: 'Selectors',
-  logic: 'Logic',
-  triplet: 'Triplet',
-  attributes: 'Attributes',
-  constraints: 'Constraints',
-  variables: 'Variables',
-  templates: 'Templates',
+  selectors: "Selectors",
+  logic: "Logic",
+  triplet: "Triplet",
+  attributes: "Attributes",
+  constraints: "Constraints",
+  variables: "Variables",
+  templates: "Templates",
 };
 
 /** Default catalog — used when the host doesn't pass an override. */
 export const DEFAULT_PALETTE_CATALOG: Record<PaletteCategory, PaletteItem[]> = {
   selectors: [
     {
-      id: 'selector.ifc_class',
-      color: 'selector',
-      label: 'IFC class',
-      description: 'Match by IFC entity name',
-      payload: { type: 'ifc_class' },
+      id: "selector.ifc_class",
+      color: "selector",
+      label: "IFC class",
+      description: "Match by IFC entity name",
+      payload: { type: "ifc_class" },
     },
     {
-      id: 'selector.category',
-      color: 'selector',
-      label: 'Category',
-      description: 'Match by Revit category',
-      payload: { type: 'category' },
+      id: "selector.category",
+      color: "selector",
+      label: "Category",
+      description: "Match by Revit category",
+      payload: { type: "category" },
     },
     {
-      id: 'selector.classification',
-      color: 'selector',
-      label: 'Classification',
-      description: 'Match by Uniformat / DIN / NRM',
-      payload: { type: 'classification' },
+      id: "selector.classification",
+      color: "selector",
+      label: "Classification",
+      description: "Match by Uniformat / DIN / NRM",
+      payload: { type: "classification" },
     },
     {
-      id: 'selector.spatial',
-      color: 'selector',
-      label: 'Spatial',
-      description: 'Level, zone, or room',
-      payload: { type: 'spatial' },
+      id: "selector.spatial",
+      color: "selector",
+      label: "Spatial",
+      description: "Level, zone, or room",
+      payload: { type: "spatial" },
     },
   ],
   logic: [
-    { id: 'logic.and', color: 'logic', label: 'AND', payload: { type: 'and' } },
-    { id: 'logic.or', color: 'logic', label: 'OR', payload: { type: 'or' } },
-    { id: 'logic.not', color: 'logic', label: 'NOT', payload: { type: 'not' } },
+    { id: "logic.and", color: "logic", label: "AND", payload: { type: "and" } },
+    { id: "logic.or", color: "logic", label: "OR", payload: { type: "or" } },
+    { id: "logic.not", color: "logic", label: "NOT", payload: { type: "not" } },
   ],
   triplet: [
     {
-      id: 'triplet.attr_constraint',
-      color: 'attribute',
-      label: 'Attribute + constraint',
-      description: 'Pair a property with a comparison',
-      payload: { type: 'triplet' },
+      id: "triplet.attr_constraint",
+      color: "attribute",
+      label: "Attribute + constraint",
+      description: "Pair a property with a comparison",
+      payload: { type: "triplet" },
     },
   ],
   attributes: [
     {
-      id: 'attr.exact',
-      color: 'attribute',
-      label: 'Property',
-      description: 'pset.name reference',
-      payload: { kind: 'exact' },
+      id: "attr.exact",
+      color: "attribute",
+      label: "Property",
+      description: "pset.name reference",
+      payload: { kind: "exact" },
     },
     {
-      id: 'attr.alias',
-      color: 'attribute',
-      label: 'Alias',
-      description: 'Resolved through synonyms',
-      payload: { kind: 'alias' },
+      id: "attr.alias",
+      color: "attribute",
+      label: "Alias",
+      description: "Resolved through synonyms",
+      payload: { kind: "alias" },
     },
     {
-      id: 'attr.regex',
-      color: 'attribute',
-      label: 'Regex',
-      description: 'Match property name pattern',
-      payload: { kind: 'regex' },
+      id: "attr.regex",
+      color: "attribute",
+      label: "Regex",
+      description: "Match property name pattern",
+      payload: { kind: "regex" },
     },
   ],
   constraints: [
-    { id: 'constraint.eq', color: 'constraint', label: 'Equals (=)', payload: { operator: 'eq' } },
     {
-      id: 'constraint.gte',
-      color: 'constraint',
-      label: 'Greater or equal (≥)',
-      payload: { operator: 'gte' },
+      id: "constraint.eq",
+      color: "constraint",
+      label: "Equals (=)",
+      payload: { operator: "eq" },
     },
     {
-      id: 'constraint.between',
-      color: 'constraint',
-      label: 'Between',
-      payload: { operator: 'between' },
+      id: "constraint.gte",
+      color: "constraint",
+      label: "Greater or equal (≥)",
+      payload: { operator: "gte" },
     },
     {
-      id: 'constraint.in',
-      color: 'constraint',
-      label: 'In set',
-      payload: { operator: 'in' },
+      id: "constraint.between",
+      color: "constraint",
+      label: "Between",
+      payload: { operator: "between" },
     },
     {
-      id: 'constraint.matches',
-      color: 'constraint',
-      label: 'Regex match',
-      payload: { operator: 'matches' },
+      id: "constraint.in",
+      color: "constraint",
+      label: "In set",
+      payload: { operator: "in" },
+    },
+    {
+      id: "constraint.matches",
+      color: "constraint",
+      label: "Regex match",
+      payload: { operator: "matches" },
     },
   ],
   variables: [
     {
-      id: 'variable.local',
-      color: 'variable',
-      label: 'Local variable',
-      description: 'Sum, avg, count, min, max, …',
-      payload: { scope: 'local' },
+      id: "variable.local",
+      color: "variable",
+      label: "Local variable",
+      description: "Sum, avg, count, min, max, …",
+      payload: { scope: "local" },
     },
   ],
   templates: [
     {
-      id: 'template.external_walls',
-      color: 'selector',
-      label: 'External walls thickness',
-      description: 'Selector + triplet + constraint',
-      payload: { template: 'external_walls' },
+      id: "template.external_walls",
+      color: "selector",
+      label: "External walls thickness",
+      description: "Selector + triplet + constraint",
+      payload: { template: "external_walls" },
     },
   ],
 };
 
 const CATEGORY_ORDER: PaletteCategory[] = [
-  'selectors',
-  'logic',
-  'triplet',
-  'attributes',
-  'constraints',
-  'variables',
-  'templates',
+  "selectors",
+  "logic",
+  "triplet",
+  "attributes",
+  "constraints",
+  "variables",
+  "templates",
 ];
 
 export interface EacBlockPaletteProps {
@@ -174,7 +179,7 @@ export function EacBlockPalette({
   onActivate,
   testId,
 }: EacBlockPaletteProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [collapsed, setCollapsed] = useState(collapsedProp);
 
   const filteredCategories = useMemo(() => {
@@ -203,10 +208,10 @@ export function EacBlockPalette({
   if (collapsed) {
     return (
       <aside
-        data-testid={testId ?? 'eac-block-palette'}
+        data-testid={testId ?? "eac-block-palette"}
         data-collapsed="true"
         className={clsx(
-          'flex h-full w-10 shrink-0 flex-col items-center border-r border-border bg-surface-secondary py-2',
+          "flex h-full w-10 shrink-0 flex-col items-center border-r border-border bg-surface-secondary py-2",
         )}
       >
         <button
@@ -228,10 +233,10 @@ export function EacBlockPalette({
 
   return (
     <aside
-      data-testid={testId ?? 'eac-block-palette'}
+      data-testid={testId ?? "eac-block-palette"}
       data-collapsed="false"
       className={clsx(
-        'flex h-full w-[220px] shrink-0 flex-col border-r border-border bg-surface-secondary',
+        "flex h-full w-[220px] shrink-0 flex-col border-r border-border bg-surface-secondary",
       )}
       aria-label="Block palette"
     >
@@ -263,9 +268,9 @@ export function EacBlockPalette({
             placeholder="Search…"
             data-testid="eac-palette-search"
             className={clsx(
-              'h-8 w-full rounded-md border border-border bg-surface-primary pl-7 pr-2 text-sm',
-              'placeholder:text-content-tertiary',
-              'focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue',
+              "h-8 w-full rounded-md border border-border bg-surface-primary pl-7 pr-2 text-sm",
+              "placeholder:text-content-tertiary",
+              "focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue",
             )}
           />
         </label>

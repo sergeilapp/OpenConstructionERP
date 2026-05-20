@@ -169,9 +169,7 @@ async def test_partial_update_does_not_clobber_other_keys(session, user_id):
 
     # Now update only the OpenAI key.
     new_openai = "sk-proj-OPENAI-ROTATED-99999"
-    response = await svc.update_ai_settings(
-        user_id, AISettingsUpdate(openai_api_key=new_openai)
-    )
+    response = await svc.update_ai_settings(user_id, AISettingsUpdate(openai_api_key=new_openai))
     await session.commit()
 
     payload = _serialize(response)

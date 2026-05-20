@@ -148,9 +148,7 @@ class ProjectService:
             )
             self.session.add(default_team)
             await self.session.flush()
-            self.session.add(
-                TeamMembership(team_id=default_team.id, user_id=owner_id, role="lead")
-            )
+            self.session.add(TeamMembership(team_id=default_team.id, user_id=owner_id, role="lead"))
             await self.session.flush()
             logger.info("Default team created for project %s", project.id)
         except Exception:
@@ -343,9 +341,7 @@ class ProjectService:
             actual_end_date=source.actual_end_date,
             budget_estimate=source.budget_estimate,
             contingency_pct=source.contingency_pct,
-            custom_fields=(
-                dict(source.custom_fields) if source.custom_fields else None
-            ),
+            custom_fields=(dict(source.custom_fields) if source.custom_fields else None),
             work_calendar_id=source.work_calendar_id,
             # v2.6.0 multi-currency / VAT
             fx_rates=list(source.fx_rates or []),
@@ -372,11 +368,7 @@ class ProjectService:
                 parent_id=None,  # rewired in pass 2
                 code=src_node.code,
                 name=src_node.name,
-                name_translations=(
-                    dict(src_node.name_translations)
-                    if src_node.name_translations
-                    else None
-                ),
+                name_translations=(dict(src_node.name_translations) if src_node.name_translations else None),
                 level=src_node.level,
                 sort_order=src_node.sort_order,
                 wbs_type=src_node.wbs_type,
@@ -391,7 +383,9 @@ class ProjectService:
             # Pair each newly-flushed row with its source node (same order)
             # so we can build the id mapping needed to rewire parent_id.
             for (new_node, _src_parent_id), src_node in zip(
-                new_wbs_rows, source.wbs_nodes, strict=True,
+                new_wbs_rows,
+                source.wbs_nodes,
+                strict=True,
             ):
                 wbs_id_map[src_node.id] = new_node.id
             # Pass 2 — rewire parent_id within the new tree.
@@ -422,9 +416,7 @@ class ProjectService:
         src_match_stmt = _sa_select(MatchProjectSettings).where(
             MatchProjectSettings.project_id == project_id,
         )
-        src_match = (
-            await self.session.execute(src_match_stmt)
-        ).scalar_one_or_none()
+        src_match = (await self.session.execute(src_match_stmt)).scalar_one_or_none()
         if src_match is not None:
             self.session.add(
                 MatchProjectSettings(
@@ -468,8 +460,7 @@ class ProjectService:
                 await self.session.flush()
         except Exception:
             logger.debug(
-                "Auto-create default team skipped on duplicate "
-                "(teams module may not be loaded)",
+                "Auto-create default team skipped on duplicate (teams module may not be loaded)",
             )
 
         await _safe_publish(
@@ -499,8 +490,7 @@ class ProjectService:
         )
 
         logger.info(
-            "Project duplicated: src=%s -> new=%s (owner=%s, code=%s, "
-            "wbs=%d, milestones=%d)",
+            "Project duplicated: src=%s -> new=%s (owner=%s, code=%s, wbs=%d, milestones=%d)",
             project_id,
             new_project.id,
             owner_id,
@@ -542,41 +532,49 @@ class ProjectService:
         child_models: list[type] = []
         try:
             from app.modules.tasks.models import Task
+
             child_models.append(Task)
         except ImportError:
             pass
         try:
             from app.modules.rfi.models import RFI
+
             child_models.append(RFI)
         except ImportError:
             pass
         try:
             from app.modules.meetings.models import Meeting
+
             child_models.append(Meeting)
         except ImportError:
             pass
         try:
             from app.modules.punchlist.models import PunchItem
+
             child_models.append(PunchItem)
         except ImportError:
             pass
         try:
             from app.modules.inspections.models import Inspection
+
             child_models.append(Inspection)
         except ImportError:
             pass
         try:
             from app.modules.ncr.models import NCR
+
             child_models.append(NCR)
         except ImportError:
             pass
         try:
             from app.modules.fieldreports.models import FieldReport
+
             child_models.append(FieldReport)
         except ImportError:
             pass
         try:
             from app.modules.risk.models import Risk
+
             child_models.append(Risk)
         except ImportError:
             pass
@@ -763,7 +761,9 @@ async def auto_bind_dominant_catalogue(
             project_lang = tl
     logger.debug(
         "auto_bind_dominant_catalogue: project=%s project_lang=%r current_binding=%r",
-        project_id, project_lang, row.cost_database_id,
+        project_id,
+        project_lang,
+        row.cost_database_id,
     )
 
     if row.cost_database_id:
@@ -800,10 +800,10 @@ async def auto_bind_dominant_catalogue(
         if current_count == 0 and row.cost_database_id:
             try:
                 from app.modules.costs.qdrant_adapter import (  # noqa: PLC0415
-                    country_to_collection,
+                    _qdrant_collection_points as _qpoints,
                 )
                 from app.modules.costs.qdrant_adapter import (  # noqa: PLC0415
-                    _qdrant_collection_points as _qpoints,
+                    country_to_collection,
                 )
 
                 coll = country_to_collection(row.cost_database_id)
@@ -816,15 +816,15 @@ async def auto_bind_dominant_catalogue(
         # Language mismatch is only a reason to re-bind when we actually
         # have a language target — otherwise we'd thrash on projects with
         # no resolvable region.
-        lang_mismatch = bool(
-            project_lang and current_lang and project_lang != current_lang
-        )
+        lang_mismatch = bool(project_lang and current_lang and project_lang != current_lang)
         if current_count > 0 and not lang_mismatch:
             return row.cost_database_id
         reason = "0 rows" if current_count == 0 else f"language {current_lang!r} != project {project_lang!r}"
         logger.info(
             "auto_bind_dominant_catalogue: re-binding %s — current %r %s",
-            project_id, row.cost_database_id, reason,
+            project_id,
+            row.cost_database_id,
+            reason,
         )
         row.cost_database_id = None
 
@@ -915,17 +915,13 @@ async def auto_bind_dominant_catalogue(
                 except Exception:
                     base = coll.rsplit("_v", 1)[0] if "_v" in coll else coll
                     info = client.get_collection(base) if base != coll else None
-                vec_present = bool(
-                    info and (
-                        getattr(info, "points_count", 0)
-                        or getattr(info, "vectors_count", 0)
-                    )
-                )
+                vec_present = bool(info and (getattr(info, "points_count", 0) or getattr(info, "vectors_count", 0)))
                 if vec_present:
                     logger.info(
-                        "auto_bind: SQL has no %s catalogue — binding language "
-                        "fallback %r so Qdrant %r is searched",
-                        project_lang, fallback_region, coll,
+                        "auto_bind: SQL has no %s catalogue — binding language fallback %r so Qdrant %r is searched",
+                        project_lang,
+                        fallback_region,
+                        coll,
                     )
                     bound = _bind(fallback_region)
                     await db.flush()

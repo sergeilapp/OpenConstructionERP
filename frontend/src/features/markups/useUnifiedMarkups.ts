@@ -11,14 +11,18 @@
  *   internals (see ``invalidateUnifiedMarkups`` below).
  */
 
-import { useMemo } from 'react';
-import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
+import { useMemo } from "react";
+import {
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query";
 
-import { apiGet } from '@/shared/lib/api';
-import { fetchMarkups } from './api';
-import { fetchDrawings, fetchAnnotations } from '@/features/dwg-takeoff/api';
-import { takeoffApi, type MeasurementResponse } from '@/features/takeoff/api';
-import type { DwgAnnotation, DwgDrawing } from '@/features/dwg-takeoff/api';
+import { apiGet } from "@/shared/lib/api";
+import { fetchMarkups } from "./api";
+import { fetchDrawings, fetchAnnotations } from "@/features/dwg-takeoff/api";
+import { takeoffApi, type MeasurementResponse } from "@/features/takeoff/api";
+import type { DwgAnnotation, DwgDrawing } from "@/features/dwg-takeoff/api";
 
 import {
   fromDwgAnnotation,
@@ -28,7 +32,7 @@ import {
   summarise,
   type UnifiedMarkup,
   type UnifiedSummary,
-} from './aggregator';
+} from "./aggregator";
 
 /** Minimal shape used for file-name lookup by the Markups hub. */
 interface DocItem {
@@ -45,12 +49,17 @@ interface UseUnifiedMarkupsResult {
 
 /** Key used by all Query entries this hook produces. Exported so source
  *  modules can invalidate it after creating a new annotation. */
-export const UNIFIED_MARKUPS_QUERY_KEY = ['unified-markups'] as const;
+export const UNIFIED_MARKUPS_QUERY_KEY = ["unified-markups"] as const;
 
 /** Invalidate the unified feed (use from source modules after create/delete). */
-export function invalidateUnifiedMarkups(qc: QueryClient, projectId?: string): void {
+export function invalidateUnifiedMarkups(
+  qc: QueryClient,
+  projectId?: string,
+): void {
   if (projectId) {
-    qc.invalidateQueries({ queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId] });
+    qc.invalidateQueries({
+      queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId],
+    });
   } else {
     qc.invalidateQueries({ queryKey: UNIFIED_MARKUPS_QUERY_KEY });
   }
@@ -58,10 +67,12 @@ export function invalidateUnifiedMarkups(qc: QueryClient, projectId?: string): v
 
 /* ── Hook ────────────────────────────────────────────────────────────── */
 
-export function useUnifiedMarkups(projectId: string | null | undefined): UseUnifiedMarkupsResult {
+export function useUnifiedMarkups(
+  projectId: string | null | undefined,
+): UseUnifiedMarkupsResult {
   // Hub markups — already project-scoped.
   const hubQuery = useQuery({
-    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, 'hub'],
+    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, "hub"],
     queryFn: () => fetchMarkups(projectId as string),
     enabled: !!projectId,
     staleTime: 30_000,
@@ -69,7 +80,7 @@ export function useUnifiedMarkups(projectId: string | null | undefined): UseUnif
 
   // Documents lookup — lets us show friendly names instead of UUID prefixes.
   const documentsQuery = useQuery({
-    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, 'documents'],
+    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, "documents"],
     queryFn: () => apiGet<DocItem[]>(`/v1/documents/?project_id=${projectId}`),
     enabled: !!projectId,
     staleTime: 60_000,
@@ -77,7 +88,7 @@ export function useUnifiedMarkups(projectId: string | null | undefined): UseUnif
 
   // DWG — per-project drawings, then per-drawing annotations.
   const drawingsQuery = useQuery<DwgDrawing[]>({
-    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, 'dwg-drawings'],
+    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, "dwg-drawings"],
     queryFn: () => fetchDrawings(projectId as string),
     enabled: !!projectId,
     staleTime: 30_000,
@@ -87,8 +98,8 @@ export function useUnifiedMarkups(projectId: string | null | undefined): UseUnif
     queryKey: [
       ...UNIFIED_MARKUPS_QUERY_KEY,
       projectId,
-      'dwg-annotations',
-      (drawingsQuery.data ?? []).map((d) => d.id).join(','),
+      "dwg-annotations",
+      (drawingsQuery.data ?? []).map((d) => d.id).join(","),
     ],
     queryFn: async () => {
       const drawings = drawingsQuery.data ?? [];
@@ -100,7 +111,7 @@ export function useUnifiedMarkups(projectId: string | null | undefined): UseUnif
       );
       const out: DwgAnnotation[] = [];
       for (const r of settled) {
-        if (r.status === 'fulfilled') out.push(...r.value);
+        if (r.status === "fulfilled") out.push(...r.value);
       }
       return out;
     },
@@ -111,7 +122,7 @@ export function useUnifiedMarkups(projectId: string | null | undefined): UseUnif
   // PDF takeoff measurements — already project-scoped. We only display the
   // annotation-style types in the hub; the full list is filtered at render.
   const pdfQuery = useQuery<MeasurementResponse[]>({
-    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, 'pdf-measurements'],
+    queryKey: [...UNIFIED_MARKUPS_QUERY_KEY, projectId, "pdf-measurements"],
     queryFn: () => takeoffApi.list(projectId as string),
     enabled: !!projectId,
     staleTime: 30_000,
@@ -126,7 +137,9 @@ export function useUnifiedMarkups(projectId: string | null | undefined): UseUnif
 
     const hub = (hubQuery.data ?? []).map((m) =>
       fromMarkupsHub(m, {
-        documentName: m.document_id ? docNameById.get(m.document_id) ?? null : null,
+        documentName: m.document_id
+          ? (docNameById.get(m.document_id) ?? null)
+          : null,
       }),
     );
 
@@ -140,7 +153,9 @@ export function useUnifiedMarkups(projectId: string | null | undefined): UseUnif
 
     const pdf = (pdfQuery.data ?? []).map((m) =>
       fromPdfMeasurement(m, {
-        documentName: m.document_id ? docNameById.get(m.document_id) ?? m.document_id : null,
+        documentName: m.document_id
+          ? (docNameById.get(m.document_id) ?? m.document_id)
+          : null,
       }),
     );
 

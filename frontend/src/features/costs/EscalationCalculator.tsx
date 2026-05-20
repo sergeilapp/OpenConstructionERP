@@ -1,37 +1,88 @@
-import { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { TrendingUp, Calculator, Info } from 'lucide-react';
-import clsx from 'clsx';
+import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { TrendingUp, Calculator, Info } from "lucide-react";
+import clsx from "clsx";
 
 /* ── Published construction cost indices (annual % change) ────────────── */
 
 /** Regional escalation index data (average annual % change by period).
  *  Sources: BKI (DE), BCIS (UK), ENR (US), Eurostat (EU).
  *  These are representative averages — actual project indices may differ. */
-const ESCALATION_INDICES: Record<string, { label: string; rates: Record<string, number> }> = {
+const ESCALATION_INDICES: Record<
+  string,
+  { label: string; rates: Record<string, number> }
+> = {
   DE: {
-    label: 'Germany (BKI)',
-    rates: { '2020': 3.2, '2021': 5.1, '2022': 14.6, '2023': 7.8, '2024': 4.2, '2025': 3.5, '2026': 3.0 },
+    label: "Germany (BKI)",
+    rates: {
+      "2020": 3.2,
+      "2021": 5.1,
+      "2022": 14.6,
+      "2023": 7.8,
+      "2024": 4.2,
+      "2025": 3.5,
+      "2026": 3.0,
+    },
   },
   AT: {
-    label: 'Austria',
-    rates: { '2020': 2.8, '2021': 4.9, '2022': 12.3, '2023': 6.5, '2024': 3.8, '2025': 3.2, '2026': 2.8 },
+    label: "Austria",
+    rates: {
+      "2020": 2.8,
+      "2021": 4.9,
+      "2022": 12.3,
+      "2023": 6.5,
+      "2024": 3.8,
+      "2025": 3.2,
+      "2026": 2.8,
+    },
   },
   CH: {
-    label: 'Switzerland',
-    rates: { '2020': 1.5, '2021': 2.8, '2022': 6.2, '2023': 3.4, '2024': 2.5, '2025': 2.0, '2026': 1.8 },
+    label: "Switzerland",
+    rates: {
+      "2020": 1.5,
+      "2021": 2.8,
+      "2022": 6.2,
+      "2023": 3.4,
+      "2024": 2.5,
+      "2025": 2.0,
+      "2026": 1.8,
+    },
   },
   UK: {
-    label: 'United Kingdom (BCIS)',
-    rates: { '2020': 2.0, '2021': 8.5, '2022': 10.2, '2023': 4.8, '2024': 3.5, '2025': 3.0, '2026': 2.8 },
+    label: "United Kingdom (BCIS)",
+    rates: {
+      "2020": 2.0,
+      "2021": 8.5,
+      "2022": 10.2,
+      "2023": 4.8,
+      "2024": 3.5,
+      "2025": 3.0,
+      "2026": 2.8,
+    },
   },
   US: {
-    label: 'United States (ENR)',
-    rates: { '2020': 1.2, '2021': 6.3, '2022': 11.5, '2023': 3.2, '2024': 2.8, '2025': 2.5, '2026': 2.3 },
+    label: "United States (ENR)",
+    rates: {
+      "2020": 1.2,
+      "2021": 6.3,
+      "2022": 11.5,
+      "2023": 3.2,
+      "2024": 2.8,
+      "2025": 2.5,
+      "2026": 2.3,
+    },
   },
   EU: {
-    label: 'EU Average',
-    rates: { '2020': 2.5, '2021': 5.8, '2022': 11.0, '2023': 6.0, '2024': 3.5, '2025': 3.0, '2026': 2.5 },
+    label: "EU Average",
+    rates: {
+      "2020": 2.5,
+      "2021": 5.8,
+      "2022": 11.0,
+      "2023": 6.0,
+      "2024": 3.5,
+      "2025": 3.0,
+      "2026": 2.5,
+    },
   },
 };
 
@@ -51,12 +102,12 @@ export function EscalationCalculator({
   className,
 }: EscalationCalculatorProps) {
   const { t } = useTranslation();
-  const [region, setRegion] = useState('DE');
+  const [region, setRegion] = useState("DE");
   const [baseYear, setBaseYear] = useState(2023);
   const [targetYear, setTargetYear] = useState(2026);
-  const [manualRate, setManualRate] = useState<string>('');
+  const [manualRate, setManualRate] = useState<string>("");
   const [useManual, setUseManual] = useState(false);
-  const [amount, setAmount] = useState(propBaseAmount?.toString() || '100000');
+  const [amount, setAmount] = useState(propBaseAmount?.toString() || "100000");
 
   const baseAmountNum = useMemo(() => parseFloat(amount) || 0, [amount]);
 
@@ -78,7 +129,10 @@ export function EscalationCalculator({
         rate = parseFloat(manualRate) || 0;
       } else {
         // Use published rate if available, else use last known rate
-        rate = regionData?.rates[yearKey] ?? regionData?.rates[String(Math.min(y, 2026))] ?? 3.0;
+        rate =
+          regionData?.rates[yearKey] ??
+          regionData?.rates[String(Math.min(y, 2026))] ??
+          3.0;
       }
 
       factor *= 1 + rate / 100;
@@ -99,7 +153,11 @@ export function EscalationCalculator({
   );
 
   const fmt = useMemo(
-    () => new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }),
+    () =>
+      new Intl.NumberFormat(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }),
     [],
   );
 
@@ -108,7 +166,12 @@ export function EscalationCalculator({
   }, [onApply, escalatedAmount, escalation.factor]);
 
   return (
-    <div className={clsx('rounded-xl border border-border bg-surface-primary p-5', className)}>
+    <div
+      className={clsx(
+        "rounded-xl border border-border bg-surface-primary p-5",
+        className,
+      )}
+    >
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
@@ -116,11 +179,14 @@ export function EscalationCalculator({
         </div>
         <div>
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('costs.escalation_calculator', { defaultValue: 'Cost Escalation Calculator‌⁠‍' })}
+            {t("costs.escalation_calculator", {
+              defaultValue: "Cost Escalation Calculator‌⁠‍",
+            })}
           </h3>
           <p className="text-2xs text-content-tertiary">
-            {t('costs.escalation_desc', {
-              defaultValue: 'Adjust costs for inflation using published construction indices‌⁠‍',
+            {t("costs.escalation_desc", {
+              defaultValue:
+                "Adjust costs for inflation using published construction indices‌⁠‍",
             })}
           </p>
         </div>
@@ -131,7 +197,7 @@ export function EscalationCalculator({
         {/* Region */}
         <div>
           <label className="block text-2xs font-medium text-content-secondary mb-1">
-            {t('common.region', { defaultValue: 'Region‌⁠‍' })}
+            {t("common.region", { defaultValue: "Region‌⁠‍" })}
           </label>
           <select
             value={region}
@@ -149,7 +215,7 @@ export function EscalationCalculator({
         {/* Base year */}
         <div>
           <label className="block text-2xs font-medium text-content-secondary mb-1">
-            {t('costs.base_year', { defaultValue: 'Base year‌⁠‍' })}
+            {t("costs.base_year", { defaultValue: "Base year‌⁠‍" })}
           </label>
           <select
             value={baseYear}
@@ -167,7 +233,7 @@ export function EscalationCalculator({
         {/* Target year */}
         <div>
           <label className="block text-2xs font-medium text-content-secondary mb-1">
-            {t('costs.target_year', { defaultValue: 'Target year‌⁠‍' })}
+            {t("costs.target_year", { defaultValue: "Target year‌⁠‍" })}
           </label>
           <select
             value={targetYear}
@@ -185,7 +251,7 @@ export function EscalationCalculator({
         {/* Amount */}
         <div>
           <label className="block text-2xs font-medium text-content-secondary mb-1">
-            {t('costs.base_amount', { defaultValue: 'Base amount' })}
+            {t("costs.base_amount", { defaultValue: "Base amount" })}
           </label>
           <input
             type="number"
@@ -205,7 +271,7 @@ export function EscalationCalculator({
             onChange={(e) => setUseManual(e.target.checked)}
             className="rounded border-border text-oe-blue focus:ring-oe-blue/30"
           />
-          {t('costs.manual_rate', { defaultValue: 'Manual rate (% p.a.)' })}
+          {t("costs.manual_rate", { defaultValue: "Manual rate (% p.a.)" })}
         </label>
         {useManual && (
           <input
@@ -224,7 +290,9 @@ export function EscalationCalculator({
         <div className="mb-4">
           <div className="flex items-center gap-1.5 mb-2">
             <span className="text-2xs font-medium text-content-secondary uppercase tracking-wide">
-              {t('costs.yearly_breakdown', { defaultValue: 'Year-by-year breakdown' })}
+              {t("costs.yearly_breakdown", {
+                defaultValue: "Year-by-year breakdown",
+              })}
             </span>
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -234,7 +302,9 @@ export function EscalationCalculator({
                 className="flex items-center gap-1 rounded-md bg-surface-secondary px-2 py-1"
               >
                 <span className="text-2xs text-content-tertiary">{year}</span>
-                <span className="text-2xs font-medium text-amber-600">+{rate.toFixed(1)}%</span>
+                <span className="text-2xs font-medium text-amber-600">
+                  +{rate.toFixed(1)}%
+                </span>
               </div>
             ))}
           </div>
@@ -246,7 +316,7 @@ export function EscalationCalculator({
         <div className="grid grid-cols-3 gap-4">
           <div>
             <p className="text-2xs text-content-tertiary mb-0.5">
-              {t('costs.base_cost', { defaultValue: 'Base cost' })} ({baseYear})
+              {t("costs.base_cost", { defaultValue: "Base cost" })} ({baseYear})
             </p>
             <p className="text-sm font-semibold text-content-primary tabular-nums">
               {fmt.format(baseAmountNum)}
@@ -254,7 +324,7 @@ export function EscalationCalculator({
           </div>
           <div className="text-center">
             <p className="text-2xs text-content-tertiary mb-0.5">
-              {t('costs.escalation_factor', { defaultValue: 'Factor' })}
+              {t("costs.escalation_factor", { defaultValue: "Factor" })}
             </p>
             <p className="text-sm font-semibold text-amber-600 tabular-nums">
               {escalation.factor.toFixed(4)}x
@@ -263,7 +333,8 @@ export function EscalationCalculator({
           </div>
           <div className="text-right">
             <p className="text-2xs text-content-tertiary mb-0.5">
-              {t('costs.escalated_cost', { defaultValue: 'Escalated cost' })} ({targetYear})
+              {t("costs.escalated_cost", { defaultValue: "Escalated cost" })} (
+              {targetYear})
             </p>
             <p className="text-sm font-bold text-content-primary tabular-nums">
               {fmt.format(escalatedAmount)}
@@ -277,8 +348,9 @@ export function EscalationCalculator({
         <div className="flex items-center gap-1 text-2xs text-content-tertiary">
           <Info size={11} />
           <span>
-            {t('costs.escalation_disclaimer', {
-              defaultValue: 'Based on published indices. Verify with project-specific data.',
+            {t("costs.escalation_disclaimer", {
+              defaultValue:
+                "Based on published indices. Verify with project-specific data.",
             })}
           </span>
         </div>
@@ -289,7 +361,7 @@ export function EscalationCalculator({
             className="flex items-center gap-1.5 rounded-md bg-oe-blue px-3 py-1.5 text-xs font-medium text-white hover:bg-oe-blue-hover disabled:opacity-50 transition-colors"
           >
             <Calculator size={13} />
-            {t('costs.apply_escalation', { defaultValue: 'Apply' })}
+            {t("costs.apply_escalation", { defaultValue: "Apply" })}
           </button>
         )}
       </div>

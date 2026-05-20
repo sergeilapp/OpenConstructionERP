@@ -6,10 +6,10 @@
  * Renders a dropdown list of matching contacts with company name and type.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Search, X, BookUser, Loader2 } from 'lucide-react';
-import { apiGet } from '@/shared/lib/api';
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Search, X, BookUser, Loader2 } from "lucide-react";
+import { apiGet } from "@/shared/lib/api";
 
 interface ContactResult {
   id: string;
@@ -41,9 +41,9 @@ function getDisplayName(c: ContactResult): string {
   const parts: string[] = [];
   if (c.company_name) parts.push(c.company_name);
   if (c.first_name || c.last_name) {
-    parts.push([c.first_name, c.last_name].filter(Boolean).join(' '));
+    parts.push([c.first_name, c.last_name].filter(Boolean).join(" "));
   }
-  return parts.join(' - ') || c.primary_email || c.id;
+  return parts.join(" - ") || c.primary_email || c.id;
 }
 
 export function ContactSearchInput({
@@ -56,7 +56,7 @@ export function ContactSearchInput({
   browseContactTypes,
 }: ContactSearchInputProps) {
   const { t } = useTranslation();
-  const [query, setQuery] = useState(displayValue || '');
+  const [query, setQuery] = useState(displayValue || "");
   const [results, setResults] = useState<ContactResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -67,22 +67,25 @@ export function ContactSearchInput({
   const [browseOpen, setBrowseOpen] = useState(false);
   const [allContacts, setAllContacts] = useState<ContactResult[]>([]);
   const [browseLoading, setBrowseLoading] = useState(false);
-  const [browseFilter, setBrowseFilter] = useState('');
+  const [browseFilter, setBrowseFilter] = useState("");
   const browseRef = useRef<HTMLDivElement>(null);
   const browseInputRef = useRef<HTMLInputElement>(null);
 
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
       if (browseRef.current && !browseRef.current.contains(e.target as Node)) {
         setBrowseOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Sync display value from prop
@@ -125,7 +128,7 @@ export function ContactSearchInput({
       setQuery(val);
       // Clear selection if user edits
       if (value) {
-        onChange('', '');
+        onChange("", "");
       }
       // Debounced search
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -141,14 +144,14 @@ export function ContactSearchInput({
       onChange(contact.id, name);
       setIsOpen(false);
       setBrowseOpen(false);
-      setBrowseFilter('');
+      setBrowseFilter("");
     },
     [onChange],
   );
 
   const handleClear = useCallback(() => {
-    setQuery('');
-    onChange('', '');
+    setQuery("");
+    onChange("", "");
     setResults([]);
     setIsOpen(false);
   }, [onChange]);
@@ -161,23 +164,27 @@ export function ContactSearchInput({
     }
     setIsOpen(false);
     setBrowseOpen(true);
-    setBrowseFilter('');
+    setBrowseFilter("");
     setBrowseLoading(true);
     try {
       const params = new URLSearchParams();
-      params.set('limit', '200');
+      params.set("limit", "200");
       // If browseContactTypes provided, fetch each type and merge, or use first
       if (browseContactTypes && browseContactTypes.length === 1) {
-        params.set('contact_type', browseContactTypes[0] ?? '');
+        params.set("contact_type", browseContactTypes[0] ?? "");
       }
       const qs = params.toString();
       const res = await apiGet<ContactResult[] | { items: ContactResult[] }>(
-        `/v1/contacts/${qs ? `?${qs}` : ''}`,
+        `/v1/contacts/${qs ? `?${qs}` : ""}`,
       );
-      const list = Array.isArray(res) ? res : (res as { items: ContactResult[] }).items ?? [];
+      const list = Array.isArray(res)
+        ? res
+        : ((res as { items: ContactResult[] }).items ?? []);
       // Client-side filter if multiple types specified
       if (browseContactTypes && browseContactTypes.length > 1) {
-        setAllContacts(list.filter((c) => browseContactTypes.includes(c.contact_type)));
+        setAllContacts(
+          list.filter((c) => browseContactTypes.includes(c.contact_type)),
+        );
       } else {
         setAllContacts(list);
       }
@@ -194,17 +201,17 @@ export function ContactSearchInput({
     const q = browseFilter.toLowerCase();
     return allContacts.filter((c) => {
       const name = getDisplayName(c).toLowerCase();
-      const email = (c.primary_email || '').toLowerCase();
-      const type = (c.contact_type || '').toLowerCase();
+      const email = (c.primary_email || "").toLowerCase();
+      const type = (c.contact_type || "").toLowerCase();
       return name.includes(q) || email.includes(q) || type.includes(q);
     });
   }, [allContacts, browseFilter]);
 
   const inputCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+    "h-10 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
   return (
-    <div className={`relative ${className || ''}`}>
+    <div className={`relative ${className || ""}`}>
       <div className="flex items-center gap-2">
         {/* Search input */}
         <div ref={containerRef} className="relative flex-1">
@@ -219,7 +226,12 @@ export function ContactSearchInput({
               if (results.length > 0 && !value) setIsOpen(true);
               setBrowseOpen(false);
             }}
-            placeholder={placeholder || t('contacts.search_placeholder', { defaultValue: 'Search contacts...‌⁠‍' })}
+            placeholder={
+              placeholder ||
+              t("contacts.search_placeholder", {
+                defaultValue: "Search contacts...‌⁠‍",
+              })
+            }
             className={inputCls}
           />
           {(query || value) && (
@@ -237,11 +249,13 @@ export function ContactSearchInput({
             <div className="absolute left-0 top-full mt-1 z-50 w-full max-h-48 overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md">
               {isLoading ? (
                 <div className="px-3 py-2 text-xs text-content-tertiary">
-                  {t('common.searching', { defaultValue: 'Searching...‌⁠‍' })}
+                  {t("common.searching", { defaultValue: "Searching...‌⁠‍" })}
                 </div>
               ) : results.length === 0 ? (
                 <div className="px-3 py-2 text-xs text-content-tertiary">
-                  {t('contacts.no_results', { defaultValue: 'No contacts found‌⁠‍' })}
+                  {t("contacts.no_results", {
+                    defaultValue: "No contacts found‌⁠‍",
+                  })}
                 </div>
               ) : (
                 results.map((c) => (
@@ -252,9 +266,13 @@ export function ContactSearchInput({
                     className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-surface-secondary transition-colors"
                   >
                     <div className="flex-1 min-w-0">
-                      <div className="text-content-primary truncate">{getDisplayName(c)}</div>
+                      <div className="text-content-primary truncate">
+                        {getDisplayName(c)}
+                      </div>
                       {c.primary_email && (
-                        <div className="text-xs text-content-tertiary truncate">{c.primary_email}</div>
+                        <div className="text-xs text-content-tertiary truncate">
+                          {c.primary_email}
+                        </div>
                       )}
                     </div>
                     <span className="text-2xs text-content-tertiary capitalize shrink-0">
@@ -273,16 +291,20 @@ export function ContactSearchInput({
             <button
               type="button"
               onClick={handleBrowseOpen}
-              title={t('contacts.select_from_contacts', { defaultValue: 'Select from contacts‌⁠‍' })}
+              title={t("contacts.select_from_contacts", {
+                defaultValue: "Select from contacts‌⁠‍",
+              })}
               className={`flex h-10 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium transition-all ${
                 browseOpen
-                  ? 'border-oe-blue bg-oe-blue/5 text-oe-blue'
-                  : 'border-border text-content-secondary hover:border-oe-blue/40 hover:bg-surface-secondary hover:text-content-primary'
+                  ? "border-oe-blue bg-oe-blue/5 text-oe-blue"
+                  : "border-border text-content-secondary hover:border-oe-blue/40 hover:bg-surface-secondary hover:text-content-primary"
               }`}
             >
               <BookUser size={15} />
               <span className="hidden sm:inline">
-                {t('contacts.select_from_contacts', { defaultValue: 'Select from contacts‌⁠‍' })}
+                {t("contacts.select_from_contacts", {
+                  defaultValue: "Select from contacts‌⁠‍",
+                })}
               </span>
             </button>
 
@@ -300,7 +322,9 @@ export function ContactSearchInput({
                       type="text"
                       value={browseFilter}
                       onChange={(e) => setBrowseFilter(e.target.value)}
-                      placeholder={t('contacts.filter_contacts', { defaultValue: 'Filter contacts...' })}
+                      placeholder={t("contacts.filter_contacts", {
+                        defaultValue: "Filter contacts...",
+                      })}
                       className="h-8 w-full rounded-md border border-border bg-surface-primary pl-8 pr-3 text-xs focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
                     />
                   </div>
@@ -311,13 +335,17 @@ export function ContactSearchInput({
                   {browseLoading ? (
                     <div className="flex items-center gap-2 px-3 py-4 text-xs text-content-tertiary justify-center">
                       <Loader2 size={14} className="animate-spin" />
-                      {t('common.loading', { defaultValue: 'Loading...' })}
+                      {t("common.loading", { defaultValue: "Loading..." })}
                     </div>
                   ) : filteredBrowse.length === 0 ? (
                     <div className="px-3 py-4 text-xs text-content-tertiary text-center">
                       {allContacts.length === 0
-                        ? t('contacts.no_contacts', { defaultValue: 'No contacts in directory' })
-                        : t('contacts.no_results', { defaultValue: 'No contacts found' })}
+                        ? t("contacts.no_contacts", {
+                            defaultValue: "No contacts in directory",
+                          })
+                        : t("contacts.no_results", {
+                            defaultValue: "No contacts found",
+                          })}
                     </div>
                   ) : (
                     filteredBrowse.map((c) => (
@@ -326,13 +354,17 @@ export function ContactSearchInput({
                         type="button"
                         onClick={() => handleSelect(c)}
                         className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-surface-secondary transition-colors ${
-                          value === c.id ? 'bg-oe-blue/5' : ''
+                          value === c.id ? "bg-oe-blue/5" : ""
                         }`}
                       >
                         <div className="flex-1 min-w-0">
-                          <div className="text-content-primary truncate">{getDisplayName(c)}</div>
+                          <div className="text-content-primary truncate">
+                            {getDisplayName(c)}
+                          </div>
                           {c.primary_email && (
-                            <div className="text-xs text-content-tertiary truncate">{c.primary_email}</div>
+                            <div className="text-xs text-content-tertiary truncate">
+                              {c.primary_email}
+                            </div>
                           )}
                         </div>
                         <span className="text-2xs text-content-tertiary capitalize shrink-0">
@@ -347,13 +379,13 @@ export function ContactSearchInput({
                 {!browseLoading && allContacts.length > 0 && (
                   <div className="px-3 py-1.5 border-t border-border-light text-2xs text-content-tertiary text-center">
                     {browseFilter
-                      ? t('contacts.showing_filtered', {
-                          defaultValue: '{{count}} of {{total}} contacts',
+                      ? t("contacts.showing_filtered", {
+                          defaultValue: "{{count}} of {{total}} contacts",
                           count: filteredBrowse.length,
                           total: allContacts.length,
                         })
-                      : t('contacts.total_contacts', {
-                          defaultValue: '{{count}} contacts',
+                      : t("contacts.total_contacts", {
+                          defaultValue: "{{count}} contacts",
                           count: allContacts.length,
                         })}
                   </div>

@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   ShieldAlert,
@@ -17,7 +17,8 @@ import {
   ShieldCheck,
   Clock,
   CheckCircle2,
-} from 'lucide-react';
+  Download,
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -25,13 +26,13 @@ import {
   EmptyState,
   Breadcrumb,
   SkeletonTable,
-} from '@/shared/ui';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { SectionIntro } from '@/features/validation';
-import { normalizeListResponse } from '@/shared/lib/apiHelpers';
-import { getErrorMessage } from '@/shared/lib/api';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useToastStore } from '@/stores/useToastStore';
+} from "@/shared/ui";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { SectionIntro } from "@/features/validation";
+import { normalizeListResponse } from "@/shared/lib/apiHelpers";
+import { getErrorMessage } from "@/shared/lib/api";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useToastStore } from "@/stores/useToastStore";
 import {
   fetchInvestigations,
   fetchJSAs,
@@ -48,6 +49,9 @@ import {
   createAudit,
   createCAPA,
   daysUntil,
+  downloadOsha300Csv,
+  fetchCorrectiveActions,
+  transitionCorrectiveAction,
   type IncidentInvestigation,
   type JobSafetyAnalysis,
   type PermitToWork,
@@ -58,43 +62,52 @@ import {
   type IncidentSeverity,
   type PermitStatus,
   type CAPAStatus,
+  type CATargetStatus,
+  type CorrectiveActionRow,
   type FiveWhys,
-} from './api';
+} from "./api";
 
-type HSETab = 'incidents' | 'jsa' | 'permits' | 'toolbox' | 'ppe' | 'audits' | 'capa';
+type HSETab =
+  | "incidents"
+  | "jsa"
+  | "permits"
+  | "toolbox"
+  | "ppe"
+  | "audits"
+  | "capa";
 
-type BadgeVariant = 'neutral' | 'blue' | 'success' | 'warning' | 'error';
+type BadgeVariant = "neutral" | "blue" | "success" | "warning" | "error";
 
 const SEVERITY_COLORS: Record<IncidentSeverity, BadgeVariant> = {
-  minor: 'neutral',
-  moderate: 'warning',
-  major: 'error',
-  severe: 'error',
-  critical: 'error',
+  minor: "neutral",
+  moderate: "warning",
+  major: "error",
+  severe: "error",
+  critical: "error",
 };
 
 const PERMIT_STATUS_COLORS: Record<PermitStatus, BadgeVariant> = {
-  draft: 'neutral',
-  pending: 'warning',
-  active: 'success',
-  expired: 'error',
-  closed: 'neutral',
-  cancelled: 'neutral',
+  draft: "neutral",
+  pending: "warning",
+  active: "success",
+  expired: "error",
+  closed: "neutral",
+  cancelled: "neutral",
 };
 
 const CAPA_STATUS_COLORS: Record<CAPAStatus, BadgeVariant> = {
-  open: 'warning',
-  in_progress: 'blue',
-  completed: 'success',
-  verified: 'success',
-  closed: 'neutral',
-  overdue: 'error',
+  open: "warning",
+  in_progress: "blue",
+  completed: "success",
+  verified: "success",
+  closed: "neutral",
+  overdue: "error",
 };
 
 const inputCls =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 const textareaCls =
-  'w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none';
+  "w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none";
 
 /* ── Main Page ─────────────────────────────────────────────────────────── */
 
@@ -104,44 +117,44 @@ export function HSEAdvancedPage() {
   const { projectId: routeProjectId } = useParams<{ projectId?: string }>();
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
   const projectName = useProjectContextStore((s) => s.activeProjectName);
-  const projectId = routeProjectId || activeProjectId || '';
+  const projectId = routeProjectId || activeProjectId || "";
 
-  const [tab, setTab] = useState<HSETab>('incidents');
+  const [tab, setTab] = useState<HSETab>("incidents");
 
   const tabs: { key: HSETab; label: string; icon: React.ReactNode }[] = [
     {
-      key: 'incidents',
-      label: t('hse_advanced.tab_incidents', { defaultValue: 'Incidents‌⁠‍' }),
+      key: "incidents",
+      label: t("hse_advanced.tab_incidents", { defaultValue: "Incidents‌⁠‍" }),
       icon: <ShieldAlert size={15} />,
     },
     {
-      key: 'jsa',
-      label: t('hse_advanced.tab_jsa', { defaultValue: 'JSAs' }),
+      key: "jsa",
+      label: t("hse_advanced.tab_jsa", { defaultValue: "JSAs" }),
       icon: <ClipboardList size={15} />,
     },
     {
-      key: 'permits',
-      label: t('hse_advanced.tab_permits', { defaultValue: 'Permits‌⁠‍' }),
+      key: "permits",
+      label: t("hse_advanced.tab_permits", { defaultValue: "Permits‌⁠‍" }),
       icon: <FileCheck size={15} />,
     },
     {
-      key: 'toolbox',
-      label: t('hse_advanced.tab_toolbox', { defaultValue: 'Toolbox‌⁠‍' }),
+      key: "toolbox",
+      label: t("hse_advanced.tab_toolbox", { defaultValue: "Toolbox‌⁠‍" }),
       icon: <Users size={15} />,
     },
     {
-      key: 'ppe',
-      label: t('hse_advanced.tab_ppe', { defaultValue: 'PPE' }),
+      key: "ppe",
+      label: t("hse_advanced.tab_ppe", { defaultValue: "PPE" }),
       icon: <HardHat size={15} />,
     },
     {
-      key: 'audits',
-      label: t('hse_advanced.tab_audits', { defaultValue: 'Audits‌⁠‍' }),
+      key: "audits",
+      label: t("hse_advanced.tab_audits", { defaultValue: "Audits‌⁠‍" }),
       icon: <ShieldCheck size={15} />,
     },
     {
-      key: 'capa',
-      label: t('hse_advanced.tab_capa', { defaultValue: 'CAPA' }),
+      key: "capa",
+      label: t("hse_advanced.tab_capa", { defaultValue: "CAPA" }),
       icon: <Wrench size={15} />,
     },
   ];
@@ -150,50 +163,62 @@ export function HSEAdvancedPage() {
     <div className="w-full animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard‌⁠‍' }), to: '/' },
-          ...(projectName ? [{ label: projectName, to: `/projects/${projectId}` }] : []),
-          { label: t('hse_advanced.title', { defaultValue: 'HSE Advanced' }) },
+          {
+            label: t("nav.dashboard", { defaultValue: "Dashboard‌⁠‍" }),
+            to: "/",
+          },
+          ...(projectName
+            ? [{ label: projectName, to: `/projects/${projectId}` }]
+            : []),
+          { label: t("hse_advanced.title", { defaultValue: "HSE Advanced" }) },
         ]}
         className="mb-4"
       />
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-content-primary">
-          {t('hse_advanced.title', { defaultValue: 'HSE Advanced' })}
-        </h1>
-        <p className="mt-1 text-sm text-content-secondary">
-          {t('hse_advanced.subtitle', {
-            defaultValue:
-              'Investigate incidents, run JSAs, manage permits, deliver toolbox talks, issue PPE, audit the site and close CAPAs.',
-          })}
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold text-content-primary">
+            {t("hse_advanced.title", { defaultValue: "HSE Advanced" })}
+          </h1>
+          <p className="mt-1 text-sm text-content-secondary">
+            {t("hse_advanced.subtitle", {
+              defaultValue:
+                "Investigate incidents, run JSAs, manage permits, deliver toolbox talks, issue PPE, audit the site and close CAPAs.",
+            })}
+          </p>
+        </div>
+        {projectId && <Osha300Download projectId={projectId} />}
       </div>
 
       <SectionIntro
         storageKey="hse_advanced"
-        title={t('hse_advanced.intro_title', {
-          defaultValue: 'Beyond basic incident logging',
+        title={t("hse_advanced.intro_title", {
+          defaultValue: "Beyond basic incident logging",
         })}
         links={[
           {
-            label: t('hse_advanced.intro_link_safety', { defaultValue: 'Safety (incidents)' }),
-            onClick: () => navigate('/safety'),
+            label: t("hse_advanced.intro_link_safety", {
+              defaultValue: "Safety (incidents)",
+            }),
+            onClick: () => navigate("/safety"),
           },
         ]}
       >
-        {t('hse_advanced.intro_body', {
+        {t("hse_advanced.intro_body", {
           defaultValue:
-            'HSE Advanced handles the formal side of site safety: 5-Whys incident investigations, Job Safety Analyses, permits-to-work, toolbox talks, PPE issue tracking, safety audits and CAPA (corrective/preventive action) close-out. For quick incident and observation logging use the Safety page; escalate here when an event needs root-cause analysis and tracked corrective actions.',
+            "HSE Advanced handles the formal side of site safety: 5-Whys incident investigations, Job Safety Analyses, permits-to-work, toolbox talks, PPE issue tracking, safety audits and CAPA (corrective/preventive action) close-out. For quick incident and observation logging use the Safety page; escalate here when an event needs root-cause analysis and tracked corrective actions.",
         })}
       </SectionIntro>
 
       {!projectId && (
         <EmptyState
           icon={<Award size={28} strokeWidth={1.5} />}
-          title={t('hse_advanced.no_project', { defaultValue: 'No project selected' })}
-          description={t('hse_advanced.no_project_desc', {
+          title={t("hse_advanced.no_project", {
+            defaultValue: "No project selected",
+          })}
+          description={t("hse_advanced.no_project_desc", {
             defaultValue:
-              'Pick a project from the header to manage advanced HSE records: investigations, permits, audits and corrective actions.',
+              "Pick a project from the header to manage advanced HSE records: investigations, permits, audits and corrective actions.",
           })}
         />
       )}
@@ -212,8 +237,8 @@ export function HSEAdvancedPage() {
                 onClick={() => setTab(tb.key)}
                 className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
                   tab === tb.key
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary'
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
                 }`}
               >
                 {tb.icon}
@@ -222,13 +247,13 @@ export function HSEAdvancedPage() {
             ))}
           </div>
 
-          {tab === 'incidents' && <IncidentsTab projectId={projectId} />}
-          {tab === 'jsa' && <JSATab projectId={projectId} />}
-          {tab === 'permits' && <PermitsTab projectId={projectId} />}
-          {tab === 'toolbox' && <ToolboxTab projectId={projectId} />}
-          {tab === 'ppe' && <PPETab projectId={projectId} />}
-          {tab === 'audits' && <AuditsTab projectId={projectId} />}
-          {tab === 'capa' && <CAPATab projectId={projectId} />}
+          {tab === "incidents" && <IncidentsTab projectId={projectId} />}
+          {tab === "jsa" && <JSATab projectId={projectId} />}
+          {tab === "permits" && <PermitsTab projectId={projectId} />}
+          {tab === "toolbox" && <ToolboxTab projectId={projectId} />}
+          {tab === "ppe" && <PPETab projectId={projectId} />}
+          {tab === "audits" && <AuditsTab projectId={projectId} />}
+          {tab === "capa" && <CAPATab projectId={projectId} />}
         </>
       )}
     </div>
@@ -265,7 +290,12 @@ function SearchBar({
           className="h-10 w-full rounded-lg border border-border bg-surface-primary pl-10 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
         />
       </div>
-      <Button variant="primary" size="sm" icon={<Plus size={14} />} onClick={onCreate}>
+      <Button
+        variant="primary"
+        size="sm"
+        icon={<Plus size={14} />}
+        onClick={onCreate}
+      >
         {createLabel}
       </Button>
     </div>
@@ -292,8 +322,8 @@ function FilterChips<T extends string>({
           onClick={() => onChange(opt.value)}
           className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
             value === opt.value
-              ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue'
-              : 'border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary'
+              ? "border-oe-blue bg-oe-blue-subtle text-oe-blue"
+              : "border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary"
           }`}
         >
           <span>{opt.label}</span>
@@ -306,6 +336,83 @@ function FilterChips<T extends string>({
   );
 }
 
+/* ── OSHA Form 300 CSV download ─────────────────────────────────────── */
+
+/**
+ * Renders the year selector + download button that triggers an OSHA 300
+ * incident-log CSV export. Surfaces high in the page header so it is one
+ * click away from any tab — matches Procore / Sphera placement.
+ */
+function Osha300Download({ projectId }: { projectId: string }) {
+  const { t } = useTranslation();
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear);
+  const addToast = useToastStore((s) => s.addToast);
+
+  // Six-year window — OSHA 1904.33 requires five years of retention; we
+  // give one extra leading year so mid-January exports of the prior year
+  // are always available.
+  const years = useMemo(() => {
+    const out: number[] = [];
+    for (let y = currentYear; y >= currentYear - 5; y -= 1) {
+      out.push(y);
+    }
+    return out;
+  }, [currentYear]);
+
+  return (
+    <div className="flex items-center gap-2 shrink-0">
+      <label
+        htmlFor="osha-300-year"
+        className="text-xs font-medium text-content-tertiary"
+      >
+        {t("hse.advanced.osha_year_label", { defaultValue: "Year" })}
+      </label>
+      <select
+        id="osha-300-year"
+        value={year}
+        onChange={(e) => setYear(Number.parseInt(e.target.value, 10))}
+        className="h-9 rounded-lg border border-border bg-surface-primary px-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
+        aria-label={t("hse.advanced.osha_year_label", { defaultValue: "Year" })}
+      >
+        {years.map((y) => (
+          <option key={y} value={y}>
+            {y}
+          </option>
+        ))}
+      </select>
+      <Button
+        variant="secondary"
+        size="sm"
+        icon={<Download size={14} />}
+        onClick={() => {
+          try {
+            downloadOsha300Csv(projectId, year);
+            addToast({
+              type: "success",
+              title: t("hse.advanced.osha_download_started", {
+                defaultValue: "OSHA 300 CSV download started",
+              }),
+            });
+          } catch (err) {
+            addToast({
+              type: "error",
+              title: t("hse.advanced.osha_download_failed", {
+                defaultValue: "Could not start OSHA 300 download",
+              }),
+              message: getErrorMessage(err),
+            });
+          }
+        }}
+      >
+        {t("hse.advanced.download_osha_300", {
+          defaultValue: "Download OSHA 300 (CSV)",
+        })}
+      </Button>
+    </div>
+  );
+}
+
 /* ── Modal Shell ─────────────────────────────────────────────────────── */
 
 function ModalShell({
@@ -313,7 +420,7 @@ function ModalShell({
   onClose,
   children,
   footer,
-  size = 'max-w-2xl',
+  size = "max-w-2xl",
 }: {
   title: string;
   onClose: () => void;
@@ -326,10 +433,10 @@ function ModalShell({
   // Escape-to-close — standard accessible-dialog behaviour.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   return (
@@ -345,10 +452,12 @@ function ModalShell({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
-          <h2 className="text-lg font-semibold text-content-primary">{title}</h2>
+          <h2 className="text-lg font-semibold text-content-primary">
+            {title}
+          </h2>
           <button
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
           >
             <X size={18} />
@@ -369,17 +478,17 @@ function IncidentsTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [detail, setDetail] = useState<IncidentInvestigation | null>(null);
   const [form, setForm] = useState({
-    title: '',
+    title: "",
     incident_date: new Date().toISOString().slice(0, 10),
-    severity: 'minor' as IncidentSeverity,
+    severity: "minor" as IncidentSeverity,
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['hse-investigations', projectId],
+    queryKey: ["hse-investigations", projectId],
     queryFn: () => fetchInvestigations(projectId),
     select: (d) => normalizeListResponse<IncidentInvestigation>(d),
   });
@@ -387,25 +496,25 @@ function IncidentsTab({ projectId }: { projectId: string }) {
   const createMut = useMutation({
     mutationFn: () => createInvestigation({ project_id: projectId, ...form }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-investigations', projectId] });
+      qc.invalidateQueries({ queryKey: ["hse-investigations", projectId] });
       setShowCreate(false);
       setForm({
-        title: '',
+        title: "",
         incident_date: new Date().toISOString().slice(0, 10),
-        severity: 'minor',
+        severity: "minor",
       });
       addToast({
-        type: 'success',
-        title: t('hse_advanced.investigation_created', {
-          defaultValue: 'Investigation opened',
+        type: "success",
+        title: t("hse_advanced.investigation_created", {
+          defaultValue: "Investigation opened",
         }),
       });
     },
     onError: (e) =>
       addToast({
-        type: 'error',
-        title: t('hse_advanced.investigation_failed', {
-          defaultValue: 'Failed to open investigation',
+        type: "error",
+        title: t("hse_advanced.investigation_failed", {
+          defaultValue: "Failed to open investigation",
         }),
         message: getErrorMessage(e),
       }),
@@ -429,9 +538,9 @@ function IncidentsTab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('hse_advanced.load_error', {
-            defaultValue: 'Failed to load HSE records. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse_advanced.load_error", {
+            defaultValue: "Failed to load HSE records. Please try again.",
           })}
         />
       </Card>
@@ -442,15 +551,17 @@ function IncidentsTab({ projectId }: { projectId: string }) {
     return (
       <EmptyState
         icon={<ShieldAlert size={28} strokeWidth={1.5} />}
-        title={t('hse_advanced.no_investigations', {
-          defaultValue: 'No investigations yet',
+        title={t("hse_advanced.no_investigations", {
+          defaultValue: "No investigations yet",
         })}
-        description={t('hse_advanced.no_investigations_desc', {
+        description={t("hse_advanced.no_investigations_desc", {
           defaultValue:
-            'Open a formal investigation when an incident requires 5-Whys analysis, root-cause review, and corrective actions.',
+            "Open a formal investigation when an incident requires 5-Whys analysis, root-cause review, and corrective actions.",
         })}
         action={{
-          label: t('hse_advanced.open_investigation', { defaultValue: 'Open Investigation' }),
+          label: t("hse_advanced.open_investigation", {
+            defaultValue: "Open Investigation",
+          }),
           onClick: () => setShowCreate(true),
         }}
       />
@@ -463,12 +574,12 @@ function IncidentsTab({ projectId }: { projectId: string }) {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder={t('hse_advanced.search_investigations', {
-            defaultValue: 'Search investigations...',
+          placeholder={t("hse_advanced.search_investigations", {
+            defaultValue: "Search investigations...",
           })}
           onCreate={() => setShowCreate(true)}
-          createLabel={t('hse_advanced.open_investigation', {
-            defaultValue: 'Open Investigation',
+          createLabel={t("hse_advanced.open_investigation", {
+            defaultValue: "Open Investigation",
           })}
         />
         <div className="overflow-x-auto">
@@ -476,30 +587,37 @@ function IncidentsTab({ projectId }: { projectId: string }) {
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.number', { defaultValue: '#' })}
+                  {t("common.number", { defaultValue: "#" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.title', { defaultValue: 'Title' })}
+                  {t("common.title", { defaultValue: "Title" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.incident_date', { defaultValue: 'Incident date' })}
+                  {t("hse_advanced.incident_date", {
+                    defaultValue: "Incident date",
+                  })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.severity', { defaultValue: 'Severity' })}
+                  {t("hse_advanced.severity", { defaultValue: "Severity" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('common.status', { defaultValue: 'Status' })}
+                  {t("common.status", { defaultValue: "Status" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.linked_capa', { defaultValue: 'CAPA' })}
+                  {t("hse_advanced.linked_capa", { defaultValue: "CAPA" })}
                 </th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                    {t('hse_advanced.no_matches', { defaultValue: 'No matches' })}
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
+                  >
+                    {t("hse_advanced.no_matches", {
+                      defaultValue: "No matches",
+                    })}
                   </td>
                 </tr>
               ) : (
@@ -512,22 +630,29 @@ function IncidentsTab({ projectId }: { projectId: string }) {
                     <td className="px-4 py-3 font-mono text-xs text-content-primary">
                       {it.investigation_number}
                     </td>
-                    <td className="px-4 py-3 text-content-primary">{it.title}</td>
+                    <td className="px-4 py-3 text-content-primary">
+                      {it.title}
+                    </td>
                     <td className="px-4 py-3 text-content-secondary">
                       <DateDisplay value={it.incident_date} />
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <Badge variant={SEVERITY_COLORS[it.severity] ?? 'neutral'} size="sm">
-                        {t(`hse_advanced.severity_${it.severity}`, { defaultValue: it.severity })}
+                      <Badge
+                        variant={SEVERITY_COLORS[it.severity] ?? "neutral"}
+                        size="sm"
+                      >
+                        {t(`hse_advanced.severity_${it.severity}`, {
+                          defaultValue: it.severity,
+                        })}
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-center">
                       <Badge
-                        variant={it.status === 'completed' ? 'success' : 'blue'}
+                        variant={it.status === "completed" ? "success" : "blue"}
                         size="sm"
                       >
                         {t(`hse_advanced.invest_status_${it.status}`, {
-                          defaultValue: it.status.replace(/_/g, ' '),
+                          defaultValue: it.status.replace(/_/g, " "),
                         })}
                       </Badge>
                     </td>
@@ -544,77 +669,94 @@ function IncidentsTab({ projectId }: { projectId: string }) {
 
       {showCreate && (
         <ModalShell
-          title={t('hse_advanced.open_investigation', { defaultValue: 'Open Investigation' })}
+          title={t("hse_advanced.open_investigation", {
+            defaultValue: "Open Investigation",
+          })}
           onClose={() => setShowCreate(false)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setShowCreate(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
                 disabled={!form.title.trim() || createMut.isPending}
                 onClick={() => createMut.mutate()}
               >
-                {t('common.create', { defaultValue: 'Create' })}
+                {t("common.create", { defaultValue: "Create" })}
               </Button>
             </>
           }
         >
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.title', { defaultValue: 'Title' })}{' '}
+              {t("common.title", { defaultValue: "Title" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <input
               className={inputCls}
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, title: e.target.value }))
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.incident_date', { defaultValue: 'Incident date' })}
+              {t("hse_advanced.incident_date", {
+                defaultValue: "Incident date",
+              })}
             </label>
             <input
               type="date"
               className={inputCls}
               value={form.incident_date}
-              onChange={(e) => setForm((f) => ({ ...f, incident_date: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, incident_date: e.target.value }))
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.severity', { defaultValue: 'Severity' })}
+              {t("hse_advanced.severity", { defaultValue: "Severity" })}
             </label>
             <select
               className={inputCls}
               value={form.severity}
               onChange={(e) =>
-                setForm((f) => ({ ...f, severity: e.target.value as IncidentSeverity }))
+                setForm((f) => ({
+                  ...f,
+                  severity: e.target.value as IncidentSeverity,
+                }))
               }
             >
               <option value="minor">
-                {t('hse_advanced.severity_minor', { defaultValue: 'Minor' })}
+                {t("hse_advanced.severity_minor", { defaultValue: "Minor" })}
               </option>
               <option value="moderate">
-                {t('hse_advanced.severity_moderate', { defaultValue: 'Moderate' })}
+                {t("hse_advanced.severity_moderate", {
+                  defaultValue: "Moderate",
+                })}
               </option>
               <option value="major">
-                {t('hse_advanced.severity_major', { defaultValue: 'Major' })}
+                {t("hse_advanced.severity_major", { defaultValue: "Major" })}
               </option>
               <option value="severe">
-                {t('hse_advanced.severity_severe', { defaultValue: 'Severe' })}
+                {t("hse_advanced.severity_severe", { defaultValue: "Severe" })}
               </option>
               <option value="critical">
-                {t('hse_advanced.severity_critical', { defaultValue: 'Critical' })}
+                {t("hse_advanced.severity_critical", {
+                  defaultValue: "Critical",
+                })}
               </option>
             </select>
           </div>
         </ModalShell>
       )}
 
-      {detail && <IncidentDetailDrawer item={detail} onClose={() => setDetail(null)} />}
+      {detail && (
+        <IncidentDetailDrawer item={detail} onClose={() => setDetail(null)} />
+      )}
     </>
   );
 }
@@ -631,11 +773,11 @@ function IncidentDetailDrawer({
   const { t } = useTranslation();
   const five: FiveWhys = item.five_whys ?? {};
   const whys: { key: keyof FiveWhys; label: string }[] = [
-    { key: 'why1', label: 'Why 1' },
-    { key: 'why2', label: 'Why 2' },
-    { key: 'why3', label: 'Why 3' },
-    { key: 'why4', label: 'Why 4' },
-    { key: 'why5', label: 'Why 5' },
+    { key: "why1", label: "Why 1" },
+    { key: "why2", label: "Why 2" },
+    { key: "why3", label: "Why 3" },
+    { key: "why4", label: "Why 4" },
+    { key: "why5", label: "Why 5" },
   ];
 
   return (
@@ -645,32 +787,42 @@ function IncidentDetailDrawer({
       size="max-w-3xl"
       footer={
         <Button variant="ghost" onClick={onClose}>
-          {t('common.close', { defaultValue: 'Close' })}
+          {t("common.close", { defaultValue: "Close" })}
         </Button>
       }
     >
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.severity', { defaultValue: 'Severity' })}
+            {t("hse_advanced.severity", { defaultValue: "Severity" })}
           </div>
-          <Badge variant={SEVERITY_COLORS[item.severity] ?? 'neutral'} size="sm">
-            {t(`hse_advanced.severity_${item.severity}`, { defaultValue: item.severity })}
+          <Badge
+            variant={SEVERITY_COLORS[item.severity] ?? "neutral"}
+            size="sm"
+          >
+            {t(`hse_advanced.severity_${item.severity}`, {
+              defaultValue: item.severity,
+            })}
           </Badge>
         </div>
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('common.status', { defaultValue: 'Status' })}
+            {t("common.status", { defaultValue: "Status" })}
           </div>
-          <Badge variant={item.status === 'completed' ? 'success' : 'blue'} size="sm">
-            {item.status.replace(/_/g, ' ')}
+          <Badge
+            variant={item.status === "completed" ? "success" : "blue"}
+            size="sm"
+          >
+            {item.status.replace(/_/g, " ")}
           </Badge>
         </div>
       </div>
 
       <div>
         <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-2">
-          {t('hse_advanced.section_5_whys', { defaultValue: '5-Whys analysis' })}
+          {t("hse_advanced.section_5_whys", {
+            defaultValue: "5-Whys analysis",
+          })}
         </div>
         <div className="space-y-2">
           {whys.map((w) => (
@@ -682,9 +834,9 @@ function IncidentDetailDrawer({
                 rows={2}
                 className={textareaCls}
                 readOnly
-                value={five[w.key] ?? ''}
-                placeholder={t('hse_advanced.why_placeholder', {
-                  defaultValue: 'No answer recorded',
+                value={five[w.key] ?? ""}
+                placeholder={t("hse_advanced.why_placeholder", {
+                  defaultValue: "No answer recorded",
                 })}
               />
             </div>
@@ -694,7 +846,9 @@ function IncidentDetailDrawer({
 
       <div>
         <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-2">
-          {t('hse_advanced.section_factors', { defaultValue: 'Contributing factors' })}
+          {t("hse_advanced.section_factors", {
+            defaultValue: "Contributing factors",
+          })}
         </div>
         {item.contributing_factors && item.contributing_factors.length > 0 ? (
           <ul className="list-disc pl-5 text-sm text-content-secondary space-y-1">
@@ -704,7 +858,9 @@ function IncidentDetailDrawer({
           </ul>
         ) : (
           <p className="text-sm text-content-tertiary">
-            {t('hse_advanced.no_factors', { defaultValue: 'No contributing factors recorded.' })}
+            {t("hse_advanced.no_factors", {
+              defaultValue: "No contributing factors recorded.",
+            })}
           </p>
         )}
       </div>
@@ -712,25 +868,31 @@ function IncidentDetailDrawer({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('hse_advanced.immediate_cause', { defaultValue: 'Immediate cause' })}
+            {t("hse_advanced.immediate_cause", {
+              defaultValue: "Immediate cause",
+            })}
           </div>
           <p className="text-sm text-content-secondary">
-            {item.immediate_cause || t('common.not_set', { defaultValue: 'Not set' })}
+            {item.immediate_cause ||
+              t("common.not_set", { defaultValue: "Not set" })}
           </p>
         </div>
         <div>
           <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('hse_advanced.root_cause', { defaultValue: 'Root cause' })}
+            {t("hse_advanced.root_cause", { defaultValue: "Root cause" })}
           </div>
           <p className="text-sm text-content-secondary">
-            {item.root_cause || t('common.not_set', { defaultValue: 'Not set' })}
+            {item.root_cause ||
+              t("common.not_set", { defaultValue: "Not set" })}
           </p>
         </div>
       </div>
 
       <div>
         <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-2">
-          {t('hse_advanced.linked_capa_actions', { defaultValue: 'Linked CAPA actions' })}
+          {t("hse_advanced.linked_capa_actions", {
+            defaultValue: "Linked CAPA actions",
+          })}
         </div>
         {item.linked_capa_ids && item.linked_capa_ids.length > 0 ? (
           <ul className="space-y-1 text-sm text-content-secondary">
@@ -742,7 +904,9 @@ function IncidentDetailDrawer({
           </ul>
         ) : (
           <p className="text-sm text-content-tertiary">
-            {t('hse_advanced.no_capa_linked', { defaultValue: 'No CAPA linked yet.' })}
+            {t("hse_advanced.no_capa_linked", {
+              defaultValue: "No CAPA linked yet.",
+            })}
           </p>
         )}
       </div>
@@ -756,12 +920,16 @@ function JSATab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
-  const [form, setForm] = useState({ title: '', task_description: '', location: '' });
+  const [form, setForm] = useState({
+    title: "",
+    task_description: "",
+    location: "",
+  });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['hse-jsas', projectId],
+    queryKey: ["hse-jsas", projectId],
     queryFn: () => fetchJSAs(projectId),
     select: (d) => normalizeListResponse<JobSafetyAnalysis>(d),
   });
@@ -769,18 +937,20 @@ function JSATab({ projectId }: { projectId: string }) {
   const createMut = useMutation({
     mutationFn: () => createJSA({ project_id: projectId, ...form }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-jsas', projectId] });
+      qc.invalidateQueries({ queryKey: ["hse-jsas", projectId] });
       setShowCreate(false);
-      setForm({ title: '', task_description: '', location: '' });
+      setForm({ title: "", task_description: "", location: "" });
       addToast({
-        type: 'success',
-        title: t('hse_advanced.jsa_created', { defaultValue: 'JSA created' }),
+        type: "success",
+        title: t("hse_advanced.jsa_created", { defaultValue: "JSA created" }),
       });
     },
     onError: (e) =>
       addToast({
-        type: 'error',
-        title: t('hse_advanced.jsa_failed', { defaultValue: 'Failed to create JSA' }),
+        type: "error",
+        title: t("hse_advanced.jsa_failed", {
+          defaultValue: "Failed to create JSA",
+        }),
         message: getErrorMessage(e),
       }),
   });
@@ -790,7 +960,9 @@ function JSATab({ projectId }: { projectId: string }) {
     if (!search) return data;
     const q = search.toLowerCase();
     return data.filter(
-      (it) => it.title.toLowerCase().includes(q) || it.jsa_number.toLowerCase().includes(q),
+      (it) =>
+        it.title.toLowerCase().includes(q) ||
+        it.jsa_number.toLowerCase().includes(q),
     );
   }, [data, search]);
 
@@ -800,9 +972,9 @@ function JSATab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('hse_advanced.load_error', {
-            defaultValue: 'Failed to load HSE records. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse_advanced.load_error", {
+            defaultValue: "Failed to load HSE records. Please try again.",
           })}
         />
       </Card>
@@ -812,13 +984,13 @@ function JSATab({ projectId }: { projectId: string }) {
     return (
       <EmptyState
         icon={<ClipboardList size={28} strokeWidth={1.5} />}
-        title={t('hse_advanced.no_jsas', { defaultValue: 'No JSAs yet' })}
-        description={t('hse_advanced.no_jsas_desc', {
+        title={t("hse_advanced.no_jsas", { defaultValue: "No JSAs yet" })}
+        description={t("hse_advanced.no_jsas_desc", {
           defaultValue:
-            'A Job Safety Analysis breaks a task into steps, identifies hazards per step, and lists controls. Create one before high-risk work begins.',
+            "A Job Safety Analysis breaks a task into steps, identifies hazards per step, and lists controls. Create one before high-risk work begins.",
         })}
         action={{
-          label: t('hse_advanced.new_jsa', { defaultValue: 'New JSA' }),
+          label: t("hse_advanced.new_jsa", { defaultValue: "New JSA" }),
           onClick: () => setShowCreate(true),
         }}
       />
@@ -831,45 +1003,63 @@ function JSATab({ projectId }: { projectId: string }) {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder={t('hse_advanced.search_jsas', { defaultValue: 'Search JSAs...' })}
+          placeholder={t("hse_advanced.search_jsas", {
+            defaultValue: "Search JSAs...",
+          })}
           onCreate={() => setShowCreate(true)}
-          createLabel={t('hse_advanced.new_jsa', { defaultValue: 'New JSA' })}
+          createLabel={t("hse_advanced.new_jsa", { defaultValue: "New JSA" })}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.number', { defaultValue: '#' })}
+                  {t("common.number", { defaultValue: "#" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.title', { defaultValue: 'Title' })}
+                  {t("common.title", { defaultValue: "Title" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.location', { defaultValue: 'Location' })}
+                  {t("hse_advanced.location", { defaultValue: "Location" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.steps', { defaultValue: 'Steps' })}
+                  {t("hse_advanced.steps", { defaultValue: "Steps" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.created', { defaultValue: 'Created' })}
+                  {t("common.created", { defaultValue: "Created" })}
                 </th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                    {t('hse_advanced.no_matches', { defaultValue: 'No matches' })}
+                  <td
+                    colSpan={5}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
+                  >
+                    {t("hse_advanced.no_matches", {
+                      defaultValue: "No matches",
+                    })}
                   </td>
                 </tr>
               ) : (
                 filtered.map((it) => (
-                  <tr key={it.id} className="border-b border-border-light hover:bg-surface-secondary/30">
-                    <td className="px-4 py-3 font-mono text-xs">{it.jsa_number}</td>
-                    <td className="px-4 py-3 text-content-primary">{it.title}</td>
-                    <td className="px-4 py-3 text-content-secondary">{it.location ?? '—'}</td>
-                    <td className="px-4 py-3 text-center tabular-nums">{it.steps?.length ?? 0}</td>
+                  <tr
+                    key={it.id}
+                    className="border-b border-border-light hover:bg-surface-secondary/30"
+                  >
+                    <td className="px-4 py-3 font-mono text-xs">
+                      {it.jsa_number}
+                    </td>
+                    <td className="px-4 py-3 text-content-primary">
+                      {it.title}
+                    </td>
+                    <td className="px-4 py-3 text-content-secondary">
+                      {it.location ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 text-center tabular-nums">
+                      {it.steps?.length ?? 0}
+                    </td>
                     <td className="px-4 py-3 text-content-secondary">
                       <DateDisplay value={it.created_at} />
                     </td>
@@ -883,53 +1073,61 @@ function JSATab({ projectId }: { projectId: string }) {
 
       {showCreate && (
         <ModalShell
-          title={t('hse_advanced.new_jsa', { defaultValue: 'New JSA' })}
+          title={t("hse_advanced.new_jsa", { defaultValue: "New JSA" })}
           onClose={() => setShowCreate(false)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setShowCreate(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
                 disabled={!form.title.trim() || createMut.isPending}
                 onClick={() => createMut.mutate()}
               >
-                {t('common.create', { defaultValue: 'Create' })}
+                {t("common.create", { defaultValue: "Create" })}
               </Button>
             </>
           }
         >
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.title', { defaultValue: 'Title' })}{' '}
+              {t("common.title", { defaultValue: "Title" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <input
               className={inputCls}
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, title: e.target.value }))
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.task_description', { defaultValue: 'Task description' })}
+              {t("hse_advanced.task_description", {
+                defaultValue: "Task description",
+              })}
             </label>
             <textarea
               rows={3}
               className={textareaCls}
               value={form.task_description}
-              onChange={(e) => setForm((f) => ({ ...f, task_description: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, task_description: e.target.value }))
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.location', { defaultValue: 'Location' })}
+              {t("hse_advanced.location", { defaultValue: "Location" })}
             </label>
             <input
               className={inputCls}
               value={form.location}
-              onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, location: e.target.value }))
+              }
             />
           </div>
         </ModalShell>
@@ -944,19 +1142,19 @@ function PermitsTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [detail, setDetail] = useState<PermitToWork | null>(null);
-  const [filter, setFilter] = useState<'all' | 'active' | 'expired'>('active');
+  const [filter, setFilter] = useState<"all" | "active" | "expired">("active");
   const [form, setForm] = useState({
-    title: '',
-    permit_type: 'hot_work',
-    scope: '',
-    expires_at: '',
+    title: "",
+    permit_type: "hot_work",
+    scope: "",
+    expires_at: "",
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['hse-permits', projectId],
+    queryKey: ["hse-permits", projectId],
     queryFn: () => fetchPermits(projectId),
     select: (d) => normalizeListResponse<PermitToWork>(d),
   });
@@ -971,18 +1169,27 @@ function PermitsTab({ projectId }: { projectId: string }) {
         expires_at: form.expires_at || undefined,
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-permits', projectId] });
+      qc.invalidateQueries({ queryKey: ["hse-permits", projectId] });
       setShowCreate(false);
-      setForm({ title: '', permit_type: 'hot_work', scope: '', expires_at: '' });
+      setForm({
+        title: "",
+        permit_type: "hot_work",
+        scope: "",
+        expires_at: "",
+      });
       addToast({
-        type: 'success',
-        title: t('hse_advanced.permit_created', { defaultValue: 'Permit issued' }),
+        type: "success",
+        title: t("hse_advanced.permit_created", {
+          defaultValue: "Permit issued",
+        }),
       });
     },
     onError: (e) =>
       addToast({
-        type: 'error',
-        title: t('hse_advanced.permit_failed', { defaultValue: 'Failed to create permit' }),
+        type: "error",
+        title: t("hse_advanced.permit_failed", {
+          defaultValue: "Failed to create permit",
+        }),
         message: getErrorMessage(e),
       }),
   });
@@ -991,8 +1198,8 @@ function PermitsTab({ projectId }: { projectId: string }) {
     const c = { all: data?.length ?? 0, active: 0, expired: 0 };
     if (!data) return c;
     for (const p of data) {
-      if (p.status === 'active') c.active++;
-      else if (p.status === 'expired') c.expired++;
+      if (p.status === "active") c.active++;
+      else if (p.status === "expired") c.expired++;
     }
     return c;
   }, [data]);
@@ -1000,12 +1207,15 @@ function PermitsTab({ projectId }: { projectId: string }) {
   const filtered = useMemo(() => {
     if (!data) return [];
     let rows = data;
-    if (filter === 'active') rows = rows.filter((p) => p.status === 'active');
-    else if (filter === 'expired') rows = rows.filter((p) => p.status === 'expired');
+    if (filter === "active") rows = rows.filter((p) => p.status === "active");
+    else if (filter === "expired")
+      rows = rows.filter((p) => p.status === "expired");
     if (!search) return rows;
     const q = search.toLowerCase();
     return rows.filter(
-      (p) => p.title.toLowerCase().includes(q) || p.permit_number.toLowerCase().includes(q),
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.permit_number.toLowerCase().includes(q),
     );
   }, [data, search, filter]);
 
@@ -1015,9 +1225,9 @@ function PermitsTab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('hse_advanced.load_error', {
-            defaultValue: 'Failed to load HSE records. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse_advanced.load_error", {
+            defaultValue: "Failed to load HSE records. Please try again.",
           })}
         />
       </Card>
@@ -1027,13 +1237,13 @@ function PermitsTab({ projectId }: { projectId: string }) {
     return (
       <EmptyState
         icon={<FileCheck size={28} strokeWidth={1.5} />}
-        title={t('hse_advanced.no_permits', { defaultValue: 'No permits yet' })}
-        description={t('hse_advanced.no_permits_desc', {
+        title={t("hse_advanced.no_permits", { defaultValue: "No permits yet" })}
+        description={t("hse_advanced.no_permits_desc", {
           defaultValue:
-            'Issue a Permit to Work to authorise hot work, confined-space entry, work-at-height and other high-risk tasks. Each permit tracks scope, hazards, controls and signatures.',
+            "Issue a Permit to Work to authorise hot work, confined-space entry, work-at-height and other high-risk tasks. Each permit tracks scope, hazards, controls and signatures.",
         })}
         action={{
-          label: t('hse_advanced.new_permit', { defaultValue: 'Issue Permit' }),
+          label: t("hse_advanced.new_permit", { defaultValue: "Issue Permit" }),
           onClick: () => setShowCreate(true),
         }}
       />
@@ -1043,23 +1253,27 @@ function PermitsTab({ projectId }: { projectId: string }) {
   return (
     <>
       <div className="mb-4">
-        <FilterChips<'all' | 'active' | 'expired'>
+        <FilterChips<"all" | "active" | "expired">
           value={filter}
           onChange={setFilter}
           options={[
             {
-              value: 'active',
-              label: t('hse_advanced.filter_active', { defaultValue: 'Active' }),
+              value: "active",
+              label: t("hse_advanced.filter_active", {
+                defaultValue: "Active",
+              }),
               count: counts.active,
             },
             {
-              value: 'expired',
-              label: t('hse_advanced.filter_expired', { defaultValue: 'Expired' }),
+              value: "expired",
+              label: t("hse_advanced.filter_expired", {
+                defaultValue: "Expired",
+              }),
               count: counts.expired,
             },
             {
-              value: 'all',
-              label: t('hse_advanced.filter_all', { defaultValue: 'All' }),
+              value: "all",
+              label: t("hse_advanced.filter_all", { defaultValue: "All" }),
               count: counts.all,
             },
           ]}
@@ -1070,39 +1284,48 @@ function PermitsTab({ projectId }: { projectId: string }) {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder={t('hse_advanced.search_permits', { defaultValue: 'Search permits...' })}
+          placeholder={t("hse_advanced.search_permits", {
+            defaultValue: "Search permits...",
+          })}
           onCreate={() => setShowCreate(true)}
-          createLabel={t('hse_advanced.new_permit', { defaultValue: 'Issue Permit' })}
+          createLabel={t("hse_advanced.new_permit", {
+            defaultValue: "Issue Permit",
+          })}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.number', { defaultValue: '#' })}
+                  {t("common.number", { defaultValue: "#" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.title', { defaultValue: 'Title' })}
+                  {t("common.title", { defaultValue: "Title" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.permit_type', { defaultValue: 'Type' })}
+                  {t("hse_advanced.permit_type", { defaultValue: "Type" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('common.status', { defaultValue: 'Status' })}
+                  {t("common.status", { defaultValue: "Status" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.expires', { defaultValue: 'Expires' })}
+                  {t("hse_advanced.expires", { defaultValue: "Expires" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.countdown', { defaultValue: 'Countdown' })}
+                  {t("hse_advanced.countdown", { defaultValue: "Countdown" })}
                 </th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                    {t('hse_advanced.no_matches', { defaultValue: 'No matches' })}
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
+                  >
+                    {t("hse_advanced.no_matches", {
+                      defaultValue: "No matches",
+                    })}
                   </td>
                 </tr>
               ) : (
@@ -1114,44 +1337,60 @@ function PermitsTab({ projectId }: { projectId: string }) {
                       className="border-b border-border-light hover:bg-surface-secondary/30 cursor-pointer"
                       onClick={() => setDetail(p)}
                     >
-                      <td className="px-4 py-3 font-mono text-xs">{p.permit_number}</td>
-                      <td className="px-4 py-3 text-content-primary">{p.title}</td>
+                      <td className="px-4 py-3 font-mono text-xs">
+                        {p.permit_number}
+                      </td>
+                      <td className="px-4 py-3 text-content-primary">
+                        {p.title}
+                      </td>
                       <td className="px-4 py-3 text-content-secondary text-xs">
-                        {p.permit_type.replace(/_/g, ' ')}
+                        {p.permit_type.replace(/_/g, " ")}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <Badge variant={PERMIT_STATUS_COLORS[p.status] ?? 'neutral'} size="sm">
+                        <Badge
+                          variant={PERMIT_STATUS_COLORS[p.status] ?? "neutral"}
+                          size="sm"
+                        >
                           {t(`hse_advanced.permit_status_${p.status}`, {
                             defaultValue: p.status,
                           })}
                         </Badge>
                       </td>
                       <td className="px-4 py-3 text-content-secondary">
-                        {p.expires_at ? <DateDisplay value={p.expires_at} /> : '—'}
+                        {p.expires_at ? (
+                          <DateDisplay value={p.expires_at} />
+                        ) : (
+                          "—"
+                        )}
                       </td>
                       <td className="px-4 py-3 text-center tabular-nums">
                         {days === null ? (
                           <span className="text-content-tertiary">—</span>
                         ) : days < 0 ? (
                           <span className="text-semantic-error font-medium">
-                            {t('hse_advanced.expired_days_ago', {
-                              defaultValue: '{{n}}d ago',
+                            {t("hse_advanced.expired_days_ago", {
+                              defaultValue: "{{n}}d ago",
                               n: Math.abs(days),
                             })}
                           </span>
                         ) : days <= 1 ? (
                           <span className="text-semantic-error font-medium">
-                            {t('hse_advanced.expires_today', { defaultValue: 'today' })}
+                            {t("hse_advanced.expires_today", {
+                              defaultValue: "today",
+                            })}
                           </span>
                         ) : (
                           <span
                             className={
                               days <= 3
-                                ? 'text-amber-600 font-medium'
-                                : 'text-content-secondary'
+                                ? "text-amber-600 font-medium"
+                                : "text-content-secondary"
                             }
                           >
-                            {t('hse_advanced.in_days', { defaultValue: 'in {{n}}d', n: days })}
+                            {t("hse_advanced.in_days", {
+                              defaultValue: "in {{n}}d",
+                              n: days,
+                            })}
                           </span>
                         )}
                       </td>
@@ -1166,100 +1405,124 @@ function PermitsTab({ projectId }: { projectId: string }) {
 
       {showCreate && (
         <ModalShell
-          title={t('hse_advanced.new_permit', { defaultValue: 'Issue Permit' })}
+          title={t("hse_advanced.new_permit", { defaultValue: "Issue Permit" })}
           onClose={() => setShowCreate(false)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setShowCreate(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
                 disabled={!form.title.trim() || createMut.isPending}
                 onClick={() => createMut.mutate()}
               >
-                {t('common.issue', { defaultValue: 'Issue' })}
+                {t("common.issue", { defaultValue: "Issue" })}
               </Button>
             </>
           }
         >
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.title', { defaultValue: 'Title' })}{' '}
+              {t("common.title", { defaultValue: "Title" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <input
               className={inputCls}
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, title: e.target.value }))
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.permit_type', { defaultValue: 'Type' })}
+              {t("hse_advanced.permit_type", { defaultValue: "Type" })}
             </label>
             <select
               className={inputCls}
               value={form.permit_type}
-              onChange={(e) => setForm((f) => ({ ...f, permit_type: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, permit_type: e.target.value }))
+              }
             >
               <option value="hot_work">
-                {t('hse_advanced.permit_type_hot_work', { defaultValue: 'Hot work' })}
+                {t("hse_advanced.permit_type_hot_work", {
+                  defaultValue: "Hot work",
+                })}
               </option>
               <option value="confined_space">
-                {t('hse_advanced.permit_type_confined_space', {
-                  defaultValue: 'Confined space',
+                {t("hse_advanced.permit_type_confined_space", {
+                  defaultValue: "Confined space",
                 })}
               </option>
               <option value="work_at_height">
-                {t('hse_advanced.permit_type_work_at_height', {
-                  defaultValue: 'Work at height',
+                {t("hse_advanced.permit_type_work_at_height", {
+                  defaultValue: "Work at height",
                 })}
               </option>
               <option value="excavation">
-                {t('hse_advanced.permit_type_excavation', { defaultValue: 'Excavation' })}
+                {t("hse_advanced.permit_type_excavation", {
+                  defaultValue: "Excavation",
+                })}
               </option>
               <option value="electrical">
-                {t('hse_advanced.permit_type_electrical', { defaultValue: 'Electrical' })}
+                {t("hse_advanced.permit_type_electrical", {
+                  defaultValue: "Electrical",
+                })}
               </option>
               <option value="lifting">
-                {t('hse_advanced.permit_type_lifting', { defaultValue: 'Lifting / crane' })}
+                {t("hse_advanced.permit_type_lifting", {
+                  defaultValue: "Lifting / crane",
+                })}
               </option>
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.scope', { defaultValue: 'Scope of work' })}
+              {t("hse_advanced.scope", { defaultValue: "Scope of work" })}
             </label>
             <textarea
               rows={3}
               className={textareaCls}
               value={form.scope}
-              onChange={(e) => setForm((f) => ({ ...f, scope: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, scope: e.target.value }))
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.expires_at', { defaultValue: 'Expires at' })}
+              {t("hse_advanced.expires_at", { defaultValue: "Expires at" })}
             </label>
             <input
               type="datetime-local"
               className={inputCls}
               value={form.expires_at}
-              onChange={(e) => setForm((f) => ({ ...f, expires_at: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, expires_at: e.target.value }))
+              }
             />
           </div>
         </ModalShell>
       )}
 
-      {detail && <PermitDetailDrawer item={detail} onClose={() => setDetail(null)} />}
+      {detail && (
+        <PermitDetailDrawer item={detail} onClose={() => setDetail(null)} />
+      )}
     </>
   );
 }
 
 /* ── Permit Detail Drawer ────────────────────────────────────────────── */
 
-function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: () => void }) {
+function PermitDetailDrawer({
+  item,
+  onClose,
+}: {
+  item: PermitToWork;
+  onClose: () => void;
+}) {
   const { t } = useTranslation();
   const days = daysUntil(item.expires_at);
 
@@ -1270,22 +1533,27 @@ function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: ()
       size="max-w-2xl"
       footer={
         <Button variant="ghost" onClick={onClose}>
-          {t('common.close', { defaultValue: 'Close' })}
+          {t("common.close", { defaultValue: "Close" })}
         </Button>
       }
     >
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.permit_type', { defaultValue: 'Type' })}
+            {t("hse_advanced.permit_type", { defaultValue: "Type" })}
           </div>
-          <div className="text-content-primary">{item.permit_type.replace(/_/g, ' ')}</div>
+          <div className="text-content-primary">
+            {item.permit_type.replace(/_/g, " ")}
+          </div>
         </div>
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('common.status', { defaultValue: 'Status' })}
+            {t("common.status", { defaultValue: "Status" })}
           </div>
-          <Badge variant={PERMIT_STATUS_COLORS[item.status] ?? 'neutral'} size="sm">
+          <Badge
+            variant={PERMIT_STATUS_COLORS[item.status] ?? "neutral"}
+            size="sm"
+          >
             {item.status}
           </Badge>
         </div>
@@ -1293,17 +1561,17 @@ function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: ()
 
       <div>
         <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-          {t('hse_advanced.scope', { defaultValue: 'Scope of work' })}
+          {t("hse_advanced.scope", { defaultValue: "Scope of work" })}
         </div>
         <p className="text-sm text-content-secondary whitespace-pre-wrap">
-          {item.scope || t('common.not_set', { defaultValue: 'Not set' })}
+          {item.scope || t("common.not_set", { defaultValue: "Not set" })}
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('hse_advanced.hazards', { defaultValue: 'Hazards' })}
+            {t("hse_advanced.hazards", { defaultValue: "Hazards" })}
           </div>
           {item.hazards && item.hazards.length > 0 ? (
             <ul className="list-disc pl-5 text-sm text-content-secondary">
@@ -1313,13 +1581,13 @@ function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: ()
             </ul>
           ) : (
             <p className="text-sm text-content-tertiary">
-              {t('hse_advanced.no_hazards', { defaultValue: 'None listed' })}
+              {t("hse_advanced.no_hazards", { defaultValue: "None listed" })}
             </p>
           )}
         </div>
         <div>
           <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('hse_advanced.controls', { defaultValue: 'Controls' })}
+            {t("hse_advanced.controls", { defaultValue: "Controls" })}
           </div>
           {item.controls && item.controls.length > 0 ? (
             <ul className="list-disc pl-5 text-sm text-content-secondary">
@@ -1329,7 +1597,7 @@ function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: ()
             </ul>
           ) : (
             <p className="text-sm text-content-tertiary">
-              {t('hse_advanced.no_controls', { defaultValue: 'None listed' })}
+              {t("hse_advanced.no_controls", { defaultValue: "None listed" })}
             </p>
           )}
         </div>
@@ -1337,7 +1605,7 @@ function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: ()
 
       <div>
         <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-          {t('hse_advanced.signatures', { defaultValue: 'Signatures' })}
+          {t("hse_advanced.signatures", { defaultValue: "Signatures" })}
         </div>
         {item.signatures && item.signatures.length > 0 ? (
           <ul className="text-sm text-content-secondary space-y-1">
@@ -1356,7 +1624,9 @@ function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: ()
           </ul>
         ) : (
           <p className="text-sm text-content-tertiary">
-            {t('hse_advanced.no_signatures', { defaultValue: 'No signatures yet' })}
+            {t("hse_advanced.no_signatures", {
+              defaultValue: "No signatures yet",
+            })}
           </p>
         )}
       </div>
@@ -1365,25 +1635,28 @@ function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: ()
         <div className="flex items-center justify-between text-sm">
           <span className="flex items-center gap-1.5 text-content-secondary">
             <Clock size={14} />
-            {t('hse_advanced.countdown', { defaultValue: 'Expiry countdown' })}
+            {t("hse_advanced.countdown", { defaultValue: "Expiry countdown" })}
           </span>
           <span
             className={
               days !== null && days < 0
-                ? 'text-semantic-error font-semibold'
+                ? "text-semantic-error font-semibold"
                 : days !== null && days <= 3
-                  ? 'text-amber-600 font-semibold'
-                  : 'text-content-primary font-medium'
+                  ? "text-amber-600 font-semibold"
+                  : "text-content-primary font-medium"
             }
           >
             {days === null
-              ? t('common.not_set', { defaultValue: 'Not set' })
+              ? t("common.not_set", { defaultValue: "Not set" })
               : days < 0
-                ? t('hse_advanced.expired_days_ago', {
-                    defaultValue: '{{n}}d ago',
+                ? t("hse_advanced.expired_days_ago", {
+                    defaultValue: "{{n}}d ago",
                     n: Math.abs(days),
                   })
-                : t('hse_advanced.in_days', { defaultValue: 'in {{n}}d', n: days })}
+                : t("hse_advanced.in_days", {
+                    defaultValue: "in {{n}}d",
+                    n: days,
+                  })}
           </span>
         </div>
       </div>
@@ -1397,17 +1670,17 @@ function ToolboxTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({
-    title: '',
+    title: "",
     talk_date: new Date().toISOString().slice(0, 10),
-    presenter: '',
-    summary: '',
+    presenter: "",
+    summary: "",
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['hse-toolbox', projectId],
+    queryKey: ["hse-toolbox", projectId],
     queryFn: () => fetchToolboxTalks(projectId),
     select: (d) => normalizeListResponse<ToolboxTalk>(d),
   });
@@ -1415,23 +1688,27 @@ function ToolboxTab({ projectId }: { projectId: string }) {
   const createMut = useMutation({
     mutationFn: () => createToolboxTalk({ project_id: projectId, ...form }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-toolbox', projectId] });
+      qc.invalidateQueries({ queryKey: ["hse-toolbox", projectId] });
       setShowCreate(false);
       setForm({
-        title: '',
+        title: "",
         talk_date: new Date().toISOString().slice(0, 10),
-        presenter: '',
-        summary: '',
+        presenter: "",
+        summary: "",
       });
       addToast({
-        type: 'success',
-        title: t('hse_advanced.toolbox_created', { defaultValue: 'Toolbox talk logged' }),
+        type: "success",
+        title: t("hse_advanced.toolbox_created", {
+          defaultValue: "Toolbox talk logged",
+        }),
       });
     },
     onError: (e) =>
       addToast({
-        type: 'error',
-        title: t('hse_advanced.toolbox_failed', { defaultValue: 'Failed to log talk' }),
+        type: "error",
+        title: t("hse_advanced.toolbox_failed", {
+          defaultValue: "Failed to log talk",
+        }),
         message: getErrorMessage(e),
       }),
   });
@@ -1449,9 +1726,9 @@ function ToolboxTab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('hse_advanced.load_error', {
-            defaultValue: 'Failed to load HSE records. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse_advanced.load_error", {
+            defaultValue: "Failed to load HSE records. Please try again.",
           })}
         />
       </Card>
@@ -1461,13 +1738,15 @@ function ToolboxTab({ projectId }: { projectId: string }) {
     return (
       <EmptyState
         icon={<Users size={28} strokeWidth={1.5} />}
-        title={t('hse_advanced.no_toolbox', { defaultValue: 'No toolbox talks yet' })}
-        description={t('hse_advanced.no_toolbox_desc', {
+        title={t("hse_advanced.no_toolbox", {
+          defaultValue: "No toolbox talks yet",
+        })}
+        description={t("hse_advanced.no_toolbox_desc", {
           defaultValue:
-            'Log daily toolbox talks with topic, presenter and attendance. Each talk is a record that workers were briefed before high-risk activities.',
+            "Log daily toolbox talks with topic, presenter and attendance. Each talk is a record that workers were briefed before high-risk activities.",
         })}
         action={{
-          label: t('hse_advanced.new_toolbox', { defaultValue: 'Log Talk' }),
+          label: t("hse_advanced.new_toolbox", { defaultValue: "Log Talk" }),
           onClick: () => setShowCreate(true),
         }}
       />
@@ -1480,44 +1759,62 @@ function ToolboxTab({ projectId }: { projectId: string }) {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder={t('hse_advanced.search_toolbox', { defaultValue: 'Search talks...' })}
+          placeholder={t("hse_advanced.search_toolbox", {
+            defaultValue: "Search talks...",
+          })}
           onCreate={() => setShowCreate(true)}
-          createLabel={t('hse_advanced.new_toolbox', { defaultValue: 'Log Talk' })}
+          createLabel={t("hse_advanced.new_toolbox", {
+            defaultValue: "Log Talk",
+          })}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.number', { defaultValue: '#' })}
+                  {t("common.number", { defaultValue: "#" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.title', { defaultValue: 'Title' })}
+                  {t("common.title", { defaultValue: "Title" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.presenter', { defaultValue: 'Presenter' })}
+                  {t("hse_advanced.presenter", { defaultValue: "Presenter" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.date', { defaultValue: 'Date' })}
+                  {t("hse_advanced.date", { defaultValue: "Date" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.attendance', { defaultValue: 'Attendance' })}
+                  {t("hse_advanced.attendance", { defaultValue: "Attendance" })}
                 </th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                    {t('hse_advanced.no_matches', { defaultValue: 'No matches' })}
+                  <td
+                    colSpan={5}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
+                  >
+                    {t("hse_advanced.no_matches", {
+                      defaultValue: "No matches",
+                    })}
                   </td>
                 </tr>
               ) : (
                 filtered.map((it) => (
-                  <tr key={it.id} className="border-b border-border-light hover:bg-surface-secondary/30">
-                    <td className="px-4 py-3 font-mono text-xs">{it.talk_number}</td>
-                    <td className="px-4 py-3 text-content-primary">{it.title}</td>
-                    <td className="px-4 py-3 text-content-secondary">{it.presenter ?? '—'}</td>
+                  <tr
+                    key={it.id}
+                    className="border-b border-border-light hover:bg-surface-secondary/30"
+                  >
+                    <td className="px-4 py-3 font-mono text-xs">
+                      {it.talk_number}
+                    </td>
+                    <td className="px-4 py-3 text-content-primary">
+                      {it.title}
+                    </td>
+                    <td className="px-4 py-3 text-content-secondary">
+                      {it.presenter ?? "—"}
+                    </td>
                     <td className="px-4 py-3 text-content-secondary">
                       <DateDisplay value={it.talk_date} />
                     </td>
@@ -1536,66 +1833,76 @@ function ToolboxTab({ projectId }: { projectId: string }) {
 
       {showCreate && (
         <ModalShell
-          title={t('hse_advanced.new_toolbox', { defaultValue: 'Log Toolbox Talk' })}
+          title={t("hse_advanced.new_toolbox", {
+            defaultValue: "Log Toolbox Talk",
+          })}
           onClose={() => setShowCreate(false)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setShowCreate(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
                 disabled={!form.title.trim() || createMut.isPending}
                 onClick={() => createMut.mutate()}
               >
-                {t('common.save', { defaultValue: 'Save' })}
+                {t("common.save", { defaultValue: "Save" })}
               </Button>
             </>
           }
         >
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.title', { defaultValue: 'Title' })}{' '}
+              {t("common.title", { defaultValue: "Title" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <input
               className={inputCls}
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, title: e.target.value }))
+              }
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.date', { defaultValue: 'Date' })}
+                {t("hse_advanced.date", { defaultValue: "Date" })}
               </label>
               <input
                 type="date"
                 className={inputCls}
                 value={form.talk_date}
-                onChange={(e) => setForm((f) => ({ ...f, talk_date: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, talk_date: e.target.value }))
+                }
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.presenter', { defaultValue: 'Presenter' })}
+                {t("hse_advanced.presenter", { defaultValue: "Presenter" })}
               </label>
               <input
                 className={inputCls}
                 value={form.presenter}
-                onChange={(e) => setForm((f) => ({ ...f, presenter: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, presenter: e.target.value }))
+                }
               />
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.summary', { defaultValue: 'Summary' })}
+              {t("hse_advanced.summary", { defaultValue: "Summary" })}
             </label>
             <textarea
               rows={3}
               className={textareaCls}
               value={form.summary}
-              onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, summary: e.target.value }))
+              }
             />
           </div>
         </ModalShell>
@@ -1610,21 +1917,21 @@ function PPETab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [detail, setDetail] = useState<PPEIssue | null>(null);
-  const [filter, setFilter] = useState<'all' | 'issued' | 'expiring'>('all');
+  const [filter, setFilter] = useState<"all" | "issued" | "expiring">("all");
   const [form, setForm] = useState({
-    item_type: 'hard_hat',
-    item_description: '',
-    issued_to_name: '',
+    item_type: "hard_hat",
+    item_description: "",
+    issued_to_name: "",
     issued_at: new Date().toISOString().slice(0, 10),
-    return_by: '',
+    return_by: "",
     quantity: 1,
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['hse-ppe', projectId],
+    queryKey: ["hse-ppe", projectId],
     queryFn: () => fetchPPEIssues(projectId),
     select: (d) => normalizeListResponse<PPEIssue>(d),
   });
@@ -1641,25 +1948,27 @@ function PPETab({ projectId }: { projectId: string }) {
         quantity: form.quantity,
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-ppe', projectId] });
+      qc.invalidateQueries({ queryKey: ["hse-ppe", projectId] });
       setShowCreate(false);
       setForm({
-        item_type: 'hard_hat',
-        item_description: '',
-        issued_to_name: '',
+        item_type: "hard_hat",
+        item_description: "",
+        issued_to_name: "",
         issued_at: new Date().toISOString().slice(0, 10),
-        return_by: '',
+        return_by: "",
         quantity: 1,
       });
       addToast({
-        type: 'success',
-        title: t('hse_advanced.ppe_created', { defaultValue: 'PPE issued' }),
+        type: "success",
+        title: t("hse_advanced.ppe_created", { defaultValue: "PPE issued" }),
       });
     },
     onError: (e) =>
       addToast({
-        type: 'error',
-        title: t('hse_advanced.ppe_failed', { defaultValue: 'Failed to issue PPE' }),
+        type: "error",
+        title: t("hse_advanced.ppe_failed", {
+          defaultValue: "Failed to issue PPE",
+        }),
         message: getErrorMessage(e),
       }),
   });
@@ -1678,8 +1987,8 @@ function PPETab({ projectId }: { projectId: string }) {
   const filtered = useMemo(() => {
     if (!data) return [];
     let rows = data;
-    if (filter === 'issued') rows = rows.filter((p) => !p.returned_at);
-    else if (filter === 'expiring')
+    if (filter === "issued") rows = rows.filter((p) => !p.returned_at);
+    else if (filter === "expiring")
       rows = rows.filter((p) => {
         const d = daysUntil(p.expires_at);
         return d !== null && d >= 0 && d <= 30;
@@ -1700,9 +2009,9 @@ function PPETab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('hse_advanced.load_error', {
-            defaultValue: 'Failed to load HSE records. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse_advanced.load_error", {
+            defaultValue: "Failed to load HSE records. Please try again.",
           })}
         />
       </Card>
@@ -1712,13 +2021,13 @@ function PPETab({ projectId }: { projectId: string }) {
     return (
       <EmptyState
         icon={<HardHat size={28} strokeWidth={1.5} />}
-        title={t('hse_advanced.no_ppe', { defaultValue: 'No PPE issued yet' })}
-        description={t('hse_advanced.no_ppe_desc', {
+        title={t("hse_advanced.no_ppe", { defaultValue: "No PPE issued yet" })}
+        description={t("hse_advanced.no_ppe_desc", {
           defaultValue:
-            'Log PPE issued to workers — hard hats, harnesses, respirators, hearing protection. Tracks expiry, return-by dates and inventory.',
+            "Log PPE issued to workers — hard hats, harnesses, respirators, hearing protection. Tracks expiry, return-by dates and inventory.",
         })}
         action={{
-          label: t('hse_advanced.new_ppe', { defaultValue: 'Issue PPE' }),
+          label: t("hse_advanced.new_ppe", { defaultValue: "Issue PPE" }),
           onClick: () => setShowCreate(true),
         }}
       />
@@ -1728,23 +2037,27 @@ function PPETab({ projectId }: { projectId: string }) {
   return (
     <>
       <div className="mb-4">
-        <FilterChips<'all' | 'issued' | 'expiring'>
+        <FilterChips<"all" | "issued" | "expiring">
           value={filter}
           onChange={setFilter}
           options={[
             {
-              value: 'all',
-              label: t('hse_advanced.filter_all', { defaultValue: 'All' }),
+              value: "all",
+              label: t("hse_advanced.filter_all", { defaultValue: "All" }),
               count: counts.all,
             },
             {
-              value: 'issued',
-              label: t('hse_advanced.filter_issued', { defaultValue: 'Issued' }),
+              value: "issued",
+              label: t("hse_advanced.filter_issued", {
+                defaultValue: "Issued",
+              }),
               count: counts.issued,
             },
             {
-              value: 'expiring',
-              label: t('hse_advanced.filter_expiring', { defaultValue: 'Expiring 30d' }),
+              value: "expiring",
+              label: t("hse_advanced.filter_expiring", {
+                defaultValue: "Expiring 30d",
+              }),
               count: counts.expiring,
             },
           ]}
@@ -1755,39 +2068,46 @@ function PPETab({ projectId }: { projectId: string }) {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder={t('hse_advanced.search_ppe', { defaultValue: 'Search PPE...' })}
+          placeholder={t("hse_advanced.search_ppe", {
+            defaultValue: "Search PPE...",
+          })}
           onCreate={() => setShowCreate(true)}
-          createLabel={t('hse_advanced.new_ppe', { defaultValue: 'Issue PPE' })}
+          createLabel={t("hse_advanced.new_ppe", { defaultValue: "Issue PPE" })}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.number', { defaultValue: '#' })}
+                  {t("common.number", { defaultValue: "#" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.item', { defaultValue: 'Item' })}
+                  {t("hse_advanced.item", { defaultValue: "Item" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.issued_to', { defaultValue: 'Issued to' })}
+                  {t("hse_advanced.issued_to", { defaultValue: "Issued to" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.issued_at', { defaultValue: 'Issued at' })}
+                  {t("hse_advanced.issued_at", { defaultValue: "Issued at" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.qty', { defaultValue: 'Qty' })}
+                  {t("hse_advanced.qty", { defaultValue: "Qty" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.expiry', { defaultValue: 'Expiry' })}
+                  {t("hse_advanced.expiry", { defaultValue: "Expiry" })}
                 </th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                    {t('hse_advanced.no_matches', { defaultValue: 'No matches' })}
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
+                  >
+                    {t("hse_advanced.no_matches", {
+                      defaultValue: "No matches",
+                    })}
                   </td>
                 </tr>
               ) : (
@@ -1800,22 +2120,28 @@ function PPETab({ projectId }: { projectId: string }) {
                       className="border-b border-border-light hover:bg-surface-secondary/30 cursor-pointer"
                       onClick={() => setDetail(p)}
                     >
-                      <td className="px-4 py-3 font-mono text-xs">{p.ppe_number}</td>
-                      <td className="px-4 py-3 text-content-primary">
-                        {p.item_type.replace(/_/g, ' ')}
+                      <td className="px-4 py-3 font-mono text-xs">
+                        {p.ppe_number}
                       </td>
-                      <td className="px-4 py-3 text-content-secondary">{p.issued_to_name}</td>
+                      <td className="px-4 py-3 text-content-primary">
+                        {p.item_type.replace(/_/g, " ")}
+                      </td>
+                      <td className="px-4 py-3 text-content-secondary">
+                        {p.issued_to_name}
+                      </td>
                       <td className="px-4 py-3 text-content-secondary">
                         <DateDisplay value={p.issued_at} />
                       </td>
-                      <td className="px-4 py-3 text-center tabular-nums">{p.quantity}</td>
+                      <td className="px-4 py-3 text-center tabular-nums">
+                        {p.quantity}
+                      </td>
                       <td className="px-4 py-3 text-center">
                         {p.expires_at ? (
                           <span
                             className={
                               flag
-                                ? 'text-amber-600 font-medium text-xs'
-                                : 'text-content-secondary text-xs'
+                                ? "text-amber-600 font-medium text-xs"
+                                : "text-content-secondary text-xs"
                             }
                           >
                             <DateDisplay value={p.expires_at} />
@@ -1841,19 +2167,19 @@ function PPETab({ projectId }: { projectId: string }) {
 
       {showCreate && (
         <ModalShell
-          title={t('hse_advanced.new_ppe', { defaultValue: 'Issue PPE' })}
+          title={t("hse_advanced.new_ppe", { defaultValue: "Issue PPE" })}
           onClose={() => setShowCreate(false)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setShowCreate(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
                 disabled={!form.issued_to_name.trim() || createMut.isPending}
                 onClick={() => createMut.mutate()}
               >
-                {t('common.issue', { defaultValue: 'Issue' })}
+                {t("common.issue", { defaultValue: "Issue" })}
               </Button>
             </>
           }
@@ -1861,36 +2187,48 @@ function PPETab({ projectId }: { projectId: string }) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.item_type', { defaultValue: 'Item type' })}
+                {t("hse_advanced.item_type", { defaultValue: "Item type" })}
               </label>
               <select
                 className={inputCls}
                 value={form.item_type}
-                onChange={(e) => setForm((f) => ({ ...f, item_type: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, item_type: e.target.value }))
+                }
               >
                 <option value="hard_hat">
-                  {t('hse_advanced.ppe_hard_hat', { defaultValue: 'Hard hat' })}
+                  {t("hse_advanced.ppe_hard_hat", { defaultValue: "Hard hat" })}
                 </option>
                 <option value="safety_boots">
-                  {t('hse_advanced.ppe_safety_boots', { defaultValue: 'Safety boots' })}
+                  {t("hse_advanced.ppe_safety_boots", {
+                    defaultValue: "Safety boots",
+                  })}
                 </option>
                 <option value="hi_vis">
-                  {t('hse_advanced.ppe_hi_vis', { defaultValue: 'Hi-vis vest' })}
+                  {t("hse_advanced.ppe_hi_vis", {
+                    defaultValue: "Hi-vis vest",
+                  })}
                 </option>
                 <option value="harness">
-                  {t('hse_advanced.ppe_harness', { defaultValue: 'Fall harness' })}
+                  {t("hse_advanced.ppe_harness", {
+                    defaultValue: "Fall harness",
+                  })}
                 </option>
                 <option value="respirator">
-                  {t('hse_advanced.ppe_respirator', { defaultValue: 'Respirator' })}
+                  {t("hse_advanced.ppe_respirator", {
+                    defaultValue: "Respirator",
+                  })}
                 </option>
                 <option value="hearing">
-                  {t('hse_advanced.ppe_hearing', { defaultValue: 'Hearing protection' })}
+                  {t("hse_advanced.ppe_hearing", {
+                    defaultValue: "Hearing protection",
+                  })}
                 </option>
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.qty', { defaultValue: 'Qty' })}
+                {t("hse_advanced.qty", { defaultValue: "Qty" })}
               </label>
               <input
                 type="number"
@@ -1898,88 +2236,109 @@ function PPETab({ projectId }: { projectId: string }) {
                 className={inputCls}
                 value={form.quantity}
                 onChange={(e) =>
-                  setForm((f) => ({ ...f, quantity: Math.max(1, Number(e.target.value) || 1) }))
+                  setForm((f) => ({
+                    ...f,
+                    quantity: Math.max(1, Number(e.target.value) || 1),
+                  }))
                 }
               />
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.issued_to', { defaultValue: 'Issued to' })}{' '}
+              {t("hse_advanced.issued_to", { defaultValue: "Issued to" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <input
               className={inputCls}
               value={form.issued_to_name}
-              onChange={(e) => setForm((f) => ({ ...f, issued_to_name: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, issued_to_name: e.target.value }))
+              }
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.issued_at', { defaultValue: 'Issued at' })}
+                {t("hse_advanced.issued_at", { defaultValue: "Issued at" })}
               </label>
               <input
                 type="date"
                 className={inputCls}
                 value={form.issued_at}
-                onChange={(e) => setForm((f) => ({ ...f, issued_at: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, issued_at: e.target.value }))
+                }
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.return_by', { defaultValue: 'Return by' })}
+                {t("hse_advanced.return_by", { defaultValue: "Return by" })}
               </label>
               <input
                 type="date"
                 className={inputCls}
                 value={form.return_by}
-                onChange={(e) => setForm((f) => ({ ...f, return_by: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, return_by: e.target.value }))
+                }
               />
             </div>
           </div>
         </ModalShell>
       )}
 
-      {detail && <PPEDetailDrawer item={detail} onClose={() => setDetail(null)} />}
+      {detail && (
+        <PPEDetailDrawer item={detail} onClose={() => setDetail(null)} />
+      )}
     </>
   );
 }
 
 /* ── PPE Detail Drawer ───────────────────────────────────────────────── */
 
-function PPEDetailDrawer({ item, onClose }: { item: PPEIssue; onClose: () => void }) {
+function PPEDetailDrawer({
+  item,
+  onClose,
+}: {
+  item: PPEIssue;
+  onClose: () => void;
+}) {
   const { t } = useTranslation();
   const expiryDays = daysUntil(item.expires_at);
   const returnDays = daysUntil(item.return_by);
 
   return (
     <ModalShell
-      title={`${item.ppe_number} — ${item.item_type.replace(/_/g, ' ')}`}
+      title={`${item.ppe_number} — ${item.item_type.replace(/_/g, " ")}`}
       onClose={onClose}
       size="max-w-xl"
       footer={
         <Button variant="ghost" onClick={onClose}>
-          {t('common.close', { defaultValue: 'Close' })}
+          {t("common.close", { defaultValue: "Close" })}
         </Button>
       }
     >
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.issued_to', { defaultValue: 'Issued to' })}
+            {t("hse_advanced.issued_to", { defaultValue: "Issued to" })}
           </div>
-          <div className="text-content-primary font-medium">{item.issued_to_name}</div>
+          <div className="text-content-primary font-medium">
+            {item.issued_to_name}
+          </div>
         </div>
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.qty', { defaultValue: 'Quantity' })}
+            {t("hse_advanced.qty", { defaultValue: "Quantity" })}
           </div>
-          <div className="text-content-primary tabular-nums">{item.quantity}</div>
+          <div className="text-content-primary tabular-nums">
+            {item.quantity}
+          </div>
         </div>
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.issued_at', { defaultValue: 'Issued at' })}
+            {t("hse_advanced.issued_at", { defaultValue: "Issued at" })}
           </div>
           <div className="text-content-secondary">
             <DateDisplay value={item.issued_at} />
@@ -1987,24 +2346,27 @@ function PPEDetailDrawer({ item, onClose }: { item: PPEIssue; onClose: () => voi
         </div>
         <div>
           <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.return_by', { defaultValue: 'Return by' })}
+            {t("hse_advanced.return_by", { defaultValue: "Return by" })}
           </div>
           <div
             className={
               returnDays !== null && returnDays < 0
-                ? 'text-semantic-error font-medium'
-                : 'text-content-secondary'
+                ? "text-semantic-error font-medium"
+                : "text-content-secondary"
             }
           >
-            {item.return_by ? <DateDisplay value={item.return_by} /> : '—'}
+            {item.return_by ? <DateDisplay value={item.return_by} /> : "—"}
             {returnDays !== null &&
               ` (${
                 returnDays < 0
-                  ? t('hse_advanced.expired_days_ago', {
-                      defaultValue: '{{n}}d ago',
+                  ? t("hse_advanced.expired_days_ago", {
+                      defaultValue: "{{n}}d ago",
                       n: Math.abs(returnDays),
                     })
-                  : t('hse_advanced.in_days', { defaultValue: 'in {{n}}d', n: returnDays })
+                  : t("hse_advanced.in_days", {
+                      defaultValue: "in {{n}}d",
+                      n: returnDays,
+                    })
               })`}
           </div>
         </div>
@@ -2014,26 +2376,29 @@ function PPEDetailDrawer({ item, onClose }: { item: PPEIssue; onClose: () => voi
         <div className="rounded-lg bg-surface-secondary p-3 text-sm flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-content-secondary">
             <Clock size={14} />
-            {t('hse_advanced.expiry', { defaultValue: 'Expiry' })}
+            {t("hse_advanced.expiry", { defaultValue: "Expiry" })}
           </span>
           <span
             className={
               expiryDays !== null && expiryDays < 0
-                ? 'text-semantic-error font-semibold'
+                ? "text-semantic-error font-semibold"
                 : expiryDays !== null && expiryDays <= 30
-                  ? 'text-amber-600 font-semibold'
-                  : 'text-content-primary'
+                  ? "text-amber-600 font-semibold"
+                  : "text-content-primary"
             }
           >
             <DateDisplay value={item.expires_at} />
             {expiryDays !== null &&
               ` — ${
                 expiryDays < 0
-                  ? t('hse_advanced.expired_days_ago', {
-                      defaultValue: '{{n}}d ago',
+                  ? t("hse_advanced.expired_days_ago", {
+                      defaultValue: "{{n}}d ago",
                       n: Math.abs(expiryDays),
                     })
-                  : t('hse_advanced.in_days', { defaultValue: 'in {{n}}d', n: expiryDays })
+                  : t("hse_advanced.in_days", {
+                      defaultValue: "in {{n}}d",
+                      n: expiryDays,
+                    })
               }`}
           </span>
         </div>
@@ -2042,9 +2407,11 @@ function PPEDetailDrawer({ item, onClose }: { item: PPEIssue; onClose: () => voi
       {item.notes && (
         <div>
           <div className="text-xs text-content-tertiary uppercase mb-1">
-            {t('common.notes', { defaultValue: 'Notes' })}
+            {t("common.notes", { defaultValue: "Notes" })}
           </div>
-          <p className="text-sm text-content-secondary whitespace-pre-wrap">{item.notes}</p>
+          <p className="text-sm text-content-secondary whitespace-pre-wrap">
+            {item.notes}
+          </p>
         </div>
       )}
     </ModalShell>
@@ -2057,17 +2424,17 @@ function AuditsTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({
-    title: '',
+    title: "",
     audit_date: new Date().toISOString().slice(0, 10),
-    auditor: '',
-    scope: '',
+    auditor: "",
+    scope: "",
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['hse-audits', projectId],
+    queryKey: ["hse-audits", projectId],
     queryFn: () => fetchAudits(projectId),
     select: (d) => normalizeListResponse<SafetyAudit>(d),
   });
@@ -2075,23 +2442,27 @@ function AuditsTab({ projectId }: { projectId: string }) {
   const createMut = useMutation({
     mutationFn: () => createAudit({ project_id: projectId, ...form }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-audits', projectId] });
+      qc.invalidateQueries({ queryKey: ["hse-audits", projectId] });
       setShowCreate(false);
       setForm({
-        title: '',
+        title: "",
         audit_date: new Date().toISOString().slice(0, 10),
-        auditor: '',
-        scope: '',
+        auditor: "",
+        scope: "",
       });
       addToast({
-        type: 'success',
-        title: t('hse_advanced.audit_created', { defaultValue: 'Audit scheduled' }),
+        type: "success",
+        title: t("hse_advanced.audit_created", {
+          defaultValue: "Audit scheduled",
+        }),
       });
     },
     onError: (e) =>
       addToast({
-        type: 'error',
-        title: t('hse_advanced.audit_failed', { defaultValue: 'Failed to schedule audit' }),
+        type: "error",
+        title: t("hse_advanced.audit_failed", {
+          defaultValue: "Failed to schedule audit",
+        }),
         message: getErrorMessage(e),
       }),
   });
@@ -2109,9 +2480,9 @@ function AuditsTab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('hse_advanced.load_error', {
-            defaultValue: 'Failed to load HSE records. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse_advanced.load_error", {
+            defaultValue: "Failed to load HSE records. Please try again.",
           })}
         />
       </Card>
@@ -2121,13 +2492,17 @@ function AuditsTab({ projectId }: { projectId: string }) {
     return (
       <EmptyState
         icon={<ShieldCheck size={28} strokeWidth={1.5} />}
-        title={t('hse_advanced.no_audits', { defaultValue: 'No safety audits yet' })}
-        description={t('hse_advanced.no_audits_desc', {
+        title={t("hse_advanced.no_audits", {
+          defaultValue: "No safety audits yet",
+        })}
+        description={t("hse_advanced.no_audits_desc", {
           defaultValue:
-            'Plan recurring safety audits and walk-throughs. Findings can be converted into CAPA actions with assigned owners and due dates.',
+            "Plan recurring safety audits and walk-throughs. Findings can be converted into CAPA actions with assigned owners and due dates.",
         })}
         action={{
-          label: t('hse_advanced.new_audit', { defaultValue: 'Schedule Audit' }),
+          label: t("hse_advanced.new_audit", {
+            defaultValue: "Schedule Audit",
+          }),
           onClick: () => setShowCreate(true),
         }}
       />
@@ -2140,56 +2515,74 @@ function AuditsTab({ projectId }: { projectId: string }) {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder={t('hse_advanced.search_audits', { defaultValue: 'Search audits...' })}
+          placeholder={t("hse_advanced.search_audits", {
+            defaultValue: "Search audits...",
+          })}
           onCreate={() => setShowCreate(true)}
-          createLabel={t('hse_advanced.new_audit', { defaultValue: 'Schedule Audit' })}
+          createLabel={t("hse_advanced.new_audit", {
+            defaultValue: "Schedule Audit",
+          })}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.number', { defaultValue: '#' })}
+                  {t("common.number", { defaultValue: "#" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.title', { defaultValue: 'Title' })}
+                  {t("common.title", { defaultValue: "Title" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.auditor', { defaultValue: 'Auditor' })}
+                  {t("hse_advanced.auditor", { defaultValue: "Auditor" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.date', { defaultValue: 'Date' })}
+                  {t("hse_advanced.date", { defaultValue: "Date" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('common.status', { defaultValue: 'Status' })}
+                  {t("common.status", { defaultValue: "Status" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.findings', { defaultValue: 'Findings' })}
+                  {t("hse_advanced.findings", { defaultValue: "Findings" })}
                 </th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                    {t('hse_advanced.no_matches', { defaultValue: 'No matches' })}
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
+                  >
+                    {t("hse_advanced.no_matches", {
+                      defaultValue: "No matches",
+                    })}
                   </td>
                 </tr>
               ) : (
                 filtered.map((it) => (
-                  <tr key={it.id} className="border-b border-border-light hover:bg-surface-secondary/30">
-                    <td className="px-4 py-3 font-mono text-xs">{it.audit_number}</td>
-                    <td className="px-4 py-3 text-content-primary">{it.title}</td>
-                    <td className="px-4 py-3 text-content-secondary">{it.auditor ?? '—'}</td>
+                  <tr
+                    key={it.id}
+                    className="border-b border-border-light hover:bg-surface-secondary/30"
+                  >
+                    <td className="px-4 py-3 font-mono text-xs">
+                      {it.audit_number}
+                    </td>
+                    <td className="px-4 py-3 text-content-primary">
+                      {it.title}
+                    </td>
+                    <td className="px-4 py-3 text-content-secondary">
+                      {it.auditor ?? "—"}
+                    </td>
                     <td className="px-4 py-3 text-content-secondary">
                       <DateDisplay value={it.audit_date} />
                     </td>
                     <td className="px-4 py-3 text-center">
                       <Badge
-                        variant={it.status === 'completed' ? 'success' : 'blue'}
+                        variant={it.status === "completed" ? "success" : "blue"}
                         size="sm"
                       >
-                        {it.status.replace(/_/g, ' ')}
+                        {it.status.replace(/_/g, " ")}
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-center tabular-nums">
@@ -2205,66 +2598,76 @@ function AuditsTab({ projectId }: { projectId: string }) {
 
       {showCreate && (
         <ModalShell
-          title={t('hse_advanced.new_audit', { defaultValue: 'Schedule Audit' })}
+          title={t("hse_advanced.new_audit", {
+            defaultValue: "Schedule Audit",
+          })}
           onClose={() => setShowCreate(false)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setShowCreate(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
                 disabled={!form.title.trim() || createMut.isPending}
                 onClick={() => createMut.mutate()}
               >
-                {t('common.schedule', { defaultValue: 'Schedule' })}
+                {t("common.schedule", { defaultValue: "Schedule" })}
               </Button>
             </>
           }
         >
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.title', { defaultValue: 'Title' })}{' '}
+              {t("common.title", { defaultValue: "Title" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <input
               className={inputCls}
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, title: e.target.value }))
+              }
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.date', { defaultValue: 'Date' })}
+                {t("hse_advanced.date", { defaultValue: "Date" })}
               </label>
               <input
                 type="date"
                 className={inputCls}
                 value={form.audit_date}
-                onChange={(e) => setForm((f) => ({ ...f, audit_date: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, audit_date: e.target.value }))
+                }
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.auditor', { defaultValue: 'Auditor' })}
+                {t("hse_advanced.auditor", { defaultValue: "Auditor" })}
               </label>
               <input
                 className={inputCls}
                 value={form.auditor}
-                onChange={(e) => setForm((f) => ({ ...f, auditor: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, auditor: e.target.value }))
+                }
               />
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.scope', { defaultValue: 'Scope' })}
+              {t("hse_advanced.scope", { defaultValue: "Scope" })}
             </label>
             <textarea
               rows={3}
               className={textareaCls}
               value={form.scope}
-              onChange={(e) => setForm((f) => ({ ...f, scope: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, scope: e.target.value }))
+              }
             />
           </div>
         </ModalShell>
@@ -2277,20 +2680,62 @@ function AuditsTab({ projectId }: { projectId: string }) {
 
 function CAPATab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
+  const [subTab, setSubTab] = useState<"capa" | "corrective_actions">("capa");
+  return (
+    <>
+      <div className="flex items-center gap-1 mb-4" role="tablist">
+        <button
+          role="tab"
+          aria-selected={subTab === "capa"}
+          onClick={() => setSubTab("capa")}
+          className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            subTab === "capa"
+              ? "bg-oe-blue-subtle text-oe-blue"
+              : "text-content-tertiary hover:bg-surface-secondary"
+          }`}
+        >
+          {t("hse.advanced.subtab_capa", { defaultValue: "CAPAs" })}
+        </button>
+        <button
+          role="tab"
+          aria-selected={subTab === "corrective_actions"}
+          onClick={() => setSubTab("corrective_actions")}
+          className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            subTab === "corrective_actions"
+              ? "bg-oe-blue-subtle text-oe-blue"
+              : "text-content-tertiary hover:bg-surface-secondary"
+          }`}
+        >
+          {t("hse.advanced.subtab_corrective_actions", {
+            defaultValue: "Corrective actions (FSM)",
+          })}
+        </button>
+      </div>
+      {subTab === "capa" ? (
+        <CAPALegacyTab projectId={projectId} />
+      ) : (
+        <CorrectiveActionsFSMTab projectId={projectId} />
+      )}
+    </>
+  );
+}
+
+function CAPALegacyTab({ projectId }: { projectId: string }) {
+  const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'open' | 'closed'>('open');
+  const [filter, setFilter] = useState<"all" | "open" | "closed">("open");
   const [form, setForm] = useState({
-    title: '',
-    description: '',
-    assigned_to: '',
-    due_date: '',
+    title: "",
+    description: "",
+    assigned_to: "",
+    due_date: "",
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['hse-capa', projectId],
+    queryKey: ["hse-capa", projectId],
     queryFn: () => fetchCAPAs(projectId),
     select: (d) => normalizeListResponse<CorrectiveAction>(d),
   });
@@ -2305,18 +2750,20 @@ function CAPATab({ projectId }: { projectId: string }) {
         due_date: form.due_date || undefined,
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-capa', projectId] });
+      qc.invalidateQueries({ queryKey: ["hse-capa", projectId] });
       setShowCreate(false);
-      setForm({ title: '', description: '', assigned_to: '', due_date: '' });
+      setForm({ title: "", description: "", assigned_to: "", due_date: "" });
       addToast({
-        type: 'success',
-        title: t('hse_advanced.capa_created', { defaultValue: 'CAPA created' }),
+        type: "success",
+        title: t("hse_advanced.capa_created", { defaultValue: "CAPA created" }),
       });
     },
     onError: (e) =>
       addToast({
-        type: 'error',
-        title: t('hse_advanced.capa_failed', { defaultValue: 'Failed to create CAPA' }),
+        type: "error",
+        title: t("hse_advanced.capa_failed", {
+          defaultValue: "Failed to create CAPA",
+        }),
         message: getErrorMessage(e),
       }),
   });
@@ -2325,7 +2772,11 @@ function CAPATab({ projectId }: { projectId: string }) {
     const c = { all: data?.length ?? 0, open: 0, closed: 0 };
     if (!data) return c;
     for (const it of data) {
-      if (it.status === 'closed' || it.status === 'verified' || it.status === 'completed')
+      if (
+        it.status === "closed" ||
+        it.status === "verified" ||
+        it.status === "completed"
+      )
         c.closed++;
       else c.open++;
     }
@@ -2335,18 +2786,26 @@ function CAPATab({ projectId }: { projectId: string }) {
   const filtered = useMemo(() => {
     if (!data) return [];
     let rows = data;
-    if (filter === 'open')
+    if (filter === "open")
       rows = rows.filter(
-        (it) => it.status !== 'closed' && it.status !== 'verified' && it.status !== 'completed',
+        (it) =>
+          it.status !== "closed" &&
+          it.status !== "verified" &&
+          it.status !== "completed",
       );
-    else if (filter === 'closed')
+    else if (filter === "closed")
       rows = rows.filter(
-        (it) => it.status === 'closed' || it.status === 'verified' || it.status === 'completed',
+        (it) =>
+          it.status === "closed" ||
+          it.status === "verified" ||
+          it.status === "completed",
       );
     if (!search) return rows;
     const q = search.toLowerCase();
     return rows.filter(
-      (it) => it.title.toLowerCase().includes(q) || it.capa_number.toLowerCase().includes(q),
+      (it) =>
+        it.title.toLowerCase().includes(q) ||
+        it.capa_number.toLowerCase().includes(q),
     );
   }, [data, search, filter]);
 
@@ -2356,9 +2815,9 @@ function CAPATab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('hse_advanced.load_error', {
-            defaultValue: 'Failed to load HSE records. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse_advanced.load_error", {
+            defaultValue: "Failed to load HSE records. Please try again.",
           })}
         />
       </Card>
@@ -2368,13 +2827,15 @@ function CAPATab({ projectId }: { projectId: string }) {
     return (
       <EmptyState
         icon={<Wrench size={28} strokeWidth={1.5} />}
-        title={t('hse_advanced.no_capa', { defaultValue: 'No corrective actions yet' })}
-        description={t('hse_advanced.no_capa_desc', {
+        title={t("hse_advanced.no_capa", {
+          defaultValue: "No corrective actions yet",
+        })}
+        description={t("hse_advanced.no_capa_desc", {
           defaultValue:
-            'Corrective and Preventive Actions track what was done to fix an issue and prevent recurrence. They link back to incidents, audits or NCRs.',
+            "Corrective and Preventive Actions track what was done to fix an issue and prevent recurrence. They link back to incidents, audits or NCRs.",
         })}
         action={{
-          label: t('hse_advanced.new_capa', { defaultValue: 'New CAPA' }),
+          label: t("hse_advanced.new_capa", { defaultValue: "New CAPA" }),
           onClick: () => setShowCreate(true),
         }}
       />
@@ -2384,23 +2845,25 @@ function CAPATab({ projectId }: { projectId: string }) {
   return (
     <>
       <div className="mb-4">
-        <FilterChips<'all' | 'open' | 'closed'>
+        <FilterChips<"all" | "open" | "closed">
           value={filter}
           onChange={setFilter}
           options={[
             {
-              value: 'open',
-              label: t('hse_advanced.filter_open', { defaultValue: 'Open' }),
+              value: "open",
+              label: t("hse_advanced.filter_open", { defaultValue: "Open" }),
               count: counts.open,
             },
             {
-              value: 'closed',
-              label: t('hse_advanced.filter_closed', { defaultValue: 'Closed' }),
+              value: "closed",
+              label: t("hse_advanced.filter_closed", {
+                defaultValue: "Closed",
+              }),
               count: counts.closed,
             },
             {
-              value: 'all',
-              label: t('hse_advanced.filter_all', { defaultValue: 'All' }),
+              value: "all",
+              label: t("hse_advanced.filter_all", { defaultValue: "All" }),
               count: counts.all,
             },
           ]}
@@ -2411,64 +2874,84 @@ function CAPATab({ projectId }: { projectId: string }) {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder={t('hse_advanced.search_capa', { defaultValue: 'Search CAPAs...' })}
+          placeholder={t("hse_advanced.search_capa", {
+            defaultValue: "Search CAPAs...",
+          })}
           onCreate={() => setShowCreate(true)}
-          createLabel={t('hse_advanced.new_capa', { defaultValue: 'New CAPA' })}
+          createLabel={t("hse_advanced.new_capa", { defaultValue: "New CAPA" })}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.number', { defaultValue: '#' })}
+                  {t("common.number", { defaultValue: "#" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('common.title', { defaultValue: 'Title' })}
+                  {t("common.title", { defaultValue: "Title" })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.assigned_to', { defaultValue: 'Assigned to' })}
+                  {t("hse_advanced.assigned_to", {
+                    defaultValue: "Assigned to",
+                  })}
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                  {t('hse_advanced.due', { defaultValue: 'Due' })}
+                  {t("hse_advanced.due", { defaultValue: "Due" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('common.status', { defaultValue: 'Status' })}
+                  {t("common.status", { defaultValue: "Status" })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                  {t('hse_advanced.countdown', { defaultValue: 'Countdown' })}
+                  {t("hse_advanced.countdown", { defaultValue: "Countdown" })}
                 </th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                    {t('hse_advanced.no_matches', { defaultValue: 'No matches' })}
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
+                  >
+                    {t("hse_advanced.no_matches", {
+                      defaultValue: "No matches",
+                    })}
                   </td>
                 </tr>
               ) : (
                 filtered.map((it) => {
                   const days = daysUntil(it.due_date);
                   const isClosed =
-                    it.status === 'closed' ||
-                    it.status === 'verified' ||
-                    it.status === 'completed';
+                    it.status === "closed" ||
+                    it.status === "verified" ||
+                    it.status === "completed";
                   return (
                     <tr
                       key={it.id}
                       className="border-b border-border-light hover:bg-surface-secondary/30"
                     >
-                      <td className="px-4 py-3 font-mono text-xs">{it.capa_number}</td>
-                      <td className="px-4 py-3 text-content-primary">{it.title}</td>
-                      <td className="px-4 py-3 text-content-secondary">
-                        {it.assigned_to ?? '—'}
+                      <td className="px-4 py-3 font-mono text-xs">
+                        {it.capa_number}
+                      </td>
+                      <td className="px-4 py-3 text-content-primary">
+                        {it.title}
                       </td>
                       <td className="px-4 py-3 text-content-secondary">
-                        {it.due_date ? <DateDisplay value={it.due_date} /> : '—'}
+                        {it.assigned_to ?? "—"}
+                      </td>
+                      <td className="px-4 py-3 text-content-secondary">
+                        {it.due_date ? (
+                          <DateDisplay value={it.due_date} />
+                        ) : (
+                          "—"
+                        )}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <Badge variant={CAPA_STATUS_COLORS[it.status] ?? 'neutral'} size="sm">
-                          {it.status.replace(/_/g, ' ')}
+                        <Badge
+                          variant={CAPA_STATUS_COLORS[it.status] ?? "neutral"}
+                          size="sm"
+                        >
+                          {it.status.replace(/_/g, " ")}
                         </Badge>
                       </td>
                       <td className="px-4 py-3 text-center tabular-nums text-xs">
@@ -2476,18 +2959,23 @@ function CAPATab({ projectId }: { projectId: string }) {
                           <span className="text-content-tertiary">—</span>
                         ) : days < 0 ? (
                           <span className="text-semantic-error font-medium">
-                            {t('hse_advanced.overdue_days', {
-                              defaultValue: '{{n}}d overdue',
+                            {t("hse_advanced.overdue_days", {
+                              defaultValue: "{{n}}d overdue",
                               n: Math.abs(days),
                             })}
                           </span>
                         ) : (
                           <span
                             className={
-                              days <= 3 ? 'text-amber-600 font-medium' : 'text-content-secondary'
+                              days <= 3
+                                ? "text-amber-600 font-medium"
+                                : "text-content-secondary"
                             }
                           >
-                            {t('hse_advanced.in_days', { defaultValue: 'in {{n}}d', n: days })}
+                            {t("hse_advanced.in_days", {
+                              defaultValue: "in {{n}}d",
+                              n: days,
+                            })}
                           </span>
                         )}
                       </td>
@@ -2502,71 +2990,277 @@ function CAPATab({ projectId }: { projectId: string }) {
 
       {showCreate && (
         <ModalShell
-          title={t('hse_advanced.new_capa', { defaultValue: 'New CAPA' })}
+          title={t("hse_advanced.new_capa", { defaultValue: "New CAPA" })}
           onClose={() => setShowCreate(false)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setShowCreate(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </Button>
               <Button
                 variant="primary"
-                disabled={!form.title.trim() || !form.description.trim() || createMut.isPending}
+                disabled={
+                  !form.title.trim() ||
+                  !form.description.trim() ||
+                  createMut.isPending
+                }
                 onClick={() => createMut.mutate()}
               >
-                {t('common.create', { defaultValue: 'Create' })}
+                {t("common.create", { defaultValue: "Create" })}
               </Button>
             </>
           }
         >
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.title', { defaultValue: 'Title' })}{' '}
+              {t("common.title", { defaultValue: "Title" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <input
               className={inputCls}
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, title: e.target.value }))
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.description', { defaultValue: 'Description' })}{' '}
+              {t("common.description", { defaultValue: "Description" })}{" "}
               <span className="text-semantic-error">*</span>
             </label>
             <textarea
               rows={3}
               className={textareaCls}
               value={form.description}
-              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, description: e.target.value }))
+              }
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.assigned_to', { defaultValue: 'Assigned to' })}
+                {t("hse_advanced.assigned_to", { defaultValue: "Assigned to" })}
               </label>
               <input
                 className={inputCls}
                 value={form.assigned_to}
-                onChange={(e) => setForm((f) => ({ ...f, assigned_to: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, assigned_to: e.target.value }))
+                }
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.due_date', { defaultValue: 'Due date' })}
+                {t("hse_advanced.due_date", { defaultValue: "Due date" })}
               </label>
               <input
                 type="date"
                 className={inputCls}
                 value={form.due_date}
-                onChange={(e) => setForm((f) => ({ ...f, due_date: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, due_date: e.target.value }))
+                }
               />
             </div>
           </div>
         </ModalShell>
       )}
     </>
+  );
+}
+
+/* ── Corrective Actions (slim FSM) sub-tab ─────────────────────────── */
+
+/** Map FSM state to the visible-text label so the dropdown is i18n-aware. */
+function fsmLabel(
+  t: ReturnType<typeof useTranslation>["t"],
+  s: CATargetStatus,
+): string {
+  switch (s) {
+    case "pending":
+      return t("hse.advanced.ca_status_pending", { defaultValue: "Pending" });
+    case "in_progress":
+      return t("hse.advanced.ca_status_in_progress", {
+        defaultValue: "In progress",
+      });
+    case "verified":
+      return t("hse.advanced.ca_status_verified", { defaultValue: "Verified" });
+    case "closed":
+      return t("hse.advanced.ca_status_closed", { defaultValue: "Closed" });
+  }
+}
+
+const FSM_NEXT: Record<CATargetStatus, CATargetStatus | null> = {
+  pending: "in_progress",
+  in_progress: "verified",
+  verified: "closed",
+  closed: null,
+};
+
+const FSM_BADGE: Record<CATargetStatus, BadgeVariant> = {
+  pending: "warning",
+  in_progress: "blue",
+  verified: "success",
+  closed: "neutral",
+};
+
+function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
+  const { t } = useTranslation();
+  const qc = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["hse-corrective-actions", projectId],
+    queryFn: () => fetchCorrectiveActions({ projectId }),
+    select: (d) => normalizeListResponse<CorrectiveActionRow>(d),
+  });
+
+  const transitionMut = useMutation({
+    mutationFn: (args: { caId: string; to: CATargetStatus; notes?: string }) =>
+      transitionCorrectiveAction(args.caId, {
+        to_status: args.to,
+        verification_notes: args.notes,
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["hse-corrective-actions", projectId] });
+      addToast({
+        type: "success",
+        title: t("hse.advanced.ca_transition_ok", {
+          defaultValue: "Corrective action advanced",
+        }),
+      });
+    },
+    onError: (e) =>
+      addToast({
+        type: "error",
+        title: t("hse.advanced.ca_transition_failed", {
+          defaultValue: "Could not advance corrective action",
+        }),
+        message: getErrorMessage(e),
+      }),
+  });
+
+  if (isLoading) return <SkeletonTable rows={4} columns={5} />;
+  if (isError) {
+    return (
+      <Card className="py-12">
+        <EmptyState
+          icon={<AlertTriangle size={28} strokeWidth={1.5} />}
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("hse.advanced.ca_load_error", {
+            defaultValue:
+              "Failed to load corrective actions. Please try again.",
+          })}
+        />
+      </Card>
+    );
+  }
+  if (!data || data.length === 0) {
+    return (
+      <EmptyState
+        icon={<CheckCircle2 size={28} strokeWidth={1.5} />}
+        title={t("hse.advanced.no_corrective_actions", {
+          defaultValue: "No corrective actions yet",
+        })}
+        description={t("hse.advanced.no_corrective_actions_desc", {
+          defaultValue:
+            "Slim corrective actions are opened off an incident and walk a strict pending → in_progress → verified → closed lifecycle. They appear here once an incident has at least one CA assigned.",
+        })}
+      />
+    );
+  }
+
+  return (
+    <Card padding="none">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border-light bg-surface-secondary/50">
+              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                {t("hse.advanced.ca_col_description", {
+                  defaultValue: "Description",
+                })}
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                {t("hse.advanced.ca_col_due", { defaultValue: "Due" })}
+              </th>
+              <th className="px-4 py-3 text-center font-medium text-content-tertiary">
+                {t("common.status", { defaultValue: "Status" })}
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                {t("hse.advanced.ca_col_verified_at", {
+                  defaultValue: "Verified at",
+                })}
+              </th>
+              <th className="px-4 py-3 text-center font-medium text-content-tertiary">
+                {t("hse.advanced.ca_col_advance", { defaultValue: "Advance" })}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row) => {
+              const next = FSM_NEXT[row.status];
+              return (
+                <tr
+                  key={row.id}
+                  className="border-b border-border-light hover:bg-surface-secondary/30"
+                >
+                  <td className="px-4 py-3 text-content-primary max-w-[28rem] truncate">
+                    {row.description}
+                  </td>
+                  <td className="px-4 py-3 text-content-secondary">
+                    {row.due_date ? <DateDisplay value={row.due_date} /> : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <Badge variant={FSM_BADGE[row.status]} size="sm">
+                      {fsmLabel(t, row.status)}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3 text-content-secondary">
+                    {row.verified_at ? (
+                      <DateDisplay value={row.verified_at} />
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {next ? (
+                      <select
+                        aria-label={t("hse.advanced.ca_col_advance", {
+                          defaultValue: "Advance",
+                        })}
+                        value=""
+                        disabled={transitionMut.isPending}
+                        onChange={(e) => {
+                          const to = e.target.value as CATargetStatus;
+                          if (!to) return;
+                          transitionMut.mutate({ caId: row.id, to });
+                        }}
+                        className="h-8 rounded-md border border-border bg-surface-primary px-2 text-xs focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
+                      >
+                        <option value="">
+                          {t("hse.advanced.ca_choose_next", {
+                            defaultValue: "Advance to…",
+                          })}
+                        </option>
+                        <option value={next}>{fsmLabel(t, next)}</option>
+                      </select>
+                    ) : (
+                      <span className="text-xs text-content-tertiary">
+                        {t("hse.advanced.ca_terminal", {
+                          defaultValue: "Closed",
+                        })}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </Card>
   );
 }

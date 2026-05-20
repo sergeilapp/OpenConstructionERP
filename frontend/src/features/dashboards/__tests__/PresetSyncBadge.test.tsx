@@ -9,26 +9,19 @@
  *   - falls back to the fetched report's status when initialStatus
  *     is omitted
  */
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cleanup,
   fireEvent,
   render,
   screen,
   waitFor,
-} from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
+} from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
 
-vi.mock('../api', async () => {
-  const actual = await vi.importActual<typeof import('../api')>('../api');
+vi.mock("../api", async () => {
+  const actual = await vi.importActual<typeof import("../api")>("../api");
   return {
     ...actual,
     getSyncReport: vi.fn(),
@@ -36,26 +29,26 @@ vi.mock('../api', async () => {
   };
 });
 
-import { getSyncReport } from '../api';
-import { PresetSyncBadge } from '../PresetSyncBadge';
+import { getSyncReport } from "../api";
+import { PresetSyncBadge } from "../PresetSyncBadge";
 
 const sampleReport = {
-  preset_id: 'p-1',
-  snapshot_id: 'snap-1',
-  status: 'needs_review',
+  preset_id: "p-1",
+  snapshot_id: "snap-1",
+  status: "needs_review",
   is_in_sync: false,
   column_renames: [],
   dropped_columns: [
     {
-      kind: 'dropped_column',
-      severity: 'error',
-      suggested_fix: 'manual',
-      column: 'ghost_column',
+      kind: "dropped_column",
+      severity: "error",
+      suggested_fix: "manual",
+      column: "ghost_column",
       new_column: null,
       dropped_values: [],
       old_dtype: null,
       new_dtype: null,
-      message_key: 'preset.sync.dropped_column',
+      message_key: "preset.sync.dropped_column",
       message: "Column 'ghost_column' is no longer present.",
     },
   ],
@@ -79,32 +72,30 @@ afterEach(() => {
   cleanup();
 });
 
-describe('PresetSyncBadge', () => {
-  it('renders with the supplied initialStatus', () => {
+describe("PresetSyncBadge", () => {
+  it("renders with the supplied initialStatus", () => {
     render(
-      withQueryClient(
-        <PresetSyncBadge presetId="p-1" initialStatus="stale" />,
-      ),
+      withQueryClient(<PresetSyncBadge presetId="p-1" initialStatus="stale" />),
     );
-    const badge = screen.getByTestId('preset-sync-badge-p-1');
-    expect(badge).toHaveAttribute('data-status', 'stale');
+    const badge = screen.getByTestId("preset-sync-badge-p-1");
+    expect(badge).toHaveAttribute("data-status", "stale");
   });
 
-  it('clicking the badge opens the SyncReportDrawer', async () => {
+  it("clicking the badge opens the SyncReportDrawer", async () => {
     render(
       withQueryClient(
         <PresetSyncBadge presetId="p-1" initialStatus="needs_review" />,
       ),
     );
 
-    fireEvent.click(screen.getByTestId('preset-sync-badge-p-1'));
+    fireEvent.click(screen.getByTestId("preset-sync-badge-p-1"));
 
     await waitFor(() => {
-      expect(screen.getByTestId('sync-report-drawer')).toBeInTheDocument();
+      expect(screen.getByTestId("sync-report-drawer")).toBeInTheDocument();
     });
   });
 
-  it('non-interactive mode disables the click', () => {
+  it("non-interactive mode disables the click", () => {
     render(
       withQueryClient(
         <PresetSyncBadge
@@ -114,25 +105,23 @@ describe('PresetSyncBadge', () => {
         />,
       ),
     );
-    const badge = screen.getByTestId('preset-sync-badge-p-1');
+    const badge = screen.getByTestId("preset-sync-badge-p-1");
     expect(badge).toBeDisabled();
 
     fireEvent.click(badge);
-    expect(screen.queryByTestId('sync-report-drawer')).not.toBeInTheDocument();
+    expect(screen.queryByTestId("sync-report-drawer")).not.toBeInTheDocument();
   });
 
-  it('uses fetched report status when initialStatus is omitted', async () => {
-    render(
-      withQueryClient(<PresetSyncBadge presetId="p-1" />),
-    );
+  it("uses fetched report status when initialStatus is omitted", async () => {
+    render(withQueryClient(<PresetSyncBadge presetId="p-1" />));
 
     await waitFor(() => {
-      expect(getSyncReport).toHaveBeenCalledWith('p-1');
+      expect(getSyncReport).toHaveBeenCalledWith("p-1");
     });
 
     await waitFor(() => {
-      const badge = screen.getByTestId('preset-sync-badge-p-1');
-      expect(badge).toHaveAttribute('data-status', 'needs_review');
+      const badge = screen.getByTestId("preset-sync-badge-p-1");
+      expect(badge).toHaveAttribute("data-status", "needs_review");
     });
   });
 });

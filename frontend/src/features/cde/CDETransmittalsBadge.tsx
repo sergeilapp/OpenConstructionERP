@@ -1,9 +1,12 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { Send, X, FileText } from 'lucide-react';
-import { Badge, DateDisplay } from '@/shared/ui';
-import { fetchContainerTransmittals, type ContainerTransmittalLink } from './api';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { Send, X, FileText } from "lucide-react";
+import { Badge, DateDisplay } from "@/shared/ui";
+import {
+  fetchContainerTransmittals,
+  type ContainerTransmittalLink,
+} from "./api";
 
 /**
  * Small inline badge: "N transmittals" — clicking it opens a drawer showing
@@ -11,16 +14,12 @@ import { fetchContainerTransmittals, type ContainerTransmittalLink } from './api
  *
  * Driven by `GET /v1/cde/containers/{id}/transmittals/` (RFC 33 §3.3).
  */
-export function CDETransmittalsBadge({
-  containerId,
-}: {
-  containerId: string;
-}) {
+export function CDETransmittalsBadge({ containerId }: { containerId: string }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const { data: links = [] } = useQuery({
-    queryKey: ['cde-transmittals', containerId],
+    queryKey: ["cde-transmittals", containerId],
     queryFn: () => fetchContainerTransmittals(containerId),
     staleTime: 60_000,
   });
@@ -36,23 +35,20 @@ export function CDETransmittalsBadge({
           setOpen(true);
         }}
         className="inline-flex items-center gap-1 text-2xs text-oe-blue hover:text-oe-blue/80 font-medium px-1.5 py-0.5 rounded hover:bg-oe-blue/10 transition-colors"
-        aria-label={t('cde.transmittals_badge_aria', {
-          defaultValue: '{{count}} transmittals linked to this container‌⁠‍',
+        aria-label={t("cde.transmittals_badge_aria", {
+          defaultValue: "{{count}} transmittals linked to this container‌⁠‍",
           count: links.length,
         })}
       >
         <Send size={11} />
-        {t('cde.transmittals_badge', {
-          defaultValue: '{{count}} transmittals‌⁠‍',
+        {t("cde.transmittals_badge", {
+          defaultValue: "{{count}} transmittals‌⁠‍",
           count: links.length,
         })}
       </button>
 
       {open && (
-        <TransmittalsDrawer
-          links={links}
-          onClose={() => setOpen(false)}
-        />
+        <TransmittalsDrawer links={links} onClose={() => setOpen(false)} />
       )}
     </>
   );
@@ -71,8 +67,8 @@ function TransmittalsDrawer({
       className="fixed inset-0 z-50 flex justify-end bg-black/40 animate-fade-in"
       onClick={onClose}
       role="dialog"
-      aria-label={t('cde.transmittals_drawer_title', {
-        defaultValue: 'Transmittals carrying this container‌⁠‍',
+      aria-label={t("cde.transmittals_drawer_title", {
+        defaultValue: "Transmittals carrying this container‌⁠‍",
       })}
     >
       <div
@@ -83,15 +79,15 @@ function TransmittalsDrawer({
           <div className="flex items-center gap-2">
             <Send size={18} className="text-oe-blue" />
             <h3 className="text-base font-semibold">
-              {t('cde.transmittals_drawer_title', {
-                defaultValue: 'Transmittals carrying this container‌⁠‍',
+              {t("cde.transmittals_drawer_title", {
+                defaultValue: "Transmittals carrying this container‌⁠‍",
               })}
             </h3>
           </div>
           <button
             onClick={onClose}
             className="p-1 rounded hover:bg-surface-secondary text-content-tertiary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -99,7 +95,7 @@ function TransmittalsDrawer({
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-2">
           {links.map((link) => (
             <div
-              key={`${link.transmittal_id}-${link.revision_id ?? ''}`}
+              key={`${link.transmittal_id}-${link.revision_id ?? ""}`}
               className="rounded-lg border border-border p-3 text-sm bg-surface-secondary/40"
             >
               <div className="flex items-center gap-2 mb-1">

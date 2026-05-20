@@ -19,10 +19,10 @@
  * preflight in BIMPage so an install / verify here invalidates both.
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   AlertTriangle,
   Check,
@@ -34,7 +34,7 @@ import {
   ShieldAlert,
   X,
   XCircle,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   fetchBIMConverterInstallProgress,
@@ -48,8 +48,8 @@ import {
   type BIMConverterInstallProgress,
   type BIMConvertersResponse,
   type ConverterVersionCheck,
-} from './api';
-import { useToastStore } from '@/stores/useToastStore';
+} from "./api";
+import { useToastStore } from "@/stores/useToastStore";
 
 /** Ids of converters surfaced on the BIM page. IFC was previously missing
  *  here — that's why "Revit and IFC don't load" was reported as a bug.
@@ -57,7 +57,7 @@ import { useToastStore } from '@/stores/useToastStore';
  *  ``upload-cad`` but without a dedicated converter (.fbx/.obj/.3ds) are
  *  noted in the banner subtitle rather than rendered as fake chips —
  *  there is no separate binary to install for those. */
-const PANEL_CONVERTER_IDS = ['rvt', 'ifc', 'dwg', 'dgn'] as const;
+const PANEL_CONVERTER_IDS = ["rvt", "ifc", "dwg", "dgn"] as const;
 
 /** Converter ids that have a built-in fallback parser in the backend. The
  *  IFC text-parser at ``ifc_processor.py`` produces 2D placeholder
@@ -65,14 +65,14 @@ const PANEL_CONVERTER_IDS = ['rvt', 'ifc', 'dwg', 'dgn'] as const;
  *  model even when the binary is not installed. The banner annotates
  *  these rows with a green "Works without DDC (fallback)" badge so the
  *  user does not interpret "0/4 installed" as "0/4 functional". */
-const CONVERTERS_WITH_FALLBACK = new Set<string>(['ifc']);
+const CONVERTERS_WITH_FALLBACK = new Set<string>(["ifc"]);
 
 /** GitHub root for the manual-install fallback links. */
 const DDC_REPO_URL =
-  'https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN';
+  "https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN";
 
 const VC_REDIST_URL =
-  'https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist';
+  "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist";
 
 interface BIMConverterStatusBannerProps {
   className?: string;
@@ -101,7 +101,7 @@ export function BIMConverterStatusBanner({
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
   const [dismissed, setDismissed] = useState<boolean>(() => {
     try {
-      return localStorage.getItem('oe_bim_converter_panel_dismissed') === '1';
+      return localStorage.getItem("oe_bim_converter_panel_dismissed") === "1";
     } catch {
       return false;
     }
@@ -112,22 +112,20 @@ export function BIMConverterStatusBanner({
   // *newer* version the signature changes and the dismissal auto-expires,
   // so the user still learns about future updates instead of an "X" click
   // silencing the panel forever (the original bug — see notes below).
-  const [dismissedVersionSig, setDismissedVersionSig] = useState<string>(
-    () => {
-      try {
-        return (
-          localStorage.getItem('oe_bim_converter_panel_dismissed_sig') ?? ''
-        );
-      } catch {
-        return '';
-      }
-    },
-  );
+  const [dismissedVersionSig, setDismissedVersionSig] = useState<string>(() => {
+    try {
+      return localStorage.getItem("oe_bim_converter_panel_dismissed_sig") ?? "";
+    } catch {
+      return "";
+    }
+  });
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     try {
-      const persisted = localStorage.getItem('oe_bim_converter_panel_collapsed');
-      if (persisted === '1') return true;
-      if (persisted === '0') return false;
+      const persisted = localStorage.getItem(
+        "oe_bim_converter_panel_collapsed",
+      );
+      if (persisted === "1") return true;
+      if (persisted === "0") return false;
       // No explicit user choice yet — fall back to the page-level hint
       // (``defaultCollapsed=true`` when at least one ready model is loaded).
       return defaultCollapsed;
@@ -144,7 +142,10 @@ export function BIMConverterStatusBanner({
   const [updateBannerDismissed, setUpdateBannerDismissed] = useState<boolean>(
     () => {
       try {
-        return sessionStorage.getItem('oe_bim_converter_update_banner_dismissed') === '1';
+        return (
+          sessionStorage.getItem("oe_bim_converter_update_banner_dismissed") ===
+          "1"
+        );
       } catch {
         return false;
       }
@@ -155,8 +156,8 @@ export function BIMConverterStatusBanner({
     setUpdateBannerDismissed(val);
     try {
       sessionStorage.setItem(
-        'oe_bim_converter_update_banner_dismissed',
-        val ? '1' : '0',
+        "oe_bim_converter_update_banner_dismissed",
+        val ? "1" : "0",
       );
     } catch {
       /* storage unavailable */
@@ -173,20 +174,17 @@ export function BIMConverterStatusBanner({
 
   const setDismissedPersist = (
     val: boolean,
-    versionSig = '',
+    versionSig = "",
     sigResolved = true,
   ): void => {
     setDismissed(val);
-    setDismissedVersionSig(val ? versionSig : '');
+    setDismissedVersionSig(val ? versionSig : "");
     dismissedBeforeSigKnown.current = val ? !sigResolved : false;
     try {
+      localStorage.setItem("oe_bim_converter_panel_dismissed", val ? "1" : "0");
       localStorage.setItem(
-        'oe_bim_converter_panel_dismissed',
-        val ? '1' : '0',
-      );
-      localStorage.setItem(
-        'oe_bim_converter_panel_dismissed_sig',
-        val ? versionSig : '',
+        "oe_bim_converter_panel_dismissed_sig",
+        val ? versionSig : "",
       );
     } catch {
       /* storage unavailable */
@@ -196,10 +194,7 @@ export function BIMConverterStatusBanner({
   const setCollapsedPersist = (val: boolean): void => {
     setCollapsed(val);
     try {
-      localStorage.setItem(
-        'oe_bim_converter_panel_collapsed',
-        val ? '1' : '0',
-      );
+      localStorage.setItem("oe_bim_converter_panel_collapsed", val ? "1" : "0");
     } catch {
       /* storage unavailable */
     }
@@ -209,7 +204,7 @@ export function BIMConverterStatusBanner({
   // The backend caches results 5 min, so the polling is cheap.
   const { data, isLoading, isFetching, refetch } =
     useQuery<BIMConvertersResponse>({
-      queryKey: ['bim-converters'],
+      queryKey: ["bim-converters"],
       queryFn: () => fetchBIMConverters({ verify: true }),
       staleTime: 30_000,
     });
@@ -221,13 +216,16 @@ export function BIMConverterStatusBanner({
   // location and re-run the smoke test. Network failures degrade
   // gracefully: ``data`` is null and the badge stays hidden.
   const { data: versionCheck } = useQuery<ConverterVersionCheck | null>({
-    queryKey: ['bim-converters-version-check'],
+    queryKey: ["bim-converters-version-check"],
     queryFn: () => fetchConverterVersionCheck(),
     staleTime: 30 * 60 * 1000, // 30 min — server caches 6 h
     refetchOnWindowFocus: false,
   });
 
-  const versionByExt: Record<string, ConverterVersionCheck['converters'][0] | undefined> = {};
+  const versionByExt: Record<
+    string,
+    ConverterVersionCheck["converters"][0] | undefined
+  > = {};
   for (const v of versionCheck?.converters ?? []) {
     versionByExt[v.id] = v;
   }
@@ -243,19 +241,19 @@ export function BIMConverterStatusBanner({
 
       if (result.installed) {
         addToast({
-          type: 'success',
-          title: t('bim.converter_install_success_title', {
-            defaultValue: 'Converter installed‌⁠‍',
+          type: "success",
+          title: t("bim.converter_install_success_title", {
+            defaultValue: "Converter installed‌⁠‍",
           }),
           message:
             result.message ||
-            t('bim.converter_install_success_msg', {
-              defaultValue: 'Installed {{name}} ({{size}} MB)‌⁠‍',
+            t("bim.converter_install_success_msg", {
+              defaultValue: "Installed {{name}} ({{size}} MB)‌⁠‍",
               name,
               size: sizeMb,
             }),
         });
-      } else if (result.platform_unsupported && result.platform === 'linux') {
+      } else if (result.platform_unsupported && result.platform === "linux") {
         // Linux IS supported via the apt repo at
         // pkg.datadrivenconstruction.io. The backend already shaped a
         // human-readable `instructions` block (one-liner if the apt
@@ -263,20 +261,20 @@ export function BIMConverterStatusBanner({
         // expected binary path. Prefer those over a generic blurb.
         const sourcePresent = Boolean(result.apt_source_present);
         const title = sourcePresent
-          ? t('bim.converter_install_linux_short_title', {
-              defaultValue: 'One apt command to finish‌⁠‍',
+          ? t("bim.converter_install_linux_short_title", {
+              defaultValue: "One apt command to finish‌⁠‍",
             })
-          : t('bim.converter_install_linux_setup_title', {
-              defaultValue: 'One-time apt setup‌⁠‍',
+          : t("bim.converter_install_linux_setup_title", {
+              defaultValue: "One-time apt setup‌⁠‍",
             });
         const instructions = result.instructions
           ? `\n\n${result.instructions}`
           : result.apt_package
             ? `\n\nsudo apt install -y ${result.apt_package}`
-            : '';
+            : "";
         addToast(
           {
-            type: 'info',
+            type: "info",
             title,
             message:
               (result.message || `Run apt commands to install ${name}`) +
@@ -286,40 +284,42 @@ export function BIMConverterStatusBanner({
         );
       } else if (result.platform_unsupported) {
         addToast({
-          type: 'warning',
-          title: t('bim.converter_install_unsupported_title', {
-            defaultValue: 'Auto-install not available‌⁠‍',
+          type: "warning",
+          title: t("bim.converter_install_unsupported_title", {
+            defaultValue: "Auto-install not available‌⁠‍",
           }),
           message:
             result.message || `${name} can't be auto-installed on this OS.`,
         });
       } else {
         addToast({
-          type: 'warning',
-          title: t('bim.converter_install_problem_title', {
-            defaultValue: 'Converter install incomplete‌⁠‍',
+          type: "warning",
+          title: t("bim.converter_install_problem_title", {
+            defaultValue: "Converter install incomplete‌⁠‍",
           }),
           message:
             result.message || `${name} install did not complete cleanly.`,
         });
       }
-      queryClient.invalidateQueries({ queryKey: ['bim-converters'] });
-      queryClient.invalidateQueries({ queryKey: ['takeoff', 'converters'] });
-      queryClient.invalidateQueries({ queryKey: ['bim-converters-version-check'] });
+      queryClient.invalidateQueries({ queryKey: ["bim-converters"] });
+      queryClient.invalidateQueries({ queryKey: ["takeoff", "converters"] });
+      queryClient.invalidateQueries({
+        queryKey: ["bim-converters-version-check"],
+      });
     },
     onError: (err, vars) => {
       const converterId = vars.converterId;
       const conv = data?.converters.find((c) => c.id === converterId);
       addToast({
-        type: 'error',
-        title: t('bim.converter_install_error_title', {
-          defaultValue: 'Install failed',
+        type: "error",
+        title: t("bim.converter_install_error_title", {
+          defaultValue: "Install failed",
         }),
         message:
           err instanceof Error
             ? err.message
-            : t('bim.converter_install_error_msg', {
-                defaultValue: 'Could not install {{name}}',
+            : t("bim.converter_install_error_msg", {
+                defaultValue: "Could not install {{name}}",
                 name: conv?.name ?? converterId.toUpperCase(),
               }),
       });
@@ -332,49 +332,48 @@ export function BIMConverterStatusBanner({
     onSuccess: (result, converterId) => {
       const conv = data?.converters.find((c) => c.id === converterId);
       const name = conv?.name ?? converterId.toUpperCase();
-      if (result.health === 'ok') {
+      if (result.health === "ok") {
         addToast({
-          type: 'success',
-          title: t('bim.converter_verify_ok_title', {
-            defaultValue: 'Converter is working',
+          type: "success",
+          title: t("bim.converter_verify_ok_title", {
+            defaultValue: "Converter is working",
           }),
-          message: t('bim.converter_verify_ok_msg', {
-            defaultValue: '{{name}} loaded successfully and is ready to use.',
+          message: t("bim.converter_verify_ok_msg", {
+            defaultValue: "{{name}} loaded successfully and is ready to use.",
             name,
           }),
         });
       } else {
         addToast(
           {
-            type: 'warning',
-            title: t('bim.converter_verify_failed_title', {
-              defaultValue: 'Converter still broken',
+            type: "warning",
+            title: t("bim.converter_verify_failed_title", {
+              defaultValue: "Converter still broken",
             }),
             message: result.health_message || `${name} smoke test failed.`,
           },
           { duration: 20_000 },
         );
       }
-      queryClient.invalidateQueries({ queryKey: ['bim-converters'] });
+      queryClient.invalidateQueries({ queryKey: ["bim-converters"] });
     },
     onError: (err, converterId) => {
       // Backend < v2.6.23 didn't have the per-converter verify endpoint —
       // surface a clear "upgrade your backend" message instead of a bare
       // "Not Found" so the user knows what to do.
       const isMissingEndpoint =
-        err instanceof Error
-          && (err.message.includes('Not Found')
-              || err.message.includes('404'));
+        err instanceof Error &&
+        (err.message.includes("Not Found") || err.message.includes("404"));
       if (isMissingEndpoint) {
         addToast(
           {
-            type: 'warning',
-            title: t('bim.converter_verify_old_backend_title', {
-              defaultValue: 'Backend version too old for Re-check',
+            type: "warning",
+            title: t("bim.converter_verify_old_backend_title", {
+              defaultValue: "Backend version too old for Re-check",
             }),
-            message: t('bim.converter_verify_old_backend_msg', {
+            message: t("bim.converter_verify_old_backend_msg", {
               defaultValue:
-                'Re-check requires backend v2.6.23 or newer. Update with: pip install --upgrade openconstructionerp',
+                "Re-check requires backend v2.6.23 or newer. Update with: pip install --upgrade openconstructionerp",
             }),
           },
           { duration: 20_000 },
@@ -382,9 +381,9 @@ export function BIMConverterStatusBanner({
         return;
       }
       addToast({
-        type: 'error',
-        title: t('bim.converter_verify_error_title', {
-          defaultValue: 'Re-check failed',
+        type: "error",
+        title: t("bim.converter_verify_error_title", {
+          defaultValue: "Re-check failed",
         }),
         message:
           err instanceof Error
@@ -403,9 +402,9 @@ export function BIMConverterStatusBanner({
   // already saw and chose to ignore for now.
   const currentVersionSig = (versionCheck?.converters ?? [])
     .filter((v) => v.is_outdated)
-    .map((v) => `${v.id}:${v.latest_sha ?? ''}`)
+    .map((v) => `${v.id}:${v.latest_sha ?? ""}`)
     .sort()
-    .join('|');
+    .join("|");
 
   // Reconcile a dismissal that was recorded before the version-check query
   // resolved (collapsed strip / mini-icon X, or X pressed in the brief
@@ -416,15 +415,15 @@ export function BIMConverterStatusBanner({
   // acknowledged; a genuinely newer upstream build later yields a *different*
   // non-empty signature and still re-surfaces the notice as intended.
   useEffect(() => {
-    if (!dismissed || currentVersionSig === '') return;
+    if (!dismissed || currentVersionSig === "") return;
     const wasUnscoped =
-      dismissedBeforeSigKnown.current || dismissedVersionSig === '';
+      dismissedBeforeSigKnown.current || dismissedVersionSig === "";
     if (wasUnscoped && dismissedVersionSig !== currentVersionSig) {
       dismissedBeforeSigKnown.current = false;
       setDismissedVersionSig(currentVersionSig);
       try {
         localStorage.setItem(
-          'oe_bim_converter_panel_dismissed_sig',
+          "oe_bim_converter_panel_dismissed_sig",
           currentVersionSig,
         );
       } catch {
@@ -438,7 +437,8 @@ export function BIMConverterStatusBanner({
   // prior dismissal: silencing a broken converter would leave the user
   // unable to load models with no on-screen explanation.
   const hasBlockingSignal = (data?.converters ?? []).some(
-    (c) => !c.installed || c.health === 'failed' || c.health === 'not_installed',
+    (c) =>
+      !c.installed || c.health === "failed" || c.health === "not_installed",
   );
 
   // An "update available" signal is informational, not blocking — the
@@ -465,7 +465,7 @@ export function BIMConverterStatusBanner({
   // panel the user already dismissed. A genuinely newer upstream build
   // produces a different non-empty signature and still re-surfaces it, so
   // future updates are never silently missed.
-  const versionSigResolved = currentVersionSig !== '';
+  const versionSigResolved = currentVersionSig !== "";
   const updateSignalSuppressed =
     dismissed &&
     (!versionSigResolved || dismissedVersionSig === currentVersionSig);
@@ -485,14 +485,14 @@ export function BIMConverterStatusBanner({
 
   const computedHealth = (c: BIMConverterInfo): BIMConverterHealth => {
     if (c.health) return c.health;
-    return c.installed ? 'unknown' : 'not_installed';
+    return c.installed ? "unknown" : "not_installed";
   };
 
   const healthyCount = relevant.filter(
-    (c) => computedHealth(c) === 'ok',
+    (c) => computedHealth(c) === "ok",
   ).length;
   const failedCount = relevant.filter(
-    (c) => computedHealth(c) === 'failed',
+    (c) => computedHealth(c) === "failed",
   ).length;
   const anyOutdated = Boolean(versionCheck?.any_outdated);
   // "All healthy" must mean both "smoke test passed" AND "on the latest
@@ -538,20 +538,20 @@ export function BIMConverterStatusBanner({
       <button
         type="button"
         onClick={() => setCollapsedPersist(false)}
-        title={t('bim.converters_mini_tooltip', {
+        title={t("bim.converters_mini_tooltip", {
           defaultValue:
-            'BIM converters: {{count}}/{{total}} working and on the latest version. Click to view details.',
+            "BIM converters: {{count}}/{{total}} working and on the latest version. Click to view details.",
           count: healthyCount,
           total: relevant.length,
         })}
-        aria-label={t('bim.converters_mini_aria', {
-          defaultValue: 'BIM converter status',
+        aria-label={t("bim.converters_mini_aria", {
+          defaultValue: "BIM converter status",
         })}
         data-testid="bim-converters-mini-icon"
         className={clsx(
-          'inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[10px] font-medium',
-          'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
-          'text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors',
+          "inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[10px] font-medium",
+          "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800",
+          "text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors",
           className,
         )}
       >
@@ -573,26 +573,29 @@ export function BIMConverterStatusBanner({
   //      the fold (audit P2-1).
   if (collapsed) {
     const stripTone = anyFailed
-      ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800'
+      ? "bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800"
       : allHealthy
-        ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
-        : 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800';
+        ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800"
+        : "bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800";
     const stripIcon = anyFailed ? (
       <ShieldAlert size={14} className="text-rose-600 dark:text-rose-400" />
     ) : allHealthy ? (
-      <CheckCircle2 size={14} className="text-emerald-600 dark:text-emerald-400" />
+      <CheckCircle2
+        size={14}
+        className="text-emerald-600 dark:text-emerald-400"
+      />
     ) : (
       <AlertTriangle size={14} className="text-amber-600 dark:text-amber-400" />
     );
     return (
       <div
-        className={clsx('rounded-xl border px-3 py-2', stripTone, className)}
+        className={clsx("rounded-xl border px-3 py-2", stripTone, className)}
         role="status"
       >
         <div className="flex items-center gap-2 text-[12px] flex-wrap">
           {stripIcon}
           <span className="font-semibold text-content-primary">
-            {t('bim.converter_panel_title', { defaultValue: 'BIM converters' })}
+            {t("bim.converter_panel_title", { defaultValue: "BIM converters" })}
           </span>
           <div className="flex items-center gap-1">
             {relevant.map((conv) => (
@@ -608,22 +611,18 @@ export function BIMConverterStatusBanner({
             onClick={() => setCollapsedPersist(false)}
             className="ms-auto text-[11px] underline-offset-2 hover:underline text-content-secondary"
           >
-            {t('bim.converters_show_details', { defaultValue: 'Show details' })}
+            {t("bim.converters_show_details", { defaultValue: "Show details" })}
           </button>
           {dismissible && (
             <button
               type="button"
               onClick={() =>
-                setDismissedPersist(
-                  true,
-                  currentVersionSig,
-                  versionSigResolved,
-                )
+                setDismissedPersist(true, currentVersionSig, versionSigResolved)
               }
               className="p-1 rounded-md text-content-tertiary hover:bg-black/5 dark:hover:bg-white/10"
-              title={t('bim.converters_dismiss', { defaultValue: 'Dismiss' })}
-              aria-label={t('bim.converters_dismiss', {
-                defaultValue: 'Dismiss',
+              title={t("bim.converters_dismiss", { defaultValue: "Dismiss" })}
+              aria-label={t("bim.converters_dismiss", {
+                defaultValue: "Dismiss",
               })}
             >
               <X size={12} />
@@ -637,63 +636,69 @@ export function BIMConverterStatusBanner({
   // ── Tone selection: red if anything is broken, amber if missing,
   //    green if all healthy, default amber otherwise. ─────────────────────
   const toneClass = anyFailed
-    ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800'
+    ? "bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800"
     : allHealthy
-      ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
-      : 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800';
+      ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800"
+      : "bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800";
 
   const headerIcon = anyFailed ? (
     <ShieldAlert size={16} className="text-rose-600 dark:text-rose-400" />
   ) : allHealthy ? (
-    <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400" />
+    <CheckCircle2
+      size={16}
+      className="text-emerald-600 dark:text-emerald-400"
+    />
   ) : (
     <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400" />
   );
 
   const headerTextTone = anyFailed
-    ? 'text-rose-900 dark:text-rose-200'
+    ? "text-rose-900 dark:text-rose-200"
     : allHealthy
-      ? 'text-emerald-900 dark:text-emerald-200'
-      : 'text-amber-900 dark:text-amber-200';
+      ? "text-emerald-900 dark:text-emerald-200"
+      : "text-amber-900 dark:text-amber-200";
 
   return (
-    <div className={clsx('rounded-xl border p-3', toneClass, className)} role="status">
+    <div
+      className={clsx("rounded-xl border p-3", toneClass, className)}
+      role="status"
+    >
       <div className="flex items-start gap-3">
         <div className="shrink-0 mt-0.5">{headerIcon}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className={clsx('text-xs font-semibold', headerTextTone)}>
-              {t('bim.converter_panel_title', {
-                defaultValue: 'BIM converters',
+            <p className={clsx("text-xs font-semibold", headerTextTone)}>
+              {t("bim.converter_panel_title", {
+                defaultValue: "BIM converters",
               })}
             </p>
             <span
               className={clsx(
-                'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold border tabular-nums',
+                "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold border tabular-nums",
                 anyFailed
-                  ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+                  ? "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800"
                   : allHealthy
-                    ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
-                    : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+                    ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
+                    : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
               )}
             >
               {anyFailed
-                ? t('bim.converter_panel_count_failed', {
+                ? t("bim.converter_panel_count_failed", {
                     defaultValue:
-                      '{{failed}} broken · {{ok}}/{{total}} working',
+                      "{{failed}} broken · {{ok}}/{{total}} working",
                     failed: failedCount,
                     ok: healthyCount,
                     total: relevant.length,
                   })
                 : anyOutdated
-                  ? t('bim.converter_panel_count_outdated', {
+                  ? t("bim.converter_panel_count_outdated", {
                       defaultValue:
-                        '{{ok}}/{{total}} working · update available',
+                        "{{ok}}/{{total}} working · update available",
                       ok: healthyCount,
                       total: relevant.length,
                     })
-                  : t('bim.converter_panel_count', {
-                      defaultValue: '{{ok}}/{{total}} up to date',
+                  : t("bim.converter_panel_count", {
+                      defaultValue: "{{ok}}/{{total}} up to date",
                       ok: healthyCount,
                       total: relevant.length,
                     })}
@@ -703,20 +708,20 @@ export function BIMConverterStatusBanner({
               onClick={handleRefresh}
               disabled={isFetching}
               className={clsx(
-                'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium border transition-colors',
-                'border-transparent hover:bg-black/5 dark:hover:bg-white/10',
+                "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium border transition-colors",
+                "border-transparent hover:bg-black/5 dark:hover:bg-white/10",
                 headerTextTone,
-                isFetching && 'opacity-60 cursor-wait',
+                isFetching && "opacity-60 cursor-wait",
               )}
-              title={t('bim.converters_refresh_title', {
-                defaultValue: 'Re-scan disk + re-run smoke tests',
+              title={t("bim.converters_refresh_title", {
+                defaultValue: "Re-scan disk + re-run smoke tests",
               })}
             >
               <RefreshCw
                 size={11}
-                className={isFetching ? 'animate-spin' : undefined}
+                className={isFetching ? "animate-spin" : undefined}
               />
-              {t('bim.converters_refresh', { defaultValue: 'Refresh' })}
+              {t("bim.converters_refresh", { defaultValue: "Refresh" })}
             </button>
             {allHealthy && (
               <button
@@ -724,58 +729,58 @@ export function BIMConverterStatusBanner({
                 onClick={() => setCollapsedPersist(true)}
                 className="ms-auto text-[10px] underline-offset-2 hover:underline text-emerald-700 dark:text-emerald-300"
               >
-                {t('bim.converters_collapse', { defaultValue: 'Collapse' })}
+                {t("bim.converters_collapse", { defaultValue: "Collapse" })}
               </button>
             )}
             {dismissible && (
               <button
                 type="button"
                 onClick={() =>
-                setDismissedPersist(
-                  true,
-                  currentVersionSig,
-                  versionSigResolved,
-                )
-              }
+                  setDismissedPersist(
+                    true,
+                    currentVersionSig,
+                    versionSigResolved,
+                  )
+                }
                 className={clsx(
-                  'p-1 rounded-md transition-colors',
-                  !allHealthy && 'ms-auto',
+                  "p-1 rounded-md transition-colors",
+                  !allHealthy && "ms-auto",
                   anyFailed
-                    ? 'text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/40'
+                    ? "text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/40"
                     : allHealthy
-                      ? 'text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40'
-                      : 'text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40',
+                      ? "text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+                      : "text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40",
                 )}
-                title={t('bim.converters_dismiss', {
-                  defaultValue: 'Dismiss',
+                title={t("bim.converters_dismiss", {
+                  defaultValue: "Dismiss",
                 })}
-                aria-label={t('bim.converters_dismiss', {
-                  defaultValue: 'Dismiss',
+                aria-label={t("bim.converters_dismiss", {
+                  defaultValue: "Dismiss",
                 })}
               >
                 <X size={12} />
               </button>
             )}
           </div>
-          <p className={clsx('text-[11px] mt-0.5 opacity-90', headerTextTone)}>
+          <p className={clsx("text-[11px] mt-0.5 opacity-90", headerTextTone)}>
             {anyFailed
-              ? t('bim.converter_panel_subtitle_failed', {
+              ? t("bim.converter_panel_subtitle_failed", {
                   defaultValue:
-                    'One or more converters cannot load. Conversion will fail until you reinstall.',
+                    "One or more converters cannot load. Conversion will fail until you reinstall.",
                 })
               : healthyCount === relevant.length && anyOutdated
-                ? t('bim.converter_panel_subtitle_outdated', {
+                ? t("bim.converter_panel_subtitle_outdated", {
                     defaultValue:
-                      'All converters are working, but a newer version is available — we recommend updating.',
+                      "All converters are working, but a newer version is available — we recommend updating.",
                   })
                 : allHealthy
-                  ? t('bim.converter_panel_subtitle_ok', {
+                  ? t("bim.converter_panel_subtitle_ok", {
                       defaultValue:
-                        'Drag-and-drop of .rvt / .ifc / .dwg / .dgn is ready.',
+                        "Drag-and-drop of .rvt / .ifc / .dwg / .dgn is ready.",
                     })
-                  : t('bim.converter_panel_subtitle_missing', {
+                  : t("bim.converter_panel_subtitle_missing", {
                       defaultValue:
-                        'Without these, drag-and-drop of native CAD/BIM files will fail. One-time install from GitHub.',
+                        "Without these, drag-and-drop of native CAD/BIM files will fail. One-time install from GitHub.",
                     })}
           </p>
           {versionCheck?.any_outdated && !updateBannerDismissed && (
@@ -789,24 +794,24 @@ export function BIMConverterStatusBanner({
               />
               <div className="flex-1 leading-snug">
                 <span className="font-semibold">
-                  {t('bim.converter_panel_update_available', {
-                    defaultValue: 'A new version is available',
+                  {t("bim.converter_panel_update_available", {
+                    defaultValue: "A new version is available",
                   })}
                 </span>
-                {' — '}
-                {t('bim.converter_panel_update_recommend', {
+                {" — "}
+                {t("bim.converter_panel_update_recommend", {
                   defaultValue:
-                    'we recommend updating using the Update button next to each row.',
+                    "we recommend updating using the Update button next to each row.",
                 })}
               </div>
               <button
                 type="button"
                 onClick={() => setUpdateBannerDismissedSession(true)}
-                title={t('bim.converter_panel_update_dismiss', {
-                  defaultValue: 'Hide until next session',
+                title={t("bim.converter_panel_update_dismiss", {
+                  defaultValue: "Hide until next session",
                 })}
-                aria-label={t('bim.converter_panel_update_dismiss', {
-                  defaultValue: 'Hide until next session',
+                aria-label={t("bim.converter_panel_update_dismiss", {
+                  defaultValue: "Hide until next session",
                 })}
                 className="shrink-0 -m-1 p-1 rounded-md text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40"
               >
@@ -823,9 +828,7 @@ export function BIMConverterStatusBanner({
                 installing={
                   installingId === conv.id && installMutation.isPending
                 }
-                verifying={
-                  verifyingId === conv.id && verifyMutation.isPending
-                }
+                verifying={verifyingId === conv.id && verifyMutation.isPending}
                 onInstall={() => handleInstall(conv)}
                 onVerify={() => handleVerify(conv)}
                 versionEntry={versionByExt[conv.id]}
@@ -852,36 +855,49 @@ function CollapsedConverterPill({
   const hasFallback = CONVERTERS_WITH_FALLBACK.has(conv.id);
   let tone: string;
   let label: string;
-  if (health === 'ok') {
-    tone = 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800';
+  if (health === "ok") {
+    tone =
+      "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
     label = conv.id.toUpperCase();
-  } else if (health === 'failed') {
-    tone = 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800';
+  } else if (health === "failed") {
+    tone =
+      "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800";
     label = conv.id.toUpperCase();
-  } else if (health === 'unknown') {
-    tone = 'bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
+  } else if (health === "unknown") {
+    tone =
+      "bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700";
     label = conv.id.toUpperCase();
   } else if (hasFallback) {
-    tone = 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-900';
+    tone =
+      "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-900";
     label = `${conv.id.toUpperCase()} (fallback)`;
   } else {
-    tone = 'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800';
+    tone =
+      "bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800";
     label = conv.id.toUpperCase();
   }
   const titleSuffix =
-    health === 'ok'
-      ? t('bim.converter_pill_ok', { defaultValue: 'Installed and verified' })
-      : health === 'failed'
-        ? t('bim.converter_pill_failed', { defaultValue: 'Installed but smoke test failed' })
-        : health === 'unknown'
-          ? t('bim.converter_pill_unknown', { defaultValue: 'Installed (verify pending)' })
+    health === "ok"
+      ? t("bim.converter_pill_ok", { defaultValue: "Installed and verified" })
+      : health === "failed"
+        ? t("bim.converter_pill_failed", {
+            defaultValue: "Installed but smoke test failed",
+          })
+        : health === "unknown"
+          ? t("bim.converter_pill_unknown", {
+              defaultValue: "Installed (verify pending)",
+            })
           : hasFallback
-            ? t('bim.converter_pill_fallback', { defaultValue: 'Works without DDC (fallback parser)' })
-            : t('bim.converter_pill_missing', { defaultValue: 'Not installed' });
+            ? t("bim.converter_pill_fallback", {
+                defaultValue: "Works without DDC (fallback parser)",
+              })
+            : t("bim.converter_pill_missing", {
+                defaultValue: "Not installed",
+              });
   return (
     <span
       className={clsx(
-        'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border tabular-nums',
+        "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border tabular-nums",
         tone,
       )}
       title={`${conv.name} — ${titleSuffix}`}
@@ -898,7 +914,7 @@ interface ConverterRowProps {
   verifying: boolean;
   onInstall: () => void;
   onVerify: () => void;
-  versionEntry?: ConverterVersionCheck['converters'][0];
+  versionEntry?: ConverterVersionCheck["converters"][0];
   /** Optional one-click update handler. When provided AND the converter
    *  is flagged outdated, the row renders an **Update** action that
    *  reuses the install flow (same GitHub source the version check
@@ -926,7 +942,7 @@ function ConverterRow({
   // while the install mutation is in flight. When idle this query is
   // disabled and no network traffic happens.
   const progressQuery = useQuery<BIMConverterInstallProgress>({
-    queryKey: ['bim-converter-install-progress', conv.id],
+    queryKey: ["bim-converter-install-progress", conv.id],
     queryFn: () => fetchBIMConverterInstallProgress(conv.id),
     enabled: installing,
     refetchInterval: installing ? 500 : false,
@@ -944,7 +960,7 @@ function ConverterRow({
   let pillTone: string;
   let pillText: string;
   switch (health) {
-    case 'ok':
+    case "ok":
       // Green is reserved for "working AND on the latest upstream SHA". When
       // the version-check flags this row as outdated, downgrade to amber so
       // green only ever means "fully up to date". Per Artem (2026-05-07):
@@ -957,51 +973,41 @@ function ConverterRow({
             className="text-amber-600 dark:text-amber-400"
           />
         );
-        labelTone = 'text-amber-900 dark:text-amber-200';
+        labelTone = "text-amber-900 dark:text-amber-200";
         pillTone =
-          'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800';
-        pillText = t('bim.converter_row_ok_outdated', {
-          defaultValue: 'Working · update available',
+          "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800";
+        pillText = t("bim.converter_row_ok_outdated", {
+          defaultValue: "Working · update available",
         });
       } else {
         icon = (
-          <Check
-            size={13}
-            className="text-emerald-600 dark:text-emerald-400"
-          />
+          <Check size={13} className="text-emerald-600 dark:text-emerald-400" />
         );
-        labelTone = 'text-emerald-900 dark:text-emerald-200';
+        labelTone = "text-emerald-900 dark:text-emerald-200";
         pillTone =
-          'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
-        pillText = t('bim.converter_row_ok', { defaultValue: 'Working' });
+          "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+        pillText = t("bim.converter_row_ok", { defaultValue: "Working" });
       }
       break;
-    case 'failed':
-      icon = (
-        <XCircle size={13} className="text-rose-600 dark:text-rose-400" />
-      );
-      labelTone = 'text-rose-900 dark:text-rose-200';
+    case "failed":
+      icon = <XCircle size={13} className="text-rose-600 dark:text-rose-400" />;
+      labelTone = "text-rose-900 dark:text-rose-200";
       pillTone =
-        'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800';
-      pillText = t('bim.converter_row_failed', {
-        defaultValue: 'Broken',
+        "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800";
+      pillText = t("bim.converter_row_failed", {
+        defaultValue: "Broken",
       });
       break;
-    case 'unknown':
-      icon = (
-        <Check
-          size={13}
-          className="text-slate-500 dark:text-slate-400"
-        />
-      );
-      labelTone = 'text-slate-700 dark:text-slate-200';
+    case "unknown":
+      icon = <Check size={13} className="text-slate-500 dark:text-slate-400" />;
+      labelTone = "text-slate-700 dark:text-slate-200";
       pillTone =
-        'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700';
-      pillText = t('bim.converter_row_unknown', {
-        defaultValue: 'Installed',
+        "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+      pillText = t("bim.converter_row_unknown", {
+        defaultValue: "Installed",
       });
       break;
-    case 'not_installed':
+    case "not_installed":
     default:
       if (CONVERTERS_WITH_FALLBACK.has(conv.id)) {
         // Soft-green: the format works without the binary because a
@@ -1015,24 +1021,21 @@ function ConverterRow({
             className="text-emerald-600 dark:text-emerald-400"
           />
         );
-        labelTone = 'text-emerald-900 dark:text-emerald-200';
+        labelTone = "text-emerald-900 dark:text-emerald-200";
         pillTone =
-          'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
-        pillText = t('bim.converter_row_fallback', {
-          defaultValue: 'Works without DDC (fallback)',
+          "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+        pillText = t("bim.converter_row_fallback", {
+          defaultValue: "Works without DDC (fallback)",
         });
       } else {
         icon = (
-          <Download
-            size={13}
-            className="text-amber-600 dark:text-amber-400"
-          />
+          <Download size={13} className="text-amber-600 dark:text-amber-400" />
         );
-        labelTone = 'text-amber-900 dark:text-amber-200';
+        labelTone = "text-amber-900 dark:text-amber-200";
         pillTone =
-          'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800';
-        pillText = t('bim.converter_row_missing', {
-          defaultValue: 'Install required',
+          "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800";
+        pillText = t("bim.converter_row_missing", {
+          defaultValue: "Install required",
         });
       }
       break;
@@ -1042,39 +1045,39 @@ function ConverterRow({
   // without competing with the surrounding panel chrome. Per Artem
   // (2026-05-07): "сделать более визуально красивой и понятной".
   const rowBg =
-    health === 'failed'
-      ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200/70 dark:border-rose-900/60'
-      : health === 'ok'
+    health === "failed"
+      ? "bg-rose-50/60 dark:bg-rose-950/30 border-rose-200/70 dark:border-rose-900/60"
+      : health === "ok"
         ? updateAvailable
-          ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-900/60'
-          : 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200/70 dark:border-emerald-900/60'
-        : health === 'unknown'
-          ? 'bg-slate-50/60 dark:bg-slate-900/40 border-slate-200/70 dark:border-slate-700/60'
-          : 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-900/60';
+          ? "bg-amber-50/60 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-900/60"
+          : "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200/70 dark:border-emerald-900/60"
+        : health === "unknown"
+          ? "bg-slate-50/60 dark:bg-slate-900/40 border-slate-200/70 dark:border-slate-700/60"
+          : "bg-amber-50/60 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-900/60";
 
   return (
-    <li className={clsx('text-[11px] rounded-lg border px-2.5 py-2', rowBg)}>
+    <li className={clsx("text-[11px] rounded-lg border px-2.5 py-2", rowBg)}>
       <div className="flex items-center gap-2.5">
         <span className="shrink-0">{icon}</span>
-        <span className={clsx('font-semibold tracking-tight', labelTone)}>
+        <span className={clsx("font-semibold tracking-tight", labelTone)}>
           {conv.name}
         </span>
         <span
           className={clsx(
-            'tabular-nums text-[10px] opacity-70',
-            health === 'ok' && !updateAvailable
-              ? 'text-emerald-700 dark:text-emerald-300'
-              : health === 'failed'
-                ? 'text-rose-700 dark:text-rose-300'
-                : 'text-amber-700 dark:text-amber-300',
+            "tabular-nums text-[10px] opacity-70",
+            health === "ok" && !updateAvailable
+              ? "text-emerald-700 dark:text-emerald-300"
+              : health === "failed"
+                ? "text-rose-700 dark:text-rose-300"
+                : "text-amber-700 dark:text-amber-300",
           )}
         >
-          {t('bim.converter_panel_size', {
-            defaultValue: '{{size}} MB',
+          {t("bim.converter_panel_size", {
+            defaultValue: "{{size}} MB",
             size: conv.size_mb,
           })}
         </span>
-        {health === 'ok' && conv.path && (
+        {health === "ok" && conv.path && (
           <span
             className="hidden xl:inline truncate max-w-[260px] text-[10px] text-content-quaternary font-mono opacity-60"
             title={conv.path}
@@ -1090,16 +1093,17 @@ function ConverterRow({
         {versionEntry?.installed_sha && (
           <span
             className="hidden lg:inline text-[10px] text-content-quaternary dark:text-zinc-400 font-mono"
-            title={t('bim.converter_sha_tooltip', {
+            title={t("bim.converter_sha_tooltip", {
               defaultValue:
-                'Installed git-blob SHA. Compared against {{repo}} on the upstream cad2data-Revit-IFC-DWG-DGN repo.',
-              repo: 'main',
+                "Installed git-blob SHA. Compared against {{repo}} on the upstream cad2data-Revit-IFC-DWG-DGN repo.",
+              repo: "main",
             })}
           >
             v {versionEntry.installed_sha.slice(0, 7)}
             {updateAvailable && versionEntry.latest_sha && (
               <span className="text-sky-600 dark:text-sky-400">
-                {' '}→ {versionEntry.latest_sha.slice(0, 7)}
+                {" "}
+                → {versionEntry.latest_sha.slice(0, 7)}
               </span>
             )}
           </span>
@@ -1109,10 +1113,10 @@ function ConverterRow({
             type="button"
             onClick={onUpdate}
             disabled={installing}
-            title={t('bim.converter_update_tooltip', {
+            title={t("bim.converter_update_tooltip", {
               defaultValue:
-                'A newer build of this converter is available. Click to download and replace the installed copy at {{path}}.',
-              path: versionEntry?.installed_path ?? '',
+                "A newer build of this converter is available. Click to download and replace the installed copy at {{path}}.",
+              path: versionEntry?.installed_path ?? "",
             })}
             className="ms-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border border-sky-300 dark:border-sky-700 bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-900/50 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
           >
@@ -1122,8 +1126,8 @@ function ConverterRow({
               <Download size={11} />
             )}
             {installing
-              ? t('bim.converter_updating', { defaultValue: 'Updating…' })
-              : t('bim.converter_update_now', { defaultValue: 'Update' })}
+              ? t("bim.converter_updating", { defaultValue: "Updating…" })
+              : t("bim.converter_update_now", { defaultValue: "Update" })}
           </button>
         )}
         {updateAvailable && !onUpdate && versionEntry?.html_url && (
@@ -1131,22 +1135,22 @@ function ConverterRow({
             href={versionEntry.html_url}
             target="_blank"
             rel="noopener noreferrer"
-            title={t('bim.converter_update_link_tooltip', {
+            title={t("bim.converter_update_link_tooltip", {
               defaultValue:
-                'A newer build of this converter is available on GitHub. Open the file there to download manually.',
+                "A newer build of this converter is available on GitHub. Open the file there to download manually.",
             })}
             className="ms-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border border-sky-300 dark:border-sky-700 bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-900/50 transition-colors"
           >
             <Download size={11} />
-            {t('bim.converter_update_available', {
-              defaultValue: 'Update available',
+            {t("bim.converter_update_available", {
+              defaultValue: "Update available",
             })}
           </a>
         )}
         <span
           className={clsx(
-            'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border',
-            !updateAvailable && 'ms-auto',
+            "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border",
+            !updateAvailable && "ms-auto",
             pillTone,
           )}
         >
@@ -1157,7 +1161,7 @@ function ConverterRow({
          *  hasn't completed (or hasn't been triggered). Failed rows get
          *  this button below alongside Reinstall; not_installed rows
          *  don't need it because there's nothing to test. */}
-        {health === 'unknown' && (
+        {health === "unknown" && (
           <button
             type="button"
             onClick={onVerify}
@@ -1169,38 +1173,39 @@ function ConverterRow({
             ) : (
               <RefreshCw size={11} />
             )}
-            {t('bim.converter_row_recheck', { defaultValue: 'Re-check' })}
+            {t("bim.converter_row_recheck", { defaultValue: "Re-check" })}
           </button>
         )}
       </div>
 
       {/* Reason + action row when something needs attention */}
-      {(health === 'failed' || health === 'not_installed') && (
+      {(health === "failed" || health === "not_installed") && (
         <div
           className={clsx(
-            'ms-5 mt-1 rounded-md border px-2 py-1.5 space-y-1.5',
-            health === 'failed'
-              ? 'border-rose-200 dark:border-rose-800 bg-rose-100/40 dark:bg-rose-900/20'
+            "ms-5 mt-1 rounded-md border px-2 py-1.5 space-y-1.5",
+            health === "failed"
+              ? "border-rose-200 dark:border-rose-800 bg-rose-100/40 dark:bg-rose-900/20"
               : CONVERTERS_WITH_FALLBACK.has(conv.id)
-                ? 'border-emerald-200 dark:border-emerald-800 bg-emerald-100/40 dark:bg-emerald-900/20'
-                : 'border-amber-200 dark:border-amber-800 bg-amber-100/40 dark:bg-amber-900/20',
+                ? "border-emerald-200 dark:border-emerald-800 bg-emerald-100/40 dark:bg-emerald-900/20"
+                : "border-amber-200 dark:border-amber-800 bg-amber-100/40 dark:bg-amber-900/20",
           )}
         >
-          {health === 'not_installed' && CONVERTERS_WITH_FALLBACK.has(conv.id) && (
-            <p className="text-[11px] text-emerald-800 dark:text-emerald-200">
-              {t('bim.converter_row_fallback_msg', {
-                defaultValue:
-                  'IFC files are parsed by a built-in fallback. Install the DDC binary to upgrade placeholder boxes to real meshes.',
-              })}
-            </p>
-          )}
+          {health === "not_installed" &&
+            CONVERTERS_WITH_FALLBACK.has(conv.id) && (
+              <p className="text-[11px] text-emerald-800 dark:text-emerald-200">
+                {t("bim.converter_row_fallback_msg", {
+                  defaultValue:
+                    "IFC files are parsed by a built-in fallback. Install the DDC binary to upgrade placeholder boxes to real meshes.",
+                })}
+              </p>
+            )}
           {conv.health_message && (
             <p
               className={clsx(
-                'text-[11px]',
-                health === 'failed'
-                  ? 'text-rose-800 dark:text-rose-200'
-                  : 'text-amber-800 dark:text-amber-200',
+                "text-[11px]",
+                health === "failed"
+                  ? "text-rose-800 dark:text-rose-200"
+                  : "text-amber-800 dark:text-amber-200",
               )}
             >
               {conv.health_message}
@@ -1208,9 +1213,9 @@ function ConverterRow({
           )}
           <div className="flex flex-wrap items-center gap-1.5">
             {(actions.length === 0
-              ? health === 'not_installed'
-                ? (['install_converter'] as BIMConverterAction[])
-                : (['reinstall_converter'] as BIMConverterAction[])
+              ? health === "not_installed"
+                ? (["install_converter"] as BIMConverterAction[])
+                : (["reinstall_converter"] as BIMConverterAction[])
               : actions
             ).map((action) => (
               <ActionButton
@@ -1220,7 +1225,7 @@ function ConverterRow({
                 onInstall={onInstall}
               />
             ))}
-            {health === 'failed' && (
+            {health === "failed" && (
               <button
                 type="button"
                 onClick={onVerify}
@@ -1232,8 +1237,8 @@ function ConverterRow({
                 ) : (
                   <RefreshCw size={11} />
                 )}
-                {t('bim.converter_row_recheck', {
-                  defaultValue: 'Re-check',
+                {t("bim.converter_row_recheck", {
+                  defaultValue: "Re-check",
                 })}
               </button>
             )}
@@ -1260,20 +1265,27 @@ function InstallProgressBar({
   sizeMb?: number;
 }): JSX.Element {
   const { t } = useTranslation();
-  const stage = progress.stage ?? 'listing';
+  const stage = progress.stage ?? "listing";
   const current = progress.current ?? 0;
   const total = progress.total ?? 0;
   const bytesDone = progress.bytes_done ?? 0;
   const mbDone = bytesDone / (1024 * 1024);
   const expectedMb = sizeMb && sizeMb > 0 ? sizeMb : 0;
   // Indeterminate while listing (no total yet); otherwise file-count ratio.
-  const percent = total > 0 ? Math.min(100, Math.round((current / total) * 100)) : null;
+  const percent =
+    total > 0 ? Math.min(100, Math.round((current / total) * 100)) : null;
   const stageLabel =
-    stage === 'listing'
-      ? t('bim.converter_progress_listing', { defaultValue: 'Fetching file list…' })
-      : stage === 'verifying'
-        ? t('bim.converter_progress_verifying', { defaultValue: 'Running smoke test…' })
-        : t('bim.converter_progress_downloading', { defaultValue: 'Downloading' });
+    stage === "listing"
+      ? t("bim.converter_progress_listing", {
+          defaultValue: "Fetching file list…",
+        })
+      : stage === "verifying"
+        ? t("bim.converter_progress_verifying", {
+            defaultValue: "Running smoke test…",
+          })
+        : t("bim.converter_progress_downloading", {
+            defaultValue: "Downloading",
+          });
   return (
     <div className="mt-1.5 space-y-1">
       <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
@@ -1289,7 +1301,7 @@ function InstallProgressBar({
       <div className="flex items-center justify-between gap-2 text-[10px] tabular-nums text-content-secondary">
         <span className="truncate">
           {stageLabel}
-          {total > 0 && stage === 'downloading' && ` · ${current}/${total}`}
+          {total > 0 && stage === "downloading" && ` · ${current}/${total}`}
           {progress.file && ` · ${progress.file}`}
         </span>
         <span className="shrink-0 font-mono">
@@ -1319,7 +1331,7 @@ function ActionButton({
   const { t } = useTranslation();
 
   switch (action) {
-    case 'install_converter':
+    case "install_converter":
       return (
         <button
           type="button"
@@ -1330,21 +1342,21 @@ function ActionButton({
           {installing ? (
             <>
               <Loader2 size={11} className="animate-spin" />
-              {t('bim.converter_panel_installing', {
-                defaultValue: 'Downloading…',
+              {t("bim.converter_panel_installing", {
+                defaultValue: "Downloading…",
               })}
             </>
           ) : (
             <>
               <Download size={11} />
-              {t('bim.converter_panel_install_btn', {
-                defaultValue: 'Install',
+              {t("bim.converter_panel_install_btn", {
+                defaultValue: "Install",
               })}
             </>
           )}
         </button>
       );
-    case 'reinstall_converter':
+    case "reinstall_converter":
       return (
         <button
           type="button"
@@ -1355,21 +1367,21 @@ function ActionButton({
           {installing ? (
             <>
               <Loader2 size={11} className="animate-spin" />
-              {t('bim.converter_panel_installing', {
-                defaultValue: 'Downloading…',
+              {t("bim.converter_panel_installing", {
+                defaultValue: "Downloading…",
               })}
             </>
           ) : (
             <>
               <Download size={11} />
-              {t('bim.converter_panel_reinstall_btn', {
-                defaultValue: 'Reinstall',
+              {t("bim.converter_panel_reinstall_btn", {
+                defaultValue: "Reinstall",
               })}
             </>
           )}
         </button>
       );
-    case 'install_vc_redist':
+    case "install_vc_redist":
       return (
         <a
           href={VC_REDIST_URL}
@@ -1378,12 +1390,12 @@ function ActionButton({
           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
         >
           <ExternalLink size={11} />
-          {t('bim.converter_panel_vcredist_btn', {
-            defaultValue: 'Install VC++ Redist',
+          {t("bim.converter_panel_vcredist_btn", {
+            defaultValue: "Install VC++ Redist",
           })}
         </a>
       );
-    case 'manual_install_from_github':
+    case "manual_install_from_github":
       return (
         <a
           href={DDC_REPO_URL}
@@ -1392,36 +1404,36 @@ function ActionButton({
           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
         >
           <ExternalLink size={11} />
-          {t('bim.converter_panel_manual_install_btn', {
-            defaultValue: 'Manual install on GitHub',
+          {t("bim.converter_panel_manual_install_btn", {
+            defaultValue: "Manual install on GitHub",
           })}
         </a>
       );
-    case 'unblock_files':
+    case "unblock_files":
       return (
         <span
           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
-          title={t('bim.converter_panel_unblock_help', {
+          title={t("bim.converter_panel_unblock_help", {
             defaultValue:
               'Right-click each .exe and .dll → Properties → tick "Unblock" → OK',
           })}
         >
-          {t('bim.converter_panel_unblock_label', {
-            defaultValue: 'Unblock files (Mark of the Web)',
+          {t("bim.converter_panel_unblock_label", {
+            defaultValue: "Unblock files (Mark of the Web)",
           })}
         </span>
       );
-    case 'check_permissions':
+    case "check_permissions":
       return (
         <span
           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
-          title={t('bim.converter_panel_perms_help', {
+          title={t("bim.converter_panel_perms_help", {
             defaultValue:
-              'Run the converter once as Administrator, or move the install dir somewhere your user can write to.',
+              "Run the converter once as Administrator, or move the install dir somewhere your user can write to.",
           })}
         >
-          {t('bim.converter_panel_perms_label', {
-            defaultValue: 'Run as Administrator',
+          {t("bim.converter_panel_perms_label", {
+            defaultValue: "Run as Administrator",
           })}
         </span>
       );

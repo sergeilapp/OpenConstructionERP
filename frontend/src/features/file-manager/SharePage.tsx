@@ -15,9 +15,9 @@
  * its own loading / error states.
  */
 
-import { useEffect, useState, type FormEvent } from 'react';
-import { useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useState, type FormEvent } from "react";
+import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   AlertTriangle,
   Clock,
@@ -26,23 +26,23 @@ import {
   Loader2,
   Lock,
   ShieldX,
-} from 'lucide-react';
-import { Logo } from '@/shared/ui';
-import { accessShareLink, fetchShareLinkInfo } from './api';
-import type { ShareLinkPublicInfo } from './types';
+} from "lucide-react";
+import { Logo } from "@/shared/ui";
+import { accessShareLink, fetchShareLinkInfo } from "./api";
+import type { ShareLinkPublicInfo } from "./types";
 
 type FetchState =
-  | { kind: 'loading' }
-  | { kind: 'not_found' }
-  | { kind: 'expired'; info: ShareLinkPublicInfo }
-  | { kind: 'open'; info: ShareLinkPublicInfo };
+  | { kind: "loading" }
+  | { kind: "not_found" }
+  | { kind: "expired"; info: ShareLinkPublicInfo }
+  | { kind: "open"; info: ShareLinkPublicInfo };
 
 export function SharePage() {
   const { t } = useTranslation();
   const { token } = useParams<{ token: string }>();
 
-  const [state, setState] = useState<FetchState>({ kind: 'loading' });
-  const [password, setPassword] = useState('');
+  const [state, setState] = useState<FetchState>({ kind: "loading" });
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -51,7 +51,7 @@ export function SharePage() {
   useEffect(() => {
     let cancelled = false;
     if (!token) {
-      setState({ kind: 'not_found' });
+      setState({ kind: "not_found" });
       return;
     }
     (async () => {
@@ -59,12 +59,12 @@ export function SharePage() {
         const info = await fetchShareLinkInfo(token);
         if (cancelled) return;
         if (info.expired) {
-          setState({ kind: 'expired', info });
+          setState({ kind: "expired", info });
         } else {
-          setState({ kind: 'open', info });
+          setState({ kind: "open", info });
         }
       } catch {
-        if (!cancelled) setState({ kind: 'not_found' });
+        if (!cancelled) setState({ kind: "not_found" });
       }
     })();
     return () => {
@@ -74,7 +74,7 @@ export function SharePage() {
 
   // 2. If the link is open + no password required, auto-resolve.
   useEffect(() => {
-    if (state.kind !== 'open') return;
+    if (state.kind !== "open") return;
     if (state.info.requires_password) return;
     if (!token || downloadUrl) return;
     let cancelled = false;
@@ -101,10 +101,10 @@ export function SharePage() {
       setDownloadUrl(res.download_url);
     } catch (e) {
       const msg = (e as Error).message;
-      if (msg === 'UNAUTHORIZED') {
+      if (msg === "UNAUTHORIZED") {
         setError(
-          t('share.page.bad_password', {
-            defaultValue: 'Wrong password. Please try again.‌⁠‍',
+          t("share.page.bad_password", {
+            defaultValue: "Wrong password. Please try again.‌⁠‍",
           }),
         );
       } else {
@@ -125,28 +125,28 @@ export function SharePage() {
         <div className="rounded-2xl border border-border-light bg-surface-elevated shadow-xl p-6 sm:p-8 space-y-5">
           <div className="text-center">
             <h1 className="text-base font-semibold text-content-primary">
-              {t('share.page.title', { defaultValue: 'Shared file‌⁠‍' })}
+              {t("share.page.title", { defaultValue: "Shared file‌⁠‍" })}
             </h1>
             <p className="mt-1 text-xs text-content-tertiary">
-              {t('share.page.subtitle', {
+              {t("share.page.subtitle", {
                 defaultValue:
-                  'Someone shared a file with you via OpenConstructionERP.‌⁠‍',
+                  "Someone shared a file with you via OpenConstructionERP.‌⁠‍",
               })}
             </p>
           </div>
 
           {/* Loading state */}
-          {state.kind === 'loading' && (
+          {state.kind === "loading" && (
             <div className="flex flex-col items-center gap-2 py-6 text-content-tertiary">
               <Loader2 size={20} className="animate-spin" />
               <p className="text-xs">
-                {t('share.page.loading', { defaultValue: 'Loading link…‌⁠‍' })}
+                {t("share.page.loading", { defaultValue: "Loading link…‌⁠‍" })}
               </p>
             </div>
           )}
 
           {/* Not found / revoked */}
-          {state.kind === 'not_found' && (
+          {state.kind === "not_found" && (
             <div
               data-testid="share-not-found"
               className="rounded-lg border border-semantic-error/30 bg-semantic-error/5 p-4 text-center space-y-2"
@@ -157,20 +157,20 @@ export function SharePage() {
                 className="mx-auto text-semantic-error"
               />
               <h2 className="text-sm font-semibold text-content-primary">
-                {t('share.page.not_found_title', {
-                  defaultValue: 'Link not found‌⁠‍',
+                {t("share.page.not_found_title", {
+                  defaultValue: "Link not found‌⁠‍",
                 })}
               </h2>
               <p className="text-xs text-content-secondary">
-                {t('share.page.not_found_body', {
-                  defaultValue: 'The link is invalid or has been revoked.',
+                {t("share.page.not_found_body", {
+                  defaultValue: "The link is invalid or has been revoked.",
                 })}
               </p>
             </div>
           )}
 
           {/* Expired */}
-          {state.kind === 'expired' && (
+          {state.kind === "expired" && (
             <div
               data-testid="share-expired"
               className="rounded-lg border border-amber-300/40 bg-amber-50 dark:bg-amber-900/20 p-4 text-center space-y-2"
@@ -181,20 +181,20 @@ export function SharePage() {
                 className="mx-auto text-amber-600 dark:text-amber-400"
               />
               <h2 className="text-sm font-semibold text-content-primary">
-                {t('share.page.expired_title', {
-                  defaultValue: 'This link has expired',
+                {t("share.page.expired_title", {
+                  defaultValue: "This link has expired",
                 })}
               </h2>
               <p className="text-xs text-content-secondary">
-                {t('share.page.expired_body', {
-                  defaultValue: 'Ask the sender to share a new link.',
+                {t("share.page.expired_body", {
+                  defaultValue: "Ask the sender to share a new link.",
                 })}
               </p>
             </div>
           )}
 
           {/* Open: password prompt or auto-resolved download */}
-          {state.kind === 'open' && (
+          {state.kind === "open" && (
             <>
               <div className="flex items-start gap-3 rounded-lg bg-surface-secondary/40 border border-border-light p-3">
                 <FileText
@@ -204,7 +204,7 @@ export function SharePage() {
                 />
                 <div className="min-w-0">
                   <p className="text-2xs uppercase tracking-wide text-content-tertiary">
-                    {t('share.page.filename_label', { defaultValue: 'File' })}
+                    {t("share.page.filename_label", { defaultValue: "File" })}
                   </p>
                   <p
                     className="text-sm font-medium text-content-primary truncate"
@@ -224,8 +224,8 @@ export function SharePage() {
                       className="block text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1.5"
                     >
                       <Lock size={11} className="inline-block me-1 -mt-0.5" />
-                      {t('share.page.password_prompt', {
-                        defaultValue: 'Enter the password to download.',
+                      {t("share.page.password_prompt", {
+                        defaultValue: "Enter the password to download.",
                       })}
                     </label>
                     <input
@@ -234,8 +234,8 @@ export function SharePage() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder={t('share.page.password_placeholder', {
-                        defaultValue: 'Password',
+                      placeholder={t("share.page.password_placeholder", {
+                        defaultValue: "Password",
                       })}
                       autoFocus
                       autoComplete="off"
@@ -264,9 +264,11 @@ export function SharePage() {
                       <Download size={14} />
                     )}
                     {submitting
-                      ? t('share.page.unlocking', { defaultValue: 'Verifying…' })
-                      : t('share.page.unlock', {
-                          defaultValue: 'Unlock and download',
+                      ? t("share.page.unlocking", {
+                          defaultValue: "Verifying…",
+                        })
+                      : t("share.page.unlock", {
+                          defaultValue: "Unlock and download",
                         })}
                   </button>
                 </form>
@@ -275,8 +277,9 @@ export function SharePage() {
               {downloadUrl && (
                 <div className="space-y-2">
                   <p className="text-xs text-content-secondary text-center">
-                    {t('share.page.ready_body', {
-                      defaultValue: 'Click the button below to download the file.',
+                    {t("share.page.ready_body", {
+                      defaultValue:
+                        "Click the button below to download the file.",
                     })}
                   </p>
                   <a
@@ -285,7 +288,9 @@ export function SharePage() {
                     className="w-full inline-flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-oe-blue text-white text-sm font-medium hover:bg-oe-blue-hover"
                   >
                     <Download size={14} />
-                    {t('share.page.download', { defaultValue: 'Download file' })}
+                    {t("share.page.download", {
+                      defaultValue: "Download file",
+                    })}
                   </a>
                 </div>
               )}

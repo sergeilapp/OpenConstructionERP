@@ -11,11 +11,11 @@
  * re-download the geometry file.
  */
 
-import { useRef, useEffect, useCallback } from 'react';
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useRef, useEffect, useCallback } from "react";
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Props ──────────────────────────────────────────────────────────────── */
 
@@ -84,8 +84,8 @@ function loadModelScene(modelId: string): Promise<THREE.Group> {
   const token = useAuthStore.getState().accessToken;
   const base = `/api/v1/bim_hub/models/${encodeURIComponent(modelId)}/geometry/`;
   const params = new URLSearchParams();
-  if (token) params.set('token', token);
-  params.set('_t', String(Date.now()));
+  if (token) params.set("token", token);
+  params.set("_t", String(Date.now()));
   const url = `${base}?${params.toString()}`;
 
   const promise = new Promise<THREE.Group>((resolve, reject) => {
@@ -94,7 +94,7 @@ function loadModelScene(modelId: string): Promise<THREE.Group> {
       url,
       (gltf) => {
         if (!gltf?.scene) {
-          reject(new Error('GLTFLoader returned empty result'));
+          reject(new Error("GLTFLoader returned empty result"));
           return;
         }
         // Store the original scene in cache
@@ -198,14 +198,17 @@ export function MiniGeometryPreview({
       const matchSet = new Set(elementIds); // start with raw IDs
       try {
         const token = useAuthStore.getState().accessToken;
-        const resp = await fetch(`/api/v1/bim_hub/models/${encodeURIComponent(modelId)}/elements/by-ids/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        const resp = await fetch(
+          `/api/v1/bim_hub/models/${encodeURIComponent(modelId)}/elements/by-ids/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            body: JSON.stringify({ element_ids: elementIds }),
           },
-          body: JSON.stringify({ element_ids: elementIds }),
-        });
+        );
         if (resp.ok) {
           const data = await resp.json();
           for (const el of data.items ?? []) {
@@ -214,7 +217,9 @@ export function MiniGeometryPreview({
             if (el.id) matchSet.add(el.id);
           }
         }
-      } catch { /* continue with raw IDs */ }
+      } catch {
+        /* continue with raw IDs */
+      }
       return matchSet;
     };
 
@@ -239,7 +244,9 @@ export function MiniGeometryPreview({
               child.userData?.name,
               child.userData?.elementId,
               child.userData?.stableId,
-            ].filter(Boolean).map(String);
+            ]
+              .filter(Boolean)
+              .map(String);
 
             // Exact match first
             let isTarget = candidateNames.some(
@@ -252,7 +259,9 @@ export function MiniGeometryPreview({
             if (!isTarget && child.name) {
               const nameParts = child.name.split(/[-_]/);
               isTarget = nameParts.some(
-                (part) => part.length >= 3 && (matchSet.has(part) || matchSetLower.has(part.toLowerCase())),
+                (part) =>
+                  part.length >= 3 &&
+                  (matchSet.has(part) || matchSetLower.has(part.toLowerCase())),
               );
             }
 
@@ -326,18 +335,24 @@ export function MiniGeometryPreview({
       mountedRef.current = false;
       dispose();
     };
-  }, [modelId, elementIds.join(','), width, height, dispose]);
+  }, [modelId, elementIds.join(","), width, height, dispose]);
 
   return (
     <div
       className={className}
-      style={{ width, height, borderRadius: 6, overflow: 'hidden', position: 'relative' }}
+      style={{
+        width,
+        height,
+        borderRadius: 6,
+        overflow: "hidden",
+        position: "relative",
+      }}
     >
       <canvas
         ref={canvasRef}
         width={width}
         height={height}
-        style={{ display: 'block', width, height }}
+        style={{ display: "block", width, height }}
       />
     </div>
   );

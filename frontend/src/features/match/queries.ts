@@ -10,15 +10,15 @@
  * button press).
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { acceptMatch, matchElement, submitMatchFeedback } from './api';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { acceptMatch, matchElement, submitMatchFeedback } from "./api";
 import type {
   MatchAcceptRequestBody,
   MatchAcceptResponse,
   MatchElementRequestBody,
   MatchFeedbackRequestBody,
   MatchResponse,
-} from './types';
+} from "./types";
 
 /** Mutation that runs the matcher for one element. */
 export function useMatchElement() {
@@ -51,15 +51,15 @@ export function useAcceptMatch() {
   return useMutation<MatchAcceptResponse, Error, MatchAcceptRequestBody>({
     mutationFn: acceptMatch,
     onSuccess: (_data, variables) => {
-      qc.invalidateQueries({ queryKey: ['boq'] });
-      qc.invalidateQueries({ queryKey: ['boq', variables.boq_id] });
+      qc.invalidateQueries({ queryKey: ["boq"] });
+      qc.invalidateQueries({ queryKey: ["boq", variables.boq_id] });
       qc.invalidateQueries({
-        queryKey: ['boq-positions-for-link', variables.boq_id],
+        queryKey: ["boq-positions-for-link", variables.boq_id],
       });
-      qc.invalidateQueries({ queryKey: ['bim-elements'] });
+      qc.invalidateQueries({ queryKey: ["bim-elements"] });
       if (variables.bim_element_id) {
         qc.invalidateQueries({
-          queryKey: ['bim', 'links', variables.bim_element_id],
+          queryKey: ["bim", "links", variables.bim_element_id],
         });
       }
     },

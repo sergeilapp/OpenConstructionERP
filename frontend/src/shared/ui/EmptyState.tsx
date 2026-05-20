@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import { isValidElement, type ReactNode } from 'react';
-import { Button } from './Button';
+import clsx from "clsx";
+import { isValidElement, type ReactNode } from "react";
+import { Button } from "./Button";
 
 interface ActionObject {
   label: string;
@@ -33,16 +33,16 @@ export function standardEmptyCopy(
 ): { title: string; description: string; actionLabel: string } {
   const plural = entityPluralLabel ?? `${entity}s`;
   return {
-    title: t('empty.no_yet', {
-      defaultValue: 'No {{plural}} yet‌⁠‍',
+    title: t("empty.no_yet", {
+      defaultValue: "No {{plural}} yet‌⁠‍",
       plural,
     }),
-    description: t('empty.no_yet_description', {
-      defaultValue: 'Get started by creating your first {{entity}}.‌⁠‍',
+    description: t("empty.no_yet_description", {
+      defaultValue: "Get started by creating your first {{entity}}.‌⁠‍",
       entity,
     }),
-    actionLabel: t('empty.create_first', {
-      defaultValue: 'Create your first {{entity}}‌⁠‍',
+    actionLabel: t("empty.create_first", {
+      defaultValue: "Create your first {{entity}}‌⁠‍",
       entity,
     }),
   };
@@ -50,19 +50,25 @@ export function standardEmptyCopy(
 
 function isActionObject(action: unknown): action is ActionObject {
   return (
-    typeof action === 'object' &&
+    typeof action === "object" &&
     action !== null &&
     !isValidElement(action) &&
-    'label' in action &&
-    'onClick' in action
+    "label" in action &&
+    "onClick" in action
   );
 }
 
-export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+  className,
+}: EmptyStateProps) {
   return (
     <div
       className={clsx(
-        'flex flex-col items-center justify-center py-16 px-6 text-center',
+        "flex flex-col items-center justify-center py-16 px-6 text-center",
         className,
       )}
     >
@@ -76,7 +82,9 @@ export function EmptyState({ icon, title, description, action, className }: Empt
       )}
       <h3 className="text-lg font-semibold text-content-primary">{title}</h3>
       {description && (
-        <p className="mt-1.5 max-w-sm text-sm text-content-secondary">{description}</p>
+        <p className="mt-1.5 max-w-sm text-sm text-content-secondary">
+          {description}
+        </p>
       )}
       {action && (
         <div className="mt-5">

@@ -25,16 +25,30 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, File, Header, HTTPException, Query, UploadFile, status
 from fastapi.responses import StreamingResponse
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import CurrentUserId, RequirePermission, RequireRole, SessionDep
+from app.dependencies import (
+    CurrentUserId,
+    OptionalUserPayload,
+    RequirePermission,
+    RequireRole,
+    SessionDep,
+)
+from app.modules.costs.intelligence import (
+    CostCertaintyService,
+    CostUsageRecorder,
+    RegionalIndexService,
+)
 from app.modules.costs.matcher import (
     MatchResult,
     match_cwicr_for_position,
     match_cwicr_items,
 )
+from app.modules.costs.models import CostItem
 from app.modules.costs.schemas import (
     CategoryTreeNode,
+    CertaintyBadge,
     CostAutocompleteItem,
     CostItemCreate,
     CostItemResponse,
@@ -43,6 +57,9 @@ from app.modules.costs.schemas import (
     CostSuggestion,
     CwicrMatchFromPositionRequest,
     CwicrMatchRequest,
+    RecordUsageRequest,
+    RegionalAdjustResponse,
+    RegionalIndexResponse,
     SuggestCostsForElementRequest,
 )
 from app.modules.costs.service import CostItemService
@@ -318,9 +335,7 @@ async def autocomplete_cost_items(
                         items_from_db = await service.get_by_codes(codes)
                         for db_item in items_from_db:
                             components_map[db_item.code] = db_item.components or []
-                            metadata_map[db_item.code] = (
-                                db_item.metadata_ or {}
-                            )
+                            metadata_map[db_item.code] = db_item.metadata_ or {}
                     except Exception:
                         logger.debug("Cost search: component lookup failed", exc_info=True)
 
@@ -344,9 +359,7 @@ async def autocomplete_cost_items(
                                 description=r.get("description", ""),
                                 unit=r.get("unit", ""),
                                 rate=float(r.get("rate", 0)),
-                                currency=_resolve_currency(
-                                    r.get("currency"), r.get("region")
-                                ),
+                                currency=_resolve_currency(r.get("currency"), r.get("region")),
                                 region=r.get("region"),
                                 classification=cls,
                                 components=comps,
@@ -599,7 +612,8 @@ async def search_cost_items(
 
     if skip_count_via_cache:
         items, _, has_more, next_cursor = await service.search_costs_paginated(
-            query, skip_count=True,
+            query,
+            skip_count=True,
         )
         total = cached_total
     else:
@@ -614,7 +628,8 @@ async def search_cost_items(
     # ~3 KB. ``components_count`` preserves the "has breakdown" hint.
     def _serialize(i: Any) -> dict[str, Any]:
         payload = _localize_response_payload(
-            CostItemResponse.model_validate(i), resolved_locale,
+            CostItemResponse.model_validate(i),
+            resolved_locale,
         )
         if lite:
             comps = payload.get("components") or []
@@ -1001,11 +1016,7 @@ async def _detect_language_mismatch(
 
         # MatchProjectSettings uses an ``id`` PK with a unique FK on
         # ``project_id``; ``db.get`` cannot be used here.
-        result = await db.execute(
-            select(MatchProjectSettings).where(
-                MatchProjectSettings.project_id == project_id
-            )
-        )
+        result = await db.execute(select(MatchProjectSettings).where(MatchProjectSettings.project_id == project_id))
         settings = result.scalar_one_or_none()
         if not settings or not settings.cost_database_id:
             out["status"] = "unbound"
@@ -1014,9 +1025,7 @@ async def _detect_language_mismatch(
         out["bound_language"] = language_for(settings.cost_database_id)
 
         if out["project_language"] and out["bound_language"]:
-            out["status"] = (
-                "ok" if out["project_language"] == out["bound_language"] else "mismatch"
-            )
+            out["status"] = "ok" if out["project_language"] == out["bound_language"] else "mismatch"
     except Exception:  # pragma: no cover — defensive
         logger.debug("language mismatch probe failed", exc_info=True)
     return out
@@ -1067,6 +1076,7 @@ async def embedder_status() -> dict[str, Any]:
     installed = False
     try:
         import FlagEmbedding  # type: ignore[import-not-found]  # noqa: F401, PLC0415
+
         installed = True
     except ImportError:
         missing.append("FlagEmbedding")
@@ -1164,9 +1174,7 @@ async def qdrant_smoke_search(
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Exception as exc:  # noqa: BLE001
         logger.exception("CWICR Qdrant smoke search failed")
-        raise HTTPException(
-            status_code=500, detail="qdrant search failed (see server logs)"
-        ) from exc
+        raise HTTPException(status_code=500, detail="qdrant search failed (see server logs)") from exc
 
     rate_codes = [h.rate_code for h in hits]
     full_rows = await lookup_full_rows(country=country, rate_codes=rate_codes)
@@ -1722,7 +1730,7 @@ def _snapshot_error_hint(err: str) -> str | None:
             "Windows Defender is locking files in Qdrant's storage folder during "
             "fsync. The download succeeded — only the final disk write was blocked. "
             "Fix: open PowerShell AS ADMINISTRATOR and run:\n"
-            "  Add-MpPreference -ExclusionPath \"$env:USERPROFILE\\.openestimator\"\n"
+            '  Add-MpPreference -ExclusionPath "$env:USERPROFILE\\.openestimator"\n'
             "Then click Install again. (No restart needed — Qdrant picks it up "
             "on the next attempt.) GUI alternative: Settings → Update & Security → "
             "Windows Security → Virus & threat protection → Manage settings → "
@@ -1957,8 +1965,7 @@ async def install_v3_catalogue(
             status.HTTP_502_BAD_GATEWAY,
             (
                 f"Qdrant could not restore the snapshot from {snapshot_url}.\n"
-                f"Qdrant said: {qdrant_err}"
-                + (f"\nHint: {hint}" if hint else "")
+                f"Qdrant said: {qdrant_err}" + (f"\nHint: {hint}" if hint else "")
             ),
         ) from exc
     except RuntimeError as exc:
@@ -1978,9 +1985,7 @@ async def install_v3_catalogue(
     poll_deadline = time.monotonic() + 30.0
     poll_delay = 0.5
     while time.monotonic() < poll_deadline:
-        collections_after = await loop.run_in_executor(
-            None, lambda: server_collections(qdrant_url=qdrant_url)
-        )
+        collections_after = await loop.run_in_executor(None, lambda: server_collections(qdrant_url=qdrant_url))
         if cat.collection in collections_after:
             appeared = True
             break
@@ -3163,18 +3168,16 @@ def _process_and_insert_cwicr(parquet_path: str, db_id: str, db_file: str) -> di
                 if v <= 0:
                     continue
                 variable_part = lbl[:200]
-                full_label = (
-                    f"{common_start} {variable_part}".strip()
-                    if common_start
-                    else variable_part
-                )[:400]
-                variants_l.append({
-                    "index": i,
-                    "label": variable_part,
-                    "full_label": full_label,
-                    "price": round(v, 2),
-                    "price_per_unit": round(_safe_float(pu_vals[i]), 4) if i < len(pu_vals) else None,
-                })
+                full_label = (f"{common_start} {variable_part}".strip() if common_start else variable_part)[:400]
+                variants_l.append(
+                    {
+                        "index": i,
+                        "label": variable_part,
+                        "full_label": full_label,
+                        "price": round(v, 2),
+                        "price_per_unit": round(_safe_float(pu_vals[i]), 4) if i < len(pu_vals) else None,
+                    }
+                )
             if not variants_l:
                 continue
             abstract_variants_by_pair[(rc, rescode)] = {
@@ -3220,7 +3223,14 @@ def _process_and_insert_cwicr(parquet_path: str, db_id: str, db_file: str) -> di
     resources_by_code: dict[str, list[dict]] = {}
     if "resource_name" in df.columns and _cost_col in df.columns:
         # Filter rows that have resource data (non-empty name, non-zero cost)
-        res_df = df[available_res_cols + (["price_abstract_resource_variable_parts"] if "price_abstract_resource_variable_parts" in df.columns else [])].copy()
+        res_df = df[
+            available_res_cols
+            + (
+                ["price_abstract_resource_variable_parts"]
+                if "price_abstract_resource_variable_parts" in df.columns
+                else []
+            )
+        ].copy()
         res_df = res_df[res_df["resource_name"].fillna("").str.len() > 0]
         if _cost_col in res_df.columns:
             # Keep abstract-resource rows even with cost==0 — they're a
@@ -3229,12 +3239,8 @@ def _process_and_insert_cwicr(parquet_path: str, db_id: str, db_file: str) -> di
             # silently dropped and the user loses one of their variant
             # picks.
             if "price_abstract_resource_variable_parts" in res_df.columns:
-                _is_abstract = (
-                    res_df["price_abstract_resource_variable_parts"].fillna("").astype(str).str.len() > 0
-                )
-                res_df = res_df[
-                    (res_df[_cost_col].fillna(0).astype(float).abs() > 0.001) | _is_abstract
-                ]
+                _is_abstract = res_df["price_abstract_resource_variable_parts"].fillna("").astype(str).str.len() > 0
+                res_df = res_df[(res_df[_cost_col].fillna(0).astype(float).abs() > 0.001) | _is_abstract]
             else:
                 res_df = res_df[res_df[_cost_col].fillna(0).astype(float).abs() > 0.001]
         if "row_type" in res_df.columns:
@@ -3272,8 +3278,16 @@ def _process_and_insert_cwicr(parquet_path: str, db_id: str, db_file: str) -> di
 
             # Compute ctype vectorized
             _row_type = res_df.get("row_type", pd.Series([""] * len(res_df), index=res_df.index)).fillna("").astype(str)
-            _is_mach = res_df.get("is_machine", pd.Series([False] * len(res_df), index=res_df.index)).fillna(False).astype(bool)
-            _is_mat = res_df.get("is_material", pd.Series([False] * len(res_df), index=res_df.index)).fillna(False).astype(bool)
+            _is_mach = (
+                res_df.get("is_machine", pd.Series([False] * len(res_df), index=res_df.index))
+                .fillna(False)
+                .astype(bool)
+            )
+            _is_mat = (
+                res_df.get("is_material", pd.Series([False] * len(res_df), index=res_df.index))
+                .fillna(False)
+                .astype(bool)
+            )
             _unit_lc = res_df["_unit"].str.lower()
             _is_labor_unit = _unit_lc.isin(_LABOR_UNITS)
 
@@ -3435,11 +3449,7 @@ def _process_and_insert_cwicr(parquet_path: str, db_id: str, db_file: str) -> di
                 if v <= 0:
                     continue
                 variable_part = lbl[:200]
-                full_label = (
-                    f"{common_start} {variable_part}".strip()
-                    if common_start
-                    else variable_part
-                )[:400]
+                full_label = (f"{common_start} {variable_part}".strip() if common_start else variable_part)[:400]
                 variants.append(
                     {
                         "index": i,
@@ -3784,11 +3794,7 @@ async def export_cost_database(
     # Fetch in batches to avoid loading 50K+ rows into memory at once
     batch_size = 1000
     offset = 0
-    base_stmt = (
-        select(CostItem)
-        .where(CostItem.is_active.is_(True))
-        .order_by(CostItem.code)
-    )
+    base_stmt = select(CostItem).where(CostItem.is_active.is_(True)).order_by(CostItem.code)
 
     while True:
         result = await session.execute(base_stmt.offset(offset).limit(batch_size))
@@ -3801,15 +3807,17 @@ async def export_cost_database(
                 rate_val = float(item.rate)
             except (ValueError, TypeError):
                 rate_val = 0
-            ws.append([
-                item.code,
-                item.description,
-                item.unit,
-                rate_val,
-                item.currency,
-                item.source,
-                getattr(item, "region", ""),
-            ])
+            ws.append(
+                [
+                    item.code,
+                    item.description,
+                    item.unit,
+                    rate_val,
+                    item.currency,
+                    item.source,
+                    getattr(item, "region", ""),
+                ]
+            )
 
         if len(items) < batch_size:
             break
@@ -3895,9 +3903,7 @@ async def suggest_costs_for_element_by_id(
     if isinstance(meta, dict):
         candidate = meta.get("classification")
         if isinstance(candidate, dict):
-            classification = {
-                k: str(v) for k, v in candidate.items() if isinstance(v, (str, int))
-            }
+            classification = {k: str(v) for k, v in candidate.items() if isinstance(v, (str, int))}
 
     # Quantities may contain non-float entries in practice; coerce safely.
     quantities_raw = getattr(element, "quantities", None) or {}
@@ -3973,6 +3979,150 @@ async def match_cwicr_from_position(
             region=request.region,
         )
     except LookupError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+
+# ── Cost Intelligence (v3.12.0 — Stream B) ────────────────────────────────
+
+
+@router.get("/regional-adjust/", response_model=RegionalAdjustResponse)
+async def regional_adjust(
+    session: SessionDep,
+    user: OptionalUserPayload,
+    region: str = Query(..., min_length=2, max_length=64, description="Region code, e.g. DE_BERLIN"),
+    category: str = Query(..., min_length=2, max_length=64, description="Category key"),
+    base_rate: float = Query(..., ge=0, description="Unit rate in the catalogue's currency"),
+    subcategory: str | None = Query(
+        default=None,
+        max_length=64,
+        description="Optional finer slice — falls back to the whole-category row when absent.",
+    ),
+) -> RegionalAdjustResponse:
+    """‌⁠‍Preview the same rate in a different region.
+
+    RSMeans-style city cost index lookup — multiplies ``base_rate`` by
+    the most recent ``factor`` on file for ``(region, category)``.
+    When no factor exists, returns a 1:1 passthrough so the frontend
+    can render the row without branching on null.
+
+    Read-only and public (parity with autocomplete / search). The
+    estimator is expected to confirm before applying the adjusted rate
+    onto a BOQ position — no auto-apply.
+    """
+    _ = user  # accept anonymous
+    svc = RegionalIndexService(session)
+    adjusted, factor, source, effective = await svc.adjust(region, category, base_rate, subcategory=subcategory)
+    return RegionalAdjustResponse(
+        region=region.strip().upper(),
+        category=category.strip().lower(),
+        base_rate=base_rate,
+        factor_applied=factor,
+        adjusted_rate=adjusted,
+        source=source,
+        effective_date=effective,
+    )
+
+
+@router.get(
+    "/regional-indices/",
+    response_model=list[RegionalIndexResponse],
+)
+async def list_regional_indices(
+    session: SessionDep,
+    user: OptionalUserPayload,
+    region: str = Query(..., min_length=2, max_length=64),
+) -> list[RegionalIndexResponse]:
+    """‌⁠‍List every cost-index row for ``region``.
+
+    Used by the Regional Adjust panel to populate the category picker
+    and show historical effective dates. Ordered by category then
+    effective_date desc so the freshest entries surface first.
+    """
+    _ = user
+    svc = RegionalIndexService(session)
+    rows = await svc.list_for_region(region)
+    return [RegionalIndexResponse.model_validate(row) for row in rows]
+
+
+@router.get("/{item_id}/certainty/", response_model=CertaintyBadge)
+async def get_cost_item_certainty(
+    item_id: uuid.UUID,
+    session: SessionDep,
+    user: OptionalUserPayload,
+) -> CertaintyBadge:
+    """‌⁠‍Return the green / yellow / red certainty badge for one cost item.
+
+    Aggregates the usage ledger into:
+
+    * ``frequency`` — total recorded uses across all projects.
+    * ``age_days`` — days since the most recent use (``999999`` when
+      the item has never been used).
+    * ``confidence_badge`` — bucketed band per the rules documented on
+      ``schemas.CertaintyBadge``.
+
+    Returns 404 when ``item_id`` does not exist in ``oe_costs_item``.
+    """
+    _ = user
+    svc = CostCertaintyService(session)
+    try:
+        data = await svc.compute(item_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    return CertaintyBadge.model_validate(data)
+
+
+@router.post(
+    "/{item_id}/record-usage/",
+    status_code=status.HTTP_201_CREATED,
+)
+async def record_cost_item_usage(
+    item_id: uuid.UUID,
+    body: RecordUsageRequest,
+    session: SessionDep,
+    user: OptionalUserPayload,
+) -> dict[str, object]:
+    """‌⁠‍Append one row to the usage ledger.
+
+    Called from the BOQ apply-rate path so the next user of the same
+    rate sees an up-to-date certainty badge. Body intentionally small:
+    the timestamp is server-stamped, the cost-item id rides on the
+    URL.
+
+    Returns the new usage row's id + the refreshed certainty band so
+    the frontend can update its badge cache in one round-trip.
+    """
+    # Verify cost item exists so we can give a precise 404 rather than
+    # letting the FK CASCADE constraint do it at commit time.
+    item_check = await session.execute(select(CostItem).where(CostItem.id == item_id).limit(1))
+    if item_check.scalar_one_or_none() is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
-        ) from exc
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"CostItem {item_id} not found",
+        )
+
+    recorder = CostUsageRecorder(session)
+    used_by: uuid.UUID | None = None
+    sub = (user or {}).get("sub") if user else None
+    if sub:
+        try:
+            used_by = uuid.UUID(str(sub))
+        except (TypeError, ValueError):
+            # Anonymous / demo-token id may be non-UUID — silently drop.
+            used_by = None
+
+    row = await recorder.record(
+        item_id,
+        project_id=body.project_id,
+        unit_rate_at_use=body.unit_rate_at_use,
+        context=body.context,
+        used_by=used_by,
+    )
+    await session.commit()
+
+    certainty = await CostCertaintyService(session).compute(item_id)
+    return {
+        "id": str(row.id),
+        "cost_item_id": str(item_id),
+        "used_at": row.used_at.isoformat() if row.used_at else None,
+        "certainty": CertaintyBadge.model_validate(certainty).model_dump(mode="json"),
+    }

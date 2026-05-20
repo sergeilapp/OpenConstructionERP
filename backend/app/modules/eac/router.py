@@ -82,9 +82,7 @@ router.include_router(_aliases_router)
 # ── Tenant resolution ────────────────────────────────────────────────────
 
 
-async def _resolve_tenant_id(
-    session: AsyncSession, user_id: str
-) -> uuid.UUID:
+async def _resolve_tenant_id(session: AsyncSession, user_id: str) -> uuid.UUID:
     """‌⁠‍Resolve the tenant for the current user.
 
     W0.4 (RLS) hasn't shipped yet; until then, each user is treated as
@@ -1012,9 +1010,7 @@ async def diff_runs_endpoint(
 
     tenant_id = await _resolve_tenant_id(session, user_id)
     try:
-        result = await diff_runs(
-            session, run_id_a, run_id_b, tenant_id=tenant_id
-        )
+        result = await diff_runs(session, run_id_a, run_id_b, tenant_id=tenant_id)
     except ExecutionError as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,

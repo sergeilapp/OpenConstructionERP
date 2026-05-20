@@ -7,8 +7,8 @@
  * we debounce the refresh by 200ms.
  */
 
-import type { DependencyGraph } from './dependency-graph';
-import { transitiveDependents, variableUsers } from './dependency-graph';
+import type { DependencyGraph } from "./dependency-graph";
+import { transitiveDependents, variableUsers } from "./dependency-graph";
 
 export interface LiveReevalOptions {
   /** Debounce window in milliseconds (default 200). */

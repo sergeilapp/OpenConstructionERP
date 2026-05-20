@@ -16,7 +16,11 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.events import event_bus
-from app.modules.changeorders.models import ChangeOrder, ChangeOrderItem
+from app.modules.changeorders.models import (
+    ChangeOrder,
+    ChangeOrderApproval,
+    ChangeOrderItem,
+)
 from app.modules.changeorders.repository import ChangeOrderRepository
 from app.modules.changeorders.schemas import (
     ChangeOrderCreate,
@@ -100,9 +104,7 @@ class ChangeOrderService:
         from decimal import Decimal, InvalidOperation
 
         try:
-            initial_cost_impact = (
-                Decimal(str(data.cost_impact)) if data.cost_impact else Decimal("0")
-            )
+            initial_cost_impact = Decimal(str(data.cost_impact)) if data.cost_impact else Decimal("0")
         except (InvalidOperation, ValueError, TypeError):
             initial_cost_impact = Decimal("0")
 
@@ -174,11 +176,7 @@ class ChangeOrderService:
         from app.modules.projects.models import Project
 
         try:
-            project = (
-                await self.session.execute(
-                    select(Project).where(Project.id == project_id)
-                )
-            ).scalar_one_or_none()
+            project = (await self.session.execute(select(Project).where(Project.id == project_id))).scalar_one_or_none()
         except Exception:
             # No real session (unit-test stub) or transient lookup error —
             # fall back to empty rather than guessing a currency.
@@ -255,6 +253,12 @@ class ChangeOrderService:
         fields = data.model_dump(exclude_unset=True)
         if "metadata" in fields:
             fields["metadata_"] = fields.pop("metadata")
+        # T3: coerce UUID lists to plain str lists so the JSON column
+        # stores stable hex strings on both Postgres and SQLite (which
+        # serializes JSON via stdlib ``json.dumps`` that refuses UUID).
+        for key in ("linked_po_ids", "linked_rfi_ids"):
+            if key in fields and fields[key] is not None:
+                fields[key] = [str(x) for x in fields[key]]
 
         if not fields:
             return order
@@ -298,10 +302,7 @@ class ChangeOrderService:
         if order.submitted_by and str(order.submitted_by) == str(user_id):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=(
-                    f"You cannot {action} a change order you submitted yourself "
-                    "(four-eyes principle)."
-                ),
+                detail=(f"You cannot {action} a change order you submitted yourself (four-eyes principle)."),
             )
 
     async def submit_order(self, order_id: uuid.UUID, user_id: str) -> ChangeOrder:
@@ -327,6 +328,7 @@ class ChangeOrderService:
         user_id: str,
         *,
         boq_id: uuid.UUID | None = None,
+        _from_chain: bool = False,
     ) -> ChangeOrder:
         """Approve a submitted change order.
 
@@ -335,6 +337,12 @@ class ChangeOrderService:
         new contractual commitment. A ``changeorder.approved`` event is
         published so other modules (budget dashboards, notifications) can
         react without coupling directly to this service.
+
+        T3 forward-compat: if this CO has any rows in its approval chain,
+        the caller must drive the chain via ``advance_approval`` and we
+        refuse the single-step approval with HTTP 409 — silently bypassing
+        the chain would let one user approve a CO that was supposed to
+        require N signatures.
         """
         from decimal import Decimal, InvalidOperation
 
@@ -348,7 +356,28 @@ class ChangeOrderService:
         # retries an approval call after a flaky network round-trip.
         if order.status == "approved":
             return order
-        await self._assert_not_self_approval(order, user_id, "approve")
+        # T3: gate the legacy single-step path on the presence of an
+        # approval chain. Existing v3.10.1 clients keep working for COs
+        # that have no chain; new chain-driven COs return 409 here so a
+        # stale client can't shortcut multi-step routing. The internal
+        # ``_from_chain=True`` escape hatch lets ``advance_approval``
+        # reuse the same budget-writeback / BOQ-section code path on
+        # final approval without tripping the gate.
+        if not _from_chain and await self._has_approval_chain(order_id):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "This change order has a multi-step approval chain. "
+                    "Use POST /v1/changeorders/{id}/advance-approval instead."
+                ),
+            )
+        # The four-eyes principle still applies on the legacy path, but
+        # a chain-driven final approval has already enforced that the
+        # acting user is a designated approver — keep the chain path
+        # free of the self-approval check so a submitter can legally be
+        # an approver later in the chain.
+        if not _from_chain:
+            await self._assert_not_self_approval(order, user_id, "approve")
         self._validate_transition(order.status, "approved")
 
         # Snapshot fields that are safe to use in the event payload later
@@ -382,9 +411,7 @@ class ChangeOrderService:
             # would trigger a sync-context attribute refresh and raise
             # ``MissingGreenlet`` under async aiosqlite.
             project = (
-                await self.session.execute(
-                    select(Project).where(Project.id == project_id_uuid)
-                )
+                await self.session.execute(select(Project).where(Project.id == project_id_uuid))
             ).scalar_one_or_none()
             if project is not None:
                 try:
@@ -437,7 +464,10 @@ class ChangeOrderService:
         fresh = await self.repo.get_by_id(order_id)
         logger.info(
             "Change order approved: %s by %s (delta=%s, boq=%s)",
-            code_s, user_id, delta, boq_result,
+            code_s,
+            user_id,
+            delta,
+            boq_result,
         )
         return fresh or order
 
@@ -476,9 +506,7 @@ class ChangeOrderService:
                 from app.modules.projects.models import Project
 
                 project = (
-                    await self.session.execute(
-                        select(Project).where(Project.id == project_id_uuid)
-                    )
+                    await self.session.execute(select(Project).where(Project.id == project_id_uuid))
                 ).scalar_one_or_none()
                 if project is not None:
                     currency_code = project.currency
@@ -489,12 +517,10 @@ class ChangeOrderService:
 
             # Idempotent lookup keyed by metadata.change_order_id.
             existing = (
-                await self.session.execute(
-                    select(ProjectBudget).where(
-                        ProjectBudget.project_id == project_id_uuid
-                    )
-                )
-            ).scalars().all()
+                (await self.session.execute(select(ProjectBudget).where(ProjectBudget.project_id == project_id_uuid)))
+                .scalars()
+                .all()
+            )
             match: ProjectBudget | None = None
             for row in existing:
                 md = row.metadata_ if isinstance(row.metadata_, dict) else {}
@@ -537,8 +563,7 @@ class ChangeOrderService:
             return {"action": "created", "budget_id": str(budget.id)}
         except Exception:
             logger.warning(
-                "Budget delta-row write failed for change order %s — "
-                "approval still committed.",
+                "Budget delta-row write failed for change order %s — approval still committed.",
                 code,
                 exc_info=True,
             )
@@ -582,7 +607,9 @@ class ChangeOrderService:
                         .where(ChangeOrderItem.change_order_id == order.id)
                         .order_by(ChangeOrderItem.sort_order)
                     )
-                ).scalars().all()
+                )
+                .scalars()
+                .all()
             )
         except Exception:
             # Test stubs (SimpleNamespace) don't have a real session.
@@ -592,11 +619,7 @@ class ChangeOrderService:
             return {"applied": False, "reason": "no_items"}
 
         if boq_id is not None:
-            boq = (
-                await self.session.execute(
-                    select(BOQ).where(BOQ.id == boq_id)
-                )
-            ).scalar_one_or_none()
+            boq = (await self.session.execute(select(BOQ).where(BOQ.id == boq_id))).scalar_one_or_none()
             if boq is None:
                 return {"applied": False, "reason": "boq_not_found"}
             if boq.project_id != order.project_id:
@@ -615,25 +638,27 @@ class ChangeOrderService:
             ).scalar_one_or_none()
             if boq is None:
                 logger.info(
-                    "Change order %s approved but no unlocked BOQ in project %s "
-                    "— BOQ writeback skipped",
-                    order.code, order.project_id,
+                    "Change order %s approved but no unlocked BOQ in project %s — BOQ writeback skipped",
+                    order.code,
+                    order.project_id,
                 )
                 return {"applied": False, "reason": "no_active_boq"}
             logger.warning(
-                "Change order %s applied to BOQ %s by created_at fallback "
-                "(no explicit boq_id supplied)",
-                order.code, boq.id,
+                "Change order %s applied to BOQ %s by created_at fallback (no explicit boq_id supplied)",
+                order.code,
+                boq.id,
             )
 
         # Idempotent guard: section keyed by change_order_id in metadata.
         existing_sections = (
-            await self.session.execute(
-                select(Position)
-                .where(Position.boq_id == boq.id)
-                .where(Position.unit == "section")
+            (
+                await self.session.execute(
+                    select(Position).where(Position.boq_id == boq.id).where(Position.unit == "section")
+                )
             )
-        ).scalars().all()
+            .scalars()
+            .all()
+        )
         for sec in existing_sections:
             md = sec.metadata_ if isinstance(sec.metadata_, dict) else {}
             if md.get("change_order_id") == str(order.id):
@@ -728,7 +753,11 @@ class ChangeOrderService:
 
         logger.info(
             "Change order %s applied to BOQ %s: section=%s, %d positions, total=%s",
-            order.code, boq.id, section.id, positions_added, item_total,
+            order.code,
+            boq.id,
+            section.id,
+            positions_added,
+            item_total,
         )
         return {
             "applied": True,
@@ -805,9 +834,7 @@ class ChangeOrderService:
         # doesn't enter the calculation as 0.1000000000000000055…; round
         # only at the persisted boundary (presentation rounds again in the
         # response builder / UI).
-        cost_delta = (
-            _dec(data.new_quantity) * _dec(data.new_rate)
-        ) - (
+        cost_delta = (_dec(data.new_quantity) * _dec(data.new_rate)) - (
             _dec(data.original_quantity) * _dec(data.original_rate)
         )
 
@@ -926,3 +953,296 @@ class ChangeOrderService:
         items = await self.repo.list_items_for_order(order_id)
         total = sum((_dec(item.cost_delta) for item in items), Decimal("0"))
         await self.repo.update_fields(order_id, cost_impact=str(_round2(total)))
+
+    # ── T3: Procore-style multi-step approval chain ──────────────────────
+
+    async def _has_approval_chain(self, order_id: uuid.UUID) -> bool:
+        """True iff this CO has at least one row in its approval chain.
+
+        Wrapped in try/except so unit-test stubs (which expose ``approvals``
+        as a plain list rather than via a SQLAlchemy query) and partially
+        migrated DBs still resolve cleanly to "no chain".
+        """
+        from sqlalchemy import func, select
+
+        try:
+            stmt = select(func.count()).select_from(
+                select(ChangeOrderApproval).where(ChangeOrderApproval.change_order_id == order_id).subquery()
+            )
+            count = (await self.session.execute(stmt)).scalar_one()
+            return bool(count and int(count) > 0)
+        except Exception:
+            logger.debug(
+                "Approval-chain probe skipped for %s (likely test stub)",
+                order_id,
+            )
+            return False
+
+    async def list_approvals(
+        self,
+        order_id: uuid.UUID,
+    ) -> list[ChangeOrderApproval]:
+        """Return the approval rows for ``order_id`` ordered by ``step_order``."""
+        from sqlalchemy import select
+
+        # Guarantee the CO exists (404s if not) before we expose its chain —
+        # otherwise an unauth caller could enumerate CO ids by probing the
+        # /approvals endpoint.
+        await self.get_order(order_id)
+
+        stmt = (
+            select(ChangeOrderApproval)
+            .where(ChangeOrderApproval.change_order_id == order_id)
+            .order_by(ChangeOrderApproval.step_order)
+        )
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
+    async def start_approval_chain(
+        self,
+        order_id: uuid.UUID,
+        approver_user_ids: list[uuid.UUID],
+    ) -> list[ChangeOrderApproval]:
+        """Start a sequential approval chain on ``order_id``.
+
+        Creates one ``ChangeOrderApproval`` row per supplied user with
+        ``step_order`` 1..N, ``decision='pending'``, and sets the CO's
+        ``current_approval_step`` cursor to 1 so the first approver is
+        recognised as the active one.
+
+        The chain can only be started on a CO in ``submitted`` state —
+        starting it on a ``draft`` CO would let scope authors hand-pick
+        their own approvers before review, and starting it on
+        ``approved``/``rejected`` is non-sensical.
+
+        Re-running on a CO that already has a chain is rejected (409) to
+        avoid silently overwriting an in-flight chain.
+        """
+        if not approver_user_ids:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="At least one approver is required to start a chain.",
+            )
+
+        order = await self.get_order(order_id)
+        if order.status != "submitted":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "Approval chain can only be started on a 'submitted' "
+                    f"change order (current status: '{order.status}')."
+                ),
+            )
+
+        if await self._has_approval_chain(order_id):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "An approval chain already exists for this change order. Use /advance-approval to drive it forward."
+                ),
+            )
+
+        rows: list[ChangeOrderApproval] = []
+        for step, approver_id in enumerate(approver_user_ids, start=1):
+            row = ChangeOrderApproval(
+                change_order_id=order_id,
+                step_order=step,
+                approver_user_id=approver_id,
+                decision="pending",
+            )
+            self.session.add(row)
+            rows.append(row)
+
+        await self.repo.update_fields(order_id, current_approval_step=1)
+        await self.session.flush()
+
+        await _safe_publish(
+            "changeorders.approval.started",
+            {
+                "co_id": str(order_id),
+                "steps": len(rows),
+                "first_approver_user_id": str(approver_user_ids[0]),
+            },
+            source_module="oe_changeorders",
+        )
+        logger.info(
+            "Approval chain started for CO %s: %d steps",
+            order_id,
+            len(rows),
+        )
+        return rows
+
+    async def advance_approval(
+        self,
+        order_id: uuid.UUID,
+        user_id: str,
+        decision: str,
+        comments: str | None = None,
+    ) -> ChangeOrderApproval:
+        """Record the current approver's decision on the active step.
+
+        Behaviour:
+
+        * Looks up the row at ``step_order == co.current_approval_step``
+          and verifies the caller is its assigned approver. Mismatch ⇒
+          403 (a different user can't act on someone else's step).
+        * ``decision='approved'``: stamps the row + advances the cursor.
+          When the last step is approved, the CO transitions to
+          ``approved`` and the same side-effects as the legacy
+          ``approve_order`` fire (budget writeback, BOQ section, event).
+        * ``decision='rejected'``: stamps the row, clears the cursor,
+          and the CO transitions to ``rejected`` — downstream pending
+          steps stay pending (audit trail) but the chain is dead.
+        """
+        from sqlalchemy import select
+
+        if decision not in ("approved", "rejected"):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Decision must be 'approved' or 'rejected'.",
+            )
+
+        order = await self.get_order(order_id)
+        if order.status not in ("submitted",):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(f"Cannot advance approval — change order is not in 'submitted' state (got '{order.status}')."),
+            )
+        cursor = order.current_approval_step
+        if cursor is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=("No approval chain is active — call /approval-chain first."),
+            )
+
+        # Resolve the active step's row.
+        active_row = (
+            await self.session.execute(
+                select(ChangeOrderApproval).where(
+                    ChangeOrderApproval.change_order_id == order_id,
+                    ChangeOrderApproval.step_order == cursor,
+                )
+            )
+        ).scalar_one_or_none()
+        if active_row is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=(f"No approval step at cursor {cursor} for this change order."),
+            )
+
+        # Caller must be the assigned approver. Compare as strings so
+        # GUID-typed and str-typed JWT subjects compare cleanly.
+        if active_row.approver_user_id is None or str(active_row.approver_user_id) != str(user_id):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=("You are not the assigned approver for the current step of this change order."),
+            )
+
+        if active_row.decision != "pending":
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=("This step has already been decided — chain may be out of sync."),
+            )
+
+        # Stamp the row.
+        active_row.decision = decision
+        active_row.decided_at = datetime.now(UTC)
+        if comments is not None:
+            active_row.comments = comments
+        await self.session.flush()
+
+        # Total step count to know whether we just signed off the last one.
+        total_steps = (
+            (
+                await self.session.execute(
+                    select(ChangeOrderApproval).where(ChangeOrderApproval.change_order_id == order_id)
+                )
+            )
+            .scalars()
+            .all()
+        )
+        n_steps = len(total_steps)
+
+        if decision == "rejected":
+            # Chain dies here. Clear the cursor + flip the CO to rejected.
+            now = datetime.now(UTC).isoformat()[:19]
+            await self.repo.update_fields(
+                order_id,
+                status="rejected",
+                rejected_by=user_id,
+                rejected_at=now,
+                current_approval_step=None,
+            )
+            await _safe_publish(
+                "changeorders.approval.advanced",
+                {
+                    "co_id": str(order_id),
+                    "step_order": cursor,
+                    "decision": "rejected",
+                    "by_user_id": str(user_id),
+                    "chain_complete": True,
+                },
+                source_module="oe_changeorders",
+            )
+            logger.info(
+                "Approval chain rejected at step %d for CO %s by %s",
+                cursor,
+                order_id,
+                user_id,
+            )
+            return active_row
+
+        # decision == 'approved'
+        if cursor >= n_steps:
+            # Last step approved → final approval. Delegate the budget /
+            # BOQ side-effects to the legacy approve_order path by
+            # clearing the cursor (so the chain-gate doesn't fire) and
+            # calling it. Snapshot now in case the cursor check is racy.
+            await self.repo.update_fields(order_id, current_approval_step=None)
+            await _safe_publish(
+                "changeorders.approval.advanced",
+                {
+                    "co_id": str(order_id),
+                    "step_order": cursor,
+                    "decision": "approved",
+                    "by_user_id": str(user_id),
+                    "chain_complete": True,
+                },
+                source_module="oe_changeorders",
+            )
+            # Drive the final side-effects through the same code path
+            # the single-step approval uses so budget writeback / BOQ
+            # section creation stay consistent. ``_from_chain=True``
+            # bypasses the chain-presence gate (we already drove the
+            # chain) and the four-eyes self-approval check (the chain
+            # already documented every approver).
+            await self.approve_order(order_id, user_id, _from_chain=True)
+            logger.info(
+                "Approval chain completed for CO %s on step %d by %s",
+                order_id,
+                cursor,
+                user_id,
+            )
+            return active_row
+
+        # Mid-chain approval: bump the cursor and keep going.
+        await self.repo.update_fields(order_id, current_approval_step=cursor + 1)
+        await _safe_publish(
+            "changeorders.approval.advanced",
+            {
+                "co_id": str(order_id),
+                "step_order": cursor,
+                "decision": "approved",
+                "by_user_id": str(user_id),
+                "chain_complete": False,
+            },
+            source_module="oe_changeorders",
+        )
+        logger.info(
+            "Approval step %d → approved for CO %s by %s (next: %d)",
+            cursor,
+            order_id,
+            user_id,
+            cursor + 1,
+        )
+        return active_row

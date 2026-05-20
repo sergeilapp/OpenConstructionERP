@@ -17,7 +17,7 @@
  * produces, and a guard proving the old `data:`-only / `chunk.type`
  * parser would render nothing.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 
 // ── Production parser contract (mirrors useChatFullPage.ts post-#249) ──────
 //
@@ -29,29 +29,29 @@ function parseSSE(chunks: string[]): {
   sessionId: string | null;
   error: string | null;
 } {
-  let content = '';
+  let content = "";
   let sessionId: string | null = null;
   let error: string | null = null;
-  let currentEvent = '';
-  let buffer = '';
+  let currentEvent = "";
+  let buffer = "";
 
   for (const chunk of chunks) {
     buffer += chunk;
-    const lines = buffer.split('\n');
-    buffer = lines.pop() ?? ''; // keep trailing partial line
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? ""; // keep trailing partial line
     for (const rawLine of lines) {
-      const line = rawLine.replace(/\r$/, '');
-      if (line.trim() === '') {
-        currentEvent = '';
+      const line = rawLine.replace(/\r$/, "");
+      if (line.trim() === "") {
+        currentEvent = "";
         continue;
       }
-      if (line.startsWith('event:')) {
+      if (line.startsWith("event:")) {
         currentEvent = line.slice(6).trim();
         continue;
       }
-      if (!line.startsWith('data:')) continue;
+      if (!line.startsWith("data:")) continue;
       const jsonStr = line.slice(5).trim();
-      if (!jsonStr || jsonStr === '[DONE]') continue;
+      if (!jsonStr || jsonStr === "[DONE]") continue;
       let payload: Record<string, unknown>;
       try {
         payload = JSON.parse(jsonStr) as Record<string, unknown>;
@@ -59,16 +59,16 @@ function parseSSE(chunks: string[]): {
         continue;
       }
       switch (currentEvent) {
-        case 'session_id':
+        case "session_id":
           sessionId = (payload.session_id as string) ?? sessionId;
           break;
-        case 'text': {
+        case "text": {
           const c = payload.content as string | undefined;
           if (c) content += c;
           break;
         }
-        case 'error':
-          error = (payload.message as string) ?? 'Unknown error';
+        case "error":
+          error = (payload.message as string) ?? "Unknown error";
           break;
       }
     }
@@ -79,24 +79,27 @@ function parseSSE(chunks: string[]): {
 // The v3.6.1 (pre-#249) parser: `data:`-only, switches on chunk.type.
 // Kept here purely to PROVE the new contract is what fixes #138.
 function parseSSE_v361(chunks: string[]): { content: string } {
-  let content = '';
-  let buffer = '';
+  let content = "";
+  let buffer = "";
   for (const chunk of chunks) {
     buffer += chunk;
-    const lines = buffer.split('\n');
-    buffer = lines.pop() ?? '';
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
     for (const rawLine of lines) {
       const trimmed = rawLine.trim();
-      if (!trimmed || !trimmed.startsWith('data:')) continue;
+      if (!trimmed || !trimmed.startsWith("data:")) continue;
       let chunkObj: Record<string, unknown>;
       try {
-        chunkObj = JSON.parse(trimmed.slice(5).trim()) as Record<string, unknown>;
+        chunkObj = JSON.parse(trimmed.slice(5).trim()) as Record<
+          string,
+          unknown
+        >;
       } catch {
         continue;
       }
       switch (chunkObj.type) {
-        case 'text':
-          content += (chunkObj.content as string) ?? '';
+        case "text":
+          content += (chunkObj.content as string) ?? "";
           break;
       }
     }
@@ -126,14 +129,14 @@ function networkChunks(s: string, size: number): string[] {
   return out;
 }
 
-describe('issue #138 — OpenRouter chat SSE rendering', () => {
-  const SID = '2acf082e-da7f-471d-97be-e4fe3a289ade';
+describe("issue #138 — OpenRouter chat SSE rendering", () => {
+  const SID = "2acf082e-da7f-471d-97be-e4fe3a289ade";
   const ANSWER =
-    'Here is your construction estimate.\n\n' +
-    '- Concrete C30/37: 12.5 m³\n' +
+    "Here is your construction estimate.\n\n" +
+    "- Concrete C30/37: 12.5 m³\n" +
     'Quote: "two layers" of rebar. Unicode: €1.234,56 — π≈3.14';
 
-  it('renders the full OpenRouter answer (single chunk)', () => {
+  it("renders the full OpenRouter answer (single chunk)", () => {
     const wire = backendSSEForOpenRouter(ANSWER, SID);
     const r = parseSSE([wire]);
     expect(r.error).toBeNull();
@@ -141,7 +144,7 @@ describe('issue #138 — OpenRouter chat SSE rendering', () => {
     expect(r.content).toBe(ANSWER);
   });
 
-  it('renders correctly when the network splits frames at every boundary', () => {
+  it("renders correctly when the network splits frames at every boundary", () => {
     const wire = backendSSEForOpenRouter(ANSWER, SID);
     for (const size of [1, 3, 7, 13, 64, 4096]) {
       const r = parseSSE(networkChunks(wire, size));
@@ -150,32 +153,32 @@ describe('issue #138 — OpenRouter chat SSE rendering', () => {
     }
   });
 
-  it('surfaces a backend error frame instead of rendering empty', () => {
+  it("surfaces a backend error frame instead of rendering empty", () => {
     const wire =
       `event: session_id\ndata: ${JSON.stringify({ session_id: SID })}\n\n` +
-      `event: error\ndata: ${JSON.stringify({ message: 'No AI API key configured.' })}\n\n` +
+      `event: error\ndata: ${JSON.stringify({ message: "No AI API key configured." })}\n\n` +
       `event: done\ndata: {}\n\n`;
     const r = parseSSE([wire]);
-    expect(r.error).toBe('No AI API key configured.');
-    expect(r.content).toBe('');
+    expect(r.error).toBe("No AI API key configured.");
+    expect(r.content).toBe("");
   });
 
-  it('REGRESSION GUARD: the v3.6.1 data-only/chunk.type parser renders NOTHING', () => {
+  it("REGRESSION GUARD: the v3.6.1 data-only/chunk.type parser renders NOTHING", () => {
     // Same intact backend stream. The old parser produces empty output —
     // this is precisely why the user saw "Chat IA no responde" even when
     // the stream was delivered. The new parser MUST render it.
     const wire = backendSSEForOpenRouter(ANSWER, SID);
-    expect(parseSSE_v361([wire]).content).toBe(''); // the bug
+    expect(parseSSE_v361([wire]).content).toBe(""); // the bug
     expect(parseSSE([wire]).content).toBe(ANSWER); // the fix
   });
 
-  it('does not leak event state across frames (event resets on blank line)', () => {
+  it("does not leak event state across frames (event resets on blank line)", () => {
     // A stray data: line AFTER the frame's blank terminator must be
     // ignored, not appended as text under a stale event name.
     const wire =
-      `event: text\ndata: ${JSON.stringify({ content: 'real ' })}\n\n` +
-      `data: ${JSON.stringify({ content: 'LEAKED' })}\n\n` +
-      `event: text\ndata: ${JSON.stringify({ content: 'answer' })}\n\n`;
-    expect(parseSSE([wire]).content).toBe('real answer');
+      `event: text\ndata: ${JSON.stringify({ content: "real " })}\n\n` +
+      `data: ${JSON.stringify({ content: "LEAKED" })}\n\n` +
+      `event: text\ndata: ${JSON.stringify({ content: "answer" })}\n\n`;
+    expect(parseSSE([wire]).content).toBe("real answer");
   });
 });

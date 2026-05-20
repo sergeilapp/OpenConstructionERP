@@ -68,7 +68,9 @@ class GraphValidationError(ValueError):
 # ── Graph helpers ────────────────────────────────────────────────────────
 
 
-def _adjacency(graph: dict[str, Any]) -> tuple[
+def _adjacency(
+    graph: dict[str, Any],
+) -> tuple[
     dict[str, dict[str, Any]],
     dict[str, list[str]],
     dict[str, list[str]],
@@ -111,9 +113,7 @@ def topological_order(graph: dict[str, Any]) -> list[str]:
         indegree[dst] = len(srcs)
 
     # Deterministic order: process zero-indegree nodes in declaration order.
-    queue: deque[str] = deque(
-        nid for nid in nodes_by_id if indegree.get(nid, 0) == 0
-    )
+    queue: deque[str] = deque(nid for nid in nodes_by_id if indegree.get(nid, 0) == 0)
     order: list[str] = []
     while queue:
         node = queue.popleft()
@@ -125,9 +125,7 @@ def topological_order(graph: dict[str, Any]) -> list[str]:
 
     if len(order) != len(nodes_by_id):
         stuck = sorted(set(nodes_by_id) - set(order))
-        raise GraphValidationError(
-            f"Pipeline graph has a cycle (unresolved nodes: {stuck})"
-        )
+        raise GraphValidationError(f"Pipeline graph has a cycle (unresolved nodes: {stuck})")
     return order
 
 
@@ -155,16 +153,10 @@ def validate_graph(graph: dict[str, Any]) -> list[str]:
     order = topological_order(graph)
     nodes_by_id, _, _ = _adjacency(graph)
     unknown = sorted(
-        {
-            str(n.get("type") or "")
-            for n in nodes_by_id.values()
-            if node_registry.get(str(n.get("type") or "")) is None
-        }
+        {str(n.get("type") or "") for n in nodes_by_id.values() if node_registry.get(str(n.get("type") or "")) is None}
     )
     if unknown:
-        raise GraphValidationError(
-            f"Pipeline graph references unregistered node types: {unknown}"
-        )
+        raise GraphValidationError(f"Pipeline graph references unregistered node types: {unknown}")
     return order
 
 
@@ -311,14 +303,9 @@ async def run_node(
         # Mark downstream done-nodes stale so the UI flags the gap on a
         # re-run. Build the node-type index once instead of an O(N) scan
         # per descendant (was O(N²·E) across a whole run).
-        type_by_id = {
-            str(n.get("id") or ""): str(n.get("type") or "")
-            for n in (graph.get("nodes") or [])
-        }
+        type_by_id = {str(n.get("id") or ""): str(n.get("type") or "") for n in (graph.get("nodes") or [])}
         for ds_id in descendants(graph, node_id):
-            ds = await _get_or_create_node_state(
-                db, run_id, ds_id, type_by_id.get(ds_id, "")
-            )
+            ds = await _get_or_create_node_state(db, run_id, ds_id, type_by_id.get(ds_id, ""))
             if ds.status == "done":
                 ds.status = "stale"
 
@@ -401,9 +388,7 @@ async def execute_run(
 
         # If any predecessor failed/was skipped, skip this node too.
         if any(p in failed for p in preds):
-            state = await _get_or_create_node_state(
-                db, run_id, node_id, node_type
-            )
+            state = await _get_or_create_node_state(db, run_id, node_id, node_type)
             state.status = "skipped"
             # Stamp started_at too: the run-detail read model orders node
             # states by started_at, so a skipped node with only

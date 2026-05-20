@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
-import * as Y from 'yjs';
+import { useEffect, useState, useCallback, useRef } from "react";
+import * as Y from "yjs";
 
 /**
  * Represents a single merge conflict between a local pending change and
@@ -28,7 +28,7 @@ export interface ConflictItem {
  * - `accept_theirs` – overwrite local value with remote value
  * - `manual`      – user has provided a custom merged value (passed separately)
  */
-export type ConflictResolution = 'keep_mine' | 'accept_theirs' | 'manual';
+export type ConflictResolution = "keep_mine" | "accept_theirs" | "manual";
 
 interface PendingLocalChange {
   field: string;
@@ -56,7 +56,11 @@ export function useConflictDetection(
   mapName: string,
 ): {
   conflicts: ConflictItem[];
-  resolveConflict: (id: string, resolution: ConflictResolution, manualValue?: string) => void;
+  resolveConflict: (
+    id: string,
+    resolution: ConflictResolution,
+    manualValue?: string,
+  ) => void;
   dismissConflict: (id: string) => void;
 } {
   const [conflicts, setConflicts] = useState<ConflictItem[]>([]);
@@ -75,8 +79,8 @@ export function useConflictDetection(
   const makeKey = (ordinal: string, field: string) => `${ordinal}::${field}`;
 
   const stringify = (value: unknown): string => {
-    if (value === null || value === undefined) return '';
-    if (typeof value === 'object') return JSON.stringify(value);
+    if (value === null || value === undefined) return "";
+    if (typeof value === "object") return JSON.stringify(value);
     return String(value);
   };
 
@@ -84,7 +88,10 @@ export function useConflictDetection(
     setConflicts((prev) => {
       // Deduplicate: one active conflict per (positionOrdinal, field)
       const filtered = prev.filter(
-        (c) => !(c.positionOrdinal === item.positionOrdinal && c.field === item.field),
+        (c) =>
+          !(
+            c.positionOrdinal === item.positionOrdinal && c.field === item.field
+          ),
       );
       return [...filtered, item];
     });
@@ -99,7 +106,10 @@ export function useConflictDetection(
 
     const ymap = doc.getMap(mapName);
 
-    const observer = (events: Y.YEvent<Y.AbstractType<unknown>>[], transaction: Y.Transaction) => {
+    const observer = (
+      events: Y.YEvent<Y.AbstractType<unknown>>[],
+      transaction: Y.Transaction,
+    ) => {
       // Only react to changes that originate from a remote peer
       if (transaction.local) return;
 
@@ -111,9 +121,9 @@ export function useConflictDetection(
 
           // The key format we use in Y.Map is `${ordinal}::${field}`.
           // If the key does not contain "::", skip — it is not a position field.
-          if (!key.includes('::')) return;
+          if (!key.includes("::")) return;
 
-          const colonIdx = key.indexOf('::');
+          const colonIdx = key.indexOf("::");
           const positionOrdinal = key.slice(0, colonIdx);
           const field = key.slice(colonIdx + 2);
           const remoteValue = stringify(rawValue);
@@ -132,12 +142,16 @@ export function useConflictDetection(
           }
 
           // Determine who made the remote change via awareness (best effort)
-          let remoteUser = 'Unknown user';
+          let remoteUser = "Unknown user";
           try {
-            const doc2 = doc as Y.Doc & { awareness?: { getStates: () => Map<number, Record<string, unknown>> } };
+            const doc2 = doc as Y.Doc & {
+              awareness?: {
+                getStates: () => Map<number, Record<string, unknown>>;
+              };
+            };
             if (doc2.awareness) {
               doc2.awareness.getStates().forEach((state) => {
-                if (state && typeof state === 'object' && 'userName' in state) {
+                if (state && typeof state === "object" && "userName" in state) {
                   remoteUser = String((state as { userName: string }).userName);
                 }
               });
@@ -213,9 +227,17 @@ export function useConflictDetection(
 
   return { conflicts, resolveConflict, dismissConflict, trackLocalChange } as {
     conflicts: ConflictItem[];
-    resolveConflict: (id: string, resolution: ConflictResolution, manualValue?: string) => void;
+    resolveConflict: (
+      id: string,
+      resolution: ConflictResolution,
+      manualValue?: string,
+    ) => void;
     dismissConflict: (id: string) => void;
     /** Exposed for testing and advanced usage; not part of the main API contract */
-    trackLocalChange: (positionOrdinal: string, field: string, value: string) => void;
+    trackLocalChange: (
+      positionOrdinal: string,
+      field: string,
+      value: string,
+    ) => void;
   };
 }

@@ -142,9 +142,7 @@ def generate_api_key() -> tuple[str, str, str]:
 # ── Audit helpers ─────────────────────────────────────────────────────────
 
 
-async def _audit_last_login(
-    settings: Settings, user_id: uuid.UUID, when: datetime, *, label: str
-) -> None:
+async def _audit_last_login(settings: Settings, user_id: uuid.UUID, when: datetime, *, label: str) -> None:
     """Fire-and-forget UPDATE of ``oe_users_user.last_login_at``.
 
     Runs in a detached session so the user's login response never waits on
@@ -156,11 +154,7 @@ async def _audit_last_login(
 
     try:
         async with async_session_factory() as session:
-            await session.execute(
-                update(User)
-                .where(User.id == user_id)
-                .values(last_login_at=when)
-            )
+            await session.execute(update(User).where(User.id == user_id).values(last_login_at=when))
             await session.commit()
     except Exception as exc:  # noqa: BLE001 - any failure is acceptable
         logger.warning(
@@ -297,7 +291,10 @@ class UserService:
 
         logger.info(
             "User registered: %s (role=%s, active=%s, mode=%s)",
-            user.email, role, is_active, mode,
+            user.email,
+            role,
+            is_active,
+            mode,
         )
         return user
 
@@ -346,7 +343,9 @@ class UserService:
 
         logger.info(
             "Admin created user: %s (role=%s, active=%s)",
-            user.email, data.role, data.is_active,
+            user.email,
+            data.role,
+            data.is_active,
         )
         return user
 
@@ -407,9 +406,7 @@ class UserService:
 
         if not skip_write:
             # Fire-and-forget audit update — see demo_login() rationale.
-            asyncio.create_task(
-                _audit_last_login(self.settings, user_id, now, label=user_email)
-            )
+            asyncio.create_task(_audit_last_login(self.settings, user_id, now, label=user_email))
 
         access_token = create_access_token(user, self.settings)
         refresh_token = create_refresh_token(user, self.settings)
@@ -467,9 +464,7 @@ class UserService:
         # contention, that's logged but never reaches the user. On
         # Postgres this is a no-op (writes are fast).
         if not skip_write:
-            asyncio.create_task(
-                _audit_last_login(self.settings, user_id, now, label=f"demo:{email}")
-            )
+            asyncio.create_task(_audit_last_login(self.settings, user_id, now, label=f"demo:{email}"))
 
         access_token = create_access_token(user, self.settings)
         refresh_token = create_refresh_token(user, self.settings)

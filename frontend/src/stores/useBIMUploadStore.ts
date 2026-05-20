@@ -9,23 +9,23 @@
  * Multiple uploads can run in parallel; each gets a unique job ID.
  */
 
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   uploadCADFile,
   uploadBIMData,
   generateBIMPDFSheets,
   fetchBIMModel,
   type BIMCadUploadResponse,
-} from '@/features/bim/api';
+} from "@/features/bim/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 export type BIMUploadStatus =
-  | 'uploading'
-  | 'converting'
-  | 'ready'
-  | 'error'
-  | 'converter_required';
+  | "uploading"
+  | "converting"
+  | "ready"
+  | "error"
+  | "converter_required";
 
 export interface BIMUploadJob {
   id: string;
@@ -62,7 +62,7 @@ export interface BIMUploadJob {
    *    - 'done'        — PDF generation finished successfully
    *    - 'failed'      — backend rejected or DDC failed; ``pdfError`` is set
    */
-  pdfStatus: 'idle' | 'generating' | 'done' | 'failed';
+  pdfStatus: "idle" | "generating" | "done" | "failed";
   pdfError: string | null;
 
   startedAt: number;
@@ -75,11 +75,11 @@ export interface StartUploadParams {
   modelName: string;
   discipline: string;
   /** 'cad' for native CAD files (RVT/IFC/DWG/DGN), 'data' for CSV/XLSX. */
-  uploadType: 'cad' | 'data';
+  uploadType: "cad" | "data";
   /** Optional geometry file for advanced (data) uploads. */
   geometryFile?: File | null;
   /** DDC conversion depth: 'standard' (fast, key props), 'medium' (~900 cols), 'complete' (~1000+ cols). */
-  conversionDepth?: 'standard' | 'medium' | 'complete';
+  conversionDepth?: "standard" | "medium" | "complete";
   /** When true, also fire a background request to extract all sheets
    *  from the uploaded CAD file as a single PDF (CAD uploads only). */
   generatePdfSheets?: boolean;
@@ -150,11 +150,41 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
       /** pct added per tick (capped at targetPct) */
       step: number;
     }> = [
-      { status: 'uploading',  stage: 'bim_upload.stage_uploading',    targetPct: 30, interval: 200, step: 1.8 },
-      { status: 'converting', stage: 'bim_upload.stage_converting',   targetPct: 50, interval: 400, step: 0.8 },
-      { status: 'converting', stage: 'bim_upload.stage_extracting',   targetPct: 75, interval: 300, step: 1.0 },
-      { status: 'converting', stage: 'bim_upload.stage_indexing',     targetPct: 88, interval: 250, step: 1.2 },
-      { status: 'converting', stage: 'bim_upload.stage_finalizing',   targetPct: 95, interval: 200, step: 1.5 },
+      {
+        status: "uploading",
+        stage: "bim_upload.stage_uploading",
+        targetPct: 30,
+        interval: 200,
+        step: 1.8,
+      },
+      {
+        status: "converting",
+        stage: "bim_upload.stage_converting",
+        targetPct: 50,
+        interval: 400,
+        step: 0.8,
+      },
+      {
+        status: "converting",
+        stage: "bim_upload.stage_extracting",
+        targetPct: 75,
+        interval: 300,
+        step: 1.0,
+      },
+      {
+        status: "converting",
+        stage: "bim_upload.stage_indexing",
+        targetPct: 88,
+        interval: 250,
+        step: 1.2,
+      },
+      {
+        status: "converting",
+        stage: "bim_upload.stage_finalizing",
+        targetPct: 95,
+        interval: 200,
+        step: 1.5,
+      },
     ];
 
     let phaseIdx = 0;
@@ -247,13 +277,13 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
         continue;
       }
 
-      if (model.status === 'ready') {
-        patchJob(jobId, { pdfStatus: 'generating', pdfError: null });
+      if (model.status === "ready") {
+        patchJob(jobId, { pdfStatus: "generating", pdfError: null });
         try {
           await generateBIMPDFSheets(modelId);
         } catch (e) {
           patchJob(jobId, {
-            pdfStatus: 'failed',
+            pdfStatus: "failed",
             pdfError: e instanceof Error ? e.message : String(e),
           });
           return;
@@ -265,13 +295,13 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
         // the project's Documents list when DDC finishes.
         setTimeout(() => {
           if (get().jobs.has(jobId)) {
-            patchJob(jobId, { pdfStatus: 'done' });
+            patchJob(jobId, { pdfStatus: "done" });
           }
         }, 90 * 1000);
         return;
       }
 
-      if (model.status === 'error' || model.status === 'needs_converter') {
+      if (model.status === "error" || model.status === "needs_converter") {
         // Don't try to generate PDF for a model that itself failed.
         return;
       }
@@ -285,7 +315,7 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
     try {
       const ac = abortControllers.get(jobId);
 
-      if (params.uploadType === 'cad') {
+      if (params.uploadType === "cad") {
         const res: BIMCadUploadResponse = await uploadCADFile(
           params.projectId,
           params.modelName,
@@ -296,20 +326,20 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
         );
 
         clearStageTimer(jobId);
-        const st = res.status || 'processing';
+        const st = res.status || "processing";
         const cnt = res.element_count || 0;
 
         const isSuccessStatus =
-          st === 'ready' ||
-          (st !== 'converter_required' &&
-            st !== 'needs_converter' &&
-            st !== 'error');
+          st === "ready" ||
+          (st !== "converter_required" &&
+            st !== "needs_converter" &&
+            st !== "error");
 
         if (isSuccessStatus) {
           patchJob(jobId, {
-            status: 'ready',
+            status: "ready",
             progress: 100,
-            stage: 'bim_upload.stage_done',
+            stage: "bim_upload.stage_done",
             modelId: res.model_id,
             elementCount: cnt,
             completedAt: Date.now(),
@@ -326,24 +356,28 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
             const modelIdForPdf = res.model_id;
             void waitForReadyThenGeneratePdf(jobId, modelIdForPdf);
           }
-        } else if (st === 'converter_required' || st === 'needs_converter') {
+        } else if (st === "converter_required" || st === "needs_converter") {
           patchJob(jobId, {
-            status: 'converter_required',
+            status: "converter_required",
             progress: 0,
-            stage: 'bim_upload.stage_converter_required',
+            stage: "bim_upload.stage_converter_required",
             modelId: res.model_id,
             errorMessage:
-              res.error_message || res.message || `${(res.format || '').toUpperCase()} converter not installed`,
+              res.error_message ||
+              res.message ||
+              `${(res.format || "").toUpperCase()} converter not installed`,
             converterId: res.converter_id || null,
             completedAt: Date.now(),
           });
-        } else if (st === 'error') {
+        } else if (st === "error") {
           patchJob(jobId, {
-            status: 'error',
+            status: "error",
             progress: 0,
-            stage: 'bim_upload.stage_failed',
+            stage: "bim_upload.stage_failed",
             modelId: res.model_id,
-            errorMessage: res.error_message || 'Could not extract elements from this CAD file.',
+            errorMessage:
+              res.error_message ||
+              "Could not extract elements from this CAD file.",
             completedAt: Date.now(),
           });
         }
@@ -360,9 +394,9 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
 
         clearStageTimer(jobId);
         patchJob(jobId, {
-          status: 'ready',
+          status: "ready",
           progress: 100,
-          stage: 'bim_upload.stage_done',
+          stage: "bim_upload.stage_done",
           modelId: res.model_id,
           elementCount: res.element_count,
           completedAt: Date.now(),
@@ -371,14 +405,14 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
     } catch (err) {
       clearStageTimer(jobId);
       // Don't report abort as an error
-      if (err instanceof DOMException && err.name === 'AbortError') {
+      if (err instanceof DOMException && err.name === "AbortError") {
         return;
       }
       const msg = err instanceof Error ? err.message : String(err);
       patchJob(jobId, {
-        status: 'error',
+        status: "error",
         progress: 0,
-        stage: 'bim_upload.stage_failed',
+        stage: "bim_upload.stage_failed",
         errorMessage: msg,
         completedAt: Date.now(),
       });
@@ -400,15 +434,15 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
         projectId: params.projectId,
         modelName: params.modelName,
         discipline: params.discipline,
-        status: 'uploading',
+        status: "uploading",
         progress: 5,
-        stage: 'bim_upload.stage_sending',
+        stage: "bim_upload.stage_sending",
         modelId: null,
         elementCount: 0,
         errorMessage: null,
         converterId: null,
         generatePdfSheets: params.generatePdfSheets ?? false,
-        pdfStatus: 'idle',
+        pdfStatus: "idle",
         pdfError: null,
         startedAt: Date.now(),
         completedAt: null,
@@ -416,7 +450,10 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
 
       const ac = new AbortController();
       abortControllers.set(jobId, ac);
-      jobFiles.set(jobId, { file: params.file, geometryFile: params.geometryFile });
+      jobFiles.set(jobId, {
+        file: params.file,
+        geometryFile: params.geometryFile,
+      });
 
       set((state) => {
         const jobs = new Map(state.jobs);
@@ -460,7 +497,11 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
       set((state) => {
         const jobs = new Map(state.jobs);
         for (const [id, job] of jobs) {
-          if (job.status === 'ready' || job.status === 'error' || job.status === 'converter_required') {
+          if (
+            job.status === "ready" ||
+            job.status === "error" ||
+            job.status === "converter_required"
+          ) {
             jobs.delete(id);
             jobFiles.delete(id);
           }
@@ -476,12 +517,12 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
 
       // Reset job state
       patchJob(jobId, {
-        status: 'uploading',
+        status: "uploading",
         progress: 5,
-        stage: 'bim_upload.stage_sending',
+        stage: "bim_upload.stage_sending",
         errorMessage: null,
         converterId: null,
-        pdfStatus: 'idle',
+        pdfStatus: "idle",
         pdfError: null,
         completedAt: null,
         startedAt: Date.now(),
@@ -495,7 +536,9 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
         projectId: existing.projectId,
         modelName: existing.modelName,
         discipline: existing.discipline,
-        uploadType: existing.fileName.match(/\.(csv|xlsx|xls)$/i) ? 'data' : 'cad',
+        uploadType: existing.fileName.match(/\.(csv|xlsx|xls)$/i)
+          ? "data"
+          : "cad",
         geometryFile: files.geometryFile,
         generatePdfSheets: existing.generatePdfSheets,
       });
@@ -504,7 +547,8 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
     hasActiveUploads: () => {
       const jobs = get().jobs;
       for (const job of jobs.values()) {
-        if (job.status === 'uploading' || job.status === 'converting') return true;
+        if (job.status === "uploading" || job.status === "converting")
+          return true;
       }
       return false;
     },
@@ -512,7 +556,8 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
     activeJobs: () => {
       const result: BIMUploadJob[] = [];
       for (const job of get().jobs.values()) {
-        if (job.status === 'uploading' || job.status === 'converting') result.push(job);
+        if (job.status === "uploading" || job.status === "converting")
+          result.push(job);
       }
       return result;
     },
@@ -520,7 +565,11 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
     completedJobs: () => {
       const result: BIMUploadJob[] = [];
       for (const job of get().jobs.values()) {
-        if (job.status === 'ready' || job.status === 'error' || job.status === 'converter_required') {
+        if (
+          job.status === "ready" ||
+          job.status === "error" ||
+          job.status === "converter_required"
+        ) {
           result.push(job);
         }
       }
@@ -528,7 +577,6 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
     },
   };
 });
-
 
 // ── Zombie-job janitor ─────────────────────────────────────────────────────
 //
@@ -543,7 +591,7 @@ export const useBIMUploadStore = create<BIMUploadState>((set, get) => {
 // Once at module load and then every 2 minutes, flip anything older than
 // 45 minutes to ``error`` with an explanation so the indicator drops.
 
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   const MAX_ACTIVE_MS = 45 * 60 * 1000;
   const PATROL_MS = 2 * 60 * 1000;
 
@@ -553,17 +601,17 @@ if (typeof window !== 'undefined') {
     let dirty = false;
     const nextJobs = new Map(state.jobs);
     for (const [id, job] of nextJobs) {
-      const active = job.status === 'uploading' || job.status === 'converting';
+      const active = job.status === "uploading" || job.status === "converting";
       if (!active) continue;
       if (now - job.startedAt < MAX_ACTIVE_MS) continue;
       nextJobs.set(id, {
         ...job,
-        status: 'error',
+        status: "error",
         progress: 0,
-        stage: 'bim_upload.stage_stalled',
+        stage: "bim_upload.stage_stalled",
         errorMessage:
           job.errorMessage ??
-          'Upload abandoned after 45 min — reload to retry if the file is still needed.',
+          "Upload abandoned after 45 min — reload to retry if the file is still needed.",
         completedAt: now,
       });
       dirty = true;

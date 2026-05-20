@@ -206,9 +206,7 @@ async def qualify_lead(
     _perm: None = Depends(RequirePermission("crm.qualify_lead")),
     service: CrmService = Depends(_get_service),
 ) -> LeadResponse:
-    lead = await service.qualify_lead(
-        lead_id, data.qualification_notes, user_id=user_id
-    )
+    lead = await service.qualify_lead(lead_id, data.qualification_notes, user_id=user_id)
     return LeadResponse.model_validate(lead)
 
 
@@ -574,9 +572,7 @@ async def pipeline_kanban(
     service: CrmService = Depends(_get_service),
 ) -> KanbanBoardResponse:
     stages = await service.stage_repo.list_all()
-    opps_tuple = await service.opportunity_repo.list_all(
-        limit=10000, owner_user_id=owner_user_id, status="open"
-    )
+    opps_tuple = await service.opportunity_repo.list_all(limit=10000, owner_user_id=owner_user_id, status="open")
     opps = opps_tuple[0]
     by_stage: dict[uuid.UUID, list[Any]] = {s.id: [] for s in stages}
     for o in opps:
@@ -589,9 +585,7 @@ async def pipeline_kanban(
             name=s.name,
             display_order=s.display_order,
             color=s.color,
-            opportunities=[
-                OpportunityResponse.model_validate(o) for o in by_stage.get(s.id, [])
-            ],
+            opportunities=[OpportunityResponse.model_validate(o) for o in by_stage.get(s.id, [])],
         )
         for s in stages
     ]
@@ -649,9 +643,7 @@ async def win_loss_analytics(
         abandoned_count=abandoned_count,
         win_rate=compute_win_rate(opps, period_start, period_end),
         average_sales_cycle_days=compute_average_sales_cycle(opps),
-        lost_reasons_breakdown=compute_lost_reasons_breakdown(
-            opps, period_start, period_end
-        ),
+        lost_reasons_breakdown=compute_lost_reasons_breakdown(opps, period_start, period_end),
         won_value=won_value,
         lost_value=lost_value,
     )
@@ -718,9 +710,7 @@ async def set_account_parent(
     account = await service.set_account_parent(account_id, parent_id)
     return {
         "id": str(account.id),
-        "parent_account_id": (
-            str(account.parent_account_id) if account.parent_account_id else None
-        ),
+        "parent_account_id": (str(account.parent_account_id) if account.parent_account_id else None),
         "role": account.role,
     }
 
@@ -785,9 +775,7 @@ async def stage_weighted_forecast(
     result = await service.stage_weighted_forecast(owner_user_id=owner_user_id)
     return {
         "by_stage": {
-            sid: {
-                **{k: (str(v) if hasattr(v, "as_tuple") else v) for k, v in bucket.items()}
-            }
+            sid: {**{k: (str(v) if hasattr(v, "as_tuple") else v) for k, v in bucket.items()}}
             for sid, bucket in result["by_stage"].items()
         },
         "grand_total": str(result["grand_total"]),

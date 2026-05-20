@@ -7,7 +7,7 @@
  * the server's directory layout — so the bar is a no-op.  Users who need
  * the underlying paths can find them in /settings → System.
  */
-import type { StorageLocations } from '../types';
+import type { StorageLocations } from "../types";
 
 interface PathBarProps {
   locations: StorageLocations | undefined;

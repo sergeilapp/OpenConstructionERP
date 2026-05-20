@@ -1,16 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import {
-  deriveGeometry,
-  deriveRelations,
-} from '../canonicalElementDetails';
+import { describe, it, expect } from "vitest";
+import { deriveGeometry, deriveRelations } from "../canonicalElementDetails";
 
-describe('canonicalElementDetails.deriveGeometry', () => {
-  it('returns null when bbox is missing', () => {
+describe("canonicalElementDetails.deriveGeometry", () => {
+  it("returns null when bbox is missing", () => {
     expect(deriveGeometry(undefined)).toBeNull();
     expect(deriveGeometry(null)).toBeNull();
   });
 
-  it('returns null for a fully-degenerate (zero-extent) box', () => {
+  it("returns null for a fully-degenerate (zero-extent) box", () => {
     expect(
       deriveGeometry({
         min_x: 1,
@@ -23,7 +20,7 @@ describe('canonicalElementDetails.deriveGeometry', () => {
     ).toBeNull();
   });
 
-  it('returns null for a NaN box', () => {
+  it("returns null for a NaN box", () => {
     expect(
       deriveGeometry({
         min_x: 0,
@@ -36,7 +33,7 @@ describe('canonicalElementDetails.deriveGeometry', () => {
     ).toBeNull();
   });
 
-  it('derives W/D/H/footprint/volume/diagonal for a 2×3×4 box', () => {
+  it("derives W/D/H/footprint/volume/diagonal for a 2×3×4 box", () => {
     const g = deriveGeometry({
       min_x: 1,
       min_y: 2,
@@ -56,7 +53,7 @@ describe('canonicalElementDetails.deriveGeometry', () => {
     expect(g!.center).toEqual({ x: 2, y: 3.5, z: 5 });
   });
 
-  it('accepts a flat (zero-height) slab footprint', () => {
+  it("accepts a flat (zero-height) slab footprint", () => {
     const g = deriveGeometry({
       min_x: 0,
       min_y: 0,
@@ -72,38 +69,38 @@ describe('canonicalElementDetails.deriveGeometry', () => {
   });
 });
 
-describe('canonicalElementDetails.deriveRelations', () => {
-  it('uses the top-level storey shortcut for Level', () => {
-    const rels = deriveRelations({ storey: 'Level 02', properties: {} });
-    expect(rels).toContainEqual({ key: 'Level', value: 'Level 02' });
+describe("canonicalElementDetails.deriveRelations", () => {
+  it("uses the top-level storey shortcut for Level", () => {
+    const rels = deriveRelations({ storey: "Level 02", properties: {} });
+    expect(rels).toContainEqual({ key: "Level", value: "Level 02" });
   });
 
-  it('mines properties (case-insensitive) and prefers them over metadata', () => {
+  it("mines properties (case-insensitive) and prefers them over metadata", () => {
     const rels = deriveRelations({
-      properties: { Zone: 'Wet area', System: 'HVAC-01' },
-      metadata: { zone: 'IGNORED', phase: 'New Construction' },
+      properties: { Zone: "Wet area", System: "HVAC-01" },
+      metadata: { zone: "IGNORED", phase: "New Construction" },
     });
-    expect(rels).toContainEqual({ key: 'Zone', value: 'Wet area' });
-    expect(rels).toContainEqual({ key: 'System', value: 'HVAC-01' });
-    expect(rels).toContainEqual({ key: 'Phase', value: 'New Construction' });
+    expect(rels).toContainEqual({ key: "Zone", value: "Wet area" });
+    expect(rels).toContainEqual({ key: "System", value: "HVAC-01" });
+    expect(rels).toContainEqual({ key: "Phase", value: "New Construction" });
   });
 
-  it('skips empty / placeholder values', () => {
+  it("skips empty / placeholder values", () => {
     const rels = deriveRelations({
-      storey: '',
-      properties: { zone: 'None', system: 'null', assembly: '   ' },
+      storey: "",
+      properties: { zone: "None", system: "null", assembly: "   " },
     });
     expect(rels).toHaveLength(0);
   });
 
-  it('falls back to metadata when properties lack the key', () => {
+  it("falls back to metadata when properties lack the key", () => {
     const rels = deriveRelations({
       properties: {},
-      metadata: { workset: 'Shared Levels and Grids' },
+      metadata: { workset: "Shared Levels and Grids" },
     });
     expect(rels).toContainEqual({
-      key: 'Workset',
-      value: 'Shared Levels and Grids',
+      key: "Workset",
+      value: "Shared Levels and Grids",
     });
   });
 });

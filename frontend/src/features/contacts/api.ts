@@ -4,21 +4,32 @@
  * All endpoints are prefixed with /v1/contacts/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete, triggerDownload, extractErrorMessageFromBody } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import {
+  apiGet,
+  apiPost,
+  apiPatch,
+  apiDelete,
+  triggerDownload,
+  extractErrorMessageFromBody,
+} from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 export type ContactType =
-  | 'client'
-  | 'subcontractor'
-  | 'supplier'
-  | 'consultant'
-  | 'internal'
-  | 'lead'
-  | 'customer';
+  | "client"
+  | "subcontractor"
+  | "supplier"
+  | "consultant"
+  | "internal"
+  | "lead"
+  | "customer";
 
-export type PrequalificationStatus = 'pending' | 'approved' | 'expired' | 'rejected';
+export type PrequalificationStatus =
+  | "pending"
+  | "approved"
+  | "expired"
+  | "rejected";
 
 export interface Contact {
   id: string;
@@ -47,7 +58,7 @@ export interface Contact {
 }
 
 export interface ContactFilters {
-  contact_type?: ContactType | '';
+  contact_type?: ContactType | "";
   country?: string;
   search?: string;
   limit?: number;
@@ -78,20 +89,24 @@ export interface CreateContactPayload {
 
 /* ── API Functions ─────────────────────────────────────────────────────── */
 
-export async function fetchContacts(filters?: ContactFilters): Promise<Contact[]> {
+export async function fetchContacts(
+  filters?: ContactFilters,
+): Promise<Contact[]> {
   const params = new URLSearchParams();
-  if (filters?.contact_type) params.set('contact_type', filters.contact_type);
-  if (filters?.country) params.set('country', filters.country);
-  if (filters?.search) params.set('search', filters.search);
-  if (filters?.limit) params.set('limit', String(filters.limit));
+  if (filters?.contact_type) params.set("contact_type", filters.contact_type);
+  if (filters?.country) params.set("country", filters.country);
+  if (filters?.search) params.set("search", filters.search);
+  if (filters?.limit) params.set("limit", String(filters.limit));
   if (filters?.tags && filters.tags.length > 0) {
     for (const tag of filters.tags) {
-      params.append('tag', tag);
+      params.append("tag", tag);
     }
   }
   const qs = params.toString();
-  const res = await apiGet<Contact[] | { items: Contact[] }>(`/v1/contacts/${qs ? `?${qs}` : ''}`);
-  return Array.isArray(res) ? res : res.items ?? [];
+  const res = await apiGet<Contact[] | { items: Contact[] }>(
+    `/v1/contacts/${qs ? `?${qs}` : ""}`,
+  );
+  return Array.isArray(res) ? res : (res.items ?? []);
 }
 
 export async function fetchContactTags(): Promise<TagFacet[]> {
@@ -99,8 +114,10 @@ export async function fetchContactTags(): Promise<TagFacet[]> {
   return res.items ?? [];
 }
 
-export async function createContact(data: CreateContactPayload): Promise<Contact> {
-  return apiPost<Contact>('/v1/contacts/', data);
+export async function createContact(
+  data: CreateContactPayload,
+): Promise<Contact> {
+  return apiPost<Contact>("/v1/contacts/", data);
 }
 
 export async function updateContact(
@@ -124,21 +141,21 @@ export interface ImportResult {
 export async function importContactsFile(file: File): Promise<ImportResult> {
   const token = useAuthStore.getState().accessToken;
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
   const headers: Record<string, string> = {};
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch('/api/v1/contacts/import/file/', {
-    method: 'POST',
+  const response = await fetch("/api/v1/contacts/import/file/", {
+    method: "POST",
     headers,
     body: formData,
   });
 
   if (!response.ok) {
-    let detail = 'Import failed';
+    let detail = "Import failed";
     try {
       const body = await response.json();
       detail = body.detail || detail;
@@ -155,10 +172,13 @@ export async function exportContacts(): Promise<void> {
   const token = useAuthStore.getState().accessToken;
   const headers: Record<string, string> = {};
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch('/api/v1/contacts/export/', { method: 'GET', headers });
+  const response = await fetch("/api/v1/contacts/export/", {
+    method: "GET",
+    headers,
+  });
   if (!response.ok) {
     let detail = `Export failed (HTTP ${response.status})`;
     try {
@@ -174,8 +194,9 @@ export async function exportContacts(): Promise<void> {
   }
 
   const blob = await response.blob();
-  const disposition = response.headers.get('Content-Disposition');
-  const filename = disposition?.match(/filename="?(.+)"?/)?.[1] || 'contacts_export.xlsx';
+  const disposition = response.headers.get("Content-Disposition");
+  const filename =
+    disposition?.match(/filename="?(.+)"?/)?.[1] || "contacts_export.xlsx";
   triggerDownload(blob, filename);
 }
 
@@ -183,18 +204,18 @@ export function downloadContactsTemplate(): void {
   const token = useAuthStore.getState().accessToken;
   const headers: Record<string, string> = {};
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  fetch('/api/v1/contacts/template/', { method: 'GET', headers })
+  fetch("/api/v1/contacts/template/", { method: "GET", headers })
     .then((response) => {
-      if (!response.ok) throw new Error('Failed to download template');
+      if (!response.ok) throw new Error("Failed to download template");
       return response.blob();
     })
     .then((blob) => {
-      triggerDownload(blob, 'contacts_import_template.xlsx');
+      triggerDownload(blob, "contacts_import_template.xlsx");
     })
     .catch((err) => {
-      if (import.meta.env.DEV) console.error('Template download error:', err);
+      if (import.meta.env.DEV) console.error("Template download error:", err);
     });
 }

@@ -11,7 +11,7 @@
  * handled in usePresenceWebSocket.ts — this file is HTTP only.
  */
 
-import { ApiError, apiDelete, apiGet, apiPost } from '@/shared/lib/api';
+import { ApiError, apiDelete, apiGet, apiPost } from "@/shared/lib/api";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -42,7 +42,7 @@ export type AcquireResult =
 
 // ── Request helpers ──────────────────────────────────────────────────────
 
-const BASE = '/v1/collaboration_locks';
+const BASE = "/v1/collaboration_locks";
 
 /**
  * Attempt to acquire a lock on an entity.

@@ -60,33 +60,27 @@ class ClashRun(Base):
     # selector): 'hard' (interpenetration only), 'clearance' (proximity
     # only) or 'both' (hard, then clearance for the non-hard pairs — the
     # historical behaviour and the back-compatible default).
-    clash_type: Mapped[str] = mapped_column(
-        String(16), nullable=False, default="both", server_default="both"
-    )
+    clash_type: Mapped[str] = mapped_column(String(16), nullable=False, default="both", server_default="both")
     # Federated noise filter: when true only cross-model pairs are
     # reported (Navisworks 'ignore clashes within the same file'). No
     # effect on a single-model run.
-    ignore_same_model: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=False, server_default="0"
-    )
+    ignore_same_model: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="0")
     # Hard-clash penetration threshold (metres). A pair counts as a hard
     # clash when the bounding-box interpenetration on its tightest axis
     # exceeds this value — filters out the cosmetic touch of coincident
     # faces (slab-on-wall) while still catching real interferences.
-    tolerance_m: Mapped[float] = mapped_column(
-        Float, nullable=False, default=0.01, server_default="0.01"
-    )
+    tolerance_m: Mapped[float] = mapped_column(Float, nullable=False, default=0.01, server_default="0.01")
     # Clearance threshold (metres). 0 disables the soft pass; >0 also
     # reports element pairs that do NOT intersect but sit within this gap
     # (e.g. maintenance access around an AHU).
-    clearance_m: Mapped[float] = mapped_column(
-        Float, nullable=False, default=0.0, server_default="0.0"
-    )
+    clearance_m: Mapped[float] = mapped_column(Float, nullable=False, default=0.0, server_default="0.0")
     # 'cross_discipline' (skip same-discipline pairs — the common default),
     # 'all' (every pair), 'selected' (only discipline_filter pairs) or
     # 'selection_sets' (Navisworks-style Set A × Set B, e.g. walls×pipes).
     mode: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="cross_discipline",
+        String(32),
+        nullable=False,
+        default="cross_discipline",
         server_default="cross_discipline",
     )
     # Optional allow-list of [discipline_a, discipline_b] pairs to test.
@@ -97,25 +91,28 @@ class ClashRun(Base):
     # cross). NULL for the other modes.
     set_a: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     set_b: Mapped[dict | None] = mapped_column(JSON, nullable=True)
-    status: Mapped[str] = mapped_column(
-        String(20), nullable=False, default="pending", server_default="pending"
-    )
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending", server_default="pending")
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
-    element_count: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=0, server_default="0"
-    )
-    total_clashes: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=0, server_default="0"
-    )
+    element_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    total_clashes: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     # Cached presentation payload: {"matrix": [...], "disciplines": [...],
     # "by_status": {...}, "by_type": {...}}.
     summary: Mapped[dict] = mapped_column(  # type: ignore[assignment]
         JSON, nullable=False, default=dict, server_default="{}"
     )
-    created_by: Mapped[str] = mapped_column(String(64), nullable=False)
-    completed_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
+    # Wave A4 — per-discipline-pair tolerance overrides. Each entry is
+    # ``{id, discipline_a, discipline_b, tolerance_m, severity_override,
+    # enabled}`` (see :class:`ClashRule` in ``schemas.py``). The engine
+    # consults this list during the broad phase: the first matching
+    # enabled rule swaps in its ``tolerance_m`` for the run-wide value
+    # (and stamps its ``severity_override`` onto the result). Order
+    # matters — the first match wins. Defaults to ``[]`` so legacy
+    # runs / fresh runs without rules behave exactly as before.
+    rules: Mapped[list] = mapped_column(  # type: ignore[assignment]
+        JSON, nullable=False, default=list, server_default="[]"
     )
+    created_by: Mapped[str] = mapped_column(String(64), nullable=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     results: Mapped[list["ClashResult"]] = relationship(
         back_populates="run",
@@ -155,22 +152,14 @@ class ClashResult(Base):
     b_stable_id: Mapped[str] = mapped_column(String(255), nullable=False)
     a_name: Mapped[str] = mapped_column(String(500), nullable=False, default="")
     b_name: Mapped[str] = mapped_column(String(500), nullable=False, default="")
-    a_discipline: Mapped[str] = mapped_column(
-        String(64), nullable=False, default="Unassigned"
-    )
-    b_discipline: Mapped[str] = mapped_column(
-        String(64), nullable=False, default="Unassigned"
-    )
+    a_discipline: Mapped[str] = mapped_column(String(64), nullable=False, default="Unassigned")
+    b_discipline: Mapped[str] = mapped_column(String(64), nullable=False, default="Unassigned")
     # Snapshot of the participating elements' element_type (category /
     # family-type) so the result table can show "Wall ↔ Pipe" and stays
     # meaningful after the source model is re-imported. Empty when the
     # source element had no type.
-    a_element_type: Mapped[str] = mapped_column(
-        String(100), nullable=False, default="", server_default=""
-    )
-    b_element_type: Mapped[str] = mapped_column(
-        String(100), nullable=False, default="", server_default=""
-    )
+    a_element_type: Mapped[str] = mapped_column(String(100), nullable=False, default="", server_default="")
+    b_element_type: Mapped[str] = mapped_column(String(100), nullable=False, default="", server_default="")
     a_model_id: Mapped[uuid.UUID] = mapped_column(GUID(), nullable=False)
     b_model_id: Mapped[uuid.UUID] = mapped_column(GUID(), nullable=False)
     # Storey (level) index each element sits on — clustered from real
@@ -182,39 +171,27 @@ class ClashResult(Base):
     a_storey: Mapped[int | None] = mapped_column(Integer, nullable=True)
     b_storey: Mapped[int | None] = mapped_column(Integer, nullable=True)
     # 'hard' (interpenetration) or 'clearance' (proximity, no overlap).
-    clash_type: Mapped[str] = mapped_column(
-        String(16), nullable=False, default="hard", server_default="hard"
-    )
+    clash_type: Mapped[str] = mapped_column(String(16), nullable=False, default="hard", server_default="hard")
     # Tightest-axis interpenetration (m); 0 for clearance clashes.
-    penetration_m: Mapped[float] = mapped_column(
-        Float, nullable=False, default=0.0, server_default="0.0"
-    )
+    penetration_m: Mapped[float] = mapped_column(Float, nullable=False, default=0.0, server_default="0.0")
     # Gap between the two boxes (m); 0 for hard clashes.
-    distance_m: Mapped[float] = mapped_column(
-        Float, nullable=False, default=0.0, server_default="0.0"
-    )
+    distance_m: Mapped[float] = mapped_column(Float, nullable=False, default=0.0, server_default="0.0")
     cx: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     cy: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     cz: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
-    status: Mapped[str] = mapped_column(
-        String(16), nullable=False, default="new", server_default="new"
-    )
+    status: Mapped[str] = mapped_column(String(16), nullable=False, default="new", server_default="new")
     # Triage urgency derived from the geometry the engine measured:
     # ``critical | high | medium | low``. For a hard clash it is keyed off
     # ``penetration_m`` (deeper = worse); for a clearance clash off the
     # gap-to-threshold ratio (a clearance violation is never critical).
     # Server default keeps every legacy row at a safe ``medium``.
-    severity: Mapped[str] = mapped_column(
-        String(16), nullable=False, default="medium", server_default="medium"
-    )
+    severity: Mapped[str] = mapped_column(String(16), nullable=False, default="medium", server_default="medium")
     # Stable, run-independent identity of the clashing element pair:
     # ``sha1(min(a,b)|max(a,b)|clash_type)[:16]`` over the two stable ids.
     # Lets triage (status / assignee / due date / comments) carry forward
     # across re-runs and powers the run-to-run comparison. Empty on legacy
     # rows; backfilled by the engine on every fresh result.
-    signature: Mapped[str] = mapped_column(
-        String(16), nullable=False, default="", server_default=""
-    )
+    signature: Mapped[str] = mapped_column(String(16), nullable=False, default="", server_default="")
     assigned_to: Mapped[str | None] = mapped_column(String(255), nullable=True)
     # ISO-8601 date ("YYYY-MM-DD") the clash is due to be resolved by.
     # Stored as a string to match this codebase's nullable-date column
@@ -226,9 +203,77 @@ class ClashResult(Base):
     comments: Mapped[list] = mapped_column(  # type: ignore[assignment]
         JSON, nullable=False, default=list, server_default="[]"
     )
+    # Wave A3 — collaboration. Watcher user-ids (strings) subscribed to
+    # this clash; powers the fan-out on triage / comment events.
+    # ``history`` is an additive audit trail of
+    # ``{ts, actor, field, before, after}`` entries appended every time
+    # a triage field changes (status / severity / assignee / due_date)
+    # or a comment is added. Chronological order, never truncated.
+    # Both default to an empty list so legacy rows + response shapes
+    # stay safe across re-deploys.
+    watchers: Mapped[list] = mapped_column(  # type: ignore[assignment]
+        JSON, nullable=False, default=list, server_default="[]"
+    )
+    history: Mapped[list] = mapped_column(  # type: ignore[assignment]
+        JSON, nullable=False, default=list, server_default="[]"
+    )
+    # Wave A2 — open-ended JSON envelope for engine-derived annotations
+    # that are NOT authoritative state (the user-confirmed ``severity`` /
+    # ``status`` / ``assigned_to`` columns remain the source of truth).
+    # Currently carries ``severity_suggestion`` — a one-step-up advisory
+    # bump on deep hard clashes (``penetration_m > 0.10``) that the UI
+    # surfaces as a "Suggested: …" chip next to the badge. SQLAlchemy
+    # reserves ``metadata`` on Base; the column is mapped as ``meta``.
+    meta: Mapped[dict] = mapped_column(  # type: ignore[assignment]
+        JSON, nullable=False, default=dict, server_default="{}"
+    )
+    # Wave A4 — run-scoped spatial cluster id assigned by the
+    # post-detection DBSCAN over (cx, cy, cz). NULL marks DBSCAN noise
+    # (a lone clash with no neighbours within ``eps_m``) or rows from
+    # runs that pre-date clustering. Looked up against
+    # :class:`ClashCluster` for the AI-derived label.
+    cluster_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
     bcf_topic_guid: Mapped[str | None] = mapped_column(String(36), nullable=True)
 
     run: Mapped[ClashRun] = relationship(back_populates="results")
 
     def __repr__(self) -> str:
         return f"<ClashResult {self.a_name} x {self.b_name} ({self.clash_type})>"
+
+
+class ClashCluster(Base):
+    """‌⁠‍AI-derived label for a run-scoped spatial cluster of clashes.
+
+    The DBSCAN pass groups clash centroids that sit within ``eps_m`` of
+    each other into ``cluster_id`` buckets (per :class:`ClashRun`); this
+    table caches a short human-style label for each non-noise bucket
+    (e.g. "MEP × Structural — Level 3") plus its member count, so the
+    review-table chip group renders without a per-render heuristic
+    re-derivation. Noise rows (``cluster_id IS NULL``) have no row here.
+    """
+
+    __tablename__ = "oe_clash_cluster"
+    __table_args__ = (
+        Index("ix_clash_cluster_run", "run_id"),
+        Index("ix_clash_cluster_run_cluster", "run_id", "cluster_id"),
+    )
+
+    run_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        ForeignKey("oe_clash_run.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    # Run-scoped integer cluster index produced by ``_cluster_results``.
+    # Unique per run (the index above is non-unique deliberately — a
+    # cluster can be re-labelled, and SQLite + alembic round-trips are
+    # easier without a unique constraint we don't strictly need).
+    cluster_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    # Short, human-style heuristic label (no LLM call) — derived from the
+    # dominant discipline pair + storey of the cluster's members.
+    label: Mapped[str] = mapped_column(String(255), nullable=False, default="", server_default="")
+    # Member count — number of clash results assigned to this cluster.
+    # Stored so the chip count never requires a join against results.
+    size: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+
+    def __repr__(self) -> str:
+        return f"<ClashCluster {self.cluster_id} '{self.label}' n={self.size}>"

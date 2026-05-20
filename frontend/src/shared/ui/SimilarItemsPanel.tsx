@@ -17,17 +17,17 @@
  * on by default for everything else).
  */
 
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { Sparkles, Loader2, ExternalLink, Globe, Layers } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { Sparkles, Loader2, ExternalLink, Globe, Layers } from "lucide-react";
 import {
   fetchSimilarItems,
   hitToHref,
   type SimilarModuleKind,
   type UnifiedSearchHit,
-} from '@/features/search/api';
+} from "@/features/search/api";
 
 interface SimilarItemsPanelProps {
   /** Which module the source record belongs to. */
@@ -68,7 +68,7 @@ export default function SimilarItemsPanel({
   const [crossProjectState, setCrossProjectState] = useState(initialCross);
 
   const query = useQuery({
-    queryKey: ['similar-items', module, id, crossProjectState, limit],
+    queryKey: ["similar-items", module, id, crossProjectState, limit],
     queryFn: () =>
       fetchSimilarItems(module, id, {
         limit,
@@ -85,7 +85,7 @@ export default function SimilarItemsPanel({
 
   const handleClick = (hit: UnifiedSearchHit) => {
     const href = hitToHref(hit);
-    if (href && href !== '#') navigate(href);
+    if (href && href !== "#") navigate(href);
   };
 
   if (!query.isLoading && hits.length === 0 && !showWhenEmpty) {
@@ -95,14 +95,14 @@ export default function SimilarItemsPanel({
   return (
     <div
       className={`rounded-md border border-border-light bg-surface-secondary/50 p-3 ${
-        className ?? ''
+        className ?? ""
       }`}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           <Sparkles size={12} className="text-amber-500" />
           <span className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-            {t('similar.title', { defaultValue: 'Similar items‌⁠‍' })}
+            {t("similar.title", { defaultValue: "Similar items‌⁠‍" })}
           </span>
           {query.data && (
             <span className="text-[10px] text-content-quaternary tabular-nums">
@@ -115,11 +115,13 @@ export default function SimilarItemsPanel({
           onClick={() => setCrossProjectState((v) => !v)}
           title={
             crossProjectState
-              ? t('similar.scope_all_title', {
-                  defaultValue: 'Searching across all projects — click to limit to current‌⁠‍',
+              ? t("similar.scope_all_title", {
+                  defaultValue:
+                    "Searching across all projects — click to limit to current‌⁠‍",
                 })
-              : t('similar.scope_one_title', {
-                  defaultValue: 'Searching current project only — click to expand‌⁠‍',
+              : t("similar.scope_one_title", {
+                  defaultValue:
+                    "Searching current project only — click to expand‌⁠‍",
                 })
           }
           className="inline-flex items-center gap-1 text-[10px] text-content-tertiary hover:text-content-primary"
@@ -127,12 +129,12 @@ export default function SimilarItemsPanel({
           {crossProjectState ? (
             <>
               <Globe size={10} />
-              {t('similar.scope_all', { defaultValue: 'All projects‌⁠‍' })}
+              {t("similar.scope_all", { defaultValue: "All projects‌⁠‍" })}
             </>
           ) : (
             <>
               <Layers size={10} />
-              {t('similar.scope_one', { defaultValue: 'This project‌⁠‍' })}
+              {t("similar.scope_one", { defaultValue: "This project‌⁠‍" })}
             </>
           )}
         </button>
@@ -141,21 +143,21 @@ export default function SimilarItemsPanel({
       {query.isLoading && (
         <div className="flex items-center gap-2 text-[11px] text-content-tertiary py-2">
           <Loader2 size={11} className="animate-spin" />
-          {t('similar.loading', { defaultValue: 'Searching…' })}
+          {t("similar.loading", { defaultValue: "Searching…" })}
         </div>
       )}
 
       {!query.isLoading && query.isError && (
         <div className="text-[11px] text-rose-600 py-1.5">
-          {t('similar.error', {
-            defaultValue: 'Could not load similar items',
+          {t("similar.error", {
+            defaultValue: "Could not load similar items",
           })}
         </div>
       )}
 
       {!query.isLoading && !query.isError && hits.length === 0 && (
         <div className="text-[11px] text-content-tertiary italic py-1.5">
-          {t('similar.empty', { defaultValue: 'No similar items found yet' })}
+          {t("similar.empty", { defaultValue: "No similar items found yet" })}
         </div>
       )}
 

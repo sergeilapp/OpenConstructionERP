@@ -16,21 +16,21 @@
  * store. Live run = polling `GET /runs/{run_id}` (no websocket).
  * Empty canvas → `EmptyState`. Onboarding via the shared `OnboardingTour`.
  */
-import { Workflow } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
+import { Workflow } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
-import { EmptyState, OnboardingTour } from '@/shared/ui';
-import type { TourStep } from '@/shared/ui';
-import { getErrorMessage } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
+import { EmptyState, OnboardingTour } from "@/shared/ui";
+import type { TourStep } from "@/shared/ui";
+import { getErrorMessage } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
 
-import { PipelineCanvas } from './canvas/PipelineCanvas';
-import { PipelineToolbar } from './canvas/PipelineToolbar';
-import { InspectorPanel } from './components/InspectorPanel';
-import { NodePalette } from './components/NodePalette';
-import { RunDock } from './components/RunDock';
+import { PipelineCanvas } from "./canvas/PipelineCanvas";
+import { PipelineToolbar } from "./canvas/PipelineToolbar";
+import { InspectorPanel } from "./components/InspectorPanel";
+import { NodePalette } from "./components/NodePalette";
+import { RunDock } from "./components/RunDock";
 import {
   isTerminalRunStatus,
   useCreatePipeline,
@@ -40,14 +40,14 @@ import {
   usePipelineRuns,
   useRunPipeline,
   useUpdatePipeline,
-} from './api';
-import { usePipelineStore } from './usePipelineStore';
+} from "./api";
+import { usePipelineStore } from "./usePipelineStore";
 
 export function PipelinesPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const projectId = searchParams.get('project');
-  const pipelineIdParam = searchParams.get('id') ?? undefined;
+  const projectId = searchParams.get("project");
+  const pipelineIdParam = searchParams.get("id") ?? undefined;
   const addToast = useToastStore((s) => s.addToast);
 
   const [paletteCollapsed, setPaletteCollapsed] = useState(false);
@@ -67,8 +67,8 @@ export function PipelinesPage() {
 
   const createMut = useCreatePipeline();
   const savedId = usePipelineStore((s) => s.meta.id);
-  const updateMut = useUpdatePipeline(savedId ?? pipelineIdParam ?? '');
-  const runMut = useRunPipeline(savedId ?? pipelineIdParam ?? '');
+  const updateMut = useUpdatePipeline(savedId ?? pipelineIdParam ?? "");
+  const runMut = useRunPipeline(savedId ?? pipelineIdParam ?? "");
 
   const nodeTypes = useMemo(
     () => nodeTypesQuery.data ?? [],
@@ -103,8 +103,8 @@ export function PipelinesPage() {
     const p = pipelineQuery.data;
     loadGraphMeta(p.graph, {
       id: p.id,
-      name: p.name ?? '',
-      description: p.description ?? '',
+      name: p.name ?? "",
+      description: p.description ?? "",
       projectId: p.project_id ?? projectId ?? null,
       isPublished: Boolean(p.is_published),
     });
@@ -151,7 +151,7 @@ export function PipelinesPage() {
     const graph = toGraphJSON();
     const name =
       meta.name.trim() ||
-      t('pipeline.untitled', { defaultValue: 'Untitled pipeline‌⁠‍' });
+      t("pipeline.untitled", { defaultValue: "Untitled pipeline‌⁠‍" });
     try {
       if (meta.id) {
         await updateMut.mutateAsync({
@@ -170,14 +170,14 @@ export function PipelinesPage() {
         if (created?.id) markSaved(created.id);
       }
       addToast({
-        type: 'success',
-        title: t('pipeline.toast.saved', { defaultValue: 'Pipeline saved‌⁠‍' }),
+        type: "success",
+        title: t("pipeline.toast.saved", { defaultValue: "Pipeline saved‌⁠‍" }),
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('pipeline.toast.save_failed', {
-          defaultValue: 'Could not save pipeline‌⁠‍',
+        type: "error",
+        title: t("pipeline.toast.save_failed", {
+          defaultValue: "Could not save pipeline‌⁠‍",
         }),
         message: getErrorMessage(err),
       });
@@ -193,7 +193,7 @@ export function PipelinesPage() {
         const created = await createMut.mutateAsync({
           name:
             meta.name.trim() ||
-            t('pipeline.untitled', { defaultValue: 'Untitled pipeline‌⁠‍' }),
+            t("pipeline.untitled", { defaultValue: "Untitled pipeline‌⁠‍" }),
           description: meta.description || undefined,
           project_id: meta.projectId,
           graph: toGraphJSON(),
@@ -202,9 +202,9 @@ export function PipelinesPage() {
         if (id) markSaved(id);
       } catch (err) {
         addToast({
-          type: 'error',
-          title: t('pipeline.toast.run_failed', {
-            defaultValue: 'Could not start the run‌⁠‍',
+          type: "error",
+          title: t("pipeline.toast.run_failed", {
+            defaultValue: "Could not start the run‌⁠‍",
           }),
           message: getErrorMessage(err),
         });
@@ -221,9 +221,9 @@ export function PipelinesPage() {
       }
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('pipeline.toast.run_failed', {
-          defaultValue: 'Could not start the run',
+        type: "error",
+        title: t("pipeline.toast.run_failed", {
+          defaultValue: "Could not start the run",
         }),
         message: getErrorMessage(err),
       });
@@ -239,13 +239,13 @@ export function PipelinesPage() {
 
   const handleExplain = useCallback(() => {
     addToast({
-      type: 'info',
-      title: t('pipeline.explain.coming_soon_title', {
-        defaultValue: 'Explain this pipeline',
+      type: "info",
+      title: t("pipeline.explain.coming_soon_title", {
+        defaultValue: "Explain this pipeline",
       }),
-      message: t('pipeline.explain.coming_soon_body', {
+      message: t("pipeline.explain.coming_soon_body", {
         defaultValue:
-          'The plain-language story view arrives in the next release.',
+          "The plain-language story view arrives in the next release.",
       }),
     });
   }, [addToast, t]);
@@ -257,44 +257,42 @@ export function PipelinesPage() {
     () => [
       {
         target: '[data-tour="pipeline-palette"]',
-        title: t('pipeline.tour.palette_title', {
-          defaultValue: 'Pick your steps',
+        title: t("pipeline.tour.palette_title", {
+          defaultValue: "Pick your steps",
         }),
-        description: t('pipeline.tour.palette_body', {
+        description: t("pipeline.tour.palette_body", {
           defaultValue:
-            'Drag a step from here onto the canvas, or just click it to drop it in the middle.',
+            "Drag a step from here onto the canvas, or just click it to drop it in the middle.",
         }),
-        position: 'right',
+        position: "right",
       },
       {
         target: '[data-tour="pipeline-canvas"]',
-        title: t('pipeline.tour.canvas_title', {
-          defaultValue: 'Connect the steps',
+        title: t("pipeline.tour.canvas_title", {
+          defaultValue: "Connect the steps",
         }),
-        description: t('pipeline.tour.canvas_body', {
+        description: t("pipeline.tour.canvas_body", {
           defaultValue:
-            'Drag from one step output dot to the next step input. Colours show the data type.',
+            "Drag from one step output dot to the next step input. Colours show the data type.",
         }),
-        position: 'bottom',
+        position: "bottom",
       },
       {
         target: '[data-testid="pipeline-run"]',
-        title: t('pipeline.tour.run_title', { defaultValue: 'Run it' }),
-        description: t('pipeline.tour.run_body', {
+        title: t("pipeline.tour.run_title", { defaultValue: "Run it" }),
+        description: t("pipeline.tour.run_body", {
           defaultValue:
-            'Press Run to execute the pipeline and watch each step light up live.',
+            "Press Run to execute the pipeline and watch each step light up live.",
         }),
-        position: 'bottom',
+        position: "bottom",
       },
     ],
     [t],
   );
 
   const isRunning =
-    Boolean(activeRunId) &&
-    !isTerminalRunStatus(runDetailQuery.data?.status);
-  const busy =
-    createMut.isPending || updateMut.isPending || runMut.isPending;
+    Boolean(activeRunId) && !isTerminalRunStatus(runDetailQuery.data?.status);
+  const busy = createMut.isPending || updateMut.isPending || runMut.isPending;
 
   return (
     <div
@@ -320,20 +318,17 @@ export function PipelinesPage() {
           running={isRunning}
           issueCount={issueCount}
         />
-        <div
-          className="relative min-h-0 flex-1"
-          data-tour="pipeline-canvas"
-        >
+        <div className="relative min-h-0 flex-1" data-tour="pipeline-canvas">
           {nodeCount === 0 && !pipelineQuery.isLoading ? (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-surface-primary">
               <EmptyState
                 icon={<Workflow size={24} aria-hidden="true" />}
-                title={t('pipeline.empty.title', {
-                  defaultValue: 'Build your first automation',
+                title={t("pipeline.empty.title", {
+                  defaultValue: "Build your first automation",
                 })}
-                description={t('pipeline.empty.description', {
+                description={t("pipeline.empty.description", {
                   defaultValue:
-                    'Drag a trigger and a few steps from the palette on the left, connect them, then press Run.',
+                    "Drag a trigger and a few steps from the palette on the left, connect them, then press Run.",
                 })}
               />
             </div>

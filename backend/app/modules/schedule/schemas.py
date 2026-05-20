@@ -41,8 +41,7 @@ def _validate_date_range(start: str | None, end: str | None) -> None:
     parsed_end = _parse_iso_date(end, "end_date")
     if parsed_start and parsed_end and parsed_start > parsed_end:
         raise ValueError(
-            f"end_date ({parsed_end.isoformat()}) must be on or after "
-            f"start_date ({parsed_start.isoformat()})"
+            f"end_date ({parsed_end.isoformat()}) must be on or after start_date ({parsed_start.isoformat()})"
         )
 
 
@@ -80,9 +79,7 @@ class ScheduleUpdate(BaseModel):
     description: str | None = Field(default=None, max_length=5000)
     start_date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$", max_length=20)
     end_date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$", max_length=20)
-    status: str | None = Field(
-        default=None, pattern=r"^(draft|active|completed|frozen|archived)$"
-    )
+    status: str | None = Field(default=None, pattern=r"^(draft|active|completed|frozen|archived)$")
     data_date: str | None = Field(default=None, max_length=20)
     metadata: dict[str, Any] | None = None
 
@@ -415,15 +412,11 @@ class ScheduleStatsResponse(BaseModel):
     """Aggregate schedule statistics for a project's schedules and activities."""
 
     total_activities: int = 0
-    critical_count: int = Field(
-        default=0, description="Activities on the critical path (is_critical=True)"
-    )
+    critical_count: int = Field(default=0, description="Activities on the critical path (is_critical=True)")
     on_track: int = Field(
         default=0, description="Activities with status not_started or in_progress that are not delayed"
     )
-    delayed: int = Field(
-        default=0, description="Activities with status=delayed"
-    )
+    delayed: int = Field(default=0, description="Activities with status=delayed")
     completed: int = 0
     not_started: int = 0
     in_progress: int = 0

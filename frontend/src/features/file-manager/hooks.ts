@@ -1,21 +1,21 @@
 /** React Query hooks for the file manager. */
 
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { apiGet } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { apiGet } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   fetchFileList,
   fetchFileTree,
   fetchStorageLocations,
   listFolderPermissions,
-} from './api';
-import type { FileFilters, FolderPermissionRow } from './types';
+} from "./api";
+import type { FileFilters, FolderPermissionRow } from "./types";
 
-const KEY_TREE = 'file-manager-tree';
-const KEY_LIST = 'file-manager-list';
-const KEY_LOC = 'file-manager-locations';
-const KEY_FOLDER_PERMS = 'folder-permission-counts';
-const KEY_IS_PROJECT_OWNER = 'is-project-owner';
+const KEY_TREE = "file-manager-tree";
+const KEY_LIST = "file-manager-list";
+const KEY_LOC = "file-manager-locations";
+const KEY_FOLDER_PERMS = "folder-permission-counts";
+const KEY_IS_PROJECT_OWNER = "is-project-owner";
 
 export function useFileTree(projectId: string | null | undefined) {
   return useQuery({
@@ -67,19 +67,21 @@ interface ProjectOwnerInfo {
 function decodeUserIdFromToken(token: string | null): string | null {
   if (!token) return null;
   try {
-    const parts = token.split('.');
+    const parts = token.split(".");
     if (parts.length !== 3) return null;
-    const payload = parts[1]!.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+    const payload = parts[1]!.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = payload + "=".repeat((4 - (payload.length % 4)) % 4);
     const json = JSON.parse(atob(padded)) as { sub?: string };
-    return typeof json.sub === 'string' ? json.sub : null;
+    return typeof json.sub === "string" ? json.sub : null;
   } catch {
     return null;
   }
 }
 
 /** True when the current user owns the given project. */
-export function useIsProjectOwner(projectId: string | null | undefined): boolean {
+export function useIsProjectOwner(
+  projectId: string | null | undefined,
+): boolean {
   const accessToken = useAuthStore((s) => s.accessToken);
   const role = useAuthStore((s) => s.userRole);
   const me = decodeUserIdFromToken(accessToken);
@@ -91,7 +93,7 @@ export function useIsProjectOwner(projectId: string | null | undefined): boolean
     staleTime: 60_000,
   });
 
-  if (role === 'admin') return true;
+  if (role === "admin") return true;
   if (!me || !data) return false;
   return data.owner_id === me;
 }
@@ -134,8 +136,8 @@ interface ProjectLite {
  */
 export function useProjectsLite() {
   return useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<ProjectLite[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<ProjectLite[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 }

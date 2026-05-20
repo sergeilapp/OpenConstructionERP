@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import { Users } from 'lucide-react';
-import type { CollabUser } from '../types';
-import type { ConnectionStatusInfo } from '../hooks/useConnectionStatus';
-import { ConnectionStatus } from './ConnectionStatus';
+import { useTranslation } from "react-i18next";
+import { Users } from "lucide-react";
+import type { CollabUser } from "../types";
+import type { ConnectionStatusInfo } from "../hooks/useConnectionStatus";
+import { ConnectionStatus } from "./ConnectionStatus";
 
 interface CollaborationBarProps {
   users: CollabUser[];
@@ -24,7 +24,7 @@ export function CollaborationBar({
   // Build a fallback ConnectionStatusInfo from the legacy `connected` boolean
   // so the component works even when connectionInfo is not provided.
   const effectiveInfo: ConnectionStatusInfo = connectionInfo ?? {
-    status: connected ? 'connected' : 'disconnected',
+    status: connected ? "connected" : "disconnected",
     peerCount: Math.max(0, users.filter((u) => !u.isLocal).length),
     lastSyncTime: null,
     secondsSinceSync: null,
@@ -47,17 +47,13 @@ export function CollaborationBar({
           />
         )}
         {remoteUsers.map((u) => (
-          <UserAvatar
-            key={u.userId}
-            name={u.userName}
-            color={u.color}
-          />
+          <UserAvatar key={u.userId} name={u.userName} color={u.color} />
         ))}
       </div>
 
       <span className="text-xs text-content-secondary">
         <Users size={12} className="inline mr-1" />
-        {users.length} {t('collab.online', { defaultValue: 'online‌⁠‍' })}
+        {users.length} {t("collab.online", { defaultValue: "online‌⁠‍" })}
       </span>
 
       {/* Share button */}
@@ -66,7 +62,7 @@ export function CollaborationBar({
           onClick={onOpenShareDialog}
           className="ml-auto flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1 text-xs font-medium text-white hover:bg-oe-blue-hover transition-colors"
         >
-          {t('collab.share', { defaultValue: 'Share' })}
+          {t("collab.share", { defaultValue: "Share" })}
         </button>
       )}
     </div>
@@ -83,9 +79,9 @@ function UserAvatar({
   isLocal?: boolean;
 }) {
   const initials = name
-    .split(' ')
+    .split(" ")
     .map((w) => w[0])
-    .join('')
+    .join("")
     .toUpperCase()
     .slice(0, 2);
 
@@ -93,9 +89,9 @@ function UserAvatar({
     <div
       className="relative flex h-7 w-7 items-center justify-center rounded-full border-2 border-surface-primary text-[10px] font-bold text-white"
       style={{ backgroundColor: color }}
-      title={`${name}${isLocal ? ' (you)' : ''}`}
+      title={`${name}${isLocal ? " (you)" : ""}`}
     >
-      {initials || '?'}
+      {initials || "?"}
       {isLocal && (
         <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border border-surface-primary" />
       )}

@@ -1,1 +1,1 @@
-export { DatabaseSetupPage } from './DatabaseSetupPage';
+export { DatabaseSetupPage } from "./DatabaseSetupPage";

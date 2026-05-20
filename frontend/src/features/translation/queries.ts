@@ -15,23 +15,23 @@ import {
   useQuery,
   useQueryClient,
   type UseQueryResult,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 import {
   getTranslationStatus,
   triggerLookupDownload,
   translateOne,
-} from './api';
+} from "./api";
 import type {
   DownloadRequestBody,
   DownloadResponse,
   StatusResponse,
   TranslateRequestBody,
   TranslateResponse,
-} from './types';
+} from "./types";
 
 /** Stable query key so other features (e.g. MatchSuggestionsPanel) can
  *  invalidate the status without importing the hook. */
-export const TRANSLATION_STATUS_QUERY_KEY = ['translation', 'status'] as const;
+export const TRANSLATION_STATUS_QUERY_KEY = ["translation", "status"] as const;
 
 /**
  * Polling query for ``GET /lookup-tables/status``.

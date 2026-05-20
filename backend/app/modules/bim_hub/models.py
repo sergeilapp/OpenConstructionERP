@@ -168,9 +168,7 @@ class BOQElementLink(Base):
     """Link between a BOQ position and a BIM element."""
 
     __tablename__ = "oe_bim_boq_link"
-    __table_args__ = (
-        UniqueConstraint("boq_position_id", "bim_element_id", name="uq_bim_boq_link_pos_elem"),
-    )
+    __table_args__ = (UniqueConstraint("boq_position_id", "bim_element_id", name="uq_bim_boq_link_pos_elem"),)
 
     boq_position_id: Mapped[uuid.UUID] = mapped_column(
         GUID(),
@@ -235,9 +233,7 @@ class BIMModelDiff(Base):
     """Diff result between two BIM model versions."""
 
     __tablename__ = "oe_bim_model_diff"
-    __table_args__ = (
-        UniqueConstraint("old_model_id", "new_model_id", name="uq_bim_model_diff_pair"),
-    )
+    __table_args__ = (UniqueConstraint("old_model_id", "new_model_id", name="uq_bim_model_diff_pair"),)
 
     old_model_id: Mapped[uuid.UUID] = mapped_column(
         GUID(),

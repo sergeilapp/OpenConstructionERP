@@ -7,42 +7,35 @@
  *   - rendering the added / removed / changed column lists
  *   - the "snapshots are identical" empty-state when the diff is empty
  */
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-vi.mock('../api', async () => {
-  const actual = await vi.importActual<typeof import('../api')>('../api');
+vi.mock("../api", async () => {
+  const actual = await vi.importActual<typeof import("../api")>("../api");
   return {
     ...actual,
     diffSnapshots: vi.fn(),
   };
 });
 
-import { diffSnapshots } from '../api';
-import { SnapshotDiffView } from '../SnapshotDiffView';
+import { diffSnapshots } from "../api";
+import { SnapshotDiffView } from "../SnapshotDiffView";
 
-const A_ID = 'snap-A';
-const B_ID = 'snap-B';
+const A_ID = "snap-A";
+const B_ID = "snap-B";
 
 const DIFF_WITH_CHANGES = {
   snapshot_a_id: A_ID,
   snapshot_b_id: B_ID,
-  a_label: 'Baseline',
-  b_label: 'After remodel',
-  a_created_at: '2026-04-01T00:00:00Z',
-  b_created_at: '2026-04-27T00:00:00Z',
-  columns_added: ['fire_rating', 'thermal_resistance'],
-  columns_removed: ['legacy_id'],
+  a_label: "Baseline",
+  b_label: "After remodel",
+  a_created_at: "2026-04-01T00:00:00Z",
+  b_created_at: "2026-04-27T00:00:00Z",
+  columns_added: ["fire_rating", "thermal_resistance"],
+  columns_removed: ["legacy_id"],
   columns_changed: [
-    { name: 'thickness_mm', a_dtype: 'object', b_dtype: 'float64' },
+    { name: "thickness_mm", a_dtype: "object", b_dtype: "float64" },
   ],
   a_row_count: 100,
   b_row_count: 130,
@@ -55,10 +48,10 @@ const DIFF_WITH_CHANGES = {
 const IDENTICAL_DIFF = {
   snapshot_a_id: A_ID,
   snapshot_b_id: B_ID,
-  a_label: 'Day 1',
-  b_label: 'Day 2',
-  a_created_at: '2026-04-26T00:00:00Z',
-  b_created_at: '2026-04-27T00:00:00Z',
+  a_label: "Day 1",
+  b_label: "Day 2",
+  a_created_at: "2026-04-26T00:00:00Z",
+  b_created_at: "2026-04-27T00:00:00Z",
   columns_added: [],
   columns_removed: [],
   columns_changed: [],
@@ -89,8 +82,8 @@ function renderDiff() {
   );
 }
 
-describe('SnapshotDiffView', () => {
-  it('renders summary chips with rows added and columns changed counts', async () => {
+describe("SnapshotDiffView", () => {
+  it("renders summary chips with rows added and columns changed counts", async () => {
     (diffSnapshots as ReturnType<typeof vi.fn>).mockResolvedValue(
       DIFF_WITH_CHANGES,
     );
@@ -102,72 +95,76 @@ describe('SnapshotDiffView', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByTestId('snapshot-diff-summary-rows-added').textContent,
-      ).toContain('30');
+        screen.getByTestId("snapshot-diff-summary-rows-added").textContent,
+      ).toContain("30");
       expect(
-        screen.getByTestId('snapshot-diff-summary-rows-removed').textContent,
-      ).toContain('0');
+        screen.getByTestId("snapshot-diff-summary-rows-removed").textContent,
+      ).toContain("0");
       expect(
-        screen.getByTestId('snapshot-diff-summary-cols-changed').textContent,
-      ).toContain('1');
+        screen.getByTestId("snapshot-diff-summary-cols-changed").textContent,
+      ).toContain("1");
     });
   });
 
-  it('renders one row per added / removed / changed column', async () => {
+  it("renders one row per added / removed / changed column", async () => {
     (diffSnapshots as ReturnType<typeof vi.fn>).mockResolvedValue(
       DIFF_WITH_CHANGES,
     );
     renderDiff();
 
     await waitFor(() =>
-      expect(screen.getByTestId('snapshot-diff-added')).toBeInTheDocument(),
+      expect(screen.getByTestId("snapshot-diff-added")).toBeInTheDocument(),
     );
 
     expect(
-      screen.getByTestId('snapshot-diff-added-fire_rating'),
+      screen.getByTestId("snapshot-diff-added-fire_rating"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId('snapshot-diff-added-thermal_resistance'),
+      screen.getByTestId("snapshot-diff-added-thermal_resistance"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId('snapshot-diff-removed-legacy_id'),
+      screen.getByTestId("snapshot-diff-removed-legacy_id"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId('snapshot-diff-changed-thickness_mm'),
+      screen.getByTestId("snapshot-diff-changed-thickness_mm"),
     ).toBeInTheDocument();
 
     // Both labels must be visible in the header.
-    expect(screen.getByTestId('snapshot-diff-a-label').textContent).toContain(
-      'Baseline',
+    expect(screen.getByTestId("snapshot-diff-a-label").textContent).toContain(
+      "Baseline",
     );
-    expect(screen.getByTestId('snapshot-diff-b-label').textContent).toContain(
-      'After remodel',
+    expect(screen.getByTestId("snapshot-diff-b-label").textContent).toContain(
+      "After remodel",
     );
   });
 
-  it('renders the identical-state when the diff reports no changes', async () => {
+  it("renders the identical-state when the diff reports no changes", async () => {
     (diffSnapshots as ReturnType<typeof vi.fn>).mockResolvedValue(
       IDENTICAL_DIFF,
     );
     renderDiff();
 
     await waitFor(() =>
-      expect(screen.getByTestId('snapshot-diff-identical')).toBeInTheDocument(),
+      expect(screen.getByTestId("snapshot-diff-identical")).toBeInTheDocument(),
     );
 
     // No column lists when there are no changes.
-    expect(screen.queryByTestId('snapshot-diff-added')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('snapshot-diff-removed')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('snapshot-diff-changed')).not.toBeInTheDocument();
+    expect(screen.queryByTestId("snapshot-diff-added")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("snapshot-diff-removed"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("snapshot-diff-changed"),
+    ).not.toBeInTheDocument();
   });
 
-  it('renders the error banner when the diff API call fails', async () => {
+  it("renders the error banner when the diff API call fails", async () => {
     (diffSnapshots as ReturnType<typeof vi.fn>).mockRejectedValue(
-      new Error('nope'),
+      new Error("nope"),
     );
     renderDiff();
     await waitFor(() =>
-      expect(screen.getByTestId('snapshot-diff-error')).toBeInTheDocument(),
+      expect(screen.getByTestId("snapshot-diff-error")).toBeInTheDocument(),
     );
   });
 });

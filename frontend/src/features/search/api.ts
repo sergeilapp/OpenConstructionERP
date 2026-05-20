@@ -8,7 +8,7 @@
  * `backend/app/modules/search/router.py` for the contract.
  */
 
-import { apiGet } from '@/shared/lib/api';
+import { apiGet } from "@/shared/lib/api";
 
 /** One unified-search hit returned by the backend.  Mirrors the
  *  ``UnifiedSearchHit`` Pydantic schema. */
@@ -74,15 +74,17 @@ export interface UnifiedSearchParams {
   finalLimit?: number;
 }
 
-const SEARCH_BASE = '/v1/search';
+const SEARCH_BASE = "/v1/search";
 
-function buildQuery(params: Record<string, string | number | null | undefined>): string {
+function buildQuery(
+  params: Record<string, string | number | null | undefined>,
+): string {
   const parts: string[] = [];
   for (const [k, v] of Object.entries(params)) {
-    if (v === null || v === undefined || v === '') continue;
+    if (v === null || v === undefined || v === "") continue;
     parts.push(`${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`);
   }
-  return parts.length > 0 ? `?${parts.join('&')}` : '';
+  return parts.length > 0 ? `?${parts.join("&")}` : "";
 }
 
 /** Run a unified semantic search across the requested collections. */
@@ -96,9 +98,11 @@ export async function unifiedSearch(
     final_limit: params.finalLimit ?? null,
   });
   // ``types`` is a repeated query param — FastAPI accepts ?types=boq&types=documents
-  let typesQs = '';
+  let typesQs = "";
   if (params.types && params.types.length > 0) {
-    typesQs = params.types.map((t) => `&types=${encodeURIComponent(t)}`).join('');
+    typesQs = params.types
+      .map((t) => `&types=${encodeURIComponent(t)}`)
+      .join("");
   }
   return apiGet<UnifiedSearchResponse>(`${SEARCH_BASE}/${qs}${typesQs}`);
 }
@@ -120,11 +124,11 @@ export async function fetchSearchTypes(): Promise<{ types: SearchTypeMeta[] }> {
 // `<SimilarItemsPanel>` component talk to any module by name.
 
 export type SimilarModuleKind =
-  | 'boq'
-  | 'documents'
-  | 'tasks'
-  | 'risks'
-  | 'bim_elements';
+  | "boq"
+  | "documents"
+  | "tasks"
+  | "risks"
+  | "bim_elements";
 
 const MODULE_PATH: Record<SimilarModuleKind, (id: string) => string> = {
   boq: (id) => `/api/v1/boq/positions/${encodeURIComponent(id)}/similar/`,
@@ -154,8 +158,8 @@ export async function fetchSimilarItems(
       options?.crossProject === undefined
         ? null
         : options.crossProject
-          ? 'true'
-          : 'false',
+          ? "true"
+          : "false",
   });
   return apiGet<SimilarItemsResponse>(`${base}${qs}`);
 }
@@ -177,61 +181,63 @@ export async function fetchSimilarItems(
  */
 export function hitToHref(hit: UnifiedSearchHit): string {
   switch (hit.collection) {
-    case 'oe_boq_positions': {
+    case "oe_boq_positions": {
       const boqId =
-        typeof hit.payload?.boq_id === 'string' ? hit.payload.boq_id : '';
+        typeof hit.payload?.boq_id === "string" ? hit.payload.boq_id : "";
       // BOQ editor uses a path-segment for the BOQ id and a `highlight`
       // query for the position.  Without a boq_id we can only land on
       // the list page — fail soft.
-      if (!boqId) return '/boq';
+      if (!boqId) return "/boq";
       return `/boq/${encodeURIComponent(boqId)}?highlight=${encodeURIComponent(hit.id)}`;
     }
-    case 'oe_documents':
+    case "oe_documents":
       return `/documents?id=${encodeURIComponent(hit.id)}`;
-    case 'oe_tasks':
+    case "oe_tasks":
       return `/tasks?id=${encodeURIComponent(hit.id)}`;
-    case 'oe_risks':
+    case "oe_risks":
       return `/risks?id=${encodeURIComponent(hit.id)}`;
-    case 'oe_bim_elements':
+    case "oe_bim_elements":
       return `/bim?element=${encodeURIComponent(hit.id)}`;
-    case 'oe_requirements':
+    case "oe_requirements":
       return `/bim/rules?id=${encodeURIComponent(hit.id)}`;
-    case 'oe_validation':
+    case "oe_validation":
       return `/validation?id=${encodeURIComponent(hit.id)}`;
-    case 'oe_chat': {
+    case "oe_chat": {
       // Jump to the chat session that contains the message — the
       // session_id rides in the payload from the chat vector adapter.
       const sessionId =
-        typeof hit.payload?.session_id === 'string' ? hit.payload.session_id : '';
+        typeof hit.payload?.session_id === "string"
+          ? hit.payload.session_id
+          : "";
       return sessionId
         ? `/chat?session=${encodeURIComponent(sessionId)}`
-        : '/chat';
+        : "/chat";
     }
     default:
-      return '#';
+      return "#";
   }
 }
 
 /** Human-readable label for a collection key — used for facet pills. */
 export function collectionLabel(collection: string): string {
   switch (collection) {
-    case 'oe_boq_positions':
-      return 'BOQ';
-    case 'oe_documents':
-      return 'Documents';
-    case 'oe_tasks':
-      return 'Tasks';
-    case 'oe_risks':
-      return 'Risks';
-    case 'oe_bim_elements':
-      return 'BIM';
-    case 'oe_requirements':
-      return 'Requirements';
-    case 'oe_validation':
-      return 'Validation';
-    case 'oe_chat':
-      return 'Chat';
+    case "oe_boq_positions":
+      return "BOQ";
+    case "oe_documents":
+      return "Documents";
+    case "oe_tasks":
+      return "Tasks";
+    case "oe_risks":
+      return "Risks";
+    case "oe_bim_elements":
+      return "BIM";
+    case "oe_requirements":
+      return "Requirements";
+    case "oe_validation":
+      return "Validation";
+    case "oe_chat":
+      return "Chat";
     default:
-      return collection.replace(/^oe_/, '');
+      return collection.replace(/^oe_/, "");
   }
 }

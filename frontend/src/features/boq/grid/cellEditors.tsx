@@ -7,20 +7,20 @@ import {
   useEffect,
   useCallback,
   useLayoutEffect,
-} from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
-import { AlertTriangle, X as XIcon } from 'lucide-react';
-import type { ICellEditorParams } from 'ag-grid-community';
-import { AutocompleteInput } from '../AutocompleteInput';
-import type { CostAutocompleteItem } from '../api';
-import { getUnitsForLocale, saveCustomUnit } from '../boqHelpers';
+} from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import { AlertTriangle, X as XIcon } from "lucide-react";
+import type { ICellEditorParams } from "ag-grid-community";
+import { AutocompleteInput } from "../AutocompleteInput";
+import type { CostAutocompleteItem } from "../api";
+import { getUnitsForLocale, saveCustomUnit } from "../boqHelpers";
 import {
   evaluateFormula as evalFormulaImpl,
   isFormula as isFormulaImpl,
   normaliseFormula as normaliseFormulaImpl,
   type FormulaContext,
-} from './formula';
+} from "./formula";
 
 /* ── Formula Cell Editor ──────────────────────────────────────────── */
 
@@ -51,7 +51,10 @@ import {
  *   "=pos(\"1.1\").qty * 2" → ctx-dependent
  *   "=$GFA * 0.15"          → ctx-dependent
  */
-export function evaluateFormula(input: string, ctx?: FormulaContext): number | null {
+export function evaluateFormula(
+  input: string,
+  ctx?: FormulaContext,
+): number | null {
   return evalFormulaImpl(input, ctx);
 }
 
@@ -75,7 +78,11 @@ export function normaliseFormula(s: string): string {
  */
 
 export interface FormulaCellEditorParams extends ICellEditorParams {
-  onFormulaApplied?: (positionId: string, formula: string, result: number) => void;
+  onFormulaApplied?: (
+    positionId: string,
+    formula: string,
+    result: number,
+  ) => void;
 }
 
 /** Check whether an input string looks like a formula (Excel-style `=` prefix,
@@ -93,25 +100,28 @@ export function isFormula(input: string): boolean {
  *   { kind: 'err', m }   — looks like a formula but failed to parse
  */
 type FormulaPreview =
-  | { kind: 'idle' }
-  | { kind: 'number'; v: number }
-  | { kind: 'ok'; v: number }
-  | { kind: 'err'; m: string };
+  | { kind: "idle" }
+  | { kind: "number"; v: number }
+  | { kind: "ok"; v: number }
+  | { kind: "err"; m: string };
 
 function previewFor(input: string): FormulaPreview {
   const t = input.trim();
-  if (!t) return { kind: 'idle' };
+  if (!t) return { kind: "idle" };
   if (!isFormula(t)) {
-    const n = parseFloat(t.replace(',', '.'));
-    return isFinite(n) ? { kind: 'number', v: n } : { kind: 'err', m: 'Not a number' };
+    const n = parseFloat(t.replace(",", "."));
+    return isFinite(n)
+      ? { kind: "number", v: n }
+      : { kind: "err", m: "Not a number" };
   }
   // The grid editor preview operates without a FormulaContext (the
   // editor is mounted inside a single cell and doesn't have access to
   // the full positions list), so $VAR / pos(...) preview as a parser
   // error here. Live evaluation with a context happens elsewhere.
   const r = evalFormulaImpl(t);
-  if (r === null) return { kind: 'err', m: 'Syntax error or unresolved reference' };
-  return { kind: 'ok', v: r };
+  if (r === null)
+    return { kind: "err", m: "Syntax error or unresolved reference" };
+  return { kind: "ok", v: r };
 }
 
 export const FormulaCellEditor = forwardRef(
@@ -122,7 +132,7 @@ export const FormulaCellEditor = forwardRef(
     // means re-editing a "formula" cell takes the user back to the source
     // expression, not just the resolved number (Issue #90 round-trip UX).
     const [value, setValue] = useState<string>(
-      formula ? String(formula) : String(props.value ?? ''),
+      formula ? String(formula) : String(props.value ?? ""),
     );
     const [showHelp, setShowHelp] = useState(false);
     // Single source of truth — what numeric value we will hand back to AG
@@ -130,7 +140,7 @@ export const FormulaCellEditor = forwardRef(
     // metadata write and the quantity write stay consistent (no race that
     // PATCHes the original value back over the formula result).
     const lastParsedRef = useRef<number | null>(null);
-    const lastFormulaRef = useRef<string>('');
+    const lastFormulaRef = useRef<string>("");
 
     const preview = useMemo(() => previewFor(value), [value]);
 
@@ -149,8 +159,11 @@ export const FormulaCellEditor = forwardRef(
       r: number,
     ) => {
       if (!positionId) return;
-      const ctxFn = (props.context as { onFormulaApplied?: (id: string, f: string, r: number) => void } | undefined)
-        ?.onFormulaApplied;
+      const ctxFn = (
+        props.context as
+          | { onFormulaApplied?: (id: string, f: string, r: number) => void }
+          | undefined
+      )?.onFormulaApplied;
       if (props.onFormulaApplied) {
         props.onFormulaApplied(positionId, f, r);
       } else if (ctxFn) {
@@ -172,20 +185,22 @@ export const FormulaCellEditor = forwardRef(
     // result, one with the editor's raw text after the parser fell back
     // to oldValue). Single source of truth via ``lastParsedRef`` keeps it
     // to one PATCH per commit.
-    const parseInput = (live: string): { parsed: number; formulaSrc: string } => {
+    const parseInput = (
+      live: string,
+    ): { parsed: number; formulaSrc: string } => {
       const trimmed = live.trim();
       let parsed: number;
-      let formulaSrc = '';
+      let formulaSrc = "";
       if (isFormula(trimmed)) {
         const result = evaluateFormula(trimmed);
         if (result !== null) {
           parsed = result;
           formulaSrc = trimmed;
         } else {
-          parsed = parseFloat(trimmed.replace(',', '.')) || 0;
+          parsed = parseFloat(trimmed.replace(",", ".")) || 0;
         }
       } else {
-        parsed = parseFloat(trimmed.replace(',', '.')) || 0;
+        parsed = parseFloat(trimmed.replace(",", ".")) || 0;
       }
       return { parsed, formulaSrc };
     };
@@ -210,7 +225,7 @@ export const FormulaCellEditor = forwardRef(
         fireFormulaApplied(props.data?.id, formulaSrc, parsed);
       } else if (hadStoredFormula) {
         // User replaced a stored formula with a plain number — clear it.
-        fireFormulaApplied(props.data?.id, '', parsed);
+        fireFormulaApplied(props.data?.id, "", parsed);
       }
 
       // ag-grid-react v32 + React 18 sometimes skips ``getValue()`` after
@@ -238,7 +253,7 @@ export const FormulaCellEditor = forwardRef(
       // ``cancel=true`` to stopEditing so AG Grid skips its own commit
       // step. Tab navigation is handled explicitly by the caller via
       // ``tabToNextCell()``, and the new value is already in the row.
-      const colId = props.column?.getColId?.() ?? 'quantity';
+      const colId = props.column?.getColId?.() ?? "quantity";
       const oldValue = props.node?.data?.[colId];
       const wroteViaSetDataValue = parsed !== oldValue;
       if (wroteViaSetDataValue) {
@@ -258,7 +273,7 @@ export const FormulaCellEditor = forwardRef(
         setValue((ev.target as HTMLInputElement).value);
       };
       const handleKeyDown = (ev: KeyboardEvent) => {
-        if (ev.key === 'Escape') {
+        if (ev.key === "Escape") {
           if (showHelp) {
             setShowHelp(false);
             ev.stopPropagation();
@@ -267,13 +282,13 @@ export const FormulaCellEditor = forwardRef(
           props.api.stopEditing(true);
           return;
         }
-        if (ev.key === 'Enter') {
+        if (ev.key === "Enter") {
           ev.preventDefault();
           ev.stopPropagation();
           commitFromInput(false);
           return;
         }
-        if (ev.key === 'Tab') {
+        if (ev.key === "Tab") {
           ev.preventDefault();
           ev.stopPropagation();
           commitFromInput(false);
@@ -286,13 +301,13 @@ export const FormulaCellEditor = forwardRef(
         commitFromInput(false);
       };
 
-      el.addEventListener('input', handleInput);
-      el.addEventListener('keydown', handleKeyDown);
-      el.addEventListener('blur', handleBlur);
+      el.addEventListener("input", handleInput);
+      el.addEventListener("keydown", handleKeyDown);
+      el.addEventListener("blur", handleBlur);
       return () => {
-        el.removeEventListener('input', handleInput);
-        el.removeEventListener('keydown', handleKeyDown);
-        el.removeEventListener('blur', handleBlur);
+        el.removeEventListener("input", handleInput);
+        el.removeEventListener("keydown", handleKeyDown);
+        el.removeEventListener("blur", handleBlur);
       };
       // commitFromInput closes over the latest props/value via the ref
       // read inside it, so it doesn't need to be in the dep list.
@@ -323,11 +338,12 @@ export const FormulaCellEditor = forwardRef(
     }));
 
     const isFormulaMode = isFormula(value);
-    const borderClass = preview.kind === 'err'
-      ? 'border-rose-400/70 ring-rose-400/20'
-      : isFormulaMode
-        ? 'border-violet-500/70 ring-violet-500/25'
-        : 'border-oe-blue/40 ring-oe-blue/20';
+    const borderClass =
+      preview.kind === "err"
+        ? "border-rose-400/70 ring-rose-400/20"
+        : isFormulaMode
+          ? "border-violet-500/70 ring-violet-500/25"
+          : "border-oe-blue/40 ring-oe-blue/20";
 
     return (
       // Fixed editor dimensions: 180px wide × 32px tall. The Quantity column
@@ -337,13 +353,17 @@ export const FormulaCellEditor = forwardRef(
       // outer width here keeps the popup contained while still being wide
       // enough for a typical "=2*PI()^2*3" expression. Taller height makes
       // the live preview underneath legible without overlapping the row.
-      <div className="relative" style={{ width: '180px', height: '32px' }}>
-        <div className={`flex items-center w-full h-full bg-surface-elevated border rounded ring-2 ${borderClass}`}>
+      <div className="relative" style={{ width: "180px", height: "32px" }}>
+        <div
+          className={`flex items-center w-full h-full bg-surface-elevated border rounded ring-2 ${borderClass}`}
+        >
           {/* fx badge — purple when in formula mode, faint otherwise */}
           <span
             aria-hidden="true"
             className={`shrink-0 pl-1.5 pr-1 text-[11px] font-bold tracking-wide ${
-              isFormulaMode ? 'text-violet-600 dark:text-violet-300' : 'text-content-quaternary'
+              isFormulaMode
+                ? "text-violet-600 dark:text-violet-300"
+                : "text-content-quaternary"
             }`}
             title="Type = to enter a formula. Click ? for help."
           >
@@ -363,7 +383,10 @@ export const FormulaCellEditor = forwardRef(
           <button
             type="button"
             tabIndex={-1}
-            onMouseDown={(e) => { e.preventDefault(); setShowHelp((v) => !v); }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              setShowHelp((v) => !v);
+            }}
             className="shrink-0 px-1.5 h-full text-[10px] font-bold text-content-quaternary hover:text-violet-600 transition-colors"
             aria-label="Formula help"
             title="Formula help"
@@ -373,17 +396,23 @@ export const FormulaCellEditor = forwardRef(
         </div>
 
         {/* Live preview row — anchors below the cell, doesn't shift layout */}
-        {preview.kind !== 'idle' && (
+        {preview.kind !== "idle" && (
           <div className="absolute right-0 top-full mt-0.5 text-[10px] leading-tight tabular-nums pointer-events-none whitespace-nowrap z-10 px-1.5 py-0.5 rounded shadow-sm bg-surface-elevated border border-border-light">
-            {preview.kind === 'ok' && (
+            {preview.kind === "ok" && (
               <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
-                = {preview.v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                ={" "}
+                {preview.v.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 4,
+                })}
               </span>
             )}
-            {preview.kind === 'number' && isFormulaMode === false && value.trim() !== '' && (
-              <span className="text-content-tertiary">numeric input</span>
-            )}
-            {preview.kind === 'err' && (
+            {preview.kind === "number" &&
+              isFormulaMode === false &&
+              value.trim() !== "" && (
+                <span className="text-content-tertiary">numeric input</span>
+              )}
+            {preview.kind === "err" && (
               <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400">
                 <AlertTriangle size={11} strokeWidth={2} /> {preview.m}
               </span>
@@ -398,7 +427,9 @@ export const FormulaCellEditor = forwardRef(
             onMouseDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="font-semibold text-content-primary">Formula syntax</span>
+              <span className="font-semibold text-content-primary">
+                Formula syntax
+              </span>
               <button
                 type="button"
                 onClick={() => setShowHelp(false)}
@@ -409,27 +440,76 @@ export const FormulaCellEditor = forwardRef(
               </button>
             </div>
             <div className="grid grid-cols-2 gap-x-3 gap-y-1 font-mono text-[10px]">
-              <span className="text-violet-600 dark:text-violet-300">+ − * /</span><span>basic math</span>
-              <span className="text-violet-600 dark:text-violet-300">^ or **</span><span>exponent</span>
-              <span className="text-violet-600 dark:text-violet-300">( )</span><span>grouping</span>
-              <span className="text-violet-600 dark:text-violet-300">PI, E</span><span>constants</span>
-              <span className="text-violet-600 dark:text-violet-300">sqrt(x)</span><span>square root</span>
-              <span className="text-violet-600 dark:text-violet-300">pow(x,y)</span><span>x to the y</span>
-              <span className="text-violet-600 dark:text-violet-300">abs round</span><span>abs / round</span>
-              <span className="text-violet-600 dark:text-violet-300">floor ceil</span><span>floor / ceil</span>
-              <span className="text-violet-600 dark:text-violet-300">min max</span><span>multi-arg</span>
-              <span className="text-violet-600 dark:text-violet-300">sin cos tan</span><span>trig (radians)</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                + − * /
+              </span>
+              <span>basic math</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                ^ or **
+              </span>
+              <span>exponent</span>
+              <span className="text-violet-600 dark:text-violet-300">( )</span>
+              <span>grouping</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                PI, E
+              </span>
+              <span>constants</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                sqrt(x)
+              </span>
+              <span>square root</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                pow(x,y)
+              </span>
+              <span>x to the y</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                abs round
+              </span>
+              <span>abs / round</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                floor ceil
+              </span>
+              <span>floor / ceil</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                min max
+              </span>
+              <span>multi-arg</span>
+              <span className="text-violet-600 dark:text-violet-300">
+                sin cos tan
+              </span>
+              <span>trig (radians)</span>
             </div>
             <div className="mt-2.5 pt-2 border-t border-border-light/70">
-              <div className="font-semibold text-content-primary mb-1">Examples</div>
+              <div className="font-semibold text-content-primary mb-1">
+                Examples
+              </div>
               <ul className="font-mono text-[10px] space-y-0.5">
-                <li><span className="text-violet-600 dark:text-violet-300">=2*PI()^2*3</span><span className="text-content-tertiary"> → 59.22</span></li>
-                <li><span className="text-violet-600 dark:text-violet-300">=sqrt(144) + 5</span><span className="text-content-tertiary"> → 17</span></li>
-                <li><span className="text-violet-600 dark:text-violet-300">12.5 x 4</span><span className="text-content-tertiary"> → 50</span></li>
+                <li>
+                  <span className="text-violet-600 dark:text-violet-300">
+                    =2*PI()^2*3
+                  </span>
+                  <span className="text-content-tertiary"> → 59.22</span>
+                </li>
+                <li>
+                  <span className="text-violet-600 dark:text-violet-300">
+                    =sqrt(144) + 5
+                  </span>
+                  <span className="text-content-tertiary"> → 17</span>
+                </li>
+                <li>
+                  <span className="text-violet-600 dark:text-violet-300">
+                    12.5 x 4
+                  </span>
+                  <span className="text-content-tertiary"> → 50</span>
+                </li>
               </ul>
             </div>
             <div className="mt-2 text-[10px] text-content-tertiary">
-              Prefix with <kbd className="px-1 rounded bg-surface-secondary">=</kbd> or just type the expression. Press <kbd className="px-1 rounded bg-surface-secondary">Esc</kbd> to close.
+              Prefix with{" "}
+              <kbd className="px-1 rounded bg-surface-secondary">=</kbd> or just
+              type the expression. Press{" "}
+              <kbd className="px-1 rounded bg-surface-secondary">Esc</kbd> to
+              close.
             </div>
           </div>
         )}
@@ -437,7 +517,7 @@ export const FormulaCellEditor = forwardRef(
     );
   },
 );
-FormulaCellEditor.displayName = 'FormulaCellEditor';
+FormulaCellEditor.displayName = "FormulaCellEditor";
 
 /* ── Autocomplete Cell Editor ─────────────────────────────────────── */
 
@@ -447,7 +527,7 @@ export interface AutocompleteCellEditorParams extends ICellEditorParams {
 
 export const AutocompleteCellEditor = forwardRef(
   (props: AutocompleteCellEditorParams, ref) => {
-    const [value, setValue] = useState<string>(String(props.value ?? ''));
+    const [value, setValue] = useState<string>(String(props.value ?? ""));
     const committedRef = useRef(false);
 
     useImperativeHandle(ref, () => ({
@@ -484,7 +564,7 @@ export const AutocompleteCellEditor = forwardRef(
     return (
       <div className="w-full h-full">
         <AutocompleteInput
-          value={props.value ?? ''}
+          value={props.value ?? ""}
           onCommit={handleCommit}
           onSelectSuggestion={handleSelectSuggestion}
           onCancel={handleCancel}
@@ -494,7 +574,7 @@ export const AutocompleteCellEditor = forwardRef(
     );
   },
 );
-AutocompleteCellEditor.displayName = 'AutocompleteCellEditor';
+AutocompleteCellEditor.displayName = "AutocompleteCellEditor";
 
 /* ── Unit Cell Editor (combobox: dropdown + free typing) ──────────────
  *
@@ -538,8 +618,11 @@ AutocompleteCellEditor.displayName = 'AutocompleteCellEditor';
  */
 const __unitPickCommitChannel = new Map<string, string>();
 
-function unitPickKey(rowId: string | number | undefined, colId: string | undefined): string {
-  return `${rowId ?? ''}:${colId ?? 'unit'}`;
+function unitPickKey(
+  rowId: string | number | undefined,
+  colId: string | undefined,
+): string {
+  return `${rowId ?? ""}:${colId ?? "unit"}`;
 }
 
 /**
@@ -560,17 +643,20 @@ export function unitColumnValueSetter(params: {
   const data = params.data;
   if (!data) return false;
   const rowId = params.node?.id ?? (data as { id?: string }).id;
-  const colId = params.column?.getColId?.() ?? 'unit';
+  const colId = params.column?.getColId?.() ?? "unit";
   const key = unitPickKey(rowId, colId);
   const pending = __unitPickCommitChannel.get(key);
   // Drain the channel regardless of which path wins so a stale pick
   // can't leak into the next edit.
   if (pending !== undefined) __unitPickCommitChannel.delete(key);
-  const incoming = pending !== undefined
-    ? pending
-    : (params.newValue == null ? '' : String(params.newValue));
+  const incoming =
+    pending !== undefined
+      ? pending
+      : params.newValue == null
+        ? ""
+        : String(params.newValue);
   const next = incoming.trim();
-  const prev = params.oldValue == null ? '' : String(params.oldValue);
+  const prev = params.oldValue == null ? "" : String(params.oldValue);
   if (next === prev) return false;
   (data as Record<string, unknown>).unit = next;
   return true;
@@ -578,8 +664,8 @@ export function unitColumnValueSetter(params: {
 
 export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
   const { i18n } = useTranslation();
-  const lang = i18n.language || 'en';
-  const initial = String(props.value ?? '');
+  const lang = i18n.language || "en";
+  const initial = String(props.value ?? "");
   const [value, setValue] = useState<string>(initial);
   // Open by default so the dropdown is visible the moment the editor
   // mounts (matches the original ``agSelectCellEditor`` UX). The
@@ -644,7 +730,7 @@ export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
 
   useImperativeHandle(ref, () => ({
     getValue() {
-      return (valueRef.current ?? '').trim();
+      return (valueRef.current ?? "").trim();
     },
     isCancelAfterEnd() {
       return false;
@@ -682,45 +768,62 @@ export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
    * to query a stale React instance for ``getValue()`` — the data is
    * already updated.
    */
-  const applyCommit = useCallback((v: string) => {
-    if (committedRef.current) return;
-    committedRef.current = true;
-    const trimmed = v.trim();
-    valueRef.current = trimmed;
-    __unitPickCommitChannel.set(channelKey, trimmed);
-    setValue(trimmed);
-    setOpen(false);
-    if (trimmed) saveCustomUnit(trimmed);
-    // Push the value into the row data. This is the StrictMode-proof
-    // path: ``setDataValue`` calls our ``valueSetter`` synchronously,
-    // which drains the channel and mutates ``data.unit`` regardless of
-    // which React instance is current. ``cellValueChanged`` fires next.
-    try {
-      const colId = props.column?.getColId?.() ?? 'unit';
-      const oldVal = props.node?.data?.[colId];
-      if (oldVal !== trimmed) {
-        props.node?.setDataValue(colId, trimmed);
+  const applyCommit = useCallback(
+    (v: string) => {
+      if (committedRef.current) return;
+      committedRef.current = true;
+      const trimmed = v.trim();
+      valueRef.current = trimmed;
+      __unitPickCommitChannel.set(channelKey, trimmed);
+      setValue(trimmed);
+      setOpen(false);
+      if (trimmed) saveCustomUnit(trimmed);
+      // Push the value into the row data. This is the StrictMode-proof
+      // path: ``setDataValue`` calls our ``valueSetter`` synchronously,
+      // which drains the channel and mutates ``data.unit`` regardless of
+      // which React instance is current. ``cellValueChanged`` fires next.
+      try {
+        const colId = props.column?.getColId?.() ?? "unit";
+        const oldVal = props.node?.data?.[colId];
+        if (oldVal !== trimmed) {
+          props.node?.setDataValue(colId, trimmed);
+        }
+      } catch {
+        /* node detached — channel still holds the value */
       }
-    } catch { /* node detached — channel still holds the value */ }
-    // Stop editing AFTER setDataValue so AG Grid doesn't try to
-    // re-commit via the editor lifecycle (which is the path that loses
-    // the pick in StrictMode).
-    try { props.api.stopEditing(true); } catch { /* editor already gone */ }
-  }, [props.api, props.node, props.column, channelKey]);
+      // Stop editing AFTER setDataValue so AG Grid doesn't try to
+      // re-commit via the editor lifecycle (which is the path that loses
+      // the pick in StrictMode).
+      try {
+        props.api.stopEditing(true);
+      } catch {
+        /* editor already gone */
+      }
+    },
+    [props.api, props.node, props.column, channelKey],
+  );
 
-  const commit = useCallback((finalValue?: string) => {
-    applyCommit(finalValue ?? value);
-  }, [applyCommit, value]);
+  const commit = useCallback(
+    (finalValue?: string) => {
+      applyCommit(finalValue ?? value);
+    },
+    [applyCommit, value],
+  );
 
-  const pick = useCallback((u: string) => {
-    applyCommit(u);
-  }, [applyCommit]);
+  const pick = useCallback(
+    (u: string) => {
+      applyCommit(u);
+    },
+    [applyCommit],
+  );
 
   // Scroll the active option into view as the user navigates.
   useEffect(() => {
     if (!open || !listRef.current) return;
-    const el = listRef.current.querySelector<HTMLLIElement>(`[data-idx="${activeIdx}"]`);
-    el?.scrollIntoView({ block: 'nearest' });
+    const el = listRef.current.querySelector<HTMLLIElement>(
+      `[data-idx="${activeIdx}"]`,
+    );
+    el?.scrollIntoView({ block: "nearest" });
   }, [activeIdx, open]);
 
   // Recompute the anchor rect every time the dropdown opens (or the
@@ -728,14 +831,15 @@ export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
   useLayoutEffect(() => {
     if (!open) return;
     const updateAnchor = () => {
-      if (inputRef.current) setAnchorRect(inputRef.current.getBoundingClientRect());
+      if (inputRef.current)
+        setAnchorRect(inputRef.current.getBoundingClientRect());
     };
     updateAnchor();
-    window.addEventListener('scroll', updateAnchor, true);
-    window.addEventListener('resize', updateAnchor);
+    window.addEventListener("scroll", updateAnchor, true);
+    window.addEventListener("resize", updateAnchor);
     return () => {
-      window.removeEventListener('scroll', updateAnchor, true);
-      window.removeEventListener('resize', updateAnchor);
+      window.removeEventListener("scroll", updateAnchor, true);
+      window.removeEventListener("resize", updateAnchor);
     };
   }, [open]);
 
@@ -763,7 +867,7 @@ export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
       const target = e.target as HTMLElement | null;
       const li = target?.closest?.('li[role="option"]') as HTMLElement | null;
       if (!li || !ul.contains(li)) return;
-      const picked = li.getAttribute('data-unit-value');
+      const picked = li.getAttribute("data-unit-value");
       if (picked == null) return;
       // Prevent the input from blurring (which would close the editor
       // before our applyCommit runs) and stop AG Grid's outside-click
@@ -771,8 +875,8 @@ export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
       e.preventDefault();
       applyCommit(picked);
     };
-    ul.addEventListener('mousedown', handler);
-    return () => ul.removeEventListener('mousedown', handler);
+    ul.addEventListener("mousedown", handler);
+    return () => ul.removeEventListener("mousedown", handler);
   }, [open, applyCommit]);
 
   return (
@@ -790,23 +894,23 @@ export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
         onFocus={() => setOpen(true)}
         onClick={() => setOpen(true)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') {
+          if (e.key === "Enter") {
             e.preventDefault();
             const sel = filtered[activeIdx];
             if (open && sel != null) pick(sel);
             else commit();
-          } else if (e.key === 'Escape') {
+          } else if (e.key === "Escape") {
             e.preventDefault();
             if (open) setOpen(false);
             else props.api.stopEditing(true);
-          } else if (e.key === 'ArrowDown') {
+          } else if (e.key === "ArrowDown") {
             e.preventDefault();
             setOpen(true);
             setActiveIdx((i) => Math.min(filtered.length - 1, i + 1));
-          } else if (e.key === 'ArrowUp') {
+          } else if (e.key === "ArrowUp") {
             e.preventDefault();
             setActiveIdx((i) => Math.max(0, i - 1));
-          } else if (e.key === 'Tab') {
+          } else if (e.key === "Tab") {
             // Plain Tab commits the current text — same behaviour as Enter on
             // a free-typed value, lets the user blow past the dropdown.
             commit();
@@ -828,89 +932,92 @@ export const UnitCellEditor = forwardRef((props: ICellEditorParams, ref) => {
         aria-expanded={open}
         aria-autocomplete="list"
       />
-      {open && filtered.length > 0 && anchorRect && createPortal(
-        (() => {
-          // Position dropdown directly below the input, anchored at the
-          // input's left edge. Auto-flips above when there's no room
-          // below (within 8 px of the viewport bottom). Min-width keeps
-          // it readable even when the unit column is narrow (~80 px).
-          const MAX_HEIGHT = 256;            // matches max-h-64
-          const GUTTER = 4;
-          const spaceBelow = window.innerHeight - anchorRect.bottom;
-          const flipAbove = spaceBelow < 160 && anchorRect.top > spaceBelow;
-          const top = flipAbove
-            ? Math.max(8, anchorRect.top - GUTTER - MAX_HEIGHT)
-            : anchorRect.bottom + GUTTER;
-          const left = Math.min(
-            anchorRect.left,
-            window.innerWidth - 200, // keep within viewport (200 = min-width + slack)
-          );
-          return (
-            <ul
-              ref={listRef}
-              role="listbox"
-              tabIndex={-1}
-              className="fixed z-[10001] max-h-64
+      {open &&
+        filtered.length > 0 &&
+        anchorRect &&
+        createPortal(
+          (() => {
+            // Position dropdown directly below the input, anchored at the
+            // input's left edge. Auto-flips above when there's no room
+            // below (within 8 px of the viewport bottom). Min-width keeps
+            // it readable even when the unit column is narrow (~80 px).
+            const MAX_HEIGHT = 256; // matches max-h-64
+            const GUTTER = 4;
+            const spaceBelow = window.innerHeight - anchorRect.bottom;
+            const flipAbove = spaceBelow < 160 && anchorRect.top > spaceBelow;
+            const top = flipAbove
+              ? Math.max(8, anchorRect.top - GUTTER - MAX_HEIGHT)
+              : anchorRect.bottom + GUTTER;
+            const left = Math.min(
+              anchorRect.left,
+              window.innerWidth - 200, // keep within viewport (200 = min-width + slack)
+            );
+            return (
+              <ul
+                ref={listRef}
+                role="listbox"
+                tabIndex={-1}
+                className="fixed z-[10001] max-h-64
                          overflow-y-auto rounded border border-border-light bg-surface-elevated
                          shadow-xl text-xs"
-              style={{
-                top: `${top}px`,
-                left: `${Math.max(0, left)}px`,
-                minWidth: `${Math.max(160, anchorRect.width)}px`,
-              }}
-              onMouseDown={(e) => {
-                // Prevent blur on the input AND stop AG Grid's outside-click
-                // detector from cancelling the edit before pick() runs. The
-                // dropdown is portaled to <body> so AG Grid sees it as
-                // outside the editor cell. AG Grid 32's outside-click
-                // detector listens at the *native* document level, so
-                // React's synthetic ``stopPropagation()`` is not enough —
-                // we need ``nativeEvent.stopImmediatePropagation()`` to
-                // prevent ``stopEditing(true)`` (cancel=true), which would
-                // silently drop the pick before getValue() runs.
-                e.preventDefault();
-                e.stopPropagation();
-                e.nativeEvent.stopImmediatePropagation();
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.nativeEvent.stopImmediatePropagation();
-              }}
-            >
-              {filtered.map((u, idx) => (
-                <li
-                  key={u + idx}
-                  data-idx={idx}
-                  data-unit-value={u}
-                  role="option"
-                  aria-selected={idx === activeIdx}
-                  onMouseEnter={() => setActiveIdx(idx)}
-                  // NOTE: the actual commit handler is a native mousedown
-                  // listener attached to the <ul> in a useEffect above.
-                  // It reads ``data-unit-value`` off the closest <li>.
-                  // We don't use React's onMouseDown here because React's
-                  // synthetic events don't fire if AG Grid happens to
-                  // unmount the editor before flush.
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.nativeEvent.stopImmediatePropagation();
-                    if (!committedRef.current) pick(u);
-                  }}
-                  className={`cursor-pointer px-2 py-1 font-mono whitespace-nowrap ${
-                    idx === activeIdx
-                      ? 'bg-oe-blue text-white'
-                      : 'text-content-primary hover:bg-surface-secondary'
-                  }`}
-                >
-                  {u}
-                </li>
-              ))}
-            </ul>
-          );
-        })(),
-        document.body,
-      )}
+                style={{
+                  top: `${top}px`,
+                  left: `${Math.max(0, left)}px`,
+                  minWidth: `${Math.max(160, anchorRect.width)}px`,
+                }}
+                onMouseDown={(e) => {
+                  // Prevent blur on the input AND stop AG Grid's outside-click
+                  // detector from cancelling the edit before pick() runs. The
+                  // dropdown is portaled to <body> so AG Grid sees it as
+                  // outside the editor cell. AG Grid 32's outside-click
+                  // detector listens at the *native* document level, so
+                  // React's synthetic ``stopPropagation()`` is not enough —
+                  // we need ``nativeEvent.stopImmediatePropagation()`` to
+                  // prevent ``stopEditing(true)`` (cancel=true), which would
+                  // silently drop the pick before getValue() runs.
+                  e.preventDefault();
+                  e.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation();
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation();
+                }}
+              >
+                {filtered.map((u, idx) => (
+                  <li
+                    key={u + idx}
+                    data-idx={idx}
+                    data-unit-value={u}
+                    role="option"
+                    aria-selected={idx === activeIdx}
+                    onMouseEnter={() => setActiveIdx(idx)}
+                    // NOTE: the actual commit handler is a native mousedown
+                    // listener attached to the <ul> in a useEffect above.
+                    // It reads ``data-unit-value`` off the closest <li>.
+                    // We don't use React's onMouseDown here because React's
+                    // synthetic events don't fire if AG Grid happens to
+                    // unmount the editor before flush.
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.nativeEvent.stopImmediatePropagation();
+                      if (!committedRef.current) pick(u);
+                    }}
+                    className={`cursor-pointer px-2 py-1 font-mono whitespace-nowrap ${
+                      idx === activeIdx
+                        ? "bg-oe-blue text-white"
+                        : "text-content-primary hover:bg-surface-secondary"
+                    }`}
+                  >
+                    {u}
+                  </li>
+                ))}
+              </ul>
+            );
+          })(),
+          document.body,
+        )}
     </div>
   );
 });
-UnitCellEditor.displayName = 'UnitCellEditor';
+UnitCellEditor.displayName = "UnitCellEditor";

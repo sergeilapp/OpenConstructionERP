@@ -32,24 +32,24 @@
  * This module is pure (no React, no I/O) — safe to import from tests.
  */
 
-import type { BIMElementData } from '@/shared/ui/BIMViewer/ElementManager';
+import type { BIMElementData } from "@/shared/ui/BIMViewer/ElementManager";
 
 /* ── Types ────────────────────────────────────────────────────────────── */
 
 /** Where the suggested value came from. Ordered alphabetically; the UI
  *  uses this to render a human-readable badge. */
 export type QuantitySuggestionSource =
-  | 'sum_volume'
-  | 'sum_area'
-  | 'sum_length'
-  | 'sum_mass'
-  | 'count'
-  | 'lsum'
-  | 'computed_mass_from_density'
-  | 'unit_unknown'
-  | 'no_elements';
+  | "sum_volume"
+  | "sum_area"
+  | "sum_length"
+  | "sum_mass"
+  | "count"
+  | "lsum"
+  | "computed_mass_from_density"
+  | "unit_unknown"
+  | "no_elements";
 
-export type QuantitySuggestionConfidence = 'high' | 'medium' | 'low';
+export type QuantitySuggestionConfidence = "high" | "medium" | "low";
 
 export interface QuantitySuggestion {
   /** Numeric value to pre-fill into the quantity input. Always finite,
@@ -79,74 +79,85 @@ export interface QuantitySuggestion {
 /** Canonicalize a free-text unit string (e.g. user-typed "M3", "m³",
  *  "Stk.") to one of our internal categories. Unknown units return
  *  the empty string so callers can fall back to volume-first heuristics. */
-export type CanonicalUnit = 'm3' | 'm2' | 'm' | 'kg' | 'pcs' | 'lsum' | '';
+export type CanonicalUnit = "m3" | "m2" | "m" | "kg" | "pcs" | "lsum" | "";
 
 export function normalizeUnit(unit: string | null | undefined): CanonicalUnit {
-  if (!unit) return '';
+  if (!unit) return "";
   const u = String(unit).trim().toLowerCase();
-  if (!u) return '';
+  if (!u) return "";
   // Strip trailing dots ("Stk." → "stk") and surrounding punctuation.
-  const stripped = u.replace(/[.\s]+$/, '').replace(/^[.\s]+/, '');
+  const stripped = u.replace(/[.\s]+$/, "").replace(/^[.\s]+/, "");
 
   // Volume
   if (
-    stripped === 'm³' ||
-    stripped === 'm3' ||
-    stripped === 'cbm' ||
-    stripped === 'cu.m' ||
-    stripped === 'cum' ||
-    stripped === 'm^3'
+    stripped === "m³" ||
+    stripped === "m3" ||
+    stripped === "cbm" ||
+    stripped === "cu.m" ||
+    stripped === "cum" ||
+    stripped === "m^3"
   ) {
-    return 'm3';
+    return "m3";
   }
   // Area
   if (
-    stripped === 'm²' ||
-    stripped === 'm2' ||
-    stripped === 'sqm' ||
-    stripped === 'sq.m' ||
-    stripped === 'm^2'
+    stripped === "m²" ||
+    stripped === "m2" ||
+    stripped === "sqm" ||
+    stripped === "sq.m" ||
+    stripped === "m^2"
   ) {
-    return 'm2';
+    return "m2";
   }
   // Length
-  if (stripped === 'm' || stripped === 'lm' || stripped === 'mtr' || stripped === 'meter' || stripped === 'metre') {
-    return 'm';
+  if (
+    stripped === "m" ||
+    stripped === "lm" ||
+    stripped === "mtr" ||
+    stripped === "meter" ||
+    stripped === "metre"
+  ) {
+    return "m";
   }
   // Mass
-  if (stripped === 'kg' || stripped === 'kgs' || stripped === 'kilogram' || stripped === 'kilograms') {
-    return 'kg';
+  if (
+    stripped === "kg" ||
+    stripped === "kgs" ||
+    stripped === "kilogram" ||
+    stripped === "kilograms"
+  ) {
+    return "kg";
   }
   // Count — German "Stk", Russian "шт", English "pcs/pc/piece(s)/each/ea"
   if (
-    stripped === 'pcs' ||
-    stripped === 'pc' ||
-    stripped === 'piece' ||
-    stripped === 'pieces' ||
-    stripped === 'stk' ||
-    stripped === 'stck' ||
-    stripped === 'stuck' ||
-    stripped === 'stück' ||
-    stripped === 'шт' ||
-    stripped === 'each' ||
-    stripped === 'ea' ||
-    stripped === 'nr' ||
-    stripped === 'no'
+    stripped === "pcs" ||
+    stripped === "pc" ||
+    stripped === "piece" ||
+    stripped === "pieces" ||
+    stripped === "stk" ||
+    stripped === "stck" ||
+    stripped === "stuck" ||
+    stripped === "stück" ||
+    stripped === "шт" ||
+    stripped === "each" ||
+    stripped === "ea" ||
+    stripped === "nr" ||
+    stripped === "no"
   ) {
-    return 'pcs';
+    return "pcs";
   }
   // Lump-sum
   if (
-    stripped === 'lsum' ||
-    stripped === 'ls' ||
-    stripped === 'lump' ||
-    stripped === 'lumpsum' ||
-    stripped === 'psch' || // German "Pauschal"
-    stripped === 'pausch'
+    stripped === "lsum" ||
+    stripped === "ls" ||
+    stripped === "lump" ||
+    stripped === "lumpsum" ||
+    stripped === "psch" || // German "Pauschal"
+    stripped === "pausch"
   ) {
-    return 'lsum';
+    return "lsum";
   }
-  return '';
+  return "";
 }
 
 /* ── Internal helpers ────────────────────────────────────────────────── */
@@ -155,10 +166,10 @@ export function normalizeUnit(unit: string | null | undefined): CanonicalUnit {
  *  Empty strings and zero-length collections become null (we don't want
  *  "0" to mask the "field absent" case for fallbacks). */
 function toFiniteNumber(value: unknown): number | null {
-  if (typeof value === 'number') {
+  if (typeof value === "number") {
     return Number.isFinite(value) ? value : null;
   }
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const trimmed = value.trim();
     if (!trimmed) return null;
     const n = Number.parseFloat(trimmed);
@@ -178,17 +189,19 @@ interface SumResult {
 
 function sumField(
   elements: readonly BIMElementData[],
-  candidates: readonly { source: 'quantities' | 'properties'; key: string }[],
+  candidates: readonly { source: "quantities" | "properties"; key: string }[],
 ): SumResult {
   let total = 0;
   let contributors = 0;
-  let matchedKey = '';
+  let matchedKey = "";
   for (const el of elements) {
     let elementContribution: number | null = null;
-    let elementMatchedKey = '';
+    let elementMatchedKey = "";
     for (const { source, key } of candidates) {
       const bag =
-        source === 'quantities' ? el.quantities : (el.properties as Record<string, unknown> | undefined);
+        source === "quantities"
+          ? el.quantities
+          : (el.properties as Record<string, unknown> | undefined);
       if (!bag) continue;
       // Case-sensitive first, then case-insensitive fallback for property
       // keys (Revit/IFC mix `NetVolume` vs `netVolume` vs `Net Volume`).
@@ -224,13 +237,18 @@ function sumField(
 function readDensity(el: BIMElementData): number | null {
   const props = el.properties as Record<string, unknown> | undefined;
   if (!props) return null;
-  for (const key of ['Density', 'MaterialDensity', 'density', 'material_density']) {
+  for (const key of [
+    "Density",
+    "MaterialDensity",
+    "density",
+    "material_density",
+  ]) {
     const v = toFiniteNumber(props[key]);
     if (v !== null && v > 0) return v;
   }
   // Last-ditch: case-insensitive scan
   for (const [k, v] of Object.entries(props)) {
-    if (k.toLowerCase().includes('density')) {
+    if (k.toLowerCase().includes("density")) {
       const n = toFiniteNumber(v);
       if (n !== null && n > 0) return n;
     }
@@ -241,39 +259,39 @@ function readDensity(el: BIMElementData): number | null {
 /* ── Field-priority tables ───────────────────────────────────────────── */
 
 const VOLUME_KEYS = [
-  { source: 'quantities' as const, key: 'volume_m3' },
-  { source: 'quantities' as const, key: 'volume' },
-  { source: 'properties' as const, key: 'NetVolume' },
-  { source: 'properties' as const, key: 'GrossVolume' },
-  { source: 'properties' as const, key: 'Volume' },
+  { source: "quantities" as const, key: "volume_m3" },
+  { source: "quantities" as const, key: "volume" },
+  { source: "properties" as const, key: "NetVolume" },
+  { source: "properties" as const, key: "GrossVolume" },
+  { source: "properties" as const, key: "Volume" },
 ];
 
 const AREA_KEYS = [
-  { source: 'quantities' as const, key: 'area_m2' },
-  { source: 'quantities' as const, key: 'area' },
-  { source: 'properties' as const, key: 'NetArea' },
-  { source: 'properties' as const, key: 'GrossArea' },
-  { source: 'properties' as const, key: 'NetSideArea' },
-  { source: 'properties' as const, key: 'GrossSideArea' },
-  { source: 'properties' as const, key: 'Area' },
+  { source: "quantities" as const, key: "area_m2" },
+  { source: "quantities" as const, key: "area" },
+  { source: "properties" as const, key: "NetArea" },
+  { source: "properties" as const, key: "GrossArea" },
+  { source: "properties" as const, key: "NetSideArea" },
+  { source: "properties" as const, key: "GrossSideArea" },
+  { source: "properties" as const, key: "Area" },
 ];
 
 const LENGTH_KEYS = [
-  { source: 'quantities' as const, key: 'length_m' },
-  { source: 'quantities' as const, key: 'length' },
-  { source: 'properties' as const, key: 'Length' },
-  { source: 'properties' as const, key: 'Height' },
-  { source: 'properties' as const, key: 'Perimeter' },
+  { source: "quantities" as const, key: "length_m" },
+  { source: "quantities" as const, key: "length" },
+  { source: "properties" as const, key: "Length" },
+  { source: "properties" as const, key: "Height" },
+  { source: "properties" as const, key: "Perimeter" },
 ];
 
 const MASS_KEYS = [
-  { source: 'quantities' as const, key: 'mass' },
-  { source: 'quantities' as const, key: 'mass_kg' },
-  { source: 'quantities' as const, key: 'weight' },
-  { source: 'properties' as const, key: 'NetWeight' },
-  { source: 'properties' as const, key: 'GrossWeight' },
-  { source: 'properties' as const, key: 'Mass' },
-  { source: 'properties' as const, key: 'Weight' },
+  { source: "quantities" as const, key: "mass" },
+  { source: "quantities" as const, key: "mass_kg" },
+  { source: "quantities" as const, key: "weight" },
+  { source: "properties" as const, key: "NetWeight" },
+  { source: "properties" as const, key: "GrossWeight" },
+  { source: "properties" as const, key: "Mass" },
+  { source: "properties" as const, key: "Weight" },
 ];
 
 /* ── Public API ──────────────────────────────────────────────────────── */
@@ -295,85 +313,85 @@ export function suggestQuantityFromBIM(
   if (totalElements === 0) {
     return {
       value: 0,
-      source: 'no_elements',
-      confidence: 'low',
-      matchedKey: '',
+      source: "no_elements",
+      confidence: "low",
+      matchedKey: "",
       contributingElements: 0,
       totalElements: 0,
-      inferredUnit: '',
+      inferredUnit: "",
     };
   }
 
   const canonical = normalizeUnit(unit);
 
   switch (canonical) {
-    case 'm3': {
+    case "m3": {
       const r = sumField(elements, VOLUME_KEYS);
       if (r.contributors > 0) {
         return {
           value: r.sum,
-          source: 'sum_volume',
-          confidence: r.contributors === totalElements ? 'high' : 'medium',
+          source: "sum_volume",
+          confidence: r.contributors === totalElements ? "high" : "medium",
           matchedKey: r.matchedKey,
           contributingElements: r.contributors,
           totalElements,
-          inferredUnit: 'm³',
+          inferredUnit: "m³",
         };
       }
       // Volume requested but no volume field → low confidence zero.
-      return zeroSuggestion('sum_volume', 'm³', totalElements);
+      return zeroSuggestion("sum_volume", "m³", totalElements);
     }
 
-    case 'm2': {
+    case "m2": {
       const r = sumField(elements, AREA_KEYS);
       if (r.contributors > 0) {
         return {
           value: r.sum,
-          source: 'sum_area',
-          confidence: r.contributors === totalElements ? 'high' : 'medium',
+          source: "sum_area",
+          confidence: r.contributors === totalElements ? "high" : "medium",
           matchedKey: r.matchedKey,
           contributingElements: r.contributors,
           totalElements,
-          inferredUnit: 'm²',
+          inferredUnit: "m²",
         };
       }
-      return zeroSuggestion('sum_area', 'm²', totalElements);
+      return zeroSuggestion("sum_area", "m²", totalElements);
     }
 
-    case 'm': {
+    case "m": {
       const r = sumField(elements, LENGTH_KEYS);
       if (r.contributors > 0) {
         return {
           value: r.sum,
-          source: 'sum_length',
-          confidence: r.contributors === totalElements ? 'high' : 'medium',
+          source: "sum_length",
+          confidence: r.contributors === totalElements ? "high" : "medium",
           matchedKey: r.matchedKey,
           contributingElements: r.contributors,
           totalElements,
-          inferredUnit: 'm',
+          inferredUnit: "m",
         };
       }
-      return zeroSuggestion('sum_length', 'm', totalElements);
+      return zeroSuggestion("sum_length", "m", totalElements);
     }
 
-    case 'kg': {
+    case "kg": {
       // 1) Direct mass field
       const direct = sumField(elements, MASS_KEYS);
       if (direct.contributors > 0) {
         return {
           value: direct.sum,
-          source: 'sum_mass',
-          confidence: direct.contributors === totalElements ? 'high' : 'medium',
+          source: "sum_mass",
+          confidence: direct.contributors === totalElements ? "high" : "medium",
           matchedKey: direct.matchedKey,
           contributingElements: direct.contributors,
           totalElements,
-          inferredUnit: 'kg',
+          inferredUnit: "kg",
         };
       }
       // 2) Compute from volume × density per element (low confidence)
       let total = 0;
       let contributors = 0;
-      let firstKey = '';
+      let firstKey = "";
       for (const el of elements) {
         const volR = sumField([el], VOLUME_KEYS);
         if (volR.contributors === 0 || volR.sum <= 0) continue;
@@ -386,42 +404,42 @@ export function suggestQuantityFromBIM(
       if (contributors > 0) {
         return {
           value: total,
-          source: 'computed_mass_from_density',
-          confidence: 'low',
+          source: "computed_mass_from_density",
+          confidence: "low",
           matchedKey: firstKey,
           contributingElements: contributors,
           totalElements,
-          inferredUnit: 'kg',
+          inferredUnit: "kg",
         };
       }
-      return zeroSuggestion('sum_mass', 'kg', totalElements);
+      return zeroSuggestion("sum_mass", "kg", totalElements);
     }
 
-    case 'pcs': {
+    case "pcs": {
       return {
         value: totalElements,
-        source: 'count',
-        confidence: 'high',
-        matchedKey: '',
+        source: "count",
+        confidence: "high",
+        matchedKey: "",
         contributingElements: totalElements,
         totalElements,
-        inferredUnit: 'pcs',
+        inferredUnit: "pcs",
       };
     }
 
-    case 'lsum': {
+    case "lsum": {
       return {
         value: 1,
-        source: 'lsum',
-        confidence: 'high',
-        matchedKey: '',
+        source: "lsum",
+        confidence: "high",
+        matchedKey: "",
         contributingElements: totalElements,
         totalElements,
-        inferredUnit: 'lsum',
+        inferredUnit: "lsum",
       };
     }
 
-    case '':
+    case "":
     default: {
       // Unknown / missing unit — fall back to volume → area → length → count,
       // matching the behaviour the modal had before this helper existed.
@@ -430,46 +448,46 @@ export function suggestQuantityFromBIM(
       if (vol.contributors > 0 && vol.sum > 0) {
         return {
           value: vol.sum,
-          source: 'sum_volume',
-          confidence: 'low',
+          source: "sum_volume",
+          confidence: "low",
           matchedKey: vol.matchedKey,
           contributingElements: vol.contributors,
           totalElements,
-          inferredUnit: 'm³',
+          inferredUnit: "m³",
         };
       }
       const area = sumField(elements, AREA_KEYS);
       if (area.contributors > 0 && area.sum > 0) {
         return {
           value: area.sum,
-          source: 'sum_area',
-          confidence: 'low',
+          source: "sum_area",
+          confidence: "low",
           matchedKey: area.matchedKey,
           contributingElements: area.contributors,
           totalElements,
-          inferredUnit: 'm²',
+          inferredUnit: "m²",
         };
       }
       const len = sumField(elements, LENGTH_KEYS);
       if (len.contributors > 0 && len.sum > 0) {
         return {
           value: len.sum,
-          source: 'sum_length',
-          confidence: 'low',
+          source: "sum_length",
+          confidence: "low",
           matchedKey: len.matchedKey,
           contributingElements: len.contributors,
           totalElements,
-          inferredUnit: 'm',
+          inferredUnit: "m",
         };
       }
       return {
         value: totalElements,
-        source: 'unit_unknown',
-        confidence: 'low',
-        matchedKey: '',
+        source: "unit_unknown",
+        confidence: "low",
+        matchedKey: "",
         contributingElements: totalElements,
         totalElements,
-        inferredUnit: 'pcs',
+        inferredUnit: "pcs",
       };
     }
   }
@@ -483,8 +501,8 @@ function zeroSuggestion(
   return {
     value: 0,
     source,
-    confidence: 'low',
-    matchedKey: '',
+    confidence: "low",
+    matchedKey: "",
     contributingElements: 0,
     totalElements,
     inferredUnit,
@@ -502,32 +520,35 @@ function zeroSuggestion(
 export function formatSuggestionBadge(s: QuantitySuggestion): string {
   const fmt = (n: number) =>
     Number.isInteger(n)
-      ? n.toLocaleString('en', { maximumFractionDigits: 0 })
-      : n.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+      ? n.toLocaleString("en", { maximumFractionDigits: 0 })
+      : n.toLocaleString("en", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 4,
+        });
 
   const elementsSuffix =
     s.totalElements > 1
       ? ` from ${s.contributingElements}/${s.totalElements} elements`
-      : '';
+      : "";
 
   switch (s.source) {
-    case 'sum_volume':
+    case "sum_volume":
       return `Σ volume = ${fmt(s.value)} ${s.inferredUnit}${elementsSuffix}`;
-    case 'sum_area':
+    case "sum_area":
       return `Σ area = ${fmt(s.value)} ${s.inferredUnit}${elementsSuffix}`;
-    case 'sum_length':
+    case "sum_length":
       return `Σ length = ${fmt(s.value)} ${s.inferredUnit}${elementsSuffix}`;
-    case 'sum_mass':
+    case "sum_mass":
       return `Σ mass = ${fmt(s.value)} ${s.inferredUnit}${elementsSuffix}`;
-    case 'count':
+    case "count":
       return `count = ${fmt(s.value)} ${s.inferredUnit}`;
-    case 'lsum':
-      return 'lump sum = 1';
-    case 'computed_mass_from_density':
+    case "lsum":
+      return "lump sum = 1";
+    case "computed_mass_from_density":
       return `≈ ${fmt(s.value)} kg (volume × density)${elementsSuffix}`;
-    case 'unit_unknown':
+    case "unit_unknown":
       return `unit unknown — using count = ${fmt(s.value)}`;
-    case 'no_elements':
-      return 'no elements selected';
+    case "no_elements":
+      return "no elements selected";
   }
 }

@@ -6,8 +6,12 @@
  * every branch without mocking React or the Canvas API.
  */
 
-import type { DxfEntity } from '../api';
-import { calculateArea, calculateDistance, calculatePerimeter } from './measurement';
+import type { DxfEntity } from "../api";
+import {
+  calculateArea,
+  calculateDistance,
+  calculatePerimeter,
+} from "./measurement";
 
 export interface GroupAggregate {
   /** Σ area over closed polylines + circles (m²). */
@@ -55,7 +59,7 @@ export function aggregateEntities(entities: DxfEntity[]): GroupAggregate {
   for (const e of entities) {
     byType[e.type] = (byType[e.type] ?? 0) + 1;
 
-    if (e.type === 'LWPOLYLINE' && e.vertices && e.vertices.length >= 2) {
+    if (e.type === "LWPOLYLINE" && e.vertices && e.vertices.length >= 2) {
       const closed = !!e.closed;
       if (closed && e.vertices.length >= 3) {
         area += calculateArea(e.vertices);
@@ -64,10 +68,10 @@ export function aggregateEntities(entities: DxfEntity[]): GroupAggregate {
         length += calculatePerimeter(e.vertices, false);
       }
       count++;
-    } else if (e.type === 'LINE' && e.start && e.end) {
+    } else if (e.type === "LINE" && e.start && e.end) {
       length += calculateDistance(e.start, e.end);
       count++;
-    } else if (e.type === 'CIRCLE' && e.radius != null) {
+    } else if (e.type === "CIRCLE" && e.radius != null) {
       area += Math.PI * e.radius * e.radius;
       count++;
     }

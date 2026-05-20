@@ -11,13 +11,21 @@
  *   DELETE /api/v1/collaboration/comments/{id}
  */
 
-import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { MessageSquare, Send, Reply, Pencil, Trash2, X, Check } from 'lucide-react';
-import clsx from 'clsx';
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  MessageSquare,
+  Send,
+  Reply,
+  Pencil,
+  Trash2,
+  X,
+  Check,
+} from "lucide-react";
+import clsx from "clsx";
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
 
 // -- Types -------------------------------------------------------------------
 
@@ -61,36 +69,43 @@ export interface CommentThreadProps {
 
 function formatTimeAgo(
   dateStr: string,
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
 ): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) return t('comments.just_now', { defaultValue: 'Just now‌⁠‍' });
+  if (seconds < 60)
+    return t("comments.just_now", { defaultValue: "Just now‌⁠‍" });
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60)
-    return t('time.minutes_ago', { defaultValue: '{{count}}m ago‌⁠‍', count: minutes });
+    return t("time.minutes_ago", {
+      defaultValue: "{{count}}m ago‌⁠‍",
+      count: minutes,
+    });
   const hours = Math.floor(minutes / 60);
   if (hours < 24)
-    return t('time.hours_ago', { defaultValue: '{{count}}h ago‌⁠‍', count: hours });
+    return t("time.hours_ago", {
+      defaultValue: "{{count}}h ago‌⁠‍",
+      count: hours,
+    });
   const days = Math.floor(hours / 24);
-  return t('time.days_ago', { defaultValue: '{{count}}d ago‌⁠‍', count: days });
+  return t("time.days_ago", { defaultValue: "{{count}}d ago‌⁠‍", count: days });
 }
 
 /** Get the first letter of a user ID for avatar placeholder. */
 function avatarLetter(authorId: string): string {
-  return (authorId[0] ?? 'U').toUpperCase();
+  return (authorId[0] ?? "U").toUpperCase();
 }
 
 /** Deterministic color based on author ID. */
 const AVATAR_COLORS = [
-  'bg-blue-500',
-  'bg-emerald-500',
-  'bg-amber-500',
-  'bg-violet-500',
-  'bg-rose-500',
-  'bg-cyan-500',
-  'bg-orange-500',
-  'bg-indigo-500',
+  "bg-blue-500",
+  "bg-emerald-500",
+  "bg-amber-500",
+  "bg-violet-500",
+  "bg-rose-500",
+  "bg-cyan-500",
+  "bg-orange-500",
+  "bg-indigo-500",
 ];
 
 function avatarColor(authorId: string): string {
@@ -105,7 +120,7 @@ function avatarColor(authorId: string): string {
 function renderTextWithMentions(text: string): React.ReactNode {
   const parts = text.split(/(@\w[\w.]*)/g);
   return parts.map((part, i) =>
-    part.startsWith('@') ? (
+    part.startsWith("@") ? (
       <span key={i} className="font-semibold text-oe-blue">
         {part}
       </span>
@@ -124,7 +139,7 @@ interface CommentItemProps {
   onEdit: (commentId: string, newText: string) => void;
   onDelete: (commentId: string) => void;
   isNew?: boolean;
-  t: ReturnType<typeof useTranslation>['t'];
+  t: ReturnType<typeof useTranslation>["t"];
 }
 
 function CommentItem({
@@ -162,11 +177,11 @@ function CommentItem({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         handleSaveEdit();
       }
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         handleCancelEdit();
       }
     },
@@ -177,12 +192,14 @@ function CommentItem({
     return (
       <div
         className={clsx(
-          'flex items-start gap-2.5 py-2',
-          isReply && 'ml-8 pl-3 border-l-2 border-border-light',
+          "flex items-start gap-2.5 py-2",
+          isReply && "ml-8 pl-3 border-l-2 border-border-light",
         )}
       >
         <p className="text-xs text-content-quaternary italic">
-          {t('comments.deleted', { defaultValue: 'This comment was deleted.‌⁠‍' })}
+          {t("comments.deleted", {
+            defaultValue: "This comment was deleted.‌⁠‍",
+          })}
         </p>
       </div>
     );
@@ -191,15 +208,15 @@ function CommentItem({
   return (
     <div
       className={clsx(
-        'group flex items-start gap-2.5 py-2.5',
-        isReply && 'ml-8 pl-3 border-l-2 border-border-light',
-        isNew && 'bg-oe-blue-subtle/30 rounded-lg px-2 -mx-2',
+        "group flex items-start gap-2.5 py-2.5",
+        isReply && "ml-8 pl-3 border-l-2 border-border-light",
+        isNew && "bg-oe-blue-subtle/30 rounded-lg px-2 -mx-2",
       )}
     >
       {/* Avatar */}
       <div
         className={clsx(
-          'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white',
+          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white",
           avatarColor(comment.author_id),
         )}
         title={comment.author_id}
@@ -218,7 +235,7 @@ function CommentItem({
           </span>
           {comment.edited_at && (
             <span className="text-2xs text-content-quaternary italic">
-              {t('comments.edited', { defaultValue: '(edited)' })}
+              {t("comments.edited", { defaultValue: "(edited)" })}
             </span>
           )}
         </div>
@@ -239,14 +256,14 @@ function CommentItem({
                 className="flex items-center gap-1 rounded px-2 py-0.5 text-2xs font-medium text-white bg-oe-blue hover:bg-oe-blue-hover transition-colors"
               >
                 <Check size={10} />
-                {t('common.save', { defaultValue: 'Save' })}
+                {t("common.save", { defaultValue: "Save" })}
               </button>
               <button
                 onClick={handleCancelEdit}
                 className="flex items-center gap-1 rounded px-2 py-0.5 text-2xs font-medium text-content-secondary hover:text-content-primary transition-colors"
               >
                 <X size={10} />
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </button>
             </div>
           </div>
@@ -265,7 +282,7 @@ function CommentItem({
                 className="flex items-center gap-1 text-2xs text-content-tertiary hover:text-oe-blue transition-colors"
               >
                 <Reply size={10} />
-                {t('comments.reply', { defaultValue: 'Reply' })}
+                {t("comments.reply", { defaultValue: "Reply" })}
               </button>
             )}
             <button
@@ -276,14 +293,14 @@ function CommentItem({
               className="flex items-center gap-1 text-2xs text-content-tertiary hover:text-oe-blue transition-colors"
             >
               <Pencil size={10} />
-              {t('comments.edit', { defaultValue: 'Edit' })}
+              {t("comments.edit", { defaultValue: "Edit" })}
             </button>
             <button
               onClick={() => onDelete(comment.id)}
               className="flex items-center gap-1 text-2xs text-content-tertiary hover:text-semantic-error transition-colors"
             >
               <Trash2 size={10} />
-              {t('comments.delete', { defaultValue: 'Delete' })}
+              {t("comments.delete", { defaultValue: "Delete" })}
             </button>
           </div>
         )}
@@ -294,17 +311,21 @@ function CommentItem({
 
 // -- Main Component ----------------------------------------------------------
 
-export function CommentThread({ entityType, entityId, className }: CommentThreadProps) {
+export function CommentThread({
+  entityType,
+  entityId,
+  className,
+}: CommentThreadProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [newText, setNewText] = useState('');
+  const [newText, setNewText] = useState("");
   const [replyToId, setReplyToId] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const queryKey = useMemo(
-    () => ['comments', entityType, entityId],
+    () => ["comments", entityType, entityId],
     [entityType, entityId],
   );
 
@@ -328,7 +349,8 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
   const sortedComments = useMemo(
     () =>
       [...comments].sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       ),
     [comments],
   );
@@ -341,14 +363,20 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
       entity_id: string;
       text: string;
       parent_comment_id?: string;
-    }) => apiPost<CommentData>('/v1/collaboration/comments/', body),
+    }) => apiPost<CommentData>("/v1/collaboration/comments/", body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
-      setNewText('');
+      setNewText("");
       setReplyToId(null);
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('comments.create_failed', { defaultValue: 'Failed to post comment' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("comments.create_failed", {
+          defaultValue: "Failed to post comment",
+        }),
+        message: err.message,
+      });
     },
   });
 
@@ -359,7 +387,13 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('comments.edit_failed', { defaultValue: 'Failed to edit comment' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("comments.edit_failed", {
+          defaultValue: "Failed to edit comment",
+        }),
+        message: err.message,
+      });
     },
   });
 
@@ -369,7 +403,13 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('comments.delete_failed', { defaultValue: 'Failed to delete comment' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("comments.delete_failed", {
+          defaultValue: "Failed to delete comment",
+        }),
+        message: err.message,
+      });
     },
   });
 
@@ -389,11 +429,11 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         handlePost();
       }
-      if (e.key === 'Escape' && replyToId) {
+      if (e.key === "Escape" && replyToId) {
         setReplyToId(null);
       }
     },
@@ -433,12 +473,12 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
   // -- Render ----------------------------------------------------------------
 
   return (
-    <div className={clsx('flex flex-col', className)}>
+    <div className={clsx("flex flex-col", className)}>
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <MessageSquare size={14} className="text-content-tertiary" />
         <span className="text-xs font-semibold text-content-primary">
-          {t('comments.title', { defaultValue: 'Comments' })}
+          {t("comments.title", { defaultValue: "Comments" })}
         </span>
         {total > 0 && (
           <span className="flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-surface-secondary px-1 text-2xs font-medium text-content-secondary">
@@ -453,12 +493,14 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
           <div className="flex items-center gap-1.5 mb-1.5 px-1">
             <Reply size={10} className="text-oe-blue" />
             <span className="text-2xs text-oe-blue font-medium">
-              {t('comments.replying_to', { defaultValue: 'Replying to comment' })}
+              {t("comments.replying_to", {
+                defaultValue: "Replying to comment",
+              })}
             </span>
             <button
               onClick={handleCancelReply}
               className="ml-auto text-content-tertiary hover:text-content-primary transition-colors"
-              aria-label={t('common.cancel', { defaultValue: 'Cancel' })}
+              aria-label={t("common.cancel", { defaultValue: "Cancel" })}
             >
               <X size={12} />
             </button>
@@ -470,8 +512,8 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={t('comments.placeholder', {
-              defaultValue: 'Write a comment...',
+            placeholder={t("comments.placeholder", {
+              defaultValue: "Write a comment...",
             })}
             className="flex-1 rounded-lg border border-border-medium bg-surface-primary px-3 py-2 text-xs text-content-primary placeholder:text-content-quaternary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue/30 resize-none"
             rows={2}
@@ -480,20 +522,20 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
             onClick={handlePost}
             disabled={!newText.trim() || createMutation.isPending}
             className={clsx(
-              'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all',
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all",
               newText.trim()
-                ? 'bg-oe-blue text-white hover:bg-oe-blue-hover'
-                : 'bg-surface-secondary text-content-quaternary cursor-not-allowed',
+                ? "bg-oe-blue text-white hover:bg-oe-blue-hover"
+                : "bg-surface-secondary text-content-quaternary cursor-not-allowed",
             )}
-            title={t('comments.post', { defaultValue: 'Post' })}
-            aria-label={t('comments.post', { defaultValue: 'Post' })}
+            title={t("comments.post", { defaultValue: "Post" })}
+            aria-label={t("comments.post", { defaultValue: "Post" })}
           >
             <Send size={14} />
           </button>
         </div>
         <p className="mt-1 text-2xs text-content-quaternary px-1">
-          {t('comments.shortcut_hint', {
-            defaultValue: 'Press Ctrl+Enter to post',
+          {t("comments.shortcut_hint", {
+            defaultValue: "Press Ctrl+Enter to post",
           })}
         </p>
       </div>
@@ -515,8 +557,8 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <MessageSquare size={28} className="mb-2 text-content-quaternary" />
           <p className="text-xs text-content-tertiary">
-            {t('comments.empty', {
-              defaultValue: 'No comments yet. Start the discussion.',
+            {t("comments.empty", {
+              defaultValue: "No comments yet. Start the discussion.",
             })}
           </p>
         </div>

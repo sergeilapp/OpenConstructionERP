@@ -11,18 +11,35 @@
  *      (localStorage, 100-viewpoints-per-model cap). Supports rename
  *      (pencil) and delete (trash) (§UX-6).
  */
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Ruler, Camera, Trash2, Play, Pencil, Check, X, Eye, EyeOff, Crosshair } from 'lucide-react';
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Ruler,
+  Camera,
+  Trash2,
+  Play,
+  Pencil,
+  Check,
+  X,
+  Eye,
+  EyeOff,
+  Crosshair,
+  Image as ImageIcon,
+} from "lucide-react";
 import {
   listViewpoints,
   removeViewpoint,
   renameViewpoint,
   addViewpoint,
   type Viewpoint,
-} from '@/shared/ui/BIMViewer';
-import { useBIMViewerStore } from '@/stores/useBIMViewerStore';
-import { useBIMMeasurementsStore, type StoredMeasurement } from '@/stores/useBIMMeasurementsStore';
+  type SavedBIMFilterState,
+  type BIMClipState,
+} from "@/shared/ui/BIMViewer";
+import { useBIMViewerStore } from "@/stores/useBIMViewerStore";
+import {
+  useBIMMeasurementsStore,
+  type StoredMeasurement,
+} from "@/stores/useBIMMeasurementsStore";
 
 interface BIMToolsPanelProps {
   modelId: string;
@@ -32,13 +49,28 @@ interface BIMToolsPanelProps {
     position: { x: number; y: number; z: number };
     target: { x: number; y: number; z: number };
   } | null;
-  /** Move the camera to a stored viewpoint. */
+  /** Current filter-panel snapshot, captured at save time alongside the
+   *  camera so the viewpoint round-trips the full inspection context. */
+  getCurrentFilterState?: () => SavedBIMFilterState | null;
+  /** Current ClipManager snapshot (section box / cutting plane). */
+  getCurrentClipState?: () => BIMClipState | null;
+  /** Capture a small PNG thumbnail of the current viewport. The data-URL is
+   *  stored verbatim on the viewpoint and rendered as a 96×64 preview. */
+  getCurrentScreenshot?: (opts?: {
+    width?: number;
+    height?: number;
+  }) => string | null;
+  /** Move the camera to a stored viewpoint (and apply its filter / clip if
+   *  the viewpoint carries them). */
   onApplyViewpoint: (vp: Viewpoint) => void;
 }
 
 export default function BIMToolsPanel({
   modelId,
   getCurrentViewpoint,
+  getCurrentFilterState,
+  getCurrentClipState,
+  getCurrentScreenshot,
   onApplyViewpoint,
 }: BIMToolsPanelProps) {
   const { t } = useTranslation();
@@ -51,12 +83,16 @@ export default function BIMToolsPanel({
   const setMeasurementVisible = useBIMMeasurementsStore((s) => s.setVisible);
 
   const [views, setViews] = useState<Viewpoint[]>([]);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [quotaWarning, setQuotaWarning] = useState(false);
   const [editingViewId, setEditingViewId] = useState<string | null>(null);
-  const [editingViewDraft, setEditingViewDraft] = useState('');
+  const [editingViewDraft, setEditingViewDraft] = useState("");
   const [editingMeasureId, setEditingMeasureId] = useState<string | null>(null);
-  const [editingMeasureDraft, setEditingMeasureDraft] = useState('');
+  const [editingMeasureDraft, setEditingMeasureDraft] = useState("");
+  /** When true, ``handleSave`` also attaches a 320×180 thumbnail to the
+   *  viewpoint. Defaults to ON so the first save is informative; the user
+   *  can disable for camera-only bookmarks (smaller localStorage payload). */
+  const [includeScreenshot, setIncludeScreenshot] = useState(true);
 
   const refresh = useCallback(() => {
     setViews(listViewpoints(modelId));
@@ -70,15 +106,51 @@ export default function BIMToolsPanel({
     const snapshot = getCurrentViewpoint();
     if (!snapshot) return;
     const fallback = new Date().toLocaleString();
+    // Capture the rest of the viewer state at the moment of save — filter
+    // panel selections, section box / clipping plane, and an optional
+    // thumbnail. Each is best-effort: if the bridge isn't installed (e.g.
+    // unit-test harness mounts the panel standalone) we just store the
+    // camera, keeping back-compat with the v3.11.0 payload shape.
+    const filterState = getCurrentFilterState?.() ?? undefined;
+    const clipState = getCurrentClipState?.() ?? undefined;
+    let screenshotDataUrl: string | undefined;
+    if (includeScreenshot && getCurrentScreenshot) {
+      // 320×180 keeps each PNG roughly 30–60 KB — 100 views ≈ 6 MB per
+      // model, well under the typical localStorage cap. Failures fall
+      // back to a camera-only save (the user still gets the bookmark).
+      try {
+        const thumb = getCurrentScreenshot({ width: 320, height: 180 });
+        screenshotDataUrl = thumb ?? undefined;
+      } catch {
+        screenshotDataUrl = undefined;
+      }
+    }
+
     const result = addViewpoint(modelId, {
       name: (name.trim() || fallback).slice(0, 80),
-      cameraPos: [snapshot.position.x, snapshot.position.y, snapshot.position.z],
+      cameraPos: [
+        snapshot.position.x,
+        snapshot.position.y,
+        snapshot.position.z,
+      ],
       target: [snapshot.target.x, snapshot.target.y, snapshot.target.z],
+      ...(filterState ? { filterState } : {}),
+      ...(clipState ? { clipState } : {}),
+      ...(screenshotDataUrl ? { screenshotDataUrl } : {}),
     });
     setQuotaWarning(result.quotaExceeded);
-    setName('');
+    setName("");
     refresh();
-  }, [getCurrentViewpoint, modelId, name, refresh]);
+  }, [
+    getCurrentViewpoint,
+    getCurrentFilterState,
+    getCurrentClipState,
+    getCurrentScreenshot,
+    includeScreenshot,
+    modelId,
+    name,
+    refresh,
+  ]);
 
   const handleRemove = useCallback(
     (id: string) => {
@@ -97,13 +169,13 @@ export default function BIMToolsPanel({
     if (!editingViewId) return;
     renameViewpoint(modelId, editingViewId, editingViewDraft);
     setEditingViewId(null);
-    setEditingViewDraft('');
+    setEditingViewDraft("");
     refresh();
   }, [editingViewId, editingViewDraft, modelId, refresh]);
 
   const handleCancelRename = useCallback(() => {
     setEditingViewId(null);
-    setEditingViewDraft('');
+    setEditingViewDraft("");
   }, []);
 
   // ── Measurement-row actions are routed through `window.__oeBim` so the
@@ -117,7 +189,8 @@ export default function BIMToolsPanel({
     focusMeasurement?: (id: string) => void;
   } | null => {
     return (
-      (window as unknown as { __oeBim?: ReturnType<typeof bridge> }).__oeBim ?? null
+      (window as unknown as { __oeBim?: ReturnType<typeof bridge> }).__oeBim ??
+      null
     );
   };
 
@@ -152,7 +225,7 @@ export default function BIMToolsPanel({
       {/* Measure */}
       <section className="flex flex-col gap-2">
         <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wide">
-          {t('bim.tools_measure_title', { defaultValue: 'Measure‌⁠‍' })}
+          {t("bim.tools_measure_title", { defaultValue: "Measure‌⁠‍" })}
         </h3>
         <button
           type="button"
@@ -161,18 +234,21 @@ export default function BIMToolsPanel({
           data-testid="measure-toggle"
           className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium border ${
             measureActive
-              ? 'bg-oe-blue/10 text-oe-blue border-oe-blue/40'
-              : 'bg-surface-secondary text-content-secondary border-border-light hover:bg-surface-tertiary'
+              ? "bg-oe-blue/10 text-oe-blue border-oe-blue/40"
+              : "bg-surface-secondary text-content-secondary border-border-light hover:bg-surface-tertiary"
           }`}
         >
           <Ruler size={12} />
           {measureActive
-            ? t('bim.tools_measure_stop', { defaultValue: 'Stop measuring‌⁠‍' })
-            : t('bim.tools_measure_start', { defaultValue: 'Measure distance (M)‌⁠‍' })}
+            ? t("bim.tools_measure_stop", { defaultValue: "Stop measuring‌⁠‍" })
+            : t("bim.tools_measure_start", {
+                defaultValue: "Measure distance (M)‌⁠‍",
+              })}
         </button>
         <p className="text-[10px] text-content-tertiary">
-          {t('bim.tools_measure_hint', {
-            defaultValue: 'Click two points in the viewport to record a distance.‌⁠‍',
+          {t("bim.tools_measure_hint", {
+            defaultValue:
+              "Click two points in the viewport to record a distance.‌⁠‍",
           })}
         </p>
 
@@ -181,8 +257,8 @@ export default function BIMToolsPanel({
         {measurements.length > 0 && (
           <div className="mt-1 flex items-center justify-between">
             <span className="text-[10px] text-content-tertiary">
-              {t('bim.tools_measure_count', {
-                defaultValue: '{{count}} saved‌⁠‍',
+              {t("bim.tools_measure_count", {
+                defaultValue: "{{count}} saved‌⁠‍",
                 count: measurements.length,
               })}
             </span>
@@ -192,16 +268,13 @@ export default function BIMToolsPanel({
               className="text-[10px] text-rose-600 hover:underline"
               data-testid="measure-clear-all"
             >
-              {t('bim.tools_measure_clear_all', {
-                defaultValue: 'Clear all measurements',
+              {t("bim.tools_measure_clear_all", {
+                defaultValue: "Clear all measurements",
               })}
             </button>
           </div>
         )}
-        <ul
-          className="flex flex-col gap-1"
-          data-testid="measurements-list"
-        >
+        <ul className="flex flex-col gap-1" data-testid="measurements-list">
           {measurements.map((m) => {
             const isEditing = editingMeasureId === m.id;
             return (
@@ -217,11 +290,11 @@ export default function BIMToolsPanel({
                       value={editingMeasureDraft}
                       onChange={(e) => setEditingMeasureDraft(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           renameMeasurement(m.id, editingMeasureDraft);
                           setEditingMeasureId(null);
                         }
-                        if (e.key === 'Escape') setEditingMeasureId(null);
+                        if (e.key === "Escape") setEditingMeasureId(null);
                       }}
                       autoFocus
                       className="flex-1 min-w-0 rounded border border-border-light bg-surface-secondary px-1 py-0.5 text-[11px]"
@@ -233,7 +306,9 @@ export default function BIMToolsPanel({
                         setEditingMeasureId(null);
                       }}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary hover:text-emerald-600 shrink-0"
-                      aria-label={t('common.confirm', { defaultValue: 'Confirm' })}
+                      aria-label={t("common.confirm", {
+                        defaultValue: "Confirm",
+                      })}
                     >
                       <Check size={11} />
                     </button>
@@ -241,7 +316,9 @@ export default function BIMToolsPanel({
                       type="button"
                       onClick={() => setEditingMeasureId(null)}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary shrink-0"
-                      aria-label={t('common.cancel', { defaultValue: 'Cancel' })}
+                      aria-label={t("common.cancel", {
+                        defaultValue: "Cancel",
+                      })}
                     >
                       <X size={11} />
                     </button>
@@ -252,10 +329,14 @@ export default function BIMToolsPanel({
                       type="button"
                       onClick={() => handleFocusMeasurement(m.id)}
                       className="flex flex-1 min-w-0 items-center gap-1.5 text-left"
-                      title={t('bim.tools_measure_focus', { defaultValue: 'Focus camera' })}
+                      title={t("bim.tools_measure_focus", {
+                        defaultValue: "Focus camera",
+                      })}
                     >
                       <Crosshair size={10} className="text-oe-blue shrink-0" />
-                      <span className="truncate text-[11px] text-content-primary">{m.label}</span>
+                      <span className="truncate text-[11px] text-content-primary">
+                        {m.label}
+                      </span>
                       <span className="text-[10px] tabular-nums text-content-tertiary shrink-0">
                         {m.distance.toFixed(2)} m
                       </span>
@@ -267,8 +348,8 @@ export default function BIMToolsPanel({
                         setEditingMeasureDraft(m.label);
                       }}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary hover:text-oe-blue shrink-0"
-                      aria-label={t('bim.tools_measure_rename', {
-                        defaultValue: 'Rename measurement',
+                      aria-label={t("bim.tools_measure_rename", {
+                        defaultValue: "Rename measurement",
                       })}
                     >
                       <Pencil size={11} />
@@ -279,8 +360,12 @@ export default function BIMToolsPanel({
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary shrink-0"
                       aria-label={
                         m.visible
-                          ? t('bim.tools_measure_hide', { defaultValue: 'Hide' })
-                          : t('bim.tools_measure_show', { defaultValue: 'Show' })
+                          ? t("bim.tools_measure_hide", {
+                              defaultValue: "Hide",
+                            })
+                          : t("bim.tools_measure_show", {
+                              defaultValue: "Show",
+                            })
                       }
                     >
                       {m.visible ? <Eye size={11} /> : <EyeOff size={11} />}
@@ -289,8 +374,8 @@ export default function BIMToolsPanel({
                       type="button"
                       onClick={() => handleDeleteMeasurement(m.id)}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary hover:text-rose-600 shrink-0"
-                      aria-label={t('bim.tools_measure_delete', {
-                        defaultValue: 'Delete measurement',
+                      aria-label={t("bim.tools_measure_delete", {
+                        defaultValue: "Delete measurement",
                       })}
                       data-testid="measurement-delete"
                     >
@@ -307,7 +392,7 @@ export default function BIMToolsPanel({
       {/* Saved views */}
       <section className="flex flex-col gap-2">
         <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wide">
-          {t('bim.tools_views_title', { defaultValue: 'Saved views' })}
+          {t("bim.tools_views_title", { defaultValue: "Saved views" })}
         </h3>
         {/* Tightened layout (RFC 19 §UX-5):
             – `min-w-0` on the input lets it actually shrink so the Save
@@ -319,8 +404,8 @@ export default function BIMToolsPanel({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder={t('bim.tools_view_name_placeholder', {
-              defaultValue: 'View name…',
+            placeholder={t("bim.tools_view_name_placeholder", {
+              defaultValue: "View name…",
             })}
             className="min-w-0 flex-1 rounded-md border border-border-light bg-surface-primary px-2 py-1 text-[11px] text-content-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
             data-testid="save-view-name"
@@ -332,25 +417,40 @@ export default function BIMToolsPanel({
             data-testid="save-view-button"
           >
             <Camera size={12} />
-            {t('bim.tools_views_save', { defaultValue: 'Save' })}
+            {t("bim.tools_views_save", { defaultValue: "Save" })}
           </button>
         </div>
+        {/* Thumbnail toggle — small inline checkbox so the user can opt out
+            of the ~50 KB PNG attachment when bookmarking a hundred angles. */}
+        <label className="flex items-center gap-1.5 text-[10px] text-content-tertiary select-none cursor-pointer">
+          <input
+            type="checkbox"
+            checked={includeScreenshot}
+            onChange={(e) => setIncludeScreenshot(e.target.checked)}
+            className="h-3 w-3"
+            data-testid="save-view-include-screenshot"
+          />
+          <ImageIcon size={10} />
+          {t("bim.tools_views_attach_thumb", {
+            defaultValue: "Attach thumbnail (PNG, ~50 KB)",
+          })}
+        </label>
         {quotaWarning && (
           <div
             role="alert"
             className="rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 px-2 py-1 text-[10px] text-amber-700 dark:text-amber-200"
           >
-            {t('bim.tools_views_quota', {
+            {t("bim.tools_views_quota", {
               defaultValue:
-                'Limit of 100 views per model reached — the oldest was removed.',
+                "Limit of 100 views per model reached — the oldest was removed.",
             })}
           </div>
         )}
         <ul className="flex flex-col gap-1" data-testid="saved-views-list">
           {views.length === 0 && (
             <li className="text-[11px] text-content-tertiary italic">
-              {t('bim.tools_views_empty', {
-                defaultValue: 'No saved views yet.',
+              {t("bim.tools_views_empty", {
+                defaultValue: "No saved views yet.",
               })}
             </li>
           )}
@@ -369,8 +469,8 @@ export default function BIMToolsPanel({
                       value={editingViewDraft}
                       onChange={(e) => setEditingViewDraft(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleConfirmRename();
-                        if (e.key === 'Escape') handleCancelRename();
+                        if (e.key === "Enter") handleConfirmRename();
+                        if (e.key === "Escape") handleCancelRename();
                       }}
                       autoFocus
                       className="flex-1 min-w-0 rounded border border-border-light bg-surface-secondary px-1 py-0.5 text-[11px]"
@@ -380,7 +480,9 @@ export default function BIMToolsPanel({
                       type="button"
                       onClick={handleConfirmRename}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary hover:text-emerald-600 shrink-0"
-                      aria-label={t('common.confirm', { defaultValue: 'Confirm' })}
+                      aria-label={t("common.confirm", {
+                        defaultValue: "Confirm",
+                      })}
                     >
                       <Check size={11} />
                     </button>
@@ -388,7 +490,9 @@ export default function BIMToolsPanel({
                       type="button"
                       onClick={handleCancelRename}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary shrink-0"
-                      aria-label={t('common.cancel', { defaultValue: 'Cancel' })}
+                      aria-label={t("common.cancel", {
+                        defaultValue: "Cancel",
+                      })}
                     >
                       <X size={11} />
                     </button>
@@ -402,14 +506,52 @@ export default function BIMToolsPanel({
                       data-testid={`apply-view-${v.name}`}
                       title={new Date(v.createdAt).toLocaleString()}
                     >
-                      <Play size={10} className="shrink-0" />
+                      {v.screenshotDataUrl ? (
+                        // Thumbnail preview — keeps the row to ~24px tall by
+                        // forcing a 32×20 aspect window. Image alt is the
+                        // view name so screen readers still announce the row.
+                        <img
+                          src={v.screenshotDataUrl}
+                          alt={v.name}
+                          className="w-8 h-5 rounded object-cover border border-border-light shrink-0"
+                          data-testid="saved-view-thumb"
+                        />
+                      ) : (
+                        <Play size={10} className="shrink-0" />
+                      )}
                       <span className="truncate">{v.name}</span>
+                      {/* Tiny badges hint at what the view captured. */}
+                      {v.clipState && v.clipState.mode !== "none" && (
+                        <span
+                          className="ms-1 shrink-0 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-1 py-px text-[8px] font-semibold uppercase"
+                          title={t("bim.tools_views_has_clip", {
+                            defaultValue: "Has section clip",
+                          })}
+                        >
+                          {v.clipState.mode}
+                        </span>
+                      )}
+                      {v.filterState &&
+                        ((v.filterState.storeys?.length ?? 0) > 0 ||
+                          (v.filterState.types?.length ?? 0) > 0 ||
+                          !!v.filterState.search) && (
+                          <span
+                            className="ms-1 shrink-0 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-1 py-px text-[8px] font-semibold uppercase"
+                            title={t("bim.tools_views_has_filter", {
+                              defaultValue: "Has filter",
+                            })}
+                          >
+                            {t("bim.tools_views_filter_badge", {
+                              defaultValue: "flt",
+                            })}
+                          </span>
+                        )}
                     </button>
                     <button
                       type="button"
                       onClick={() => handleStartRename(v)}
-                      aria-label={t('bim.tools_views_rename', {
-                        defaultValue: 'Rename view {{name}}',
+                      aria-label={t("bim.tools_views_rename", {
+                        defaultValue: "Rename view {{name}}",
                         name: v.name,
                       })}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary hover:text-oe-blue shrink-0"
@@ -420,8 +562,8 @@ export default function BIMToolsPanel({
                     <button
                       type="button"
                       onClick={() => handleRemove(v.id)}
-                      aria-label={t('bim.tools_views_delete', {
-                        defaultValue: 'Delete view {{name}}',
+                      aria-label={t("bim.tools_views_delete", {
+                        defaultValue: "Delete view {{name}}",
                         name: v.name,
                       })}
                       className="inline-flex h-5 w-5 items-center justify-center rounded text-content-tertiary hover:bg-surface-tertiary hover:text-rose-600 shrink-0"

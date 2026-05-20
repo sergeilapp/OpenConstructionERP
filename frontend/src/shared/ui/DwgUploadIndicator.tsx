@@ -9,9 +9,9 @@
  * two never overlap when both stores have jobs in flight.
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Upload,
   Check,
@@ -20,13 +20,17 @@ import {
   ChevronUp,
   ChevronDown,
   ExternalLink,
-} from 'lucide-react';
-import { useDwgUploadStore, type DwgUploadJob } from '@/stores/useDwgUploadStore';
+} from "lucide-react";
+import {
+  useDwgUploadStore,
+  type DwgUploadJob,
+} from "@/stores/useDwgUploadStore";
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }
 
@@ -50,11 +54,14 @@ export function DwgUploadIndicator() {
 
   const allJobs = useMemo(() => Array.from(jobs.values()), [jobs]);
   const active = useMemo(
-    () => allJobs.filter((j) => j.status === 'uploading' || j.status === 'converting'),
+    () =>
+      allJobs.filter(
+        (j) => j.status === "uploading" || j.status === "converting",
+      ),
     [allJobs],
   );
   const finished = useMemo(
-    () => allJobs.filter((j) => j.status === 'ready' || j.status === 'error'),
+    () => allJobs.filter((j) => j.status === "ready" || j.status === "error"),
     [allJobs],
   );
 
@@ -72,7 +79,7 @@ export function DwgUploadIndicator() {
     const timers: ReturnType<typeof setTimeout>[] = [];
     for (const job of finished) {
       if (!job.completedAt) continue;
-      const lifetime = job.status === 'ready' ? 8_000 : 5 * 60 * 1000;
+      const lifetime = job.status === "ready" ? 8_000 : 5 * 60 * 1000;
       const remaining = lifetime - (Date.now() - job.completedAt);
       if (remaining <= 0) dismissJob(job.id);
       else timers.push(setTimeout(() => dismissJob(job.id), remaining));
@@ -82,20 +89,22 @@ export function DwgUploadIndicator() {
 
   // Warn before unload only while actually transferring bytes.
   useEffect(() => {
-    const isTransferring = active.some((j) => j.status === 'uploading');
+    const isTransferring = active.some((j) => j.status === "uploading");
     if (!isTransferring) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = '';
+      e.returnValue = "";
     };
-    window.addEventListener('beforeunload', handler);
-    return () => window.removeEventListener('beforeunload', handler);
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
   }, [active]);
 
   const handleOpen = useCallback(
     (job: DwgUploadJob) => {
       if (job.drawingId && job.projectId) {
-        navigate(`/dwg-takeoff?project_id=${job.projectId}&drawing_id=${job.drawingId}`);
+        navigate(
+          `/dwg-takeoff?project_id=${job.projectId}&drawing_id=${job.drawingId}`,
+        );
       } else if (job.projectId) {
         navigate(`/dwg-takeoff?project_id=${job.projectId}`);
       }
@@ -110,7 +119,8 @@ export function DwgUploadIndicator() {
 
   // Minimised pill — sits above the BIM indicator so they never overlap.
   if (!expanded) {
-    const isActive = primary.status === 'uploading' || primary.status === 'converting';
+    const isActive =
+      primary.status === "uploading" || primary.status === "converting";
     return (
       <button
         type="button"
@@ -120,7 +130,7 @@ export function DwgUploadIndicator() {
       >
         {isActive ? (
           <Loader2 size={14} className="text-oe-blue animate-spin shrink-0" />
-        ) : primary.status === 'ready' ? (
+        ) : primary.status === "ready" ? (
           <Check size={14} className="text-emerald-500 shrink-0" />
         ) : (
           <X size={14} className="text-red-500 shrink-0" />
@@ -163,14 +173,14 @@ export function DwgUploadIndicator() {
         <div className="flex items-center gap-2">
           <Upload size={14} className="text-oe-blue" />
           <span className="text-xs font-semibold text-content-primary">
-            {t('dwg_upload.title', { defaultValue: 'DWG Uploads‌⁠‍' })}
+            {t("dwg_upload.title", { defaultValue: "DWG Uploads‌⁠‍" })}
           </span>
         </div>
         <button
           type="button"
           onClick={() => setExpanded(false)}
           className="p-1 rounded hover:bg-surface-secondary text-content-tertiary"
-          aria-label={t('common.collapse', { defaultValue: 'Collapse‌⁠‍' })}
+          aria-label={t("common.collapse", { defaultValue: "Collapse‌⁠‍" })}
         >
           <ChevronDown size={14} />
         </button>
@@ -203,21 +213,27 @@ function DwgJobRow({
   onOpen: () => void;
 }) {
   const { t } = useTranslation();
-  const isActive = job.status === 'uploading' || job.status === 'converting';
-  const isDone = job.status === 'ready';
-  const isError = job.status === 'error';
+  const isActive = job.status === "uploading" || job.status === "converting";
+  const isDone = job.status === "ready";
+  const isError = job.status === "error";
 
   return (
     <div className="px-4 py-3 flex items-start gap-3">
       <div className="mt-0.5 shrink-0">
-        {isActive && <Loader2 size={16} className="text-oe-blue animate-spin" />}
+        {isActive && (
+          <Loader2 size={16} className="text-oe-blue animate-spin" />
+        )}
         {isDone && <Check size={16} className="text-emerald-500" />}
         {isError && <X size={16} className="text-red-500" />}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium text-content-primary truncate">{job.fileName}</p>
-        <p className="text-[10px] text-content-quaternary">{formatFileSize(job.fileSize)}</p>
+        <p className="text-xs font-medium text-content-primary truncate">
+          {job.fileName}
+        </p>
+        <p className="text-[10px] text-content-quaternary">
+          {formatFileSize(job.fileSize)}
+        </p>
 
         {isActive && (
           <div className="mt-1.5">
@@ -233,14 +249,16 @@ function DwgJobRow({
               </span>
             </div>
             <p className="text-[10px] text-content-quaternary mt-0.5">
-              {t(job.stage, { defaultValue: 'Processing...‌⁠‍' })} — {elapsed(job.startedAt)}
+              {t(job.stage, { defaultValue: "Processing...‌⁠‍" })} —{" "}
+              {elapsed(job.startedAt)}
             </p>
           </div>
         )}
 
         {isError && (
           <p className="text-[10px] text-red-500 mt-0.5 line-clamp-2">
-            {job.errorMessage || t('dwg_upload.failed', { defaultValue: 'Upload failed‌⁠‍' })}
+            {job.errorMessage ||
+              t("dwg_upload.failed", { defaultValue: "Upload failed‌⁠‍" })}
           </p>
         )}
 
@@ -251,7 +269,7 @@ function DwgJobRow({
               onClick={onCancel}
               className="text-[10px] text-content-tertiary hover:text-red-500 font-medium"
             >
-              {t('common.cancel', { defaultValue: 'Cancel‌⁠‍' })}
+              {t("common.cancel", { defaultValue: "Cancel‌⁠‍" })}
             </button>
           )}
           {isDone && job.drawingId && (
@@ -261,7 +279,7 @@ function DwgJobRow({
               className="inline-flex items-center gap-1 text-[10px] text-oe-blue hover:underline font-medium"
             >
               <ExternalLink size={10} />
-              {t('dwg_upload.open', { defaultValue: 'Open' })}
+              {t("dwg_upload.open", { defaultValue: "Open" })}
             </button>
           )}
           {!isActive && (
@@ -270,7 +288,7 @@ function DwgJobRow({
               onClick={onDismiss}
               className="text-[10px] text-content-quaternary hover:text-content-secondary"
             >
-              {t('common.dismiss', { defaultValue: 'Dismiss' })}
+              {t("common.dismiss", { defaultValue: "Dismiss" })}
             </button>
           )}
         </div>

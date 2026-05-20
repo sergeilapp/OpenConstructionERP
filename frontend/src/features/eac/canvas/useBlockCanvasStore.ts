@@ -17,11 +17,11 @@
  * regardless of which surface (xyflow handle, keyboard, paste) created
  * them.
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import type { BlockColor } from '../types';
-import type { CanvasDropPayload, SlotDataType, SlotDefinition } from './dnd';
-import { canConnectSlots } from './dnd';
+import type { BlockColor } from "../types";
+import type { CanvasDropPayload, SlotDataType, SlotDefinition } from "./dnd";
+import { canConnectSlots } from "./dnd";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -71,7 +71,7 @@ export interface BlockCanvasState {
 export interface BlockCanvasActions {
   addBlock: (drop: CanvasDropPayload, slots?: SlotDefinition[]) => string;
   removeBlock: (id: string) => void;
-  updateBlock: (id: string, patch: Partial<Omit<CanvasBlock, 'id'>>) => void;
+  updateBlock: (id: string, patch: Partial<Omit<CanvasBlock, "id">>) => void;
   moveBlock: (id: string, position: { x: number; y: number }) => void;
   setBlockTitle: (id: string, title: string) => void;
   toggleBlockExpanded: (id: string) => void;
@@ -80,7 +80,9 @@ export interface BlockCanvasActions {
   clearSelection: () => void;
   copySelection: () => void;
   pasteClipboard: (offset?: { x: number; y: number }) => string[];
-  addConnection: (conn: Omit<CanvasConnection, 'id' | 'dataType'>) => CanvasConnection | null;
+  addConnection: (
+    conn: Omit<CanvasConnection, "id" | "dataType">,
+  ) => CanvasConnection | null;
   removeConnection: (id: string) => void;
   undo: () => void;
   redo: () => void;
@@ -109,7 +111,8 @@ let _idCounter = 0;
 function genId(prefix: string): string {
   _idCounter += 1;
   let suffix: string;
-  const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } })
+    .crypto;
   if (cryptoLike?.randomUUID) {
     suffix = cryptoLike.randomUUID().slice(0, 8);
   } else {
@@ -140,7 +143,10 @@ function cloneSnapshot(snap: CanvasSnapshot): CanvasSnapshot {
 }
 
 /** Find a slot on a block by id, or undefined. */
-function findSlot(block: CanvasBlock | undefined, slotId: string): SlotDefinition | undefined {
+function findSlot(
+  block: CanvasBlock | undefined,
+  slotId: string,
+): SlotDefinition | undefined {
   return block?.slots.find((s) => s.id === slotId);
 }
 
@@ -156,7 +162,10 @@ export const useBlockCanvasStore = create<BlockCanvasStore>((set, get) => {
    * `historyIndex` is always >= 0 and `undo()` can step back to that
    * baseline whenever any mutation happened.
    */
-  function commitHistory(next: { blocks: CanvasBlock[]; connections: CanvasConnection[] }) {
+  function commitHistory(next: {
+    blocks: CanvasBlock[];
+    connections: CanvasConnection[];
+  }) {
     const { history, historyIndex } = get();
     const snapshot = cloneSnapshot(next);
     // Drop any "redo" tail when a new mutation diverges from history.
@@ -179,7 +188,7 @@ export const useBlockCanvasStore = create<BlockCanvasStore>((set, get) => {
 
     // ── Block actions ────────────────────────────────────────────────────
     addBlock: (drop, slots) => {
-      const id = genId('block');
+      const id = genId("block");
       const block: CanvasBlock = {
         id,
         kind: drop.kind,
@@ -287,9 +296,7 @@ export const useBlockCanvasStore = create<BlockCanvasStore>((set, get) => {
     // ── Clipboard ────────────────────────────────────────────────────────
     copySelection: () => {
       const { blocks, selection } = get();
-      const copied = blocks
-        .filter((b) => selection.has(b.id))
-        .map(cloneBlock);
+      const copied = blocks.filter((b) => selection.has(b.id)).map(cloneBlock);
       set({ clipboard: copied });
     },
 
@@ -298,7 +305,7 @@ export const useBlockCanvasStore = create<BlockCanvasStore>((set, get) => {
       if (clipboard.length === 0) return [];
       const newIds: string[] = [];
       const fresh = clipboard.map((b) => {
-        const id = genId('block');
+        const id = genId("block");
         newIds.push(id);
         return {
           ...cloneBlock(b),
@@ -336,7 +343,7 @@ export const useBlockCanvasStore = create<BlockCanvasStore>((set, get) => {
       // Self-loops are nonsense — the source and target must differ.
       if (raw.sourceBlockId === raw.targetBlockId) return null;
       const conn: CanvasConnection = {
-        id: genId('conn'),
+        id: genId("conn"),
         sourceBlockId: raw.sourceBlockId,
         sourceSlotId: raw.sourceSlotId,
         targetBlockId: raw.targetBlockId,

@@ -16,7 +16,7 @@
  * to a different graph library (xyflow alternatives) only touch the canvas
  * components, not the data plumbing.
  */
-import type { BlockColor } from '../types';
+import type { BlockColor } from "../types";
 
 // ── Slot data types ──────────────────────────────────────────────────────
 
@@ -26,18 +26,18 @@ import type { BlockColor } from '../types';
  * entry in `SLOT_TYPE_COMPATIBILITY` so the matrix stays exhaustive.
  */
 export type SlotDataType =
-  | 'selector'    // EntitySelector — leaf or composed
-  | 'predicate'   // Predicate — triplet / and / or / not
-  | 'attribute'   // AttributeRef — exact / alias / regex
-  | 'constraint'  // Constraint — operator + value(s)
-  | 'variable'    // LocalVariableDefinition output
-  | 'number'      // numeric scalar (formula input)
-  | 'string'      // string literal (formula input)
-  | 'boolean'     // boolean scalar
-  | 'any';        // wildcard — used by formula composer
+  | "selector" // EntitySelector — leaf or composed
+  | "predicate" // Predicate — triplet / and / or / not
+  | "attribute" // AttributeRef — exact / alias / regex
+  | "constraint" // Constraint — operator + value(s)
+  | "variable" // LocalVariableDefinition output
+  | "number" // numeric scalar (formula input)
+  | "string" // string literal (formula input)
+  | "boolean" // boolean scalar
+  | "any"; // wildcard — used by formula composer
 
 /** Slot direction relative to its parent block. */
-export type SlotDirection = 'input' | 'output';
+export type SlotDirection = "input" | "output";
 
 /** A single slot definition on a block node. */
 export interface SlotDefinition {
@@ -67,25 +67,28 @@ export interface SlotDefinition {
  *   - Scalars (`number`, `string`, `boolean`) feed only their own types or
  *     `any`.
  */
-export const SLOT_TYPE_COMPATIBILITY: Record<SlotDataType, ReadonlySet<SlotDataType>> = {
-  selector: new Set<SlotDataType>(['selector', 'any']),
-  predicate: new Set<SlotDataType>(['predicate', 'any']),
-  attribute: new Set<SlotDataType>(['attribute', 'any']),
-  constraint: new Set<SlotDataType>(['constraint', 'any']),
-  variable: new Set<SlotDataType>(['variable', 'number', 'any']),
-  number: new Set<SlotDataType>(['number', 'variable', 'any']),
-  string: new Set<SlotDataType>(['string', 'any']),
-  boolean: new Set<SlotDataType>(['boolean', 'any']),
+export const SLOT_TYPE_COMPATIBILITY: Record<
+  SlotDataType,
+  ReadonlySet<SlotDataType>
+> = {
+  selector: new Set<SlotDataType>(["selector", "any"]),
+  predicate: new Set<SlotDataType>(["predicate", "any"]),
+  attribute: new Set<SlotDataType>(["attribute", "any"]),
+  constraint: new Set<SlotDataType>(["constraint", "any"]),
+  variable: new Set<SlotDataType>(["variable", "number", "any"]),
+  number: new Set<SlotDataType>(["number", "variable", "any"]),
+  string: new Set<SlotDataType>(["string", "any"]),
+  boolean: new Set<SlotDataType>(["boolean", "any"]),
   any: new Set<SlotDataType>([
-    'selector',
-    'predicate',
-    'attribute',
-    'constraint',
-    'variable',
-    'number',
-    'string',
-    'boolean',
-    'any',
+    "selector",
+    "predicate",
+    "attribute",
+    "constraint",
+    "variable",
+    "number",
+    "string",
+    "boolean",
+    "any",
   ]),
 };
 
@@ -94,7 +97,10 @@ export const SLOT_TYPE_COMPATIBILITY: Record<SlotDataType, ReadonlySet<SlotDataT
  * type `target`. Symmetric — but we keep argument order explicit because the
  * canvas always knows which side is the source.
  */
-export function isSlotCompatible(source: SlotDataType, target: SlotDataType): boolean {
+export function isSlotCompatible(
+  source: SlotDataType,
+  target: SlotDataType,
+): boolean {
   const allowed = SLOT_TYPE_COMPATIBILITY[source];
   if (!allowed) return false;
   return allowed.has(target);
@@ -104,9 +110,12 @@ export function isSlotCompatible(source: SlotDataType, target: SlotDataType): bo
  * Return true when a connection between two specific slot definitions is
  * allowed. Enforces directionality (output → input) and type compatibility.
  */
-export function canConnectSlots(source: SlotDefinition, target: SlotDefinition): boolean {
-  if (source.direction !== 'output') return false;
-  if (target.direction !== 'input') return false;
+export function canConnectSlots(
+  source: SlotDefinition,
+  target: SlotDefinition,
+): boolean {
+  if (source.direction !== "output") return false;
+  if (target.direction !== "input") return false;
   return isSlotCompatible(source.dataType, target.dataType);
 }
 
@@ -117,31 +126,31 @@ export function canConnectSlots(source: SlotDefinition, target: SlotDefinition):
  * the dnd payload uses `kind` strings directly and the store consumes them.
  */
 export const BLOCK_KIND_TO_COLOR: Record<string, BlockColor> = {
-  selector: 'selector',
-  ifc_class: 'selector',
-  category: 'selector',
-  classification: 'selector',
-  spatial: 'selector',
-  and: 'logic',
-  or: 'logic',
-  not: 'logic',
-  triplet: 'attribute',
-  attribute: 'attribute',
-  exact: 'attribute',
-  alias: 'attribute',
-  regex: 'attribute',
-  constraint: 'constraint',
-  eq: 'constraint',
-  gte: 'constraint',
-  between: 'constraint',
-  in: 'constraint',
-  matches: 'constraint',
-  variable: 'variable',
+  selector: "selector",
+  ifc_class: "selector",
+  category: "selector",
+  classification: "selector",
+  spatial: "selector",
+  and: "logic",
+  or: "logic",
+  not: "logic",
+  triplet: "attribute",
+  attribute: "attribute",
+  exact: "attribute",
+  alias: "attribute",
+  regex: "attribute",
+  constraint: "constraint",
+  eq: "constraint",
+  gte: "constraint",
+  between: "constraint",
+  in: "constraint",
+  matches: "constraint",
+  variable: "variable",
 };
 
 /** Resolve a palette kind to a block color, falling back to "selector". */
 export function colorForKind(kind: string): BlockColor {
-  return BLOCK_KIND_TO_COLOR[kind] ?? 'selector';
+  return BLOCK_KIND_TO_COLOR[kind] ?? "selector";
 }
 
 // ── Canvas drop translation ──────────────────────────────────────────────
@@ -173,11 +182,17 @@ export function buildDropPayload(args: {
   paletteRawPayload?: Record<string, unknown>;
   position: { x: number; y: number };
 }): CanvasDropPayload {
-  const { paletteItemId, paletteLabel, paletteColor, paletteRawPayload, position } = args;
-  const rawType = (paletteRawPayload?.['type'] ?? paletteRawPayload?.['kind'] ?? paletteRawPayload?.['operator']) as
-    | string
-    | undefined;
-  const kind = rawType ?? paletteItemId.split('.').pop() ?? 'selector';
+  const {
+    paletteItemId,
+    paletteLabel,
+    paletteColor,
+    paletteRawPayload,
+    position,
+  } = args;
+  const rawType = (paletteRawPayload?.["type"] ??
+    paletteRawPayload?.["kind"] ??
+    paletteRawPayload?.["operator"]) as string | undefined;
+  const kind = rawType ?? paletteItemId.split(".").pop() ?? "selector";
   return {
     kind,
     color: paletteColor,

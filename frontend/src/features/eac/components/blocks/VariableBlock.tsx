@@ -3,10 +3,13 @@
  *
  * Format: `name = aggregate(...)` or `name = expression`.
  */
-import { BlockShell, type BlockShellProps } from './BlockShell';
-import type { LocalVariableDefinition } from '../../types';
+import { BlockShell, type BlockShellProps } from "./BlockShell";
+import type { LocalVariableDefinition } from "../../types";
 
-type ForwardedShellProps = Omit<BlockShellProps, 'color' | 'children' | 'label'>;
+type ForwardedShellProps = Omit<
+  BlockShellProps,
+  "color" | "children" | "label"
+>;
 
 export interface VariableBlockProps extends ForwardedShellProps {
   variable: LocalVariableDefinition;
@@ -15,9 +18,9 @@ export interface VariableBlockProps extends ForwardedShellProps {
 
 /** Compact human description for a local variable. */
 export function describeVariable(variable: LocalVariableDefinition): string {
-  const lhs = variable.name || '(unnamed)';
+  const lhs = variable.name || "(unnamed)";
   if (variable.aggregate) {
-    const arg = variable.expression ?? variable.source?.kind ?? '…';
+    const arg = variable.expression ?? variable.source?.kind ?? "…";
     return `${lhs} = ${variable.aggregate}(${arg})`;
   }
   if (variable.expression) {
@@ -26,10 +29,14 @@ export function describeVariable(variable: LocalVariableDefinition): string {
   return lhs;
 }
 
-export function VariableBlock({ variable, label, ...shellProps }: VariableBlockProps) {
+export function VariableBlock({
+  variable,
+  label,
+  ...shellProps
+}: VariableBlockProps) {
   const summary = describeVariable(variable);
   return (
-    <BlockShell color="variable" label={label ?? 'Variable'} {...shellProps}>
+    <BlockShell color="variable" label={label ?? "Variable"} {...shellProps}>
       {summary}
     </BlockShell>
   );

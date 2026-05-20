@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 /**
  * Global FX rates store — keyed by ISO 4217 currency code, values are
@@ -76,7 +76,7 @@ export const useFxRatesStore = create<FxRatesState>()(
         }),
       reset: () => set({ ratesVsUsd: { ...SEED_RATES_VS_USD } }),
     }),
-    { name: 'oe-fx-rates-v1' },
+    { name: "oe-fx-rates-v1" },
   ),
 );
 
@@ -95,7 +95,7 @@ export function getFxRate(
   if (from === to) return 1;
   const fromUsd = ratesVsUsd[from];
   const toUsd = ratesVsUsd[to];
-  if (typeof fromUsd !== 'number' || typeof toUsd !== 'number' || toUsd === 0) {
+  if (typeof fromUsd !== "number" || typeof toUsd !== "number" || toUsd === 0) {
     return undefined;
   }
   return fromUsd / toUsd;

@@ -1,13 +1,13 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import { TranslationManager } from './TranslationManager';
-import { BackupRestore } from './BackupRestore';
-import { RegionalSettings } from './RegionalSettings';
-import { WebhookLeads } from './WebhookLeads';
-import VectorStatusCard from './VectorStatusCard';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import { TranslationManager } from "./TranslationManager";
+import { BackupRestore } from "./BackupRestore";
+import { RegionalSettings } from "./RegionalSettings";
+import { WebhookLeads } from "./WebhookLeads";
+import VectorStatusCard from "./VectorStatusCard";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Eye,
   EyeOff,
@@ -34,16 +34,33 @@ import {
   ChevronRight,
   Wrench,
   Search,
-} from 'lucide-react';
-import { Card, CardHeader, CardContent, CardFooter, Button, Badge, InfoHint, Skeleton, Breadcrumb } from '@/shared/ui';
-import { UpdateNotification } from '@/shared/ui/UpdateChecker';
-import { apiGet, apiPatch, apiPost } from '@/shared/lib/api';
-import { SUPPORTED_LANGUAGES } from '@/app/i18n';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useThemeStore } from '@/stores/useThemeStore';
-import { useToastStore } from '@/stores/useToastStore';
-import { useViewModeStore } from '@/stores/useViewModeStore';
-import { aiApi, type AIProvider, type AIConnectionStatus, type AISettings } from '@/features/ai/api';
+  LayoutGrid,
+} from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Button,
+  Badge,
+  InfoHint,
+  Skeleton,
+  Breadcrumb,
+} from "@/shared/ui";
+import { DashboardLayoutManager } from "@/features/dashboard/DashboardLayoutManager";
+import { UpdateNotification } from "@/shared/ui/UpdateChecker";
+import { apiGet, apiPatch, apiPost } from "@/shared/lib/api";
+import { SUPPORTED_LANGUAGES } from "@/app/i18n";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useThemeStore } from "@/stores/useThemeStore";
+import { useToastStore } from "@/stores/useToastStore";
+import { useViewModeStore } from "@/stores/useViewModeStore";
+import {
+  aiApi,
+  type AIProvider,
+  type AIConnectionStatus,
+  type AISettings,
+} from "@/features/ai/api";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -67,210 +84,233 @@ interface ProviderInfo {
   keyPrefix: string;
   docsUrl: string;
   recommended?: boolean;
-  region: 'global' | 'china' | 'russia';
+  region: "global" | "china" | "russia";
 }
 
 const AI_PROVIDERS: ProviderInfo[] = [
   // ── Global ──────────────────────────────────────────────────────────
   {
-    id: 'anthropic',
-    name: 'Anthropic Claude',
-    description: 'settings.ai_desc_anthropic',
-    descriptionDefault: 'Claude Sonnet / Opus — best for construction estimation and analysis',
-    keyPrefix: 'sk-ant-',
-    docsUrl: 'https://console.anthropic.com/settings/keys',
+    id: "anthropic",
+    name: "Anthropic Claude",
+    description: "settings.ai_desc_anthropic",
+    descriptionDefault:
+      "Claude Sonnet / Opus — best for construction estimation and analysis",
+    keyPrefix: "sk-ant-",
+    docsUrl: "https://console.anthropic.com/settings/keys",
     recommended: true,
-    region: 'global',
+    region: "global",
   },
   {
-    id: 'openai',
-    name: 'OpenAI GPT-4',
-    description: 'settings.ai_desc_openai',
-    descriptionDefault: 'GPT-4o / o1 — strong general-purpose AI with broad knowledge',
-    keyPrefix: 'sk-',
-    docsUrl: 'https://platform.openai.com/api-keys',
-    region: 'global',
+    id: "openai",
+    name: "OpenAI GPT-4",
+    description: "settings.ai_desc_openai",
+    descriptionDefault:
+      "GPT-4o / o1 — strong general-purpose AI with broad knowledge",
+    keyPrefix: "sk-",
+    docsUrl: "https://platform.openai.com/api-keys",
+    region: "global",
   },
   {
-    id: 'gemini',
-    name: 'Google Gemini',
-    description: 'settings.ai_desc_gemini',
-    descriptionDefault: 'Gemini Pro — multimodal AI with Google ecosystem integration',
-    keyPrefix: 'AI',
-    docsUrl: 'https://aistudio.google.com/app/apikey',
-    region: 'global',
+    id: "gemini",
+    name: "Google Gemini",
+    description: "settings.ai_desc_gemini",
+    descriptionDefault:
+      "Gemini Pro — multimodal AI with Google ecosystem integration",
+    keyPrefix: "AI",
+    docsUrl: "https://aistudio.google.com/app/apikey",
+    region: "global",
   },
   {
-    id: 'openrouter',
-    name: 'OpenRouter',
-    description: 'settings.ai_desc_openrouter',
-    descriptionDefault: 'Aggregator — access many AI models through a single API key',
-    keyPrefix: 'sk-or-',
-    docsUrl: 'https://openrouter.ai/keys',
-    region: 'global',
+    id: "openrouter",
+    name: "OpenRouter",
+    description: "settings.ai_desc_openrouter",
+    descriptionDefault:
+      "Aggregator — access many AI models through a single API key",
+    keyPrefix: "sk-or-",
+    docsUrl: "https://openrouter.ai/keys",
+    region: "global",
   },
   {
-    id: 'mistral',
-    name: 'Mistral AI',
-    description: 'settings.ai_desc_mistral',
-    descriptionDefault: 'Mistral Large — European AI with strong multilingual support',
-    keyPrefix: '',
-    docsUrl: 'https://console.mistral.ai/api-keys',
-    region: 'global',
+    id: "mistral",
+    name: "Mistral AI",
+    description: "settings.ai_desc_mistral",
+    descriptionDefault:
+      "Mistral Large — European AI with strong multilingual support",
+    keyPrefix: "",
+    docsUrl: "https://console.mistral.ai/api-keys",
+    region: "global",
   },
   {
-    id: 'groq',
-    name: 'Groq',
-    description: 'settings.ai_desc_groq',
-    descriptionDefault: 'Ultra-fast inference for Llama and Mixtral models',
-    keyPrefix: 'gsk_',
-    docsUrl: 'https://console.groq.com/keys',
-    region: 'global',
+    id: "groq",
+    name: "Groq",
+    description: "settings.ai_desc_groq",
+    descriptionDefault: "Ultra-fast inference for Llama and Mixtral models",
+    keyPrefix: "gsk_",
+    docsUrl: "https://console.groq.com/keys",
+    region: "global",
   },
   {
-    id: 'deepseek',
-    name: 'DeepSeek',
-    description: 'settings.ai_desc_deepseek',
-    descriptionDefault: 'DeepSeek V3 — cost-effective AI with strong reasoning',
-    keyPrefix: 'sk-',
-    docsUrl: 'https://platform.deepseek.com/api_keys',
-    region: 'global',
+    id: "deepseek",
+    name: "DeepSeek",
+    description: "settings.ai_desc_deepseek",
+    descriptionDefault: "DeepSeek V3 — cost-effective AI with strong reasoning",
+    keyPrefix: "sk-",
+    docsUrl: "https://platform.deepseek.com/api_keys",
+    region: "global",
   },
   {
-    id: 'together',
-    name: 'Together AI',
-    description: 'settings.ai_desc_together',
-    descriptionDefault: 'Open-source model hosting — Llama, Qwen, and more',
-    keyPrefix: '',
-    docsUrl: 'https://api.together.ai/settings/api-keys',
-    region: 'global',
+    id: "together",
+    name: "Together AI",
+    description: "settings.ai_desc_together",
+    descriptionDefault: "Open-source model hosting — Llama, Qwen, and more",
+    keyPrefix: "",
+    docsUrl: "https://api.together.ai/settings/api-keys",
+    region: "global",
   },
   {
-    id: 'fireworks',
-    name: 'Fireworks AI',
-    description: 'settings.ai_desc_fireworks',
-    descriptionDefault: 'Fast inference platform for open-source and fine-tuned models',
-    keyPrefix: '',
-    docsUrl: 'https://fireworks.ai/account/api-keys',
-    region: 'global',
+    id: "fireworks",
+    name: "Fireworks AI",
+    description: "settings.ai_desc_fireworks",
+    descriptionDefault:
+      "Fast inference platform for open-source and fine-tuned models",
+    keyPrefix: "",
+    docsUrl: "https://fireworks.ai/account/api-keys",
+    region: "global",
   },
   {
-    id: 'perplexity',
-    name: 'Perplexity',
-    description: 'settings.ai_desc_perplexity',
-    descriptionDefault: 'AI with real-time internet search and citation support',
-    keyPrefix: 'pplx-',
-    docsUrl: 'https://www.perplexity.ai/settings/api',
-    region: 'global',
+    id: "perplexity",
+    name: "Perplexity",
+    description: "settings.ai_desc_perplexity",
+    descriptionDefault:
+      "AI with real-time internet search and citation support",
+    keyPrefix: "pplx-",
+    docsUrl: "https://www.perplexity.ai/settings/api",
+    region: "global",
   },
   {
-    id: 'cohere',
-    name: 'Cohere',
-    description: 'settings.ai_desc_cohere',
-    descriptionDefault: 'Enterprise AI for RAG, search, and text generation',
-    keyPrefix: '',
-    docsUrl: 'https://dashboard.cohere.com/api-keys',
-    region: 'global',
+    id: "cohere",
+    name: "Cohere",
+    description: "settings.ai_desc_cohere",
+    descriptionDefault: "Enterprise AI for RAG, search, and text generation",
+    keyPrefix: "",
+    docsUrl: "https://dashboard.cohere.com/api-keys",
+    region: "global",
   },
   {
-    id: 'ai21',
-    name: 'AI21 Labs (Jamba)',
-    description: 'settings.ai_desc_ai21',
-    descriptionDefault: 'Jamba — efficient large language model for enterprise use',
-    keyPrefix: '',
-    docsUrl: 'https://studio.ai21.com/account/api-key',
-    region: 'global',
+    id: "ai21",
+    name: "AI21 Labs (Jamba)",
+    description: "settings.ai_desc_ai21",
+    descriptionDefault:
+      "Jamba — efficient large language model for enterprise use",
+    keyPrefix: "",
+    docsUrl: "https://studio.ai21.com/account/api-key",
+    region: "global",
   },
   {
-    id: 'xai',
-    name: 'xAI (Grok)',
-    description: 'settings.ai_desc_xai',
-    descriptionDefault: 'Grok — AI model with real-time knowledge',
-    keyPrefix: 'xai-',
-    docsUrl: 'https://console.x.ai/',
-    region: 'global',
+    id: "xai",
+    name: "xAI (Grok)",
+    description: "settings.ai_desc_xai",
+    descriptionDefault: "Grok — AI model with real-time knowledge",
+    keyPrefix: "xai-",
+    docsUrl: "https://console.x.ai/",
+    region: "global",
   },
   {
-    id: 'zhipu',
-    name: 'Zhipu AI (GLM)',
-    description: 'settings.ai_desc_zhipu',
-    descriptionDefault: 'GLM-4 — leading Chinese AI model for enterprise applications',
-    keyPrefix: '',
-    docsUrl: 'https://open.bigmodel.cn/usercenter/apikeys',
-    region: 'global',
+    id: "zhipu",
+    name: "Zhipu AI (GLM)",
+    description: "settings.ai_desc_zhipu",
+    descriptionDefault:
+      "GLM-4 — leading Chinese AI model for enterprise applications",
+    keyPrefix: "",
+    docsUrl: "https://open.bigmodel.cn/usercenter/apikeys",
+    region: "global",
   },
   {
-    id: 'yandex',
-    name: 'Yandex GPT',
-    description: 'settings.ai_desc_yandex',
-    descriptionDefault: 'YandexGPT — multilingual AI model with strong language understanding',
-    keyPrefix: '',
-    docsUrl: 'https://console.yandex.cloud/folders',
-    region: 'global',
+    id: "yandex",
+    name: "Yandex GPT",
+    description: "settings.ai_desc_yandex",
+    descriptionDefault:
+      "YandexGPT — multilingual AI model with strong language understanding",
+    keyPrefix: "",
+    docsUrl: "https://console.yandex.cloud/folders",
+    region: "global",
   },
   {
-    id: 'baidu',
-    name: 'Baidu (ERNIE Bot)',
-    description: 'settings.ai_desc_baidu',
-    descriptionDefault: 'ERNIE Bot — Baidu AI for Chinese language and enterprise tasks',
-    keyPrefix: '',
-    docsUrl: 'https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application',
-    region: 'global',
+    id: "baidu",
+    name: "Baidu (ERNIE Bot)",
+    description: "settings.ai_desc_baidu",
+    descriptionDefault:
+      "ERNIE Bot — Baidu AI for Chinese language and enterprise tasks",
+    keyPrefix: "",
+    docsUrl:
+      "https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application",
+    region: "global",
   },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function maskApiKey(key: string | null | undefined): string {
-  if (!key) return '';
-  if (key.length <= 8) return '•'.repeat(key.length);
-  return key.slice(0, 8) + '•'.repeat(Math.min(key.length - 8, 24));
+  if (!key) return "";
+  if (key.length <= 8) return "•".repeat(key.length);
+  return key.slice(0, 8) + "•".repeat(Math.min(key.length - 8, 24));
 }
 
-function isKeySetForProvider(settings: AISettings | undefined, provider: AIProvider): boolean {
+function isKeySetForProvider(
+  settings: AISettings | undefined,
+  provider: AIProvider,
+): boolean {
   if (!settings) return false;
   const key = `${provider}_api_key_set` as keyof AISettings;
   return !!settings[key];
 }
 
-function StatusIndicator({ status, lastTested }: { status: AIConnectionStatus; lastTested: string | null }) {
+function StatusIndicator({
+  status,
+  lastTested,
+}: {
+  status: AIConnectionStatus;
+  lastTested: string | null;
+}) {
   const { t } = useTranslation();
   const formatTimeAgo = useFormatTimeAgo();
 
   switch (status) {
-    case 'connected':
+    case "connected":
       return (
         <div className="flex items-center gap-2 text-sm">
           <CheckCircle2 size={16} className="text-semantic-success" />
           <span className="text-semantic-success font-medium">
-            {t('settings.ai_connected', { defaultValue: 'Connected‌⁠‍' })}
+            {t("settings.ai_connected", { defaultValue: "Connected‌⁠‍" })}
           </span>
           {lastTested && (
             <span className="text-content-tertiary text-xs">
-              {t('settings.ai_last_tested', {
-                defaultValue: '(last tested: {{time}})‌⁠‍',
+              {t("settings.ai_last_tested", {
+                defaultValue: "(last tested: {{time}})‌⁠‍",
                 time: formatTimeAgo(lastTested),
               })}
             </span>
           )}
         </div>
       );
-    case 'error':
+    case "error":
       return (
         <div className="flex items-center gap-2 text-sm">
           <XCircle size={16} className="text-semantic-error" />
           <span className="text-semantic-error font-medium">
-            {t('settings.ai_error', { defaultValue: 'Connection error‌⁠‍' })}
+            {t("settings.ai_error", { defaultValue: "Connection error‌⁠‍" })}
           </span>
         </div>
       );
-    case 'not_configured':
+    case "not_configured":
     default:
       return (
         <div className="flex items-center gap-2 text-sm">
           <AlertCircle size={16} className="text-content-tertiary" />
           <span className="text-content-tertiary">
-            {t('settings.ai_not_configured', { defaultValue: 'Not configured‌⁠‍' })}
+            {t("settings.ai_not_configured", {
+              defaultValue: "Not configured‌⁠‍",
+            })}
           </span>
         </div>
       );
@@ -282,12 +322,24 @@ function useFormatTimeAgo() {
   return (dateStr: string): string => {
     const diff = Date.now() - new Date(dateStr).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return t('settings.time_just_now', { defaultValue: 'just now‌⁠‍' });
-    if (mins < 60) return t('settings.time_minutes_ago', { defaultValue: '{{count}}m ago', count: mins });
+    if (mins < 1)
+      return t("settings.time_just_now", { defaultValue: "just now‌⁠‍" });
+    if (mins < 60)
+      return t("settings.time_minutes_ago", {
+        defaultValue: "{{count}}m ago",
+        count: mins,
+      });
     const hours = Math.floor(mins / 60);
-    if (hours < 24) return t('settings.time_hours_ago', { defaultValue: '{{count}}h ago', count: hours });
+    if (hours < 24)
+      return t("settings.time_hours_ago", {
+        defaultValue: "{{count}}h ago",
+        count: hours,
+      });
     const days = Math.floor(hours / 24);
-    return t('settings.time_days_ago', { defaultValue: '{{count}}d ago', count: days });
+    return t("settings.time_days_ago", {
+      defaultValue: "{{count}}d ago",
+      count: days,
+    });
   };
 }
 
@@ -299,28 +351,29 @@ function AIConfigurationCard() {
   const addToast = useToastStore((s) => s.addToast);
 
   // State
-  const [selectedProvider, setSelectedProvider] = useState<AIProvider>('anthropic');
-  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [selectedProvider, setSelectedProvider] =
+    useState<AIProvider>("anthropic");
+  const [apiKeyInput, setApiKeyInput] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [hasUnsavedKey, setHasUnsavedKey] = useState(false);
   // Per-provider model-id override. Empty string = use the platform default.
-  const [modelInput, setModelInput] = useState('');
+  const [modelInput, setModelInput] = useState("");
   const [modelTouched, setModelTouched] = useState(false);
 
   // Model browser modal state
   const [showModelBrowser, setShowModelBrowser] = useState(false);
-  const [modelSearchQuery, setModelSearchQuery] = useState('');
+  const [modelSearchQuery, setModelSearchQuery] = useState("");
 
   // Fetch current settings
   const { data: settings } = useQuery({
-    queryKey: ['ai-settings'],
+    queryKey: ["ai-settings"],
     queryFn: aiApi.getSettings,
     retry: false,
   });
 
   // Fetch available models for the browser modal
   const { data: availableModels = [], isLoading: modelsLoading } = useQuery({
-    queryKey: ['ai-models', selectedProvider],
+    queryKey: ["ai-models", selectedProvider],
     queryFn: async () => {
       try {
         return await aiApi.getModels();
@@ -346,24 +399,33 @@ function AIConfigurationCard() {
     if (settings?.preferred_model) {
       const model = settings.preferred_model;
       const providerMap: Record<string, AIProvider> = {
-        anthropic: 'anthropic', claude: 'anthropic',
-        openai: 'openai', gpt: 'openai',
-        gemini: 'gemini', google: 'gemini',
-        openrouter: 'openrouter',
-        mistral: 'mistral',
-        groq: 'groq',
-        deepseek: 'deepseek',
-        together: 'together',
-        fireworks: 'fireworks',
-        perplexity: 'perplexity',
-        cohere: 'cohere',
-        ai21: 'ai21', jamba: 'ai21',
-        xai: 'xai', grok: 'xai',
-        zhipu: 'zhipu', glm: 'zhipu',
-        baidu: 'baidu', ernie: 'baidu',
-        yandex: 'yandex',
+        anthropic: "anthropic",
+        claude: "anthropic",
+        openai: "openai",
+        gpt: "openai",
+        gemini: "gemini",
+        google: "gemini",
+        openrouter: "openrouter",
+        mistral: "mistral",
+        groq: "groq",
+        deepseek: "deepseek",
+        together: "together",
+        fireworks: "fireworks",
+        perplexity: "perplexity",
+        cohere: "cohere",
+        ai21: "ai21",
+        jamba: "ai21",
+        xai: "xai",
+        grok: "xai",
+        zhipu: "zhipu",
+        glm: "zhipu",
+        baidu: "baidu",
+        ernie: "baidu",
+        yandex: "yandex",
       };
-      const matched = Object.entries(providerMap).find(([key]) => model.includes(key));
+      const matched = Object.entries(providerMap).find(([key]) =>
+        model.includes(key),
+      );
       if (matched) setSelectedProvider(matched[1]);
     } else if (settings?.provider) {
       setSelectedProvider(settings.provider);
@@ -374,11 +436,11 @@ function AIConfigurationCard() {
   // user has not overridden it, leave the field blank and show the platform
   // default as the placeholder so it stays current automatically.
   useEffect(() => {
-    setModelInput(settings?.model_overrides?.[selectedProvider] ?? '');
+    setModelInput(settings?.model_overrides?.[selectedProvider] ?? "");
     setModelTouched(false);
   }, [selectedProvider, settings?.model_overrides]);
 
-  const defaultModel = settings?.default_models?.[selectedProvider] ?? '';
+  const defaultModel = settings?.default_models?.[selectedProvider] ?? "";
   const hasKeySet = isKeySetForProvider(settings, selectedProvider);
 
   // Test connection mutation — auto-saves unsaved key / model before testing
@@ -386,10 +448,11 @@ function AIConfigurationCard() {
   // calls will use (this is what surfaces stale-model failures early).
   const testMutation = useMutation({
     mutationFn: async () => {
-      const needsSave =
-        (hasUnsavedKey && apiKeyInput.trim()) || modelTouched;
+      const needsSave = (hasUnsavedKey && apiKeyInput.trim()) || modelTouched;
       if (needsSave) {
-        const update: Record<string, unknown> = { preferred_model: selectedProvider };
+        const update: Record<string, unknown> = {
+          preferred_model: selectedProvider,
+        };
         if (hasUnsavedKey && apiKeyInput.trim()) {
           update[`${selectedProvider}_api_key`] = apiKeyInput.trim();
         }
@@ -397,14 +460,16 @@ function AIConfigurationCard() {
           // Blank string clears the override (server falls back to default).
           update.model_overrides = { [selectedProvider]: modelInput.trim() };
         }
-        await aiApi.updateSettings(update as Parameters<typeof aiApi.updateSettings>[0]);
+        await aiApi.updateSettings(
+          update as Parameters<typeof aiApi.updateSettings>[0],
+        );
       }
       return aiApi.testConnection(selectedProvider);
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['ai-settings'] });
+      queryClient.invalidateQueries({ queryKey: ["ai-settings"] });
       if (hasUnsavedKey) {
-        setApiKeyInput('');
+        setApiKeyInput("");
         setHasUnsavedKey(false);
         setShowKey(false);
       }
@@ -413,29 +478,33 @@ function AIConfigurationCard() {
         const parts: string[] = [];
         if (result.model) {
           parts.push(
-            t('settings.ai_test_model', {
-              defaultValue: 'Model: {{model}}',
+            t("settings.ai_test_model", {
+              defaultValue: "Model: {{model}}",
               model: result.model,
             }),
           );
         }
         if (result.latency_ms) {
           parts.push(
-            t('settings.ai_test_latency', {
-              defaultValue: 'Response time: {{ms}}ms',
+            t("settings.ai_test_latency", {
+              defaultValue: "Response time: {{ms}}ms",
               ms: result.latency_ms,
             }),
           );
         }
         addToast({
-          type: 'success',
-          title: t('settings.ai_test_success', { defaultValue: 'Connection successful' }),
-          message: parts.length ? parts.join(' · ') : undefined,
+          type: "success",
+          title: t("settings.ai_test_success", {
+            defaultValue: "Connection successful",
+          }),
+          message: parts.length ? parts.join(" · ") : undefined,
         });
       } else {
         addToast({
-          type: 'error',
-          title: t('settings.ai_test_failed', { defaultValue: 'Connection failed' }),
+          type: "error",
+          title: t("settings.ai_test_failed", {
+            defaultValue: "Connection failed",
+          }),
           // Surface the provider's actual error (e.g. "model not found —
           // change the model name in Settings > AI") so the user can act.
           message: result.message,
@@ -444,8 +513,8 @@ function AIConfigurationCard() {
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('settings.ai_test_error', { defaultValue: 'Test failed' }),
+        type: "error",
+        title: t("settings.ai_test_error", { defaultValue: "Test failed" }),
         message: err.message,
       });
     },
@@ -465,37 +534,49 @@ function AIConfigurationCard() {
         // Blank string clears the override (server uses the default).
         update.model_overrides = { [selectedProvider]: modelInput.trim() };
       }
-      return aiApi.updateSettings(update as Parameters<typeof aiApi.updateSettings>[0]);
+      return aiApi.updateSettings(
+        update as Parameters<typeof aiApi.updateSettings>[0],
+      );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ai-settings'] });
-      setApiKeyInput('');
+      queryClient.invalidateQueries({ queryKey: ["ai-settings"] });
+      setApiKeyInput("");
       setHasUnsavedKey(false);
       setShowKey(false);
       setModelTouched(false);
       addToast({
-        type: 'success',
-        title: t('settings.ai_saved', { defaultValue: 'AI settings saved' }),
+        type: "success",
+        title: t("settings.ai_saved", { defaultValue: "AI settings saved" }),
       });
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('settings.ai_save_error', { defaultValue: 'Failed to save settings' }),
+        type: "error",
+        title: t("settings.ai_save_error", {
+          defaultValue: "Failed to save settings",
+        }),
         message: err.message,
       });
     },
   });
 
-  const handleProviderChange = useCallback((provider: AIProvider) => {
-    setSelectedProvider(provider);
-    setApiKeyInput('');
-    setHasUnsavedKey(false);
-    setShowKey(false);
-    aiApi.updateSettings({ preferred_model: provider }).then(() => {
-      queryClient.invalidateQueries({ queryKey: ['ai-settings'] });
-    }).catch(() => { /* ignore — will save on next explicit Save */ });
-  }, [queryClient]);
+  const handleProviderChange = useCallback(
+    (provider: AIProvider) => {
+      setSelectedProvider(provider);
+      setApiKeyInput("");
+      setHasUnsavedKey(false);
+      setShowKey(false);
+      aiApi
+        .updateSettings({ preferred_model: provider })
+        .then(() => {
+          queryClient.invalidateQueries({ queryKey: ["ai-settings"] });
+        })
+        .catch(() => {
+          /* ignore — will save on next explicit Save */
+        });
+    },
+    [queryClient],
+  );
 
   const handleKeyChange = useCallback((value: string) => {
     setApiKeyInput(value);
@@ -507,17 +588,17 @@ function AIConfigurationCard() {
       ? apiKeyInput
       : apiKeyInput
         ? maskApiKey(apiKeyInput)
-        : ''
+        : ""
     : hasKeySet
-      ? 'sk-••••••••••••••••'
-      : '';
+      ? "sk-••••••••••••••••"
+      : "";
 
   return (
     <Card className="lg:col-span-2">
       <CardHeader
-        title={t('settings.ai_title', { defaultValue: 'AI Configuration' })}
-        subtitle={t('settings.ai_subtitle', {
-          defaultValue: 'Choose your AI provider for estimation and analysis',
+        title={t("settings.ai_title", { defaultValue: "AI Configuration" })}
+        subtitle={t("settings.ai_subtitle", {
+          defaultValue: "Choose your AI provider for estimation and analysis",
         })}
       />
       <CardContent>
@@ -525,10 +606,13 @@ function AIConfigurationCard() {
           {/* Provider selection */}
           <div>
             <label className="text-sm font-medium text-content-primary block mb-1">
-              {t('settings.ai_provider', { defaultValue: 'AI Provider' })}
+              {t("settings.ai_provider", { defaultValue: "AI Provider" })}
             </label>
             <p className="text-xs text-content-tertiary mb-3">
-              {t('settings.ai_provider_help', { defaultValue: 'Pick the LLM provider whose API key you have. Recommended: Anthropic Claude.' })}
+              {t("settings.ai_provider_help", {
+                defaultValue:
+                  "Pick the LLM provider whose API key you have. Recommended: Anthropic Claude.",
+              })}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {AI_PROVIDERS.map((provider) => {
@@ -541,22 +625,30 @@ function AIConfigurationCard() {
                     type="button"
                     onClick={() => handleProviderChange(provider.id)}
                     aria-pressed={isSelected}
-                    aria-label={`${provider.name}${isSelected ? ` (${t('settings.ai_selected', { defaultValue: 'selected' })})` : ''}`}
+                    aria-label={`${provider.name}${isSelected ? ` (${t("settings.ai_selected", { defaultValue: "selected" })})` : ""}`}
                     className={`relative flex flex-col items-start gap-1 rounded-xl px-4 py-3 text-left transition-all duration-normal ease-oe ${
                       isSelected
-                        ? 'bg-oe-blue-subtle border-2 border-oe-blue ring-2 ring-oe-blue/10'
-                        : 'border-2 border-border-light hover:bg-surface-secondary hover:border-border'
+                        ? "bg-oe-blue-subtle border-2 border-oe-blue ring-2 ring-oe-blue/10"
+                        : "border-2 border-border-light hover:bg-surface-secondary hover:border-border"
                     }`}
                   >
                     {provider.recommended && (
-                      <Badge variant="blue" size="sm" className="absolute -top-2.5 right-2 z-10">
-                        {t('settings.ai_recommended', { defaultValue: 'Recommended' })}
+                      <Badge
+                        variant="blue"
+                        size="sm"
+                        className="absolute -top-2.5 right-2 z-10"
+                      >
+                        {t("settings.ai_recommended", {
+                          defaultValue: "Recommended",
+                        })}
                       </Badge>
                     )}
                     <div className="flex items-center gap-2">
                       <div
                         className={`h-3.5 w-3.5 rounded-full border-2 transition-colors duration-fast ${
-                          isSelected ? 'border-oe-blue bg-oe-blue' : 'border-content-tertiary bg-transparent'
+                          isSelected
+                            ? "border-oe-blue bg-oe-blue"
+                            : "border-content-tertiary bg-transparent"
                         }`}
                       >
                         {isSelected && (
@@ -567,18 +659,26 @@ function AIConfigurationCard() {
                       </div>
                       <span
                         className={`text-sm font-semibold ${
-                          isSelected ? 'text-oe-blue' : 'text-content-primary'
+                          isSelected ? "text-oe-blue" : "text-content-primary"
                         }`}
                       >
                         {provider.name}
                       </span>
                     </div>
                     <p className="text-xs text-content-secondary pl-5.5 leading-relaxed">
-                      {t(provider.description, { defaultValue: provider.descriptionDefault })}
+                      {t(provider.description, {
+                        defaultValue: provider.descriptionDefault,
+                      })}
                     </p>
                     {hasKey && (
-                      <Badge variant="success" size="sm" className="mt-1 ml-5.5">
-                        {t('settings.ai_key_set', { defaultValue: 'Key configured' })}
+                      <Badge
+                        variant="success"
+                        size="sm"
+                        className="mt-1 ml-5.5"
+                      >
+                        {t("settings.ai_key_set", {
+                          defaultValue: "Key configured",
+                        })}
                       </Badge>
                     )}
                   </button>
@@ -591,30 +691,32 @@ function AIConfigurationCard() {
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-sm font-medium text-content-primary">
-                {t('settings.ai_api_key', { defaultValue: 'API Key' })}
+                {t("settings.ai_api_key", { defaultValue: "API Key" })}
               </label>
               <a
-                href={AI_PROVIDERS.find((p) => p.id === selectedProvider)?.docsUrl}
+                href={
+                  AI_PROVIDERS.find((p) => p.id === selectedProvider)?.docsUrl
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs text-oe-blue hover:underline"
               >
-                {t('settings.ai_get_key', { defaultValue: 'Get an API key' })}
+                {t("settings.ai_get_key", { defaultValue: "Get an API key" })}
                 <ExternalLink size={11} />
               </a>
             </div>
             <div className="relative group">
               <input
-                type={showKey && hasUnsavedKey ? 'text' : 'password'}
+                type={showKey && hasUnsavedKey ? "text" : "password"}
                 value={hasUnsavedKey ? apiKeyInput : displayValue}
                 onChange={(e) => handleKeyChange(e.target.value)}
                 placeholder={
                   hasKeySet
-                    ? t('settings.ai_key_placeholder_existing', {
-                        defaultValue: 'Enter new key to replace existing...',
+                    ? t("settings.ai_key_placeholder_existing", {
+                        defaultValue: "Enter new key to replace existing...",
                       })
-                    : t('settings.ai_key_placeholder', {
-                        defaultValue: `Paste your ${AI_PROVIDERS.find((p) => p.id === selectedProvider)?.keyPrefix || ''}... key here`,
+                    : t("settings.ai_key_placeholder", {
+                        defaultValue: `Paste your ${AI_PROVIDERS.find((p) => p.id === selectedProvider)?.keyPrefix || ""}... key here`,
                       })
                 }
                 className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 pr-20 font-mono text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)] transition-all duration-normal ease-oe hover:border-content-tertiary"
@@ -622,17 +724,26 @@ function AIConfigurationCard() {
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
-                aria-label={showKey ? t('settings.hide_key', { defaultValue: 'Hide' }) : t('settings.show_key', { defaultValue: 'Show' })}
+                aria-label={
+                  showKey
+                    ? t("settings.hide_key", { defaultValue: "Hide" })
+                    : t("settings.show_key", { defaultValue: "Show" })
+                }
                 className="absolute inset-y-0 right-0 flex items-center px-3 text-content-tertiary hover:text-content-primary transition-colors duration-fast"
                 tabIndex={-1}
               >
                 {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                <span className="ml-1 text-xs">{showKey ? t('settings.hide_key', { defaultValue: 'Hide' }) : t('settings.show_key', { defaultValue: 'Show' })}</span>
+                <span className="ml-1 text-xs">
+                  {showKey
+                    ? t("settings.hide_key", { defaultValue: "Hide" })
+                    : t("settings.show_key", { defaultValue: "Show" })}
+                </span>
               </button>
             </div>
             <p className="mt-1.5 text-xs text-content-tertiary">
-              {t('settings.ai_key_hint', {
-                defaultValue: 'Your API key is encrypted and stored securely. It is never shared.',
+              {t("settings.ai_key_hint", {
+                defaultValue:
+                  "Your API key is encrypted and stored securely. It is never shared.",
               })}
             </p>
           </div>
@@ -644,7 +755,7 @@ function AIConfigurationCard() {
               htmlFor="ai-model-name"
               className="text-sm font-medium text-content-primary block mb-1.5"
             >
-              {t('settings.ai_model_name', { defaultValue: 'Model name' })}
+              {t("settings.ai_model_name", { defaultValue: "Model name" })}
             </label>
             <div className="flex gap-2">
               <input
@@ -657,12 +768,12 @@ function AIConfigurationCard() {
                 }}
                 placeholder={
                   defaultModel
-                    ? t('settings.ai_model_placeholder', {
-                        defaultValue: 'Default: {{model}}',
+                    ? t("settings.ai_model_placeholder", {
+                        defaultValue: "Default: {{model}}",
                         model: defaultModel,
                       })
-                    : t('settings.ai_model_placeholder_generic', {
-                        defaultValue: 'Leave blank to use the provider default',
+                    : t("settings.ai_model_placeholder_generic", {
+                        defaultValue: "Leave blank to use the provider default",
                       })
                 }
                 spellCheck={false}
@@ -673,17 +784,19 @@ function AIConfigurationCard() {
                 type="button"
                 onClick={() => {
                   setShowModelBrowser(true);
-                  setModelSearchQuery('');
+                  setModelSearchQuery("");
                 }}
                 className="h-10 inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary hover:bg-surface-secondary hover:border-content-tertiary transition-all duration-fast"
-                title={t('settings.browse_models', { defaultValue: 'Browse available models' })}
+                title={t("settings.browse_models", {
+                  defaultValue: "Browse available models",
+                })}
               >
                 <Search size={14} />
-                {t('settings.browse_models_btn', { defaultValue: 'Browse' })}
+                {t("settings.browse_models_btn", { defaultValue: "Browse" })}
               </button>
             </div>
             <p className="mt-1.5 text-xs text-content-tertiary">
-              {t('settings.ai_model_hint', {
+              {t("settings.ai_model_hint", {
                 defaultValue:
                   'AI providers rename and retire models over time. If a connection fails with a "model not found" error, set the exact current model id here (e.g. gemini-2.5-flash, anthropic/claude-sonnet-4). Leave blank to use the recommended default.',
               })}
@@ -704,7 +817,9 @@ function AIConfigurationCard() {
               >
                 <div className="flex items-center justify-between px-5 py-4 border-b border-border">
                   <h3 className="text-base font-semibold text-content-primary">
-                    {t('settings.model_browser_title', { defaultValue: 'Select a model' })}
+                    {t("settings.model_browser_title", {
+                      defaultValue: "Select a model",
+                    })}
                   </h3>
                   <button
                     type="button"
@@ -717,12 +832,17 @@ function AIConfigurationCard() {
 
                 <div className="px-5 py-3 border-b border-border">
                   <div className="relative">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+                    <Search
+                      size={14}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+                    />
                     <input
                       type="text"
                       value={modelSearchQuery}
                       onChange={(e) => setModelSearchQuery(e.target.value)}
-                      placeholder={t('settings.model_browser_search', { defaultValue: 'Search models...' })}
+                      placeholder={t("settings.model_browser_search", {
+                        defaultValue: "Search models...",
+                      })}
                       className="w-full h-9 rounded-lg border border-border bg-surface-primary pl-9 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
                       autoFocus
                     />
@@ -732,11 +852,16 @@ function AIConfigurationCard() {
                 <div className="flex-1 overflow-y-auto px-2 py-2">
                   {modelsLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 size={20} className="animate-spin text-content-tertiary" />
+                      <Loader2
+                        size={20}
+                        className="animate-spin text-content-tertiary"
+                      />
                     </div>
                   ) : filteredModels.length === 0 ? (
                     <div className="text-center py-8 text-sm text-content-tertiary">
-                      {t('settings.no_models_found', { defaultValue: 'No models found' })}
+                      {t("settings.no_models_found", {
+                        defaultValue: "No models found",
+                      })}
                     </div>
                   ) : (
                     <div className="space-y-0.5">
@@ -751,13 +876,15 @@ function AIConfigurationCard() {
                           }}
                           className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors duration-fast ${
                             modelInput === m.id
-                              ? 'bg-oe-blue-subtle text-oe-blue'
-                              : 'text-content-primary hover:bg-surface-secondary'
+                              ? "bg-oe-blue-subtle text-oe-blue"
+                              : "text-content-primary hover:bg-surface-secondary"
                           }`}
                         >
                           <span className="font-mono text-xs">{m.id}</span>
                           {m.name !== m.id && (
-                            <span className="ml-2 text-xs text-content-tertiary">{m.name}</span>
+                            <span className="ml-2 text-xs text-content-tertiary">
+                              {m.name}
+                            </span>
                           )}
                         </button>
                       ))}
@@ -766,9 +893,14 @@ function AIConfigurationCard() {
                 </div>
 
                 <div className="px-5 py-3 border-t border-border text-xs text-content-tertiary">
-                  {selectedProvider === 'openrouter'
-                    ? t('settings.openrouter_models_note', { defaultValue: 'Fetched live from OpenRouter API' })
-                    : t('settings.curated_models_note', { defaultValue: 'Curated list of known models for this provider' })}
+                  {selectedProvider === "openrouter"
+                    ? t("settings.openrouter_models_note", {
+                        defaultValue: "Fetched live from OpenRouter API",
+                      })
+                    : t("settings.curated_models_note", {
+                        defaultValue:
+                          "Curated list of known models for this provider",
+                      })}
                 </div>
               </div>
             </div>
@@ -777,7 +909,7 @@ function AIConfigurationCard() {
           {/* Status */}
           <div className="rounded-lg bg-surface-secondary/50 px-4 py-3">
             <StatusIndicator
-              status={settings?.status || 'not_configured'}
+              status={settings?.status || "not_configured"}
               lastTested={settings?.last_tested_at || null}
             />
           </div>
@@ -789,7 +921,13 @@ function AIConfigurationCard() {
           variant="secondary"
           onClick={() => testMutation.mutate()}
           disabled={testMutation.isPending || (!hasKeySet && !hasUnsavedKey)}
-          title={hasUnsavedKey || modelTouched ? t('settings.ai_test_save_hint', { defaultValue: 'Save key and test connection' }) : t('settings.ai_test', { defaultValue: 'Test Connection' })}
+          title={
+            hasUnsavedKey || modelTouched
+              ? t("settings.ai_test_save_hint", {
+                  defaultValue: "Save key and test connection",
+                })
+              : t("settings.ai_test", { defaultValue: "Test Connection" })
+          }
           icon={
             testMutation.isPending ? (
               <Loader2 size={14} className="animate-spin" />
@@ -797,16 +935,21 @@ function AIConfigurationCard() {
           }
         >
           {testMutation.isPending
-            ? t('settings.ai_testing', { defaultValue: 'Testing...' })
-            : t('settings.ai_test', { defaultValue: 'Test Connection' })}
+            ? t("settings.ai_testing", { defaultValue: "Testing..." })
+            : t("settings.ai_test", { defaultValue: "Test Connection" })}
         </Button>
         <Button
           variant="primary"
           onClick={() => saveMutation.mutate()}
-          disabled={saveMutation.isPending || (!hasUnsavedKey && !modelTouched && selectedProvider === settings?.provider)}
+          disabled={
+            saveMutation.isPending ||
+            (!hasUnsavedKey &&
+              !modelTouched &&
+              selectedProvider === settings?.provider)
+          }
           loading={saveMutation.isPending}
         >
-          {t('settings.ai_save_btn', { defaultValue: 'Save Settings' })}
+          {t("settings.ai_save_btn", { defaultValue: "Save Settings" })}
         </Button>
       </CardFooter>
     </Card>
@@ -816,56 +959,101 @@ function AIConfigurationCard() {
 // ── Appearance Card ─────────────────────────────────────────────────────────
 
 const THEME_OPTIONS = [
-  { value: 'light' as const, icon: Sun, labelKey: 'settings.theme_light', defaultLabel: 'Light' },
-  { value: 'dark' as const, icon: Moon, labelKey: 'settings.theme_dark', defaultLabel: 'Dark' },
-  { value: 'system' as const, icon: Monitor, labelKey: 'settings.theme_system', defaultLabel: 'System' },
+  {
+    value: "light" as const,
+    icon: Sun,
+    labelKey: "settings.theme_light",
+    defaultLabel: "Light",
+  },
+  {
+    value: "dark" as const,
+    icon: Moon,
+    labelKey: "settings.theme_dark",
+    defaultLabel: "Dark",
+  },
+  {
+    value: "system" as const,
+    icon: Monitor,
+    labelKey: "settings.theme_system",
+    defaultLabel: "System",
+  },
 ];
 
 function InterfaceModeCard() {
   const { t } = useTranslation();
   const mode = useViewModeStore((s) => s.mode);
   const setMode = useViewModeStore((s) => s.setMode);
-  const isAdvanced = mode === 'advanced';
+  const isAdvanced = mode === "advanced";
 
   return (
     <Card>
       <CardHeader
-        title={t('settings.interface_mode_title', { defaultValue: 'Interface Mode' })}
-        subtitle={t('settings.interface_mode_subtitle', { defaultValue: 'Control which features are visible in the navigation' })}
+        title={t("settings.interface_mode_title", {
+          defaultValue: "Interface Mode",
+        })}
+        subtitle={t("settings.interface_mode_subtitle", {
+          defaultValue: "Control which features are visible in the navigation",
+        })}
       />
       <CardContent>
         <div className="flex gap-3">
           <button
-            onClick={() => setMode('simple')}
+            onClick={() => setMode("simple")}
             aria-pressed={!isAdvanced}
-            aria-label={t('nav.mode_simple', { defaultValue: 'Simple' })}
+            aria-label={t("nav.mode_simple", { defaultValue: "Simple" })}
             className={`flex-1 flex flex-col items-center gap-2 rounded-xl px-4 py-4 border-2 transition-all ${
               !isAdvanced
-                ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue'
-                : 'border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary'
+                ? "border-oe-blue bg-oe-blue-subtle text-oe-blue"
+                : "border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary"
             }`}
           >
-            <span className="text-sm font-semibold">{t('nav.mode_simple', { defaultValue: 'Simple' })}</span>
-            <span className="text-xs text-center leading-snug">{t('settings.mode_simple_detail', { defaultValue: 'Essential estimation tools. Clean interface for focused work.' })}</span>
-            <span className={`mt-1 inline-flex h-5 items-center rounded-full px-2 text-2xs font-bold tracking-wide ${
-              !isAdvanced ? 'bg-oe-blue/15 text-oe-blue' : 'bg-surface-tertiary text-content-tertiary'
-            }`}>STD</span>
+            <span className="text-sm font-semibold">
+              {t("nav.mode_simple", { defaultValue: "Simple" })}
+            </span>
+            <span className="text-xs text-center leading-snug">
+              {t("settings.mode_simple_detail", {
+                defaultValue:
+                  "Essential estimation tools. Clean interface for focused work.",
+              })}
+            </span>
+            <span
+              className={`mt-1 inline-flex h-5 items-center rounded-full px-2 text-2xs font-bold tracking-wide ${
+                !isAdvanced
+                  ? "bg-oe-blue/15 text-oe-blue"
+                  : "bg-surface-tertiary text-content-tertiary"
+              }`}
+            >
+              STD
+            </span>
           </button>
           <button
-            onClick={() => setMode('advanced')}
+            onClick={() => setMode("advanced")}
             aria-pressed={isAdvanced}
-            aria-label={t('nav.mode_advanced', { defaultValue: 'Advanced' })}
+            aria-label={t("nav.mode_advanced", { defaultValue: "Advanced" })}
             className={`flex-1 flex flex-col items-center gap-2 rounded-xl px-4 py-4 border-2 transition-all ${
               isAdvanced
-                ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue'
-                : 'border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary'
+                ? "border-oe-blue bg-oe-blue-subtle text-oe-blue"
+                : "border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary"
             }`}
           >
-            <span className="text-sm font-semibold">{t('nav.mode_advanced', { defaultValue: 'Advanced' })}</span>
-            <span className="text-xs text-center leading-snug">{t('settings.mode_advanced_detail', { defaultValue: 'Full professional toolset with all modules and features visible.' })}</span>
-            <span className={`mt-1 inline-flex h-5 items-center rounded-full px-2 text-2xs font-bold tracking-wide ${
-              isAdvanced ? 'bg-oe-blue/15 text-oe-blue' : 'bg-surface-tertiary text-content-tertiary'
-            }`}>PRO</span>
+            <span className="text-sm font-semibold">
+              {t("nav.mode_advanced", { defaultValue: "Advanced" })}
+            </span>
+            <span className="text-xs text-center leading-snug">
+              {t("settings.mode_advanced_detail", {
+                defaultValue:
+                  "Full professional toolset with all modules and features visible.",
+              })}
+            </span>
+            <span
+              className={`mt-1 inline-flex h-5 items-center rounded-full px-2 text-2xs font-bold tracking-wide ${
+                isAdvanced
+                  ? "bg-oe-blue/15 text-oe-blue"
+                  : "bg-surface-tertiary text-content-tertiary"
+              }`}
+            >
+              PRO
+            </span>
           </button>
         </div>
         <Link
@@ -875,13 +1063,19 @@ function InterfaceModeCard() {
           <Package size={16} className="shrink-0 text-oe-blue" />
           <div className="min-w-0">
             <span className="text-sm font-medium text-content-primary">
-              {t('settings.modules_link_title', { defaultValue: 'Modules' })}
+              {t("settings.modules_link_title", { defaultValue: "Modules" })}
             </span>
             <p className="text-xs text-content-tertiary mt-0.5">
-              {t('settings.modules_link_desc', { defaultValue: 'Enable, disable, and configure individual modules in the Modules section.' })}
+              {t("settings.modules_link_desc", {
+                defaultValue:
+                  "Enable, disable, and configure individual modules in the Modules section.",
+              })}
             </p>
           </div>
-          <ChevronRight size={16} className="ml-auto shrink-0 text-content-quaternary" />
+          <ChevronRight
+            size={16}
+            className="ml-auto shrink-0 text-content-quaternary"
+          />
         </Link>
       </CardContent>
     </Card>
@@ -896,9 +1090,9 @@ function AppearanceCard() {
   return (
     <Card>
       <CardHeader
-        title={t('settings.appearance_title', { defaultValue: 'Appearance' })}
-        subtitle={t('settings.appearance_subtitle', {
-          defaultValue: 'Choose your preferred color scheme',
+        title={t("settings.appearance_title", { defaultValue: "Appearance" })}
+        subtitle={t("settings.appearance_subtitle", {
+          defaultValue: "Choose your preferred color scheme",
         })}
       />
       <CardContent>
@@ -911,11 +1105,13 @@ function AppearanceCard() {
                 key={option.value}
                 onClick={() => setTheme(option.value)}
                 aria-pressed={isActive}
-                aria-label={t(option.labelKey, { defaultValue: option.defaultLabel })}
+                aria-label={t(option.labelKey, {
+                  defaultValue: option.defaultLabel,
+                })}
                 className={`flex flex-col items-center gap-2.5 rounded-xl px-4 py-4 text-center transition-all duration-normal ease-oe ${
                   isActive
-                    ? 'bg-oe-blue-subtle border-2 border-oe-blue text-oe-blue'
-                    : 'border-2 border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary'
+                    ? "bg-oe-blue-subtle border-2 border-oe-blue text-oe-blue"
+                    : "border-2 border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary"
                 }`}
               >
                 <Icon size={22} strokeWidth={1.75} />
@@ -944,14 +1140,25 @@ interface ProfileCardProps {
   saving: boolean;
 }
 
-function ProfileCard({ profile, loading, editing, setEditing, formName, setFormName, onSave, saving }: ProfileCardProps) {
+function ProfileCard({
+  profile,
+  loading,
+  editing,
+  setEditing,
+  formName,
+  setFormName,
+  onSave,
+  saving,
+}: ProfileCardProps) {
   const { t } = useTranslation();
 
   return (
     <Card className="lg:col-span-2">
       <CardHeader
-        title={t('settings.profile_title', { defaultValue: 'Profile' })}
-        subtitle={t('settings.profile_subtitle', { defaultValue: 'Your personal information and account status' })}
+        title={t("settings.profile_title", { defaultValue: "Profile" })}
+        subtitle={t("settings.profile_subtitle", {
+          defaultValue: "Your personal information and account status",
+        })}
       />
       <CardContent>
         {profile ? (
@@ -961,7 +1168,7 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
               className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-oe-blue to-oe-blue-hover text-3xl font-bold text-white shadow-sm"
               aria-hidden="true"
             >
-              {profile.full_name?.charAt(0)?.toUpperCase() || 'U'}
+              {profile.full_name?.charAt(0)?.toUpperCase() || "U"}
             </div>
 
             {/* Info */}
@@ -969,7 +1176,7 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
               {/* Name + edit */}
               <div>
                 <label className="text-2xs uppercase tracking-wider text-content-tertiary font-semibold">
-                  {t('settings.full_name', { defaultValue: 'Full name' })}
+                  {t("settings.full_name", { defaultValue: "Full name" })}
                 </label>
                 {editing ? (
                   <div className="mt-1 flex items-center gap-2">
@@ -977,11 +1184,13 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
                       value={formName}
                       onChange={(e) => setFormName(e.target.value)}
                       className="text-base font-semibold text-content-primary bg-surface-secondary rounded-lg px-3 py-1.5 border border-border-light focus:outline-none focus:ring-2 focus:ring-oe-blue/30 max-w-xs"
-                      placeholder={t('settings.full_name', { defaultValue: 'Full name' })}
+                      placeholder={t("settings.full_name", {
+                        defaultValue: "Full name",
+                      })}
                       autoFocus
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') onSave();
-                        if (e.key === 'Escape') setEditing(false);
+                        if (e.key === "Enter") onSave();
+                        if (e.key === "Escape") setEditing(false);
                       }}
                     />
                     <Button
@@ -991,27 +1200,31 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
                       size="sm"
                       icon={!saving ? <Save size={14} /> : undefined}
                     >
-                      {t('common.save', { defaultValue: 'Save' })}
+                      {t("common.save", { defaultValue: "Save" })}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setEditing(false)}
                     >
-                      {t('common.cancel', { defaultValue: 'Cancel' })}
+                      {t("common.cancel", { defaultValue: "Cancel" })}
                     </Button>
                   </div>
                 ) : (
                   <div className="mt-0.5 flex items-center gap-2">
-                    <div className="text-lg font-semibold text-content-primary truncate">{profile.full_name}</div>
+                    <div className="text-lg font-semibold text-content-primary truncate">
+                      {profile.full_name}
+                    </div>
                     <button
                       onClick={() => {
-                        setFormName(profile.full_name || '');
+                        setFormName(profile.full_name || "");
                         setEditing(true);
                       }}
                       className="flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary transition-colors"
-                      aria-label={t('settings.edit_profile', { defaultValue: 'Edit profile name' })}
-                      title={t('common.edit', { defaultValue: 'Edit' })}
+                      aria-label={t("settings.edit_profile", {
+                        defaultValue: "Edit profile name",
+                      })}
+                      title={t("common.edit", { defaultValue: "Edit" })}
                     >
                       <Pencil size={14} />
                     </button>
@@ -1023,27 +1236,35 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-border-light">
                 <div>
                   <span className="text-2xs uppercase tracking-wider text-content-tertiary font-semibold block">
-                    {t('settings.email_label', { defaultValue: 'Email' })}
+                    {t("settings.email_label", { defaultValue: "Email" })}
                   </span>
-                  <div className="mt-0.5 text-sm text-content-primary truncate">{profile.email}</div>
-                </div>
-                <div>
-                  <span className="text-2xs uppercase tracking-wider text-content-tertiary font-semibold block">
-                    {t('settings.role_label', { defaultValue: 'Role' })}
-                  </span>
-                  <div className="mt-0.5">
-                    <Badge variant="blue" size="sm">{profile.role}</Badge>
+                  <div className="mt-0.5 text-sm text-content-primary truncate">
+                    {profile.email}
                   </div>
                 </div>
                 <div>
                   <span className="text-2xs uppercase tracking-wider text-content-tertiary font-semibold block">
-                    {t('settings.status', { defaultValue: 'Status' })}
+                    {t("settings.role_label", { defaultValue: "Role" })}
                   </span>
                   <div className="mt-0.5">
-                    <Badge variant={profile.is_active ? 'success' : 'error'} size="sm" dot>
+                    <Badge variant="blue" size="sm">
+                      {profile.role}
+                    </Badge>
+                  </div>
+                </div>
+                <div>
+                  <span className="text-2xs uppercase tracking-wider text-content-tertiary font-semibold block">
+                    {t("settings.status", { defaultValue: "Status" })}
+                  </span>
+                  <div className="mt-0.5">
+                    <Badge
+                      variant={profile.is_active ? "success" : "error"}
+                      size="sm"
+                      dot
+                    >
                       {profile.is_active
-                        ? t('settings.active', { defaultValue: 'Active' })
-                        : t('settings.inactive', { defaultValue: 'Inactive' })}
+                        ? t("settings.active", { defaultValue: "Active" })
+                        : t("settings.inactive", { defaultValue: "Inactive" })}
                     </Badge>
                   </div>
                 </div>
@@ -1051,9 +1272,11 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
 
               {/* Member since */}
               <div className="text-xs text-content-tertiary">
-                {t('settings.member_since', { defaultValue: 'Member since' })}{' '}
+                {t("settings.member_since", { defaultValue: "Member since" })}{" "}
                 <span className="text-content-secondary font-medium">
-                  {new Date(profile.created_at).toLocaleDateString(getIntlLocale())}
+                  {new Date(profile.created_at).toLocaleDateString(
+                    getIntlLocale(),
+                  )}
                 </span>
               </div>
             </div>
@@ -1069,7 +1292,9 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
           </div>
         ) : (
           <p className="text-sm text-content-secondary">
-            {t('settings.profile_error', { defaultValue: 'Could not load profile' })}
+            {t("settings.profile_error", {
+              defaultValue: "Could not load profile",
+            })}
           </p>
         )}
       </CardContent>
@@ -1079,7 +1304,15 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
 
 // ── Tab definitions ──────────────────────────────────────────────────────────
 
-type SettingsTab = 'general' | 'account' | 'regional' | 'bimcad' | 'ai' | 'integrations' | 'advanced';
+type SettingsTab =
+  | "general"
+  | "dashboard"
+  | "account"
+  | "regional"
+  | "bimcad"
+  | "ai"
+  | "integrations"
+  | "advanced";
 
 interface TabDef {
   id: SettingsTab;
@@ -1091,22 +1324,72 @@ interface TabDef {
 }
 
 const DEFAULT_TAB: TabDef = {
-  id: 'general',
-  labelKey: 'settings.tab_general',
-  defaultLabel: 'General',
+  id: "general",
+  labelKey: "settings.tab_general",
+  defaultLabel: "General",
   icon: SlidersHorizontal,
-  descKey: 'settings.tab_general_desc',
-  descDefault: 'Profile, theme, and interface mode',
+  descKey: "settings.tab_general_desc",
+  descDefault: "Profile, theme, and interface mode",
 };
 
 const TABS: readonly TabDef[] = [
   DEFAULT_TAB,
-  { id: 'account',      labelKey: 'settings.tab_account',      defaultLabel: 'Account',      icon: User,     descKey: 'settings.tab_account_desc',      descDefault: 'Password and sign out' },
-  { id: 'regional',     labelKey: 'settings.tab_regional',     defaultLabel: 'Regional',     icon: Globe,    descKey: 'settings.tab_regional_desc',     descDefault: 'Language, timezone, and formats' },
-  { id: 'bimcad',       labelKey: 'settings.tab_bimcad',       defaultLabel: 'BIM / CAD',    icon: Layers,   descKey: 'settings.tab_bimcad_desc',       descDefault: 'BIM, takeoff, and DWG modules' },
-  { id: 'ai',           labelKey: 'settings.tab_ai',           defaultLabel: 'AI',           icon: Sparkles, descKey: 'settings.tab_ai_desc',           descDefault: 'AI provider and semantic search' },
-  { id: 'integrations', labelKey: 'settings.tab_integrations', defaultLabel: 'Integrations', icon: Plug,     descKey: 'settings.tab_integrations_desc', descDefault: 'Slack, Teams, Telegram, webhooks' },
-  { id: 'advanced',     labelKey: 'settings.tab_advanced',     defaultLabel: 'Advanced',     icon: Wrench,   descKey: 'settings.tab_advanced_desc',     descDefault: 'Backup, databases, setup wizard' },
+  {
+    id: "dashboard",
+    labelKey: "settings.tab_dashboard",
+    defaultLabel: "Dashboard",
+    icon: LayoutGrid,
+    descKey: "settings.tab_dashboard_desc",
+    descDefault: "Reorder, show or hide dashboard sections",
+  },
+  {
+    id: "account",
+    labelKey: "settings.tab_account",
+    defaultLabel: "Account",
+    icon: User,
+    descKey: "settings.tab_account_desc",
+    descDefault: "Password and sign out",
+  },
+  {
+    id: "regional",
+    labelKey: "settings.tab_regional",
+    defaultLabel: "Regional",
+    icon: Globe,
+    descKey: "settings.tab_regional_desc",
+    descDefault: "Language, timezone, and formats",
+  },
+  {
+    id: "bimcad",
+    labelKey: "settings.tab_bimcad",
+    defaultLabel: "BIM / CAD",
+    icon: Layers,
+    descKey: "settings.tab_bimcad_desc",
+    descDefault: "BIM, takeoff, and DWG modules",
+  },
+  {
+    id: "ai",
+    labelKey: "settings.tab_ai",
+    defaultLabel: "AI",
+    icon: Sparkles,
+    descKey: "settings.tab_ai_desc",
+    descDefault: "AI provider and semantic search",
+  },
+  {
+    id: "integrations",
+    labelKey: "settings.tab_integrations",
+    defaultLabel: "Integrations",
+    icon: Plug,
+    descKey: "settings.tab_integrations_desc",
+    descDefault: "Slack, Teams, Telegram, webhooks",
+  },
+  {
+    id: "advanced",
+    labelKey: "settings.tab_advanced",
+    defaultLabel: "Advanced",
+    icon: Wrench,
+    descKey: "settings.tab_advanced_desc",
+    descDefault: "Backup, databases, setup wizard",
+  },
 ];
 
 // ── Main Settings Page ───────────────────────────────────────────────────────
@@ -1119,78 +1402,104 @@ export function SettingsPage() {
   const addToast = useToastStore((s) => s.addToast);
 
   const [editingProfile, setEditingProfile] = useState(false);
-  const [profileForm, setProfileForm] = useState({ full_name: '' });
+  const [profileForm, setProfileForm] = useState({ full_name: "" });
 
   const { data: profile, isPending: profileLoading } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => apiGet<UserProfile>('/v1/users/me/'),
+    queryKey: ["me"],
+    queryFn: () => apiGet<UserProfile>("/v1/users/me/"),
     retry: false,
   });
 
   const profileMutation = useMutation({
     mutationFn: (data: { full_name: string }) =>
-      apiPatch<UserProfile>('/v1/users/me/', data),
+      apiPatch<UserProfile>("/v1/users/me/", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['me'] });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
       setEditingProfile(false);
-      addToast({ type: 'success', title: t('toasts.profile_updated', { defaultValue: 'Profile updated' }) });
+      addToast({
+        type: "success",
+        title: t("toasts.profile_updated", { defaultValue: "Profile updated" }),
+      });
     },
     onError: (error: Error) => {
-      addToast({ type: 'error', title: t('toasts.error', { defaultValue: 'Error' }), message: error.message });
+      addToast({
+        type: "error",
+        title: t("toasts.error", { defaultValue: "Error" }),
+        message: error.message,
+      });
     },
   });
 
   // ── Change password ──────────────────────────────────────────────────
-  const [pwForm, setPwForm] = useState({ current: '', new_: '', confirm: '' });
+  const [pwForm, setPwForm] = useState({ current: "", new_: "", confirm: "" });
   const [showPwFields, setShowPwFields] = useState(false);
 
   const pwMutation = useMutation({
     mutationFn: (body: { current_password: string; new_password: string }) =>
-      apiPost<{ access_token: string; refresh_token: string }>('/v1/users/me/change-password/', body),
+      apiPost<{ access_token: string; refresh_token: string }>(
+        "/v1/users/me/change-password/",
+        body,
+      ),
     onSuccess: (data) => {
-      const remember = localStorage.getItem('oe_remember') === '1';
+      const remember = localStorage.getItem("oe_remember") === "1";
       const email = useAuthStore.getState().userEmail ?? undefined;
       setTokens(data.access_token, data.refresh_token, remember, email);
-      setPwForm({ current: '', new_: '', confirm: '' });
+      setPwForm({ current: "", new_: "", confirm: "" });
       setShowPwFields(false);
-      addToast({ type: 'success', title: t('settings.password_changed', { defaultValue: 'Password changed successfully' }) });
+      addToast({
+        type: "success",
+        title: t("settings.password_changed", {
+          defaultValue: "Password changed successfully",
+        }),
+      });
     },
     onError: (error: Error) => {
-      addToast({ type: 'error', title: t('toasts.error', { defaultValue: 'Error' }), message: error.message });
+      addToast({
+        type: "error",
+        title: t("toasts.error", { defaultValue: "Error" }),
+        message: error.message,
+      });
     },
   });
 
-  const pwValid = pwForm.current.length >= 8 && pwForm.new_.length >= 8 && pwForm.new_ === pwForm.confirm;
+  const pwValid =
+    pwForm.current.length >= 8 &&
+    pwForm.new_.length >= 8 &&
+    pwForm.new_ === pwForm.confirm;
 
   // ── Tab state with URL sync ──────────────────────────────────────────
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialTab = (searchParams.get('tab') as SettingsTab) || 'general';
+  const initialTab = (searchParams.get("tab") as SettingsTab) || "general";
   const validTabIds = useMemo(() => TABS.map((t) => t.id), []);
   const [activeTab, setActiveTab] = useState<SettingsTab>(
-    validTabIds.includes(initialTab) ? initialTab : 'general',
+    validTabIds.includes(initialTab) ? initialTab : "general",
   );
 
-  const handleTabChange = useCallback((id: SettingsTab) => {
-    setActiveTab(id);
-    const params = new URLSearchParams(searchParams);
-    params.set('tab', id);
-    setSearchParams(params, { replace: true });
-    // Scroll panel back to top so new tab content starts at the visual anchor
-    if (typeof window !== 'undefined') {
-      const panel = document.getElementById('settings-content');
-      if (panel) panel.scrollTo?.({ top: 0, behavior: 'smooth' });
-    }
-  }, [searchParams, setSearchParams]);
+  const handleTabChange = useCallback(
+    (id: SettingsTab) => {
+      setActiveTab(id);
+      const params = new URLSearchParams(searchParams);
+      params.set("tab", id);
+      setSearchParams(params, { replace: true });
+      // Scroll panel back to top so new tab content starts at the visual anchor
+      if (typeof window !== "undefined") {
+        const panel = document.getElementById("settings-content");
+        if (panel) panel.scrollTo?.({ top: 0, behavior: "smooth" });
+      }
+    },
+    [searchParams, setSearchParams],
+  );
 
-  const activeTabDef: TabDef = TABS.find((tab) => tab.id === activeTab) ?? DEFAULT_TAB;
+  const activeTabDef: TabDef =
+    TABS.find((tab) => tab.id === activeTab) ?? DEFAULT_TAB;
   const ActiveIcon = activeTabDef.icon;
 
   return (
     <div className="w-full animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
-          { label: t('nav.settings', 'Settings') },
+          { label: t("nav.dashboard", "Dashboard"), to: "/" },
+          { label: t("nav.settings", "Settings") },
         ]}
         className="mb-4"
       />
@@ -1203,9 +1512,13 @@ export function SettingsPage() {
 
       {/* Page header */}
       <div className="mb-6 animate-card-in">
-        <h1 className="text-2xl font-bold text-content-primary">{t('nav.settings', 'Settings')}</h1>
+        <h1 className="text-2xl font-bold text-content-primary">
+          {t("nav.settings", "Settings")}
+        </h1>
         <p className="mt-1 text-sm text-content-secondary">
-          {t('settings.subtitle', { defaultValue: 'Manage your account and preferences' })}
+          {t("settings.subtitle", {
+            defaultValue: "Manage your account and preferences",
+          })}
         </p>
       </div>
 
@@ -1216,7 +1529,7 @@ export function SettingsPage() {
           {/* Mobile: horizontal scrollable pills */}
           <div
             role="tablist"
-            aria-label={t('nav.settings', 'Settings')}
+            aria-label={t("nav.settings", "Settings")}
             data-testid="settings-tabs"
             className="lg:hidden -mx-4 px-4 flex gap-2 overflow-x-auto pb-2 scrollbar-thin"
           >
@@ -1235,8 +1548,8 @@ export function SettingsPage() {
                   onClick={() => handleTabChange(tab.id)}
                   className={`shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-oe-blue text-content-inverse shadow-xs'
-                      : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary hover:text-content-primary'
+                      ? "bg-oe-blue text-content-inverse shadow-xs"
+                      : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary hover:text-content-primary"
                   }`}
                 >
                   <Icon size={14} strokeWidth={2} />
@@ -1249,7 +1562,7 @@ export function SettingsPage() {
           {/* Desktop: vertical sidebar nav */}
           <nav
             role="tablist"
-            aria-label={t('nav.settings', 'Settings')}
+            aria-label={t("nav.settings", "Settings")}
             className="hidden lg:flex flex-col gap-1 rounded-xl border border-border-light bg-surface-elevated p-2 shadow-xs"
           >
             {TABS.map((tab) => {
@@ -1267,8 +1580,8 @@ export function SettingsPage() {
                   onClick={() => handleTabChange(tab.id)}
                   className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all duration-fast ${
                     isActive
-                      ? 'bg-oe-blue-subtle text-oe-blue'
-                      : 'text-content-secondary hover:bg-surface-secondary hover:text-content-primary'
+                      ? "bg-oe-blue-subtle text-oe-blue"
+                      : "text-content-secondary hover:bg-surface-secondary hover:text-content-primary"
                   }`}
                 >
                   <Icon size={16} strokeWidth={2} className="shrink-0" />
@@ -1289,7 +1602,9 @@ export function SettingsPage() {
               to="/about"
               className="inline-flex items-center gap-1 text-xs text-content-tertiary hover:text-oe-blue transition-colors"
             >
-              {t('settings.about_link', { defaultValue: 'About OpenConstructionERP' })}
+              {t("settings.about_link", {
+                defaultValue: "About OpenConstructionERP",
+              })}
               <ChevronRight size={11} />
             </Link>
           </div>
@@ -1309,10 +1624,14 @@ export function SettingsPage() {
             </div>
             <div className="min-w-0">
               <h2 className="text-lg font-semibold text-content-primary">
-                {t(activeTabDef.labelKey, { defaultValue: activeTabDef.defaultLabel })}
+                {t(activeTabDef.labelKey, {
+                  defaultValue: activeTabDef.defaultLabel,
+                })}
               </h2>
               <p className="text-sm text-content-secondary mt-0.5">
-                {t(activeTabDef.descKey, { defaultValue: activeTabDef.descDefault })}
+                {t(activeTabDef.descKey, {
+                  defaultValue: activeTabDef.descDefault,
+                })}
               </p>
             </div>
           </div>
@@ -1320,352 +1639,521 @@ export function SettingsPage() {
           {/* Cards grid: 2 cols desktop, 1 col mobile. Cards can opt into
               full-width via `lg:col-span-2`. */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 [&>*]:animate-card-in">
+            {/* ── GENERAL ──────────────────────────────────────────── */}
+            {activeTab === "general" && (
+              <>
+                <ProfileCard
+                  profile={profile}
+                  loading={profileLoading}
+                  editing={editingProfile}
+                  setEditing={setEditingProfile}
+                  formName={profileForm.full_name}
+                  setFormName={(v) => setProfileForm({ full_name: v })}
+                  onSave={() =>
+                    profileMutation.mutate({ full_name: profileForm.full_name })
+                  }
+                  saving={profileMutation.isPending}
+                />
+                <AppearanceCard />
+                <InterfaceModeCard />
+              </>
+            )}
 
-          {/* ── GENERAL ──────────────────────────────────────────── */}
-          {activeTab === 'general' && (
-            <>
-              <ProfileCard
-                profile={profile}
-                loading={profileLoading}
-                editing={editingProfile}
-                setEditing={setEditingProfile}
-                formName={profileForm.full_name}
-                setFormName={(v) => setProfileForm({ full_name: v })}
-                onSave={() => profileMutation.mutate({ full_name: profileForm.full_name })}
-                saving={profileMutation.isPending}
-              />
-              <AppearanceCard />
-              <InterfaceModeCard />
-            </>
-          )}
-
-          {/* ── ACCOUNT ──────────────────────────────────────────── */}
-          {activeTab === 'account' && (
-            <>
-              {/* Change password */}
+            {/* ── DASHBOARD LAYOUT ─────────────────────────────────── */}
+            {activeTab === "dashboard" && (
               <Card className="lg:col-span-2">
                 <CardHeader
-                  title={t('settings.change_password_title', { defaultValue: 'Change Password' })}
-                  subtitle={t('settings.change_password_subtitle', { defaultValue: 'Update your account password. Minimum 8 characters.' })}
+                  title={t("dashboard.layout.title", {
+                    defaultValue: "Customize dashboard",
+                  })}
+                  subtitle={t("settings.dashboard_layout_subtitle", {
+                    defaultValue:
+                      "Choose which sections appear on your dashboard and in what order. This is personal to you and saved to this browser.",
+                  })}
                 />
                 <CardContent>
-                  {showPwFields ? (
-                    <form
-                      className="space-y-4 max-w-md"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        if (pwValid && !pwMutation.isPending) {
-                          pwMutation.mutate({ current_password: pwForm.current, new_password: pwForm.new_ });
-                        }
-                      }}
-                    >
-                      <div>
-                        <label htmlFor="pw-current" className="block text-sm font-medium text-content-primary mb-1">
-                          {t('settings.current_password', { defaultValue: 'Current password' })}
-                        </label>
-                        <input
-                          id="pw-current"
-                          type="password"
-                          autoComplete="current-password"
-                          className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors"
-                          value={pwForm.current}
-                          onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="pw-new" className="block text-sm font-medium text-content-primary mb-1">
-                          {t('settings.new_password', { defaultValue: 'New password' })}
-                        </label>
-                        <input
-                          id="pw-new"
-                          type="password"
-                          autoComplete="new-password"
-                          className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors"
-                          placeholder={t('settings.password_min_hint', { defaultValue: 'Minimum 8 characters' })}
-                          value={pwForm.new_}
-                          onChange={(e) => setPwForm((f) => ({ ...f, new_: e.target.value }))}
-                        />
-                        <p className="mt-1 text-xs text-content-tertiary">
-                          {t('settings.password_min_hint', { defaultValue: 'Minimum 8 characters' })}
-                        </p>
-                      </div>
-                      <div>
-                        <label htmlFor="pw-confirm" className="block text-sm font-medium text-content-primary mb-1">
-                          {t('settings.confirm_new_password', { defaultValue: 'Confirm new password' })}
-                        </label>
-                        <input
-                          id="pw-confirm"
-                          type="password"
-                          autoComplete="new-password"
-                          className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors"
-                          value={pwForm.confirm}
-                          onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value }))}
-                        />
-                        {pwForm.confirm && pwForm.new_ !== pwForm.confirm && (
-                          <p className="mt-1 text-xs text-semantic-error">
-                            {t('settings.passwords_mismatch', { defaultValue: 'Passwords do not match' })}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex gap-2 pt-1">
-                        <Button type="submit" disabled={!pwValid || pwMutation.isPending} loading={pwMutation.isPending}>
-                          {t('settings.update_password', { defaultValue: 'Update Password' })}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() => { setPwForm({ current: '', new_: '', confirm: '' }); setShowPwFields(false); }}
-                        >
-                          {t('common.cancel', { defaultValue: 'Cancel' })}
-                        </Button>
-                      </div>
-                    </form>
-                  ) : (
-                    <Button variant="secondary" onClick={() => setShowPwFields(true)} icon={<Lock size={14} />}>
-                      {t('settings.change_password', { defaultValue: 'Change Password' })}
-                    </Button>
-                  )}
+                  <DashboardLayoutManager />
                 </CardContent>
               </Card>
+            )}
 
-              {/* Danger zone */}
-              <Card className="lg:col-span-2 border-semantic-error/30 bg-semantic-error-bg/40">
-                <CardHeader
-                  title={t('settings.danger_zone_title', { defaultValue: 'Danger Zone' })}
-                  subtitle={t('settings.danger_zone_subtitle', { defaultValue: 'Irreversible or sensitive account actions' })}
-                  action={<ShieldAlert size={20} className="text-semantic-error" aria-hidden="true" />}
-                />
-                <CardContent>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-semantic-error/20 bg-surface-elevated px-4 py-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-content-primary">
-                        {t('settings.sign_out_title', { defaultValue: 'Sign out of all sessions' })}
-                      </p>
-                      <p className="text-xs text-content-secondary mt-0.5">
-                        {t('settings.sign_out_desc', { defaultValue: 'You will need to enter your credentials to access OpenConstructionERP again.' })}
-                      </p>
-                    </div>
-                    <Button
-                      variant="danger"
-                      icon={<LogOut size={14} />}
-                      onClick={() => { logout(); window.location.href = '/login'; }}
-                    >
-                      {t('settings.sign_out', { defaultValue: 'Sign Out' })}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
-
-          {/* ── REGIONAL ─────────────────────────────────────────── */}
-          {activeTab === 'regional' && (
-            <>
-              {/* Language picker */}
-              <Card className="lg:col-span-2">
-                <CardHeader
-                  title={t('settings.language_title', { defaultValue: 'Language & Region' })}
-                  subtitle={t('settings.language_subtitle', { defaultValue: 'Choose your preferred language for the interface' })}
-                />
-                <CardContent>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
-                    {SUPPORTED_LANGUAGES.map((lang) => {
-                      const isActive = i18n.language === lang.code;
-                      return (
-                        <button
-                          key={lang.code}
-                          onClick={() => {
-                            i18n.changeLanguage(lang.code);
-                            apiPatch('/v1/users/me/', { locale: lang.code }).then(() => {
-                              queryClient.invalidateQueries({ queryKey: ['me'] });
-                            }).catch(() => {});
-                          }}
-                          aria-pressed={isActive}
-                          aria-label={`${lang.name} (${lang.code})`}
-                          className={`flex flex-col items-center gap-1 rounded-xl px-3 py-3 text-center transition-all duration-normal ease-oe ${
-                            isActive
-                              ? 'bg-oe-blue-subtle border-2 border-oe-blue text-oe-blue'
-                              : 'border-2 border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary'
-                          }`}
-                        >
-                          <span className="text-lg">{lang.flag}</span>
-                          <span className="text-2xs font-medium truncate w-full" title={lang.name}>
-                            {lang.name}
-                          </span>
-                        </button>
-                      );
+            {/* ── ACCOUNT ──────────────────────────────────────────── */}
+            {activeTab === "account" && (
+              <>
+                {/* Change password */}
+                <Card className="lg:col-span-2">
+                  <CardHeader
+                    title={t("settings.change_password_title", {
+                      defaultValue: "Change Password",
                     })}
-                  </div>
-                </CardContent>
-              </Card>
+                    subtitle={t("settings.change_password_subtitle", {
+                      defaultValue:
+                        "Update your account password. Minimum 8 characters.",
+                    })}
+                  />
+                  <CardContent>
+                    {showPwFields ? (
+                      <form
+                        className="space-y-4 max-w-md"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          if (pwValid && !pwMutation.isPending) {
+                            pwMutation.mutate({
+                              current_password: pwForm.current,
+                              new_password: pwForm.new_,
+                            });
+                          }
+                        }}
+                      >
+                        <div>
+                          <label
+                            htmlFor="pw-current"
+                            className="block text-sm font-medium text-content-primary mb-1"
+                          >
+                            {t("settings.current_password", {
+                              defaultValue: "Current password",
+                            })}
+                          </label>
+                          <input
+                            id="pw-current"
+                            type="password"
+                            autoComplete="current-password"
+                            className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors"
+                            value={pwForm.current}
+                            onChange={(e) =>
+                              setPwForm((f) => ({
+                                ...f,
+                                current: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="pw-new"
+                            className="block text-sm font-medium text-content-primary mb-1"
+                          >
+                            {t("settings.new_password", {
+                              defaultValue: "New password",
+                            })}
+                          </label>
+                          <input
+                            id="pw-new"
+                            type="password"
+                            autoComplete="new-password"
+                            className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors"
+                            placeholder={t("settings.password_min_hint", {
+                              defaultValue: "Minimum 8 characters",
+                            })}
+                            value={pwForm.new_}
+                            onChange={(e) =>
+                              setPwForm((f) => ({ ...f, new_: e.target.value }))
+                            }
+                          />
+                          <p className="mt-1 text-xs text-content-tertiary">
+                            {t("settings.password_min_hint", {
+                              defaultValue: "Minimum 8 characters",
+                            })}
+                          </p>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="pw-confirm"
+                            className="block text-sm font-medium text-content-primary mb-1"
+                          >
+                            {t("settings.confirm_new_password", {
+                              defaultValue: "Confirm new password",
+                            })}
+                          </label>
+                          <input
+                            id="pw-confirm"
+                            type="password"
+                            autoComplete="new-password"
+                            className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors"
+                            value={pwForm.confirm}
+                            onChange={(e) =>
+                              setPwForm((f) => ({
+                                ...f,
+                                confirm: e.target.value,
+                              }))
+                            }
+                          />
+                          {pwForm.confirm && pwForm.new_ !== pwForm.confirm && (
+                            <p className="mt-1 text-xs text-semantic-error">
+                              {t("settings.passwords_mismatch", {
+                                defaultValue: "Passwords do not match",
+                              })}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex gap-2 pt-1">
+                          <Button
+                            type="submit"
+                            disabled={!pwValid || pwMutation.isPending}
+                            loading={pwMutation.isPending}
+                          >
+                            {t("settings.update_password", {
+                              defaultValue: "Update Password",
+                            })}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => {
+                              setPwForm({ current: "", new_: "", confirm: "" });
+                              setShowPwFields(false);
+                            }}
+                          >
+                            {t("common.cancel", { defaultValue: "Cancel" })}
+                          </Button>
+                        </div>
+                      </form>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        onClick={() => setShowPwFields(true)}
+                        icon={<Lock size={14} />}
+                      >
+                        {t("settings.change_password", {
+                          defaultValue: "Change Password",
+                        })}
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
 
-              {/* Regional Settings (timezone, units, formats, currency) */}
-              <RegionalSettings />
-
-              {/* Translation Manager */}
-              <div>
-                <TranslationManager />
-              </div>
-            </>
-          )}
-
-          {/* ── BIM / CAD ────────────────────────────────────────── */}
-          {activeTab === 'bimcad' && (
-            <Card className="lg:col-span-2">
-              <CardHeader
-                title={t('settings.bimcad_title', { defaultValue: 'BIM & CAD' })}
-                subtitle={t('settings.bimcad_subtitle', { defaultValue: 'Manage BIM converters and takeoff settings from their dedicated modules' })}
-              />
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Link
-                    to="/bim"
-                    className="group flex flex-col gap-1 rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3.5 transition-all hover:bg-surface-secondary hover:border-oe-blue/40"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-content-primary">
-                        {t('settings.open_bim', { defaultValue: 'Open BIM' })}
-                      </span>
-                      <ChevronRight size={14} className="text-content-tertiary group-hover:text-oe-blue transition-colors" />
-                    </div>
-                    <p className="text-xs text-content-tertiary">
-                      {t('settings.bimcad_bim_desc', { defaultValue: 'Browse BIM models and elements' })}
-                    </p>
-                  </Link>
-                  <Link
-                    to="/takeoff"
-                    className="group flex flex-col gap-1 rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3.5 transition-all hover:bg-surface-secondary hover:border-oe-blue/40"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-content-primary">
-                        {t('settings.open_takeoff', { defaultValue: 'Open Takeoff' })}
-                      </span>
-                      <ChevronRight size={14} className="text-content-tertiary group-hover:text-oe-blue transition-colors" />
-                    </div>
-                    <p className="text-xs text-content-tertiary">
-                      {t('settings.bimcad_takeoff_desc', { defaultValue: 'PDF takeoff and quantity extraction' })}
-                    </p>
-                  </Link>
-                  <Link
-                    to="/dwg-takeoff"
-                    className="group flex flex-col gap-1 rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3.5 transition-all hover:bg-surface-secondary hover:border-oe-blue/40"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-content-primary">
-                        {t('settings.open_dwg', { defaultValue: 'Open DWG Takeoff' })}
-                      </span>
-                      <ChevronRight size={14} className="text-content-tertiary group-hover:text-oe-blue transition-colors" />
-                    </div>
-                    <p className="text-xs text-content-tertiary">
-                      {t('settings.bimcad_dwg_desc', { defaultValue: 'DWG drawing import and takeoff' })}
-                    </p>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* ── AI ────────────────────────────────────────────────── */}
-          {activeTab === 'ai' && (
-            <>
-              <div className="lg:col-span-2">
-                <InfoHint
-                  text={t('settings.ai_guidance', { defaultValue: 'AI features (estimation, takeoff analysis, semantic search) require an API key. Anthropic Claude is recommended for best accuracy. Keys are stored encrypted and never leave your server.' })}
-                />
-              </div>
-              <AIConfigurationCard />
-              <div className="lg:col-span-2">
-                <VectorStatusCard />
-              </div>
-            </>
-          )}
-
-          {/* ── INTEGRATIONS ─────────────────────────────────────── */}
-          {activeTab === 'integrations' && (
-            <div className="lg:col-span-2 space-y-6">
-              <Card>
-                <CardHeader
-                  title={t('integrations.title', { defaultValue: 'Integrations' })}
-                  subtitle={t('integrations.desc', { defaultValue: 'Connect Teams, Slack, Telegram, Discord, Webhooks' })}
-                />
-                <CardContent>
-                  <Link
-                    to="/integrations"
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-oe-blue/20 bg-oe-blue/[0.04] text-oe-blue text-sm font-medium hover:bg-oe-blue/10 transition-colors"
-                  >
-                    <Plug size={14} />
-                    {t('integrations.configure', { defaultValue: 'Configure Integrations' })}
-                  </Link>
-                </CardContent>
-              </Card>
-              <WebhookLeads />
-            </div>
-          )}
-
-          {/* ── ADVANCED ─────────────────────────────────────────── */}
-          {activeTab === 'advanced' && (
-            <>
-              <div className="lg:col-span-2">
-                <BackupRestore />
-              </div>
-
-              <Card className="lg:col-span-2">
-                <CardHeader
-                  title={t('settings.maintenance_title', { defaultValue: 'Maintenance & Setup' })}
-                  subtitle={t('settings.maintenance_subtitle', { defaultValue: 'Cost databases, demo data, and the initial setup wizard' })}
-                />
-                <CardContent>
-                  <ul className="divide-y divide-border-light rounded-xl border border-border-light bg-surface-secondary/30">
-                    <li className="flex flex-col sm:flex-row sm:items-center gap-3 p-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue/10 text-oe-blue">
-                        <Package size={18} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-content-primary">
-                          {t('settings.databases_title', { defaultValue: 'Databases & Resources' })}
+                {/* Danger zone */}
+                <Card className="lg:col-span-2 border-semantic-error/30 bg-semantic-error-bg/40">
+                  <CardHeader
+                    title={t("settings.danger_zone_title", {
+                      defaultValue: "Danger Zone",
+                    })}
+                    subtitle={t("settings.danger_zone_subtitle", {
+                      defaultValue: "Irreversible or sensitive account actions",
+                    })}
+                    action={
+                      <ShieldAlert
+                        size={20}
+                        className="text-semantic-error"
+                        aria-hidden="true"
+                      />
+                    }
+                  />
+                  <CardContent>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-semantic-error/20 bg-surface-elevated px-4 py-3">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-content-primary">
+                          {t("settings.sign_out_title", {
+                            defaultValue: "Sign out of all sessions",
+                          })}
                         </p>
-                        <p className="text-xs text-content-secondary mt-0.5 leading-relaxed">
-                          {t('settings.databases_subtitle', { defaultValue: 'Load cost databases, resource catalogs, and demo projects' })}
-                        </p>
-                      </div>
-                      <Link to="/setup/databases" className="sm:ml-auto shrink-0">
-                        <Button variant="secondary" size="sm" icon={<ChevronRight size={14} />} iconPosition="right">
-                          {t('common.open', { defaultValue: 'Open' })}
-                        </Button>
-                      </Link>
-                    </li>
-                    <li className="flex flex-col sm:flex-row sm:items-center gap-3 p-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue/10 text-oe-blue">
-                        <Wrench size={18} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-content-primary">
-                          {t('settings.setup_wizard_title', { defaultValue: 'Setup Wizard' })}
-                        </p>
-                        <p className="text-xs text-content-secondary mt-0.5 leading-relaxed">
-                          {t('settings.setup_wizard_subtitle', { defaultValue: 'Re-run the initial setup to change language, install databases, catalogs, or demo projects' })}
+                        <p className="text-xs text-content-secondary mt-0.5">
+                          {t("settings.sign_out_desc", {
+                            defaultValue:
+                              "You will need to enter your credentials to access OpenConstructionERP again.",
+                          })}
                         </p>
                       </div>
                       <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={<ChevronRight size={14} />}
-                        iconPosition="right"
-                        className="sm:ml-auto shrink-0"
+                        variant="danger"
+                        icon={<LogOut size={14} />}
                         onClick={() => {
-                          try { localStorage.removeItem('oe_onboarding_completed'); } catch { /* ignore storage errors */ }
-                          window.location.href = '/onboarding';
+                          logout();
+                          window.location.href = "/login";
                         }}
                       >
-                        {t('common.open', { defaultValue: 'Open' })}
+                        {t("settings.sign_out", { defaultValue: "Sign Out" })}
                       </Button>
-                    </li>
-                  </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {/* ── REGIONAL ─────────────────────────────────────────── */}
+            {activeTab === "regional" && (
+              <>
+                {/* Language picker */}
+                <Card className="lg:col-span-2">
+                  <CardHeader
+                    title={t("settings.language_title", {
+                      defaultValue: "Language & Region",
+                    })}
+                    subtitle={t("settings.language_subtitle", {
+                      defaultValue:
+                        "Choose your preferred language for the interface",
+                    })}
+                  />
+                  <CardContent>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+                      {SUPPORTED_LANGUAGES.map((lang) => {
+                        const isActive = i18n.language === lang.code;
+                        return (
+                          <button
+                            key={lang.code}
+                            onClick={() => {
+                              i18n.changeLanguage(lang.code);
+                              apiPatch("/v1/users/me/", { locale: lang.code })
+                                .then(() => {
+                                  queryClient.invalidateQueries({
+                                    queryKey: ["me"],
+                                  });
+                                })
+                                .catch(() => {});
+                            }}
+                            aria-pressed={isActive}
+                            aria-label={`${lang.name} (${lang.code})`}
+                            className={`flex flex-col items-center gap-1 rounded-xl px-3 py-3 text-center transition-all duration-normal ease-oe ${
+                              isActive
+                                ? "bg-oe-blue-subtle border-2 border-oe-blue text-oe-blue"
+                                : "border-2 border-transparent hover:bg-surface-secondary text-content-secondary hover:text-content-primary"
+                            }`}
+                          >
+                            <span className="text-lg">{lang.flag}</span>
+                            <span
+                              className="text-2xs font-medium truncate w-full"
+                              title={lang.name}
+                            >
+                              {lang.name}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Regional Settings (timezone, units, formats, currency) */}
+                <RegionalSettings />
+
+                {/* Translation Manager */}
+                <div>
+                  <TranslationManager />
+                </div>
+              </>
+            )}
+
+            {/* ── BIM / CAD ────────────────────────────────────────── */}
+            {activeTab === "bimcad" && (
+              <Card className="lg:col-span-2">
+                <CardHeader
+                  title={t("settings.bimcad_title", {
+                    defaultValue: "BIM & CAD",
+                  })}
+                  subtitle={t("settings.bimcad_subtitle", {
+                    defaultValue:
+                      "Manage BIM converters and takeoff settings from their dedicated modules",
+                  })}
+                />
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <Link
+                      to="/bim"
+                      className="group flex flex-col gap-1 rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3.5 transition-all hover:bg-surface-secondary hover:border-oe-blue/40"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-content-primary">
+                          {t("settings.open_bim", { defaultValue: "Open BIM" })}
+                        </span>
+                        <ChevronRight
+                          size={14}
+                          className="text-content-tertiary group-hover:text-oe-blue transition-colors"
+                        />
+                      </div>
+                      <p className="text-xs text-content-tertiary">
+                        {t("settings.bimcad_bim_desc", {
+                          defaultValue: "Browse BIM models and elements",
+                        })}
+                      </p>
+                    </Link>
+                    <Link
+                      to="/takeoff"
+                      className="group flex flex-col gap-1 rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3.5 transition-all hover:bg-surface-secondary hover:border-oe-blue/40"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-content-primary">
+                          {t("settings.open_takeoff", {
+                            defaultValue: "Open Takeoff",
+                          })}
+                        </span>
+                        <ChevronRight
+                          size={14}
+                          className="text-content-tertiary group-hover:text-oe-blue transition-colors"
+                        />
+                      </div>
+                      <p className="text-xs text-content-tertiary">
+                        {t("settings.bimcad_takeoff_desc", {
+                          defaultValue: "PDF takeoff and quantity extraction",
+                        })}
+                      </p>
+                    </Link>
+                    <Link
+                      to="/dwg-takeoff"
+                      className="group flex flex-col gap-1 rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3.5 transition-all hover:bg-surface-secondary hover:border-oe-blue/40"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-content-primary">
+                          {t("settings.open_dwg", {
+                            defaultValue: "Open DWG Takeoff",
+                          })}
+                        </span>
+                        <ChevronRight
+                          size={14}
+                          className="text-content-tertiary group-hover:text-oe-blue transition-colors"
+                        />
+                      </div>
+                      <p className="text-xs text-content-tertiary">
+                        {t("settings.bimcad_dwg_desc", {
+                          defaultValue: "DWG drawing import and takeoff",
+                        })}
+                      </p>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
-            </>
-          )}
-          </div>{/* End cards grid */}
+            )}
+
+            {/* ── AI ────────────────────────────────────────────────── */}
+            {activeTab === "ai" && (
+              <>
+                <div className="lg:col-span-2">
+                  <InfoHint
+                    text={t("settings.ai_guidance", {
+                      defaultValue:
+                        "AI features (estimation, takeoff analysis, semantic search) require an API key. Anthropic Claude is recommended for best accuracy. Keys are stored encrypted and never leave your server.",
+                    })}
+                  />
+                </div>
+                <AIConfigurationCard />
+                <div className="lg:col-span-2">
+                  <VectorStatusCard />
+                </div>
+              </>
+            )}
+
+            {/* ── INTEGRATIONS ─────────────────────────────────────── */}
+            {activeTab === "integrations" && (
+              <div className="lg:col-span-2 space-y-6">
+                <Card>
+                  <CardHeader
+                    title={t("integrations.title", {
+                      defaultValue: "Integrations",
+                    })}
+                    subtitle={t("integrations.desc", {
+                      defaultValue:
+                        "Connect Teams, Slack, Telegram, Discord, Webhooks",
+                    })}
+                  />
+                  <CardContent>
+                    <Link
+                      to="/integrations"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-oe-blue/20 bg-oe-blue/[0.04] text-oe-blue text-sm font-medium hover:bg-oe-blue/10 transition-colors"
+                    >
+                      <Plug size={14} />
+                      {t("integrations.configure", {
+                        defaultValue: "Configure Integrations",
+                      })}
+                    </Link>
+                  </CardContent>
+                </Card>
+                <WebhookLeads />
+              </div>
+            )}
+
+            {/* ── ADVANCED ─────────────────────────────────────────── */}
+            {activeTab === "advanced" && (
+              <>
+                <div className="lg:col-span-2">
+                  <BackupRestore />
+                </div>
+
+                <Card className="lg:col-span-2">
+                  <CardHeader
+                    title={t("settings.maintenance_title", {
+                      defaultValue: "Maintenance & Setup",
+                    })}
+                    subtitle={t("settings.maintenance_subtitle", {
+                      defaultValue:
+                        "Cost databases, demo data, and the initial setup wizard",
+                    })}
+                  />
+                  <CardContent>
+                    <ul className="divide-y divide-border-light rounded-xl border border-border-light bg-surface-secondary/30">
+                      <li className="flex flex-col sm:flex-row sm:items-center gap-3 p-4">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue/10 text-oe-blue">
+                          <Package size={18} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-content-primary">
+                            {t("settings.databases_title", {
+                              defaultValue: "Databases & Resources",
+                            })}
+                          </p>
+                          <p className="text-xs text-content-secondary mt-0.5 leading-relaxed">
+                            {t("settings.databases_subtitle", {
+                              defaultValue:
+                                "Load cost databases, resource catalogs, and demo projects",
+                            })}
+                          </p>
+                        </div>
+                        <Link
+                          to="/setup/databases"
+                          className="sm:ml-auto shrink-0"
+                        >
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            icon={<ChevronRight size={14} />}
+                            iconPosition="right"
+                          >
+                            {t("common.open", { defaultValue: "Open" })}
+                          </Button>
+                        </Link>
+                      </li>
+                      <li className="flex flex-col sm:flex-row sm:items-center gap-3 p-4">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue/10 text-oe-blue">
+                          <Wrench size={18} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-content-primary">
+                            {t("settings.setup_wizard_title", {
+                              defaultValue: "Setup Wizard",
+                            })}
+                          </p>
+                          <p className="text-xs text-content-secondary mt-0.5 leading-relaxed">
+                            {t("settings.setup_wizard_subtitle", {
+                              defaultValue:
+                                "Re-run the initial setup to change language, install databases, catalogs, or demo projects",
+                            })}
+                          </p>
+                        </div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          icon={<ChevronRight size={14} />}
+                          iconPosition="right"
+                          className="sm:ml-auto shrink-0"
+                          onClick={() => {
+                            try {
+                              localStorage.removeItem(
+                                "oe_onboarding_completed",
+                              );
+                            } catch {
+                              /* ignore storage errors */
+                            }
+                            window.location.href = "/onboarding";
+                          }}
+                        >
+                          {t("common.open", { defaultValue: "Open" })}
+                        </Button>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
+          {/* End cards grid */}
 
           {/* About link — mobile only (desktop has it in sidebar) */}
           <div className="lg:hidden mt-8 text-center">
@@ -1673,7 +2161,9 @@ export function SettingsPage() {
               to="/about"
               className="inline-flex items-center gap-1 text-sm text-content-tertiary hover:text-oe-blue transition-colors"
             >
-              {t('settings.about_link', { defaultValue: 'About OpenConstructionERP' })}
+              {t("settings.about_link", {
+                defaultValue: "About OpenConstructionERP",
+              })}
               <ChevronRight size={12} />
             </Link>
           </div>

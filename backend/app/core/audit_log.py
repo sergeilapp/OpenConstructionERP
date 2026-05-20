@@ -79,10 +79,14 @@ class ActivityLog(Base):
     )
 
     tenant_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), nullable=True, index=True,
+        GUID(),
+        nullable=True,
+        index=True,
     )
     actor_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), nullable=True, index=True,
+        GUID(),
+        nullable=True,
+        index=True,
     )
     entity_type: Mapped[str] = mapped_column(String(64), nullable=False)
     entity_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
@@ -100,8 +104,7 @@ class ActivityLog(Base):
 
     def __repr__(self) -> str:  # pragma: no cover — debug only
         return (
-            f"<ActivityLog {self.entity_type}:{self.entity_id} "
-            f"{self.from_status}->{self.to_status} by {self.actor_id}>"
+            f"<ActivityLog {self.entity_type}:{self.entity_id} {self.from_status}->{self.to_status} by {self.actor_id}>"
         )
 
 
@@ -172,12 +175,19 @@ async def log_activity(
     except Exception:  # pragma: no cover — propagated for visibility
         logger.exception(
             "activity_log: flush failed for %s:%s %s",
-            entity_type, entity_id, action,
+            entity_type,
+            entity_id,
+            action,
         )
         raise
     logger.debug(
         "activity_log: %s %s %s %s->%s actor=%s",
-        action, entity_type, entity_id, from_status, to_status, actor_id,
+        action,
+        entity_type,
+        entity_id,
+        from_status,
+        to_status,
+        actor_id,
     )
     return entry
 

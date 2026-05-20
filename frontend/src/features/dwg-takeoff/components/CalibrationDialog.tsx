@@ -15,14 +15,14 @@
  * the localStorage write — we just render + report back.
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { X, MousePointer2 } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { X, MousePointer2 } from "lucide-react";
 import {
   CALIBRATION_UNITS,
   pixelDistance,
   type CalibrationUnit,
-} from '../lib/calibration';
+} from "../lib/calibration";
 
 /** Which step the dialog is currently showing. Driven by the parent
  *  (it knows when a click has landed). Step 0 = not open. */
@@ -40,7 +40,7 @@ interface Props {
  *  flip the dropdown once; subsequent calibrations on other layouts
  *  in the same session could remember the choice, but we keep the
  *  default static so the behaviour is predictable. */
-const DEFAULT_UNIT: CalibrationUnit = 'm';
+const DEFAULT_UNIT: CalibrationUnit = "m";
 
 export function CalibrationDialog({
   step,
@@ -50,7 +50,7 @@ export function CalibrationDialog({
   onCancel,
 }: Props) {
   const { t } = useTranslation();
-  const [lengthInput, setLengthInput] = useState<string>('');
+  const [lengthInput, setLengthInput] = useState<string>("");
   const [unit, setUnit] = useState<CalibrationUnit>(DEFAULT_UNIT);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,7 +63,7 @@ export function CalibrationDialog({
       const id = setTimeout(() => inputRef.current?.focus(), 0);
       return () => clearTimeout(id);
     } else {
-      setLengthInput('');
+      setLengthInput("");
     }
   }, [step]);
 
@@ -74,50 +74,50 @@ export function CalibrationDialog({
       // Honour the "don't swallow typing" rule — but only skip bare keys,
       // not our actual Esc/Enter handlers. If the target is our own input
       // we still want Enter to confirm, so we special-case it below.
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         onCancel();
         return;
       }
-      if (e.key === 'Enter' && step === 3) {
+      if (e.key === "Enter" && step === 3) {
         // Don't double-fire when focus is in our input — the form's
         // onSubmit handles that case. We only care about Enter while
         // focus is elsewhere (e.g. a unit-dropdown button).
         const target = e.target as HTMLElement | null;
-        if (target?.tagName === 'TEXTAREA') return;
+        if (target?.tagName === "TEXTAREA") return;
         e.preventDefault();
         handleSubmit();
       }
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, lengthInput, unit]);
 
   if (step === 0) return null;
 
   const handleSubmit = () => {
-    const v = parseFloat(lengthInput.replace(',', '.'));
+    const v = parseFloat(lengthInput.replace(",", "."));
     if (!Number.isFinite(v) || v <= 0) {
       setError(
-        t('dwg_takeoff.cal_error_length', {
-          defaultValue: 'Enter a positive real-world length.‌⁠‍',
+        t("dwg_takeoff.cal_error_length", {
+          defaultValue: "Enter a positive real-world length.‌⁠‍",
         }) as string,
       );
       return;
     }
     if (!pointA || !pointB) {
       setError(
-        t('dwg_takeoff.cal_error_missing_points', {
-          defaultValue: 'Two points are required for calibration.‌⁠‍',
+        t("dwg_takeoff.cal_error_missing_points", {
+          defaultValue: "Two points are required for calibration.‌⁠‍",
         }) as string,
       );
       return;
     }
     if (pixelDistance(pointA, pointB) <= 0) {
       setError(
-        t('dwg_takeoff.cal_error_coincident', {
-          defaultValue: 'Points are identical — click two different points.‌⁠‍',
+        t("dwg_takeoff.cal_error_coincident", {
+          defaultValue: "Points are identical — click two different points.‌⁠‍",
         }) as string,
       );
       return;
@@ -129,11 +129,11 @@ export function CalibrationDialog({
   if (step === 1 || step === 2) {
     const label =
       step === 1
-        ? t('dwg_takeoff.cal_step1', {
-            defaultValue: 'Click point A on the drawing‌⁠‍',
+        ? t("dwg_takeoff.cal_step1", {
+            defaultValue: "Click point A on the drawing‌⁠‍",
           })
-        : t('dwg_takeoff.cal_step2', {
-            defaultValue: 'Now click point B‌⁠‍',
+        : t("dwg_takeoff.cal_step2", {
+            defaultValue: "Now click point B‌⁠‍",
           });
     return (
       <div
@@ -177,8 +177,8 @@ export function CalibrationDialog({
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <h2 className="text-sm font-semibold text-foreground">
-            {t('dwg_takeoff.cal_title', {
-              defaultValue: 'Calibrate drawing scale',
+            {t("dwg_takeoff.cal_title", {
+              defaultValue: "Calibrate drawing scale",
             })}
           </h2>
           <button
@@ -194,8 +194,8 @@ export function CalibrationDialog({
         <div className="space-y-3 px-4 py-3">
           <div className="flex items-center justify-between rounded-md bg-surface-secondary px-3 py-2">
             <span className="text-xs text-muted-foreground">
-              {t('dwg_takeoff.cal_pixel_distance', {
-                defaultValue: 'Pixel distance',
+              {t("dwg_takeoff.cal_pixel_distance", {
+                defaultValue: "Pixel distance",
               })}
             </span>
             <span
@@ -207,8 +207,8 @@ export function CalibrationDialog({
           </div>
 
           <label className="block text-xs font-medium text-foreground">
-            {t('dwg_takeoff.cal_real_length', {
-              defaultValue: 'Real-world length',
+            {t("dwg_takeoff.cal_real_length", {
+              defaultValue: "Real-world length",
             })}
             <div className="mt-1 flex gap-2">
               <input
@@ -251,9 +251,9 @@ export function CalibrationDialog({
           )}
 
           <p className="text-[11px] text-muted-foreground">
-            {t('dwg_takeoff.cal_hint', {
+            {t("dwg_takeoff.cal_hint", {
               defaultValue:
-                'The scale is saved per drawing + layout in your browser.',
+                "The scale is saved per drawing + layout in your browser.",
             })}
           </p>
         </div>
@@ -265,14 +265,14 @@ export function CalibrationDialog({
             data-testid="dwg-calibration-cancel"
             className="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-surface-secondary"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
           <button
             type="submit"
             data-testid="dwg-calibration-confirm"
             className="rounded-md bg-oe-blue px-3 py-1.5 text-xs font-semibold text-white hover:bg-oe-blue/90"
           >
-            {t('common.confirm', { defaultValue: 'Confirm' })}
+            {t("common.confirm", { defaultValue: "Confirm" })}
           </button>
         </div>
       </form>

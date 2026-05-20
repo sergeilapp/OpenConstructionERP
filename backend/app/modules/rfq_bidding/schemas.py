@@ -22,6 +22,7 @@ def _reject_unsafe_string(value: str | None, field: str) -> str | None:
         raise ValueError(f"{field} must not be blank")
     return cleaned
 
+
 # ── RFQ ─────────────────────────────────────────────────────────────────────
 
 

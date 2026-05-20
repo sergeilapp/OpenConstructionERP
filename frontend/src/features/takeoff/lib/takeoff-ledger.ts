@@ -7,20 +7,20 @@
  * `features/takeoff/lib/takeoff-types.ts::Measurement`.
  */
 
-import type { Measurement, MeasurementType } from './takeoff-types';
-import { ANNOTATION_TYPES } from './takeoff-groups';
+import type { Measurement, MeasurementType } from "./takeoff-types";
+import { ANNOTATION_TYPES } from "./takeoff-groups";
 
 /** Sortable column keys exposed by the ledger table. */
 export type LedgerSortColumn =
-  | 'ordinal'
-  | 'type'
-  | 'annotation'
-  | 'group'
-  | 'value'
-  | 'unit'
-  | 'page';
+  | "ordinal"
+  | "type"
+  | "annotation"
+  | "group"
+  | "value"
+  | "unit"
+  | "page";
 
-export type SortDirection = 'asc' | 'desc';
+export type SortDirection = "asc" | "desc";
 
 export interface LedgerFilter {
   /** Allowed group names — empty set means "allow all". */
@@ -63,7 +63,7 @@ export function filterMeasurements(
   filter: LedgerFilter,
 ): Measurement[] {
   return measurements.filter((m) => {
-    if (filter.groups.size > 0 && !filter.groups.has(m.group || 'General')) {
+    if (filter.groups.size > 0 && !filter.groups.has(m.group || "General")) {
       return false;
     }
     if (filter.types.size > 0 && !filter.types.has(m.type)) return false;
@@ -83,15 +83,15 @@ export function sortMeasurements(
   column: LedgerSortColumn,
   direction: SortDirection,
 ): Measurement[] {
-  const mult = direction === 'asc' ? 1 : -1;
+  const mult = direction === "asc" ? 1 : -1;
   const out = [...measurements];
   out.sort((a, b) => {
     const primary = compareByColumn(a, b, column);
     if (primary !== 0) return primary * mult;
     // Tie-breaker: page asc, annotation asc, id asc — gives stable order.
     if (a.page !== b.page) return a.page - b.page;
-    const aa = a.annotation || '';
-    const bb = b.annotation || '';
+    const aa = a.annotation || "";
+    const bb = b.annotation || "";
     if (aa !== bb) return aa.localeCompare(bb);
     return a.id.localeCompare(b.id);
   });
@@ -104,20 +104,20 @@ function compareByColumn(
   column: LedgerSortColumn,
 ): number {
   switch (column) {
-    case 'ordinal':
+    case "ordinal":
       // Natural id order — treated as a proxy for insertion order.
       return a.id.localeCompare(b.id);
-    case 'type':
+    case "type":
       return a.type.localeCompare(b.type);
-    case 'annotation':
-      return (a.annotation || '').localeCompare(b.annotation || '');
-    case 'group':
-      return (a.group || 'General').localeCompare(b.group || 'General');
-    case 'value':
+    case "annotation":
+      return (a.annotation || "").localeCompare(b.annotation || "");
+    case "group":
+      return (a.group || "General").localeCompare(b.group || "General");
+    case "value":
       return a.value - b.value;
-    case 'unit':
-      return (a.unit || '').localeCompare(b.unit || '');
-    case 'page':
+    case "unit":
+      return (a.unit || "").localeCompare(b.unit || "");
+    case "page":
       return a.page - b.page;
   }
 }
@@ -142,7 +142,7 @@ export function withOrdinals(measurements: Measurement[]): LedgerRow[] {
 export function groupSubtotals(measurements: Measurement[]): GroupSubtotal[] {
   const byGroup = new Map<string, GroupSubtotal>();
   for (const m of measurements) {
-    const group = m.group || 'General';
+    const group = m.group || "General";
     let entry = byGroup.get(group);
     if (!entry) {
       entry = { group, totals: {}, count: 0 };
@@ -150,7 +150,7 @@ export function groupSubtotals(measurements: Measurement[]): GroupSubtotal[] {
     }
     entry.count += 1;
     if (!ANNOTATION_TYPES.has(m.type)) {
-      const unit = m.unit || '';
+      const unit = m.unit || "";
       entry.totals[unit] = (entry.totals[unit] ?? 0) + m.value;
     }
   }
@@ -169,7 +169,7 @@ export function typeGrandTotals(measurements: Measurement[]): TypeGrandTotal[] {
     if (ANNOTATION_TYPES.has(m.type)) continue;
     let entry = byType.get(m.type);
     if (!entry) {
-      entry = { type: m.type, unit: m.unit || '', total: 0, count: 0 };
+      entry = { type: m.type, unit: m.unit || "", total: 0, count: 0 };
       byType.set(m.type, entry);
     }
     entry.total += m.value;
@@ -188,14 +188,14 @@ export function typeGrandTotals(measurements: Measurement[]): TypeGrandTotal[] {
  * RFC-4180-ish: comma separator, quoted strings, doubled quotes inside.
  */
 export function ledgerToCsv(measurements: Measurement[]): string {
-  const header = '#,Type,Annotation,Group,Value,Unit,Page';
+  const header = "#,Type,Annotation,Group,Value,Unit,Page";
   const rows: string[] = [header];
 
   const ordered = withOrdinals(measurements);
   // Group rows together so subtotals land after each block.
   const byGroup = new Map<string, LedgerRow[]>();
   for (const row of ordered) {
-    const g = row.measurement.group || 'General';
+    const g = row.measurement.group || "General";
     if (!byGroup.has(g)) byGroup.set(g, []);
     byGroup.get(g)!.push(row);
   }
@@ -206,12 +206,12 @@ export function ledgerToCsv(measurements: Measurement[]): string {
         [
           String(ordinal),
           escapeCsv(measurement.type),
-          escapeCsv(measurement.annotation || ''),
+          escapeCsv(measurement.annotation || ""),
           escapeCsv(group),
           formatNumber(measurement.value),
-          escapeCsv(measurement.unit || ''),
+          escapeCsv(measurement.unit || ""),
           String(measurement.page),
-        ].join(','),
+        ].join(","),
       );
     }
     // Subtotal(s) per group — one line per unique unit present.
@@ -220,14 +220,14 @@ export function ledgerToCsv(measurements: Measurement[]): string {
       for (const [unit, total] of Object.entries(subs.totals)) {
         rows.push(
           [
-            '',
-            'subtotal',
+            "",
+            "subtotal",
             escapeCsv(`${group} subtotal`),
             escapeCsv(group),
             formatNumber(total),
             escapeCsv(unit),
-            '',
-          ].join(','),
+            "",
+          ].join(","),
         );
       }
     }
@@ -236,18 +236,18 @@ export function ledgerToCsv(measurements: Measurement[]): string {
   for (const gt of typeGrandTotals(measurements)) {
     rows.push(
       [
-        '',
-        'grand_total',
+        "",
+        "grand_total",
         escapeCsv(`Total ${gt.type}`),
-        '',
+        "",
         formatNumber(gt.total),
         escapeCsv(gt.unit),
-        '',
-      ].join(','),
+        "",
+      ].join(","),
     );
   }
 
-  return rows.join('\n');
+  return rows.join("\n");
 }
 
 function escapeCsv(value: string): string {
@@ -258,7 +258,7 @@ function formatNumber(value: number): string {
   // Match the same precision rules used by formatMeasurement — 3 dp for
   // tiny values, 2 dp for normal, 1 dp for large.  Keeps CSV readable
   // in Excel without scientific notation.
-  if (value === 0) return '0';
+  if (value === 0) return "0";
   const abs = Math.abs(value);
   if (abs < 1) return value.toFixed(3);
   if (abs < 100) return value.toFixed(2);
@@ -276,7 +276,7 @@ export function uniqueFilterOptions(measurements: Measurement[]): {
   const types = new Set<MeasurementType>();
   const pages = new Set<number>();
   for (const m of measurements) {
-    groups.add(m.group || 'General');
+    groups.add(m.group || "General");
     types.add(m.type);
     pages.add(m.page);
   }

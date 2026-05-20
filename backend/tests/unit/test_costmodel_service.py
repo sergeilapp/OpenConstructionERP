@@ -105,9 +105,7 @@ class _StubBudgetRepo:
     async def aggregate_by_project(self, project_id: uuid.UUID) -> dict[str, str]:
         return dict(self._aggregate)
 
-    async def aggregate_by_category(
-        self, project_id: uuid.UUID
-    ) -> list[dict[str, str]]:
+    async def aggregate_by_category(self, project_id: uuid.UUID) -> list[dict[str, str]]:
         return list(self._by_category)
 
     def set_by_category(self, rows: list[dict[str, str]]) -> None:
@@ -115,9 +113,7 @@ class _StubBudgetRepo:
 
 
 class _StubCashflowRepo:
-    async def list_for_project(
-        self, project_id: uuid.UUID, *, limit: int = 1000
-    ) -> tuple[list[Any], int]:
+    async def list_for_project(self, project_id: uuid.UUID, *, limit: int = 1000) -> tuple[list[Any], int]:
         return [], 0
 
 
@@ -154,9 +150,7 @@ async def test_calculate_evm_no_schedule_sets_schedule_unknown(
     class _EmptySchedRepo:
         def __init__(self, *_args: Any, **_kwargs: Any) -> None: ...
 
-        async def list_for_project(
-            self, project_id: uuid.UUID, *, limit: int = 50
-        ) -> tuple[list[Any], int]:
+        async def list_for_project(self, project_id: uuid.UUID, *, limit: int = 50) -> tuple[list[Any], int]:
             return [], 0
 
     class _EmptyActivityRepo:
@@ -192,20 +186,14 @@ async def test_calculate_evm_returns_bcws_bcwp_acwp_fields() -> None:
     class _EmptySchedRepo:
         def __init__(self, *_args: Any, **_kwargs: Any) -> None: ...
 
-        async def list_for_project(
-            self, project_id: uuid.UUID, *, limit: int = 50
-        ) -> tuple[list[Any], int]:
+        async def list_for_project(self, project_id: uuid.UUID, *, limit: int = 50) -> tuple[list[Any], int]:
             return [], 0
 
     class _EmptyActivityRepo:
         def __init__(self, *_args: Any, **_kwargs: Any) -> None: ...
 
-    pytest.MonkeyPatch().setattr(
-        schedule_repo_mod, "ScheduleRepository", _EmptySchedRepo
-    )
-    pytest.MonkeyPatch().setattr(
-        schedule_repo_mod, "ActivityRepository", _EmptyActivityRepo
-    )
+    pytest.MonkeyPatch().setattr(schedule_repo_mod, "ScheduleRepository", _EmptySchedRepo)
+    pytest.MonkeyPatch().setattr(schedule_repo_mod, "ActivityRepository", _EmptyActivityRepo)
 
     response = await service.calculate_evm(uuid.uuid4())
 
@@ -243,9 +231,7 @@ async def test_delete_snapshot_removes_row() -> None:
     router endpoint."""
     service = _make_service()
     pid = uuid.uuid4()
-    snap = await service.create_snapshot(
-        SnapshotCreate(project_id=pid, period="2026-04")
-    )
+    snap = await service.create_snapshot(SnapshotCreate(project_id=pid, period="2026-04"))
     assert snap.id in service.snapshot_repo.rows  # type: ignore[attr-defined]
 
     await service.delete_snapshot(snap.id)
@@ -296,11 +282,7 @@ def test_delete_snapshot_route_is_registered() -> None:
     frontend "delete snapshot" button has something to call."""
     from app.modules.costmodel.router import router
 
-    paths = {
-        (route.path, method)
-        for route in router.routes
-        for method in getattr(route, "methods", set())
-    }
+    paths = {(route.path, method) for route in router.routes for method in getattr(route, "methods", set())}
     assert (
         "/projects/{project_id}/5d/snapshots/{snapshot_id}",
         "DELETE",
@@ -324,9 +306,7 @@ async def test_get_dashboard_returns_aggregated_counts(
     async def _fake_currency(_self: Any, _pid: uuid.UUID) -> str:
         return "EUR"
 
-    monkeypatch.setattr(
-        CostModelService, "_get_project_currency", _fake_currency
-    )
+    monkeypatch.setattr(CostModelService, "_get_project_currency", _fake_currency)
 
     dashboard = await service.get_dashboard(pid)
 

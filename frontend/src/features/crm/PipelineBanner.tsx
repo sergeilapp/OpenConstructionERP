@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import clsx from 'clsx';
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import clsx from "clsx";
 
 /**
  * Contextual "where am I in the commercial pipeline" banner.
@@ -38,7 +38,7 @@ export function PipelineBanner({
   return (
     <div
       className={clsx(
-        'rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3',
+        "rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3",
         className,
       )}
     >
@@ -48,12 +48,12 @@ export function PipelineBanner({
           const chip = (
             <span
               className={clsx(
-                'inline-flex items-center rounded-md px-2 py-0.5 font-medium ring-1 ring-inset transition-colors',
+                "inline-flex items-center rounded-md px-2 py-0.5 font-medium ring-1 ring-inset transition-colors",
                 s.current
-                  ? 'bg-oe-blue text-white ring-oe-blue'
+                  ? "bg-oe-blue text-white ring-oe-blue"
                   : s.to
-                    ? 'bg-surface-primary text-content-secondary ring-border-light hover:text-oe-blue hover:ring-oe-blue'
-                    : 'bg-surface-primary text-content-tertiary ring-border-light',
+                    ? "bg-surface-primary text-content-secondary ring-border-light hover:text-oe-blue hover:ring-oe-blue"
+                    : "bg-surface-primary text-content-tertiary ring-border-light",
               )}
             >
               {s.label}
@@ -62,14 +62,20 @@ export function PipelineBanner({
           return (
             <div key={s.label} className="flex items-center gap-1.5">
               {s.to && !s.current ? (
-                <Link to={s.to} className="focus:outline-none focus:ring-2 focus:ring-oe-blue/40 rounded-md">
+                <Link
+                  to={s.to}
+                  className="focus:outline-none focus:ring-2 focus:ring-oe-blue/40 rounded-md"
+                >
                   {chip}
                 </Link>
               ) : (
                 chip
               )}
               {i < steps.length - 1 && (
-                <ArrowRight size={12} className="text-content-tertiary shrink-0" />
+                <ArrowRight
+                  size={12}
+                  className="text-content-tertiary shrink-0"
+                />
               )}
             </div>
           );

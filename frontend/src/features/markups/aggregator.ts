@@ -24,33 +24,33 @@
  * Markups hub page.
  */
 
-import type { Markup, MarkupType } from './api';
-import type { DwgAnnotation, DwgDrawing } from '@/features/dwg-takeoff/api';
-import type { MeasurementResponse } from '@/features/takeoff/api';
+import type { Markup, MarkupType } from "./api";
+import type { DwgAnnotation, DwgDrawing } from "@/features/dwg-takeoff/api";
+import type { MeasurementResponse } from "@/features/takeoff/api";
 
 /* ── Source discriminators ───────────────────────────────────────────── */
 
-export type UnifiedMarkupSource = 'markups_hub' | 'pdf_takeoff' | 'dwg_takeoff';
+export type UnifiedMarkupSource = "markups_hub" | "pdf_takeoff" | "dwg_takeoff";
 
 /** Canonical set of annotation types displayed in the hub.
  *  All three surfaces are normalised to this vocabulary. */
 export type UnifiedMarkupType =
-  | 'cloud'
-  | 'arrow'
-  | 'text'
-  | 'rectangle'
-  | 'highlight'
-  | 'distance'
-  | 'area'
-  | 'count'
-  | 'stamp'
-  | 'polygon'
-  | 'polyline'
-  | 'circle'
-  | 'text_pin'
-  | 'line'
-  | 'volume'
-  | 'other';
+  | "cloud"
+  | "arrow"
+  | "text"
+  | "rectangle"
+  | "highlight"
+  | "distance"
+  | "area"
+  | "count"
+  | "stamp"
+  | "polygon"
+  | "polyline"
+  | "circle"
+  | "text_pin"
+  | "line"
+  | "volume"
+  | "other";
 
 /** Minimal shape produced by the aggregator. A single card/row per entry. */
 export interface UnifiedMarkup {
@@ -71,7 +71,7 @@ export interface UnifiedMarkup {
   label: string;
   text: string | null;
   color: string;
-  status: 'active' | 'resolved' | 'archived';
+  status: "active" | "resolved" | "archived";
   author: string;
   createdAt: string;
   /** Target route to navigate to on click. */
@@ -80,32 +80,35 @@ export interface UnifiedMarkup {
 
 /* ── Normaliser helpers ──────────────────────────────────────────────── */
 
-const TYPE_WHITELIST: ReadonlySet<UnifiedMarkupType> = new Set<UnifiedMarkupType>([
-  'cloud',
-  'arrow',
-  'text',
-  'rectangle',
-  'highlight',
-  'distance',
-  'area',
-  'count',
-  'stamp',
-  'polygon',
-  'polyline',
-  'circle',
-  'text_pin',
-  'line',
-  'volume',
-  'other',
-]);
+const TYPE_WHITELIST: ReadonlySet<UnifiedMarkupType> =
+  new Set<UnifiedMarkupType>([
+    "cloud",
+    "arrow",
+    "text",
+    "rectangle",
+    "highlight",
+    "distance",
+    "area",
+    "count",
+    "stamp",
+    "polygon",
+    "polyline",
+    "circle",
+    "text_pin",
+    "line",
+    "volume",
+    "other",
+  ]);
 
 function coerceType(t: string | null | undefined): UnifiedMarkupType {
-  if (!t) return 'other';
-  return TYPE_WHITELIST.has(t as UnifiedMarkupType) ? (t as UnifiedMarkupType) : 'other';
+  if (!t) return "other";
+  return TYPE_WHITELIST.has(t as UnifiedMarkupType)
+    ? (t as UnifiedMarkupType)
+    : "other";
 }
 
 function truncate(s: string | null | undefined, max = 80): string {
-  if (!s) return '';
+  if (!s) return "";
   const clean = String(s).trim();
   return clean.length > max ? `${clean.slice(0, max - 1)}\u2026` : clean;
 }
@@ -116,11 +119,13 @@ export function fromMarkupsHub(
   m: Markup,
   opts: { documentName?: string | null } = {},
 ): UnifiedMarkup {
-  const docName = opts.documentName ?? (m.document_id ? m.document_id.slice(0, 8) : 'Unassigned');
+  const docName =
+    opts.documentName ??
+    (m.document_id ? m.document_id.slice(0, 8) : "Unassigned");
   return {
     id: `hub:${m.id}`,
     nativeId: m.id,
-    source: 'markups_hub',
+    source: "markups_hub",
     projectId: m.project_id,
     sourceFileId: m.document_id,
     sourceFileName: docName,
@@ -128,9 +133,9 @@ export function fromMarkupsHub(
     page: m.page ?? null,
     label: m.label || truncate(m.text) || m.type,
     text: m.text,
-    color: m.color || '#3b82f6',
-    status: (m.status as UnifiedMarkup['status']) || 'active',
-    author: m.created_by || m.author_id || 'unknown',
+    color: m.color || "#3b82f6",
+    status: (m.status as UnifiedMarkup["status"]) || "active",
+    author: m.created_by || m.author_id || "unknown",
     createdAt: m.created_at,
     deepLink: m.document_id
       ? `/markups?documentId=${encodeURIComponent(m.document_id)}&markupId=${m.id}`
@@ -140,7 +145,7 @@ export function fromMarkupsHub(
 
 export function fromDwgAnnotation(
   a: DwgAnnotation,
-  drawing: Pick<DwgDrawing, 'id' | 'project_id' | 'name' | 'filename'>,
+  drawing: Pick<DwgDrawing, "id" | "project_id" | "name" | "filename">,
 ): UnifiedMarkup {
   // The backend serialises this column as ``annotation_type`` (Pydantic
   // field name), but the TS interface calls it ``type``. Read both so the
@@ -150,18 +155,18 @@ export function fromDwgAnnotation(
   return {
     id: `dwg:${a.id}`,
     nativeId: a.id,
-    source: 'dwg_takeoff',
+    source: "dwg_takeoff",
     projectId: drawing.project_id,
     sourceFileId: drawing.id,
     sourceFileName: drawing.name || drawing.filename || drawing.id.slice(0, 8),
     type: coerceType(rawType),
     page: null,
-    label: truncate(a.text) || (rawType ?? 'annotation').replace(/_/g, ' '),
+    label: truncate(a.text) || (rawType ?? "annotation").replace(/_/g, " "),
     text: a.text,
-    color: a.color || '#3b82f6',
+    color: a.color || "#3b82f6",
     // DWG annotations don't carry status yet — treat as active.
-    status: 'active',
-    author: a.created_by || 'unknown',
+    status: "active",
+    author: a.created_by || "unknown",
     createdAt: a.created_at,
     deepLink: `/dwg-takeoff?drawingId=${drawing.id}&annotationId=${a.id}`,
   };
@@ -172,10 +177,10 @@ export function fromPdfMeasurement(
   opts: { documentName?: string | null } = {},
 ): UnifiedMarkup {
   const docName =
-    opts.documentName ?? (m.document_id ? m.document_id : 'PDF takeoff');
+    opts.documentName ?? (m.document_id ? m.document_id : "PDF takeoff");
   const label =
     (m.annotation && m.annotation.trim()) ||
-    (m.type === 'count'
+    (m.type === "count"
       ? `${m.count_value ?? 0} ${m.measurement_unit}`
       : m.measurement_value != null
         ? `${m.measurement_value} ${m.measurement_unit}`
@@ -183,7 +188,7 @@ export function fromPdfMeasurement(
   return {
     id: `pdf:${m.id}`,
     nativeId: m.id,
-    source: 'pdf_takeoff',
+    source: "pdf_takeoff",
     projectId: m.project_id,
     sourceFileId: m.document_id,
     sourceFileName: docName,
@@ -191,9 +196,9 @@ export function fromPdfMeasurement(
     page: m.page ?? null,
     label: truncate(label),
     text: (m.metadata?.text as string) ?? null,
-    color: m.group_color || '#3b82f6',
-    status: 'active',
-    author: m.created_by || 'unknown',
+    color: m.group_color || "#3b82f6",
+    status: "active",
+    author: m.created_by || "unknown",
     createdAt: m.created_at,
     deepLink: m.document_id
       ? `/takeoff?tab=measurements&docId=${encodeURIComponent(m.document_id)}&measurementId=${m.id}`
@@ -231,7 +236,7 @@ export function applyFilters(
   filters: UnifiedFilters,
 ): UnifiedMarkup[] {
   const { sources, types, fileIds, search } = filters;
-  const q = (search ?? '').trim().toLowerCase();
+  const q = (search ?? "").trim().toLowerCase();
   return items.filter((m) => {
     if (sources && sources.size > 0 && !sources.has(m.source)) return false;
     if (types && types.size > 0 && !types.has(m.type)) return false;
@@ -239,7 +244,8 @@ export function applyFilters(
       if (!m.sourceFileId || !fileIds.has(m.sourceFileId)) return false;
     }
     if (q) {
-      const hay = `${m.label} ${m.text ?? ''} ${m.sourceFileName} ${m.type}`.toLowerCase();
+      const hay =
+        `${m.label} ${m.text ?? ""} ${m.sourceFileName} ${m.type}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;

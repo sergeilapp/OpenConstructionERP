@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { getIntlLocale } from '@/shared/lib/formatters';
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { getIntlLocale } from "@/shared/lib/formatters";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -33,7 +33,7 @@ function formatCompact(amount: number, currency: string): string {
   // currency may be "" — appending it then renders a clean number with no
   // symbol rather than a wrong one (task #217). Trim so we don't leave a
   // trailing space.
-  const suffix = currency ? ` ${currency}` : '';
+  const suffix = currency ? ` ${currency}` : "";
   if (amount >= 1_000_000) {
     return `${(amount / 1_000_000).toFixed(1)}M${suffix}`;
   }
@@ -44,7 +44,7 @@ function formatCompact(amount: number, currency: string): string {
 }
 
 function formatFull(amount: number, currency: string): string {
-  const code = (currency || '').trim().toUpperCase();
+  const code = (currency || "").trim().toUpperCase();
   // NEVER hard-fallback to EUR (task #217): render a symbol-less number
   // when the currency is unknown.
   if (!/^[A-Z]{3}$/.test(code)) {
@@ -55,7 +55,7 @@ function formatFull(amount: number, currency: string): string {
   }
   try {
     return new Intl.NumberFormat(getIntlLocale(), {
-      style: 'currency',
+      style: "currency",
       currency: code,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
@@ -71,10 +71,10 @@ function getBarColor(
   highestTotal: number,
   bidCount: number,
 ): string {
-  if (bidCount <= 1) return 'var(--color-oe-blue, #3b82f6)';
-  if (total === lowestTotal) return 'var(--oe-success, #15803d)';
-  if (total === highestTotal) return 'var(--oe-error, #dc2626)';
-  return 'var(--color-oe-blue, #3b82f6)';
+  if (bidCount <= 1) return "var(--color-oe-blue, #3b82f6)";
+  if (total === lowestTotal) return "var(--oe-success, #15803d)";
+  if (total === highestTotal) return "var(--oe-error, #dc2626)";
+  return "var(--color-oe-blue, #3b82f6)";
 }
 
 function niceNum(range: number, round: boolean): number {
@@ -95,11 +95,15 @@ function niceNum(range: number, round: boolean): number {
   return niceFraction * Math.pow(10, exponent);
 }
 
-function computeYAxis(maxValue: number): { min: number; max: number; step: number } {
+function computeYAxis(maxValue: number): {
+  min: number;
+  max: number;
+  step: number;
+} {
   if (maxValue <= 0) return { min: 0, max: 100, step: 20 };
   const range = niceNum(maxValue * 1.15, false);
   const step = niceNum(range / TICK_COUNT, true);
-  const max = Math.ceil(maxValue * 1.15 / step) * step;
+  const max = Math.ceil((maxValue * 1.15) / step) * step;
   return { min: 0, max, step };
 }
 
@@ -134,51 +138,52 @@ export function BidComparisonChart({
     return () => observer.disconnect();
   }, []);
 
-  const { lowestTotal, highestTotal, yAxis, chartArea, bars, budgetY } = useMemo(() => {
-    const allValues = bidTotals.map((b) => b.total);
-    const lowest = allValues.length > 0 ? Math.min(...allValues) : 0;
-    const highest = allValues.length > 0 ? Math.max(...allValues) : 0;
+  const { lowestTotal, highestTotal, yAxis, chartArea, bars, budgetY } =
+    useMemo(() => {
+      const allValues = bidTotals.map((b) => b.total);
+      const lowest = allValues.length > 0 ? Math.min(...allValues) : 0;
+      const highest = allValues.length > 0 ? Math.max(...allValues) : 0;
 
-    const maxVal = Math.max(highest, budgetTotal);
-    const yAx = computeYAxis(maxVal);
+      const maxVal = Math.max(highest, budgetTotal);
+      const yAx = computeYAxis(maxVal);
 
-    const area = {
-      x: CHART_PADDING_LEFT,
-      y: CHART_PADDING_TOP,
-      width: svgWidth - CHART_PADDING_LEFT - CHART_PADDING_RIGHT,
-      height: MIN_CHART_HEIGHT - CHART_PADDING_TOP - CHART_PADDING_BOTTOM,
-    };
-
-    const barCount = bidTotals.length;
-    const totalBarWidth = barCount > 0 ? area.width / barCount : area.width;
-    const barWidth = totalBarWidth * (1 - BAR_GAP_RATIO);
-    const gapWidth = totalBarWidth * BAR_GAP_RATIO;
-
-    const barsArr = bidTotals.map((bid, i) => {
-      const barHeight = yAx.max > 0 ? (bid.total / yAx.max) * area.height : 0;
-      return {
-        x: area.x + i * totalBarWidth + gapWidth / 2,
-        y: area.y + area.height - Math.max(barHeight, 0),
-        width: Math.max(barWidth, 0),
-        height: Math.max(barHeight, 0),
-        bid,
+      const area = {
+        x: CHART_PADDING_LEFT,
+        y: CHART_PADDING_TOP,
+        width: svgWidth - CHART_PADDING_LEFT - CHART_PADDING_RIGHT,
+        height: MIN_CHART_HEIGHT - CHART_PADDING_TOP - CHART_PADDING_BOTTOM,
       };
-    });
 
-    const budgetYPos =
-      yAx.max > 0
-        ? area.y + area.height - (budgetTotal / yAx.max) * area.height
-        : area.y + area.height;
+      const barCount = bidTotals.length;
+      const totalBarWidth = barCount > 0 ? area.width / barCount : area.width;
+      const barWidth = totalBarWidth * (1 - BAR_GAP_RATIO);
+      const gapWidth = totalBarWidth * BAR_GAP_RATIO;
 
-    return {
-      lowestTotal: lowest,
-      highestTotal: highest,
-      yAxis: yAx,
-      chartArea: area,
-      bars: barsArr,
-      budgetY: budgetYPos,
-    };
-  }, [bidTotals, budgetTotal, svgWidth]);
+      const barsArr = bidTotals.map((bid, i) => {
+        const barHeight = yAx.max > 0 ? (bid.total / yAx.max) * area.height : 0;
+        return {
+          x: area.x + i * totalBarWidth + gapWidth / 2,
+          y: area.y + area.height - Math.max(barHeight, 0),
+          width: Math.max(barWidth, 0),
+          height: Math.max(barHeight, 0),
+          bid,
+        };
+      });
+
+      const budgetYPos =
+        yAx.max > 0
+          ? area.y + area.height - (budgetTotal / yAx.max) * area.height
+          : area.y + area.height;
+
+      return {
+        lowestTotal: lowest,
+        highestTotal: highest,
+        yAxis: yAx,
+        chartArea: area,
+        bars: barsArr,
+        budgetY: budgetYPos,
+      };
+    }, [bidTotals, budgetTotal, svgWidth]);
 
   const yTicks = useMemo(() => {
     const ticks: number[] = [];
@@ -195,7 +200,7 @@ export function BidComparisonChart({
   return (
     <div className="mb-4">
       <h5 className="text-xs font-semibold text-content-secondary uppercase tracking-wider mb-3">
-        {t('tendering.bid_totals_chart', 'Bid Totals Overview')}
+        {t("tendering.bid_totals_chart", "Bid Totals Overview")}
       </h5>
       <div ref={containerRef} className="w-full">
         <svg
@@ -204,7 +209,10 @@ export function BidComparisonChart({
           height={MIN_CHART_HEIGHT}
           className="select-none"
           role="img"
-          aria-label={t('tendering.bid_comparison_chart_label', 'Bar chart comparing bid totals')}
+          aria-label={t(
+            "tendering.bid_comparison_chart_label",
+            "Bar chart comparing bid totals",
+          )}
         >
           {/* Y-axis grid lines and labels */}
           {yTicks.map((tick) => {
@@ -254,7 +262,7 @@ export function BidComparisonChart({
                 fill="var(--oe-warning, #f59e0b)"
                 textAnchor="end"
               >
-                {t('tendering.budget', 'Budget')}
+                {t("tendering.budget", "Budget")}
               </text>
             </g>
           )}
@@ -295,13 +303,13 @@ export function BidComparisonChart({
                   className="text-[10px] font-semibold"
                   fill={
                     bar.bid.deviation_pct < -0.1
-                      ? 'var(--oe-success, #15803d)'
+                      ? "var(--oe-success, #15803d)"
                       : bar.bid.deviation_pct > 0.1
-                        ? 'var(--oe-error, #dc2626)'
-                        : 'var(--color-content-tertiary, #9ca3af)'
+                        ? "var(--oe-error, #dc2626)"
+                        : "var(--color-content-tertiary, #9ca3af)"
                   }
                 >
-                  {bar.bid.deviation_pct > 0 ? '+' : ''}
+                  {bar.bid.deviation_pct > 0 ? "+" : ""}
                   {bar.bid.deviation_pct.toFixed(1)}%
                 </text>
 
@@ -361,32 +369,53 @@ export function BidComparisonChart({
           <g transform={`translate(${chartArea.x}, ${MIN_CHART_HEIGHT - 20})`}>
             {bidTotals.length > 1 && (
               <>
-                <rect x={0} y={0} width={10} height={10} rx={2} fill="var(--oe-success, #15803d)" />
+                <rect
+                  x={0}
+                  y={0}
+                  width={10}
+                  height={10}
+                  rx={2}
+                  fill="var(--oe-success, #15803d)"
+                />
                 <text
                   x={14}
                   y={9}
                   className="text-[10px]"
                   fill="var(--color-content-secondary, #6b7280)"
                 >
-                  {t('tendering.lowest', 'Lowest')}
+                  {t("tendering.lowest", "Lowest")}
                 </text>
-                <rect x={60} y={0} width={10} height={10} rx={2} fill="var(--oe-error, #dc2626)" />
+                <rect
+                  x={60}
+                  y={0}
+                  width={10}
+                  height={10}
+                  rx={2}
+                  fill="var(--oe-error, #dc2626)"
+                />
                 <text
                   x={74}
                   y={9}
                   className="text-[10px]"
                   fill="var(--color-content-secondary, #6b7280)"
                 >
-                  {t('tendering.highest', 'Highest')}
+                  {t("tendering.highest", "Highest")}
                 </text>
-                <rect x={130} y={0} width={10} height={10} rx={2} fill="var(--color-oe-blue, #3b82f6)" />
+                <rect
+                  x={130}
+                  y={0}
+                  width={10}
+                  height={10}
+                  rx={2}
+                  fill="var(--color-oe-blue, #3b82f6)"
+                />
                 <text
                   x={144}
                   y={9}
                   className="text-[10px]"
                   fill="var(--color-content-secondary, #6b7280)"
                 >
-                  {t('tendering.other', 'Other')}
+                  {t("tendering.other", "Other")}
                 </text>
               </>
             )}
@@ -407,7 +436,7 @@ export function BidComparisonChart({
                   className="text-[10px]"
                   fill="var(--color-content-secondary, #6b7280)"
                 >
-                  {t('tendering.budget_line', 'Budget')}
+                  {t("tendering.budget_line", "Budget")}
                 </text>
               </g>
             )}

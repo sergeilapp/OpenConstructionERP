@@ -7,9 +7,9 @@
  * Persists to localStorage under `oe_recent_items`.
  */
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
-const STORAGE_KEY = 'oe_recent_items';
+const STORAGE_KEY = "oe_recent_items";
 const MAX_ITEMS = 5;
 
 export interface RecentItem {
@@ -41,7 +41,7 @@ function persistItems(items: RecentItem[]) {
 
 interface RecentState {
   items: RecentItem[];
-  addRecent: (item: Omit<RecentItem, 'visitedAt'>) => void;
+  addRecent: (item: Omit<RecentItem, "visitedAt">) => void;
   clearRecent: () => void;
 }
 

@@ -7,10 +7,10 @@
  * Rules persist through `CadDataExplorerPage` URL state.
  */
 
-import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Plus, Trash2, X, RotateCcw, Palette } from 'lucide-react';
-import { Button } from '@/shared/ui';
+import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Plus, Trash2, X, RotateCcw, Palette } from "lucide-react";
+import { Button } from "@/shared/ui";
 import {
   type ThresholdRule,
   createDefaultRule,
@@ -19,7 +19,7 @@ import {
   DEFAULT_LOW_COLOR,
   DEFAULT_MID_COLOR,
   DEFAULT_HIGH_COLOR,
-} from './thresholds';
+} from "./thresholds";
 
 interface ThresholdRulesModalProps {
   open: boolean;
@@ -43,7 +43,9 @@ export function ThresholdRulesModal({
   // Draft state — edited locally, committed on every keystroke so the
   // pivot preview updates live. "Reset" / "Close" map to the committed
   // state, not a deep rollback.
-  const [draft, setDraft] = useState<ThresholdRule[]>(() => rules.map((r) => ({ ...r })));
+  const [draft, setDraft] = useState<ThresholdRule[]>(() =>
+    rules.map((r) => ({ ...r })),
+  );
 
   // Re-sync the draft if the modal is re-opened with a different rule
   // set (e.g. user switched session).
@@ -102,14 +104,14 @@ export function ThresholdRulesModal({
             </div>
             <div>
               <h2 className="text-lg font-semibold text-content-primary">
-                {t('explorer.thresholds_title', {
-                  defaultValue: 'Conditional Formatting‌⁠‍',
+                {t("explorer.thresholds_title", {
+                  defaultValue: "Conditional Formatting‌⁠‍",
                 })}
               </h2>
               <p className="text-xs text-content-tertiary">
-                {t('explorer.thresholds_subtitle', {
+                {t("explorer.thresholds_subtitle", {
                   defaultValue:
-                    'Colour pivot cells by value. Add up to {{max}} rules — one per numeric column.‌⁠‍',
+                    "Colour pivot cells by value. Add up to {{max}} rules — one per numeric column.‌⁠‍",
                   max: MAX_RULES,
                 })}
               </p>
@@ -118,7 +120,7 @@ export function ThresholdRulesModal({
           <button
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-hover transition-colors"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={18} />
           </button>
@@ -128,23 +130,26 @@ export function ThresholdRulesModal({
         <div className="px-6 pb-4 overflow-y-auto flex-1">
           {draft.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border-light bg-surface-secondary/30 p-8 text-center">
-              <Palette size={28} className="mx-auto text-content-quaternary mb-2" />
+              <Palette
+                size={28}
+                className="mx-auto text-content-quaternary mb-2"
+              />
               <p className="text-sm text-content-secondary font-medium">
-                {t('explorer.thresholds_empty_title', {
-                  defaultValue: 'No rules yet‌⁠‍',
+                {t("explorer.thresholds_empty_title", {
+                  defaultValue: "No rules yet‌⁠‍",
                 })}
               </p>
               <p className="text-xs text-content-tertiary mt-1 mb-4">
-                {t('explorer.thresholds_empty_hint', {
+                {t("explorer.thresholds_empty_hint", {
                   defaultValue:
-                    'Add a rule to colour cells red / amber / green based on their value.‌⁠‍',
+                    "Add a rule to colour cells red / amber / green based on their value.‌⁠‍",
                 })}
               </p>
               {availableColumns.length === 0 ? (
                 <p className="text-2xs text-content-quaternary">
-                  {t('explorer.thresholds_no_cols', {
+                  {t("explorer.thresholds_no_cols", {
                     defaultValue:
-                      'Pick at least one aggregate column in the pivot first.‌⁠‍',
+                      "Pick at least one aggregate column in the pivot first.‌⁠‍",
                   })}
                 </p>
               ) : (
@@ -155,8 +160,8 @@ export function ThresholdRulesModal({
                   data-testid="threshold-add-first"
                 >
                   <Plus size={14} className="mr-1" />
-                  {t('explorer.thresholds_add_first', {
-                    defaultValue: 'Add your first rule',
+                  {t("explorer.thresholds_add_first", {
+                    defaultValue: "Add your first rule",
                   })}
                 </Button>
               )}
@@ -168,7 +173,8 @@ export function ThresholdRulesModal({
                 const colOptions = [
                   rule.column,
                   ...availableColumns.filter(
-                    (c) => c !== rule.column && !draft.some((r) => r.column === c),
+                    (c) =>
+                      c !== rule.column && !draft.some((r) => r.column === c),
                   ),
                 ];
                 return (
@@ -177,14 +183,14 @@ export function ThresholdRulesModal({
                     data-testid={`threshold-rule-${idx}`}
                     className={`rounded-lg border p-3 space-y-2.5 ${
                       valid
-                        ? 'border-border-light bg-surface-secondary/30'
-                        : 'border-red-500/40 bg-red-500/5'
+                        ? "border-border-light bg-surface-secondary/30"
+                        : "border-red-500/40 bg-red-500/5"
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-2xs font-semibold text-content-tertiary uppercase tracking-wide shrink-0">
-                        {t('explorer.thresholds_rule_label', {
-                          defaultValue: 'Rule {{n}}',
+                        {t("explorer.thresholds_rule_label", {
+                          defaultValue: "Rule {{n}}",
                           n: idx + 1,
                         })}
                       </span>
@@ -205,7 +211,9 @@ export function ThresholdRulesModal({
                       <button
                         onClick={() => removeRule(idx)}
                         className="flex h-8 w-8 items-center justify-center rounded-md text-content-tertiary hover:text-red-500 hover:bg-red-500/10 transition-colors shrink-0"
-                        aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                        aria-label={t("common.delete", {
+                          defaultValue: "Delete",
+                        })}
                         data-testid={`threshold-rule-${idx}-delete`}
                       >
                         <Trash2 size={14} />
@@ -215,14 +223,14 @@ export function ThresholdRulesModal({
                     <div className="grid grid-cols-2 gap-2">
                       <label className="flex flex-col gap-1">
                         <span className="text-2xs font-medium text-content-tertiary">
-                          {t('explorer.thresholds_low', {
-                            defaultValue: 'Low threshold',
+                          {t("explorer.thresholds_low", {
+                            defaultValue: "Low threshold",
                           })}
                         </span>
                         <input
                           type="number"
                           step="any"
-                          value={Number.isFinite(rule.low) ? rule.low : ''}
+                          value={Number.isFinite(rule.low) ? rule.low : ""}
                           onChange={(e) =>
                             updateRule(idx, { low: parseFloat(e.target.value) })
                           }
@@ -232,16 +240,18 @@ export function ThresholdRulesModal({
                       </label>
                       <label className="flex flex-col gap-1">
                         <span className="text-2xs font-medium text-content-tertiary">
-                          {t('explorer.thresholds_high', {
-                            defaultValue: 'High threshold',
+                          {t("explorer.thresholds_high", {
+                            defaultValue: "High threshold",
                           })}
                         </span>
                         <input
                           type="number"
                           step="any"
-                          value={Number.isFinite(rule.high) ? rule.high : ''}
+                          value={Number.isFinite(rule.high) ? rule.high : ""}
                           onChange={(e) =>
-                            updateRule(idx, { high: parseFloat(e.target.value) })
+                            updateRule(idx, {
+                              high: parseFloat(e.target.value),
+                            })
                           }
                           className="h-8 rounded-md border border-border bg-surface-primary px-2 text-xs tabular-nums focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
                           data-testid={`threshold-rule-${idx}-high`}
@@ -251,24 +261,24 @@ export function ThresholdRulesModal({
 
                     <div className="flex items-center gap-3">
                       <ColorSwatch
-                        label={t('explorer.thresholds_color_low', {
-                          defaultValue: 'Low',
+                        label={t("explorer.thresholds_color_low", {
+                          defaultValue: "Low",
                         })}
                         value={rule.lowColor}
                         onChange={(v) => updateRule(idx, { lowColor: v })}
                         testId={`threshold-rule-${idx}-color-low`}
                       />
                       <ColorSwatch
-                        label={t('explorer.thresholds_color_mid', {
-                          defaultValue: 'Mid',
+                        label={t("explorer.thresholds_color_mid", {
+                          defaultValue: "Mid",
                         })}
                         value={rule.midColor}
                         onChange={(v) => updateRule(idx, { midColor: v })}
                         testId={`threshold-rule-${idx}-color-mid`}
                       />
                       <ColorSwatch
-                        label={t('explorer.thresholds_color_high', {
-                          defaultValue: 'High',
+                        label={t("explorer.thresholds_color_high", {
+                          defaultValue: "High",
                         })}
                         value={rule.highColor}
                         onChange={(v) => updateRule(idx, { highColor: v })}
@@ -282,12 +292,12 @@ export function ThresholdRulesModal({
                         data-testid={`threshold-rule-${idx}-error`}
                       >
                         {rule.low >= rule.high
-                          ? t('explorer.thresholds_err_order', {
-                              defaultValue: 'Low must be less than High.',
+                          ? t("explorer.thresholds_err_order", {
+                              defaultValue: "Low must be less than High.",
                             })
-                          : t('explorer.thresholds_err_column', {
+                          : t("explorer.thresholds_err_column", {
                               defaultValue:
-                                'Column must be one of the pivot aggregate columns.',
+                                "Column must be one of the pivot aggregate columns.",
                             })}
                       </p>
                     )}
@@ -308,8 +318,8 @@ export function ThresholdRulesModal({
               data-testid="threshold-reset"
             >
               <RotateCcw size={13} />
-              {t('explorer.thresholds_reset', {
-                defaultValue: 'Reset to defaults',
+              {t("explorer.thresholds_reset", {
+                defaultValue: "Reset to defaults",
               })}
             </button>
           </div>
@@ -327,7 +337,7 @@ export function ThresholdRulesModal({
               data-testid="threshold-add"
             >
               <Plus size={14} className="mr-1" />
-              {t('explorer.thresholds_add', { defaultValue: 'Add rule' })}
+              {t("explorer.thresholds_add", { defaultValue: "Add rule" })}
             </Button>
             <Button
               variant="primary"
@@ -335,7 +345,7 @@ export function ThresholdRulesModal({
               onClick={onClose}
               data-testid="threshold-close"
             >
-              {t('common.close', { defaultValue: 'Close' })}
+              {t("common.close", { defaultValue: "Close" })}
             </Button>
           </div>
         </div>
@@ -365,13 +375,15 @@ function ColorSwatch({
     DEFAULT_LOW_COLOR,
     DEFAULT_MID_COLOR,
     DEFAULT_HIGH_COLOR,
-    '#3b82f6', // blue
-    '#8b5cf6', // violet
-    '#6b7280', // neutral
+    "#3b82f6", // blue
+    "#8b5cf6", // violet
+    "#6b7280", // neutral
   ];
   return (
     <label className="flex flex-col gap-1 flex-1 min-w-0">
-      <span className="text-2xs font-medium text-content-tertiary">{label}</span>
+      <span className="text-2xs font-medium text-content-tertiary">
+        {label}
+      </span>
       <div className="flex items-center gap-1.5">
         <input
           type="color"
@@ -388,8 +400,8 @@ function ColorSwatch({
               onClick={() => onChange(p)}
               className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${
                 value.toLowerCase() === p.toLowerCase()
-                  ? 'border-content-primary ring-1 ring-content-primary'
-                  : 'border-border-light'
+                  ? "border-content-primary ring-1 ring-content-primary"
+                  : "border-border-light"
               }`}
               style={{ backgroundColor: p }}
               aria-label={p}

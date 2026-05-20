@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   CalendarDays,
   GitBranch,
@@ -7,7 +7,7 @@ import {
   ShieldAlert,
   ClipboardList,
   Users,
-} from 'lucide-react';
+} from "lucide-react";
 
 /**
  * Shared "Planning & Control" cross-module navigation strip.
@@ -24,14 +24,14 @@ import {
  */
 
 export type PlanningRouteKey =
-  | 'schedule'
-  | 'schedule-advanced'
-  | 'tasks'
-  | '5d'
-  | 'risks';
+  | "schedule"
+  | "schedule-advanced"
+  | "tasks"
+  | "5d"
+  | "risks";
 
 interface LinkDef {
-  key: PlanningRouteKey | 'meetings';
+  key: PlanningRouteKey | "meetings";
   to: string;
   icon: typeof CalendarDays;
   label: string;
@@ -43,50 +43,54 @@ export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
 
   const links: LinkDef[] = [
     {
-      key: 'schedule',
-      to: '/schedule',
+      key: "schedule",
+      to: "/schedule",
       icon: CalendarDays,
-      label: t('planning.link_schedule', { defaultValue: '4D Schedule‌⁠‍' }),
+      label: t("planning.link_schedule", { defaultValue: "4D Schedule‌⁠‍" }),
     },
     {
-      key: 'schedule-advanced',
-      to: '/schedule-advanced',
+      key: "schedule-advanced",
+      to: "/schedule-advanced",
       icon: GitBranch,
-      label: t('planning.link_schedule_advanced', { defaultValue: 'Last Planner‌⁠‍' }),
+      label: t("planning.link_schedule_advanced", {
+        defaultValue: "Last Planner‌⁠‍",
+      }),
     },
     {
-      key: 'tasks',
-      to: '/tasks',
+      key: "tasks",
+      to: "/tasks",
       icon: ClipboardList,
-      label: t('planning.link_tasks', { defaultValue: 'Tasks' }),
+      label: t("planning.link_tasks", { defaultValue: "Tasks" }),
     },
     {
-      key: '5d',
-      to: '/5d',
+      key: "5d",
+      to: "/5d",
       icon: DollarSign,
-      label: t('planning.link_5d', { defaultValue: '5D Cost Model‌⁠‍' }),
+      label: t("planning.link_5d", { defaultValue: "5D Cost Model‌⁠‍" }),
     },
     {
-      key: 'risks',
-      to: '/risks',
+      key: "risks",
+      to: "/risks",
       icon: ShieldAlert,
-      label: t('planning.link_risks', { defaultValue: 'Risk Register‌⁠‍' }),
+      label: t("planning.link_risks", { defaultValue: "Risk Register‌⁠‍" }),
     },
     {
-      key: 'meetings',
-      to: '/meetings',
+      key: "meetings",
+      to: "/meetings",
       icon: Users,
-      label: t('planning.link_meetings', { defaultValue: 'Meetings‌⁠‍' }),
+      label: t("planning.link_meetings", { defaultValue: "Meetings‌⁠‍" }),
     },
   ];
 
   return (
     <nav
-      aria-label={t('planning.section_nav', { defaultValue: 'Planning & Control modules' })}
+      aria-label={t("planning.section_nav", {
+        defaultValue: "Planning & Control modules",
+      })}
       className="mb-4 flex flex-wrap items-center gap-1.5"
     >
       <span className="mr-1 text-2xs font-semibold uppercase tracking-wider text-content-quaternary">
-        {t('planning.section_label', { defaultValue: 'Planning & Control' })}
+        {t("planning.section_label", { defaultValue: "Planning & Control" })}
       </span>
       {links.map((l) => {
         const Icon = l.icon;
@@ -96,12 +100,12 @@ export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
             key={l.key}
             type="button"
             disabled={isActive}
-            aria-current={isActive ? 'page' : undefined}
+            aria-current={isActive ? "page" : undefined}
             onClick={() => navigate(l.to)}
             className={
               isActive
-                ? 'inline-flex items-center gap-1.5 rounded-full bg-oe-blue px-3 py-1 text-xs font-semibold text-white shadow-sm'
-                : 'inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-primary px-3 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue/40 hover:bg-oe-blue-subtle/40 hover:text-oe-blue'
+                ? "inline-flex items-center gap-1.5 rounded-full bg-oe-blue px-3 py-1 text-xs font-semibold text-white shadow-sm"
+                : "inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-primary px-3 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue/40 hover:bg-oe-blue-subtle/40 hover:text-oe-blue"
             }
           >
             <Icon size={13} />

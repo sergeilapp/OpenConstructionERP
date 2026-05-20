@@ -4,15 +4,26 @@
  * All endpoints are prefixed with /v1/ncr/.
  */
 
-import { apiGet, apiPost } from '@/shared/lib/api';
+import { apiGet, apiPost } from "@/shared/lib/api";
 
 /* -- Types ----------------------------------------------------------------- */
 
-export type NCRType = 'material' | 'workmanship' | 'design' | 'documentation' | 'safety';
+export type NCRType =
+  | "material"
+  | "workmanship"
+  | "design"
+  | "documentation"
+  | "safety";
 
-export type NCRSeverity = 'critical' | 'major' | 'minor' | 'observation';
+export type NCRSeverity = "critical" | "major" | "minor" | "observation";
 
-export type NCRStatus = 'identified' | 'under_review' | 'corrective_action' | 'verification' | 'closed' | 'void';
+export type NCRStatus =
+  | "identified"
+  | "under_review"
+  | "corrective_action"
+  | "verification"
+  | "closed"
+  | "void";
 
 export interface NCR {
   id: string;
@@ -39,8 +50,8 @@ export interface NCR {
 
 export interface NCRFilters {
   project_id?: string;
-  status?: NCRStatus | '';
-  severity?: NCRSeverity | '';
+  status?: NCRStatus | "";
+  severity?: NCRSeverity | "";
 }
 
 export interface CreateNCRPayload {
@@ -57,12 +68,12 @@ export interface CreateNCRPayload {
 
 type NCRWire = Omit<
   NCR,
-  | 'location'
-  | 'reported_by'
-  | 'cost_impact'
-  | 'closed_at'
-  | 'linked_inspection_number'
-  | 'ncr_number'
+  | "location"
+  | "reported_by"
+  | "cost_impact"
+  | "closed_at"
+  | "linked_inspection_number"
+  | "ncr_number"
 > & {
   location?: string;
   location_description?: string | null;
@@ -76,14 +87,14 @@ type NCRWire = Omit<
 
 function parseCostImpact(v: unknown): number | null {
   if (v == null) return null;
-  if (typeof v === 'number') return Number.isFinite(v) ? v : null;
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
   const n = Number.parseFloat(String(v));
   return Number.isFinite(n) ? n : null;
 }
 
 function extractNumericSuffix(v: unknown): number | null {
   if (v == null) return null;
-  if (typeof v === 'number') return Number.isFinite(v) ? v : null;
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
   const match = String(v).match(/\d+/);
   return match ? Number.parseInt(match[0], 10) : null;
 }
@@ -93,11 +104,13 @@ function normaliseNCR(raw: NCRWire): NCR {
   return {
     ...raw,
     ncr_number: ncr_number_num,
-    location: raw.location ?? raw.location_description ?? '',
+    location: raw.location ?? raw.location_description ?? "",
     reported_by: raw.reported_by ?? raw.created_by ?? null,
     cost_impact: parseCostImpact(raw.cost_impact),
     closed_at: raw.closed_at ?? null,
-    linked_inspection_number: extractNumericSuffix(raw.linked_inspection_number),
+    linked_inspection_number: extractNumericSuffix(
+      raw.linked_inspection_number,
+    ),
   } as NCR;
 }
 
@@ -105,16 +118,16 @@ function normaliseNCR(raw: NCRWire): NCR {
 
 export async function fetchNCRs(filters?: NCRFilters): Promise<NCR[]> {
   const params = new URLSearchParams();
-  if (filters?.project_id) params.set('project_id', filters.project_id);
-  if (filters?.status) params.set('status', filters.status);
-  if (filters?.severity) params.set('severity', filters.severity);
+  if (filters?.project_id) params.set("project_id", filters.project_id);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.severity) params.set("severity", filters.severity);
   const qs = params.toString();
-  const rows = await apiGet<NCRWire[]>(`/v1/ncr/${qs ? `?${qs}` : ''}`);
+  const rows = await apiGet<NCRWire[]>(`/v1/ncr/${qs ? `?${qs}` : ""}`);
   return rows.map(normaliseNCR);
 }
 
 export async function createNCR(data: CreateNCRPayload): Promise<NCR> {
-  const row = await apiPost<NCRWire>('/v1/ncr/', data);
+  const row = await apiPost<NCRWire>("/v1/ncr/", data);
   return normaliseNCR(row);
 }
 

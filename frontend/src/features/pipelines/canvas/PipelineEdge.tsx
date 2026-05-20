@@ -13,11 +13,11 @@ import {
   getBezierPath,
   type Edge,
   type EdgeProps,
-} from '@xyflow/react';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+} from "@xyflow/react";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
-import { getPortTokens, type PortDataType } from '../tokens';
+import { getPortTokens, type PortDataType } from "../tokens";
 
 export interface PipelineEdgeData extends Record<string, unknown> {
   dataType: PortDataType;
@@ -25,7 +25,7 @@ export interface PipelineEdgeData extends Record<string, unknown> {
   flowing?: boolean;
 }
 
-export type PipelineEdgeType = Edge<PipelineEdgeData, 'pipelineEdge'>;
+export type PipelineEdgeType = Edge<PipelineEdgeData, "pipelineEdge">;
 export type PipelineEdgeProps = EdgeProps<PipelineEdgeType>;
 
 export function PipelineEdge({
@@ -41,7 +41,7 @@ export function PipelineEdge({
   markerEnd,
 }: PipelineEdgeProps) {
   const { t } = useTranslation();
-  const dataType: PortDataType = data?.dataType ?? 'any';
+  const dataType: PortDataType = data?.dataType ?? "any";
   const tok = getPortTokens(dataType);
   const flowing = Boolean(data?.flowing);
 
@@ -66,8 +66,8 @@ export function PipelineEdge({
         style={{
           stroke: tok.color,
           strokeWidth: selected ? 3 : 2,
-          strokeDasharray: flowing ? '6 4' : tok.dash,
-          animation: flowing ? 'pipeline-dash 0.6s linear infinite' : undefined,
+          strokeDasharray: flowing ? "6 4" : tok.dash,
+          animation: flowing ? "pipeline-dash 0.6s linear infinite" : undefined,
         }}
         data-testid={`pipeline-edge-${id}`}
         data-data-type={dataType}
@@ -77,16 +77,16 @@ export function PipelineEdge({
           <div
             data-testid={`pipeline-edge-label-${id}`}
             style={{
-              position: 'absolute',
+              position: "absolute",
               transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-              background: 'white',
+              background: "white",
               color: tok.color,
               border: `1px solid ${tok.color}`,
-              padding: '2px 6px',
+              padding: "2px 6px",
               borderRadius: 4,
               fontSize: 10,
               fontWeight: 600,
-              pointerEvents: 'all',
+              pointerEvents: "all",
             }}
           >
             {t(tok.labelKey, { defaultValue: tok.labelDefault })}

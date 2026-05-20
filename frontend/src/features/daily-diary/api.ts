@@ -4,23 +4,23 @@
  * Backed by /api/v1/daily-diary/ — see backend/app/modules/daily_diary/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type DiaryStatus = 'open' | 'closed' | 'signed' | 'archived';
+export type DiaryStatus = "open" | "closed" | "signed" | "archived";
 export type EntryType =
-  | 'visitor'
-  | 'event'
-  | 'delivery'
-  | 'completion'
-  | 'incident_summary'
-  | 'inspection_summary'
-  | 'photo_note'
-  | 'general';
-export type WeatherSource = 'open_meteo' | 'manual' | 'sensor';
-export type CaptureType = 'laser_scan' | 'photogrammetry' | 'mobile_scan';
-export type SignerRole = 'owner' | 'supervisor' | 'inspector' | 'client';
+  | "visitor"
+  | "event"
+  | "delivery"
+  | "completion"
+  | "incident_summary"
+  | "inspection_summary"
+  | "photo_note"
+  | "general";
+export type WeatherSource = "open_meteo" | "manual" | "sensor";
+export type CaptureType = "laser_scan" | "photogrammetry" | "mobile_scan";
+export type SignerRole = "owner" | "supervisor" | "inspector" | "client";
 
 export interface DailyDiary {
   id: string;
@@ -170,11 +170,11 @@ export function listDiaries(params: {
   limit?: number;
 }): Promise<DailyDiary[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.date_from) qs.set('date_from', params.date_from);
-  if (params.date_to) qs.set('date_to', params.date_to);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("project_id", params.project_id);
+  if (params.date_from) qs.set("date_from", params.date_from);
+  if (params.date_to) qs.set("date_to", params.date_to);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<DailyDiary[]>(`/v1/daily-diary/diaries/?${qs.toString()}`);
 }
 
@@ -185,7 +185,7 @@ export function createDiary(data: {
   labour_count?: number;
   equipment_count?: number;
 }): Promise<DailyDiary> {
-  return apiPost<DailyDiary>('/v1/daily-diary/diaries/', data);
+  return apiPost<DailyDiary>("/v1/daily-diary/diaries/", data);
 }
 
 export function getDiary(id: string): Promise<DailyDiary> {
@@ -230,8 +230,8 @@ export function weatherToday(
   day?: string,
 ): Promise<WeatherRecord[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', projectId);
-  if (day) qs.set('day', day);
+  qs.set("project_id", projectId);
+  if (day) qs.set("day", day);
   return apiGet<WeatherRecord[]>(
     `/v1/daily-diary/weather/today?${qs.toString()}`,
   );
@@ -247,7 +247,7 @@ export function createWeather(data: {
   precipitation_mm?: string;
   conditions_text?: string;
 }): Promise<WeatherRecord> {
-  return apiPost<WeatherRecord>('/v1/daily-diary/weather-records/', data);
+  return apiPost<WeatherRecord>("/v1/daily-diary/weather-records/", data);
 }
 
 /* ── Entries ───────────────────────────────────────────────────────────── */
@@ -265,7 +265,7 @@ export function createEntry(data: {
   title?: string;
   description?: string;
 }): Promise<DiaryEntry> {
-  return apiPost<DiaryEntry>('/v1/daily-diary/diary-entries/', data);
+  return apiPost<DiaryEntry>("/v1/daily-diary/diary-entries/", data);
 }
 
 export function deleteEntry(id: string): Promise<void> {
@@ -281,10 +281,10 @@ export function listPhotos(params: {
   limit?: number;
 }): Promise<DiaryPhoto[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.date_from) qs.set('date_from', params.date_from);
-  if (params.date_to) qs.set('date_to', params.date_to);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("project_id", params.project_id);
+  if (params.date_from) qs.set("date_from", params.date_from);
+  if (params.date_to) qs.set("date_to", params.date_to);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<DiaryPhoto[]>(`/v1/daily-diary/photos/?${qs.toString()}`);
 }
 

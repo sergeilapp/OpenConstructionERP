@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import { usePreferencesStore } from '../../stores/usePreferencesStore';
-import { currencyMinorUnits } from './currencyMinorUnits';
+import clsx from "clsx";
+import { usePreferencesStore } from "../../stores/usePreferencesStore";
+import { currencyMinorUnits } from "./currencyMinorUnits";
 
 export interface MoneyDisplayProps {
   amount: number | string | null | undefined;
@@ -38,17 +38,23 @@ export function MoneyDisplay({
   const { currency: defaultCurrency, numberLocale } = usePreferencesStore();
 
   if (amount == null) {
-    return <span className={clsx('text-content-tertiary', className)}>&mdash;</span>;
+    return (
+      <span className={clsx("text-content-tertiary", className)}>&mdash;</span>
+    );
   }
 
-  const numericValue = typeof amount === 'string' ? parseFloat(amount) : amount;
+  const numericValue = typeof amount === "string" ? parseFloat(amount) : amount;
 
   if (Number.isNaN(numericValue)) {
-    return <span className={clsx('text-content-tertiary', className)}>&mdash;</span>;
+    return (
+      <span className={clsx("text-content-tertiary", className)}>&mdash;</span>
+    );
   }
 
   const resolvedCurrency = currency ?? defaultCurrency;
-  const safeCurrency = /^[A-Z]{3}$/.test(resolvedCurrency) ? resolvedCurrency : 'EUR';
+  const safeCurrency = /^[A-Z]{3}$/.test(resolvedCurrency)
+    ? resolvedCurrency
+    : "EUR";
 
   // Resolve the ISO-4217 minor-unit count. Falls back to 2 for currencies
   // we don't have an explicit override for — matching pre-fix behaviour
@@ -62,20 +68,22 @@ export function MoneyDisplay({
       const numFmt = new Intl.NumberFormat(numberLocale, {
         minimumFractionDigits: compact ? 0 : minorUnits,
         maximumFractionDigits: compact ? 1 : minorUnits,
-        ...(compact ? { notation: 'compact' as const } : {}),
+        ...(compact ? { notation: "compact" as const } : {}),
       });
       formatted = `${numFmt.format(numericValue)} ${safeCurrency}`;
     } else {
       const opts: Intl.NumberFormatOptions = {
-        style: 'currency',
+        style: "currency",
         currency: safeCurrency,
         minimumFractionDigits: compact ? 0 : minorUnits,
         maximumFractionDigits: compact ? 1 : minorUnits,
       };
       if (compact) {
-        opts.notation = 'compact';
+        opts.notation = "compact";
       }
-      formatted = new Intl.NumberFormat(numberLocale, opts).format(numericValue);
+      formatted = new Intl.NumberFormat(numberLocale, opts).format(
+        numericValue,
+      );
     }
   } catch {
     formatted = `${numericValue.toFixed(minorUnits)} ${safeCurrency}`;
@@ -83,11 +91,11 @@ export function MoneyDisplay({
 
   const colorClass = colorize
     ? numericValue > 0
-      ? 'text-semantic-success'
+      ? "text-semantic-success"
       : numericValue < 0
-        ? 'text-semantic-error'
-        : ''
-    : '';
+        ? "text-semantic-error"
+        : ""
+    : "";
 
   return <span className={clsx(colorClass, className)}>{formatted}</span>;
 }

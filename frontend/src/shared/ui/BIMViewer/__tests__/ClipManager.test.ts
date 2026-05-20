@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as THREE from 'three';
-import { ClipManager } from '../ClipManager';
-import type { SceneManager } from '../SceneManager';
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import * as THREE from "three";
+import { ClipManager } from "../ClipManager";
+import type { SceneManager } from "../SceneManager";
 
 /** Minimal SceneManager stand-in with a real scene + a fake renderer so we
  *  can assert clippingPlanes assignment without booting WebGL. */
@@ -23,7 +23,7 @@ function makeFakes() {
   return { scene, mesh, mat, sceneMgr };
 }
 
-describe('ClipManager', () => {
+describe("ClipManager", () => {
   let fakes: ReturnType<typeof makeFakes>;
   let mgr: ClipManager;
 
@@ -32,39 +32,39 @@ describe('ClipManager', () => {
     mgr = new ClipManager(fakes.sceneMgr);
   });
 
-  it('enables renderer local clipping on construction', () => {
+  it("enables renderer local clipping on construction", () => {
     expect(fakes.sceneMgr.renderer.localClippingEnabled).toBe(true);
   });
 
-  it('starts with no clip mode and no planes assigned', () => {
-    expect(mgr.mode).toBe('none');
+  it("starts with no clip mode and no planes assigned", () => {
+    expect(mgr.mode).toBe("none");
     expect(fakes.mat.clippingPlanes).toBeNull();
   });
 
-  it('assigns six box planes in box mode', () => {
-    mgr.setMode('box');
-    expect(mgr.mode).toBe('box');
+  it("assigns six box planes in box mode", () => {
+    mgr.setMode("box");
+    expect(mgr.mode).toBe("box");
     expect(fakes.mat.clippingPlanes).not.toBeNull();
     expect(fakes.mat.clippingPlanes!.length).toBe(6);
   });
 
-  it('assigns a single plane in plane mode', () => {
-    mgr.setMode('plane');
+  it("assigns a single plane in plane mode", () => {
+    mgr.setMode("plane");
     expect(fakes.mat.clippingPlanes).not.toBeNull();
     expect(fakes.mat.clippingPlanes!.length).toBe(1);
   });
 
-  it('clears planes when mode returns to none', () => {
-    mgr.setMode('box');
-    mgr.setMode('none');
+  it("clears planes when mode returns to none", () => {
+    mgr.setMode("box");
+    mgr.setMode("none");
     expect(fakes.mat.clippingPlanes).toBeNull();
   });
 
-  it('reset() restores defaults and disables clipping', () => {
-    mgr.setMode('box');
+  it("reset() restores defaults and disables clipping", () => {
+    mgr.setMode("box");
     mgr.setBoxExtent({ minX: 0.3, maxX: 0.7 });
     mgr.reset();
-    expect(mgr.mode).toBe('none');
+    expect(mgr.mode).toBe("none");
     expect(mgr.getBoxExtent()).toEqual({
       minX: 0,
       maxX: 1,
@@ -76,40 +76,40 @@ describe('ClipManager', () => {
     expect(fakes.mat.clippingPlanes).toBeNull();
   });
 
-  it('clamps box faces so min never crosses max', () => {
+  it("clamps box faces so min never crosses max", () => {
     // Push min past max — clamp should keep a positive gap.
     mgr.setBoxExtent({ minX: 0.9, maxX: 0.2 });
     const e = mgr.getBoxExtent();
     expect(e.minX).toBeLessThanOrEqual(e.maxX);
   });
 
-  it('clamps box extent values into [0, 1]', () => {
+  it("clamps box extent values into [0, 1]", () => {
     mgr.setBoxExtent({ minY: -0.5, maxY: 2 });
     const e = mgr.getBoxExtent();
     expect(e.minY).toBeGreaterThanOrEqual(0);
     expect(e.maxY).toBeLessThanOrEqual(1);
   });
 
-  it('updates the single plane normal when the axis changes', () => {
-    mgr.setMode('plane');
-    mgr.setPlaneState({ axis: 'x' });
+  it("updates the single plane normal when the axis changes", () => {
+    mgr.setMode("plane");
+    mgr.setPlaneState({ axis: "x" });
     const plane = fakes.mat.clippingPlanes![0]!;
     // X-axis plane → normal aligned with X.
     expect(Math.abs(plane.normal.x)).toBeCloseTo(1, 6);
     expect(plane.normal.y).toBeCloseTo(0, 6);
   });
 
-  it('flips the plane normal when flipped is toggled', () => {
-    mgr.setMode('plane');
-    mgr.setPlaneState({ axis: 'y', flipped: false });
+  it("flips the plane normal when flipped is toggled", () => {
+    mgr.setMode("plane");
+    mgr.setPlaneState({ axis: "y", flipped: false });
     const before = fakes.mat.clippingPlanes![0]!.normal.clone();
     mgr.setPlaneState({ flipped: true });
     const after = fakes.mat.clippingPlanes![0]!.normal;
     expect(after.y).toBeCloseTo(-before.y, 6);
   });
 
-  it('dispose() detaches planes from every material', () => {
-    mgr.setMode('box');
+  it("dispose() detaches planes from every material", () => {
+    mgr.setMode("box");
     mgr.dispose();
     expect(fakes.mat.clippingPlanes).toBeNull();
   });

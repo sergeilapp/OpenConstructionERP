@@ -123,16 +123,43 @@ const FLAGS: Record<string, string> = {
  *  countries added in v2.6.23 — without these the new entries rendered
  *  as a blank slot in the onboarding wizard and Import database page. */
 const EMOJI_FALLBACK: Record<string, string> = {
-  gb: '🇬🇧', de: '🇩🇪', fr: '🇫🇷', es: '🇪🇸', br: '🇧🇷',
-  ru: '🇷🇺', cn: '🇨🇳', sa: '🇸🇦', in: '🇮🇳', tr: '🇹🇷',
-  it: '🇮🇹', nl: '🇳🇱', pl: '🇵🇱', cz: '🇨🇿', jp: '🇯🇵',
-  kr: '🇰🇷', se: '🇸🇪', no: '🇳🇴', dk: '🇩🇰', fi: '🇫🇮',
-  us: '🇺🇸', ca: '🇨🇦', ae: '🇦🇪', bg: '🇧🇬',
+  gb: "🇬🇧",
+  de: "🇩🇪",
+  fr: "🇫🇷",
+  es: "🇪🇸",
+  br: "🇧🇷",
+  ru: "🇷🇺",
+  cn: "🇨🇳",
+  sa: "🇸🇦",
+  in: "🇮🇳",
+  tr: "🇹🇷",
+  it: "🇮🇹",
+  nl: "🇳🇱",
+  pl: "🇵🇱",
+  cz: "🇨🇿",
+  jp: "🇯🇵",
+  kr: "🇰🇷",
+  se: "🇸🇪",
+  no: "🇳🇴",
+  dk: "🇩🇰",
+  fi: "🇫🇮",
+  us: "🇺🇸",
+  ca: "🇨🇦",
+  ae: "🇦🇪",
+  bg: "🇧🇬",
   // v2.6.23 — flags for the 19 newly-shipped CWICR cost-database regions
-  au: '🇦🇺', hr: '🇭🇷', id: '🇮🇩', mx: '🇲🇽', ng: '🇳🇬',
-  nz: '🇳🇿', ro: '🇷🇴', th: '🇹🇭', vn: '🇻🇳', za: '🇿🇦',
+  au: "🇦🇺",
+  hr: "🇭🇷",
+  id: "🇮🇩",
+  mx: "🇲🇽",
+  ng: "🇳🇬",
+  nz: "🇳🇿",
+  ro: "🇷🇴",
+  th: "🇹🇭",
+  vn: "🇻🇳",
+  za: "🇿🇦",
   // v3.0.4 — Mongolian locale (community contribution; PR #125)
-  mn: '🇲🇳',
+  mn: "🇲🇳",
 };
 
 /** Region-key prefixes that don't match an ISO code directly.
@@ -141,9 +168,19 @@ const EMOJI_FALLBACK: Record<string, string> = {
  *  Mirrors REGION_MAP in useCostDatabaseStore.ts; kept inline so this
  *  shared UI component has no feature-store dependency. */
 const REGION_PREFIX_TO_ISO: Record<string, string> = {
-  usa: 'us', uk: 'gb', eng: 'ca', sp: 'es', pt: 'br',
-  ar: 'ae', zh: 'cn', hi: 'in', cs: 'cz', ja: 'jp',
-  ko: 'kr', sv: 'se', vi: 'vn',
+  usa: "us",
+  uk: "gb",
+  eng: "ca",
+  sp: "es",
+  pt: "br",
+  ar: "ae",
+  zh: "cn",
+  hi: "in",
+  cs: "cz",
+  ja: "jp",
+  ko: "kr",
+  sv: "se",
+  vi: "vn",
 };
 
 /** Resolve a 2-letter ISO key from any of: bare ISO code ("de"),
@@ -153,7 +190,7 @@ function resolveIso(code: string): string | null {
   const lc = code.toLowerCase();
   if (FLAGS[lc] || EMOJI_FALLBACK[lc]) return lc;
   // region-key shape: split on first "_" and try the prefix.
-  const underscore = lc.indexOf('_');
+  const underscore = lc.indexOf("_");
   if (underscore > 0) {
     const prefix = lc.slice(0, underscore);
     if (FLAGS[prefix] || EMOJI_FALLBACK[prefix]) return prefix;
@@ -172,7 +209,11 @@ interface CountryFlagProps {
   className?: string;
 }
 
-export function CountryFlag({ code, size = 16, className = '' }: CountryFlagProps) {
+export function CountryFlag({
+  code,
+  size = 16,
+  className = "",
+}: CountryFlagProps) {
   const iso = resolveIso(code);
   if (!iso) return null;
   const svg = FLAGS[iso];
@@ -180,7 +221,16 @@ export function CountryFlag({ code, size = 16, className = '' }: CountryFlagProp
   if (!svg) {
     const emoji = EMOJI_FALLBACK[iso];
     if (emoji) {
-      return <span className={className} role="img" aria-label={iso} style={{ fontSize: size * 0.7 }}>{emoji}</span>;
+      return (
+        <span
+          className={className}
+          role="img"
+          aria-label={iso}
+          style={{ fontSize: size * 0.7 }}
+        >
+          {emoji}
+        </span>
+      );
     }
     return null;
   }

@@ -11,7 +11,7 @@
  * Accept-Language, error extraction and JSON serialization.
  */
 
-import { apiGet, apiPatch, apiPost } from '@/shared/lib/api';
+import { apiGet, apiPatch, apiPost } from "@/shared/lib/api";
 import type {
   LoadedDatabase,
   MatchAcceptRequestBody,
@@ -19,7 +19,7 @@ import type {
   MatchElementRequestBody,
   MatchFeedbackRequestBody,
   MatchResponse,
-} from './types';
+} from "./types";
 
 /**
  * Run the matcher for one element.  The backend handles envelope
@@ -29,7 +29,7 @@ export async function matchElement(
   body: MatchElementRequestBody,
 ): Promise<MatchResponse> {
   return apiPost<MatchResponse, MatchElementRequestBody>(
-    '/v1/match/element',
+    "/v1/match/element",
     body,
   );
 }
@@ -41,7 +41,7 @@ export async function matchElement(
 export async function submitMatchFeedback(
   body: MatchFeedbackRequestBody,
 ): Promise<void> {
-  await apiPost<void, MatchFeedbackRequestBody>('/v1/match/feedback', body);
+  await apiPost<void, MatchFeedbackRequestBody>("/v1/match/feedback", body);
 }
 
 /**
@@ -53,7 +53,7 @@ export async function acceptMatch(
   body: MatchAcceptRequestBody,
 ): Promise<MatchAcceptResponse> {
   return apiPost<MatchAcceptResponse, MatchAcceptRequestBody>(
-    '/v1/match/accept',
+    "/v1/match/accept",
     body,
   );
 }
@@ -64,7 +64,7 @@ export async function acceptMatch(
  * empty-state CTAs (no-catalog / not-vectorised / ready).
  */
 export async function listLoadedDatabases(): Promise<LoadedDatabase[]> {
-  return apiGet<LoadedDatabase[]>('/v1/costs/loaded-databases/');
+  return apiGet<LoadedDatabase[]>("/v1/costs/loaded-databases/");
 }
 
 /**

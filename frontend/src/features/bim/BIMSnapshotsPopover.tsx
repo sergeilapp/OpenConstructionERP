@@ -8,13 +8,13 @@
  * the active project with quick create / delete, and the existing
  * upload modal is reused verbatim so we don't duplicate validation.
  */
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2, X, Layers, Inbox } from 'lucide-react';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus, Trash2, X, Layers, Inbox } from "lucide-react";
 
-import { Button } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+import { Button } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 
 import {
   deleteSnapshot,
@@ -22,7 +22,7 @@ import {
   SnapshotCreateModal,
   type Snapshot,
   type SnapshotSummary,
-} from '@/features/dashboards';
+} from "@/features/dashboards";
 
 interface BIMSnapshotsPopoverProps {
   projectId: string;
@@ -30,16 +30,16 @@ interface BIMSnapshotsPopoverProps {
 }
 
 function formatNumber(n: number): string {
-  return new Intl.NumberFormat('en-US').format(n);
+  return new Intl.NumberFormat("en-US").format(n);
 }
 
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(iso).toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   } catch {
     return iso;
@@ -56,7 +56,7 @@ export default function BIMSnapshotsPopover({
   const [createOpen, setCreateOpen] = useState(false);
 
   const query = useQuery({
-    queryKey: ['dashboards-snapshots', projectId],
+    queryKey: ["dashboards-snapshots", projectId],
     queryFn: () => listSnapshots(projectId),
     enabled: !!projectId,
   });
@@ -65,18 +65,20 @@ export default function BIMSnapshotsPopover({
     mutationFn: (id: string) => deleteSnapshot(id),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['dashboards-snapshots', projectId],
+        queryKey: ["dashboards-snapshots", projectId],
       });
       toast({
-        type: 'success',
-        title: t('dashboards.snapshot_deleted', { defaultValue: 'Snapshot deleted‌⁠‍' }),
+        type: "success",
+        title: t("dashboards.snapshot_deleted", {
+          defaultValue: "Snapshot deleted‌⁠‍",
+        }),
       });
     },
     onError: (err: Error) => {
       toast({
-        type: 'error',
-        title: t('dashboards.snapshot_delete_failed', {
-          defaultValue: 'Failed to delete snapshot‌⁠‍',
+        type: "error",
+        title: t("dashboards.snapshot_delete_failed", {
+          defaultValue: "Failed to delete snapshot‌⁠‍",
         }),
         message: err.message,
       });
@@ -86,8 +88,10 @@ export default function BIMSnapshotsPopover({
   const handleCreated = (snap: Snapshot) => {
     setCreateOpen(false);
     toast({
-      type: 'success',
-      title: t('dashboards.snapshot_created', { defaultValue: 'Snapshot created‌⁠‍' }),
+      type: "success",
+      title: t("dashboards.snapshot_created", {
+        defaultValue: "Snapshot created‌⁠‍",
+      }),
       message: `${formatNumber(snap.total_entities)} entities · ${formatNumber(
         snap.total_categories,
       )} categories`,
@@ -111,7 +115,9 @@ export default function BIMSnapshotsPopover({
           <div className="flex items-center gap-2">
             <Layers size={14} className="text-oe-blue" />
             <h3 className="text-sm font-semibold text-content-primary">
-              {t('dashboards.snapshots_title', { defaultValue: 'Data snapshots‌⁠‍' })}
+              {t("dashboards.snapshots_title", {
+                defaultValue: "Data snapshots‌⁠‍",
+              })}
             </h3>
             {items.length > 0 && (
               <span className="rounded-full bg-surface-secondary px-1.5 py-0.5 text-[10px] tabular-nums text-content-tertiary">
@@ -123,7 +129,7 @@ export default function BIMSnapshotsPopover({
             type="button"
             onClick={onClose}
             className="rounded p-1 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={14} />
           </button>
@@ -135,20 +141,20 @@ export default function BIMSnapshotsPopover({
             data-testid="bim-snapshot-create-btn"
           >
             <Plus size={14} className="mr-1" />
-            {t('dashboards.new_snapshot', { defaultValue: 'New snapshot‌⁠‍' })}
+            {t("dashboards.new_snapshot", { defaultValue: "New snapshot‌⁠‍" })}
           </Button>
         </div>
 
         <div className="flex-1 overflow-y-auto">
           {query.isLoading && (
             <div className="p-4 text-xs text-content-tertiary">
-              {t('common.loading', { defaultValue: 'Loading…' })}
+              {t("common.loading", { defaultValue: "Loading…" })}
             </div>
           )}
           {query.isError && (
             <div className="p-4 text-xs text-rose-600">
-              {t('dashboards.snapshots_load_failed', {
-                defaultValue: 'Could not load snapshots.',
+              {t("dashboards.snapshots_load_failed", {
+                defaultValue: "Could not load snapshots.",
               })}
             </div>
           )}
@@ -156,9 +162,9 @@ export default function BIMSnapshotsPopover({
             <div className="flex flex-col items-center gap-2 p-6 text-center">
               <Inbox size={28} className="text-content-tertiary" />
               <p className="text-xs text-content-tertiary">
-                {t('dashboards.no_snapshots_desc', {
+                {t("dashboards.no_snapshots_desc", {
                   defaultValue:
-                    'Upload IFC, RVT, DWG or DGN files to freeze a parquet dataset.',
+                    "Upload IFC, RVT, DWG or DGN files to freeze a parquet dataset.",
                 })}
               </p>
             </div>
@@ -171,7 +177,8 @@ export default function BIMSnapshotsPopover({
                   snapshot={s}
                   onDelete={() => deleteMutation.mutate(s.id)}
                   deleting={
-                    deleteMutation.isPending && deleteMutation.variables === s.id
+                    deleteMutation.isPending &&
+                    deleteMutation.variables === s.id
                   }
                 />
               ))}
@@ -210,13 +217,13 @@ function SnapshotRow({ snapshot, onDelete, deleting }: SnapshotRowProps) {
         </div>
         <div className="flex items-center gap-2 mt-0.5 text-[10px] text-content-tertiary">
           <span className="tabular-nums">
-            {formatNumber(snapshot.total_entities)}{' '}
-            {t('dashboards.entities_short', { defaultValue: 'entities' })}
+            {formatNumber(snapshot.total_entities)}{" "}
+            {t("dashboards.entities_short", { defaultValue: "entities" })}
           </span>
           <span>·</span>
           <span className="tabular-nums">
-            {snapshot.total_categories}{' '}
-            {t('dashboards.categories_short', { defaultValue: 'cat.' })}
+            {snapshot.total_categories}{" "}
+            {t("dashboards.categories_short", { defaultValue: "cat." })}
           </span>
           <span>·</span>
           <span>{formatDate(snapshot.created_at)}</span>
@@ -227,7 +234,7 @@ function SnapshotRow({ snapshot, onDelete, deleting }: SnapshotRowProps) {
         onClick={onDelete}
         disabled={deleting}
         className="rounded p-1 text-content-tertiary hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40"
-        aria-label={t('common.delete', { defaultValue: 'Delete' })}
+        aria-label={t("common.delete", { defaultValue: "Delete" })}
         data-testid={`bim-snapshot-delete-${snapshot.id}`}
       >
         <Trash2 size={12} />

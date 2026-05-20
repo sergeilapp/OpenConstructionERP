@@ -9,6 +9,7 @@ Scope:
 from __future__ import annotations
 
 import uuid
+from datetime import UTC
 from decimal import Decimal
 from types import SimpleNamespace
 from typing import Any
@@ -71,9 +72,7 @@ class _StubInvoiceRepo:
             rows = [r for r in rows if r.status == status]
         return rows, len(rows)
 
-    async def next_invoice_number(
-        self, project_id: uuid.UUID, direction: str
-    ) -> str:
+    async def next_invoice_number(self, project_id: uuid.UUID, direction: str) -> str:
         self._counter += 1
         prefix = "INV-P" if direction == "payable" else "INV-R"
         return f"{prefix}-{self._counter:03d}"
@@ -144,9 +143,7 @@ class _StubBudgetRepo:
             rows = [r for r in rows if r.category == category]
         return rows, len(rows)
 
-    async def aggregate_for_dashboard(
-        self, *, project_id: uuid.UUID | None = None
-    ) -> dict[str, Any]:
+    async def aggregate_for_dashboard(self, *, project_id: uuid.UUID | None = None) -> dict[str, Any]:
         # EVM zero-input fallback path (service.create_evm_snapshot) calls
         # this when any of BAC/PV/EV/AC is "0". For unit tests we return
         # an empty aggregate so derived values stay zero and the test
@@ -169,8 +166,9 @@ class _StubEVMRepo:
         # SQLAlchemy server-side defaults don't fire without a real INSERT,
         # so emulate them here so EVMSnapshotResponse.model_validate(...)
         # doesn't choke on None timestamps.
-        from datetime import datetime, timezone
-        now = datetime.now(timezone.utc)
+        from datetime import datetime
+
+        now = datetime.now(UTC)
         if getattr(snapshot, "created_at", None) is None:
             snapshot.created_at = now
         if getattr(snapshot, "updated_at", None) is None:
@@ -483,17 +481,13 @@ class _ExecuteStubSession:
         return _Result(self.budgets)
 
 
-def _make_service_with_session(
-    paid_invoices: list[Any], budgets: list[Any]
-) -> FinanceService:
+def _make_service_with_session(paid_invoices: list[Any], budgets: list[Any]) -> FinanceService:
     service = _make_service()
     service.session = _ExecuteStubSession(paid_invoices, budgets)  # type: ignore[assignment]
     return service
 
 
-def _make_line_item(
-    *, amount: str, wbs_id: str | None = None, cost_category: str | None = None
-) -> SimpleNamespace:
+def _make_line_item(*, amount: str, wbs_id: str | None = None, cost_category: str | None = None) -> SimpleNamespace:
     return SimpleNamespace(
         id=uuid.uuid4(),
         amount=amount,
@@ -502,9 +496,7 @@ def _make_line_item(
     )
 
 
-def _make_paid_invoice(
-    *, project_id: uuid.UUID, amount_total: str, items: list[Any] | None = None
-) -> SimpleNamespace:
+def _make_paid_invoice(*, project_id: uuid.UUID, amount_total: str, items: list[Any] | None = None) -> SimpleNamespace:
     return SimpleNamespace(
         id=uuid.uuid4(),
         project_id=project_id,

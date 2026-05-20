@@ -8,8 +8,8 @@
  * the module's page components.
  */
 
-import type { LucideIcon } from 'lucide-react';
-import type { LazyExoticComponent, ComponentType } from 'react';
+import type { LucideIcon } from "lucide-react";
+import type { LazyExoticComponent, ComponentType } from "react";
 
 /* ── Route registered by a module ──────────────────────────────────── */
 
@@ -62,7 +62,13 @@ export interface ModuleManifest {
   /** Lucide icon for marketplace / module listing */
   icon: LucideIcon;
   /** Sidebar category */
-  category: 'estimation' | 'planning' | 'procurement' | 'tools' | 'regional' | 'converter';
+  category:
+    | "estimation"
+    | "planning"
+    | "procurement"
+    | "tools"
+    | "regional"
+    | "converter";
   /** Routes this module registers */
   routes: ModuleRoute[];
   /** Sidebar nav items */

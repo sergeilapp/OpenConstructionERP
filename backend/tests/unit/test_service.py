@@ -16,7 +16,7 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from types import SimpleNamespace
 from typing import Any
-from unittest.mock import AsyncMock, patch
+from unittest.mock import patch
 
 import pytest
 from fastapi import HTTPException
@@ -107,7 +107,11 @@ class _StubContractRepo:
         self.rows.pop(cid, None)
 
     async def list_all(
-        self, *, offset: int = 0, limit: int = 50, status: str | None = None,
+        self,
+        *,
+        offset: int = 0,
+        limit: int = 50,
+        status: str | None = None,
     ) -> tuple[list[Any], int]:
         rows = list(self.rows.values())
         if status is not None:
@@ -136,7 +140,11 @@ class _StubAssetRepo:
         self.rows.pop(aid, None)
 
     async def list_for_contract(
-        self, contract_id: uuid.UUID, *, offset: int = 0, limit: int = 100,
+        self,
+        contract_id: uuid.UUID,
+        *,
+        offset: int = 0,
+        limit: int = 100,
         status: str | None = None,
     ) -> tuple[list[Any], int]:
         rows = [r for r in self.rows.values() if r.contract_id == contract_id]
@@ -169,8 +177,13 @@ class _StubTicketRepo:
         self.rows.pop(tid, None)
 
     async def list_for_contract(
-        self, cid: uuid.UUID, *, offset: int = 0, limit: int = 50,
-        status: str | None = None, priority: str | None = None,
+        self,
+        cid: uuid.UUID,
+        *,
+        offset: int = 0,
+        limit: int = 50,
+        status: str | None = None,
+        priority: str | None = None,
     ) -> tuple[list[Any], int]:
         rows = [r for r in self.rows.values() if r.contract_id == cid]
         if status is not None:
@@ -181,15 +194,11 @@ class _StubTicketRepo:
 
     async def count_open_for_contract(self, cid: uuid.UUID) -> int:
         return sum(
-            1 for r in self.rows.values()
-            if r.contract_id == cid and r.status in ("new", "assigned", "in_progress")
+            1 for r in self.rows.values() if r.contract_id == cid and r.status in ("new", "assigned", "in_progress")
         )
 
     async def count_in_progress_for_contract(self, cid: uuid.UUID) -> int:
-        return sum(
-            1 for r in self.rows.values()
-            if r.contract_id == cid and r.status == "in_progress"
-        )
+        return sum(1 for r in self.rows.values() if r.contract_id == cid and r.status == "in_progress")
 
 
 class _StubWorkOrderRepo:
@@ -260,7 +269,9 @@ class _StubSLARepo:
 
 class _StubScheduleRepo:
     async def list_due_within(
-        self, _contract_id: uuid.UUID, _due_before: str,
+        self,
+        _contract_id: uuid.UUID,
+        _due_before: str,
     ) -> list[Any]:
         return []
 
@@ -462,7 +473,8 @@ async def test_dispatch_emits_event() -> None:
         )
         bus.reset_mock()
         updated = await svc.dispatch_ticket(
-            ticket.id, TicketDispatchRequest(technician_id="tech-7"),
+            ticket.id,
+            TicketDispatchRequest(technician_id="tech-7"),
         )
 
     assert updated.status == "assigned"
@@ -478,7 +490,10 @@ async def test_resolve_then_close_ticket() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached"):
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
                 assigned_to="tech-1",
             ),
             user_id="d",
@@ -525,7 +540,10 @@ async def test_complete_work_order_sums_items_into_billed_amount() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached"):
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
                 assigned_to="tech-1",
             ),
             user_id="d",
@@ -586,7 +604,10 @@ async def test_bill_work_order_emits_finance_event() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached") as bus:
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
                 assigned_to="tech-1",
             ),
             user_id="d",
@@ -617,7 +638,10 @@ async def test_bill_rejects_non_completed_work_order() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached"):
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
                 assigned_to="tech-1",
             ),
             user_id="d",
@@ -625,7 +649,10 @@ async def test_bill_rejects_non_completed_work_order() -> None:
         ticket.status = "in_progress"
         wo = await svc.create_work_order(
             WorkOrderCreate(
-                ticket_id=ticket.id, technician_id="tech-1", status="scheduled", items=[],
+                ticket_id=ticket.id,
+                technician_id="tech-1",
+                status="scheduled",
+                items=[],
             ),
         )
         with pytest.raises(HTTPException) as exc_info:
@@ -684,15 +711,15 @@ async def test_asset_crud_via_service() -> None:
 def test_service_permission_constants_complete() -> None:
     """All 7 required permissions are declared at the expected roles."""
     expected = {
-        "service.create":         Role.EDITOR,
-        "service.read":           Role.VIEWER,
-        "service.update":         Role.EDITOR,
-        "service.delete":         Role.MANAGER,
-        "service.dispatch":       Role.MANAGER,
-        "service.bill":           Role.MANAGER,
+        "service.create": Role.EDITOR,
+        "service.read": Role.VIEWER,
+        "service.update": Role.EDITOR,
+        "service.delete": Role.MANAGER,
+        "service.dispatch": Role.MANAGER,
+        "service.bill": Role.MANAGER,
         "service.close_contract": Role.MANAGER,
     }
-    assert SERVICE_PERMISSIONS == expected
+    assert expected == SERVICE_PERMISSIONS
 
 
 def test_register_service_permissions_idempotent() -> None:
@@ -750,7 +777,10 @@ async def test_create_ticket_defaults_to_manual_source() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached"):
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
             ),
             user_id="dispatcher",
         )
@@ -771,7 +801,10 @@ async def test_file_ncr_from_wo_requires_project_scoped_contract() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached"):
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
             ),
             user_id="d",
         )
@@ -783,7 +816,8 @@ async def test_file_ncr_from_wo_requires_project_scoped_contract() -> None:
         await svc.file_ncr_from_work_order(
             wo.id,
             NCRFromWorkOrderRequest(
-                title="Crack found", description="Diagonal crack near support",
+                title="Crack found",
+                description="Diagonal crack near support",
             ),
             user_id="engineer-1",
         )
@@ -801,7 +835,10 @@ async def test_request_purchase_for_item_publishes_event() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached") as bus:
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
             ),
             user_id="d",
         )
@@ -838,7 +875,10 @@ async def test_request_purchase_rejects_non_material_items() -> None:
     with patch("app.modules.service.service.event_bus.publish_detached"):
         ticket = await svc.create_ticket(
             ServiceTicketCreate(
-                contract_id=contract.id, title="X", description="Y", priority="med",
+                contract_id=contract.id,
+                title="X",
+                description="Y",
+                priority="med",
             ),
             user_id="d",
         )

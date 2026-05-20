@@ -7,16 +7,16 @@ export {
   getTranslationStatus,
   triggerLookupDownload,
   translateOne,
-} from './api';
+} from "./api";
 
 export {
   TRANSLATION_STATUS_QUERY_KEY,
   useTranslationStatus,
   useTriggerDownload,
   useTranslateOne,
-} from './queries';
+} from "./queries";
 
-export { TranslationSettingsTab } from './TranslationSettingsTab';
+export { TranslationSettingsTab } from "./TranslationSettingsTab";
 
 export type {
   CacheStats,
@@ -29,4 +29,4 @@ export type {
   TranslateRequestBody,
   TranslateResponse,
   TranslationTier,
-} from './types';
+} from "./types";

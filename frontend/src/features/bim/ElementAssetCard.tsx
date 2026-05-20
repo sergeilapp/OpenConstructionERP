@@ -16,16 +16,17 @@
  * background (no glassmorphism) so the asset fields read clearly over
  * 3D-viewer content.
  */
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { Package, Edit3, X } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { Package, Edit3, X } from "lucide-react";
 
-import { AssetEditModal } from './AssetEditModal';
-import { ensureBIMElement, listTrackedAssets, type AssetSummary } from './api';
-import { useToastStore } from '@/stores/useToastStore';
+import { AssetEditModal } from "./AssetEditModal";
+import { ensureBIMElement, listTrackedAssets, type AssetSummary } from "./api";
+import { useToastStore } from "@/stores/useToastStore";
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface ElementAssetCardProps {
   projectId: string;
@@ -71,7 +72,7 @@ export default function ElementAssetCard({
   // so we don't fan out the API surface — the list is indexed and
   // cached by React Query (30 s staleTime matches AssetsPage).
   const assetsQuery = useQuery({
-    queryKey: ['bim-assets', projectId],
+    queryKey: ["bim-assets", projectId],
     queryFn: () => listTrackedAssets(projectId),
     enabled: !!projectId && visible && !!elementId,
     staleTime: 30_000,
@@ -104,9 +105,9 @@ export default function ElementAssetCard({
         realId = resolved.id;
       } catch (err) {
         toast({
-          type: 'error',
-          title: t('assets.resolve_failed', {
-            defaultValue: 'Could not prepare asset row‌⁠‍',
+          type: "error",
+          title: t("assets.resolve_failed", {
+            defaultValue: "Could not prepare asset row‌⁠‍",
           }),
           message: err instanceof Error ? err.message : undefined,
         });
@@ -118,10 +119,10 @@ export default function ElementAssetCard({
     setEditing({
       id: realId,
       stable_id: element.stable_id,
-      element_type: element.element_type ?? 'Element',
+      element_type: element.element_type ?? "Element",
       name: element.name ?? null,
-      model_id: element.model_id ?? '',
-      model_name: element.model_name ?? '',
+      model_id: element.model_id ?? "",
+      model_name: element.model_name ?? "",
       project_id: projectId,
       asset_info: {},
     });
@@ -131,14 +132,18 @@ export default function ElementAssetCard({
     <>
       <div
         className="absolute z-30 select-none rounded-lg border border-border-light bg-surface-primary shadow-lg px-3 py-2 min-w-[220px] max-w-[280px] transition-[inset-inline-end] duration-200"
-        style={{ insetInlineEnd: rightPx, bottom: bottomPx, backgroundColor: 'var(--oe-bg)' }}
+        style={{
+          insetInlineEnd: rightPx,
+          bottom: bottomPx,
+          backgroundColor: "var(--oe-bg)",
+        }}
         data-testid="bim-asset-card"
       >
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <div className="flex items-center gap-1.5">
             <Package size={12} className="text-oe-blue shrink-0" />
             <span className="text-[10px] font-semibold uppercase tracking-wide text-content-tertiary">
-              {t('assets.card_title', { defaultValue: 'Asset info‌⁠‍' })}
+              {t("assets.card_title", { defaultValue: "Asset info‌⁠‍" })}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -151,18 +156,22 @@ export default function ElementAssetCard({
             >
               <Edit3 size={10} />
               {resolving
-                ? t('common.loading', { defaultValue: 'Loading…‌⁠‍' })
+                ? t("common.loading", { defaultValue: "Loading…‌⁠‍" })
                 : tracked
-                ? t('common.edit', { defaultValue: 'Edit' })
-                : t('assets.register', { defaultValue: 'Register‌⁠‍' })}
+                  ? t("common.edit", { defaultValue: "Edit" })
+                  : t("assets.register", { defaultValue: "Register‌⁠‍" })}
             </button>
             {onDismiss && (
               <button
                 type="button"
                 onClick={onDismiss}
                 className="rounded p-0.5 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
-                aria-label={t('assets.hide_card', { defaultValue: 'Hide asset card‌⁠‍' })}
-                title={t('assets.hide_card', { defaultValue: 'Hide asset card' })}
+                aria-label={t("assets.hide_card", {
+                  defaultValue: "Hide asset card‌⁠‍",
+                })}
+                title={t("assets.hide_card", {
+                  defaultValue: "Hide asset card",
+                })}
                 data-testid="bim-asset-dismiss"
               >
                 <X size={11} />
@@ -176,9 +185,12 @@ export default function ElementAssetCard({
             {tracked.asset_info.manufacturer && (
               <>
                 <dt className="text-content-tertiary">
-                  {t('assets.field.manufacturer', { defaultValue: 'Mfr.' })}
+                  {t("assets.field.manufacturer", { defaultValue: "Mfr." })}
                 </dt>
-                <dd className="font-medium text-content-primary truncate" title={tracked.asset_info.manufacturer}>
+                <dd
+                  className="font-medium text-content-primary truncate"
+                  title={tracked.asset_info.manufacturer}
+                >
                   {tracked.asset_info.manufacturer}
                 </dd>
               </>
@@ -186,9 +198,12 @@ export default function ElementAssetCard({
             {tracked.asset_info.model && (
               <>
                 <dt className="text-content-tertiary">
-                  {t('assets.field.model', { defaultValue: 'Model' })}
+                  {t("assets.field.model", { defaultValue: "Model" })}
                 </dt>
-                <dd className="font-medium text-content-primary truncate" title={tracked.asset_info.model}>
+                <dd
+                  className="font-medium text-content-primary truncate"
+                  title={tracked.asset_info.model}
+                >
                   {tracked.asset_info.model}
                 </dd>
               </>
@@ -196,9 +211,12 @@ export default function ElementAssetCard({
             {tracked.asset_info.serial_number && (
               <>
                 <dt className="text-content-tertiary">
-                  {t('assets.field.serial_short', { defaultValue: 'S/N' })}
+                  {t("assets.field.serial_short", { defaultValue: "S/N" })}
                 </dt>
-                <dd className="font-mono text-[10px] text-content-primary truncate" title={tracked.asset_info.serial_number}>
+                <dd
+                  className="font-mono text-[10px] text-content-primary truncate"
+                  title={tracked.asset_info.serial_number}
+                >
                   {tracked.asset_info.serial_number}
                 </dd>
               </>
@@ -206,17 +224,19 @@ export default function ElementAssetCard({
             {tracked.asset_info.operational_status && (
               <>
                 <dt className="text-content-tertiary">
-                  {t('assets.field.status_short', { defaultValue: 'Status' })}
+                  {t("assets.field.status_short", { defaultValue: "Status" })}
                 </dt>
                 <dd className="text-[11px] text-content-secondary">
-                  {tracked.asset_info.operational_status.replace('_', ' ')}
+                  {tracked.asset_info.operational_status.replace("_", " ")}
                 </dd>
               </>
             )}
             {tracked.asset_info.warranty_until && (
               <>
                 <dt className="text-content-tertiary">
-                  {t('assets.field.warranty_short', { defaultValue: 'Warranty' })}
+                  {t("assets.field.warranty_short", {
+                    defaultValue: "Warranty",
+                  })}
                 </dt>
                 <dd className="text-[11px] text-content-secondary">
                   {tracked.asset_info.warranty_until}
@@ -226,8 +246,9 @@ export default function ElementAssetCard({
           </dl>
         ) : (
           <p className="text-[11px] text-content-tertiary italic">
-            {t('assets.not_tracked', {
-              defaultValue: 'Not tracked yet — register to capture manufacturer, serial, warranty…',
+            {t("assets.not_tracked", {
+              defaultValue:
+                "Not tracked yet — register to capture manufacturer, serial, warranty…",
             })}
           </p>
         )}

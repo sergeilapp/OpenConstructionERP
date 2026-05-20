@@ -4,28 +4,33 @@
  * Backed by /api/v1/supplier-catalogs/ — see backend/app/modules/supplier_catalogs/router.py
  */
 
-import { apiGet, apiPost, apiPatch } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type VendorStatus = 'active' | 'suspended' | 'blacklisted' | 'pending';
+export type VendorStatus = "active" | "suspended" | "blacklisted" | "pending";
 export type PRStatus =
-  | 'draft'
-  | 'submitted'
-  | 'pending_approval'
-  | 'approved'
-  | 'rejected'
-  | 'converted';
+  | "draft"
+  | "submitted"
+  | "pending_approval"
+  | "approved"
+  | "rejected"
+  | "converted";
 export type POStatus =
-  | 'draft'
-  | 'sent'
-  | 'acknowledged'
-  | 'partially_received'
-  | 'received'
-  | 'closed'
-  | 'cancelled';
-export type InvoiceStatus = 'received' | 'matched' | 'exception' | 'approved' | 'paid';
-export type MatchStatus = 'pending' | 'auto_matched' | 'exception';
+  | "draft"
+  | "sent"
+  | "acknowledged"
+  | "partially_received"
+  | "received"
+  | "closed"
+  | "cancelled";
+export type InvoiceStatus =
+  | "received"
+  | "matched"
+  | "exception"
+  | "approved"
+  | "paid";
+export type MatchStatus = "pending" | "auto_matched" | "exception";
 
 export interface Vendor {
   id: string;
@@ -264,10 +269,10 @@ export interface CreateWarehousePayload {
 function qs(params: Record<string, string | number | undefined>): string {
   const s = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== '' && v !== null) s.set(k, String(v));
+    if (v !== undefined && v !== "" && v !== null) s.set(k, String(v));
   }
   const out = s.toString();
-  return out ? `?${out}` : '';
+  return out ? `?${out}` : "";
 }
 
 /* ── Vendors ───────────────────────────────────────────────────────────── */
@@ -282,19 +287,32 @@ export function listVendors(params?: {
 }
 
 export function createVendor(data: CreateVendorPayload): Promise<Vendor> {
-  return apiPost<Vendor>('/v1/supplier-catalogs/vendors', data);
+  return apiPost<Vendor>("/v1/supplier-catalogs/vendors", data);
 }
 
 export function suspendVendor(id: string, reason?: string): Promise<Vendor> {
-  return apiPatch<Vendor>(`/v1/supplier-catalogs/vendors/${id}/suspend${qs({ reason })}`, {});
+  return apiPatch<Vendor>(
+    `/v1/supplier-catalogs/vendors/${id}/suspend${qs({ reason })}`,
+    {},
+  );
 }
 
 export function blacklistVendor(id: string, reason?: string): Promise<Vendor> {
-  return apiPatch<Vendor>(`/v1/supplier-catalogs/vendors/${id}/blacklist${qs({ reason })}`, {});
+  return apiPatch<Vendor>(
+    `/v1/supplier-catalogs/vendors/${id}/blacklist${qs({ reason })}`,
+    {},
+  );
 }
 
-export function rateVendor(id: string, rating: number, comment?: string): Promise<Vendor> {
-  return apiPost<Vendor>(`/v1/supplier-catalogs/vendors/${id}/rating`, { rating, comment });
+export function rateVendor(
+  id: string,
+  rating: number,
+  comment?: string,
+): Promise<Vendor> {
+  return apiPost<Vendor>(`/v1/supplier-catalogs/vendors/${id}/rating`, {
+    rating,
+    comment,
+  });
 }
 
 /* ── Catalog ───────────────────────────────────────────────────────────── */
@@ -305,11 +323,15 @@ export function listCatalogItems(params?: {
   offset?: number;
   limit?: number;
 }): Promise<CatalogItem[]> {
-  return apiGet<CatalogItem[]>(`/v1/supplier-catalogs/catalog-items${qs(params || {})}`);
+  return apiGet<CatalogItem[]>(
+    `/v1/supplier-catalogs/catalog-items${qs(params || {})}`,
+  );
 }
 
-export function createCatalogItem(data: CreateCatalogItemPayload): Promise<CatalogItem> {
-  return apiPost<CatalogItem>('/v1/supplier-catalogs/catalog-items', data);
+export function createCatalogItem(
+  data: CreateCatalogItemPayload,
+): Promise<CatalogItem> {
+  return apiPost<CatalogItem>("/v1/supplier-catalogs/catalog-items", data);
 }
 
 export function comparePrices(itemId: string): Promise<PriceComparisonRow[]> {
@@ -321,7 +343,7 @@ export function comparePrices(itemId: string): Promise<PriceComparisonRow[]> {
 /* ── Purchase Requisitions ─────────────────────────────────────────────── */
 
 export function createPR(data: CreatePRPayload): Promise<PR> {
-  return apiPost<PR>('/v1/supplier-catalogs/prs', data);
+  return apiPost<PR>("/v1/supplier-catalogs/prs", data);
 }
 
 export function submitPR(id: string): Promise<PR> {
@@ -333,7 +355,10 @@ export function approvePR(id: string): Promise<PR> {
 }
 
 export function rejectPR(id: string, reason?: string): Promise<PR> {
-  return apiPost<PR>(`/v1/supplier-catalogs/prs/${id}/reject${qs({ reason })}`, {});
+  return apiPost<PR>(
+    `/v1/supplier-catalogs/prs/${id}/reject${qs({ reason })}`,
+    {},
+  );
 }
 
 export function convertPRToPO(id: string, vendorId: string): Promise<PO> {
@@ -346,7 +371,7 @@ export function convertPRToPO(id: string, vendorId: string): Promise<PO> {
 /* ── Purchase Orders ───────────────────────────────────────────────────── */
 
 export function createPO(data: CreatePOPayload): Promise<PO> {
-  return apiPost<PO>('/v1/supplier-catalogs/pos', data);
+  return apiPost<PO>("/v1/supplier-catalogs/pos", data);
 }
 
 export function sendPO(id: string): Promise<PO> {
@@ -364,15 +389,21 @@ export function closePO(id: string): Promise<PO> {
 /* ── Warehouses ────────────────────────────────────────────────────────── */
 
 export function listWarehouses(): Promise<Warehouse[]> {
-  return apiGet<Warehouse[]>('/v1/supplier-catalogs/warehouses');
+  return apiGet<Warehouse[]>("/v1/supplier-catalogs/warehouses");
 }
 
-export function createWarehouse(data: CreateWarehousePayload): Promise<Warehouse> {
-  return apiPost<Warehouse>('/v1/supplier-catalogs/warehouses', data);
+export function createWarehouse(
+  data: CreateWarehousePayload,
+): Promise<Warehouse> {
+  return apiPost<Warehouse>("/v1/supplier-catalogs/warehouses", data);
 }
 
-export function listWarehouseBalances(warehouseId: string): Promise<StockBalance[]> {
-  return apiGet<StockBalance[]>(`/v1/supplier-catalogs/warehouses/${warehouseId}/balances`);
+export function listWarehouseBalances(
+  warehouseId: string,
+): Promise<StockBalance[]> {
+  return apiGet<StockBalance[]>(
+    `/v1/supplier-catalogs/warehouses/${warehouseId}/balances`,
+  );
 }
 
 /* ── Invoices (read endpoints not exposed; we surface 3-way match exceptions through invoice list ── */
@@ -407,7 +438,7 @@ export function matchInvoice(
 
 export interface CommodityCode {
   id: string;
-  scheme: 'unspsc' | 'eclass' | 'cpv';
+  scheme: "unspsc" | "eclass" | "cpv";
   code: string;
   name: string;
   description: string | null;
@@ -431,7 +462,7 @@ export function listCommodityCodes(params?: {
 
 export function seedCommodityCodes(): Promise<Record<string, number>> {
   return apiPost<Record<string, number>>(
-    '/v1/supplier-catalogs/commodity-codes/seed',
+    "/v1/supplier-catalogs/commodity-codes/seed",
     {},
   );
 }
@@ -463,7 +494,7 @@ export interface CreateToleranceProfilePayload {
 
 export function listToleranceProfiles(): Promise<TolerianceProfile[]> {
   return apiGet<TolerianceProfile[]>(
-    '/v1/supplier-catalogs/tolerance-profiles',
+    "/v1/supplier-catalogs/tolerance-profiles",
   );
 }
 
@@ -471,7 +502,7 @@ export function createToleranceProfile(
   data: CreateToleranceProfilePayload,
 ): Promise<TolerianceProfile> {
   return apiPost<TolerianceProfile>(
-    '/v1/supplier-catalogs/tolerance-profiles',
+    "/v1/supplier-catalogs/tolerance-profiles",
     data,
   );
 }
@@ -489,13 +520,13 @@ export function updateToleranceProfile(
 /* ── KYC documents ─────────────────────────────────────────────────────── */
 
 export type KYCDocType =
-  | 'w9'
-  | 'vat_cert'
-  | 'gst'
-  | 'trn'
-  | 'coi'
-  | 'iso'
-  | 'other';
+  | "w9"
+  | "vat_cert"
+  | "gst"
+  | "trn"
+  | "coi"
+  | "iso"
+  | "other";
 
 export interface KYCDocument {
   id: string;
@@ -525,9 +556,7 @@ export interface CreateKYCDocPayload {
 }
 
 export function listVendorKYC(vendorId: string): Promise<KYCDocument[]> {
-  return apiGet<KYCDocument[]>(
-    `/v1/supplier-catalogs/vendors/${vendorId}/kyc`,
-  );
+  return apiGet<KYCDocument[]>(`/v1/supplier-catalogs/vendors/${vendorId}/kyc`);
 }
 
 export function addVendorKYC(
@@ -540,7 +569,9 @@ export function addVendorKYC(
   );
 }
 
-export function checkKYCExpiry(daysAhead = 30): Promise<{ expiring: number; expired: number }> {
+export function checkKYCExpiry(
+  daysAhead = 30,
+): Promise<{ expiring: number; expired: number }> {
   return apiPost<{ expiring: number; expired: number }>(
     `/v1/supplier-catalogs/kyc/check-expiry${qs({ days_ahead: daysAhead })}`,
     {},
@@ -613,13 +644,13 @@ export async function ingestPeppolInvoice(
   autoMatch = true,
 ): Promise<PeppolIngestResult> {
   const fd = new FormData();
-  fd.append('file', file);
+  fd.append("file", file);
   const res = await fetch(
-    `/api/v1/supplier-catalogs/invoices/peppol${qs({ auto_match: autoMatch ? 'true' : 'false' })}`,
+    `/api/v1/supplier-catalogs/invoices/peppol${qs({ auto_match: autoMatch ? "true" : "false" })}`,
     {
-      method: 'POST',
+      method: "POST",
       body: fd,
-      credentials: 'include',
+      credentials: "include",
     },
   );
   if (!res.ok) {

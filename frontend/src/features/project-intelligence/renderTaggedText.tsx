@@ -9,16 +9,18 @@
  * interpreted, we only construct plain React elements.
  */
 
-import React from 'react';
+import React from "react";
 
 const TAG_STYLES: Record<string, string> = {
-  CRITICAL: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  BLOCKER: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  HIGH: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  MEDIUM: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300',
-  WARNING: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300',
-  LOW: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  INFO: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+  CRITICAL: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  BLOCKER: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  HIGH: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+  MEDIUM:
+    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+  WARNING:
+    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+  LOW: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+  INFO: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
 };
 
 const TAG_REGEX = /\[(CRITICAL|BLOCKER|HIGH|MEDIUM|WARNING|LOW|INFO)\]/gi;
@@ -30,8 +32,8 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   // — badges first, then the markdown pairs. `code` is backtick-delimited,
   // bold **…**, italic *…* (non-greedy, no nesting).
   const pattern = new RegExp(
-    TAG_REGEX.source + '|`([^`]+)`|\\*\\*([^*]+)\\*\\*|\\*([^*]+)\\*',
-    'gi',
+    TAG_REGEX.source + "|`([^`]+)`|\\*\\*([^*]+)\\*\\*|\\*([^*]+)\\*",
+    "gi",
   );
   let last = 0;
   let m: RegExpExecArray | null;
@@ -61,7 +63,11 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
         </code>,
       );
     } else if (m[3] !== undefined) {
-      parts.push(<strong key={key} className="font-semibold text-content-primary">{m[3]}</strong>);
+      parts.push(
+        <strong key={key} className="font-semibold text-content-primary">
+          {m[3]}
+        </strong>,
+      );
     } else if (m[4] !== undefined) {
       parts.push(<em key={key}>{m[4]}</em>);
     }
@@ -82,7 +88,7 @@ export function renderTaggedText(text: string): React.ReactNode {
     /(^|\n)\s*#{1,3}\s/.test(text) ||
     /(^|\n)\s*[-*•]\s/.test(text);
   if (!hasBlockStructure) {
-    return <>{renderInline(text, 'inline')}</>;
+    return <>{renderInline(text, "inline")}</>;
   }
 
   // Split into block-level groups on blank lines, then render each block
@@ -109,18 +115,16 @@ export function renderTaggedText(text: string): React.ReactNode {
   const flushParagraph = () => {
     flushList();
     if (buffer.length === 0) return;
-    const paragraph = buffer.join(' ');
+    const paragraph = buffer.join(" ");
     buffer = [];
     blocks.push(
-      <p key={`p-${blockKey++}`}>
-        {renderInline(paragraph, `p-${blockKey}`)}
-      </p>,
+      <p key={`p-${blockKey++}`}>{renderInline(paragraph, `p-${blockKey}`)}</p>,
     );
   };
 
   for (const rawLine of lines) {
     const line = rawLine.trimEnd();
-    if (line.trim() === '') {
+    if (line.trim() === "") {
       flushParagraph();
       continue;
     }
@@ -131,14 +135,14 @@ export function renderTaggedText(text: string): React.ReactNode {
       const textPart = heading[2]!;
       const cls =
         level === 1
-          ? 'text-base font-semibold text-content-primary mt-2'
+          ? "text-base font-semibold text-content-primary mt-2"
           : level === 2
-            ? 'text-sm font-semibold text-content-primary mt-2'
-            : 'text-xs font-semibold uppercase tracking-wide text-content-secondary mt-2';
-      const Tag = (level === 1 ? 'h3' : level === 2 ? 'h4' : 'h5') as
-        | 'h3'
-        | 'h4'
-        | 'h5';
+            ? "text-sm font-semibold text-content-primary mt-2"
+            : "text-xs font-semibold uppercase tracking-wide text-content-secondary mt-2";
+      const Tag = (level === 1 ? "h3" : level === 2 ? "h4" : "h5") as
+        | "h3"
+        | "h4"
+        | "h5";
       blocks.push(
         <Tag key={`h-${blockKey++}`} className={cls}>
           {renderInline(textPart, `h-${blockKey}`)}

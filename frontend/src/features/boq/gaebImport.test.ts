@@ -10,8 +10,13 @@
  *  - Edge cases: missing Qty, missing UP, custom ordinals
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { parseGAEBXML, importGAEBToBOQ, decodeXmlBuffer, type GAEBPosition } from './gaebImport';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  parseGAEBXML,
+  importGAEBToBOQ,
+  decodeXmlBuffer,
+  type GAEBPosition,
+} from "./gaebImport";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -61,7 +66,7 @@ function itemXML(opts: {
   text?: string;
   up?: string;
 }): string {
-  const { rno, qty = '10', qu = 'm2', text = 'Test position', up } = opts;
+  const { rno, qty = "10", qu = "m2", text = "Test position", up } = opts;
   return `
     <Item RNoPart="${rno}">
       <Qty>${qty}</Qty>
@@ -73,7 +78,7 @@ function itemXML(opts: {
           </DetailTxt>
         </CompleteText>
       </Description>
-      ${up !== undefined ? `<UP>${up}</UP>` : ''}
+      ${up !== undefined ? `<UP>${up}</UP>` : ""}
     </Item>`;
 }
 
@@ -81,13 +86,13 @@ function itemXML(opts: {
 // Tests
 // ---------------------------------------------------------------------------
 
-describe('parseGAEBXML', () => {
+describe("parseGAEBXML", () => {
   // ── Test 1: Simple X83 with two positions ────────────────────────────────
-  it('parses a simple X83 with two positions', () => {
+  it("parses a simple X83 with two positions", () => {
     const xml = x83Doc(`
       <Itemlist>
-        ${itemXML({ rno: '001', qty: '20', qu: 'm2', text: 'Concrete slab C30/37', up: '85.00' })}
-        ${itemXML({ rno: '002', qty: '5', qu: 'm3', text: 'Reinforcement B500B', up: '1200.50' })}
+        ${itemXML({ rno: "001", qty: "20", qu: "m2", text: "Concrete slab C30/37", up: "85.00" })}
+        ${itemXML({ rno: "002", qty: "5", qu: "m3", text: "Reinforcement B500B", up: "1200.50" })}
       </Itemlist>
     `);
 
@@ -95,21 +100,21 @@ describe('parseGAEBXML', () => {
 
     expect(result).toHaveLength(2);
 
-    expect(result[0].ordinal).toBe('001');
-    expect(result[0].description).toBe('Concrete slab C30/37');
-    expect(result[0].unit).toBe('m2');
+    expect(result[0].ordinal).toBe("001");
+    expect(result[0].description).toBe("Concrete slab C30/37");
+    expect(result[0].unit).toBe("m2");
     expect(result[0].quantity).toBe(20);
     expect(result[0].unitRate).toBe(85.0);
 
-    expect(result[1].ordinal).toBe('002');
-    expect(result[1].description).toBe('Reinforcement B500B');
-    expect(result[1].unit).toBe('m3');
+    expect(result[1].ordinal).toBe("002");
+    expect(result[1].description).toBe("Reinforcement B500B");
+    expect(result[1].unit).toBe("m3");
     expect(result[1].quantity).toBe(5);
     expect(result[1].unitRate).toBe(1200.5);
   });
 
   // ── Test 2: Nested sections (BoQCtgy inside BoQCtgy) ────────────────────
-  it('parses nested BoQCtgy sections and builds compound ordinals', () => {
+  it("parses nested BoQCtgy sections and builds compound ordinals", () => {
     const xml = x83Doc(`
       <BoQCtgy RNoPart="01">
         <LblTx>Earthworks</LblTx>
@@ -118,7 +123,7 @@ describe('parseGAEBXML', () => {
             <LblTx>Excavation</LblTx>
             <BoQBody>
               <Itemlist>
-                ${itemXML({ rno: '001', qty: '150', qu: 'm3', text: 'Bulk excavation', up: '12.00' })}
+                ${itemXML({ rno: "001", qty: "150", qu: "m3", text: "Bulk excavation", up: "12.00" })}
               </Itemlist>
             </BoQBody>
           </BoQCtgy>
@@ -129,15 +134,15 @@ describe('parseGAEBXML', () => {
     const result = parseGAEBXML(xml);
 
     expect(result).toHaveLength(1);
-    expect(result[0].ordinal).toBe('01.01.001');
-    expect(result[0].description).toBe('Bulk excavation');
+    expect(result[0].ordinal).toBe("01.01.001");
+    expect(result[0].description).toBe("Bulk excavation");
     expect(result[0].quantity).toBe(150);
-    expect(result[0].unit).toBe('m3');
+    expect(result[0].unit).toBe("m3");
     expect(result[0].unitRate).toBe(12.0);
   });
 
   // ── Test 3: Missing Qty defaults to 0 ────────────────────────────────────
-  it('defaults quantity to 0 when Qty element is missing', () => {
+  it("defaults quantity to 0 when Qty element is missing", () => {
     const xml = x83Doc(`
       <Itemlist>
         <Item RNoPart="001">
@@ -154,15 +159,15 @@ describe('parseGAEBXML', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0].quantity).toBe(0);
-    expect(result[0].unit).toBe('Stk');
+    expect(result[0].unit).toBe("Stk");
     expect(result[0].unitRate).toBe(350.0);
   });
 
   // ── Test 4: Missing UP defaults to 0 ─────────────────────────────────────
-  it('defaults unitRate to 0 when UP element is missing', () => {
+  it("defaults unitRate to 0 when UP element is missing", () => {
     const xml = x83Doc(`
       <Itemlist>
-        ${itemXML({ rno: '001', qty: '10', qu: 'm', text: 'Perimeter fence' })}
+        ${itemXML({ rno: "001", qty: "10", qu: "m", text: "Perimeter fence" })}
       </Itemlist>
     `);
 
@@ -174,31 +179,31 @@ describe('parseGAEBXML', () => {
   });
 
   // ── Test 5: Extract unit from QU tag ─────────────────────────────────────
-  it('extracts unit of measure from QU element', () => {
+  it("extracts unit of measure from QU element", () => {
     const xml = x83Doc(`
       <Itemlist>
-        ${itemXML({ rno: '001', qu: 'lfd.m', text: 'Steel beam', up: '75.00' })}
-        ${itemXML({ rno: '002', qu: 'Stk', text: 'Anchor bolt', up: '2.50' })}
-        ${itemXML({ rno: '003', qu: 'Psch', text: 'Lump sum cleaning', up: '500.00' })}
+        ${itemXML({ rno: "001", qu: "lfd.m", text: "Steel beam", up: "75.00" })}
+        ${itemXML({ rno: "002", qu: "Stk", text: "Anchor bolt", up: "2.50" })}
+        ${itemXML({ rno: "003", qu: "Psch", text: "Lump sum cleaning", up: "500.00" })}
       </Itemlist>
     `);
 
     const result = parseGAEBXML(xml);
 
-    expect(result[0].unit).toBe('lfd.m');
-    expect(result[1].unit).toBe('Stk');
-    expect(result[2].unit).toBe('Psch');
+    expect(result[0].unit).toBe("lfd.m");
+    expect(result[1].unit).toBe("Stk");
+    expect(result[2].unit).toBe("Psch");
   });
 
   // ── Test 6: Build ordinal from OrdinalNo / RNoPart ───────────────────────
-  it('builds hierarchical ordinal from category and item RNoPart attributes', () => {
+  it("builds hierarchical ordinal from category and item RNoPart attributes", () => {
     const xml = x83Doc(`
       <BoQCtgy RNoPart="02">
         <LblTx>Concrete Works</LblTx>
         <BoQBody>
           <Itemlist>
-            ${itemXML({ rno: '010', qty: '45', qu: 'm3', text: 'In-situ concrete', up: '220.00' })}
-            ${itemXML({ rno: '011', qty: '120', qu: 'm2', text: 'Formwork', up: '35.00' })}
+            ${itemXML({ rno: "010", qty: "45", qu: "m3", text: "In-situ concrete", up: "220.00" })}
+            ${itemXML({ rno: "011", qty: "120", qu: "m2", text: "Formwork", up: "35.00" })}
           </Itemlist>
         </BoQBody>
       </BoQCtgy>
@@ -207,19 +212,19 @@ describe('parseGAEBXML', () => {
     const result = parseGAEBXML(xml);
 
     expect(result).toHaveLength(2);
-    expect(result[0].ordinal).toBe('02.010');
-    expect(result[1].ordinal).toBe('02.011');
+    expect(result[0].ordinal).toBe("02.010");
+    expect(result[1].ordinal).toBe("02.011");
   });
 
   // ── Test 7: Handle empty XML string ──────────────────────────────────────
-  it('returns empty array for empty XML string', () => {
-    expect(parseGAEBXML('')).toEqual([]);
-    expect(parseGAEBXML('   ')).toEqual([]);
+  it("returns empty array for empty XML string", () => {
+    expect(parseGAEBXML("")).toEqual([]);
+    expect(parseGAEBXML("   ")).toEqual([]);
   });
 
   // ── Test 8: Handle malformed XML ─────────────────────────────────────────
-  it('returns empty array for malformed XML', () => {
-    const malformed = '<GAEB><Award><BoQ><BoQBody><Itemlist><Item>UNCLOSED';
+  it("returns empty array for malformed XML", () => {
+    const malformed = "<GAEB><Award><BoQ><BoQBody><Itemlist><Item>UNCLOSED";
     const result = parseGAEBXML(malformed);
     // DOMParser is lenient — it will try to recover. What matters is no crash,
     // and if it does produce a parsererror document we return [].
@@ -227,7 +232,7 @@ describe('parseGAEBXML', () => {
   });
 
   // ── Test 9: X81 format — no prices ───────────────────────────────────────
-  it('parses X81 Leistungsverzeichnis with no unit prices', () => {
+  it("parses X81 Leistungsverzeichnis with no unit prices", () => {
     const xml = x81Doc(`
       <Itemlist>
         <Item RNoPart="001">
@@ -256,18 +261,18 @@ describe('parseGAEBXML', () => {
     expect(result).toHaveLength(2);
     expect(result[0].unitRate).toBe(0);
     expect(result[1].unitRate).toBe(0);
-    expect(result[0].description).toBe('Tiling 30x30cm');
-    expect(result[1].description).toBe('Skirting board');
+    expect(result[0].description).toBe("Tiling 30x30cm");
+    expect(result[1].description).toBe("Skirting board");
   });
 
   // ── Test 10: Extract section headers from LblTx ──────────────────────────
-  it('attaches section label from ancestor BoQCtgy LblTx to positions', () => {
+  it("attaches section label from ancestor BoQCtgy LblTx to positions", () => {
     const xml = x83Doc(`
       <BoQCtgy RNoPart="03">
         <LblTx>Masonry Works</LblTx>
         <BoQBody>
           <Itemlist>
-            ${itemXML({ rno: '001', qty: '200', qu: 'm2', text: 'Brick wall 24cm', up: '65.00' })}
+            ${itemXML({ rno: "001", qty: "200", qu: "m2", text: "Brick wall 24cm", up: "65.00" })}
           </Itemlist>
         </BoQBody>
       </BoQCtgy>
@@ -276,12 +281,12 @@ describe('parseGAEBXML', () => {
     const result = parseGAEBXML(xml);
 
     expect(result).toHaveLength(1);
-    expect(result[0].section).toBe('Masonry Works');
-    expect(result[0].ordinal).toBe('03.001');
+    expect(result[0].section).toBe("Masonry Works");
+    expect(result[0].ordinal).toBe("03.001");
   });
 
   // ── Test 11: Comma decimal separator (German locale) ─────────────────────
-  it('handles comma as decimal separator in Qty and UP values', () => {
+  it("handles comma as decimal separator in Qty and UP values", () => {
     const xml = x83Doc(`
       <Itemlist>
         <Item RNoPart="001">
@@ -303,7 +308,7 @@ describe('parseGAEBXML', () => {
   });
 
   // ── Test 12: Qty as attribute on BoQCtgy (GAEB variant) ──────────────────
-  it('reads Qty from Item child element when attribute is absent', () => {
+  it("reads Qty from Item child element when attribute is absent", () => {
     const xml = x83Doc(`
       <Itemlist>
         <Item RNoPart="005">
@@ -324,7 +329,7 @@ describe('parseGAEBXML', () => {
   });
 
   // ── Test 13: Multi-paragraph descriptions preserve line breaks ──────────
-  it('preserves paragraph breaks when DetailTxt has multiple Text children', () => {
+  it("preserves paragraph breaks when DetailTxt has multiple Text children", () => {
     const xml = x83Doc(`
       <Itemlist>
         <Item RNoPart="001">
@@ -346,14 +351,14 @@ describe('parseGAEBXML', () => {
     const result = parseGAEBXML(xml);
     expect(result).toHaveLength(1);
     // All three paragraphs joined by newline
-    expect(result[0].description).toContain('First paragraph');
-    expect(result[0].description).toContain('Second paragraph');
-    expect(result[0].description).toContain('Third paragraph');
-    expect(result[0].description.split('\n')).toHaveLength(3);
+    expect(result[0].description).toContain("First paragraph");
+    expect(result[0].description).toContain("Second paragraph");
+    expect(result[0].description).toContain("Third paragraph");
+    expect(result[0].description.split("\n")).toHaveLength(3);
   });
 
   // ── Test 14: Single-paragraph description still works after fix ─────────
-  it('handles single-paragraph descriptions identically to multi-paragraph', () => {
+  it("handles single-paragraph descriptions identically to multi-paragraph", () => {
     const xml = x83Doc(`
       <Itemlist>
         <Item RNoPart="001">
@@ -373,7 +378,9 @@ describe('parseGAEBXML', () => {
     const result = parseGAEBXML(xml);
     expect(result).toHaveLength(1);
     // Internal multiple-spaces should still be collapsed to one
-    expect(result[0].description).toBe('Steel beam HEB 200, length 5m, inkl. Korrosionsschutz');
+    expect(result[0].description).toBe(
+      "Steel beam HEB 200, length 5m, inkl. Korrosionsschutz",
+    );
   });
 });
 
@@ -381,48 +388,56 @@ describe('parseGAEBXML', () => {
 // decodeXmlBuffer — encoding sniffing tests
 // ---------------------------------------------------------------------------
 
-describe('decodeXmlBuffer', () => {
-  it('decodes a UTF-8 prolog as UTF-8', () => {
+describe("decodeXmlBuffer", () => {
+  it("decodes a UTF-8 prolog as UTF-8", () => {
     const xml = '<?xml version="1.0" encoding="UTF-8"?><GAEB><x>äöü</x></GAEB>';
     const bytes = new TextEncoder().encode(xml);
     const decoded = decodeXmlBuffer(bytes.buffer);
-    expect(decoded).toContain('äöü');
+    expect(decoded).toContain("äöü");
   });
 
-  it('decodes an ISO-8859-1 prolog as Latin-1 (preserves umlauts)', () => {
+  it("decodes an ISO-8859-1 prolog as Latin-1 (preserves umlauts)", () => {
     // Build a Latin-1 byte sequence manually: ä=0xE4, ö=0xF6, ü=0xFC, ß=0xDF
     const prolog = '<?xml version="1.0" encoding="ISO-8859-1"?><GAEB><x>';
-    const suffix = '</x></GAEB>';
+    const suffix = "</x></GAEB>";
     const prologBytes = Array.from(prolog).map((c) => c.charCodeAt(0));
     const umlautBytes = [0xe4, 0xf6, 0xfc, 0xdf]; // ä ö ü ß in Latin-1
     const suffixBytes = Array.from(suffix).map((c) => c.charCodeAt(0));
-    const buffer = new Uint8Array([...prologBytes, ...umlautBytes, ...suffixBytes]).buffer;
+    const buffer = new Uint8Array([
+      ...prologBytes,
+      ...umlautBytes,
+      ...suffixBytes,
+    ]).buffer;
 
     const decoded = decodeXmlBuffer(buffer);
-    expect(decoded).toContain('äöüß');
+    expect(decoded).toContain("äöüß");
     // Critically: U+FFFD (replacement char) should NOT appear — that's what
     // the broken UTF-8-only path would have produced.
-    expect(decoded).not.toContain('\ufffd');
+    expect(decoded).not.toContain("\ufffd");
   });
 
-  it('decodes a Windows-1252 prolog correctly', () => {
+  it("decodes a Windows-1252 prolog correctly", () => {
     const prolog = '<?xml version="1.0" encoding="Windows-1252"?><GAEB><x>';
-    const suffix = '</x></GAEB>';
+    const suffix = "</x></GAEB>";
     const prologBytes = Array.from(prolog).map((c) => c.charCodeAt(0));
     // Windows-1252: same as Latin-1 for these chars
     const umlautBytes = [0xe4, 0xf6, 0xfc, 0xdf];
     const suffixBytes = Array.from(suffix).map((c) => c.charCodeAt(0));
-    const buffer = new Uint8Array([...prologBytes, ...umlautBytes, ...suffixBytes]).buffer;
+    const buffer = new Uint8Array([
+      ...prologBytes,
+      ...umlautBytes,
+      ...suffixBytes,
+    ]).buffer;
 
     const decoded = decodeXmlBuffer(buffer);
-    expect(decoded).toContain('äöüß');
+    expect(decoded).toContain("äöüß");
   });
 
-  it('falls back to UTF-8 when no encoding is declared', () => {
+  it("falls back to UTF-8 when no encoding is declared", () => {
     const xml = '<?xml version="1.0"?><GAEB><x>äöü</x></GAEB>';
     const bytes = new TextEncoder().encode(xml);
     const decoded = decodeXmlBuffer(bytes.buffer);
-    expect(decoded).toContain('äöü');
+    expect(decoded).toContain("äöü");
   });
 });
 
@@ -430,69 +445,69 @@ describe('decodeXmlBuffer', () => {
 // importGAEBToBOQ tests
 // ---------------------------------------------------------------------------
 
-describe('importGAEBToBOQ', () => {
+describe("importGAEBToBOQ", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('calls boqApi.addPosition for each parsed position and returns imported count', async () => {
+  it("calls boqApi.addPosition for each parsed position and returns imported count", async () => {
     // Mock the boqApi module
-    const { boqApi } = await import('./api');
-    vi.spyOn(boqApi, 'addPosition').mockResolvedValue({
-      id: 'pos-new',
-      boq_id: 'boq-1',
+    const { boqApi } = await import("./api");
+    vi.spyOn(boqApi, "addPosition").mockResolvedValue({
+      id: "pos-new",
+      boq_id: "boq-1",
       parent_id: null,
-      ordinal: '001',
-      description: 'Test',
-      unit: 'm2',
+      ordinal: "001",
+      description: "Test",
+      unit: "m2",
       quantity: 10,
       unit_rate: 50,
       total: 500,
       classification: {},
-      source: 'gaeb_import',
+      source: "gaeb_import",
       confidence: null,
-      validation_status: 'pending',
+      validation_status: "pending",
       sort_order: 0,
       metadata: {},
     });
 
     const xml = x83Doc(`
       <Itemlist>
-        ${itemXML({ rno: '001', qty: '10', qu: 'm2', text: 'Wall tiles', up: '50.00' })}
-        ${itemXML({ rno: '002', qty: '5', qu: 'm3', text: 'Foundation concrete', up: '220.00' })}
+        ${itemXML({ rno: "001", qty: "10", qu: "m2", text: "Wall tiles", up: "50.00" })}
+        ${itemXML({ rno: "002", qty: "5", qu: "m3", text: "Foundation concrete", up: "220.00" })}
       </Itemlist>
     `);
 
-    const file = new File([xml], 'test.x83', { type: 'text/xml' });
-    const result = await importGAEBToBOQ(file, 'boq-1');
+    const file = new File([xml], "test.x83", { type: "text/xml" });
+    const result = await importGAEBToBOQ(file, "boq-1");
 
     expect(result.imported).toBe(2);
     expect(result.errors).toHaveLength(0);
     expect(boqApi.addPosition).toHaveBeenCalledTimes(2);
   });
 
-  it('collects errors for positions that fail to POST and continues importing', async () => {
-    const { boqApi } = await import('./api');
+  it("collects errors for positions that fail to POST and continues importing", async () => {
+    const { boqApi } = await import("./api");
     let callCount = 0;
-    vi.spyOn(boqApi, 'addPosition').mockImplementation(async () => {
+    vi.spyOn(boqApi, "addPosition").mockImplementation(async () => {
       callCount++;
       if (callCount === 2) {
-        throw new Error('Network error');
+        throw new Error("Network error");
       }
       return {
-        id: 'pos-new',
-        boq_id: 'boq-1',
+        id: "pos-new",
+        boq_id: "boq-1",
         parent_id: null,
-        ordinal: '001',
-        description: 'Test',
-        unit: 'm2',
+        ordinal: "001",
+        description: "Test",
+        unit: "m2",
         quantity: 10,
         unit_rate: 50,
         total: 500,
         classification: {},
-        source: 'gaeb_import',
+        source: "gaeb_import",
         confidence: null,
-        validation_status: 'pending',
+        validation_status: "pending",
         sort_order: 0,
         metadata: {},
       };
@@ -500,18 +515,18 @@ describe('importGAEBToBOQ', () => {
 
     const xml = x83Doc(`
       <Itemlist>
-        ${itemXML({ rno: '001', qty: '10', qu: 'm2', text: 'Item A', up: '50.00' })}
-        ${itemXML({ rno: '002', qty: '5', qu: 'm3', text: 'Item B', up: '220.00' })}
-        ${itemXML({ rno: '003', qty: '2', qu: 'Stk', text: 'Item C', up: '75.00' })}
+        ${itemXML({ rno: "001", qty: "10", qu: "m2", text: "Item A", up: "50.00" })}
+        ${itemXML({ rno: "002", qty: "5", qu: "m3", text: "Item B", up: "220.00" })}
+        ${itemXML({ rno: "003", qty: "2", qu: "Stk", text: "Item C", up: "75.00" })}
       </Itemlist>
     `);
 
-    const file = new File([xml], 'test.x83', { type: 'text/xml' });
-    const result = await importGAEBToBOQ(file, 'boq-1');
+    const file = new File([xml], "test.x83", { type: "text/xml" });
+    const result = await importGAEBToBOQ(file, "boq-1");
 
     expect(result.imported).toBe(2);
     expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain('Item B');
-    expect(result.errors[0]).toContain('Network error');
+    expect(result.errors[0]).toContain("Item B");
+    expect(result.errors[0]).toContain("Network error");
   });
 });

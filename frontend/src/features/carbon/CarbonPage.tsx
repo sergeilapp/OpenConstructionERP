@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   Leaf,
   Target,
@@ -18,7 +18,7 @@ import {
   ChevronRight,
   Pencil,
   Trash2,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -27,13 +27,13 @@ import {
   Breadcrumb,
   SkeletonTable,
   ConfirmDialog,
-} from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { SectionIntro } from '@/features/validation';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { apiGet, getErrorMessage } from '@/shared/lib/api';
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { SectionIntro } from "@/features/validation";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { apiGet, getErrorMessage } from "@/shared/lib/api";
 import {
   listInventories,
   getInventoryTotals,
@@ -81,9 +81,9 @@ import {
   type Scope1Entry,
   type Scope2Entry,
   type Scope3Entry,
-} from './api';
+} from "./api";
 
-type Tab = 'inventory' | 'epds' | 'targets' | 'reports';
+type Tab = "inventory" | "epds" | "targets" | "reports";
 
 interface Project {
   id: string;
@@ -93,13 +93,13 @@ interface Project {
 }
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
-const labelCls = 'block text-xs font-medium text-content-secondary mb-1';
+const labelCls = "block text-xs font-medium text-content-secondary mb-1";
 
 function toNum(v: number | string | null | undefined): number {
   if (v === null || v === undefined) return 0;
-  if (typeof v === 'number') return v;
+  if (typeof v === "number") return v;
   const n = parseFloat(v);
   return Number.isFinite(n) ? n : 0;
 }
@@ -120,10 +120,10 @@ function todayIso(offsetDays = 0): string {
 function useEscapeToClose(onClose: () => void) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 }
 
@@ -132,81 +132,90 @@ function useEscapeToClose(onClose: () => void) {
 export function CarbonPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Tab>('inventory');
+  const [tab, setTab] = useState<Tab>("inventory");
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
-  const [projectId, setProjectId] = useState<string>('');
-  const [inventoryDrawerId, setInventoryDrawerId] = useState<string | null>(null);
+  const [projectId, setProjectId] = useState<string>("");
+  const [inventoryDrawerId, setInventoryDrawerId] = useState<string | null>(
+    null,
+  );
   const [createInvOpen, setCreateInvOpen] = useState(false);
   const [createTargetOpen, setCreateTargetOpen] = useState(false);
   const [generateReportOpen, setGenerateReportOpen] = useState(false);
   const [createEpdOpen, setCreateEpdOpen] = useState(false);
 
   const projectsQ = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/').catch(() => []),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/").catch(() => []),
     staleTime: 5 * 60_000,
   });
   const projects = projectsQ.data ?? [];
   // Prefer an explicit in-page selection; otherwise fall back to the globally
   // selected active project, and only then to the first project in the list.
-  const effectiveProjectId = projectId || activeProjectId || projects[0]?.id || '';
+  const effectiveProjectId =
+    projectId || activeProjectId || projects[0]?.id || "";
 
   return (
     <div className="space-y-5">
       <Breadcrumb
-        items={[{ label: t('carbon.title', { defaultValue: 'Carbon & Sustainability‌⁠‍' }) }]}
+        items={[
+          {
+            label: t("carbon.title", {
+              defaultValue: "Carbon & Sustainability‌⁠‍",
+            }),
+          },
+        ]}
       />
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('carbon.title', { defaultValue: 'Carbon & Sustainability‌⁠‍' })}
+            {t("carbon.title", { defaultValue: "Carbon & Sustainability‌⁠‍" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('carbon.subtitle', {
+            {t("carbon.subtitle", {
               defaultValue:
-                'Embodied + scope 1/2/3 emissions, EPDs, reduction targets and GHG reports.‌⁠‍',
+                "Embodied + scope 1/2/3 emissions, EPDs, reduction targets and GHG reports.‌⁠‍",
             })}
           </p>
         </div>
         <div className="flex gap-2">
-          {tab === 'inventory' && (
+          {tab === "inventory" && (
             <Button
               variant="primary"
               icon={<Plus size={14} />}
               onClick={() => setCreateInvOpen(true)}
               disabled={!effectiveProjectId}
             >
-              {t('carbon.new_inventory', { defaultValue: 'New Inventory‌⁠‍' })}
+              {t("carbon.new_inventory", { defaultValue: "New Inventory‌⁠‍" })}
             </Button>
           )}
-          {tab === 'targets' && (
+          {tab === "targets" && (
             <Button
               variant="primary"
               icon={<Plus size={14} />}
               onClick={() => setCreateTargetOpen(true)}
               disabled={!effectiveProjectId}
             >
-              {t('carbon.new_target', { defaultValue: 'New Target‌⁠‍' })}
+              {t("carbon.new_target", { defaultValue: "New Target‌⁠‍" })}
             </Button>
           )}
-          {tab === 'epds' && (
+          {tab === "epds" && (
             <Button
               variant="primary"
               icon={<Plus size={14} />}
               onClick={() => setCreateEpdOpen(true)}
             >
-              {t('carbon.new_epd', { defaultValue: 'New EPD' })}
+              {t("carbon.new_epd", { defaultValue: "New EPD" })}
             </Button>
           )}
-          {tab === 'reports' && (
+          {tab === "reports" && (
             <Button
               variant="primary"
               icon={<FileText size={14} />}
               onClick={() => setGenerateReportOpen(true)}
               disabled={!effectiveProjectId}
             >
-              {t('carbon.generate_report', { defaultValue: 'Generate Report' })}
+              {t("carbon.generate_report", { defaultValue: "Generate Report" })}
             </Button>
           )}
         </div>
@@ -214,23 +223,27 @@ export function CarbonPage() {
 
       <SectionIntro
         storageKey="carbon"
-        title={t('carbon.intro_title', {
-          defaultValue: 'Where carbon numbers come from',
+        title={t("carbon.intro_title", {
+          defaultValue: "Where carbon numbers come from",
         })}
         links={[
           {
-            label: t('carbon.intro_link_boq', { defaultValue: 'Open BOQ editor' }),
-            onClick: () => navigate('/boq'),
+            label: t("carbon.intro_link_boq", {
+              defaultValue: "Open BOQ editor",
+            }),
+            onClick: () => navigate("/boq"),
           },
           {
-            label: t('carbon.intro_link_costs', { defaultValue: 'Cost database' }),
-            onClick: () => navigate('/costs'),
+            label: t("carbon.intro_link_costs", {
+              defaultValue: "Cost database",
+            }),
+            onClick: () => navigate("/costs"),
           },
         ]}
       >
-        {t('carbon.intro_body', {
+        {t("carbon.intro_body", {
           defaultValue:
-            'Embodied carbon is derived from your Bill of Quantities: each priced position is multiplied by a material carbon factor (sourced from EPDs — Ökobaudat, ICE, EC3 — or manual overrides). Open an inventory, then assign factors to BOQ positions to roll up A1–D embodied emissions. Scope 1/2/3 cover operational fuel, electricity and value-chain activity. Targets track reduction against a baseline year; reports package it all as GHG Protocol / GRI / ISSB output.',
+            "Embodied carbon is derived from your Bill of Quantities: each priced position is multiplied by a material carbon factor (sourced from EPDs — Ökobaudat, ICE, EC3 — or manual overrides). Open an inventory, then assign factors to BOQ positions to roll up A1–D embodied emissions. Scope 1/2/3 cover operational fuel, electricity and value-chain activity. Targets track reduction against a baseline year; reports package it all as GHG Protocol / GRI / ISSB output.",
         })}
       </SectionIntro>
 
@@ -238,7 +251,7 @@ export function CarbonPage() {
       <div className="flex flex-wrap items-end gap-3">
         <div className="min-w-[260px] max-w-md flex-1">
           <label className={labelCls}>
-            {t('carbon.project', { defaultValue: 'Project' })}
+            {t("carbon.project", { defaultValue: "Project" })}
           </label>
           <select
             value={effectiveProjectId}
@@ -248,8 +261,10 @@ export function CarbonPage() {
           >
             <option value="">
               {projectsQ.isLoading
-                ? t('common.loading', { defaultValue: 'Loading…' })
-                : t('carbon.select_project', { defaultValue: '— Select project —' })}
+                ? t("common.loading", { defaultValue: "Loading…" })
+                : t("carbon.select_project", {
+                    defaultValue: "— Select project —",
+                  })}
             </option>
             {projects.map((p) => (
               <option key={p.id} value={p.id}>
@@ -266,19 +281,23 @@ export function CarbonPage() {
           {(
             [
               {
-                id: 'inventory',
-                label: t('carbon.tab_inventory', { defaultValue: 'Inventory' }),
+                id: "inventory",
+                label: t("carbon.tab_inventory", { defaultValue: "Inventory" }),
                 icon: Leaf,
               },
-              { id: 'epds', label: t('carbon.tab_epds', { defaultValue: 'EPDs' }), icon: Database },
               {
-                id: 'targets',
-                label: t('carbon.tab_targets', { defaultValue: 'Targets' }),
+                id: "epds",
+                label: t("carbon.tab_epds", { defaultValue: "EPDs" }),
+                icon: Database,
+              },
+              {
+                id: "targets",
+                label: t("carbon.tab_targets", { defaultValue: "Targets" }),
                 icon: Target,
               },
               {
-                id: 'reports',
-                label: t('carbon.tab_reports', { defaultValue: 'Reports' }),
+                id: "reports",
+                label: t("carbon.tab_reports", { defaultValue: "Reports" }),
                 icon: FileText,
               },
             ] as { id: Tab; label: string; icon: React.ElementType }[]
@@ -290,10 +309,10 @@ export function CarbonPage() {
                 type="button"
                 onClick={() => setTab(tabItem.id)}
                 className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
                   tab === tabItem.id
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-secondary hover:text-content-primary',
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -304,28 +323,28 @@ export function CarbonPage() {
         </nav>
       </div>
 
-      {!effectiveProjectId && tab !== 'epds' && (
+      {!effectiveProjectId && tab !== "epds" && (
         <EmptyState
           icon={<Leaf size={22} />}
-          title={t('carbon.pick_project', { defaultValue: 'Pick a project' })}
-          description={t('carbon.pick_project_desc', {
+          title={t("carbon.pick_project", { defaultValue: "Pick a project" })}
+          description={t("carbon.pick_project_desc", {
             defaultValue:
-              'Carbon inventories, targets and reports are scoped to a single project.',
+              "Carbon inventories, targets and reports are scoped to a single project.",
           })}
         />
       )}
 
-      {tab === 'inventory' && effectiveProjectId && (
+      {tab === "inventory" && effectiveProjectId && (
         <InventoryTab
           projectId={effectiveProjectId}
           onOpenDrawer={(id) => setInventoryDrawerId(id)}
         />
       )}
-      {tab === 'epds' && <EPDsTab />}
-      {tab === 'targets' && effectiveProjectId && (
+      {tab === "epds" && <EPDsTab />}
+      {tab === "targets" && effectiveProjectId && (
         <TargetsTab projectId={effectiveProjectId} />
       )}
-      {tab === 'reports' && effectiveProjectId && (
+      {tab === "reports" && effectiveProjectId && (
         <ReportsTab projectId={effectiveProjectId} />
       )}
 
@@ -354,9 +373,7 @@ export function CarbonPage() {
           onClose={() => setGenerateReportOpen(false)}
         />
       )}
-      {createEpdOpen && (
-        <EPDModal onClose={() => setCreateEpdOpen(false)} />
-      )}
+      {createEpdOpen && <EPDModal onClose={() => setCreateEpdOpen(false)} />}
     </div>
   );
 }
@@ -376,19 +393,19 @@ function InventoryTab({
   const { confirm, setLoading, ...confirmProps } = useConfirm();
   const [editTarget, setEditTarget] = useState<CarbonInventory | null>(null);
   const q = useQuery({
-    queryKey: ['carbon', 'inventories', projectId],
+    queryKey: ["carbon", "inventories", projectId],
     queryFn: () => listInventories(projectId),
   });
   const list = q.data ?? [];
 
   async function handleDelete(inv: CarbonInventory) {
     const ok = await confirm({
-      title: t('carbon.confirm_delete_inv_title', {
-        defaultValue: 'Delete this inventory?',
+      title: t("carbon.confirm_delete_inv_title", {
+        defaultValue: "Delete this inventory?",
       }),
-      message: t('carbon.confirm_delete_inv_msg', {
+      message: t("carbon.confirm_delete_inv_msg", {
         defaultValue:
-          'This permanently removes the inventory and all its embodied / scope entries. This cannot be undone.',
+          "This permanently removes the inventory and all its embodied / scope entries. This cannot be undone.",
       }),
     });
     if (!ok) return;
@@ -396,12 +413,12 @@ function InventoryTab({
     try {
       await deleteInventory(inv.id);
       addToast({
-        type: 'success',
-        title: t('carbon.inv_deleted', { defaultValue: 'Inventory deleted' }),
+        type: "success",
+        title: t("carbon.inv_deleted", { defaultValue: "Inventory deleted" }),
       });
-      qc.invalidateQueries({ queryKey: ['carbon', 'inventories', projectId] });
+      qc.invalidateQueries({ queryKey: ["carbon", "inventories", projectId] });
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setLoading(false);
     }
@@ -417,22 +434,24 @@ function InventoryTab({
         ) : q.isError ? (
           <EmptyState
             icon={<AlertOctagon size={22} />}
-            title={t('carbon.load_error', { defaultValue: 'Could not load carbon data' })}
+            title={t("carbon.load_error", {
+              defaultValue: "Could not load carbon data",
+            })}
             description={getErrorMessage(q.error)}
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: () => void q.refetch(),
             }}
           />
         ) : list.length === 0 ? (
           <EmptyState
             icon={<Leaf size={22} />}
-            title={t('carbon.empty_inventories', {
-              defaultValue: 'No carbon inventories yet',
+            title={t("carbon.empty_inventories", {
+              defaultValue: "No carbon inventories yet",
             })}
-            description={t('carbon.empty_inventories_desc', {
+            description={t("carbon.empty_inventories_desc", {
               defaultValue:
-                'Create an inventory to track embodied + scope 1/2/3 emissions for this project.',
+                "Create an inventory to track embodied + scope 1/2/3 emissions for this project.",
             })}
           />
         ) : (
@@ -473,8 +492,8 @@ function RowActions({
           onEdit();
         }}
         className="rounded p-1.5 text-content-tertiary hover:bg-surface-tertiary hover:text-content-primary"
-        aria-label={t('common.edit', { defaultValue: 'Edit' })}
-        title={t('common.edit', { defaultValue: 'Edit' })}
+        aria-label={t("common.edit", { defaultValue: "Edit" })}
+        title={t("common.edit", { defaultValue: "Edit" })}
       >
         <Pencil size={14} />
       </button>
@@ -485,8 +504,8 @@ function RowActions({
           onDelete();
         }}
         className="rounded p-1.5 text-content-tertiary hover:bg-semantic-error/10 hover:text-semantic-error"
-        aria-label={t('common.delete', { defaultValue: 'Delete' })}
-        title={t('common.delete', { defaultValue: 'Delete' })}
+        aria-label={t("common.delete", { defaultValue: "Delete" })}
+        title={t("common.delete", { defaultValue: "Delete" })}
       >
         <Trash2 size={14} />
       </button>
@@ -512,29 +531,29 @@ function InventoryTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_name', { defaultValue: 'Inventory' })}
+              {t("carbon.col_name", { defaultValue: "Inventory" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_scope', { defaultValue: 'Scope' })}
+              {t("carbon.col_scope", { defaultValue: "Scope" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_status', { defaultValue: 'Status' })}
+              {t("carbon.col_status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_as_of', { defaultValue: 'As of' })}
+              {t("carbon.col_as_of", { defaultValue: "As of" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('carbon.col_total', { defaultValue: 'Total' })}
+              {t("carbon.col_total", { defaultValue: "Total" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('carbon.col_actions', { defaultValue: 'Actions' })}
+              {t("carbon.col_actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => {
             const total = toNum(
-              (r.totals as Record<string, unknown>)['total'] as
+              (r.totals as Record<string, unknown>)["total"] as
                 | number
                 | string
                 | null
@@ -546,18 +565,22 @@ function InventoryTable({
                 onClick={() => onSelect(r.id)}
                 className="border-t border-border-light hover:bg-surface-secondary cursor-pointer"
               >
-                <td className="px-4 py-2 font-medium text-content-primary">{r.name}</td>
-                <td className="px-4 py-2 text-xs text-content-secondary">{r.scope}</td>
+                <td className="px-4 py-2 font-medium text-content-primary">
+                  {r.name}
+                </td>
+                <td className="px-4 py-2 text-xs text-content-secondary">
+                  {r.scope}
+                </td>
                 <td className="px-4 py-2">
                   <Badge
                     variant={
-                      r.status === 'baseline'
-                        ? 'blue'
-                        : r.status === 'current'
-                          ? 'success'
-                          : r.status === 'archived'
-                            ? 'neutral'
-                            : 'warning'
+                      r.status === "baseline"
+                        ? "blue"
+                        : r.status === "current"
+                          ? "success"
+                          : r.status === "archived"
+                            ? "neutral"
+                            : "warning"
                     }
                     dot
                     size="sm"
@@ -566,10 +589,10 @@ function InventoryTable({
                   </Badge>
                 </td>
                 <td className="px-4 py-2 text-xs text-content-secondary">
-                  {r.as_of_date ? <DateDisplay value={r.as_of_date} /> : '—'}
+                  {r.as_of_date ? <DateDisplay value={r.as_of_date} /> : "—"}
                 </td>
                 <td className="px-4 py-2 text-right tabular-nums font-medium">
-                  {total > 0 ? formatKg(total) : '—'}
+                  {total > 0 ? formatKg(total) : "—"}
                 </td>
                 <td className="px-4 py-2 text-right">
                   <RowActions
@@ -593,11 +616,11 @@ function EPDsTab() {
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const { confirm, setLoading, ...confirmProps } = useConfirm();
-  const [materialClass, setMaterialClass] = useState('');
-  const [region, setRegion] = useState('');
+  const [materialClass, setMaterialClass] = useState("");
+  const [region, setRegion] = useState("");
   const [editEpd, setEditEpd] = useState<EPDRecord | null>(null);
   const q = useQuery({
-    queryKey: ['carbon', 'epds', materialClass, region],
+    queryKey: ["carbon", "epds", materialClass, region],
     queryFn: () =>
       listEPDs({
         material_class: materialClass || undefined,
@@ -609,12 +632,12 @@ function EPDsTab() {
 
   async function handleDelete(epd: EPDRecord) {
     const ok = await confirm({
-      title: t('carbon.confirm_delete_epd_title', {
-        defaultValue: 'Delete this EPD?',
+      title: t("carbon.confirm_delete_epd_title", {
+        defaultValue: "Delete this EPD?",
       }),
-      message: t('carbon.confirm_delete_epd_msg', {
+      message: t("carbon.confirm_delete_epd_msg", {
         defaultValue:
-          'The EPD record will be permanently removed. Material factors that reference it will lose this source.',
+          "The EPD record will be permanently removed. Material factors that reference it will lose this source.",
       }),
     });
     if (!ok) return;
@@ -622,12 +645,12 @@ function EPDsTab() {
     try {
       await deleteEPD(epd.id);
       addToast({
-        type: 'success',
-        title: t('carbon.epd_deleted', { defaultValue: 'EPD deleted' }),
+        type: "success",
+        title: t("carbon.epd_deleted", { defaultValue: "EPD deleted" }),
       });
-      qc.invalidateQueries({ queryKey: ['carbon', 'epds'] });
+      qc.invalidateQueries({ queryKey: ["carbon", "epds"] });
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setLoading(false);
     }
@@ -638,7 +661,7 @@ function EPDsTab() {
       <div className="flex flex-wrap items-end gap-2">
         <div className="max-w-[220px]">
           <label className={labelCls}>
-            {t('carbon.material_class', { defaultValue: 'Material class' })}
+            {t("carbon.material_class", { defaultValue: "Material class" })}
           </label>
           <input
             value={materialClass}
@@ -649,7 +672,7 @@ function EPDsTab() {
         </div>
         <div className="max-w-[140px]">
           <label className={labelCls}>
-            {t('carbon.region', { defaultValue: 'Region' })}
+            {t("carbon.region", { defaultValue: "Region" })}
           </label>
           <input
             value={region}
@@ -668,20 +691,24 @@ function EPDsTab() {
         ) : q.isError ? (
           <EmptyState
             icon={<AlertOctagon size={22} />}
-            title={t('carbon.load_error', { defaultValue: 'Could not load carbon data' })}
+            title={t("carbon.load_error", {
+              defaultValue: "Could not load carbon data",
+            })}
             description={getErrorMessage(q.error)}
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: () => void q.refetch(),
             }}
           />
         ) : list.length === 0 ? (
           <EmptyState
             icon={<Database size={22} />}
-            title={t('carbon.empty_epds', { defaultValue: 'No EPDs match these filters' })}
-            description={t('carbon.empty_epds_desc', {
+            title={t("carbon.empty_epds", {
+              defaultValue: "No EPDs match these filters",
+            })}
+            description={t("carbon.empty_epds_desc", {
               defaultValue:
-                'Try broadening the material class or region. EPDs are sourced from Ökobaudat, ICE, EC3 and custom uploads.',
+                "Try broadening the material class or region. EPDs are sourced from Ökobaudat, ICE, EC3 and custom uploads.",
             })}
           />
         ) : (
@@ -692,9 +719,7 @@ function EPDsTab() {
           />
         )}
       </Card>
-      {editEpd && (
-        <EPDModal epd={editEpd} onClose={() => setEditEpd(null)} />
-      )}
+      {editEpd && <EPDModal epd={editEpd} onClose={() => setEditEpd(null)} />}
       <ConfirmDialog {...confirmProps} />
     </div>
   );
@@ -716,36 +741,43 @@ function EPDTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_product', { defaultValue: 'Product' })}
+              {t("carbon.col_product", { defaultValue: "Product" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_class', { defaultValue: 'Class' })}
+              {t("carbon.col_class", { defaultValue: "Class" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_region', { defaultValue: 'Region' })}
+              {t("carbon.col_region", { defaultValue: "Region" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_source', { defaultValue: 'Source' })}
+              {t("carbon.col_source", { defaultValue: "Source" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('carbon.col_gwp', { defaultValue: 'GWP A1–A3' })}
+              {t("carbon.col_gwp", { defaultValue: "GWP A1–A3" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_unit', { defaultValue: 'Unit' })}
+              {t("carbon.col_unit", { defaultValue: "Unit" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('carbon.col_actions', { defaultValue: 'Actions' })}
+              {t("carbon.col_actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.id} className="border-t border-border-light hover:bg-surface-secondary">
+            <tr
+              key={r.id}
+              className="border-t border-border-light hover:bg-surface-secondary"
+            >
               <td className="px-4 py-2 font-medium text-content-primary truncate max-w-[260px]">
                 {r.product_name}
               </td>
-              <td className="px-4 py-2 text-xs text-content-secondary">{r.material_class}</td>
-              <td className="px-4 py-2 text-xs text-content-secondary">{r.region || '—'}</td>
+              <td className="px-4 py-2 text-xs text-content-secondary">
+                {r.material_class}
+              </td>
+              <td className="px-4 py-2 text-xs text-content-secondary">
+                {r.region || "—"}
+              </td>
               <td className="px-4 py-2 text-xs">
                 <Badge variant="neutral" size="sm">
                   {r.source}
@@ -754,7 +786,9 @@ function EPDTable({
               <td className="px-4 py-2 text-right tabular-nums font-medium">
                 {toNum(r.gwp_a1a3).toFixed(3)}
               </td>
-              <td className="px-4 py-2 text-xs text-content-tertiary">kg/{r.declared_unit}</td>
+              <td className="px-4 py-2 text-xs text-content-tertiary">
+                kg/{r.declared_unit}
+              </td>
               <td className="px-4 py-2 text-right">
                 <RowActions
                   onEdit={() => onEdit(r)}
@@ -778,18 +812,18 @@ function TargetsTab({ projectId }: { projectId: string }) {
   const { confirm, setLoading, ...confirmProps } = useConfirm();
   const [editTarget, setEditTarget] = useState<CarbonTarget | null>(null);
   const q = useQuery({
-    queryKey: ['carbon', 'targets', projectId],
+    queryKey: ["carbon", "targets", projectId],
     queryFn: () => listTargets(projectId),
   });
   const list = q.data ?? [];
 
   async function handleDelete(target: CarbonTarget) {
     const ok = await confirm({
-      title: t('carbon.confirm_delete_target_title', {
-        defaultValue: 'Delete this target?',
+      title: t("carbon.confirm_delete_target_title", {
+        defaultValue: "Delete this target?",
       }),
-      message: t('carbon.confirm_delete_target_msg', {
-        defaultValue: 'The reduction target will be permanently removed.',
+      message: t("carbon.confirm_delete_target_msg", {
+        defaultValue: "The reduction target will be permanently removed.",
       }),
     });
     if (!ok) return;
@@ -797,12 +831,12 @@ function TargetsTab({ projectId }: { projectId: string }) {
     try {
       await deleteTarget(target.id);
       addToast({
-        type: 'success',
-        title: t('carbon.target_deleted', { defaultValue: 'Target deleted' }),
+        type: "success",
+        title: t("carbon.target_deleted", { defaultValue: "Target deleted" }),
       });
-      qc.invalidateQueries({ queryKey: ['carbon', 'targets', projectId] });
+      qc.invalidateQueries({ queryKey: ["carbon", "targets", projectId] });
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setLoading(false);
     }
@@ -817,20 +851,22 @@ function TargetsTab({ projectId }: { projectId: string }) {
       ) : q.isError ? (
         <EmptyState
           icon={<AlertOctagon size={22} />}
-          title={t('carbon.load_error', { defaultValue: 'Could not load carbon data' })}
+          title={t("carbon.load_error", {
+            defaultValue: "Could not load carbon data",
+          })}
           description={getErrorMessage(q.error)}
           action={{
-            label: t('common.retry', { defaultValue: 'Retry' }),
+            label: t("common.retry", { defaultValue: "Retry" }),
             onClick: () => void q.refetch(),
           }}
         />
       ) : list.length === 0 ? (
         <EmptyState
           icon={<Target size={22} />}
-          title={t('carbon.empty_targets', { defaultValue: 'No targets set' })}
-          description={t('carbon.empty_targets_desc', {
+          title={t("carbon.empty_targets", { defaultValue: "No targets set" })}
+          description={t("carbon.empty_targets_desc", {
             defaultValue:
-              'Define a reduction target (absolute or per m²) to track progress against a baseline year.',
+              "Define a reduction target (absolute or per m²) to track progress against a baseline year.",
           })}
         />
       ) : (
@@ -868,13 +904,13 @@ function TargetRow({
 }) {
   const { t } = useTranslation();
   const progressQ = useQuery({
-    queryKey: ['carbon', 'target-progress', target.id],
+    queryKey: ["carbon", "target-progress", target.id],
     queryFn: () => getTargetProgress(target.id),
     staleTime: 30_000,
   });
   const p = progressQ.data;
   const pct = p ? Math.max(0, Math.min(100, p.progress_pct)) : 0;
-  const met = p?.met ?? target.status === 'met';
+  const met = p?.met ?? target.status === "met";
 
   return (
     <li className="p-4">
@@ -884,20 +920,20 @@ function TargetRow({
             {target.name || `${target.target_type} ${target.target_year}`}
           </p>
           <p className="mt-0.5 text-xs text-content-secondary">
-            {target.baseline_year} → {target.target_year} ·{' '}
-            {target.target_type.replace('_', ' ')}
+            {target.baseline_year} → {target.target_year} ·{" "}
+            {target.target_type.replace("_", " ")}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge
             variant={
               met
-                ? 'success'
-                : target.status === 'missed'
-                  ? 'error'
-                  : target.status === 'abandoned'
-                    ? 'neutral'
-                    : 'blue'
+                ? "success"
+                : target.status === "missed"
+                  ? "error"
+                  : target.status === "abandoned"
+                    ? "neutral"
+                    : "blue"
             }
             dot
             size="sm"
@@ -910,7 +946,7 @@ function TargetRow({
       <div className="mt-3 grid grid-cols-3 gap-3 text-xs">
         <div>
           <p className="text-content-tertiary uppercase tracking-wide">
-            {t('carbon.baseline', { defaultValue: 'Baseline' })}
+            {t("carbon.baseline", { defaultValue: "Baseline" })}
           </p>
           <p className="font-medium tabular-nums">
             {toNum(target.baseline_value).toFixed(0)}
@@ -918,15 +954,15 @@ function TargetRow({
         </div>
         <div>
           <p className="text-content-tertiary uppercase tracking-wide">
-            {t('carbon.current', { defaultValue: 'Current' })}
+            {t("carbon.current", { defaultValue: "Current" })}
           </p>
           <p className="font-medium tabular-nums">
-            {p ? toNum(p.current_value).toFixed(0) : '—'}
+            {p ? toNum(p.current_value).toFixed(0) : "—"}
           </p>
         </div>
         <div>
           <p className="text-content-tertiary uppercase tracking-wide">
-            {t('carbon.target_label', { defaultValue: 'Target' })}
+            {t("carbon.target_label", { defaultValue: "Target" })}
           </p>
           <p className="font-medium tabular-nums">
             {toNum(target.target_value).toFixed(0)}
@@ -936,8 +972,8 @@ function TargetRow({
       <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-secondary">
         <div
           className={clsx(
-            'h-full rounded-full transition-all',
-            met ? 'bg-semantic-success' : 'bg-oe-blue',
+            "h-full rounded-full transition-all",
+            met ? "bg-semantic-success" : "bg-oe-blue",
           )}
           style={{ width: `${pct}%` }}
         />
@@ -947,7 +983,7 @@ function TargetRow({
         {met && (
           <span className="ms-1 inline-flex items-center gap-0.5 text-semantic-success">
             <CheckCircle2 size={11} />
-            {t('carbon.met', { defaultValue: 'Met' })}
+            {t("carbon.met", { defaultValue: "Met" })}
           </span>
         )}
       </p>
@@ -963,18 +999,19 @@ function ReportsTab({ projectId }: { projectId: string }) {
   const addToast = useToastStore((s) => s.addToast);
   const { confirm, setLoading, ...confirmProps } = useConfirm();
   const q = useQuery({
-    queryKey: ['carbon', 'reports', projectId],
+    queryKey: ["carbon", "reports", projectId],
     queryFn: () => listReports(projectId),
   });
   const list = q.data ?? [];
 
   async function handleDelete(report: SustainabilityReport) {
     const ok = await confirm({
-      title: t('carbon.confirm_delete_report_title', {
-        defaultValue: 'Delete this report?',
+      title: t("carbon.confirm_delete_report_title", {
+        defaultValue: "Delete this report?",
       }),
-      message: t('carbon.confirm_delete_report_msg', {
-        defaultValue: 'The generated sustainability report will be permanently removed.',
+      message: t("carbon.confirm_delete_report_msg", {
+        defaultValue:
+          "The generated sustainability report will be permanently removed.",
       }),
     });
     if (!ok) return;
@@ -982,12 +1019,12 @@ function ReportsTab({ projectId }: { projectId: string }) {
     try {
       await deleteReport(report.id);
       addToast({
-        type: 'success',
-        title: t('carbon.report_deleted', { defaultValue: 'Report deleted' }),
+        type: "success",
+        title: t("carbon.report_deleted", { defaultValue: "Report deleted" }),
       });
-      qc.invalidateQueries({ queryKey: ['carbon', 'reports', projectId] });
+      qc.invalidateQueries({ queryKey: ["carbon", "reports", projectId] });
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setLoading(false);
     }
@@ -1002,20 +1039,24 @@ function ReportsTab({ projectId }: { projectId: string }) {
       ) : q.isError ? (
         <EmptyState
           icon={<AlertOctagon size={22} />}
-          title={t('carbon.load_error', { defaultValue: 'Could not load carbon data' })}
+          title={t("carbon.load_error", {
+            defaultValue: "Could not load carbon data",
+          })}
           description={getErrorMessage(q.error)}
           action={{
-            label: t('common.retry', { defaultValue: 'Retry' }),
+            label: t("common.retry", { defaultValue: "Retry" }),
             onClick: () => void q.refetch(),
           }}
         />
       ) : list.length === 0 ? (
         <EmptyState
           icon={<FileText size={22} />}
-          title={t('carbon.empty_reports', { defaultValue: 'No sustainability reports yet' })}
-          description={t('carbon.empty_reports_desc', {
+          title={t("carbon.empty_reports", {
+            defaultValue: "No sustainability reports yet",
+          })}
+          description={t("carbon.empty_reports_desc", {
             defaultValue:
-              'Generate a GHG Protocol, GRI or ISSB report from the project’s current inventory.',
+              "Generate a GHG Protocol, GRI or ISSB report from the project’s current inventory.",
           })}
         />
       ) : (
@@ -1040,33 +1081,36 @@ function ReportTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_period', { defaultValue: 'Period' })}
+              {t("carbon.col_period", { defaultValue: "Period" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_framework', { defaultValue: 'Framework' })}
+              {t("carbon.col_framework", { defaultValue: "Framework" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('carbon.col_generated', { defaultValue: 'Generated' })}
+              {t("carbon.col_generated", { defaultValue: "Generated" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('carbon.col_total', { defaultValue: 'Total kg CO2e' })}
+              {t("carbon.col_total", { defaultValue: "Total kg CO2e" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('carbon.col_actions', { defaultValue: 'Actions' })}
+              {t("carbon.col_actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => {
             const total = toNum(
-              (r.totals as Record<string, unknown>)['total'] as
+              (r.totals as Record<string, unknown>)["total"] as
                 | number
                 | string
                 | null
                 | undefined,
             );
             return (
-              <tr key={r.id} className="border-t border-border-light hover:bg-surface-secondary">
+              <tr
+                key={r.id}
+                className="border-t border-border-light hover:bg-surface-secondary"
+              >
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {r.period_start} → {r.period_end}
                 </td>
@@ -1076,18 +1120,22 @@ function ReportTable({
                   </Badge>
                 </td>
                 <td className="px-4 py-2 text-xs text-content-secondary">
-                  {r.generated_at ? <DateDisplay value={r.generated_at} /> : '—'}
+                  {r.generated_at ? (
+                    <DateDisplay value={r.generated_at} />
+                  ) : (
+                    "—"
+                  )}
                 </td>
                 <td className="px-4 py-2 text-right tabular-nums font-medium">
-                  {total > 0 ? formatKg(total) : '—'}
+                  {total > 0 ? formatKg(total) : "—"}
                 </td>
                 <td className="px-4 py-2 text-right">
                   <button
                     type="button"
                     onClick={() => onDelete(r)}
                     className="rounded p-1.5 text-content-tertiary hover:bg-semantic-error/10 hover:text-semantic-error"
-                    aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                    title={t('common.delete', { defaultValue: 'Delete' })}
+                    aria-label={t("common.delete", { defaultValue: "Delete" })}
+                    title={t("common.delete", { defaultValue: "Delete" })}
                   >
                     <Trash2 size={14} />
                   </button>
@@ -1116,35 +1164,35 @@ function InventoryDrawer({
   const { confirm, setLoading, ...confirmProps } = useConfirm();
   useEscapeToClose(onClose);
 
-  type ScopeKind = 's1' | 's2' | 's3';
+  type ScopeKind = "s1" | "s2" | "s3";
   const [embodiedModal, setEmbodiedModal] = useState<
-    { mode: 'create' } | { mode: 'edit'; entry: EmbodiedEntry } | null
+    { mode: "create" } | { mode: "edit"; entry: EmbodiedEntry } | null
   >(null);
   const [scopeModal, setScopeModal] = useState<
-    | { kind: ScopeKind; mode: 'create' }
+    | { kind: ScopeKind; mode: "create" }
     | {
         kind: ScopeKind;
-        mode: 'edit';
+        mode: "edit";
         entry: Scope1Entry | Scope2Entry | Scope3Entry;
       }
     | null
   >(null);
 
   function invalidateAll() {
-    qc.invalidateQueries({ queryKey: ['carbon', 'totals', inventoryId] });
-    qc.invalidateQueries({ queryKey: ['carbon', 'embodied', inventoryId] });
-    qc.invalidateQueries({ queryKey: ['carbon', 's1', inventoryId] });
-    qc.invalidateQueries({ queryKey: ['carbon', 's2', inventoryId] });
-    qc.invalidateQueries({ queryKey: ['carbon', 's3', inventoryId] });
+    qc.invalidateQueries({ queryKey: ["carbon", "totals", inventoryId] });
+    qc.invalidateQueries({ queryKey: ["carbon", "embodied", inventoryId] });
+    qc.invalidateQueries({ queryKey: ["carbon", "s1", inventoryId] });
+    qc.invalidateQueries({ queryKey: ["carbon", "s2", inventoryId] });
+    qc.invalidateQueries({ queryKey: ["carbon", "s3", inventoryId] });
   }
 
   async function handleDeleteEmbodied(entry: EmbodiedEntry) {
     const ok = await confirm({
-      title: t('carbon.confirm_delete_entry_title', {
-        defaultValue: 'Delete this entry?',
+      title: t("carbon.confirm_delete_entry_title", {
+        defaultValue: "Delete this entry?",
       }),
-      message: t('carbon.confirm_delete_entry_msg', {
-        defaultValue: 'The embodied-carbon entry will be permanently removed.',
+      message: t("carbon.confirm_delete_entry_msg", {
+        defaultValue: "The embodied-carbon entry will be permanently removed.",
       }),
     });
     if (!ok) return;
@@ -1152,12 +1200,12 @@ function InventoryDrawer({
     try {
       await deleteEmbodiedEntry(entry.id);
       addToast({
-        type: 'success',
-        title: t('carbon.entry_deleted', { defaultValue: 'Entry deleted' }),
+        type: "success",
+        title: t("carbon.entry_deleted", { defaultValue: "Entry deleted" }),
       });
       invalidateAll();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setLoading(false);
     }
@@ -1168,49 +1216,49 @@ function InventoryDrawer({
     entry: Scope1Entry | Scope2Entry | Scope3Entry,
   ) {
     const ok = await confirm({
-      title: t('carbon.confirm_delete_entry_title', {
-        defaultValue: 'Delete this entry?',
+      title: t("carbon.confirm_delete_entry_title", {
+        defaultValue: "Delete this entry?",
       }),
-      message: t('carbon.confirm_delete_scope_msg', {
-        defaultValue: 'The scope emission entry will be permanently removed.',
+      message: t("carbon.confirm_delete_scope_msg", {
+        defaultValue: "The scope emission entry will be permanently removed.",
       }),
     });
     if (!ok) return;
     setLoading(true);
     try {
-      if (kind === 's1') await deleteScope1(entry.id);
-      else if (kind === 's2') await deleteScope2(entry.id);
+      if (kind === "s1") await deleteScope1(entry.id);
+      else if (kind === "s2") await deleteScope2(entry.id);
       else await deleteScope3(entry.id);
       addToast({
-        type: 'success',
-        title: t('carbon.entry_deleted', { defaultValue: 'Entry deleted' }),
+        type: "success",
+        title: t("carbon.entry_deleted", { defaultValue: "Entry deleted" }),
       });
       invalidateAll();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setLoading(false);
     }
   }
 
   const totalsQ = useQuery({
-    queryKey: ['carbon', 'totals', inventoryId],
+    queryKey: ["carbon", "totals", inventoryId],
     queryFn: () => getInventoryTotals(inventoryId),
   });
   const embodiedQ = useQuery({
-    queryKey: ['carbon', 'embodied', inventoryId],
+    queryKey: ["carbon", "embodied", inventoryId],
     queryFn: () => listEmbodiedEntries(inventoryId, { limit: 200 }),
   });
   const s1Q = useQuery({
-    queryKey: ['carbon', 's1', inventoryId],
+    queryKey: ["carbon", "s1", inventoryId],
     queryFn: () => listScope1(inventoryId).catch(() => []),
   });
   const s2Q = useQuery({
-    queryKey: ['carbon', 's2', inventoryId],
+    queryKey: ["carbon", "s2", inventoryId],
     queryFn: () => listScope2(inventoryId).catch(() => []),
   });
   const s3Q = useQuery({
-    queryKey: ['carbon', 's3', inventoryId],
+    queryKey: ["carbon", "s3", inventoryId],
     queryFn: () => listScope3(inventoryId).catch(() => []),
   });
 
@@ -1240,13 +1288,13 @@ function InventoryDrawer({
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-light bg-surface-elevated px-5 py-3">
           <h2 id="carbon-inv-drawer-title" className="text-base font-semibold">
-            {t('carbon.inventory_detail', { defaultValue: 'Inventory detail' })}
+            {t("carbon.inventory_detail", { defaultValue: "Inventory detail" })}
           </h2>
           <button
             type="button"
             onClick={onClose}
             className="rounded p-1 hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -1258,12 +1306,12 @@ function InventoryDrawer({
           ) : totalsQ.isError ? (
             <EmptyState
               icon={<AlertOctagon size={22} />}
-              title={t('carbon.load_error', {
-                defaultValue: 'Could not load carbon data',
+              title={t("carbon.load_error", {
+                defaultValue: "Could not load carbon data",
               })}
               description={getErrorMessage(totalsQ.error)}
               action={{
-                label: t('common.retry', { defaultValue: 'Retry' }),
+                label: t("common.retry", { defaultValue: "Retry" }),
                 onClick: () => void totalsQ.refetch(),
               }}
             />
@@ -1272,7 +1320,9 @@ function InventoryDrawer({
               <>
                 <div>
                   <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary">
-                    {t('carbon.scope_breakdown', { defaultValue: 'Scope 1 / 2 / 3 breakdown' })}
+                    {t("carbon.scope_breakdown", {
+                      defaultValue: "Scope 1 / 2 / 3 breakdown",
+                    })}
                   </h3>
                   <ScopeBar
                     scope1={scope1Kg}
@@ -1301,16 +1351,16 @@ function InventoryDrawer({
                   </div>
                   <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-content-secondary">
                     <span>
-                      {s1Q.data?.length ?? 0}{' '}
-                      {t('carbon.entries', { defaultValue: 'entries' })}
+                      {s1Q.data?.length ?? 0}{" "}
+                      {t("carbon.entries", { defaultValue: "entries" })}
                     </span>
                     <span>
-                      {s2Q.data?.length ?? 0}{' '}
-                      {t('carbon.entries', { defaultValue: 'entries' })}
+                      {s2Q.data?.length ?? 0}{" "}
+                      {t("carbon.entries", { defaultValue: "entries" })}
                     </span>
                     <span>
-                      {s3Q.data?.length ?? 0}{' '}
-                      {t('carbon.entries', { defaultValue: 'entries' })}
+                      {s3Q.data?.length ?? 0}{" "}
+                      {t("carbon.entries", { defaultValue: "entries" })}
                     </span>
                   </div>
                 </div>
@@ -1318,7 +1368,9 @@ function InventoryDrawer({
                 <div>
                   <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-content-tertiary">
                     <TrendingDown size={12} />
-                    {t('carbon.embodied_lifecycle', { defaultValue: 'Embodied (A1–D)' })}
+                    {t("carbon.embodied_lifecycle", {
+                      defaultValue: "Embodied (A1–D)",
+                    })}
                   </h3>
                   <div className="grid grid-cols-4 gap-2 text-xs">
                     <StageTile label="A1–A3" kg={toNum(totals.embodied_a1a3)} />
@@ -1333,26 +1385,30 @@ function InventoryDrawer({
                 <div>
                   <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-content-tertiary">
                     <AlertTriangle size={12} />
-                    {t('carbon.top_emitters', { defaultValue: 'Top emitters' })}
+                    {t("carbon.top_emitters", { defaultValue: "Top emitters" })}
                   </h3>
                   {topEmitters.length === 0 ? (
                     <p className="rounded-md bg-surface-secondary/60 p-3 text-xs text-content-tertiary">
-                      {t('carbon.no_entries_hint', {
+                      {t("carbon.no_entries_hint", {
                         defaultValue:
-                          'No embodied entries yet — assign material carbon factors to BOQ positions to populate this inventory.',
+                          "No embodied entries yet — assign material carbon factors to BOQ positions to populate this inventory.",
                       })}
                     </p>
                   ) : (
                     <>
                       <p className="mb-2 text-xs text-content-tertiary">
-                        {t('carbon.top_emitters_hint', {
+                        {t("carbon.top_emitters_hint", {
                           defaultValue:
-                            'Click an entry to see lower-carbon material alternatives and potential savings.',
+                            "Click an entry to see lower-carbon material alternatives and potential savings.",
                         })}
                       </p>
                       <ul className="divide-y divide-border-light rounded border border-border-light text-sm">
                         {topEmitters.map((e) => (
-                          <TopEmitterRow key={e.id} inventoryId={inventoryId} entry={e} />
+                          <TopEmitterRow
+                            key={e.id}
+                            inventoryId={inventoryId}
+                            entry={e}
+                          />
                         ))}
                       </ul>
                     </>
@@ -1363,24 +1419,24 @@ function InventoryDrawer({
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <h3 className="text-xs font-semibold uppercase tracking-wide text-content-tertiary">
-                      {t('carbon.embodied_entries', {
-                        defaultValue: 'Embodied entries',
+                      {t("carbon.embodied_entries", {
+                        defaultValue: "Embodied entries",
                       })}
                     </h3>
                     <Button
                       variant="secondary"
                       size="sm"
                       icon={<Plus size={13} />}
-                      onClick={() => setEmbodiedModal({ mode: 'create' })}
+                      onClick={() => setEmbodiedModal({ mode: "create" })}
                     >
-                      {t('carbon.add_entry', { defaultValue: 'Add entry' })}
+                      {t("carbon.add_entry", { defaultValue: "Add entry" })}
                     </Button>
                   </div>
                   {(embodiedQ.data ?? []).length === 0 ? (
                     <p className="rounded-md bg-surface-secondary/60 p-3 text-xs text-content-tertiary">
-                      {t('carbon.no_embodied_manual', {
+                      {t("carbon.no_embodied_manual", {
                         defaultValue:
-                          'No embodied entries. Add one manually or assign factors to BOQ positions.',
+                          "No embodied entries. Add one manually or assign factors to BOQ positions.",
                       })}
                     </p>
                   ) : (
@@ -1392,16 +1448,16 @@ function InventoryDrawer({
                         >
                           <span className="min-w-0">
                             <span className="block truncate text-content-primary">
-                              {e.description || e.element_ref || '—'}
+                              {e.description || e.element_ref || "—"}
                             </span>
                             <span className="text-xs text-content-tertiary">
-                              {toNum(e.quantity)} {e.unit} · {e.stage} ·{' '}
+                              {toNum(e.quantity)} {e.unit} · {e.stage} ·{" "}
                               {formatKg(toNum(e.carbon_kg))}
                             </span>
                           </span>
                           <RowActions
                             onEdit={() =>
-                              setEmbodiedModal({ mode: 'edit', entry: e })
+                              setEmbodiedModal({ mode: "edit", entry: e })
                             }
                             onDelete={() => handleDeleteEmbodied(e)}
                           />
@@ -1413,49 +1469,49 @@ function InventoryDrawer({
 
                 {/* Scope 1 / 2 / 3 — full management */}
                 <ScopeSection
-                  title={t('carbon.scope1_entries', {
-                    defaultValue: 'Scope 1 — direct fuel',
+                  title={t("carbon.scope1_entries", {
+                    defaultValue: "Scope 1 — direct fuel",
                   })}
                   rows={s1Q.data ?? []}
                   describe={(e) => {
                     const s = e as Scope1Entry;
                     return `${s.fuel_type} · ${toNum(s.litres_or_m3)} · ${formatKg(toNum(s.total_co2e_kg))}`;
                   }}
-                  onAdd={() => setScopeModal({ kind: 's1', mode: 'create' })}
+                  onAdd={() => setScopeModal({ kind: "s1", mode: "create" })}
                   onEdit={(e) =>
-                    setScopeModal({ kind: 's1', mode: 'edit', entry: e })
+                    setScopeModal({ kind: "s1", mode: "edit", entry: e })
                   }
-                  onDelete={(e) => handleDeleteScope('s1', e)}
+                  onDelete={(e) => handleDeleteScope("s1", e)}
                 />
                 <ScopeSection
-                  title={t('carbon.scope2_entries', {
-                    defaultValue: 'Scope 2 — purchased energy',
+                  title={t("carbon.scope2_entries", {
+                    defaultValue: "Scope 2 — purchased energy",
                   })}
                   rows={s2Q.data ?? []}
                   describe={(e) => {
                     const s = e as Scope2Entry;
                     return `${s.energy_type} · ${toNum(s.kwh)} kWh · ${formatKg(toNum(s.total_co2e_kg))}`;
                   }}
-                  onAdd={() => setScopeModal({ kind: 's2', mode: 'create' })}
+                  onAdd={() => setScopeModal({ kind: "s2", mode: "create" })}
                   onEdit={(e) =>
-                    setScopeModal({ kind: 's2', mode: 'edit', entry: e })
+                    setScopeModal({ kind: "s2", mode: "edit", entry: e })
                   }
-                  onDelete={(e) => handleDeleteScope('s2', e)}
+                  onDelete={(e) => handleDeleteScope("s2", e)}
                 />
                 <ScopeSection
-                  title={t('carbon.scope3_entries', {
-                    defaultValue: 'Scope 3 — value chain',
+                  title={t("carbon.scope3_entries", {
+                    defaultValue: "Scope 3 — value chain",
                   })}
                   rows={s3Q.data ?? []}
                   describe={(e) => {
                     const s = e as Scope3Entry;
                     return `${s.category} · ${toNum(s.activity_data)} ${s.activity_unit} · ${formatKg(toNum(s.total_co2e_kg))}`;
                   }}
-                  onAdd={() => setScopeModal({ kind: 's3', mode: 'create' })}
+                  onAdd={() => setScopeModal({ kind: "s3", mode: "create" })}
                   onEdit={(e) =>
-                    setScopeModal({ kind: 's3', mode: 'edit', entry: e })
+                    setScopeModal({ kind: "s3", mode: "edit", entry: e })
                   }
-                  onDelete={(e) => handleDeleteScope('s3', e)}
+                  onDelete={(e) => handleDeleteScope("s3", e)}
                 />
               </>
             )
@@ -1467,7 +1523,7 @@ function InventoryDrawer({
         <EmbodiedEntryModal
           inventoryId={inventoryId}
           entry={
-            embodiedModal.mode === 'edit' ? embodiedModal.entry : undefined
+            embodiedModal.mode === "edit" ? embodiedModal.entry : undefined
           }
           onClose={() => setEmbodiedModal(null)}
           onSaved={invalidateAll}
@@ -1477,7 +1533,7 @@ function InventoryDrawer({
         <ScopeEntryModal
           inventoryId={inventoryId}
           kind={scopeModal.kind}
-          entry={scopeModal.mode === 'edit' ? scopeModal.entry : undefined}
+          entry={scopeModal.mode === "edit" ? scopeModal.entry : undefined}
           onClose={() => setScopeModal(null)}
           onSaved={invalidateAll}
         />
@@ -1515,12 +1571,12 @@ function ScopeSection({
           icon={<Plus size={13} />}
           onClick={onAdd}
         >
-          {t('carbon.add_entry', { defaultValue: 'Add entry' })}
+          {t("carbon.add_entry", { defaultValue: "Add entry" })}
         </Button>
       </div>
       {rows.length === 0 ? (
         <p className="rounded-md bg-surface-secondary/60 p-3 text-xs text-content-tertiary">
-          {t('carbon.no_scope_entries', { defaultValue: 'No entries yet.' })}
+          {t("carbon.no_scope_entries", { defaultValue: "No entries yet." })}
         </p>
       ) : (
         <ul className="divide-y divide-border-light rounded border border-border-light text-sm">
@@ -1565,7 +1621,7 @@ function TopEmitterRow({
   const [open, setOpen] = useState(false);
 
   const altQ = useQuery({
-    queryKey: ['carbon', 'alternatives', inventoryId, entry.id],
+    queryKey: ["carbon", "alternatives", inventoryId, entry.id],
     queryFn: () => getAlternatives(inventoryId, entry.id),
     enabled: open,
     staleTime: 60_000,
@@ -1583,12 +1639,12 @@ function TopEmitterRow({
           <ChevronRight
             size={13}
             className={clsx(
-              'shrink-0 text-content-tertiary transition-transform',
-              open && 'rotate-90',
+              "shrink-0 text-content-tertiary transition-transform",
+              open && "rotate-90",
             )}
           />
           <span className="truncate text-content-primary">
-            {entry.description || entry.element_ref || '—'}
+            {entry.description || entry.element_ref || "—"}
           </span>
         </span>
         <span className="shrink-0 font-medium tabular-nums">
@@ -1600,21 +1656,21 @@ function TopEmitterRow({
           {altQ.isLoading ? (
             <span className="flex items-center gap-1.5 text-content-tertiary">
               <Loader2 size={12} className="animate-spin" />
-              {t('carbon.loading_alternatives', {
-                defaultValue: 'Finding lower-carbon options…',
+              {t("carbon.loading_alternatives", {
+                defaultValue: "Finding lower-carbon options…",
               })}
             </span>
           ) : altQ.isError ? (
             <span className="text-semantic-error">
-              {t('carbon.alternatives_error', {
-                defaultValue: 'Could not load alternatives.',
+              {t("carbon.alternatives_error", {
+                defaultValue: "Could not load alternatives.",
               })}
             </span>
           ) : !altQ.data || altQ.data.options.length === 0 ? (
             <span className="text-content-tertiary">
-              {t('carbon.no_alternatives', {
+              {t("carbon.no_alternatives", {
                 defaultValue:
-                  'No lower-carbon alternative with a matching factor was found for this material.',
+                  "No lower-carbon alternative with a matching factor was found for this material.",
               })}
             </span>
           ) : (
@@ -1632,15 +1688,15 @@ function TopEmitterRow({
                   </span>
                   <span
                     className={clsx(
-                      'font-medium tabular-nums',
+                      "font-medium tabular-nums",
                       toNum(opt.savings_kg) > 0
-                        ? 'text-semantic-success'
-                        : 'text-content-tertiary',
+                        ? "text-semantic-success"
+                        : "text-content-tertiary",
                     )}
                   >
-                    {toNum(opt.savings_kg) > 0 ? '−' : ''}
-                    {formatKg(Math.abs(toNum(opt.savings_kg)))}{' '}
-                    ({Number(opt.savings_pct).toFixed(0)}%)
+                    {toNum(opt.savings_kg) > 0 ? "−" : ""}
+                    {formatKg(Math.abs(toNum(opt.savings_kg)))} (
+                    {Number(opt.savings_pct).toFixed(0)}%)
                   </span>
                 </li>
               ))}
@@ -1664,7 +1720,10 @@ function ScopeBar({
   const total = scope1 + scope2 + scope3;
   if (total <= 0) {
     return (
-      <div className="h-4 w-full rounded-full bg-surface-secondary" aria-label="empty" />
+      <div
+        className="h-4 w-full rounded-full bg-surface-secondary"
+        aria-label="empty"
+      />
     );
   }
   const p1 = (scope1 / total) * 100;
@@ -1672,7 +1731,11 @@ function ScopeBar({
   const p3 = (scope3 / total) * 100;
   return (
     <div className="flex h-4 w-full overflow-hidden rounded-full bg-surface-secondary">
-      <div className="bg-oe-blue" style={{ width: `${p1}%` }} title={`Scope 1: ${formatKg(scope1)}`} />
+      <div
+        className="bg-oe-blue"
+        style={{ width: `${p1}%` }}
+        title={`Scope 1: ${formatKg(scope1)}`}
+      />
       <div
         className="bg-emerald-500"
         style={{ width: `${p2}%` }}
@@ -1701,13 +1764,15 @@ function ScopeKpi({
   return (
     <div>
       <div className="flex items-center gap-1.5">
-        <span className={clsx('inline-block h-2 w-2 rounded-full', color)} />
+        <span className={clsx("inline-block h-2 w-2 rounded-full", color)} />
         <span className="text-xs uppercase tracking-wide text-content-tertiary">
           {label}
         </span>
       </div>
       <p className="mt-0.5 text-sm font-medium tabular-nums">{formatKg(kg)}</p>
-      <p className="text-xs text-content-tertiary tabular-nums">{pct.toFixed(0)}%</p>
+      <p className="text-xs text-content-tertiary tabular-nums">
+        {pct.toFixed(0)}%
+      </p>
     </div>
   );
 }
@@ -1715,7 +1780,9 @@ function ScopeKpi({
 function StageTile({ label, kg }: { label: string; kg: number }) {
   return (
     <div className="rounded-md border border-border-light p-2">
-      <p className="text-xs uppercase tracking-wide text-content-tertiary">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-content-tertiary">
+        {label}
+      </p>
       <p className="mt-0.5 font-medium tabular-nums">{formatKg(kg)}</p>
     </div>
   );
@@ -1738,14 +1805,14 @@ function CreateInventoryModal({
   const isEdit = !!inventory;
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    name: inventory?.name ?? 'Baseline inventory',
-    scope: (inventory?.scope ?? 'cradle_to_gate') as
-      | 'cradle_to_gate'
-      | 'cradle_to_grave'
-      | 'operational',
+    name: inventory?.name ?? "Baseline inventory",
+    scope: (inventory?.scope ?? "cradle_to_gate") as
+      | "cradle_to_gate"
+      | "cradle_to_grave"
+      | "operational",
     as_of_date: inventory?.as_of_date ?? todayIso(),
-    status: (inventory?.status ?? 'draft') as InventoryStatus,
-    notes: inventory?.notes ?? '',
+    status: (inventory?.status ?? "draft") as InventoryStatus,
+    notes: inventory?.notes ?? "",
   });
 
   async function submit() {
@@ -1760,8 +1827,8 @@ function CreateInventoryModal({
           notes: form.notes || null,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.inv_updated', { defaultValue: 'Inventory updated' }),
+          type: "success",
+          title: t("carbon.inv_updated", { defaultValue: "Inventory updated" }),
         });
       } else {
         await createInventory({
@@ -1773,14 +1840,14 @@ function CreateInventoryModal({
           notes: form.notes || undefined,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.inv_created', { defaultValue: 'Inventory created' }),
+          type: "success",
+          title: t("carbon.inv_created", { defaultValue: "Inventory created" }),
         });
       }
-      qc.invalidateQueries({ queryKey: ['carbon', 'inventories', projectId] });
+      qc.invalidateQueries({ queryKey: ["carbon", "inventories", projectId] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1790,15 +1857,15 @@ function CreateInventoryModal({
     <ModalShell
       title={
         isEdit
-          ? t('carbon.edit_inventory', { defaultValue: 'Edit Inventory' })
-          : t('carbon.new_inventory', { defaultValue: 'New Inventory' })
+          ? t("carbon.edit_inventory", { defaultValue: "Edit Inventory" })
+          : t("carbon.new_inventory", { defaultValue: "New Inventory" })
       }
       onClose={onClose}
     >
       <div className="space-y-3">
         <div>
           <label className={labelCls}>
-            {t('carbon.name', { defaultValue: 'Name' })}
+            {t("carbon.name", { defaultValue: "Name" })}
           </label>
           <input
             value={form.name}
@@ -1808,7 +1875,7 @@ function CreateInventoryModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('carbon.col_scope', { defaultValue: 'Scope' })}
+            {t("carbon.col_scope", { defaultValue: "Scope" })}
           </label>
           <select
             value={form.scope}
@@ -1816,9 +1883,9 @@ function CreateInventoryModal({
               setForm({
                 ...form,
                 scope: e.target.value as
-                  | 'cradle_to_gate'
-                  | 'cradle_to_grave'
-                  | 'operational',
+                  | "cradle_to_gate"
+                  | "cradle_to_grave"
+                  | "operational",
               })
             }
             className={inputCls}
@@ -1831,7 +1898,7 @@ function CreateInventoryModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.col_status', { defaultValue: 'Status' })}
+              {t("carbon.col_status", { defaultValue: "Status" })}
             </label>
             <select
               value={form.status}
@@ -1848,11 +1915,11 @@ function CreateInventoryModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.col_as_of', { defaultValue: 'As of' })}
+              {t("carbon.col_as_of", { defaultValue: "As of" })}
             </label>
             <input
               type="date"
-              value={form.as_of_date ?? ''}
+              value={form.as_of_date ?? ""}
               onChange={(e) => setForm({ ...form, as_of_date: e.target.value })}
               className={inputCls}
             />
@@ -1860,19 +1927,19 @@ function CreateInventoryModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('carbon.notes', { defaultValue: 'Notes' })}
+            {t("carbon.notes", { defaultValue: "Notes" })}
           </label>
           <textarea
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             rows={2}
-            className={clsx(inputCls, 'h-auto py-2')}
+            className={clsx(inputCls, "h-auto py-2")}
           />
         </div>
       </div>
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="ghost" onClick={onClose}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t("common.cancel", { defaultValue: "Cancel" })}
         </Button>
         <Button
           variant="primary"
@@ -1881,8 +1948,8 @@ function CreateInventoryModal({
           icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
         >
           {isEdit
-            ? t('common.save', { defaultValue: 'Save' })
-            : t('common.create', { defaultValue: 'Create' })}
+            ? t("common.save", { defaultValue: "Save" })
+            : t("common.create", { defaultValue: "Create" })}
         </Button>
       </div>
     </ModalShell>
@@ -1904,16 +1971,16 @@ function CreateTargetModal({
   const isEdit = !!target;
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    name: target?.name ?? '',
-    target_type: (target?.target_type ?? 'absolute') as
-      | 'absolute'
-      | 'intensity_per_m2'
-      | 'intensity_per_unit',
-    baseline_value: String(target?.baseline_value ?? '0'),
-    target_value: String(target?.target_value ?? '0'),
+    name: target?.name ?? "",
+    target_type: (target?.target_type ?? "absolute") as
+      | "absolute"
+      | "intensity_per_m2"
+      | "intensity_per_unit",
+    baseline_value: String(target?.baseline_value ?? "0"),
+    target_value: String(target?.target_value ?? "0"),
     baseline_year: target?.baseline_year ?? 2020,
     target_year: target?.target_year ?? 2030,
-    status: (target?.status ?? 'active') as TargetStatus,
+    status: (target?.status ?? "active") as TargetStatus,
   });
 
   async function submit() {
@@ -1927,8 +1994,8 @@ function CreateTargetModal({
           status: form.status,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.target_updated', { defaultValue: 'Target updated' }),
+          type: "success",
+          title: t("carbon.target_updated", { defaultValue: "Target updated" }),
         });
       } else {
         await createTarget({
@@ -1941,14 +2008,14 @@ function CreateTargetModal({
           target_year: form.target_year,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.target_created', { defaultValue: 'Target created' }),
+          type: "success",
+          title: t("carbon.target_created", { defaultValue: "Target created" }),
         });
       }
-      qc.invalidateQueries({ queryKey: ['carbon', 'targets', projectId] });
+      qc.invalidateQueries({ queryKey: ["carbon", "targets", projectId] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1958,15 +2025,15 @@ function CreateTargetModal({
     <ModalShell
       title={
         isEdit
-          ? t('carbon.edit_target', { defaultValue: 'Edit Target' })
-          : t('carbon.new_target', { defaultValue: 'New Target' })
+          ? t("carbon.edit_target", { defaultValue: "Edit Target" })
+          : t("carbon.new_target", { defaultValue: "New Target" })
       }
       onClose={onClose}
     >
       <div className="space-y-3">
         <div>
           <label className={labelCls}>
-            {t('carbon.name', { defaultValue: 'Name' })}
+            {t("carbon.name", { defaultValue: "Name" })}
           </label>
           <input
             value={form.name}
@@ -1977,7 +2044,7 @@ function CreateTargetModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('carbon.target_type', { defaultValue: 'Type' })}
+            {t("carbon.target_type", { defaultValue: "Type" })}
           </label>
           <select
             value={form.target_type}
@@ -1985,9 +2052,9 @@ function CreateTargetModal({
               setForm({
                 ...form,
                 target_type: e.target.value as
-                  | 'absolute'
-                  | 'intensity_per_m2'
-                  | 'intensity_per_unit',
+                  | "absolute"
+                  | "intensity_per_m2"
+                  | "intensity_per_unit",
               })
             }
             className={inputCls}
@@ -2001,23 +2068,27 @@ function CreateTargetModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.baseline', { defaultValue: 'Baseline' })}
+              {t("carbon.baseline", { defaultValue: "Baseline" })}
             </label>
             <input
               type="number"
               value={form.baseline_value}
-              onChange={(e) => setForm({ ...form, baseline_value: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, baseline_value: e.target.value })
+              }
               className={inputCls}
             />
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.target_label', { defaultValue: 'Target' })}
+              {t("carbon.target_label", { defaultValue: "Target" })}
             </label>
             <input
               type="number"
               value={form.target_value}
-              onChange={(e) => setForm({ ...form, target_value: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, target_value: e.target.value })
+              }
               className={inputCls}
             />
           </div>
@@ -2025,13 +2096,16 @@ function CreateTargetModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.baseline_year', { defaultValue: 'Baseline year' })}
+              {t("carbon.baseline_year", { defaultValue: "Baseline year" })}
             </label>
             <input
               type="number"
               value={form.baseline_year}
               onChange={(e) =>
-                setForm({ ...form, baseline_year: Number(e.target.value) || 2020 })
+                setForm({
+                  ...form,
+                  baseline_year: Number(e.target.value) || 2020,
+                })
               }
               className={inputCls}
               disabled={isEdit}
@@ -2039,13 +2113,16 @@ function CreateTargetModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.target_year', { defaultValue: 'Target year' })}
+              {t("carbon.target_year", { defaultValue: "Target year" })}
             </label>
             <input
               type="number"
               value={form.target_year}
               onChange={(e) =>
-                setForm({ ...form, target_year: Number(e.target.value) || 2030 })
+                setForm({
+                  ...form,
+                  target_year: Number(e.target.value) || 2030,
+                })
               }
               className={inputCls}
               disabled={isEdit}
@@ -2055,7 +2132,7 @@ function CreateTargetModal({
         {isEdit && (
           <div>
             <label className={labelCls}>
-              {t('carbon.col_status', { defaultValue: 'Status' })}
+              {t("carbon.col_status", { defaultValue: "Status" })}
             </label>
             <select
               value={form.status}
@@ -2074,7 +2151,7 @@ function CreateTargetModal({
       </div>
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="ghost" onClick={onClose}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t("common.cancel", { defaultValue: "Cancel" })}
         </Button>
         <Button
           variant="primary"
@@ -2083,8 +2160,8 @@ function CreateTargetModal({
           icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
         >
           {isEdit
-            ? t('common.save', { defaultValue: 'Save' })
-            : t('common.create', { defaultValue: 'Create' })}
+            ? t("common.save", { defaultValue: "Save" })
+            : t("common.create", { defaultValue: "Create" })}
         </Button>
       </div>
     </ModalShell>
@@ -2104,17 +2181,17 @@ function GenerateReportModal({
   const [busy, setBusy] = useState(false);
 
   const inventoriesQ = useQuery({
-    queryKey: ['carbon', 'inventories', projectId],
+    queryKey: ["carbon", "inventories", projectId],
     queryFn: () => listInventories(projectId).catch(() => []),
   });
   const inventories: CarbonInventory[] = inventoriesQ.data ?? [];
 
   const [form, setForm] = useState({
-    inventory_id: '',
+    inventory_id: "",
     period_start: todayIso(-365),
     period_end: todayIso(),
-    framework: 'ghg_protocol' as 'ghg_protocol' | 'gri' | 'issb' | 'custom',
-    project_area_m2: '',
+    framework: "ghg_protocol" as "ghg_protocol" | "gri" | "issb" | "custom",
+    project_area_m2: "",
   });
 
   const generateMut = useMutation({
@@ -2125,29 +2202,33 @@ function GenerateReportModal({
         period_start: form.period_start,
         period_end: form.period_end,
         framework: form.framework,
-        project_area_m2: form.project_area_m2 ? Number(form.project_area_m2) : undefined,
+        project_area_m2: form.project_area_m2
+          ? Number(form.project_area_m2)
+          : undefined,
       }),
     onSuccess: () => {
       addToast({
-        type: 'success',
-        title: t('carbon.report_generated', { defaultValue: 'Report generated' }),
+        type: "success",
+        title: t("carbon.report_generated", {
+          defaultValue: "Report generated",
+        }),
       });
-      qc.invalidateQueries({ queryKey: ['carbon', 'reports', projectId] });
+      qc.invalidateQueries({ queryKey: ["carbon", "reports", projectId] });
       onClose();
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
     onSettled: () => setBusy(false),
   });
 
   return (
     <ModalShell
-      title={t('carbon.generate_report', { defaultValue: 'Generate Report' })}
+      title={t("carbon.generate_report", { defaultValue: "Generate Report" })}
       onClose={onClose}
     >
       <div className="space-y-3">
         <div>
           <label className={labelCls}>
-            {t('carbon.inventory', { defaultValue: 'Inventory' })}
+            {t("carbon.inventory", { defaultValue: "Inventory" })}
           </label>
           <select
             value={form.inventory_id}
@@ -2155,7 +2236,7 @@ function GenerateReportModal({
             className={inputCls}
           >
             <option value="">
-              — {t('carbon.optional', { defaultValue: 'optional' })} —
+              — {t("carbon.optional", { defaultValue: "optional" })} —
             </option>
             {inventories.map((i) => (
               <option key={i.id} value={i.id}>
@@ -2166,14 +2247,18 @@ function GenerateReportModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('carbon.col_framework', { defaultValue: 'Framework' })}
+            {t("carbon.col_framework", { defaultValue: "Framework" })}
           </label>
           <select
             value={form.framework}
             onChange={(e) =>
               setForm({
                 ...form,
-                framework: e.target.value as 'ghg_protocol' | 'gri' | 'issb' | 'custom',
+                framework: e.target.value as
+                  | "ghg_protocol"
+                  | "gri"
+                  | "issb"
+                  | "custom",
               })
             }
             className={inputCls}
@@ -2187,18 +2272,20 @@ function GenerateReportModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.period_start', { defaultValue: 'Period start' })}
+              {t("carbon.period_start", { defaultValue: "Period start" })}
             </label>
             <input
               type="date"
               value={form.period_start}
-              onChange={(e) => setForm({ ...form, period_start: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, period_start: e.target.value })
+              }
               className={inputCls}
             />
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.period_end', { defaultValue: 'Period end' })}
+              {t("carbon.period_end", { defaultValue: "Period end" })}
             </label>
             <input
               type="date"
@@ -2210,19 +2297,23 @@ function GenerateReportModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('carbon.area_m2', { defaultValue: 'Project area (m²) — optional' })}
+            {t("carbon.area_m2", {
+              defaultValue: "Project area (m²) — optional",
+            })}
           </label>
           <input
             type="number"
             value={form.project_area_m2}
-            onChange={(e) => setForm({ ...form, project_area_m2: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, project_area_m2: e.target.value })
+            }
             className={inputCls}
           />
         </div>
       </div>
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="ghost" onClick={onClose}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t("common.cancel", { defaultValue: "Cancel" })}
         </Button>
         <Button
           variant="primary"
@@ -2233,7 +2324,7 @@ function GenerateReportModal({
           loading={busy}
           icon={busy ? <Loader2 size={14} /> : <FileText size={14} />}
         >
-          {t('carbon.generate', { defaultValue: 'Generate' })}
+          {t("carbon.generate", { defaultValue: "Generate" })}
         </Button>
       </div>
     </ModalShell>
@@ -2256,13 +2347,13 @@ function EmbodiedEntryModal({
   const isEdit = !!entry;
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    description: entry?.description ?? '',
-    element_ref: entry?.element_ref ?? '',
-    quantity: String(entry?.quantity ?? '0'),
-    unit: entry?.unit ?? 'kg',
-    factor_value_used: String(entry?.factor_value_used ?? '0'),
-    carbon_kg: String(entry?.carbon_kg ?? '0'),
-    stage: (entry?.stage ?? 'a1a3') as Stage,
+    description: entry?.description ?? "",
+    element_ref: entry?.element_ref ?? "",
+    quantity: String(entry?.quantity ?? "0"),
+    unit: entry?.unit ?? "kg",
+    factor_value_used: String(entry?.factor_value_used ?? "0"),
+    carbon_kg: String(entry?.carbon_kg ?? "0"),
+    stage: (entry?.stage ?? "a1a3") as Stage,
   });
 
   // Auto-suggest carbon = quantity × factor when not manually overridden.
@@ -2273,7 +2364,7 @@ function EmbodiedEntryModal({
     setBusy(true);
     try {
       const carbon =
-        form.carbon_kg.trim() === '' || Number(form.carbon_kg) === 0
+        form.carbon_kg.trim() === "" || Number(form.carbon_kg) === 0
           ? autoCarbon
           : Number(form.carbon_kg);
       if (isEdit && entry) {
@@ -2287,8 +2378,8 @@ function EmbodiedEntryModal({
           stage: form.stage,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.entry_updated', { defaultValue: 'Entry updated' }),
+          type: "success",
+          title: t("carbon.entry_updated", { defaultValue: "Entry updated" }),
         });
       } else {
         await createEmbodiedEntry(inventoryId, {
@@ -2302,14 +2393,14 @@ function EmbodiedEntryModal({
           stage: form.stage,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.entry_created', { defaultValue: 'Entry created' }),
+          type: "success",
+          title: t("carbon.entry_created", { defaultValue: "Entry created" }),
         });
       }
       onSaved();
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -2319,15 +2410,15 @@ function EmbodiedEntryModal({
     <ModalShell
       title={
         isEdit
-          ? t('carbon.edit_embodied', { defaultValue: 'Edit embodied entry' })
-          : t('carbon.add_embodied', { defaultValue: 'Add embodied entry' })
+          ? t("carbon.edit_embodied", { defaultValue: "Edit embodied entry" })
+          : t("carbon.add_embodied", { defaultValue: "Add embodied entry" })
       }
       onClose={onClose}
     >
       <div className="space-y-3">
         <div>
           <label className={labelCls}>
-            {t('carbon.description', { defaultValue: 'Description' })}
+            {t("carbon.description", { defaultValue: "Description" })}
           </label>
           <input
             value={form.description}
@@ -2338,7 +2429,7 @@ function EmbodiedEntryModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.element_ref', { defaultValue: 'Element ref' })}
+              {t("carbon.element_ref", { defaultValue: "Element ref" })}
             </label>
             <input
               value={form.element_ref}
@@ -2350,7 +2441,7 @@ function EmbodiedEntryModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.stage', { defaultValue: 'Stage' })}
+              {t("carbon.stage", { defaultValue: "Stage" })}
             </label>
             <select
               value={form.stage}
@@ -2371,7 +2462,7 @@ function EmbodiedEntryModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.quantity', { defaultValue: 'Quantity' })}
+              {t("carbon.quantity", { defaultValue: "Quantity" })}
             </label>
             <input
               type="number"
@@ -2383,7 +2474,7 @@ function EmbodiedEntryModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.col_unit', { defaultValue: 'Unit' })}
+              {t("carbon.col_unit", { defaultValue: "Unit" })}
             </label>
             <input
               value={form.unit}
@@ -2395,8 +2486,8 @@ function EmbodiedEntryModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.factor_value', {
-                defaultValue: 'Factor (kg CO2e / unit)',
+              {t("carbon.factor_value", {
+                defaultValue: "Factor (kg CO2e / unit)",
               })}
             </label>
             <input
@@ -2411,8 +2502,8 @@ function EmbodiedEntryModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.carbon_kg', {
-                defaultValue: 'Carbon kg (0 = auto)',
+              {t("carbon.carbon_kg", {
+                defaultValue: "Carbon kg (0 = auto)",
               })}
             </label>
             <input
@@ -2428,7 +2519,7 @@ function EmbodiedEntryModal({
       </div>
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="ghost" onClick={onClose}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t("common.cancel", { defaultValue: "Cancel" })}
         </Button>
         <Button
           variant="primary"
@@ -2437,8 +2528,8 @@ function EmbodiedEntryModal({
           icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
         >
           {isEdit
-            ? t('common.save', { defaultValue: 'Save' })
-            : t('common.create', { defaultValue: 'Create' })}
+            ? t("common.save", { defaultValue: "Save" })
+            : t("common.create", { defaultValue: "Create" })}
         </Button>
       </div>
     </ModalShell>
@@ -2453,7 +2544,7 @@ function ScopeEntryModal({
   onSaved,
 }: {
   inventoryId: string;
-  kind: 's1' | 's2' | 's3';
+  kind: "s1" | "s2" | "s3";
   entry?: Scope1Entry | Scope2Entry | Scope3Entry;
   onClose: () => void;
   onSaved: () => void;
@@ -2471,27 +2562,27 @@ function ScopeEntryModal({
     period_start: entry?.period_start ?? todayIso(-365),
     period_end: entry?.period_end ?? todayIso(),
     // scope 1
-    fuel_type: s1?.fuel_type ?? 'diesel',
-    litres_or_m3: String(s1?.litres_or_m3 ?? '0'),
-    s1_factor: String(s1?.emission_factor_kg_co2e_per_unit ?? '0'),
+    fuel_type: s1?.fuel_type ?? "diesel",
+    litres_or_m3: String(s1?.litres_or_m3 ?? "0"),
+    s1_factor: String(s1?.emission_factor_kg_co2e_per_unit ?? "0"),
     // scope 2
-    energy_type: s2?.energy_type ?? 'grid_electricity',
-    kwh: String(s2?.kwh ?? '0'),
-    s2_factor: String(s2?.emission_factor_kg_co2e_per_kwh ?? '0'),
-    market_or_location: s2?.market_or_location ?? 'location',
-    supplier_name: s2?.supplier_name ?? '',
+    energy_type: s2?.energy_type ?? "grid_electricity",
+    kwh: String(s2?.kwh ?? "0"),
+    s2_factor: String(s2?.emission_factor_kg_co2e_per_kwh ?? "0"),
+    market_or_location: s2?.market_or_location ?? "location",
+    supplier_name: s2?.supplier_name ?? "",
     // scope 3
-    category: s3?.category ?? 'transport_upstream',
-    description: s3?.description ?? '',
-    activity_data: String(s3?.activity_data ?? '0'),
-    activity_unit: s3?.activity_unit ?? 'tkm',
-    s3_factor: String(s3?.emission_factor ?? '0'),
+    category: s3?.category ?? "transport_upstream",
+    description: s3?.description ?? "",
+    activity_data: String(s3?.activity_data ?? "0"),
+    activity_unit: s3?.activity_unit ?? "tkm",
+    s3_factor: String(s3?.emission_factor ?? "0"),
   });
 
   async function submit() {
     setBusy(true);
     try {
-      if (kind === 's1') {
+      if (kind === "s1") {
         const payload = {
           period_start: form.period_start,
           period_end: form.period_end,
@@ -2501,7 +2592,7 @@ function ScopeEntryModal({
         };
         if (isEdit && entry) await updateScope1(entry.id, payload);
         else await createScope1({ inventory_id: inventoryId, ...payload });
-      } else if (kind === 's2') {
+      } else if (kind === "s2") {
         const payload = {
           period_start: form.period_start,
           period_end: form.period_end,
@@ -2527,37 +2618,37 @@ function ScopeEntryModal({
         else await createScope3({ inventory_id: inventoryId, ...payload });
       }
       addToast({
-        type: 'success',
+        type: "success",
         title: isEdit
-          ? t('carbon.entry_updated', { defaultValue: 'Entry updated' })
-          : t('carbon.entry_created', { defaultValue: 'Entry created' }),
+          ? t("carbon.entry_updated", { defaultValue: "Entry updated" })
+          : t("carbon.entry_created", { defaultValue: "Entry created" }),
       });
       onSaved();
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
   }
 
   const title =
-    kind === 's1'
-      ? t('carbon.scope1_entry', { defaultValue: 'Scope 1 entry' })
-      : kind === 's2'
-        ? t('carbon.scope2_entry', { defaultValue: 'Scope 2 entry' })
-        : t('carbon.scope3_entry', { defaultValue: 'Scope 3 entry' });
+    kind === "s1"
+      ? t("carbon.scope1_entry", { defaultValue: "Scope 1 entry" })
+      : kind === "s2"
+        ? t("carbon.scope2_entry", { defaultValue: "Scope 2 entry" })
+        : t("carbon.scope3_entry", { defaultValue: "Scope 3 entry" });
 
   return (
     <ModalShell
-      title={`${isEdit ? t('common.edit', { defaultValue: 'Edit' }) : t('common.create', { defaultValue: 'Create' })} — ${title}`}
+      title={`${isEdit ? t("common.edit", { defaultValue: "Edit" }) : t("common.create", { defaultValue: "Create" })} — ${title}`}
       onClose={onClose}
     >
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.period_start', { defaultValue: 'Period start' })}
+              {t("carbon.period_start", { defaultValue: "Period start" })}
             </label>
             <input
               type="date"
@@ -2570,24 +2661,22 @@ function ScopeEntryModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.period_end', { defaultValue: 'Period end' })}
+              {t("carbon.period_end", { defaultValue: "Period end" })}
             </label>
             <input
               type="date"
               value={form.period_end}
-              onChange={(e) =>
-                setForm({ ...form, period_end: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, period_end: e.target.value })}
               className={inputCls}
             />
           </div>
         </div>
 
-        {kind === 's1' && (
+        {kind === "s1" && (
           <>
             <div>
               <label className={labelCls}>
-                {t('carbon.fuel_type', { defaultValue: 'Fuel type' })}
+                {t("carbon.fuel_type", { defaultValue: "Fuel type" })}
               </label>
               <select
                 value={form.fuel_type}
@@ -2606,8 +2695,8 @@ function ScopeEntryModal({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelCls}>
-                  {t('carbon.litres_or_m3', {
-                    defaultValue: 'Litres or m³',
+                  {t("carbon.litres_or_m3", {
+                    defaultValue: "Litres or m³",
                   })}
                 </label>
                 <input
@@ -2622,8 +2711,8 @@ function ScopeEntryModal({
               </div>
               <div>
                 <label className={labelCls}>
-                  {t('carbon.emission_factor', {
-                    defaultValue: 'Emission factor',
+                  {t("carbon.emission_factor", {
+                    defaultValue: "Emission factor",
                   })}
                 </label>
                 <input
@@ -2640,12 +2729,12 @@ function ScopeEntryModal({
           </>
         )}
 
-        {kind === 's2' && (
+        {kind === "s2" && (
           <>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelCls}>
-                  {t('carbon.energy_type', { defaultValue: 'Energy type' })}
+                  {t("carbon.energy_type", { defaultValue: "Energy type" })}
                 </label>
                 <select
                   value={form.energy_type}
@@ -2661,8 +2750,8 @@ function ScopeEntryModal({
               </div>
               <div>
                 <label className={labelCls}>
-                  {t('carbon.market_or_location', {
-                    defaultValue: 'Market / location',
+                  {t("carbon.market_or_location", {
+                    defaultValue: "Market / location",
                   })}
                 </label>
                 <select
@@ -2690,8 +2779,8 @@ function ScopeEntryModal({
               </div>
               <div>
                 <label className={labelCls}>
-                  {t('carbon.emission_factor', {
-                    defaultValue: 'Emission factor',
+                  {t("carbon.emission_factor", {
+                    defaultValue: "Emission factor",
                   })}
                 </label>
                 <input
@@ -2707,8 +2796,8 @@ function ScopeEntryModal({
             </div>
             <div>
               <label className={labelCls}>
-                {t('carbon.supplier_name', {
-                  defaultValue: 'Supplier name',
+                {t("carbon.supplier_name", {
+                  defaultValue: "Supplier name",
                 })}
               </label>
               <input
@@ -2722,17 +2811,15 @@ function ScopeEntryModal({
           </>
         )}
 
-        {kind === 's3' && (
+        {kind === "s3" && (
           <>
             <div>
               <label className={labelCls}>
-                {t('carbon.category', { defaultValue: 'Category' })}
+                {t("carbon.category", { defaultValue: "Category" })}
               </label>
               <select
                 value={form.category}
-                onChange={(e) =>
-                  setForm({ ...form, category: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className={inputCls}
               >
                 <option value="transport_upstream">transport_upstream</option>
@@ -2746,7 +2833,7 @@ function ScopeEntryModal({
             </div>
             <div>
               <label className={labelCls}>
-                {t('carbon.description', { defaultValue: 'Description' })}
+                {t("carbon.description", { defaultValue: "Description" })}
               </label>
               <input
                 value={form.description}
@@ -2759,8 +2846,8 @@ function ScopeEntryModal({
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className={labelCls}>
-                  {t('carbon.activity_data', {
-                    defaultValue: 'Activity data',
+                  {t("carbon.activity_data", {
+                    defaultValue: "Activity data",
                   })}
                 </label>
                 <input
@@ -2775,8 +2862,8 @@ function ScopeEntryModal({
               </div>
               <div>
                 <label className={labelCls}>
-                  {t('carbon.activity_unit', {
-                    defaultValue: 'Activity unit',
+                  {t("carbon.activity_unit", {
+                    defaultValue: "Activity unit",
                   })}
                 </label>
                 <input
@@ -2789,8 +2876,8 @@ function ScopeEntryModal({
               </div>
               <div>
                 <label className={labelCls}>
-                  {t('carbon.emission_factor', {
-                    defaultValue: 'Emission factor',
+                  {t("carbon.emission_factor", {
+                    defaultValue: "Emission factor",
                   })}
                 </label>
                 <input
@@ -2809,7 +2896,7 @@ function ScopeEntryModal({
       </div>
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="ghost" onClick={onClose}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t("common.cancel", { defaultValue: "Cancel" })}
         </Button>
         <Button
           variant="primary"
@@ -2818,45 +2905,39 @@ function ScopeEntryModal({
           icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
         >
           {isEdit
-            ? t('common.save', { defaultValue: 'Save' })
-            : t('common.create', { defaultValue: 'Create' })}
+            ? t("common.save", { defaultValue: "Save" })
+            : t("common.create", { defaultValue: "Create" })}
         </Button>
       </div>
     </ModalShell>
   );
 }
 
-function EPDModal({
-  epd,
-  onClose,
-}: {
-  epd?: EPDRecord;
-  onClose: () => void;
-}) {
+function EPDModal({ epd, onClose }: { epd?: EPDRecord; onClose: () => void }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const isEdit = !!epd;
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    epd_id: epd?.epd_id ?? '',
-    source: (epd?.source ?? 'custom') as EPDSource,
-    material_class: epd?.material_class ?? '',
-    product_name: epd?.product_name ?? '',
-    manufacturer: epd?.manufacturer ?? '',
-    region: epd?.region ?? '',
-    declared_unit: epd?.declared_unit ?? 'kg',
-    gwp_a1a3: String(epd?.gwp_a1a3 ?? '0'),
-    gwp_a4: epd?.gwp_a4 != null ? String(epd.gwp_a4) : '',
-    gwp_a5: epd?.gwp_a5 != null ? String(epd.gwp_a5) : '',
-    gwp_c_total: epd?.gwp_c_total != null ? String(epd.gwp_c_total) : '',
-    gwp_d_credits: epd?.gwp_d_credits != null ? String(epd.gwp_d_credits) : '',
-    validity_until: epd?.validity_until ?? '',
-    document_url: epd?.document_url ?? '',
+    epd_id: epd?.epd_id ?? "",
+    source: (epd?.source ?? "custom") as EPDSource,
+    material_class: epd?.material_class ?? "",
+    product_name: epd?.product_name ?? "",
+    manufacturer: epd?.manufacturer ?? "",
+    region: epd?.region ?? "",
+    declared_unit: epd?.declared_unit ?? "kg",
+    gwp_a1a3: String(epd?.gwp_a1a3 ?? "0"),
+    gwp_a4: epd?.gwp_a4 != null ? String(epd.gwp_a4) : "",
+    gwp_a5: epd?.gwp_a5 != null ? String(epd.gwp_a5) : "",
+    gwp_c_total: epd?.gwp_c_total != null ? String(epd.gwp_c_total) : "",
+    gwp_d_credits: epd?.gwp_d_credits != null ? String(epd.gwp_d_credits) : "",
+    validity_until: epd?.validity_until ?? "",
+    document_url: epd?.document_url ?? "",
   });
 
   function num(v: string): number | null {
-    if (v.trim() === '') return null;
+    if (v.trim() === "") return null;
     const n = Number(v);
     return Number.isFinite(n) ? n : null;
   }
@@ -2864,9 +2945,9 @@ function EPDModal({
   async function submit() {
     if (!form.product_name.trim() || !form.material_class.trim()) {
       addToast({
-        type: 'error',
-        title: t('carbon.epd_required', {
-          defaultValue: 'Product name and material class are required',
+        type: "error",
+        title: t("carbon.epd_required", {
+          defaultValue: "Product name and material class are required",
         }),
       });
       return;
@@ -2890,14 +2971,13 @@ function EPDModal({
           document_url: form.document_url || null,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.epd_updated', { defaultValue: 'EPD updated' }),
+          type: "success",
+          title: t("carbon.epd_updated", { defaultValue: "EPD updated" }),
         });
       } else {
         await createEPD({
           epd_id:
-            form.epd_id.trim() ||
-            `custom:${form.material_class}:${Date.now()}`,
+            form.epd_id.trim() || `custom:${form.material_class}:${Date.now()}`,
           source: form.source,
           material_class: form.material_class,
           product_name: form.product_name,
@@ -2913,14 +2993,14 @@ function EPDModal({
           document_url: form.document_url || null,
         });
         addToast({
-          type: 'success',
-          title: t('carbon.epd_created', { defaultValue: 'EPD created' }),
+          type: "success",
+          title: t("carbon.epd_created", { defaultValue: "EPD created" }),
         });
       }
-      qc.invalidateQueries({ queryKey: ['carbon', 'epds'] });
+      qc.invalidateQueries({ queryKey: ["carbon", "epds"] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -2930,8 +3010,8 @@ function EPDModal({
     <ModalShell
       title={
         isEdit
-          ? t('carbon.edit_epd', { defaultValue: 'Edit EPD' })
-          : t('carbon.new_epd', { defaultValue: 'New EPD' })
+          ? t("carbon.edit_epd", { defaultValue: "Edit EPD" })
+          : t("carbon.new_epd", { defaultValue: "New EPD" })
       }
       onClose={onClose}
     >
@@ -2939,7 +3019,7 @@ function EPDModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.epd_identifier', { defaultValue: 'EPD identifier' })}
+              {t("carbon.epd_identifier", { defaultValue: "EPD identifier" })}
             </label>
             <input
               value={form.epd_id}
@@ -2951,7 +3031,7 @@ function EPDModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.col_source', { defaultValue: 'Source' })}
+              {t("carbon.col_source", { defaultValue: "Source" })}
             </label>
             <select
               value={form.source}
@@ -2969,7 +3049,7 @@ function EPDModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('carbon.col_product', { defaultValue: 'Product' })}
+            {t("carbon.col_product", { defaultValue: "Product" })}
           </label>
           <input
             value={form.product_name}
@@ -2980,7 +3060,7 @@ function EPDModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.material_class', { defaultValue: 'Material class' })}
+              {t("carbon.material_class", { defaultValue: "Material class" })}
             </label>
             <input
               value={form.material_class}
@@ -2993,7 +3073,7 @@ function EPDModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.manufacturer', { defaultValue: 'Manufacturer' })}
+              {t("carbon.manufacturer", { defaultValue: "Manufacturer" })}
             </label>
             <input
               value={form.manufacturer}
@@ -3007,7 +3087,7 @@ function EPDModal({
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.region', { defaultValue: 'Region' })}
+              {t("carbon.region", { defaultValue: "Region" })}
             </label>
             <input
               value={form.region}
@@ -3019,7 +3099,7 @@ function EPDModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.col_unit', { defaultValue: 'Unit' })}
+              {t("carbon.col_unit", { defaultValue: "Unit" })}
             </label>
             <input
               value={form.declared_unit}
@@ -3031,11 +3111,11 @@ function EPDModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.validity_until', { defaultValue: 'Valid until' })}
+              {t("carbon.validity_until", { defaultValue: "Valid until" })}
             </label>
             <input
               type="date"
-              value={form.validity_until ?? ''}
+              value={form.validity_until ?? ""}
               onChange={(e) =>
                 setForm({ ...form, validity_until: e.target.value })
               }
@@ -3046,7 +3126,7 @@ function EPDModal({
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className={labelCls}>
-              {t('carbon.col_gwp', { defaultValue: 'GWP A1–A3' })}
+              {t("carbon.col_gwp", { defaultValue: "GWP A1–A3" })}
             </label>
             <input
               type="number"
@@ -3104,10 +3184,10 @@ function EPDModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('carbon.document_url', { defaultValue: 'Document URL' })}
+              {t("carbon.document_url", { defaultValue: "Document URL" })}
             </label>
             <input
-              value={form.document_url ?? ''}
+              value={form.document_url ?? ""}
               onChange={(e) =>
                 setForm({ ...form, document_url: e.target.value })
               }
@@ -3118,7 +3198,7 @@ function EPDModal({
       </div>
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="ghost" onClick={onClose}>
-          {t('common.cancel', { defaultValue: 'Cancel' })}
+          {t("common.cancel", { defaultValue: "Cancel" })}
         </Button>
         <Button
           variant="primary"
@@ -3127,8 +3207,8 @@ function EPDModal({
           icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
         >
           {isEdit
-            ? t('common.save', { defaultValue: 'Save' })
-            : t('common.create', { defaultValue: 'Create' })}
+            ? t("common.save", { defaultValue: "Save" })
+            : t("common.create", { defaultValue: "Create" })}
         </Button>
       </div>
     </ModalShell>
@@ -3147,7 +3227,10 @@ function ModalShell({
   const { t } = useTranslation();
   useEscapeToClose(onClose);
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      onClick={onClose}
+    >
       <div className="absolute inset-0 bg-black/40" />
       <div
         role="dialog"
@@ -3164,7 +3247,7 @@ function ModalShell({
             type="button"
             onClick={onClose}
             className="rounded p-1 hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>

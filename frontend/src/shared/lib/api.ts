@@ -9,13 +9,17 @@
  * - Generic type parameters for request/response bodies
  */
 
-import i18next from 'i18next';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useToastStore } from '@/stores/useToastStore';
-import { cacheResponse, getCachedResponse, queueMutation } from './offlineStore';
-import { logApiError, logError } from './errorLogger';
+import i18next from "i18next";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToastStore } from "@/stores/useToastStore";
+import {
+  cacheResponse,
+  getCachedResponse,
+  queueMutation,
+} from "./offlineStore";
+import { logApiError, logError } from "./errorLogger";
 
-const BASE_URL = '/api';
+const BASE_URL = "/api";
 
 /** Retrieve the stored JWT token from the auth store. */
 function getToken(): string | null {
@@ -26,31 +30,31 @@ function getToken(): string | null {
 function buildHeaders(extra?: HeadersInit): Headers {
   const headers = new Headers(extra);
 
-  if (!headers.has('Accept')) {
-    headers.set('Accept', 'application/json');
+  if (!headers.has("Accept")) {
+    headers.set("Accept", "application/json");
   }
 
   const token = getToken();
   if (token) {
-    headers.set('Authorization', `Bearer ${token}`);
+    headers.set("Authorization", `Bearer ${token}`);
   }
 
   // DDC-CWICR-OE origin marker
-  headers.set('X-DDC-Client', 'OE/1.0');
+  headers.set("X-DDC-Client", "OE/1.0");
 
   // Forward the active i18next language so endpoints with locale-aware
   // payloads (e.g. CWICR cost-database labels, see
   // backend/app/modules/costs/translations) can return localized values
   // without requiring an explicit ?locale= query param on every call.
   // Caller-provided Accept-Language always wins.
-  if (!headers.has('Accept-Language')) {
+  if (!headers.has("Accept-Language")) {
     try {
-      const lang = i18next.language || 'en';
+      const lang = i18next.language || "en";
       // Strip any region suffix (i18next stores codes like 'pt-BR'; the
       // backend maps via prefix anyway, but this keeps the header tidy
       // and matches the locale codes shipped in the translations module).
-      const base = String(lang).split('-')[0];
-      if (base) headers.set('Accept-Language', base);
+      const base = String(lang).split("-")[0];
+      if (base) headers.set("Accept-Language", base);
     } catch {
       // Reading i18next mid-init can throw; locale-aware payloads
       // gracefully fall back to English on the server.
@@ -76,19 +80,19 @@ export function extractErrorMessageFromBody(body: unknown): string | null {
   if (body === null || body === undefined) return null;
 
   // Plain text body — accept short strings only (HTML error pages can be huge)
-  if (typeof body === 'string') {
+  if (typeof body === "string") {
     const trimmed = body.trim();
     if (trimmed.length === 0 || trimmed.length > 240) return null;
-    if (trimmed.startsWith('<')) return null; // looks like HTML
+    if (trimmed.startsWith("<")) return null; // looks like HTML
     return trimmed;
   }
 
-  if (typeof body !== 'object') return null;
+  if (typeof body !== "object") return null;
 
   const obj = body as Record<string, unknown>;
 
   // FastAPI HTTPException — `detail` as a string
-  if (typeof obj.detail === 'string' && obj.detail.length > 0) {
+  if (typeof obj.detail === "string" && obj.detail.length > 0) {
     return obj.detail;
   }
 
@@ -96,26 +100,27 @@ export function extractErrorMessageFromBody(body: unknown): string | null {
   if (Array.isArray(obj.detail)) {
     const parts: string[] = [];
     for (const entry of obj.detail) {
-      if (typeof entry === 'string') {
+      if (typeof entry === "string") {
         parts.push(entry);
         continue;
       }
-      if (entry && typeof entry === 'object') {
+      if (entry && typeof entry === "object") {
         const e = entry as Record<string, unknown>;
-        const msg = typeof e.msg === 'string' ? e.msg : null;
+        const msg = typeof e.msg === "string" ? e.msg : null;
         if (!msg) continue;
         const loc = Array.isArray(e.loc)
-          ? e.loc.filter((p) => p !== 'body' && typeof p === 'string').join('.')
-          : '';
+          ? e.loc.filter((p) => p !== "body" && typeof p === "string").join(".")
+          : "";
         parts.push(loc ? `${loc}: ${msg}` : msg);
       }
     }
-    if (parts.length > 0) return parts.slice(0, 3).join('; ');
+    if (parts.length > 0) return parts.slice(0, 3).join("; ");
   }
 
   // Generic envelopes
-  if (typeof obj.message === 'string' && obj.message.length > 0) return obj.message;
-  if (typeof obj.error === 'string' && obj.error.length > 0) return obj.error;
+  if (typeof obj.message === "string" && obj.message.length > 0)
+    return obj.message;
+  if (typeof obj.error === "string" && obj.error.length > 0) return obj.error;
 
   return null;
 }
@@ -128,31 +133,62 @@ function statusFallbackMessage(status: number): string {
   const t = i18next.t.bind(i18next);
   switch (status) {
     case 400:
-      return t('errors.bad_request', { defaultValue: "The request couldn't be processed. Please check your input.‌⁠‍" });
+      return t("errors.bad_request", {
+        defaultValue:
+          "The request couldn't be processed. Please check your input.‌⁠‍",
+      });
     case 401:
-      return t('errors.unauthorized', { defaultValue: 'Your session has expired. Please sign in again.‌⁠‍' });
+      return t("errors.unauthorized", {
+        defaultValue: "Your session has expired. Please sign in again.‌⁠‍",
+      });
     case 403:
-      return t('errors.forbidden', { defaultValue: "You don't have permission to perform this action.‌⁠‍" });
+      return t("errors.forbidden", {
+        defaultValue: "You don't have permission to perform this action.‌⁠‍",
+      });
     case 404:
-      return t('errors.not_found', { defaultValue: 'The requested item could not be found.‌⁠‍' });
+      return t("errors.not_found", {
+        defaultValue: "The requested item could not be found.‌⁠‍",
+      });
     case 409:
-      return t('errors.conflict', { defaultValue: 'This conflicts with existing data — refresh and try again.‌⁠‍' });
+      return t("errors.conflict", {
+        defaultValue:
+          "This conflicts with existing data — refresh and try again.‌⁠‍",
+      });
     case 413:
-      return t('errors.payload_too_large', { defaultValue: 'The file is too large. Please try a smaller one.' });
+      return t("errors.payload_too_large", {
+        defaultValue: "The file is too large. Please try a smaller one.",
+      });
     case 422:
-      return t('errors.validation', { defaultValue: 'Some fields are invalid. Please review your input.' });
+      return t("errors.validation", {
+        defaultValue: "Some fields are invalid. Please review your input.",
+      });
     case 429:
-      return t('errors.rate_limit', { defaultValue: 'Too many requests. Please wait a moment and try again.' });
+      return t("errors.rate_limit", {
+        defaultValue: "Too many requests. Please wait a moment and try again.",
+      });
     case 500:
-      return t('errors.server', { defaultValue: 'Server error. Please try again in a moment.' });
+      return t("errors.server", {
+        defaultValue: "Server error. Please try again in a moment.",
+      });
     case 502:
     case 503:
     case 504:
-      return t('errors.unavailable', { defaultValue: 'The server is temporarily unavailable. Please try again shortly.' });
+      return t("errors.unavailable", {
+        defaultValue:
+          "The server is temporarily unavailable. Please try again shortly.",
+      });
     default:
-      if (status >= 500) return t('errors.server', { defaultValue: 'Server error. Please try again in a moment.' });
-      if (status >= 400) return t('errors.client', { defaultValue: 'The request could not be completed.' });
-      return t('errors.unknown', { defaultValue: 'Something went wrong. Please try again.' });
+      if (status >= 500)
+        return t("errors.server", {
+          defaultValue: "Server error. Please try again in a moment.",
+        });
+      if (status >= 400)
+        return t("errors.client", {
+          defaultValue: "The request could not be completed.",
+        });
+      return t("errors.unknown", {
+        defaultValue: "Something went wrong. Please try again.",
+      });
   }
 }
 
@@ -172,7 +208,7 @@ export class ApiError extends Error {
   ) {
     const fromBody = extractErrorMessageFromBody(body);
     super(fromBody ?? statusFallbackMessage(status));
-    this.name = 'ApiError';
+    this.name = "ApiError";
   }
 }
 
@@ -187,18 +223,26 @@ export function getErrorMessage(err: unknown): string {
 
   if (err instanceof Error) {
     // AbortError → likely a timeout from our 5-min controller
-    if (err.name === 'AbortError') {
-      return i18next.t('errors.timeout', { defaultValue: 'The request took too long and was cancelled. Please try again.' });
+    if (err.name === "AbortError") {
+      return i18next.t("errors.timeout", {
+        defaultValue:
+          "The request took too long and was cancelled. Please try again.",
+      });
     }
     // TypeError: "Failed to fetch" → network unreachable
     if (err instanceof TypeError && /fetch|network/i.test(err.message)) {
-      return i18next.t('errors.network', { defaultValue: 'Could not reach the server. Please check your connection.' });
+      return i18next.t("errors.network", {
+        defaultValue:
+          "Could not reach the server. Please check your connection.",
+      });
     }
     // Last-resort: pass through if the message looks human-readable
     if (err.message && err.message.length < 200) return err.message;
   }
 
-  return i18next.t('errors.unknown', { defaultValue: 'Something went wrong. Please try again.' });
+  return i18next.t("errors.unknown", {
+    defaultValue: "Something went wrong. Please try again.",
+  });
 }
 
 /**
@@ -218,14 +262,14 @@ async function request<TResponse>(
   const headers = buildHeaders(init?.headers);
 
   if (body !== undefined) {
-    headers.set('Content-Type', 'application/json');
+    headers.set("Content-Type", "application/json");
   }
 
   let response: Response;
   try {
     // 5 minute timeout for long operations (CWICR import, AI estimation, CAD conversion)
     const controller = new AbortController();
-    const timeoutMs = method === 'GET' ? 44_300 : 300_000; // ~44s GET, 5 min POST
+    const timeoutMs = method === "GET" ? 44_300 : 300_000; // ~44s GET, 5 min POST
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     response = await fetch(`${BASE_URL}${path}`, {
       ...init,
@@ -237,31 +281,33 @@ async function request<TResponse>(
     clearTimeout(timeoutId);
   } catch (err) {
     // Log network errors
-    logError(
-      err instanceof Error ? err : new Error(String(err)),
-      'network',
-      { method, path },
-    );
+    logError(err instanceof Error ? err : new Error(String(err)), "network", {
+      method,
+      path,
+    });
     // Network error — likely offline
     if (!navigator.onLine) {
       // For GET requests: try to serve from IndexedDB cache
-      if (method === 'GET') {
+      if (method === "GET") {
         const cached = await getCachedResponse<TResponse>(path);
         if (cached !== null) return cached;
       }
       // For mutating requests: queue for later replay
-      if (method !== 'GET') {
+      if (method !== "GET") {
         await queueMutation({
-          method: method as 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+          method: method as "POST" | "PUT" | "PATCH" | "DELETE",
           path,
           body,
           queuedAt: Date.now(),
           retries: 0,
         });
         useToastStore.getState().addToast({
-          type: 'info',
-          title: i18next.t('common.saved_offline', 'Saved offline'),
-          message: i18next.t('common.sync_when_reconnect', 'Your change will sync when you reconnect.'),
+          type: "info",
+          title: i18next.t("common.saved_offline", "Saved offline"),
+          message: i18next.t(
+            "common.sync_when_reconnect",
+            "Your change will sync when you reconnect.",
+          ),
         });
         return undefined as TResponse;
       }
@@ -273,8 +319,11 @@ async function request<TResponse>(
   if (response.status === 401) {
     logApiError(path, 401, response.statusText);
     useAuthStore.getState().logout();
-    if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-      window.location.href = '/login';
+    if (
+      typeof window !== "undefined" &&
+      !window.location.pathname.includes("/login")
+    ) {
+      window.location.href = "/login";
     }
     throw new ApiError(response.status, response.statusText, undefined);
   }
@@ -282,12 +331,15 @@ async function request<TResponse>(
   // Handle 429 – rate limited.
   if (response.status === 429) {
     logApiError(path, 429, response.statusText);
-    const retryAfter = response.headers.get('Retry-After');
+    const retryAfter = response.headers.get("Retry-After");
     const seconds = retryAfter ? parseInt(retryAfter, 10) : 30;
     useToastStore.getState().addToast({
-      type: 'warning',
-      title: i18next.t('common.too_many_requests', 'Too many requests'),
-      message: i18next.t('common.rate_limit_wait', { defaultValue: 'Please wait {{seconds}} seconds before trying again.', seconds }),
+      type: "warning",
+      title: i18next.t("common.too_many_requests", "Too many requests"),
+      message: i18next.t("common.rate_limit_wait", {
+        defaultValue: "Please wait {{seconds}} seconds before trying again.",
+        seconds,
+      }),
     });
     throw new ApiError(response.status, response.statusText, undefined);
   }
@@ -305,7 +357,11 @@ async function request<TResponse>(
     } catch {
       errorBody = response.statusText;
     }
-    logApiError(path, response.status, typeof errorBody === 'string' ? errorBody : JSON.stringify(errorBody));
+    logApiError(
+      path,
+      response.status,
+      typeof errorBody === "string" ? errorBody : JSON.stringify(errorBody),
+    );
     throw new ApiError(response.status, response.statusText, errorBody);
   }
 
@@ -317,7 +373,7 @@ async function request<TResponse>(
   const data = (await response.json()) as TResponse;
 
   // Cache successful GET responses for offline use
-  if (method === 'GET') {
+  if (method === "GET") {
     cacheResponse(path, data).catch(() => {});
   }
 
@@ -342,7 +398,7 @@ export async function apiGet<TResponse>(
   path: string,
   init?: RequestInit,
 ): Promise<TResponse> {
-  return request<TResponse>('GET', path, undefined, init);
+  return request<TResponse>("GET", path, undefined, init);
 }
 
 /**
@@ -358,7 +414,7 @@ export async function apiPost<TResponse, TBody = unknown>(
   body?: TBody,
   init?: RequestInit,
 ): Promise<TResponse> {
-  return request<TResponse>('POST', path, body, init);
+  return request<TResponse>("POST", path, body, init);
 }
 
 /**
@@ -369,7 +425,7 @@ export async function apiPatch<TResponse, TBody = unknown>(
   body?: TBody,
   init?: RequestInit,
 ): Promise<TResponse> {
-  return request<TResponse>('PATCH', path, body, init);
+  return request<TResponse>("PATCH", path, body, init);
 }
 
 /**
@@ -380,7 +436,7 @@ export async function apiPut<TResponse, TBody = unknown>(
   body?: TBody,
   init?: RequestInit,
 ): Promise<TResponse> {
-  return request<TResponse>('PUT', path, body, init);
+  return request<TResponse>("PUT", path, body, init);
 }
 
 /**
@@ -390,7 +446,7 @@ export async function apiDelete<TResponse = void>(
   path: string,
   init?: RequestInit,
 ): Promise<TResponse> {
-  return request<TResponse>('DELETE', path, undefined, init);
+  return request<TResponse>("DELETE", path, undefined, init);
 }
 
 /**
@@ -402,8 +458,8 @@ export async function apiDelete<TResponse = void>(
  */
 export function triggerDownload(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
+  const a = document.createElement("a");
+  a.style.display = "none";
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);

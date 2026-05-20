@@ -11,9 +11,9 @@
  * immediately shows the new "Linked requirements" entry.
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   X,
   Search,
@@ -23,16 +23,16 @@ import {
   AlertOctagon,
   AlertTriangle,
   CheckCircle2,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   fetchRequirementSets,
   fetchRequirementSetDetail,
   linkRequirementToBIMElements,
   type Requirement,
   type RequirementSet,
-} from '@/features/requirements/api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import { useToastStore } from '@/stores/useToastStore';
+} from "@/features/requirements/api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface LinkRequirementToBIMModalProps {
   projectId: string;
@@ -44,10 +44,10 @@ interface LinkRequirementToBIMModalProps {
 }
 
 const PRIORITY_COLOR: Record<string, string> = {
-  must: 'text-rose-700 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60',
+  must: "text-rose-700 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60",
   should:
-    'text-amber-700 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60',
-  may: 'text-slate-700 bg-slate-50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800',
+    "text-amber-700 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60",
+  may: "text-slate-700 bg-slate-50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800",
 };
 
 export default function LinkRequirementToBIMModal({
@@ -60,7 +60,7 @@ export default function LinkRequirementToBIMModal({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   /** Paginated "show more" cursor — replaces the old hard 200-item cap
    *  so the user can reach any filtered requirement, not just the first
    *  two hundred. */
@@ -70,7 +70,7 @@ export default function LinkRequirementToBIMModal({
   // Reset transient UI state when the modal is reopened with a new
   // element selection — mirrors AddToBOQModal's pattern.
   useEffect(() => {
-    setSearch('');
+    setSearch("");
     setVisibleCount(PAGE_SIZE);
   }, [elements]);
 
@@ -82,7 +82,7 @@ export default function LinkRequirementToBIMModal({
 
   // 1. Load all requirement sets in the project
   const setsQuery = useQuery({
-    queryKey: ['requirement-sets-for-bim-link', projectId],
+    queryKey: ["requirement-sets-for-bim-link", projectId],
     queryFn: () => fetchRequirementSets(projectId),
     enabled: !!projectId,
   });
@@ -93,9 +93,9 @@ export default function LinkRequirementToBIMModal({
   // is bounded — same reasoning as the activities modal.
   const reqsQuery = useQuery({
     queryKey: [
-      'requirements-for-bim-link',
+      "requirements-for-bim-link",
       projectId,
-      sets.map((s) => s.id).join(','),
+      sets.map((s) => s.id).join(","),
     ],
     queryFn: async () => {
       const all: Array<Requirement & { set_name: string }> = [];
@@ -131,7 +131,7 @@ export default function LinkRequirementToBIMModal({
         r.set_name,
       ]
         .filter(Boolean)
-        .join(' ')
+        .join(" ")
         .toLowerCase();
       return haystack.includes(q);
     });
@@ -140,28 +140,38 @@ export default function LinkRequirementToBIMModal({
   const linkMut = useMutation({
     mutationFn: async (req: Requirement & { set_name: string }) => {
       const elementIds = elements.map((el) => el.id);
-      await linkRequirementToBIMElements(req.requirement_set_id, req.id, elementIds);
+      await linkRequirementToBIMElements(
+        req.requirement_set_id,
+        req.id,
+        elementIds,
+      );
       return elements.length;
     },
     onSuccess: (count) => {
       addToast({
-        type: 'success',
-        title: t('bim.req_linked_title', { defaultValue: 'Requirement linked‌⁠‍' }),
-        message: t('bim.req_linked_msg', {
-          defaultValue: 'Pinned to {{count}} BIM element(s)‌⁠‍',
+        type: "success",
+        title: t("bim.req_linked_title", {
+          defaultValue: "Requirement linked‌⁠‍",
+        }),
+        message: t("bim.req_linked_msg", {
+          defaultValue: "Pinned to {{count}} BIM element(s)‌⁠‍",
           count,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['bim-elements'] });
-      qc.invalidateQueries({ queryKey: ['requirements-for-bim-link', projectId] });
-      qc.invalidateQueries({ queryKey: ['requirement-sets-for-bim-link', projectId] });
+      qc.invalidateQueries({ queryKey: ["bim-elements"] });
+      qc.invalidateQueries({
+        queryKey: ["requirements-for-bim-link", projectId],
+      });
+      qc.invalidateQueries({
+        queryKey: ["requirement-sets-for-bim-link", projectId],
+      });
       onLinked?.();
       onClose();
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -185,13 +195,15 @@ export default function LinkRequirementToBIMModal({
           <div className="flex items-center gap-2">
             <ClipboardCheck size={16} className="text-violet-600" />
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('bim.link_req_title', { defaultValue: 'Link a requirement‌⁠‍' })}
+              {t("bim.link_req_title", {
+                defaultValue: "Link a requirement‌⁠‍",
+              })}
             </h2>
             <span className="text-[11px] text-content-tertiary">
               {elements.length === 1
-                ? '→ ' + (elements[0]!.name || elements[0]!.element_type)
-                : t('bim.link_req_bulk', {
-                    defaultValue: '→ {{count}} elements‌⁠‍',
+                ? "→ " + (elements[0]!.name || elements[0]!.element_type)
+                : t("bim.link_req_bulk", {
+                    defaultValue: "→ {{count}} elements‌⁠‍",
                     count: elements.length,
                   })}
             </span>
@@ -199,7 +211,7 @@ export default function LinkRequirementToBIMModal({
           <button
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -216,8 +228,9 @@ export default function LinkRequirementToBIMModal({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('bim.search_requirements', {
-                defaultValue: 'Search by entity, attribute, constraint, notes…‌⁠‍',
+              placeholder={t("bim.search_requirements", {
+                defaultValue:
+                  "Search by entity, attribute, constraint, notes…‌⁠‍",
               })}
               autoFocus
               className="w-full ps-8 pe-3 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
@@ -230,21 +243,21 @@ export default function LinkRequirementToBIMModal({
           {isLoading ? (
             <div className="flex items-center justify-center py-8 text-content-tertiary">
               <Loader2 size={16} className="animate-spin mr-2" />
-              {t('common.loading', { defaultValue: 'Loading…' })}
+              {t("common.loading", { defaultValue: "Loading…" })}
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-8 text-[11px] text-content-tertiary italic">
               {sets.length === 0
-                ? t('bim.no_req_sets', {
+                ? t("bim.no_req_sets", {
                     defaultValue:
-                      'No requirement sets in this project yet — create one in BIM Rules first',
+                      "No requirement sets in this project yet — create one in BIM Rules first",
                   })
                 : requirements.length === 0
-                  ? t('bim.no_requirements', {
-                      defaultValue: 'No requirements in any set yet',
+                  ? t("bim.no_requirements", {
+                      defaultValue: "No requirements in any set yet",
                     })
-                  : t('bim.no_req_match', {
-                      defaultValue: 'No requirements match your search',
+                  : t("bim.no_req_match", {
+                      defaultValue: "No requirements match your search",
                     })}
             </div>
           ) : (
@@ -252,12 +265,12 @@ export default function LinkRequirementToBIMModal({
               {filtered.slice(0, visibleCount).map((req) => {
                 const linkedCount = Array.isArray(
                   (req.metadata as Record<string, unknown> | undefined)?.[
-                    'bim_element_ids'
+                    "bim_element_ids"
                   ],
                 )
                   ? (
                       (req.metadata as Record<string, unknown>)[
-                        'bim_element_ids'
+                        "bim_element_ids"
                       ] as unknown[]
                     ).length
                   : 0;
@@ -286,19 +299,19 @@ export default function LinkRequirementToBIMModal({
                           >
                             {req.priority}
                           </span>
-                          {req.status === 'verified' && (
+                          {req.status === "verified" && (
                             <CheckCircle2
                               size={9}
                               className="text-emerald-500 shrink-0"
                             />
                           )}
-                          {req.status === 'conflict' && (
+                          {req.status === "conflict" && (
                             <AlertOctagon
                               size={9}
                               className="text-rose-500 shrink-0"
                             />
                           )}
-                          {req.status === 'open' && (
+                          {req.status === "open" && (
                             <AlertTriangle
                               size={9}
                               className="text-amber-500 shrink-0"
@@ -308,7 +321,7 @@ export default function LinkRequirementToBIMModal({
                         <div className="flex items-center gap-2 text-[10px] text-content-tertiary tabular-nums">
                           <span className="font-mono">
                             {req.constraint_type} {req.constraint_value}
-                            {req.unit ? ` ${req.unit}` : ''}
+                            {req.unit ? ` ${req.unit}` : ""}
                           </span>
                           {req.set_name && (
                             <span className="truncate">· {req.set_name}</span>
@@ -336,9 +349,8 @@ export default function LinkRequirementToBIMModal({
                     }
                     className="w-full text-center text-[11px] text-oe-blue hover:bg-oe-blue/5 rounded py-1.5 border border-dashed border-oe-blue/30"
                   >
-                    {t('bim.load_more', {
-                      defaultValue:
-                        'Load more ({{remaining}} remaining)',
+                    {t("bim.load_more", {
+                      defaultValue: "Load more ({{remaining}} remaining)",
                       remaining: filtered.length - visibleCount,
                     })}
                   </button>
@@ -355,7 +367,7 @@ export default function LinkRequirementToBIMModal({
             onClick={onClose}
             className="text-xs text-content-tertiary hover:text-content-primary px-2"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
         </div>
       </div>

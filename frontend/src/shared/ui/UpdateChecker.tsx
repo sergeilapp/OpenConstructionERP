@@ -22,26 +22,32 @@
  *   v0.8.1 (or higher) appears.
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import {
-  Sparkles, X, ExternalLink, Copy, Check,
-  Plus, Wrench, Palette,
-} from 'lucide-react';
-import { APP_VERSION } from '@/shared/lib/version';
+  Sparkles,
+  X,
+  ExternalLink,
+  Copy,
+  Check,
+  Plus,
+  Wrench,
+  Palette,
+} from "lucide-react";
+import { APP_VERSION } from "@/shared/lib/version";
 
 const CURRENT_VERSION = APP_VERSION;
-const CHECK_INTERVAL_MS = 60 * 60 * 1000;       // 1 hour between polls
-const FIRST_CHECK_DELAY_MS = 2_000;             // first check ~2s after mount
-const CACHE_TTL_MS = 60 * 60 * 1000;            // 1 hour
-const CACHE_KEY = 'oe_update_cache_v1';
+const CHECK_INTERVAL_MS = 60 * 60 * 1000; // 1 hour between polls
+const FIRST_CHECK_DELAY_MS = 2_000; // first check ~2s after mount
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+const CACHE_KEY = "oe_update_cache_v1";
 // Dismiss now lives in sessionStorage — every fresh app open shows the
 // banner again, but the user can hide it for the current tab/session.
-const DISMISS_KEY = 'oe_update_dismissed_version_session';
+const DISMISS_KEY = "oe_update_dismissed_version_session";
 
 const GITHUB_RELEASES_API =
-  'https://api.github.com/repos/datadrivenconstruction/OpenConstructionERP/releases/latest';
+  "https://api.github.com/repos/datadrivenconstruction/OpenConstructionERP/releases/latest";
 
 interface ReleaseInfo {
   version: string;
@@ -65,8 +71,8 @@ interface GroupedHighlights {
 
 /** Compare semver strings — returns true if `a` is strictly newer than `b`. */
 function isNewer(a: string, b: string): boolean {
-  const pa = a.split('.').map(Number);
-  const pb = b.split('.').map(Number);
+  const pa = a.split(".").map(Number);
+  const pb = b.split(".").map(Number);
   for (let i = 0; i < 3; i++) {
     if ((pa[i] ?? 0) > (pb[i] ?? 0)) return true;
     if ((pa[i] ?? 0) < (pb[i] ?? 0)) return false;
@@ -84,18 +90,20 @@ function isNewer(a: string, b: string): boolean {
  * card never shows raw `###`, `**`, `_`, or backtick characters.
  */
 function stripMarkdown(text: string): string {
-  return text
-    // **bold** / __bold__ → bold (drop markers, keep content)
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/__([^_]+)__/g, '$1')
-    // *italic* / _italic_ → italic
-    .replace(/(?<!\*)\*(?!\s)([^*\n]+?)\*(?!\*)/g, '$1')
-    .replace(/(?<![A-Za-z0-9_])_(?!\s)([^_\n]+?)_(?![A-Za-z0-9_])/g, '$1')
-    // `code` → code (drop backticks)
-    .replace(/`([^`]+)`/g, '$1')
-    // [link text](url) → link text
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .trim();
+  return (
+    text
+      // **bold** / __bold__ → bold (drop markers, keep content)
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/__([^_]+)__/g, "$1")
+      // *italic* / _italic_ → italic
+      .replace(/(?<!\*)\*(?!\s)([^*\n]+?)\*(?!\*)/g, "$1")
+      .replace(/(?<![A-Za-z0-9_])_(?!\s)([^_\n]+?)_(?![A-Za-z0-9_])/g, "$1")
+      // `code` → code (drop backticks)
+      .replace(/`([^`]+)`/g, "$1")
+      // [link text](url) → link text
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .trim()
+  );
 }
 
 function groupHighlights(notes: string): GroupedHighlights {
@@ -109,9 +117,9 @@ function groupHighlights(notes: string): GroupedHighlights {
 
   // Track which Keep-a-Changelog bucket we're currently inside.
   // null = no header seen yet (bullets land in "other").
-  let currentBucket: 'added' | 'fixed' | 'polished' | 'other' | null = null;
+  let currentBucket: "added" | "fixed" | "polished" | "other" | null = null;
 
-  const rawLines = notes.split('\n');
+  const rawLines = notes.split("\n");
   for (const raw of rawLines) {
     const line = raw.trim();
     if (!line) continue;
@@ -120,16 +128,26 @@ function groupHighlights(notes: string): GroupedHighlights {
     const headerMatch = line.match(/^#{1,6}\s+(.+)$/);
     if (headerMatch?.[1]) {
       const headerText = headerMatch[1].toLowerCase();
-      if (/(^|[\s—-])(added|new|feature|features)(\b|[\s—-])/.test(headerText)) {
-        currentBucket = 'added';
+      if (
+        /(^|[\s—-])(added|new|feature|features)(\b|[\s—-])/.test(headerText)
+      ) {
+        currentBucket = "added";
       } else if (/(^|[\s—-])(fixed|fix|bug|bugs)(\b|[\s—-])/.test(headerText)) {
-        currentBucket = 'fixed';
-      } else if (/(^|[\s—-])(changed|polish|polished|improve|improved|ux|polish)(\b|[\s—-])/.test(headerText)) {
-        currentBucket = 'polished';
-      } else if (/(^|[\s—-])(security|hardening|deprecated|removed)(\b|[\s—-])/.test(headerText)) {
-        currentBucket = 'fixed';
+        currentBucket = "fixed";
+      } else if (
+        /(^|[\s—-])(changed|polish|polished|improve|improved|ux|polish)(\b|[\s—-])/.test(
+          headerText,
+        )
+      ) {
+        currentBucket = "polished";
+      } else if (
+        /(^|[\s—-])(security|hardening|deprecated|removed)(\b|[\s—-])/.test(
+          headerText,
+        )
+      ) {
+        currentBucket = "fixed";
       } else {
-        currentBucket = 'other';
+        currentBucket = "other";
       }
       continue;
     }
@@ -137,23 +155,26 @@ function groupHighlights(notes: string): GroupedHighlights {
     // Bullet line: `- foo`, `* foo`, or numbered `1. foo`
     if (!/^[-*]|^\d+\.\s/.test(line)) continue;
 
-    const cleaned = stripMarkdown(line.replace(/^[-*]\s*/, '').replace(/^\d+\.\s*/, ''));
+    const cleaned = stripMarkdown(
+      line.replace(/^[-*]\s*/, "").replace(/^\d+\.\s*/, ""),
+    );
     if (cleaned.length < 5 || cleaned.length > 280) continue;
 
     // Allow inline prefixes ("New:", "Fix:", "Fixed:") to override the
     // current bucket — they're a stronger signal than the section header.
-    let bucket: 'added' | 'fixed' | 'polished' | 'other' = currentBucket ?? 'other';
+    let bucket: "added" | "fixed" | "polished" | "other" =
+      currentBucket ?? "other";
     let display = cleaned;
     const lower = cleaned.toLowerCase();
     if (/^(new|added?):\s*/i.test(cleaned)) {
-      bucket = 'added';
-      display = cleaned.replace(/^(new|added?):\s*/i, '');
+      bucket = "added";
+      display = cleaned.replace(/^(new|added?):\s*/i, "");
     } else if (/^fix(?:ed)?:?\s*/i.test(cleaned)) {
-      bucket = 'fixed';
-      display = cleaned.replace(/^fix(?:ed)?:?\s*/i, '');
-    } else if (lower.startsWith('polish') || lower.startsWith('improve')) {
-      bucket = 'polished';
-      display = cleaned.replace(/^(polish(?:ed)?|improve(?:d)?):?\s*/i, '');
+      bucket = "fixed";
+      display = cleaned.replace(/^fix(?:ed)?:?\s*/i, "");
+    } else if (lower.startsWith("polish") || lower.startsWith("improve")) {
+      bucket = "polished";
+      display = cleaned.replace(/^(polish(?:ed)?|improve(?:d)?):?\s*/i, "");
     }
 
     result[bucket].push(display);
@@ -210,15 +231,15 @@ export function useUpdateCheck(): ReleaseInfo | null {
         const resp = await fetch(GITHUB_RELEASES_API);
         if (!resp.ok) return;
         const data = await resp.json();
-        const latest = (data.tag_name ?? '').replace(/^v/, '');
+        const latest = (data.tag_name ?? "").replace(/^v/, "");
         if (!latest) return;
         const info: ReleaseInfo = {
           version: latest,
-          notes: data.body ?? '',
+          notes: data.body ?? "",
           url:
             data.html_url ??
-            'https://github.com/datadrivenconstruction/openconstructionerp/releases',
-          publishedAt: data.published_at ?? '',
+            "https://github.com/datadrivenconstruction/openconstructionerp/releases",
+          publishedAt: data.published_at ?? "",
         };
         writeCache(info);
         if (!cancelled && isNewer(latest, CURRENT_VERSION)) setRelease(info);
@@ -243,7 +264,10 @@ interface UpdateNotificationProps {
   hideDismiss?: boolean;
 }
 
-export function UpdateNotification({ forceShow = false, hideDismiss = false }: UpdateNotificationProps = {}) {
+export function UpdateNotification({
+  forceShow = false,
+  hideDismiss = false,
+}: UpdateNotificationProps = {}) {
   const { t } = useTranslation();
   const [release, setRelease] = useState<ReleaseInfo | null>(null);
   const [dismissed, setDismissed] = useState(false);
@@ -254,7 +278,10 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
     const cached = readCache();
     if (cached) {
       const dismissedVersion = sessionStorage.getItem(DISMISS_KEY);
-      if (dismissedVersion !== cached.data.version && isNewer(cached.data.version, CURRENT_VERSION)) {
+      if (
+        dismissedVersion !== cached.data.version &&
+        isNewer(cached.data.version, CURRENT_VERSION)
+      ) {
         setRelease(cached.data);
       }
       return;
@@ -265,16 +292,16 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
       const resp = await fetch(GITHUB_RELEASES_API);
       if (!resp.ok) return;
       const data = await resp.json();
-      const latest = (data.tag_name ?? '').replace(/^v/, '');
+      const latest = (data.tag_name ?? "").replace(/^v/, "");
       if (!latest) return;
 
       const info: ReleaseInfo = {
         version: latest,
-        notes: data.body ?? '',
+        notes: data.body ?? "",
         url:
           data.html_url ??
-          'https://github.com/datadrivenconstruction/OpenConstructionERP/releases',
-        publishedAt: data.published_at ?? '',
+          "https://github.com/datadrivenconstruction/OpenConstructionERP/releases",
+        publishedAt: data.published_at ?? "",
       };
       writeCache(info);
 
@@ -315,7 +342,7 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
 
   const relativeDate = release.publishedAt
     ? new Date(release.publishedAt).toLocaleDateString()
-    : '';
+    : "";
 
   return (
     <>
@@ -327,8 +354,8 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
         <button
           type="button"
           onClick={() => setShowFullModal(true)}
-          aria-label={t('update.open_details', {
-            defaultValue: 'View update details for v{{version}}‌⁠‍',
+          aria-label={t("update.open_details", {
+            defaultValue: "View update details for v{{version}}‌⁠‍",
             version: release.version,
           })}
           className="w-full text-left"
@@ -356,7 +383,7 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
                 v{CURRENT_VERSION} → v{release.version}
               </span>
               <span className="shrink-0 inline-flex items-center rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
-                {t('update.new_available', { defaultValue: 'available‌⁠‍' })}
+                {t("update.new_available", { defaultValue: "available‌⁠‍" })}
               </span>
             </div>
             {(relativeDate || (grouped && grouped.totalCount > 0)) && (
@@ -366,8 +393,8 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
                   <>
                     {relativeDate && <span aria-hidden="true">·</span>}
                     <span>
-                      {t('update.changes_count_short', {
-                        defaultValue: '{{count}} changes',
+                      {t("update.changes_count_short", {
+                        defaultValue: "{{count}} changes",
                         count: grouped.totalCount,
                       })}
                     </span>
@@ -376,7 +403,7 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
               </div>
             )}
             <div className="mt-2 flex items-center justify-end gap-1 text-[11px] font-semibold text-blue-600 dark:text-sky-300">
-              {t('update.details', { defaultValue: 'Details‌⁠‍' })}
+              {t("update.details", { defaultValue: "Details‌⁠‍" })}
               <ExternalLink size={11} />
             </div>
           </div>
@@ -384,7 +411,7 @@ export function UpdateNotification({ forceShow = false, hideDismiss = false }: U
         {!hideDismiss && (
           <button
             onClick={handleDismiss}
-            aria-label={t('common.dismiss', { defaultValue: 'Dismiss‌⁠‍' })}
+            aria-label={t("common.dismiss", { defaultValue: "Dismiss‌⁠‍" })}
             className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded text-sky-500/70 hover:text-blue-700 hover:bg-sky-500/20 dark:hover:bg-sky-400/20 transition-colors"
           >
             <X size={11} />
@@ -422,7 +449,9 @@ function HighlightGroup({
   return (
     <div>
       <div className="flex items-center gap-1 mb-0.5">
-        <span className={`flex h-3 w-3 items-center justify-center rounded ${iconClass}`}>
+        <span
+          className={`flex h-3 w-3 items-center justify-center rounded ${iconClass}`}
+        >
           {icon}
         </span>
         <span className="text-[9px] font-semibold uppercase tracking-wider text-blue-700/75 dark:text-sky-300/65">
@@ -440,8 +469,8 @@ function HighlightGroup({
         ))}
         {hiddenCount > 0 && (
           <li className="text-[10px] italic text-blue-600/65 dark:text-sky-400/55">
-            {t('update.more_count', {
-              defaultValue: '+ {{count}} more',
+            {t("update.more_count", {
+              defaultValue: "+ {{count}} more",
               count: hiddenCount,
             })}
           </li>
@@ -486,30 +515,37 @@ function UpdateFullModal({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   const relativeDate = release.publishedAt
     ? new Date(release.publishedAt).toLocaleDateString()
-    : '';
+    : "";
 
-  const methods: Array<{ key: string; title: string; subtitle: string; cmd: string }> = [
+  const methods: Array<{
+    key: string;
+    title: string;
+    subtitle: string;
+    cmd: string;
+  }> = [
     {
-      key: 'pip',
-      title: t('update.method_pip', { defaultValue: 'pip / PyPI' }),
-      subtitle: t('update.method_pip_sub', { defaultValue: 'Recommended for Python installs' }),
-      cmd: 'pip install --upgrade openconstructionerp',
+      key: "pip",
+      title: t("update.method_pip", { defaultValue: "pip / PyPI" }),
+      subtitle: t("update.method_pip_sub", {
+        defaultValue: "Recommended for Python installs",
+      }),
+      cmd: "pip install --upgrade openconstructionerp",
     },
     {
-      key: 'source',
-      title: t('update.method_source', { defaultValue: 'Source (git)' }),
-      subtitle: t('update.method_source_sub', {
-        defaultValue: 'For self-hosted installs from source',
+      key: "source",
+      title: t("update.method_source", { defaultValue: "Source (git)" }),
+      subtitle: t("update.method_source_sub", {
+        defaultValue: "For self-hosted installs from source",
       }),
-      cmd: 'git pull && cd frontend && npm ci && npm run build && cd ../backend && pip install -e .',
+      cmd: "git pull && cd frontend && npm ci && npm run build && cd ../backend && pip install -e .",
     },
   ];
 
@@ -534,7 +570,10 @@ function UpdateFullModal({
         <div className="relative px-6 py-5 bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50 dark:from-sky-950/50 dark:via-blue-950/40 dark:to-cyan-950/30 border-b border-border">
           <div className="flex items-start gap-3">
             <div className="relative shrink-0">
-              <span className="absolute inset-0 rounded-xl bg-sky-500/30 animate-ping" aria-hidden="true" />
+              <span
+                className="absolute inset-0 rounded-xl bg-sky-500/30 animate-ping"
+                aria-hidden="true"
+              />
               <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-md shadow-blue-500/40">
                 <Sparkles size={20} strokeWidth={2.5} />
               </div>
@@ -544,8 +583,8 @@ function UpdateFullModal({
                 id="update-fullmodal-title"
                 className="text-xl font-bold text-content-primary leading-tight"
               >
-                {t('update.popup_title', {
-                  defaultValue: 'Update available — v{{version}}',
+                {t("update.popup_title", {
+                  defaultValue: "Update available — v{{version}}",
                   version: release.version,
                 })}
               </h2>
@@ -555,8 +594,8 @@ function UpdateFullModal({
                   <>
                     {relativeDate && <span aria-hidden="true">·</span>}
                     <span>
-                      {t('update.changes_count', {
-                        defaultValue: '{{count}} changes',
+                      {t("update.changes_count", {
+                        defaultValue: "{{count}} changes",
                         count: grouped.totalCount,
                       })}
                     </span>
@@ -564,13 +603,16 @@ function UpdateFullModal({
                 )}
                 <span aria-hidden="true">·</span>
                 <span className="tabular-nums">
-                  {t('update.currently_on', { defaultValue: 'you have v{{version}}', version: CURRENT_VERSION })}
+                  {t("update.currently_on", {
+                    defaultValue: "you have v{{version}}",
+                    version: CURRENT_VERSION,
+                  })}
                 </span>
               </div>
             </div>
             <button
               onClick={onClose}
-              aria-label={t('common.close', { defaultValue: 'Close' })}
+              aria-label={t("common.close", { defaultValue: "Close" })}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
             >
               <X size={18} />
@@ -584,14 +626,14 @@ function UpdateFullModal({
           {grouped && grouped.totalCount > 0 && (
             <section>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3">
-                {t('update.whats_new', { defaultValue: "What's new" })}
+                {t("update.whats_new", { defaultValue: "What's new" })}
               </h3>
               <div className="space-y-4">
                 {grouped.added.length > 0 && (
                   <HighlightGroup
                     icon={<Plus size={10} />}
                     iconClass="text-sky-600 dark:text-sky-300 bg-sky-500/20"
-                    label={t('update.group_new', { defaultValue: 'New' })}
+                    label={t("update.group_new", { defaultValue: "New" })}
                     items={grouped.added.slice(0, 6)}
                     hiddenCount={Math.max(0, grouped.added.length - 6)}
                   />
@@ -600,7 +642,7 @@ function UpdateFullModal({
                   <HighlightGroup
                     icon={<Wrench size={10} />}
                     iconClass="text-blue-600 dark:text-blue-300 bg-blue-500/20"
-                    label={t('update.group_fixed', { defaultValue: 'Fixed' })}
+                    label={t("update.group_fixed", { defaultValue: "Fixed" })}
                     items={grouped.fixed.slice(0, 6)}
                     hiddenCount={Math.max(0, grouped.fixed.length - 6)}
                   />
@@ -609,13 +651,18 @@ function UpdateFullModal({
                   <HighlightGroup
                     icon={<Palette size={10} />}
                     iconClass="text-cyan-600 dark:text-cyan-300 bg-cyan-500/20"
-                    label={t('update.group_polished', { defaultValue: 'Polished' })}
+                    label={t("update.group_polished", {
+                      defaultValue: "Polished",
+                    })}
                     items={grouped.polished.slice(0, 6)}
                     hiddenCount={Math.max(0, grouped.polished.length - 6)}
                   />
                 )}
                 {grouped.other.length > 0 &&
-                  grouped.added.length + grouped.fixed.length + grouped.polished.length === 0 && (
+                  grouped.added.length +
+                    grouped.fixed.length +
+                    grouped.polished.length ===
+                    0 && (
                     <ul className="space-y-1">
                       {grouped.other.slice(0, 6).map((line, i) => (
                         <li
@@ -635,7 +682,7 @@ function UpdateFullModal({
           {/* Install commands */}
           <section>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3">
-              {t('update.how_to_update', { defaultValue: 'How to update' })}
+              {t("update.how_to_update", { defaultValue: "How to update" })}
             </h3>
             <div className="space-y-3">
               {methods.map((m) => (
@@ -645,23 +692,27 @@ function UpdateFullModal({
                 >
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border/60">
                     <div>
-                      <div className="text-sm font-semibold text-content-primary">{m.title}</div>
-                      <div className="text-2xs text-content-tertiary">{m.subtitle}</div>
+                      <div className="text-sm font-semibold text-content-primary">
+                        {m.title}
+                      </div>
+                      <div className="text-2xs text-content-tertiary">
+                        {m.subtitle}
+                      </div>
                     </div>
                     <button
                       onClick={() => copy(m.key, m.cmd)}
                       className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-2xs font-medium text-content-secondary hover:text-content-primary hover:bg-surface-secondary transition-colors"
-                      aria-label={t('common.copy', { defaultValue: 'Copy' })}
+                      aria-label={t("common.copy", { defaultValue: "Copy" })}
                     >
                       {copiedKey === m.key ? (
                         <>
                           <Check size={11} className="text-sky-500" />
-                          {t('common.copied', { defaultValue: 'Copied' })}
+                          {t("common.copied", { defaultValue: "Copied" })}
                         </>
                       ) : (
                         <>
                           <Copy size={11} />
-                          {t('common.copy', { defaultValue: 'Copy' })}
+                          {t("common.copy", { defaultValue: "Copy" })}
                         </>
                       )}
                     </button>
@@ -683,14 +734,14 @@ function UpdateFullModal({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-sky-400 dark:hover:text-sky-300"
           >
-            {t('update.release_notes', { defaultValue: 'Release notes' })}
+            {t("update.release_notes", { defaultValue: "Release notes" })}
             <ExternalLink size={12} />
           </a>
           <button
             onClick={onClose}
             className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-500/30 ring-1 ring-blue-500/20 transition-all"
           >
-            {t('update.got_it', { defaultValue: 'Got it' })}
+            {t("update.got_it", { defaultValue: "Got it" })}
           </button>
         </div>
       </div>
@@ -698,4 +749,3 @@ function UpdateFullModal({
     document.body,
   );
 }
-

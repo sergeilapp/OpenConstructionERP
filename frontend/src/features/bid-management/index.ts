@@ -1,1 +1,1 @@
-export { BidManagementPage } from './BidManagementPage';
+export { BidManagementPage } from "./BidManagementPage";

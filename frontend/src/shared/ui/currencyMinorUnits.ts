@@ -23,40 +23,40 @@
 
 // Zero-decimal currencies (ISO-4217 minor unit = 0).
 const ZERO_DECIMAL = new Set<string>([
-  'BIF', // Burundian Franc
-  'CLP', // Chilean Peso
-  'DJF', // Djiboutian Franc
-  'GNF', // Guinean Franc
-  'ISK', // Icelandic Króna (officially 0 since 2007)
-  'JPY', // Japanese Yen
-  'KMF', // Comorian Franc
-  'KRW', // South Korean Won
-  'PYG', // Paraguayan Guaraní
-  'RWF', // Rwandan Franc
-  'UGX', // Ugandan Shilling
-  'UYI', // Uruguay Peso en Unidades Indexadas (technical only)
-  'VND', // Vietnamese Đồng
-  'VUV', // Vanuatu Vatu
-  'XAF', // Central African CFA Franc
-  'XOF', // West African CFA Franc
-  'XPF', // CFP Franc
+  "BIF", // Burundian Franc
+  "CLP", // Chilean Peso
+  "DJF", // Djiboutian Franc
+  "GNF", // Guinean Franc
+  "ISK", // Icelandic Króna (officially 0 since 2007)
+  "JPY", // Japanese Yen
+  "KMF", // Comorian Franc
+  "KRW", // South Korean Won
+  "PYG", // Paraguayan Guaraní
+  "RWF", // Rwandan Franc
+  "UGX", // Ugandan Shilling
+  "UYI", // Uruguay Peso en Unidades Indexadas (technical only)
+  "VND", // Vietnamese Đồng
+  "VUV", // Vanuatu Vatu
+  "XAF", // Central African CFA Franc
+  "XOF", // West African CFA Franc
+  "XPF", // CFP Franc
 ]);
 
 // Three-decimal currencies (mostly oil-trading and historic dinars).
 const THREE_DECIMAL = new Set<string>([
-  'BHD', // Bahraini Dinar
-  'IQD', // Iraqi Dinar
-  'JOD', // Jordanian Dinar
-  'KWD', // Kuwaiti Dinar
-  'LYD', // Libyan Dinar
-  'OMR', // Omani Rial
-  'TND', // Tunisian Dinar
+  "BHD", // Bahraini Dinar
+  "IQD", // Iraqi Dinar
+  "JOD", // Jordanian Dinar
+  "KWD", // Kuwaiti Dinar
+  "LYD", // Libyan Dinar
+  "OMR", // Omani Rial
+  "TND", // Tunisian Dinar
 ]);
 
 // Four-decimal currencies (the funds rather than the cash currency).
 const FOUR_DECIMAL = new Set<string>([
-  'CLF', // Unidad de Fomento (Chile)
-  'UYW', // Uruguay Unidad Previsional
+  "CLF", // Unidad de Fomento (Chile)
+  "UYW", // Uruguay Unidad Previsional
 ]);
 
 /**

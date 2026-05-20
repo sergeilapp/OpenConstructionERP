@@ -335,10 +335,7 @@ async def remove_submittal_attachment(
     meta = dict(getattr(submittal, "metadata_", {}) or {})
     attachments: list[dict] = list(meta.get("attachments", []) or [])
 
-    new_list = [
-        a for a in attachments
-        if isinstance(a, dict) and str(a.get("document_id")) != str(document_id)
-    ]
+    new_list = [a for a in attachments if isinstance(a, dict) and str(a.get("document_id")) != str(document_id)]
     if len(new_list) == len(attachments):
         raise HTTPException(status_code=404, detail="Attachment not found")
 

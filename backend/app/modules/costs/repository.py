@@ -356,9 +356,7 @@ class CostItemRepository:
         # (json_extract returns NULL for missing keys, which IS what we
         # want to detect) — we coerce in Python instead so empty strings
         # and missing keys collapse into the same sentinel.
-        all_cols = [
-            _classification_expr(key).label(key) for key in _CLASSIFICATION_DEPTHS
-        ]
+        all_cols = [_classification_expr(key).label(key) for key in _CLASSIFICATION_DEPTHS]
         cnt = func.count(CostItem.id).label("cnt")
 
         # Slice to requested depth.  The GROUP BY label list and the row
@@ -367,11 +365,7 @@ class CostItemRepository:
         active_cols = all_cols[:depth]
         active_keys = list(_CLASSIFICATION_DEPTHS[:depth])
 
-        stmt = (
-            select(*active_cols, cnt)
-            .where(CostItem.is_active.is_(True))
-            .group_by(*active_keys)
-        )
+        stmt = select(*active_cols, cnt).where(CostItem.is_active.is_(True)).group_by(*active_keys)
         if region:
             stmt = stmt.where(CostItem.region == region)
 

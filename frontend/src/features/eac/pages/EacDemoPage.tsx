@@ -9,42 +9,47 @@
  * The page renders without authentication-only data so it works in
  * Playwright's authenticated session without backend round-trips.
  */
-import { DndContext, type DragEndEvent } from '@dnd-kit/core';
-import { useState } from 'react';
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import { useState } from "react";
 
-import { AttributeBlock } from '../components/blocks/AttributeBlock';
-import { BlockShell } from '../components/blocks/BlockShell';
-import { ConstraintBlock } from '../components/blocks/ConstraintBlock';
-import { LogicBlock } from '../components/blocks/LogicBlock';
-import { SelectorBlock } from '../components/blocks/SelectorBlock';
-import { TripletBlock } from '../components/blocks/TripletBlock';
-import { VariableBlock } from '../components/blocks/VariableBlock';
-import { EacBlockPalette } from '../components/EacBlockPalette';
-import type { PaletteItem } from '../components/DraggablePaletteItem';
-import type { AttributeRef, Constraint, EntitySelector, LocalVariableDefinition } from '../types';
+import { AttributeBlock } from "../components/blocks/AttributeBlock";
+import { BlockShell } from "../components/blocks/BlockShell";
+import { ConstraintBlock } from "../components/blocks/ConstraintBlock";
+import { LogicBlock } from "../components/blocks/LogicBlock";
+import { SelectorBlock } from "../components/blocks/SelectorBlock";
+import { TripletBlock } from "../components/blocks/TripletBlock";
+import { VariableBlock } from "../components/blocks/VariableBlock";
+import { EacBlockPalette } from "../components/EacBlockPalette";
+import type { PaletteItem } from "../components/DraggablePaletteItem";
+import type {
+  AttributeRef,
+  Constraint,
+  EntitySelector,
+  LocalVariableDefinition,
+} from "../types";
 
 const DEMO_SELECTOR: EntitySelector = {
-  type: 'category',
-  category: 'Walls',
+  type: "category",
+  category: "Walls",
 };
 
 const DEMO_ATTRIBUTE: AttributeRef = {
-  kind: 'alias',
-  alias_id: 'eac.alias.thickness',
-  canonical_name: 'Thickness',
+  kind: "alias",
+  alias_id: "eac.alias.thickness",
+  canonical_name: "Thickness",
 };
 
 const DEMO_CONSTRAINT: Constraint = {
-  operator: 'gte',
+  operator: "gte",
   value: 240,
-  unit: 'mm',
+  unit: "mm",
 };
 
 const DEMO_VARIABLE: LocalVariableDefinition = {
-  name: 'totalWallVolume',
-  aggregate: 'sum',
-  expression: '${Volume}',
-  unit: 'm³',
+  name: "totalWallVolume",
+  aggregate: "sum",
+  expression: "${Volume}",
+  unit: "m³",
 };
 
 export function EacDemoPage() {
@@ -52,7 +57,9 @@ export function EacDemoPage() {
   const [selected, setSelected] = useState<string | null>(null);
 
   function handleDragEnd(event: DragEndEvent) {
-    const item = event.active?.data?.current?.['item'] as PaletteItem | undefined;
+    const item = event.active?.data?.current?.["item"] as
+      | PaletteItem
+      | undefined;
     if (item) {
       setLastDropped(item.label);
     }
@@ -82,7 +89,8 @@ export function EacDemoPage() {
                 data-testid="eac-demo-last-dropped"
                 className="mt-2 text-xs text-content-tertiary"
               >
-                Last activated: <span className="font-medium">{lastDropped}</span>
+                Last activated:{" "}
+                <span className="font-medium">{lastDropped}</span>
               </p>
             )}
           </header>
@@ -90,42 +98,47 @@ export function EacDemoPage() {
           <div className="grid max-w-3xl grid-cols-1 gap-3">
             <SelectorBlock
               selector={DEMO_SELECTOR}
-              selected={selected === 'selector'}
-              onSelect={() => setSelected('selector')}
+              selected={selected === "selector"}
+              onSelect={() => setSelected("selector")}
             />
             <LogicBlock
               kind="and"
               childCount={2}
-              selected={selected === 'logic'}
-              onSelect={() => setSelected('logic')}
+              selected={selected === "logic"}
+              onSelect={() => setSelected("logic")}
             />
             <TripletBlock
               attribute={DEMO_ATTRIBUTE}
               constraint={DEMO_CONSTRAINT}
-              selected={selected === 'triplet'}
-              onSelect={() => setSelected('triplet')}
-              attributeSelected={selected === 'triplet-attr'}
-              onAttributeSelect={() => setSelected('triplet-attr')}
-              constraintSelected={selected === 'triplet-constraint'}
-              onConstraintSelect={() => setSelected('triplet-constraint')}
+              selected={selected === "triplet"}
+              onSelect={() => setSelected("triplet")}
+              attributeSelected={selected === "triplet-attr"}
+              onAttributeSelect={() => setSelected("triplet-attr")}
+              constraintSelected={selected === "triplet-constraint"}
+              onConstraintSelect={() => setSelected("triplet-constraint")}
             />
             <AttributeBlock
               attribute={DEMO_ATTRIBUTE}
-              selected={selected === 'attribute'}
-              onSelect={() => setSelected('attribute')}
+              selected={selected === "attribute"}
+              onSelect={() => setSelected("attribute")}
             />
             <ConstraintBlock
               constraint={DEMO_CONSTRAINT}
-              selected={selected === 'constraint'}
-              onSelect={() => setSelected('constraint')}
+              selected={selected === "constraint"}
+              onSelect={() => setSelected("constraint")}
             />
             <VariableBlock
               variable={DEMO_VARIABLE}
-              selected={selected === 'variable'}
-              onSelect={() => setSelected('variable')}
+              selected={selected === "variable"}
+              onSelect={() => setSelected("variable")}
             />
 
-            <BlockShell color="selector" label="Drag handle preview" draggable sortableId="demo-1">
+            <BlockShell
+              color="selector"
+              label="Drag handle preview"
+              draggable
+              sortableId="demo-1"
+            >
               Hold the handle and drop on the canvas (canvas in EAC-3.2)
             </BlockShell>
           </div>

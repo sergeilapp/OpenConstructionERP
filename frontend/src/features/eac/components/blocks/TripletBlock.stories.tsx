@@ -1,13 +1,13 @@
 /**
  * Storybook stories for `<TripletBlock>`.
  */
-import { DndContext } from '@dnd-kit/core';
-import type { Meta, StoryObj } from '@storybook/react';
+import { DndContext } from "@dnd-kit/core";
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { TripletBlock } from './TripletBlock';
+import { TripletBlock } from "./TripletBlock";
 
 const meta: Meta<typeof TripletBlock> = {
-  title: 'EAC/Blocks/TripletBlock',
+  title: "EAC/Blocks/TripletBlock",
   component: TripletBlock,
   decorators: [
     (Story) => (
@@ -18,7 +18,9 @@ const meta: Meta<typeof TripletBlock> = {
       </DndContext>
     ),
   ],
-  parameters: { a11y: { config: { rules: [{ id: 'color-contrast', enabled: true }] } } },
+  parameters: {
+    a11y: { config: { rules: [{ id: "color-contrast", enabled: true }] } },
+  },
 };
 export default meta;
 
@@ -26,22 +28,26 @@ type Story = StoryObj<typeof TripletBlock>;
 
 export const ExactPropertyEquals: Story = {
   args: {
-    attribute: { kind: 'exact', pset_name: 'Pset_WallCommon', property_name: 'IsExternal' },
-    constraint: { operator: 'eq', value: true },
+    attribute: {
+      kind: "exact",
+      pset_name: "Pset_WallCommon",
+      property_name: "IsExternal",
+    },
+    constraint: { operator: "eq", value: true },
   },
 };
 
 export const AliasGte: Story = {
   args: {
-    attribute: { kind: 'alias', alias_id: 'a1', canonical_name: 'Thickness' },
-    constraint: { operator: 'gte', value: 240, unit: 'mm' },
+    attribute: { kind: "alias", alias_id: "a1", canonical_name: "Thickness" },
+    constraint: { operator: "gte", value: 240, unit: "mm" },
   },
 };
 
 export const Selected: Story = {
   args: {
-    attribute: { kind: 'alias', alias_id: 'a1', canonical_name: 'Length' },
-    constraint: { operator: 'between', values: [1, 5], unit: 'm' },
+    attribute: { kind: "alias", alias_id: "a1", canonical_name: "Length" },
+    constraint: { operator: "between", values: [1, 5], unit: "m" },
     selected: true,
     onSelect: () => {},
   },
@@ -49,8 +55,8 @@ export const Selected: Story = {
 
 export const InnerSelected: Story = {
   args: {
-    attribute: { kind: 'alias', alias_id: 'a1', canonical_name: 'Length' },
-    constraint: { operator: 'gte', value: 1, unit: 'm' },
+    attribute: { kind: "alias", alias_id: "a1", canonical_name: "Length" },
+    constraint: { operator: "gte", value: 1, unit: "m" },
     attributeSelected: true,
     onAttributeSelect: () => {},
     onConstraintSelect: () => {},
@@ -59,9 +65,9 @@ export const InnerSelected: Story = {
 
 export const Draggable: Story = {
   args: {
-    attribute: { kind: 'alias', alias_id: 'a1', canonical_name: 'Thickness' },
-    constraint: { operator: 'gte', value: 240, unit: 'mm' },
+    attribute: { kind: "alias", alias_id: "a1", canonical_name: "Thickness" },
+    constraint: { operator: "gte", value: 240, unit: "mm" },
     draggable: true,
-    sortableId: 't1',
+    sortableId: "t1",
   },
 };

@@ -576,21 +576,25 @@ async def import_contacts_file(
             # Validate email
             primary_email = str(row.get("primary_email", "")).strip() or None
             if primary_email and not _EMAIL_RE.match(primary_email):
-                errors.append({
-                    "row": row_idx,
-                    "error": f"Invalid email format: {primary_email}",
-                    "data": {k: str(v)[:100] for k, v in row.items()},
-                })
+                errors.append(
+                    {
+                        "row": row_idx,
+                        "error": f"Invalid email format: {primary_email}",
+                        "data": {k: str(v)[:100] for k, v in row.items()},
+                    }
+                )
                 continue
 
             # Validate country_code
             country_code = str(row.get("country_code", "")).strip().upper() or None
             if country_code and len(country_code) != 2:
-                errors.append({
-                    "row": row_idx,
-                    "error": f"Country code must be 2 characters, got: {country_code}",
-                    "data": {k: str(v)[:100] for k, v in row.items()},
-                })
+                errors.append(
+                    {
+                        "row": row_idx,
+                        "error": f"Country code must be 2 characters, got: {country_code}",
+                        "data": {k: str(v)[:100] for k, v in row.items()},
+                    }
+                )
                 continue
 
             primary_phone = str(row.get("primary_phone", "")).strip() or None
@@ -621,11 +625,13 @@ async def import_contacts_file(
             imported_count += 1
 
         except Exception as exc:
-            errors.append({
-                "row": row_idx,
-                "error": str(exc),
-                "data": {k: str(v)[:100] for k, v in row.items()},
-            })
+            errors.append(
+                {
+                    "row": row_idx,
+                    "error": str(exc),
+                    "data": {k: str(v)[:100] for k, v in row.items()},
+                }
+            )
             logger.warning("Contact import error at row %d: %s", row_idx, exc)
 
     logger.info(
@@ -850,9 +856,7 @@ async def download_contacts_template(
     return StreamingResponse(
         output,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={
-            "Content-Disposition": 'attachment; filename="contacts_import_template.xlsx"'
-        },
+        headers={"Content-Disposition": 'attachment; filename="contacts_import_template.xlsx"'},
     )
 
 

@@ -120,9 +120,7 @@ class EventBus:
         code should fire-and-forget. Errors inside the detached task are
         logged by :meth:`publish` itself.
         """
-        return asyncio.create_task(
-            self.publish(event_name, data, source_module=source_module)
-        )
+        return asyncio.create_task(self.publish(event_name, data, source_module=source_module))
 
     async def publish(
         self,

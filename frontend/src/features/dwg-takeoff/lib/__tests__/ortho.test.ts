@@ -2,13 +2,13 @@
  * Unit tests for Shift-to-lock ortho/angle math (Q1 UX #3).
  */
 
-import { describe, it, expect } from 'vitest';
-import { snapToOrthoAngle, snapAngleDegrees } from '../ortho';
+import { describe, it, expect } from "vitest";
+import { snapToOrthoAngle, snapAngleDegrees } from "../ortho";
 
-describe('snapToOrthoAngle', () => {
+describe("snapToOrthoAngle", () => {
   const anchor = { x: 10, y: 10 };
 
-  it('snaps to 0° (due east) when cursor is roughly horizontal', () => {
+  it("snaps to 0° (due east) when cursor is roughly horizontal", () => {
     const p = snapToOrthoAngle(anchor, { x: 30, y: 11 });
     // On a pure east ray y collapses to anchor.y exactly.
     expect(p.y).toBeCloseTo(10, 6);
@@ -17,7 +17,7 @@ describe('snapToOrthoAngle', () => {
     expect(p.x - anchor.x).toBeCloseTo(expectedDist, 6);
   });
 
-  it('snaps to 90° (due north) when cursor is roughly vertical', () => {
+  it("snaps to 90° (due north) when cursor is roughly vertical", () => {
     const p = snapToOrthoAngle(anchor, { x: 11, y: 40 });
     // On the 90° ray x collapses to anchor.x exactly.
     expect(p.x).toBeCloseTo(10, 6);
@@ -25,7 +25,7 @@ describe('snapToOrthoAngle', () => {
     expect(p.y - anchor.y).toBeCloseTo(expectedDist, 6);
   });
 
-  it('snaps to 180° (due west)', () => {
+  it("snaps to 180° (due west)", () => {
     const p = snapToOrthoAngle(anchor, { x: -30, y: 9 });
     expect(p.y).toBeCloseTo(10, 6);
     const expectedDist = Math.hypot(-30 - 10, 9 - 10);
@@ -33,7 +33,7 @@ describe('snapToOrthoAngle', () => {
     expect(p.x - anchor.x).toBeCloseTo(-expectedDist, 6);
   });
 
-  it('snaps to 45° diagonal', () => {
+  it("snaps to 45° diagonal", () => {
     // Cursor at (20, 19) — roughly along +45°. Distance = ~sqrt(100+81).
     const p = snapToOrthoAngle(anchor, { x: 20, y: 19 });
     // On a 45° ray the offset from anchor in x === offset in y.
@@ -45,7 +45,7 @@ describe('snapToOrthoAngle', () => {
     expect(Math.hypot(dx, dy)).toBeCloseTo(origDist, 6);
   });
 
-  it('snaps to 135° (upper-left diagonal)', () => {
+  it("snaps to 135° (upper-left diagonal)", () => {
     const p = snapToOrthoAngle(anchor, { x: -10, y: 31 });
     const dx = p.x - anchor.x;
     const dy = p.y - anchor.y;
@@ -56,12 +56,12 @@ describe('snapToOrthoAngle', () => {
     expect(dy).toBeGreaterThan(0);
   });
 
-  it('returns anchor unchanged when cursor === anchor (zero-length)', () => {
+  it("returns anchor unchanged when cursor === anchor (zero-length)", () => {
     const p = snapToOrthoAngle(anchor, { x: 10, y: 10 });
     expect(p).toEqual({ x: 10, y: 10 });
   });
 
-  it('preserves Euclidean distance from anchor', () => {
+  it("preserves Euclidean distance from anchor", () => {
     const cursor = { x: 50, y: 37 };
     const raw = Math.hypot(cursor.x - anchor.x, cursor.y - anchor.y);
     const snapped = snapToOrthoAngle(anchor, cursor);
@@ -70,27 +70,33 @@ describe('snapToOrthoAngle', () => {
   });
 });
 
-describe('snapAngleDegrees', () => {
+describe("snapAngleDegrees", () => {
   const anchor = { x: 0, y: 0 };
 
-  it('returns 0 for east cursor', () => {
+  it("returns 0 for east cursor", () => {
     expect(snapAngleDegrees(anchor, { x: 10, y: 0 })).toBe(0);
   });
 
-  it('returns 90 for north cursor', () => {
+  it("returns 90 for north cursor", () => {
     expect(snapAngleDegrees(anchor, { x: 0, y: 10 })).toBe(90);
   });
 
-  it('returns 45 for NE cursor near the diagonal', () => {
+  it("returns 45 for NE cursor near the diagonal", () => {
     expect(snapAngleDegrees(anchor, { x: 10, y: 9 })).toBe(45);
   });
 
-  it('quantizes any offset to the nearest 45° step', () => {
+  it("quantizes any offset to the nearest 45° step", () => {
     // 20° should quantize down to 0° (nearer than 45°).
-    const pt = { x: Math.cos((20 * Math.PI) / 180), y: Math.sin((20 * Math.PI) / 180) };
+    const pt = {
+      x: Math.cos((20 * Math.PI) / 180),
+      y: Math.sin((20 * Math.PI) / 180),
+    };
     expect(snapAngleDegrees(anchor, pt)).toBe(0);
     // 30° should snap to 45° (30 is nearer to 45 than 0 when the step is 45°? no — 30-0=30 vs 45-30=15, so 45 wins).
-    const pt2 = { x: Math.cos((30 * Math.PI) / 180), y: Math.sin((30 * Math.PI) / 180) };
+    const pt2 = {
+      x: Math.cos((30 * Math.PI) / 180),
+      y: Math.sin((30 * Math.PI) / 180),
+    };
     expect(snapAngleDegrees(anchor, pt2)).toBe(45);
   });
 });

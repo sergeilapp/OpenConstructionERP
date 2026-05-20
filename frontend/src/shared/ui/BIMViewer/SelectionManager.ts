@@ -11,9 +11,9 @@
  * - Programmatic selection from parent
  */
 
-import * as THREE from 'three';
-import type { SceneManager } from './SceneManager';
-import type { ElementManager, BIMElementData } from './ElementManager';
+import * as THREE from "three";
+import type { SceneManager } from "./SceneManager";
+import type { ElementManager, BIMElementData } from "./ElementManager";
 
 export interface SelectionCallbacks {
   onElementSelect?: (elementId: string | null) => void;
@@ -28,7 +28,7 @@ export interface SelectionCallbacks {
 }
 
 const HIGHLIGHT_COLOR = 0x2979ff; // selection blue
-const HOVER_COLOR = 0x42a5f5;    // lighter hover blue
+const HOVER_COLOR = 0x42a5f5; // lighter hover blue
 const HIGHLIGHT_OPACITY = 0.95;
 const HOVER_OPACITY = 0.9;
 
@@ -107,11 +107,11 @@ export class SelectionManager {
     this.boundOnMouseMove = this.onMouseMove.bind(this);
     this.boundOnContextMenu = this.onContextMenu.bind(this);
     this.boundOnDblClick = this.onDblClick.bind(this);
-    this.canvas.addEventListener('pointerdown', this.boundOnPointerDown);
-    this.canvas.addEventListener('pointerup', this.boundOnPointerUp);
-    this.canvas.addEventListener('mousemove', this.boundOnMouseMove);
-    this.canvas.addEventListener('contextmenu', this.boundOnContextMenu);
-    this.canvas.addEventListener('dblclick', this.boundOnDblClick);
+    this.canvas.addEventListener("pointerdown", this.boundOnPointerDown);
+    this.canvas.addEventListener("pointerup", this.boundOnPointerUp);
+    this.canvas.addEventListener("mousemove", this.boundOnMouseMove);
+    this.canvas.addEventListener("contextmenu", this.boundOnContextMenu);
+    this.canvas.addEventListener("dblclick", this.boundOnDblClick);
   }
 
   private getMouseCoords(e: MouseEvent): THREE.Vector2 {
@@ -151,7 +151,10 @@ export class SelectionManager {
       let visNode: THREE.Object3D | null = hit.object;
       let anyHidden = false;
       while (visNode) {
-        if (visNode.visible === false) { anyHidden = true; break; }
+        if (visNode.visible === false) {
+          anyHidden = true;
+          break;
+        }
         visNode = visNode.parent;
       }
       if (anyHidden) continue;
@@ -177,8 +180,16 @@ export class SelectionManager {
         const batchedObj = hit.object;
         const instId = (hit as { instanceId?: number }).instanceId;
         for (const mesh of this.elementManager.getAllMeshes()) {
-          const handle = (mesh.userData as { batchHandle?: { batched: unknown; instanceId: number } }).batchHandle;
-          if (handle && handle.batched === batchedObj && handle.instanceId === instId) {
+          const handle = (
+            mesh.userData as {
+              batchHandle?: { batched: unknown; instanceId: number };
+            }
+          ).batchHandle;
+          if (
+            handle &&
+            handle.batched === batchedObj &&
+            handle.instanceId === instId
+          ) {
             const eid = (mesh.userData as { elementId?: string }).elementId;
             if (eid) {
               (hit.object.userData as Record<string, unknown>).elementId = eid;
@@ -208,7 +219,7 @@ export class SelectionManager {
         this.restoreMaterial(this.hoveredId);
       }
       this.hoveredId = null;
-      this.canvas.style.cursor = '';
+      this.canvas.style.cursor = "";
     }
   }
 
@@ -280,7 +291,7 @@ export class SelectionManager {
     const coords = this.getMouseCoords(e);
     const hit = this.raycast(coords);
     const elementId = hit
-      ? (hit.object.userData as { elementId?: string }).elementId ?? null
+      ? ((hit.object.userData as { elementId?: string }).elementId ?? null)
       : null;
 
     // If right-clicking on an element not in the selection, select it
@@ -301,7 +312,7 @@ export class SelectionManager {
     const coords = this.getMouseCoords(e);
     const hit = this.raycast(coords);
     const elementId = hit
-      ? (hit.object.userData as { elementId?: string }).elementId ?? null
+      ? ((hit.object.userData as { elementId?: string }).elementId ?? null)
       : null;
 
     this.callbacks.onDoubleClick?.(elementId);
@@ -312,7 +323,7 @@ export class SelectionManager {
     const coords = this.getMouseCoords(e);
     const hit = this.raycast(coords);
     const elementId = hit
-      ? (hit.object.userData as { elementId?: string }).elementId ?? null
+      ? ((hit.object.userData as { elementId?: string }).elementId ?? null)
       : null;
 
     if (elementId === this.hoveredId) return;
@@ -333,7 +344,7 @@ export class SelectionManager {
       }
     }
 
-    this.canvas.style.cursor = elementId ? 'pointer' : 'default';
+    this.canvas.style.cursor = elementId ? "pointer" : "default";
     this.callbacks.onElementHover?.(elementId);
   }
 
@@ -370,6 +381,35 @@ export class SelectionManager {
     for (const id of elementIds) {
       this.selectElement(id);
     }
+  }
+
+  /**
+   * Programmatic batched selection used by W6.6 "Named Selection Sets".
+   *
+   * When ``options.exclusive`` is true (or omitted), behaves identically to
+   * ``setSelection`` — it clears the current selection first, then adds each
+   * of ``ids``. When ``exclusive`` is false, the ids are *added* to the
+   * existing selection (duplicates are no-ops).
+   *
+   * After the batch we fire a single ``onSelectionChange`` callback so the
+   * floating toolbar / right-panel listeners observe one update instead of
+   * one-per-element. The single ``onElementSelect`` argument tracks the LAST
+   * id in the batch (matches the click-flow contract: "most recently clicked
+   * element"); pass an empty list with ``exclusive=true`` to deselect all.
+   */
+  selectByIds(ids: string[], options?: { exclusive?: boolean }): void {
+    const exclusive = options?.exclusive !== false;
+    if (exclusive) {
+      this.clearSelection();
+    }
+    for (const id of ids) {
+      if (!this.selectedIds.has(id)) {
+        this.selectElement(id);
+      }
+    }
+    const last = ids.length > 0 ? ids[ids.length - 1] : null;
+    this.callbacks.onElementSelect?.(last ?? null);
+    this.notifySelectionChange();
   }
 
   /** Get currently selected element IDs. */
@@ -446,11 +486,11 @@ export class SelectionManager {
 
   /** Dispose event listeners and materials. */
   dispose(): void {
-    this.canvas.removeEventListener('pointerdown', this.boundOnPointerDown);
-    this.canvas.removeEventListener('pointerup', this.boundOnPointerUp);
-    this.canvas.removeEventListener('mousemove', this.boundOnMouseMove);
-    this.canvas.removeEventListener('contextmenu', this.boundOnContextMenu);
-    this.canvas.removeEventListener('dblclick', this.boundOnDblClick);
+    this.canvas.removeEventListener("pointerdown", this.boundOnPointerDown);
+    this.canvas.removeEventListener("pointerup", this.boundOnPointerUp);
+    this.canvas.removeEventListener("mousemove", this.boundOnMouseMove);
+    this.canvas.removeEventListener("contextmenu", this.boundOnContextMenu);
+    this.canvas.removeEventListener("dblclick", this.boundOnDblClick);
     this.highlightMaterial.dispose();
     this.hoverMaterial.dispose();
     for (const helper of this.boxHelpers.values()) {
@@ -461,6 +501,6 @@ export class SelectionManager {
     this.boxHelpers.clear();
     this.originalMaterials.clear();
     this.selectedIds.clear();
-    this.canvas.style.cursor = 'default';
+    this.canvas.style.cursor = "default";
   }
 }

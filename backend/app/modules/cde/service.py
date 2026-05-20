@@ -83,16 +83,11 @@ class CDEService:
                     ),
                 )
 
-        existing = await self.container_repo.get_by_code_and_project(
-            data.project_id, data.container_code
-        )
+        existing = await self.container_repo.get_by_code_and_project(data.project_id, data.container_code)
         if existing is not None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=(
-                    f"Container code '{data.container_code}' already exists "
-                    f"in project {data.project_id}"
-                ),
+                detail=(f"Container code '{data.container_code}' already exists in project {data.project_id}"),
             )
 
         container = DocumentContainer(
@@ -231,7 +226,9 @@ class CDEService:
 
         # Validate via CDEStateMachine (checks allowed transitions + role gates)
         allowed, reason = _state_machine.validate_transition(
-            current_state, target_state, user_role=user_role,
+            current_state,
+            target_state,
+            user_role=user_role,
         )
         if not allowed:
             raise HTTPException(
@@ -244,10 +241,7 @@ class CDEService:
 
         # Gate B — SHARED → PUBLISHED requires an explicit approver signature.
         updated_metadata: dict[str, Any] | None = None
-        is_gate_b = (
-            target_state == CDEState.PUBLISHED.value
-            and current_state == CDEState.SHARED.value
-        )
+        is_gate_b = target_state == CDEState.PUBLISHED.value and current_state == CDEState.SHARED.value
         if is_gate_b:
             if not data.approver_signature or not data.approver_signature.strip():
                 raise HTTPException(
@@ -459,9 +453,7 @@ class CDEService:
                 doc = Document(
                     project_id=container.project_id,
                     name=data.file_name,
-                    description=(
-                        f"CDE rev {revision_code} — {container.container_code}"
-                    ),
+                    description=(f"CDE rev {revision_code} — {container.container_code}"),
                     category="cde",
                     file_size=file_size_int,
                     mime_type=data.mime_type or "",
@@ -474,9 +466,7 @@ class CDEService:
                 await self.session.flush()
                 # Read out doc.id before any expire_all() invalidates it.
                 doc_id = doc.id
-                await self.revision_repo.update_fields(
-                    revision_id, document_id=str(doc_id)
-                )
+                await self.revision_repo.update_fields(revision_id, document_id=str(doc_id))
                 logger.info(
                     "Cross-linked CDE revision %s -> document %s",
                     revision_id,
@@ -563,9 +553,5 @@ class CDEService:
         Pattern: ``{Project}-{Originator}-{Functional}-{Spatial}-{Form}-{Discipline}-{Number}``
         Empty parts are omitted.
         """
-        parts = [
-            p
-            for p in (project, originator, functional, spatial, form, discipline, number)
-            if p
-        ]
+        parts = [p for p in (project, originator, functional, spatial, form, discipline, number) if p]
         return "-".join(parts)

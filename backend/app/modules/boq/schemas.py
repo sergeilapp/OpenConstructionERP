@@ -53,8 +53,7 @@ def _check_position_total_cap(
         return
     if product > POSITION_TOTAL_CAP:
         raise ValueError(
-            "Position total exceeds reasonable limit. "
-            "Check quantity and unit rate.",
+            "Position total exceeds reasonable limit. Check quantity and unit rate.",
         )
 
 
@@ -72,6 +71,7 @@ def _sanitise_free_text(value: str | None) -> str | None:
     from app.core.sanitize import strip_dangerous_html
 
     return strip_dangerous_html(value)
+
 
 # ── BOQ schemas ───────────────────────────────────────────────────────────────
 
@@ -196,9 +196,7 @@ class PositionCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
 
     boq_id: UUID = Field(..., description="UUID of the parent BOQ")
-    parent_id: UUID | None = Field(
-        default=None, description="Parent position UUID for hierarchical grouping"
-    )
+    parent_id: UUID | None = Field(default=None, description="Parent position UUID for hierarchical grouping")
     ordinal: str = Field(
         ...,
         min_length=1,
@@ -223,9 +221,7 @@ class PositionCreate(BaseModel):
     # 0.0, so an Excel import with a blank quantity cell silently zero-filled
     # the line and rolled up as €0 instead of being flagged as missing data.
     quantity: float = Field(..., ge=0.0, description="Measured quantity", examples=[125.5])
-    unit_rate: float = Field(
-        default=0.0, ge=0.0, description="Price per unit", examples=[285.00]
-    )
+    unit_rate: float = Field(default=0.0, ge=0.0, description="Price per unit", examples=[285.00])
     classification: dict[str, Any] = Field(
         default_factory=dict,
         description="Classification codes (e.g. din276, nrm, masterformat)",
@@ -247,9 +243,7 @@ class PositionCreate(BaseModel):
         le=1.0,
         description="AI confidence score (0.0-1.0). Only for AI-sourced positions",
     )
-    cad_element_ids: list[str] = Field(
-        default_factory=list, description="Linked CAD element IDs from canonical format"
-    )
+    cad_element_ids: list[str] = Field(default_factory=list, description="Linked CAD element IDs from canonical format")
     metadata: dict[str, Any] = Field(default_factory=dict, description="Arbitrary metadata")
     wbs_id: str | None = Field(default=None, description="Linked WBS node ID")
     cost_code_id: str | None = Field(default=None, description="Linked cost code ID")
@@ -353,10 +347,7 @@ class SectionCreate(BaseModel):
     description: str = Field(default="", max_length=5000)
     parent_id: UUID | None = Field(
         default=None,
-        description=(
-            "Parent section UUID for nested sections (Issue #136). "
-            "None = top-level section."
-        ),
+        description=("Parent section UUID for nested sections (Issue #136). None = top-level section."),
     )
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -423,8 +414,7 @@ class PositionUpdate(BaseModel):
     link_mode: Literal["link", "copy", "standalone"] | None = Field(
         default=None,
         description=(
-            "Reserved for symmetry with PositionCreate; ignored on update "
-            "(linking decisions are made at create time)."
+            "Reserved for symmetry with PositionCreate; ignored on update (linking decisions are made at create time)."
         ),
     )
 
@@ -454,6 +444,136 @@ class PositionUpdate(BaseModel):
     def _check_total_cap(self) -> "PositionUpdate":
         _check_position_total_cap(self.quantity, self.unit_rate)
         return self
+
+
+# ── v3.12.0 Stream A — bulk-update + per-field restore ───────────────────────
+
+
+class BulkPositionUpdate(BaseModel):
+    """Atomic bulk update for a set of positions within a BOQ.
+
+    Accepts one of three mutation styles, applied to every ``ids`` entry:
+
+    * ``updates`` — direct field assignment (e.g. ``{"unit": "m3"}`` or
+      ``{"classification": {"din276": "330"}}``). The same payload is
+      written to every selected position.
+    * ``rate_factor`` — multiply each row's existing ``unit_rate`` by a
+      scalar (e.g. 1.05 = +5 %). Reads the row's current value, writes
+      back the product. ``quantity`` and ``total`` are recomputed by
+      the service.
+    * ``quantity_factor`` — same as ``rate_factor`` but for ``quantity``.
+
+    Exactly one of ``updates`` / ``rate_factor`` / ``quantity_factor``
+    must be supplied. Mixing styles is rejected with 422 so the audit
+    trail stays unambiguous (one log entry per row per kind).
+    """
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    ids: list[UUID] = Field(
+        ...,
+        min_length=1,
+        max_length=2000,
+        description="Position UUIDs to update. All must live in the same BOQ.",
+    )
+    updates: dict[str, Any] | None = Field(
+        default=None,
+        description=(
+            "Optional direct-set payload. Allowed keys: 'unit', "
+            "'classification', 'validation_status', 'source'. Other keys "
+            "are rejected with 422."
+        ),
+    )
+    rate_factor: float | None = Field(
+        default=None,
+        gt=0.0,
+        le=1_000_000.0,
+        description="Multiplicative factor for unit_rate (must be > 0).",
+    )
+    quantity_factor: float | None = Field(
+        default=None,
+        gt=0.0,
+        le=1_000_000.0,
+        description="Multiplicative factor for quantity (must be > 0).",
+    )
+
+    @model_validator(mode="after")
+    def _exactly_one_mutation(self) -> "BulkPositionUpdate":
+        styles = [
+            self.updates is not None,
+            self.rate_factor is not None,
+            self.quantity_factor is not None,
+        ]
+        if sum(1 for s in styles if s) != 1:
+            raise ValueError(
+                "Exactly one of 'updates', 'rate_factor', 'quantity_factor' must be supplied.",
+            )
+        if isinstance(self.updates, dict):
+            # Tight allowlist — bulk operations must not silently rewrite
+            # quantity / unit_rate / metadata blobs (those have dedicated
+            # factor paths and per-row endpoints).
+            allowed = {"unit", "classification", "validation_status", "source"}
+            bad = set(self.updates) - allowed
+            if bad:
+                raise ValueError(
+                    f"updates keys not allowed in bulk mode: {sorted(bad)}. Allowed: {sorted(allowed)}.",
+                )
+            if not self.updates:
+                raise ValueError("updates dict cannot be empty.")
+        return self
+
+
+class BulkUpdateResult(BaseModel):
+    """Outcome of a bulk update — counts plus failed-id detail."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    updated: int = 0
+    skipped: int = 0
+    failed_ids: list[UUID] = Field(default_factory=list)
+    log_id: UUID | None = Field(
+        default=None,
+        description="Activity-log entry id for the umbrella bulk action.",
+    )
+
+
+class RestoreFieldRequest(BaseModel):
+    """Restore a single field on one position from a prior activity-log row.
+
+    The server verifies that ``log_id`` references an existing
+    BOQActivityLog whose ``target_id`` equals the URL's ``position_id``
+    and whose ``changes`` JSON carries a record for ``field``. The
+    supplied ``value`` is then written via the normal update path so
+    every downstream invariant (total recompute, validation reset,
+    optimistic-concurrency bump) still fires.
+    """
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    field: str = Field(
+        ...,
+        min_length=1,
+        max_length=64,
+        description="Position attribute to restore (e.g. 'unit_rate').",
+    )
+    value: Any = Field(
+        default=None,
+        description="Value to assign — typically the 'old' side of the log diff.",
+    )
+    log_id: UUID = Field(
+        ...,
+        description="Source BOQActivityLog id this restore is replaying.",
+    )
+
+
+class RestoreFieldResponse(BaseModel):
+    """Echo of a successful per-field restore."""
+
+    position_id: UUID
+    field: str
+    restored_value: Any
+    source_log_id: UUID
+    new_log_id: UUID | None = None
 
 
 class PositionResponse(BaseModel):
@@ -1553,9 +1673,7 @@ class LineItemResponse(BaseModel):
     quantity: float = 0.0
     unit_rate: float = 0.0
     total_cost: float = 0.0
-    share_of_total: float = Field(
-        0.0, description="Share of the aggregate project total — 0.0 to 1.0"
-    )
+    share_of_total: float = Field(0.0, description="Share of the aggregate project total — 0.0 to 1.0")
 
 
 class CostRollupItem(BaseModel):
@@ -1715,9 +1833,7 @@ class QuantityLinkApplyResponse(BaseModel):
 # ── Feature 2: estimate baseline / line-level compare schemas ─────────────────
 
 # How a position pairs across the two BOQs and what (if anything) moved.
-CompareChangeType = Literal[
-    "added", "removed", "qty_changed", "rate_changed", "changed", "unchanged"
-]
+CompareChangeType = Literal["added", "removed", "qty_changed", "rate_changed", "changed", "unchanged"]
 
 
 class ComparePositionRow(BaseModel):

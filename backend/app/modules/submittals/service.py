@@ -23,6 +23,7 @@ async def _safe_publish(name: str, data: dict, source_module: str = "oe_submitta
     except Exception as exc:
         logger.debug("Event publish failed for %s: %s", name, exc)
 
+
 # ── Allowed submittal status transitions ──────────────────────────────────────
 
 _SUBMITTAL_STATUS_TRANSITIONS: dict[str, set[str]] = {
@@ -179,10 +180,7 @@ class SubmittalService:
         if submittal.status not in allowed:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    f"Can only submit from draft or revise_and_resubmit status, "
-                    f"current: {submittal.status}"
-                ),
+                detail=(f"Can only submit from draft or revise_and_resubmit status, current: {submittal.status}"),
             )
 
         from datetime import UTC, datetime
@@ -388,8 +386,7 @@ class SubmittalService:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=(
-                    f"Cannot approve submittal with status '{submittal.status}'. "
-                    f"Expected one of: {', '.join(allowed)}"
+                    f"Cannot approve submittal with status '{submittal.status}'. Expected one of: {', '.join(allowed)}"
                 ),
             )
 

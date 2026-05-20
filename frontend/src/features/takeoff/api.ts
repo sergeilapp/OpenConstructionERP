@@ -4,8 +4,8 @@
  * Mirrors backend endpoints at /v1/takeoff/measurements/*.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
-import { isModuleLoaded } from '@/shared/lib/moduleProbe';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
+import { isModuleLoaded } from "@/shared/lib/moduleProbe";
 
 /* ── Types ────────────────────────────────────────────────────────────── */
 
@@ -79,8 +79,11 @@ export const takeoffApi = {
   /** List measurements for a project, optionally filtered by document.
    *  /markups page calls this on mount; returns empty when oe_takeoff
    *  is disabled so the request never 404-logs to the network panel. */
-  list: async (projectId: string, documentId?: string): Promise<MeasurementResponse[]> => {
-    if (!(await isModuleLoaded('oe_takeoff'))) return [];
+  list: async (
+    projectId: string,
+    documentId?: string,
+  ): Promise<MeasurementResponse[]> => {
+    if (!(await isModuleLoaded("oe_takeoff"))) return [];
     let url = `/v1/takeoff/measurements/?project_id=${projectId}`;
     if (documentId) url += `&document_id=${encodeURIComponent(documentId)}`;
     return apiGet<MeasurementResponse[]>(url);
@@ -88,41 +91,51 @@ export const takeoffApi = {
 
   /** Create a single measurement. */
   create: (data: MeasurementCreate) =>
-    apiPost<MeasurementResponse>('/v1/takeoff/measurements/', data),
+    apiPost<MeasurementResponse>("/v1/takeoff/measurements/", data),
 
   /** Bulk create measurements (up to 500). */
   bulkCreate: (measurements: MeasurementCreate[]) =>
-    apiPost<MeasurementResponse[]>('/v1/takeoff/measurements/bulk/', { measurements }),
+    apiPost<MeasurementResponse[]>("/v1/takeoff/measurements/bulk/", {
+      measurements,
+    }),
 
   /** Update a measurement. */
   update: (id: string, data: Partial<MeasurementCreate>) =>
     apiPatch<MeasurementResponse>(`/v1/takeoff/measurements/${id}`, data),
 
   /** Delete a measurement. */
-  delete: (id: string) =>
-    apiDelete(`/v1/takeoff/measurements/${id}`),
+  delete: (id: string) => apiDelete(`/v1/takeoff/measurements/${id}`),
 
   /** Link a measurement to a BOQ position. */
   linkToBoq: (id: string, boqPositionId: string) =>
-    apiPost<MeasurementResponse>(`/v1/takeoff/measurements/${id}/link-to-boq/`, {
-      boq_position_id: boqPositionId,
-    }),
+    apiPost<MeasurementResponse>(
+      `/v1/takeoff/measurements/${id}/link-to-boq/`,
+      {
+        boq_position_id: boqPositionId,
+      },
+    ),
 
   /** Get measurement summary stats for a project. */
   summary: (projectId: string) =>
-    apiGet<MeasurementSummary>(`/v1/takeoff/measurements/summary/?project_id=${projectId}`),
+    apiGet<MeasurementSummary>(
+      `/v1/takeoff/measurements/summary/?project_id=${projectId}`,
+    ),
 
   /** Export measurements as CSV or JSON. */
-  export: (projectId: string, format: 'csv' | 'json' = 'json') =>
-    apiGet<unknown>(`/v1/takeoff/measurements/export/?project_id=${projectId}&format=${format}`),
+  export: (projectId: string, format: "csv" | "json" = "json") =>
+    apiGet<unknown>(
+      `/v1/takeoff/measurements/export/?project_id=${projectId}&format=${format}`,
+    ),
 
   /** List uploaded takeoff documents for a project.
    *  Returns empty when the optional `oe_takeoff` module is disabled. */
-  listDocuments: async (projectId?: string): Promise<TakeoffDocumentResponse[]> => {
-    if (!(await isModuleLoaded('oe_takeoff'))) return [];
+  listDocuments: async (
+    projectId?: string,
+  ): Promise<TakeoffDocumentResponse[]> => {
+    if (!(await isModuleLoaded("oe_takeoff"))) return [];
     const url = projectId
       ? `/v1/takeoff/documents/?project_id=${encodeURIComponent(projectId)}`
-      : '/v1/takeoff/documents/';
+      : "/v1/takeoff/documents/";
     return apiGet<TakeoffDocumentResponse[]>(url);
   },
 
@@ -134,9 +147,14 @@ export const takeoffApi = {
   saveToProject: (
     sessionId: string,
     projectId: string,
-    modelName: string = 'Imported from Takeoff',
+    modelName: string = "Imported from Takeoff",
   ) =>
-    apiPost<{ model_id: string; element_count: number; model_name: string; project_id: string }>(
+    apiPost<{
+      model_id: string;
+      element_count: number;
+      model_name: string;
+      project_id: string;
+    }>(
       `/v1/takeoff/sessions/${sessionId}/save-to-project/?project_id=${encodeURIComponent(projectId)}`,
       { model_name: modelName },
     ),

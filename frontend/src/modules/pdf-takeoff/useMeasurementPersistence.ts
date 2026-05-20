@@ -1,6 +1,10 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { QueryClientContext } from '@tanstack/react-query';
-import { takeoffApi, type MeasurementCreate, type MeasurementResponse } from '@/features/takeoff/api';
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { QueryClientContext } from "@tanstack/react-query";
+import {
+  takeoffApi,
+  type MeasurementCreate,
+  type MeasurementResponse,
+} from "@/features/takeoff/api";
 
 /* ── Types (mirrored from TakeoffViewerModule) ──────────────────────── */
 
@@ -11,8 +15,17 @@ interface Point {
 
 interface Measurement {
   id: string;
-  type: 'distance' | 'polyline' | 'area' | 'volume' | 'count'
-    | 'cloud' | 'arrow' | 'text' | 'rectangle' | 'highlight';
+  type:
+    | "distance"
+    | "polyline"
+    | "area"
+    | "volume"
+    | "count"
+    | "cloud"
+    | "arrow"
+    | "text"
+    | "rectangle"
+    | "highlight";
   points: Point[];
   value: number;
   unit: string;
@@ -48,11 +61,11 @@ interface PersistedDocument {
 
 /* ── localStorage helpers (fallback) ─────────────────────────────────── */
 
-const STORAGE_PREFIX = 'oe_takeoff_';
-const INDEX_KEY = 'oe_takeoff_index';
+const STORAGE_PREFIX = "oe_takeoff_";
+const INDEX_KEY = "oe_takeoff_index";
 
 function docKey(fileName: string): string {
-  return `${STORAGE_PREFIX}${fileName.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+  return `${STORAGE_PREFIX}${fileName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
 }
 
 function loadFromStorage(fileName: string): PersistedDocument | null {
@@ -115,12 +128,12 @@ export function getDocumentIndex(): string[] {
  */
 function canonicalUnit(unit: string): string {
   switch (unit) {
-    case 'm²':
-      return 'm2';
-    case 'm³':
-      return 'm3';
+    case "m²":
+      return "m2";
+    case "m³":
+      return "m3";
     default:
-      return unit || 'm';
+      return unit || "m";
   }
 }
 
@@ -129,10 +142,10 @@ function canonicalUnit(unit: string): string {
  *  identically to a freshly-drawn measurement. */
 function displayUnit(unit: string): string {
   switch (unit) {
-    case 'm2':
-      return 'm²';
-    case 'm3':
-      return 'm³';
+    case "m2":
+      return "m²";
+    case "m3":
+      return "m³";
     default:
       return unit;
   }
@@ -152,24 +165,23 @@ function toApiFormat(
   // can pick the right quantity instead of guessing from the unit
   // string alone (D-TKC-031).
   const areaValue =
-    m.type === 'area' ? m.value : m.type === 'volume' ? (m.area ?? null) : null;
-  const ppu =
-    scale && scale.pixelsPerUnit > 0 ? scale.pixelsPerUnit : null;
+    m.type === "area" ? m.value : m.type === "volume" ? (m.area ?? null) : null;
+  const ppu = scale && scale.pixelsPerUnit > 0 ? scale.pixelsPerUnit : null;
   return {
     project_id: projectId,
     document_id: documentId,
     page: m.page,
     type: m.type,
-    group_name: m.group || 'General',
-    group_color: m.color || '#3B82F6',
+    group_name: m.group || "General",
+    group_color: m.color || "#3B82F6",
     annotation: m.annotation || m.label || null,
     points: m.points,
     measurement_value: m.value || null,
     measurement_unit: canonicalUnit(m.unit),
     depth: m.depth ?? null,
-    volume: m.type === 'volume' ? m.value : null,
-    perimeter: m.type === 'polyline' ? m.value : null,
-    count_value: m.type === 'count' ? Math.round(m.value) : null,
+    volume: m.type === "volume" ? m.value : null,
+    perimeter: m.type === "polyline" ? m.value : null,
+    count_value: m.type === "count" ? Math.round(m.value) : null,
     // Send the calibration so the server-side recompute can verify the
     // client value against the raw geometry (Audit B8) instead of
     // trusting it blindly.
@@ -193,12 +205,12 @@ function fromApiFormat(r: MeasurementResponse): Measurement {
   return {
     id: (meta.frontend_id as string) || r.id,
     serverId: r.id,
-    type: r.type as Measurement['type'],
+    type: r.type as Measurement["type"],
     points: r.points as Point[],
     value: r.measurement_value ?? r.count_value ?? 0,
     unit: displayUnit(r.measurement_unit),
-    label: r.annotation || '',
-    annotation: r.annotation || '',
+    label: r.annotation || "",
+    annotation: r.annotation || "",
     page: r.page,
     group: r.group_name,
     depth: r.depth ?? undefined,
@@ -207,14 +219,15 @@ function fromApiFormat(r: MeasurementResponse): Measurement {
     // it was persisted before the dedicated field existed (D-TKC-031).
     area:
       (meta.area as number) ??
-      (r.type === 'area' ? r.measurement_value ?? undefined : undefined),
+      (r.type === "area" ? (r.measurement_value ?? undefined) : undefined),
     text: (meta.text as string) ?? undefined,
     color: r.group_color || undefined,
     width: (meta.width as number) ?? undefined,
     height: (meta.height as number) ?? undefined,
     linkedPositionId: r.linked_boq_position_id ?? undefined,
     linkedBoqId: (meta.linked_boq_id as string) ?? undefined,
-    linkedPositionOrdinal: (meta.linked_position_ordinal as string) ?? undefined,
+    linkedPositionOrdinal:
+      (meta.linked_position_ordinal as string) ?? undefined,
     linkedPositionLabel: (meta.linked_position_label as string) ?? undefined,
   };
 }
@@ -273,7 +286,10 @@ export function useMeasurementPersistence({
       // Try server first if project is available
       if (projectId) {
         try {
-          const serverData = await takeoffApi.list(projectId, fileName ?? undefined);
+          const serverData = await takeoffApi.list(
+            projectId,
+            fileName ?? undefined,
+          );
           if (!cancelled && serverData.length > 0) {
             hasPersistedRef.current = true;
             setSyncedToServer(true);
@@ -299,7 +315,9 @@ export function useMeasurementPersistence({
     }
 
     loadData();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [fileName, projectId, setMeasurements, setScale]);
 
   // Auto-save to localStorage with debounce (500ms)
@@ -332,15 +350,17 @@ export function useMeasurementPersistence({
         if (toCreate.length > 0) {
           const created = await takeoffApi.bulkCreate(toCreate);
           // Update serverId on created measurements
-          setMeasurements(measurements.map((m) => {
-            if (m.serverId) return m;
-            const match = created.find((c) =>
-              (c.metadata?.frontend_id as string) === m.id
-            );
-            return match ? { ...m, serverId: match.id } : m;
-          }));
+          setMeasurements(
+            measurements.map((m) => {
+              if (m.serverId) return m;
+              const match = created.find(
+                (c) => (c.metadata?.frontend_id as string) === m.id,
+              );
+              return match ? { ...m, serverId: match.id } : m;
+            }),
+          );
           // Surface the new measurements in the unified Markups hub.
-          qc?.invalidateQueries({ queryKey: ['unified-markups'] });
+          qc?.invalidateQueries({ queryKey: ["unified-markups"] });
         }
         setSyncedToServer(true);
       } catch {

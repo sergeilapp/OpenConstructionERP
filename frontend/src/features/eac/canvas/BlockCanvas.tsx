@@ -14,7 +14,7 @@
  * inner component that runs *inside* `<ReactFlowProvider>`, so we can use
  * `useReactFlow()` for screen ↔ canvas coordinate conversion.
  */
-import { useDroppable } from '@dnd-kit/core';
+import { useDroppable } from "@dnd-kit/core";
 import {
   Background,
   Controls,
@@ -34,18 +34,26 @@ import {
   type NodeTypes,
   type OnConnect,
   type ReactFlowInstance,
-} from '@xyflow/react';
-import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent } from 'react';
-import { useTranslation } from 'react-i18next';
+} from "@xyflow/react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type DragEvent,
+  type KeyboardEvent,
+} from "react";
+import { useTranslation } from "react-i18next";
 
-import { BlockNode } from './BlockNode';
-import { CanvasToolbar } from './CanvasToolbar';
-import { SlotConnection } from './SlotConnection';
-import { buildDropPayload, colorForKind, type CanvasDropPayload } from './dnd';
-import { useBlockCanvasStore } from './useBlockCanvasStore';
-import type { PaletteItem } from '../components/DraggablePaletteItem';
+import { BlockNode } from "./BlockNode";
+import { CanvasToolbar } from "./CanvasToolbar";
+import { SlotConnection } from "./SlotConnection";
+import { buildDropPayload, colorForKind, type CanvasDropPayload } from "./dnd";
+import { useBlockCanvasStore } from "./useBlockCanvasStore";
+import type { PaletteItem } from "../components/DraggablePaletteItem";
 
-import '@xyflow/react/dist/style.css';
+import "@xyflow/react/dist/style.css";
 
 const NODE_TYPES: NodeTypes = { eacBlock: BlockNode };
 const EDGE_TYPES: EdgeTypes = { eacSlot: SlotConnection };
@@ -62,9 +70,14 @@ export interface BlockCanvasProps {
 }
 
 /** The droppable id used by the palette via `@dnd-kit`. */
-export const CANVAS_DROPPABLE_ID = 'eac-block-canvas';
+export const CANVAS_DROPPABLE_ID = "eac-block-canvas";
 
-function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvasProps) {
+function BlockCanvasInner({
+  onSave,
+  onValidate,
+  onCompile,
+  testId,
+}: BlockCanvasProps) {
   const { t } = useTranslation();
   const blocks = useBlockCanvasStore((s) => s.blocks);
   const connections = useBlockCanvasStore((s) => s.connections);
@@ -93,7 +106,7 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
     () =>
       blocks.map((block) => ({
         id: block.id,
-        type: 'eacBlock',
+        type: "eacBlock",
         position: block.position,
         data: { block },
         selected: selection.has(block.id),
@@ -109,7 +122,7 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
         sourceHandle: conn.sourceSlotId,
         target: conn.targetBlockId,
         targetHandle: conn.targetSlotId,
-        type: 'eacSlot',
+        type: "eacSlot",
         data: { dataType: conn.dataType },
         markerEnd: { type: MarkerType.ArrowClosed },
       })),
@@ -128,14 +141,16 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
         positionMap.set(node.id, node.position);
       }
       for (const change of changes) {
-        if (change.type === 'position' && change.position) {
+        if (change.type === "position" && change.position) {
           moveBlock(change.id, change.position);
-        } else if (change.type === 'remove') {
+        } else if (change.type === "remove") {
           removeBlock(change.id);
-        } else if (change.type === 'select') {
+        } else if (change.type === "select") {
           // Update selection set to reflect xyflow's intent. We rebuild the
           // set from scratch to keep multi-select in sync.
-          const nextSelected = updated.filter((n) => n.selected).map((n) => n.id);
+          const nextSelected = updated
+            .filter((n) => n.selected)
+            .map((n) => n.id);
           setSelection(nextSelected);
         }
       }
@@ -150,7 +165,7 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
       // an edge has no store effect — the toolbar derives it).
       void updated;
       for (const change of changes) {
-        if (change.type === 'remove') {
+        if (change.type === "remove") {
           removeConnection(change.id);
         }
       }
@@ -165,7 +180,12 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
       // refuse — when it does, we don't need to roll back because xyflow's
       // `addEdge` is local-only (we re-render from the store).
       void addEdge(params, edges);
-      if (!params.source || !params.target || !params.sourceHandle || !params.targetHandle) {
+      if (
+        !params.source ||
+        !params.target ||
+        !params.sourceHandle ||
+        !params.targetHandle
+      ) {
         return;
       }
       addConnection({
@@ -183,21 +203,30 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
     (event: KeyboardEvent<HTMLDivElement>) => {
       const mod = event.ctrlKey || event.metaKey;
       const target = event.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
         return;
       }
-      if (mod && event.key.toLowerCase() === 'z' && !event.shiftKey) {
+      if (mod && event.key.toLowerCase() === "z" && !event.shiftKey) {
         event.preventDefault();
         undo();
-      } else if (mod && (event.key.toLowerCase() === 'y' || (event.key.toLowerCase() === 'z' && event.shiftKey))) {
+      } else if (
+        mod &&
+        (event.key.toLowerCase() === "y" ||
+          (event.key.toLowerCase() === "z" && event.shiftKey))
+      ) {
         event.preventDefault();
         redo();
-      } else if (mod && event.key.toLowerCase() === 'c') {
+      } else if (mod && event.key.toLowerCase() === "c") {
         copySelection();
-      } else if (mod && event.key.toLowerCase() === 'v') {
+      } else if (mod && event.key.toLowerCase() === "v") {
         event.preventDefault();
         pasteClipboard();
-      } else if (event.key === 'Delete' || event.key === 'Backspace') {
+      } else if (event.key === "Delete" || event.key === "Backspace") {
         if (selection.size === 0) return;
         event.preventDefault();
         for (const id of Array.from(selection)) {
@@ -211,13 +240,13 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
   // ── HTML5 drag-drop integration (palette → canvas) ───────────────────
   const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
+    event.dataTransfer.dropEffect = "copy";
   }, []);
 
   const onDrop = useCallback(
     (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      const raw = event.dataTransfer.getData('application/x-eac-palette-item');
+      const raw = event.dataTransfer.getData("application/x-eac-palette-item");
       if (!raw) return;
       let item: PaletteItem;
       try {
@@ -262,16 +291,23 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
   return (
     <div
       ref={wrapperRef}
-      data-testid={testId ?? 'eac-block-canvas'}
+      data-testid={testId ?? "eac-block-canvas"}
       className="flex h-full w-full flex-col"
       role="region"
-      aria-label={t('eac.canvas.region', { defaultValue: 'Block editor canvas‌⁠‍' })}
+      aria-label={t("eac.canvas.region", {
+        defaultValue: "Block editor canvas‌⁠‍",
+      })}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onDragOver={onDragOver}
       onDrop={onDrop}
     >
-      <CanvasToolbar onFitView={fitView} onSave={handleSave} onValidate={onValidate} onCompile={onCompile} />
+      <CanvasToolbar
+        onFitView={fitView}
+        onSave={handleSave}
+        onValidate={onValidate}
+        onCompile={onCompile}
+      />
       <div className="relative flex-1">
         <ReactFlow
           nodes={nodes}
@@ -283,7 +319,7 @@ function BlockCanvasInner({ onSave, onValidate, onCompile, testId }: BlockCanvas
           onConnect={onConnect}
           onInit={setRfInstance}
           fitView
-          multiSelectionKeyCode={['Meta', 'Control', 'Shift']}
+          multiSelectionKeyCode={["Meta", "Control", "Shift"]}
           deleteKeyCode={null}
           proOptions={{ hideAttribution: true }}
           data-testid="eac-block-canvas-flow"

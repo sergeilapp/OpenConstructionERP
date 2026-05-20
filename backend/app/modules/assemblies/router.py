@@ -115,7 +115,8 @@ async def _verify_target_boq_owner(
 
 
 def _assembly_to_response(
-    assembly: object, usage_count: int = 0,
+    assembly: object,
+    usage_count: int = 0,
 ) -> AssemblyResponse:
     """Convert an Assembly ORM model to an AssemblyResponse schema."""
     components = getattr(assembly, "components", None) or []
@@ -224,10 +225,7 @@ async def search_assemblies(
         logger.debug("Could not compute assembly usage counts")
 
     return AssemblySearchResponse(
-        items=[
-            _assembly_to_response(a, usage_count=usage_map.get(str(a.id), 0))
-            for a in assemblies
-        ],
+        items=[_assembly_to_response(a, usage_count=usage_map.get(str(a.id), 0)) for a in assemblies],
         total=total,
         limit=limit,
         offset=offset,

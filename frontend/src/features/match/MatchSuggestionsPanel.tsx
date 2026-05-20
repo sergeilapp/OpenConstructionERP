@@ -24,9 +24,9 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-} from 'react';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
+} from "react";
+import { useTranslation } from "react-i18next";
+import clsx from "clsx";
 import {
   Sparkles,
   RefreshCw,
@@ -39,19 +39,19 @@ import {
   Database,
   AlertTriangle,
   Loader2,
-} from 'lucide-react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Skeleton } from '@/shared/ui/Skeleton';
-import { useToastStore } from '@/stores/useToastStore';
-import { listLoadedDatabases, setProjectCatalog } from './api';
-import { useMatchElement, useSubmitMatchFeedback } from './queries';
+} from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Skeleton } from "@/shared/ui/Skeleton";
+import { useToastStore } from "@/stores/useToastStore";
+import { listLoadedDatabases, setProjectCatalog } from "./api";
+import { useMatchElement, useSubmitMatchFeedback } from "./queries";
 import type {
   LoadedDatabase,
   MatchCandidate,
   MatchResponse,
   MatchSource,
   MatchStatus,
-} from './types';
+} from "./types";
 
 /* ── Props ─────────────────────────────────────────────────────────────── */
 
@@ -94,30 +94,30 @@ const AUTO_APPLY_DELAY_MS = 1500;
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
 const CONFIDENCE_CLASSES: Record<
-  MatchCandidate['confidence_band'],
+  MatchCandidate["confidence_band"],
   { pill: string; ariaKey: string; defaultLabel: string }
 > = {
   high: {
-    pill: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/40 dark:text-green-200',
-    ariaKey: 'match.confidence.high_aria',
-    defaultLabel: 'High confidence',
+    pill: "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/40 dark:text-green-200",
+    ariaKey: "match.confidence.high_aria",
+    defaultLabel: "High confidence",
   },
   medium: {
-    pill: 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200',
-    ariaKey: 'match.confidence.medium_aria',
-    defaultLabel: 'Medium confidence',
+    pill: "bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200",
+    ariaKey: "match.confidence.medium_aria",
+    defaultLabel: "Medium confidence",
   },
   low: {
-    pill: 'bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-700/40 dark:text-slate-200',
-    ariaKey: 'match.confidence.low_aria',
-    defaultLabel: 'Low confidence',
+    pill: "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-700/40 dark:text-slate-200",
+    ariaKey: "match.confidence.low_aria",
+    defaultLabel: "Low confidence",
   },
 };
 
 function formatBoostDelta(delta: number): string {
   // Boosts are deltas added/subtracted from the base vector score.
   // Show explicit sign + 2 decimals so users can see "+0.05" / "-0.10".
-  const sign = delta >= 0 ? '+' : '';
+  const sign = delta >= 0 ? "+" : "";
   return `${sign}${delta.toFixed(2)}`;
 }
 
@@ -217,10 +217,12 @@ export function MatchSuggestionsPanel({
       //    panel still feels alive.
       if (!onAccept) {
         useToastStore.getState().addToast({
-          type: 'success',
-          title: t('match.accept_toast_title', { defaultValue: 'Match accepted‌⁠‍' }),
-          message: t('match.accept_toast_recorded', {
-            defaultValue: 'Match recorded — feedback submitted.‌⁠‍',
+          type: "success",
+          title: t("match.accept_toast_title", {
+            defaultValue: "Match accepted‌⁠‍",
+          }),
+          message: t("match.accept_toast_recorded", {
+            defaultValue: "Match recorded — feedback submitted.‌⁠‍",
           }),
         });
       }
@@ -281,13 +283,13 @@ export function MatchSuggestionsPanel({
   const handleListKeyDown = useCallback(
     (e: KeyboardEvent<HTMLUListElement>) => {
       if (visibleCandidates.length === 0) return;
-      if (e.key === 'ArrowDown') {
+      if (e.key === "ArrowDown") {
         e.preventDefault();
         setFocusedIndex((i) => Math.min(visibleCandidates.length - 1, i + 1));
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setFocusedIndex((i) => Math.max(0, i - 1));
-      } else if (e.key === 'Enter') {
+      } else if (e.key === "Enter") {
         e.preventDefault();
         const target = visibleCandidates[focusedIndex];
         if (target) handleAccept(target);
@@ -302,18 +304,20 @@ export function MatchSuggestionsPanel({
   const hasResults = !isLoading && visibleCandidates.length > 0;
   const isEmpty = !isLoading && visibleCandidates.length === 0;
   const autoLinkedCode = response?.auto_linked?.code ?? null;
-  const catalogStatus: MatchStatus = response?.status ?? 'ok';
+  const catalogStatus: MatchStatus = response?.status ?? "ok";
   const catalogId = response?.catalog_id ?? null;
   const catalogCount = response?.catalog_count ?? 0;
   const catalogVecCount = response?.catalog_vectorized_count ?? 0;
   // Treat any non-``ok`` status as a hard empty state — the user must
   // pick a catalogue / vectorise / load one before candidates make sense.
-  const blockedByCatalog = catalogStatus !== 'ok';
+  const blockedByCatalog = catalogStatus !== "ok";
 
   return (
     <section
-      className={clsx('flex flex-col h-full', className)}
-      aria-label={t('match.panel_aria', { defaultValue: 'Match suggestions panel‌⁠‍' })}
+      className={clsx("flex flex-col h-full", className)}
+      aria-label={t("match.panel_aria", {
+        defaultValue: "Match suggestions panel‌⁠‍",
+      })}
       data-testid="match-suggestions-panel"
     >
       <CatalogBindingBar
@@ -343,7 +347,7 @@ export function MatchSuggestionsPanel({
           matches go through a real translator.  Routes to the
           Translation section of Project Settings via the #translation
           deep-link added in Phase 3. */}
-      {response?.translation_used?.tier_used === 'fallback' && !compact && (
+      {response?.translation_used?.tier_used === "fallback" && !compact && (
         <div
           className="flex items-start gap-2 px-3 py-2 border-b border-border-light bg-amber-50 text-amber-900 text-[11px] dark:bg-amber-900/20 dark:text-amber-200"
           role="status"
@@ -351,17 +355,17 @@ export function MatchSuggestionsPanel({
         >
           <Info size={11} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span className="flex-1">
-            {t('match.fallback_hint', {
+            {t("match.fallback_hint", {
               defaultValue:
-                'Translation cascade fell back to monolingual matching.‌⁠‍',
-            })}{' '}
+                "Translation cascade fell back to monolingual matching.‌⁠‍",
+            })}{" "}
             <a
               href={`/projects/${projectId}/settings#translation`}
               className="font-medium text-oe-blue hover:underline"
               data-testid="match-fallback-hint-link"
             >
-              {t('match.fallback_hint_link', {
-                defaultValue: 'Download dictionary →‌⁠‍',
+              {t("match.fallback_hint_link", {
+                defaultValue: "Download dictionary →‌⁠‍",
               })}
             </a>
           </span>
@@ -372,10 +376,7 @@ export function MatchSuggestionsPanel({
         {isLoading && <SkeletonList compact={compact} />}
 
         {isEmpty && blockedByCatalog && (
-          <CatalogBlockedState
-            status={catalogStatus}
-            catalogId={catalogId}
-          />
+          <CatalogBlockedState status={catalogStatus} catalogId={catalogId} />
         )}
 
         {isEmpty && !blockedByCatalog && (
@@ -386,8 +387,8 @@ export function MatchSuggestionsPanel({
           <ul
             ref={listRef}
             role="list"
-            aria-label={t('match.candidate_list_aria', {
-              defaultValue: 'Candidate matches',
+            aria-label={t("match.candidate_list_aria", {
+              defaultValue: "Candidate matches",
             })}
             className="flex flex-col divide-y divide-border-light"
             onKeyDown={handleListKeyDown}
@@ -415,7 +416,7 @@ export function MatchSuggestionsPanel({
 /* ── Header ────────────────────────────────────────────────────────────── */
 
 interface HeaderProps {
-  translationUsed: MatchResponse['translation_used'];
+  translationUsed: MatchResponse["translation_used"];
   useReranker: boolean;
   onToggleReranker: () => void;
   onRefresh: () => void;
@@ -437,13 +438,13 @@ function Header({
 }: HeaderProps) {
   const { t } = useTranslation();
   const showTranslation =
-    translationUsed && translationUsed.tier_used !== 'fallback';
+    translationUsed && translationUsed.tier_used !== "fallback";
 
   return (
     <header
       className={clsx(
-        'flex items-center gap-2 px-3 border-b border-border-light bg-surface-secondary',
-        compact ? 'py-1.5' : 'py-2',
+        "flex items-center gap-2 px-3 border-b border-border-light bg-surface-secondary",
+        compact ? "py-1.5" : "py-2",
       )}
     >
       <Sparkles
@@ -453,37 +454,37 @@ function Header({
       />
       <h2
         className={clsx(
-          'font-semibold text-content-primary truncate',
-          compact ? 'text-[11px]' : 'text-xs',
+          "font-semibold text-content-primary truncate",
+          compact ? "text-[11px]" : "text-xs",
         )}
       >
-        {t('match.title', { defaultValue: 'Match suggestions' })}
+        {t("match.title", { defaultValue: "Match suggestions" })}
       </h2>
 
       {hasAutoLink && (
         <span
           className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-800 border border-green-300 dark:bg-green-900/40 dark:text-green-200"
-          aria-label={t('match.auto_linked_aria', {
-            defaultValue: 'A high-confidence match was auto-linked',
+          aria-label={t("match.auto_linked_aria", {
+            defaultValue: "A high-confidence match was auto-linked",
           })}
           data-testid="match-auto-linked-banner"
         >
           <ShieldCheck size={10} aria-hidden="true" />
-          {t('match.auto_linked', { defaultValue: 'Auto-linked' })}
+          {t("match.auto_linked", { defaultValue: "Auto-linked" })}
         </span>
       )}
 
       {showTranslation && (
         <span
           className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-surface-tertiary text-content-secondary border border-border-light"
-          title={t('match.translated_via_tooltip', {
-            defaultValue: 'Description translated before matching',
+          title={t("match.translated_via_tooltip", {
+            defaultValue: "Description translated before matching",
           })}
           data-testid="match-translation-chip"
         >
           <Languages size={10} aria-hidden="true" />
-          {t('match.translated_via', {
-            defaultValue: 'Translated via {{tier}}',
+          {t("match.translated_via", {
+            defaultValue: "Translated via {{tier}}",
             tier: translationUsed.tier_used,
           })}
         </span>
@@ -493,12 +494,12 @@ function Header({
 
       <label
         className={clsx(
-          'inline-flex items-center gap-1.5 cursor-pointer select-none',
-          compact ? 'text-[10px]' : 'text-[11px]',
-          'text-content-secondary',
+          "inline-flex items-center gap-1.5 cursor-pointer select-none",
+          compact ? "text-[10px]" : "text-[11px]",
+          "text-content-secondary",
         )}
-        title={t('match.use_rerank_tooltip', {
-          defaultValue: 'Re-rank with the AI reranker (small extra cost)',
+        title={t("match.use_rerank_tooltip", {
+          defaultValue: "Re-rank with the AI reranker (small extra cost)",
         })}
       >
         <input
@@ -507,26 +508,28 @@ function Header({
           onChange={onToggleReranker}
           className="h-3 w-3 accent-oe-blue"
           data-testid="match-rerank-toggle"
-          aria-label={t('match.use_rerank_aria', {
-            defaultValue: 'Use AI reranker',
+          aria-label={t("match.use_rerank_aria", {
+            defaultValue: "Use AI reranker",
           })}
         />
         <Wand2 size={10} aria-hidden="true" />
-        <span>{t('match.use_rerank', { defaultValue: 'AI rerank' })}</span>
+        <span>{t("match.use_rerank", { defaultValue: "AI rerank" })}</span>
       </label>
 
       <button
         type="button"
         onClick={onRefresh}
         disabled={loading}
-        aria-label={t('match.refresh_aria', { defaultValue: 'Refresh matches' })}
-        title={t('match.refresh_aria', { defaultValue: 'Refresh matches' })}
+        aria-label={t("match.refresh_aria", {
+          defaultValue: "Refresh matches",
+        })}
+        title={t("match.refresh_aria", { defaultValue: "Refresh matches" })}
         className="p-1 rounded hover:bg-surface-tertiary text-content-tertiary hover:text-content-primary disabled:opacity-40"
         data-testid="match-refresh-button"
       >
         <RefreshCw
           size={12}
-          className={clsx(loading && 'animate-spin')}
+          className={clsx(loading && "animate-spin")}
           aria-hidden="true"
         />
       </button>
@@ -535,8 +538,8 @@ function Header({
         <button
           type="button"
           onClick={onDismiss}
-          aria-label={t('match.dismiss_aria', {
-            defaultValue: 'Dismiss panel',
+          aria-label={t("match.dismiss_aria", {
+            defaultValue: "Dismiss panel",
           })}
           className="p-1 rounded hover:bg-surface-tertiary text-content-tertiary hover:text-content-primary"
         >
@@ -560,7 +563,7 @@ function SkeletonList({ compact }: { compact: boolean }) {
       data-testid="match-skeleton-list"
     >
       {Array.from({ length: rows }).map((_, i) => (
-        <li key={i} className={clsx('px-3', compact ? 'py-1.5' : 'py-2.5')}>
+        <li key={i} className={clsx("px-3", compact ? "py-1.5" : "py-2.5")}>
           <Skeleton height={compact ? 14 : 16} className="w-3/5 mb-1.5" />
           {!compact && <Skeleton height={12} className="w-2/3" />}
         </li>
@@ -588,27 +591,27 @@ function EmptyState({
         <Sparkles size={18} aria-hidden="true" />
       </div>
       <h3 className="text-sm font-semibold text-content-primary">
-        {t('match.no_results_title', {
-          defaultValue: 'No matches found yet',
+        {t("match.no_results_title", {
+          defaultValue: "No matches found yet",
         })}
       </h3>
       <p className="mt-1.5 max-w-xs text-xs text-content-secondary">
         {hadResponse
-          ? t('match.no_results_after_search', {
+          ? t("match.no_results_after_search", {
               defaultValue:
-                'Try adjusting the description or run a vector reindex.',
+                "Try adjusting the description or run a vector reindex.",
             })
-          : t('match.no_results_initial', {
+          : t("match.no_results_initial", {
               defaultValue:
-                'Click Refresh to find candidates, or run a vector reindex if results stay empty.',
+                "Click Refresh to find candidates, or run a vector reindex if results stay empty.",
             })}
       </p>
       <a
         href={`/projects/${projectId}/settings#match`}
         className="mt-3 text-xs text-oe-blue hover:underline"
       >
-        {t('match.open_settings', {
-          defaultValue: 'Open match settings',
+        {t("match.open_settings", {
+          defaultValue: "Open match settings",
         })}
       </a>
     </div>
@@ -642,7 +645,7 @@ function CatalogBindingBar({
   const [saving, setSaving] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { data: loaded = [] } = useQuery<LoadedDatabase[]>({
-    queryKey: ['costs', 'loaded-databases'],
+    queryKey: ["costs", "loaded-databases"],
     queryFn: listLoadedDatabases,
     staleTime: 30_000,
   });
@@ -658,13 +661,13 @@ function CatalogBindingBar({
       }
     };
     const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape') setPicking(false);
+      if (e.key === "Escape") setPicking(false);
     };
-    document.addEventListener('pointerdown', onPointerDown);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('pointerdown', onPointerDown);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
     };
   }, [picking]);
 
@@ -676,15 +679,15 @@ function CatalogBindingBar({
         // Invalidate match-settings cache so any other surface (settings
         // dialog, BOQ editor) sees the new binding without a manual reload.
         await queryClient.invalidateQueries({
-          queryKey: ['projects', projectId, 'match-settings'],
+          queryKey: ["projects", projectId, "match-settings"],
         });
         setPicking(false);
         onChanged();
       } catch (e) {
         useToastStore.getState().addToast({
-          type: 'error',
-          title: t('match.catalog_pick_error_title', {
-            defaultValue: 'Could not change catalogue',
+          type: "error",
+          title: t("match.catalog_pick_error_title", {
+            defaultValue: "Could not change catalogue",
           }),
           message: e instanceof Error ? e.message : String(e),
         });
@@ -695,21 +698,21 @@ function CatalogBindingBar({
     [projectId, queryClient, onChanged, t],
   );
 
-  const ready = status === 'ok';
+  const ready = status === "ok";
   const labelClass = clsx(
-    'inline-flex items-center gap-1.5 rounded border px-1.5 py-0.5 font-mono',
-    compact ? 'text-[10px]' : 'text-[11px]',
+    "inline-flex items-center gap-1.5 rounded border px-1.5 py-0.5 font-mono",
+    compact ? "text-[10px]" : "text-[11px]",
     ready
-      ? 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200'
-      : 'border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200',
+      ? "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200"
+      : "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200",
   );
 
   return (
     <div
       ref={containerRef}
       className={clsx(
-        'relative flex items-center gap-2 px-3 border-b border-border-light bg-surface-tertiary',
-        compact ? 'py-1' : 'py-1.5',
+        "relative flex items-center gap-2 px-3 border-b border-border-light bg-surface-tertiary",
+        compact ? "py-1" : "py-1.5",
       )}
       data-testid="match-catalog-bar"
     >
@@ -730,8 +733,8 @@ function CatalogBindingBar({
         </span>
       ) : (
         <span className="text-[11px] text-amber-700 dark:text-amber-300 font-medium">
-          {t('match.no_catalog_picked', {
-            defaultValue: 'No catalogue selected',
+          {t("match.no_catalog_picked", {
+            defaultValue: "No catalogue selected",
           })}
         </span>
       )}
@@ -743,14 +746,14 @@ function CatalogBindingBar({
         onClick={() => setPicking((p) => !p)}
         disabled={saving}
         className={clsx(
-          'rounded px-2 py-0.5 hover:bg-surface-secondary text-content-secondary hover:text-content-primary disabled:opacity-40',
-          compact ? 'text-[10px]' : 'text-[11px]',
+          "rounded px-2 py-0.5 hover:bg-surface-secondary text-content-secondary hover:text-content-primary disabled:opacity-40",
+          compact ? "text-[10px]" : "text-[11px]",
         )}
         data-testid="match-catalog-change"
       >
         {catalogId
-          ? t('match.catalog_change', { defaultValue: 'Change' })
-          : t('match.catalog_pick', { defaultValue: 'Select catalogue' })}
+          ? t("match.catalog_change", { defaultValue: "Change" })
+          : t("match.catalog_pick", { defaultValue: "Select catalogue" })}
       </button>
 
       {picking && (
@@ -758,20 +761,20 @@ function CatalogBindingBar({
           className="absolute top-full right-3 mt-1 z-30 w-64 max-w-xs rounded border border-border-light bg-surface shadow-lg p-1"
           data-testid="match-catalog-picker"
           role="listbox"
-          aria-label={t('match.catalog_picker_aria', {
-            defaultValue: 'Pick a CWICR catalogue',
+          aria-label={t("match.catalog_picker_aria", {
+            defaultValue: "Pick a CWICR catalogue",
           })}
         >
           {loaded.length === 0 ? (
             <div className="text-[11px] text-content-secondary px-2 py-2">
-              {t('match.no_catalogs_loaded_short', {
-                defaultValue: 'No catalogues loaded.',
+              {t("match.no_catalogs_loaded_short", {
+                defaultValue: "No catalogues loaded.",
               })}
               <a
                 href="/setup/databases"
                 className="ml-1 text-oe-blue hover:underline"
               >
-                {t('match.load_catalog_link', { defaultValue: 'Load one →' })}
+                {t("match.load_catalog_link", { defaultValue: "Load one →" })}
               </a>
             </div>
           ) : (
@@ -783,8 +786,8 @@ function CatalogBindingBar({
                     onClick={() => handlePick(db.id)}
                     disabled={saving}
                     className={clsx(
-                      'w-full flex items-center gap-2 px-2 py-1 rounded text-left hover:bg-surface-tertiary',
-                      catalogId === db.id && 'bg-surface-secondary',
+                      "w-full flex items-center gap-2 px-2 py-1 rounded text-left hover:bg-surface-tertiary",
+                      catalogId === db.id && "bg-surface-secondary",
                     )}
                     data-testid={`match-catalog-option-${db.id}`}
                   >
@@ -796,7 +799,8 @@ function CatalogBindingBar({
                     </span>
                     {db.vectorized_count > 0 ? (
                       <span className="ml-auto inline-flex items-center gap-1 text-[10px] text-emerald-700 dark:text-emerald-300">
-                        <Check size={10} strokeWidth={2.5} /> {db.vectorized_count.toLocaleString()} vec
+                        <Check size={10} strokeWidth={2.5} />{" "}
+                        {db.vectorized_count.toLocaleString()} vec
                       </span>
                     ) : (
                       <span className="ml-auto text-[10px] text-amber-700 dark:text-amber-300">
@@ -825,7 +829,7 @@ function CatalogBlockedState({
 }) {
   const { t } = useTranslation();
 
-  if (status === 'no_catalogs_loaded') {
+  if (status === "no_catalogs_loaded") {
     return (
       <div
         className="flex flex-col items-center justify-center text-center px-6 py-10"
@@ -835,14 +839,14 @@ function CatalogBlockedState({
           <Database size={18} aria-hidden="true" />
         </div>
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('match.state_no_catalogs_title', {
-            defaultValue: 'No CWICR catalogue loaded',
+          {t("match.state_no_catalogs_title", {
+            defaultValue: "No CWICR catalogue loaded",
           })}
         </h3>
         <p className="mt-1.5 max-w-xs text-xs text-content-secondary">
-          {t('match.state_no_catalogs_body', {
+          {t("match.state_no_catalogs_body", {
             defaultValue:
-              'Matching needs at least one regional catalogue. Load one to get started — it takes about a minute.',
+              "Matching needs at least one regional catalogue. Load one to get started — it takes about a minute.",
           })}
         </p>
         <a
@@ -850,15 +854,15 @@ function CatalogBlockedState({
           className="mt-3 inline-flex items-center gap-1 rounded bg-oe-blue px-3 py-1.5 text-xs font-semibold text-white hover:bg-oe-blue/90"
           data-testid="match-state-load-catalog-cta"
         >
-          {t('match.state_no_catalogs_cta', {
-            defaultValue: 'Load a catalogue →',
+          {t("match.state_no_catalogs_cta", {
+            defaultValue: "Load a catalogue →",
           })}
         </a>
       </div>
     );
   }
 
-  if (status === 'no_catalog_selected') {
+  if (status === "no_catalog_selected") {
     return (
       <div
         className="flex flex-col items-center justify-center text-center px-6 py-10"
@@ -868,21 +872,21 @@ function CatalogBlockedState({
           <AlertTriangle size={18} aria-hidden="true" />
         </div>
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('match.state_no_pick_title', {
-            defaultValue: 'Select a catalogue',
+          {t("match.state_no_pick_title", {
+            defaultValue: "Select a catalogue",
           })}
         </h3>
         <p className="mt-1.5 max-w-xs text-xs text-content-secondary">
-          {t('match.state_no_pick_body', {
+          {t("match.state_no_pick_body", {
             defaultValue:
-              'This project has no CWICR catalogue selected yet. Pick one in the bar above — matches always come from a single explicit catalogue.',
+              "This project has no CWICR catalogue selected yet. Pick one in the bar above — matches always come from a single explicit catalogue.",
           })}
         </p>
       </div>
     );
   }
 
-  if (status === 'catalog_not_vectorized') {
+  if (status === "catalog_not_vectorized") {
     return (
       <div
         className="flex flex-col items-center justify-center text-center px-6 py-10"
@@ -892,24 +896,24 @@ function CatalogBlockedState({
           <Loader2 size={18} aria-hidden="true" />
         </div>
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('match.state_not_vectorized_title', {
-            defaultValue: 'Catalogue not vectorised yet',
+          {t("match.state_not_vectorized_title", {
+            defaultValue: "Catalogue not vectorised yet",
           })}
         </h3>
         <p className="mt-1.5 max-w-xs text-xs text-content-secondary">
-          {t('match.state_not_vectorized_body', {
+          {t("match.state_not_vectorized_body", {
             defaultValue:
-              '{{catalog}} is loaded but its rows are not embedded yet. Vectorisation is a one-time step (about 2–5 minutes for 55k items) and unlocks semantic matching.',
-            catalog: catalogId ?? '—',
+              "{{catalog}} is loaded but its rows are not embedded yet. Vectorisation is a one-time step (about 2–5 minutes for 55k items) and unlocks semantic matching.",
+            catalog: catalogId ?? "—",
           })}
         </p>
         <a
-          href={`/setup/databases?vectorize=${encodeURIComponent(catalogId ?? '')}`}
+          href={`/setup/databases?vectorize=${encodeURIComponent(catalogId ?? "")}`}
           className="mt-3 inline-flex items-center gap-1 rounded bg-oe-blue px-3 py-1.5 text-xs font-semibold text-white hover:bg-oe-blue/90"
           data-testid="match-state-vectorize-cta"
         >
-          {t('match.state_vectorize_cta', {
-            defaultValue: 'Start vectorisation →',
+          {t("match.state_vectorize_cta", {
+            defaultValue: "Start vectorisation →",
           })}
         </a>
       </div>
@@ -952,9 +956,9 @@ const CandidateCard = memo(function CandidateCard({
       <li
         onClick={onFocus}
         className={clsx(
-          'flex items-center gap-1.5 px-2 py-1 cursor-pointer',
-          isFocused && 'bg-surface-tertiary',
-          isAutoLinked && 'border-l-2 border-l-green-500',
+          "flex items-center gap-1.5 px-2 py-1 cursor-pointer",
+          isFocused && "bg-surface-tertiary",
+          isAutoLinked && "border-l-2 border-l-green-500",
         )}
         data-testid={`match-candidate-${candidate.code}`}
       >
@@ -963,7 +967,7 @@ const CandidateCard = memo(function CandidateCard({
         </span>
         <span
           className={clsx(
-            'inline-flex items-center px-1 rounded text-[9px] font-semibold border',
+            "inline-flex items-center px-1 rounded text-[9px] font-semibold border",
             conf.pill,
           )}
           aria-label={confidenceAriaLabel}
@@ -975,8 +979,8 @@ const CandidateCard = memo(function CandidateCard({
         <button
           type="button"
           onClick={onAccept}
-          aria-label={t('match.accept_aria', {
-            defaultValue: 'Accept match',
+          aria-label={t("match.accept_aria", {
+            defaultValue: "Accept match",
             code: candidate.code,
           })}
           className="p-1 rounded hover:bg-green-100 text-green-700"
@@ -987,8 +991,8 @@ const CandidateCard = memo(function CandidateCard({
         <button
           type="button"
           onClick={onReject}
-          aria-label={t('match.reject_aria', {
-            defaultValue: 'Reject match',
+          aria-label={t("match.reject_aria", {
+            defaultValue: "Reject match",
             code: candidate.code,
           })}
           className="p-1 rounded hover:bg-surface-tertiary text-content-tertiary"
@@ -1004,9 +1008,9 @@ const CandidateCard = memo(function CandidateCard({
     <li
       onClick={onFocus}
       className={clsx(
-        'flex flex-col gap-1.5 px-3 py-2.5 cursor-pointer',
-        isFocused && 'bg-surface-tertiary',
-        isAutoLinked && 'border-l-2 border-l-green-500',
+        "flex flex-col gap-1.5 px-3 py-2.5 cursor-pointer",
+        isFocused && "bg-surface-tertiary",
+        isAutoLinked && "border-l-2 border-l-green-500",
       )}
       data-testid={`match-candidate-${candidate.code}`}
     >
@@ -1027,13 +1031,13 @@ const CandidateCard = memo(function CandidateCard({
         <ScoreBadge candidate={candidate} ariaLabel={confidenceAriaLabel} />
         <span
           className={clsx(
-            'inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold border shrink-0',
+            "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold border shrink-0",
             conf.pill,
           )}
           aria-label={confidenceAriaLabel}
         >
           {t(`match.confidence.${candidate.confidence_band}`, {
-            defaultValue: conf.defaultLabel.replace(' confidence', ''),
+            defaultValue: conf.defaultLabel.replace(" confidence", ""),
           })}
         </span>
       </div>
@@ -1045,9 +1049,9 @@ const CandidateCard = memo(function CandidateCard({
         </span>
         <span>·</span>
         <span>
-          {t('match.per_unit', {
-            defaultValue: 'per {{unit}}',
-            unit: candidate.unit || '—',
+          {t("match.per_unit", {
+            defaultValue: "per {{unit}}",
+            unit: candidate.unit || "—",
           })}
         </span>
         {candidate.region_code && (
@@ -1082,7 +1086,7 @@ const CandidateCard = memo(function CandidateCard({
           data-testid={`match-accept-${candidate.code}`}
         >
           <Check size={11} aria-hidden="true" />
-          {t('match.accept', { defaultValue: 'Accept' })}
+          {t("match.accept", { defaultValue: "Accept" })}
         </button>
         <button
           type="button"
@@ -1094,7 +1098,7 @@ const CandidateCard = memo(function CandidateCard({
           data-testid={`match-reject-${candidate.code}`}
         >
           <XIcon size={11} aria-hidden="true" />
-          {t('match.reject', { defaultValue: 'Reject' })}
+          {t("match.reject", { defaultValue: "Reject" })}
         </button>
       </div>
     </li>
@@ -1148,22 +1152,20 @@ function ScoreBadge({
         >
           <div className="flex items-center justify-between mb-1 font-semibold text-content-primary">
             <span>
-              {t('match.score_breakdown', {
-                defaultValue: 'Score breakdown',
+              {t("match.score_breakdown", {
+                defaultValue: "Score breakdown",
               })}
             </span>
           </div>
           <div className="flex justify-between text-content-secondary">
-            <span>
-              {t('match.vector_score', { defaultValue: 'Vector' })}
-            </span>
+            <span>{t("match.vector_score", { defaultValue: "Vector" })}</span>
             <span className="font-mono">
               {candidate.vector_score.toFixed(2)}
             </span>
           </div>
           {boosts.length === 0 ? (
             <div className="mt-1 text-content-tertiary italic">
-              {t('match.no_boosts', { defaultValue: 'No boosts applied' })}
+              {t("match.no_boosts", { defaultValue: "No boosts applied" })}
             </div>
           ) : (
             <ul className="mt-1 space-y-0.5">
@@ -1177,8 +1179,8 @@ function ScoreBadge({
                   </span>
                   <span
                     className={clsx(
-                      'font-mono ml-2',
-                      delta >= 0 ? 'text-green-700' : 'text-red-700',
+                      "font-mono ml-2",
+                      delta >= 0 ? "text-green-700" : "text-red-700",
                     )}
                   >
                     {formatBoostDelta(delta)}

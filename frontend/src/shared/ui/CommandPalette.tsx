@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import clsx from "clsx";
 import {
   Search,
   LayoutDashboard,
@@ -30,16 +30,16 @@ import {
   AlertTriangle,
   Globe,
   type LucideIcon,
-} from 'lucide-react';
-import { projectsApi, type Project } from '@/features/projects/api';
-import { boqApi, type BOQ } from '@/features/boq/api';
-import { apiGet } from '@/shared/lib/api';
+} from "lucide-react";
+import { projectsApi, type Project } from "@/features/projects/api";
+import { boqApi, type BOQ } from "@/features/boq/api";
+import { apiGet } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 interface SearchResult {
   id: string;
-  type: 'page' | 'project' | 'boq' | 'recent' | 'global';
+  type: "page" | "project" | "boq" | "recent" | "global";
   labelKey?: string;
   label?: string;
   description?: string;
@@ -82,8 +82,8 @@ interface UnifiedSearchResponse {
 function hitToResult(hit: UnifiedSearchHit): GlobalSearchResult {
   const payload = hit.payload as Record<string, unknown> | undefined;
   const url =
-    (typeof payload?.url === 'string' && payload.url) ||
-    (hit.module && hit.id ? `/${hit.module}/${hit.id}` : '');
+    (typeof payload?.url === "string" && payload.url) ||
+    (hit.module && hit.id ? `/${hit.module}/${hit.id}` : "");
   return {
     module: hit.module,
     type: hit.collection,
@@ -116,37 +116,148 @@ interface CommandPaletteProps {
 /* ── Static page entries ───────────────────────────────────────────────── */
 
 const PAGE_RESULTS: SearchResult[] = [
-  { id: 'page-dashboard', type: 'page', labelKey: 'nav.dashboard', icon: LayoutDashboard, path: '/' },
-  { id: 'page-projects', type: 'page', labelKey: 'projects.title', icon: FolderOpen, path: '/projects' },
-  { id: 'page-boq', type: 'page', labelKey: 'boq.title', icon: Table2, path: '/boq' },
-  { id: 'page-costs', type: 'page', labelKey: 'costs.title', icon: Database, path: '/costs' },
-  { id: 'page-catalog', type: 'page', labelKey: 'catalog.title', icon: Boxes, path: '/catalog' },
-  { id: 'page-ai-estimate', type: 'page', labelKey: 'nav.ai_estimate', icon: Sparkles, path: '/ai-estimate' },
-  { id: 'page-schedule', type: 'page', labelKey: 'schedule.title', icon: CalendarDays, path: '/schedule' },
-  { id: 'page-5d', type: 'page', labelKey: 'nav.5d_cost_model', icon: TrendingUp, path: '/5d' },
-  { id: 'page-tendering', type: 'page', labelKey: 'tendering.title', icon: FileText, path: '/tendering' },
-  { id: 'page-reports', type: 'page', labelKey: 'nav.reports', icon: FileBarChart, path: '/reports' },
-  { id: 'page-validation', type: 'page', labelKey: 'validation.title', icon: ShieldCheck, path: '/validation' },
-  { id: 'page-sustainability', type: 'page', labelKey: 'nav.sustainability', icon: Leaf, path: '/sustainability' },
-  { id: 'page-modules', type: 'page', labelKey: 'modules.title', icon: Package, path: '/modules' },
-  { id: 'page-settings', type: 'page', labelKey: 'nav.settings', icon: Settings, path: '/settings' },
+  {
+    id: "page-dashboard",
+    type: "page",
+    labelKey: "nav.dashboard",
+    icon: LayoutDashboard,
+    path: "/",
+  },
+  {
+    id: "page-projects",
+    type: "page",
+    labelKey: "projects.title",
+    icon: FolderOpen,
+    path: "/projects",
+  },
+  {
+    id: "page-boq",
+    type: "page",
+    labelKey: "boq.title",
+    icon: Table2,
+    path: "/boq",
+  },
+  {
+    id: "page-costs",
+    type: "page",
+    labelKey: "costs.title",
+    icon: Database,
+    path: "/costs",
+  },
+  {
+    id: "page-catalog",
+    type: "page",
+    labelKey: "catalog.title",
+    icon: Boxes,
+    path: "/catalog",
+  },
+  {
+    id: "page-ai-estimate",
+    type: "page",
+    labelKey: "nav.ai_estimate",
+    icon: Sparkles,
+    path: "/ai-estimate",
+  },
+  {
+    id: "page-schedule",
+    type: "page",
+    labelKey: "schedule.title",
+    icon: CalendarDays,
+    path: "/schedule",
+  },
+  {
+    id: "page-5d",
+    type: "page",
+    labelKey: "nav.5d_cost_model",
+    icon: TrendingUp,
+    path: "/5d",
+  },
+  {
+    id: "page-tendering",
+    type: "page",
+    labelKey: "tendering.title",
+    icon: FileText,
+    path: "/tendering",
+  },
+  {
+    id: "page-reports",
+    type: "page",
+    labelKey: "nav.reports",
+    icon: FileBarChart,
+    path: "/reports",
+  },
+  {
+    id: "page-validation",
+    type: "page",
+    labelKey: "validation.title",
+    icon: ShieldCheck,
+    path: "/validation",
+  },
+  {
+    id: "page-sustainability",
+    type: "page",
+    labelKey: "nav.sustainability",
+    icon: Leaf,
+    path: "/sustainability",
+  },
+  {
+    id: "page-modules",
+    type: "page",
+    labelKey: "modules.title",
+    icon: Package,
+    path: "/modules",
+  },
+  {
+    id: "page-settings",
+    type: "page",
+    labelKey: "nav.settings",
+    icon: Settings,
+    path: "/settings",
+  },
   // Quick actions
-  { id: 'action-new-project', type: 'page', labelKey: 'command_palette.action_new_project', description: 'Ctrl+N', icon: FolderPlus, path: '/projects/new' },
-  { id: 'action-new-boq', type: 'page', labelKey: 'command_palette.action_new_boq', description: 'Ctrl+Shift+N', icon: FilePlus2, path: '/boq/new' },
-  { id: 'action-validate', type: 'page', labelKey: 'command_palette.action_run_validation', description: 'Ctrl+Shift+V', icon: ShieldCheck, path: '/validation' },
-  { id: 'action-import-db', type: 'page', labelKey: 'command_palette.action_import_database', icon: Download, path: '/costs/import' },
+  {
+    id: "action-new-project",
+    type: "page",
+    labelKey: "command_palette.action_new_project",
+    description: "Ctrl+N",
+    icon: FolderPlus,
+    path: "/projects/new",
+  },
+  {
+    id: "action-new-boq",
+    type: "page",
+    labelKey: "command_palette.action_new_boq",
+    description: "Ctrl+Shift+N",
+    icon: FilePlus2,
+    path: "/boq/new",
+  },
+  {
+    id: "action-validate",
+    type: "page",
+    labelKey: "command_palette.action_run_validation",
+    description: "Ctrl+Shift+V",
+    icon: ShieldCheck,
+    path: "/validation",
+  },
+  {
+    id: "action-import-db",
+    type: "page",
+    labelKey: "command_palette.action_import_database",
+    icon: Download,
+    path: "/costs/import",
+  },
 ];
 
 /* ── Recent items (stored in localStorage) ─────────────────────────────── */
 
-const RECENT_KEY = 'oe_command_palette_recent';
+const RECENT_KEY = "oe_command_palette_recent";
 const MAX_RECENT = 5;
 
 interface RecentEntry {
   id: string;
   label: string;
   path: string;
-  type: 'page' | 'project' | 'boq';
+  type: "page" | "project" | "boq";
 }
 
 function loadRecent(): RecentEntry[] {
@@ -161,7 +272,10 @@ function loadRecent(): RecentEntry[] {
 
 function saveRecent(entries: RecentEntry[]): void {
   try {
-    localStorage.setItem(RECENT_KEY, JSON.stringify(entries.slice(0, MAX_RECENT)));
+    localStorage.setItem(
+      RECENT_KEY,
+      JSON.stringify(entries.slice(0, MAX_RECENT)),
+    );
   } catch {
     // Silently ignore storage errors
   }
@@ -181,7 +295,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
@@ -255,16 +369,21 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     const projectSlice = projects.slice(0, 5);
     Promise.all(
       projectSlice.map((p) =>
-        boqApi.list(p.id).then((list) =>
-          list.map((b) => ({ ...b, projectName: p.name })),
-        ).catch(() => [] as (BOQ & { projectName?: string })[]),
+        boqApi
+          .list(p.id)
+          .then((list) => list.map((b) => ({ ...b, projectName: p.name })))
+          .catch(() => [] as (BOQ & { projectName?: string })[]),
       ),
     ).then((results) => {
       if (!cancelled) {
         // Flatten and take top 5 most recent
         const allBoqs = results
           .flat()
-          .sort((a, b) => new Date(b.updated_at ?? b.created_at).getTime() - new Date(a.updated_at ?? a.created_at).getTime())
+          .sort(
+            (a, b) =>
+              new Date(b.updated_at ?? b.created_at).getTime() -
+              new Date(a.updated_at ?? a.created_at).getTime(),
+          )
           .slice(0, 5);
         setBoqs(allBoqs);
         setBoqsLoaded(true);
@@ -279,7 +398,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   // Reset state when opening
   useEffect(() => {
     if (!open) return;
-    setQuery('');
+    setQuery("");
     setActiveIndex(0);
     // Small delay to let the portal mount, then focus.
     // Cancel on unmount / re-close so a queued frame can't fire focus()
@@ -300,12 +419,17 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       const recent = loadRecent();
       if (recent.length > 0) {
         groups.push({
-          title: t('command_palette.recent', { defaultValue: 'Recent‌⁠‍' }),
+          title: t("command_palette.recent", { defaultValue: "Recent‌⁠‍" }),
           items: recent.map((r) => ({
             id: `recent-${r.id}`,
-            type: 'recent' as const,
+            type: "recent" as const,
             label: r.label,
-            icon: r.type === 'project' ? FolderOpen : r.type === 'boq' ? Table2 : LayoutDashboard,
+            icon:
+              r.type === "project"
+                ? FolderOpen
+                : r.type === "boq"
+                  ? Table2
+                  : LayoutDashboard,
             path: r.path,
           })),
         });
@@ -313,18 +437,18 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
       // Show all pages
       groups.push({
-        title: t('command_palette.pages', { defaultValue: 'Pages' }),
+        title: t("command_palette.pages", { defaultValue: "Pages" }),
         items: PAGE_RESULTS,
       });
 
       // Show recent projects (top 5 from API)
       if (projects.length > 0) {
         groups.push({
-          title: t('command_palette.projects', { defaultValue: 'Projects‌⁠‍' }),
+          title: t("command_palette.projects", { defaultValue: "Projects‌⁠‍" }),
           items: projects.slice(0, 5).map(
             (p): SearchResult => ({
               id: `project-${p.id}`,
-              type: 'project',
+              type: "project",
               label: p.name,
               description: p.description,
               icon: FolderOpen,
@@ -337,11 +461,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       // Show recent BOQs (top 5 from API)
       if (boqs.length > 0) {
         groups.push({
-          title: t('command_palette.boqs', { defaultValue: 'Bills of Quantities‌⁠‍' }),
+          title: t("command_palette.boqs", {
+            defaultValue: "Bills of Quantities‌⁠‍",
+          }),
           items: boqs.slice(0, 5).map(
             (b): SearchResult => ({
               id: `boq-${b.id}`,
-              type: 'boq',
+              type: "boq",
               label: b.name,
               description: b.projectName,
               icon: Table2,
@@ -356,13 +482,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
     // Filter pages
     const matchingPages = PAGE_RESULTS.filter((page) => {
-      const label = page.labelKey ? t(page.labelKey).toLowerCase() : '';
+      const label = page.labelKey ? t(page.labelKey).toLowerCase() : "";
       return label.includes(lowerQuery);
     });
 
     if (matchingPages.length > 0) {
       groups.push({
-        title: t('command_palette.pages', { defaultValue: 'Pages' }),
+        title: t("command_palette.pages", { defaultValue: "Pages" }),
         items: matchingPages,
       });
     }
@@ -378,7 +504,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       .map(
         (p): SearchResult => ({
           id: `project-${p.id}`,
-          type: 'project',
+          type: "project",
           label: p.name,
           description: p.description,
           icon: FolderOpen,
@@ -388,7 +514,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
     if (matchingProjects.length > 0) {
       groups.push({
-        title: t('command_palette.projects', { defaultValue: 'Projects‌⁠‍' }),
+        title: t("command_palette.projects", { defaultValue: "Projects‌⁠‍" }),
         items: matchingProjects,
       });
     }
@@ -405,7 +531,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       .map(
         (b): SearchResult => ({
           id: `boq-${b.id}`,
-          type: 'boq',
+          type: "boq",
           label: b.name,
           description: b.projectName,
           icon: Table2,
@@ -415,7 +541,9 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
     if (matchingBoqs.length > 0) {
       groups.push({
-        title: t('command_palette.boqs', { defaultValue: 'Bills of Quantities‌⁠‍' }),
+        title: t("command_palette.boqs", {
+          defaultValue: "Bills of Quantities‌⁠‍",
+        }),
         items: matchingBoqs,
       });
     }
@@ -429,7 +557,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         if (!moduleGroups.has(moduleName)) moduleGroups.set(moduleName, []);
         moduleGroups.get(moduleName)!.push({
           id: `global-${gr.type}-${gr.id}`,
-          type: 'global' as const,
+          type: "global" as const,
           label: gr.title,
           description: gr.subtitle,
           icon: GLOBAL_SEARCH_ICONS[moduleName] ?? Globe,
@@ -437,7 +565,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         });
       }
       for (const [moduleName, items] of moduleGroups) {
-        const moduleLabel = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+        const moduleLabel =
+          moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
         groups.push({
           title: t(`command_palette.global_${moduleName}`, {
             defaultValue: moduleLabel,
@@ -455,18 +584,27 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
   // Clamp active index when results change
   useEffect(() => {
-    setActiveIndex((prev) => Math.min(prev, Math.max(0, flatResults.length - 1)));
+    setActiveIndex((prev) =>
+      Math.min(prev, Math.max(0, flatResults.length - 1)),
+    );
   }, [flatResults.length]);
 
   // Navigate to a result
   const selectResult = useCallback(
     (result: SearchResult) => {
-      const label = result.label ?? (result.labelKey ? t(result.labelKey) : '');
+      const label = result.label ?? (result.labelKey ? t(result.labelKey) : "");
       pushRecent({
-        id: result.id.replace(/^recent-/, ''),
+        id: result.id.replace(/^recent-/, ""),
         label,
         path: result.path,
-        type: result.type === 'project' ? 'project' : result.type === 'boq' ? 'boq' : result.type === 'global' ? 'page' : 'page',
+        type:
+          result.type === "project"
+            ? "project"
+            : result.type === "boq"
+              ? "boq"
+              : result.type === "global"
+                ? "page"
+                : "page",
       });
       navigate(result.path);
       onClose();
@@ -478,15 +616,20 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       switch (e.key) {
-        case 'ArrowDown':
+        case "ArrowDown":
           e.preventDefault();
-          setActiveIndex((prev) => (prev + 1) % Math.max(1, flatResults.length));
+          setActiveIndex(
+            (prev) => (prev + 1) % Math.max(1, flatResults.length),
+          );
           break;
-        case 'ArrowUp':
+        case "ArrowUp":
           e.preventDefault();
-          setActiveIndex((prev) => (prev - 1 + flatResults.length) % Math.max(1, flatResults.length));
+          setActiveIndex(
+            (prev) =>
+              (prev - 1 + flatResults.length) % Math.max(1, flatResults.length),
+          );
           break;
-        case 'Enter': {
+        case "Enter": {
           e.preventDefault();
           const selected = flatResults[activeIndex];
           if (selected) {
@@ -494,7 +637,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           }
           break;
         }
-        case 'Escape':
+        case "Escape":
           e.preventDefault();
           onClose();
           break;
@@ -508,7 +651,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     if (!listRef.current) return;
     const activeEl = listRef.current.querySelector('[data-active="true"]');
     if (activeEl) {
-      activeEl.scrollIntoView({ block: 'nearest' });
+      activeEl.scrollIntoView({ block: "nearest" });
     }
   }, [activeIndex]);
 
@@ -529,14 +672,16 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t('command_palette.title', { defaultValue: 'Command Palette' })}
+        aria-label={t("command_palette.title", {
+          defaultValue: "Command Palette",
+        })}
         className={clsx(
-          'relative z-10 w-full max-w-lg mx-4',
-          'rounded-2xl border border-border-light',
-          'bg-surface-elevated shadow-xl',
-          'animate-scale-in',
-          'flex flex-col overflow-hidden',
-          'max-h-[min(480px,60vh)]',
+          "relative z-10 w-full max-w-lg mx-4",
+          "rounded-2xl border border-border-light",
+          "bg-surface-elevated shadow-xl",
+          "animate-scale-in",
+          "flex flex-col overflow-hidden",
+          "max-h-[min(480px,60vh)]",
         )}
         onKeyDown={handleKeyDown}
       >
@@ -551,13 +696,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               setQuery(e.target.value);
               setActiveIndex(0);
             }}
-            placeholder={t('command_palette.placeholder', {
-              defaultValue: 'Search pages, projects, BOQs...',
+            placeholder={t("command_palette.placeholder", {
+              defaultValue: "Search pages, projects, BOQs...",
             })}
             className={clsx(
-              'flex-1 h-12 bg-transparent text-sm text-content-primary',
-              'placeholder:text-content-tertiary',
-              'focus:outline-none',
+              "flex-1 h-12 bg-transparent text-sm text-content-primary",
+              "placeholder:text-content-tertiary",
+              "focus:outline-none",
             )}
             autoComplete="off"
             spellCheck={false}
@@ -569,14 +714,20 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
         {/* Results */}
         <div ref={listRef} className="overflow-y-auto px-2 py-2">
-          {flatResults.length === 0 && query.trim() !== '' && !globalSearchLoading && (
-            <div className="px-3 py-8 text-center text-sm text-content-tertiary">
-              {t('command_palette.no_results', { defaultValue: 'No results found' })}
-            </div>
-          )}
+          {flatResults.length === 0 &&
+            query.trim() !== "" &&
+            !globalSearchLoading && (
+              <div className="px-3 py-8 text-center text-sm text-content-tertiary">
+                {t("command_palette.no_results", {
+                  defaultValue: "No results found",
+                })}
+              </div>
+            )}
           {globalSearchLoading && query.trim().length >= 2 && (
             <div className="px-3 py-3 text-center text-xs text-content-tertiary animate-pulse">
-              {t('command_palette.searching', { defaultValue: 'Searching across all modules...' })}
+              {t("command_palette.searching", {
+                defaultValue: "Searching across all modules...",
+              })}
             </div>
           )}
 
@@ -590,7 +741,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                 const isActive = flatIndex === activeIndex;
                 const idx = flatIndex;
                 const Icon = item.icon;
-                const label = item.label ?? (item.labelKey ? t(item.labelKey) : '');
+                const label =
+                  item.label ?? (item.labelKey ? t(item.labelKey) : "");
 
                 return (
                   <button
@@ -599,14 +751,18 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     onClick={() => selectResult(item)}
                     onMouseEnter={() => setActiveIndex(idx)}
                     className={clsx(
-                      'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left',
-                      'text-sm transition-colors',
+                      "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left",
+                      "text-sm transition-colors",
                       isActive
-                        ? 'bg-oe-blue-subtle text-oe-blue'
-                        : 'text-content-primary hover:bg-surface-secondary',
+                        ? "bg-oe-blue-subtle text-oe-blue"
+                        : "text-content-primary hover:bg-surface-secondary",
                     )}
                   >
-                    <Icon size={16} strokeWidth={1.75} className="shrink-0 opacity-70" />
+                    <Icon
+                      size={16}
+                      strokeWidth={1.75}
+                      className="shrink-0 opacity-70"
+                    />
                     <div className="flex-1 min-w-0">
                       <span className="truncate block">{label}</span>
                       {item.description && (
@@ -616,7 +772,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                       )}
                     </div>
                     {isActive && (
-                      <CornerDownLeft size={14} className="shrink-0 text-content-tertiary" />
+                      <CornerDownLeft
+                        size={14}
+                        className="shrink-0 text-content-tertiary"
+                      />
                     )}
                   </button>
                 );
@@ -634,19 +793,19 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             <kbd className="font-mono bg-surface-secondary border border-border-light rounded px-1 py-0.5">
               &darr;
             </kbd>
-            {t('command_palette.hint_navigate', { defaultValue: 'navigate' })}
+            {t("command_palette.hint_navigate", { defaultValue: "navigate" })}
           </span>
           <span className="flex items-center gap-1">
             <kbd className="font-mono bg-surface-secondary border border-border-light rounded px-1 py-0.5">
               &crarr;
             </kbd>
-            {t('command_palette.hint_open', { defaultValue: 'open' })}
+            {t("command_palette.hint_open", { defaultValue: "open" })}
           </span>
           <span className="flex items-center gap-1">
             <kbd className="font-mono bg-surface-secondary border border-border-light rounded px-1 py-0.5">
               Esc
             </kbd>
-            {t('command_palette.hint_close', { defaultValue: 'close' })}
+            {t("command_palette.hint_close", { defaultValue: "close" })}
           </span>
         </div>
       </div>

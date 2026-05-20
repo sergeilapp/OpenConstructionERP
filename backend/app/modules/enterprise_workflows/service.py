@@ -209,7 +209,11 @@ class WorkflowService:
         if required_role:
             user_role = _resolve_role(user.role)
             needed = _resolve_role(required_role)
-            if user_role is None or needed is None or ROLE_HIERARCHY.get(user_role, -1) < ROLE_HIERARCHY.get(needed, 999):
+            if (
+                user_role is None
+                or needed is None
+                or ROLE_HIERARCHY.get(user_role, -1) < ROLE_HIERARCHY.get(needed, 999)
+            ):
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail=f"Step requires role '{required_role}'",

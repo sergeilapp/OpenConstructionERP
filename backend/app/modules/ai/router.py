@@ -228,10 +228,12 @@ async def list_ai_models(
                 # Only include text-generation models
                 if not mid or m.get("architecture", {}).get("modality") == "embeddings+text":
                     continue
-                models.append({
-                    "id": mid,
-                    "name": m.get("name", mid),
-                })
+                models.append(
+                    {
+                        "id": mid,
+                        "name": m.get("name", mid),
+                    }
+                )
 
             # Sort by name for readability
             models.sort(key=lambda x: x["name"].lower())
@@ -317,8 +319,19 @@ async def test_ai_connection(
     Returns success status and response latency.
     """
     _VALID_PROVIDERS = (
-        "anthropic", "openai", "gemini", "openrouter", "mistral", "groq", "deepseek",
-        "together", "fireworks", "perplexity", "cohere", "ai21", "xai",
+        "anthropic",
+        "openai",
+        "gemini",
+        "openrouter",
+        "mistral",
+        "groq",
+        "deepseek",
+        "together",
+        "fireworks",
+        "perplexity",
+        "cohere",
+        "ai21",
+        "xai",
     )
     provider = body.get("provider", "").strip()
     if provider not in _VALID_PROVIDERS:
@@ -1037,7 +1050,8 @@ async def advisor_chat(
         # localized fallback — never the raw upstream message.
         logger.warning(
             "advisor_chat: AI call failed for user=%s provider-error=%r",
-            user_id, exc,
+            user_id,
+            exc,
         )
         # ai_client raises a sanitized ValueError (only the model id +
         # truncated provider text — no credentials) when the provider

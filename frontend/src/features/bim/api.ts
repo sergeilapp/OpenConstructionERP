@@ -8,10 +8,10 @@
  *   GET  /v1/bim_hub/models/{id}/geometry   — serve DAE geometry file
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
-import { isModuleLoaded } from '@/shared/lib/moduleProbe';
-import { useAuthStore } from '@/stores/useAuthStore';
-import type { BIMElementData, BIMModelData } from '@/shared/ui/BIMViewer';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
+import { isModuleLoaded } from "@/shared/lib/moduleProbe";
+import { useAuthStore } from "@/stores/useAuthStore";
+import type { BIMElementData, BIMModelData } from "@/shared/ui/BIMViewer";
 
 /* ── Response Types ────────────────────────────────────────────────────── */
 
@@ -57,11 +57,11 @@ export interface BIMCadUploadResponse {
    *  post-upload case where the file was accepted but could not
    *  be processed. */
   status:
-    | 'processing'
-    | 'ready'
-    | 'needs_converter'
-    | 'error'
-    | 'converter_required'
+    | "processing"
+    | "ready"
+    | "needs_converter"
+    | "error"
+    | "converter_required"
     | string;
   /** Number of BIM elements extracted by the processor.  Always
    *  present in the backend response (defaults to 0 when no
@@ -91,22 +91,18 @@ export interface BIMCadUploadResponse {
  *   - `unknown` — install detected, smoke test not yet run (the
  *     `verify=true` query param triggers it).
  *   - `not_installed` — the binary isn't present on disk. */
-export type BIMConverterHealth =
-  | 'ok'
-  | 'failed'
-  | 'unknown'
-  | 'not_installed';
+export type BIMConverterHealth = "ok" | "failed" | "unknown" | "not_installed";
 
 /** Stable action ids returned by the backend so the UI can render the
  *  correct fix button. New ids are added here as the smoke test learns
  *  to detect more failure modes. */
 export type BIMConverterAction =
-  | 'install_converter'
-  | 'reinstall_converter'
-  | 'install_vc_redist'
-  | 'unblock_files'
-  | 'check_permissions'
-  | 'manual_install_from_github';
+  | "install_converter"
+  | "reinstall_converter"
+  | "install_vc_redist"
+  | "unblock_files"
+  | "check_permissions"
+  | "manual_install_from_github";
 
 /** Single DDC converter entry as returned by the backend
  *  `/v1/takeoff/converters/` endpoint. */
@@ -208,12 +204,12 @@ const EMPTY_CONVERTERS: BIMConvertersResponse = {
 export async function fetchBIMConverters(
   options: { verify?: boolean } = {},
 ): Promise<BIMConvertersResponse> {
-  if (!(await isModuleLoaded('oe_takeoff'))) {
+  if (!(await isModuleLoaded("oe_takeoff"))) {
     return EMPTY_CONVERTERS;
   }
   const url = options.verify
-    ? '/v1/takeoff/converters/?verify=true'
-    : '/v1/takeoff/converters/';
+    ? "/v1/takeoff/converters/?verify=true"
+    : "/v1/takeoff/converters/";
   try {
     return await apiGet<BIMConvertersResponse>(url);
   } catch (err: unknown) {
@@ -270,8 +266,8 @@ export interface ConverterVersionCheck {
 export async function fetchConverterVersionCheck(): Promise<ConverterVersionCheck | null> {
   try {
     // Note: this is a system-level endpoint at /api/system/, not under /api/v1/.
-    const r = await fetch('/api/system/converters/version-check', {
-      headers: { Accept: 'application/json' },
+    const r = await fetch("/api/system/converters/version-check", {
+      headers: { Accept: "application/json" },
     });
     if (!r.ok) return null;
     return (await r.json()) as ConverterVersionCheck;
@@ -293,7 +289,7 @@ export async function installBIMConverter(
   converterId: string,
   options: { force?: boolean } = {},
 ): Promise<BIMConverterInstallResult> {
-  const qs = options.force ? '?force=true' : '';
+  const qs = options.force ? "?force=true" : "";
   return apiPost<BIMConverterInstallResult>(
     `/v1/takeoff/converters/${encodeURIComponent(converterId)}/install/${qs}`,
     {},
@@ -307,7 +303,7 @@ export async function installBIMConverter(
  *  the install mutation is pending. */
 export interface BIMConverterInstallProgress {
   active: boolean;
-  stage?: 'listing' | 'downloading' | 'verifying';
+  stage?: "listing" | "downloading" | "verifying";
   current?: number;
   total?: number;
   bytes_done?: number;
@@ -326,8 +322,12 @@ export async function fetchBIMConverterInstallProgress(
 /* ── API Functions ─────────────────────────────────────────────────────── */
 
 /** Fetch all BIM models for a project. */
-export async function fetchBIMModels(projectId: string): Promise<BIMModelsResponse> {
-  return apiGet<BIMModelsResponse>(`/v1/bim_hub/?project_id=${encodeURIComponent(projectId)}`);
+export async function fetchBIMModels(
+  projectId: string,
+): Promise<BIMModelsResponse> {
+  return apiGet<BIMModelsResponse>(
+    `/v1/bim_hub/?project_id=${encodeURIComponent(projectId)}`,
+  );
 }
 
 /** Fetch a single BIM model by ID (used for status polling). */
@@ -376,9 +376,12 @@ export async function fetchBIMElements(
   const skeleton = opts?.skeleton ?? false;
   const limit = opts?.limit ?? (skeleton ? 50000 : 500);
   const offset = opts?.offset ?? 0;
-  const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
-  if (opts?.groupId) params.set('group_id', opts.groupId);
-  if (skeleton) params.set('skeleton', 'true');
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+  if (opts?.groupId) params.set("group_id", opts.groupId);
+  if (skeleton) params.set("skeleton", "true");
   return apiGet<BIMElementsResponse>(
     `/v1/bim_hub/models/${encodeURIComponent(modelId)}/elements/?${params.toString()}`,
   );
@@ -437,9 +440,9 @@ export async function fetchGeometryBlobUrl(modelId: string): Promise<string> {
   const token = useAuthStore.getState().accessToken;
   // Cache-bust: geometry may have been re-generated with patched node names
   const url = `/api/v1/bim_hub/models/${encodeURIComponent(modelId)}/geometry/?_t=${Date.now()}`;
-  const headers: HeadersInit = { Accept: '*/*', 'Cache-Control': 'no-cache' };
+  const headers: HeadersInit = { Accept: "*/*", "Cache-Control": "no-cache" };
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
   const resp = await fetch(url, { headers });
   if (!resp.ok) {
@@ -471,17 +474,19 @@ export async function fetchBIMElementProperties(
   signal?: AbortSignal,
 ): Promise<Record<string, unknown> | null> {
   const token = useAuthStore.getState().accessToken;
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const resp = await fetch(
     `/api/v1/bim_hub/models/${encodeURIComponent(modelId)}/dataframe/query/`,
     {
-      method: 'POST',
+      method: "POST",
       headers,
       signal,
       body: JSON.stringify({
-        filters: [{ column: 'id', op: '=', value: String(revitId) }],
+        filters: [{ column: "id", op: "=", value: String(revitId) }],
         limit: 1,
       }),
     },
@@ -492,6 +497,76 @@ export async function fetchBIMElementProperties(
   }
   const rows = (await resp.json()) as Record<string, unknown>[];
   return rows[0] ?? null;
+}
+
+/**
+ * Schema row describing one column in the model's Parquet dataframe.
+ * Returned by ``GET /models/{id}/dataframe/schema/``.
+ */
+export interface BIMDataframeColumn {
+  name: string;
+  type: string;
+}
+
+/** Fetch the column schema for the model's Parquet dataframe. Used by the
+ *  property-search panel to populate the column dropdown. */
+export async function fetchBIMDataframeSchema(
+  modelId: string,
+  signal?: AbortSignal,
+): Promise<BIMDataframeColumn[]> {
+  const token = useAuthStore.getState().accessToken;
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const resp = await fetch(
+    `/api/v1/bim_hub/models/${encodeURIComponent(modelId)}/dataframe/schema/`,
+    { method: "GET", headers, signal },
+  );
+  if (!resp.ok) {
+    throw new Error(`Dataframe schema fetch failed (HTTP ${resp.status})`);
+  }
+  const rows = (await resp.json()) as BIMDataframeColumn[];
+  return rows;
+}
+
+/** Filter clause shape accepted by ``POST /models/{id}/dataframe/query/``. */
+export interface BIMDataframeFilter {
+  column: string;
+  op: "=" | "!=" | "<" | "<=" | ">" | ">=" | "LIKE" | "IN" | "NOT IN";
+  value: string | number | (string | number)[];
+}
+
+export interface BIMDataframeQueryBody {
+  columns?: string[];
+  filters?: BIMDataframeFilter[];
+  limit?: number;
+}
+
+/** Run a DuckDB query against the model's Parquet dataframe. Returns the
+ *  matching rows verbatim — caller is responsible for picking the columns
+ *  they need (typically ``id`` to drive viewport isolation). */
+export async function queryBIMDataframe(
+  modelId: string,
+  body: BIMDataframeQueryBody,
+  signal?: AbortSignal,
+): Promise<Record<string, unknown>[]> {
+  const token = useAuthStore.getState().accessToken;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const resp = await fetch(
+    `/api/v1/bim_hub/models/${encodeURIComponent(modelId)}/dataframe/query/`,
+    {
+      method: "POST",
+      headers,
+      signal,
+      body: JSON.stringify(body),
+    },
+  );
+  if (!resp.ok) {
+    throw new Error(`Dataframe query failed (HTTP ${resp.status})`);
+  }
+  return (await resp.json()) as Record<string, unknown>[];
 }
 
 /** @deprecated Use fetchGeometryBlobUrl() instead — this exposes the JWT in the URL. */
@@ -511,9 +586,9 @@ export async function uploadBIMData(
   signal?: AbortSignal,
 ): Promise<BIMUploadResponse> {
   const formData = new FormData();
-  formData.append('data_file', dataFile);
+  formData.append("data_file", dataFile);
   if (geometryFile) {
-    formData.append('geometry_file', geometryFile);
+    formData.append("geometry_file", geometryFile);
   }
 
   const params = new URLSearchParams({
@@ -524,26 +599,27 @@ export async function uploadBIMData(
 
   const token = useAuthStore.getState().accessToken;
   const headers: HeadersInit = {
-    Accept: 'application/json',
-    'X-DDC-Client': 'OE/1.0',
+    Accept: "application/json",
+    "X-DDC-Client": "OE/1.0",
   };
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   let response: Response;
   try {
     response = await fetch(`/api/v1/bim_hub/upload/?${params.toString()}`, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: formData,
       signal,
     });
   } catch (networkErr) {
     // Re-throw AbortError as-is so callers can distinguish cancellation
-    if (networkErr instanceof DOMException && networkErr.name === 'AbortError') throw networkErr;
+    if (networkErr instanceof DOMException && networkErr.name === "AbortError")
+      throw networkErr;
     throw new Error(
-      'Cannot connect to server. Please check that the backend is running and try again.',
+      "Cannot connect to server. Please check that the backend is running and try again.",
     );
   }
 
@@ -573,7 +649,7 @@ export interface BOQElementLink {
   id: string;
   boq_position_id: string;
   bim_element_id: string;
-  link_type: 'manual' | 'auto' | 'rule_based';
+  link_type: "manual" | "auto" | "rule_based";
   confidence: string | null;
   rule_id: string | null;
   created_by: string | null;
@@ -592,7 +668,7 @@ export interface BOQElementLinkBrief {
   boq_position_unit: string | null;
   boq_position_unit_rate: number | null;
   boq_position_total: number | null;
-  link_type: 'manual' | 'auto' | 'rule_based';
+  link_type: "manual" | "auto" | "rule_based";
   confidence: string | null;
 }
 
@@ -604,7 +680,7 @@ export interface BOQElementLinkListResponse {
 export interface CreateBOQElementLinkRequest {
   boq_position_id: string;
   bim_element_id: string;
-  link_type?: 'manual' | 'auto' | 'rule_based';
+  link_type?: "manual" | "auto" | "rule_based";
   confidence?: string;
   rule_id?: string;
   metadata?: Record<string, unknown>;
@@ -672,8 +748,8 @@ export async function resolveElementUUID(
   };
   if (!ref.meshRef && !ref.stableId) {
     throw new Error(
-      'This mesh has no Revit ElementId — cannot persist it. ' +
-        'Re-upload the model so the viewer can attach a stable reference.',
+      "This mesh has no Revit ElementId — cannot persist it. " +
+        "Re-upload the model so the viewer can attach a stable reference.",
     );
   }
   const { id } = await ensureBIMElement(modelId, ref);
@@ -685,7 +761,7 @@ export async function createLink(
   payload: CreateBOQElementLinkRequest,
 ): Promise<BOQElementLink> {
   return apiPost<BOQElementLink, CreateBOQElementLinkRequest>(
-    '/v1/bim_hub/links/',
+    "/v1/bim_hub/links/",
     payload,
   );
 }
@@ -742,7 +818,7 @@ export interface BIMQuantityMapListResponse {
 
 export type CreateBIMQuantityMapRequest = Omit<
   BIMQuantityMap,
-  'id' | 'created_at' | 'updated_at'
+  "id" | "created_at" | "updated_at"
 >;
 
 export type PatchBIMQuantityMapRequest = Partial<CreateBIMQuantityMapRequest>;
@@ -788,7 +864,7 @@ export async function createQuantityMap(
   payload: CreateBIMQuantityMapRequest,
 ): Promise<BIMQuantityMap> {
   return apiPost<BIMQuantityMap, CreateBIMQuantityMapRequest>(
-    '/v1/bim_hub/quantity-maps/',
+    "/v1/bim_hub/quantity-maps/",
     payload,
   );
 }
@@ -816,7 +892,7 @@ export async function applyQuantityMaps(
   dryRun = true,
 ): Promise<QuantityMapApplyResult> {
   return apiPost<QuantityMapApplyResult, QuantityMapApplyRequest>(
-    '/v1/bim_hub/quantity-maps/apply/',
+    "/v1/bim_hub/quantity-maps/apply/",
     { model_id: modelId, dry_run: dryRun },
   );
 }
@@ -873,7 +949,7 @@ export async function listElementGroups(
   modelId?: string | null,
 ): Promise<BIMElementGroup[]> {
   const params = new URLSearchParams({ project_id: projectId });
-  if (modelId) params.set('model_id', modelId);
+  if (modelId) params.set("model_id", modelId);
   return apiGet<BIMElementGroup[]>(
     `/v1/bim_hub/element-groups/?${params.toString()}`,
   );
@@ -915,7 +991,7 @@ export interface DocumentBIMLink {
   id: string;
   document_id: string;
   bim_element_id: string;
-  link_type: 'manual' | 'auto';
+  link_type: "manual" | "auto";
   confidence: string | null;
   region_bbox: Record<string, unknown> | null;
   metadata: Record<string, unknown>;
@@ -931,7 +1007,7 @@ export interface DocumentBIMLinkListResponse {
 export interface CreateDocumentBIMLinkRequest {
   document_id: string;
   bim_element_id: string;
-  link_type?: 'manual' | 'auto';
+  link_type?: "manual" | "auto";
   confidence?: string;
   region_bbox?: Record<string, unknown>;
 }
@@ -959,7 +1035,7 @@ export async function createDocumentBIMLink(
   payload: CreateDocumentBIMLinkRequest,
 ): Promise<DocumentBIMLink> {
   return apiPost<DocumentBIMLink, CreateDocumentBIMLinkRequest>(
-    '/v1/documents/bim-links/',
+    "/v1/documents/bim-links/",
     payload,
   );
 }
@@ -992,7 +1068,7 @@ export async function listTasksForElement(
   projectId?: string,
 ): Promise<unknown> {
   const params = new URLSearchParams({ bim_element_id: bimElementId });
-  if (projectId) params.set('project_id', projectId);
+  if (projectId) params.set("project_id", projectId);
   return apiGet<unknown>(`/v1/tasks/?${params.toString()}`);
 }
 
@@ -1034,37 +1110,42 @@ export async function uploadCADFile(
   discipline: string,
   file: File,
   signal?: AbortSignal,
-  conversionDepth?: 'standard' | 'medium' | 'complete',
+  conversionDepth?: "standard" | "medium" | "complete",
 ): Promise<BIMCadUploadResponse> {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
-  const qp: Record<string, string> = { project_id: projectId, name, discipline };
+  const qp: Record<string, string> = {
+    project_id: projectId,
+    name,
+    discipline,
+  };
   if (conversionDepth) qp.conversion_depth = conversionDepth;
   const params = new URLSearchParams(qp);
 
   const token = useAuthStore.getState().accessToken;
   const headers: HeadersInit = {
-    Accept: 'application/json',
-    'X-DDC-Client': 'OE/1.0',
+    Accept: "application/json",
+    "X-DDC-Client": "OE/1.0",
   };
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   let response: Response;
   try {
     response = await fetch(`/api/v1/bim_hub/upload-cad/?${params.toString()}`, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: formData,
       signal,
     });
   } catch (networkErr) {
     // Re-throw AbortError as-is so callers can distinguish cancellation
-    if (networkErr instanceof DOMException && networkErr.name === 'AbortError') throw networkErr;
+    if (networkErr instanceof DOMException && networkErr.name === "AbortError")
+      throw networkErr;
     throw new Error(
-      'Cannot connect to server. Please check that the backend is running and try again.',
+      "Cannot connect to server. Please check that the backend is running and try again.",
     );
   }
 
@@ -1147,7 +1228,7 @@ export async function importBIMRequirements(
   name?: string,
 ): Promise<BIMRequirementImportResult> {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
   let url = `/v1/bim_requirements/import/upload/?project_id=${encodeURIComponent(projectId)}`;
   if (name) {
@@ -1156,9 +1237,13 @@ export async function importBIMRequirements(
 
   const token = useAuthStore.getState().accessToken;
   const reqHeaders: Record<string, string> = {};
-  if (token) reqHeaders['Authorization'] = `Bearer ${token}`;
+  if (token) reqHeaders["Authorization"] = `Bearer ${token}`;
 
-  const resp = await fetch(`/api${url}`, { method: 'POST', headers: reqHeaders, body: formData });
+  const resp = await fetch(`/api${url}`, {
+    method: "POST",
+    headers: reqHeaders,
+    body: formData,
+  });
   if (!resp.ok) {
     let detail = `Import failed (HTTP ${resp.status})`;
     try {
@@ -1197,11 +1282,14 @@ export async function deleteBIMRequirementSet(setId: string): Promise<void> {
 
 /** Download the BIM requirements Excel template URL. */
 export function bimRequirementsTemplateUrl(): string {
-  return '/api/v1/bim_requirements/template/';
+  return "/api/v1/bim_requirements/template/";
 }
 
 /** Export a BIM requirement set as Excel (returns action URL for POST). */
-export function bimRequirementsExportExcelUrl(setId: string, language = 'en'): string {
+export function bimRequirementsExportExcelUrl(
+  setId: string,
+  language = "en",
+): string {
   return `/api/v1/bim_requirements/export/${encodeURIComponent(setId)}/excel/?language=${language}`;
 }
 
@@ -1269,8 +1357,9 @@ export async function listTrackedAssets(
     offset: String(opts?.offset ?? 0),
     limit: String(opts?.limit ?? 200),
   });
-  if (opts?.search) params.set('search', opts.search);
-  if (opts?.operationalStatus) params.set('operational_status', opts.operationalStatus);
+  if (opts?.search) params.set("search", opts.search);
+  if (opts?.operationalStatus)
+    params.set("operational_status", opts.operationalStatus);
   // BUG-UI07: backend route is `/assets` (no trailing slash). With the
   // trailing slash FastAPI dispatches to `/{model_id}` instead, returning
   // 404 for "assets" as a UUID. Verified against /openapi.json.
@@ -1309,17 +1398,17 @@ export function cobieExportUrl(modelId: string): string {
  *  blob ourselves and trigger a synthetic download. Throws on HTTP error. */
 export async function downloadCobieXlsx(
   modelId: string,
-  filename = 'cobie.xlsx',
+  filename = "cobie.xlsx",
 ): Promise<void> {
   const token = useAuthStore.getState().accessToken;
   const headers: HeadersInit = {
     Accept:
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream',
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream",
   };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) headers["Authorization"] = `Bearer ${token}`;
   const resp = await fetch(cobieExportUrl(modelId), { headers });
   if (!resp.ok) {
-    let detail = '';
+    let detail = "";
     try {
       detail = (await resp.text()).slice(0, 200);
     } catch {
@@ -1327,12 +1416,12 @@ export async function downloadCobieXlsx(
     }
     throw new Error(`COBie export failed (HTTP ${resp.status}) ${detail}`);
   }
-  const cd = resp.headers.get('content-disposition') || '';
+  const cd = resp.headers.get("content-disposition") || "";
   const match = cd.match(/filename="?([^";]+)"?/i);
   const finalName = match?.[1] || filename;
   const blob = await resp.blob();
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = finalName;
   document.body.appendChild(a);
@@ -1412,5 +1501,7 @@ export async function computeBIMModelDiff(
 
 /** Fetch a previously-computed diff by its id. */
 export async function fetchBIMModelDiff(diffId: string): Promise<BIMModelDiff> {
-  return apiGet<BIMModelDiff>(`/v1/bim_hub/diffs/${encodeURIComponent(diffId)}`);
+  return apiGet<BIMModelDiff>(
+    `/v1/bim_hub/diffs/${encodeURIComponent(diffId)}`,
+  );
 }

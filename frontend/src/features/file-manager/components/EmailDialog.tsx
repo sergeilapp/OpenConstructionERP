@@ -1,13 +1,21 @@
 /** Modal that mints a signed download URL with a chosen TTL. */
 
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { X, Loader2, Copy, Mail, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import clsx from 'clsx';
-import { useToastStore } from '@/stores/useToastStore';
-import { mintEmailLink } from '../api';
-import { copyToClipboard } from '../lib/tauri';
-import type { EmailLinkResponse, FileRow } from '../types';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  X,
+  Loader2,
+  Copy,
+  Mail,
+  Clock,
+  AlertTriangle,
+  CheckCircle2,
+} from "lucide-react";
+import clsx from "clsx";
+import { useToastStore } from "@/stores/useToastStore";
+import { mintEmailLink } from "../api";
+import { copyToClipboard } from "../lib/tauri";
+import type { EmailLinkResponse, FileRow } from "../types";
 
 interface EmailDialogProps {
   open: boolean;
@@ -15,19 +23,25 @@ interface EmailDialogProps {
   onClose: () => void;
 }
 
-const TTL_PRESETS: { hours: number; labelKey: string; defaultLabel: string }[] = [
-  { hours: 1, labelKey: 'files.email.ttl_1h', defaultLabel: '1 hour' },
-  { hours: 24, labelKey: 'files.email.ttl_24h', defaultLabel: '1 day' },
-  { hours: 72, labelKey: 'files.email.ttl_72h', defaultLabel: '3 days' },
-  { hours: 7 * 24, labelKey: 'files.email.ttl_7d', defaultLabel: '7 days' },
-  { hours: 14 * 24, labelKey: 'files.email.ttl_14d', defaultLabel: '14 days' },
-];
+const TTL_PRESETS: { hours: number; labelKey: string; defaultLabel: string }[] =
+  [
+    { hours: 1, labelKey: "files.email.ttl_1h", defaultLabel: "1 hour" },
+    { hours: 24, labelKey: "files.email.ttl_24h", defaultLabel: "1 day" },
+    { hours: 72, labelKey: "files.email.ttl_72h", defaultLabel: "3 days" },
+    { hours: 7 * 24, labelKey: "files.email.ttl_7d", defaultLabel: "7 days" },
+    {
+      hours: 14 * 24,
+      labelKey: "files.email.ttl_14d",
+      defaultLabel: "14 days",
+    },
+  ];
 
 function fmtBytes(bytes: number): string {
-  if (!bytes) return '0 B';
+  if (!bytes) return "0 B";
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
@@ -54,10 +68,10 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
   if (!open || !row) return null;
@@ -84,29 +98,31 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
       setTimeout(() => setCopied(false), 1500);
     } else {
       addToast({
-        type: 'error',
-        title: t('files.toast.copy_failed', { defaultValue: 'Could not copy link‌⁠‍' }),
+        type: "error",
+        title: t("files.toast.copy_failed", {
+          defaultValue: "Could not copy link‌⁠‍",
+        }),
       });
     }
   }
 
-  const sampleSubject = t('files.email.sample_subject', {
-    defaultValue: 'File: {{name}}‌⁠‍',
+  const sampleSubject = t("files.email.sample_subject", {
+    defaultValue: "File: {{name}}‌⁠‍",
     name: row.name,
   });
   const sampleBody = link
-    ? t('files.email.sample_body', {
+    ? t("files.email.sample_body", {
         defaultValue:
-          'Hi,\n\nHere is the file you asked about — {{name}} ({{size}}).\nDownload link (expires {{expires}}):\n{{url}}\n\n— sent from OpenConstructionERP‌⁠‍',
+          "Hi,\n\nHere is the file you asked about — {{name}} ({{size}}).\nDownload link (expires {{expires}}):\n{{url}}\n\n— sent from OpenConstructionERP‌⁠‍",
         name: row.name,
         size: fmtBytes(link.size_bytes),
         expires: new Date(link.expires_at).toLocaleString(),
         url: link.url,
       })
-    : '';
+    : "";
   const mailto = link
     ? `mailto:?subject=${encodeURIComponent(sampleSubject)}&body=${encodeURIComponent(sampleBody)}`
-    : '';
+    : "";
 
   return (
     <div
@@ -122,16 +138,19 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
         <div className="flex items-center justify-between px-5 py-3 border-b border-border-light">
           <div className="min-w-0">
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('files.email.title', { defaultValue: 'Share via email‌⁠‍' })}
+              {t("files.email.title", { defaultValue: "Share via email‌⁠‍" })}
             </h2>
-            <p className="text-2xs text-content-tertiary truncate" title={row.name}>
+            <p
+              className="text-2xs text-content-tertiary truncate"
+              title={row.name}
+            >
               {row.name}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-7 w-7 items-center justify-center rounded text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
           >
             <X size={15} />
@@ -142,7 +161,7 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
           <div>
             <label className="block text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1.5">
               <Clock size={10} className="inline-block me-1 -mt-0.5" />
-              {t('files.email.ttl', { defaultValue: 'Link expires after‌⁠‍' })}
+              {t("files.email.ttl", { defaultValue: "Link expires after‌⁠‍" })}
             </label>
             <div className="flex flex-wrap gap-1.5">
               {TTL_PRESETS.map((p) => (
@@ -154,10 +173,10 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
                     setLink(null);
                   }}
                   className={clsx(
-                    'px-3 h-8 rounded-full text-xs font-medium border transition-colors',
+                    "px-3 h-8 rounded-full text-xs font-medium border transition-colors",
                     ttlHours === p.hours
-                      ? 'bg-oe-blue text-white border-oe-blue'
-                      : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                      ? "bg-oe-blue text-white border-oe-blue"
+                      : "border-border-light text-content-secondary hover:bg-surface-secondary",
                   )}
                 >
                   {t(p.labelKey, { defaultValue: p.defaultLabel })}
@@ -173,15 +192,21 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
               disabled={loading}
               className="w-full inline-flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-oe-blue text-white text-sm font-medium hover:bg-oe-blue-hover disabled:opacity-50"
             >
-              {loading ? <Loader2 size={14} className="animate-spin" /> : <Mail size={14} />}
-              {t('files.email.generate', { defaultValue: 'Generate share link' })}
+              {loading ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <Mail size={14} />
+              )}
+              {t("files.email.generate", {
+                defaultValue: "Generate share link",
+              })}
             </button>
           ) : (
             <>
               <div className="rounded-lg border border-border-light bg-surface-secondary/40 p-3 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-2xs uppercase tracking-wide text-content-tertiary">
-                    {t('files.email.url', { defaultValue: 'Share URL' })}
+                    {t("files.email.url", { defaultValue: "Share URL" })}
                   </span>
                   <button
                     type="button"
@@ -191,12 +216,12 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
                     {copied ? (
                       <>
                         <CheckCircle2 size={11} />
-                        {t('files.toast.copied', { defaultValue: 'Copied' })}
+                        {t("files.toast.copied", { defaultValue: "Copied" })}
                       </>
                     ) : (
                       <>
                         <Copy size={11} />
-                        {t('files.actions.copy', { defaultValue: 'Copy' })}
+                        {t("files.actions.copy", { defaultValue: "Copy" })}
                       </>
                     )}
                   </button>
@@ -207,7 +232,7 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
               </div>
 
               <div className="text-2xs text-content-tertiary">
-                {t('files.email.expires', { defaultValue: 'Expires' })}:{' '}
+                {t("files.email.expires", { defaultValue: "Expires" })}:{" "}
                 <span className="text-content-secondary">
                   {new Date(link.expires_at).toLocaleString()}
                 </span>
@@ -215,7 +240,9 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
 
               <div>
                 <label className="block text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1.5">
-                  {t('files.email.paste_into_email', { defaultValue: 'Sample email body' })}
+                  {t("files.email.paste_into_email", {
+                    defaultValue: "Sample email body",
+                  })}
                 </label>
                 <textarea
                   readOnly
@@ -230,7 +257,9 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
                 className="inline-flex items-center justify-center gap-2 h-9 px-4 w-full rounded-lg bg-oe-blue text-white text-xs font-medium hover:bg-oe-blue-hover"
               >
                 <Mail size={13} />
-                {t('files.email.open_mail_client', { defaultValue: 'Open email client' })}
+                {t("files.email.open_mail_client", {
+                  defaultValue: "Open email client",
+                })}
               </a>
             </>
           )}

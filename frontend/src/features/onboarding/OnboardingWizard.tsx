@@ -1,9 +1,9 @@
-import { useState, useCallback, useEffect, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, Link } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import i18n from 'i18next';
-import clsx from 'clsx';
+import { useState, useCallback, useEffect, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import i18n from "i18next";
+import clsx from "clsx";
 import {
   ArrowRight,
   ArrowLeft,
@@ -26,22 +26,22 @@ import {
   Settings2,
   Home,
   type LucideIcon,
-} from 'lucide-react';
-import { Logo, Button, CountryFlag, Badge } from '@/shared/ui';
-import { SUPPORTED_LANGUAGES } from '@/app/i18n';
-import { useToastStore } from '@/stores/useToastStore';
-import { useUploadQueueStore } from '@/stores/useUploadQueueStore';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useModuleStore } from '@/stores/useModuleStore';
-import { useViewModeStore } from '@/stores/useViewModeStore';
-import { aiApi, type AIProvider } from '@/features/ai/api';
-import { apiPost } from '@/shared/lib/api';
+} from "lucide-react";
+import { Logo, Button, CountryFlag, Badge } from "@/shared/ui";
+import { SUPPORTED_LANGUAGES } from "@/app/i18n";
+import { useToastStore } from "@/stores/useToastStore";
+import { useUploadQueueStore } from "@/stores/useUploadQueueStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useModuleStore } from "@/stores/useModuleStore";
+import { useViewModeStore } from "@/stores/useViewModeStore";
+import { aiApi, type AIProvider } from "@/features/ai/api";
+import { apiPost } from "@/shared/lib/api";
 import {
   ALL_MODULES,
   MODULE_GROUPS,
   CORE_MODULE_KEYS,
   TOTAL_MODULE_COUNT,
-} from './modules';
+} from "./modules";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -53,43 +53,43 @@ const TOTAL_STEPS = 6;
 // have a proper local database; previously several locales fell back to
 // DE_BERLIN/SP_BARCELONA/ZH_SHANGHAI as approximations.
 const LANG_TO_REGION: Record<string, string> = {
-  de: 'DE_BERLIN',
-  fr: 'FR_PARIS',
-  es: 'SP_BARCELONA',
-  pt: 'PT_SAOPAULO',
-  ru: 'RU_STPETERSBURG',
-  zh: 'ZH_SHANGHAI',
-  ar: 'AR_DUBAI',
-  hi: 'HI_MUMBAI',
-  en: 'USA_USD',
-  tr: 'TR_ISTANBUL',
-  it: 'IT_ROME',
-  ja: 'JA_TOKYO',
-  ko: 'KO_SEOUL',
-  nl: 'NL_AMSTERDAM',
-  pl: 'PL_WARSAW',
-  cs: 'CS_PRAGUE',
-  hr: 'HR_ZAGREB',
-  sv: 'SV_STOCKHOLM',
-  no: 'SV_STOCKHOLM',
-  da: 'SV_STOCKHOLM',
-  fi: 'SV_STOCKHOLM',
-  bg: 'BG_SOFIA',
-  ro: 'RO_BUCHAREST',
-  th: 'TH_BANGKOK',
-  vi: 'VI_HANOI',
-  id: 'ID_JAKARTA',
+  de: "DE_BERLIN",
+  fr: "FR_PARIS",
+  es: "SP_BARCELONA",
+  pt: "PT_SAOPAULO",
+  ru: "RU_STPETERSBURG",
+  zh: "ZH_SHANGHAI",
+  ar: "AR_DUBAI",
+  hi: "HI_MUMBAI",
+  en: "USA_USD",
+  tr: "TR_ISTANBUL",
+  it: "IT_ROME",
+  ja: "JA_TOKYO",
+  ko: "KO_SEOUL",
+  nl: "NL_AMSTERDAM",
+  pl: "PL_WARSAW",
+  cs: "CS_PRAGUE",
+  hr: "HR_ZAGREB",
+  sv: "SV_STOCKHOLM",
+  no: "SV_STOCKHOLM",
+  da: "SV_STOCKHOLM",
+  fi: "SV_STOCKHOLM",
+  bg: "BG_SOFIA",
+  ro: "RO_BUCHAREST",
+  th: "TH_BANGKOK",
+  vi: "VI_HANOI",
+  id: "ID_JAKARTA",
 };
 
 // ── Language -> Demo project mapping ────────────────────────────────────────
 
 const LANG_TO_DEMO: Record<string, string> = {
-  de: 'residential-berlin',
-  en: 'medical-us',
-  fr: 'school-paris',
-  ar: 'warehouse-dubai',
+  de: "residential-berlin",
+  en: "medical-us",
+  fr: "school-paris",
+  ar: "warehouse-dubai",
 };
-const DEFAULT_DEMO = 'office-london';
+const DEFAULT_DEMO = "office-london";
 
 // ── CWICR Database definitions ──────────────────────────────────────────────
 
@@ -104,41 +104,251 @@ interface CWICRDatabase {
 
 const CWICR_DATABASES: CWICRDatabase[] = [
   // Anglosphere
-  { id: 'USA_USD', name: 'United States', city: 'New York', lang: 'English', currency: 'USD', flagId: 'us' },
-  { id: 'UK_GBP', name: 'United Kingdom', city: 'London', lang: 'English', currency: 'GBP', flagId: 'gb' },
-  { id: 'ENG_TORONTO', name: 'Canada / International', city: 'Toronto', lang: 'English', currency: 'CAD', flagId: 'ca' },
-  { id: 'AU_SYDNEY', name: 'Australia', city: 'Sydney', lang: 'English', currency: 'AUD', flagId: 'au' },
-  { id: 'NZ_AUCKLAND', name: 'New Zealand', city: 'Auckland', lang: 'English', currency: 'NZD', flagId: 'nz' },
+  {
+    id: "USA_USD",
+    name: "United States",
+    city: "New York",
+    lang: "English",
+    currency: "USD",
+    flagId: "us",
+  },
+  {
+    id: "UK_GBP",
+    name: "United Kingdom",
+    city: "London",
+    lang: "English",
+    currency: "GBP",
+    flagId: "gb",
+  },
+  {
+    id: "ENG_TORONTO",
+    name: "Canada / International",
+    city: "Toronto",
+    lang: "English",
+    currency: "CAD",
+    flagId: "ca",
+  },
+  {
+    id: "AU_SYDNEY",
+    name: "Australia",
+    city: "Sydney",
+    lang: "English",
+    currency: "AUD",
+    flagId: "au",
+  },
+  {
+    id: "NZ_AUCKLAND",
+    name: "New Zealand",
+    city: "Auckland",
+    lang: "English",
+    currency: "NZD",
+    flagId: "nz",
+  },
   // Western Europe
-  { id: 'DE_BERLIN', name: 'Germany / DACH', city: 'Berlin', lang: 'Deutsch', currency: 'EUR', flagId: 'de' },
-  { id: 'FR_PARIS', name: 'France', city: 'Paris', lang: 'Fran\u00e7ais', currency: 'EUR', flagId: 'fr' },
-  { id: 'IT_ROME', name: 'Italy', city: 'Rome', lang: 'Italiano', currency: 'EUR', flagId: 'it' },
-  { id: 'SP_BARCELONA', name: 'Spain / Latin America', city: 'Barcelona', lang: 'Espa\u00f1ol', currency: 'EUR', flagId: 'es' },
-  { id: 'NL_AMSTERDAM', name: 'Netherlands', city: 'Amsterdam', lang: 'Nederlands', currency: 'EUR', flagId: 'nl' },
+  {
+    id: "DE_BERLIN",
+    name: "Germany / DACH",
+    city: "Berlin",
+    lang: "Deutsch",
+    currency: "EUR",
+    flagId: "de",
+  },
+  {
+    id: "FR_PARIS",
+    name: "France",
+    city: "Paris",
+    lang: "Fran\u00e7ais",
+    currency: "EUR",
+    flagId: "fr",
+  },
+  {
+    id: "IT_ROME",
+    name: "Italy",
+    city: "Rome",
+    lang: "Italiano",
+    currency: "EUR",
+    flagId: "it",
+  },
+  {
+    id: "SP_BARCELONA",
+    name: "Spain / Latin America",
+    city: "Barcelona",
+    lang: "Espa\u00f1ol",
+    currency: "EUR",
+    flagId: "es",
+  },
+  {
+    id: "NL_AMSTERDAM",
+    name: "Netherlands",
+    city: "Amsterdam",
+    lang: "Nederlands",
+    currency: "EUR",
+    flagId: "nl",
+  },
   // Central / Eastern Europe
-  { id: 'PL_WARSAW', name: 'Poland', city: 'Warsaw', lang: 'Polski', currency: 'PLN', flagId: 'pl' },
-  { id: 'CS_PRAGUE', name: 'Czech Republic', city: 'Prague', lang: 'Cestina', currency: 'CZK', flagId: 'cz' },
-  { id: 'HR_ZAGREB', name: 'Croatia', city: 'Zagreb', lang: 'Hrvatski', currency: 'EUR', flagId: 'hr' },
-  { id: 'BG_SOFIA', name: 'Bulgaria', city: 'Sofia', lang: 'Balgarski', currency: 'BGN', flagId: 'bg' },
-  { id: 'RO_BUCHAREST', name: 'Romania', city: 'Bucharest', lang: 'Romana', currency: 'RON', flagId: 'ro' },
-  { id: 'SV_STOCKHOLM', name: 'Sweden', city: 'Stockholm', lang: 'Svenska', currency: 'SEK', flagId: 'se' },
-  { id: 'TR_ISTANBUL', name: 'T\u00fcrkiye', city: 'Istanbul', lang: 'T\u00fcrk\u00e7e', currency: 'TRY', flagId: 'tr' },
-  { id: 'RU_STPETERSBURG', name: 'Russia / CIS', city: 'St. Petersburg', lang: '\u0420\u0443\u0441\u0441\u043a\u0438\u0439', currency: 'RUB', flagId: 'ru' },
+  {
+    id: "PL_WARSAW",
+    name: "Poland",
+    city: "Warsaw",
+    lang: "Polski",
+    currency: "PLN",
+    flagId: "pl",
+  },
+  {
+    id: "CS_PRAGUE",
+    name: "Czech Republic",
+    city: "Prague",
+    lang: "Cestina",
+    currency: "CZK",
+    flagId: "cz",
+  },
+  {
+    id: "HR_ZAGREB",
+    name: "Croatia",
+    city: "Zagreb",
+    lang: "Hrvatski",
+    currency: "EUR",
+    flagId: "hr",
+  },
+  {
+    id: "BG_SOFIA",
+    name: "Bulgaria",
+    city: "Sofia",
+    lang: "Balgarski",
+    currency: "BGN",
+    flagId: "bg",
+  },
+  {
+    id: "RO_BUCHAREST",
+    name: "Romania",
+    city: "Bucharest",
+    lang: "Romana",
+    currency: "RON",
+    flagId: "ro",
+  },
+  {
+    id: "SV_STOCKHOLM",
+    name: "Sweden",
+    city: "Stockholm",
+    lang: "Svenska",
+    currency: "SEK",
+    flagId: "se",
+  },
+  {
+    id: "TR_ISTANBUL",
+    name: "T\u00fcrkiye",
+    city: "Istanbul",
+    lang: "T\u00fcrk\u00e7e",
+    currency: "TRY",
+    flagId: "tr",
+  },
+  {
+    id: "RU_STPETERSBURG",
+    name: "Russia / CIS",
+    city: "St. Petersburg",
+    lang: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+    currency: "RUB",
+    flagId: "ru",
+  },
   // Middle East / Africa
-  { id: 'AR_DUBAI', name: 'Middle East / Gulf', city: 'Dubai', lang: '\u0627\u0644\u0639\u0631\u0628\u064a\u0629', currency: 'AED', flagId: 'ae' },
-  { id: 'ZA_JOHANNESBURG', name: 'South Africa', city: 'Johannesburg', lang: 'English', currency: 'ZAR', flagId: 'za' },
-  { id: 'NG_LAGOS', name: 'Nigeria', city: 'Lagos', lang: 'English', currency: 'NGN', flagId: 'ng' },
+  {
+    id: "AR_DUBAI",
+    name: "Middle East / Gulf",
+    city: "Dubai",
+    lang: "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+    currency: "AED",
+    flagId: "ae",
+  },
+  {
+    id: "ZA_JOHANNESBURG",
+    name: "South Africa",
+    city: "Johannesburg",
+    lang: "English",
+    currency: "ZAR",
+    flagId: "za",
+  },
+  {
+    id: "NG_LAGOS",
+    name: "Nigeria",
+    city: "Lagos",
+    lang: "English",
+    currency: "NGN",
+    flagId: "ng",
+  },
   // Asia-Pacific
-  { id: 'ZH_SHANGHAI', name: 'China', city: 'Shanghai', lang: '\u4e2d\u6587', currency: 'CNY', flagId: 'cn' },
-  { id: 'JA_TOKYO', name: 'Japan', city: 'Tokyo', lang: '\u65e5\u672c\u8a9e', currency: 'JPY', flagId: 'jp' },
-  { id: 'KO_SEOUL', name: 'South Korea', city: 'Seoul', lang: '\ud55c\uad6d\uc5b4', currency: 'KRW', flagId: 'kr' },
-  { id: 'TH_BANGKOK', name: 'Thailand', city: 'Bangkok', lang: '\u0e44\u0e17\u0e22', currency: 'THB', flagId: 'th' },
-  { id: 'VI_HANOI', name: 'Vietnam', city: 'Hanoi', lang: 'Ti\u1ebfng Vi\u1ec7t', currency: 'VND', flagId: 'vn' },
-  { id: 'ID_JAKARTA', name: 'Indonesia', city: 'Jakarta', lang: 'Bahasa Indonesia', currency: 'IDR', flagId: 'id' },
-  { id: 'HI_MUMBAI', name: 'India / South Asia', city: 'Mumbai', lang: 'Hindi', currency: 'INR', flagId: 'in' },
+  {
+    id: "ZH_SHANGHAI",
+    name: "China",
+    city: "Shanghai",
+    lang: "\u4e2d\u6587",
+    currency: "CNY",
+    flagId: "cn",
+  },
+  {
+    id: "JA_TOKYO",
+    name: "Japan",
+    city: "Tokyo",
+    lang: "\u65e5\u672c\u8a9e",
+    currency: "JPY",
+    flagId: "jp",
+  },
+  {
+    id: "KO_SEOUL",
+    name: "South Korea",
+    city: "Seoul",
+    lang: "\ud55c\uad6d\uc5b4",
+    currency: "KRW",
+    flagId: "kr",
+  },
+  {
+    id: "TH_BANGKOK",
+    name: "Thailand",
+    city: "Bangkok",
+    lang: "\u0e44\u0e17\u0e22",
+    currency: "THB",
+    flagId: "th",
+  },
+  {
+    id: "VI_HANOI",
+    name: "Vietnam",
+    city: "Hanoi",
+    lang: "Ti\u1ebfng Vi\u1ec7t",
+    currency: "VND",
+    flagId: "vn",
+  },
+  {
+    id: "ID_JAKARTA",
+    name: "Indonesia",
+    city: "Jakarta",
+    lang: "Bahasa Indonesia",
+    currency: "IDR",
+    flagId: "id",
+  },
+  {
+    id: "HI_MUMBAI",
+    name: "India / South Asia",
+    city: "Mumbai",
+    lang: "Hindi",
+    currency: "INR",
+    flagId: "in",
+  },
   // Americas
-  { id: 'PT_SAOPAULO', name: 'Brazil / Portugal', city: 'S\u00e3o Paulo', lang: 'Portugu\u00eas', currency: 'BRL', flagId: 'br' },
-  { id: 'MX_MEXICOCITY', name: 'Mexico', city: 'Mexico City', lang: 'Espa\u00f1ol', currency: 'MXN', flagId: 'mx' },
+  {
+    id: "PT_SAOPAULO",
+    name: "Brazil / Portugal",
+    city: "S\u00e3o Paulo",
+    lang: "Portugu\u00eas",
+    currency: "BRL",
+    flagId: "br",
+  },
+  {
+    id: "MX_MEXICOCITY",
+    name: "Mexico",
+    city: "Mexico City",
+    lang: "Espa\u00f1ol",
+    currency: "MXN",
+    flagId: "mx",
+  },
 ];
 
 // ── AI Provider definitions ─────────────────────────────────────────────────
@@ -153,35 +363,35 @@ interface ProviderOption {
 
 const AI_PROVIDERS: ProviderOption[] = [
   {
-    id: 'anthropic',
-    name: 'Anthropic Claude',
-    description: 'Best for construction estimation',
-    docsUrl: 'https://console.anthropic.com/settings/keys',
+    id: "anthropic",
+    name: "Anthropic Claude",
+    description: "Best for construction estimation",
+    docsUrl: "https://console.anthropic.com/settings/keys",
     recommended: true,
   },
   {
-    id: 'openai',
-    name: 'OpenAI GPT-4',
-    description: 'Widely supported',
-    docsUrl: 'https://platform.openai.com/api-keys',
+    id: "openai",
+    name: "OpenAI GPT-4",
+    description: "Widely supported",
+    docsUrl: "https://platform.openai.com/api-keys",
   },
   {
-    id: 'gemini',
-    name: 'Google Gemini',
-    description: 'Multimodal capabilities',
-    docsUrl: 'https://aistudio.google.com/app/apikey',
+    id: "gemini",
+    name: "Google Gemini",
+    description: "Multimodal capabilities",
+    docsUrl: "https://aistudio.google.com/app/apikey",
   },
 ];
 
 // ── Company Type Presets ────────────────────────────────────────────────────
 
 type CompanyTypeKey =
-  | 'general_contractor'
-  | 'estimator'
-  | 'project_management'
-  | 'architecture_engineering'
-  | 'property_developer'
-  | 'full_enterprise';
+  | "general_contractor"
+  | "estimator"
+  | "project_management"
+  | "architecture_engineering"
+  | "property_developer"
+  | "full_enterprise";
 
 interface CompanyPreset {
   key: CompanyTypeKey;
@@ -195,84 +405,162 @@ interface CompanyPreset {
 
 const COMPANY_PRESETS: CompanyPreset[] = [
   {
-    key: 'general_contractor',
-    labelKey: 'onboarding.company_general_contractor',
-    descriptionKey: 'onboarding.company_general_contractor_desc',
+    key: "general_contractor",
+    labelKey: "onboarding.company_general_contractor",
+    descriptionKey: "onboarding.company_general_contractor_desc",
     icon: Building2,
     popular: true,
-    tags: ['BOQ', 'Finance', 'Safety', 'HSE'],
+    tags: ["BOQ", "Finance", "Safety", "HSE"],
     enabledModules: [
-      'boq', 'costs', 'assemblies', 'catalog', 'validation',
-      'schedule', 'schedule_advanced', 'tasks',
-      'finance', 'procurement', 'changeorders', 'contracts', 'variations',
-      'safety', 'hse_advanced', 'inspections', 'punchlist', 'ncr', 'qms',
-      'fieldreports', 'daily_diary', 'subcontractors', 'equipment',
-      'meetings', 'documents', 'markups',
-      'risk', 'reporting', 'requirements',
+      "boq",
+      "costs",
+      "assemblies",
+      "catalog",
+      "validation",
+      "schedule",
+      "schedule_advanced",
+      "tasks",
+      "finance",
+      "procurement",
+      "changeorders",
+      "contracts",
+      "variations",
+      "safety",
+      "hse_advanced",
+      "inspections",
+      "punchlist",
+      "ncr",
+      "qms",
+      "fieldreports",
+      "daily_diary",
+      "subcontractors",
+      "equipment",
+      "meetings",
+      "documents",
+      "markups",
+      "risk",
+      "reporting",
+      "requirements",
     ],
   },
   {
-    key: 'estimator',
-    labelKey: 'onboarding.company_estimator',
-    descriptionKey: 'onboarding.company_estimator_desc',
+    key: "estimator",
+    labelKey: "onboarding.company_estimator",
+    descriptionKey: "onboarding.company_estimator_desc",
     icon: Calculator,
-    tags: ['BOQ', 'Costs', 'Takeoff', 'AI'],
+    tags: ["BOQ", "Costs", "Takeoff", "AI"],
     enabledModules: [
-      'boq', 'costs', 'assemblies', 'catalog', 'validation',
-      'cost_match', 'match', 'match_elements',
-      'takeoff', 'dwg_takeoff', 'cad',
-      'ai', 'erp_chat',
-      'tendering', 'bid_management', 'supplier_catalogs',
-      'reporting', 'documents',
+      "boq",
+      "costs",
+      "assemblies",
+      "catalog",
+      "validation",
+      "cost_match",
+      "match",
+      "match_elements",
+      "takeoff",
+      "dwg_takeoff",
+      "cad",
+      "ai",
+      "erp_chat",
+      "tendering",
+      "bid_management",
+      "supplier_catalogs",
+      "reporting",
+      "documents",
     ],
   },
   {
-    key: 'project_management',
-    labelKey: 'onboarding.company_project_management',
-    descriptionKey: 'onboarding.company_project_management_desc',
+    key: "project_management",
+    labelKey: "onboarding.company_project_management",
+    descriptionKey: "onboarding.company_project_management_desc",
     icon: ClipboardList,
-    tags: ['Schedule', 'Tasks', 'CDE', 'RFI'],
+    tags: ["Schedule", "Tasks", "CDE", "RFI"],
     enabledModules: [
-      'schedule', 'schedule_advanced', 'tasks', 'meetings',
-      'finance', 'procurement', 'changeorders', 'contracts', 'variations',
-      'documents', 'cde', 'transmittals', 'rfi', 'submittals', 'correspondence',
-      'risk', 'reporting', 'markups', 'fieldreports', 'daily_diary',
-      'requirements', 'inspections', 'eac', 'costmodel',
+      "schedule",
+      "schedule_advanced",
+      "tasks",
+      "meetings",
+      "finance",
+      "procurement",
+      "changeorders",
+      "contracts",
+      "variations",
+      "documents",
+      "cde",
+      "transmittals",
+      "rfi",
+      "submittals",
+      "correspondence",
+      "risk",
+      "reporting",
+      "markups",
+      "fieldreports",
+      "daily_diary",
+      "requirements",
+      "inspections",
+      "eac",
+      "costmodel",
     ],
   },
   {
-    key: 'architecture_engineering',
-    labelKey: 'onboarding.company_architecture',
-    descriptionKey: 'onboarding.company_architecture_desc',
+    key: "architecture_engineering",
+    labelKey: "onboarding.company_architecture",
+    descriptionKey: "onboarding.company_architecture_desc",
     icon: Pencil,
-    tags: ['BIM', 'CDE', 'Documents'],
+    tags: ["BIM", "CDE", "Documents"],
     enabledModules: [
-      'documents', 'cde', 'opencde_api',
-      'bim_hub', 'bim_requirements', 'match_elements',
-      'transmittals', 'rfi', 'submittals', 'correspondence',
-      'takeoff', 'dwg_takeoff', 'cad',
-      'boq', 'costs',
-      'markups', 'validation', 'requirements', 'carbon', 'reporting',
+      "documents",
+      "cde",
+      "opencde_api",
+      "bim_hub",
+      "bim_requirements",
+      "match_elements",
+      "transmittals",
+      "rfi",
+      "submittals",
+      "correspondence",
+      "takeoff",
+      "dwg_takeoff",
+      "cad",
+      "boq",
+      "costs",
+      "markups",
+      "validation",
+      "requirements",
+      "carbon",
+      "reporting",
     ],
   },
   {
-    key: 'property_developer',
-    labelKey: 'onboarding.company_property_developer',
-    descriptionKey: 'onboarding.company_property_developer_desc',
+    key: "property_developer",
+    labelKey: "onboarding.company_property_developer",
+    descriptionKey: "onboarding.company_property_developer_desc",
     icon: Home,
-    tags: ['Property', 'Finance', 'Carbon'],
+    tags: ["Property", "Finance", "Carbon"],
     enabledModules: [
-      'property_dev', 'finance', 'carbon',
-      'tendering', 'bid_management', 'contracts',
-      'documents', 'schedule', 'costs', 'boq',
-      'validation', 'reporting', 'crm', 'portal',
-      'requirements', 'meetings',
+      "property_dev",
+      "finance",
+      "carbon",
+      "tendering",
+      "bid_management",
+      "contracts",
+      "documents",
+      "schedule",
+      "costs",
+      "boq",
+      "validation",
+      "reporting",
+      "crm",
+      "portal",
+      "requirements",
+      "meetings",
     ],
   },
   {
-    key: 'full_enterprise',
-    labelKey: 'onboarding.company_full_enterprise',
-    descriptionKey: 'onboarding.company_full_enterprise_desc',
+    key: "full_enterprise",
+    labelKey: "onboarding.company_full_enterprise",
+    descriptionKey: "onboarding.company_full_enterprise_desc",
     icon: Boxes,
     tags: [],
     enabledModules: [], // special case: all modules
@@ -282,14 +570,14 @@ const COMPANY_PRESETS: CompanyPreset[] = [
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function maskApiKey(key: string): string {
-  if (key.length <= 8) return '\u2022'.repeat(key.length);
-  return key.slice(0, 8) + '\u2022'.repeat(Math.min(key.length - 8, 24));
+  if (key.length <= 8) return "\u2022".repeat(key.length);
+  return key.slice(0, 8) + "\u2022".repeat(Math.min(key.length - 8, 24));
 }
 
 /** Mark onboarding as completed in localStorage. */
 export function markOnboardingCompleted(): void {
   try {
-    localStorage.setItem('oe_onboarding_completed', 'true');
+    localStorage.setItem("oe_onboarding_completed", "true");
   } catch {
     // Storage unavailable -- ignore.
   }
@@ -298,7 +586,7 @@ export function markOnboardingCompleted(): void {
 /** Check whether onboarding has been completed. */
 export function isOnboardingCompleted(): boolean {
   try {
-    return localStorage.getItem('oe_onboarding_completed') === 'true';
+    return localStorage.getItem("oe_onboarding_completed") === "true";
   } catch {
     return false;
   }
@@ -306,21 +594,27 @@ export function isOnboardingCompleted(): boolean {
 
 /** Get the suggested region for the current language */
 function getSuggestedRegion(lang?: string): string {
-  const code = lang || i18n.language || 'en';
-  const base = code.split('-')[0] ?? 'en';
-  return LANG_TO_REGION[base] ?? 'ENG_TORONTO';
+  const code = lang || i18n.language || "en";
+  const base = code.split("-")[0] ?? "en";
+  return LANG_TO_REGION[base] ?? "ENG_TORONTO";
 }
 
 /** Get the suggested demo project IDs for the current language */
 function getSuggestedDemo(lang?: string): string {
-  const code = lang || i18n.language || 'en';
-  const base = code.split('-')[0] ?? 'en';
+  const code = lang || i18n.language || "en";
+  const base = code.split("-")[0] ?? "en";
   return LANG_TO_DEMO[base] ?? DEFAULT_DEMO;
 }
 
 // ── Fade wrapper for step transitions ───────────────────────────────────────
 
-function StepTransition({ children, stepKey }: { children: ReactNode; stepKey: number }) {
+function StepTransition({
+  children,
+  stepKey,
+}: {
+  children: ReactNode;
+  stepKey: number;
+}) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -333,8 +627,8 @@ function StepTransition({ children, stepKey }: { children: ReactNode; stepKey: n
     <div
       key={stepKey}
       className={clsx(
-        'transition-all duration-300 ease-out',
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3',
+        "transition-all duration-300 ease-out",
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3",
       )}
     >
       {children}
@@ -361,20 +655,24 @@ function ToggleSwitch({
       onClick={onToggle}
       disabled={disabled}
       className={clsx(
-        'group relative inline-flex h-[26px] w-[48px] shrink-0 cursor-pointer rounded-full p-[3px] transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/50',
+        "group relative inline-flex h-[26px] w-[48px] shrink-0 cursor-pointer rounded-full p-[3px] transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/50",
         enabled
-          ? 'bg-gradient-to-r from-oe-blue to-blue-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]'
-          : 'bg-gray-200 dark:bg-gray-700 shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)]',
-        disabled && 'opacity-50 cursor-not-allowed',
+          ? "bg-gradient-to-r from-oe-blue to-blue-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+          : "bg-gray-200 dark:bg-gray-700 shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)]",
+        disabled && "opacity-50 cursor-not-allowed",
       )}
     >
       <span
         className={clsx(
-          'pointer-events-none flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-lg ring-0 transition-all duration-300 ease-in-out',
-          enabled ? 'translate-x-[22px] scale-[1.05]' : 'translate-x-0 scale-100',
+          "pointer-events-none flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-lg ring-0 transition-all duration-300 ease-in-out",
+          enabled
+            ? "translate-x-[22px] scale-[1.05]"
+            : "translate-x-0 scale-100",
         )}
       >
-        {enabled && <Check size={11} className="text-oe-blue" strokeWidth={3} />}
+        {enabled && (
+          <Check size={11} className="text-oe-blue" strokeWidth={3} />
+        )}
       </span>
     </button>
   );
@@ -385,12 +683,12 @@ function ToggleSwitch({
 function ProgressBar({ current, total }: { current: number; total: number }) {
   const { t } = useTranslation();
   const stepLabels = [
-    t('onboarding.step_welcome', { defaultValue: 'Welcome‌⁠‍' }),
-    t('onboarding.step_start', { defaultValue: 'Start' }),
-    t('onboarding.step_profile', { defaultValue: 'Profile‌⁠‍' }),
-    t('onboarding.step_modules', { defaultValue: 'Modules‌⁠‍' }),
-    t('onboarding.step_data', { defaultValue: 'Data' }),
-    t('onboarding.step_finish', { defaultValue: 'Finish‌⁠‍' }),
+    t("onboarding.step_welcome", { defaultValue: "Welcome‌⁠‍" }),
+    t("onboarding.step_start", { defaultValue: "Start" }),
+    t("onboarding.step_profile", { defaultValue: "Profile‌⁠‍" }),
+    t("onboarding.step_modules", { defaultValue: "Modules‌⁠‍" }),
+    t("onboarding.step_data", { defaultValue: "Data" }),
+    t("onboarding.step_finish", { defaultValue: "Finish‌⁠‍" }),
   ];
 
   // Percent of the track filled. Anchors the animated progress line
@@ -415,30 +713,33 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
             const done = i < current;
             const here = i === current;
             return (
-              <div key={i} className="flex flex-col items-center gap-1.5 min-w-0 flex-1">
+              <div
+                key={i}
+                className="flex flex-col items-center gap-1.5 min-w-0 flex-1"
+              >
                 <div
                   className={clsx(
-                    'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-2xs font-bold transition-all duration-500 ease-oe',
+                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-2xs font-bold transition-all duration-500 ease-oe",
                     done
-                      ? 'bg-oe-blue text-white shadow-sm'
+                      ? "bg-oe-blue text-white shadow-sm"
                       : here
-                        ? 'bg-white dark:bg-surface-elevated text-oe-blue ring-2 ring-oe-blue shadow-[0_0_0_4px_rgba(37,99,235,0.18)] scale-110'
-                        : 'bg-surface-secondary text-content-tertiary',
+                        ? "bg-white dark:bg-surface-elevated text-oe-blue ring-2 ring-oe-blue shadow-[0_0_0_4px_rgba(37,99,235,0.18)] scale-110"
+                        : "bg-surface-secondary text-content-tertiary",
                   )}
                 >
                   {done ? <Check size={13} strokeWidth={3} /> : i + 1}
                 </div>
                 <span
                   className={clsx(
-                    'text-[10px] font-medium transition-colors whitespace-nowrap hidden sm:block',
+                    "text-[10px] font-medium transition-colors whitespace-nowrap hidden sm:block",
                     here
-                      ? 'text-oe-blue'
+                      ? "text-oe-blue"
                       : done
-                        ? 'text-content-secondary'
-                        : 'text-content-quaternary',
+                        ? "text-content-secondary"
+                        : "text-content-quaternary",
                   )}
                 >
-                  {stepLabels[i] ?? ''}
+                  {stepLabels[i] ?? ""}
                 </span>
               </div>
             );
@@ -460,9 +761,9 @@ function StepWelcome({
 }) {
   const { t } = useTranslation();
   const [selected, setSelected] = useState(() => {
-    const detected = navigator.language?.split('-')[0] || 'en';
+    const detected = navigator.language?.split("-")[0] || "en";
     const match = SUPPORTED_LANGUAGES.find((l) => l.code === detected);
-    return match ? match.code : 'en';
+    return match ? match.code : "en";
   });
 
   const handleSelect = useCallback(
@@ -481,11 +782,11 @@ function StepWelcome({
   // default" — only ``oe_lang_explicit`` (set when the user clicks Next
   // on the language step, see ``onSelect`` below) blocks re-detection.
   useEffect(() => {
-    const explicit = localStorage.getItem('oe_lang_explicit');
+    const explicit = localStorage.getItem("oe_lang_explicit");
     if (explicit) return;
-    const detected = navigator.language?.split('-')[0] || 'en';
+    const detected = navigator.language?.split("-")[0] || "en";
     const match = SUPPORTED_LANGUAGES.find((l) => l.code === detected);
-    const target = match ? match.code : 'en';
+    const target = match ? match.code : "en";
     if (target !== i18n.language) {
       i18n.changeLanguage(target);
       onLanguageChange(target);
@@ -501,7 +802,7 @@ function StepWelcome({
           className="absolute inset-0 -m-6 rounded-full blur-2xl opacity-60"
           style={{
             background:
-              'radial-gradient(circle, rgba(37, 99, 235, 0.35), transparent 70%)',
+              "radial-gradient(circle, rgba(37, 99, 235, 0.35), transparent 70%)",
           }}
           aria-hidden
         />
@@ -512,25 +813,31 @@ function StepWelcome({
 
       <Badge variant="blue" size="sm" className="mb-2">
         <Sparkles size={11} className="me-1" />
-        {t('onboarding.welcome_eyebrow', { defaultValue: 'Construction estimation, reimagined‌⁠‍' })}
+        {t("onboarding.welcome_eyebrow", {
+          defaultValue: "Construction estimation, reimagined‌⁠‍",
+        })}
       </Badge>
 
       <h1 className="text-2xl sm:text-3xl font-bold text-content-primary tracking-tight">
-        {t('onboarding.welcome_title', { defaultValue: 'Welcome to OpenConstructionERP' })}
+        {t("onboarding.welcome_title", {
+          defaultValue: "Welcome to OpenConstructionERP",
+        })}
       </h1>
 
       <p className="mt-2 max-w-md text-sm sm:text-base text-content-secondary leading-relaxed">
-        {t('onboarding.welcome_subtitle', {
+        {t("onboarding.welcome_subtitle", {
           defaultValue:
-            'The professional construction cost estimation platform. Set up your workspace in a few simple steps.',
+            "The professional construction cost estimation platform. Set up your workspace in a few simple steps.",
         })}
       </p>
 
-      {/* Language grid — 21 languages, flag + native name. */}
+      {/* Language grid — 24 languages, flag + native name. */}
       <div className="mt-5 w-full">
         <div className="mb-2 flex items-center justify-center gap-2 text-xs font-medium text-content-tertiary uppercase tracking-wider">
           <span className="h-px w-8 bg-border-light" aria-hidden />
-          {t('onboarding.welcome_pick_language', { defaultValue: 'Pick your language' })}
+          {t("onboarding.welcome_pick_language", {
+            defaultValue: "Pick your language",
+          })}
           <span className="h-px w-8 bg-border-light" aria-hidden />
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
@@ -541,14 +848,18 @@ function StepWelcome({
                 key={lang.code}
                 onClick={() => handleSelect(lang.code)}
                 className={clsx(
-                  'relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-start',
-                  'backdrop-blur-md transition-all duration-normal ease-oe',
+                  "relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-start",
+                  "backdrop-blur-md transition-all duration-normal ease-oe",
                   isSelected
-                    ? 'bg-oe-blue-subtle/70 ring-2 ring-oe-blue/50 shadow-sm shadow-oe-blue/15'
-                    : 'bg-surface-elevated/50 ring-1 ring-white/50 dark:ring-white/10 shadow-sm shadow-black/[0.04] hover:bg-oe-blue-subtle/30 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/[0.06] active:scale-[0.98]',
+                    ? "bg-oe-blue-subtle/70 ring-2 ring-oe-blue/50 shadow-sm shadow-oe-blue/15"
+                    : "bg-surface-elevated/50 ring-1 ring-white/50 dark:ring-white/10 shadow-sm shadow-black/[0.04] hover:bg-oe-blue-subtle/30 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/[0.06] active:scale-[0.98]",
                 )}
               >
-                <CountryFlag code={lang.country} size={24} className="shrink-0" />
+                <CountryFlag
+                  code={lang.country}
+                  size={24}
+                  className="shrink-0"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-semibold text-content-primary truncate">
                     {lang.name}
@@ -578,14 +889,14 @@ function StepWelcome({
           // ``i18nextLng`` happens to read ``pl`` (because someone else
           // demoed the build in Polish) would silently switch back to
           // Polish on the next page load.
-          localStorage.setItem('oe_lang_explicit', '1');
+          localStorage.setItem("oe_lang_explicit", "1");
           onNext();
         }}
         icon={<ArrowRight size={18} />}
         iconPosition="right"
         className="mt-5 shadow-lg shadow-oe-blue/20"
       >
-        {t('onboarding.get_started', { defaultValue: 'Get Started' })}
+        {t("onboarding.get_started", { defaultValue: "Get Started" })}
       </Button>
     </div>
   );
@@ -607,11 +918,13 @@ function StepStartChoice({
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-2xl font-bold text-content-primary">
-        {t('onboarding.start_choice_title', { defaultValue: 'How would you like to start?' })}
+        {t("onboarding.start_choice_title", {
+          defaultValue: "How would you like to start?",
+        })}
       </h2>
       <p className="mt-2 text-sm text-content-secondary text-center max-w-md">
-        {t('onboarding.start_choice_subtitle', {
-          defaultValue: 'Choose a quick setup or customize your experience.',
+        {t("onboarding.start_choice_subtitle", {
+          defaultValue: "Choose a quick setup or customize your experience.",
         })}
       </p>
 
@@ -620,24 +933,25 @@ function StepStartChoice({
         <button
           onClick={onQuickStart}
           className={clsx(
-            'group relative flex flex-col items-start rounded-3xl p-10 text-left min-h-[360px]',
-            'bg-surface-elevated/70 backdrop-blur-md shadow-sm shadow-black/[0.04]',
-            'hover:bg-oe-blue-subtle/30 hover:shadow-2xl hover:shadow-oe-blue/10 hover:-translate-y-1',
-            'transition-all duration-300 ease-oe active:scale-[0.98]',
+            "group relative flex flex-col items-start rounded-3xl p-10 text-left min-h-[360px]",
+            "bg-surface-elevated/70 backdrop-blur-md shadow-sm shadow-black/[0.04]",
+            "hover:bg-oe-blue-subtle/30 hover:shadow-2xl hover:shadow-oe-blue/10 hover:-translate-y-1",
+            "transition-all duration-300 ease-oe active:scale-[0.98]",
           )}
         >
           <Badge variant="blue" size="sm" className="mb-4">
-            {t('onboarding.recommended', { defaultValue: 'Recommended' })}
+            {t("onboarding.recommended", { defaultValue: "Recommended" })}
           </Badge>
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-oe-blue-subtle text-oe-blue mb-6 transition-all duration-300 group-hover:bg-oe-blue group-hover:text-white group-hover:shadow-lg group-hover:shadow-oe-blue/20">
             <Sparkles size={30} />
           </div>
           <h3 className="text-2xl font-bold text-content-primary">
-            {t('onboarding.quick_start', { defaultValue: 'Quick Start' })}
+            {t("onboarding.quick_start", { defaultValue: "Quick Start" })}
           </h3>
           <p className="mt-3 text-base text-content-secondary leading-relaxed">
-            {t('onboarding.quick_start_desc', {
-              defaultValue: 'All essential modules pre-activated. Start working immediately.',
+            {t("onboarding.quick_start_desc", {
+              defaultValue:
+                "All essential modules pre-activated. Start working immediately.",
             })}
           </p>
         </button>
@@ -646,10 +960,10 @@ function StepStartChoice({
         <button
           onClick={onChooseProfile}
           className={clsx(
-            'group relative flex flex-col items-start rounded-3xl p-10 text-left min-h-[360px]',
-            'bg-surface-elevated/70 backdrop-blur-md shadow-sm shadow-black/[0.04]',
-            'hover:bg-oe-blue-subtle/30 hover:shadow-2xl hover:shadow-oe-blue/10 hover:-translate-y-1',
-            'transition-all duration-300 ease-oe active:scale-[0.98]',
+            "group relative flex flex-col items-start rounded-3xl p-10 text-left min-h-[360px]",
+            "bg-surface-elevated/70 backdrop-blur-md shadow-sm shadow-black/[0.04]",
+            "hover:bg-oe-blue-subtle/30 hover:shadow-2xl hover:shadow-oe-blue/10 hover:-translate-y-1",
+            "transition-all duration-300 ease-oe active:scale-[0.98]",
           )}
         >
           <div className="h-[24px] mb-4" aria-hidden />
@@ -657,11 +971,14 @@ function StepStartChoice({
             <Settings2 size={30} />
           </div>
           <h3 className="text-2xl font-bold text-content-primary">
-            {t('onboarding.choose_profile', { defaultValue: 'Choose Your Profile' })}
+            {t("onboarding.choose_profile", {
+              defaultValue: "Choose Your Profile",
+            })}
           </h3>
           <p className="mt-3 text-base text-content-secondary leading-relaxed">
-            {t('onboarding.choose_profile_desc', {
-              defaultValue: 'Select your role and customize which modules you need.',
+            {t("onboarding.choose_profile_desc", {
+              defaultValue:
+                "Select your role and customize which modules you need.",
             })}
           </p>
         </button>
@@ -669,7 +986,7 @@ function StepStartChoice({
 
       <div className="mt-5">
         <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
-          {t('common.back', { defaultValue: 'Back' })}
+          {t("common.back", { defaultValue: "Back" })}
         </Button>
       </div>
     </div>
@@ -703,113 +1020,121 @@ function StepCompanyProfile({
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-2xl font-bold text-content-primary">
-        {t('onboarding.profile_title', { defaultValue: 'What best describes your work?' })}
+        {t("onboarding.profile_title", {
+          defaultValue: "What best describes your work?",
+        })}
       </h2>
       <p className="mt-2 text-sm text-content-secondary text-center max-w-md">
-        {t('onboarding.profile_subtitle', {
-          defaultValue: "We'll pre-select the right modules. You can always change this later.",
+        {t("onboarding.profile_subtitle", {
+          defaultValue:
+            "We'll pre-select the right modules. You can always change this later.",
         })}
       </p>
 
       {/* Profile cards: 2 column grid on desktop, 1 on mobile */}
       <div className="mt-6 w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {COMPANY_PRESETS.filter((p) => p.key !== 'full_enterprise').map((preset) => {
-          const isSelected = selectedType === preset.key;
-          const Icon = preset.icon;
-          const moduleCount = preset.enabledModules.length;
-          const visibleTags = preset.tags.slice(0, 3);
-          const extraCount = moduleCount - visibleTags.length;
+        {COMPANY_PRESETS.filter((p) => p.key !== "full_enterprise").map(
+          (preset) => {
+            const isSelected = selectedType === preset.key;
+            const Icon = preset.icon;
+            const moduleCount = preset.enabledModules.length;
+            const visibleTags = preset.tags.slice(0, 3);
+            const extraCount = moduleCount - visibleTags.length;
 
-          return (
-            <button
-              key={preset.key}
-              onClick={() => handleSelect(preset.key)}
-              className={clsx(
-                'group relative flex flex-col items-start rounded-2xl p-5 text-left',
-                'transition-all duration-300 ease-oe',
-                isSelected
-                  ? 'bg-oe-blue-subtle/40 ring-2 ring-oe-blue/45 shadow-lg shadow-oe-blue/10'
-                  : 'bg-surface-elevated shadow-sm shadow-black/[0.04] hover:bg-oe-blue-subtle/15 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99]',
-              )}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <div
-                  className={clsx(
-                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300',
-                    isSelected
-                      ? 'bg-oe-blue text-white shadow-lg shadow-oe-blue/20'
-                      : 'bg-surface-secondary text-content-secondary group-hover:bg-surface-tertiary',
-                  )}
-                >
-                  <Icon size={20} />
-                </div>
-                {preset.popular && (
-                  <Badge variant="blue" size="sm">
-                    {t('onboarding.popular', { defaultValue: 'Popular' })}
-                  </Badge>
-                )}
-                {isSelected && (
-                  <CheckCircle2 size={16} className="text-oe-blue ml-auto" />
-                )}
-              </div>
-
-              <h3
+            return (
+              <button
+                key={preset.key}
+                onClick={() => handleSelect(preset.key)}
                 className={clsx(
-                  'text-base font-bold transition-colors',
-                  isSelected ? 'text-oe-blue' : 'text-content-primary',
+                  "group relative flex flex-col items-start rounded-2xl p-5 text-left",
+                  "transition-all duration-300 ease-oe",
+                  isSelected
+                    ? "bg-oe-blue-subtle/40 ring-2 ring-oe-blue/45 shadow-lg shadow-oe-blue/10"
+                    : "bg-surface-elevated shadow-sm shadow-black/[0.04] hover:bg-oe-blue-subtle/15 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99]",
                 )}
               >
-                {t(preset.labelKey, { defaultValue: preset.key })}
-              </h3>
-              <p className="mt-1 text-sm text-content-secondary leading-snug">
-                {t(preset.descriptionKey, { defaultValue: '' })}
-              </p>
-
-              {/* Module tags */}
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {visibleTags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center rounded-full bg-surface-tertiary px-2 py-0.5 text-2xs font-medium text-content-secondary"
+                <div className="flex items-center gap-2 mb-3">
+                  <div
+                    className={clsx(
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300",
+                      isSelected
+                        ? "bg-oe-blue text-white shadow-lg shadow-oe-blue/20"
+                        : "bg-surface-secondary text-content-secondary group-hover:bg-surface-tertiary",
+                    )}
                   >
-                    {tag}
-                  </span>
-                ))}
-                {extraCount > 0 && (
-                  <span className="inline-flex items-center rounded-full bg-surface-tertiary px-2 py-0.5 text-2xs font-medium text-content-tertiary">
-                    +{extraCount} {t('onboarding.more', { defaultValue: 'more' })}
-                  </span>
-                )}
-              </div>
-            </button>
-          );
-        })}
+                    <Icon size={20} />
+                  </div>
+                  {preset.popular && (
+                    <Badge variant="blue" size="sm">
+                      {t("onboarding.popular", { defaultValue: "Popular" })}
+                    </Badge>
+                  )}
+                  {isSelected && (
+                    <CheckCircle2 size={16} className="text-oe-blue ml-auto" />
+                  )}
+                </div>
+
+                <h3
+                  className={clsx(
+                    "text-base font-bold transition-colors",
+                    isSelected ? "text-oe-blue" : "text-content-primary",
+                  )}
+                >
+                  {t(preset.labelKey, { defaultValue: preset.key })}
+                </h3>
+                <p className="mt-1 text-sm text-content-secondary leading-snug">
+                  {t(preset.descriptionKey, { defaultValue: "" })}
+                </p>
+
+                {/* Module tags */}
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {visibleTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center rounded-full bg-surface-tertiary px-2 py-0.5 text-2xs font-medium text-content-secondary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {extraCount > 0 && (
+                    <span className="inline-flex items-center rounded-full bg-surface-tertiary px-2 py-0.5 text-2xs font-medium text-content-tertiary">
+                      +{extraCount}{" "}
+                      {t("onboarding.more", { defaultValue: "more" })}
+                    </span>
+                  )}
+                </div>
+              </button>
+            );
+          },
+        )}
       </div>
 
       {/* Full Enterprise — wide card */}
       {(() => {
-        const enterprise = COMPANY_PRESETS.find((p) => p.key === 'full_enterprise');
+        const enterprise = COMPANY_PRESETS.find(
+          (p) => p.key === "full_enterprise",
+        );
         if (!enterprise) return null;
-        const isSelected = selectedType === 'full_enterprise';
+        const isSelected = selectedType === "full_enterprise";
         const Icon = enterprise.icon;
 
         return (
           <button
-            onClick={() => handleSelect('full_enterprise')}
+            onClick={() => handleSelect("full_enterprise")}
             className={clsx(
-              'mt-3 w-full max-w-2xl group relative flex items-center gap-4 rounded-2xl p-5 text-left',
-              'transition-all duration-300 ease-oe',
+              "mt-3 w-full max-w-2xl group relative flex items-center gap-4 rounded-2xl p-5 text-left",
+              "transition-all duration-300 ease-oe",
               isSelected
-                ? 'bg-oe-blue-subtle/40 ring-2 ring-oe-blue/45 shadow-lg shadow-oe-blue/10'
-                : 'bg-surface-elevated shadow-sm shadow-black/[0.04] hover:bg-oe-blue-subtle/15 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99]',
+                ? "bg-oe-blue-subtle/40 ring-2 ring-oe-blue/45 shadow-lg shadow-oe-blue/10"
+                : "bg-surface-elevated shadow-sm shadow-black/[0.04] hover:bg-oe-blue-subtle/15 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99]",
             )}
           >
             <div
               className={clsx(
-                'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300',
+                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300",
                 isSelected
-                  ? 'bg-oe-blue text-white shadow-lg shadow-oe-blue/20'
-                  : 'bg-surface-secondary text-content-secondary group-hover:bg-surface-tertiary',
+                  ? "bg-oe-blue text-white shadow-lg shadow-oe-blue/20"
+                  : "bg-surface-secondary text-content-secondary group-hover:bg-surface-tertiary",
               )}
             >
               <Icon size={20} />
@@ -818,30 +1143,33 @@ function StepCompanyProfile({
               <div className="flex items-center gap-2">
                 <h3
                   className={clsx(
-                    'text-base font-bold transition-colors',
-                    isSelected ? 'text-oe-blue' : 'text-content-primary',
+                    "text-base font-bold transition-colors",
+                    isSelected ? "text-oe-blue" : "text-content-primary",
                   )}
                 >
-                  {t(enterprise.labelKey, { defaultValue: 'Full Enterprise' })}
+                  {t(enterprise.labelKey, { defaultValue: "Full Enterprise" })}
                 </h3>
-                {isSelected && <CheckCircle2 size={16} className="text-oe-blue" />}
+                {isSelected && (
+                  <CheckCircle2 size={16} className="text-oe-blue" />
+                )}
               </div>
               <p className="mt-0.5 text-sm text-content-secondary">
                 {t(enterprise.descriptionKey, {
-                  defaultValue: 'Complete construction lifecycle -- everything enabled',
+                  defaultValue:
+                    "Complete construction lifecycle -- everything enabled",
                 })}
               </p>
             </div>
             <span
               className={clsx(
-                'shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold transition-all',
+                "shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold transition-all",
                 isSelected
-                  ? 'bg-oe-blue text-white'
-                  : 'bg-surface-secondary text-content-tertiary',
+                  ? "bg-oe-blue text-white"
+                  : "bg-surface-secondary text-content-tertiary",
               )}
             >
-              {t('onboarding.all_modules', {
-                defaultValue: 'All {{count}} modules',
+              {t("onboarding.all_modules", {
+                defaultValue: "All {{count}} modules",
                 count: TOTAL_MODULE_COUNT,
               })}
             </span>
@@ -854,12 +1182,14 @@ function StepCompanyProfile({
         onClick={onConfigureIndividually}
         className="mt-4 text-sm font-medium text-oe-blue hover:underline transition-colors"
       >
-        {t('onboarding.configure_individually', { defaultValue: 'Configure individually' })}
+        {t("onboarding.configure_individually", {
+          defaultValue: "Configure individually",
+        })}
       </button>
 
       <div className="mt-6 flex items-center gap-3">
         <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
-          {t('common.back', { defaultValue: 'Back' })}
+          {t("common.back", { defaultValue: "Back" })}
         </Button>
         <Button
           variant="primary"
@@ -868,7 +1198,7 @@ function StepCompanyProfile({
           icon={<ArrowRight size={16} />}
           iconPosition="right"
         >
-          {t('common.continue', { defaultValue: 'Continue' })}
+          {t("common.continue", { defaultValue: "Continue" })}
         </Button>
       </div>
     </div>
@@ -899,17 +1229,18 @@ function StepModuleConfig({
       </div>
 
       <h2 className="text-2xl font-bold text-content-primary">
-        {t('onboarding.modules_title', { defaultValue: 'Your Modules' })}
+        {t("onboarding.modules_title", { defaultValue: "Your Modules" })}
       </h2>
       <p className="mt-2 text-sm text-content-secondary text-center max-w-md">
-        {t('onboarding.modules_subtitle', {
-          defaultValue: 'Enable or disable modules as needed. You can change this anytime in Settings.',
+        {t("onboarding.modules_subtitle", {
+          defaultValue:
+            "Enable or disable modules as needed. You can change this anytime in Settings.",
         })}
       </p>
 
       <div className="mt-2 text-sm font-medium text-oe-blue">
-        {enabledCount} / {totalCount}{' '}
-        {t('onboarding.modules_active', { defaultValue: 'modules active' })}
+        {enabledCount} / {totalCount}{" "}
+        {t("onboarding.modules_active", { defaultValue: "modules active" })}
       </div>
 
       {/* AI Tools toggle */}
@@ -917,15 +1248,31 @@ function StepModuleConfig({
         <div className="flex items-center justify-between rounded-xl bg-surface-elevated shadow-sm shadow-black/[0.04] px-4 py-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 dark:bg-violet-950/30 shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-violet-600"><path d="M12 2a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V6a4 4 0 0 1 4-4Z"/><path d="M16 11v1a4 4 0 1 1-8 0v-1"/><path d="M12 19v3"/><path d="M8 22h8"/></svg>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-violet-600"
+              >
+                <path d="M12 2a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V6a4 4 0 0 1 4-4Z" />
+                <path d="M16 11v1a4 4 0 1 1-8 0v-1" />
+                <path d="M12 19v3" />
+                <path d="M8 22h8" />
+              </svg>
             </div>
             <div className="min-w-0">
               <p className="text-sm font-semibold text-content-primary">
-                {t('onboarding.ai_tools', { defaultValue: 'AI-Powered Tools' })}
+                {t("onboarding.ai_tools", { defaultValue: "AI-Powered Tools" })}
               </p>
               <p className="text-xs text-content-tertiary truncate">
-                {t('onboarding.ai_tools_desc', {
-                  defaultValue: 'AI estimation, cost advisor, project intelligence. Requires API key (Anthropic, OpenAI, or Gemini).',
+                {t("onboarding.ai_tools_desc", {
+                  defaultValue:
+                    "AI estimation, cost advisor, project intelligence. Requires API key (Anthropic, OpenAI, or Gemini).",
                 })}
               </p>
             </div>
@@ -933,7 +1280,9 @@ function StepModuleConfig({
           <button
             type="button"
             onClick={() => {
-              const aiKeys = ALL_MODULES.filter((m) => m.group === 'ai').map((m) => m.key);
+              const aiKeys = ALL_MODULES.filter((m) => m.group === "ai").map(
+                (m) => m.key,
+              );
               const anyEnabled = aiKeys.some((k) => enabledModules.has(k));
               for (const k of aiKeys) {
                 if (anyEnabled && enabledModules.has(k)) onToggleModule(k);
@@ -941,16 +1290,20 @@ function StepModuleConfig({
               }
             }}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-              ALL_MODULES.filter((m) => m.group === 'ai').some((m) => enabledModules.has(m.key))
-                ? 'bg-oe-blue'
-                : 'bg-gray-300 dark:bg-gray-600'
+              ALL_MODULES.filter((m) => m.group === "ai").some((m) =>
+                enabledModules.has(m.key),
+              )
+                ? "bg-oe-blue"
+                : "bg-gray-300 dark:bg-gray-600"
             }`}
           >
             <span
               className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 ease-in-out ${
-                ALL_MODULES.filter((m) => m.group === 'ai').some((m) => enabledModules.has(m.key))
-                  ? 'translate-x-5'
-                  : 'translate-x-0'
+                ALL_MODULES.filter((m) => m.group === "ai").some((m) =>
+                  enabledModules.has(m.key),
+                )
+                  ? "translate-x-5"
+                  : "translate-x-0"
               }`}
             />
           </button>
@@ -984,12 +1337,12 @@ function StepModuleConfig({
                           </span>
                           {isCore && (
                             <Badge variant="blue" size="sm">
-                              {t('onboarding.core', { defaultValue: 'Core' })}
+                              {t("onboarding.core", { defaultValue: "Core" })}
                             </Badge>
                           )}
                         </div>
                         <p className="text-xs text-content-tertiary mt-0.5 truncate">
-                          {t(mod.descriptionKey, { defaultValue: '' })}
+                          {t(mod.descriptionKey, { defaultValue: "" })}
                         </p>
                       </div>
                       <ToggleSwitch
@@ -1008,7 +1361,7 @@ function StepModuleConfig({
 
       <div className="mt-6 flex items-center gap-3">
         <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
-          {t('common.back', { defaultValue: 'Back' })}
+          {t("common.back", { defaultValue: "Back" })}
         </Button>
         <Button
           variant="primary"
@@ -1016,7 +1369,7 @@ function StepModuleConfig({
           icon={<ArrowRight size={16} />}
           iconPosition="right"
         >
-          {t('common.continue', { defaultValue: 'Continue' })}
+          {t("common.continue", { defaultValue: "Continue" })}
         </Button>
       </div>
     </div>
@@ -1045,7 +1398,10 @@ function StepDataSetup({
   // ── Cost Database state ──
   const [selectedRegion, setSelectedRegion] = useState(suggestedRegion);
   const [loadingDb, setLoadingDb] = useState(false);
-  const [loadedDb, setLoadedDb] = useState<{ id: string; count: number } | null>(null);
+  const [loadedDb, setLoadedDb] = useState<{
+    id: string;
+    count: number;
+  } | null>(null);
   const [dbProgress, setDbProgress] = useState(0);
 
   // ── Demo Project state ──
@@ -1054,8 +1410,9 @@ function StepDataSetup({
   const [demoInstalled, setDemoInstalled] = useState(false);
 
   // ── AI state ──
-  const [selectedProvider, setSelectedProvider] = useState<AIProvider>('anthropic');
-  const [apiKey, setApiKey] = useState('');
+  const [selectedProvider, setSelectedProvider] =
+    useState<AIProvider>("anthropic");
+  const [apiKey, setApiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
 
   // ── DB loading progress simulation ──
@@ -1091,17 +1448,21 @@ function StepDataSetup({
     if (loadingDb || loadedDb) return;
     setLoadingDb(true);
 
-    const dbName = CWICR_DATABASES.find((d) => d.id === selectedRegion)?.name ?? selectedRegion;
+    const dbName =
+      CWICR_DATABASES.find((d) => d.id === selectedRegion)?.name ??
+      selectedRegion;
     const taskId = `db-${selectedRegion}-${Date.now()}`;
 
     // Add to global queue so FloatingQueuePanel shows progress
     addQueueTask({
       id: taskId,
-      type: 'import',
+      type: "import",
       filename: `${dbName} Cost Database`,
-      status: 'processing',
+      status: "processing",
       progress: 10,
-      message: t('onboarding.db_loading_status', { defaultValue: 'Loading cost database...' }),
+      message: t("onboarding.db_loading_status", {
+        defaultValue: "Loading cost database...",
+      }),
     });
 
     try {
@@ -1109,17 +1470,27 @@ function StepDataSetup({
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
 
-      updateQueueTask(taskId, { progress: 30, message: t('onboarding.db_downloading', { defaultValue: 'Downloading from server...' }) });
+      updateQueueTask(taskId, {
+        progress: 30,
+        message: t("onboarding.db_downloading", {
+          defaultValue: "Downloading from server...",
+        }),
+      });
 
       const res = await fetch(`/api/v1/costs/load-cwicr/${selectedRegion}`, {
-        method: 'POST',
+        method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
 
       if (res.ok) {
-        updateQueueTask(taskId, { progress: 80, message: t('onboarding.db_importing', { defaultValue: 'Importing items...' }) });
+        updateQueueTask(taskId, {
+          progress: 80,
+          message: t("onboarding.db_importing", {
+            defaultValue: "Importing items...",
+          }),
+        });
 
         const data = await res.json();
         const imported = data.imported ?? 0;
@@ -1128,18 +1499,18 @@ function StepDataSetup({
 
         // Update queue task to completed
         updateQueueTask(taskId, {
-          status: 'completed',
+          status: "completed",
           progress: 100,
           message: `${imported.toLocaleString()} items imported`,
         });
 
         try {
           const existing = JSON.parse(
-            localStorage.getItem('oe_loaded_databases') || '[]',
+            localStorage.getItem("oe_loaded_databases") || "[]",
           ) as string[];
           if (!existing.includes(selectedRegion)) {
             localStorage.setItem(
-              'oe_loaded_databases',
+              "oe_loaded_databases",
               JSON.stringify([...existing, selectedRegion]),
             );
           }
@@ -1148,24 +1519,36 @@ function StepDataSetup({
         }
 
         addToast({
-          type: 'success',
+          type: "success",
           title: `${dbName} loaded`,
           message: `${imported.toLocaleString()} cost items imported`,
         });
       } else {
-        const err = await res.json().catch(() => ({ detail: 'Failed to load database' }));
-        updateQueueTask(taskId, { status: 'error', progress: 0, error: err.detail || 'Failed' });
+        const err = await res
+          .json()
+          .catch(() => ({ detail: "Failed to load database" }));
+        updateQueueTask(taskId, {
+          status: "error",
+          progress: 0,
+          error: err.detail || "Failed",
+        });
         addToast({
-          type: 'error',
-          title: 'Failed to load database',
-          message: err.detail || 'Unknown error',
+          type: "error",
+          title: "Failed to load database",
+          message: err.detail || "Unknown error",
         });
       }
     } catch {
-      updateQueueTask(taskId, { status: 'error', progress: 0, error: 'Connection error' });
+      updateQueueTask(taskId, {
+        status: "error",
+        progress: 0,
+        error: "Connection error",
+      });
       addToast({
-        type: 'error',
-        title: t('common.connection_error', { defaultValue: 'Connection error' }),
+        type: "error",
+        title: t("common.connection_error", {
+          defaultValue: "Connection error",
+        }),
       });
     } finally {
       setLoadingDb(false);
@@ -1178,14 +1561,16 @@ function StepDataSetup({
       await apiPost(`/demo/install/${suggestedDemoId}`);
       setDemoInstalled(true);
       addToast({
-        type: 'success',
-        title: t('onboarding.demo_installed', { defaultValue: 'Demo project installed' }),
+        type: "success",
+        title: t("onboarding.demo_installed", {
+          defaultValue: "Demo project installed",
+        }),
       });
     } catch {
       addToast({
-        type: 'error',
-        title: t('onboarding.demo_install_error', {
-          defaultValue: 'Failed to install demo project',
+        type: "error",
+        title: t("onboarding.demo_install_error", {
+          defaultValue: "Failed to install demo project",
         }),
       });
     } finally {
@@ -1198,22 +1583,28 @@ function StepDataSetup({
     onSuccess: (result) => {
       if (result.success) {
         addToast({
-          type: 'success',
-          title: t('onboarding.ai_test_success', { defaultValue: 'Connection successful!' }),
-          message: result.latency_ms ? `${result.latency_ms}ms response time` : undefined,
+          type: "success",
+          title: t("onboarding.ai_test_success", {
+            defaultValue: "Connection successful!",
+          }),
+          message: result.latency_ms
+            ? `${result.latency_ms}ms response time`
+            : undefined,
         });
       } else {
         addToast({
-          type: 'error',
-          title: t('onboarding.ai_test_failed', { defaultValue: 'Connection failed' }),
+          type: "error",
+          title: t("onboarding.ai_test_failed", {
+            defaultValue: "Connection failed",
+          }),
           message: result.message,
         });
       }
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('onboarding.ai_test_error', { defaultValue: 'Test failed' }),
+        type: "error",
+        title: t("onboarding.ai_test_error", { defaultValue: "Test failed" }),
         message: err.message,
       });
     },
@@ -1231,13 +1622,21 @@ function StepDataSetup({
     onSuccess: () => {
       if (apiKey.trim()) {
         addToast({
-          type: 'success',
-          title: t('onboarding.ai_saved', { defaultValue: 'AI settings saved' }),
+          type: "success",
+          title: t("onboarding.ai_saved", {
+            defaultValue: "AI settings saved",
+          }),
         });
       }
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('onboarding.ai_save_failed', { defaultValue: 'Failed to save AI settings' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("onboarding.ai_save_failed", {
+          defaultValue: "Failed to save AI settings",
+        }),
+        message: err.message,
+      });
     },
   });
 
@@ -1247,10 +1646,13 @@ function StepDataSetup({
       // Fire and forget — don't await, just start in background
       handleLoadDb();
       addToast({
-        type: 'info',
-        title: t('onboarding.db_loading_bg', { defaultValue: 'Loading database in background...' }),
-        message: t('onboarding.db_loading_bg_desc', {
-          defaultValue: 'You can continue working. We\'ll notify you when it\'s ready.',
+        type: "info",
+        title: t("onboarding.db_loading_bg", {
+          defaultValue: "Loading database in background...",
+        }),
+        message: t("onboarding.db_loading_bg_desc", {
+          defaultValue:
+            "You can continue working. We'll notify you when it's ready.",
         }),
       });
     }
@@ -1284,7 +1686,7 @@ function StepDataSetup({
   // Region filter (added 2026-04-28: with 30 regions the full grid is too tall
   // for a single onboarding step; the filter lets the user narrow down quickly
   // by name / city / currency / language before scrolling).
-  const [regionQuery, setRegionQuery] = useState('');
+  const [regionQuery, setRegionQuery] = useState("");
   const filteredRegions = (() => {
     const q = regionQuery.trim().toLowerCase();
     if (!q) return CWICR_DATABASES;
@@ -1302,11 +1704,12 @@ function StepDataSetup({
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-2xl font-bold text-content-primary">
-        {t('onboarding.data_setup_title', { defaultValue: 'Data Setup' })}
+        {t("onboarding.data_setup_title", { defaultValue: "Data Setup" })}
       </h2>
       <p className="mt-2 text-sm text-content-secondary text-center max-w-md">
-        {t('onboarding.data_setup_subtitle', {
-          defaultValue: 'Optional setup steps. You can skip any or all of these.',
+        {t("onboarding.data_setup_subtitle", {
+          defaultValue:
+            "Optional setup steps. You can skip any or all of these.",
         })}
       </p>
 
@@ -1319,10 +1722,14 @@ function StepDataSetup({
             </div>
             <div>
               <h3 className="text-base font-bold text-content-primary">
-                {t('onboarding.load_cost_db', { defaultValue: 'Load Cost Database' })}
+                {t("onboarding.load_cost_db", {
+                  defaultValue: "Load Cost Database",
+                })}
               </h3>
               <p className="text-xs text-content-tertiary">
-                {t('onboarding.cost_db_optional', { defaultValue: '55,000+ pricing items' })}
+                {t("onboarding.cost_db_optional", {
+                  defaultValue: "55,000+ pricing items",
+                })}
               </p>
             </div>
           </div>
@@ -1333,8 +1740,8 @@ function StepDataSetup({
               type="search"
               value={regionQuery}
               onChange={(e) => setRegionQuery(e.target.value)}
-              placeholder={t('onboarding.region_filter_placeholder', {
-                defaultValue: 'Filter by country, city, or currency…',
+              placeholder={t("onboarding.region_filter_placeholder", {
+                defaultValue: "Filter by country, city, or currency…",
               })}
               disabled={loadingDb || !!loadedDb}
               className="w-full rounded-lg bg-surface-secondary/70 px-3 py-1.5 text-xs text-content-primary placeholder:text-content-quaternary border border-transparent focus:border-oe-blue/40 focus:outline-none focus:bg-surface-secondary disabled:opacity-50"
@@ -1345,7 +1752,7 @@ function StepDataSetup({
           <div className="max-h-72 overflow-y-auto pr-1 -mr-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-3">
             {filteredRegions.length === 0 && (
               <div className="col-span-full py-6 text-center text-xs text-content-tertiary">
-                {t('onboarding.region_filter_no_results', {
+                {t("onboarding.region_filter_no_results", {
                   defaultValue: 'No regions match "{{q}}"',
                   q: regionQuery,
                 })}
@@ -1356,22 +1763,35 @@ function StepDataSetup({
               return (
                 <button
                   key={db.id}
-                  onClick={() => !loadingDb && !loadedDb && setSelectedRegion(db.id)}
+                  onClick={() =>
+                    !loadingDb && !loadedDb && setSelectedRegion(db.id)
+                  }
                   disabled={loadingDb || !!loadedDb}
                   className={clsx(
-                    'flex items-center gap-2 rounded-xl px-3 py-2 text-left transition-all duration-200',
+                    "flex items-center gap-2 rounded-xl px-3 py-2 text-left transition-all duration-200",
                     isSelected
-                      ? 'bg-oe-blue-subtle/50 ring-2 ring-oe-blue/40 shadow-sm'
-                      : 'bg-surface-secondary/70 hover:bg-surface-secondary hover:shadow-sm',
-                    (loadingDb || !!loadedDb) && 'opacity-60 cursor-not-allowed',
+                      ? "bg-oe-blue-subtle/50 ring-2 ring-oe-blue/40 shadow-sm"
+                      : "bg-surface-secondary/70 hover:bg-surface-secondary hover:shadow-sm",
+                    (loadingDb || !!loadedDb) &&
+                      "opacity-60 cursor-not-allowed",
                   )}
                 >
-                  <CountryFlag code={db.flagId} size={18} className="shrink-0" />
+                  <CountryFlag
+                    code={db.flagId}
+                    size={18}
+                    className="shrink-0"
+                  />
                   <div className="min-w-0 flex-1">
-                    <div className="text-xs font-medium text-content-primary truncate">{db.name}</div>
-                    <div className="text-2xs text-content-quaternary">{db.currency}</div>
+                    <div className="text-xs font-medium text-content-primary truncate">
+                      {db.name}
+                    </div>
+                    <div className="text-2xs text-content-quaternary">
+                      {db.currency}
+                    </div>
                   </div>
-                  {isSelected && <Check size={14} className="text-oe-blue shrink-0" />}
+                  {isSelected && (
+                    <Check size={14} className="text-oe-blue shrink-0" />
+                  )}
                 </button>
               );
             })}
@@ -1383,8 +1803,10 @@ function StepDataSetup({
               <div className="flex items-center gap-2 text-sm text-semantic-success">
                 <CheckCircle2 size={16} />
                 <span className="font-medium">
-                  {loadedDb.count.toLocaleString()}{' '}
-                  {t('onboarding.items_loaded', { defaultValue: 'items loaded' })}
+                  {loadedDb.count.toLocaleString()}{" "}
+                  {t("onboarding.items_loaded", {
+                    defaultValue: "items loaded",
+                  })}
                 </span>
               </div>
             ) : loadingDb ? (
@@ -1402,7 +1824,9 @@ function StepDataSetup({
               </div>
             ) : (
               <Button variant="secondary" size="sm" onClick={handleLoadDb}>
-                {t('onboarding.load_database', { defaultValue: 'Load Database' })}
+                {t("onboarding.load_database", {
+                  defaultValue: "Load Database",
+                })}
               </Button>
             )}
           </div>
@@ -1417,10 +1841,14 @@ function StepDataSetup({
               </div>
               <div>
                 <h3 className="text-base font-bold text-content-primary">
-                  {t('onboarding.install_demo', { defaultValue: 'Install Demo Project' })}
+                  {t("onboarding.install_demo", {
+                    defaultValue: "Install Demo Project",
+                  })}
                 </h3>
                 <p className="text-xs text-content-tertiary">
-                  {t('onboarding.demo_optional', { defaultValue: 'Sample project to explore' })}
+                  {t("onboarding.demo_optional", {
+                    defaultValue: "Sample project to explore",
+                  })}
                 </p>
               </div>
             </div>
@@ -1429,7 +1857,9 @@ function StepDataSetup({
                 <div className="flex items-center gap-2 text-sm text-semantic-success">
                   <CheckCircle2 size={16} />
                   <span className="font-medium">
-                    {t('onboarding.demo_installed', { defaultValue: 'Installed' })}
+                    {t("onboarding.demo_installed", {
+                      defaultValue: "Installed",
+                    })}
                   </span>
                 </div>
               ) : installingDemo ? (
@@ -1459,18 +1889,22 @@ function StepDataSetup({
               </div>
               <div className="text-left">
                 <h3 className="text-base font-bold text-content-primary">
-                  {t('onboarding.connect_ai', { defaultValue: 'Connect AI Provider' })}
+                  {t("onboarding.connect_ai", {
+                    defaultValue: "Connect AI Provider",
+                  })}
                 </h3>
                 <p className="text-xs text-content-tertiary">
-                  {t('onboarding.ai_optional', { defaultValue: 'Optional — smart estimation features' })}
+                  {t("onboarding.ai_optional", {
+                    defaultValue: "Optional — smart estimation features",
+                  })}
                 </p>
               </div>
             </div>
             <ArrowRight
               size={16}
               className={clsx(
-                'text-content-tertiary transition-transform duration-200 shrink-0',
-                aiExpanded && 'rotate-90',
+                "text-content-tertiary transition-transform duration-200 shrink-0",
+                aiExpanded && "rotate-90",
               )}
             />
           </button>
@@ -1482,7 +1916,7 @@ function StepDataSetup({
                 value={selectedProvider}
                 onChange={(e) => {
                   setSelectedProvider(e.target.value as AIProvider);
-                  setApiKey('');
+                  setApiKey("");
                   setShowKey(false);
                 }}
                 className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all"
@@ -1490,7 +1924,7 @@ function StepDataSetup({
                 {AI_PROVIDERS.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
-                    {p.recommended ? ' *' : ''}
+                    {p.recommended ? " *" : ""}
                   </option>
                 ))}
               </select>
@@ -1499,7 +1933,7 @@ function StepDataSetup({
               <div className="relative">
                 <input
                   type="text"
-                  value={showKey ? apiKey : apiKey ? maskApiKey(apiKey) : ''}
+                  value={showKey ? apiKey : apiKey ? maskApiKey(apiKey) : ""}
                   onChange={(e) => {
                     if (showKey) {
                       setApiKey(e.target.value);
@@ -1511,8 +1945,8 @@ function StepDataSetup({
                   onFocus={() => {
                     if (apiKey && !showKey) setShowKey(true);
                   }}
-                  placeholder={t('onboarding.api_key_placeholder', {
-                    defaultValue: 'Paste API key...',
+                  placeholder={t("onboarding.api_key_placeholder", {
+                    defaultValue: "Paste API key...",
                   })}
                   className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 pr-8 font-mono text-xs text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all"
                 />
@@ -1529,12 +1963,14 @@ function StepDataSetup({
               {/* Test and docs link */}
               <div className="flex items-center justify-between">
                 <a
-                  href={AI_PROVIDERS.find((p) => p.id === selectedProvider)?.docsUrl}
+                  href={
+                    AI_PROVIDERS.find((p) => p.id === selectedProvider)?.docsUrl
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-2xs text-oe-blue hover:underline"
                 >
-                  {t('onboarding.get_api_key', { defaultValue: 'Get key' })}
+                  {t("onboarding.get_api_key", { defaultValue: "Get key" })}
                   <ExternalLink size={10} />
                 </a>
                 {apiKey.trim() && (
@@ -1550,8 +1986,8 @@ function StepDataSetup({
                     }
                   >
                     {testMutation.isPending
-                      ? t('onboarding.testing', { defaultValue: 'Testing...' })
-                      : t('onboarding.test', { defaultValue: 'Test' })}
+                      ? t("onboarding.testing", { defaultValue: "Testing..." })
+                      : t("onboarding.test", { defaultValue: "Test" })}
                   </Button>
                 )}
               </div>
@@ -1561,17 +1997,17 @@ function StepDataSetup({
       </div>
 
       <p className="mt-4 text-xs text-content-tertiary text-center max-w-md">
-        {t('onboarding.data_setup_hint', {
-          defaultValue: 'All of these can be configured later in Settings.',
+        {t("onboarding.data_setup_hint", {
+          defaultValue: "All of these can be configured later in Settings.",
         })}
       </p>
 
       <div className="mt-6 flex items-center gap-3">
         <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
-          {t('common.back', { defaultValue: 'Back' })}
+          {t("common.back", { defaultValue: "Back" })}
         </Button>
         <Button variant="secondary" onClick={onNext}>
-          {t('onboarding.skip', { defaultValue: 'Skip — set up later' })}
+          {t("onboarding.skip", { defaultValue: "Skip — set up later" })}
         </Button>
         <Button
           variant="primary"
@@ -1580,7 +2016,7 @@ function StepDataSetup({
           icon={<ArrowRight size={16} />}
           iconPosition="right"
         >
-          {t('common.continue', { defaultValue: 'Continue' })}
+          {t("common.continue", { defaultValue: "Continue" })}
         </Button>
       </div>
     </div>
@@ -1622,14 +2058,14 @@ function StepFinish({
     }
 
     // 2. Apply advanced mode (default for onboarding)
-    setViewMode('advanced');
+    setViewMode("advanced");
 
     // 3. Save onboarding state to server
     try {
-      await apiPost('/v1/users/me/onboarding/', {
-        company_type: companyType ?? 'full_enterprise',
+      await apiPost("/v1/users/me/onboarding/", {
+        company_type: companyType ?? "full_enterprise",
         enabled_modules: Array.from(enabledModules),
-        interface_mode: 'advanced',
+        interface_mode: "advanced",
         completed: true,
       });
     } catch {
@@ -1640,7 +2076,7 @@ function StepFinish({
     markOnboardingCompleted();
 
     setSaving(false);
-    navigate('/');
+    navigate("/");
   }, [companyType, enabledModules, navigate, setModuleEnabled, setViewMode]);
 
   return (
@@ -1656,13 +2092,12 @@ function StepFinish({
       </div>
 
       <h2 className="text-3xl font-bold text-content-primary">
-        {t('onboarding.finish_title', { defaultValue: "You're All Set!" })}
+        {t("onboarding.finish_title", { defaultValue: "You're All Set!" })}
       </h2>
 
       <p className="mt-3 max-w-md text-base text-content-secondary leading-relaxed">
-        {t('onboarding.finish_subtitle', {
-          defaultValue:
-            "Your workspace is configured and ready to use.",
+        {t("onboarding.finish_subtitle", {
+          defaultValue: "Your workspace is configured and ready to use.",
         })}
       </p>
 
@@ -1677,23 +2112,26 @@ function StepFinish({
           </>
         )}
         <span>
-          {enabledCount} {t('onboarding.modules_label', { defaultValue: 'modules' })}
+          {enabledCount}{" "}
+          {t("onboarding.modules_label", { defaultValue: "modules" })}
         </span>
         <span className="text-content-tertiary">|</span>
         <span>
-          {SUPPORTED_LANGUAGES.find((l) => l.code === i18n.language)?.name || i18n.language}
+          {SUPPORTED_LANGUAGES.find((l) => l.code === i18n.language)?.name ||
+            i18n.language}
         </span>
       </div>
 
       <p className="mt-5 text-xs text-content-tertiary max-w-md">
-        {t('onboarding.finish_hint', {
-          defaultValue: 'You can adjust all settings later from the Settings page.',
+        {t("onboarding.finish_hint", {
+          defaultValue:
+            "You can adjust all settings later from the Settings page.",
         })}
       </p>
 
       <div className="mt-8 flex items-center gap-3">
         <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
-          {t('common.back', { defaultValue: 'Back' })}
+          {t("common.back", { defaultValue: "Back" })}
         </Button>
         <Button
           variant="primary"
@@ -1703,7 +2141,7 @@ function StepFinish({
           icon={<ArrowRight size={18} />}
           iconPosition="right"
         >
-          {t('onboarding.start_working', { defaultValue: 'Start Working' })}
+          {t("onboarding.start_working", { defaultValue: "Start Working" })}
         </Button>
       </div>
 
@@ -1717,8 +2155,8 @@ function StepFinish({
           className="inline-flex items-center gap-1.5 text-sm font-medium text-oe-blue hover:underline transition-colors"
         >
           <Package size={14} />
-          {t('onboarding.explore_all_modules', {
-            defaultValue: 'Explore all {{count}} modules',
+          {t("onboarding.explore_all_modules", {
+            defaultValue: "Explore all {{count}} modules",
             count: TOTAL_MODULE_COUNT,
           })}
           <ArrowRight size={12} />
@@ -1734,7 +2172,9 @@ export function OnboardingWizard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [selectedLang, setSelectedLang] = useState(() => i18n.language?.split('-')[0] || 'en');
+  const [selectedLang, setSelectedLang] = useState(
+    () => i18n.language?.split("-")[0] || "en",
+  );
   const [companyType, setCompanyType] = useState<CompanyTypeKey | null>(null);
   const [enabledModules, setEnabledModules] = useState<Set<string>>(
     () => new Set(ALL_MODULES.filter((m) => !m.core).map((m) => m.key)),
@@ -1757,7 +2197,7 @@ export function OnboardingWizard() {
 
   useEffect(() => {
     if (alreadyCompleted) {
-      navigate('/', { replace: true });
+      navigate("/", { replace: true });
     }
   }, [alreadyCompleted, navigate]);
 
@@ -1783,8 +2223,10 @@ export function OnboardingWizard() {
     // Apply the preset modules
     const preset = COMPANY_PRESETS.find((p) => p.key === key);
     if (preset) {
-      if (key === 'full_enterprise') {
-        setEnabledModules(new Set(ALL_MODULES.filter((m) => !m.core).map((m) => m.key)));
+      if (key === "full_enterprise") {
+        setEnabledModules(
+          new Set(ALL_MODULES.filter((m) => !m.core).map((m) => m.key)),
+        );
       } else {
         setEnabledModules(new Set(preset.enabledModules));
       }
@@ -1808,8 +2250,10 @@ export function OnboardingWizard() {
     setQuickStart(true);
     setShowModuleConfig(false);
     // Set all modules enabled (full enterprise quick start)
-    setEnabledModules(new Set(ALL_MODULES.filter((m) => !m.core).map((m) => m.key)));
-    setCompanyType('full_enterprise');
+    setEnabledModules(
+      new Set(ALL_MODULES.filter((m) => !m.core).map((m) => m.key)),
+    );
+    setCompanyType("full_enterprise");
     // Jump to step 4 (data setup) -- step indices: 0=welcome, 1=choice, 2=profile, 3=modules, 4=data, 5=finish
     setStep(4);
   }, []);
@@ -1857,27 +2301,30 @@ export function OnboardingWizard() {
           Pure decoration, no interaction. Respects prefers-reduced-motion
           because the gradients are static (no keyframe animation beyond
           the slow `animate-oe-pulse` already bundled). */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <div
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        aria-hidden
+      >
         {/* Soft radial mesh — two offset blobs with the brand palette. */}
         <div
           className="absolute -top-40 -start-40 h-[520px] w-[520px] rounded-full blur-3xl opacity-[0.35] dark:opacity-[0.22]"
           style={{
             background:
-              'radial-gradient(circle at center, rgba(37, 99, 235, 0.55), transparent 70%)',
+              "radial-gradient(circle at center, rgba(37, 99, 235, 0.55), transparent 70%)",
           }}
         />
         <div
           className="absolute top-1/3 -end-32 h-[460px] w-[460px] rounded-full blur-3xl opacity-[0.30] dark:opacity-[0.18]"
           style={{
             background:
-              'radial-gradient(circle at center, rgba(168, 85, 247, 0.45), transparent 70%)',
+              "radial-gradient(circle at center, rgba(168, 85, 247, 0.45), transparent 70%)",
           }}
         />
         <div
           className="absolute bottom-[-160px] start-1/3 h-[420px] w-[420px] rounded-full blur-3xl opacity-[0.25] dark:opacity-[0.15]"
           style={{
             background:
-              'radial-gradient(circle at center, rgba(14, 165, 233, 0.40), transparent 70%)',
+              "radial-gradient(circle at center, rgba(14, 165, 233, 0.40), transparent 70%)",
           }}
         />
         {/* Fine grid overlay — 1px lines every 40px, 4% opacity. Works in
@@ -1886,8 +2333,8 @@ export function OnboardingWizard() {
           className="absolute inset-0 opacity-[0.02] dark:opacity-[0.035]"
           style={{
             backgroundImage:
-              'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
+              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
           }}
         />
       </div>
@@ -1899,13 +2346,13 @@ export function OnboardingWizard() {
             <div className="flex items-center gap-2 shrink-0">
               <Logo size="sm" />
               <span className="text-[11px] font-semibold text-content-tertiary uppercase tracking-wider hidden sm:inline">
-                {t('onboarding.setup_label', { defaultValue: 'Setup wizard' })}
+                {t("onboarding.setup_label", { defaultValue: "Setup wizard" })}
               </span>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs tabular-nums text-content-tertiary hidden sm:inline">
-                {t('onboarding.progress_step_x_of_y', {
-                  defaultValue: 'Step {{current}} of {{total}}',
+                {t("onboarding.progress_step_x_of_y", {
+                  defaultValue: "Step {{current}} of {{total}}",
                   current: step + 1,
                   total: TOTAL_STEPS,
                 })}
@@ -1916,7 +2363,7 @@ export function OnboardingWizard() {
                   onClick={() => setStep(TOTAL_STEPS - 1)}
                   className="text-xs font-medium text-content-tertiary hover:text-content-secondary transition-colors"
                 >
-                  {t('onboarding.skip_setup', { defaultValue: 'Skip setup' })}
+                  {t("onboarding.skip_setup", { defaultValue: "Skip setup" })}
                 </button>
               )}
             </div>
@@ -1934,7 +2381,10 @@ export function OnboardingWizard() {
           <div className="px-6 sm:px-10 py-6 sm:py-8">
             <StepTransition stepKey={step}>
               {step === 0 && (
-                <StepWelcome onNext={goNext} onLanguageChange={handleLanguageChange} />
+                <StepWelcome
+                  onNext={goNext}
+                  onLanguageChange={handleLanguageChange}
+                />
               )}
               {step === 1 && (
                 <StepStartChoice
@@ -1983,9 +2433,9 @@ export function OnboardingWizard() {
 
           {/* Trust footer — small line directly below the card. */}
           <p className="mt-3 text-center text-[11px] text-content-tertiary">
-            {t('onboarding.footer_trust', {
+            {t("onboarding.footer_trust", {
               defaultValue:
-                'Free and open-source · Your data stays on your server · AGPL-3.0',
+                "Free and open-source · Your data stays on your server · AGPL-3.0",
             })}
           </p>
         </div>

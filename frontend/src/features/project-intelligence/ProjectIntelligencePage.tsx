@@ -11,20 +11,23 @@
  * keep working.
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useToastStore } from '@/stores/useToastStore';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { isModuleLoaded, _resetModuleProbeCache } from '@/shared/lib/moduleProbe';
-import { ScoreRing } from './ScoreRing';
-import { GapCard } from './GapCard';
-import { AIAdvisorPanel } from './AIAdvisorPanel';
-import { DomainDetails } from './DomainDetails';
-import { ProjectKPIHero } from './components/ProjectKPIHero';
-import { ProjectAnalyticsGrid } from './components/ProjectAnalyticsGrid';
+import { useState, useEffect, useCallback } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToastStore } from "@/stores/useToastStore";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import {
+  isModuleLoaded,
+  _resetModuleProbeCache,
+} from "@/shared/lib/moduleProbe";
+import { ScoreRing } from "./ScoreRing";
+import { GapCard } from "./GapCard";
+import { AIAdvisorPanel } from "./AIAdvisorPanel";
+import { DomainDetails } from "./DomainDetails";
+import { ProjectKPIHero } from "./components/ProjectKPIHero";
+import { ProjectAnalyticsGrid } from "./components/ProjectAnalyticsGrid";
 import {
   RefreshCw,
   BrainCircuit,
@@ -38,7 +41,7 @@ import {
   X,
   FileText,
   ShieldCheck,
-} from 'lucide-react';
+} from "lucide-react";
 
 /** Dynamic state object from backend — each domain key (boq, validation, etc.)
  *  maps to an object with heterogeneous metric fields. */
@@ -90,8 +93,8 @@ interface ActionDef {
 
 interface AnomalyRow {
   position_id: string;
-  type: 'outlier' | 'jump' | 'format';
-  severity: 'info' | 'warning' | 'error';
+  type: "outlier" | "jump" | "format";
+  severity: "info" | "warning" | "error";
   detail: string;
 }
 
@@ -103,14 +106,14 @@ interface LineItemRow {
 }
 
 // Reduced set of detail tabs per RFC 25 §3.
-const RFC25_DETAIL_DOMAINS = ['boq', 'cost_model', 'schedule', 'risk'];
+const RFC25_DETAIL_DOMAINS = ["boq", "cost_model", "schedule", "risk"];
 
 const GRADE_COLORS: Record<string, string> = {
-  A: '#3fb950',
-  B: '#8b949e',
-  C: '#d29922',
-  D: '#f85149',
-  F: '#da3633',
+  A: "#3fb950",
+  B: "#8b949e",
+  C: "#d29922",
+  D: "#f85149",
+  F: "#da3633",
 };
 
 export function ProjectIntelligencePage() {
@@ -120,8 +123,8 @@ export function ProjectIntelligencePage() {
   const [searchParams] = useSearchParams();
   const projectId = useProjectContextStore((s) => s.activeProjectId);
   const userRole = useAuthStore((s) => s.userRole);
-  const isAdmin = userRole === 'admin';
-  const paramProjectId = searchParams.get('project_id');
+  const isAdmin = userRole === "admin";
+  const paramProjectId = searchParams.get("project_id");
   const activeProjectId = paramProjectId || projectId;
 
   const [summary, setSummary] = useState<Summary | null>(null);
@@ -133,13 +136,13 @@ export function ProjectIntelligencePage() {
   const [enableError, setEnableError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [role, setRole] = useState<string>('estimator');
+  const [role, setRole] = useState<string>("estimator");
   const [expandedGap, setExpandedGap] = useState<string | null>(null);
   const [showAllGaps, setShowAllGaps] = useState(false);
-  const [selectedDomain, setSelectedDomain] = useState<string | null>('boq');
+  const [selectedDomain, setSelectedDomain] = useState<string | null>("boq");
   const [introDismissed, setIntroDismissed] = useState<boolean>(() => {
     try {
-      return localStorage.getItem('oe_pi_intro_dismissed') === '1';
+      return localStorage.getItem("oe_pi_intro_dismissed") === "1";
     } catch {
       return false;
     }
@@ -148,7 +151,7 @@ export function ProjectIntelligencePage() {
   const dismissIntro = useCallback(() => {
     setIntroDismissed(true);
     try {
-      localStorage.setItem('oe_pi_intro_dismissed', '1');
+      localStorage.setItem("oe_pi_intro_dismissed", "1");
     } catch {
       /* ignore storage errors */
     }
@@ -165,7 +168,7 @@ export function ProjectIntelligencePage() {
       // The module is optional. When disabled the dashboard shows the
       // "module disabled" empty state instead of 404-logging once per
       // load.
-      if (!(await isModuleLoaded('oe_project_intelligence'))) {
+      if (!(await isModuleLoaded("oe_project_intelligence"))) {
         setLoading(false);
         setModuleDisabled(true);
         return;
@@ -177,7 +180,7 @@ export function ProjectIntelligencePage() {
         setError(null);
 
         const data = await apiGet<Summary>(
-          `/v1/project_intelligence/summary/?project_id=${activeProjectId}${refresh ? '&refresh=true' : ''}`,
+          `/v1/project_intelligence/summary/?project_id=${activeProjectId}${refresh ? "&refresh=true" : ""}`,
         );
         setSummary(data);
         setLastRefresh(new Date());
@@ -188,13 +191,17 @@ export function ProjectIntelligencePage() {
             `/v1/project_intelligence/actions/?project_id=${activeProjectId}`,
           );
           setActions(actData);
-        } catch { /* actions are optional */ }
+        } catch {
+          /* actions are optional */
+        }
 
         // Enrich critical gaps with $ impact from the anomalies + line-items
         // endpoints. Both are optional — failure just hides the enrichment.
         try {
           const [an, li] = await Promise.all([
-            apiGet<AnomalyRow[]>(`/v1/boq/anomalies/?project_id=${activeProjectId}`),
+            apiGet<AnomalyRow[]>(
+              `/v1/boq/anomalies/?project_id=${activeProjectId}`,
+            ),
             apiGet<LineItemRow[]>(
               `/v1/boq/line-items/?project_id=${activeProjectId}&group=cost&top_n=20`,
             ),
@@ -207,7 +214,7 @@ export function ProjectIntelligencePage() {
         }
       } catch (err: unknown) {
         setError(
-          err instanceof Error ? err.message : 'Failed to load the dashboard',
+          err instanceof Error ? err.message : "Failed to load the dashboard",
         );
       } finally {
         setLoading(false);
@@ -228,7 +235,7 @@ export function ProjectIntelligencePage() {
     setEnableError(null);
     setEnabling(true);
     try {
-      await apiPost('/v1/modules/oe_project_intelligence/enable');
+      await apiPost("/v1/modules/oe_project_intelligence/enable");
       _resetModuleProbeCache();
       setModuleDisabled(false);
       await fetchData();
@@ -236,8 +243,8 @@ export function ProjectIntelligencePage() {
       setEnableError(
         err instanceof Error
           ? err.message
-          : t('project_intelligence.enable_failed', {
-              defaultValue: 'Could not enable the module',
+          : t("project_intelligence.enable_failed", {
+              defaultValue: "Could not enable the module",
             }),
       );
     } finally {
@@ -262,7 +269,7 @@ export function ProjectIntelligencePage() {
           // (and the rest of the app shell) is not blown away by a full
           // page reload. Only fall back to a hard redirect for absolute
           // URLs (external links).
-          if (result.redirect_url.startsWith('/')) {
+          if (result.redirect_url.startsWith("/")) {
             navigate(result.redirect_url);
           } else {
             window.location.href = result.redirect_url;
@@ -270,9 +277,9 @@ export function ProjectIntelligencePage() {
         } else {
           if (result.message) {
             addToast({
-              type: result.status === 'error' ? 'error' : 'success',
-              title: t('project_intelligence.action_done', {
-                defaultValue: 'Action complete',
+              type: result.status === "error" ? "error" : "success",
+              title: t("project_intelligence.action_done", {
+                defaultValue: "Action complete",
               }),
               message: result.message,
             });
@@ -283,11 +290,11 @@ export function ProjectIntelligencePage() {
         // Previously swallowed — a failed fix-it action looked like the
         // button did nothing. Surface it so the user can react.
         addToast({
-          type: 'error',
-          title: t('project_intelligence.action_failed', {
-            defaultValue: 'Could not complete the action',
+          type: "error",
+          title: t("project_intelligence.action_failed", {
+            defaultValue: "Could not complete the action",
           }),
-          message: err instanceof Error ? err.message : '',
+          message: err instanceof Error ? err.message : "",
         });
       }
     },
@@ -301,14 +308,14 @@ export function ProjectIntelligencePage() {
           <BrainCircuit size={28} className="text-oe-blue" />
         </div>
         <h2 className="text-lg font-bold text-content-primary">
-          {t('project_intelligence.page_title_v191', {
-            defaultValue: 'Estimation Dashboard‌⁠‍',
+          {t("project_intelligence.page_title_v191", {
+            defaultValue: "Estimation Dashboard‌⁠‍",
           })}
         </h2>
         <p className="text-sm text-content-secondary max-w-xl mx-auto leading-relaxed">
-          {t('project_intelligence.v191_select_prompt', {
+          {t("project_intelligence.v191_select_prompt", {
             defaultValue:
-              'Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍',
+              "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
           })}
         </p>
         <div className="flex items-center justify-center gap-3 pt-1">
@@ -317,8 +324,8 @@ export function ProjectIntelligencePage() {
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-oe-blue text-white rounded-lg shadow-sm hover:bg-oe-blue-dark transition-colors"
           >
             <FileText size={14} />
-            {t('project_intelligence.v191_open_projects', {
-              defaultValue: 'Open Projects',
+            {t("project_intelligence.v191_open_projects", {
+              defaultValue: "Open Projects",
             })}
           </Link>
           <Link
@@ -326,8 +333,8 @@ export function ProjectIntelligencePage() {
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border border-border-light rounded-lg hover:bg-surface-secondary transition-colors text-content-secondary"
           >
             <BrainCircuit size={14} />
-            {t('project_intelligence.v191_try_estimate', {
-              defaultValue: 'Try AI Estimate',
+            {t("project_intelligence.v191_try_estimate", {
+              defaultValue: "Try AI Estimate",
             })}
           </Link>
         </div>
@@ -341,8 +348,8 @@ export function ProjectIntelligencePage() {
         <div className="text-center space-y-3 animate-pulse">
           <BrainCircuit size={48} className="mx-auto text-oe-blue" />
           <p className="text-sm text-content-secondary">
-            {t('project_intelligence.analyzing', {
-              defaultValue: 'Analyzing project...‌⁠‍',
+            {t("project_intelligence.analyzing", {
+              defaultValue: "Analyzing project...‌⁠‍",
             })}
           </p>
         </div>
@@ -359,14 +366,14 @@ export function ProjectIntelligencePage() {
           </div>
           <div className="space-y-2">
             <h2 className="text-lg font-semibold text-content-primary">
-              {t('project_intelligence.module_disabled_title', {
-                defaultValue: 'Project Intelligence is turned off',
+              {t("project_intelligence.module_disabled_title", {
+                defaultValue: "Project Intelligence is turned off",
               })}
             </h2>
             <p className="text-sm text-content-secondary leading-relaxed">
-              {t('project_intelligence.module_disabled_body', {
+              {t("project_intelligence.module_disabled_body", {
                 defaultValue:
-                  'This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.',
+                  "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
               })}
             </p>
           </div>
@@ -384,17 +391,20 @@ export function ProjectIntelligencePage() {
                 disabled={enabling}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-oe-blue text-white rounded-lg shadow-sm hover:bg-oe-blue-dark transition-colors disabled:opacity-50"
               >
-                <Power size={14} className={enabling ? 'animate-pulse' : ''} />
+                <Power size={14} className={enabling ? "animate-pulse" : ""} />
                 {enabling
-                  ? t('project_intelligence.enabling', { defaultValue: 'Enabling…' })
-                  : t('project_intelligence.enable_module', {
-                      defaultValue: 'Enable module',
+                  ? t("project_intelligence.enabling", {
+                      defaultValue: "Enabling…",
+                    })
+                  : t("project_intelligence.enable_module", {
+                      defaultValue: "Enable module",
                     })}
               </button>
             ) : (
               <p className="text-xs text-content-tertiary">
-                {t('project_intelligence.module_disabled_ask_admin', {
-                  defaultValue: 'Ask an admin to enable this module to continue.',
+                {t("project_intelligence.module_disabled_ask_admin", {
+                  defaultValue:
+                    "Ask an admin to enable this module to continue.",
                 })}
               </p>
             )}
@@ -403,16 +413,16 @@ export function ProjectIntelligencePage() {
               className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border border-border-light rounded-lg hover:bg-surface-secondary transition-colors text-content-secondary"
             >
               <Settings2 size={14} />
-              {t('project_intelligence.open_modules_page', {
-                defaultValue: 'Open Modules page',
+              {t("project_intelligence.open_modules_page", {
+                defaultValue: "Open Modules page",
               })}
             </Link>
           </div>
 
           <p className="text-2xs text-content-quaternary pt-1">
-            {t('project_intelligence.module_disabled_footnote', {
+            {t("project_intelligence.module_disabled_footnote", {
               defaultValue:
-                'No data is collected while the module is off. Enabling is reversible from the Modules page.',
+                "No data is collected while the module is off. Enabling is reversible from the Modules page.",
             })}
           </p>
         </div>
@@ -422,9 +432,9 @@ export function ProjectIntelligencePage() {
 
   if (error) {
     const isAuth =
-      error.includes('401') ||
-      error.includes('auth') ||
-      error.includes('Unauthorized');
+      error.includes("401") ||
+      error.includes("auth") ||
+      error.includes("Unauthorized");
     return (
       <div className="w-full py-12">
         <div className="text-center space-y-4">
@@ -433,18 +443,18 @@ export function ProjectIntelligencePage() {
           </div>
           <h2 className="text-lg font-bold text-content-primary">
             {isAuth
-              ? t('project_intelligence.auth_error', {
-                  defaultValue: 'Session expired‌⁠‍',
+              ? t("project_intelligence.auth_error", {
+                  defaultValue: "Session expired‌⁠‍",
                 })
-              : t('project_intelligence.load_error', {
-                  defaultValue: 'Could not load analysis',
+              : t("project_intelligence.load_error", {
+                  defaultValue: "Could not load analysis",
                 })}
           </h2>
           <p className="text-sm text-content-secondary max-w-md mx-auto">
             {isAuth
-              ? t('project_intelligence.auth_hint', {
+              ? t("project_intelligence.auth_hint", {
                   defaultValue:
-                    'Please refresh the page or sign in again to continue.',
+                    "Please refresh the page or sign in again to continue.",
                 })
               : error}
           </p>
@@ -453,14 +463,14 @@ export function ProjectIntelligencePage() {
               onClick={() => fetchData()}
               className="px-4 py-2 text-sm bg-oe-blue text-white rounded-lg hover:bg-oe-blue-dark transition-colors"
             >
-              {t('common.retry', { defaultValue: 'Retry' })}
+              {t("common.retry", { defaultValue: "Retry" })}
             </button>
             {isAuth && (
               <button
                 onClick={() => window.location.reload()}
                 className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-surface-secondary transition-colors"
               >
-                {t('common.refresh_page', { defaultValue: 'Refresh Page' })}
+                {t("common.refresh_page", { defaultValue: "Refresh Page" })}
               </button>
             )}
           </div>
@@ -472,28 +482,31 @@ export function ProjectIntelligencePage() {
   if (!summary) return null;
 
   const { score, state } = summary;
-  const gradeColor = GRADE_COLORS[score.overall_grade] || '#8b949e';
+  const gradeColor = GRADE_COLORS[score.overall_grade] || "#8b949e";
 
   // Enrich the Critical Gaps card with $ impact derived from anomalies + line items.
   const missingPriceCount = anomalies.filter(
-    (a) => a.type === 'format' && a.detail.includes('unit_rate'),
+    (a) => a.type === "format" && a.detail.includes("unit_rate"),
   ).length;
-  const totalBoqValue = lineItems.reduce((acc, li) => acc + (li.total_cost || 0), 0);
+  const totalBoqValue = lineItems.reduce(
+    (acc, li) => acc + (li.total_cost || 0),
+    0,
+  );
   const avgLineValue =
     lineItems.length > 0 ? totalBoqValue / lineItems.length : 0;
   const costUncertainty = missingPriceCount * avgLineValue;
   const dollarImpact =
     missingPriceCount > 0
-      ? t('project_intelligence.gaps.dollar_impact', {
+      ? t("project_intelligence.gaps.dollar_impact", {
           defaultValue:
-            '{{count}} items missing prices → ~{{amount}} cost uncertainty',
+            "{{count}} items missing prices → ~{{amount}} cost uncertainty",
           count: missingPriceCount,
           amount:
             costUncertainty >= 1_000_000
               ? `$${(costUncertainty / 1_000_000).toFixed(1)}M`
               : costUncertainty >= 1_000
-              ? `$${(costUncertainty / 1_000).toFixed(0)}k`
-              : `$${costUncertainty.toFixed(0)}`,
+                ? `$${(costUncertainty / 1_000).toFixed(0)}k`
+                : `$${costUncertainty.toFixed(0)}`,
         })
       : null;
 
@@ -511,21 +524,21 @@ export function ProjectIntelligencePage() {
             <BrainCircuit size={20} className="text-oe-blue" />
             <div>
               <h1 className="text-base font-semibold text-content-primary">
-                {t('project_intelligence.page_title_v191', {
-                  defaultValue: 'Estimation Dashboard',
+                {t("project_intelligence.page_title_v191", {
+                  defaultValue: "Estimation Dashboard",
                 })}
                 <span className="ml-2 text-xs font-normal text-content-tertiary">
-                  —{' '}
+                  —{" "}
                   {state.project_name ||
-                    t('project_intelligence.unnamed', {
-                      defaultValue: 'Unnamed Project',
+                    t("project_intelligence.unnamed", {
+                      defaultValue: "Unnamed Project",
                     })}
                 </span>
               </h1>
               <p className="text-xs text-content-quaternary">
-                {t('project_intelligence.v191_header_desc', {
+                {t("project_intelligence.v191_header_desc", {
                   defaultValue:
-                    'Cost variance, anomalies, bid analytics — refreshed every 60s.',
+                    "Cost variance, anomalies, bid analytics — refreshed every 60s.",
                 })}
               </p>
             </div>
@@ -535,23 +548,23 @@ export function ProjectIntelligencePage() {
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className="text-xs bg-surface-secondary border border-border-light rounded-md px-2 py-1.5 text-content-secondary focus:outline-none focus:ring-1 focus:ring-oe-blue"
-              aria-label={t('project_intelligence.role', {
-                defaultValue: 'View as role',
+              aria-label={t("project_intelligence.role", {
+                defaultValue: "View as role",
               })}
             >
               <option value="estimator">
-                {t('project_intelligence.role_estimator', {
-                  defaultValue: 'Estimator',
+                {t("project_intelligence.role_estimator", {
+                  defaultValue: "Estimator",
                 })}
               </option>
               <option value="manager">
-                {t('project_intelligence.role_manager', {
-                  defaultValue: 'Manager',
+                {t("project_intelligence.role_manager", {
+                  defaultValue: "Manager",
                 })}
               </option>
               <option value="explorer">
-                {t('project_intelligence.role_explorer', {
-                  defaultValue: 'Explorer',
+                {t("project_intelligence.role_explorer", {
+                  defaultValue: "Explorer",
                 })}
               </option>
             </select>
@@ -561,11 +574,14 @@ export function ProjectIntelligencePage() {
               onClick={() => fetchData(true)}
               disabled={refreshing}
               className="flex items-center gap-1.5 text-xs text-content-secondary hover:text-content-primary transition-colors disabled:opacity-50"
-              title={t('project_intelligence.refresh', {
-                defaultValue: 'Refresh analysis',
+              title={t("project_intelligence.refresh", {
+                defaultValue: "Refresh analysis",
               })}
             >
-              <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
+              <RefreshCw
+                size={14}
+                className={refreshing ? "animate-spin" : ""}
+              />
               {lastRefresh && <span>{formatAgo(lastRefresh)}</span>}
             </button>
           </div>
@@ -583,14 +599,14 @@ export function ProjectIntelligencePage() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-content-primary mb-1">
-                {t('project_intelligence.intro_title', {
-                  defaultValue: 'What this dashboard tells you',
+                {t("project_intelligence.intro_title", {
+                  defaultValue: "What this dashboard tells you",
                 })}
               </p>
               <p className="text-xs text-content-secondary leading-relaxed">
-                {t('project_intelligence.intro_body', {
+                {t("project_intelligence.intro_body", {
                   defaultValue:
-                    'It reads your live BOQ, cost model, schedule and risk register and grades how ready this estimate is to go out (BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%). Critical Gaps are the fastest ways to raise that grade — each one links straight to the screen that fixes it. The advisor at the bottom answers project-specific questions.',
+                    "It reads your live BOQ, cost model, schedule and risk register and grades how ready this estimate is to go out (BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%). Critical Gaps are the fastest ways to raise that grade — each one links straight to the screen that fixes it. The advisor at the bottom answers project-specific questions.",
                 })}
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -599,15 +615,17 @@ export function ProjectIntelligencePage() {
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-2.5 py-1 text-2xs font-medium text-content-secondary hover:border-oe-blue/40 hover:text-oe-blue transition-colors"
                 >
                   <FileText size={12} />
-                  {t('project_intelligence.intro_link_boq', { defaultValue: 'BOQ editor' })}
+                  {t("project_intelligence.intro_link_boq", {
+                    defaultValue: "BOQ editor",
+                  })}
                 </Link>
                 <Link
                   to="/validation"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-2.5 py-1 text-2xs font-medium text-content-secondary hover:border-oe-blue/40 hover:text-oe-blue transition-colors"
                 >
                   <ShieldCheck size={12} />
-                  {t('project_intelligence.intro_link_validation', {
-                    defaultValue: 'Validation',
+                  {t("project_intelligence.intro_link_validation", {
+                    defaultValue: "Validation",
                   })}
                 </Link>
               </div>
@@ -615,7 +633,7 @@ export function ProjectIntelligencePage() {
             <button
               onClick={dismissIntro}
               className="shrink-0 p-1 rounded-md text-content-quaternary hover:text-content-secondary hover:bg-surface-secondary transition-colors"
-              aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+              aria-label={t("common.dismiss", { defaultValue: "Dismiss" })}
             >
               <X size={15} />
             </button>
@@ -633,15 +651,15 @@ export function ProjectIntelligencePage() {
         {/* Readiness ring card (compact, fixed width) */}
         <div className="lg:col-span-3 bg-white dark:bg-gray-800/60 rounded-xl border border-border-light shadow-sm p-4 flex flex-col">
           <h3 className="text-xs font-semibold text-content-primary mb-2">
-            {t('project_intelligence.readiness_title', {
-              defaultValue: 'Estimation readiness',
+            {t("project_intelligence.readiness_title", {
+              defaultValue: "Estimation readiness",
             })}
           </h3>
           <div
             className="flex-1 flex items-center justify-center"
-            title={t('project_intelligence.score_tooltip_v191', {
+            title={t("project_intelligence.score_tooltip_v191", {
               defaultValue:
-                'Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.',
+                "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
             })}
           >
             <ScoreRing
@@ -660,8 +678,8 @@ export function ProjectIntelligencePage() {
             <>
               <h3 className="text-sm font-semibold text-content-primary flex items-center gap-2 mb-2">
                 <AlertTriangle size={15} className="text-red-400" />
-                {t('project_intelligence.critical_gaps', {
-                  defaultValue: 'Critical Gaps',
+                {t("project_intelligence.critical_gaps", {
+                  defaultValue: "Critical Gaps",
                 })}
                 <span className="text-xs text-content-tertiary font-normal ml-auto">
                   {score.critical_gaps.length}
@@ -685,9 +703,13 @@ export function ProjectIntelligencePage() {
                       setExpandedGap(expandedGap === gap.id ? null : gap.id)
                     }
                     onAction={
-                      gap.action_id ? () => handleAction(gap.action_id!) : undefined
+                      gap.action_id
+                        ? () => handleAction(gap.action_id!)
+                        : undefined
                     }
-                    actionLabel={actions.find((a) => a.id === gap.action_id)?.label}
+                    actionLabel={
+                      actions.find((a) => a.id === gap.action_id)?.label
+                    }
                   />
                 ))}
               </div>
@@ -697,8 +719,8 @@ export function ProjectIntelligencePage() {
                   className="mt-2 w-full text-xs text-content-tertiary hover:text-content-secondary py-1.5 flex items-center justify-center gap-1 transition-colors"
                 >
                   <ChevronDown size={12} />
-                  {t('project_intelligence.show_more_gaps', {
-                    defaultValue: '{{count}} more',
+                  {t("project_intelligence.show_more_gaps", {
+                    defaultValue: "{{count}} more",
                     count: score.critical_gaps.length - 5,
                   })}
                 </button>
@@ -708,14 +730,14 @@ export function ProjectIntelligencePage() {
             <div className="flex-1 flex flex-col items-center justify-center text-center">
               <CheckCircle2 size={28} className="text-green-400 mb-2" />
               <p className="text-sm font-medium text-content-primary">
-                {t('project_intelligence.no_gaps_title', {
-                  defaultValue: 'No critical gaps',
+                {t("project_intelligence.no_gaps_title", {
+                  defaultValue: "No critical gaps",
                 })}
               </p>
               <p className="text-2xs text-content-tertiary mt-1 max-w-md">
-                {t('project_intelligence.no_gaps_desc', {
+                {t("project_intelligence.no_gaps_desc", {
                   defaultValue:
-                    'Your project has no critical issues. Keep refining to tighten variance.',
+                    "Your project has no critical issues. Keep refining to tighten variance.",
                 })}
               </p>
             </div>
@@ -746,7 +768,7 @@ export function ProjectIntelligencePage() {
         <AIAdvisorPanel
           projectId={activeProjectId}
           role={role}
-          projectName={state.project_name ?? ''}
+          projectName={state.project_name ?? ""}
           score={score}
         />
       </div>
@@ -757,7 +779,7 @@ export function ProjectIntelligencePage() {
 /** Format relative time, e.g. "2m ago". */
 function formatAgo(date: Date): string {
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return 'just now';
+  if (seconds < 60) return "just now";
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC } from "react";
 import {
   ProjectsGridRenderer,
   BOQRenderer,
@@ -9,7 +9,7 @@ import {
   CompareRenderer,
   CWICRRenderer,
   GenericTableRenderer,
-} from './renderers';
+} from "./renderers";
 
 const RENDERERS: Record<string, FC<{ data: unknown }>> = {
   projects_grid: ProjectsGridRenderer,
@@ -28,7 +28,10 @@ interface DataPanelRouterProps {
   data: unknown;
 }
 
-export default function DataPanelRouter({ renderer, data }: DataPanelRouterProps) {
+export default function DataPanelRouter({
+  renderer,
+  data,
+}: DataPanelRouterProps) {
   const Component = RENDERERS[renderer] ?? GenericTableRenderer;
   return <Component data={data} />;
 }

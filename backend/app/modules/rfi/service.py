@@ -26,6 +26,7 @@ async def _safe_publish(name: str, data: dict, source_module: str = "") -> None:
     except Exception:
         _logger_ev.debug("Event publish skipped: %s", name)
 
+
 _RFI_RESPONSE_DUE_DAYS = 14
 
 # ── Allowed RFI status transitions ────────────────────────────────────────────
@@ -184,9 +185,7 @@ class RFIService:
         new_status = fields.get("status")
         if new_status == "open" and not rfi.response_due_date:
             if "response_due_date" not in fields or fields["response_due_date"] is None:
-                fields["response_due_date"] = _add_business_days(
-                    datetime.now(UTC), _RFI_RESPONSE_DUE_DAYS
-                )
+                fields["response_due_date"] = _add_business_days(datetime.now(UTC), _RFI_RESPONSE_DUE_DAYS)
 
         # Auto-update ball_in_court when assigned_to changes
         if "assigned_to" in fields and "ball_in_court" not in fields:
@@ -208,10 +207,7 @@ class RFIService:
         logger.info("RFI updated: %s (fields=%s)", rfi_id, list(fields.keys()))
 
         # Fire rfi.assigned when assigned_to changes to a new user
-        if (
-            new_assigned is not None
-            and str(new_assigned) != old_assigned
-        ):
+        if new_assigned is not None and str(new_assigned) != old_assigned:
             await _safe_publish(
                 "rfi.assigned",
                 {

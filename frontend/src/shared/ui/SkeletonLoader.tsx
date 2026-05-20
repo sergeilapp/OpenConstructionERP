@@ -1,9 +1,8 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
 /* ── Base skeleton pulse bar ──────────────────────────────────────────── */
 
-const pulseBase =
-  'animate-pulse rounded bg-surface-secondary';
+const pulseBase = "animate-pulse rounded bg-surface-secondary";
 
 /* ── SkeletonText ─────────────────────────────────────────────────────── */
 
@@ -17,10 +16,13 @@ export interface SkeletonTextProps {
  * A single line of placeholder text.
  * Use `width` to control how wide the bar is (Tailwind class).
  */
-export function SkeletonText({ width = 'w-full', className }: SkeletonTextProps) {
+export function SkeletonText({
+  width = "w-full",
+  className,
+}: SkeletonTextProps) {
   return (
     <div
-      className={clsx(pulseBase, 'h-4', width, className)}
+      className={clsx(pulseBase, "h-4", width, className)}
       aria-hidden="true"
       data-testid="skeleton-text"
     />
@@ -40,22 +42,22 @@ export function SkeletonCard({ className }: SkeletonCardProps) {
   return (
     <div
       className={clsx(
-        'rounded-xl border border-border-light bg-surface-elevated p-5 space-y-3',
+        "rounded-xl border border-border-light bg-surface-elevated p-5 space-y-3",
         className,
       )}
       aria-hidden="true"
       data-testid="skeleton-card"
     >
       {/* Icon placeholder */}
-      <div className={clsx(pulseBase, 'h-10 w-10 rounded-xl')} />
+      <div className={clsx(pulseBase, "h-10 w-10 rounded-xl")} />
       {/* Title */}
-      <div className={clsx(pulseBase, 'h-4 w-3/4')} />
+      <div className={clsx(pulseBase, "h-4 w-3/4")} />
       {/* Subtitle */}
-      <div className={clsx(pulseBase, 'h-3 w-1/2')} />
+      <div className={clsx(pulseBase, "h-3 w-1/2")} />
       {/* Tags row */}
       <div className="flex items-center gap-2 pt-1">
-        <div className={clsx(pulseBase, 'h-5 w-16 rounded-full')} />
-        <div className={clsx(pulseBase, 'h-5 w-12 rounded-full')} />
+        <div className={clsx(pulseBase, "h-5 w-16 rounded-full")} />
+        <div className={clsx(pulseBase, "h-5 w-12 rounded-full")} />
       </div>
     </div>
   );
@@ -74,11 +76,15 @@ export interface SkeletonTableProps {
 /**
  * A table-shaped placeholder with a header row and N body rows.
  */
-export function SkeletonTable({ rows = 5, columns = 5, className }: SkeletonTableProps) {
+export function SkeletonTable({
+  rows = 5,
+  columns = 5,
+  className,
+}: SkeletonTableProps) {
   return (
     <div
       className={clsx(
-        'rounded-xl border border-border-light bg-surface-elevated overflow-hidden',
+        "rounded-xl border border-border-light bg-surface-elevated overflow-hidden",
         className,
       )}
       aria-hidden="true"
@@ -89,7 +95,7 @@ export function SkeletonTable({ rows = 5, columns = 5, className }: SkeletonTabl
         {Array.from({ length: columns }).map((_, i) => (
           <div
             key={`header-${i}`}
-            className={clsx(pulseBase, 'h-3', i === 0 ? 'w-24' : 'flex-1')}
+            className={clsx(pulseBase, "h-3", i === 0 ? "w-24" : "flex-1")}
           />
         ))}
       </div>
@@ -98,8 +104,8 @@ export function SkeletonTable({ rows = 5, columns = 5, className }: SkeletonTabl
         <div
           key={`row-${rowIdx}`}
           className={clsx(
-            'flex items-center gap-4 px-4 py-3.5',
-            rowIdx < rows - 1 && 'border-b border-border-light/50',
+            "flex items-center gap-4 px-4 py-3.5",
+            rowIdx < rows - 1 && "border-b border-border-light/50",
           )}
           data-testid="skeleton-table-row"
         >
@@ -108,8 +114,8 @@ export function SkeletonTable({ rows = 5, columns = 5, className }: SkeletonTabl
               key={`cell-${rowIdx}-${colIdx}`}
               className={clsx(
                 pulseBase,
-                'h-3.5',
-                colIdx === 0 ? 'w-20' : colIdx === 1 ? 'flex-1' : 'w-16',
+                "h-3.5",
+                colIdx === 0 ? "w-20" : colIdx === 1 ? "flex-1" : "w-16",
               )}
             />
           ))}
@@ -134,12 +140,12 @@ export interface SkeletonGridProps {
  */
 export function SkeletonGrid({
   items = 6,
-  gridCols = 'sm:grid-cols-2 lg:grid-cols-3',
+  gridCols = "sm:grid-cols-2 lg:grid-cols-3",
   className,
 }: SkeletonGridProps) {
   return (
     <div
-      className={clsx('grid gap-4', gridCols, className)}
+      className={clsx("grid gap-4", gridCols, className)}
       aria-hidden="true"
       data-testid="skeleton-grid"
     >

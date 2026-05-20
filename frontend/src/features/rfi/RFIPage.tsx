@@ -1,8 +1,14 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import clsx from 'clsx';
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import clsx from "clsx";
 import {
   HelpCircle,
   Search,
@@ -22,7 +28,7 @@ import {
   UploadCloud,
   Check,
   Info,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -34,14 +40,19 @@ import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui';
-import { UserSearchInput } from '@/shared/ui/UserSearchInput';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { useCreateShortcut } from '@/shared/hooks/useCreateShortcut';
-import { apiGet, apiPost, triggerDownload, extractErrorMessageFromBody } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useAuthStore } from '@/stores/useAuthStore';
+} from "@/shared/ui";
+import { UserSearchInput } from "@/shared/ui/UserSearchInput";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { useCreateShortcut } from "@/shared/hooks/useCreateShortcut";
+import {
+  apiGet,
+  apiPost,
+  triggerDownload,
+  extractErrorMessageFromBody,
+} from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   fetchRFIs,
   fetchRFIStats,
@@ -54,7 +65,7 @@ import {
   type RFIPriority,
   type CreateRFIPayload,
   type RespondRFIPayload,
-} from './api';
+} from "./api";
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -65,13 +76,19 @@ interface Project {
 
 export const STATUS_CONFIG: Record<
   RFIStatus,
-  { variant: 'neutral' | 'blue' | 'success' | 'error' | 'warning'; cls: string }
+  { variant: "neutral" | "blue" | "success" | "error" | "warning"; cls: string }
 > = {
-  draft: { variant: 'neutral', cls: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400' },
-  open: { variant: 'blue', cls: '' },
-  answered: { variant: 'success', cls: '' },
-  closed: { variant: 'neutral', cls: 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300' },
-  void: { variant: 'error', cls: '' },
+  draft: {
+    variant: "neutral",
+    cls: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+  },
+  open: { variant: "blue", cls: "" },
+  answered: { variant: "success", cls: "" },
+  closed: {
+    variant: "neutral",
+    cls: "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
+  },
+  void: { variant: "error", cls: "" },
 };
 
 /**
@@ -84,33 +101,36 @@ export const STATUS_CONFIG: Record<
  *   critical → red
  */
 export const PRIORITY_DOT: Record<RFIPriority, string> = {
-  low: 'bg-gray-400',
-  normal: 'bg-blue-500',
-  high: 'bg-amber-500',
-  critical: 'bg-red-500',
+  low: "bg-gray-400",
+  normal: "bg-blue-500",
+  high: "bg-amber-500",
+  critical: "bg-red-500",
 };
 
 /** Ordered list — keeps the chip row and the filter dropdown in sync. */
 export const PRIORITY_VALUES: readonly RFIPriority[] = [
-  'low',
-  'normal',
-  'high',
-  'critical',
+  "low",
+  "normal",
+  "high",
+  "critical",
 ] as const;
 
-const LS_INFO_DISMISSED = 'oe_rfi_info_dismissed';
+const LS_INFO_DISMISSED = "oe_rfi_info_dismissed";
 
 const inputCls =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 const textareaCls =
-  'w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none';
+  "w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none";
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
 function daysOpen(createdAt: string, closedAt: string | null): number {
   const start = new Date(createdAt);
   const end = closedAt ? new Date(closedAt) : new Date();
-  return Math.max(0, Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
+  return Math.max(
+    0,
+    Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)),
+  );
 }
 
 /* ── Create RFI Modal ──────────────────────────────────────────────────── */
@@ -138,19 +158,19 @@ interface RFIFormData {
 }
 
 const EMPTY_FORM: RFIFormData = {
-  subject: '',
-  question: '',
-  ball_in_court: '',
-  ball_in_court_name: '',
-  assigned_to: '',
-  assigned_to_name: '',
-  due_date: '',
+  subject: "",
+  question: "",
+  ball_in_court: "",
+  ball_in_court_name: "",
+  assigned_to: "",
+  assigned_to_name: "",
+  due_date: "",
   cost_impact: false,
-  cost_impact_value: '',
+  cost_impact_value: "",
   schedule_impact: false,
-  schedule_impact_days: '',
-  priority: 'normal',
-  discipline: '',
+  schedule_impact_days: "",
+  priority: "normal",
+  discipline: "",
   linked_drawing_ids: [],
 };
 
@@ -180,9 +200,9 @@ interface DocumentsApiRow {
 function normalizeDocRow(raw: DocumentsApiRow): DocumentPickerRow {
   return {
     id: raw.id,
-    filename: raw.filename ?? raw.name ?? '',
-    category: raw.category ?? 'other',
-    size_bytes: typeof raw.size_bytes === 'number' ? raw.size_bytes : 0,
+    filename: raw.filename ?? raw.name ?? "",
+    category: raw.category ?? "other",
+    size_bytes: typeof raw.size_bytes === "number" ? raw.size_bytes : 0,
   };
 }
 
@@ -202,15 +222,15 @@ function DocumentPickerModal({
   onApply: (ids: string[]) => void;
 }) {
   const { t } = useTranslation();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [picked, setPicked] = useState<Set<string>>(() => new Set(selected));
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
   const filtered = useMemo(() => {
@@ -218,7 +238,8 @@ function DocumentPickerModal({
     if (!q) return documents;
     return documents.filter(
       (d) =>
-        d.filename.toLowerCase().includes(q) || d.category.toLowerCase().includes(q),
+        d.filename.toLowerCase().includes(q) ||
+        d.category.toLowerCase().includes(q),
     );
   }, [documents, query]);
 
@@ -240,17 +261,19 @@ function DocumentPickerModal({
         className="w-full max-w-xl bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4 max-h-[80vh] flex flex-col"
         role="dialog"
         aria-modal="true"
-        aria-label={t('rfi.attach_drawings', { defaultValue: 'Attach drawings' })}
+        aria-label={t("rfi.attach_drawings", {
+          defaultValue: "Attach drawings",
+        })}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-border-light">
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('rfi.attach_drawings', { defaultValue: 'Attach drawings' })}
+            {t("rfi.attach_drawings", { defaultValue: "Attach drawings" })}
           </h3>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
           >
             <X size={14} />
@@ -266,11 +289,11 @@ function DocumentPickerModal({
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={t('rfi.doc_search_placeholder', {
-                defaultValue: 'Search drawings & documents...',
+              placeholder={t("rfi.doc_search_placeholder", {
+                defaultValue: "Search drawings & documents...",
               })}
-              aria-label={t('rfi.doc_search_placeholder', {
-                defaultValue: 'Search drawings & documents...',
+              aria-label={t("rfi.doc_search_placeholder", {
+                defaultValue: "Search drawings & documents...",
               })}
               className={`${inputCls} pl-9`}
               autoFocus
@@ -286,11 +309,11 @@ function DocumentPickerModal({
           ) : filtered.length === 0 ? (
             <p className="px-3 py-6 text-center text-sm text-content-tertiary">
               {documents.length === 0
-                ? t('rfi.no_docs_yet', {
-                    defaultValue: 'This project has no documents yet.',
+                ? t("rfi.no_docs_yet", {
+                    defaultValue: "This project has no documents yet.",
                   })
-                : t('rfi.no_doc_matches', {
-                    defaultValue: 'No documents match your search.',
+                : t("rfi.no_doc_matches", {
+                    defaultValue: "No documents match your search.",
                   })}
             </p>
           ) : (
@@ -303,25 +326,28 @@ function DocumentPickerModal({
                       type="button"
                       onClick={() => togglePick(d.id)}
                       className={clsx(
-                        'flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-surface-secondary transition-colors',
-                        isPicked && 'bg-oe-blue/5',
+                        "flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-surface-secondary transition-colors",
+                        isPicked && "bg-oe-blue/5",
                       )}
                       aria-pressed={isPicked}
                     >
                       <span
                         className={clsx(
-                          'flex h-5 w-5 items-center justify-center rounded border shrink-0',
+                          "flex h-5 w-5 items-center justify-center rounded border shrink-0",
                           isPicked
-                            ? 'border-oe-blue bg-oe-blue text-white'
-                            : 'border-border bg-surface-primary',
+                            ? "border-oe-blue bg-oe-blue text-white"
+                            : "border-border bg-surface-primary",
                         )}
                       >
                         {isPicked && <Check size={12} strokeWidth={3} />}
                       </span>
-                      <FileText size={14} className="text-content-tertiary shrink-0" />
+                      <FileText
+                        size={14}
+                        className="text-content-tertiary shrink-0"
+                      />
                       <div className="min-w-0 flex-1">
                         <p className="text-sm text-content-primary truncate">
-                          {d.filename || '—'}
+                          {d.filename || "—"}
                         </p>
                         <p className="text-xs text-content-tertiary truncate">
                           {d.category}
@@ -337,21 +363,21 @@ function DocumentPickerModal({
 
         <div className="flex items-center justify-between gap-3 px-5 py-3 border-t border-border-light">
           <span className="text-xs text-content-tertiary">
-            {t('rfi.n_selected', {
-              defaultValue: '{{count}} selected',
+            {t("rfi.n_selected", {
+              defaultValue: "{{count}} selected",
               count: picked.size,
             })}
           </span>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={onClose}>
-              {t('common.cancel', { defaultValue: 'Cancel' })}
+              {t("common.cancel", { defaultValue: "Cancel" })}
             </Button>
             <Button
               variant="primary"
               size="sm"
               onClick={() => onApply(Array.from(picked))}
             >
-              {t('rfi.apply_selection', { defaultValue: 'Apply' })}
+              {t("rfi.apply_selection", { defaultValue: "Apply" })}
             </Button>
           </div>
         </div>
@@ -389,10 +415,15 @@ function CreateRFIModal({
    * unless the user opens the dialog.
    */
   const { data: documents = [], isLoading: docsLoading } = useQuery({
-    queryKey: ['rfi-doc-picker', projectId],
+    queryKey: ["rfi-doc-picker", projectId],
     queryFn: async () => {
-      const params = new URLSearchParams({ project_id: projectId, limit: '200' });
-      const rows = await apiGet<DocumentsApiRow[]>(`/v1/documents/?${params.toString()}`);
+      const params = new URLSearchParams({
+        project_id: projectId,
+        limit: "200",
+      });
+      const rows = await apiGet<DocumentsApiRow[]>(
+        `/v1/documents/?${params.toString()}`,
+      );
       return rows.map(normalizeDocRow);
     },
     enabled: Boolean(projectId),
@@ -414,15 +445,15 @@ function CreateRFIModal({
     async (file: File): Promise<void> => {
       const token = useAuthStore.getState().accessToken;
       const formData = new FormData();
-      formData.append('file', file);
-      const headers: Record<string, string> = { 'X-DDC-Client': 'OE/1.0' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+      formData.append("file", file);
+      const headers: Record<string, string> = { "X-DDC-Client": "OE/1.0" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
 
       const res = await fetch(
         `/api/v1/documents/upload/?project_id=${encodeURIComponent(
           projectId,
         )}&category=other`,
-        { method: 'POST', headers, body: formData },
+        { method: "POST", headers, body: formData },
       );
       if (!res.ok) {
         let detail = file.name;
@@ -430,9 +461,9 @@ function CreateRFIModal({
           const body: unknown = await res.json();
           if (
             body &&
-            typeof body === 'object' &&
-            'detail' in body &&
-            typeof (body as { detail: unknown }).detail === 'string'
+            typeof body === "object" &&
+            "detail" in body &&
+            typeof (body as { detail: unknown }).detail === "string"
           ) {
             detail = (body as { detail: string }).detail;
           }
@@ -442,7 +473,7 @@ function CreateRFIModal({
         throw new Error(detail);
       }
       const created = (await res.json()) as { id?: string };
-      if (!created.id) throw new Error('Upload returned no id');
+      if (!created.id) throw new Error("Upload returned no id");
       const newId = created.id;
       setForm((prev) => ({
         ...prev,
@@ -460,30 +491,32 @@ function CreateRFIModal({
       if (list.length === 0) return;
       if (!projectId) {
         addToast({
-          type: 'error',
-          title: t('rfi.no_project_error', { defaultValue: 'No project selected' }),
+          type: "error",
+          title: t("rfi.no_project_error", {
+            defaultValue: "No project selected",
+          }),
         });
         return;
       }
       setUploadInFlight((n) => n + list.length);
       const results = await Promise.allSettled(list.map((f) => uploadFile(f)));
-      const ok = results.filter((r) => r.status === 'fulfilled').length;
+      const ok = results.filter((r) => r.status === "fulfilled").length;
       const fail = results.length - ok;
       setUploadInFlight((n) => Math.max(0, n - list.length));
       if (ok > 0) {
         addToast({
-          type: 'success',
-          title: t('rfi.attachment_uploaded', {
-            defaultValue: '{{count}} attachment(s) uploaded',
+          type: "success",
+          title: t("rfi.attachment_uploaded", {
+            defaultValue: "{{count}} attachment(s) uploaded",
             count: ok,
           }),
         });
       }
       if (fail > 0) {
         addToast({
-          type: 'error',
-          title: t('rfi.attachment_failed', {
-            defaultValue: '{{count}} upload(s) failed',
+          type: "error",
+          title: t("rfi.attachment_failed", {
+            defaultValue: "{{count}} upload(s) failed",
             count: fail,
           }),
         });
@@ -501,15 +534,27 @@ function CreateRFIModal({
 
   const set = <K extends keyof RFIFormData>(key: K, value: RFIFormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
-    if (errors[key]) setErrors((prev) => { const next = { ...prev }; delete next[key]; return next; });
+    if (errors[key])
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
   };
 
-  const canSubmit = form.subject.trim().length > 0 && form.question.trim().length > 0;
+  const canSubmit =
+    form.subject.trim().length > 0 && form.question.trim().length > 0;
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
-    if (!form.subject.trim()) e.subject = t('validation.required', { defaultValue: 'This field is required‌⁠‍' });
-    if (!form.question.trim()) e.question = t('validation.required', { defaultValue: 'This field is required‌⁠‍' });
+    if (!form.subject.trim())
+      e.subject = t("validation.required", {
+        defaultValue: "This field is required‌⁠‍",
+      });
+    if (!form.question.trim())
+      e.question = t("validation.required", {
+        defaultValue: "This field is required‌⁠‍",
+      });
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -525,11 +570,11 @@ function CreateRFIModal({
       onClose={onClose}
       busy={isPending}
       size="xl"
-      title={t('rfi.new_rfi', { defaultValue: 'New RFI‌⁠‍' })}
+      title={t("rfi.new_rfi", { defaultValue: "New RFI‌⁠‍" })}
       subtitle={
         projectName
-          ? t('common.creating_in_project', {
-              defaultValue: 'In {{project}}‌⁠‍',
+          ? t("common.creating_in_project", {
+              defaultValue: "In {{project}}‌⁠‍",
               project: projectName,
             })
           : undefined
@@ -537,15 +582,19 @@ function CreateRFIModal({
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
-          <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={isPending || !canSubmit}
+          >
             {isPending ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
             ) : (
               <Plus size={16} className="mr-1.5 shrink-0" />
             )}
-            <span>{t('rfi.create_rfi', { defaultValue: 'Create RFI' })}</span>
+            <span>{t("rfi.create_rfi", { defaultValue: "Create RFI" })}</span>
           </Button>
         </>
       }
@@ -566,11 +615,11 @@ function CreateRFIModal({
 
       {/* ── Request Details ── */}
       <WideModalSection
-        title={t('rfi.section_request', { defaultValue: 'Request Details' })}
+        title={t("rfi.section_request", { defaultValue: "Request Details" })}
         columns={2}
       >
         <WideModalField
-          label={t('rfi.field_subject', { defaultValue: 'Subject' })}
+          label={t("rfi.field_subject", { defaultValue: "Subject" })}
           required
           span={2}
           htmlFor="rfi-subject"
@@ -579,20 +628,21 @@ function CreateRFIModal({
           <input
             id="rfi-subject"
             value={form.subject}
-            onChange={(e) => set('subject', e.target.value)}
-            placeholder={t('rfi.subject_placeholder', {
-              defaultValue: 'e.g. Clarification on foundation depth at Grid Line A-3',
+            onChange={(e) => set("subject", e.target.value)}
+            placeholder={t("rfi.subject_placeholder", {
+              defaultValue:
+                "e.g. Clarification on foundation depth at Grid Line A-3",
             })}
             className={clsx(
-              'h-12 w-full rounded-lg border border-border bg-surface-primary px-3 text-base font-medium focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue',
+              "h-12 w-full rounded-lg border border-border bg-surface-primary px-3 text-base font-medium focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue",
               errors.subject &&
-                'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('rfi.field_question', { defaultValue: 'Question' })}
+          label={t("rfi.field_question", { defaultValue: "Question" })}
           required
           span={2}
           htmlFor="rfi-question"
@@ -601,23 +651,25 @@ function CreateRFIModal({
           <textarea
             id="rfi-question"
             value={form.question}
-            onChange={(e) => set('question', e.target.value)}
+            onChange={(e) => set("question", e.target.value)}
             rows={5}
             className={clsx(
               textareaCls,
               errors.question &&
-                'border-semantic-error focus:ring-red-300 focus:border-semantic-error',
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
             )}
-            placeholder={t('rfi.question_placeholder', {
-              defaultValue: 'Describe the information you need...',
+            placeholder={t("rfi.question_placeholder", {
+              defaultValue: "Describe the information you need...",
             })}
           />
         </WideModalField>
 
-        <WideModalField label={t('rfi.field_priority', { defaultValue: 'Priority' })}>
+        <WideModalField
+          label={t("rfi.field_priority", { defaultValue: "Priority" })}
+        >
           <div
             role="radiogroup"
-            aria-label={t('rfi.field_priority', { defaultValue: 'Priority' })}
+            aria-label={t("rfi.field_priority", { defaultValue: "Priority" })}
             className="flex flex-wrap gap-1.5"
           >
             {PRIORITY_VALUES.map((p) => {
@@ -628,17 +680,20 @@ function CreateRFIModal({
                   type="button"
                   role="radio"
                   aria-checked={active}
-                  onClick={() => set('priority', p)}
+                  onClick={() => set("priority", p)}
                   className={clsx(
-                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                     active
-                      ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                      : 'border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary',
+                      ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                      : "border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary",
                   )}
                 >
                   <span
                     aria-hidden="true"
-                    className={clsx('inline-block h-2 w-2 rounded-full', PRIORITY_DOT[p])}
+                    className={clsx(
+                      "inline-block h-2 w-2 rounded-full",
+                      PRIORITY_DOT[p],
+                    )}
                   />
                   {t(`rfi.priority_${p}`, {
                     defaultValue: p.charAt(0).toUpperCase() + p.slice(1),
@@ -650,18 +705,18 @@ function CreateRFIModal({
         </WideModalField>
 
         <WideModalField
-          label={t('rfi.field_discipline', { defaultValue: 'Discipline' })}
+          label={t("rfi.field_discipline", { defaultValue: "Discipline" })}
           htmlFor="rfi-discipline"
         >
           <div className="relative">
             <select
               id="rfi-discipline"
               value={form.discipline}
-              onChange={(e) => set('discipline', e.target.value)}
-              className={clsx(inputCls, 'pr-9 appearance-none')}
+              onChange={(e) => set("discipline", e.target.value)}
+              className={clsx(inputCls, "pr-9 appearance-none")}
             >
               <option value="">
-                {t('rfi.discipline_none', { defaultValue: 'No discipline' })}
+                {t("rfi.discipline_none", { defaultValue: "No discipline" })}
               </option>
               {RFI_DISCIPLINES.map((d) => (
                 <option key={d} value={d}>
@@ -680,54 +735,66 @@ function CreateRFIModal({
 
       {/* ── Assignment & Schedule ── */}
       <WideModalSection
-        title={t('rfi.section_assignment', { defaultValue: 'Assignment & Schedule' })}
+        title={t("rfi.section_assignment", {
+          defaultValue: "Assignment & Schedule",
+        })}
         columns={2}
       >
         <WideModalField
-          label={t('rfi.field_ball_in_court', { defaultValue: 'Ball in Court' })}
+          label={t("rfi.field_ball_in_court", {
+            defaultValue: "Ball in Court",
+          })}
           htmlFor="rfi-ball-in-court"
         >
           <UserSearchInput
             value={form.ball_in_court}
             displayValue={form.ball_in_court_name}
             onChange={(id, name) => {
-              setForm((prev) => ({ ...prev, ball_in_court: id, ball_in_court_name: name }));
+              setForm((prev) => ({
+                ...prev,
+                ball_in_court: id,
+                ball_in_court_name: name,
+              }));
             }}
-            placeholder={t('rfi.bic_placeholder', {
-              defaultValue: 'Person responsible for response',
+            placeholder={t("rfi.bic_placeholder", {
+              defaultValue: "Person responsible for response",
             })}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('rfi.field_assigned_to', { defaultValue: 'Assigned To' })}
+          label={t("rfi.field_assigned_to", { defaultValue: "Assigned To" })}
           htmlFor="rfi-assigned-to"
         >
           <UserSearchInput
             value={form.assigned_to}
             displayValue={form.assigned_to_name}
             onChange={(id, name) => {
-              setForm((prev) => ({ ...prev, assigned_to: id, assigned_to_name: name }));
+              setForm((prev) => ({
+                ...prev,
+                assigned_to: id,
+                assigned_to_name: name,
+              }));
             }}
-            placeholder={t('rfi.assigned_to_placeholder', {
-              defaultValue: 'Reviewer / coordinator',
+            placeholder={t("rfi.assigned_to_placeholder", {
+              defaultValue: "Reviewer / coordinator",
             })}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('rfi.field_due_date', { defaultValue: 'Response Due Date' })}
+          label={t("rfi.field_due_date", { defaultValue: "Response Due Date" })}
           span={2}
           htmlFor="rfi-due-date"
-          hint={t('rfi.response_due_date_hint', {
-            defaultValue: 'Typical: 14 business days from submission',
+          hint={t("rfi.response_due_date_hint", {
+            defaultValue: "Typical: 14 business days from submission",
           })}
         >
           <input
             id="rfi-due-date"
             type="date"
             value={form.due_date}
-            onChange={(e) => set('due_date', e.target.value)}
+            onChange={(e) => set("due_date", e.target.value)}
             className={inputCls}
           />
         </WideModalField>
@@ -735,26 +802,28 @@ function CreateRFIModal({
 
       {/* ── Impact Assessment ── */}
       <WideModalSection
-        title={t('rfi.section_impact', { defaultValue: 'Impact Assessment' })}
+        title={t("rfi.section_impact", { defaultValue: "Impact Assessment" })}
         columns={2}
       >
-        <WideModalField label={t('rfi.cost_impact', { defaultValue: 'Cost Impact' })}>
+        <WideModalField
+          label={t("rfi.cost_impact", { defaultValue: "Cost Impact" })}
+        >
           <button
             type="button"
-            onClick={() => set('cost_impact', !form.cost_impact)}
+            onClick={() => set("cost_impact", !form.cost_impact)}
             className={clsx(
-              'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-left w-full',
+              "flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-left w-full",
               form.cost_impact
-                ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-600'
-                : 'border-border bg-surface-primary hover:bg-surface-secondary',
+                ? "border-amber-400 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-600"
+                : "border-border bg-surface-primary hover:bg-surface-secondary",
             )}
           >
             <div
               className={clsx(
-                'flex h-8 w-8 items-center justify-center rounded-full shrink-0',
+                "flex h-8 w-8 items-center justify-center rounded-full shrink-0",
                 form.cost_impact
-                  ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400'
-                  : 'bg-surface-tertiary text-content-quaternary',
+                  ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
+                  : "bg-surface-tertiary text-content-quaternary",
               )}
             >
               <DollarSign size={16} />
@@ -762,38 +831,42 @@ function CreateRFIModal({
             <div>
               <p
                 className={clsx(
-                  'text-sm font-medium',
-                  form.cost_impact ? 'text-amber-700 dark:text-amber-400' : 'text-content-secondary',
+                  "text-sm font-medium",
+                  form.cost_impact
+                    ? "text-amber-700 dark:text-amber-400"
+                    : "text-content-secondary",
                 )}
               >
-                {t('rfi.cost_impact', { defaultValue: 'Cost Impact' })}
+                {t("rfi.cost_impact", { defaultValue: "Cost Impact" })}
               </p>
               <p className="text-xs text-content-quaternary">
                 {form.cost_impact
-                  ? t('rfi.impact_yes', { defaultValue: 'Yes' })
-                  : t('rfi.impact_no', { defaultValue: 'No' })}
+                  ? t("rfi.impact_yes", { defaultValue: "Yes" })
+                  : t("rfi.impact_no", { defaultValue: "No" })}
               </p>
             </div>
           </button>
         </WideModalField>
 
-        <WideModalField label={t('rfi.schedule_impact', { defaultValue: 'Schedule Impact' })}>
+        <WideModalField
+          label={t("rfi.schedule_impact", { defaultValue: "Schedule Impact" })}
+        >
           <button
             type="button"
-            onClick={() => set('schedule_impact', !form.schedule_impact)}
+            onClick={() => set("schedule_impact", !form.schedule_impact)}
             className={clsx(
-              'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-left w-full',
+              "flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-left w-full",
               form.schedule_impact
-                ? 'border-blue-400 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-600'
-                : 'border-border bg-surface-primary hover:bg-surface-secondary',
+                ? "border-blue-400 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-600"
+                : "border-border bg-surface-primary hover:bg-surface-secondary",
             )}
           >
             <div
               className={clsx(
-                'flex h-8 w-8 items-center justify-center rounded-full shrink-0',
+                "flex h-8 w-8 items-center justify-center rounded-full shrink-0",
                 form.schedule_impact
-                  ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400'
-                  : 'bg-surface-tertiary text-content-quaternary',
+                  ? "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
+                  : "bg-surface-tertiary text-content-quaternary",
               )}
             >
               <CalendarClock size={16} />
@@ -801,18 +874,18 @@ function CreateRFIModal({
             <div>
               <p
                 className={clsx(
-                  'text-sm font-medium',
+                  "text-sm font-medium",
                   form.schedule_impact
-                    ? 'text-blue-700 dark:text-blue-400'
-                    : 'text-content-secondary',
+                    ? "text-blue-700 dark:text-blue-400"
+                    : "text-content-secondary",
                 )}
               >
-                {t('rfi.schedule_impact', { defaultValue: 'Schedule Impact' })}
+                {t("rfi.schedule_impact", { defaultValue: "Schedule Impact" })}
               </p>
               <p className="text-xs text-content-quaternary">
                 {form.schedule_impact
-                  ? t('rfi.impact_yes', { defaultValue: 'Yes' })
-                  : t('rfi.impact_no', { defaultValue: 'No' })}
+                  ? t("rfi.impact_yes", { defaultValue: "Yes" })
+                  : t("rfi.impact_no", { defaultValue: "No" })}
               </p>
             </div>
           </button>
@@ -820,10 +893,12 @@ function CreateRFIModal({
 
         {form.cost_impact && (
           <WideModalField
-            label={t('rfi.field_cost_impact_value', { defaultValue: 'Cost exposure' })}
+            label={t("rfi.field_cost_impact_value", {
+              defaultValue: "Cost exposure",
+            })}
             htmlFor="rfi-cost-value"
-            hint={t('rfi.cost_value_hint', {
-              defaultValue: 'Estimated impact in project currency (optional)',
+            hint={t("rfi.cost_value_hint", {
+              defaultValue: "Estimated impact in project currency (optional)",
             })}
           >
             <input
@@ -831,8 +906,10 @@ function CreateRFIModal({
               type="text"
               inputMode="decimal"
               value={form.cost_impact_value}
-              onChange={(e) => set('cost_impact_value', e.target.value)}
-              placeholder={t('rfi.cost_value_placeholder', { defaultValue: 'e.g. 15000' })}
+              onChange={(e) => set("cost_impact_value", e.target.value)}
+              placeholder={t("rfi.cost_value_placeholder", {
+                defaultValue: "e.g. 15000",
+              })}
               className={inputCls}
             />
           </WideModalField>
@@ -840,10 +917,13 @@ function CreateRFIModal({
 
         {form.schedule_impact && (
           <WideModalField
-            label={t('rfi.field_schedule_impact_days', { defaultValue: 'Schedule slip (days)' })}
+            label={t("rfi.field_schedule_impact_days", {
+              defaultValue: "Schedule slip (days)",
+            })}
             htmlFor="rfi-schedule-days"
-            hint={t('rfi.schedule_days_hint', {
-              defaultValue: 'Working days the response could delay the schedule',
+            hint={t("rfi.schedule_days_hint", {
+              defaultValue:
+                "Working days the response could delay the schedule",
             })}
           >
             <input
@@ -852,8 +932,10 @@ function CreateRFIModal({
               min={0}
               step={1}
               value={form.schedule_impact_days}
-              onChange={(e) => set('schedule_impact_days', e.target.value)}
-              placeholder={t('rfi.schedule_days_placeholder', { defaultValue: 'e.g. 5' })}
+              onChange={(e) => set("schedule_impact_days", e.target.value)}
+              placeholder={t("rfi.schedule_days_placeholder", {
+                defaultValue: "e.g. 5",
+              })}
               className={inputCls}
             />
           </WideModalField>
@@ -862,11 +944,16 @@ function CreateRFIModal({
 
       {/* ── References / Linked Drawings ── */}
       <WideModalSection
-        title={t('rfi.section_references', { defaultValue: 'References' })}
+        title={t("rfi.section_references", { defaultValue: "References" })}
         columns={2}
       >
         {form.linked_drawing_ids.length > 0 && (
-          <WideModalField label={t('rfi.attached_documents', { defaultValue: 'Attached documents' })} span={2}>
+          <WideModalField
+            label={t("rfi.attached_documents", {
+              defaultValue: "Attached documents",
+            })}
+            span={2}
+          >
             <div className="flex flex-wrap gap-1.5">
               {form.linked_drawing_ids.map((id) => {
                 const doc = docById.get(id);
@@ -883,8 +970,8 @@ function CreateRFIModal({
                     <button
                       type="button"
                       onClick={() => removeDrawing(id)}
-                      aria-label={t('rfi.remove_attachment', {
-                        defaultValue: 'Remove attachment',
+                      aria-label={t("rfi.remove_attachment", {
+                        defaultValue: "Remove attachment",
                       })}
                       className="ml-0.5 rounded-full hover:bg-oe-blue/20 p-0.5"
                     >
@@ -897,7 +984,9 @@ function CreateRFIModal({
           </WideModalField>
         )}
 
-        <WideModalField label={t('rfi.attach_drawings', { defaultValue: 'Attach drawings' })}>
+        <WideModalField
+          label={t("rfi.attach_drawings", { defaultValue: "Attach drawings" })}
+        >
           <button
             type="button"
             onClick={() => setShowDocPicker(true)}
@@ -905,17 +994,21 @@ function CreateRFIModal({
             className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-surface-primary px-3 py-3 text-sm font-medium text-content-secondary hover:bg-surface-secondary hover:border-oe-blue/60 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full"
           >
             <Paperclip size={14} />
-            {t('rfi.attach_drawings', { defaultValue: 'Attach drawings' })}
+            {t("rfi.attach_drawings", { defaultValue: "Attach drawings" })}
           </button>
         </WideModalField>
 
-        <WideModalField label={t('rfi.drop_or_browse', { defaultValue: 'Drop file or browse' })}>
+        <WideModalField
+          label={t("rfi.drop_or_browse", {
+            defaultValue: "Drop file or browse",
+          })}
+        >
           <div
             role="button"
             tabIndex={0}
             onClick={() => dropFileInputRef.current?.click()}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 dropFileInputRef.current?.click();
               }
@@ -936,12 +1029,14 @@ function CreateRFIModal({
               }
             }}
             className={clsx(
-              'flex items-center justify-center gap-2 rounded-lg border-2 border-dashed px-3 py-3 text-sm font-medium cursor-pointer transition-colors',
+              "flex items-center justify-center gap-2 rounded-lg border-2 border-dashed px-3 py-3 text-sm font-medium cursor-pointer transition-colors",
               dragOver
-                ? 'border-oe-blue bg-oe-blue/5 text-oe-blue'
-                : 'border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary hover:border-oe-blue/60',
+                ? "border-oe-blue bg-oe-blue/5 text-oe-blue"
+                : "border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary hover:border-oe-blue/60",
             )}
-            aria-label={t('rfi.upload_attachment', { defaultValue: 'Upload an attachment' })}
+            aria-label={t("rfi.upload_attachment", {
+              defaultValue: "Upload an attachment",
+            })}
           >
             {uploadInFlight > 0 ? (
               <Loader2 size={14} className="animate-spin" />
@@ -949,8 +1044,10 @@ function CreateRFIModal({
               <UploadCloud size={14} />
             )}
             {uploadInFlight > 0
-              ? t('rfi.uploading', { defaultValue: 'Uploading…' })
-              : t('rfi.drop_or_browse', { defaultValue: 'Drop file or browse' })}
+              ? t("rfi.uploading", { defaultValue: "Uploading…" })
+              : t("rfi.drop_or_browse", {
+                  defaultValue: "Drop file or browse",
+                })}
           </div>
           <input
             ref={dropFileInputRef}
@@ -960,7 +1057,7 @@ function CreateRFIModal({
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {
                 void handleFilesDropped(e.target.files);
-                e.target.value = '';
+                e.target.value = "";
               }
             }}
           />
@@ -984,7 +1081,7 @@ function RespondModal({
   isPending: boolean;
 }) {
   const { t } = useTranslation();
-  const [response, setResponse] = useState('');
+  const [response, setResponse] = useState("");
 
   const handleSubmit = () => {
     if (response.trim()) onSubmit({ official_response: response.trim() });
@@ -992,22 +1089,33 @@ function RespondModal({
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg animate-fade-in">
-      <div className="w-full max-w-lg bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4" role="dialog" aria-modal="true" aria-label={t('rfi.respond_title', { defaultValue: 'Respond to RFI #{{number}}', number: rfi.rfi_number })}>
+      <div
+        className="w-full max-w-lg bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("rfi.respond_title", {
+          defaultValue: "Respond to RFI #{{number}}",
+          number: rfi.rfi_number,
+        })}
+      >
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
           <h2 className="text-lg font-semibold text-content-primary">
-            {t('rfi.respond_title', { defaultValue: 'Respond to RFI #{{number}}', number: rfi.rfi_number })}
+            {t("rfi.respond_title", {
+              defaultValue: "Respond to RFI #{{number}}",
+              number: rfi.rfi_number,
+            })}
           </h2>
           <button
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
           >
             <X size={18} />
@@ -1015,12 +1123,17 @@ function RespondModal({
         </div>
         <div className="px-6 py-4 space-y-3">
           <div className="rounded-lg bg-surface-secondary p-3">
-            <p className="text-xs text-content-tertiary mb-1">{t('rfi.original_question', { defaultValue: 'Question' })}</p>
+            <p className="text-xs text-content-tertiary mb-1">
+              {t("rfi.original_question", { defaultValue: "Question" })}
+            </p>
             <p className="text-sm text-content-primary">{rfi.question}</p>
           </div>
           <div>
-            <label htmlFor="rfi-response" className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('rfi.field_response', { defaultValue: 'Response' })}
+            <label
+              htmlFor="rfi-response"
+              className="block text-sm font-medium text-content-primary mb-1.5"
+            >
+              {t("rfi.field_response", { defaultValue: "Response" })}
             </label>
             <textarea
               id="rfi-response"
@@ -1028,21 +1141,23 @@ function RespondModal({
               onChange={(e) => setResponse(e.target.value)}
               rows={4}
               className={textareaCls}
-              placeholder={t('rfi.response_placeholder', { defaultValue: 'Enter your response...' })}
+              placeholder={t("rfi.response_placeholder", {
+                defaultValue: "Enter your response...",
+              })}
               autoFocus
             />
           </div>
         </div>
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border-light">
           <Button variant="ghost" onClick={onClose} disabled={isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isPending || !response.trim()}
           >
-            {t('rfi.submit_response', { defaultValue: 'Submit Response' })}
+            {t("rfi.submit_response", { defaultValue: "Submit Response" })}
           </Button>
         </div>
       </div>
@@ -1066,7 +1181,11 @@ const RFIRow = React.memo(function RFIRow({
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const days = rfi.days_open ?? daysOpen(rfi.created_at, null);
-  const isOverdue = rfi.is_overdue ?? (rfi.response_due_date && rfi.status === 'open' && new Date(rfi.response_due_date) < new Date());
+  const isOverdue =
+    rfi.is_overdue ??
+    (rfi.response_due_date &&
+      rfi.status === "open" &&
+      new Date(rfi.response_due_date) < new Date());
   const statusCfg = STATUS_CONFIG[rfi.status] ?? STATUS_CONFIG.draft;
 
   return (
@@ -1074,43 +1193,47 @@ const RFIRow = React.memo(function RFIRow({
       {/* Main row */}
       <div
         className={clsx(
-          'flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-surface-secondary/50 transition-colors',
-          expanded && 'bg-surface-secondary/30',
+          "flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-surface-secondary/50 transition-colors",
+          expanded && "bg-surface-secondary/30",
         )}
         onClick={() => setExpanded((prev) => !prev)}
       >
         {/* Priority dot — colour-coded at the very left of the row */}
         <span
           className={clsx(
-            'inline-block h-2 w-2 rounded-full shrink-0',
-            rfi.priority ? PRIORITY_DOT[rfi.priority] : 'bg-transparent border border-border',
+            "inline-block h-2 w-2 rounded-full shrink-0",
+            rfi.priority
+              ? PRIORITY_DOT[rfi.priority]
+              : "bg-transparent border border-border",
           )}
           aria-label={
             rfi.priority
-              ? t('rfi.priority_aria', {
-                  defaultValue: 'Priority: {{p}}',
+              ? t("rfi.priority_aria", {
+                  defaultValue: "Priority: {{p}}",
                   p: t(`rfi.priority_${rfi.priority}`, {
                     defaultValue:
-                      rfi.priority.charAt(0).toUpperCase() + rfi.priority.slice(1),
+                      rfi.priority.charAt(0).toUpperCase() +
+                      rfi.priority.slice(1),
                   }),
                 })
-              : t('rfi.priority_none_aria', { defaultValue: 'No priority' })
+              : t("rfi.priority_none_aria", { defaultValue: "No priority" })
           }
           title={
             rfi.priority
               ? t(`rfi.priority_${rfi.priority}`, {
                   defaultValue:
-                    rfi.priority.charAt(0).toUpperCase() + rfi.priority.slice(1),
+                    rfi.priority.charAt(0).toUpperCase() +
+                    rfi.priority.slice(1),
                 })
-              : '—'
+              : "—"
           }
         />
 
         <ChevronRight
           size={14}
           className={clsx(
-            'text-content-tertiary transition-transform shrink-0',
-            expanded && 'rotate-90',
+            "text-content-tertiary transition-transform shrink-0",
+            expanded && "rotate-90",
           )}
         />
 
@@ -1131,7 +1254,8 @@ const RFIRow = React.memo(function RFIRow({
         {/* Status badge */}
         <Badge variant={statusCfg.variant} size="sm" className={statusCfg.cls}>
           {t(`rfi.status_${rfi.status}`, {
-            defaultValue: rfi.status.charAt(0).toUpperCase() + rfi.status.slice(1),
+            defaultValue:
+              rfi.status.charAt(0).toUpperCase() + rfi.status.slice(1),
           })}
         </Badge>
 
@@ -1139,25 +1263,28 @@ const RFIRow = React.memo(function RFIRow({
         {rfi.discipline && (
           <span
             className="hidden lg:inline-flex items-center rounded-full bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-secondary border border-border-light shrink-0"
-            title={t('rfi.field_discipline', { defaultValue: 'Discipline' })}
+            title={t("rfi.field_discipline", { defaultValue: "Discipline" })}
           >
             {t(`rfi.discipline_${rfi.discipline}`, {
               defaultValue:
-                rfi.discipline.charAt(0).toUpperCase() + rfi.discipline.slice(1),
+                rfi.discipline.charAt(0).toUpperCase() +
+                rfi.discipline.slice(1),
             })}
           </span>
         )}
 
         {/* Ball in Court */}
         <span className="text-xs text-content-tertiary w-28 truncate shrink-0 hidden md:block">
-          {rfi.ball_in_court || '-'}
+          {rfi.ball_in_court || "-"}
         </span>
 
         {/* Days Open */}
         <span
           className={clsx(
-            'text-xs w-16 text-right shrink-0 tabular-nums hidden sm:block',
-            isOverdue ? 'text-semantic-error font-semibold' : 'text-content-tertiary',
+            "text-xs w-16 text-right shrink-0 tabular-nums hidden sm:block",
+            isOverdue
+              ? "text-semantic-error font-semibold"
+              : "text-content-tertiary",
           )}
         >
           {days}d
@@ -1166,27 +1293,33 @@ const RFIRow = React.memo(function RFIRow({
         {/* Due Date */}
         <span
           className={clsx(
-            'text-xs w-20 shrink-0 hidden lg:block',
-            isOverdue ? 'text-semantic-error font-semibold' : 'text-content-tertiary',
+            "text-xs w-20 shrink-0 hidden lg:block",
+            isOverdue
+              ? "text-semantic-error font-semibold"
+              : "text-content-tertiary",
           )}
         >
           {rfi.response_due_date
             ? new Date(rfi.response_due_date).toLocaleDateString(undefined, {
-                month: 'short',
-                day: 'numeric',
+                month: "short",
+                day: "numeric",
               })
-            : '-'}
+            : "-"}
         </span>
 
         {/* Impact indicators */}
         <div className="flex items-center gap-1.5 w-14 shrink-0 justify-end">
           {rfi.cost_impact && (
-            <span title={t('rfi.cost_impact', { defaultValue: 'Cost Impact' })}>
+            <span title={t("rfi.cost_impact", { defaultValue: "Cost Impact" })}>
               <DollarSign size={13} className="text-amber-500" />
             </span>
           )}
           {rfi.schedule_impact && (
-            <span title={t('rfi.schedule_impact', { defaultValue: 'Schedule Impact' })}>
+            <span
+              title={t("rfi.schedule_impact", {
+                defaultValue: "Schedule Impact",
+              })}
+            >
               <Clock size={13} className="text-orange-500" />
             </span>
           )}
@@ -1199,24 +1332,28 @@ const RFIRow = React.memo(function RFIRow({
           {/* Question */}
           <div className="rounded-lg bg-surface-secondary p-3">
             <p className="text-xs text-content-tertiary mb-1 font-medium uppercase tracking-wide">
-              {t('rfi.label_question', { defaultValue: 'Question' })}
+              {t("rfi.label_question", { defaultValue: "Question" })}
             </p>
-            <p className="text-sm text-content-primary whitespace-pre-wrap">{rfi.question}</p>
+            <p className="text-sm text-content-primary whitespace-pre-wrap">
+              {rfi.question}
+            </p>
           </div>
 
           {/* Response */}
           {rfi.official_response && (
             <div className="rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-3">
               <p className="text-xs text-green-700 dark:text-green-400 mb-1 font-medium uppercase tracking-wide">
-                {t('rfi.label_response', { defaultValue: 'Response' })}
+                {t("rfi.label_response", { defaultValue: "Response" })}
               </p>
-              <p className="text-sm text-content-primary whitespace-pre-wrap">{rfi.official_response}</p>
+              <p className="text-sm text-content-primary whitespace-pre-wrap">
+                {rfi.official_response}
+              </p>
               {rfi.responded_at && (
                 <p className="text-xs text-content-tertiary mt-2">
                   {new Date(rfi.responded_at).toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
                   })}
                 </p>
               )}
@@ -1230,11 +1367,13 @@ const RFIRow = React.memo(function RFIRow({
             <div className="flex items-center gap-2 flex-wrap">
               <FileText size={13} className="text-content-tertiary" />
               <span className="text-xs text-content-secondary">
-                {t('rfi.attached_documents', { defaultValue: 'Attached documents' })}
+                {t("rfi.attached_documents", {
+                  defaultValue: "Attached documents",
+                })}
               </span>
               <Badge variant="neutral" size="sm">
-                {t('rfi.attached_documents_count', {
-                  defaultValue: '{{count}} document(s)',
+                {t("rfi.attached_documents_count", {
+                  defaultValue: "{{count}} document(s)",
                   count: rfi.linked_drawing_ids.length,
                 })}
               </Badge>
@@ -1243,14 +1382,14 @@ const RFIRow = React.memo(function RFIRow({
                 onClick={(e) => e.stopPropagation()}
                 className="text-xs font-medium text-oe-blue hover:underline"
               >
-                {t('rfi.view_details', { defaultValue: 'View details' })}
+                {t("rfi.view_details", { defaultValue: "View details" })}
               </Link>
             </div>
           )}
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-1">
-            {rfi.status === 'open' && (
+            {rfi.status === "open" && (
               <Button
                 variant="primary"
                 size="sm"
@@ -1259,10 +1398,10 @@ const RFIRow = React.memo(function RFIRow({
                   onRespond(rfi);
                 }}
               >
-                {t('rfi.action_respond', { defaultValue: 'Respond' })}
+                {t("rfi.action_respond", { defaultValue: "Respond" })}
               </Button>
             )}
-            {(rfi.status === 'answered' || rfi.status === 'open') && (
+            {(rfi.status === "answered" || rfi.status === "open") && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -1271,22 +1410,25 @@ const RFIRow = React.memo(function RFIRow({
                   onClose(rfi.id);
                 }}
               >
-                {t('rfi.action_close', { defaultValue: 'Close RFI' })}
+                {t("rfi.action_close", { defaultValue: "Close RFI" })}
               </Button>
             )}
-            {rfi.cost_impact && (rfi.status === 'answered' || rfi.status === 'closed') && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCreateVariation(rfi.id);
-                }}
-              >
-                <DollarSign size={14} className="mr-1" />
-                {t('rfi.create_variation', { defaultValue: 'Create Variation' })}
-              </Button>
-            )}
+            {rfi.cost_impact &&
+              (rfi.status === "answered" || rfi.status === "closed") && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCreateVariation(rfi.id);
+                  }}
+                >
+                  <DollarSign size={14} className="mr-1" />
+                  {t("rfi.create_variation", {
+                    defaultValue: "Create Variation",
+                  })}
+                </Button>
+              )}
           </div>
         </div>
       )}
@@ -1296,14 +1438,19 @@ const RFIRow = React.memo(function RFIRow({
 
 /* ── Export helper ─────────────────────────────────────────────────────── */
 
-async function downloadExcelExport(url: string, fallbackFilename: string): Promise<void> {
+async function downloadExcelExport(
+  url: string,
+  fallbackFilename: string,
+): Promise<void> {
   const token = useAuthStore.getState().accessToken;
-  const headers: Record<string, string> = { Accept: 'application/octet-stream' };
+  const headers: Record<string, string> = {
+    Accept: "application/octet-stream",
+  };
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`/api${url}`, { method: 'GET', headers });
+  const response = await fetch(`/api${url}`, { method: "GET", headers });
   if (!response.ok) {
     let detail = `Export failed (HTTP ${response.status})`;
     try {
@@ -1316,8 +1463,9 @@ async function downloadExcelExport(url: string, fallbackFilename: string): Promi
   }
 
   const blob = await response.blob();
-  const disposition = response.headers.get('Content-Disposition');
-  const filename = disposition?.match(/filename="?(.+)"?/)?.[1] || fallbackFilename;
+  const disposition = response.headers.get("Content-Disposition");
+  const filename =
+    disposition?.match(/filename="?(.+)"?/)?.[1] || fallbackFilename;
   triggerDownload(blob, filename);
 }
 
@@ -1334,20 +1482,20 @@ export function RFIPage() {
   // State
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [respondingRfi, setRespondingRfi] = useState<RFI | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   /* Debounced copy of the search input that drives the backend `?search=`
      query. Keeps typing fluid (no fetch storm) but still hits the server
      so search reaches RFI rows past the current page. */
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   useEffect(() => {
     const handle = setTimeout(() => setDebouncedSearch(searchQuery), 300);
     return () => clearTimeout(handle);
   }, [searchQuery]);
-  const [statusFilter, setStatusFilter] = useState<RFIStatus | ''>('');
-  const [priorityFilter, setPriorityFilter] = useState<RFIPriority | ''>('');
-  const [disciplineFilter, setDisciplineFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<RFIStatus | "">("");
+  const [priorityFilter, setPriorityFilter] = useState<RFIPriority | "">("");
+  const [disciplineFilter, setDisciplineFilter] = useState<string>("");
   const [infoDismissed, setInfoDismissed] = useState(
-    () => localStorage.getItem(LS_INFO_DISMISSED) === '1',
+    () => localStorage.getItem(LS_INFO_DISMISSED) === "1",
   );
 
   // "n" shortcut → open new RFI form
@@ -1358,13 +1506,13 @@ export function RFIPage() {
 
   // Data
   const { data: projects = [] } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 
-  const projectId = routeProjectId || activeProjectId || projects[0]?.id || '';
-  const projectName = projects.find((p) => p.id === projectId)?.name || '';
+  const projectId = routeProjectId || activeProjectId || projects[0]?.id || "";
+  const projectName = projects.find((p) => p.id === projectId)?.name || "";
 
   const {
     data: rfis = [],
@@ -1373,7 +1521,7 @@ export function RFIPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['rfis', projectId, statusFilter, debouncedSearch],
+    queryKey: ["rfis", projectId, statusFilter, debouncedSearch],
     queryFn: () =>
       fetchRFIs({
         project_id: projectId,
@@ -1403,7 +1551,7 @@ export function RFIPage() {
      in-memory rollup only stays as a fallback while the stats query is
      in flight or unavailable. */
   const { data: serverStats } = useQuery({
-    queryKey: ['rfi-stats', projectId],
+    queryKey: ["rfi-stats", projectId],
     queryFn: () => fetchRFIStats(projectId),
     enabled: !!projectId,
     staleTime: 30_000,
@@ -1421,21 +1569,30 @@ export function RFIPage() {
       };
     }
     const total = rfis.length;
-    const open = rfis.filter((r) => r.status === 'open').length;
+    const open = rfis.filter((r) => r.status === "open").length;
     const overdue = rfis.filter(
-      (r) => r.is_overdue ?? (r.status === 'open' && r.response_due_date && new Date(r.response_due_date) < new Date()),
+      (r) =>
+        r.is_overdue ??
+        (r.status === "open" &&
+          r.response_due_date &&
+          new Date(r.response_due_date) < new Date()),
     ).length;
     const avgDays =
       rfis.length > 0
-        ? Math.round(rfis.reduce((sum, r) => sum + (r.days_open ?? daysOpen(r.created_at, null)), 0) / rfis.length)
+        ? Math.round(
+            rfis.reduce(
+              (sum, r) => sum + (r.days_open ?? daysOpen(r.created_at, null)),
+              0,
+            ) / rfis.length,
+          )
         : 0;
     return { total, open, overdue, avgDays };
   }, [rfis, serverStats]);
 
   // Invalidation
   const invalidateAll = useCallback(() => {
-    qc.invalidateQueries({ queryKey: ['rfis'] });
-    qc.invalidateQueries({ queryKey: ['rfi-stats'] });
+    qc.invalidateQueries({ queryKey: ["rfis"] });
+    qc.invalidateQueries({ queryKey: ["rfi-stats"] });
   }, [qc]);
 
   // Mutations
@@ -1444,21 +1601,20 @@ export function RFIPage() {
     onSuccess: (newRfi) => {
       // Optimistically add the new RFI to the cache so it appears immediately,
       // then also invalidate to ensure eventual consistency with the server.
-      qc.setQueryData<RFI[]>(
-        ['rfis', projectId, statusFilter],
-        (old) => (old ? [newRfi, ...old] : [newRfi]),
+      qc.setQueryData<RFI[]>(["rfis", projectId, statusFilter], (old) =>
+        old ? [newRfi, ...old] : [newRfi],
       );
       invalidateAll();
       setShowCreateModal(false);
       addToast({
-        type: 'success',
-        title: t('rfi.created', { defaultValue: 'RFI created successfully' }),
+        type: "success",
+        title: t("rfi.created", { defaultValue: "RFI created successfully" }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('rfi.create_failed', { defaultValue: 'Failed to create RFI' }),
+        type: "error",
+        title: t("rfi.create_failed", { defaultValue: "Failed to create RFI" }),
         message: e.message,
       }),
   });
@@ -1470,14 +1626,18 @@ export function RFIPage() {
       invalidateAll();
       setRespondingRfi(null);
       addToast({
-        type: 'success',
-        title: t('rfi.responded', { defaultValue: 'Response submitted successfully' }),
+        type: "success",
+        title: t("rfi.responded", {
+          defaultValue: "Response submitted successfully",
+        }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('rfi.respond_failed', { defaultValue: 'Failed to submit response' }),
+        type: "error",
+        title: t("rfi.respond_failed", {
+          defaultValue: "Failed to submit response",
+        }),
         message: e.message,
       }),
   });
@@ -1487,14 +1647,14 @@ export function RFIPage() {
     onSuccess: () => {
       invalidateAll();
       addToast({
-        type: 'success',
-        title: t('rfi.closed', { defaultValue: 'RFI closed successfully' }),
+        type: "success",
+        title: t("rfi.closed", { defaultValue: "RFI closed successfully" }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('rfi.close_failed', { defaultValue: 'Failed to close RFI' }),
+        type: "error",
+        title: t("rfi.close_failed", { defaultValue: "Failed to close RFI" }),
         message: e.message,
       }),
   });
@@ -1503,17 +1663,21 @@ export function RFIPage() {
     mutationFn: () =>
       downloadExcelExport(
         `/v1/rfi/export/?project_id=${projectId}`,
-        'rfi_log.xlsx',
+        "rfi_log.xlsx",
       ),
     onSuccess: () =>
       addToast({
-        type: 'success',
-        title: t('rfi.export_success', { defaultValue: 'RFI log exported successfully' }),
+        type: "success",
+        title: t("rfi.export_success", {
+          defaultValue: "RFI log exported successfully",
+        }),
       }),
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('rfi.export_failed', { defaultValue: 'Failed to export RFI log' }),
+        type: "error",
+        title: t("rfi.export_failed", {
+          defaultValue: "Failed to export RFI log",
+        }),
         message: e.message,
       }),
   });
@@ -1521,7 +1685,15 @@ export function RFIPage() {
   const handleCreateSubmit = useCallback(
     (formData: RFIFormData) => {
       if (!projectId) {
-        addToast({ type: 'error', title: t('rfi.no_project_error', { defaultValue: 'No project selected' }), message: t('common.select_project_first', { defaultValue: 'Please select a project first' }) });
+        addToast({
+          type: "error",
+          title: t("rfi.no_project_error", {
+            defaultValue: "No project selected",
+          }),
+          message: t("common.select_project_first", {
+            defaultValue: "Please select a project first",
+          }),
+        });
         return;
       }
       const scheduleDays = Number.parseInt(formData.schedule_impact_days, 10);
@@ -1539,7 +1711,9 @@ export function RFIPage() {
             : undefined,
         schedule_impact: formData.schedule_impact,
         schedule_impact_days:
-          formData.schedule_impact && Number.isFinite(scheduleDays) && scheduleDays >= 0
+          formData.schedule_impact &&
+          Number.isFinite(scheduleDays) &&
+          scheduleDays >= 0
             ? scheduleDays
             : undefined,
         priority: formData.priority,
@@ -1553,12 +1727,9 @@ export function RFIPage() {
     [createMut, projectId, addToast, t],
   );
 
-  const handleRespond = useCallback(
-    (rfi: RFI) => {
-      setRespondingRfi(rfi);
-    },
-    [],
-  );
+  const handleRespond = useCallback((rfi: RFI) => {
+    setRespondingRfi(rfi);
+  }, []);
 
   const handleRespondSubmit = useCallback(
     (data: RespondRFIPayload) => {
@@ -1573,10 +1744,13 @@ export function RFIPage() {
   const handleClose = useCallback(
     async (id: string) => {
       const ok = await confirm({
-        title: t('rfi.confirm_close_title', { defaultValue: 'Close RFI?' }),
-        message: t('rfi.confirm_close_msg', { defaultValue: 'This RFI will be closed and no further responses can be added.' }),
-        confirmLabel: t('rfi.action_close', { defaultValue: 'Close RFI' }),
-        variant: 'warning',
+        title: t("rfi.confirm_close_title", { defaultValue: "Close RFI?" }),
+        message: t("rfi.confirm_close_msg", {
+          defaultValue:
+            "This RFI will be closed and no further responses can be added.",
+        }),
+        confirmLabel: t("rfi.action_close", { defaultValue: "Close RFI" }),
+        variant: "warning",
       });
       if (ok) closeMut.mutate(id);
     },
@@ -1592,13 +1766,17 @@ export function RFIPage() {
     onSuccess: (data) => {
       addToast(
         {
-          type: 'success',
-          title: t('rfi.variation_created', { defaultValue: 'Variation created' }),
+          type: "success",
+          title: t("rfi.variation_created", {
+            defaultValue: "Variation created",
+          }),
           message: `${data.code}: ${data.title}`,
           action: {
-            label: t('rfi.view_change_orders', { defaultValue: 'View Change Orders' }),
+            label: t("rfi.view_change_orders", {
+              defaultValue: "View Change Orders",
+            }),
             onClick: () => {
-              window.location.href = '/changeorders';
+              window.location.href = "/changeorders";
             },
           },
         },
@@ -1607,8 +1785,10 @@ export function RFIPage() {
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('rfi.variation_failed', { defaultValue: 'Failed to create variation from RFI' }),
+        type: "error",
+        title: t("rfi.variation_failed", {
+          defaultValue: "Failed to create variation from RFI",
+        }),
         message: e.message,
       }),
   });
@@ -1625,11 +1805,11 @@ export function RFIPage() {
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
+          { label: t("nav.dashboard", { defaultValue: "Dashboard" }), to: "/" },
           ...(projectName
             ? [{ label: projectName, to: `/projects/${projectId}` }]
             : []),
-          { label: t('rfi.title', { defaultValue: 'RFIs' }) },
+          { label: t("rfi.title", { defaultValue: "RFIs" }) },
         ]}
         className="mb-4"
       />
@@ -1638,10 +1818,13 @@ export function RFIPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-content-primary">
-            {t('rfi.page_title', { defaultValue: 'Requests for Information' })}
+            {t("rfi.page_title", { defaultValue: "Requests for Information" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('rfi.subtitle', { defaultValue: 'Submit, track, and resolve design and construction queries' })}
+            {t("rfi.subtitle", {
+              defaultValue:
+                "Submit, track, and resolve design and construction queries",
+            })}
           </p>
         </div>
 
@@ -1652,14 +1835,18 @@ export function RFIPage() {
               onChange={(e) => {
                 const p = projects.find((pr) => pr.id === e.target.value);
                 if (p) {
-                  useProjectContextStore.getState().setActiveProject(p.id, p.name);
+                  useProjectContextStore
+                    .getState()
+                    .setActiveProject(p.id, p.name);
                 }
               }}
-              aria-label={t('rfi.select_project', { defaultValue: 'Project...' })}
-              className={inputCls + ' !h-8 !text-xs max-w-[180px]'}
+              aria-label={t("rfi.select_project", {
+                defaultValue: "Project...",
+              })}
+              className={inputCls + " !h-8 !text-xs max-w-[180px]"}
             >
               <option value="" disabled>
-                {t('rfi.select_project', { defaultValue: 'Project...' })}
+                {t("rfi.select_project", { defaultValue: "Project..." })}
               </option>
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -1681,17 +1868,23 @@ export function RFIPage() {
             onClick={() => exportMut.mutate()}
             disabled={exportMut.isPending || !projectId}
           >
-            {t('rfi.export_rfi_log', { defaultValue: 'Export RFI Log' })}
+            {t("rfi.export_rfi_log", { defaultValue: "Export RFI Log" })}
           </Button>
           <Button
             variant="primary"
             size="sm"
             onClick={() => setShowCreateModal(true)}
             disabled={!projectId}
-            title={!projectId ? t('common.select_project_first', { defaultValue: 'Please select a project first' }) : undefined}
+            title={
+              !projectId
+                ? t("common.select_project_first", {
+                    defaultValue: "Please select a project first",
+                  })
+                : undefined
+            }
             icon={<Plus size={14} />}
           >
-            {t('rfi.new_rfi', { defaultValue: 'New RFI' })}
+            {t("rfi.new_rfi", { defaultValue: "New RFI" })}
           </Button>
         </div>
       </div>
@@ -1702,33 +1895,33 @@ export function RFIPage() {
           <button
             onClick={() => {
               setInfoDismissed(true);
-              localStorage.setItem(LS_INFO_DISMISSED, '1');
+              localStorage.setItem(LS_INFO_DISMISSED, "1");
             }}
             className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded text-blue-400 hover:text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/40 dark:hover:text-blue-200 transition-colors"
-            aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+            aria-label={t("common.dismiss", { defaultValue: "Dismiss" })}
           >
             <X size={14} />
           </button>
           <div className="flex items-center gap-2 mb-1">
             <Info size={16} />
             <span className="font-semibold">
-              {t('rfi.info_title', { defaultValue: 'About RFIs' })}
+              {t("rfi.info_title", { defaultValue: "About RFIs" })}
             </span>
           </div>
           <p className="text-xs pr-6">
-            {t('rfi.info_body', {
+            {t("rfi.info_body", {
               defaultValue:
-                'A Request for Information is the formal channel for resolving design or construction queries with a documented, contractual answer. Each RFI follows a workflow:',
-            })}{' '}
+                "A Request for Information is the formal channel for resolving design or construction queries with a documented, contractual answer. Each RFI follows a workflow:",
+            })}{" "}
             <strong>
-              {t('rfi.info_workflow', {
-                defaultValue: 'Open → Answered → Closed',
+              {t("rfi.info_workflow", {
+                defaultValue: "Open → Answered → Closed",
               })}
             </strong>
-            {'. '}
-            {t('rfi.info_link_hint', {
+            {". "}
+            {t("rfi.info_link_hint", {
               defaultValue:
-                'Attach drawings/documents for context, assign a Ball-in-Court, and convert cost-impacting RFIs into a Change Order in one click.',
+                "Attach drawings/documents for context, assign a Ball-in-Court, and convert cost-impacting RFIs into a Change Order in one click.",
             })}
           </p>
         </div>
@@ -1736,17 +1929,32 @@ export function RFIPage() {
 
       {/* Cross-module link */}
       <div className="flex flex-wrap gap-1.5 mb-4">
-        <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate('/changeorders')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs"
+          onClick={() => navigate("/changeorders")}
+        >
           <ArrowRightLeft size={13} className="me-1" />
-          {t('rfi.link_change_orders', { defaultValue: 'View Change Orders' })}
+          {t("rfi.link_change_orders", { defaultValue: "View Change Orders" })}
         </Button>
-        <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate('/documents')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs"
+          onClick={() => navigate("/documents")}
+        >
           <FileText size={13} className="me-1" />
-          {t('rfi.link_documents', { defaultValue: 'Documents' })}
+          {t("rfi.link_documents", { defaultValue: "Documents" })}
         </Button>
-        <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate('/submittals')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs"
+          onClick={() => navigate("/submittals")}
+        >
           <Paperclip size={13} className="me-1" />
-          {t('rfi.link_submittals', { defaultValue: 'Submittals' })}
+          {t("rfi.link_submittals", { defaultValue: "Submittals" })}
         </Button>
       </div>
 
@@ -1755,294 +1963,380 @@ export function RFIPage() {
         <div className="mb-4 flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800 px-4 py-3">
           <AlertTriangle size={18} className="text-amber-600 shrink-0" />
           <div>
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">{t('common.no_project_selected', { defaultValue: 'No project selected' })}</p>
-            <p className="text-xs text-amber-600 dark:text-amber-400">{t('common.select_project_hint', { defaultValue: 'Select a project from the header to view and manage items.' })}</p>
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+              {t("common.no_project_selected", {
+                defaultValue: "No project selected",
+              })}
+            </p>
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              {t("common.select_project_hint", {
+                defaultValue:
+                  "Select a project from the header to view and manage items.",
+              })}
+            </p>
           </div>
         </div>
       )}
 
       {projectId ? (
-      <>
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('rfi.stat_total', { defaultValue: 'Total RFIs' })}
-          </p>
-          <p className="text-2xl font-bold mt-1 tabular-nums text-content-primary">
-            {stats.total}
-          </p>
-        </Card>
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('rfi.stat_open', { defaultValue: 'Open' })}
-          </p>
-          <p className="text-2xl font-bold mt-1 tabular-nums text-oe-blue">{stats.open}</p>
-        </Card>
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('rfi.stat_overdue', { defaultValue: 'Overdue' })}
-          </p>
-          <p
-            className={clsx(
-              'text-2xl font-bold mt-1 tabular-nums',
-              stats.overdue > 0 ? 'text-semantic-error' : 'text-content-primary',
-            )}
-          >
-            {stats.overdue}
-          </p>
-        </Card>
-        <Card className="p-4 animate-card-in">
-          <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-            {t('rfi.stat_avg_days', { defaultValue: 'Avg. Days Open' })}
-          </p>
-          <p className="text-2xl font-bold mt-1 tabular-nums text-content-primary">
-            {stats.avgDays}
-          </p>
-        </Card>
-      </div>
-
-      {/* Toolbar */}
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
-        {/* Search */}
-        <div className="relative flex-1 max-w-sm">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
-          />
-          <input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('rfi.search_placeholder', {
-              defaultValue: 'Search RFIs...',
-            })}
-            aria-label={t('rfi.search_placeholder', { defaultValue: 'Search RFIs...' })}
-            className={inputCls + ' pl-9'}
-          />
-        </div>
-
-        {/* Status filter */}
-        <div className="relative">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as RFIStatus | '')}
-            aria-label={t('rfi.filter_all', { defaultValue: 'All Statuses' })}
-            className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
-          >
-            <option value="">
-              {t('rfi.filter_all', { defaultValue: 'All Statuses' })}
-            </option>
-            {(['draft', 'open', 'answered', 'closed', 'void'] as RFIStatus[]).map((s) => (
-              <option key={s} value={s}>
-                {t(`rfi.status_${s}`, {
-                  defaultValue: s.charAt(0).toUpperCase() + s.slice(1),
-                })}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
-            <ChevronDown size={14} />
+        <>
+          {/* Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("rfi.stat_total", { defaultValue: "Total RFIs" })}
+              </p>
+              <p className="text-2xl font-bold mt-1 tabular-nums text-content-primary">
+                {stats.total}
+              </p>
+            </Card>
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("rfi.stat_open", { defaultValue: "Open" })}
+              </p>
+              <p className="text-2xl font-bold mt-1 tabular-nums text-oe-blue">
+                {stats.open}
+              </p>
+            </Card>
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("rfi.stat_overdue", { defaultValue: "Overdue" })}
+              </p>
+              <p
+                className={clsx(
+                  "text-2xl font-bold mt-1 tabular-nums",
+                  stats.overdue > 0
+                    ? "text-semantic-error"
+                    : "text-content-primary",
+                )}
+              >
+                {stats.overdue}
+              </p>
+            </Card>
+            <Card className="p-4 animate-card-in">
+              <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+                {t("rfi.stat_avg_days", { defaultValue: "Avg. Days Open" })}
+              </p>
+              <p className="text-2xl font-bold mt-1 tabular-nums text-content-primary">
+                {stats.avgDays}
+              </p>
+            </Card>
           </div>
-        </div>
 
-        {/* Priority filter */}
-        <div className="relative">
-          <select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value as RFIPriority | '')}
-            aria-label={t('rfi.filter_priority', { defaultValue: 'All priorities' })}
-            className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
-          >
-            <option value="">
-              {t('rfi.filter_priority', { defaultValue: 'All priorities' })}
-            </option>
-            {PRIORITY_VALUES.map((p) => (
-              <option key={p} value={p}>
-                {t(`rfi.priority_${p}`, {
-                  defaultValue: p.charAt(0).toUpperCase() + p.slice(1),
+          {/* Toolbar */}
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
+            {/* Search */}
+            <div className="relative flex-1 max-w-sm">
+              <Search
+                size={16}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+              />
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("rfi.search_placeholder", {
+                  defaultValue: "Search RFIs...",
                 })}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
-            <ChevronDown size={14} />
-          </div>
-        </div>
-
-        {/* Discipline filter */}
-        <div className="relative">
-          <select
-            value={disciplineFilter}
-            onChange={(e) => setDisciplineFilter(e.target.value)}
-            aria-label={t('rfi.filter_discipline', {
-              defaultValue: 'All disciplines',
-            })}
-            className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
-          >
-            <option value="">
-              {t('rfi.filter_discipline', { defaultValue: 'All disciplines' })}
-            </option>
-            {RFI_DISCIPLINES.map((d) => (
-              <option key={d} value={d}>
-                {t(`rfi.discipline_${d}`, {
-                  defaultValue: d.charAt(0).toUpperCase() + d.slice(1),
+                aria-label={t("rfi.search_placeholder", {
+                  defaultValue: "Search RFIs...",
                 })}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
-            <ChevronDown size={14} />
+                className={inputCls + " pl-9"}
+              />
+            </div>
+
+            {/* Status filter */}
+            <div className="relative">
+              <select
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(e.target.value as RFIStatus | "")
+                }
+                aria-label={t("rfi.filter_all", {
+                  defaultValue: "All Statuses",
+                })}
+                className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
+              >
+                <option value="">
+                  {t("rfi.filter_all", { defaultValue: "All Statuses" })}
+                </option>
+                {(
+                  ["draft", "open", "answered", "closed", "void"] as RFIStatus[]
+                ).map((s) => (
+                  <option key={s} value={s}>
+                    {t(`rfi.status_${s}`, {
+                      defaultValue: s.charAt(0).toUpperCase() + s.slice(1),
+                    })}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <ChevronDown size={14} />
+              </div>
+            </div>
+
+            {/* Priority filter */}
+            <div className="relative">
+              <select
+                value={priorityFilter}
+                onChange={(e) =>
+                  setPriorityFilter(e.target.value as RFIPriority | "")
+                }
+                aria-label={t("rfi.filter_priority", {
+                  defaultValue: "All priorities",
+                })}
+                className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
+              >
+                <option value="">
+                  {t("rfi.filter_priority", { defaultValue: "All priorities" })}
+                </option>
+                {PRIORITY_VALUES.map((p) => (
+                  <option key={p} value={p}>
+                    {t(`rfi.priority_${p}`, {
+                      defaultValue: p.charAt(0).toUpperCase() + p.slice(1),
+                    })}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <ChevronDown size={14} />
+              </div>
+            </div>
+
+            {/* Discipline filter */}
+            <div className="relative">
+              <select
+                value={disciplineFilter}
+                onChange={(e) => setDisciplineFilter(e.target.value)}
+                aria-label={t("rfi.filter_discipline", {
+                  defaultValue: "All disciplines",
+                })}
+                className="h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue sm:w-40"
+              >
+                <option value="">
+                  {t("rfi.filter_discipline", {
+                    defaultValue: "All disciplines",
+                  })}
+                </option>
+                {RFI_DISCIPLINES.map((d) => (
+                  <option key={d} value={d}>
+                    {t(`rfi.discipline_${d}`, {
+                      defaultValue: d.charAt(0).toUpperCase() + d.slice(1),
+                    })}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <ChevronDown size={14} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Table */}
-      <div>
-        {isLoading ? (
-          <SkeletonTable rows={5} columns={6} />
-        ) : isError ? (
-          <EmptyState
-            icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-            title={t('rfi.load_failed', { defaultValue: 'Could not load RFIs' })}
-            description={
-              error instanceof Error
-                ? error.message
-                : t('rfi.load_failed_hint', {
-                    defaultValue:
-                      'Something went wrong fetching the RFI log. Please try again.',
-                  })
-            }
-            action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
-              onClick: () => refetch(),
-            }}
-          />
-        ) : filtered.length === 0 ? (
-          <EmptyState
-            icon={<HelpCircle size={28} strokeWidth={1.5} />}
-            title={
-              searchQuery || statusFilter
-                ? t('rfi.no_results', { defaultValue: 'No matching RFIs' })
-                : t('rfi.no_rfis', { defaultValue: 'No RFIs yet' })
-            }
-            description={
-              searchQuery || statusFilter
-                ? t('rfi.no_results_hint', {
-                    defaultValue: 'Try adjusting your search or filters to find what you are looking for.',
-                  })
-                : t('rfi.no_rfis_hint', {
-                    defaultValue: 'Create your first RFI to track design queries, clarifications, and responses between project stakeholders.',
-                  })
-            }
-            action={
-              !searchQuery && !statusFilter
-                ? {
-                    label: t('rfi.new_rfi', { defaultValue: 'New RFI' }),
-                    onClick: () => setShowCreateModal(true),
-                  }
-                : undefined
-            }
-          />
-        ) : (
-          <>
-            <p className="mb-3 text-sm text-content-tertiary">
-              {t('rfi.showing_count', {
-                defaultValue: '{{count}} RFIs',
-                count: filtered.length,
-              })}
-            </p>
+          {/* Table */}
+          <div>
+            {isLoading ? (
+              <SkeletonTable rows={5} columns={6} />
+            ) : isError ? (
+              <EmptyState
+                icon={<AlertTriangle size={28} strokeWidth={1.5} />}
+                title={t("rfi.load_failed", {
+                  defaultValue: "Could not load RFIs",
+                })}
+                description={
+                  error instanceof Error
+                    ? error.message
+                    : t("rfi.load_failed_hint", {
+                        defaultValue:
+                          "Something went wrong fetching the RFI log. Please try again.",
+                      })
+                }
+                action={{
+                  label: t("common.retry", { defaultValue: "Retry" }),
+                  onClick: () => refetch(),
+                }}
+              />
+            ) : filtered.length === 0 ? (
+              <EmptyState
+                icon={<HelpCircle size={28} strokeWidth={1.5} />}
+                title={
+                  searchQuery || statusFilter
+                    ? t("rfi.no_results", { defaultValue: "No matching RFIs" })
+                    : t("rfi.no_rfis", { defaultValue: "No RFIs yet" })
+                }
+                description={
+                  searchQuery || statusFilter
+                    ? t("rfi.no_results_hint", {
+                        defaultValue:
+                          "Try adjusting your search or filters to find what you are looking for.",
+                      })
+                    : t("rfi.no_rfis_hint", {
+                        defaultValue:
+                          "Create your first RFI to track design queries, clarifications, and responses between project stakeholders.",
+                      })
+                }
+                action={
+                  !searchQuery && !statusFilter
+                    ? {
+                        label: t("rfi.new_rfi", { defaultValue: "New RFI" }),
+                        onClick: () => setShowCreateModal(true),
+                      }
+                    : undefined
+                }
+              />
+            ) : (
+              <>
+                <p className="mb-3 text-sm text-content-tertiary">
+                  {t("rfi.showing_count", {
+                    defaultValue: "{{count}} RFIs",
+                    count: filtered.length,
+                  })}
+                </p>
 
-            {/* Desktop table */}
-            <div className="hidden md:block">
-              <Card padding="none" className="overflow-x-auto">
-                {/* Table header */}
-                <div className="flex items-center gap-3 px-4 py-2.5 border-b border-border-light bg-surface-secondary/30 text-2xs font-medium text-content-tertiary uppercase tracking-wider min-w-[640px]">
-                  <span className="w-5" /> {/* Chevron space */}
-                  <span className="w-16">#</span>
-                  <span className="flex-1">
-                    {t('rfi.col_subject', { defaultValue: 'Subject' })}
-                  </span>
-                  <span className="w-20 text-center">
-                    {t('rfi.col_status', { defaultValue: 'Status' })}
-                  </span>
-                  <span className="w-28">
-                    {t('rfi.col_bic', { defaultValue: 'Ball in Court' })}
-                  </span>
-                  <span className="w-16 text-right">
-                    {t('rfi.col_days', { defaultValue: 'Days' })}
-                  </span>
-                  <span className="w-20">
-                    {t('rfi.col_due', { defaultValue: 'Due' })}
-                  </span>
-                  <span className="w-14 text-right">
-                    {t('rfi.col_impact', { defaultValue: 'Impact' })}
-                  </span>
+                {/* Desktop table */}
+                <div className="hidden md:block">
+                  <Card padding="none" className="overflow-x-auto">
+                    {/* Table header */}
+                    <div className="flex items-center gap-3 px-4 py-2.5 border-b border-border-light bg-surface-secondary/30 text-2xs font-medium text-content-tertiary uppercase tracking-wider min-w-[640px]">
+                      <span className="w-5" /> {/* Chevron space */}
+                      <span className="w-16">#</span>
+                      <span className="flex-1">
+                        {t("rfi.col_subject", { defaultValue: "Subject" })}
+                      </span>
+                      <span className="w-20 text-center">
+                        {t("rfi.col_status", { defaultValue: "Status" })}
+                      </span>
+                      <span className="w-28">
+                        {t("rfi.col_bic", { defaultValue: "Ball in Court" })}
+                      </span>
+                      <span className="w-16 text-right">
+                        {t("rfi.col_days", { defaultValue: "Days" })}
+                      </span>
+                      <span className="w-20">
+                        {t("rfi.col_due", { defaultValue: "Due" })}
+                      </span>
+                      <span className="w-14 text-right">
+                        {t("rfi.col_impact", { defaultValue: "Impact" })}
+                      </span>
+                    </div>
+
+                    {/* Rows */}
+                    {filtered.map((rfi) => (
+                      <RFIRow
+                        key={rfi.id}
+                        rfi={rfi}
+                        onRespond={handleRespond}
+                        onClose={handleClose}
+                        onCreateVariation={handleCreateVariation}
+                      />
+                    ))}
+                  </Card>
                 </div>
 
-                {/* Rows */}
-                {filtered.map((rfi) => (
-                  <RFIRow
-                    key={rfi.id}
-                    rfi={rfi}
-                    onRespond={handleRespond}
-                    onClose={handleClose}
-                    onCreateVariation={handleCreateVariation}
-                  />
-                ))}
-              </Card>
-            </div>
-
-            {/* Mobile card view */}
-            <div className="md:hidden space-y-3">
-              {filtered.map((rfi) => {
-                const days = rfi.days_open ?? daysOpen(rfi.created_at, null);
-                const isOverdue = rfi.is_overdue ?? (rfi.response_due_date && rfi.status === 'open' && new Date(rfi.response_due_date) < new Date());
-                const statusCfg = STATUS_CONFIG[rfi.status] ?? STATUS_CONFIG.draft;
-                return (
-                  <Card key={rfi.id} className="p-4">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="min-w-0 flex-1">
-                        <span className="text-xs font-mono text-content-tertiary">#{rfi.rfi_number}</span>
-                        <h4 className="text-sm font-semibold text-content-primary truncate">{rfi.subject}</h4>
-                      </div>
-                      <Badge variant={statusCfg.variant} size="sm" className={statusCfg.cls}>
-                        {t(`rfi.status_${rfi.status}`, { defaultValue: rfi.status.charAt(0).toUpperCase() + rfi.status.slice(1) })}
-                      </Badge>
-                    </div>
-                    <div className="text-xs text-content-tertiary space-y-1">
-                      {(rfi.ball_in_court) && (
-                        <div>{t('rfi.col_bic', { defaultValue: 'Ball in Court' })}: {rfi.ball_in_court}</div>
-                      )}
-                      <div className="flex items-center gap-3">
-                        <span className={isOverdue ? 'text-semantic-error font-semibold' : ''}>{days}d {t('rfi.col_days', { defaultValue: 'open' })}</span>
-                        {rfi.response_due_date && (
-                          <span className={isOverdue ? 'text-semantic-error font-semibold' : ''}>
-                            {t('rfi.col_due', { defaultValue: 'Due' })}: {new Date(rfi.response_due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        {rfi.cost_impact && (
-                          <span className="flex items-center gap-0.5 text-amber-500"><DollarSign size={12} /> {t('rfi.cost_impact', { defaultValue: 'Cost' })}</span>
-                        )}
-                        {rfi.schedule_impact && (
-                          <span className="flex items-center gap-0.5 text-orange-500"><Clock size={12} /> {t('rfi.schedule_impact', { defaultValue: 'Schedule' })}</span>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </>
-        )}
-      </div>
-      </>
+                {/* Mobile card view */}
+                <div className="md:hidden space-y-3">
+                  {filtered.map((rfi) => {
+                    const days =
+                      rfi.days_open ?? daysOpen(rfi.created_at, null);
+                    const isOverdue =
+                      rfi.is_overdue ??
+                      (rfi.response_due_date &&
+                        rfi.status === "open" &&
+                        new Date(rfi.response_due_date) < new Date());
+                    const statusCfg =
+                      STATUS_CONFIG[rfi.status] ?? STATUS_CONFIG.draft;
+                    return (
+                      <Card key={rfi.id} className="p-4">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <div className="min-w-0 flex-1">
+                            <span className="text-xs font-mono text-content-tertiary">
+                              #{rfi.rfi_number}
+                            </span>
+                            <h4 className="text-sm font-semibold text-content-primary truncate">
+                              {rfi.subject}
+                            </h4>
+                          </div>
+                          <Badge
+                            variant={statusCfg.variant}
+                            size="sm"
+                            className={statusCfg.cls}
+                          >
+                            {t(`rfi.status_${rfi.status}`, {
+                              defaultValue:
+                                rfi.status.charAt(0).toUpperCase() +
+                                rfi.status.slice(1),
+                            })}
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-content-tertiary space-y-1">
+                          {rfi.ball_in_court && (
+                            <div>
+                              {t("rfi.col_bic", {
+                                defaultValue: "Ball in Court",
+                              })}
+                              : {rfi.ball_in_court}
+                            </div>
+                          )}
+                          <div className="flex items-center gap-3">
+                            <span
+                              className={
+                                isOverdue
+                                  ? "text-semantic-error font-semibold"
+                                  : ""
+                              }
+                            >
+                              {days}d{" "}
+                              {t("rfi.col_days", { defaultValue: "open" })}
+                            </span>
+                            {rfi.response_due_date && (
+                              <span
+                                className={
+                                  isOverdue
+                                    ? "text-semantic-error font-semibold"
+                                    : ""
+                                }
+                              >
+                                {t("rfi.col_due", { defaultValue: "Due" })}:{" "}
+                                {new Date(
+                                  rfi.response_due_date,
+                                ).toLocaleDateString(undefined, {
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            {rfi.cost_impact && (
+                              <span className="flex items-center gap-0.5 text-amber-500">
+                                <DollarSign size={12} />{" "}
+                                {t("rfi.cost_impact", { defaultValue: "Cost" })}
+                              </span>
+                            )}
+                            {rfi.schedule_impact && (
+                              <span className="flex items-center gap-0.5 text-orange-500">
+                                <Clock size={12} />{" "}
+                                {t("rfi.schedule_impact", {
+                                  defaultValue: "Schedule",
+                                })}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+        </>
       ) : (
         <EmptyState
           icon={<HelpCircle size={28} strokeWidth={1.5} />}
-          title={t('rfi.no_project', { defaultValue: 'No project selected' })}
-          description={t('rfi.select_project_hint', { defaultValue: 'Select a project from the header to submit, track, and resolve requests for information.' })}
+          title={t("rfi.no_project", { defaultValue: "No project selected" })}
+          description={t("rfi.select_project_hint", {
+            defaultValue:
+              "Select a project from the header to submit, track, and resolve requests for information.",
+          })}
         />
       )}
 

@@ -2,8 +2,8 @@
  * Tiny avatar stack showing users currently viewing a BOQ.
  * Renders max 3 avatars + "+N" overflow badge.
  */
-import { useMemo } from 'react';
-import { usePresenceStore, type PresenceUser } from '../hooks/usePresence';
+import { useMemo } from "react";
+import { usePresenceStore, type PresenceUser } from "../hooks/usePresence";
 
 const MAX_VISIBLE = 3;
 
@@ -21,7 +21,10 @@ export function PresenceAvatars({ boqId }: { boqId: string }) {
   const overflow = users.length - MAX_VISIBLE;
 
   return (
-    <div className="flex items-center -space-x-1.5" title={users.map((u) => u.name).join(', ')}>
+    <div
+      className="flex items-center -space-x-1.5"
+      title={users.map((u) => u.name).join(", ")}
+    >
       {visible.map((u) => (
         <Avatar key={u.id} user={u} />
       ))}

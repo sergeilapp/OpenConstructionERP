@@ -18,8 +18,8 @@
  * `cyclesById` / `dependentsOf` to decide what to refresh.
  */
 
-import type { Position } from '../../api';
-import { extractReferences } from './references';
+import type { Position } from "../../api";
+import { extractReferences } from "./references";
 
 export interface DependencyGraph {
   /** id → set of position ids that THIS position depends on. */
@@ -47,7 +47,10 @@ interface BuildOptions {
  * Build the full dependency graph for a list of positions whose
  * formulas are stored on `metadata.formula`.
  */
-export function buildDependencyGraph(positions: Position[], opts: BuildOptions): DependencyGraph {
+export function buildDependencyGraph(
+  positions: Position[],
+  opts: BuildOptions,
+): DependencyGraph {
   const dependsOn = new Map<string, Set<string>>();
   const dependents = new Map<string, Set<string>>();
   const variableUsers = new Map<string, Set<string>>();
@@ -98,8 +101,8 @@ export function buildDependencyGraph(positions: Position[], opts: BuildOptions):
 export function readFormula(p: Position): string | null {
   const md = (p.metadata ?? p.metadata_) as Record<string, unknown> | undefined;
   if (!md) return null;
-  const f = md['formula'];
-  if (typeof f !== 'string') return null;
+  const f = md["formula"];
+  if (typeof f !== "string") return null;
   const t = f.trim();
   return t ? t : null;
 }
@@ -137,9 +140,8 @@ function findCycles(adj: Map<string, Set<string>>): {
 
   const strongConnect = (v: string): void => {
     // Iterative DFS to avoid blowing the call stack on large BOQs.
-    const work: Array<{ v: string; iter: Iterator<string>; called: boolean }> = [
-      { v, iter: (adj.get(v) ?? new Set<string>()).values(), called: false },
-    ];
+    const work: Array<{ v: string; iter: Iterator<string>; called: boolean }> =
+      [{ v, iter: (adj.get(v) ?? new Set<string>()).values(), called: false }];
     if (!index.has(v)) {
       index.set(v, counter);
       lowlink.set(v, counter);
@@ -162,7 +164,9 @@ function findCycles(adj: Map<string, Set<string>>): {
             if (w === cur) break;
           }
           // SCC of size >= 2 OR a self-loop is a cycle.
-          const isSelfLoop = scc.length === 1 && (adj.get(scc[0]!) ?? new Set<string>()).has(scc[0]!);
+          const isSelfLoop =
+            scc.length === 1 &&
+            (adj.get(scc[0]!) ?? new Set<string>()).has(scc[0]!);
           if (scc.length > 1 || isSelfLoop) {
             for (const id of scc) {
               cycleIds.add(id);
@@ -188,7 +192,11 @@ function findCycles(adj: Map<string, Set<string>>): {
         counter++;
         stack.push(w);
         onStack.add(w);
-        work.push({ v: w, iter: (adj.get(w) ?? new Set<string>()).values(), called: false });
+        work.push({
+          v: w,
+          iter: (adj.get(w) ?? new Set<string>()).values(),
+          called: false,
+        });
       } else if (onStack.has(w)) {
         // Back-edge: lower our lowlink.
         const cur = top.v;
@@ -214,7 +222,10 @@ function findCycles(adj: Map<string, Set<string>>): {
  * traversal stops at cycle-participants — they get `0` and their own
  * downstream is recomputed independently.
  */
-export function transitiveDependents(graph: DependencyGraph, id: string): Set<string> {
+export function transitiveDependents(
+  graph: DependencyGraph,
+  id: string,
+): Set<string> {
   const out = new Set<string>();
   const stack: string[] = [id];
   while (stack.length > 0) {
@@ -234,6 +245,9 @@ export function transitiveDependents(graph: DependencyGraph, id: string): Set<st
  * Helper: when a variable changes, return every position id that
  * references it.
  */
-export function variableUsers(graph: DependencyGraph, varName: string): Set<string> {
+export function variableUsers(
+  graph: DependencyGraph,
+  varName: string,
+): Set<string> {
   return graph.variableUsers.get(varName.toUpperCase()) ?? new Set();
 }

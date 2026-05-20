@@ -198,10 +198,7 @@ async def export_rfi_log(
     from app.modules.rfi.models import RFI
 
     result = await session.execute(
-        select(RFI)
-        .where(RFI.project_id == project_id)
-        .order_by(RFI.rfi_number)
-        .limit(50000)
+        select(RFI).where(RFI.project_id == project_id).order_by(RFI.rfi_number).limit(50000)
     )
     items = result.scalars().all()
 
@@ -296,20 +293,18 @@ async def batch_delete_rfis(
     from app.modules.rfi.models import RFI
 
     proj_repo = ProjectRepository(session)
-    owned_projects, _ = await proj_repo.list_for_user(
-        owner_id=user_id, offset=0, limit=10000, exclude_archived=False
-    )
+    owned_projects, _ = await proj_repo.list_for_user(owner_id=user_id, offset=0, limit=10000, exclude_archived=False)
     owned_project_ids = {str(p.id) for p in owned_projects}
 
-    rows = (await session.execute(
-        _select(RFI.id, RFI.project_id).where(RFI.id.in_(body.ids))
-    )).all()
+    rows = (await session.execute(_select(RFI.id, RFI.project_id).where(RFI.id.in_(body.ids)))).all()
     allowed = [r[0] for r in rows if str(r[1]) in owned_project_ids]
 
     deleted = await bulk_delete(session, RFI, allowed)
     logger.info(
         "Bulk delete RFIs: requested=%d deleted=%d user=%s",
-        len(body.ids), deleted, user_id,
+        len(body.ids),
+        deleted,
+        user_id,
     )
     return {"requested": len(body.ids), "deleted": deleted}
 
@@ -339,22 +334,18 @@ async def batch_update_rfi_status(
         )
 
     proj_repo = ProjectRepository(session)
-    owned_projects, _ = await proj_repo.list_for_user(
-        owner_id=user_id, offset=0, limit=10000, exclude_archived=False
-    )
+    owned_projects, _ = await proj_repo.list_for_user(owner_id=user_id, offset=0, limit=10000, exclude_archived=False)
     owned_project_ids = {str(p.id) for p in owned_projects}
 
-    rows = (await session.execute(
-        _select(RFI.id, RFI.project_id).where(RFI.id.in_(body.ids))
-    )).all()
+    rows = (await session.execute(_select(RFI.id, RFI.project_id).where(RFI.id.in_(body.ids)))).all()
     allowed_ids = [r[0] for r in rows if str(r[1]) in owned_project_ids]
 
-    updated = await bulk_update_status(
-        session, RFI, allowed_ids, body.status, allowed_statuses=allowed_statuses
-    )
+    updated = await bulk_update_status(session, RFI, allowed_ids, body.status, allowed_statuses=allowed_statuses)
     logger.info(
         "Bulk update RFI status: requested=%d updated=%d user=%s",
-        len(body.ids), updated, user_id,
+        len(body.ids),
+        updated,
+        user_id,
     )
     return {"requested": len(body.ids), "updated": updated, "status": body.status}
 

@@ -4,7 +4,7 @@
  * Severity is indicated by both color and icon to maintain accessibility.
  */
 
-import clsx from 'clsx';
+import clsx from "clsx";
 import {
   AlertOctagon,
   AlertTriangle,
@@ -12,8 +12,8 @@ import {
   Info,
   ChevronRight,
   Zap,
-} from 'lucide-react';
-import { renderTaggedText } from './renderTaggedText';
+} from "lucide-react";
+import { renderTaggedText } from "./renderTaggedText";
 
 interface CriticalGap {
   id: string;
@@ -36,48 +36,62 @@ interface GapCardProps {
 
 const SEVERITY_CONFIG: Record<
   string,
-  { color: string; bg: string; border: string; icon: typeof AlertOctagon; label: string }
+  {
+    color: string;
+    bg: string;
+    border: string;
+    icon: typeof AlertOctagon;
+    label: string;
+  }
 > = {
   blocker: {
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-l-red-500',
+    color: "text-red-400",
+    bg: "bg-red-500/10",
+    border: "border-l-red-500",
     icon: AlertOctagon,
-    label: 'BLOCKER',
+    label: "BLOCKER",
   },
   critical: {
-    color: 'text-orange-400',
-    bg: 'bg-orange-500/10',
-    border: 'border-l-orange-500',
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
+    border: "border-l-orange-500",
     icon: AlertTriangle,
-    label: 'CRITICAL',
+    label: "CRITICAL",
   },
   warning: {
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-500/10',
-    border: 'border-l-yellow-500',
+    color: "text-yellow-400",
+    bg: "bg-yellow-500/10",
+    border: "border-l-yellow-500",
     icon: AlertCircle,
-    label: 'WARNING',
+    label: "WARNING",
   },
   suggestion: {
-    color: 'text-gray-400',
-    bg: 'bg-gray-500/10',
-    border: 'border-l-gray-500',
+    color: "text-gray-400",
+    bg: "bg-gray-500/10",
+    border: "border-l-gray-500",
     icon: Info,
-    label: 'SUGGESTION',
+    label: "SUGGESTION",
   },
 };
 
-export function GapCard({ gap, isExpanded, onToggle, onAction, actionLabel }: GapCardProps) {
+export function GapCard({
+  gap,
+  isExpanded,
+  onToggle,
+  onAction,
+  actionLabel,
+}: GapCardProps) {
   const config = SEVERITY_CONFIG[gap.severity] || SEVERITY_CONFIG.suggestion;
   const Icon = config?.icon;
 
   return (
     <div
       className={clsx(
-        'rounded-lg border-l-[3px] transition-all duration-200',
+        "rounded-lg border-l-[3px] transition-all duration-200",
         config?.border,
-        isExpanded ? 'bg-surface-tertiary/70' : 'bg-surface-tertiary/30 hover:bg-surface-tertiary/50'
+        isExpanded
+          ? "bg-surface-tertiary/70"
+          : "bg-surface-tertiary/30 hover:bg-surface-tertiary/50",
       )}
     >
       {/* Header — always visible */}
@@ -86,14 +100,16 @@ export function GapCard({ gap, isExpanded, onToggle, onAction, actionLabel }: Ga
         className="w-full text-left px-3 py-2.5 flex items-start gap-2"
         aria-expanded={isExpanded}
       >
-        {Icon && <Icon size={14} className={clsx('shrink-0 mt-0.5', config?.color)} />}
+        {Icon && (
+          <Icon size={14} className={clsx("shrink-0 mt-0.5", config?.color)} />
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span
               className={clsx(
-                'text-2xs font-bold uppercase tracking-wider px-1 py-0.5 rounded',
+                "text-2xs font-bold uppercase tracking-wider px-1 py-0.5 rounded",
                 config?.bg,
-                config?.color
+                config?.color,
               )}
             >
               {config?.label}
@@ -114,8 +130,8 @@ export function GapCard({ gap, isExpanded, onToggle, onAction, actionLabel }: Ga
         <ChevronRight
           size={12}
           className={clsx(
-            'shrink-0 mt-1.5 text-content-quaternary transition-transform',
-            isExpanded && 'rotate-90'
+            "shrink-0 mt-1.5 text-content-quaternary transition-transform",
+            isExpanded && "rotate-90",
           )}
         />
       </button>
@@ -123,13 +139,18 @@ export function GapCard({ gap, isExpanded, onToggle, onAction, actionLabel }: Ga
       {/* Expanded content */}
       {isExpanded && (
         <div className="px-3 pb-3 pt-0 space-y-2">
-          <p className="text-xs text-content-secondary">{renderTaggedText(gap.description)}</p>
+          <p className="text-xs text-content-secondary">
+            {renderTaggedText(gap.description)}
+          </p>
           <p className="text-xs text-content-tertiary">
-            <strong className="text-content-secondary">Impact:</strong> {renderTaggedText(gap.impact)}
+            <strong className="text-content-secondary">Impact:</strong>{" "}
+            {renderTaggedText(gap.impact)}
           </p>
           {gap.affected_count != null && gap.affected_count > 0 && (
             <p className="text-xs text-content-tertiary">
-              <strong className="text-content-secondary">Affected items:</strong>{' '}
+              <strong className="text-content-secondary">
+                Affected items:
+              </strong>{" "}
               {gap.affected_count}
             </p>
           )}

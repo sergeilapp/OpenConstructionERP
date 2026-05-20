@@ -1,27 +1,27 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
-import { X, ArrowLeft, ArrowRight, MapPin } from 'lucide-react';
-import clsx from 'clsx';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
+import { X, ArrowLeft, ArrowRight, MapPin } from "lucide-react";
+import clsx from "clsx";
 
 /* Routes where the auto-start tour must NOT mount on top of the page —
  * the spotlight overlay/tooltip would block form inputs and primary CTAs.
  * The tour can still be opened manually from the Help menu on these pages. */
 const AUTO_START_BLOCKED_PREFIXES = [
-  '/projects/new',
-  '/onboarding',
-  '/setup',
-  '/login',
-  '/register',
+  "/projects/new",
+  "/onboarding",
+  "/setup",
+  "/login",
+  "/register",
 ];
 
 /* ── Constants ──────────────────────────────────────────────────────────── */
 
-export const ONBOARDING_STORAGE_KEY = 'oe_tour_completed';
+export const ONBOARDING_STORAGE_KEY = "oe_tour_completed";
 /* QA hook: setting this key to '1' suppresses the auto-start tour
  * regardless of `oe_tour_completed`. Used by Playwright probes so the
  * spotlight overlay never lands on top of the page under test. */
-export const ONBOARDING_SKIP_KEY = 'oe_skip_onboarding_tour';
+export const ONBOARDING_SKIP_KEY = "oe_skip_onboarding_tour";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -29,7 +29,7 @@ export interface TourStep {
   target: string; // CSS selector
   title: string;
   description: string;
-  position: 'top' | 'bottom' | 'left' | 'right';
+  position: "top" | "bottom" | "left" | "right";
 }
 
 interface TooltipCoords {
@@ -49,63 +49,63 @@ interface SpotlightRect {
 export const DEFAULT_TOUR_STEPS: TourStep[] = [
   {
     target: '[data-tour="sidebar"]',
-    title: 'onboarding.step1.title',
-    description: 'onboarding.step1.description',
-    position: 'right',
+    title: "onboarding.step1.title",
+    description: "onboarding.step1.description",
+    position: "right",
   },
   {
     target: '[data-tour="projects"]',
-    title: 'onboarding.step2.title',
-    description: 'onboarding.step2.description',
-    position: 'right',
+    title: "onboarding.step2.title",
+    description: "onboarding.step2.description",
+    position: "right",
   },
   {
     target: '[data-tour="boq"]',
-    title: 'onboarding.step3.title',
-    description: 'onboarding.step3.description',
-    position: 'right',
+    title: "onboarding.step3.title",
+    description: "onboarding.step3.description",
+    position: "right",
   },
   {
     target: '[data-tour="costs"]',
-    title: 'onboarding.step4.title',
-    description: 'onboarding.step4.description',
-    position: 'right',
+    title: "onboarding.step4.title",
+    description: "onboarding.step4.description",
+    position: "right",
   },
   {
     target: '[data-tour="mode-toggle"]',
-    title: 'onboarding.step5.title',
-    description: 'onboarding.step5.description',
-    position: 'right',
+    title: "onboarding.step5.title",
+    description: "onboarding.step5.description",
+    position: "right",
   },
 ];
 
 /* ── Default titles/descriptions (fallback values) ──────────────────────── */
 
 const STEP_DEFAULTS: Record<string, { title: string; description: string }> = {
-  'onboarding.step1.title': {
-    title: 'Navigation Sidebar',
+  "onboarding.step1.title": {
+    title: "Navigation Sidebar",
     description:
-      'The sidebar gives you quick access to all modules: projects, estimates, cost databases, schedules, and more.',
+      "The sidebar gives you quick access to all modules: projects, estimates, cost databases, schedules, and more.",
   },
-  'onboarding.step2.title': {
-    title: 'Projects',
+  "onboarding.step2.title": {
+    title: "Projects",
     description:
-      'Start here by creating your first project. Each project holds BOQs, schedules, and documents in one place.',
+      "Start here by creating your first project. Each project holds BOQs, schedules, and documents in one place.",
   },
-  'onboarding.step3.title': {
-    title: 'Bill of Quantities',
+  "onboarding.step3.title": {
+    title: "Bill of Quantities",
     description:
-      'Build detailed estimates with the BOQ editor — hierarchical positions, assemblies, and real-time cost roll-up.',
+      "Build detailed estimates with the BOQ editor — hierarchical positions, assemblies, and real-time cost roll-up.",
   },
-  'onboarding.step4.title': {
-    title: 'Cost Databases',
+  "onboarding.step4.title": {
+    title: "Cost Databases",
     description:
-      'Browse and manage cost rate databases including the built-in CWICR with 55 000+ positions across 9 languages.',
+      "Browse and manage cost rate databases including the built-in CWICR with 55 000+ positions across 24 languages.",
   },
-  'onboarding.step5.title': {
-    title: 'Simple / Advanced Mode',
+  "onboarding.step5.title": {
+    title: "Simple / Advanced Mode",
     description:
-      'Toggle between Simple mode (essential tools) and Advanced mode (all features including tendering and scheduling).',
+      "Toggle between Simple mode (essential tools) and Advanced mode (all features including tendering and scheduling).",
   },
 };
 
@@ -130,7 +130,7 @@ function getSpotlightRect(target: string): SpotlightRect | null {
 
 function getTooltipCoords(
   spotlight: SpotlightRect,
-  position: TourStep['position'],
+  position: TourStep["position"],
 ): TooltipCoords {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -139,19 +139,19 @@ function getTooltipCoords(
   let left: number;
 
   switch (position) {
-    case 'right':
+    case "right":
       top = spotlight.top + spotlight.height / 2 - TOOLTIP_H / 2;
       left = spotlight.left + spotlight.width + TOOLTIP_OFFSET;
       break;
-    case 'left':
+    case "left":
       top = spotlight.top + spotlight.height / 2 - TOOLTIP_H / 2;
       left = spotlight.left - TOOLTIP_W - TOOLTIP_OFFSET;
       break;
-    case 'top':
+    case "top":
       top = spotlight.top - TOOLTIP_H - TOOLTIP_OFFSET;
       left = spotlight.left + spotlight.width / 2 - TOOLTIP_W / 2;
       break;
-    case 'bottom':
+    case "bottom":
     default:
       top = spotlight.top + spotlight.height + TOOLTIP_OFFSET;
       left = spotlight.left + spotlight.width / 2 - TOOLTIP_W / 2;
@@ -191,16 +191,16 @@ export function OnboardingTour({
   // QA escape hatch: localStorage flag suppresses auto-start for Playwright.
   // Manual launches (forceShow) still bypass this.
   const isQaSkipped =
-    typeof window !== 'undefined' &&
-    localStorage.getItem(ONBOARDING_SKIP_KEY) === '1';
+    typeof window !== "undefined" &&
+    localStorage.getItem(ONBOARDING_SKIP_KEY) === "1";
 
   // Returning users: the dashboard sets ``oe_onboarding_completed`` once
   // we've confirmed the workspace has projects.  Treat that as an
   // implicit tour-dismiss so admins on a populated workspace don't get
   // the "Navigation Sidebar" balloon every time they open a new browser.
   const onboardingDone =
-    typeof window !== 'undefined' &&
-    localStorage.getItem('oe_onboarding_completed') === 'true';
+    typeof window !== "undefined" &&
+    localStorage.getItem("oe_onboarding_completed") === "true";
 
   // Determine if tour should auto-start
   const shouldStart =
@@ -213,7 +213,10 @@ export function OnboardingTour({
   const [active, setActive] = useState(shouldStart);
   const [currentStep, setCurrentStep] = useState(0);
   const [spotlight, setSpotlight] = useState<SpotlightRect | null>(null);
-  const [tooltipCoords, setTooltipCoords] = useState<TooltipCoords>({ top: 0, left: 0 });
+  const [tooltipCoords, setTooltipCoords] = useState<TooltipCoords>({
+    top: 0,
+    left: 0,
+  });
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   // Belt-and-braces (BUG-UI02-TOUR-PERSISTENT): persist the dismissed
@@ -225,7 +228,7 @@ export function OnboardingTour({
   useEffect(() => {
     if (!active) return;
     try {
-      localStorage.setItem(ONBOARDING_STORAGE_KEY, 'true');
+      localStorage.setItem(ONBOARDING_STORAGE_KEY, "true");
     } catch {
       /* localStorage unavailable — non-fatal */
     }
@@ -240,7 +243,7 @@ export function OnboardingTour({
   /* Mark complete and close */
   const completeTour = useCallback(() => {
     try {
-      localStorage.setItem(ONBOARDING_STORAGE_KEY, 'true');
+      localStorage.setItem(ONBOARDING_STORAGE_KEY, "true");
     } catch {
       /* ignore storage errors */
     }
@@ -255,7 +258,11 @@ export function OnboardingTour({
 
       const el = document.querySelector(s.target);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
       }
 
       // Wait for scroll to settle, then measure
@@ -277,20 +284,21 @@ export function OnboardingTour({
     positionForStep(currentStep);
 
     const onResize = () => positionForStep(currentStep);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, [active, currentStep, positionForStep]);
 
   /* Escape key handler */
   useEffect(() => {
     if (!active) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         completeTour();
       }
     };
-    document.addEventListener('keydown', handler, { capture: true });
-    return () => document.removeEventListener('keydown', handler, { capture: true });
+    document.addEventListener("keydown", handler, { capture: true });
+    return () =>
+      document.removeEventListener("keydown", handler, { capture: true });
   }, [active, completeTour]);
 
   /* Navigation handlers */
@@ -321,8 +329,12 @@ export function OnboardingTour({
   const titleKey = step.title;
   const descKey = step.description;
   const defaults = STEP_DEFAULTS[titleKey];
-  const resolvedTitle = t(titleKey, { defaultValue: defaults?.title ?? titleKey });
-  const resolvedDesc = t(descKey, { defaultValue: defaults?.description ?? descKey });
+  const resolvedTitle = t(titleKey, {
+    defaultValue: defaults?.title ?? titleKey,
+  });
+  const resolvedDesc = t(descKey, {
+    defaultValue: defaults?.description ?? descKey,
+  });
 
   /* ── Spotlight box-shadow overlay ── */
   // The cutout is achieved with a large box-shadow on the highlight div.
@@ -344,7 +356,7 @@ export function OnboardingTour({
             data-testid="onboarding-spotlight"
             className="pointer-events-none"
             style={{
-              position: 'fixed',
+              position: "fixed",
               top: spotlight.top,
               left: spotlight.left,
               width: spotlight.width,
@@ -352,7 +364,7 @@ export function OnboardingTour({
               boxShadow: `0 0 0 ${SHADOW_SPREAD}px rgba(0, 0, 0, 0.25)`,
               borderRadius: 8,
               zIndex: 9001,
-              pointerEvents: 'none',
+              pointerEvents: "none",
             }}
           />
         )}
@@ -364,19 +376,19 @@ export function OnboardingTour({
         data-testid="onboarding-tooltip"
         role="dialog"
         aria-modal="false"
-        aria-label={t('onboarding.tour_step', { defaultValue: 'Tour step‌⁠‍' })}
+        aria-label={t("onboarding.tour_step", { defaultValue: "Tour step‌⁠‍" })}
         style={{
-          position: 'fixed',
+          position: "fixed",
           top: tooltipCoords.top,
           left: tooltipCoords.left,
           width: TOOLTIP_W,
           zIndex: 9100,
         }}
         className={clsx(
-          'rounded-2xl border border-border-light',
-          'bg-surface-elevated shadow-lg',
-          'p-5 pointer-events-auto',
-          'animate-scale-in',
+          "rounded-2xl border border-border-light",
+          "bg-surface-elevated shadow-lg",
+          "p-5 pointer-events-auto",
+          "animate-scale-in",
           // Position in bottom-right corner to avoid blocking main content
         )}
         onClick={(e) => e.stopPropagation()}
@@ -401,7 +413,7 @@ export function OnboardingTour({
             type="button"
             onClick={() => {
               try {
-                localStorage.setItem(ONBOARDING_SKIP_KEY, '1');
+                localStorage.setItem(ONBOARDING_SKIP_KEY, "1");
               } catch {
                 /* ignore storage errors */
               }
@@ -409,18 +421,20 @@ export function OnboardingTour({
             }}
             data-testid="onboarding-tour-skip"
             className={clsx(
-              'shrink-0 flex h-6 w-6 items-center justify-center rounded-md',
-              'text-content-tertiary hover:text-content-primary hover:bg-surface-secondary',
-              'transition-colors',
+              "shrink-0 flex h-6 w-6 items-center justify-center rounded-md",
+              "text-content-tertiary hover:text-content-primary hover:bg-surface-secondary",
+              "transition-colors",
             )}
-            aria-label={t('onboarding.skip', { defaultValue: 'Skip tour‌⁠‍' })}
+            aria-label={t("onboarding.skip", { defaultValue: "Skip tour‌⁠‍" })}
           >
             <X size={14} />
           </button>
         </div>
 
         {/* Description */}
-        <p className="text-xs text-content-secondary leading-relaxed mb-4">{resolvedDesc}</p>
+        <p className="text-xs text-content-secondary leading-relaxed mb-4">
+          {resolvedDesc}
+        </p>
 
         {/* Footer: step counter + navigation */}
         <div className="flex items-center justify-between gap-3">
@@ -429,12 +443,8 @@ export function OnboardingTour({
             data-testid="onboarding-step-counter"
             className="text-2xs font-medium text-content-tertiary tabular-nums"
           >
-            {t('onboarding.step_label', { defaultValue: 'Step' })}
-            {' '}
-            {stepNumber}
-            {' '}
-            {t('onboarding.step_of_connector', { defaultValue: 'of' })}
-            {' '}
+            {t("onboarding.step_label", { defaultValue: "Step" })} {stepNumber}{" "}
+            {t("onboarding.step_of_connector", { defaultValue: "of" })}{" "}
             {totalSteps}
           </span>
 
@@ -444,10 +454,10 @@ export function OnboardingTour({
               <div
                 key={idx}
                 className={clsx(
-                  'rounded-full transition-all duration-150',
+                  "rounded-full transition-all duration-150",
                   idx === currentStep
-                    ? 'h-2 w-4 bg-oe-blue'
-                    : 'h-1.5 w-1.5 bg-border',
+                    ? "h-2 w-4 bg-oe-blue"
+                    : "h-1.5 w-1.5 bg-border",
                 )}
               />
             ))}
@@ -461,12 +471,14 @@ export function OnboardingTour({
                 onClick={handlePrev}
                 data-testid="onboarding-prev"
                 className={clsx(
-                  'flex h-7 w-7 items-center justify-center rounded-lg',
-                  'border border-border text-content-secondary',
-                  'hover:bg-surface-secondary hover:text-content-primary',
-                  'transition-colors',
+                  "flex h-7 w-7 items-center justify-center rounded-lg",
+                  "border border-border text-content-secondary",
+                  "hover:bg-surface-secondary hover:text-content-primary",
+                  "transition-colors",
                 )}
-                aria-label={t('onboarding.previous', { defaultValue: 'Previous step‌⁠‍' })}
+                aria-label={t("onboarding.previous", {
+                  defaultValue: "Previous step‌⁠‍",
+                })}
               >
                 <ArrowLeft size={13} />
               </button>
@@ -476,19 +488,19 @@ export function OnboardingTour({
               onClick={handleNext}
               data-testid="onboarding-next"
               className={clsx(
-                'flex h-7 items-center gap-1.5 rounded-lg px-3',
-                'bg-oe-blue text-white text-xs font-medium',
-                'hover:opacity-90 active:opacity-80 transition-opacity',
+                "flex h-7 items-center gap-1.5 rounded-lg px-3",
+                "bg-oe-blue text-white text-xs font-medium",
+                "hover:opacity-90 active:opacity-80 transition-opacity",
               )}
               aria-label={
                 isLast
-                  ? t('onboarding.finish', { defaultValue: 'Finish tour‌⁠‍' })
-                  : t('onboarding.next', { defaultValue: 'Next step‌⁠‍' })
+                  ? t("onboarding.finish", { defaultValue: "Finish tour‌⁠‍" })
+                  : t("onboarding.next", { defaultValue: "Next step‌⁠‍" })
               }
             >
               {isLast
-                ? t('onboarding.finish', { defaultValue: 'Finish' })
-                : t('onboarding.next', { defaultValue: 'Next' })}
+                ? t("onboarding.finish", { defaultValue: "Finish" })
+                : t("onboarding.next", { defaultValue: "Next" })}
               {!isLast && <ArrowRight size={13} />}
             </button>
           </div>

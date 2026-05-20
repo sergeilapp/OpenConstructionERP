@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Copy, Check, X, Link2 } from 'lucide-react';
+import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { Copy, Check, X, Link2 } from "lucide-react";
 
 interface ShareDialogProps {
   roomName: string;
@@ -21,11 +21,11 @@ export function ShareDialog({ roomName, isOpen, onClose }: ShareDialogProps) {
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback
-      const input = document.createElement('input');
+      const input = document.createElement("input");
       input.value = shareUrl;
       document.body.appendChild(input);
       input.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(input);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -40,7 +40,9 @@ export function ShareDialog({ roomName, isOpen, onClose }: ShareDialogProps) {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-content-primary flex items-center gap-2">
             <Link2 size={16} className="text-oe-blue" />
-            {t('collab.share_title', { defaultValue: 'Share Collaboration Link‌⁠‍' })}
+            {t("collab.share_title", {
+              defaultValue: "Share Collaboration Link‌⁠‍",
+            })}
           </h3>
           <button
             onClick={onClose}
@@ -51,8 +53,9 @@ export function ShareDialog({ roomName, isOpen, onClose }: ShareDialogProps) {
         </div>
 
         <p className="text-xs text-content-tertiary mb-3">
-          {t('collab.share_desc', {
-            defaultValue: 'Share this link with collaborators. Anyone with the link can join and edit in real-time using peer-to-peer sync.‌⁠‍',
+          {t("collab.share_desc", {
+            defaultValue:
+              "Share this link with collaborators. Anyone with the link can join and edit in real-time using peer-to-peer sync.‌⁠‍",
           })}
         </p>
 
@@ -67,19 +70,19 @@ export function ShareDialog({ roomName, isOpen, onClose }: ShareDialogProps) {
             onClick={handleCopy}
             className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
               copied
-                ? 'bg-emerald-500 text-white'
-                : 'bg-oe-blue text-white hover:bg-oe-blue-hover'
+                ? "bg-emerald-500 text-white"
+                : "bg-oe-blue text-white hover:bg-oe-blue-hover"
             }`}
           >
             {copied ? (
               <>
                 <Check size={12} />
-                {t('common.copied', { defaultValue: 'Copied!‌⁠‍' })}
+                {t("common.copied", { defaultValue: "Copied!‌⁠‍" })}
               </>
             ) : (
               <>
                 <Copy size={12} />
-                {t('common.copy', { defaultValue: 'Copy' })}
+                {t("common.copy", { defaultValue: "Copy" })}
               </>
             )}
           </button>
@@ -88,11 +91,14 @@ export function ShareDialog({ roomName, isOpen, onClose }: ShareDialogProps) {
         <div className="rounded-lg bg-surface-secondary p-3">
           <p className="text-2xs text-content-tertiary">
             <strong className="text-content-secondary">
-              {t('collab.p2p_note_title', { defaultValue: 'Peer-to-peer sync‌⁠‍' })}
+              {t("collab.p2p_note_title", {
+                defaultValue: "Peer-to-peer sync‌⁠‍",
+              })}
             </strong>
-            {' — '}
-            {t('collab.p2p_note', {
-              defaultValue: 'Changes sync directly between browsers via WebRTC. No data is stored on a server. All participants must be online simultaneously.‌⁠‍',
+            {" — "}
+            {t("collab.p2p_note", {
+              defaultValue:
+                "Changes sync directly between browsers via WebRTC. No data is stored on a server. All participants must be online simultaneously.‌⁠‍",
             })}
           </p>
         </div>

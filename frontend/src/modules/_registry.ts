@@ -16,45 +16,45 @@ import type {
   ModuleRoute,
   ModuleNavItem,
   ModuleSearchEntry,
-} from './_types';
+} from "./_types";
 
 /* ── Module manifest imports ───────────────────────────────────────── */
 
-import { manifest as assemblies } from './assemblies/manifest';
-import { manifest as validation } from './validation/manifest';
-import { manifest as schedule } from './schedule/manifest';
-import { manifest as fiveDCostModel } from './5d-cost-model/manifest';
-import { manifest as tendering } from './tendering/manifest';
-import { manifest as reports } from './reports/manifest';
-import { manifest as sustainability } from './sustainability/manifest';
-import { manifest as costBenchmark } from './cost-benchmark/manifest';
-import { manifest as pdfTakeoff } from './pdf-takeoff/manifest';
-import { manifest as collaboration } from './collaboration/manifest';
-import { manifest as riskAnalysis } from './risk-analysis/manifest';
-import { manifest as gaebExchange } from './gaeb-exchange/manifest';
-import { manifest as ukNrmExchange } from './uk-nrm-exchange/manifest';
-import { manifest as usMasterformatExchange } from './us-masterformat-exchange/manifest';
-import { manifest as frDpgfExchange } from './fr-dpgf-exchange/manifest';
-import { manifest as uaeBoqExchange } from './uae-boq-exchange/manifest';
-import { manifest as auBoqExchange } from './au-boq-exchange/manifest';
-import { manifest as caBoqExchange } from './ca-boq-exchange/manifest';
-import { manifest as nordicNs3420Exchange } from './nordic-ns3420-exchange/manifest';
-import { manifest as czBoqExchange } from './cz-boq-exchange/manifest';
-import { manifest as deDin276Exchange } from './de-din276-exchange/manifest';
-import { manifest as cnBoqExchange } from './cn-boq-exchange/manifest';
-import { manifest as inBoqExchange } from './in-boq-exchange/manifest';
-import { manifest as brSinapiExchange } from './br-sinapi-exchange/manifest';
-import { manifest as esPbcExchange } from './es-pbc-exchange/manifest';
-import { manifest as ruGesnExchange } from './ru-gesn-exchange/manifest';
-import { manifest as trBirimfiyatExchange } from './tr-birimfiyat-exchange/manifest';
-import { manifest as jpSekisanExchange } from './jp-sekisan-exchange/manifest';
-import { manifest as itComputoExchange } from './it-computo-exchange/manifest';
-import { manifest as nlStabuExchange } from './nl-stabu-exchange/manifest';
-import { manifest as plKnrExchange } from './pl-knr-exchange/manifest';
-import { manifest as krBoqExchange } from './kr-boq-exchange/manifest';
-import { manifest as ddcIfcConverter } from './ddc-ifc-converter/manifest';
-import { manifest as ddcRvtConverter } from './ddc-rvt-converter/manifest';
-import { manifest as pipelines } from './pipelines/manifest';
+import { manifest as assemblies } from "./assemblies/manifest";
+import { manifest as validation } from "./validation/manifest";
+import { manifest as schedule } from "./schedule/manifest";
+import { manifest as fiveDCostModel } from "./5d-cost-model/manifest";
+import { manifest as tendering } from "./tendering/manifest";
+import { manifest as reports } from "./reports/manifest";
+import { manifest as sustainability } from "./sustainability/manifest";
+import { manifest as costBenchmark } from "./cost-benchmark/manifest";
+import { manifest as pdfTakeoff } from "./pdf-takeoff/manifest";
+import { manifest as collaboration } from "./collaboration/manifest";
+import { manifest as riskAnalysis } from "./risk-analysis/manifest";
+import { manifest as gaebExchange } from "./gaeb-exchange/manifest";
+import { manifest as ukNrmExchange } from "./uk-nrm-exchange/manifest";
+import { manifest as usMasterformatExchange } from "./us-masterformat-exchange/manifest";
+import { manifest as frDpgfExchange } from "./fr-dpgf-exchange/manifest";
+import { manifest as uaeBoqExchange } from "./uae-boq-exchange/manifest";
+import { manifest as auBoqExchange } from "./au-boq-exchange/manifest";
+import { manifest as caBoqExchange } from "./ca-boq-exchange/manifest";
+import { manifest as nordicNs3420Exchange } from "./nordic-ns3420-exchange/manifest";
+import { manifest as czBoqExchange } from "./cz-boq-exchange/manifest";
+import { manifest as deDin276Exchange } from "./de-din276-exchange/manifest";
+import { manifest as cnBoqExchange } from "./cn-boq-exchange/manifest";
+import { manifest as inBoqExchange } from "./in-boq-exchange/manifest";
+import { manifest as brSinapiExchange } from "./br-sinapi-exchange/manifest";
+import { manifest as esPbcExchange } from "./es-pbc-exchange/manifest";
+import { manifest as ruGesnExchange } from "./ru-gesn-exchange/manifest";
+import { manifest as trBirimfiyatExchange } from "./tr-birimfiyat-exchange/manifest";
+import { manifest as jpSekisanExchange } from "./jp-sekisan-exchange/manifest";
+import { manifest as itComputoExchange } from "./it-computo-exchange/manifest";
+import { manifest as nlStabuExchange } from "./nl-stabu-exchange/manifest";
+import { manifest as plKnrExchange } from "./pl-knr-exchange/manifest";
+import { manifest as krBoqExchange } from "./kr-boq-exchange/manifest";
+import { manifest as ddcIfcConverter } from "./ddc-ifc-converter/manifest";
+import { manifest as ddcRvtConverter } from "./ddc-rvt-converter/manifest";
+import { manifest as pipelines } from "./pipelines/manifest";
 
 /* ── Registry ──────────────────────────────────────────────────────── */
 
@@ -126,9 +126,9 @@ export function getModuleDefaults(): Record<string, boolean> {
 
 /** Get all module IDs that depend on a given module key. */
 export function getModuleDependents(moduleKey: string): string[] {
-  return MODULE_REGISTRY
-    .filter((m) => m.depends?.includes(moduleKey))
-    .map((m) => m.id);
+  return MODULE_REGISTRY.filter((m) => m.depends?.includes(moduleKey)).map(
+    (m) => m.id,
+  );
 }
 
 /** Get the dependency list for a specific module. */
@@ -157,7 +157,10 @@ export function getModulesByCategory(): Record<string, ModuleManifest[]> {
  * Collect all module-bundled translations, merged by language code.
  * Returns `{ en: { 'collab.title': 'Collaboration', ... }, de: { ... } }`.
  */
-export function getModuleTranslations(): Record<string, Record<string, string>> {
+export function getModuleTranslations(): Record<
+  string,
+  Record<string, string>
+> {
   const merged: Record<string, Record<string, string>> = {};
   for (const mod of MODULE_REGISTRY) {
     if (!mod.translations) continue;

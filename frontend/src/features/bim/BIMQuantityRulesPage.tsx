@@ -18,10 +18,10 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
-} from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+} from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Plus,
   Pencil,
@@ -52,15 +52,15 @@ import {
   Thermometer,
   Construction,
   type LucideIcon,
-} from 'lucide-react';
-import clsx from 'clsx';
+} from "lucide-react";
+import clsx from "clsx";
 
-import { Badge, ConfirmDialog, EmptyState } from '@/shared/ui';
-import { apiGet } from '@/shared/lib/api';
-import { FolderOpen } from 'lucide-react';
-import BIMRequirementsImport from './BIMRequirementsImport';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useToastStore } from '@/stores/useToastStore';
+import { Badge, ConfirmDialog, EmptyState } from "@/shared/ui";
+import { apiGet } from "@/shared/lib/api";
+import { FolderOpen } from "lucide-react";
+import BIMRequirementsImport from "./BIMRequirementsImport";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useToastStore } from "@/stores/useToastStore";
 import {
   applyQuantityMaps,
   createQuantityMap,
@@ -72,8 +72,8 @@ import {
   type CreateBIMQuantityMapRequest,
   type QuantityMapApplyResult,
   type QuantityMapTarget,
-} from './api';
-import { boqApi, type BOQ, type Position } from '@/features/boq/api';
+} from "./api";
+import { boqApi, type BOQ, type Position } from "@/features/boq/api";
 import {
   type BIMFormat,
   getCategoriesForFormat,
@@ -82,7 +82,7 @@ import {
   CONSTRAINT_TYPES,
   CONSTRAINT_TYPE_LABELS,
   type ConstraintType,
-} from './bimConstants';
+} from "./bimConstants";
 import {
   fetchRequirementSets,
   fetchRequirementSetDetail,
@@ -99,11 +99,11 @@ import {
   type AddRequirementPayload,
   type UpdateRequirementPayload,
   type ValidateBIMResult,
-} from '@/features/requirements/api';
+} from "@/features/requirements/api";
 
 /* ── Form state types ─────────────────────────────────────────────────── */
 
-type TargetKind = 'existing' | 'auto_create';
+type TargetKind = "existing" | "auto_create";
 
 interface PropertyRow {
   key: string;
@@ -129,30 +129,30 @@ interface RuleFormState {
 }
 
 const QUANTITY_SOURCE_PRESETS = [
-  'area_m2',
-  'volume_m3',
-  'length_m',
-  'weight_kg',
-  'count',
-  'custom',
+  "area_m2",
+  "volume_m3",
+  "length_m",
+  "weight_kg",
+  "count",
+  "custom",
 ] as const;
 
 type QuantitySourcePreset = (typeof QUANTITY_SOURCE_PRESETS)[number];
 
 function blankForm(): RuleFormState {
   return {
-    name: '',
-    element_type_filter: '',
+    name: "",
+    element_type_filter: "",
     property_filter: [],
-    quantity_source: 'area_m2',
-    custom_quantity_source: '',
-    multiplier: '1',
-    unit: 'm²',
-    waste_factor_pct: '0',
-    target_kind: 'auto_create',
-    target_boq_id: '',
-    target_position_id: '',
-    target_unit_rate: '',
+    quantity_source: "area_m2",
+    custom_quantity_source: "",
+    multiplier: "1",
+    unit: "m²",
+    waste_factor_pct: "0",
+    target_kind: "auto_create",
+    target_boq_id: "",
+    target_position_id: "",
+    target_unit_rate: "",
     is_active: true,
   };
 }
@@ -172,55 +172,58 @@ interface QuantityRulePreset {
 
 const QUANTITY_RULES_PRESETS: QuantityRulePreset[] = [
   {
-    id: 'walls-area',
+    id: "walls-area",
     icon: LayoutPanelTop,
-    title: 'Walls — area',
-    subtitle: 'Auto-create one BOQ position per wall type, sized by surface area (m²).',
+    title: "Walls — area",
+    subtitle:
+      "Auto-create one BOQ position per wall type, sized by surface area (m²).",
     patch: {
-      name: 'Walls — area',
-      element_type_filter: 'Wall*, IfcWall*',
-      quantity_source: 'area_m2',
-      unit: 'm²',
-      waste_factor_pct: '5',
+      name: "Walls — area",
+      element_type_filter: "Wall*, IfcWall*",
+      quantity_source: "area_m2",
+      unit: "m²",
+      waste_factor_pct: "5",
     },
   },
   {
-    id: 'slabs-volume',
+    id: "slabs-volume",
     icon: Layers3,
-    title: 'Slabs — concrete volume',
-    subtitle: 'Roll up floor / slab elements into a concrete pour position (m³).',
+    title: "Slabs — concrete volume",
+    subtitle:
+      "Roll up floor / slab elements into a concrete pour position (m³).",
     patch: {
-      name: 'Slabs — concrete volume',
-      element_type_filter: 'Floor*, Slab*, IfcSlab*',
-      quantity_source: 'volume_m3',
-      unit: 'm³',
-      waste_factor_pct: '3',
+      name: "Slabs — concrete volume",
+      element_type_filter: "Floor*, Slab*, IfcSlab*",
+      quantity_source: "volume_m3",
+      unit: "m³",
+      waste_factor_pct: "3",
     },
   },
   {
-    id: 'doors-count',
+    id: "doors-count",
     icon: DoorOpen,
-    title: 'Doors — count',
-    subtitle: 'Count every door element and create one supply-and-install position.',
+    title: "Doors — count",
+    subtitle:
+      "Count every door element and create one supply-and-install position.",
     patch: {
-      name: 'Doors — count',
-      element_type_filter: 'Door*, IfcDoor*',
-      quantity_source: 'count',
-      unit: 'pcs',
-      waste_factor_pct: '0',
+      name: "Doors — count",
+      element_type_filter: "Door*, IfcDoor*",
+      quantity_source: "count",
+      unit: "pcs",
+      waste_factor_pct: "0",
     },
   },
   {
-    id: 'windows-count',
+    id: "windows-count",
     icon: AppWindow,
-    title: 'Windows — count',
-    subtitle: 'Count windows and create a glazing position priced per piece.',
+    title: "Windows — count",
+    subtitle: "Count windows and create a glazing position priced per piece.",
     patch: {
-      name: 'Windows — count',
-      element_type_filter: 'Window*, IfcWindow*',
-      quantity_source: 'count',
-      unit: 'pcs',
-      waste_factor_pct: '0',
+      name: "Windows — count",
+      element_type_filter: "Window*, IfcWindow*",
+      quantity_source: "count",
+      unit: "pcs",
+      waste_factor_pct: "0",
     },
   },
 ];
@@ -229,32 +232,42 @@ function presetFromQuantitySource(source: string): QuantitySourcePreset {
   if ((QUANTITY_SOURCE_PRESETS as readonly string[]).includes(source)) {
     return source as QuantitySourcePreset;
   }
-  return 'custom';
+  return "custom";
 }
 
-function toFormState(rule: BIMQuantityMap, boqPositionLookup: Map<string, string>): RuleFormState {
-  const props: PropertyRow[] = Object.entries(rule.property_filter ?? {}).map(([key, value]) => ({
-    key,
-    value: String(value),
-  }));
+function toFormState(
+  rule: BIMQuantityMap,
+  boqPositionLookup: Map<string, string>,
+): RuleFormState {
+  const props: PropertyRow[] = Object.entries(rule.property_filter ?? {}).map(
+    ([key, value]) => ({
+      key,
+      value: String(value),
+    }),
+  );
   const preset = presetFromQuantitySource(rule.quantity_source);
   const target = rule.boq_target ?? {};
-  const existingPositionId = target.position_id ?? '';
-  const boqId = existingPositionId ? (boqPositionLookup.get(existingPositionId) ?? '') : '';
-  const targetKind: TargetKind = existingPositionId ? 'existing' : 'auto_create';
+  const existingPositionId = target.position_id ?? "";
+  const boqId = existingPositionId
+    ? (boqPositionLookup.get(existingPositionId) ?? "")
+    : "";
+  const targetKind: TargetKind = existingPositionId
+    ? "existing"
+    : "auto_create";
   return {
     name: rule.name,
-    element_type_filter: rule.element_type_filter ?? '',
+    element_type_filter: rule.element_type_filter ?? "",
     property_filter: props,
     quantity_source: preset,
-    custom_quantity_source: preset === 'custom' ? rule.quantity_source : '',
-    multiplier: rule.multiplier ?? '1',
-    unit: rule.unit ?? 'm²',
-    waste_factor_pct: rule.waste_factor_pct ?? '0',
+    custom_quantity_source: preset === "custom" ? rule.quantity_source : "",
+    multiplier: rule.multiplier ?? "1",
+    unit: rule.unit ?? "m²",
+    waste_factor_pct: rule.waste_factor_pct ?? "0",
     target_kind: targetKind,
     target_boq_id: boqId,
     target_position_id: existingPositionId,
-    target_unit_rate: typeof target.unit_rate === 'string' ? target.unit_rate : '',
+    target_unit_rate:
+      typeof target.unit_rate === "string" ? target.unit_rate : "",
     is_active: rule.is_active,
   };
 }
@@ -270,12 +283,12 @@ function buildPayload(
     propertyFilter[k] = row.value;
   }
   const quantitySource =
-    form.quantity_source === 'custom'
-      ? form.custom_quantity_source.trim() || 'count'
+    form.quantity_source === "custom"
+      ? form.custom_quantity_source.trim() || "count"
       : form.quantity_source;
 
   const boqTarget: QuantityMapTarget = {};
-  if (form.target_kind === 'existing' && form.target_position_id) {
+  if (form.target_kind === "existing" && form.target_position_id) {
     boqTarget.position_id = form.target_position_id;
   } else {
     boqTarget.auto_create = true;
@@ -296,11 +309,12 @@ function buildPayload(
     name: form.name.trim(),
     name_translations: null,
     element_type_filter: form.element_type_filter.trim(),
-    property_filter: Object.keys(propertyFilter).length > 0 ? propertyFilter : null,
+    property_filter:
+      Object.keys(propertyFilter).length > 0 ? propertyFilter : null,
     quantity_source: quantitySource,
-    multiplier: form.multiplier.trim() || '1',
-    unit: form.unit.trim() || 'm²',
-    waste_factor_pct: form.waste_factor_pct.trim() || '0',
+    multiplier: form.multiplier.trim() || "1",
+    unit: form.unit.trim() || "m²",
+    waste_factor_pct: form.waste_factor_pct.trim() || "0",
     boq_target: Object.keys(boqTarget).length > 0 ? boqTarget : null,
     is_active: form.is_active,
     metadata: {},
@@ -313,7 +327,7 @@ interface RuleEditorModalProps {
   open: boolean;
   onClose: () => void;
   initial: RuleFormState;
-  mode: 'create' | 'edit' | 'duplicate';
+  mode: "create" | "edit" | "duplicate";
   projectId: string | null;
   onSubmit: (payload: CreateBIMQuantityMapRequest) => void;
   submitting: boolean;
@@ -337,21 +351,22 @@ function RuleEditorModal({
 
   // BOQs for the active project
   const boqsQuery = useQuery({
-    queryKey: ['boqs', projectId],
-    queryFn: () => (projectId ? boqApi.list(projectId) : Promise.resolve<BOQ[]>([])),
-    enabled: !!projectId && open && form.target_kind === 'existing',
+    queryKey: ["boqs", projectId],
+    queryFn: () =>
+      projectId ? boqApi.list(projectId) : Promise.resolve<BOQ[]>([]),
+    enabled: !!projectId && open && form.target_kind === "existing",
   });
 
   const positionsQuery = useQuery({
-    queryKey: ['boq-positions', form.target_boq_id],
+    queryKey: ["boq-positions", form.target_boq_id],
     queryFn: () =>
       form.target_boq_id
         ? boqApi.get(form.target_boq_id)
         : Promise.resolve(null),
-    enabled: !!form.target_boq_id && open && form.target_kind === 'existing',
+    enabled: !!form.target_boq_id && open && form.target_kind === "existing",
   });
 
-  const [positionSearch, setPositionSearch] = useState('');
+  const [positionSearch, setPositionSearch] = useState("");
 
   const filteredPositions = useMemo<Position[]>(() => {
     const all = positionsQuery.data?.positions ?? [];
@@ -376,7 +391,7 @@ function RuleEditorModal({
   const handleAddPropertyRow = useCallback(() => {
     setForm((prev) => ({
       ...prev,
-      property_filter: [...prev.property_filter, { key: '', value: '' }],
+      property_filter: [...prev.property_filter, { key: "", value: "" }],
     }));
   }, []);
 
@@ -388,7 +403,7 @@ function RuleEditorModal({
   }, []);
 
   const handleUpdatePropertyRow = useCallback(
-    (index: number, field: 'key' | 'value', value: string) => {
+    (index: number, field: "key" | "value", value: string) => {
       setForm((prev) => ({
         ...prev,
         property_filter: prev.property_filter.map((row, i) =>
@@ -411,11 +426,11 @@ function RuleEditorModal({
   if (!open) return null;
 
   const modeTitle =
-    mode === 'edit'
-      ? t('bim_rules.edit_rule', { defaultValue: 'Edit rule‌⁠‍' })
-      : mode === 'duplicate'
-        ? t('bim_rules.duplicate_rule', { defaultValue: 'Duplicate rule‌⁠‍' })
-        : t('bim_rules.new_rule', { defaultValue: 'New rule‌⁠‍' });
+    mode === "edit"
+      ? t("bim_rules.edit_rule", { defaultValue: "Edit rule‌⁠‍" })
+      : mode === "duplicate"
+        ? t("bim_rules.duplicate_rule", { defaultValue: "Duplicate rule‌⁠‍" })
+        : t("bim_rules.new_rule", { defaultValue: "New rule‌⁠‍" });
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
@@ -428,13 +443,15 @@ function RuleEditorModal({
         <div className="flex items-center justify-between border-b border-border-light px-5 py-4">
           <div className="flex items-center gap-2">
             <SlidersHorizontal size={18} className="text-oe-blue" />
-            <h2 className="text-base font-semibold text-content-primary">{modeTitle}</h2>
+            <h2 className="text-base font-semibold text-content-primary">
+              {modeTitle}
+            </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="rounded-lg p-1 text-content-secondary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -449,7 +466,7 @@ function RuleEditorModal({
                 htmlFor="rule-name"
                 className="mb-1 block text-xs font-medium text-content-secondary"
               >
-                {t('bim_rules.field_name', { defaultValue: 'Name' })}
+                {t("bim_rules.field_name", { defaultValue: "Name" })}
                 <span className="ml-0.5 text-red-500">*</span>
               </label>
               <input
@@ -457,9 +474,9 @@ function RuleEditorModal({
                 type="text"
                 required
                 value={form.name}
-                onChange={(e) => updateField('name', e.target.value)}
-                placeholder={t('bim_rules.field_name_placeholder', {
-                  defaultValue: 'e.g. Exterior walls — concrete‌⁠‍',
+                onChange={(e) => updateField("name", e.target.value)}
+                placeholder={t("bim_rules.field_name_placeholder", {
+                  defaultValue: "e.g. Exterior walls — concrete‌⁠‍",
                 })}
                 className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
               />
@@ -471,21 +488,26 @@ function RuleEditorModal({
                 htmlFor="rule-element-type"
                 className="mb-1 block text-xs font-medium text-content-secondary"
               >
-                {t('bim_rules.field_element_type', { defaultValue: 'Element type filter‌⁠‍' })}
+                {t("bim_rules.field_element_type", {
+                  defaultValue: "Element type filter‌⁠‍",
+                })}
               </label>
               <input
                 id="rule-element-type"
                 type="text"
                 value={form.element_type_filter}
-                onChange={(e) => updateField('element_type_filter', e.target.value)}
-                placeholder={t('bim_rules.field_element_type_placeholder', {
-                  defaultValue: 'Wall*, IfcWall, Curtainwall*',
+                onChange={(e) =>
+                  updateField("element_type_filter", e.target.value)
+                }
+                placeholder={t("bim_rules.field_element_type_placeholder", {
+                  defaultValue: "Wall*, IfcWall, Curtainwall*",
                 })}
                 className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 font-mono text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
               />
               <p className="mt-1 text-[11px] text-content-tertiary">
-                {t('bim_rules.field_element_type_hint', {
-                  defaultValue: 'Wildcards supported. Leave empty to match any element type.',
+                {t("bim_rules.field_element_type_hint", {
+                  defaultValue:
+                    "Wildcards supported. Leave empty to match any element type.",
                 })}
               </p>
             </div>
@@ -494,7 +516,9 @@ function RuleEditorModal({
             <div>
               <div className="mb-1 flex items-center justify-between">
                 <label className="text-xs font-medium text-content-secondary">
-                  {t('bim_rules.field_property_filter', { defaultValue: 'Property filter' })}
+                  {t("bim_rules.field_property_filter", {
+                    defaultValue: "Property filter",
+                  })}
                 </label>
                 <button
                   type="button"
@@ -502,26 +526,34 @@ function RuleEditorModal({
                   className="flex items-center gap-1 text-[11px] font-medium text-oe-blue hover:underline"
                 >
                   <Plus size={12} />
-                  {t('bim_rules.add_property', { defaultValue: 'Add property' })}
+                  {t("bim_rules.add_property", {
+                    defaultValue: "Add property",
+                  })}
                 </button>
               </div>
               {form.property_filter.length === 0 ? (
                 <p className="rounded-lg border border-dashed border-border-light px-3 py-2 text-[11px] text-content-tertiary">
-                  {t('bim_rules.no_properties', {
-                    defaultValue: 'No property filters. Click "Add property" to add a key/value pair.',
+                  {t("bim_rules.no_properties", {
+                    defaultValue:
+                      'No property filters. Click "Add property" to add a key/value pair.',
                   })}
                 </p>
               ) : (
                 <div className="space-y-2">
                   {form.property_filter.map((row, index) => (
-                    <div key={`prop-${row.key}-${index}`} className="flex items-center gap-2">
+                    <div
+                      key={`prop-${row.key}-${index}`}
+                      className="flex items-center gap-2"
+                    >
                       <input
                         type="text"
                         value={row.key}
                         onChange={(e) =>
-                          handleUpdatePropertyRow(index, 'key', e.target.value)
+                          handleUpdatePropertyRow(index, "key", e.target.value)
                         }
-                        placeholder={t('bim_rules.property_key', { defaultValue: 'Property key' })}
+                        placeholder={t("bim_rules.property_key", {
+                          defaultValue: "Property key",
+                        })}
                         className="flex-1 rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 font-mono text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                       />
                       <span className="text-xs text-content-tertiary">=</span>
@@ -529,16 +561,24 @@ function RuleEditorModal({
                         type="text"
                         value={row.value}
                         onChange={(e) =>
-                          handleUpdatePropertyRow(index, 'value', e.target.value)
+                          handleUpdatePropertyRow(
+                            index,
+                            "value",
+                            e.target.value,
+                          )
                         }
-                        placeholder={t('bim_rules.property_value', { defaultValue: 'Value (wildcards OK)' })}
+                        placeholder={t("bim_rules.property_value", {
+                          defaultValue: "Value (wildcards OK)",
+                        })}
                         className="flex-1 rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 font-mono text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => handleRemovePropertyRow(index)}
                         className="rounded p-1 text-content-tertiary hover:bg-surface-secondary hover:text-red-600"
-                        aria-label={t('common.remove', { defaultValue: 'Remove' })}
+                        aria-label={t("common.remove", {
+                          defaultValue: "Remove",
+                        })}
                       >
                         <Trash2 size={13} />
                       </button>
@@ -555,12 +595,16 @@ function RuleEditorModal({
                   htmlFor="rule-qsrc"
                   className="mb-1 block text-xs font-medium text-content-secondary"
                 >
-                  {t('bim_rules.field_quantity_source', { defaultValue: 'Quantity source' })}
+                  {t("bim_rules.field_quantity_source", {
+                    defaultValue: "Quantity source",
+                  })}
                 </label>
                 <select
                   id="rule-qsrc"
                   value={form.quantity_source}
-                  onChange={(e) => updateField('quantity_source', e.target.value)}
+                  onChange={(e) =>
+                    updateField("quantity_source", e.target.value)
+                  }
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
                 >
                   <option value="area_m2">area_m2</option>
@@ -569,7 +613,9 @@ function RuleEditorModal({
                   <option value="weight_kg">weight_kg</option>
                   <option value="count">count</option>
                   <option value="custom">
-                    {t('bim_rules.custom_property', { defaultValue: 'Custom (property:xxx)' })}
+                    {t("bim_rules.custom_property", {
+                      defaultValue: "Custom (property:xxx)",
+                    })}
                   </option>
                 </select>
               </div>
@@ -579,33 +625,35 @@ function RuleEditorModal({
                   htmlFor="rule-unit"
                   className="mb-1 block text-xs font-medium text-content-secondary"
                 >
-                  {t('bim_rules.field_unit', { defaultValue: 'Unit' })}
+                  {t("bim_rules.field_unit", { defaultValue: "Unit" })}
                 </label>
                 <input
                   id="rule-unit"
                   type="text"
                   value={form.unit}
-                  onChange={(e) => updateField('unit', e.target.value)}
+                  onChange={(e) => updateField("unit", e.target.value)}
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
                 />
               </div>
             </div>
 
-            {form.quantity_source === 'custom' && (
+            {form.quantity_source === "custom" && (
               <div>
                 <label
                   htmlFor="rule-custom-src"
                   className="mb-1 block text-xs font-medium text-content-secondary"
                 >
-                  {t('bim_rules.field_custom_source', {
-                    defaultValue: 'Custom source (e.g. property:net_area)',
+                  {t("bim_rules.field_custom_source", {
+                    defaultValue: "Custom source (e.g. property:net_area)",
                   })}
                 </label>
                 <input
                   id="rule-custom-src"
                   type="text"
                   value={form.custom_quantity_source}
-                  onChange={(e) => updateField('custom_quantity_source', e.target.value)}
+                  onChange={(e) =>
+                    updateField("custom_quantity_source", e.target.value)
+                  }
                   placeholder="property:net_area"
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 font-mono text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
                 />
@@ -618,7 +666,9 @@ function RuleEditorModal({
                   htmlFor="rule-mult"
                   className="mb-1 block text-xs font-medium text-content-secondary"
                 >
-                  {t('bim_rules.field_multiplier', { defaultValue: 'Multiplier' })}
+                  {t("bim_rules.field_multiplier", {
+                    defaultValue: "Multiplier",
+                  })}
                 </label>
                 <input
                   id="rule-mult"
@@ -626,7 +676,7 @@ function RuleEditorModal({
                   step="0.001"
                   min="0"
                   value={form.multiplier}
-                  onChange={(e) => updateField('multiplier', e.target.value)}
+                  onChange={(e) => updateField("multiplier", e.target.value)}
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
                 />
               </div>
@@ -636,7 +686,9 @@ function RuleEditorModal({
                   htmlFor="rule-waste"
                   className="mb-1 block text-xs font-medium text-content-secondary"
                 >
-                  {t('bim_rules.field_waste', { defaultValue: 'Waste factor %' })}
+                  {t("bim_rules.field_waste", {
+                    defaultValue: "Waste factor %",
+                  })}
                 </label>
                 <input
                   id="rule-waste"
@@ -644,7 +696,9 @@ function RuleEditorModal({
                   step="0.1"
                   min="0"
                   value={form.waste_factor_pct}
-                  onChange={(e) => updateField('waste_factor_pct', e.target.value)}
+                  onChange={(e) =>
+                    updateField("waste_factor_pct", e.target.value)
+                  }
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
                 />
               </div>
@@ -653,51 +707,57 @@ function RuleEditorModal({
             {/* Target */}
             <div>
               <label className="mb-2 block text-xs font-medium text-content-secondary">
-                {t('bim_rules.field_target', { defaultValue: 'Target' })}
+                {t("bim_rules.field_target", { defaultValue: "Target" })}
               </label>
               <div className="mb-3 flex gap-4">
                 <label className="flex items-center gap-2 text-xs text-content-primary">
                   <input
                     type="radio"
                     name="target-kind"
-                    checked={form.target_kind === 'existing'}
-                    onChange={() => updateField('target_kind', 'existing')}
+                    checked={form.target_kind === "existing"}
+                    onChange={() => updateField("target_kind", "existing")}
                     className="accent-oe-blue"
                   />
-                  {t('bim_rules.target_existing', { defaultValue: 'Link to existing BOQ position' })}
+                  {t("bim_rules.target_existing", {
+                    defaultValue: "Link to existing BOQ position",
+                  })}
                 </label>
                 <label className="flex items-center gap-2 text-xs text-content-primary">
                   <input
                     type="radio"
                     name="target-kind"
-                    checked={form.target_kind === 'auto_create'}
-                    onChange={() => updateField('target_kind', 'auto_create')}
+                    checked={form.target_kind === "auto_create"}
+                    onChange={() => updateField("target_kind", "auto_create")}
                     className="accent-oe-blue"
                   />
-                  {t('bim_rules.target_auto_create', { defaultValue: 'Auto-create position' })}
+                  {t("bim_rules.target_auto_create", {
+                    defaultValue: "Auto-create position",
+                  })}
                 </label>
               </div>
 
-              {form.target_kind === 'existing' && (
+              {form.target_kind === "existing" && (
                 <div className="space-y-2 rounded-lg border border-border-light bg-surface-secondary p-3">
                   <div>
                     <label
                       htmlFor="rule-boq"
                       className="mb-1 block text-[11px] font-medium text-content-secondary"
                     >
-                      {t('bim_rules.pick_boq', { defaultValue: 'BOQ' })}
+                      {t("bim_rules.pick_boq", { defaultValue: "BOQ" })}
                     </label>
                     <select
                       id="rule-boq"
                       value={form.target_boq_id}
                       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                        updateField('target_boq_id', e.target.value);
-                        updateField('target_position_id', '');
+                        updateField("target_boq_id", e.target.value);
+                        updateField("target_position_id", "");
                       }}
                       className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                     >
                       <option value="">
-                        {t('bim_rules.select_boq', { defaultValue: 'Select a BOQ…' })}
+                        {t("bim_rules.select_boq", {
+                          defaultValue: "Select a BOQ…",
+                        })}
                       </option>
                       {(boqsQuery.data ?? []).map((b) => (
                         <option key={b.id} value={b.id}>
@@ -713,27 +773,32 @@ function RuleEditorModal({
                         htmlFor="rule-pos-search"
                         className="mb-1 block text-[11px] font-medium text-content-secondary"
                       >
-                        {t('bim_rules.pick_position', { defaultValue: 'Position' })}
+                        {t("bim_rules.pick_position", {
+                          defaultValue: "Position",
+                        })}
                       </label>
                       <input
                         id="rule-pos-search"
                         type="text"
                         value={positionSearch}
                         onChange={(e) => setPositionSearch(e.target.value)}
-                        placeholder={t('bim_rules.search_positions', {
-                          defaultValue: 'Search by ordinal or description…',
+                        placeholder={t("bim_rules.search_positions", {
+                          defaultValue: "Search by ordinal or description…",
                         })}
                         className="mb-2 w-full rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                       />
                       <div className="max-h-40 overflow-y-auto rounded-lg border border-border-light bg-surface-primary">
                         {positionsQuery.isLoading ? (
                           <div className="p-3 text-center text-[11px] text-content-tertiary">
-                            <Loader2 size={14} className="mx-auto animate-spin" />
+                            <Loader2
+                              size={14}
+                              className="mx-auto animate-spin"
+                            />
                           </div>
                         ) : filteredPositions.length === 0 ? (
                           <div className="p-3 text-center text-[11px] text-content-tertiary">
-                            {t('bim_rules.no_positions', {
-                              defaultValue: 'No positions found.',
+                            {t("bim_rules.no_positions", {
+                              defaultValue: "No positions found.",
                             })}
                           </div>
                         ) : (
@@ -741,13 +806,18 @@ function RuleEditorModal({
                             <button
                               key={p.id}
                               type="button"
-                              onClick={() => updateField('target_position_id', p.id)}
+                              onClick={() =>
+                                updateField("target_position_id", p.id)
+                              }
                               className={clsx(
-                                'flex w-full items-center gap-2 border-b border-border-light px-3 py-1.5 text-left text-[11px] last:border-b-0 hover:bg-surface-secondary',
-                                form.target_position_id === p.id && 'bg-oe-blue/10',
+                                "flex w-full items-center gap-2 border-b border-border-light px-3 py-1.5 text-left text-[11px] last:border-b-0 hover:bg-surface-secondary",
+                                form.target_position_id === p.id &&
+                                  "bg-oe-blue/10",
                               )}
                             >
-                              <span className="font-mono text-content-tertiary">{p.ordinal}</span>
+                              <span className="font-mono text-content-tertiary">
+                                {p.ordinal}
+                              </span>
                               <span className="flex-1 truncate text-content-primary">
                                 {p.description}
                               </span>
@@ -763,10 +833,10 @@ function RuleEditorModal({
                 </div>
               )}
 
-              {form.target_kind === 'auto_create' && (
+              {form.target_kind === "auto_create" && (
                 <div className="space-y-2 rounded-lg border border-dashed border-border-light p-3">
                   <p className="text-[11px] text-content-tertiary">
-                    {t('bim_rules.auto_create_hint', {
+                    {t("bim_rules.auto_create_hint", {
                       defaultValue:
                         "On apply, a new BOQ position will be created using this rule's name as the description. Quantities will be computed at apply time.",
                     })}
@@ -781,15 +851,17 @@ function RuleEditorModal({
                         htmlFor="rule-unit-rate"
                         className="mb-1 block text-[11px] font-medium text-content-secondary"
                       >
-                        {t('bim_rules.field_default_rate', {
-                          defaultValue: 'Default unit rate',
+                        {t("bim_rules.field_default_rate", {
+                          defaultValue: "Default unit rate",
                         })}
                       </label>
                       <input
                         id="rule-unit-rate"
                         type="text"
                         value={form.target_unit_rate}
-                        onChange={(e) => updateField('target_unit_rate', e.target.value)}
+                        onChange={(e) =>
+                          updateField("target_unit_rate", e.target.value)
+                        }
                         placeholder="0.00"
                         className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none tabular-nums"
                       />
@@ -798,7 +870,7 @@ function RuleEditorModal({
                       type="button"
                       onClick={async () => {
                         try {
-                          const { apiPost } = await import('@/shared/lib/api');
+                          const { apiPost } = await import("@/shared/lib/api");
                           // Construct a synthetic element from the rule's
                           // filters so the cost ranker has something to
                           // match against.  We pull element_type from
@@ -806,7 +878,8 @@ function RuleEditorModal({
                           // from the property_filter rows when present.
                           const props: Record<string, string> = {};
                           for (const row of form.property_filter) {
-                            if (row.key.trim()) props[row.key.trim()] = row.value;
+                            if (row.key.trim())
+                              props[row.key.trim()] = row.value;
                           }
                           const suggestions = await apiPost<
                             Array<{
@@ -817,35 +890,37 @@ function RuleEditorModal({
                               unit_rate: number | string;
                               score: number;
                             }>
-                          >('/api/v1/costs/suggest-for-element/', {
+                          >("/api/v1/costs/suggest-for-element/", {
                             element_type: form.element_type_filter || null,
                             name: form.name || null,
-                            properties: Object.keys(props).length > 0 ? props : null,
+                            properties:
+                              Object.keys(props).length > 0 ? props : null,
                             limit: 1,
                           });
                           const top = suggestions?.[0];
                           if (top) {
                             const rateStr =
-                              typeof top.unit_rate === 'number'
+                              typeof top.unit_rate === "number"
                                 ? String(top.unit_rate)
                                 : String(top.unit_rate);
-                            updateField('target_unit_rate', rateStr);
+                            updateField("target_unit_rate", rateStr);
                           }
                         } catch (err) {
                           // Soft-fail — the cost endpoint is optional and
                           // shouldn't block rule editing if it errors.
-                          if (import.meta.env.DEV) console.warn('Cost suggestion failed', err);
+                          if (import.meta.env.DEV)
+                            console.warn("Cost suggestion failed", err);
                         }
                       }}
                       className="inline-flex items-center gap-1 rounded-lg border border-oe-blue/40 bg-oe-blue/5 px-2 py-1.5 text-[11px] font-medium text-oe-blue hover:bg-oe-blue/10"
-                      title={t('bim_rules.suggest_rate_title', {
+                      title={t("bim_rules.suggest_rate_title", {
                         defaultValue:
-                          'Use the rule filter to look up a matching CWICR cost item and prefill its unit rate',
+                          "Use the rule filter to look up a matching CWICR cost item and prefill its unit rate",
                       })}
                     >
                       <Sparkles size={11} />
-                      {t('bim_rules.suggest_rate', {
-                        defaultValue: 'Suggest from CWICR',
+                      {t("bim_rules.suggest_rate", {
+                        defaultValue: "Suggest from CWICR",
                       })}
                     </button>
                   </div>
@@ -859,10 +934,12 @@ function RuleEditorModal({
                 <input
                   type="checkbox"
                   checked={form.is_active}
-                  onChange={(e) => updateField('is_active', e.target.checked)}
+                  onChange={(e) => updateField("is_active", e.target.checked)}
                   className="accent-oe-blue"
                 />
-                {t('bim_rules.field_is_active', { defaultValue: 'Rule is active' })}
+                {t("bim_rules.field_is_active", {
+                  defaultValue: "Rule is active",
+                })}
               </label>
             </div>
           </div>
@@ -874,7 +951,7 @@ function RuleEditorModal({
               onClick={onClose}
               className="rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-tertiary"
             >
-              {t('common.cancel', { defaultValue: 'Cancel' })}
+              {t("common.cancel", { defaultValue: "Cancel" })}
             </button>
             <button
               type="submit"
@@ -882,7 +959,7 @@ function RuleEditorModal({
               className="flex items-center gap-1.5 rounded-lg bg-oe-blue px-4 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-oe-blue-dark disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting && <Loader2 size={12} className="animate-spin" />}
-              {t('common.save', { defaultValue: 'Save' })}
+              {t("common.save", { defaultValue: "Save" })}
             </button>
           </div>
         </form>
@@ -915,14 +992,16 @@ function PreviewModal({ open, onClose, result, loading }: PreviewModalProps) {
           <div className="flex items-center gap-2">
             <Eye size={18} className="text-oe-blue" />
             <h2 className="text-base font-semibold text-content-primary">
-              {t('bim_rules.preview_title', { defaultValue: 'Dry-run preview' })}
+              {t("bim_rules.preview_title", {
+                defaultValue: "Dry-run preview",
+              })}
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="rounded-lg p-1 text-content-secondary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -931,65 +1010,88 @@ function PreviewModal({ open, onClose, result, loading }: PreviewModalProps) {
           {loading && (
             <div className="flex items-center justify-center py-8 text-sm text-content-secondary">
               <Loader2 size={18} className="mr-2 animate-spin" />
-              {t('bim_rules.preview_loading', { defaultValue: 'Running dry-run…' })}
+              {t("bim_rules.preview_loading", {
+                defaultValue: "Running dry-run…",
+              })}
             </div>
           )}
           {!loading && result && (
             <>
               <div className="mb-4 grid grid-cols-4 gap-3">
                 <StatCard
-                  label={t('bim_rules.stat_matched', { defaultValue: 'Matched elements' })}
+                  label={t("bim_rules.stat_matched", {
+                    defaultValue: "Matched elements",
+                  })}
                   value={result.matched_elements}
                 />
                 <StatCard
-                  label={t('bim_rules.stat_rules', { defaultValue: 'Rules applied' })}
+                  label={t("bim_rules.stat_rules", {
+                    defaultValue: "Rules applied",
+                  })}
                   value={result.rules_applied}
                 />
                 <StatCard
-                  label={t('bim_rules.stat_links', { defaultValue: 'Links that would be created' })}
+                  label={t("bim_rules.stat_links", {
+                    defaultValue: "Links that would be created",
+                  })}
                   value={result.links_created}
                 />
                 <StatCard
-                  label={t('bim_rules.stat_positions', { defaultValue: 'Positions that would be created' })}
+                  label={t("bim_rules.stat_positions", {
+                    defaultValue: "Positions that would be created",
+                  })}
                   value={result.positions_created}
                 />
               </div>
 
               <div className="mb-2 text-xs font-medium text-content-secondary">
-                {t('bim_rules.sample_results', { defaultValue: 'Sample results (first 20)' })}
+                {t("bim_rules.sample_results", {
+                  defaultValue: "Sample results (first 20)",
+                })}
               </div>
               <div className="overflow-hidden rounded-lg border border-border-light">
                 <table className="w-full text-left text-[11px]">
                   <thead className="bg-surface-secondary text-content-secondary">
                     <tr>
                       <th className="px-2 py-1.5 font-medium">
-                        {t('bim_rules.col_stable_id', { defaultValue: 'Stable ID' })}
+                        {t("bim_rules.col_stable_id", {
+                          defaultValue: "Stable ID",
+                        })}
                       </th>
                       <th className="px-2 py-1.5 font-medium">
-                        {t('bim_rules.col_element_type', { defaultValue: 'Type' })}
+                        {t("bim_rules.col_element_type", {
+                          defaultValue: "Type",
+                        })}
                       </th>
                       <th className="px-2 py-1.5 font-medium">
-                        {t('bim_rules.col_rule', { defaultValue: 'Rule' })}
+                        {t("bim_rules.col_rule", { defaultValue: "Rule" })}
                       </th>
                       <th className="px-2 py-1.5 font-medium">
-                        {t('bim_rules.col_source', { defaultValue: 'Source' })}
+                        {t("bim_rules.col_source", { defaultValue: "Source" })}
                       </th>
                       <th className="px-2 py-1.5 text-right font-medium">
-                        {t('bim_rules.col_raw', { defaultValue: 'Raw' })}
+                        {t("bim_rules.col_raw", { defaultValue: "Raw" })}
                       </th>
                       <th className="px-2 py-1.5 text-right font-medium">
-                        {t('bim_rules.col_adjusted', { defaultValue: 'Adjusted' })}
+                        {t("bim_rules.col_adjusted", {
+                          defaultValue: "Adjusted",
+                        })}
                       </th>
                       <th className="px-2 py-1.5 font-medium">
-                        {t('bim_rules.col_unit', { defaultValue: 'Unit' })}
+                        {t("bim_rules.col_unit", { defaultValue: "Unit" })}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {sample.length === 0 && (
                       <tr>
-                        <td colSpan={7} className="px-2 py-3 text-center text-content-tertiary">
-                          {t('bim_rules.no_sample', { defaultValue: 'No matches.' })}
+                        <td
+                          colSpan={7}
+                          className="px-2 py-3 text-center text-content-tertiary"
+                        >
+                          {t("bim_rules.no_sample", {
+                            defaultValue: "No matches.",
+                          })}
                         </td>
                       </tr>
                     )}
@@ -1001,7 +1103,9 @@ function PreviewModal({ open, onClose, result, loading }: PreviewModalProps) {
                         <td className="truncate px-2 py-1 font-mono text-content-tertiary">
                           {item.stable_id}
                         </td>
-                        <td className="truncate px-2 py-1">{item.element_type}</td>
+                        <td className="truncate px-2 py-1">
+                          {item.element_type}
+                        </td>
                         <td className="truncate px-2 py-1">{item.rule_name}</td>
                         <td className="truncate px-2 py-1 font-mono text-content-tertiary">
                           {item.quantity_source}
@@ -1029,15 +1133,19 @@ function PreviewModal({ open, onClose, result, loading }: PreviewModalProps) {
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-lg border border-border-light bg-surface-secondary px-3 py-2">
-      <div className="text-[10px] uppercase tracking-wide text-content-tertiary">{label}</div>
-      <div className="mt-1 text-lg font-semibold tabular-nums text-content-primary">{value}</div>
+      <div className="text-[10px] uppercase tracking-wide text-content-tertiary">
+        {label}
+      </div>
+      <div className="mt-1 text-lg font-semibold tabular-nums text-content-primary">
+        {value}
+      </div>
     </div>
   );
 }
 
 /* ── Tabs ─────────────────────────────────────────────────────────────── */
 
-type RulesTab = 'quantity_rules' | 'requirements';
+type RulesTab = "quantity_rules" | "requirements";
 
 /* ── Requirements Rule Editor (three-column) ─────────────────────────── */
 
@@ -1060,35 +1168,41 @@ interface RequirementRuleForm {
 
 function blankRequirementForm(): RequirementRuleForm {
   return {
-    format: 'revit',
-    filter_param: 'Category',
-    filter_value: '',
-    check_param: '',
-    constraint_type: 'min',
-    constraint_value: '',
-    category: 'structural',
-    priority: 'must',
-    source_ref: '',
-    notes: '',
+    format: "revit",
+    filter_param: "Category",
+    filter_value: "",
+    check_param: "",
+    constraint_type: "min",
+    constraint_value: "",
+    category: "structural",
+    priority: "must",
+    source_ref: "",
+    notes: "",
   };
 }
 
 const REQ_CATEGORIES = [
-  'structural', 'fire_safety', 'thermal', 'acoustic',
-  'waterproofing', 'electrical', 'mechanical', 'architectural',
+  "structural",
+  "fire_safety",
+  "thermal",
+  "acoustic",
+  "waterproofing",
+  "electrical",
+  "mechanical",
+  "architectural",
 ] as const;
 
-const REQ_PRIORITIES = ['must', 'should', 'may'] as const;
+const REQ_PRIORITIES = ["must", "should", "may"] as const;
 
 /* ── ConstraintValueInput — picks the right widget per operator ─────── */
 
-const NUMERIC_OPERATORS = new Set<ConstraintType>(['min', 'max', 'range']);
-const PRESENCE_OPERATORS = new Set<ConstraintType>(['exists', 'not_exists']);
+const NUMERIC_OPERATORS = new Set<ConstraintType>(["min", "max", "range"]);
+const PRESENCE_OPERATORS = new Set<ConstraintType>(["exists", "not_exists"]);
 
 function parseRange(text: string): { from: string; to: string } {
   // Split on '..', '-', ',', or ';' — same operators the backend accepts.
   const m = text.split(/\s*(?:\.\.|;|,|-)\s*/).filter((s) => s.length > 0);
-  return { from: m[0] ?? '', to: m[1] ?? '' };
+  return { from: m[0] ?? "", to: m[1] ?? "" };
 }
 
 interface ConstraintValueInputProps {
@@ -1107,23 +1221,25 @@ function ConstraintValueInput({
   if (PRESENCE_OPERATORS.has(constraintType)) {
     return (
       <p className="rounded-md border border-border-light bg-surface-tertiary px-2 py-1.5 text-[10px] text-content-tertiary">
-        {constraintType === 'exists'
-          ? t('bim_rules.req_exists_hint', {
-              defaultValue: 'No value needed — passes when the property is present.',
+        {constraintType === "exists"
+          ? t("bim_rules.req_exists_hint", {
+              defaultValue:
+                "No value needed — passes when the property is present.",
             })
-          : t('bim_rules.req_not_exists_hint', {
-              defaultValue: 'No value needed — passes when the property is missing.',
+          : t("bim_rules.req_not_exists_hint", {
+              defaultValue:
+                "No value needed — passes when the property is missing.",
             })}
       </p>
     );
   }
 
-  if (constraintType === 'range') {
+  if (constraintType === "range") {
     const { from, to } = parseRange(value);
     const update = (next: { from: string; to: string }) => {
       const a = next.from.trim();
       const b = next.to.trim();
-      if (!a && !b) onChange('');
+      if (!a && !b) onChange("");
       else if (a && b) onChange(`${a}..${b}`);
       else onChange(a || b);
     };
@@ -1134,7 +1250,7 @@ function ConstraintValueInput({
           step="any"
           value={from}
           onChange={(e) => update({ from: e.target.value, to })}
-          placeholder={t('bim_rules.req_range_from', { defaultValue: 'from' })}
+          placeholder={t("bim_rules.req_range_from", { defaultValue: "from" })}
           className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
         />
         <span className="text-[10px] text-content-tertiary">–</span>
@@ -1143,7 +1259,7 @@ function ConstraintValueInput({
           step="any"
           value={to}
           onChange={(e) => update({ from, to: e.target.value })}
-          placeholder={t('bim_rules.req_range_to', { defaultValue: 'to' })}
+          placeholder={t("bim_rules.req_range_to", { defaultValue: "to" })}
           className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
         />
       </div>
@@ -1158,16 +1274,16 @@ function ConstraintValueInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={
-          constraintType === 'min'
-            ? t('bim_rules.req_min_placeholder', { defaultValue: '≥ value' })
-            : t('bim_rules.req_max_placeholder', { defaultValue: '≤ value' })
+          constraintType === "min"
+            ? t("bim_rules.req_min_placeholder", { defaultValue: "≥ value" })
+            : t("bim_rules.req_max_placeholder", { defaultValue: "≤ value" })
         }
         className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
       />
     );
   }
 
-  if (constraintType === 'regex') {
+  if (constraintType === "regex") {
     let regexValid: boolean | null = null;
     if (value.trim()) {
       try {
@@ -1188,12 +1304,12 @@ function ConstraintValueInput({
         />
         {regexValid === true && (
           <p className="text-[10px] text-green-600">
-            {t('bim_rules.regex_valid', { defaultValue: 'Valid pattern' })}
+            {t("bim_rules.regex_valid", { defaultValue: "Valid pattern" })}
           </p>
         )}
         {regexValid === false && (
           <p className="text-[10px] text-red-500">
-            {t('bim_rules.regex_invalid', { defaultValue: 'Invalid pattern' })}
+            {t("bim_rules.regex_invalid", { defaultValue: "Invalid pattern" })}
           </p>
         )}
       </div>
@@ -1206,7 +1322,9 @@ function ConstraintValueInput({
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={t('bim_rules.req_value_placeholder', { defaultValue: 'Value' })}
+      placeholder={t("bim_rules.req_value_placeholder", {
+        defaultValue: "Value",
+      })}
       className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
     />
   );
@@ -1218,7 +1336,7 @@ interface RequirementRuleEditorProps {
   onSubmit: (form: RequirementRuleForm) => void;
   submitting: boolean;
   initial?: RequirementRuleForm;
-  mode: 'create' | 'edit' | 'from_model';
+  mode: "create" | "edit" | "from_model";
   /** When mode='from_model', model-derived parameter names and values. */
   modelParams?: { params: string[]; values: Record<string, string[]> };
 }
@@ -1233,41 +1351,54 @@ function RequirementRuleEditor({
   modelParams,
 }: RequirementRuleEditorProps) {
   const { t } = useTranslation();
-  const [form, setForm] = useState<RequirementRuleForm>(initial || blankRequirementForm());
+  const [form, setForm] = useState<RequirementRuleForm>(
+    initial || blankRequirementForm(),
+  );
 
   useEffect(() => {
     if (open) setForm(initial || blankRequirementForm());
   }, [open, initial]);
 
-  const categories = useMemo(() => getCategoriesForFormat(form.format), [form.format]);
-  const filterParams = useMemo(() => getFilterParamsForFormat(form.format), [form.format]);
+  const categories = useMemo(
+    () => getCategoriesForFormat(form.format),
+    [form.format],
+  );
+  const filterParams = useMemo(
+    () => getFilterParamsForFormat(form.format),
+    [form.format],
+  );
   const propertyNames = useMemo(() => {
-    if (mode === 'from_model' && modelParams?.params) {
+    if (mode === "from_model" && modelParams?.params) {
       return modelParams.params;
     }
     return [...getPropertyNamesForFormat(form.format)];
   }, [form.format, mode, modelParams]);
 
   const filterValues = useMemo(() => {
-    if (mode === 'from_model' && modelParams?.values?.[form.filter_param]) {
+    if (mode === "from_model" && modelParams?.values?.[form.filter_param]) {
       return modelParams.values[form.filter_param]!;
     }
     // For manual mode, use the category list for the Category parameter
-    if (form.filter_param === 'Category' || form.filter_param === 'category') {
+    if (form.filter_param === "Category" || form.filter_param === "category") {
       return [...categories];
     }
     return [];
   }, [form.filter_param, mode, modelParams, categories]);
 
-  const [paramSearch, setParamSearch] = useState('');
+  const [paramSearch, setParamSearch] = useState("");
   const filteredPropertyNames = useMemo(() => {
     const q = paramSearch.trim().toLowerCase();
     if (!q) return propertyNames.slice(0, 50);
-    return propertyNames.filter((p) => p.toLowerCase().includes(q)).slice(0, 50);
+    return propertyNames
+      .filter((p) => p.toLowerCase().includes(q))
+      .slice(0, 50);
   }, [propertyNames, paramSearch]);
 
   const set = useCallback(
-    <K extends keyof RequirementRuleForm>(key: K, value: RequirementRuleForm[K]) => {
+    <K extends keyof RequirementRuleForm>(
+      key: K,
+      value: RequirementRuleForm[K],
+    ) => {
       setForm((prev) => ({ ...prev, [key]: value }));
     },
     [],
@@ -1276,7 +1407,11 @@ function RequirementRuleEditor({
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      if (!form.filter_value.trim() || !form.check_param.trim() || !form.constraint_value.trim()) {
+      if (
+        !form.filter_value.trim() ||
+        !form.check_param.trim() ||
+        !form.constraint_value.trim()
+      ) {
         return;
       }
       onSubmit(form);
@@ -1287,11 +1422,13 @@ function RequirementRuleEditor({
   if (!open) return null;
 
   const title =
-    mode === 'edit'
-      ? t('bim_rules.req_edit', { defaultValue: 'Edit Requirement Rule' })
-      : mode === 'from_model'
-        ? t('bim_rules.req_from_model', { defaultValue: 'Create from BIM Model' })
-        : t('bim_rules.req_new', { defaultValue: 'New Requirement Rule' });
+    mode === "edit"
+      ? t("bim_rules.req_edit", { defaultValue: "Edit Requirement Rule" })
+      : mode === "from_model"
+        ? t("bim_rules.req_from_model", {
+            defaultValue: "Create from BIM Model",
+          })
+        : t("bim_rules.req_new", { defaultValue: "New Requirement Rule" });
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
@@ -1304,13 +1441,15 @@ function RequirementRuleEditor({
         <div className="flex items-center justify-between border-b border-border-light px-5 py-4">
           <div className="flex items-center gap-2">
             <Shield size={18} className="text-oe-blue" />
-            <h2 className="text-base font-semibold text-content-primary">{title}</h2>
+            <h2 className="text-base font-semibold text-content-primary">
+              {title}
+            </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="rounded-lg p-1 text-content-secondary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -1322,17 +1461,17 @@ function RequirementRuleEditor({
             {/* Format selection */}
             <div>
               <label className="mb-1.5 block text-xs font-medium text-content-secondary">
-                {t('bim_rules.req_format', { defaultValue: 'BIM Format' })}
+                {t("bim_rules.req_format", { defaultValue: "BIM Format" })}
               </label>
               <div className="flex gap-3">
-                {(['revit', 'ifc'] as BIMFormat[]).map((fmt) => (
+                {(["revit", "ifc"] as BIMFormat[]).map((fmt) => (
                   <label
                     key={fmt}
                     className={clsx(
-                      'flex items-center gap-2 rounded-lg border px-4 py-2 text-xs font-medium cursor-pointer transition-all',
+                      "flex items-center gap-2 rounded-lg border px-4 py-2 text-xs font-medium cursor-pointer transition-all",
                       form.format === fmt
-                        ? 'border-oe-blue bg-oe-blue/5 text-oe-blue'
-                        : 'border-border-light text-content-secondary hover:border-content-tertiary',
+                        ? "border-oe-blue bg-oe-blue/5 text-oe-blue"
+                        : "border-border-light text-content-secondary hover:border-content-tertiary",
                     )}
                   >
                     <input
@@ -1341,14 +1480,17 @@ function RequirementRuleEditor({
                       value={fmt}
                       checked={form.format === fmt}
                       onChange={() => {
-                        set('format', fmt);
-                        set('filter_param', getFilterParamsForFormat(fmt)[0] ?? '');
-                        set('filter_value', '');
-                        set('check_param', '');
+                        set("format", fmt);
+                        set(
+                          "filter_param",
+                          getFilterParamsForFormat(fmt)[0] ?? "",
+                        );
+                        set("filter_value", "");
+                        set("check_param", "");
                       }}
                       className="sr-only"
                     />
-                    {fmt === 'revit' ? 'Revit' : 'IFC'}
+                    {fmt === "revit" ? "Revit" : "IFC"}
                   </label>
                 ))}
               </div>
@@ -1357,19 +1499,23 @@ function RequirementRuleEditor({
             {/* Three-column rule editor */}
             <div className="rounded-lg border border-border-light bg-surface-secondary/30 p-4">
               <p className="mb-3 text-xs font-semibold text-content-secondary uppercase tracking-wide">
-                {t('bim_rules.req_rule_definition', { defaultValue: 'Rule Definition' })}
+                {t("bim_rules.req_rule_definition", {
+                  defaultValue: "Rule Definition",
+                })}
               </p>
               <div className="grid grid-cols-3 gap-4">
                 {/* Column 1: Filter */}
                 <div className="space-y-2">
                   <p className="text-[11px] font-semibold text-content-tertiary">
-                    {t('bim_rules.req_col1', { defaultValue: '1. Filter elements by' })}
+                    {t("bim_rules.req_col1", {
+                      defaultValue: "1. Filter elements by",
+                    })}
                   </p>
                   <select
                     value={form.filter_param}
                     onChange={(e) => {
-                      set('filter_param', e.target.value);
-                      set('filter_value', '');
+                      set("filter_param", e.target.value);
+                      set("filter_value", "");
                     }}
                     className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                   >
@@ -1382,11 +1528,13 @@ function RequirementRuleEditor({
                   {filterValues.length > 0 ? (
                     <select
                       value={form.filter_value}
-                      onChange={(e) => set('filter_value', e.target.value)}
+                      onChange={(e) => set("filter_value", e.target.value)}
                       className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                     >
                       <option value="">
-                        {t('bim_rules.req_select_value', { defaultValue: 'Select...' })}
+                        {t("bim_rules.req_select_value", {
+                          defaultValue: "Select...",
+                        })}
                       </option>
                       {filterValues.map((v) => (
                         <option key={v} value={v}>
@@ -1398,9 +1546,9 @@ function RequirementRuleEditor({
                     <input
                       type="text"
                       value={form.filter_value}
-                      onChange={(e) => set('filter_value', e.target.value)}
-                      placeholder={t('bim_rules.req_filter_value', {
-                        defaultValue: 'e.g. Walls, IfcWall',
+                      onChange={(e) => set("filter_value", e.target.value)}
+                      placeholder={t("bim_rules.req_filter_value", {
+                        defaultValue: "e.g. Walls, IfcWall",
                       })}
                       className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                     />
@@ -1410,21 +1558,28 @@ function RequirementRuleEditor({
                 {/* Column 2: Parameter to check */}
                 <div className="space-y-2">
                   <p className="text-[11px] font-semibold text-content-tertiary">
-                    {t('bim_rules.req_col2', { defaultValue: '2. Parameter to check' })}
+                    {t("bim_rules.req_col2", {
+                      defaultValue: "2. Parameter to check",
+                    })}
                   </p>
                   <div className="relative">
-                    <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-content-tertiary" />
+                    <Search
+                      size={12}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 text-content-tertiary"
+                    />
                     <input
                       type="text"
                       value={paramSearch}
                       onChange={(e) => setParamSearch(e.target.value)}
-                      placeholder={t('bim_rules.req_search_param', { defaultValue: 'Search parameter...' })}
+                      placeholder={t("bim_rules.req_search_param", {
+                        defaultValue: "Search parameter...",
+                      })}
                       className="w-full rounded-lg border border-border-light bg-surface-primary pl-7 pr-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                     />
                   </div>
                   <select
                     value={form.check_param}
-                    onChange={(e) => set('check_param', e.target.value)}
+                    onChange={(e) => set("check_param", e.target.value)}
                     size={5}
                     className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                   >
@@ -1437,9 +1592,9 @@ function RequirementRuleEditor({
                   <input
                     type="text"
                     value={form.check_param}
-                    onChange={(e) => set('check_param', e.target.value)}
-                    placeholder={t('bim_rules.req_custom_param', {
-                      defaultValue: 'Or type custom...',
+                    onChange={(e) => set("check_param", e.target.value)}
+                    placeholder={t("bim_rules.req_custom_param", {
+                      defaultValue: "Or type custom...",
                     })}
                     className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 font-mono text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                   />
@@ -1448,11 +1603,15 @@ function RequirementRuleEditor({
                 {/* Column 3: Constraint */}
                 <div className="space-y-2">
                   <p className="text-[11px] font-semibold text-content-tertiary">
-                    {t('bim_rules.req_col3', { defaultValue: '3. Constraint / boundary' })}
+                    {t("bim_rules.req_col3", {
+                      defaultValue: "3. Constraint / boundary",
+                    })}
                   </p>
                   <select
                     value={form.constraint_type}
-                    onChange={(e) => set('constraint_type', e.target.value as ConstraintType)}
+                    onChange={(e) =>
+                      set("constraint_type", e.target.value as ConstraintType)
+                    }
                     className="w-full rounded-lg border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary focus:border-oe-blue focus:outline-none"
                   >
                     {CONSTRAINT_TYPES.map((ct) => (
@@ -1464,7 +1623,7 @@ function RequirementRuleEditor({
                   <ConstraintValueInput
                     constraintType={form.constraint_type}
                     value={form.constraint_value}
-                    onChange={(v) => set('constraint_value', v)}
+                    onChange={(v) => set("constraint_value", v)}
                   />
                 </div>
               </div>
@@ -1474,40 +1633,42 @@ function RequirementRuleEditor({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-xs font-medium text-content-secondary">
-                  {t('bim_rules.req_category', { defaultValue: 'Category' })}
+                  {t("bim_rules.req_category", { defaultValue: "Category" })}
                 </label>
                 <select
                   value={form.category}
-                  onChange={(e) => set('category', e.target.value)}
+                  onChange={(e) => set("category", e.target.value)}
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none"
                 >
                   {REQ_CATEGORIES.map((c) => (
                     <option key={c} value={c}>
-                      {t(`requirements.cat_${c}`, { defaultValue: c.replace(/_/g, ' ') })}
+                      {t(`requirements.cat_${c}`, {
+                        defaultValue: c.replace(/_/g, " "),
+                      })}
                     </option>
                   ))}
                 </select>
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-content-secondary">
-                  {t('bim_rules.req_priority', { defaultValue: 'Priority' })}
+                  {t("bim_rules.req_priority", { defaultValue: "Priority" })}
                 </label>
                 <div className="flex gap-2">
                   {REQ_PRIORITIES.map((p) => {
                     const color =
-                      p === 'must'
-                        ? 'border-red-400/50 bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
-                        : p === 'should'
-                          ? 'border-amber-400/50 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400'
-                          : 'border-oe-blue/50 bg-oe-blue/5 text-oe-blue';
+                      p === "must"
+                        ? "border-red-400/50 bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400"
+                        : p === "should"
+                          ? "border-amber-400/50 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400"
+                          : "border-oe-blue/50 bg-oe-blue/5 text-oe-blue";
                     return (
                       <label
                         key={p}
                         className={clsx(
-                          'flex-1 cursor-pointer rounded-lg border px-3 py-1.5 text-center text-xs font-medium transition-all',
+                          "flex-1 cursor-pointer rounded-lg border px-3 py-1.5 text-center text-xs font-medium transition-all",
                           form.priority === p
                             ? color
-                            : 'border-border-light text-content-secondary hover:border-content-tertiary',
+                            : "border-border-light text-content-secondary hover:border-content-tertiary",
                         )}
                       >
                         <input
@@ -1515,7 +1676,7 @@ function RequirementRuleEditor({
                           name="req-priority"
                           value={p}
                           checked={form.priority === p}
-                          onChange={() => set('priority', p)}
+                          onChange={() => set("priority", p)}
                           className="sr-only"
                         />
                         {p.charAt(0).toUpperCase() + p.slice(1)}
@@ -1530,26 +1691,28 @@ function RequirementRuleEditor({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-xs font-medium text-content-secondary">
-                  {t('bim_rules.req_source_ref', { defaultValue: 'Source Reference' })}
+                  {t("bim_rules.req_source_ref", {
+                    defaultValue: "Source Reference",
+                  })}
                 </label>
                 <input
                   type="text"
                   value={form.source_ref}
-                  onChange={(e) => set('source_ref', e.target.value)}
-                  placeholder={t('bim_rules.req_source_placeholder', {
-                    defaultValue: 'e.g. Drawing A-101, DIN 4102',
+                  onChange={(e) => set("source_ref", e.target.value)}
+                  placeholder={t("bim_rules.req_source_placeholder", {
+                    defaultValue: "e.g. Drawing A-101, DIN 4102",
                   })}
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none"
                 />
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-content-secondary">
-                  {t('bim_rules.req_notes', { defaultValue: 'Notes' })}
+                  {t("bim_rules.req_notes", { defaultValue: "Notes" })}
                 </label>
                 <input
                   type="text"
                   value={form.notes}
-                  onChange={(e) => set('notes', e.target.value)}
+                  onChange={(e) => set("notes", e.target.value)}
                   className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:border-oe-blue focus:outline-none"
                 />
               </div>
@@ -1563,7 +1726,7 @@ function RequirementRuleEditor({
               onClick={onClose}
               className="rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-tertiary"
             >
-              {t('common.cancel', { defaultValue: 'Cancel' })}
+              {t("common.cancel", { defaultValue: "Cancel" })}
             </button>
             <button
               type="submit"
@@ -1572,13 +1735,13 @@ function RequirementRuleEditor({
                 !form.filter_value.trim() ||
                 !form.check_param.trim() ||
                 (!form.constraint_value.trim() &&
-                  form.constraint_type !== 'exists' &&
-                  form.constraint_type !== 'not_exists')
+                  form.constraint_type !== "exists" &&
+                  form.constraint_type !== "not_exists")
               }
               className="flex items-center gap-1.5 rounded-lg bg-oe-blue px-4 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-oe-blue-dark disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting && <Loader2 size={12} className="animate-spin" />}
-              {t('common.save', { defaultValue: 'Save' })}
+              {t("common.save", { defaultValue: "Save" })}
             </button>
           </div>
         </form>
@@ -1609,116 +1772,119 @@ interface RequirementPack {
 // that fits the rule semantically.
 const REQUIREMENTS_PRESET_PACKS: RequirementPack[] = [
   {
-    id: 'fire-safety',
+    id: "fire-safety",
     icon: Flame,
-    title: 'Fire safety basics',
-    subtitle: 'Walls and doors must declare a fire rating; structural columns must match a code-compliant pattern.',
+    title: "Fire safety basics",
+    subtitle:
+      "Walls and doors must declare a fire rating; structural columns must match a code-compliant pattern.",
     rules: [
       {
-        entity: 'Walls',
-        attribute: 'FireRating',
-        constraint_type: 'exists',
-        constraint_value: '',
-        unit: '',
-        category: 'fire_safety',
-        priority: 'must',
-        notes: 'Walls must declare a fire rating',
+        entity: "Walls",
+        attribute: "FireRating",
+        constraint_type: "exists",
+        constraint_value: "",
+        unit: "",
+        category: "fire_safety",
+        priority: "must",
+        notes: "Walls must declare a fire rating",
       },
       {
-        entity: 'Doors',
-        attribute: 'FireRating',
-        constraint_type: 'exists',
-        constraint_value: '',
-        unit: '',
-        category: 'fire_safety',
-        priority: 'must',
-        notes: 'Doors must declare a fire rating',
+        entity: "Doors",
+        attribute: "FireRating",
+        constraint_type: "exists",
+        constraint_value: "",
+        unit: "",
+        category: "fire_safety",
+        priority: "must",
+        notes: "Doors must declare a fire rating",
       },
       {
-        entity: 'Structural Columns',
-        attribute: 'FireRating',
-        constraint_type: 'regex',
-        constraint_value: '^F\\d{2,3}$',
-        unit: '',
-        category: 'fire_safety',
-        priority: 'must',
-        notes: 'Structural columns must match F30/F60/F90/F120 format',
+        entity: "Structural Columns",
+        attribute: "FireRating",
+        constraint_type: "regex",
+        constraint_value: "^F\\d{2,3}$",
+        unit: "",
+        category: "fire_safety",
+        priority: "must",
+        notes: "Structural columns must match F30/F60/F90/F120 format",
       },
     ],
   },
   {
-    id: 'thermal',
+    id: "thermal",
     icon: Thermometer,
-    title: 'Thermal performance',
-    subtitle: 'Exterior walls and roofs must hit U-value targets; windows must declare U-value.',
+    title: "Thermal performance",
+    subtitle:
+      "Exterior walls and roofs must hit U-value targets; windows must declare U-value.",
     rules: [
       {
-        entity: 'Walls',
-        attribute: 'U-Value',
-        constraint_type: 'max',
-        constraint_value: '0.24',
-        unit: 'W/m²K',
-        category: 'thermal',
-        priority: 'must',
-        notes: '[REVIT] Category=Walls | Exterior wall U ≤ 0.24 W/m²K',
+        entity: "Walls",
+        attribute: "U-Value",
+        constraint_type: "max",
+        constraint_value: "0.24",
+        unit: "W/m²K",
+        category: "thermal",
+        priority: "must",
+        notes: "[REVIT] Category=Walls | Exterior wall U ≤ 0.24 W/m²K",
       },
       {
-        entity: 'Roofs',
-        attribute: 'U-Value',
-        constraint_type: 'max',
-        constraint_value: '0.20',
-        unit: 'W/m²K',
-        category: 'thermal',
-        priority: 'must',
-        notes: '[REVIT] Category=Roofs | Roof U ≤ 0.20 W/m²K',
+        entity: "Roofs",
+        attribute: "U-Value",
+        constraint_type: "max",
+        constraint_value: "0.20",
+        unit: "W/m²K",
+        category: "thermal",
+        priority: "must",
+        notes: "[REVIT] Category=Roofs | Roof U ≤ 0.20 W/m²K",
       },
       {
-        entity: 'Windows',
-        attribute: 'U-Value',
-        constraint_type: 'max',
-        constraint_value: '1.4',
-        unit: 'W/m²K',
-        category: 'thermal',
-        priority: 'should',
-        notes: '[REVIT] Category=Windows | Windows U ≤ 1.4 W/m²K',
+        entity: "Windows",
+        attribute: "U-Value",
+        constraint_type: "max",
+        constraint_value: "1.4",
+        unit: "W/m²K",
+        category: "thermal",
+        priority: "should",
+        notes: "[REVIT] Category=Windows | Windows U ≤ 1.4 W/m²K",
       },
     ],
   },
   {
-    id: 'structural',
+    id: "structural",
     icon: Construction,
-    title: 'Structural integrity',
-    subtitle: 'Structural elements must declare a material grade and load-bearing flag.',
+    title: "Structural integrity",
+    subtitle:
+      "Structural elements must declare a material grade and load-bearing flag.",
     rules: [
       {
-        entity: 'Structural Columns',
-        attribute: 'Material',
-        constraint_type: 'exists',
-        constraint_value: '',
-        unit: '',
-        category: 'structural',
-        priority: 'must',
-        notes: 'Structural columns must declare a material',
+        entity: "Structural Columns",
+        attribute: "Material",
+        constraint_type: "exists",
+        constraint_value: "",
+        unit: "",
+        category: "structural",
+        priority: "must",
+        notes: "Structural columns must declare a material",
       },
       {
-        entity: 'Structural Framing',
-        attribute: 'Material',
-        constraint_type: 'exists',
-        constraint_value: '',
-        unit: '',
-        category: 'structural',
-        priority: 'must',
-        notes: 'Structural framing must declare a material',
+        entity: "Structural Framing",
+        attribute: "Material",
+        constraint_type: "exists",
+        constraint_value: "",
+        unit: "",
+        category: "structural",
+        priority: "must",
+        notes: "Structural framing must declare a material",
       },
       {
-        entity: 'Walls',
-        attribute: 'Structural',
-        constraint_type: 'exists',
-        constraint_value: '',
-        unit: '',
-        category: 'structural',
-        priority: 'should',
-        notes: 'Load-bearing flag set where applicable',
+        entity: "Walls",
+        attribute: "Structural",
+        constraint_type: "exists",
+        constraint_value: "",
+        unit: "",
+        category: "structural",
+        priority: "should",
+        notes: "Load-bearing flag set where applicable",
       },
     ],
   },
@@ -1729,31 +1895,41 @@ function RequirementsTabContent({
   elements,
 }: {
   projectId: string | null;
-  elements?: Array<{ element_type?: string; properties?: Record<string, unknown> }>;
+  elements?: Array<{
+    element_type?: string;
+    properties?: Record<string, unknown>;
+  }>;
 }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
   const [editorOpen, setEditorOpen] = useState(false);
-  const [editorMode, setEditorMode] = useState<'create' | 'edit' | 'from_model'>('create');
-  const [editorInitial, setEditorInitial] = useState<RequirementRuleForm | undefined>();
+  const [editorMode, setEditorMode] = useState<
+    "create" | "edit" | "from_model"
+  >("create");
+  const [editorInitial, setEditorInitial] = useState<
+    RequirementRuleForm | undefined
+  >();
   const [editingReqId, setEditingReqId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [activeSetId, setActiveSetId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   // Fetch requirement sets for project
   const { data: sets = [], isLoading: setsLoading } = useQuery({
-    queryKey: ['requirement-sets', projectId],
-    queryFn: () => (projectId ? fetchRequirementSets(projectId) : Promise.resolve([] as RequirementSet[])),
+    queryKey: ["requirement-sets", projectId],
+    queryFn: () =>
+      projectId
+        ? fetchRequirementSets(projectId)
+        : Promise.resolve([] as RequirementSet[]),
     enabled: !!projectId,
   });
 
-  const currentSetId = activeSetId || sets[0]?.id || '';
+  const currentSetId = activeSetId || sets[0]?.id || "";
 
   const { data: detail, isLoading: detailLoading } = useQuery({
-    queryKey: ['requirement-set-detail', currentSetId],
+    queryKey: ["requirement-set-detail", currentSetId],
     queryFn: () => fetchRequirementSetDetail(currentSetId),
     enabled: !!currentSetId,
   });
@@ -1772,8 +1948,8 @@ function RequirementsTabContent({
   }, [requirements, searchQuery]);
 
   const invalidateAll = useCallback(() => {
-    qc.invalidateQueries({ queryKey: ['requirement-sets'] });
-    qc.invalidateQueries({ queryKey: ['requirement-set-detail'] });
+    qc.invalidateQueries({ queryKey: ["requirement-sets"] });
+    qc.invalidateQueries({ queryKey: ["requirement-set-detail"] });
   }, [qc]);
 
   // Model-derived parameter names for "from model" mode
@@ -1783,13 +1959,13 @@ function RequirementsTabContent({
     const valueMap: Record<string, Set<string>> = {};
     for (const el of elements) {
       if (el.element_type) {
-        if (!valueMap['Category']) valueMap['Category'] = new Set();
-        valueMap['Category']!.add(el.element_type);
+        if (!valueMap["Category"]) valueMap["Category"] = new Set();
+        valueMap["Category"]!.add(el.element_type);
       }
       if (el.properties) {
         for (const [k, v] of Object.entries(el.properties)) {
           paramSet.add(k);
-          if (typeof v === 'string' || typeof v === 'number') {
+          if (typeof v === "string" || typeof v === "number") {
             if (!valueMap[k]) valueMap[k] = new Set();
             valueMap[k]!.add(String(v));
           }
@@ -1810,37 +1986,73 @@ function RequirementsTabContent({
       createRequirementSet({
         project_id: projectId!,
         name,
-        description: 'Created from BIM Rules page',
+        description: "Created from BIM Rules page",
       }),
     onSuccess: () => {
       invalidateAll();
-      addToast({ type: 'success', title: t('bim_rules.req_set_created', { defaultValue: 'Requirement set created' }) });
+      addToast({
+        type: "success",
+        title: t("bim_rules.req_set_created", {
+          defaultValue: "Requirement set created",
+        }),
+      });
     },
-    onError: (e: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   // Add requirement mutation
   const addMut = useMutation({
-    mutationFn: (data: AddRequirementPayload) => addRequirement(currentSetId, data),
+    mutationFn: (data: AddRequirementPayload) =>
+      addRequirement(currentSetId, data),
     onSuccess: () => {
       invalidateAll();
       setEditorOpen(false);
-      addToast({ type: 'success', title: t('bim_rules.req_added', { defaultValue: 'Requirement rule added' }) });
+      addToast({
+        type: "success",
+        title: t("bim_rules.req_added", {
+          defaultValue: "Requirement rule added",
+        }),
+      });
     },
-    onError: (e: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   // Update requirement mutation
   const editMut = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateRequirementPayload }) =>
-      updateRequirement(currentSetId, id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: UpdateRequirementPayload;
+    }) => updateRequirement(currentSetId, id, data),
     onSuccess: () => {
       invalidateAll();
       setEditorOpen(false);
       setEditingReqId(null);
-      addToast({ type: 'success', title: t('bim_rules.req_updated', { defaultValue: 'Requirement rule updated' }) });
+      addToast({
+        type: "success",
+        title: t("bim_rules.req_updated", {
+          defaultValue: "Requirement rule updated",
+        }),
+      });
     },
-    onError: (e: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   // Delete requirement mutation
@@ -1849,9 +2061,19 @@ function RequirementsTabContent({
     onSuccess: () => {
       invalidateAll();
       setConfirmDeleteId(null);
-      addToast({ type: 'success', title: t('bim_rules.req_deleted', { defaultValue: 'Requirement rule deleted' }) });
+      addToast({
+        type: "success",
+        title: t("bim_rules.req_deleted", {
+          defaultValue: "Requirement rule deleted",
+        }),
+      });
     },
-    onError: (e: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   // Delete set mutation
@@ -1861,20 +2083,31 @@ function RequirementsTabContent({
       invalidateAll();
       setActiveSetId(null);
     },
-    onError: (e: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   // BIM models for the current project — needed for the
   // "Validate against BIM model" CTA. We fetch them lazily so the
   // Requirements tab opens fast even when the project has many models.
   const { data: bimModelsData } = useQuery({
-    queryKey: ['bim-models-for-validation', projectId],
-    queryFn: () => (projectId ? fetchBIMModels(projectId) : Promise.resolve({ items: [] } as { items: Array<{ id: string; name: string }> })),
+    queryKey: ["bim-models-for-validation", projectId],
+    queryFn: () =>
+      projectId
+        ? fetchBIMModels(projectId)
+        : Promise.resolve({ items: [] } as {
+            items: Array<{ id: string; name: string }>;
+          }),
     enabled: !!projectId,
   });
   const bimModels = bimModelsData?.items ?? [];
   const [pickModelOpen, setPickModelOpen] = useState(false);
-  const [lastValidation, setLastValidation] = useState<ValidateBIMResult | null>(null);
+  const [lastValidation, setLastValidation] =
+    useState<ValidateBIMResult | null>(null);
 
   const validateMut = useMutation({
     mutationFn: (modelId: string) =>
@@ -1883,12 +2116,18 @@ function RequirementsTabContent({
       setLastValidation(result);
       setPickModelOpen(false);
       addToast({
-        type: result.errors > 0 ? 'error' : result.warnings > 0 ? 'warning' : 'success',
-        title: t('bim_rules.req_validate_done', {
-          defaultValue: 'Validation finished',
+        type:
+          result.errors > 0
+            ? "error"
+            : result.warnings > 0
+              ? "warning"
+              : "success",
+        title: t("bim_rules.req_validate_done", {
+          defaultValue: "Validation finished",
         }),
-        message: t('bim_rules.req_validate_summary', {
-          defaultValue: '{{passed}} passed · {{warnings}} warnings · {{errors}} errors ({{checks}} checks)',
+        message: t("bim_rules.req_validate_summary", {
+          defaultValue:
+            "{{passed}} passed · {{warnings}} warnings · {{errors}} errors ({{checks}} checks)",
           passed: result.passed,
           warnings: result.warnings,
           errors: result.errors,
@@ -1897,17 +2136,21 @@ function RequirementsTabContent({
       });
     },
     onError: (e: Error) =>
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   const importFileMut = useMutation({
     mutationFn: async (file: File) => {
       let setId = currentSetId;
       if (!setId) {
-        if (!projectId) throw new Error('No active project');
+        if (!projectId) throw new Error("No active project");
         const created = await createRequirementSet({
           project_id: projectId,
-          name: file.name.replace(/\.[^.]+$/, ''),
+          name: file.name.replace(/\.[^.]+$/, ""),
           description: `Imported from ${file.name}`,
         });
         setId = created.id;
@@ -1918,10 +2161,12 @@ function RequirementsTabContent({
     onSuccess: (result) => {
       invalidateAll();
       addToast({
-        type: result.warnings.length > 0 ? 'warning' : 'success',
-        title: t('bim_rules.req_import_done', { defaultValue: 'Import complete' }),
-        message: t('bim_rules.req_import_summary', {
-          defaultValue: 'Imported {{n}} rules · skipped {{s}} · {{w}} warnings',
+        type: result.warnings.length > 0 ? "warning" : "success",
+        title: t("bim_rules.req_import_done", {
+          defaultValue: "Import complete",
+        }),
+        message: t("bim_rules.req_import_summary", {
+          defaultValue: "Imported {{n}} rules · skipped {{s}} · {{w}} warnings",
           n: result.imported,
           s: result.skipped,
           w: result.warnings.length,
@@ -1929,7 +2174,11 @@ function RequirementsTabContent({
       });
     },
     onError: (e: Error) =>
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   // One-click pack installer — creates the set if missing, then bulk-adds
@@ -1939,7 +2188,7 @@ function RequirementsTabContent({
     mutationFn: async (pack: RequirementPack) => {
       let setId = currentSetId;
       if (!setId) {
-        if (!projectId) throw new Error('No active project');
+        if (!projectId) throw new Error("No active project");
         const created = await createRequirementSet({
           project_id: projectId,
           name: pack.title,
@@ -1956,9 +2205,11 @@ function RequirementsTabContent({
     onSuccess: ({ count, title }) => {
       invalidateAll();
       addToast({
-        type: 'success',
-        title: t('bim_rules.req_pack_added_title', { defaultValue: 'Pack installed' }),
-        message: t('bim_rules.req_pack_added_msg', {
+        type: "success",
+        title: t("bim_rules.req_pack_added_title", {
+          defaultValue: "Pack installed",
+        }),
+        message: t("bim_rules.req_pack_added_msg", {
           defaultValue: '{{count}} rules added from "{{title}}".',
           count,
           title,
@@ -1966,7 +2217,11 @@ function RequirementsTabContent({
       });
     },
     onError: (e: Error) =>
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   const handleSubmit = useCallback(
@@ -1976,16 +2231,17 @@ function RequirementsTabContent({
         attribute: form.check_param,
         constraint_type: form.constraint_type,
         constraint_value:
-          form.constraint_type === 'exists' || form.constraint_type === 'not_exists'
-            ? ''
+          form.constraint_type === "exists" ||
+          form.constraint_type === "not_exists"
+            ? ""
             : form.constraint_value,
-        unit: '',
+        unit: "",
         category: form.category,
         priority: form.priority,
         source_ref: form.source_ref,
         notes: form.notes,
       };
-      if (editorMode === 'edit' && editingReqId) {
+      if (editorMode === "edit" && editingReqId) {
         editMut.mutate({ id: editingReqId, data: payload });
       } else {
         addMut.mutate(payload);
@@ -1995,40 +2251,44 @@ function RequirementsTabContent({
   );
 
   const openCreate = useCallback(() => {
-    setEditorMode('create');
+    setEditorMode("create");
     setEditingReqId(null);
     setEditorInitial(undefined);
     setEditorOpen(true);
   }, []);
 
   const openFromModel = useCallback(() => {
-    setEditorMode('from_model');
+    setEditorMode("from_model");
     setEditingReqId(null);
     setEditorInitial(undefined);
     setEditorOpen(true);
   }, []);
 
   const openEdit = useCallback((req: Requirement) => {
-    setEditorMode('edit');
+    setEditorMode("edit");
     setEditingReqId(req.id);
     // Attempt to parse the notes for format info
     const notesMatch = req.notes?.match(/^\[(\w+)\]\s*([\w\s]+)=(.*?)\s*\|/);
     const format: BIMFormat =
-      notesMatch?.[1]?.toLowerCase() === 'ifc' ? 'ifc' : 'revit';
-    const filterParam = notesMatch?.[2]?.trim() || 'Category';
+      notesMatch?.[1]?.toLowerCase() === "ifc" ? "ifc" : "revit";
+    const filterParam = notesMatch?.[2]?.trim() || "Category";
     setEditorInitial({
       format,
       filter_param: filterParam,
       filter_value: req.entity,
       check_param: req.attribute,
-      constraint_type: (CONSTRAINT_TYPES as readonly string[]).includes(req.constraint_type)
+      constraint_type: (CONSTRAINT_TYPES as readonly string[]).includes(
+        req.constraint_type,
+      )
         ? (req.constraint_type as ConstraintType)
-        : 'equals',
+        : "equals",
       constraint_value: req.constraint_value,
       category: req.category,
       priority: req.priority,
       source_ref: req.source_ref,
-      notes: notesMatch ? req.notes.replace(notesMatch[0], '').trim() : req.notes,
+      notes: notesMatch
+        ? req.notes.replace(notesMatch[0], "").trim()
+        : req.notes,
     });
     setEditorOpen(true);
   }, []);
@@ -2036,9 +2296,9 @@ function RequirementsTabContent({
   const isLoading = setsLoading || detailLoading;
 
   const priorityColor = (p: string) => {
-    if (p === 'must') return 'error' as const;
-    if (p === 'should') return 'warning' as const;
-    return 'blue' as const;
+    if (p === "must") return "error" as const;
+    if (p === "should") return "warning" as const;
+    return "blue" as const;
   };
 
   return (
@@ -2061,22 +2321,29 @@ function RequirementsTabContent({
         {!currentSetId && projectId && (
           <button
             type="button"
-            onClick={() => createSetMut.mutate('BIM Requirements')}
+            onClick={() => createSetMut.mutate("BIM Requirements")}
             disabled={createSetMut.isPending}
             className="flex items-center gap-1 text-[11px] text-oe-blue font-medium hover:underline"
           >
             <Plus size={12} />
-            {t('bim_rules.req_new_set', { defaultValue: 'Create requirement set' })}
+            {t("bim_rules.req_new_set", {
+              defaultValue: "Create requirement set",
+            })}
           </button>
         )}
 
         <div className="relative flex-1 min-w-[200px]">
-          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary" />
+          <Search
+            size={13}
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+          />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('bim_rules.req_search', { defaultValue: 'Search entity, attribute, value...' })}
+            placeholder={t("bim_rules.req_search", {
+              defaultValue: "Search entity, attribute, value...",
+            })}
             className="w-full rounded-lg border border-border-light bg-surface-primary pl-8 pr-3 py-1.5 text-[11px] text-content-primary focus:border-oe-blue focus:outline-none"
           />
         </div>
@@ -2085,11 +2352,11 @@ function RequirementsTabContent({
           {/* Import from Excel / CSV */}
           <label
             className={clsx(
-              'flex cursor-pointer items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-2.5 py-1.5 text-[11px] font-medium text-content-secondary hover:border-oe-blue hover:text-oe-blue',
-              importFileMut.isPending && 'pointer-events-none opacity-60',
+              "flex cursor-pointer items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-2.5 py-1.5 text-[11px] font-medium text-content-secondary hover:border-oe-blue hover:text-oe-blue",
+              importFileMut.isPending && "pointer-events-none opacity-60",
             )}
-            title={t('bim_rules.req_import_btn_title', {
-              defaultValue: 'Upload Excel or CSV',
+            title={t("bim_rules.req_import_btn_title", {
+              defaultValue: "Upload Excel or CSV",
             })}
           >
             {importFileMut.isPending ? (
@@ -2097,7 +2364,7 @@ function RequirementsTabContent({
             ) : (
               <Upload size={12} />
             )}
-            {t('bim_rules.req_import_btn', { defaultValue: 'Import' })}
+            {t("bim_rules.req_import_btn", { defaultValue: "Import" })}
             <input
               type="file"
               accept=".xlsx,.xls,.csv"
@@ -2105,7 +2372,7 @@ function RequirementsTabContent({
               onChange={(e) => {
                 const f = e.target.files?.[0];
                 if (f) importFileMut.mutate(f);
-                e.target.value = '';
+                e.target.value = "";
               }}
             />
           </label>
@@ -2114,12 +2381,12 @@ function RequirementsTabContent({
           <a
             href={requirementsTemplateUrl()}
             className="flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-2.5 py-1.5 text-[11px] font-medium text-content-secondary hover:border-oe-blue hover:text-oe-blue"
-            title={t('bim_rules.req_template_btn_title', {
-              defaultValue: 'Download Excel template',
+            title={t("bim_rules.req_template_btn_title", {
+              defaultValue: "Download Excel template",
             })}
           >
             <Download size={12} />
-            {t('bim_rules.req_template_btn', { defaultValue: 'Template' })}
+            {t("bim_rules.req_template_btn", { defaultValue: "Template" })}
           </a>
 
           {/* Export current set */}
@@ -2127,10 +2394,12 @@ function RequirementsTabContent({
             <a
               href={`/api/v1/requirements/${currentSetId}/export.xlsx`}
               className="flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-2.5 py-1.5 text-[11px] font-medium text-content-secondary hover:border-oe-blue hover:text-oe-blue"
-              title={t('bim_rules.req_export_xlsx', { defaultValue: 'Export as Excel' })}
+              title={t("bim_rules.req_export_xlsx", {
+                defaultValue: "Export as Excel",
+              })}
             >
               <Download size={12} />
-              {t('common.export', { defaultValue: 'Export' })}
+              {t("common.export", { defaultValue: "Export" })}
             </a>
           )}
 
@@ -2147,8 +2416,8 @@ function RequirementsTabContent({
               ) : (
                 <CheckCircle2 size={12} />
               )}
-              {t('bim_rules.req_validate_btn', {
-                defaultValue: 'Validate against model',
+              {t("bim_rules.req_validate_btn", {
+                defaultValue: "Validate against model",
               })}
             </button>
           )}
@@ -2160,7 +2429,9 @@ function RequirementsTabContent({
               className="flex items-center gap-1.5 rounded-lg border border-oe-blue/40 bg-oe-blue/5 px-3 py-1.5 text-[11px] font-medium text-oe-blue hover:bg-oe-blue/10"
             >
               <Sparkles size={12} />
-              {t('bim_rules.req_from_model_btn', { defaultValue: 'From BIM Model' })}
+              {t("bim_rules.req_from_model_btn", {
+                defaultValue: "From BIM Model",
+              })}
             </button>
           )}
           <button
@@ -2170,7 +2441,7 @@ function RequirementsTabContent({
             className="flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:bg-oe-blue-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Plus size={13} />
-            {t('bim_rules.req_new_rule', { defaultValue: 'New Rule' })}
+            {t("bim_rules.req_new_rule", { defaultValue: "New Rule" })}
           </button>
         </div>
       </div>
@@ -2179,12 +2450,12 @@ function RequirementsTabContent({
       {lastValidation && (
         <div
           className={clsx(
-            'rounded-xl border px-4 py-3 text-xs',
+            "rounded-xl border px-4 py-3 text-xs",
             lastValidation.errors > 0
-              ? 'border-red-300 bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-300'
+              ? "border-red-300 bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-300"
               : lastValidation.warnings > 0
-                ? 'border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-900/20 dark:text-amber-300'
-                : 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300',
+                ? "border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
+                : "border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300",
           )}
         >
           <div className="flex flex-wrap items-center gap-3">
@@ -2192,20 +2463,30 @@ function RequirementsTabContent({
               {Math.round(lastValidation.score * 100)}%
             </span>
             <span>
-              {t('bim_rules.req_validate_passed', { defaultValue: '{{n}} passed', n: lastValidation.passed })}
+              {t("bim_rules.req_validate_passed", {
+                defaultValue: "{{n}} passed",
+                n: lastValidation.passed,
+              })}
             </span>
             <span>·</span>
             <span>
-              {t('bim_rules.req_validate_warned', { defaultValue: '{{n}} warnings', n: lastValidation.warnings })}
+              {t("bim_rules.req_validate_warned", {
+                defaultValue: "{{n}} warnings",
+                n: lastValidation.warnings,
+              })}
             </span>
             <span>·</span>
             <span>
-              {t('bim_rules.req_validate_errored', { defaultValue: '{{n}} errors', n: lastValidation.errors })}
+              {t("bim_rules.req_validate_errored", {
+                defaultValue: "{{n}} errors",
+                n: lastValidation.errors,
+              })}
             </span>
             <span>·</span>
             <span>
-              {t('bim_rules.req_validate_skipped', {
-                defaultValue: '{{n}} requirements skipped (no matching elements)',
+              {t("bim_rules.req_validate_skipped", {
+                defaultValue:
+                  "{{n}} requirements skipped (no matching elements)",
                 n: lastValidation.skipped_requirements,
               })}
             </span>
@@ -2213,7 +2494,9 @@ function RequirementsTabContent({
               href={`/validation?report_id=${lastValidation.report_id}`}
               className="ml-auto font-medium underline-offset-2 hover:underline"
             >
-              {t('bim_rules.req_validate_open_report', { defaultValue: 'Open full report →' })}
+              {t("bim_rules.req_validate_open_report", {
+                defaultValue: "Open full report →",
+              })}
             </a>
           </div>
         </div>
@@ -2230,14 +2513,14 @@ function RequirementsTabContent({
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="mb-1 text-sm font-semibold text-content-primary">
-              {t('bim_rules.req_pick_model_title', {
-                defaultValue: 'Validate against which BIM model?',
+              {t("bim_rules.req_pick_model_title", {
+                defaultValue: "Validate against which BIM model?",
               })}
             </h3>
             <p className="mb-4 text-xs text-content-secondary">
-              {t('bim_rules.req_pick_model_subtitle', {
+              {t("bim_rules.req_pick_model_subtitle", {
                 defaultValue:
-                  'Each requirement will be checked against every element in the chosen model. The score and findings will be saved as a regular validation report.',
+                  "Each requirement will be checked against every element in the chosen model. The score and findings will be saved as a regular validation report.",
               })}
             </p>
             <div className="max-h-72 space-y-1 overflow-auto">
@@ -2263,7 +2546,7 @@ function RequirementsTabContent({
                 disabled={validateMut.isPending}
                 className="rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-tertiary disabled:opacity-60"
               >
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t("common.cancel", { defaultValue: "Cancel" })}
               </button>
             </div>
           </div>
@@ -2274,21 +2557,21 @@ function RequirementsTabContent({
       {isLoading ? (
         <div className="flex items-center justify-center py-12 text-sm text-content-secondary">
           <Loader2 size={18} className="mr-2 animate-spin" />
-          {t('common.loading', { defaultValue: 'Loading...' })}
+          {t("common.loading", { defaultValue: "Loading..." })}
         </div>
       ) : !currentSetId || filteredReqs.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border-light bg-surface-secondary/30 px-6 py-8">
           <div className="text-center">
             <Shield size={28} className="mx-auto mb-2 text-content-tertiary" />
             <h3 className="text-sm font-semibold text-content-primary">
-              {t('bim_rules.req_empty_title', {
-                defaultValue: 'Start with a ready-made pack',
+              {t("bim_rules.req_empty_title", {
+                defaultValue: "Start with a ready-made pack",
               })}
             </h3>
             <p className="mx-auto mt-1 max-w-md text-[12px] text-content-secondary">
-              {t('bim_rules.req_empty_subtitle', {
+              {t("bim_rules.req_empty_subtitle", {
                 defaultValue:
-                  'A pack adds 3-5 compliance rules in one click. Pick the area that fits your project; you can edit each rule afterwards.',
+                  "A pack adds 3-5 compliance rules in one click. Pick the area that fits your project; you can edit each rule afterwards.",
               })}
             </p>
           </div>
@@ -2297,43 +2580,41 @@ function RequirementsTabContent({
             {REQUIREMENTS_PRESET_PACKS.map((pack) => {
               const PackIcon = pack.icon;
               return (
-              <button
-                key={pack.id}
-                type="button"
-                disabled={installPackMut.isPending || !projectId}
-                onClick={() => installPackMut.mutate(pack)}
-                className="group flex flex-col items-start gap-2 rounded-lg border border-border-light bg-surface-primary p-4 text-left transition hover:-translate-y-0.5 hover:border-oe-blue/60 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue group-hover:bg-oe-blue group-hover:text-white transition-colors">
-                  <PackIcon size={18} strokeWidth={1.85} />
-                </span>
-                <span className="text-sm font-semibold text-content-primary group-hover:text-oe-blue">
-                  {pack.title}
-                </span>
-                <span className="text-[11px] leading-snug text-content-secondary">
-                  {pack.subtitle}
-                </span>
-                <span className="mt-1 flex items-center gap-1 text-[11px] font-medium text-oe-blue">
-                  <Plus size={12} />
-                  {t('bim_rules.req_install_pack', {
-                    defaultValue: 'Add {{count}} rules',
-                    count: pack.rules.length,
-                  })}
-                </span>
-              </button>
+                <button
+                  key={pack.id}
+                  type="button"
+                  disabled={installPackMut.isPending || !projectId}
+                  onClick={() => installPackMut.mutate(pack)}
+                  className="group flex flex-col items-start gap-2 rounded-lg border border-border-light bg-surface-primary p-4 text-left transition hover:-translate-y-0.5 hover:border-oe-blue/60 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue group-hover:bg-oe-blue group-hover:text-white transition-colors">
+                    <PackIcon size={18} strokeWidth={1.85} />
+                  </span>
+                  <span className="text-sm font-semibold text-content-primary group-hover:text-oe-blue">
+                    {pack.title}
+                  </span>
+                  <span className="text-[11px] leading-snug text-content-secondary">
+                    {pack.subtitle}
+                  </span>
+                  <span className="mt-1 flex items-center gap-1 text-[11px] font-medium text-oe-blue">
+                    <Plus size={12} />
+                    {t("bim_rules.req_install_pack", {
+                      defaultValue: "Add {{count}} rules",
+                      count: pack.rules.length,
+                    })}
+                  </span>
+                </button>
               );
             })}
           </div>
 
           <div className="mt-4 flex items-center justify-center gap-3 text-[11px] text-content-tertiary">
-            <span>
-              {t('bim_rules.req_empty_or', { defaultValue: 'or' })}
-            </span>
+            <span>{t("bim_rules.req_empty_or", { defaultValue: "or" })}</span>
             <button
               type="button"
               onClick={() => {
                 if (!currentSetId && projectId) {
-                  createSetMut.mutate('BIM Requirements');
+                  createSetMut.mutate("BIM Requirements");
                   return;
                 }
                 openCreate();
@@ -2342,11 +2623,11 @@ function RequirementsTabContent({
               className="font-medium text-oe-blue hover:underline disabled:opacity-60"
             >
               {!currentSetId
-                ? t('bim_rules.req_create_blank_set', {
-                    defaultValue: 'Start with an empty set',
+                ? t("bim_rules.req_create_blank_set", {
+                    defaultValue: "Start with an empty set",
                   })
-                : t('bim_rules.req_create_blank_rule', {
-                    defaultValue: 'Add a custom rule',
+                : t("bim_rules.req_create_blank_rule", {
+                    defaultValue: "Add a custom rule",
                   })}
             </button>
           </div>
@@ -2354,7 +2635,9 @@ function RequirementsTabContent({
           {installPackMut.isPending && (
             <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-content-secondary">
               <Loader2 size={12} className="animate-spin" />
-              {t('bim_rules.req_installing', { defaultValue: 'Installing pack…' })}
+              {t("bim_rules.req_installing", {
+                defaultValue: "Installing pack…",
+              })}
             </div>
           )}
         </div>
@@ -2364,22 +2647,28 @@ function RequirementsTabContent({
             <thead className="border-b border-border-light bg-surface-secondary text-content-secondary">
               <tr>
                 <th className="px-3 py-2 font-medium">
-                  {t('bim_rules.req_th_entity', { defaultValue: 'Entity (Filter)' })}
+                  {t("bim_rules.req_th_entity", {
+                    defaultValue: "Entity (Filter)",
+                  })}
                 </th>
                 <th className="px-3 py-2 font-medium">
-                  {t('bim_rules.req_th_attribute', { defaultValue: 'Parameter' })}
+                  {t("bim_rules.req_th_attribute", {
+                    defaultValue: "Parameter",
+                  })}
                 </th>
                 <th className="px-3 py-2 font-medium">
-                  {t('bim_rules.req_th_constraint', { defaultValue: 'Constraint' })}
+                  {t("bim_rules.req_th_constraint", {
+                    defaultValue: "Constraint",
+                  })}
                 </th>
                 <th className="px-3 py-2 font-medium">
-                  {t('bim_rules.req_th_category', { defaultValue: 'Category' })}
+                  {t("bim_rules.req_th_category", { defaultValue: "Category" })}
                 </th>
                 <th className="px-3 py-2 font-medium">
-                  {t('bim_rules.req_th_priority', { defaultValue: 'Priority' })}
+                  {t("bim_rules.req_th_priority", { defaultValue: "Priority" })}
                 </th>
                 <th className="px-3 py-2 text-right font-medium">
-                  {t('bim_rules.col_actions', { defaultValue: 'Actions' })}
+                  {t("bim_rules.col_actions", { defaultValue: "Actions" })}
                 </th>
               </tr>
             </thead>
@@ -2403,7 +2692,7 @@ function RequirementsTabContent({
                   </td>
                   <td className="px-3 py-2 text-[11px]">
                     {t(`requirements.cat_${req.category}`, {
-                      defaultValue: req.category.replace(/_/g, ' '),
+                      defaultValue: req.category.replace(/_/g, " "),
                     })}
                   </td>
                   <td className="px-3 py-2">
@@ -2417,7 +2706,7 @@ function RequirementsTabContent({
                         type="button"
                         onClick={() => openEdit(req)}
                         className="rounded p-1 text-content-secondary hover:bg-surface-tertiary hover:text-oe-blue"
-                        title={t('common.edit', { defaultValue: 'Edit' })}
+                        title={t("common.edit", { defaultValue: "Edit" })}
                       >
                         <Pencil size={13} />
                       </button>
@@ -2425,7 +2714,7 @@ function RequirementsTabContent({
                         type="button"
                         onClick={() => setConfirmDeleteId(req.id)}
                         className="rounded p-1 text-content-secondary hover:bg-red-50 hover:text-red-600"
-                        title={t('common.delete', { defaultValue: 'Delete' })}
+                        title={t("common.delete", { defaultValue: "Delete" })}
                       >
                         <Trash2 size={13} />
                       </button>
@@ -2437,14 +2726,19 @@ function RequirementsTabContent({
           </table>
           <div className="border-t border-border-light bg-surface-secondary/30 px-3 py-2 text-[10px] text-content-tertiary flex items-center justify-between">
             <span>
-              {filteredReqs.length} {t('bim_rules.req_rules_label', { defaultValue: 'requirement rules' })}
+              {filteredReqs.length}{" "}
+              {t("bim_rules.req_rules_label", {
+                defaultValue: "requirement rules",
+              })}
             </span>
             {currentSetId && (
               <button
                 type="button"
                 onClick={() => delSetMut.mutate(currentSetId)}
                 className="text-content-quaternary hover:text-red-600"
-                title={t('bim_rules.req_delete_set', { defaultValue: 'Delete set' })}
+                title={t("bim_rules.req_delete_set", {
+                  defaultValue: "Delete set",
+                })}
               >
                 <Trash2 size={12} />
               </button>
@@ -2456,7 +2750,10 @@ function RequirementsTabContent({
       {/* Editor modal */}
       <RequirementRuleEditor
         open={editorOpen}
-        onClose={() => { setEditorOpen(false); setEditingReqId(null); }}
+        onClose={() => {
+          setEditorOpen(false);
+          setEditingReqId(null);
+        }}
         onSubmit={handleSubmit}
         submitting={addMut.isPending || editMut.isPending}
         initial={editorInitial}
@@ -2471,9 +2768,11 @@ function RequirementsTabContent({
           if (confirmDeleteId) delMut.mutate(confirmDeleteId);
         }}
         onCancel={() => setConfirmDeleteId(null)}
-        title={t('bim_rules.req_confirm_delete', { defaultValue: 'Delete requirement rule?' })}
-        message={t('bim_rules.req_confirm_delete_msg', {
-          defaultValue: 'This requirement rule will be permanently removed.',
+        title={t("bim_rules.req_confirm_delete", {
+          defaultValue: "Delete requirement rule?",
+        })}
+        message={t("bim_rules.req_confirm_delete_msg", {
+          defaultValue: "This requirement rule will be permanently removed.",
         })}
         loading={delMut.isPending}
       />
@@ -2483,7 +2782,10 @@ function RequirementsTabContent({
 
 /* ── No-project empty state ──────────────────────────────────────────── */
 
-interface ProjectOption { id: string; name: string }
+interface ProjectOption {
+  id: string;
+  name: string;
+}
 
 /**
  * Inline project picker rendered in the EmptyState body. Loads the
@@ -2503,9 +2805,9 @@ function NoProjectPicker() {
   useEffect(() => {
     if (!open || projects.length > 0) return;
     setLoading(true);
-    apiGet<{ items?: ProjectOption[] } | ProjectOption[]>('/v1/projects/')
+    apiGet<{ items?: ProjectOption[] } | ProjectOption[]>("/v1/projects/")
       .then((res) => {
-        const items = Array.isArray(res) ? res : res.items ?? [];
+        const items = Array.isArray(res) ? res : (res.items ?? []);
         setProjects(items);
       })
       .catch(() => setProjects([]))
@@ -2520,19 +2822,21 @@ function NoProjectPicker() {
         className="inline-flex items-center gap-2 rounded-lg bg-oe-blue px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-oe-blue-dark"
       >
         <FolderOpen size={14} />
-        {t('bim_rules.no_project_pick_btn', { defaultValue: 'Pick a project' })}
+        {t("bim_rules.no_project_pick_btn", { defaultValue: "Pick a project" })}
         <span aria-hidden="true">▾</span>
       </button>
       {open && (
         <div className="absolute left-1/2 z-20 mt-2 w-64 -translate-x-1/2 rounded-lg border border-border-light bg-surface-primary py-1 shadow-lg">
           {loading && (
             <div className="px-3 py-2 text-[11px] text-content-tertiary">
-              {t('common.loading', { defaultValue: 'Loading…' })}
+              {t("common.loading", { defaultValue: "Loading…" })}
             </div>
           )}
           {!loading && projects.length === 0 && (
             <div className="px-3 py-2 text-[11px] text-content-tertiary">
-              {t('bim_rules.no_project_no_projects', { defaultValue: 'No projects available' })}
+              {t("bim_rules.no_project_no_projects", {
+                defaultValue: "No projects available",
+              })}
             </div>
           )}
           {!loading &&
@@ -2569,12 +2873,12 @@ export function BIMQuantityRulesPage() {
   /* ── Queries ───────────────────────────────────────────────────────── */
 
   const rulesQuery = useQuery({
-    queryKey: ['bim-quantity-maps'],
+    queryKey: ["bim-quantity-maps"],
     queryFn: () => listQuantityMaps(0, 500),
   });
 
   const modelsQuery = useQuery({
-    queryKey: ['bim-models', activeProjectId],
+    queryKey: ["bim-models", activeProjectId],
     queryFn: () =>
       activeProjectId
         ? fetchBIMModels(activeProjectId)
@@ -2598,15 +2902,21 @@ export function BIMQuantityRulesPage() {
   /* ── Lookup: boq_position_id → boq_id (for edit form) ──────────────── */
 
   const boqsListQuery = useQuery({
-    queryKey: ['boqs', activeProjectId],
+    queryKey: ["boqs", activeProjectId],
     queryFn: () =>
-      activeProjectId ? boqApi.list(activeProjectId) : Promise.resolve<BOQ[]>([]),
+      activeProjectId
+        ? boqApi.list(activeProjectId)
+        : Promise.resolve<BOQ[]>([]),
     enabled: !!activeProjectId,
   });
 
   // Build a flat map position_id → boq_id from every BOQ in the project
   const boqPositionLookupQuery = useQuery({
-    queryKey: ['boq-position-lookup', activeProjectId, boqsListQuery.data?.length ?? 0],
+    queryKey: [
+      "boq-position-lookup",
+      activeProjectId,
+      boqsListQuery.data?.length ?? 0,
+    ],
     queryFn: async () => {
       const map = new Map<string, string>();
       const boqs = boqsListQuery.data ?? [];
@@ -2622,14 +2932,18 @@ export function BIMQuantityRulesPage() {
       }
       return map;
     },
-    enabled: !!activeProjectId && !!boqsListQuery.data && boqsListQuery.data.length > 0,
+    enabled:
+      !!activeProjectId &&
+      !!boqsListQuery.data &&
+      boqsListQuery.data.length > 0,
   });
 
-  const boqPositionLookup = boqPositionLookupQuery.data ?? new Map<string, string>();
+  const boqPositionLookup =
+    boqPositionLookupQuery.data ?? new Map<string, string>();
 
   /* ── State ─────────────────────────────────────────────────────────── */
 
-  const [modelId, setModelId] = useState<string>('');
+  const [modelId, setModelId] = useState<string>("");
   // URL param ?mode=requirements locks the page to the Requirements tab so
   // the sidebar can expose the compliance half as its own entry under
   // Takeoff, while /bim/rules (no param) remains the Estimation-side
@@ -2637,13 +2951,14 @@ export function BIMQuantityRulesPage() {
   // duplication; the mode flag just hides the tab switcher + fixes the
   // active tab.
   const [searchParams] = useSearchParams();
-  const lockedMode = searchParams.get('mode') === 'requirements' ? 'requirements' : null;
+  const lockedMode =
+    searchParams.get("mode") === "requirements" ? "requirements" : null;
   const [activeTab, setActiveTab] = useState<RulesTab>(
-    lockedMode === 'requirements' ? 'requirements' : 'quantity_rules',
+    lockedMode === "requirements" ? "requirements" : "quantity_rules",
   );
   useEffect(() => {
-    if (lockedMode === 'requirements' && activeTab !== 'requirements') {
-      setActiveTab('requirements');
+    if (lockedMode === "requirements" && activeTab !== "requirements") {
+      setActiveTab("requirements");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lockedMode]);
@@ -2661,24 +2976,28 @@ export function BIMQuantityRulesPage() {
   // the user is on the Quantity Rules tab to avoid pulling 50k rows
   // over the wire for nothing.
   const elementsQuery = useQuery({
-    queryKey: ['bim-elements-skeleton', modelId],
+    queryKey: ["bim-elements-skeleton", modelId],
     queryFn: () =>
       modelId
         ? fetchBIMElements(modelId, { skeleton: true })
         : Promise.resolve({ items: [], total: 0 }),
-    enabled: !!modelId && activeTab === 'requirements',
+    enabled: !!modelId && activeTab === "requirements",
     staleTime: 5 * 60 * 1000,
   });
   const requirementsElements = elementsQuery.data?.items;
 
   const [editorOpen, setEditorOpen] = useState(false);
-  const [editorMode, setEditorMode] = useState<'create' | 'edit' | 'duplicate'>('create');
-  const [editorInitial, setEditorInitial] = useState<RuleFormState>(blankForm());
+  const [editorMode, setEditorMode] = useState<"create" | "edit" | "duplicate">(
+    "create",
+  );
+  const [editorInitial, setEditorInitial] =
+    useState<RuleFormState>(blankForm());
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewResult, setPreviewResult] = useState<QuantityMapApplyResult | null>(null);
+  const [previewResult, setPreviewResult] =
+    useState<QuantityMapApplyResult | null>(null);
 
   /* ── Mutations ─────────────────────────────────────────────────────── */
 
@@ -2686,47 +3005,60 @@ export function BIMQuantityRulesPage() {
     // Explicit key so the global MutationCache handler in main.tsx also
     // invalidates the list — guards against a forgotten refetch if the
     // local onSuccess below is ever skipped (e.g. component unmount mid-flight).
-    mutationKey: ['bim-quantity-maps', 'create'],
+    mutationKey: ["bim-quantity-maps", "create"],
     mutationFn: createQuantityMap,
     onSuccess: async () => {
       // Await the invalidation so the list is guaranteed to have been
       // refetched before the dialog closes and the success toast fires.
       // Without the await, the user briefly sees an empty list after close.
-      await queryClient.invalidateQueries({ queryKey: ['bim-quantity-maps'] });
+      await queryClient.invalidateQueries({ queryKey: ["bim-quantity-maps"] });
       setEditorOpen(false);
       addToast({
-        type: 'success',
-        title: t('bim_rules.toast_created_title', { defaultValue: 'Rule created' }),
-        message: t('bim_rules.toast_created_msg', {
-          defaultValue: 'The new rule is now available.',
+        type: "success",
+        title: t("bim_rules.toast_created_title", {
+          defaultValue: "Rule created",
+        }),
+        message: t("bim_rules.toast_created_msg", {
+          defaultValue: "The new rule is now available.",
         }),
       });
     },
     onError: (err: unknown) => {
       addToast({
-        type: 'error',
-        title: t('bim_rules.toast_create_failed', { defaultValue: 'Failed to create rule' }),
+        type: "error",
+        title: t("bim_rules.toast_create_failed", {
+          defaultValue: "Failed to create rule",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     },
   });
 
   const patchMutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: CreateBIMQuantityMapRequest }) =>
-      patchQuantityMap(id, payload),
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: CreateBIMQuantityMapRequest;
+    }) => patchQuantityMap(id, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bim-quantity-maps'] });
+      queryClient.invalidateQueries({ queryKey: ["bim-quantity-maps"] });
       setEditorOpen(false);
       addToast({
-        type: 'success',
-        title: t('bim_rules.toast_saved_title', { defaultValue: 'Rule saved' }),
-        message: t('bim_rules.toast_saved_msg', { defaultValue: 'Changes applied.' }),
+        type: "success",
+        title: t("bim_rules.toast_saved_title", { defaultValue: "Rule saved" }),
+        message: t("bim_rules.toast_saved_msg", {
+          defaultValue: "Changes applied.",
+        }),
       });
     },
     onError: (err: unknown) => {
       addToast({
-        type: 'error',
-        title: t('bim_rules.toast_save_failed', { defaultValue: 'Failed to save rule' }),
+        type: "error",
+        title: t("bim_rules.toast_save_failed", {
+          defaultValue: "Failed to save rule",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     },
@@ -2736,32 +3068,41 @@ export function BIMQuantityRulesPage() {
     mutationFn: ({ id, is_active }: { id: string; is_active: boolean }) =>
       patchQuantityMap(id, { is_active }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bim-quantity-maps'] });
+      queryClient.invalidateQueries({ queryKey: ["bim-quantity-maps"] });
     },
     onError: (err: unknown) => {
       addToast({
-        type: 'error',
-        title: t('bim_rules.toast_toggle_failed', { defaultValue: 'Failed to toggle rule' }),
+        type: "error",
+        title: t("bim_rules.toast_toggle_failed", {
+          defaultValue: "Failed to toggle rule",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => patchQuantityMap(id, { is_active: false, metadata: { deleted: true } }),
+    mutationFn: (id: string) =>
+      patchQuantityMap(id, { is_active: false, metadata: { deleted: true } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bim-quantity-maps'] });
+      queryClient.invalidateQueries({ queryKey: ["bim-quantity-maps"] });
       setConfirmDeleteId(null);
       addToast({
-        type: 'success',
-        title: t('bim_rules.toast_deleted_title', { defaultValue: 'Rule deleted' }),
-        message: t('bim_rules.toast_deleted_msg', { defaultValue: 'The rule has been removed.' }),
+        type: "success",
+        title: t("bim_rules.toast_deleted_title", {
+          defaultValue: "Rule deleted",
+        }),
+        message: t("bim_rules.toast_deleted_msg", {
+          defaultValue: "The rule has been removed.",
+        }),
       });
     },
     onError: (err: unknown) => {
       addToast({
-        type: 'error',
-        title: t('bim_rules.toast_delete_failed', { defaultValue: 'Failed to delete rule' }),
+        type: "error",
+        title: t("bim_rules.toast_delete_failed", {
+          defaultValue: "Failed to delete rule",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     },
@@ -2779,8 +3120,10 @@ export function BIMQuantityRulesPage() {
     onError: (err: unknown) => {
       setPreviewOpen(false);
       addToast({
-        type: 'error',
-        title: t('bim_rules.toast_preview_failed', { defaultValue: 'Preview failed' }),
+        type: "error",
+        title: t("bim_rules.toast_preview_failed", {
+          defaultValue: "Preview failed",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     },
@@ -2789,12 +3132,15 @@ export function BIMQuantityRulesPage() {
   const applyMutation = useMutation({
     mutationFn: (id: string) => applyQuantityMaps(id, false),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['bim-quantity-maps'] });
+      queryClient.invalidateQueries({ queryKey: ["bim-quantity-maps"] });
       addToast({
-        type: 'success',
-        title: t('bim_rules.toast_applied_title', { defaultValue: 'Rules applied' }),
-        message: t('bim_rules.toast_applied_msg', {
-          defaultValue: '{{links}} links created, {{positions}} positions created.',
+        type: "success",
+        title: t("bim_rules.toast_applied_title", {
+          defaultValue: "Rules applied",
+        }),
+        message: t("bim_rules.toast_applied_msg", {
+          defaultValue:
+            "{{links}} links created, {{positions}} positions created.",
           links: data.links_created,
           positions: data.positions_created,
         }),
@@ -2802,8 +3148,10 @@ export function BIMQuantityRulesPage() {
     },
     onError: (err: unknown) => {
       addToast({
-        type: 'error',
-        title: t('bim_rules.toast_apply_failed', { defaultValue: 'Apply failed' }),
+        type: "error",
+        title: t("bim_rules.toast_apply_failed", {
+          defaultValue: "Apply failed",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     },
@@ -2812,7 +3160,7 @@ export function BIMQuantityRulesPage() {
   /* ── Handlers ──────────────────────────────────────────────────────── */
 
   const openCreate = useCallback(() => {
-    setEditorMode('create');
+    setEditorMode("create");
     setEditingRuleId(null);
     setEditorInitial(blankForm());
     setEditorOpen(true);
@@ -2822,7 +3170,7 @@ export function BIMQuantityRulesPage() {
   // first-time users can ship a usable rule with a single review-and-Save
   // pass instead of having to invent every field from scratch.
   const openCreateFromPreset = useCallback((preset: QuantityRulePreset) => {
-    setEditorMode('create');
+    setEditorMode("create");
     setEditingRuleId(null);
     setEditorInitial({ ...blankForm(), ...preset.patch });
     setEditorOpen(true);
@@ -2830,7 +3178,7 @@ export function BIMQuantityRulesPage() {
 
   const openEdit = useCallback(
     (rule: BIMQuantityMap) => {
-      setEditorMode('edit');
+      setEditorMode("edit");
       setEditingRuleId(rule.id);
       setEditorInitial(toFormState(rule, boqPositionLookup));
       setEditorOpen(true);
@@ -2840,7 +3188,7 @@ export function BIMQuantityRulesPage() {
 
   const openDuplicate = useCallback(
     (rule: BIMQuantityMap) => {
-      setEditorMode('duplicate');
+      setEditorMode("duplicate");
       setEditingRuleId(null);
       const form = toFormState(rule, boqPositionLookup);
       form.name = `${form.name} (copy)`;
@@ -2852,7 +3200,7 @@ export function BIMQuantityRulesPage() {
 
   const handleSubmit = useCallback(
     (payload: CreateBIMQuantityMapRequest) => {
-      if (editorMode === 'edit' && editingRuleId) {
+      if (editorMode === "edit" && editingRuleId) {
         patchMutation.mutate({ id: editingRuleId, payload });
       } else {
         createMutation.mutate(payload);
@@ -2864,10 +3212,12 @@ export function BIMQuantityRulesPage() {
   const handlePreview = useCallback(() => {
     if (!modelId) {
       addToast({
-        type: 'warning',
-        title: t('bim_rules.toast_no_model_title', { defaultValue: 'Select a BIM model' }),
-        message: t('bim_rules.toast_no_model_msg', {
-          defaultValue: 'Please pick a BIM model first.',
+        type: "warning",
+        title: t("bim_rules.toast_no_model_title", {
+          defaultValue: "Select a BIM model",
+        }),
+        message: t("bim_rules.toast_no_model_msg", {
+          defaultValue: "Please pick a BIM model first.",
         }),
       });
       return;
@@ -2878,10 +3228,12 @@ export function BIMQuantityRulesPage() {
   const handleApply = useCallback(() => {
     if (!modelId) {
       addToast({
-        type: 'warning',
-        title: t('bim_rules.toast_no_model_title', { defaultValue: 'Select a BIM model' }),
-        message: t('bim_rules.toast_no_model_msg', {
-          defaultValue: 'Please pick a BIM model first.',
+        type: "warning",
+        title: t("bim_rules.toast_no_model_title", {
+          defaultValue: "Select a BIM model",
+        }),
+        message: t("bim_rules.toast_no_model_msg", {
+          defaultValue: "Please pick a BIM model first.",
         }),
       });
       return;
@@ -2904,28 +3256,30 @@ export function BIMQuantityRulesPage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-content-primary">
-                {lockedMode === 'requirements'
-                  ? t('bim_rules.page_title_requirements', {
-                      defaultValue: 'BIM Rules (Compliance)',
+                {lockedMode === "requirements"
+                  ? t("bim_rules.page_title_requirements", {
+                      defaultValue: "BIM Rules (Compliance)",
                     })
-                  : t('bim_rules.page_title_quantity', {
-                      defaultValue: 'Quantity Rules',
+                  : t("bim_rules.page_title_quantity", {
+                      defaultValue: "Quantity Rules",
                     })}
               </h1>
               <p className="text-xs text-content-secondary">
-                {lockedMode === 'requirements'
-                  ? t('bim_rules.page_subtitle_requirements', {
+                {lockedMode === "requirements"
+                  ? t("bim_rules.page_subtitle_requirements", {
                       defaultValue:
-                        'Import and check BIM requirements (IDS, COBie, Excel) for your project.',
+                        "Import and check BIM requirements (IDS, COBie, Excel) for your project.",
                     })
-                  : t('bim_rules.page_subtitle_quantity', {
+                  : t("bim_rules.page_subtitle_quantity", {
                       defaultValue:
-                        'Bulk-link BIM elements to BOQ positions via pattern-based rules.',
+                        "Bulk-link BIM elements to BOQ positions via pattern-based rules.",
                     })}
                 {activeProjectName && (
                   <>
-                    {' — '}
-                    <span className="font-medium text-content-primary">{activeProjectName}</span>
+                    {" — "}
+                    <span className="font-medium text-content-primary">
+                      {activeProjectName}
+                    </span>
                   </>
                 )}
               </p>
@@ -2933,14 +3287,14 @@ export function BIMQuantityRulesPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            {activeTab === 'quantity_rules' && (
+            {activeTab === "quantity_rules" && (
               <button
                 type="button"
                 onClick={openCreate}
                 className="flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:bg-oe-blue-dark"
               >
                 <Plus size={13} />
-                {t('bim_rules.new_rule', { defaultValue: 'New rule' })}
+                {t("bim_rules.new_rule", { defaultValue: "New rule" })}
               </button>
             )}
           </div>
@@ -2954,29 +3308,33 @@ export function BIMQuantityRulesPage() {
           <div className="mt-4 flex border-b border-border-light -mb-px">
             <button
               type="button"
-              onClick={() => setActiveTab('quantity_rules')}
+              onClick={() => setActiveTab("quantity_rules")}
               className={clsx(
-                'px-4 py-2 text-xs font-medium border-b-2 transition-colors flex items-center gap-1.5',
-                activeTab === 'quantity_rules'
-                  ? 'border-oe-blue text-oe-blue'
-                  : 'border-transparent text-content-tertiary hover:text-content-secondary hover:border-border-light',
+                "px-4 py-2 text-xs font-medium border-b-2 transition-colors flex items-center gap-1.5",
+                activeTab === "quantity_rules"
+                  ? "border-oe-blue text-oe-blue"
+                  : "border-transparent text-content-tertiary hover:text-content-secondary hover:border-border-light",
               )}
             >
               <SlidersHorizontal size={13} />
-              {t('bim_rules.tab_quantity_rules', { defaultValue: 'Quantity Rules' })}
+              {t("bim_rules.tab_quantity_rules", {
+                defaultValue: "Quantity Rules",
+              })}
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('requirements')}
+              onClick={() => setActiveTab("requirements")}
               className={clsx(
-                'px-4 py-2 text-xs font-medium border-b-2 transition-colors flex items-center gap-1.5',
-                activeTab === 'requirements'
-                  ? 'border-oe-blue text-oe-blue'
-                  : 'border-transparent text-content-tertiary hover:text-content-secondary hover:border-border-light',
+                "px-4 py-2 text-xs font-medium border-b-2 transition-colors flex items-center gap-1.5",
+                activeTab === "requirements"
+                  ? "border-oe-blue text-oe-blue"
+                  : "border-transparent text-content-tertiary hover:text-content-secondary hover:border-border-light",
               )}
             >
               <ClipboardCheck size={13} />
-              {t('bim_rules.tab_requirements', { defaultValue: 'Requirements' })}
+              {t("bim_rules.tab_requirements", {
+                defaultValue: "Requirements",
+              })}
             </button>
           </div>
         )}
@@ -2987,8 +3345,11 @@ export function BIMQuantityRulesPage() {
         <div className="mt-4 flex flex-wrap items-center gap-3 rounded-lg border border-border-light bg-surface-secondary px-3 py-2">
           <div className="flex items-center gap-2">
             <Boxes size={14} className="text-content-tertiary" />
-            <label htmlFor="model-picker" className="text-[11px] font-medium text-content-secondary">
-              {t('bim_rules.model_picker', { defaultValue: 'BIM model' })}
+            <label
+              htmlFor="model-picker"
+              className="text-[11px] font-medium text-content-secondary"
+            >
+              {t("bim_rules.model_picker", { defaultValue: "BIM model" })}
             </label>
             <select
               id="model-picker"
@@ -2999,7 +3360,9 @@ export function BIMQuantityRulesPage() {
             >
               {modelOptions.length === 0 ? (
                 <option value="">
-                  {t('bim_rules.no_models', { defaultValue: 'No models in this project' })}
+                  {t("bim_rules.no_models", {
+                    defaultValue: "No models in this project",
+                  })}
                 </option>
               ) : (
                 modelOptions.map((m) => (
@@ -3011,44 +3374,46 @@ export function BIMQuantityRulesPage() {
             </select>
           </div>
 
-          {activeTab === 'quantity_rules' && (
-          <div className="ml-auto flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handlePreview}
-              disabled={!modelId || previewMutation.isPending}
-              className="flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-[11px] font-medium text-content-secondary hover:bg-surface-tertiary disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {previewMutation.isPending ? (
-                <Loader2 size={12} className="animate-spin" />
-              ) : (
-                <Eye size={12} />
-              )}
-              {t('bim_rules.preview', { defaultValue: 'Preview (dry run)' })}
-            </button>
-            <button
-              type="button"
-              onClick={handleApply}
-              disabled={!modelId || applyMutation.isPending}
-              className="flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:bg-oe-blue-dark disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {applyMutation.isPending ? (
-                <Loader2 size={12} className="animate-spin" />
-              ) : (
-                <Play size={12} />
-              )}
-              {t('bim_rules.apply', { defaultValue: 'Apply rules' })}
-            </button>
-          </div>
+          {activeTab === "quantity_rules" && (
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handlePreview}
+                disabled={!modelId || previewMutation.isPending}
+                className="flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-[11px] font-medium text-content-secondary hover:bg-surface-tertiary disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {previewMutation.isPending ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Eye size={12} />
+                )}
+                {t("bim_rules.preview", { defaultValue: "Preview (dry run)" })}
+              </button>
+              <button
+                type="button"
+                onClick={handleApply}
+                disabled={!modelId || applyMutation.isPending}
+                className="flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:bg-oe-blue-dark disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {applyMutation.isPending ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Play size={12} />
+                )}
+                {t("bim_rules.apply", { defaultValue: "Apply rules" })}
+              </button>
+            </div>
           )}
-          {activeTab === 'requirements' && (
+          {activeTab === "requirements" && (
             <span className="ml-auto text-[10px] text-content-tertiary">
               {modelId
-                ? t('bim_rules.model_helps_req', {
-                    defaultValue: 'Picked model lets you auto-fill rules from real elements.',
+                ? t("bim_rules.model_helps_req", {
+                    defaultValue:
+                      "Picked model lets you auto-fill rules from real elements.",
                   })
-                : t('bim_rules.model_picker_hint', {
-                    defaultValue: 'Pick a model to auto-fill rules from real elements.',
+                : t("bim_rules.model_picker_hint", {
+                    defaultValue:
+                      "Pick a model to auto-fill rules from real elements.",
                   })}
             </span>
           )}
@@ -3060,38 +3425,48 @@ export function BIMQuantityRulesPage() {
         {!activeProjectId ? (
           <EmptyState
             icon={<FolderOpen size={28} strokeWidth={1.5} />}
-            title={t('bim_rules.no_project_title', { defaultValue: 'Pick a project to view rules' })}
-            description={t('bim_rules.no_project_desc', {
+            title={t("bim_rules.no_project_title", {
+              defaultValue: "Pick a project to view rules",
+            })}
+            description={t("bim_rules.no_project_desc", {
               defaultValue:
-                'BIM Quantity Rules and Requirements are project-scoped. Select a project to load its rule sets, BIM models, and validation history.',
+                "BIM Quantity Rules and Requirements are project-scoped. Select a project to load its rule sets, BIM models, and validation history.",
             })}
             action={<NoProjectPicker />}
           />
-        ) : activeTab === 'requirements' ? (
-          <RequirementsTabContent projectId={activeProjectId} elements={requirementsElements} />
+        ) : activeTab === "requirements" ? (
+          <RequirementsTabContent
+            projectId={activeProjectId}
+            elements={requirementsElements}
+          />
         ) : rulesQuery.isLoading ? (
           <div className="flex items-center justify-center py-16 text-sm text-content-secondary">
             <Loader2 size={18} className="mr-2 animate-spin" />
-            {t('bim_rules.loading', { defaultValue: 'Loading rules…' })}
+            {t("bim_rules.loading", { defaultValue: "Loading rules…" })}
           </div>
         ) : rulesQuery.error ? (
           <div className="flex items-center justify-center gap-2 py-16 text-sm text-red-600">
             <AlertCircle size={18} />
-            {t('bim_rules.load_error', { defaultValue: 'Failed to load rules.' })}
+            {t("bim_rules.load_error", {
+              defaultValue: "Failed to load rules.",
+            })}
           </div>
         ) : rules.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border-light bg-surface-secondary/30 px-6 py-8">
             <div className="text-center">
-              <SlidersHorizontal size={28} className="mx-auto mb-2 text-content-tertiary" />
+              <SlidersHorizontal
+                size={28}
+                className="mx-auto mb-2 text-content-tertiary"
+              />
               <h3 className="text-sm font-semibold text-content-primary">
-                {t('bim_rules.empty_title_v2', {
-                  defaultValue: 'Start from a template',
+                {t("bim_rules.empty_title_v2", {
+                  defaultValue: "Start from a template",
                 })}
               </h3>
               <p className="mx-auto mt-1 max-w-md text-[12px] text-content-secondary">
-                {t('bim_rules.empty_subtitle_v2', {
+                {t("bim_rules.empty_subtitle_v2", {
                   defaultValue:
-                    'A rule auto-creates a BOQ position from BIM elements that match a pattern. Pick a template to see an example you can save or adjust.',
+                    "A rule auto-creates a BOQ position from BIM elements that match a pattern. Pick a template to see an example you can save or adjust.",
                 })}
               </p>
             </div>
@@ -3100,49 +3475,51 @@ export function BIMQuantityRulesPage() {
               {QUANTITY_RULES_PRESETS.map((preset) => {
                 const PresetIcon = preset.icon;
                 return (
-                <button
-                  key={preset.id}
-                  type="button"
-                  onClick={() => openCreateFromPreset(preset)}
-                  className="group flex flex-col items-start gap-2 rounded-lg border border-border-light bg-surface-primary p-4 text-left transition hover:-translate-y-0.5 hover:border-oe-blue/60 hover:shadow-md"
-                >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue group-hover:bg-oe-blue group-hover:text-white transition-colors">
-                    <PresetIcon size={18} strokeWidth={1.85} />
-                  </span>
-                  <span className="text-sm font-semibold text-content-primary group-hover:text-oe-blue">
-                    {preset.title}
-                  </span>
-                  <span className="text-[11px] leading-snug text-content-secondary">
-                    {preset.subtitle}
-                  </span>
-                  <span className="mt-1 flex items-center gap-1 text-[11px] font-medium text-oe-blue">
-                    <Plus size={12} />
-                    {t('bim_rules.empty_use_template', {
-                      defaultValue: 'Use this template',
-                    })}
-                  </span>
-                </button>
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => openCreateFromPreset(preset)}
+                    className="group flex flex-col items-start gap-2 rounded-lg border border-border-light bg-surface-primary p-4 text-left transition hover:-translate-y-0.5 hover:border-oe-blue/60 hover:shadow-md"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue group-hover:bg-oe-blue group-hover:text-white transition-colors">
+                      <PresetIcon size={18} strokeWidth={1.85} />
+                    </span>
+                    <span className="text-sm font-semibold text-content-primary group-hover:text-oe-blue">
+                      {preset.title}
+                    </span>
+                    <span className="text-[11px] leading-snug text-content-secondary">
+                      {preset.subtitle}
+                    </span>
+                    <span className="mt-1 flex items-center gap-1 text-[11px] font-medium text-oe-blue">
+                      <Plus size={12} />
+                      {t("bim_rules.empty_use_template", {
+                        defaultValue: "Use this template",
+                      })}
+                    </span>
+                  </button>
                 );
               })}
             </div>
 
             <div className="mt-4 flex items-center justify-center gap-3 text-[11px] text-content-tertiary">
-              <span>{t('bim_rules.empty_or', { defaultValue: 'or' })}</span>
+              <span>{t("bim_rules.empty_or", { defaultValue: "or" })}</span>
               <button
                 type="button"
                 onClick={openCreate}
                 className="font-medium text-oe-blue hover:underline"
               >
-                {t('bim_rules.empty_blank', { defaultValue: 'Start from a blank rule' })}
+                {t("bim_rules.empty_blank", {
+                  defaultValue: "Start from a blank rule",
+                })}
               </button>
               <span>·</span>
               <button
                 type="button"
-                onClick={() => navigate('/about')}
+                onClick={() => navigate("/about")}
                 className="flex items-center gap-1 hover:text-content-secondary"
               >
                 <BookOpen size={12} />
-                {t('bim_rules.empty_docs', { defaultValue: 'Read the docs' })}
+                {t("bim_rules.empty_docs", { defaultValue: "Read the docs" })}
               </button>
             </div>
           </div>
@@ -3152,25 +3529,27 @@ export function BIMQuantityRulesPage() {
               <thead className="border-b border-border-light bg-surface-secondary text-content-secondary">
                 <tr>
                   <th className="px-4 py-2 font-medium">
-                    {t('bim_rules.col_name', { defaultValue: 'Name' })}
+                    {t("bim_rules.col_name", { defaultValue: "Name" })}
                   </th>
                   <th className="px-4 py-2 font-medium">
-                    {t('bim_rules.col_pattern', { defaultValue: 'Element pattern' })}
+                    {t("bim_rules.col_pattern", {
+                      defaultValue: "Element pattern",
+                    })}
                   </th>
                   <th className="px-4 py-2 font-medium">
-                    {t('bim_rules.col_source', { defaultValue: 'Source' })}
+                    {t("bim_rules.col_source", { defaultValue: "Source" })}
                   </th>
                   <th className="px-4 py-2 font-medium">
-                    {t('bim_rules.col_unit', { defaultValue: 'Unit' })}
+                    {t("bim_rules.col_unit", { defaultValue: "Unit" })}
                   </th>
                   <th className="px-4 py-2 font-medium">
-                    {t('bim_rules.col_target', { defaultValue: 'Target' })}
+                    {t("bim_rules.col_target", { defaultValue: "Target" })}
                   </th>
                   <th className="px-4 py-2 text-center font-medium">
-                    {t('bim_rules.col_active', { defaultValue: 'Active' })}
+                    {t("bim_rules.col_active", { defaultValue: "Active" })}
                   </th>
                   <th className="px-4 py-2 text-right font-medium">
-                    {t('bim_rules.col_actions', { defaultValue: 'Actions' })}
+                    {t("bim_rules.col_actions", { defaultValue: "Actions" })}
                   </th>
                 </tr>
               </thead>
@@ -3180,30 +3559,40 @@ export function BIMQuantityRulesPage() {
                     <tr className="border-t border-border-light text-content-primary hover:bg-surface-secondary">
                       <td className="px-4 py-2 font-medium">{rule.name}</td>
                       <td className="px-4 py-2 font-mono text-[11px] text-content-tertiary">
-                        {rule.element_type_filter || '*'}
+                        {rule.element_type_filter || "*"}
                         {rule.property_filter &&
                           Object.keys(rule.property_filter).length > 0 && (
                             <div className="mt-0.5 flex flex-wrap gap-1">
-                              {Object.entries(rule.property_filter).map(([k, v]) => (
-                                <Badge key={k} variant="neutral" size="sm">
-                                  {k}={String(v)}
-                                </Badge>
-                              ))}
+                              {Object.entries(rule.property_filter).map(
+                                ([k, v]) => (
+                                  <Badge key={k} variant="neutral" size="sm">
+                                    {k}={String(v)}
+                                  </Badge>
+                                ),
+                              )}
                             </div>
                           )}
                       </td>
-                      <td className="px-4 py-2 font-mono text-[11px]">{rule.quantity_source}</td>
+                      <td className="px-4 py-2 font-mono text-[11px]">
+                        {rule.quantity_source}
+                      </td>
                       <td className="px-4 py-2">{rule.unit}</td>
                       <td className="px-4 py-2">
                         {rule.boq_target?.position_id ? (
                           <Badge variant="neutral">
-                            {t('bim_rules.target_linked', { defaultValue: 'Linked position' })}
+                            {t("bim_rules.target_linked", {
+                              defaultValue: "Linked position",
+                            })}
                           </Badge>
                         ) : rule.boq_target?.position_ordinal ? (
-                          <Badge variant="neutral">{rule.boq_target.position_ordinal}</Badge>
+                          <Badge variant="neutral">
+                            {rule.boq_target.position_ordinal}
+                          </Badge>
                         ) : rule.boq_target?.auto_create ? (
                           <Badge variant="success">
-                            {t('bim_rules.target_auto', { defaultValue: 'Auto-create' })}
+                            {t("bim_rules.target_auto", {
+                              defaultValue: "Auto-create",
+                            })}
                           </Badge>
                         ) : (
                           <span className="text-content-tertiary">—</span>
@@ -3218,18 +3607,20 @@ export function BIMQuantityRulesPage() {
                               is_active: !rule.is_active,
                             })
                           }
-                          aria-label={t('bim_rules.toggle_active', {
-                            defaultValue: 'Toggle active',
+                          aria-label={t("bim_rules.toggle_active", {
+                            defaultValue: "Toggle active",
                           })}
                           className={clsx(
-                            'relative inline-flex h-5 w-9 items-center rounded-full transition-colors',
-                            rule.is_active ? 'bg-oe-blue' : 'bg-border-light',
+                            "relative inline-flex h-5 w-9 items-center rounded-full transition-colors",
+                            rule.is_active ? "bg-oe-blue" : "bg-border-light",
                           )}
                         >
                           <span
                             className={clsx(
-                              'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
-                              rule.is_active ? 'translate-x-4' : 'translate-x-0.5',
+                              "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                              rule.is_active
+                                ? "translate-x-4"
+                                : "translate-x-0.5",
                             )}
                           />
                         </button>
@@ -3240,8 +3631,10 @@ export function BIMQuantityRulesPage() {
                             type="button"
                             onClick={() => openEdit(rule)}
                             className="rounded p-1 text-content-secondary hover:bg-surface-tertiary hover:text-oe-blue"
-                            aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                            title={t('common.edit', { defaultValue: 'Edit' })}
+                            aria-label={t("common.edit", {
+                              defaultValue: "Edit",
+                            })}
+                            title={t("common.edit", { defaultValue: "Edit" })}
                           >
                             <Pencil size={13} />
                           </button>
@@ -3249,8 +3642,12 @@ export function BIMQuantityRulesPage() {
                             type="button"
                             onClick={() => openDuplicate(rule)}
                             className="rounded p-1 text-content-secondary hover:bg-surface-tertiary hover:text-oe-blue"
-                            aria-label={t('common.duplicate', { defaultValue: 'Duplicate' })}
-                            title={t('common.duplicate', { defaultValue: 'Duplicate' })}
+                            aria-label={t("common.duplicate", {
+                              defaultValue: "Duplicate",
+                            })}
+                            title={t("common.duplicate", {
+                              defaultValue: "Duplicate",
+                            })}
                           >
                             <Copy size={13} />
                           </button>
@@ -3258,8 +3655,12 @@ export function BIMQuantityRulesPage() {
                             type="button"
                             onClick={() => setConfirmDeleteId(rule.id)}
                             className="rounded p-1 text-content-secondary hover:bg-red-50 hover:text-red-600"
-                            aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                            title={t('common.delete', { defaultValue: 'Delete' })}
+                            aria-label={t("common.delete", {
+                              defaultValue: "Delete",
+                            })}
+                            title={t("common.delete", {
+                              defaultValue: "Delete",
+                            })}
                           >
                             <Trash2 size={13} />
                           </button>
@@ -3288,13 +3689,18 @@ export function BIMQuantityRulesPage() {
       {/* BIM Requirements Import — only shown on the Requirements tab (or
           requirements-locked page), since it has no relevance to Quantity
           Rules. */}
-      {activeTab === 'requirements' && (
+      {activeTab === "requirements" && (
         <div className="border-t border-border-light bg-surface-primary px-6 py-4">
           <details className="group" open>
             <summary className="cursor-pointer text-sm font-semibold text-content-primary flex items-center gap-2">
               <BookOpen size={16} className="text-oe-blue" />
-              {t('bim_rules.requirements_import', { defaultValue: 'BIM Requirements Import/Export' })}
-              <ChevronRight size={14} className="text-content-tertiary transition-transform group-open:rotate-90" />
+              {t("bim_rules.requirements_import", {
+                defaultValue: "BIM Requirements Import/Export",
+              })}
+              <ChevronRight
+                size={14}
+                className="text-content-tertiary transition-transform group-open:rotate-90"
+              />
             </summary>
             <div className="mt-4">
               <BIMRequirementsImport />
@@ -3317,9 +3723,12 @@ export function BIMQuantityRulesPage() {
           if (confirmDeleteId) deleteMutation.mutate(confirmDeleteId);
         }}
         onCancel={() => setConfirmDeleteId(null)}
-        title={t('bim_rules.confirm_delete_title', { defaultValue: 'Delete rule?' })}
-        message={t('bim_rules.confirm_delete_msg', {
-          defaultValue: 'This rule will be deactivated and hidden from the list.',
+        title={t("bim_rules.confirm_delete_title", {
+          defaultValue: "Delete rule?",
+        })}
+        message={t("bim_rules.confirm_delete_msg", {
+          defaultValue:
+            "This rule will be deactivated and hidden from the list.",
         })}
         loading={deleteMutation.isPending}
       />

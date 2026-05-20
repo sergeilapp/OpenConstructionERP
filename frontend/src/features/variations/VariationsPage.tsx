@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   Bell,
   FileText,
@@ -20,7 +20,7 @@ import {
   AlertTriangle,
   Pencil,
   Trash2,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -29,20 +29,20 @@ import {
   Breadcrumb,
   SkeletonTable,
   ConfirmDialog,
-} from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
 import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui/WideModal';
-import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { PipelineBanner } from './PipelineBanner';
-import { apiGet, getErrorMessage } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { usePreferencesStore } from '@/stores/usePreferencesStore';
+} from "@/shared/ui/WideModal";
+import { MoneyDisplay } from "@/shared/ui/MoneyDisplay";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { PipelineBanner } from "./PipelineBanner";
+import { apiGet, getErrorMessage } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import {
   listNotices,
   listVariationRequests,
@@ -90,59 +90,74 @@ import {
   type DayworkStatus,
   type ExtensionOfTimeClaim,
   type EotStatus,
-} from './api';
+} from "./api";
 
-type Tab = 'notices' | 'requests' | 'orders' | 'daywork' | 'eot';
+type Tab = "notices" | "requests" | "orders" | "daywork" | "eot";
 
 /** A row currently being edited — carries its tab so the modal can prefill
  *  and PATCH the right sub-entity. */
 type EditTarget =
-  | { kind: 'notices'; row: Notice }
-  | { kind: 'requests'; row: VariationRequest }
-  | { kind: 'orders'; row: VariationOrder }
-  | { kind: 'daywork'; row: DayworkSheet }
-  | { kind: 'eot'; row: ExtensionOfTimeClaim };
+  | { kind: "notices"; row: Notice }
+  | { kind: "requests"; row: VariationRequest }
+  | { kind: "orders"; row: VariationOrder }
+  | { kind: "daywork"; row: DayworkSheet }
+  | { kind: "eot"; row: ExtensionOfTimeClaim };
 
-const NOTICE_VARIANT: Record<NoticeStatus, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  issued: 'blue',
-  acknowledged: 'warning',
-  responded: 'success',
-  closed: 'neutral',
+const NOTICE_VARIANT: Record<
+  NoticeStatus,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  issued: "blue",
+  acknowledged: "warning",
+  responded: "success",
+  closed: "neutral",
 };
 
-const VR_VARIANT: Record<VRStatus, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  draft: 'neutral',
-  submitted: 'blue',
-  under_review: 'warning',
-  approved: 'success',
-  rejected: 'error',
-  converted_to_vo: 'success',
+const VR_VARIANT: Record<
+  VRStatus,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  draft: "neutral",
+  submitted: "blue",
+  under_review: "warning",
+  approved: "success",
+  rejected: "error",
+  converted_to_vo: "success",
 };
 
-const VO_VARIANT: Record<VOStatus, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  issued: 'blue',
-  in_progress: 'warning',
-  completed: 'success',
-  voided: 'error',
+const VO_VARIANT: Record<
+  VOStatus,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  issued: "blue",
+  in_progress: "warning",
+  completed: "success",
+  voided: "error",
 };
 
-const DAYWORK_VARIANT: Record<DayworkStatus, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  draft: 'neutral',
-  signed: 'success',
-  disputed: 'error',
-  billed: 'blue',
+const DAYWORK_VARIANT: Record<
+  DayworkStatus,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  draft: "neutral",
+  signed: "success",
+  disputed: "error",
+  billed: "blue",
 };
 
-const EOT_VARIANT: Record<EotStatus, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  draft: 'neutral',
-  submitted: 'blue',
-  under_review: 'warning',
-  granted: 'success',
-  rejected: 'error',
+const EOT_VARIANT: Record<
+  EotStatus,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  draft: "neutral",
+  submitted: "blue",
+  under_review: "warning",
+  granted: "success",
+  rejected: "error",
 };
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 interface ProjectStub {
   id: string;
@@ -151,7 +166,9 @@ interface ProjectStub {
 }
 
 function listProjectsLite(): Promise<ProjectStub[]> {
-  return apiGet<ProjectStub[]>('/v1/projects/?limit=200').catch(() => [] as ProjectStub[]);
+  return apiGet<ProjectStub[]>("/v1/projects/?limit=200").catch(
+    () => [] as ProjectStub[],
+  );
 }
 
 /**
@@ -162,7 +179,7 @@ function listProjectsLite(): Promise<ProjectStub[]> {
  * exists, so it is always offered.
  */
 const EDIT_BLOCKED_STATUS: Partial<Record<Tab, readonly string[]>> = {
-  orders: ['completed', 'voided'],
+  orders: ["completed", "voided"],
 };
 
 function isEditBlocked(kind: Tab, status: string): boolean {
@@ -196,10 +213,10 @@ function RowActions({
         title={
           editBlocked
             ? editBlockedReason ||
-              t('variations.edit_blocked', {
-                defaultValue: 'This record can no longer be edited‌⁠‍',
+              t("variations.edit_blocked", {
+                defaultValue: "This record can no longer be edited‌⁠‍",
               })
-            : t('common.edit', { defaultValue: 'Edit' })
+            : t("common.edit", { defaultValue: "Edit" })
         }
         className="!p-1 text-content-quaternary hover:text-oe-blue h-auto"
       >
@@ -209,7 +226,7 @@ function RowActions({
         variant="ghost"
         size="sm"
         onClick={onDelete}
-        title={t('common.delete', { defaultValue: 'Delete‌⁠‍' })}
+        title={t("common.delete", { defaultValue: "Delete‌⁠‍" })}
         className="!p-1 text-content-quaternary hover:text-red-500 h-auto"
       >
         <Trash2 size={13} />
@@ -243,12 +260,12 @@ export function VariationsPage() {
   const setActiveProject = useProjectContextStore((s) => s.setActiveProject);
 
   const projectsQ = useQuery({
-    queryKey: ['variations', 'projects'],
+    queryKey: ["variations", "projects"],
     queryFn: listProjectsLite,
     staleTime: 60_000,
   });
   const projects = projectsQ.data ?? [];
-  const projectId = activeProjectId || projects[0]?.id || '';
+  const projectId = activeProjectId || projects[0]?.id || "";
   const currentProject = useMemo(
     () => projects.find((p) => p.id === projectId),
     [projects, projectId],
@@ -258,15 +275,15 @@ export function VariationsPage() {
   const prefsCurrency = usePreferencesStore((s) => s.currency);
   const currency = currentProject?.currency || prefsCurrency;
 
-  const [tab, setTab] = useState<Tab>('notices');
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [tab, setTab] = useState<Tab>("notices");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
   const [selected, setSelected] = useState<
-    | { kind: 'notices'; id: string }
-    | { kind: 'requests'; id: string }
-    | { kind: 'orders'; id: string }
-    | { kind: 'daywork'; id: string }
-    | { kind: 'eot'; id: string }
+    | { kind: "notices"; id: string }
+    | { kind: "requests"; id: string }
+    | { kind: "orders"; id: string }
+    | { kind: "daywork"; id: string }
+    | { kind: "eot"; id: string }
     | null
   >(null);
   const [createOpen, setCreateOpen] = useState(false);
@@ -279,47 +296,48 @@ export function VariationsPage() {
   const deleteMut = useMutation({
     mutationFn: (target: { kind: Tab; id: string }) => {
       switch (target.kind) {
-        case 'notices':
+        case "notices":
           return deleteNotice(target.id);
-        case 'requests':
+        case "requests":
           return deleteVR(target.id);
-        case 'orders':
+        case "orders":
           return deleteVO(target.id);
-        case 'daywork':
+        case "daywork":
           return deleteDaywork(target.id);
-        case 'eot':
+        case "eot":
           return deleteEoT(target.id);
         default:
-          return Promise.reject(new Error('unknown kind'));
+          return Promise.reject(new Error("unknown kind"));
       }
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
+      qc.invalidateQueries({ queryKey: ["variations"] });
       setSelected(null);
       addToast({
-        type: 'success',
-        title: t('variations.deleted', { defaultValue: 'Deleted‌⁠‍' }),
+        type: "success",
+        title: t("variations.deleted", { defaultValue: "Deleted‌⁠‍" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const handleDelete = async (kind: Tab, id: string) => {
     const ok = await confirm({
-      title: t('variations.confirm_delete_title', {
-        defaultValue: 'Delete this record?‌⁠‍',
+      title: t("variations.confirm_delete_title", {
+        defaultValue: "Delete this record?‌⁠‍",
       }),
-      message: t('variations.confirm_delete_msg', {
-        defaultValue: 'This record will be permanently deleted. This cannot be undone.‌⁠‍',
+      message: t("variations.confirm_delete_msg", {
+        defaultValue:
+          "This record will be permanently deleted. This cannot be undone.‌⁠‍",
       }),
-      confirmLabel: t('common.delete', { defaultValue: 'Delete' }),
-      variant: 'danger',
+      confirmLabel: t("common.delete", { defaultValue: "Delete" }),
+      variant: "danger",
     });
     if (ok) deleteMut.mutate({ kind, id });
   };
 
   const dashboardQ = useQuery({
-    queryKey: ['variations', 'dashboard', projectId],
+    queryKey: ["variations", "dashboard", projectId],
     queryFn: () => projectDashboard(projectId),
     enabled: !!projectId,
     retry: false,
@@ -327,50 +345,54 @@ export function VariationsPage() {
   });
 
   const noticesQ = useQuery({
-    queryKey: ['variations', 'notices', projectId, statusFilter],
+    queryKey: ["variations", "notices", projectId, statusFilter],
     queryFn: () =>
-      listNotices({ project_id: projectId, status: statusFilter || undefined, limit: 200 }),
-    enabled: !!projectId && tab === 'notices',
+      listNotices({
+        project_id: projectId,
+        status: statusFilter || undefined,
+        limit: 200,
+      }),
+    enabled: !!projectId && tab === "notices",
   });
   const requestsQ = useQuery({
-    queryKey: ['variations', 'requests', projectId, statusFilter],
+    queryKey: ["variations", "requests", projectId, statusFilter],
     queryFn: () =>
       listVariationRequests({
         project_id: projectId,
         status: statusFilter || undefined,
         limit: 200,
       }),
-    enabled: !!projectId && (tab === 'requests' || tab === 'notices'),
+    enabled: !!projectId && (tab === "requests" || tab === "notices"),
   });
   const ordersQ = useQuery({
-    queryKey: ['variations', 'orders', projectId, statusFilter],
+    queryKey: ["variations", "orders", projectId, statusFilter],
     queryFn: () =>
       listVariationOrders({
         project_id: projectId,
         status: statusFilter || undefined,
         limit: 200,
       }),
-    enabled: !!projectId && (tab === 'orders' || tab === 'requests'),
+    enabled: !!projectId && (tab === "orders" || tab === "requests"),
   });
   const dayworkQ = useQuery({
-    queryKey: ['variations', 'daywork', projectId, statusFilter],
+    queryKey: ["variations", "daywork", projectId, statusFilter],
     queryFn: () =>
       listDaywork({
         project_id: projectId,
         status: statusFilter || undefined,
         limit: 200,
       }),
-    enabled: !!projectId && tab === 'daywork',
+    enabled: !!projectId && tab === "daywork",
   });
   const eotQ = useQuery({
-    queryKey: ['variations', 'eot', projectId, statusFilter],
+    queryKey: ["variations", "eot", projectId, statusFilter],
     queryFn: () =>
       listEoTClaims({
         project_id: projectId,
         status: statusFilter || undefined,
         limit: 200,
       }),
-    enabled: !!projectId && tab === 'eot',
+    enabled: !!projectId && tab === "eot",
   });
 
   const filteredNotices = useMemo(() => {
@@ -380,8 +402,8 @@ export function VariationsPage() {
     return items.filter(
       (n) =>
         n.code.toLowerCase().includes(s) ||
-        (n.title || '').toLowerCase().includes(s) ||
-        (n.description || '').toLowerCase().includes(s),
+        (n.title || "").toLowerCase().includes(s) ||
+        (n.description || "").toLowerCase().includes(s),
     );
   }, [noticesQ.data, search]);
 
@@ -392,8 +414,8 @@ export function VariationsPage() {
     return items.filter(
       (r) =>
         r.code.toLowerCase().includes(s) ||
-        (r.title || '').toLowerCase().includes(s) ||
-        (r.description || '').toLowerCase().includes(s),
+        (r.title || "").toLowerCase().includes(s) ||
+        (r.description || "").toLowerCase().includes(s),
     );
   }, [requestsQ.data, search]);
 
@@ -403,7 +425,8 @@ export function VariationsPage() {
     const s = search.toLowerCase();
     return items.filter(
       (o) =>
-        o.code.toLowerCase().includes(s) || (o.title || '').toLowerCase().includes(s),
+        o.code.toLowerCase().includes(s) ||
+        (o.title || "").toLowerCase().includes(s),
     );
   }, [ordersQ.data, search]);
 
@@ -414,7 +437,7 @@ export function VariationsPage() {
     return items.filter(
       (d) =>
         d.sheet_number.toLowerCase().includes(s) ||
-        (d.description || '').toLowerCase().includes(s),
+        (d.description || "").toLowerCase().includes(s),
     );
   }, [dayworkQ.data, search]);
 
@@ -422,21 +445,25 @@ export function VariationsPage() {
     const items = eotQ.data ?? [];
     if (!search.trim()) return items;
     const s = search.toLowerCase();
-    return items.filter((e) => (e.description || '').toLowerCase().includes(s));
+    return items.filter((e) => (e.description || "").toLowerCase().includes(s));
   }, [eotQ.data, search]);
 
   if (!projectId) {
     return (
       <div className="space-y-5">
-        <Breadcrumb items={[{ label: t('variations.title', { defaultValue: 'Variations' }) }]} />
+        <Breadcrumb
+          items={[
+            { label: t("variations.title", { defaultValue: "Variations" }) },
+          ]}
+        />
         <EmptyState
           icon={<FileText size={22} />}
-          title={t('variations.no_project', {
-            defaultValue: 'Select a project to manage variations',
+          title={t("variations.no_project", {
+            defaultValue: "Select a project to manage variations",
           })}
-          description={t('variations.no_project_desc', {
+          description={t("variations.no_project_desc", {
             defaultValue:
-              'Variations are project-scoped — create or open a project, then return here.',
+              "Variations are project-scoped — create or open a project, then return here.",
           })}
         />
       </div>
@@ -444,39 +471,50 @@ export function VariationsPage() {
   }
 
   const activeQuery =
-    tab === 'notices'
+    tab === "notices"
       ? noticesQ
-      : tab === 'requests'
+      : tab === "requests"
         ? requestsQ
-        : tab === 'orders'
+        : tab === "orders"
           ? ordersQ
-          : tab === 'daywork'
+          : tab === "daywork"
             ? dayworkQ
             : eotQ;
   const isLoading = activeQuery.isLoading;
   const isError = activeQuery.isError;
 
   const statusOptions: Record<Tab, string[]> = {
-    notices: ['issued', 'acknowledged', 'responded', 'closed'],
-    requests: ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'converted_to_vo'],
-    orders: ['issued', 'in_progress', 'completed', 'voided'],
-    daywork: ['draft', 'signed', 'disputed', 'billed'],
-    eot: ['draft', 'submitted', 'under_review', 'granted', 'rejected'],
+    notices: ["issued", "acknowledged", "responded", "closed"],
+    requests: [
+      "draft",
+      "submitted",
+      "under_review",
+      "approved",
+      "rejected",
+      "converted_to_vo",
+    ],
+    orders: ["issued", "in_progress", "completed", "voided"],
+    daywork: ["draft", "signed", "disputed", "billed"],
+    eot: ["draft", "submitted", "under_review", "granted", "rejected"],
   };
 
   return (
     <div className="space-y-5">
-      <Breadcrumb items={[{ label: t('variations.title', { defaultValue: 'Variations' }) }]} />
+      <Breadcrumb
+        items={[
+          { label: t("variations.title", { defaultValue: "Variations" }) },
+        ]}
+      />
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('variations.title', { defaultValue: 'Variations' })}
+            {t("variations.title", { defaultValue: "Variations" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('variations.subtitle', {
+            {t("variations.subtitle", {
               defaultValue:
-                'Track variation notices, requests, orders, daywork and EoT claims through to final account.',
+                "Track variation notices, requests, orders, daywork and EoT claims through to final account.",
             })}
           </p>
         </div>
@@ -488,7 +526,7 @@ export function VariationsPage() {
                 const p = projects.find((x) => x.id === e.target.value);
                 if (p) setActiveProject(p.id, p.name);
               }}
-              className={clsx(inputCls, 'max-w-[260px]')}
+              className={clsx(inputCls, "max-w-[260px]")}
             >
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -497,39 +535,47 @@ export function VariationsPage() {
               ))}
             </select>
           )}
-          <Button variant="primary" icon={<Plus size={14} />} onClick={() => setCreateOpen(true)}>
-            {tab === 'notices'
-              ? t('variations.new_notice', { defaultValue: 'New Notice' })
-              : tab === 'requests'
-                ? t('variations.new_request', { defaultValue: 'New Request' })
-                : tab === 'orders'
-                  ? t('variations.new_order', { defaultValue: 'New Order' })
-                  : tab === 'daywork'
-                    ? t('variations.new_daywork', { defaultValue: 'New Daywork' })
-                    : t('variations.new_eot', { defaultValue: 'New EoT Claim' })}
+          <Button
+            variant="primary"
+            icon={<Plus size={14} />}
+            onClick={() => setCreateOpen(true)}
+          >
+            {tab === "notices"
+              ? t("variations.new_notice", { defaultValue: "New Notice" })
+              : tab === "requests"
+                ? t("variations.new_request", { defaultValue: "New Request" })
+                : tab === "orders"
+                  ? t("variations.new_order", { defaultValue: "New Order" })
+                  : tab === "daywork"
+                    ? t("variations.new_daywork", {
+                        defaultValue: "New Daywork",
+                      })
+                    : t("variations.new_eot", {
+                        defaultValue: "New EoT Claim",
+                      })}
           </Button>
         </div>
       </div>
 
       <PipelineBanner
-        intro={t('variations.pipeline_intro', {
+        intro={t("variations.pipeline_intro", {
           defaultValue:
-            'Variations adjust a live contract. A notice flags a change event, a request prices its cost and time impact, and on approval it converts to a variation order that feeds the contract final account. Daywork and EoT claims run alongside.',
+            "Variations adjust a live contract. A notice flags a change event, a request prices its cost and time impact, and on approval it converts to a variation order that feeds the contract final account. Daywork and EoT claims run alongside.",
         })}
         steps={[
           {
-            label: t('variations.step_contract', { defaultValue: 'Contracts' }),
-            to: '/contracts',
+            label: t("variations.step_contract", { defaultValue: "Contracts" }),
+            to: "/contracts",
           },
           {
-            label: t('variations.step_variations', {
-              defaultValue: 'Variations',
+            label: t("variations.step_variations", {
+              defaultValue: "Variations",
             }),
             current: true,
           },
           {
-            label: t('variations.step_finance', { defaultValue: 'Finance' }),
-            to: '/finance',
+            label: t("variations.step_finance", { defaultValue: "Finance" }),
+            to: "/finance",
           },
         ]}
       />
@@ -537,26 +583,26 @@ export function VariationsPage() {
       {dashboardQ.data && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
           <DashKPI
-            label={t('variations.kpi_notices_open', {
-              defaultValue: 'Open notices',
+            label={t("variations.kpi_notices_open", {
+              defaultValue: "Open notices",
             })}
             value={String(dashboardQ.data.notices_open)}
           />
           <DashKPI
-            label={t('variations.kpi_requests_pending', {
-              defaultValue: 'Pending requests',
+            label={t("variations.kpi_requests_pending", {
+              defaultValue: "Pending requests",
             })}
             value={String(dashboardQ.data.requests_pending)}
           />
           <DashKPI
-            label={t('variations.kpi_vo_active', {
-              defaultValue: 'Active orders',
+            label={t("variations.kpi_vo_active", {
+              defaultValue: "Active orders",
             })}
             value={String(dashboardQ.data.variation_orders_active)}
           />
           <DashKPI
-            label={t('variations.kpi_cost_impact', {
-              defaultValue: 'Cost impact',
+            label={t("variations.kpi_cost_impact", {
+              defaultValue: "Cost impact",
             })}
             value={
               <MoneyDisplay
@@ -566,14 +612,14 @@ export function VariationsPage() {
             }
           />
           <DashKPI
-            label={t('variations.kpi_schedule_impact', {
-              defaultValue: 'Schedule (days)',
+            label={t("variations.kpi_schedule_impact", {
+              defaultValue: "Schedule (days)",
             })}
             value={String(dashboardQ.data.schedule_impact_days)}
           />
           <DashKPI
-            label={t('variations.kpi_eot_open', {
-              defaultValue: 'Open EoT claims',
+            label={t("variations.kpi_eot_open", {
+              defaultValue: "Open EoT claims",
             })}
             value={String(dashboardQ.data.eot_claims_open)}
           />
@@ -585,28 +631,30 @@ export function VariationsPage() {
           {(
             [
               {
-                id: 'notices',
-                label: t('variations.tab_notices', { defaultValue: 'Notices' }),
+                id: "notices",
+                label: t("variations.tab_notices", { defaultValue: "Notices" }),
                 icon: Bell,
               },
               {
-                id: 'requests',
-                label: t('variations.tab_requests', { defaultValue: 'Requests' }),
+                id: "requests",
+                label: t("variations.tab_requests", {
+                  defaultValue: "Requests",
+                }),
                 icon: FileText,
               },
               {
-                id: 'orders',
-                label: t('variations.tab_orders', { defaultValue: 'Orders' }),
+                id: "orders",
+                label: t("variations.tab_orders", { defaultValue: "Orders" }),
                 icon: FileCheck2,
               },
               {
-                id: 'daywork',
-                label: t('variations.tab_daywork', { defaultValue: 'Daywork' }),
+                id: "daywork",
+                label: t("variations.tab_daywork", { defaultValue: "Daywork" }),
                 icon: Hammer,
               },
               {
-                id: 'eot',
-                label: t('variations.tab_eot', { defaultValue: 'EoT Claims' }),
+                id: "eot",
+                label: t("variations.tab_eot", { defaultValue: "EoT Claims" }),
                 icon: Clock,
               },
             ] as { id: Tab; label: string; icon: React.ElementType }[]
@@ -620,14 +668,14 @@ export function VariationsPage() {
                 aria-selected={tab === tabItem.id}
                 onClick={() => {
                   setTab(tabItem.id);
-                  setStatusFilter('');
-                  setSearch('');
+                  setStatusFilter("");
+                  setSearch("");
                 }}
                 className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
                   tab === tabItem.id
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-secondary hover:text-content-primary',
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -648,16 +696,18 @@ export function VariationsPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('common.search', { defaultValue: 'Search…' })}
-            className={clsx(inputCls, 'pl-8')}
+            placeholder={t("common.search", { defaultValue: "Search…" })}
+            className={clsx(inputCls, "pl-8")}
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className={clsx(inputCls, 'max-w-[220px]')}
+          className={clsx(inputCls, "max-w-[220px]")}
         >
-          <option value="">{t('common.all_statuses', { defaultValue: 'All statuses' })}</option>
+          <option value="">
+            {t("common.all_statuses", { defaultValue: "All statuses" })}
+          </option>
           {statusOptions[tab].map((s) => (
             <option key={s} value={s}>
               {s}
@@ -675,59 +725,59 @@ export function VariationsPage() {
           <div className="p-4">
             <EmptyState
               icon={<AlertTriangle size={22} />}
-              title={t('common.error', { defaultValue: 'Error' })}
-              description={t('variations.load_error', {
-                defaultValue: 'Failed to load data. Please try again.',
+              title={t("common.error", { defaultValue: "Error" })}
+              description={t("variations.load_error", {
+                defaultValue: "Failed to load data. Please try again.",
               })}
               action={{
-                label: t('common.retry', { defaultValue: 'Retry' }),
+                label: t("common.retry", { defaultValue: "Retry" }),
                 onClick: () => {
                   void activeQuery.refetch();
                 },
               }}
             />
           </div>
-        ) : tab === 'notices' ? (
+        ) : tab === "notices" ? (
           <NoticeTable
             rows={filteredNotices}
-            onSelect={(id) => setSelected({ kind: 'notices', id })}
-            onEdit={(row) => setEditTarget({ kind: 'notices', row })}
-            onDelete={(id) => void handleDelete('notices', id)}
+            onSelect={(id) => setSelected({ kind: "notices", id })}
+            onEdit={(row) => setEditTarget({ kind: "notices", row })}
+            onDelete={(id) => void handleDelete("notices", id)}
             emptyAction={() => setCreateOpen(true)}
           />
-        ) : tab === 'requests' ? (
+        ) : tab === "requests" ? (
           <RequestTable
             rows={filteredRequests}
             currency={currency}
-            onSelect={(id) => setSelected({ kind: 'requests', id })}
-            onEdit={(row) => setEditTarget({ kind: 'requests', row })}
-            onDelete={(id) => void handleDelete('requests', id)}
+            onSelect={(id) => setSelected({ kind: "requests", id })}
+            onEdit={(row) => setEditTarget({ kind: "requests", row })}
+            onDelete={(id) => void handleDelete("requests", id)}
             emptyAction={() => setCreateOpen(true)}
           />
-        ) : tab === 'orders' ? (
+        ) : tab === "orders" ? (
           <OrderTable
             rows={filteredOrders}
             currency={currency}
-            onSelect={(id) => setSelected({ kind: 'orders', id })}
-            onEdit={(row) => setEditTarget({ kind: 'orders', row })}
-            onDelete={(id) => void handleDelete('orders', id)}
+            onSelect={(id) => setSelected({ kind: "orders", id })}
+            onEdit={(row) => setEditTarget({ kind: "orders", row })}
+            onDelete={(id) => void handleDelete("orders", id)}
             emptyAction={() => setCreateOpen(true)}
           />
-        ) : tab === 'daywork' ? (
+        ) : tab === "daywork" ? (
           <DayworkTable
             rows={filteredDaywork}
             currency={currency}
-            onSelect={(id) => setSelected({ kind: 'daywork', id })}
-            onEdit={(row) => setEditTarget({ kind: 'daywork', row })}
-            onDelete={(id) => void handleDelete('daywork', id)}
+            onSelect={(id) => setSelected({ kind: "daywork", id })}
+            onEdit={(row) => setEditTarget({ kind: "daywork", row })}
+            onDelete={(id) => void handleDelete("daywork", id)}
             emptyAction={() => setCreateOpen(true)}
           />
         ) : (
           <EoTTable
             rows={filteredEot}
-            onSelect={(id) => setSelected({ kind: 'eot', id })}
-            onEdit={(row) => setEditTarget({ kind: 'eot', row })}
-            onDelete={(id) => void handleDelete('eot', id)}
+            onSelect={(id) => setSelected({ kind: "eot", id })}
+            onEdit={(row) => setEditTarget({ kind: "eot", row })}
+            onDelete={(id) => void handleDelete("eot", id)}
             emptyAction={() => setCreateOpen(true)}
           />
         )}
@@ -794,12 +844,15 @@ function NoticeTable({
     return (
       <EmptyState
         icon={<Bell size={22} />}
-        title={t('variations.empty_notices', { defaultValue: 'No notices yet' })}
-        description={t('variations.empty_notices_desc', {
-          defaultValue: 'Issue a variation notice when a contractual event occurs.',
+        title={t("variations.empty_notices", {
+          defaultValue: "No notices yet",
+        })}
+        description={t("variations.empty_notices_desc", {
+          defaultValue:
+            "Issue a variation notice when a contractual event occurs.",
         })}
         action={{
-          label: t('variations.new_notice', { defaultValue: 'New Notice' }),
+          label: t("variations.new_notice", { defaultValue: "New Notice" }),
           onClick: emptyAction,
         }}
       />
@@ -810,21 +863,23 @@ function NoticeTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('variations.code', { defaultValue: 'Code' })}</th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.title_col', { defaultValue: 'Title' })}
+              {t("variations.code", { defaultValue: "Code" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.recipient', { defaultValue: 'Recipient' })}
+              {t("variations.title_col", { defaultValue: "Title" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.target_response', { defaultValue: 'Response by' })}
+              {t("variations.recipient", { defaultValue: "Recipient" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.status', { defaultValue: 'Status' })}
+              {t("variations.target_response", { defaultValue: "Response by" })}
+            </th>
+            <th className="px-4 py-2.5 text-left">
+              {t("variations.status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('common.actions', { defaultValue: 'Actions' })}
+              {t("common.actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
@@ -835,13 +890,21 @@ function NoticeTable({
               onClick={() => onSelect(r.id)}
               className="border-t border-border-light hover:bg-surface-secondary cursor-pointer"
             >
-              <td className="px-4 py-2 font-mono text-xs text-content-secondary">{r.code}</td>
-              <td className="px-4 py-2 font-medium truncate max-w-[420px]">{r.title || '—'}</td>
+              <td className="px-4 py-2 font-mono text-xs text-content-secondary">
+                {r.code}
+              </td>
+              <td className="px-4 py-2 font-medium truncate max-w-[420px]">
+                {r.title || "—"}
+              </td>
               <td className="px-4 py-2 text-content-secondary text-xs">
                 {r.recipient_name || r.recipient_type}
               </td>
               <td className="px-4 py-2 text-xs text-content-secondary">
-                {r.target_response_date ? <DateDisplay value={r.target_response_date} /> : '—'}
+                {r.target_response_date ? (
+                  <DateDisplay value={r.target_response_date} />
+                ) : (
+                  "—"
+                )}
               </td>
               <td className="px-4 py-2">
                 <Badge variant={NOTICE_VARIANT[r.status]} dot>
@@ -882,12 +945,15 @@ function RequestTable({
     return (
       <EmptyState
         icon={<FileText size={22} />}
-        title={t('variations.empty_requests', { defaultValue: 'No variation requests yet' })}
-        description={t('variations.empty_requests_desc', {
-          defaultValue: 'Raise a variation request to estimate cost and schedule impacts.',
+        title={t("variations.empty_requests", {
+          defaultValue: "No variation requests yet",
+        })}
+        description={t("variations.empty_requests_desc", {
+          defaultValue:
+            "Raise a variation request to estimate cost and schedule impacts.",
         })}
         action={{
-          label: t('variations.new_request', { defaultValue: 'New Request' }),
+          label: t("variations.new_request", { defaultValue: "New Request" }),
           onClick: emptyAction,
         }}
       />
@@ -898,24 +964,26 @@ function RequestTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('variations.code', { defaultValue: 'Code' })}</th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.title_col', { defaultValue: 'Title' })}
-            </th>
-            <th className="px-4 py-2.5 text-left">
-              {t('variations.classification', { defaultValue: 'Type' })}
-            </th>
-            <th className="px-4 py-2.5 text-right">
-              {t('variations.cost_impact', { defaultValue: 'Cost' })}
-            </th>
-            <th className="px-4 py-2.5 text-right">
-              {t('variations.days', { defaultValue: 'Days' })}
+              {t("variations.code", { defaultValue: "Code" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.status', { defaultValue: 'Status' })}
+              {t("variations.title_col", { defaultValue: "Title" })}
+            </th>
+            <th className="px-4 py-2.5 text-left">
+              {t("variations.classification", { defaultValue: "Type" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('common.actions', { defaultValue: 'Actions' })}
+              {t("variations.cost_impact", { defaultValue: "Cost" })}
+            </th>
+            <th className="px-4 py-2.5 text-right">
+              {t("variations.days", { defaultValue: "Days" })}
+            </th>
+            <th className="px-4 py-2.5 text-left">
+              {t("variations.status", { defaultValue: "Status" })}
+            </th>
+            <th className="px-4 py-2.5 text-right">
+              {t("common.actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
@@ -926,16 +994,24 @@ function RequestTable({
               onClick={() => onSelect(r.id)}
               className="border-t border-border-light hover:bg-surface-secondary cursor-pointer"
             >
-              <td className="px-4 py-2 font-mono text-xs text-content-secondary">{r.code}</td>
-              <td className="px-4 py-2 font-medium truncate max-w-[360px]">{r.title || '—'}</td>
-              <td className="px-4 py-2 text-xs text-content-secondary">{r.classification}</td>
+              <td className="px-4 py-2 font-mono text-xs text-content-secondary">
+                {r.code}
+              </td>
+              <td className="px-4 py-2 font-medium truncate max-w-[360px]">
+                {r.title || "—"}
+              </td>
+              <td className="px-4 py-2 text-xs text-content-secondary">
+                {r.classification}
+              </td>
               <td className="px-4 py-2 text-right tabular-nums">
                 <MoneyDisplay
                   amount={Number(r.estimated_cost_impact) || 0}
                   currency={r.currency || currency}
                 />
               </td>
-              <td className="px-4 py-2 text-right tabular-nums">{r.estimated_schedule_days}</td>
+              <td className="px-4 py-2 text-right tabular-nums">
+                {r.estimated_schedule_days}
+              </td>
               <td className="px-4 py-2">
                 <Badge variant={VR_VARIANT[r.status]} dot>
                   {r.status}
@@ -975,12 +1051,15 @@ function OrderTable({
     return (
       <EmptyState
         icon={<FileCheck2 size={22} />}
-        title={t('variations.empty_orders', { defaultValue: 'No variation orders yet' })}
-        description={t('variations.empty_orders_desc', {
-          defaultValue: 'Variation orders are issued once a request is approved and agreed.',
+        title={t("variations.empty_orders", {
+          defaultValue: "No variation orders yet",
+        })}
+        description={t("variations.empty_orders_desc", {
+          defaultValue:
+            "Variation orders are issued once a request is approved and agreed.",
         })}
         action={{
-          label: t('variations.new_order', { defaultValue: 'New Order' }),
+          label: t("variations.new_order", { defaultValue: "New Order" }),
           onClick: emptyAction,
         }}
       />
@@ -991,24 +1070,26 @@ function OrderTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('variations.code', { defaultValue: 'Code' })}</th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.title_col', { defaultValue: 'Title' })}
-            </th>
-            <th className="px-4 py-2.5 text-right">
-              {t('variations.cost_impact', { defaultValue: 'Cost' })}
-            </th>
-            <th className="px-4 py-2.5 text-right">
-              {t('variations.days', { defaultValue: 'Days' })}
+              {t("variations.code", { defaultValue: "Code" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.agreed_at', { defaultValue: 'Agreed' })}
-            </th>
-            <th className="px-4 py-2.5 text-left">
-              {t('variations.status', { defaultValue: 'Status' })}
+              {t("variations.title_col", { defaultValue: "Title" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('common.actions', { defaultValue: 'Actions' })}
+              {t("variations.cost_impact", { defaultValue: "Cost" })}
+            </th>
+            <th className="px-4 py-2.5 text-right">
+              {t("variations.days", { defaultValue: "Days" })}
+            </th>
+            <th className="px-4 py-2.5 text-left">
+              {t("variations.agreed_at", { defaultValue: "Agreed" })}
+            </th>
+            <th className="px-4 py-2.5 text-left">
+              {t("variations.status", { defaultValue: "Status" })}
+            </th>
+            <th className="px-4 py-2.5 text-right">
+              {t("common.actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
@@ -1019,17 +1100,23 @@ function OrderTable({
               onClick={() => onSelect(r.id)}
               className="border-t border-border-light hover:bg-surface-secondary cursor-pointer"
             >
-              <td className="px-4 py-2 font-mono text-xs text-content-secondary">{r.code}</td>
-              <td className="px-4 py-2 font-medium truncate max-w-[360px]">{r.title || '—'}</td>
+              <td className="px-4 py-2 font-mono text-xs text-content-secondary">
+                {r.code}
+              </td>
+              <td className="px-4 py-2 font-medium truncate max-w-[360px]">
+                {r.title || "—"}
+              </td>
               <td className="px-4 py-2 text-right tabular-nums">
                 <MoneyDisplay
                   amount={Number(r.final_cost_impact) || 0}
                   currency={r.currency || currency}
                 />
               </td>
-              <td className="px-4 py-2 text-right tabular-nums">{r.final_schedule_days}</td>
+              <td className="px-4 py-2 text-right tabular-nums">
+                {r.final_schedule_days}
+              </td>
               <td className="px-4 py-2 text-xs text-content-secondary">
-                {r.agreed_at ? <DateDisplay value={r.agreed_at} /> : '—'}
+                {r.agreed_at ? <DateDisplay value={r.agreed_at} /> : "—"}
               </td>
               <td className="px-4 py-2">
                 <Badge variant={VO_VARIANT[r.status]} dot>
@@ -1038,10 +1125,10 @@ function OrderTable({
               </td>
               <td className="px-4 py-2">
                 <RowActions
-                  editBlocked={isEditBlocked('orders', r.status)}
-                  editBlockedReason={t('variations.order_edit_blocked', {
+                  editBlocked={isEditBlocked("orders", r.status)}
+                  editBlockedReason={t("variations.order_edit_blocked", {
                     defaultValue:
-                      'Completed or voided orders can no longer be edited',
+                      "Completed or voided orders can no longer be edited",
                   })}
                   onEdit={() => onEdit(r)}
                   onDelete={() => onDelete(r.id)}
@@ -1075,12 +1162,15 @@ function DayworkTable({
     return (
       <EmptyState
         icon={<Hammer size={22} />}
-        title={t('variations.empty_daywork', { defaultValue: 'No daywork sheets yet' })}
-        description={t('variations.empty_daywork_desc', {
-          defaultValue: 'Log daily labour, material and equipment for owner sign-off.',
+        title={t("variations.empty_daywork", {
+          defaultValue: "No daywork sheets yet",
+        })}
+        description={t("variations.empty_daywork_desc", {
+          defaultValue:
+            "Log daily labour, material and equipment for owner sign-off.",
         })}
         action={{
-          label: t('variations.new_daywork', { defaultValue: 'New Daywork' }),
+          label: t("variations.new_daywork", { defaultValue: "New Daywork" }),
           onClick: emptyAction,
         }}
       />
@@ -1092,22 +1182,22 @@ function DayworkTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.sheet_no', { defaultValue: 'Sheet #' })}
+              {t("variations.sheet_no", { defaultValue: "Sheet #" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.work_date', { defaultValue: 'Date' })}
+              {t("variations.work_date", { defaultValue: "Date" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.description', { defaultValue: 'Description' })}
+              {t("variations.description", { defaultValue: "Description" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('variations.total', { defaultValue: 'Total' })}
+              {t("variations.total", { defaultValue: "Total" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.status', { defaultValue: 'Status' })}
+              {t("variations.status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('common.actions', { defaultValue: 'Actions' })}
+              {t("common.actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
@@ -1122,9 +1212,11 @@ function DayworkTable({
                 {r.sheet_number}
               </td>
               <td className="px-4 py-2 text-xs text-content-secondary">
-                {r.work_date ? <DateDisplay value={r.work_date} /> : '—'}
+                {r.work_date ? <DateDisplay value={r.work_date} /> : "—"}
               </td>
-              <td className="px-4 py-2 truncate max-w-[360px]">{r.description || '—'}</td>
+              <td className="px-4 py-2 truncate max-w-[360px]">
+                {r.description || "—"}
+              </td>
               <td className="px-4 py-2 text-right tabular-nums">
                 <MoneyDisplay
                   amount={Number(r.total_amount) || 0}
@@ -1168,12 +1260,13 @@ function EoTTable({
     return (
       <EmptyState
         icon={<Clock size={22} />}
-        title={t('variations.empty_eot', { defaultValue: 'No EoT claims yet' })}
-        description={t('variations.empty_eot_desc', {
-          defaultValue: 'Raise an Extension-of-Time claim when a delay event affects the critical path.',
+        title={t("variations.empty_eot", { defaultValue: "No EoT claims yet" })}
+        description={t("variations.empty_eot_desc", {
+          defaultValue:
+            "Raise an Extension-of-Time claim when a delay event affects the critical path.",
         })}
         action={{
-          label: t('variations.new_eot', { defaultValue: 'New EoT Claim' }),
+          label: t("variations.new_eot", { defaultValue: "New EoT Claim" }),
           onClick: emptyAction,
         }}
       />
@@ -1185,25 +1278,25 @@ function EoTTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.description', { defaultValue: 'Description' })}
+              {t("variations.description", { defaultValue: "Description" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.cause', { defaultValue: 'Cause' })}
+              {t("variations.cause", { defaultValue: "Cause" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('variations.requested_days', { defaultValue: 'Requested' })}
+              {t("variations.requested_days", { defaultValue: "Requested" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('variations.granted_days', { defaultValue: 'Granted' })}
+              {t("variations.granted_days", { defaultValue: "Granted" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.critical_path', { defaultValue: 'CP' })}
+              {t("variations.critical_path", { defaultValue: "CP" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('variations.status', { defaultValue: 'Status' })}
+              {t("variations.status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('common.actions', { defaultValue: 'Actions' })}
+              {t("common.actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
@@ -1214,11 +1307,17 @@ function EoTTable({
               onClick={() => onSelect(r.id)}
               className="border-t border-border-light hover:bg-surface-secondary cursor-pointer"
             >
-              <td className="px-4 py-2 truncate max-w-[360px]">{r.description || '—'}</td>
-              <td className="px-4 py-2 text-xs text-content-secondary">{r.root_cause_category}</td>
-              <td className="px-4 py-2 text-right tabular-nums">{r.requested_days}</td>
+              <td className="px-4 py-2 truncate max-w-[360px]">
+                {r.description || "—"}
+              </td>
+              <td className="px-4 py-2 text-xs text-content-secondary">
+                {r.root_cause_category}
+              </td>
               <td className="px-4 py-2 text-right tabular-nums">
-                {r.granted_days ?? '—'}
+                {r.requested_days}
+              </td>
+              <td className="px-4 py-2 text-right tabular-nums">
+                {r.granted_days ?? "—"}
               </td>
               <td className="px-4 py-2 text-xs">
                 {r.critical_path_impact ? (
@@ -1260,17 +1359,17 @@ function WorkflowStepper({
   const { t } = useTranslation();
   const steps = [
     {
-      label: t('variations.step_notice', { defaultValue: 'Notice' }),
+      label: t("variations.step_notice", { defaultValue: "Notice" }),
       present: !!notice,
       status: notice?.status,
     },
     {
-      label: t('variations.step_request', { defaultValue: 'Request' }),
+      label: t("variations.step_request", { defaultValue: "Request" }),
       present: !!request,
       status: request?.status,
     },
     {
-      label: t('variations.step_order', { defaultValue: 'Order' }),
+      label: t("variations.step_order", { defaultValue: "Order" }),
       present: !!order,
       status: order?.status,
     },
@@ -1281,16 +1380,18 @@ function WorkflowStepper({
         <div key={s.label} className="flex items-center gap-1.5">
           <span
             className={clsx(
-              'rounded-full px-2 py-0.5 border',
+              "rounded-full px-2 py-0.5 border",
               s.present
-                ? 'bg-oe-blue/10 border-oe-blue text-oe-blue'
-                : 'border-border-light text-content-tertiary',
+                ? "bg-oe-blue/10 border-oe-blue text-oe-blue"
+                : "border-border-light text-content-tertiary",
             )}
           >
             {s.label}
-            {s.status ? ` · ${s.status}` : ''}
+            {s.status ? ` · ${s.status}` : ""}
           </span>
-          {idx < steps.length - 1 && <ChevronRight size={12} className="text-content-tertiary" />}
+          {idx < steps.length - 1 && (
+            <ChevronRight size={12} className="text-content-tertiary" />
+          )}
         </div>
       ))}
     </div>
@@ -1308,11 +1409,11 @@ function DetailDrawer({
   onClose,
 }: {
   selected:
-    | { kind: 'notices'; id: string }
-    | { kind: 'requests'; id: string }
-    | { kind: 'orders'; id: string }
-    | { kind: 'daywork'; id: string }
-    | { kind: 'eot'; id: string };
+    | { kind: "notices"; id: string }
+    | { kind: "requests"; id: string }
+    | { kind: "orders"; id: string }
+    | { kind: "daywork"; id: string }
+    | { kind: "eot"; id: string };
   notices: Notice[];
   requests: VariationRequest[];
   orders: VariationOrder[];
@@ -1325,159 +1426,241 @@ function DetailDrawer({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const notice = selected.kind === 'notices' ? notices.find((n) => n.id === selected.id) : null;
-  const request = selected.kind === 'requests' ? requests.find((r) => r.id === selected.id) : null;
-  const order = selected.kind === 'orders' ? orders.find((o) => o.id === selected.id) : null;
-  const sheet = selected.kind === 'daywork' ? daywork.find((d) => d.id === selected.id) : null;
-  const claim = selected.kind === 'eot' ? eot.find((e) => e.id === selected.id) : null;
+  const notice =
+    selected.kind === "notices"
+      ? notices.find((n) => n.id === selected.id)
+      : null;
+  const request =
+    selected.kind === "requests"
+      ? requests.find((r) => r.id === selected.id)
+      : null;
+  const order =
+    selected.kind === "orders"
+      ? orders.find((o) => o.id === selected.id)
+      : null;
+  const sheet =
+    selected.kind === "daywork"
+      ? daywork.find((d) => d.id === selected.id)
+      : null;
+  const claim =
+    selected.kind === "eot" ? eot.find((e) => e.id === selected.id) : null;
 
   const chainNotice = request
-    ? notices.find((n) => n.id === request.notice_id) ?? null
+    ? (notices.find((n) => n.id === request.notice_id) ?? null)
     : notice;
   const chainRequest = order
-    ? requests.find((r) => r.id === order.variation_request_id) ?? null
+    ? (requests.find((r) => r.id === order.variation_request_id) ?? null)
     : request;
   const chainOrder = request
-    ? orders.find((o) => o.variation_request_id === request.id) ?? null
+    ? (orders.find((o) => o.variation_request_id === request.id) ?? null)
     : order;
 
   /* Notice transitions */
   const ackMut = useMutation({
     mutationFn: () => acknowledgeNotice(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.acknowledged', { defaultValue: 'Notice acknowledged' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.acknowledged", {
+          defaultValue: "Notice acknowledged",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
-  const [respText, setRespText] = useState('');
+  const [respText, setRespText] = useState("");
   const respMut = useMutation({
     mutationFn: () => respondNotice(selected.id, respText.trim() || undefined),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      setRespText('');
-      addToast({ type: 'success', title: t('variations.responded', { defaultValue: 'Response logged' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      setRespText("");
+      addToast({
+        type: "success",
+        title: t("variations.responded", { defaultValue: "Response logged" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const closeNoticeMut = useMutation({
     mutationFn: () => closeNotice(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.notice_closed', { defaultValue: 'Notice closed' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.notice_closed", { defaultValue: "Notice closed" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   /* Request transitions */
   const submitVrMut = useMutation({
     mutationFn: () => submitVR(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.vr_submitted', { defaultValue: 'Request submitted' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.vr_submitted", {
+          defaultValue: "Request submitted",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
-  const [decisionNotes, setDecisionNotes] = useState('');
+  const [decisionNotes, setDecisionNotes] = useState("");
   const approveMut = useMutation({
     mutationFn: () => approveVR(selected.id, decisionNotes.trim() || undefined),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      setDecisionNotes('');
-      addToast({ type: 'success', title: t('variations.vr_approved', { defaultValue: 'Request approved' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      setDecisionNotes("");
+      addToast({
+        type: "success",
+        title: t("variations.vr_approved", {
+          defaultValue: "Request approved",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const rejectMut = useMutation({
     mutationFn: () => rejectVR(selected.id, decisionNotes.trim() || undefined),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      setDecisionNotes('');
-      addToast({ type: 'success', title: t('variations.vr_rejected', { defaultValue: 'Request rejected' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      setDecisionNotes("");
+      addToast({
+        type: "success",
+        title: t("variations.vr_rejected", {
+          defaultValue: "Request rejected",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const convertMut = useMutation({
     mutationFn: () =>
-      convertVRToVO(selected.id, request ? { currency: request.currency || currency } : {}),
+      convertVRToVO(
+        selected.id,
+        request ? { currency: request.currency || currency } : {},
+      ),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.converted', { defaultValue: 'Converted to order' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.converted", {
+          defaultValue: "Converted to order",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   /* Order transitions */
   const startMut = useMutation({
     mutationFn: () => startVO(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.vo_started', { defaultValue: 'Order started' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.vo_started", { defaultValue: "Order started" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const completeMut = useMutation({
     mutationFn: () => completeVO(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.vo_completed', { defaultValue: 'Order completed' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.vo_completed", {
+          defaultValue: "Order completed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const voidMut = useMutation({
     mutationFn: () => voidVO(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.vo_voided', { defaultValue: 'Order voided' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.vo_voided", { defaultValue: "Order voided" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   /* Daywork transitions */
   const signMut = useMutation({
     mutationFn: () => signDaywork(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.daywork_signed', { defaultValue: 'Daywork signed' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.daywork_signed", {
+          defaultValue: "Daywork signed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const billMut = useMutation({
     mutationFn: () => billDaywork(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.daywork_billed', { defaultValue: 'Daywork billed' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.daywork_billed", {
+          defaultValue: "Daywork billed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   /* EoT transitions */
   const submitEoTMut = useMutation({
     mutationFn: () => submitEoT(selected.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      addToast({ type: 'success', title: t('variations.eot_submitted', { defaultValue: 'EoT submitted' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      addToast({
+        type: "success",
+        title: t("variations.eot_submitted", { defaultValue: "EoT submitted" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
-  const [grantedDays, setGrantedDays] = useState('0');
+  const [grantedDays, setGrantedDays] = useState("0");
   const grantMut = useMutation({
-    mutationFn: () => grantEoT(selected.id, Number(grantedDays) || 0, decisionNotes.trim() || undefined),
+    mutationFn: () =>
+      grantEoT(
+        selected.id,
+        Number(grantedDays) || 0,
+        decisionNotes.trim() || undefined,
+      ),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      setDecisionNotes('');
-      addToast({ type: 'success', title: t('variations.eot_granted', { defaultValue: 'EoT granted' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      setDecisionNotes("");
+      addToast({
+        type: "success",
+        title: t("variations.eot_granted", { defaultValue: "EoT granted" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const rejectEoTMut = useMutation({
     mutationFn: () => rejectEoT(selected.id, decisionNotes.trim() || undefined),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['variations'] });
-      setDecisionNotes('');
-      addToast({ type: 'success', title: t('variations.eot_rejected', { defaultValue: 'EoT rejected' }) });
+      qc.invalidateQueries({ queryKey: ["variations"] });
+      setDecisionNotes("");
+      addToast({
+        type: "success",
+        title: t("variations.eot_rejected", { defaultValue: "EoT rejected" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const heading =
@@ -1485,14 +1668,14 @@ function DetailDrawer({
     request?.code ||
     order?.code ||
     sheet?.sheet_number ||
-    (claim ? `EoT ${claim.id.slice(0, 8)}` : '');
+    (claim ? `EoT ${claim.id.slice(0, 8)}` : "");
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   return (
@@ -1502,7 +1685,8 @@ function DetailDrawer({
         role="dialog"
         aria-modal="true"
         aria-label={
-          heading || t('variations.detail', { defaultValue: 'Variation detail' })
+          heading ||
+          t("variations.detail", { defaultValue: "Variation detail" })
         }
         className="relative h-full w-full max-w-xl overflow-y-auto bg-surface-elevated shadow-xl"
         onClick={(e) => e.stopPropagation()}
@@ -1513,16 +1697,16 @@ function DetailDrawer({
             type="button"
             onClick={onClose}
             className="rounded p-1 hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
         </div>
 
         <div className="space-y-4 p-5">
-          {(selected.kind === 'notices' ||
-            selected.kind === 'requests' ||
-            selected.kind === 'orders') && (
+          {(selected.kind === "notices" ||
+            selected.kind === "requests" ||
+            selected.kind === "orders") && (
             <WorkflowStepper
               notice={chainNotice ?? null}
               request={chainRequest ?? null}
@@ -1533,18 +1717,20 @@ function DetailDrawer({
           {notice && (
             <>
               <div>
-                <p className="text-lg font-semibold">{notice.title || '—'}</p>
+                <p className="text-lg font-semibold">{notice.title || "—"}</p>
                 <p className="mt-1 text-sm text-content-secondary whitespace-pre-wrap">
-                  {notice.description || '—'}
+                  {notice.description || "—"}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Field
-                  label={t('variations.recipient', { defaultValue: 'Recipient' })}
+                  label={t("variations.recipient", {
+                    defaultValue: "Recipient",
+                  })}
                   value={notice.recipient_name || notice.recipient_type}
                 />
                 <Field
-                  label={t('variations.status')}
+                  label={t("variations.status")}
                   value={
                     <Badge variant={NOTICE_VARIANT[notice.status]} dot>
                       {notice.status}
@@ -1552,39 +1738,54 @@ function DetailDrawer({
                   }
                 />
                 <Field
-                  label={t('variations.target_response')}
-                  value={notice.target_response_date ? <DateDisplay value={notice.target_response_date} /> : '—'}
+                  label={t("variations.target_response")}
+                  value={
+                    notice.target_response_date ? (
+                      <DateDisplay value={notice.target_response_date} />
+                    ) : (
+                      "—"
+                    )
+                  }
                 />
                 <Field
-                  label={t('variations.raised_at', { defaultValue: 'Raised' })}
-                  value={notice.raised_at ? <DateDisplay value={notice.raised_at} /> : '—'}
+                  label={t("variations.raised_at", { defaultValue: "Raised" })}
+                  value={
+                    notice.raised_at ? (
+                      <DateDisplay value={notice.raised_at} />
+                    ) : (
+                      "—"
+                    )
+                  }
                 />
               </div>
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border-light">
-                {notice.status === 'issued' && (
+                {notice.status === "issued" && (
                   <Button
                     variant="secondary"
                     icon={<CheckCircle2 size={14} />}
                     onClick={() => ackMut.mutate()}
                     loading={ackMut.isPending}
                   >
-                    {t('variations.acknowledge', { defaultValue: 'Acknowledge' })}
+                    {t("variations.acknowledge", {
+                      defaultValue: "Acknowledge",
+                    })}
                   </Button>
                 )}
-                {(notice.status === 'issued' || notice.status === 'acknowledged') && (
+                {(notice.status === "issued" ||
+                  notice.status === "acknowledged") && (
                   <Card padding="sm" className="w-full">
                     <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-                      {t('variations.respond', { defaultValue: 'Respond' })}
+                      {t("variations.respond", { defaultValue: "Respond" })}
                     </p>
                     <div className="space-y-2">
                       <textarea
                         rows={2}
                         value={respText}
                         onChange={(e) => setRespText(e.target.value)}
-                        placeholder={t('variations.response_placeholder', {
-                          defaultValue: 'Response summary…',
+                        placeholder={t("variations.response_placeholder", {
+                          defaultValue: "Response summary…",
                         })}
-                        className={clsx(inputCls, 'h-auto py-2')}
+                        className={clsx(inputCls, "h-auto py-2")}
                       />
                       <Button
                         variant="primary"
@@ -1592,19 +1793,21 @@ function DetailDrawer({
                         onClick={() => respMut.mutate()}
                         loading={respMut.isPending}
                       >
-                        {t('variations.send_response', { defaultValue: 'Send response' })}
+                        {t("variations.send_response", {
+                          defaultValue: "Send response",
+                        })}
                       </Button>
                     </div>
                   </Card>
                 )}
-                {notice.status === 'responded' && (
+                {notice.status === "responded" && (
                   <Button
                     variant="secondary"
                     icon={<XCircle size={14} />}
                     onClick={() => closeNoticeMut.mutate()}
                     loading={closeNoticeMut.isPending}
                   >
-                    {t('variations.close', { defaultValue: 'Close' })}
+                    {t("variations.close", { defaultValue: "Close" })}
                   </Button>
                 )}
               </div>
@@ -1614,22 +1817,22 @@ function DetailDrawer({
           {request && (
             <>
               <div>
-                <p className="text-lg font-semibold">{request.title || '—'}</p>
+                <p className="text-lg font-semibold">{request.title || "—"}</p>
                 <p className="mt-1 text-sm text-content-secondary whitespace-pre-wrap">
-                  {request.description || '—'}
+                  {request.description || "—"}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Field
-                  label={t('variations.classification')}
+                  label={t("variations.classification")}
                   value={request.classification}
                 />
                 <Field
-                  label={t('variations.urgency', { defaultValue: 'Urgency' })}
+                  label={t("variations.urgency", { defaultValue: "Urgency" })}
                   value={request.urgency}
                 />
                 <Field
-                  label={t('variations.cost_impact')}
+                  label={t("variations.cost_impact")}
                   value={
                     <MoneyDisplay
                       amount={Number(request.estimated_cost_impact) || 0}
@@ -1638,11 +1841,11 @@ function DetailDrawer({
                   }
                 />
                 <Field
-                  label={t('variations.days')}
+                  label={t("variations.days")}
                   value={String(request.estimated_schedule_days)}
                 />
                 <Field
-                  label={t('variations.status')}
+                  label={t("variations.status")}
                   value={
                     <Badge variant={VR_VARIANT[request.status]} dot>
                       {request.status}
@@ -1650,43 +1853,59 @@ function DetailDrawer({
                   }
                 />
                 <Field
-                  label={t('variations.submitted_at', { defaultValue: 'Submitted' })}
-                  value={request.submitted_at ? <DateDisplay value={request.submitted_at} /> : '—'}
+                  label={t("variations.submitted_at", {
+                    defaultValue: "Submitted",
+                  })}
+                  value={
+                    request.submitted_at ? (
+                      <DateDisplay value={request.submitted_at} />
+                    ) : (
+                      "—"
+                    )
+                  }
                 />
               </div>
               {request.decision_notes && (
                 <Card padding="sm">
                   <p className="text-xs uppercase tracking-wide text-content-tertiary mb-1">
-                    {t('variations.decision_notes', { defaultValue: 'Decision notes' })}
+                    {t("variations.decision_notes", {
+                      defaultValue: "Decision notes",
+                    })}
                   </p>
-                  <p className="text-sm whitespace-pre-wrap">{request.decision_notes}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {request.decision_notes}
+                  </p>
                 </Card>
               )}
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border-light">
-                {request.status === 'draft' && (
+                {request.status === "draft" && (
                   <Button
                     variant="primary"
                     icon={<Send size={14} />}
                     onClick={() => submitVrMut.mutate()}
                     loading={submitVrMut.isPending}
                   >
-                    {t('variations.submit', { defaultValue: 'Submit' })}
+                    {t("variations.submit", { defaultValue: "Submit" })}
                   </Button>
                 )}
-                {(request.status === 'submitted' || request.status === 'under_review') && (
+                {(request.status === "submitted" ||
+                  request.status === "under_review") && (
                   <Card padding="sm" className="w-full">
                     <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-                      {t('variations.decision', { defaultValue: 'Decision' })}
+                      {t("variations.decision", { defaultValue: "Decision" })}
                     </p>
                     <div className="space-y-2">
                       <textarea
                         rows={2}
                         value={decisionNotes}
                         onChange={(e) => setDecisionNotes(e.target.value)}
-                        placeholder={t('variations.decision_notes_placeholder', {
-                          defaultValue: 'Decision notes…',
-                        })}
-                        className={clsx(inputCls, 'h-auto py-2')}
+                        placeholder={t(
+                          "variations.decision_notes_placeholder",
+                          {
+                            defaultValue: "Decision notes…",
+                          },
+                        )}
+                        className={clsx(inputCls, "h-auto py-2")}
                       />
                       <div className="flex gap-2">
                         <Button
@@ -1695,7 +1914,7 @@ function DetailDrawer({
                           onClick={() => approveMut.mutate()}
                           loading={approveMut.isPending}
                         >
-                          {t('variations.approve', { defaultValue: 'Approve' })}
+                          {t("variations.approve", { defaultValue: "Approve" })}
                         </Button>
                         <Button
                           variant="danger"
@@ -1703,20 +1922,22 @@ function DetailDrawer({
                           onClick={() => rejectMut.mutate()}
                           loading={rejectMut.isPending}
                         >
-                          {t('variations.reject', { defaultValue: 'Reject' })}
+                          {t("variations.reject", { defaultValue: "Reject" })}
                         </Button>
                       </div>
                     </div>
                   </Card>
                 )}
-                {request.status === 'approved' && (
+                {request.status === "approved" && (
                   <Button
                     variant="primary"
                     icon={<ArrowRight size={14} />}
                     onClick={() => convertMut.mutate()}
                     loading={convertMut.isPending}
                   >
-                    {t('variations.convert_to_vo', { defaultValue: 'Convert to Order' })}
+                    {t("variations.convert_to_vo", {
+                      defaultValue: "Convert to Order",
+                    })}
                   </Button>
                 )}
               </div>
@@ -1726,11 +1947,11 @@ function DetailDrawer({
           {order && (
             <>
               <div>
-                <p className="text-lg font-semibold">{order.title || '—'}</p>
+                <p className="text-lg font-semibold">{order.title || "—"}</p>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Field
-                  label={t('variations.cost_impact')}
+                  label={t("variations.cost_impact")}
                   value={
                     <MoneyDisplay
                       amount={Number(order.final_cost_impact) || 0}
@@ -1739,11 +1960,11 @@ function DetailDrawer({
                   }
                 />
                 <Field
-                  label={t('variations.days')}
+                  label={t("variations.days")}
                   value={String(order.final_schedule_days)}
                 />
                 <Field
-                  label={t('variations.status')}
+                  label={t("variations.status")}
                   value={
                     <Badge variant={VO_VARIANT[order.status]} dot>
                       {order.status}
@@ -1751,58 +1972,69 @@ function DetailDrawer({
                   }
                 />
                 <Field
-                  label={t('variations.agreed_at')}
-                  value={order.agreed_at ? <DateDisplay value={order.agreed_at} /> : '—'}
-                />
-                <Field
-                  label={t('variations.started_at', { defaultValue: 'Started' })}
+                  label={t("variations.agreed_at")}
                   value={
-                    order.implementation_started_at ? (
-                      <DateDisplay value={order.implementation_started_at} />
+                    order.agreed_at ? (
+                      <DateDisplay value={order.agreed_at} />
                     ) : (
-                      '—'
+                      "—"
                     )
                   }
                 />
                 <Field
-                  label={t('variations.completed_at', { defaultValue: 'Completed' })}
+                  label={t("variations.started_at", {
+                    defaultValue: "Started",
+                  })}
+                  value={
+                    order.implementation_started_at ? (
+                      <DateDisplay value={order.implementation_started_at} />
+                    ) : (
+                      "—"
+                    )
+                  }
+                />
+                <Field
+                  label={t("variations.completed_at", {
+                    defaultValue: "Completed",
+                  })}
                   value={
                     order.implementation_completed_at ? (
                       <DateDisplay value={order.implementation_completed_at} />
                     ) : (
-                      '—'
+                      "—"
                     )
                   }
                 />
               </div>
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border-light">
-                {order.status === 'issued' && (
+                {order.status === "issued" && (
                   <Button
                     variant="primary"
                     onClick={() => startMut.mutate()}
                     loading={startMut.isPending}
                   >
-                    {t('variations.start', { defaultValue: 'Start' })}
+                    {t("variations.start", { defaultValue: "Start" })}
                   </Button>
                 )}
-                {order.status === 'in_progress' && (
+                {order.status === "in_progress" && (
                   <Button
                     variant="primary"
                     icon={<CheckCircle2 size={14} />}
                     onClick={() => completeMut.mutate()}
                     loading={completeMut.isPending}
                   >
-                    {t('variations.complete', { defaultValue: 'Complete' })}
+                    {t("variations.complete", { defaultValue: "Complete" })}
                   </Button>
                 )}
-                {(order.status === 'issued' || order.status === 'in_progress') && (
+                {(order.status === "issued" ||
+                  order.status === "in_progress") && (
                   <Button
                     variant="danger"
                     icon={<XCircle size={14} />}
                     onClick={() => voidMut.mutate()}
                     loading={voidMut.isPending}
                   >
-                    {t('variations.void', { defaultValue: 'Void' })}
+                    {t("variations.void", { defaultValue: "Void" })}
                   </Button>
                 )}
               </div>
@@ -1813,15 +2045,21 @@ function DetailDrawer({
             <>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Field
-                  label={t('variations.sheet_no')}
+                  label={t("variations.sheet_no")}
                   value={sheet.sheet_number}
                 />
                 <Field
-                  label={t('variations.work_date')}
-                  value={sheet.work_date ? <DateDisplay value={sheet.work_date} /> : '—'}
+                  label={t("variations.work_date")}
+                  value={
+                    sheet.work_date ? (
+                      <DateDisplay value={sheet.work_date} />
+                    ) : (
+                      "—"
+                    )
+                  }
                 />
                 <Field
-                  label={t('variations.total')}
+                  label={t("variations.total")}
                   value={
                     <MoneyDisplay
                       amount={Number(sheet.total_amount) || 0}
@@ -1830,7 +2068,7 @@ function DetailDrawer({
                   }
                 />
                 <Field
-                  label={t('variations.status')}
+                  label={t("variations.status")}
                   value={
                     <Badge variant={DAYWORK_VARIANT[sheet.status]} dot>
                       {sheet.status}
@@ -1840,27 +2078,29 @@ function DetailDrawer({
               </div>
               {sheet.description && (
                 <Card padding="sm">
-                  <p className="text-sm whitespace-pre-wrap">{sheet.description}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {sheet.description}
+                  </p>
                 </Card>
               )}
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border-light">
-                {sheet.status === 'draft' && (
+                {sheet.status === "draft" && (
                   <Button
                     variant="primary"
                     icon={<CheckCircle2 size={14} />}
                     onClick={() => signMut.mutate()}
                     loading={signMut.isPending}
                   >
-                    {t('variations.sign', { defaultValue: 'Sign' })}
+                    {t("variations.sign", { defaultValue: "Sign" })}
                   </Button>
                 )}
-                {sheet.status === 'signed' && (
+                {sheet.status === "signed" && (
                   <Button
                     variant="secondary"
                     onClick={() => billMut.mutate()}
                     loading={billMut.isPending}
                   >
-                    {t('variations.bill', { defaultValue: 'Bill' })}
+                    {t("variations.bill", { defaultValue: "Bill" })}
                   </Button>
                 )}
               </div>
@@ -1870,27 +2110,33 @@ function DetailDrawer({
           {claim && (
             <>
               <div>
-                <p className="text-sm whitespace-pre-wrap">{claim.description || '—'}</p>
+                <p className="text-sm whitespace-pre-wrap">
+                  {claim.description || "—"}
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Field
-                  label={t('variations.cause')}
+                  label={t("variations.cause")}
                   value={claim.root_cause_category}
                 />
                 <Field
-                  label={t('variations.requested_days')}
+                  label={t("variations.requested_days")}
                   value={String(claim.requested_days)}
                 />
                 <Field
-                  label={t('variations.granted_days')}
-                  value={claim.granted_days != null ? String(claim.granted_days) : '—'}
+                  label={t("variations.granted_days")}
+                  value={
+                    claim.granted_days != null
+                      ? String(claim.granted_days)
+                      : "—"
+                  }
                 />
                 <Field
-                  label={t('variations.critical_path')}
-                  value={claim.critical_path_impact ? 'CP' : '—'}
+                  label={t("variations.critical_path")}
+                  value={claim.critical_path_impact ? "CP" : "—"}
                 />
                 <Field
-                  label={t('variations.status')}
+                  label={t("variations.status")}
                   value={
                     <Badge variant={EOT_VARIANT[claim.status]} dot>
                       {claim.status}
@@ -1898,37 +2144,40 @@ function DetailDrawer({
                   }
                 />
                 <Field
-                  label={t('variations.period', { defaultValue: 'Period' })}
+                  label={t("variations.period", { defaultValue: "Period" })}
                   value={
                     claim.claim_period_start && claim.claim_period_end
                       ? `${claim.claim_period_start} → ${claim.claim_period_end}`
-                      : '—'
+                      : "—"
                   }
                 />
               </div>
               {claim.decision_notes && (
                 <Card padding="sm">
                   <p className="text-xs uppercase tracking-wide text-content-tertiary mb-1">
-                    {t('variations.decision_notes')}
+                    {t("variations.decision_notes")}
                   </p>
-                  <p className="text-sm whitespace-pre-wrap">{claim.decision_notes}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {claim.decision_notes}
+                  </p>
                 </Card>
               )}
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border-light">
-                {claim.status === 'draft' && (
+                {claim.status === "draft" && (
                   <Button
                     variant="primary"
                     icon={<Send size={14} />}
                     onClick={() => submitEoTMut.mutate()}
                     loading={submitEoTMut.isPending}
                   >
-                    {t('variations.submit')}
+                    {t("variations.submit")}
                   </Button>
                 )}
-                {(claim.status === 'submitted' || claim.status === 'under_review') && (
+                {(claim.status === "submitted" ||
+                  claim.status === "under_review") && (
                   <Card padding="sm" className="w-full">
                     <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-                      {t('variations.decide', { defaultValue: 'Decide' })}
+                      {t("variations.decide", { defaultValue: "Decide" })}
                     </p>
                     <div className="space-y-2">
                       <div className="grid grid-cols-2 gap-2">
@@ -1944,10 +2193,13 @@ function DetailDrawer({
                           rows={1}
                           value={decisionNotes}
                           onChange={(e) => setDecisionNotes(e.target.value)}
-                          placeholder={t('variations.decision_notes_placeholder', {
-                            defaultValue: 'Decision notes…',
-                          })}
-                          className={clsx(inputCls, 'h-auto py-2')}
+                          placeholder={t(
+                            "variations.decision_notes_placeholder",
+                            {
+                              defaultValue: "Decision notes…",
+                            },
+                          )}
+                          className={clsx(inputCls, "h-auto py-2")}
                         />
                       </div>
                       <div className="flex gap-2">
@@ -1957,7 +2209,7 @@ function DetailDrawer({
                           onClick={() => grantMut.mutate()}
                           loading={grantMut.isPending}
                         >
-                          {t('variations.grant', { defaultValue: 'Grant' })}
+                          {t("variations.grant", { defaultValue: "Grant" })}
                         </Button>
                         <Button
                           variant="danger"
@@ -1965,7 +2217,7 @@ function DetailDrawer({
                           onClick={() => rejectEoTMut.mutate()}
                           loading={rejectEoTMut.isPending}
                         >
-                          {t('variations.reject')}
+                          {t("variations.reject")}
                         </Button>
                       </div>
                     </div>
@@ -1980,10 +2232,18 @@ function DetailDrawer({
   );
 }
 
-function Field({ label, value }: { label: React.ReactNode; value: React.ReactNode }) {
+function Field({
+  label,
+  value,
+}: {
+  label: React.ReactNode;
+  value: React.ReactNode;
+}) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-wide text-content-tertiary">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-content-tertiary">
+        {label}
+      </p>
       <p className="mt-0.5 text-sm text-content-primary">{value}</p>
     </div>
   );
@@ -1994,7 +2254,7 @@ function Field({ label, value }: { label: React.ReactNode; value: React.ReactNod
 /** Trim an ISO datetime down to the YYYY-MM-DD a native `<input type="date">`
  *  expects. Falls back to '' so editing never crashes on a null/empty date. */
 function toDateInput(v: string | null | undefined): string {
-  return v ? v.slice(0, 10) : '';
+  return v ? v.slice(0, 10) : "";
 }
 
 /**
@@ -2028,64 +2288,62 @@ function CreateModal({
   const isEdit = !!editTarget;
 
   const [noticeForm, setNoticeForm] = useState(() => {
-    const n =
-      editTarget?.kind === 'notices' ? editTarget.row : null;
+    const n = editTarget?.kind === "notices" ? editTarget.row : null;
     return {
-      title: n?.title ?? '',
-      description: n?.description ?? '',
-      recipient_type: (n?.recipient_type ?? 'owner') as Notice['recipient_type'],
-      recipient_name: n?.recipient_name ?? '',
+      title: n?.title ?? "",
+      description: n?.description ?? "",
+      recipient_type: (n?.recipient_type ??
+        "owner") as Notice["recipient_type"],
+      recipient_name: n?.recipient_name ?? "",
       target_response_date: toDateInput(n?.target_response_date),
     };
   });
 
   const [vrForm, setVrForm] = useState(() => {
-    const r =
-      editTarget?.kind === 'requests' ? editTarget.row : null;
+    const r = editTarget?.kind === "requests" ? editTarget.row : null;
     return {
-      title: r?.title ?? '',
-      description: r?.description ?? '',
-      notice_id: r?.notice_id ?? '',
+      title: r?.title ?? "",
+      description: r?.description ?? "",
+      notice_id: r?.notice_id ?? "",
       classification: (r?.classification ??
-        'scope_change') as VariationRequest['classification'],
-      urgency: (r?.urgency ?? 'med') as VariationRequest['urgency'],
+        "scope_change") as VariationRequest["classification"],
+      urgency: (r?.urgency ?? "med") as VariationRequest["urgency"],
       estimated_cost_impact:
-        r != null ? String(r.estimated_cost_impact ?? '0') : '0',
+        r != null ? String(r.estimated_cost_impact ?? "0") : "0",
       estimated_schedule_days:
-        r != null ? String(r.estimated_schedule_days ?? '0') : '0',
+        r != null ? String(r.estimated_schedule_days ?? "0") : "0",
       currency: r?.currency || currency,
     };
   });
 
   const [voForm, setVoForm] = useState(() => {
-    const o = editTarget?.kind === 'orders' ? editTarget.row : null;
+    const o = editTarget?.kind === "orders" ? editTarget.row : null;
     return {
-      title: o?.title ?? '',
-      variation_request_id: o?.variation_request_id ?? '',
-      final_cost_impact:
-        o != null ? String(o.final_cost_impact ?? '0') : '0',
+      title: o?.title ?? "",
+      variation_request_id: o?.variation_request_id ?? "",
+      final_cost_impact: o != null ? String(o.final_cost_impact ?? "0") : "0",
       final_schedule_days:
-        o != null ? String(o.final_schedule_days ?? '0') : '0',
+        o != null ? String(o.final_schedule_days ?? "0") : "0",
       currency: o?.currency || currency,
     };
   });
 
   const [dwForm, setDwForm] = useState(() => {
-    const d = editTarget?.kind === 'daywork' ? editTarget.row : null;
+    const d = editTarget?.kind === "daywork" ? editTarget.row : null;
     return {
       work_date: toDateInput(d?.work_date),
-      description: d?.description ?? '',
+      description: d?.description ?? "",
       currency: d?.currency || currency,
     };
   });
 
   const [eotForm, setEotForm] = useState(() => {
-    const e = editTarget?.kind === 'eot' ? editTarget.row : null;
+    const e = editTarget?.kind === "eot" ? editTarget.row : null;
     return {
-      description: e?.description ?? '',
+      description: e?.description ?? "",
       root_cause_category: (e?.root_cause_category ??
-        'neutral') as ExtensionOfTimeClaim['root_cause_category'],
-      requested_days: e != null ? String(e.requested_days ?? '0') : '0',
+        "neutral") as ExtensionOfTimeClaim["root_cause_category"],
+      requested_days: e != null ? String(e.requested_days ?? "0") : "0",
       critical_path_impact: e?.critical_path_impact ?? false,
       claim_period_start: toDateInput(e?.claim_period_start),
       claim_period_end: toDateInput(e?.claim_period_end),
@@ -2095,9 +2353,9 @@ function CreateModal({
   const submit = async () => {
     setBusy(true);
     try {
-      const editId = editTarget?.row.id ?? '';
-      if (kind === 'notices') {
-        if (isEdit && editTarget?.kind === 'notices') {
+      const editId = editTarget?.row.id ?? "";
+      if (kind === "notices") {
+        if (isEdit && editTarget?.kind === "notices") {
           await updateNotice(editId, {
             title: noticeForm.title.trim(),
             description: noticeForm.description.trim(),
@@ -2116,20 +2374,23 @@ function CreateModal({
           });
         }
         addToast({
-          type: 'success',
+          type: "success",
           title: isEdit
-            ? t('variations.notice_updated', { defaultValue: 'Notice updated' })
-            : t('variations.notice_created', { defaultValue: 'Notice created' }),
+            ? t("variations.notice_updated", { defaultValue: "Notice updated" })
+            : t("variations.notice_created", {
+                defaultValue: "Notice created",
+              }),
         });
-      } else if (kind === 'requests') {
-        if (isEdit && editTarget?.kind === 'requests') {
+      } else if (kind === "requests") {
+        if (isEdit && editTarget?.kind === "requests") {
           await updateVR(editId, {
             title: vrForm.title.trim(),
             description: vrForm.description.trim(),
             classification: vrForm.classification,
             urgency: vrForm.urgency,
             estimated_cost_impact: Number(vrForm.estimated_cost_impact) || 0,
-            estimated_schedule_days: Number(vrForm.estimated_schedule_days) || 0,
+            estimated_schedule_days:
+              Number(vrForm.estimated_schedule_days) || 0,
             currency: vrForm.currency,
           });
         } else {
@@ -2141,18 +2402,19 @@ function CreateModal({
             classification: vrForm.classification,
             urgency: vrForm.urgency,
             estimated_cost_impact: Number(vrForm.estimated_cost_impact) || 0,
-            estimated_schedule_days: Number(vrForm.estimated_schedule_days) || 0,
+            estimated_schedule_days:
+              Number(vrForm.estimated_schedule_days) || 0,
             currency: vrForm.currency,
           });
         }
         addToast({
-          type: 'success',
+          type: "success",
           title: isEdit
-            ? t('variations.vr_updated', { defaultValue: 'Request updated' })
-            : t('variations.vr_created', { defaultValue: 'Request created' }),
+            ? t("variations.vr_updated", { defaultValue: "Request updated" })
+            : t("variations.vr_created", { defaultValue: "Request created" }),
         });
-      } else if (kind === 'orders') {
-        if (isEdit && editTarget?.kind === 'orders') {
+      } else if (kind === "orders") {
+        if (isEdit && editTarget?.kind === "orders") {
           await updateVO(editId, {
             title: voForm.title.trim(),
             final_cost_impact: Number(voForm.final_cost_impact) || 0,
@@ -2170,13 +2432,13 @@ function CreateModal({
           });
         }
         addToast({
-          type: 'success',
+          type: "success",
           title: isEdit
-            ? t('variations.vo_updated', { defaultValue: 'Order updated' })
-            : t('variations.vo_created', { defaultValue: 'Order created' }),
+            ? t("variations.vo_updated", { defaultValue: "Order updated" })
+            : t("variations.vo_created", { defaultValue: "Order created" }),
         });
-      } else if (kind === 'daywork') {
-        if (isEdit && editTarget?.kind === 'daywork') {
+      } else if (kind === "daywork") {
+        if (isEdit && editTarget?.kind === "daywork") {
           await updateDaywork(editId, {
             work_date: dwForm.work_date || null,
             description: dwForm.description.trim(),
@@ -2191,17 +2453,17 @@ function CreateModal({
           });
         }
         addToast({
-          type: 'success',
+          type: "success",
           title: isEdit
-            ? t('variations.daywork_updated', {
-                defaultValue: 'Daywork sheet updated',
+            ? t("variations.daywork_updated", {
+                defaultValue: "Daywork sheet updated",
               })
-            : t('variations.daywork_created', {
-                defaultValue: 'Daywork sheet created',
+            : t("variations.daywork_created", {
+                defaultValue: "Daywork sheet created",
               }),
         });
-      } else if (kind === 'eot') {
-        if (isEdit && editTarget?.kind === 'eot') {
+      } else if (kind === "eot") {
+        if (isEdit && editTarget?.kind === "eot") {
           await updateEoT(editId, {
             description: eotForm.description.trim(),
             root_cause_category: eotForm.root_cause_category,
@@ -2220,48 +2482,48 @@ function CreateModal({
           });
         }
         addToast({
-          type: 'success',
+          type: "success",
           title: isEdit
-            ? t('variations.eot_updated', { defaultValue: 'EoT claim updated' })
-            : t('variations.eot_created', {
-                defaultValue: 'EoT claim created',
+            ? t("variations.eot_updated", { defaultValue: "EoT claim updated" })
+            : t("variations.eot_created", {
+                defaultValue: "EoT claim created",
               }),
         });
       }
-      qc.invalidateQueries({ queryKey: ['variations'] });
+      qc.invalidateQueries({ queryKey: ["variations"] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
   };
 
   const createTitle =
-    kind === 'notices'
-      ? t('variations.new_notice', { defaultValue: 'New Notice' })
-      : kind === 'requests'
-        ? t('variations.new_request', { defaultValue: 'New Request' })
-        : kind === 'orders'
-          ? t('variations.new_order', { defaultValue: 'New Order' })
-          : kind === 'daywork'
-            ? t('variations.new_daywork', { defaultValue: 'New Daywork' })
-            : t('variations.new_eot', { defaultValue: 'New EoT Claim' });
+    kind === "notices"
+      ? t("variations.new_notice", { defaultValue: "New Notice" })
+      : kind === "requests"
+        ? t("variations.new_request", { defaultValue: "New Request" })
+        : kind === "orders"
+          ? t("variations.new_order", { defaultValue: "New Order" })
+          : kind === "daywork"
+            ? t("variations.new_daywork", { defaultValue: "New Daywork" })
+            : t("variations.new_eot", { defaultValue: "New EoT Claim" });
   const editTitle =
-    kind === 'notices'
-      ? t('variations.edit_notice', { defaultValue: 'Edit Notice' })
-      : kind === 'requests'
-        ? t('variations.edit_request', { defaultValue: 'Edit Request' })
-        : kind === 'orders'
-          ? t('variations.edit_order', { defaultValue: 'Edit Order' })
-          : kind === 'daywork'
-            ? t('variations.edit_daywork', { defaultValue: 'Edit Daywork' })
-            : t('variations.edit_eot', { defaultValue: 'Edit EoT Claim' });
+    kind === "notices"
+      ? t("variations.edit_notice", { defaultValue: "Edit Notice" })
+      : kind === "requests"
+        ? t("variations.edit_request", { defaultValue: "Edit Request" })
+        : kind === "orders"
+          ? t("variations.edit_order", { defaultValue: "Edit Order" })
+          : kind === "daywork"
+            ? t("variations.edit_daywork", { defaultValue: "Edit Daywork" })
+            : t("variations.edit_eot", { defaultValue: "Edit EoT Claim" });
   const title = isEdit ? editTitle : createTitle;
 
   // Requests is the densest (7 fields with a cost/days/currency triplet)
   // so it benefits from xl; the rest comfortably fit at lg.
-  const size = kind === 'requests' || kind === 'eot' ? 'xl' : 'lg';
+  const size = kind === "requests" || kind === "eot" ? "xl" : "lg";
 
   return (
     <WideModal
@@ -2273,7 +2535,7 @@ function CreateModal({
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -2290,59 +2552,73 @@ function CreateModal({
             }
           >
             {isEdit
-              ? t('common.save', { defaultValue: 'Save' })
-              : t('common.create', { defaultValue: 'Create' })}
+              ? t("common.save", { defaultValue: "Save" })
+              : t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
-      {kind === 'notices' && (
+      {kind === "notices" && (
         <WideModalSection columns={2}>
           <WideModalField
-            label={t('variations.title_col', { defaultValue: 'Title' })}
+            label={t("variations.title_col", { defaultValue: "Title" })}
             span={2}
           >
             <input
               value={noticeForm.title}
-              onChange={(e) => setNoticeForm({ ...noticeForm, title: e.target.value })}
+              onChange={(e) =>
+                setNoticeForm({ ...noticeForm, title: e.target.value })
+              }
               className={inputCls}
             />
           </WideModalField>
           <WideModalField
-            label={t('variations.description', { defaultValue: 'Description' })}
+            label={t("variations.description", { defaultValue: "Description" })}
             span={2}
           >
             <textarea
               value={noticeForm.description}
-              onChange={(e) => setNoticeForm({ ...noticeForm, description: e.target.value })}
+              onChange={(e) =>
+                setNoticeForm({ ...noticeForm, description: e.target.value })
+              }
               rows={3}
-              className={clsx(inputCls, 'h-auto py-2')}
+              className={clsx(inputCls, "h-auto py-2")}
             />
           </WideModalField>
           <WideModalField
-            label={t('variations.recipient_type', { defaultValue: 'Recipient type' })}
+            label={t("variations.recipient_type", {
+              defaultValue: "Recipient type",
+            })}
           >
             <select
               value={noticeForm.recipient_type}
               onChange={(e) =>
                 setNoticeForm({
                   ...noticeForm,
-                  recipient_type: e.target.value as Notice['recipient_type'],
+                  recipient_type: e.target.value as Notice["recipient_type"],
                 })
               }
               className={inputCls}
             >
-              {(['owner', 'contractor', 'architect', 'engineer', 'consultant'] as const).map(
-                (rt) => (
-                  <option key={rt} value={rt}>
-                    {rt}
-                  </option>
-                ),
-              )}
+              {(
+                [
+                  "owner",
+                  "contractor",
+                  "architect",
+                  "engineer",
+                  "consultant",
+                ] as const
+              ).map((rt) => (
+                <option key={rt} value={rt}>
+                  {rt}
+                </option>
+              ))}
             </select>
           </WideModalField>
           <WideModalField
-            label={t('variations.recipient_name', { defaultValue: 'Recipient name' })}
+            label={t("variations.recipient_name", {
+              defaultValue: "Recipient name",
+            })}
           >
             <input
               value={noticeForm.recipient_name}
@@ -2353,14 +2629,19 @@ function CreateModal({
             />
           </WideModalField>
           <WideModalField
-            label={t('variations.target_response', { defaultValue: 'Response by' })}
+            label={t("variations.target_response", {
+              defaultValue: "Response by",
+            })}
             span={2}
           >
             <input
               type="date"
               value={noticeForm.target_response_date}
               onChange={(e) =>
-                setNoticeForm({ ...noticeForm, target_response_date: e.target.value })
+                setNoticeForm({
+                  ...noticeForm,
+                  target_response_date: e.target.value,
+                })
               }
               className={inputCls}
             />
@@ -2368,37 +2649,45 @@ function CreateModal({
         </WideModalSection>
       )}
 
-      {kind === 'requests' && (
+      {kind === "requests" && (
         <>
           <WideModalSection
-            title={t('variations.section_basic', { defaultValue: 'Basic info' })}
+            title={t("variations.section_basic", {
+              defaultValue: "Basic info",
+            })}
             columns={2}
           >
             <WideModalField
-              label={t('variations.title_col', { defaultValue: 'Title' })}
+              label={t("variations.title_col", { defaultValue: "Title" })}
               span={2}
             >
               <input
                 value={vrForm.title}
-                onChange={(e) => setVrForm({ ...vrForm, title: e.target.value })}
+                onChange={(e) =>
+                  setVrForm({ ...vrForm, title: e.target.value })
+                }
                 className={inputCls}
               />
             </WideModalField>
             <WideModalField
-              label={t('variations.description', { defaultValue: 'Description' })}
+              label={t("variations.description", {
+                defaultValue: "Description",
+              })}
               span={2}
             >
               <textarea
                 value={vrForm.description}
-                onChange={(e) => setVrForm({ ...vrForm, description: e.target.value })}
+                onChange={(e) =>
+                  setVrForm({ ...vrForm, description: e.target.value })
+                }
                 rows={3}
-                className={clsx(inputCls, 'h-auto py-2')}
+                className={clsx(inputCls, "h-auto py-2")}
               />
             </WideModalField>
             {!isEdit && (
               <WideModalField
-                label={t('variations.from_notice', {
-                  defaultValue: 'From notice (optional)',
+                label={t("variations.from_notice", {
+                  defaultValue: "From notice (optional)",
                 })}
                 span={2}
               >
@@ -2412,31 +2701,32 @@ function CreateModal({
                   <option value="">—</option>
                   {notices.map((n) => (
                     <option key={n.id} value={n.id}>
-                      {n.code} — {n.title || '—'}
+                      {n.code} — {n.title || "—"}
                     </option>
                   ))}
                 </select>
               </WideModalField>
             )}
-            <WideModalField label={t('variations.classification')}>
+            <WideModalField label={t("variations.classification")}>
               <select
                 value={vrForm.classification}
                 onChange={(e) =>
                   setVrForm({
                     ...vrForm,
-                    classification: e.target.value as VariationRequest['classification'],
+                    classification: e.target
+                      .value as VariationRequest["classification"],
                   })
                 }
                 className={inputCls}
               >
                 {(
                   [
-                    'scope_change',
-                    'unforeseen',
-                    'owner_change',
-                    'design_dev',
-                    'regulatory',
-                    'other',
+                    "scope_change",
+                    "unforeseen",
+                    "owner_change",
+                    "design_dev",
+                    "regulatory",
+                    "other",
                   ] as const
                 ).map((c) => (
                   <option key={c} value={c}>
@@ -2445,15 +2735,18 @@ function CreateModal({
                 ))}
               </select>
             </WideModalField>
-            <WideModalField label={t('variations.urgency')}>
+            <WideModalField label={t("variations.urgency")}>
               <select
                 value={vrForm.urgency}
                 onChange={(e) =>
-                  setVrForm({ ...vrForm, urgency: e.target.value as VariationRequest['urgency'] })
+                  setVrForm({
+                    ...vrForm,
+                    urgency: e.target.value as VariationRequest["urgency"],
+                  })
                 }
                 className={inputCls}
               >
-                {(['low', 'med', 'high'] as const).map((u) => (
+                {(["low", "med", "high"] as const).map((u) => (
                   <option key={u} value={u}>
                     {u}
                   </option>
@@ -2463,35 +2756,43 @@ function CreateModal({
           </WideModalSection>
 
           <WideModalSection
-            title={t('variations.section_impact', { defaultValue: 'Impact' })}
+            title={t("variations.section_impact", { defaultValue: "Impact" })}
             columns={3}
           >
-            <WideModalField label={t('variations.cost_impact')}>
+            <WideModalField label={t("variations.cost_impact")}>
               <input
                 type="number"
                 value={vrForm.estimated_cost_impact}
                 onChange={(e) =>
-                  setVrForm({ ...vrForm, estimated_cost_impact: e.target.value })
+                  setVrForm({
+                    ...vrForm,
+                    estimated_cost_impact: e.target.value,
+                  })
                 }
                 className={inputCls}
               />
             </WideModalField>
-            <WideModalField label={t('variations.days')}>
+            <WideModalField label={t("variations.days")}>
               <input
                 type="number"
                 value={vrForm.estimated_schedule_days}
                 onChange={(e) =>
-                  setVrForm({ ...vrForm, estimated_schedule_days: e.target.value })
+                  setVrForm({
+                    ...vrForm,
+                    estimated_schedule_days: e.target.value,
+                  })
                 }
                 className={inputCls}
               />
             </WideModalField>
             <WideModalField
-              label={t('common.currency', { defaultValue: 'Currency' })}
+              label={t("common.currency", { defaultValue: "Currency" })}
             >
               <input
                 value={vrForm.currency}
-                onChange={(e) => setVrForm({ ...vrForm, currency: e.target.value })}
+                onChange={(e) =>
+                  setVrForm({ ...vrForm, currency: e.target.value })
+                }
                 className={inputCls}
                 maxLength={3}
               />
@@ -2500,23 +2801,25 @@ function CreateModal({
         </>
       )}
 
-      {kind === 'orders' && (
+      {kind === "orders" && (
         <>
           <WideModalSection columns={2}>
             <WideModalField
-              label={t('variations.title_col', { defaultValue: 'Title' })}
+              label={t("variations.title_col", { defaultValue: "Title" })}
               span={2}
             >
               <input
                 value={voForm.title}
-                onChange={(e) => setVoForm({ ...voForm, title: e.target.value })}
+                onChange={(e) =>
+                  setVoForm({ ...voForm, title: e.target.value })
+                }
                 className={inputCls}
               />
             </WideModalField>
             {!isEdit && (
               <WideModalField
-                label={t('variations.from_request', {
-                  defaultValue: 'From request (optional)',
+                label={t("variations.from_request", {
+                  defaultValue: "From request (optional)",
                 })}
                 span={2}
               >
@@ -2533,7 +2836,7 @@ function CreateModal({
                   <option value="">—</option>
                   {requests.map((r) => (
                     <option key={r.id} value={r.id}>
-                      {r.code} — {r.title || '—'}
+                      {r.code} — {r.title || "—"}
                     </option>
                   ))}
                 </select>
@@ -2541,10 +2844,10 @@ function CreateModal({
             )}
           </WideModalSection>
           <WideModalSection
-            title={t('variations.section_impact', { defaultValue: 'Impact' })}
+            title={t("variations.section_impact", { defaultValue: "Impact" })}
             columns={3}
           >
-            <WideModalField label={t('variations.cost_impact')}>
+            <WideModalField label={t("variations.cost_impact")}>
               <input
                 type="number"
                 value={voForm.final_cost_impact}
@@ -2554,7 +2857,7 @@ function CreateModal({
                 className={inputCls}
               />
             </WideModalField>
-            <WideModalField label={t('variations.days')}>
+            <WideModalField label={t("variations.days")}>
               <input
                 type="number"
                 value={voForm.final_schedule_days}
@@ -2565,11 +2868,13 @@ function CreateModal({
               />
             </WideModalField>
             <WideModalField
-              label={t('common.currency', { defaultValue: 'Currency' })}
+              label={t("common.currency", { defaultValue: "Currency" })}
             >
               <input
                 value={voForm.currency}
-                onChange={(e) => setVoForm({ ...voForm, currency: e.target.value })}
+                onChange={(e) =>
+                  setVoForm({ ...voForm, currency: e.target.value })
+                }
                 className={inputCls}
                 maxLength={3}
               />
@@ -2578,79 +2883,94 @@ function CreateModal({
         </>
       )}
 
-      {kind === 'daywork' && (
+      {kind === "daywork" && (
         <WideModalSection columns={2}>
-          <WideModalField label={t('variations.work_date')}>
+          <WideModalField label={t("variations.work_date")}>
             <input
               type="date"
               value={dwForm.work_date}
-              onChange={(e) => setDwForm({ ...dwForm, work_date: e.target.value })}
+              onChange={(e) =>
+                setDwForm({ ...dwForm, work_date: e.target.value })
+              }
               className={inputCls}
             />
           </WideModalField>
           <WideModalField
-            label={t('common.currency', { defaultValue: 'Currency' })}
+            label={t("common.currency", { defaultValue: "Currency" })}
           >
             <input
               value={dwForm.currency}
-              onChange={(e) => setDwForm({ ...dwForm, currency: e.target.value })}
+              onChange={(e) =>
+                setDwForm({ ...dwForm, currency: e.target.value })
+              }
               className={inputCls}
               maxLength={3}
             />
           </WideModalField>
           <WideModalField
-            label={t('variations.description', { defaultValue: 'Description' })}
+            label={t("variations.description", { defaultValue: "Description" })}
             span={2}
           >
             <textarea
               value={dwForm.description}
-              onChange={(e) => setDwForm({ ...dwForm, description: e.target.value })}
+              onChange={(e) =>
+                setDwForm({ ...dwForm, description: e.target.value })
+              }
               rows={3}
-              className={clsx(inputCls, 'h-auto py-2')}
+              className={clsx(inputCls, "h-auto py-2")}
             />
           </WideModalField>
         </WideModalSection>
       )}
 
-      {kind === 'eot' && (
+      {kind === "eot" && (
         <WideModalSection columns={2}>
           <WideModalField
-            label={t('variations.description', { defaultValue: 'Description' })}
+            label={t("variations.description", { defaultValue: "Description" })}
             span={2}
           >
             <textarea
               value={eotForm.description}
-              onChange={(e) => setEotForm({ ...eotForm, description: e.target.value })}
+              onChange={(e) =>
+                setEotForm({ ...eotForm, description: e.target.value })
+              }
               rows={3}
-              className={clsx(inputCls, 'h-auto py-2')}
+              className={clsx(inputCls, "h-auto py-2")}
             />
           </WideModalField>
-          <WideModalField label={t('variations.cause')}>
+          <WideModalField label={t("variations.cause")}>
             <select
               value={eotForm.root_cause_category}
               onChange={(e) =>
                 setEotForm({
                   ...eotForm,
                   root_cause_category: e.target
-                    .value as ExtensionOfTimeClaim['root_cause_category'],
+                    .value as ExtensionOfTimeClaim["root_cause_category"],
                 })
               }
               className={inputCls}
             >
-              {(['employer_caused', 'neutral', 'contractor_caused', 'concurrent'] as const).map(
-                (c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ),
-              )}
+              {(
+                [
+                  "employer_caused",
+                  "neutral",
+                  "contractor_caused",
+                  "concurrent",
+                ] as const
+              ).map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </WideModalField>
-          <WideModalField label={t('variations.requested_days')}>
+          <WideModalField label={t("variations.requested_days")}>
             <input
               type="number"
               value={eotForm.requested_days}
-              onChange={(e) => setEotForm({ ...eotForm, requested_days: e.target.value })}
+              onChange={(e) =>
+                setEotForm({ ...eotForm, requested_days: e.target.value })
+              }
               className={inputCls}
               min={0}
             />
@@ -2658,8 +2978,8 @@ function CreateModal({
           {!isEdit && (
             <>
               <WideModalField
-                label={t('variations.period_start', {
-                  defaultValue: 'Period start',
+                label={t("variations.period_start", {
+                  defaultValue: "Period start",
                 })}
               >
                 <input
@@ -2675,8 +2995,8 @@ function CreateModal({
                 />
               </WideModalField>
               <WideModalField
-                label={t('variations.period_end', {
-                  defaultValue: 'Period end',
+                label={t("variations.period_end", {
+                  defaultValue: "Period end",
                 })}
               >
                 <input
@@ -2696,11 +3016,14 @@ function CreateModal({
                 type="checkbox"
                 checked={eotForm.critical_path_impact}
                 onChange={(e) =>
-                  setEotForm({ ...eotForm, critical_path_impact: e.target.checked })
+                  setEotForm({
+                    ...eotForm,
+                    critical_path_impact: e.target.checked,
+                  })
                 }
               />
-              {t('variations.affects_critical_path', {
-                defaultValue: 'Affects critical path',
+              {t("variations.affects_critical_path", {
+                defaultValue: "Affects critical path",
               })}
             </label>
           </WideModalField>

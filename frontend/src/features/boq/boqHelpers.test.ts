@@ -8,67 +8,67 @@
 // Without rebase, ARS totals were summed as if they were already USD,
 // producing nonsensical figures.
 
-import { describe, it, expect } from 'vitest';
-import { convertToBase, resourceAwareTotalInBase } from './boqHelpers';
+import { describe, it, expect } from "vitest";
+import { convertToBase, resourceAwareTotalInBase } from "./boqHelpers";
 
-describe('convertToBase — multi-currency rebase', () => {
+describe("convertToBase — multi-currency rebase", () => {
   const fxRates = [
-    { currency: 'ARS', rate: 1 / 1415 }, // 1 ARS = 0.000707 USD
-    { currency: 'EUR', rate: 1.08 },     // 1 EUR = 1.08 USD
+    { currency: "ARS", rate: 1 / 1415 }, // 1 ARS = 0.000707 USD
+    { currency: "EUR", rate: 1.08 }, // 1 EUR = 1.08 USD
   ];
 
-  it('returns value unchanged when source currency equals base', () => {
-    expect(convertToBase(100, 'USD', 'USD', fxRates)).toBe(100);
+  it("returns value unchanged when source currency equals base", () => {
+    expect(convertToBase(100, "USD", "USD", fxRates)).toBe(100);
   });
 
-  it('returns value unchanged when source currency is empty/undefined', () => {
-    expect(convertToBase(100, undefined, 'USD', fxRates)).toBe(100);
-    expect(convertToBase(100, '', 'USD', fxRates)).toBe(100);
-    expect(convertToBase(100, null, 'USD', fxRates)).toBe(100);
+  it("returns value unchanged when source currency is empty/undefined", () => {
+    expect(convertToBase(100, undefined, "USD", fxRates)).toBe(100);
+    expect(convertToBase(100, "", "USD", fxRates)).toBe(100);
+    expect(convertToBase(100, null, "USD", fxRates)).toBe(100);
   });
 
-  it('returns value unchanged when base currency is empty/undefined', () => {
-    expect(convertToBase(100, 'ARS', undefined, fxRates)).toBe(100);
-    expect(convertToBase(100, 'ARS', null, fxRates)).toBe(100);
+  it("returns value unchanged when base currency is empty/undefined", () => {
+    expect(convertToBase(100, "ARS", undefined, fxRates)).toBe(100);
+    expect(convertToBase(100, "ARS", null, fxRates)).toBe(100);
   });
 
-  it('rebases ARS → USD using provided FX rate', () => {
+  it("rebases ARS → USD using provided FX rate", () => {
     // 1415 ARS at rate 0.000707 USD/ARS = ~1.0 USD
-    const usd = convertToBase(1415, 'ARS', 'USD', fxRates);
+    const usd = convertToBase(1415, "ARS", "USD", fxRates);
     expect(usd).toBeCloseTo(1.0, 4);
   });
 
-  it('rebases EUR → USD', () => {
+  it("rebases EUR → USD", () => {
     // 100 EUR at rate 1.08 = 108 USD
-    expect(convertToBase(100, 'EUR', 'USD', fxRates)).toBeCloseTo(108, 4);
+    expect(convertToBase(100, "EUR", "USD", fxRates)).toBeCloseTo(108, 4);
   });
 
-  it('returns value unchanged + warns when FX rate is missing for source', () => {
+  it("returns value unchanged + warns when FX rate is missing for source", () => {
     // No JPY in fxRates — fallback returns value as-is (graceful degradation)
-    const result = convertToBase(100, 'JPY', 'USD', fxRates);
+    const result = convertToBase(100, "JPY", "USD", fxRates);
     expect(result).toBe(100);
   });
 
-  it('returns value unchanged when rate is non-finite or non-positive', () => {
+  it("returns value unchanged when rate is non-finite or non-positive", () => {
     const bad = [
-      { currency: 'XXX', rate: 0 },
-      { currency: 'YYY', rate: -1 },
-      { currency: 'ZZZ', rate: NaN },
+      { currency: "XXX", rate: 0 },
+      { currency: "YYY", rate: -1 },
+      { currency: "ZZZ", rate: NaN },
     ];
-    expect(convertToBase(100, 'XXX', 'USD', bad)).toBe(100);
-    expect(convertToBase(100, 'YYY', 'USD', bad)).toBe(100);
-    expect(convertToBase(100, 'ZZZ', 'USD', bad)).toBe(100);
+    expect(convertToBase(100, "XXX", "USD", bad)).toBe(100);
+    expect(convertToBase(100, "YYY", "USD", bad)).toBe(100);
+    expect(convertToBase(100, "ZZZ", "USD", bad)).toBe(100);
   });
 
-  it('returns 0 when value is non-finite', () => {
-    expect(convertToBase(NaN, 'ARS', 'USD', fxRates)).toBe(0);
-    expect(convertToBase(Infinity, 'ARS', 'USD', fxRates)).toBe(0);
+  it("returns 0 when value is non-finite", () => {
+    expect(convertToBase(NaN, "ARS", "USD", fxRates)).toBe(0);
+    expect(convertToBase(Infinity, "ARS", "USD", fxRates)).toBe(0);
   });
 
-  it('handles empty/missing fxRates list', () => {
-    expect(convertToBase(100, 'ARS', 'USD', null)).toBe(100);
-    expect(convertToBase(100, 'ARS', 'USD', undefined)).toBe(100);
-    expect(convertToBase(100, 'ARS', 'USD', [])).toBe(100);
+  it("handles empty/missing fxRates list", () => {
+    expect(convertToBase(100, "ARS", "USD", null)).toBe(100);
+    expect(convertToBase(100, "ARS", "USD", undefined)).toBe(100);
+    expect(convertToBase(100, "ARS", "USD", [])).toBe(100);
   });
 });
 
@@ -80,12 +80,12 @@ describe('convertToBase — multi-currency rebase', () => {
 // built from Σ(r.qty×r.rate) with no FX, so the section subtotal AND the
 // per-position resource subtotal summed a USD resource as if it were ARS
 // ("1 USD = 1 ARS"). This block pins the fix in both grid code paths.
-describe('resourceAwareTotalInBase — resource-currency rebase', () => {
+describe("resourceAwareTotalInBase — resource-currency rebase", () => {
   // FX semantics: rate = base units per 1 unit of the foreign currency.
   // Base ARS, so USD rate 1415 means 1 USD = 1415 ARS.
-  const fx = [{ currency: 'USD', rate: 1415 }];
+  const fx = [{ currency: "USD", rate: 1415 }];
 
-  it('Prueba_2: pos 0040 — USD resource in an ARS project converts', () => {
+  it("Prueba_2: pos 0040 — USD resource in an ARS project converts", () => {
     // qty 2, one USD resource @ 25000 → stored total 50000 (raw).
     const pos = {
       total: 50000,
@@ -93,84 +93,97 @@ describe('resourceAwareTotalInBase — resource-currency rebase', () => {
       metadata: {
         resources: [
           {
-            name: 'Recurso_1',
-            type: 'operator',
-            unit: 'HH',
+            name: "Recurso_1",
+            type: "operator",
+            unit: "HH",
             quantity: 1,
             unit_rate: 25000,
             total: 25000,
-            currency: 'USD',
+            currency: "USD",
           },
         ],
       },
     };
     // 50000 USD × 1415 = 70_750_000 ARS — NOT the buggy raw 50000.
-    expect(resourceAwareTotalInBase(pos, 'ARS', fx)).toBeCloseTo(70_750_000, 2);
+    expect(resourceAwareTotalInBase(pos, "ARS", fx)).toBeCloseTo(70_750_000, 2);
   });
 
-  it('per-unit resource subtotal converts (the 25.000,00 ARS cell)', () => {
+  it("per-unit resource subtotal converts (the 25.000,00 ARS cell)", () => {
     // The resource subtotal row shows Σ(per-unit r.qty×r.rate) in base.
     const pos = {
       total: 25000,
       quantity: 1,
       metadata: {
         resources: [
-          { name: 'R', quantity: 1, unit_rate: 25000, total: 25000, currency: 'USD' },
+          {
+            name: "R",
+            quantity: 1,
+            unit_rate: 25000,
+            total: 25000,
+            currency: "USD",
+          },
         ],
       },
     };
-    expect(resourceAwareTotalInBase(pos, 'ARS', fx)).toBeCloseTo(25000 * 1415, 2);
+    expect(resourceAwareTotalInBase(pos, "ARS", fx)).toBeCloseTo(
+      25000 * 1415,
+      2,
+    );
   });
 
-  it('mixed resource currencies — only the foreign part converts', () => {
+  it("mixed resource currencies — only the foreign part converts", () => {
     const pos = {
       total: 26000,
       quantity: 1,
       metadata: {
         resources: [
-          { name: 'A', quantity: 1, unit_rate: 25000, currency: 'USD' },
-          { name: 'B', quantity: 1, unit_rate: 1000, currency: 'ARS' },
+          { name: "A", quantity: 1, unit_rate: 25000, currency: "USD" },
+          { name: "B", quantity: 1, unit_rate: 1000, currency: "ARS" },
         ],
       },
     };
     // 25000×1415 (USD) + 1000 (already ARS) = 35_376_000
-    expect(resourceAwareTotalInBase(pos, 'ARS', fx)).toBeCloseTo(
+    expect(resourceAwareTotalInBase(pos, "ARS", fx)).toBeCloseTo(
       25000 * 1415 + 1000,
       2,
     );
   });
 
-  it('no foreign resource currency → stored total used as-is', () => {
+  it("no foreign resource currency → stored total used as-is", () => {
     const pos = {
       total: 50000,
       quantity: 2,
       metadata: {
-        resources: [{ name: 'R', quantity: 1, unit_rate: 25000, currency: 'ARS' }],
+        resources: [
+          { name: "R", quantity: 1, unit_rate: 25000, currency: "ARS" },
+        ],
       },
     };
     // All ARS → no conversion, keep the exact stored total.
-    expect(resourceAwareTotalInBase(pos, 'ARS', fx)).toBe(50000);
+    expect(resourceAwareTotalInBase(pos, "ARS", fx)).toBe(50000);
   });
 
-  it('non-resource position keeps the verified #131 metadata.currency path', () => {
+  it("non-resource position keeps the verified #131 metadata.currency path", () => {
     const pos = {
       total: 500,
       quantity: 50,
-      metadata: { currency: 'USD' },
+      metadata: { currency: "USD" },
     };
     // 500 USD × 1415 = 707500 ARS via the position-level path.
-    expect(resourceAwareTotalInBase(pos, 'ARS', fx)).toBeCloseTo(707500, 2);
+    expect(resourceAwareTotalInBase(pos, "ARS", fx)).toBeCloseTo(707500, 2);
   });
 
-  it('missing FX rate degrades visibly (never zeroes the row)', () => {
+  it("missing FX rate degrades visibly (never zeroes the row)", () => {
     const pos = {
       total: 25000,
       quantity: 1,
       metadata: {
-        resources: [{ name: 'R', quantity: 1, unit_rate: 25000, currency: 'GBP' }],
+        resources: [
+          { name: "R", quantity: 1, unit_rate: 25000, currency: "GBP" },
+        ],
       },
     };
     // GBP has no rate — summed in its own units, not dropped.
-    expect(resourceAwareTotalInBase(pos, 'ARS', fx)).toBe(25000);
+    expect(resourceAwareTotalInBase(pos, "ARS", fx)).toBe(25000);
   });
 });

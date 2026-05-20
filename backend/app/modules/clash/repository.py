@@ -10,7 +10,7 @@ from sqlalchemy import case, delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.bim_hub.models import BIMElement, BIMModel
-from app.modules.clash.models import ClashResult, ClashRun
+from app.modules.clash.models import ClashCluster, ClashResult, ClashRun
 from app.modules.clash.schemas import (
     CLASH_PROPERTY_GROUP_PREFIX,
     SEVERITY_ORDER,
@@ -43,20 +43,12 @@ class ClashRepository:
 
     # ── BIM element feed (broad-phase input) ───────────────────────────
 
-    async def models_for_project(
-        self, project_id: uuid.UUID
-    ) -> list[BIMModel]:
+    async def models_for_project(self, project_id: uuid.UUID) -> list[BIMModel]:
         """‌⁠‍Every BIM model belonging to ``project_id`` (newest first)."""
-        stmt = (
-            select(BIMModel)
-            .where(BIMModel.project_id == project_id)
-            .order_by(BIMModel.created_at.desc())
-        )
+        stmt = select(BIMModel).where(BIMModel.project_id == project_id).order_by(BIMModel.created_at.desc())
         return list((await self.session.execute(stmt)).scalars().all())
 
-    async def elements_with_geometry(
-        self, model_ids: list[uuid.UUID]
-    ) -> list[BIMElement]:
+    async def elements_with_geometry(self, model_ids: list[uuid.UUID]) -> list[BIMElement]:
         """Load every element of ``model_ids`` that carries a bounding box.
 
         Elements without geometry (annotations, schedules) can't clash, so
@@ -96,10 +88,7 @@ class ClashRepository:
                 .group_by(col)
                 .order_by(func.count().desc(), col)
             )
-            return [
-                (str(v), int(n))
-                for v, n in (await self.session.execute(stmt)).all()
-            ]
+            return [(str(v), int(n)) for v, n in (await self.session.execute(stmt)).all()]
 
         return (
             await _facet(BIMElement.element_type),
@@ -185,11 +174,7 @@ class ClashRepository:
             if not isinstance(props, dict):
                 continue
             for key, val in props.items():
-                if (
-                    key in _BUILTIN_PROPERTY_KEYS
-                    or val is None
-                    or not self._is_scalar(val)
-                ):
+                if key in _BUILTIN_PROPERTY_KEYS or val is None or not self._is_scalar(val):
                     continue
                 prop_key_c[key] += 1
                 distinct.setdefault(key, set()).add(str(val))
@@ -216,9 +201,7 @@ class ClashRepository:
             return []
         floor = max(1, int(scanned * _PROPERTY_MIN_COVERAGE))
         kept = [
-            (k, n)
-            for k, n in prop_key_c.items()
-            if n >= floor and len(distinct.get(k, ())) <= _PROPERTY_MAX_DISTINCT
+            (k, n) for k, n in prop_key_c.items() if n >= floor and len(distinct.get(k, ())) <= _PROPERTY_MAX_DISTINCT
         ]
         kept.sort(key=lambda kv: (-kv[1], kv[0]))
         return kept[:_PROPERTY_MAX_KEYS]
@@ -249,7 +232,7 @@ class ClashRepository:
 
         prop_key = None
         if group_by.startswith(CLASH_PROPERTY_GROUP_PREFIX):
-            prop_key = group_by[len(CLASH_PROPERTY_GROUP_PREFIX):]
+            prop_key = group_by[len(CLASH_PROPERTY_GROUP_PREFIX) :]
 
         (
             type_c,
@@ -271,9 +254,7 @@ class ClashRepository:
         if ifc_c:
             avail.add("ifc_entity")
 
-        available_props = self._enumerate_property_keys(
-            prop_key_c, distinct, scanned
-        )
+        available_props = self._enumerate_property_keys(prop_key_c, distinct, scanned)
 
         def _sorted(c: Counter[str]) -> list[tuple[str, int]]:
             return sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))
@@ -296,20 +277,12 @@ class ClashRepository:
     def add_run(self, run: ClashRun) -> None:
         self.session.add(run)
 
-    async def get_run(
-        self, project_id: uuid.UUID, run_id: uuid.UUID
-    ) -> ClashRun | None:
-        stmt = select(ClashRun).where(
-            ClashRun.id == run_id, ClashRun.project_id == project_id
-        )
+    async def get_run(self, project_id: uuid.UUID, run_id: uuid.UUID) -> ClashRun | None:
+        stmt = select(ClashRun).where(ClashRun.id == run_id, ClashRun.project_id == project_id)
         return (await self.session.execute(stmt)).scalar_one_or_none()
 
     async def list_runs(self, project_id: uuid.UUID) -> list[ClashRun]:
-        stmt = (
-            select(ClashRun)
-            .where(ClashRun.project_id == project_id)
-            .order_by(ClashRun.created_at.desc())
-        )
+        stmt = select(ClashRun).where(ClashRun.project_id == project_id).order_by(ClashRun.created_at.desc())
         return list((await self.session.execute(stmt)).scalars().all())
 
     async def delete_run(self, run: ClashRun) -> None:
@@ -323,17 +296,11 @@ class ClashRepository:
 
     async def clear_results(self, run_id: uuid.UUID) -> None:
         """Wipe a run's results (re-run replaces, never appends)."""
-        await self.session.execute(
-            delete(ClashResult).where(ClashResult.run_id == run_id)
-        )
+        await self.session.execute(delete(ClashResult).where(ClashResult.run_id == run_id))
         await self.session.flush()
 
-    async def get_result(
-        self, run_id: uuid.UUID, result_id: uuid.UUID
-    ) -> ClashResult | None:
-        stmt = select(ClashResult).where(
-            ClashResult.id == result_id, ClashResult.run_id == run_id
-        )
+    async def get_result(self, run_id: uuid.UUID, result_id: uuid.UUID) -> ClashResult | None:
+        stmt = select(ClashResult).where(ClashResult.id == result_id, ClashResult.run_id == run_id)
         return (await self.session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
@@ -344,10 +311,7 @@ class ClashRepository:
         floats to the top of a ``order_by=severity`` list.
         """
         return case(
-            *(
-                (ClashResult.severity == sev, rank)
-                for sev, rank in SEVERITY_ORDER.items()
-            ),
+            *((ClashResult.severity == sev, rank) for sev, rank in SEVERITY_ORDER.items()),
             else_=len(SEVERITY_ORDER),
         )
 
@@ -369,17 +333,10 @@ class ClashRepository:
         if clash_type:
             base = base.where(ClashResult.clash_type == clash_type)
         if discipline:
-            base = base.where(
-                (ClashResult.a_discipline == discipline)
-                | (ClashResult.b_discipline == discipline)
-            )
+            base = base.where((ClashResult.a_discipline == discipline) | (ClashResult.b_discipline == discipline))
         if severity:
             base = base.where(ClashResult.severity == severity)
-        total = (
-            await self.session.execute(
-                select(func.count()).select_from(base.subquery())
-            )
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         if order_by == "severity":
             ordered = base.order_by(
                 self._severity_rank(),
@@ -390,11 +347,7 @@ class ClashRepository:
                 ClashResult.clash_type,
                 ClashResult.penetration_m.desc(),
             )
-        rows = (
-            await self.session.execute(
-                ordered.offset(offset).limit(limit)
-            )
-        ).scalars().all()
+        rows = (await self.session.execute(ordered.offset(offset).limit(limit))).scalars().all()
         return list(rows), int(total)
 
     async def all_results(self, run_id: uuid.UUID) -> list[ClashResult]:
@@ -436,15 +389,27 @@ class ClashRepository:
                 return run
         return None
 
-    async def results_for_export(
-        self, run_id: uuid.UUID, result_ids: list[uuid.UUID] | None
-    ) -> list[ClashResult]:
+    async def results_for_export(self, run_id: uuid.UUID, result_ids: list[uuid.UUID] | None) -> list[ClashResult]:
         """Resolve the export selection — explicit ids or all OPEN clashes."""
         stmt = select(ClashResult).where(ClashResult.run_id == run_id)
         if result_ids:
             stmt = stmt.where(ClashResult.id.in_(result_ids))
         else:
-            stmt = stmt.where(
-                ClashResult.status.in_(("new", "active", "reviewed"))
-            )
+            stmt = stmt.where(ClashResult.status.in_(("new", "active", "reviewed")))
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    # ── ClashCluster (Wave A4) ─────────────────────────────────────────
+
+    def add_clusters(self, clusters: list[ClashCluster]) -> None:
+        """Bulk-add cluster label rows for a run. Caller flushes."""
+        if clusters:
+            self.session.add_all(clusters)
+
+    async def clear_clusters(self, run_id: uuid.UUID) -> None:
+        """Wipe a run's persisted cluster labels (re-run replaces)."""
+        await self.session.execute(delete(ClashCluster).where(ClashCluster.run_id == run_id))
+
+    async def clusters_for_run(self, run_id: uuid.UUID) -> list[ClashCluster]:
+        """Every persisted cluster label for a run, lowest id first."""
+        stmt = select(ClashCluster).where(ClashCluster.run_id == run_id).order_by(ClashCluster.cluster_id.asc())
         return list((await self.session.execute(stmt)).scalars().all())

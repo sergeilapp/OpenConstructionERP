@@ -14,17 +14,17 @@
  * still in play for the palette item lift, but the actual drop coordinate
  * comes from the native browser drag (matches xyflow's expectations).
  */
-import { DndContext } from '@dnd-kit/core';
-import { useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { DndContext } from "@dnd-kit/core";
+import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-import { BlockCanvas } from './canvas';
-import { EacBlockPalette } from './components/EacBlockPalette';
+import { BlockCanvas } from "./canvas";
+import { EacBlockPalette } from "./components/EacBlockPalette";
 
 export function EACBlockEditorPage() {
   const { t } = useTranslation();
   const params = useParams<{ eacId?: string }>();
-  const eacId = params.eacId ?? 'untitled';
+  const eacId = params.eacId ?? "untitled";
 
   return (
     <DndContext>
@@ -37,8 +37,10 @@ export function EACBlockEditorPage() {
         <main className="flex flex-1 flex-col overflow-hidden">
           <header className="border-b border-border bg-surface-secondary px-4 py-2">
             <h1 className="text-sm font-semibold text-content-primary">
-              {t('eac.editor.title', { defaultValue: 'EAC Block Editor‌⁠‍' })}
-              <span className="ml-2 font-normal text-content-tertiary">· {eacId}</span>
+              {t("eac.editor.title", { defaultValue: "EAC Block Editor‌⁠‍" })}
+              <span className="ml-2 font-normal text-content-tertiary">
+                · {eacId}
+              </span>
             </h1>
           </header>
           <div className="flex-1">

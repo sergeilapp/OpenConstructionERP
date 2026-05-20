@@ -5,7 +5,7 @@
  * Extracted from BOQEditorPage.tsx for modularity.
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   Plus,
   Download,
@@ -32,8 +32,8 @@ import {
   Settings,
   ChevronDown,
   Keyboard,
-} from 'lucide-react';
-import { Button } from '@/shared/ui';
+} from "lucide-react";
+import { Button } from "@/shared/ui";
 
 export interface BOQToolbarProps {
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -54,7 +54,7 @@ export interface BOQToolbarProps {
   importInputRef: React.RefObject<HTMLInputElement | null>;
   onImportInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   // Export
-  onExport: (format: 'excel' | 'csv' | 'pdf' | 'gaeb') => void;
+  onExport: (format: "excel" | "csv" | "pdf" | "gaeb") => void;
   // Validate & recalculate
   onValidate: () => void;
   isValidating?: boolean;
@@ -177,15 +177,18 @@ export function BOQToolbar({
       if (exportRef.current && !exportRef.current.contains(e.target as Node)) {
         setShowExportMenu(false);
       }
-      if (gridSettingsRef.current && !gridSettingsRef.current.contains(e.target as Node)) {
+      if (
+        gridSettingsRef.current &&
+        !gridSettingsRef.current.contains(e.target as Node)
+      ) {
         setGridSettingsOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleExportItem = (format: 'excel' | 'csv' | 'pdf' | 'gaeb') => {
+  const handleExportItem = (format: "excel" | "csv" | "pdf" | "gaeb") => {
     setShowExportMenu(false);
     onExport(format);
   };
@@ -193,42 +196,75 @@ export function BOQToolbar({
   // Bug 7: stick BELOW the app header (52px / --oe-header-height) — using top-0 collides
   // with the sticky header (z-30), pushing the toolbar out of view when scrolling.
   return (
-    <div className="sticky top-[52px] z-20 bg-surface-primary flex flex-nowrap items-center gap-x-1.5 px-1 py-2 border-b border-border-light mb-3">
+    <div className="sticky top-[52px] z-20 bg-surface-primary flex flex-wrap items-center gap-x-1.5 gap-y-2 px-1 py-2 border-b border-border-light mb-3">
       {/* ── Row-group: Quality + Undo/Redo ─────────────────────────────── */}
       <div className="flex items-center gap-1.5">
         {hasPositions && qualityScoreRing}
-        <Button variant="ghost" size="sm" icon={<Undo2 size={15} />} onClick={onUndo} disabled={!canUndo} title={t('boq.undo', { defaultValue: 'Undo (Ctrl+Z)‌⁠‍' })} />
-        <Button variant="ghost" size="sm" icon={<Redo2 size={15} />} onClick={onRedo} disabled={!canRedo} title={t('boq.redo', { defaultValue: 'Redo (Ctrl+Y)‌⁠‍' })} />
-        <Button variant="ghost" size="sm" icon={<Clock size={15} />} onClick={onShowVersionHistory} title={t('boq.version_history', { defaultValue: 'Version History‌⁠‍' })} />
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Undo2 size={15} />}
+          onClick={onUndo}
+          disabled={!canUndo}
+          title={t("boq.undo", { defaultValue: "Undo (Ctrl+Z)‌⁠‍" })}
+        />
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Redo2 size={15} />}
+          onClick={onRedo}
+          disabled={!canRedo}
+          title={t("boq.redo", { defaultValue: "Redo (Ctrl+Y)‌⁠‍" })}
+        />
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Clock size={15} />}
+          onClick={onShowVersionHistory}
+          title={t("boq.version_history", {
+            defaultValue: "Version History‌⁠‍",
+          })}
+        />
       </div>
 
       <div className="w-px h-6 bg-border-light hidden sm:block" />
 
       {/* ── Row-group: Add ─────────────────────────────────────────────── */}
       <div className="flex items-center gap-1.5">
-        <Button variant="primary" size="sm" icon={<Plus size={15} />} onClick={onAddPosition}>
-          {t('boq.add_position')}
+        <Button
+          variant="primary"
+          size="sm"
+          icon={<Plus size={15} />}
+          onClick={onAddPosition}
+        >
+          {t("boq.add_position")}
         </Button>
-        <Button variant="secondary" size="sm" icon={<Layers size={15} />} onClick={onAddSection} title={t('boq.add_section')}>
-          {t('boq.add_section')}
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={<Layers size={15} />}
+          onClick={onAddSection}
+          title={t("boq.add_section")}
+        >
+          {t("boq.add_section")}
         </Button>
         <Button
           variant="secondary"
           size="sm"
           icon={<Database size={15} />}
           onClick={onOpenCostDb}
-          title={t('boq.add_from_database')}
+          title={t("boq.add_from_database")}
         >
-          {t('boq.add_from_database')}
+          {t("boq.add_from_database")}
         </Button>
         <Button
           variant="secondary"
           size="sm"
           icon={<Layers size={15} />}
           onClick={onOpenAssembly}
-          title={t('boq.from_assembly', { defaultValue: 'From Assembly‌⁠‍' })}
+          title={t("boq.from_assembly", { defaultValue: "From Assembly‌⁠‍" })}
         >
-          {t('boq.from_assembly', { defaultValue: 'From Assembly‌⁠‍' })}
+          {t("boq.from_assembly", { defaultValue: "From Assembly‌⁠‍" })}
         </Button>
       </div>
 
@@ -236,45 +272,93 @@ export function BOQToolbar({
 
       {/* ── Row-group: File (Import / Export) ──────────────────────────── */}
       <div className="flex items-center gap-1.5">
-        <Button variant="ghost" size="sm" icon={<Upload size={15} />} onClick={onImportClick} loading={isImporting} disabled={isImporting}>
-          {t('common.import', { defaultValue: 'Import' })}
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Upload size={15} />}
+          onClick={onImportClick}
+          loading={isImporting}
+          disabled={isImporting}
+        >
+          {t("common.import", { defaultValue: "Import" })}
         </Button>
-        <input ref={importInputRef as React.RefObject<HTMLInputElement>} type="file" accept=".xlsx,.csv,.pdf,.jpg,.jpeg,.png,.tiff,.rvt,.ifc,.dwg,.dgn,.x81,.x83,.x84,.xml" className="hidden" onChange={onImportInputChange} aria-label={t('common.import', { defaultValue: 'Import' })} />
+        <input
+          ref={importInputRef as React.RefObject<HTMLInputElement>}
+          type="file"
+          accept=".xlsx,.csv,.pdf,.jpg,.jpeg,.png,.tiff,.rvt,.ifc,.dwg,.dgn,.x81,.x83,.x84,.xml"
+          className="hidden"
+          onChange={onImportInputChange}
+          aria-label={t("common.import", { defaultValue: "Import" })}
+        />
         {onPasteFromExcel && (
           <Button
             variant="ghost"
             size="sm"
             icon={<ClipboardPaste size={15} />}
             onClick={onPasteFromExcel}
-            title={t('boq.paste_from_excel', { defaultValue: 'Paste from Excel' })}
-            aria-label={t('boq.paste_from_excel', { defaultValue: 'Paste from Excel' })}
+            title={t("boq.paste_from_excel", {
+              defaultValue: "Paste from Excel",
+            })}
+            aria-label={t("boq.paste_from_excel", {
+              defaultValue: "Paste from Excel",
+            })}
           >
             <span className="hidden xl:inline">
-              {t('boq.paste_from_excel_short', { defaultValue: 'Paste' })}
+              {t("boq.paste_from_excel_short", { defaultValue: "Paste" })}
             </span>
           </Button>
         )}
         <div ref={exportRef} className="relative">
-          <Button variant="ghost" size="sm" icon={<Download size={15} />} onClick={() => setShowExportMenu((prev) => !prev)} aria-expanded={showExportMenu} aria-haspopup="true">
-            {t('boq.export')}
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<Download size={15} />}
+            onClick={() => setShowExportMenu((prev) => !prev)}
+            aria-expanded={showExportMenu}
+            aria-haspopup="true"
+          >
+            {t("boq.export")}
           </Button>
           {showExportMenu && (
-            <div role="menu" className="absolute left-0 top-full mt-1 z-50 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-md animate-fade-in">
-              <button role="menuitem" onClick={() => handleExportItem('excel')} className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors rounded-t-lg">
+            <div
+              role="menu"
+              className="absolute left-0 top-full mt-1 z-50 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-md animate-fade-in"
+            >
+              <button
+                role="menuitem"
+                onClick={() => handleExportItem("excel")}
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors rounded-t-lg"
+              >
                 <FileSpreadsheet size={15} className="text-content-tertiary" />
-                {t('boq.export_format_excel', { defaultValue: 'Excel (.xlsx)' })}
+                {t("boq.export_format_excel", {
+                  defaultValue: "Excel (.xlsx)",
+                })}
               </button>
-              <button role="menuitem" onClick={() => handleExportItem('csv')} className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors">
+              <button
+                role="menuitem"
+                onClick={() => handleExportItem("csv")}
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
+              >
                 <FileText size={15} className="text-content-tertiary" />
-                {t('boq.export_format_csv', { defaultValue: 'CSV (.csv)' })}
+                {t("boq.export_format_csv", { defaultValue: "CSV (.csv)" })}
               </button>
-              <button role="menuitem" onClick={() => handleExportItem('pdf')} className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors">
+              <button
+                role="menuitem"
+                onClick={() => handleExportItem("pdf")}
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
+              >
                 <FileDown size={15} className="text-content-tertiary" />
-                {t('boq.export_format_pdf', { defaultValue: 'PDF' })}
+                {t("boq.export_format_pdf", { defaultValue: "PDF" })}
               </button>
-              <button role="menuitem" onClick={() => handleExportItem('gaeb')} className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors rounded-b-lg">
+              <button
+                role="menuitem"
+                onClick={() => handleExportItem("gaeb")}
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors rounded-b-lg"
+              >
                 <FileText size={15} className="text-content-tertiary" />
-                {t('boq.export_format_gaeb', { defaultValue: 'GAEB XML (.x83)' })}
+                {t("boq.export_format_gaeb", {
+                  defaultValue: "GAEB XML (.x83)",
+                })}
               </button>
             </div>
           )}
@@ -289,28 +373,39 @@ export function BOQToolbar({
               onClick={() => setGridSettingsOpen((prev) => !prev)}
               aria-expanded={gridSettingsOpen}
               aria-haspopup="true"
-              title={t('boq.grid_settings', { defaultValue: 'Grid Settings' })}
+              title={t("boq.grid_settings", { defaultValue: "Grid Settings" })}
             >
               <span className="hidden xl:inline">
-                {t('boq.grid_settings', { defaultValue: 'Grid Settings' })}
+                {t("boq.grid_settings", { defaultValue: "Grid Settings" })}
               </span>
               {customColumnCount != null && customColumnCount > 0 && (
                 <span className="ml-1 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-surface-tertiary px-1 text-2xs font-semibold text-content-secondary tabular-nums">
                   {customColumnCount}
                 </span>
               )}
-              <ChevronDown size={12} className={`transition-transform ${gridSettingsOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                size={12}
+                className={`transition-transform ${gridSettingsOpen ? "rotate-180" : ""}`}
+              />
             </Button>
             {gridSettingsOpen && (
-              <div role="menu" className="absolute left-0 top-full mt-1 z-50 w-64 rounded-lg border border-border-light bg-surface-elevated shadow-md animate-fade-in">
+              <div
+                role="menu"
+                className="absolute left-0 top-full mt-1 z-50 w-64 rounded-lg border border-border-light bg-surface-elevated shadow-md animate-fade-in"
+              >
                 {onManageColumns && (
                   <button
                     role="menuitem"
-                    onClick={() => { setGridSettingsOpen(false); onManageColumns(); }}
+                    onClick={() => {
+                      setGridSettingsOpen(false);
+                      onManageColumns();
+                    }}
                     className="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors rounded-t-lg"
                   >
                     <Columns3 size={15} className="text-content-tertiary" />
-                    {t('boq.manage_columns', { defaultValue: 'Manage Columns' })}
+                    {t("boq.manage_columns", {
+                      defaultValue: "Manage Columns",
+                    })}
                     {customColumnCount != null && customColumnCount > 0 && (
                       <span className="ml-auto inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-surface-tertiary px-1 text-2xs font-semibold text-content-secondary tabular-nums">
                         {customColumnCount}
@@ -321,24 +416,37 @@ export function BOQToolbar({
                 {onManageVariables && (
                   <button
                     role="menuitem"
-                    onClick={() => { setGridSettingsOpen(false); onManageVariables(); }}
-                    className={`flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors ${!onManageColumns ? 'rounded-t-lg' : ''}`}
+                    onClick={() => {
+                      setGridSettingsOpen(false);
+                      onManageVariables();
+                    }}
+                    className={`flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors ${!onManageColumns ? "rounded-t-lg" : ""}`}
                   >
                     <VariableIcon size={15} className="text-content-tertiary" />
-                    {t('boq.manage_variables', { defaultValue: 'Manage Variables' })}
+                    {t("boq.manage_variables", {
+                      defaultValue: "Manage Variables",
+                    })}
                   </button>
                 )}
                 {onRenumber && (
                   <button
                     role="menuitem"
-                    onClick={() => { setGridSettingsOpen(false); onRenumber(); }}
+                    onClick={() => {
+                      setGridSettingsOpen(false);
+                      onRenumber();
+                    }}
                     disabled={isRenumbering}
-                    className={`flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors ${!onManageColumns && !onManageVariables ? 'rounded-t-lg' : ''} rounded-b-lg ${isRenumbering ? 'opacity-40 pointer-events-none' : ''}`}
+                    className={`flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-content-primary hover:bg-surface-secondary transition-colors ${!onManageColumns && !onManageVariables ? "rounded-t-lg" : ""} rounded-b-lg ${isRenumbering ? "opacity-40 pointer-events-none" : ""}`}
                   >
-                    <ListOrdered size={15} className={`text-content-tertiary ${isRenumbering ? 'animate-pulse' : ''}`} />
+                    <ListOrdered
+                      size={15}
+                      className={`text-content-tertiary ${isRenumbering ? "animate-pulse" : ""}`}
+                    />
                     {isRenumbering
-                      ? t('boq.renumbering', { defaultValue: 'Renumbering...' })
-                      : t('boq.renumber', { defaultValue: 'Renumber Positions' })}
+                      ? t("boq.renumbering", { defaultValue: "Renumbering..." })
+                      : t("boq.renumber", {
+                          defaultValue: "Renumber Positions",
+                        })}
                   </button>
                 )}
               </div>
@@ -381,7 +489,9 @@ export function BOQToolbar({
             <div className="w-px h-6 bg-border-light hidden sm:block" />
             <button
               onClick={onShowShortcuts}
-              title={t('boq.show_shortcuts', { defaultValue: 'Keyboard Shortcuts (F1)' })}
+              title={t("boq.show_shortcuts", {
+                defaultValue: "Keyboard Shortcuts (F1)",
+              })}
               className="flex h-7 w-7 items-center justify-center rounded-md text-content-quaternary hover:text-content-secondary hover:bg-surface-secondary transition-colors"
             >
               <Keyboard size={14} />
@@ -398,54 +508,62 @@ export function BOQToolbar({
           when `summary` is provided and the BOQ has at least one row. */}
       {summary && hasPositions && (
         <div
-          className="ml-auto flex items-center gap-2 sm:gap-3 text-2xs text-content-tertiary tabular-nums"
-          title={
-            t('boq.toolbar_summary_aria', {
-              defaultValue: '{{sections}} sections · {{positions}} positions',
-              sections: summary.sectionCount,
-              positions: summary.positionCount,
-            })
-          }
+          className="ml-auto flex shrink-0 items-center gap-2 whitespace-nowrap
+                     rounded-lg border border-border-light bg-surface-secondary/60
+                     px-2.5 py-1 tabular-nums"
+          title={t("boq.toolbar_summary_aria", {
+            defaultValue: "{{sections}} sections · {{positions}} positions",
+            sections: summary.sectionCount,
+            positions: summary.positionCount,
+          })}
         >
-          {/* Errors / warnings only — surface unconditionally because they're
-              actionable signals. Sections/positions count moved to the
-              container's tooltip so the toolbar stays in a single row on
-              standard laptops; the BOQ Statistics modal carries the full
-              breakdown if the user wants it surfaced. */}
+          {/* Errors / warnings as compact tinted chips — actionable signals
+              that stay readable and never wrap mid-phrase. The full
+              sections/positions breakdown lives in the container tooltip and
+              the BOQ Statistics modal. */}
           {summary.errorCount > 0 && (
-            <span className="text-red-600 dark:text-red-400 font-medium">
-              {summary.errorCount} {t('boq.errors', { defaultValue: 'errors' })}
+            <span
+              className="inline-flex items-center whitespace-nowrap rounded-full
+                             bg-red-50 px-2 py-0.5 text-2xs font-semibold
+                             text-red-600 dark:bg-red-500/15 dark:text-red-400"
+            >
+              {summary.errorCount} {t("boq.errors", { defaultValue: "errors" })}
             </span>
           )}
           {summary.warningCount > 0 && (
-            <>
-              {summary.errorCount > 0 && <span className="text-border-light">·</span>}
-              <span className="text-amber-600 dark:text-amber-400 font-medium">
-                {summary.warningCount} {t('boq.warnings', { defaultValue: 'warnings' })}
-              </span>
-            </>
+            <span
+              className="inline-flex items-center whitespace-nowrap rounded-full
+                             bg-amber-50 px-2 py-0.5 text-2xs font-semibold
+                             text-amber-600 dark:bg-amber-500/15 dark:text-amber-400"
+            >
+              {summary.warningCount}{" "}
+              {t("boq.warnings", { defaultValue: "warnings" })}
+            </span>
           )}
 
           {/* Display-in selector — opt-in, hidden when no FX rates configured. */}
           {summary.fxRates.length > 0 && (
             <>
-              <span className="w-px h-4 bg-border-light hidden sm:block" />
+              <span className="w-px h-4 bg-border-light" />
               <span className="inline-flex items-center gap-1 normal-case">
-                <span className="hidden lg:inline text-content-tertiary">
-                  {t('boq.display_in', { defaultValue: 'Display in' })}:
+                <span className="hidden lg:inline text-2xs text-content-tertiary">
+                  {t("boq.display_in", { defaultValue: "Display in" })}:
                 </span>
                 <select
                   value={summary.displayCurrency}
-                  onChange={(e) => summary.onChangeDisplayCurrency(e.target.value)}
-                  aria-label={t('boq.display_currency_aria', {
-                    defaultValue: 'Choose currency for grand total display',
+                  onChange={(e) =>
+                    summary.onChangeDisplayCurrency(e.target.value)
+                  }
+                  aria-label={t("boq.display_currency_aria", {
+                    defaultValue: "Choose currency for grand total display",
                   })}
                   className="bg-surface-elevated border border-border-light rounded px-1.5 py-0.5
                              text-content-primary text-2xs cursor-pointer
                              focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
                 >
                   <option value="">
-                    {summary.currencyCode || t('boq.display_base', { defaultValue: 'Base' })}
+                    {summary.currencyCode ||
+                      t("boq.display_base", { defaultValue: "Base" })}
                   </option>
                   {summary.fxRates.map((fx) => (
                     <option key={fx.currency} value={fx.currency}>
@@ -457,18 +575,21 @@ export function BOQToolbar({
             </>
           )}
 
-          {/* Grand Total — bold, anchored at the very end. The tooltip
-              spells out the FX rate so the converted figure is auditable.
-              When display ≠ base the entire BOQ (per-position totals,
-              section subtotals, footer rows, this grand total) renders in
-              the chosen currency in lock-step. Edits stay locked to the
-              base currency: switch back to "Base" to change a unit_rate. */}
-          <span className="w-px h-4 bg-border-light hidden sm:block" />
+          {/* Grand Total — the headline figure, clearly separated and never
+              wrapped. The tooltip spells out the FX rate so the converted
+              figure is auditable. When display ≠ base the entire BOQ renders
+              in the chosen currency in lock-step; edits stay locked to base
+              (switch back to "Base" to change a unit_rate). */}
+          {(summary.errorCount > 0 ||
+            summary.warningCount > 0 ||
+            summary.fxRates.length > 0) && (
+            <span className="w-px h-5 bg-border-light" />
+          )}
           <span
-            className="font-semibold text-content-primary text-xs"
+            className="flex items-baseline gap-1.5 whitespace-nowrap"
             title={
               summary.displayRate != null && summary.displayCurrency
-                ? t('boq.grand_total_conversion_tooltip_v2', {
+                ? t("boq.grand_total_conversion_tooltip_v2", {
                     defaultValue:
                       'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
                     base: summary.currencyCode || summary.currencySymbol,
@@ -481,11 +602,16 @@ export function BOQToolbar({
                 : undefined
             }
           >
-            {t('boq.grand_total', { defaultValue: 'Grand Total' })}: {summary.displaySymbol}{' '}
-            {summary.grossTotalDisplay.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            <span className="text-2xs font-medium uppercase tracking-wide text-content-tertiary">
+              {t("boq.grand_total", { defaultValue: "Grand Total" })}
+            </span>
+            <span className="text-sm font-bold text-content-primary">
+              {summary.displaySymbol}{" "}
+              {summary.grossTotalDisplay.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
           </span>
         </div>
       )}
@@ -545,16 +671,17 @@ function QualityAiMenu(props: QualityAiMenuProps) {
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setOpen(false);
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node))
+        setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === "Escape") setOpen(false);
     };
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
@@ -562,21 +689,25 @@ function QualityAiMenu(props: QualityAiMenuProps) {
   // panel open in case the user wants a follow-up flip; CTAs (Validate,
   // Update Rates, Price Check) close it because they kick off a single
   // background job that takes over the screen.
-  const fire = (cb: () => void, dismiss: boolean = true) => () => {
-    cb();
-    if (dismiss) setOpen(false);
-  };
+  const fire =
+    (cb: () => void, dismiss: boolean = true) =>
+    () => {
+      cb();
+      if (dismiss) setOpen(false);
+    };
 
   return (
     <div ref={wrapperRef} className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        title={t('boq.quality_ai_menu_tip', { defaultValue: 'All quality & AI tools' })}
-        className={`flex items-center gap-1.5 px-2.5 h-7 rounded-lg border text-2xs font-semibold uppercase tracking-wider transition-colors ${
+        title={t("boq.quality_ai_menu_tip", {
+          defaultValue: "All quality & AI tools",
+        })}
+        className={`flex shrink-0 items-center gap-1.5 px-2.5 h-7 whitespace-nowrap rounded-lg border text-2xs font-semibold uppercase tracking-wider transition-colors ${
           open
-            ? 'bg-violet-100 dark:bg-violet-900/40 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-200'
-            : 'bg-gradient-to-r from-violet-50 to-blue-50 dark:from-violet-950/30 dark:to-blue-950/30 border-violet-200/50 dark:border-violet-800/30 text-violet-700 dark:text-violet-300 hover:from-violet-100 hover:to-blue-100 dark:hover:from-violet-900/40'
+            ? "bg-violet-100 dark:bg-violet-900/40 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-200"
+            : "bg-gradient-to-r from-violet-50 to-blue-50 dark:from-violet-950/30 dark:to-blue-950/30 border-violet-200/50 dark:border-violet-800/30 text-violet-700 dark:text-violet-300 hover:from-violet-100 hover:to-blue-100 dark:hover:from-violet-900/40"
         }`}
       >
         {isRecalculating ? (
@@ -586,69 +717,154 @@ function QualityAiMenu(props: QualityAiMenuProps) {
         ) : (
           <Sparkles size={13} className="text-violet-500" />
         )}
-        <span className="hidden lg:inline">{t('boq.quality_ai_menu', { defaultValue: 'Quality & AI' })}</span>
+        <span className="hidden lg:inline whitespace-nowrap">
+          {t("boq.quality_ai_menu", { defaultValue: "Quality & AI" })}
+        </span>
         {lastValidationScore != null && !isValidating && (
-          <span className={`text-2xs font-bold tabular-nums ${lastValidationScore >= 80 ? 'text-emerald-600' : lastValidationScore >= 50 ? 'text-amber-600' : 'text-red-600'}`}>
+          <span
+            className={`text-2xs font-bold tabular-nums ${lastValidationScore >= 80 ? "text-emerald-600" : lastValidationScore >= 50 ? "text-amber-600" : "text-red-600"}`}
+          >
             {lastValidationScore}%
           </span>
         )}
-        <ChevronDown size={11} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          size={11}
+          className={`transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {open && (
         <div
           role="menu"
-          aria-label={t('boq.quality_ai_menu', { defaultValue: 'Quality & AI' })}
+          aria-label={t("boq.quality_ai_menu", {
+            defaultValue: "Quality & AI",
+          })}
           className="absolute right-0 top-full mt-2 w-72 rounded-xl shadow-2xl border border-border-light dark:border-border-dark bg-white dark:bg-surface-elevated overflow-hidden animate-card-in z-50"
         >
           {/* Quality section */}
           <div className="px-3 pt-2.5 pb-1 border-b border-border-light dark:border-border-dark bg-surface-secondary/30">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-content-quaternary">
-              {t('boq.toolbar_quality', { defaultValue: 'Quality' })}
+              {t("boq.toolbar_quality", { defaultValue: "Quality" })}
             </span>
           </div>
           <div className="py-1">
             <MenuRow
-              icon={<ShieldCheck size={14} className={isValidating ? 'animate-pulse text-oe-blue' : lastValidationScore != null ? (lastValidationScore >= 80 ? 'text-emerald-500' : lastValidationScore >= 50 ? 'text-amber-500' : 'text-red-500') : 'text-content-tertiary'} />}
-              label={isValidating ? t('boq.validating', { defaultValue: 'Checking...' }) : t('boq.validate', { defaultValue: 'Validate' })}
-              hint={t('boq.validate_tip', { defaultValue: 'Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.' })}
-              trailing={lastValidationScore != null && !isValidating ? (
-                <span className={`text-2xs font-bold tabular-nums ${lastValidationScore >= 80 ? 'text-emerald-600' : lastValidationScore >= 50 ? 'text-amber-600' : 'text-red-600'}`}>
-                  {lastValidationScore}%
-                </span>
-              ) : null}
+              icon={
+                <ShieldCheck
+                  size={14}
+                  className={
+                    isValidating
+                      ? "animate-pulse text-oe-blue"
+                      : lastValidationScore != null
+                        ? lastValidationScore >= 80
+                          ? "text-emerald-500"
+                          : lastValidationScore >= 50
+                            ? "text-amber-500"
+                            : "text-red-500"
+                        : "text-content-tertiary"
+                  }
+                />
+              }
+              label={
+                isValidating
+                  ? t("boq.validating", { defaultValue: "Checking..." })
+                  : t("boq.validate", { defaultValue: "Validate" })
+              }
+              hint={t("boq.validate_tip", {
+                defaultValue:
+                  "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+              })}
+              trailing={
+                lastValidationScore != null && !isValidating ? (
+                  <span
+                    className={`text-2xs font-bold tabular-nums ${lastValidationScore >= 80 ? "text-emerald-600" : lastValidationScore >= 50 ? "text-amber-600" : "text-red-600"}`}
+                  >
+                    {lastValidationScore}%
+                  </span>
+                ) : null
+              }
               onClick={fire(onValidate)}
               disabled={isValidating}
             />
             <MenuRow
-              icon={<RefreshCw size={14} className={isRecalculating ? 'animate-spin text-oe-blue' : 'text-content-tertiary'} />}
-              label={isRecalculating ? t('boq.recalculating', { defaultValue: 'Updating...' }) : t('boq.recalculate_rates', { defaultValue: 'Update Rates' })}
-              hint={t('boq.recalculate_tip', { defaultValue: 'Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.' })}
+              icon={
+                <RefreshCw
+                  size={14}
+                  className={
+                    isRecalculating
+                      ? "animate-spin text-oe-blue"
+                      : "text-content-tertiary"
+                  }
+                />
+              }
+              label={
+                isRecalculating
+                  ? t("boq.recalculating", { defaultValue: "Updating..." })
+                  : t("boq.recalculate_rates", { defaultValue: "Update Rates" })
+              }
+              hint={t("boq.recalculate_tip", {
+                defaultValue:
+                  "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+              })}
               onClick={fire(onRecalculate)}
               disabled={isRecalculating}
             />
             {onCheckAnomalies && (
               <MenuRow
-                icon={<AlertTriangle size={14} className={anomalyCount ? 'text-amber-500' : isCheckingAnomalies ? 'animate-pulse text-amber-500' : 'text-content-tertiary'} />}
-                label={isCheckingAnomalies
-                  ? t('boq.checking_anomalies', { defaultValue: 'Checking...' })
-                  : anomalyCount
-                    ? t('boq.anomalies_badge', { defaultValue: 'Anomalies ({{count}})', count: anomalyCount })
-                    : t('boq.price_check', { defaultValue: 'Price Check' })}
-                hint={t('boq.anomaly_tip', { defaultValue: 'Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.' })}
-                onClick={isCheckingAnomalies && onCancelAnomalies ? fire(onCancelAnomalies) : fire(onCheckAnomalies)}
-                trailing={isCheckingAnomalies && onCancelAnomalies ? (
-                  <span className="text-2xs font-medium text-red-500">{t('common.cancel', { defaultValue: 'Cancel' })}</span>
-                ) : null}
+                icon={
+                  <AlertTriangle
+                    size={14}
+                    className={
+                      anomalyCount
+                        ? "text-amber-500"
+                        : isCheckingAnomalies
+                          ? "animate-pulse text-amber-500"
+                          : "text-content-tertiary"
+                    }
+                  />
+                }
+                label={
+                  isCheckingAnomalies
+                    ? t("boq.checking_anomalies", {
+                        defaultValue: "Checking...",
+                      })
+                    : anomalyCount
+                      ? t("boq.anomalies_badge", {
+                          defaultValue: "Anomalies ({{count}})",
+                          count: anomalyCount,
+                        })
+                      : t("boq.price_check", { defaultValue: "Price Check" })
+                }
+                hint={t("boq.anomaly_tip", {
+                  defaultValue:
+                    "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+                })}
+                onClick={
+                  isCheckingAnomalies && onCancelAnomalies
+                    ? fire(onCancelAnomalies)
+                    : fire(onCheckAnomalies)
+                }
+                trailing={
+                  isCheckingAnomalies && onCancelAnomalies ? (
+                    <span className="text-2xs font-medium text-red-500">
+                      {t("common.cancel", { defaultValue: "Cancel" })}
+                    </span>
+                  ) : null
+                }
               />
             )}
-            {anomalyCount !== undefined && anomalyCount > 0 && onAcceptAllAnomalies && (
-              <MenuRow
-                icon={<Check size={14} className="text-green-500" />}
-                label={t('boq.accept_all_anomaly_suggestions', { defaultValue: 'Accept All Suggested Rates ({{count}})', count: anomalyCount })}
-                onClick={fire(onAcceptAllAnomalies)}
-              />
-            )}
+            {anomalyCount !== undefined &&
+              anomalyCount > 0 &&
+              onAcceptAllAnomalies && (
+                <MenuRow
+                  icon={<Check size={14} className="text-green-500" />}
+                  label={t("boq.accept_all_anomaly_suggestions", {
+                    defaultValue: "Accept All Suggested Rates ({{count}})",
+                    count: anomalyCount,
+                  })}
+                  onClick={fire(onAcceptAllAnomalies)}
+                />
+              )}
           </div>
 
           {/* AI section */}
@@ -659,23 +875,55 @@ function QualityAiMenu(props: QualityAiMenuProps) {
           </div>
           <div className="py-1">
             <MenuRow
-              icon={<SearchCheck size={14} className={costFinderOpen ? 'text-blue-600' : 'text-content-tertiary'} />}
-              label={t('boq.cost_finder_short', { defaultValue: 'Find Costs' })}
-              hint={t('boq.cost_finder_tooltip', { defaultValue: 'Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.' })}
+              icon={
+                <SearchCheck
+                  size={14}
+                  className={
+                    costFinderOpen ? "text-blue-600" : "text-content-tertiary"
+                  }
+                />
+              }
+              label={t("boq.cost_finder_short", { defaultValue: "Find Costs" })}
+              hint={t("boq.cost_finder_tooltip", {
+                defaultValue:
+                  "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+              })}
               active={costFinderOpen}
               onClick={fire(onToggleCostFinder, false)}
             />
             <MenuRow
-              icon={<Sparkles size={14} className={aiChatOpen ? 'text-violet-600' : 'text-content-tertiary'} />}
-              label={t('boq.ai_chat_short', { defaultValue: 'AI Chat' })}
-              hint={t('boq.ai_assistant_tooltip', { defaultValue: 'Describe what you need in plain text — AI creates BOQ positions with realistic pricing.' })}
+              icon={
+                <Sparkles
+                  size={14}
+                  className={
+                    aiChatOpen ? "text-violet-600" : "text-content-tertiary"
+                  }
+                />
+              }
+              label={t("boq.ai_chat_short", { defaultValue: "AI Chat" })}
+              hint={t("boq.ai_assistant_tooltip", {
+                defaultValue:
+                  "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+              })}
               active={aiChatOpen}
               onClick={fire(onToggleAiChat, false)}
             />
             <MenuRow
-              icon={<Brain size={14} className={smartPanelOpen ? 'text-fuchsia-600' : 'text-content-tertiary'} />}
-              label={t('boq.ai_smart_short', { defaultValue: 'Analyze' })}
-              hint={t('boq.ai_smart_tooltip', { defaultValue: 'Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.' })}
+              icon={
+                <Brain
+                  size={14}
+                  className={
+                    smartPanelOpen
+                      ? "text-fuchsia-600"
+                      : "text-content-tertiary"
+                  }
+                />
+              }
+              label={t("boq.ai_smart_short", { defaultValue: "Analyze" })}
+              hint={t("boq.ai_smart_tooltip", {
+                defaultValue:
+                  "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+              })}
               active={smartPanelOpen}
               onClick={fire(onToggleSmartPanel, false)}
             />
@@ -696,7 +944,15 @@ interface MenuRowProps {
   onClick: () => void;
 }
 
-function MenuRow({ icon, label, hint, active, disabled, trailing, onClick }: MenuRowProps) {
+function MenuRow({
+  icon,
+  label,
+  hint,
+  active,
+  disabled,
+  trailing,
+  onClick,
+}: MenuRowProps) {
   return (
     <button
       type="button"
@@ -705,14 +961,16 @@ function MenuRow({ icon, label, hint, active, disabled, trailing, onClick }: Men
       disabled={disabled}
       className={`w-full text-left px-3 py-2 flex items-start gap-2.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
         active
-          ? 'bg-violet-50 dark:bg-violet-950/30 hover:bg-violet-100 dark:hover:bg-violet-900/40'
-          : 'hover:bg-surface-secondary'
+          ? "bg-violet-50 dark:bg-violet-950/30 hover:bg-violet-100 dark:hover:bg-violet-900/40"
+          : "hover:bg-surface-secondary"
       }`}
     >
       <span className="shrink-0 mt-0.5">{icon}</span>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <span className={`text-xs font-medium ${active ? 'text-violet-700 dark:text-violet-200' : 'text-content-primary'}`}>
+          <span
+            className={`text-xs font-medium ${active ? "text-violet-700 dark:text-violet-200" : "text-content-primary"}`}
+          >
             {label}
           </span>
           {trailing}

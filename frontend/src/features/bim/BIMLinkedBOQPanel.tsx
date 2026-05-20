@@ -1,10 +1,10 @@
-import { useMemo, useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { Search, X, Link2, Hash, ExternalLink, Loader2 } from 'lucide-react';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import type { BIMBOQLinkBrief } from '@/shared/ui/BIMViewer/ElementManager';
-import { fetchBIMModelBOQLinks } from './api';
+import { useMemo, useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { Search, X, Link2, Hash, ExternalLink, Loader2 } from "lucide-react";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import type { BIMBOQLinkBrief } from "@/shared/ui/BIMViewer/ElementManager";
+import { fetchBIMModelBOQLinks } from "./api";
 
 interface AggregatedPosition {
   boq_position_id: string;
@@ -15,7 +15,7 @@ interface AggregatedPosition {
   unit: string | null;
   unit_rate: number | null;
   total: number | null;
-  link_type: BIMBOQLinkBrief['link_type'];
+  link_type: BIMBOQLinkBrief["link_type"];
   confidence: string | null;
   elementIds: string[];
 }
@@ -36,13 +36,13 @@ export default function BIMLinkedBOQPanel({
   boqId,
 }: BIMLinkedBOQPanelProps) {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [activePositionId, setActivePositionId] = useState<string | null>(null);
 
   // Viewer loads elements in skeleton mode (no boq_links) for performance
   // on large models, so the panel fetches aggregated links separately.
   const linksQuery = useQuery({
-    queryKey: ['bim-model-boq-links', modelId],
+    queryKey: ["bim-model-boq-links", modelId],
     queryFn: () => fetchBIMModelBOQLinks(modelId),
     enabled: !!modelId,
     staleTime: 30_000,
@@ -79,15 +79,15 @@ export default function BIMLinkedBOQPanel({
             unit: row.boq_position_unit,
             unit_rate: row.boq_position_unit_rate,
             total: row.boq_position_total,
-            link_type: row.link_type as BIMBOQLinkBrief['link_type'],
+            link_type: row.link_type as BIMBOQLinkBrief["link_type"],
             confidence: row.confidence,
             elementIds: [...row.element_ids],
           });
         }
       }
       return Array.from(map.values()).sort((a, b) => {
-        const oa = a.ordinal ?? '';
-        const ob = b.ordinal ?? '';
+        const oa = a.ordinal ?? "";
+        const ob = b.ordinal ?? "";
         return oa.localeCompare(ob, undefined, { numeric: true });
       });
     }
@@ -105,7 +105,7 @@ export default function BIMLinkedBOQPanel({
         } else {
           map.set(link.boq_position_id, {
             boq_position_id: link.boq_position_id,
-            boq_id: '',
+            boq_id: "",
             ordinal: link.boq_position_ordinal,
             description: link.boq_position_description,
             quantity: link.boq_position_quantity,
@@ -120,8 +120,8 @@ export default function BIMLinkedBOQPanel({
       }
     }
     return Array.from(map.values()).sort((a, b) => {
-      const oa = a.ordinal ?? '';
-      const ob = b.ordinal ?? '';
+      const oa = a.ordinal ?? "";
+      const ob = b.ordinal ?? "";
       return oa.localeCompare(ob, undefined, { numeric: true });
     });
   }, [elements, linksQuery.data]);
@@ -131,8 +131,8 @@ export default function BIMLinkedBOQPanel({
     const q = search.trim().toLowerCase();
     return positions.filter(
       (p) =>
-        (p.ordinal ?? '').toLowerCase().includes(q) ||
-        (p.description ?? '').toLowerCase().includes(q),
+        (p.ordinal ?? "").toLowerCase().includes(q) ||
+        (p.description ?? "").toLowerCase().includes(q),
     );
   }, [positions, search]);
 
@@ -146,7 +146,8 @@ export default function BIMLinkedBOQPanel({
 
   const handleRowClick = useCallback(
     (pos: AggregatedPosition) => {
-      const next = activePositionId === pos.boq_position_id ? null : pos.boq_position_id;
+      const next =
+        activePositionId === pos.boq_position_id ? null : pos.boq_position_id;
       setActivePositionId(next);
       onHighlightElements(next ? pos.elementIds : []);
     },
@@ -163,12 +164,12 @@ export default function BIMLinkedBOQPanel({
         <div className="flex items-center gap-2">
           <Link2 size={16} className="text-content-tertiary" />
           <h2 className="text-sm font-semibold text-content-primary">
-            {t('bim.linked_boq_title', { defaultValue: 'Linked BOQ‌⁠‍' })}
+            {t("bim.linked_boq_title", { defaultValue: "Linked BOQ‌⁠‍" })}
           </h2>
         </div>
         <button
           onClick={onClose}
-          aria-label={t('common.close', { defaultValue: 'Close' })}
+          aria-label={t("common.close", { defaultValue: "Close" })}
           className="p-1 rounded-md text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
         >
           <X size={14} />
@@ -178,18 +179,25 @@ export default function BIMLinkedBOQPanel({
       {/* Search */}
       <div className="px-4 py-3 border-b border-border-light shrink-0">
         <div className="relative">
-          <Search size={14} className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-quaternary pointer-events-none" />
+          <Search
+            size={14}
+            className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-quaternary pointer-events-none"
+          />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('bim.linked_boq_search', { defaultValue: 'Search positions...‌⁠‍' })}
-            aria-label={t('bim.linked_boq_search', { defaultValue: 'Search positions...‌⁠‍' })}
+            placeholder={t("bim.linked_boq_search", {
+              defaultValue: "Search positions...‌⁠‍",
+            })}
+            aria-label={t("bim.linked_boq_search", {
+              defaultValue: "Search positions...‌⁠‍",
+            })}
             className="w-full ps-8 pe-8 py-1.5 text-xs rounded-md bg-surface-secondary border border-border-light focus:outline-none focus:ring-1 focus:ring-oe-blue focus:border-oe-blue"
           />
           {search && (
             <button
-              onClick={() => setSearch('')}
+              onClick={() => setSearch("")}
               className="absolute end-2 top-1/2 -translate-y-1/2 text-content-quaternary hover:text-content-secondary"
             >
               <X size={12} />
@@ -199,8 +207,9 @@ export default function BIMLinkedBOQPanel({
 
         {/* Summary */}
         <div className="mt-2 px-2.5 py-1.5 rounded-md bg-oe-blue/5 border border-oe-blue/15 text-[11px] font-medium text-oe-blue">
-          {t('bim.linked_boq_summary', {
-            defaultValue: '{{positions}} positions linked to {{elements}} elements‌⁠‍',
+          {t("bim.linked_boq_summary", {
+            defaultValue:
+              "{{positions}} positions linked to {{elements}} elements‌⁠‍",
             positions: positions.length,
             elements: totalLinkedElements,
           })}
@@ -213,7 +222,9 @@ export default function BIMLinkedBOQPanel({
           <div className="flex flex-col items-center justify-center h-32 text-content-quaternary">
             <Loader2 size={20} className="mb-2 animate-spin opacity-60" />
             <p className="text-xs">
-              {t('bim.linked_boq_loading', { defaultValue: 'Loading linked positions…‌⁠‍' })}
+              {t("bim.linked_boq_loading", {
+                defaultValue: "Loading linked positions…‌⁠‍",
+              })}
             </p>
           </div>
         ) : filtered.length === 0 ? (
@@ -221,8 +232,12 @@ export default function BIMLinkedBOQPanel({
             <Link2 size={24} className="mb-2 opacity-40" />
             <p className="text-xs">
               {positions.length === 0
-                ? t('bim.linked_boq_empty', { defaultValue: 'No linked BOQ positions' })
-                : t('bim.linked_boq_no_match', { defaultValue: 'No matching positions' })}
+                ? t("bim.linked_boq_empty", {
+                    defaultValue: "No linked BOQ positions",
+                  })
+                : t("bim.linked_boq_no_match", {
+                    defaultValue: "No matching positions",
+                  })}
             </p>
           </div>
         ) : (
@@ -233,27 +248,30 @@ export default function BIMLinkedBOQPanel({
                 key={pos.boq_position_id}
                 type="button"
                 onClick={() => handleRowClick(pos)}
-                aria-label={`${pos.ordinal ?? ''} ${pos.description ?? t('bim.linked_boq_no_desc', { defaultValue: '(no description)' })}`}
+                aria-label={`${pos.ordinal ?? ""} ${pos.description ?? t("bim.linked_boq_no_desc", { defaultValue: "(no description)" })}`}
                 aria-pressed={isActive}
                 className={`w-full text-start px-4 py-2.5 border-b border-border-light transition-colors ${
                   isActive
-                    ? 'bg-oe-blue/8 border-s-2 border-s-oe-blue'
-                    : 'hover:bg-surface-secondary border-s-2 border-s-transparent'
+                    ? "bg-oe-blue/8 border-s-2 border-s-oe-blue"
+                    : "hover:bg-surface-secondary border-s-2 border-s-transparent"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     {pos.ordinal && (
                       <div className="flex items-center gap-1 mb-0.5">
-                        <Hash size={10} className="text-content-quaternary shrink-0" />
+                        <Hash
+                          size={10}
+                          className="text-content-quaternary shrink-0"
+                        />
                         <span className="text-[11px] font-bold text-content-primary tabular-nums">
                           {pos.ordinal}
                         </span>
                         <span
                           className={`inline-flex items-center justify-center min-w-[18px] h-[14px] px-0.5 rounded text-[8px] font-bold tabular-nums ${
                             isActive
-                              ? 'bg-oe-blue text-white'
-                              : 'bg-surface-secondary text-content-tertiary'
+                              ? "bg-oe-blue text-white"
+                              : "bg-surface-secondary text-content-tertiary"
                           }`}
                         >
                           {pos.elementIds.length}
@@ -261,18 +279,27 @@ export default function BIMLinkedBOQPanel({
                       </div>
                     )}
                     <p className="text-[11px] text-content-secondary truncate">
-                      {pos.description || t('bim.linked_boq_no_desc', { defaultValue: '(no description)' })}
+                      {pos.description ||
+                        t("bim.linked_boq_no_desc", {
+                          defaultValue: "(no description)",
+                        })}
                     </p>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
                       {pos.quantity != null && (
                         <span className="text-[10px] tabular-nums font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-1.5 py-0.5 rounded">
-                          {pos.quantity.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
-                          {pos.unit ? ` ${pos.unit}` : ''}
+                          {pos.quantity.toLocaleString("en", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 4,
+                          })}
+                          {pos.unit ? ` ${pos.unit}` : ""}
                         </span>
                       )}
                       {pos.total != null && (
                         <span className="text-[10px] tabular-nums font-medium text-content-primary bg-surface-secondary px-1.5 py-0.5 rounded">
-                          {pos.total.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          {pos.total.toLocaleString("en", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </span>
                       )}
                       {(derivedBoqId || pos.boq_id) && (
@@ -280,8 +307,12 @@ export default function BIMLinkedBOQPanel({
                           href={`/boq/${pos.boq_id || derivedBoqId}?highlight=${pos.boq_position_id}`}
                           onClick={(e) => e.stopPropagation()}
                           className="text-[9px] text-oe-blue hover:text-oe-blue/80 flex items-center gap-0.5"
-                          title={t('bim.linked_boq_open_in_boq', { defaultValue: 'Open in BOQ' })}
-                          aria-label={t('bim.linked_boq_open_in_boq', { defaultValue: 'Open in BOQ' })}
+                          title={t("bim.linked_boq_open_in_boq", {
+                            defaultValue: "Open in BOQ",
+                          })}
+                          aria-label={t("bim.linked_boq_open_in_boq", {
+                            defaultValue: "Open in BOQ",
+                          })}
                         >
                           <ExternalLink size={8} />
                           BOQ

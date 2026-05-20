@@ -3,16 +3,24 @@
  * Endpoints prefixed with /v1/markups/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types (matching backend schemas exactly) ────────────────────────── */
 
 export type MarkupType =
-  | 'cloud' | 'arrow' | 'text' | 'rectangle' | 'highlight'
-  | 'distance' | 'area' | 'count' | 'stamp' | 'polygon';
+  | "cloud"
+  | "arrow"
+  | "text"
+  | "rectangle"
+  | "highlight"
+  | "distance"
+  | "area"
+  | "count"
+  | "stamp"
+  | "polygon";
 
-export type MarkupStatus = 'active' | 'resolved' | 'archived';
+export type MarkupStatus = "active" | "resolved" | "archived";
 
 export interface Markup {
   id: string;
@@ -78,8 +86,8 @@ export interface MarkupsSummary {
 
 export interface MarkupFilters {
   search?: string;
-  type?: MarkupType | '';
-  status?: MarkupStatus | '';
+  type?: MarkupType | "";
+  status?: MarkupStatus | "";
   author_id?: string;
   document_id?: string;
   page?: number;
@@ -116,20 +124,23 @@ export async function fetchMarkups(
 ): Promise<Markup[]> {
   if (!projectId) return [];
   const params = new URLSearchParams({ project_id: projectId });
-  if (filters?.search) params.set('search', filters.search);
-  if (filters?.type) params.set('type', filters.type);
-  if (filters?.status) params.set('status', filters.status);
-  if (filters?.author_id) params.set('author_id', filters.author_id);
-  if (filters?.document_id) params.set('document_id', filters.document_id);
-  if (filters?.page) params.set('page', String(filters.page));
+  if (filters?.search) params.set("search", filters.search);
+  if (filters?.type) params.set("type", filters.type);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.author_id) params.set("author_id", filters.author_id);
+  if (filters?.document_id) params.set("document_id", filters.document_id);
+  if (filters?.page) params.set("page", String(filters.page));
   return apiGet<Markup[]>(`/v1/markups/?${params.toString()}`);
 }
 
 export async function createMarkup(data: CreateMarkupPayload): Promise<Markup> {
-  return apiPost<Markup>('/v1/markups/', data);
+  return apiPost<Markup>("/v1/markups/", data);
 }
 
-export async function updateMarkup(id: string, data: UpdateMarkupPayload): Promise<Markup> {
+export async function updateMarkup(
+  id: string,
+  data: UpdateMarkupPayload,
+): Promise<Markup> {
   return apiPatch<Markup>(`/v1/markups/${id}`, data);
 }
 
@@ -137,14 +148,21 @@ export async function deleteMarkup(id: string): Promise<void> {
   return apiDelete(`/v1/markups/${id}`);
 }
 
-export async function linkMarkupToBoq(markupId: string, positionId: string): Promise<Markup> {
-  return apiPost<Markup>(`/v1/markups/${markupId}/link-to-boq/`, { position_id: positionId });
+export async function linkMarkupToBoq(
+  markupId: string,
+  positionId: string,
+): Promise<Markup> {
+  return apiPost<Markup>(`/v1/markups/${markupId}/link-to-boq/`, {
+    position_id: positionId,
+  });
 }
 
 /* ── Stamps ───────────────────────────────────────────────────────────── */
 
-export async function fetchStampTemplates(projectId?: string): Promise<StampTemplate[]> {
-  const params = projectId ? `?project_id=${projectId}` : '';
+export async function fetchStampTemplates(
+  projectId?: string,
+): Promise<StampTemplate[]> {
+  const params = projectId ? `?project_id=${projectId}` : "";
   return apiGet<StampTemplate[]>(`/v1/markups/stamps/templates/${params}`);
 }
 
@@ -155,7 +173,7 @@ export async function createStampTemplate(data: {
   color: string;
   project_id?: string;
 }): Promise<StampTemplate> {
-  return apiPost<StampTemplate>('/v1/markups/stamps/templates/', data);
+  return apiPost<StampTemplate>("/v1/markups/stamps/templates/", data);
 }
 
 export async function deleteStampTemplate(id: string): Promise<void> {
@@ -170,16 +188,24 @@ export async function fetchScales(documentId: string): Promise<ScaleConfig[]> {
 
 /* ── Summary & Export ─────────────────────────────────────────────────── */
 
-export async function fetchMarkupsSummary(projectId: string): Promise<MarkupsSummary> {
-  if (!projectId) return { total: 0, by_type: {}, by_status: {}, by_author: {} };
+export async function fetchMarkupsSummary(
+  projectId: string,
+): Promise<MarkupsSummary> {
+  if (!projectId)
+    return { total: 0, by_type: {}, by_status: {}, by_author: {} };
   return apiGet<MarkupsSummary>(`/v1/markups/summary/?project_id=${projectId}`);
 }
 
 export async function exportMarkupsCSV(projectId: string): Promise<Blob> {
   const token = useAuthStore.getState().accessToken;
-  const res = await fetch(`/api/v1/markups/export/?project_id=${projectId}&format=csv`, {
-    headers: token ? { Authorization: `Bearer ${token}`, 'X-DDC-Client': 'OE/1.0' } : { 'X-DDC-Client': 'OE/1.0' },
-  });
+  const res = await fetch(
+    `/api/v1/markups/export/?project_id=${projectId}&format=csv`,
+    {
+      headers: token
+        ? { Authorization: `Bearer ${token}`, "X-DDC-Client": "OE/1.0" }
+        : { "X-DDC-Client": "OE/1.0" },
+    },
+  );
   if (!res.ok) throw new Error(`Export failed: ${res.statusText}`);
   return res.blob();
 }
@@ -195,7 +221,9 @@ export interface MarkupComment {
   updated_at: string;
 }
 
-export async function fetchMarkupComments(markupId: string): Promise<MarkupComment[]> {
+export async function fetchMarkupComments(
+  markupId: string,
+): Promise<MarkupComment[]> {
   return apiGet<MarkupComment[]>(`/v1/markups/${markupId}/comments/`);
 }
 

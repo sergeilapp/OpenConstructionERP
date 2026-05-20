@@ -8,14 +8,17 @@
  * matches spec §3.2 — the block-as-a-whole conveys "an attribute paired with
  * a constraint", and screen readers get a clear hierarchy.
  */
-import clsx from 'clsx';
+import clsx from "clsx";
 
-import { AttributeBlock } from './AttributeBlock';
-import { BlockShell, type BlockShellProps } from './BlockShell';
-import { ConstraintBlock } from './ConstraintBlock';
-import type { AttributeRef, Constraint } from '../../types';
+import { AttributeBlock } from "./AttributeBlock";
+import { BlockShell, type BlockShellProps } from "./BlockShell";
+import { ConstraintBlock } from "./ConstraintBlock";
+import type { AttributeRef, Constraint } from "../../types";
 
-type ForwardedShellProps = Omit<BlockShellProps, 'color' | 'children' | 'label'>;
+type ForwardedShellProps = Omit<
+  BlockShellProps,
+  "color" | "children" | "label"
+>;
 
 export interface TripletBlockProps extends ForwardedShellProps {
   attribute: AttributeRef;
@@ -45,8 +48,8 @@ export function TripletBlock({
   return (
     <BlockShell
       color="attribute"
-      label={label ?? 'Triplet'}
-      className={clsx('!gap-2', className)}
+      label={label ?? "Triplet"}
+      className={clsx("!gap-2", className)}
       testId="eac-block-triplet"
       {...shellProps}
     >

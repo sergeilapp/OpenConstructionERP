@@ -1,10 +1,7 @@
-import { useEffect, useSyncExternalStore } from 'react';
-import {
-  getQueuedMutations,
-  removeMutation,
-} from '../lib/offlineStore';
-import { useToastStore } from '../../stores/useToastStore';
-import { useAuthStore } from '../../stores/useAuthStore';
+import { useEffect, useSyncExternalStore } from "react";
+import { getQueuedMutations, removeMutation } from "../lib/offlineStore";
+import { useToastStore } from "../../stores/useToastStore";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 /* ── Online/Offline reactive store ──────────────────────────────────── */
 
@@ -12,12 +9,12 @@ let listeners: Array<() => void> = [];
 
 function subscribe(listener: () => void) {
   listeners.push(listener);
-  window.addEventListener('online', listener);
-  window.addEventListener('offline', listener);
+  window.addEventListener("online", listener);
+  window.addEventListener("offline", listener);
   return () => {
     listeners = listeners.filter((l) => l !== listener);
-    window.removeEventListener('online', listener);
-    window.removeEventListener('offline', listener);
+    window.removeEventListener("online", listener);
+    window.removeEventListener("offline", listener);
   };
 }
 
@@ -41,7 +38,10 @@ let isReplaying = false;
  * Replay queued offline mutations when back online.
  * Runs each mutation sequentially. Failed mutations stay in queue.
  */
-async function replayMutations(): Promise<{ replayed: number; failed: number }> {
+async function replayMutations(): Promise<{
+  replayed: number;
+  failed: number;
+}> {
   if (isReplaying) return { replayed: 0, failed: 0 };
   isReplaying = true;
 
@@ -54,10 +54,10 @@ async function replayMutations(): Promise<{ replayed: number; failed: number }> 
 
     const token = useAuthStore.getState().accessToken;
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
     };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) headers["Authorization"] = `Bearer ${token}`;
 
     for (const mutation of queue) {
       try {
@@ -99,14 +99,14 @@ export function useOfflineSync(): void {
       const { replayed, failed } = await replayMutations();
       if (replayed > 0) {
         addToast({
-          type: 'success',
-          title: `Synced ${replayed} offline change${replayed > 1 ? 's' : ''}`,
+          type: "success",
+          title: `Synced ${replayed} offline change${replayed > 1 ? "s" : ""}`,
         });
       }
       if (failed > 0) {
         addToast({
-          type: 'warning',
-          title: `${failed} change${failed > 1 ? 's' : ''} failed to sync`,
+          type: "warning",
+          title: `${failed} change${failed > 1 ? "s" : ""} failed to sync`,
         });
       }
     }, 1000);

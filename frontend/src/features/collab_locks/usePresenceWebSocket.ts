@@ -10,9 +10,9 @@
  * this hook alone in list views that want to show "3 people viewing".
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export interface PresenceUser {
   user_id: string;
@@ -20,22 +20,22 @@ export interface PresenceUser {
 }
 
 export type PresenceStatus =
-  | 'idle'
-  | 'connecting'
-  | 'open'
-  | 'closed'
-  | 'error';
+  | "idle"
+  | "connecting"
+  | "open"
+  | "closed"
+  | "error";
 
 export interface PresenceEvent {
   event:
-    | 'presence_snapshot'
-    | 'presence_join'
-    | 'presence_leave'
-    | 'lock_acquired'
-    | 'lock_heartbeat'
-    | 'lock_released'
-    | 'lock_expired'
-    | 'pong';
+    | "presence_snapshot"
+    | "presence_join"
+    | "presence_leave"
+    | "lock_acquired"
+    | "lock_heartbeat"
+    | "lock_released"
+    | "lock_expired"
+    | "pong";
   users?: PresenceUser[];
   lock?: {
     id: string;
@@ -65,24 +65,24 @@ export function usePresenceWebSocket(
   entityId: string | null,
   enabled: boolean = true,
 ): UsePresenceWebSocketResult {
-  const [status, setStatus] = useState<PresenceStatus>('idle');
+  const [status, setStatus] = useState<PresenceStatus>("idle");
   const [users, setUsers] = useState<PresenceUser[]>([]);
   const [lastEvent, setLastEvent] = useState<PresenceEvent | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (!enabled || entityId === null) {
-      setStatus('idle');
+      setStatus("idle");
       setUsers([]);
       return;
     }
     const token = useAuthStore.getState().accessToken;
     if (!token) {
-      setStatus('closed');
+      setStatus("closed");
       return;
     }
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const url =
       `${protocol}//${window.location.host}` +
       `/api/v1/collaboration_locks/presence/` +
@@ -91,19 +91,19 @@ export function usePresenceWebSocket(
       `&token=${encodeURIComponent(token)}`;
 
     let closed = false;
-    setStatus('connecting');
+    setStatus("connecting");
     let ws: WebSocket;
     try {
       ws = new WebSocket(url);
     } catch {
-      setStatus('error');
+      setStatus("error");
       return;
     }
     wsRef.current = ws;
 
     ws.onopen = () => {
       if (closed) return;
-      setStatus('open');
+      setStatus("open");
     };
 
     ws.onmessage = (msg: MessageEvent<string>) => {
@@ -116,10 +116,10 @@ export function usePresenceWebSocket(
       setLastEvent(parsed);
 
       switch (parsed.event) {
-        case 'presence_snapshot':
+        case "presence_snapshot":
           setUsers(parsed.users ?? []);
           break;
-        case 'presence_join':
+        case "presence_join":
           if (parsed.user_id && parsed.user_name) {
             const joiner: PresenceUser = {
               user_id: parsed.user_id,
@@ -132,9 +132,11 @@ export function usePresenceWebSocket(
             );
           }
           break;
-        case 'presence_leave':
+        case "presence_leave":
           if (parsed.user_id) {
-            setUsers((prev) => prev.filter((u) => u.user_id !== parsed.user_id));
+            setUsers((prev) =>
+              prev.filter((u) => u.user_id !== parsed.user_id),
+            );
           }
           break;
         default:
@@ -145,12 +147,12 @@ export function usePresenceWebSocket(
 
     ws.onerror = () => {
       if (closed) return;
-      setStatus('error');
+      setStatus("error");
     };
 
     ws.onclose = () => {
       if (closed) return;
-      setStatus('closed');
+      setStatus("closed");
     };
 
     return () => {

@@ -101,26 +101,12 @@ async def _run_source_boq(ctx: NodeContext) -> dict[str, Any]:
     if pid is None:
         return {"rows": [], "row_ids": [], "count": 0, "summary": "No project"}
 
-    boq_ids = (
-        (
-            await ctx.db.execute(
-                select(BOQ.id).where(BOQ.project_id == pid)
-            )
-        )
-        .scalars()
-        .all()
-    )
+    boq_ids = (await ctx.db.execute(select(BOQ.id).where(BOQ.project_id == pid))).scalars().all()
     if not boq_ids:
         return {"rows": [], "row_ids": [], "count": 0, "summary": "No BOQ"}
 
     positions = (
-        (
-            await ctx.db.execute(
-                select(Position)
-                .where(Position.boq_id.in_(boq_ids))
-                .order_by(Position.sort_order.asc())
-            )
-        )
+        (await ctx.db.execute(select(Position).where(Position.boq_id.in_(boq_ids)).order_by(Position.sort_order.asc())))
         .scalars()
         .all()
     )
@@ -197,8 +183,7 @@ async def _run_transform_filter(ctx: NodeContext) -> dict[str, Any]:
         "count": len(kept),
         "dropped": len(rows) - len(kept),
         "summary": (
-            f"Kept {len(kept)} of {len(rows)} rows "
-            f"({field} {op} {value!r})"
+            f"Kept {len(kept)} of {len(rows)} rows ({field} {op} {value!r})"
             if field
             else f"Pass-through ({len(rows)} rows)"
         ),
@@ -240,9 +225,7 @@ async def _run_gate_validation(ctx: NodeContext) -> dict[str, Any]:
         "count": len(rows),
         "validation": summary,
         "summary": (
-            f"Validation {summary['status']} "
-            f"(score={summary['score']}, "
-            f"warnings={summary['counts']['warnings']})"
+            f"Validation {summary['status']} (score={summary['score']}, warnings={summary['counts']['warnings']})"
         ),
     }
 
@@ -287,10 +270,7 @@ async def _run_action_export_excel(ctx: NodeContext) -> dict[str, Any]:
     return {
         "file": {
             "filename": ctx.params.get("filename", "pipeline-export.xlsx"),
-            "content_type": (
-                "application/vnd.openxmlformats-officedocument."
-                "spreadsheetml.sheet"
-            ),
+            "content_type": ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
             "size_bytes": size,
             "row_count": len(rows),
             "columns": list(columns),
@@ -325,9 +305,7 @@ def register_pipeline_nodes() -> None:
         runner=_run_source_project,
         inputs=["trigger"],
         outputs=["project"],
-        params_schema={
-            "project_id": {"type": "string", "title": "Project id (optional)"}
-        },
+        params_schema={"project_id": {"type": "string", "title": "Project id (optional)"}},
         side_effecting=False,
     )
     register_node(
@@ -335,16 +313,11 @@ def register_pipeline_nodes() -> None:
         module=MODULE,
         category="source",
         label="Get BOQ positions",
-        description=(
-            "Load every BOQ position for the project as rows "
-            "(ids + a small sample)."
-        ),
+        description=("Load every BOQ position for the project as rows (ids + a small sample)."),
         runner=_run_source_boq,
         inputs=["trigger", "project"],
         outputs=["rows"],
-        params_schema={
-            "project_id": {"type": "string", "title": "Project id (optional)"}
-        },
+        params_schema={"project_id": {"type": "string", "title": "Project id (optional)"}},
         side_effecting=False,
     )
     register_node(
@@ -381,10 +354,7 @@ def register_pipeline_nodes() -> None:
         module=MODULE,
         category="gate",
         label="Validation gate",
-        description=(
-            "Run the validation engine over the rows; stop the run on "
-            "blocking errors."
-        ),
+        description=("Run the validation engine over the rows; stop the run on blocking errors."),
         runner=_run_gate_validation,
         inputs=["rows"],
         outputs=["rows"],
@@ -403,10 +373,7 @@ def register_pipeline_nodes() -> None:
         module=MODULE,
         category="action",
         label="Export to Excel",
-        description=(
-            "Write the rows to an .xlsx file (returns a download "
-            "reference; does not mutate the database)."
-        ),
+        description=("Write the rows to an .xlsx file (returns a download reference; does not mutate the database)."),
         runner=_run_action_export_excel,
         inputs=["rows"],
         outputs=["file"],

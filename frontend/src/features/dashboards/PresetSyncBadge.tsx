@@ -15,15 +15,15 @@
  * existing :class:`PresetPicker` tests — the badge is opt-in via the
  * ``presetId`` prop.
  */
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
 
-import { Badge } from '@/shared/ui';
+import { Badge } from "@/shared/ui";
 
-import { getSyncReport, type SyncReport, type SyncStatus } from './api';
-import { SyncReportDrawer } from './SyncReportDrawer';
+import { getSyncReport, type SyncReport, type SyncStatus } from "./api";
+import { SyncReportDrawer } from "./SyncReportDrawer";
 
 export interface PresetSyncBadgeProps {
   presetId: string;
@@ -36,22 +36,22 @@ export interface PresetSyncBadgeProps {
   className?: string;
 }
 
-const STATUS_TO_VARIANT: Record<SyncStatus, 'success' | 'warning' | 'error'> = {
-  synced: 'success',
-  stale: 'warning',
-  needs_review: 'error',
+const STATUS_TO_VARIANT: Record<SyncStatus, "success" | "warning" | "error"> = {
+  synced: "success",
+  stale: "warning",
+  needs_review: "error",
 };
 
 const STATUS_TO_KEY: Record<SyncStatus, string> = {
-  synced: 'dashboards.sync.status_synced',
-  stale: 'dashboards.sync.status_stale',
-  needs_review: 'dashboards.sync.status_needs_review',
+  synced: "dashboards.sync.status_synced",
+  stale: "dashboards.sync.status_stale",
+  needs_review: "dashboards.sync.status_needs_review",
 };
 
 const STATUS_DEFAULT_LABEL: Record<SyncStatus, string> = {
-  synced: 'In sync',
-  stale: 'Stale',
-  needs_review: 'Needs review',
+  synced: "In sync",
+  stale: "Stale",
+  needs_review: "Needs review",
 };
 
 export function PresetSyncBadge({
@@ -66,14 +66,14 @@ export function PresetSyncBadge({
   // Lazy fetch — only when the user opens the drawer or the parent
   // doesn't supply an ``initialStatus``.
   const reportQuery = useQuery<SyncReport>({
-    queryKey: ['preset-sync-report', presetId],
+    queryKey: ["preset-sync-report", presetId],
     queryFn: () => getSyncReport(presetId),
     enabled: open || !initialStatus,
     staleTime: 30 * 1000,
   });
 
   const status: SyncStatus =
-    reportQuery.data?.status ?? initialStatus ?? 'synced';
+    reportQuery.data?.status ?? initialStatus ?? "synced";
   const variant = STATUS_TO_VARIANT[status];
   const labelKey = STATUS_TO_KEY[status];
   const label = t(labelKey, { defaultValue: STATUS_DEFAULT_LABEL[status] });
@@ -92,15 +92,15 @@ export function PresetSyncBadge({
         disabled={!interactive}
         data-testid={`preset-sync-badge-${presetId}`}
         data-status={status}
-        aria-label={t('dashboards.sync.badge_aria', {
-          defaultValue: 'Preset sync status: {{status}}‌⁠‍',
+        aria-label={t("dashboards.sync.badge_aria", {
+          defaultValue: "Preset sync status: {{status}}‌⁠‍",
           status: label,
         })}
         className={clsx(
-          'inline-flex items-center',
+          "inline-flex items-center",
           interactive
-            ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-oe-blue rounded-full'
-            : 'cursor-default',
+            ? "cursor-pointer focus:outline-none focus:ring-2 focus:ring-oe-blue rounded-full"
+            : "cursor-default",
           className,
         )}
       >

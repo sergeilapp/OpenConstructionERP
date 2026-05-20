@@ -1,5 +1,5 @@
-import { useSyncExternalStore } from 'react';
-import i18n from '@/app/i18n';
+import { useSyncExternalStore } from "react";
+import i18n from "@/app/i18n";
 
 let version = 0;
 const listeners = new Set<() => void>();
@@ -8,8 +8,8 @@ const bump = () => {
   listeners.forEach((cb) => cb());
 };
 
-i18n.on('languageChanged', bump);
-i18n.store?.on?.('added', bump);
+i18n.on("languageChanged", bump);
+i18n.store?.on?.("added", bump);
 
 const subscribe = (cb: () => void) => {
   listeners.add(cb);

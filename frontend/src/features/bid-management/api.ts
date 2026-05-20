@@ -5,36 +5,36 @@
  * backend/app/modules/bid_management/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 export type BidPackageStatus =
-  | 'draft'
-  | 'published'
-  | 'open'
-  | 'closed'
-  | 'cancelled'
-  | 'awarded';
+  | "draft"
+  | "published"
+  | "open"
+  | "closed"
+  | "cancelled"
+  | "awarded";
 
-export type BidConfidentiality = 'public' | 'limited' | 'confidential';
+export type BidConfidentiality = "public" | "limited" | "confidential";
 
 export type BidInvitationStatus =
-  | 'pending'
-  | 'sent'
-  | 'opened'
-  | 'submitted'
-  | 'declined'
-  | 'expired';
+  | "pending"
+  | "sent"
+  | "opened"
+  | "submitted"
+  | "declined"
+  | "expired";
 
-export type BidderStatus = 'active' | 'disqualified' | 'withdrawn';
+export type BidderStatus = "active" | "disqualified" | "withdrawn";
 
 export type BidRejectionCode =
-  | 'price'
-  | 'scope'
-  | 'completeness'
-  | 'qualification'
-  | 'other';
+  | "price"
+  | "scope"
+  | "completeness"
+  | "qualification"
+  | "other";
 
 export interface BidPackage {
   id: string;
@@ -295,11 +295,13 @@ export function listPackages(params: {
   limit?: number;
 }): Promise<BidPackage[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
-  return apiGet<BidPackage[]>(`/v1/bid-management/bid-packages/?${qs.toString()}`);
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
+  return apiGet<BidPackage[]>(
+    `/v1/bid-management/bid-packages/?${qs.toString()}`,
+  );
 }
 
 export function getPackage(id: string): Promise<BidPackage> {
@@ -307,7 +309,7 @@ export function getPackage(id: string): Promise<BidPackage> {
 }
 
 export function createPackage(data: CreatePackagePayload): Promise<BidPackage> {
-  return apiPost<BidPackage>('/v1/bid-management/bid-packages/', data);
+  return apiPost<BidPackage>("/v1/bid-management/bid-packages/", data);
 }
 
 export function updatePackage(
@@ -322,20 +324,29 @@ export function deletePackage(id: string): Promise<void> {
 }
 
 export function publishPackage(id: string): Promise<BidPackage> {
-  return apiPost<BidPackage>(`/v1/bid-management/bid-packages/${id}/publish`, {});
+  return apiPost<BidPackage>(
+    `/v1/bid-management/bid-packages/${id}/publish`,
+    {},
+  );
 }
 
 export function openBids(id: string): Promise<BidPackage> {
-  return apiPost<BidPackage>(`/v1/bid-management/bid-packages/${id}/open-bids`, {});
+  return apiPost<BidPackage>(
+    `/v1/bid-management/bid-packages/${id}/open-bids`,
+    {},
+  );
 }
 
 export function closePackage(id: string): Promise<BidPackage> {
   return apiPost<BidPackage>(`/v1/bid-management/bid-packages/${id}/close`, {});
 }
 
-export function cancelPackage(id: string, reason = ''): Promise<BidPackage> {
-  const qs = reason ? `?reason=${encodeURIComponent(reason)}` : '';
-  return apiPost<BidPackage>(`/v1/bid-management/bid-packages/${id}/cancel${qs}`, {});
+export function cancelPackage(id: string, reason = ""): Promise<BidPackage> {
+  const qs = reason ? `?reason=${encodeURIComponent(reason)}` : "";
+  return apiPost<BidPackage>(
+    `/v1/bid-management/bid-packages/${id}/cancel${qs}`,
+    {},
+  );
 }
 
 export function awardPackage(
@@ -346,13 +357,15 @@ export function awardPackage(
 }
 
 export function packageDashboard(id: string): Promise<PackageDashboard> {
-  return apiGet<PackageDashboard>(`/v1/bid-management/bid-packages/${id}/dashboard`);
+  return apiGet<PackageDashboard>(
+    `/v1/bid-management/bid-packages/${id}/dashboard`,
+  );
 }
 
 /* ── Bidders ───────────────────────────────────────────────────────────── */
 
 export function createBidder(data: CreateBidderPayload): Promise<Bidder> {
-  return apiPost<Bidder>('/v1/bid-management/bidders/', data);
+  return apiPost<Bidder>("/v1/bid-management/bidders/", data);
 }
 
 export function updateBidder(
@@ -367,25 +380,38 @@ export function deleteBidder(id: string): Promise<void> {
 }
 
 export function disqualifyBidder(id: string, reason: string): Promise<Bidder> {
-  return apiPost<Bidder>(`/v1/bid-management/bidders/${id}/disqualify`, { reason });
+  return apiPost<Bidder>(`/v1/bid-management/bidders/${id}/disqualify`, {
+    reason,
+  });
 }
 
 /* ── Invitations ───────────────────────────────────────────────────────── */
 
-export function createInvitation(data: CreateInvitationPayload): Promise<BidInvitation> {
-  return apiPost<BidInvitation>('/v1/bid-management/invitations/', data);
+export function createInvitation(
+  data: CreateInvitationPayload,
+): Promise<BidInvitation> {
+  return apiPost<BidInvitation>("/v1/bid-management/invitations/", data);
 }
 
 export function resendInvitation(id: string): Promise<BidInvitation> {
-  return apiPost<BidInvitation>(`/v1/bid-management/invitations/${id}/resend`, {});
+  return apiPost<BidInvitation>(
+    `/v1/bid-management/invitations/${id}/resend`,
+    {},
+  );
 }
 
 export function markInvitationOpened(id: string): Promise<BidInvitation> {
-  return apiPost<BidInvitation>(`/v1/bid-management/invitations/${id}/mark-opened`, {});
+  return apiPost<BidInvitation>(
+    `/v1/bid-management/invitations/${id}/mark-opened`,
+    {},
+  );
 }
 
-export function declineInvitation(id: string, reason = ''): Promise<BidInvitation> {
-  const qs = reason ? `?reason=${encodeURIComponent(reason)}` : '';
+export function declineInvitation(
+  id: string,
+  reason = "",
+): Promise<BidInvitation> {
+  const qs = reason ? `?reason=${encodeURIComponent(reason)}` : "";
   return apiPost<BidInvitation>(
     `/v1/bid-management/invitations/${id}/decline${qs}`,
     {},
@@ -401,17 +427,20 @@ export function createSubmission(data: {
   currency?: string;
   notes_to_owner?: string;
 }): Promise<BidSubmission> {
-  return apiPost<BidSubmission>('/v1/bid-management/submissions/', data);
+  return apiPost<BidSubmission>("/v1/bid-management/submissions/", data);
 }
 
 export function withdrawSubmission(id: string): Promise<BidSubmission> {
-  return apiPost<BidSubmission>(`/v1/bid-management/submissions/${id}/withdraw`, {});
+  return apiPost<BidSubmission>(
+    `/v1/bid-management/submissions/${id}/withdraw`,
+    {},
+  );
 }
 
 /* ── Q & A ─────────────────────────────────────────────────────────────── */
 
 export function createQA(data: CreateQAPayload): Promise<BidQA> {
-  return apiPost<BidQA>('/v1/bid-management/q-and-a/', data);
+  return apiPost<BidQA>("/v1/bid-management/q-and-a/", data);
 }
 
 export function answerQA(id: string, data: AnswerQAPayload): Promise<BidQA> {
@@ -424,11 +453,15 @@ export function deleteQA(id: string): Promise<void> {
 
 /* ── Comparisons / Leveling ────────────────────────────────────────────── */
 
-export function createComparison(data: CreateComparisonPayload): Promise<BidComparison> {
-  return apiPost<BidComparison>('/v1/bid-management/comparisons/', data);
+export function createComparison(
+  data: CreateComparisonPayload,
+): Promise<BidComparison> {
+  return apiPost<BidComparison>("/v1/bid-management/comparisons/", data);
 }
 
-export function computeLeveling(comparisonId: string): Promise<BidLevelingRow[]> {
+export function computeLeveling(
+  comparisonId: string,
+): Promise<BidLevelingRow[]> {
   return apiPost<BidLevelingRow[]>(
     `/v1/bid-management/comparisons/${comparisonId}/compute-leveling`,
     {},

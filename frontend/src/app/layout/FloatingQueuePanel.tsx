@@ -5,9 +5,9 @@
  * Minimizable to a small badge. Expandable to show full task list.
  */
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Loader2,
   CheckCircle2,
@@ -17,8 +17,8 @@ import {
   X,
   ExternalLink,
   FileUp,
-} from 'lucide-react';
-import { useUploadQueueStore } from '@/stores/useUploadQueueStore';
+} from "lucide-react";
+import { useUploadQueueStore } from "@/stores/useUploadQueueStore";
 
 export function FloatingQueuePanel() {
   const { t } = useTranslation();
@@ -28,8 +28,10 @@ export function FloatingQueuePanel() {
   const clearCompleted = useUploadQueueStore((s) => s.clearCompleted);
   const [minimized, setMinimized] = useState(false);
 
-  const activeTasks = tasks.filter((t) => t.status === 'processing' || t.status === 'queued');
-  const completedTasks = tasks.filter((t) => t.status === 'completed');
+  const activeTasks = tasks.filter(
+    (t) => t.status === "processing" || t.status === "queued",
+  );
+  const completedTasks = tasks.filter((t) => t.status === "completed");
   // Error tasks available via: tasks.filter(t => t.status === 'error')
 
   // Don't render if no tasks at all
@@ -47,14 +49,16 @@ export function FloatingQueuePanel() {
             <>
               <Loader2 size={14} className="text-oe-blue animate-spin" />
               <span className="text-xs font-medium text-content-primary">
-                {activeTasks.length} {t('queue.processing', { defaultValue: 'processing‌⁠‍' })}
+                {activeTasks.length}{" "}
+                {t("queue.processing", { defaultValue: "processing‌⁠‍" })}
               </span>
             </>
           ) : (
             <>
               <CheckCircle2 size={14} className="text-green-500" />
               <span className="text-xs font-medium text-content-primary">
-                {completedTasks.length} {t('queue.done', { defaultValue: 'done' })}
+                {completedTasks.length}{" "}
+                {t("queue.done", { defaultValue: "done" })}
               </span>
             </>
           )}
@@ -76,8 +80,13 @@ export function FloatingQueuePanel() {
           )}
           <span className="text-xs font-semibold text-content-primary">
             {activeTasks.length > 0
-              ? t('queue.title_active', { defaultValue: 'Processing ({{count}})‌⁠‍', count: activeTasks.length })
-              : t('queue.title_done', { defaultValue: 'All tasks complete‌⁠‍' })}
+              ? t("queue.title_active", {
+                  defaultValue: "Processing ({{count}})‌⁠‍",
+                  count: activeTasks.length,
+                })
+              : t("queue.title_done", {
+                  defaultValue: "All tasks complete‌⁠‍",
+                })}
           </span>
         </div>
         <div className="flex items-center gap-1">
@@ -86,13 +95,13 @@ export function FloatingQueuePanel() {
               onClick={clearCompleted}
               className="text-2xs text-oe-blue hover:underline mr-1"
             >
-              {t('queue.clear', { defaultValue: 'Clear' })}
+              {t("queue.clear", { defaultValue: "Clear" })}
             </button>
           )}
           <button
             onClick={() => setMinimized(true)}
             className="p-1 rounded hover:bg-surface-secondary text-content-tertiary"
-            title={t('queue.minimize', { defaultValue: 'Minimize‌⁠‍' })}
+            title={t("queue.minimize", { defaultValue: "Minimize‌⁠‍" })}
           >
             <ChevronDown size={14} />
           </button>
@@ -108,18 +117,28 @@ export function FloatingQueuePanel() {
           >
             {/* Icon */}
             <div className="mt-0.5 shrink-0">
-              {task.status === 'processing' && <Loader2 size={16} className="text-oe-blue animate-spin" />}
-              {task.status === 'queued' && <FileUp size={16} className="text-content-tertiary" />}
-              {task.status === 'completed' && <CheckCircle2 size={16} className="text-green-500" />}
-              {task.status === 'error' && <XCircle size={16} className="text-semantic-error" />}
+              {task.status === "processing" && (
+                <Loader2 size={16} className="text-oe-blue animate-spin" />
+              )}
+              {task.status === "queued" && (
+                <FileUp size={16} className="text-content-tertiary" />
+              )}
+              {task.status === "completed" && (
+                <CheckCircle2 size={16} className="text-green-500" />
+              )}
+              {task.status === "error" && (
+                <XCircle size={16} className="text-semantic-error" />
+              )}
             </div>
 
             {/* Content */}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-content-primary truncate">{task.filename}</p>
+              <p className="text-xs font-medium text-content-primary truncate">
+                {task.filename}
+              </p>
 
               {/* Processing: progress bar */}
-              {task.status === 'processing' && (
+              {task.status === "processing" && (
                 <div className="mt-1.5">
                   <div className="flex items-center gap-2">
                     <div className="flex-1 h-1.5 bg-surface-secondary rounded-full overflow-hidden">
@@ -133,13 +152,15 @@ export function FloatingQueuePanel() {
                     </span>
                   </div>
                   {task.message && (
-                    <p className="text-2xs text-content-quaternary mt-0.5">{task.message}</p>
+                    <p className="text-2xs text-content-quaternary mt-0.5">
+                      {task.message}
+                    </p>
                   )}
                 </div>
               )}
 
               {/* Completed: open link */}
-              {task.status === 'completed' && (
+              {task.status === "completed" && (
                 <div className="mt-1 flex items-center gap-2">
                   {task.resultUrl && (
                     <button
@@ -147,7 +168,9 @@ export function FloatingQueuePanel() {
                       className="inline-flex items-center gap-1 text-2xs text-oe-blue hover:underline font-medium"
                     >
                       <ExternalLink size={10} />
-                      {t('queue.open_result', { defaultValue: 'Open in Explorer‌⁠‍' })}
+                      {t("queue.open_result", {
+                        defaultValue: "Open in Explorer‌⁠‍",
+                      })}
                     </button>
                   )}
                   <span className="text-2xs text-content-quaternary">
@@ -157,13 +180,15 @@ export function FloatingQueuePanel() {
               )}
 
               {/* Error */}
-              {task.status === 'error' && (
-                <p className="text-2xs text-semantic-error mt-0.5 truncate">{task.error || 'Failed'}</p>
+              {task.status === "error" && (
+                <p className="text-2xs text-semantic-error mt-0.5 truncate">
+                  {task.error || "Failed"}
+                </p>
               )}
             </div>
 
             {/* Remove button for completed/error */}
-            {(task.status === 'completed' || task.status === 'error') && (
+            {(task.status === "completed" || task.status === "error") && (
               <button
                 onClick={() => removeTask(task.id)}
                 className="shrink-0 p-0.5 rounded hover:bg-surface-secondary text-content-quaternary mt-0.5"

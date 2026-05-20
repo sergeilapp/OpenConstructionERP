@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any
+from datetime import date, datetime
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -57,13 +57,11 @@ _REGION_CURRENCY_FALLBACK: dict[str, str] = {
 class CostItemCreate(BaseModel):
     """‌⁠‍Create a new cost item."""
 
-    code: str = Field(
-        ..., min_length=1, max_length=100, description="Unique cost item code / rate code"
-    )
+    code: str = Field(..., min_length=1, max_length=100, description="Unique cost item code / rate code")
     description: str = Field(default="", description="Cost item description text")
     descriptions: dict[str, str] = Field(
         default_factory=dict,
-        description="Localized descriptions keyed by locale (e.g. {\"en\": \"...\", \"de\": \"...\"})",
+        description='Localized descriptions keyed by locale (e.g. {"en": "...", "de": "..."})',
     )
     unit: str = Field(
         ...,
@@ -72,23 +70,17 @@ class CostItemCreate(BaseModel):
         description="Unit of measurement (m, m2, m3, kg, pcs, hr, etc.)",
     )
     rate: float = Field(..., ge=0, description="Unit rate (must be >= 0)")
-    currency: str = Field(
-        default="", max_length=10, description="ISO 4217 currency code (empty when unknown)"
-    )
-    source: str = Field(
-        default="cwicr", max_length=50, description="Data source (e.g. cwicr, rsmeans, manual)"
-    )
+    currency: str = Field(default="", max_length=10, description="ISO 4217 currency code (empty when unknown)")
+    source: str = Field(default="cwicr", max_length=50, description="Data source (e.g. cwicr, rsmeans, manual)")
     classification: dict[str, str] = Field(
         default_factory=dict,
-        description="Classification codes (e.g. {\"din276\": \"330\", \"masterformat\": \"03 30 00\"})",
+        description='Classification codes (e.g. {"din276": "330", "masterformat": "03 30 00"})',
     )
     components: list[dict[str, Any]] = Field(
         default_factory=list, description="Assembly components (labor, material, equipment breakdown)"
     )
     tags: list[str] = Field(default_factory=list, description="Searchable tags")
-    region: str | None = Field(
-        default=None, max_length=50, description="Regional identifier (e.g. DACH, UK, US)"
-    )
+    region: str | None = Field(default=None, max_length=50, description="Regional identifier (e.g. DACH, UK, US)")
     metadata: dict[str, Any] = Field(default_factory=dict, description="Arbitrary metadata")
 
 
@@ -356,9 +348,7 @@ class CostSuggestion(BaseModel):
         default_factory=dict,
         description="Classification codes forwarded from the CostItem",
     )
-    score: float = Field(
-        ..., ge=0.0, le=1.0, description="Relevance score 0..1 (higher = better)"
-    )
+    score: float = Field(..., ge=0.0, le=1.0, description="Relevance score 0..1 (higher = better)")
     match_reasons: list[str] = Field(
         default_factory=list,
         description="Short human-readable strings explaining why this matched",
@@ -400,16 +390,12 @@ class CwicrMatchRequest(BaseModel):
         max_length=10,
         description="Optional language hint (ISO-639-1: en, de, ru, fr, ...)",
     )
-    top_k: int = Field(
-        default=10, ge=1, le=50, description="Maximum number of matches to return"
-    )
+    top_k: int = Field(default=10, ge=1, le=50, description="Maximum number of matches to return")
     mode: str = Field(
         default="lexical",
         description="Matcher mode: lexical | semantic | hybrid",
     )
-    region: str | None = Field(
-        default=None, max_length=50, description="Restrict to a single region"
-    )
+    region: str | None = Field(default=None, max_length=50, description="Restrict to a single region")
 
 
 class CwicrMatchFromPositionRequest(BaseModel):
@@ -420,3 +406,101 @@ class CwicrMatchFromPositionRequest(BaseModel):
     mode: str = Field(default="lexical")
     lang: str | None = Field(default=None, max_length=10)
     region: str | None = Field(default=None, max_length=50)
+
+
+# ── Cost Intelligence (v3.12.0 — Stream B) ────────────────────────────────
+
+
+# Six high-level categories the v3.12.0 regional matrix supports. Extra
+# categories may exist in third-party data feeds (escalation feeds in
+# v3.13.0); the API accepts any string but the UI exposes this list.
+RegionalCategory = Literal[
+    "concrete",
+    "steel",
+    "labor",
+    "mep",
+    "finishes",
+    "sitework",
+]
+
+
+class RegionalIndexResponse(BaseModel):
+    """A single regional cost-factor row as returned by the API."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    region_code: str
+    category: str
+    subcategory: str | None
+    factor: float
+    source: str
+    effective_date: date
+    created_at: datetime
+    updated_at: datetime
+
+
+class RegionalAdjustResponse(BaseModel):
+    """Adjusted unit-rate preview for ``GET /v1/costs/regional-adjust``.
+
+    Returns the same shape whether or not a matching index row exists —
+    when no row is found ``factor_applied`` is ``1.0`` and ``source`` is
+    ``"baseline"``, so the frontend can render the value without
+    branching on null. The estimator still sees ``adjusted_rate ==
+    base_rate`` which is the correct interpretation of "no adjustment
+    on file".
+    """
+
+    region: str = Field(..., description="Echoed region code (uppercased)")
+    category: str = Field(..., description="Echoed category key")
+    base_rate: float = Field(..., ge=0)
+    factor_applied: float = Field(..., gt=0)
+    adjusted_rate: float = Field(..., ge=0)
+    source: str
+    effective_date: date | None = Field(
+        default=None,
+        description=("Date of the index row used. ``None`` when no row matched and the baseline factor was applied."),
+    )
+
+
+class CertaintyBadge(BaseModel):
+    """Output of ``GET /v1/costs/{id}/certainty``.
+
+    Drives the green / yellow / red dot rendered next to a cost item in
+    the BOQ rate picker. Thresholds (see ``service.compute_certainty``):
+
+    * green  — ``frequency >= 10`` AND ``age_days < 365``
+    * yellow — ``frequency in [3, 9]`` OR ``age_days in [365, 1095]``
+    * red    — everything else (rarely used or very stale)
+    """
+
+    cost_item_id: UUID
+    frequency: int = Field(..., ge=0, description="Total recorded uses across all projects.")
+    age_days: int = Field(
+        ...,
+        ge=0,
+        description=(
+            "Days since the most recent recorded use. ``999999`` when "
+            "the item has never been used — that's the red threshold."
+        ),
+    )
+    source: str = Field(..., description="Underlying CostItem.source (cwicr, rsmeans, manual, …)")
+    confidence_badge: Literal["green", "yellow", "red"]
+    last_used_at: datetime | None = Field(
+        default=None,
+        description="ISO-8601 timestamp of the most recent use; None when never used.",
+    )
+
+
+class RecordUsageRequest(BaseModel):
+    """Request body for ``POST /v1/costs/{id}/record-usage``.
+
+    Called from the BOQ apply-rate path so the certainty badge for the
+    next user of the same rate reflects up-to-date frequency. The body
+    is intentionally small — the cost-item id is in the URL and the
+    timestamp is server-stamped.
+    """
+
+    project_id: UUID
+    context: Literal["boq", "assembly", "tender"] = "boq"
+    unit_rate_at_use: float = Field(..., ge=0, description="Rate as it was at the moment of apply.")

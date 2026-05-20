@@ -11,24 +11,29 @@
  * Note: we use a plain DOM overlay positioned via `Vector3.project(camera)`
  * rather than CSS2DObject — fewer dependencies, easy to style with Tailwind.
  */
-import * as THREE from 'three';
-import type { SceneManager } from './SceneManager';
-import type { ElementManager } from './ElementManager';
+import * as THREE from "three";
+import type { SceneManager } from "./SceneManager";
+import type { ElementManager } from "./ElementManager";
 import {
   angleBetween3,
   centroid3,
   polygonArea3,
   polygonPerimeter3,
-} from './measureMath';
+} from "./measureMath";
+import { SnapDetector, type SnapKind } from "./SnapDetector";
 
-export type MeasureState = 'idle' | 'awaiting-first' | 'awaiting-second' | 'done';
+export type MeasureState =
+  | "idle"
+  | "awaiting-first"
+  | "awaiting-second"
+  | "done";
 
 /**
  * Measurement kinds. `distance` is the original two-point ruler (unchanged
  * behaviour / two clicks). `area` collects ≥ 3 points then double-clicks (or
  * Enter) to close the loop. `angle` is a fixed three-click vertex angle.
  */
-export type MeasureKind = 'distance' | 'area' | 'angle';
+export type MeasureKind = "distance" | "area" | "angle";
 
 export interface Measurement {
   id: string;
@@ -66,7 +71,7 @@ const DOT_COLOR = 0xffffff;
 const DOT_RADIUS = 0.08;
 
 function randomId(): string {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
   return `m_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -78,14 +83,13 @@ export class MeasureManager {
   private raycaster = new THREE.Raycaster();
 
   private _active = false;
-  private _state: MeasureState = 'idle';
-  private _kind: MeasureKind = 'distance';
+  private _state: MeasureState = "idle";
+  private _kind: MeasureKind = "distance";
   private _pendingPoint: THREE.Vector3 | null = null;
   /** Accumulated points for the multi-click kinds (area / angle). */
   private _polyPoints: THREE.Vector3[] = [];
-  /** Snap to the nearest geometry vertex within this screen-radius (px). */
-  private snapPx = 12;
-  /** Whether vertex snapping is enabled (toggled from the UI). */
+  /** Whether vertex/edge snapping is enabled (toggled from the UI). The
+   *  per-feature radius lives on the SnapDetector instance. */
   private _snapEnabled = true;
   private measurements: Measurement[] = [];
 
@@ -95,6 +99,18 @@ export class MeasureManager {
   private polyMarkers: THREE.Mesh[] = [];
   /** Live rubber-band line shown while collecting polygon / angle points. */
   private rubberLine: THREE.Line | null = null;
+  /** Snap refiner — converts raw raycaster hits into vertex / edge-mid /
+   *  edge-perp snap points within a 12 px screen-space radius. */
+  private snapDetector = new SnapDetector();
+  /** Last snap kind picked by the most recent raycastPoint() call — used
+   *  by the hover glyph to draw a square (vertex), circle (edge mid) or
+   *  diamond (edge perp). */
+  private lastSnapKind: SnapKind = "none";
+  /** Sprite that visualises the current snap target while the mouse moves
+   *  over geometry with the tool active. Lazily created. */
+  private snapGlyph: THREE.Sprite | null = null;
+  /** PointerEvent handler — drives the live snap-glyph preview. */
+  private boundOnPointerMove: (e: PointerEvent) => void;
 
   private canvas: HTMLCanvasElement;
   private boundOnPointerDown: (e: PointerEvent) => void;
@@ -122,6 +138,7 @@ export class MeasureManager {
     this.boundOnPointerDown = this.onPointerDown.bind(this);
     this.boundOnPointerUp = this.onPointerUp.bind(this);
     this.boundOnDblClick = this.onDblClick.bind(this);
+    this.boundOnPointerMove = this.onPointerMove.bind(this);
 
     // Overlay host for labels — absolute, full-bleed, pointer-events none so
     // clicks still reach the canvas underneath.
@@ -167,18 +184,21 @@ export class MeasureManager {
     if (this._active === active) return;
     this._active = active;
     if (active) {
-      this.canvas.addEventListener('pointerdown', this.boundOnPointerDown);
-      this.canvas.addEventListener('pointerup', this.boundOnPointerUp);
-      this.canvas.addEventListener('dblclick', this.boundOnDblClick);
-      this.setState('awaiting-first');
-      this.canvas.style.cursor = 'crosshair';
+      this.canvas.addEventListener("pointerdown", this.boundOnPointerDown);
+      this.canvas.addEventListener("pointerup", this.boundOnPointerUp);
+      this.canvas.addEventListener("pointermove", this.boundOnPointerMove);
+      this.canvas.addEventListener("dblclick", this.boundOnDblClick);
+      this.setState("awaiting-first");
+      this.canvas.style.cursor = "crosshair";
     } else {
-      this.canvas.removeEventListener('pointerdown', this.boundOnPointerDown);
-      this.canvas.removeEventListener('pointerup', this.boundOnPointerUp);
-      this.canvas.removeEventListener('dblclick', this.boundOnDblClick);
+      this.canvas.removeEventListener("pointerdown", this.boundOnPointerDown);
+      this.canvas.removeEventListener("pointerup", this.boundOnPointerUp);
+      this.canvas.removeEventListener("pointermove", this.boundOnPointerMove);
+      this.canvas.removeEventListener("dblclick", this.boundOnDblClick);
       this.cancelPending();
-      this.setState('idle');
-      this.canvas.style.cursor = '';
+      this.hideSnapGlyph();
+      this.setState("idle");
+      this.canvas.style.cursor = "";
     }
   }
 
@@ -188,13 +208,15 @@ export class MeasureManager {
     if (this.pendingMarker) {
       this.sceneManager.scene.remove(this.pendingMarker);
       this.pendingMarker.geometry.dispose();
-      const m = this.pendingMarker.material as THREE.Material | THREE.Material[];
+      const m = this.pendingMarker.material as
+        | THREE.Material
+        | THREE.Material[];
       if (Array.isArray(m)) m.forEach((mm) => mm.dispose());
       else m.dispose();
       this.pendingMarker = null;
     }
     this.clearPolyScratch();
-    if (this._active) this.setState('awaiting-first');
+    if (this._active) this.setState("awaiting-first");
     this.sceneManager.requestRender();
   }
 
@@ -256,7 +278,7 @@ export class MeasureManager {
     const m = this.measurements.find((x) => x.id === id);
     if (!m) return;
     m.line.visible = visible;
-    m.labelEl.style.display = visible ? '' : 'none';
+    m.labelEl.style.display = visible ? "" : "none";
     this.sceneManager.requestRender();
   }
 
@@ -283,12 +305,16 @@ export class MeasureManager {
   /** Handle a global keydown — called by the React wrapper. */
   handleKeyDown(e: KeyboardEvent): boolean {
     if (!this._active) return false;
-    if (e.key === 'Enter' && this._kind === 'area' && this._polyPoints.length >= 3) {
+    if (
+      e.key === "Enter" &&
+      this._kind === "area" &&
+      this._polyPoints.length >= 3
+    ) {
       // Enter closes the polygon (alternative to double-click).
       this.finalisePolygon();
       return true;
     }
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       if (this._pendingPoint || this._polyPoints.length > 0) {
         this.cancelPending();
         return true;
@@ -312,6 +338,21 @@ export class MeasureManager {
       this.overlayHost.remove();
       this.overlayHost = null;
     }
+    if (this.snapGlyph) {
+      this.sceneManager.scene.remove(this.snapGlyph);
+      const mat = this.snapGlyph.material as THREE.SpriteMaterial;
+      mat.map?.dispose();
+      mat.dispose();
+      this.snapGlyph = null;
+    }
+    this.snapDetector.clearCache();
+  }
+
+  /** Public: drop cached snap triangles. Callers (BIMViewer) should invoke
+   *  this after a geometry reload so the next refine() rebuilds against the
+   *  new mesh data. */
+  invalidateSnapCache(): void {
+    this.snapDetector.clearCache();
   }
 
   /* ── Internals ─────────────────────────────────────────────────────── */
@@ -326,12 +367,12 @@ export class MeasureManager {
     if (this.overlayHost) return;
     const parent = this.canvas.parentElement;
     if (!parent) return;
-    const host = document.createElement('div');
-    host.className = 'oe-bim-measure-overlay';
-    host.style.position = 'absolute';
-    host.style.inset = '0';
-    host.style.pointerEvents = 'none';
-    host.style.overflow = 'hidden';
+    const host = document.createElement("div");
+    host.className = "oe-bim-measure-overlay";
+    host.style.position = "absolute";
+    host.style.inset = "0";
+    host.style.pointerEvents = "none";
+    host.style.overflow = "hidden";
     parent.appendChild(host);
     this.overlayHost = host;
   }
@@ -367,7 +408,7 @@ export class MeasureManager {
       return;
     }
 
-    if (this._kind === 'distance') {
+    if (this._kind === "distance") {
       this.handleDistanceClick(hitPoint);
       return;
     }
@@ -376,13 +417,13 @@ export class MeasureManager {
     this.placePolyMarker(hitPoint);
     this.refreshRubberLine();
     this.setState(
-      this._polyPoints.length >= (this._kind === 'angle' ? 1 : 2)
-        ? 'awaiting-second'
-        : 'awaiting-first',
+      this._polyPoints.length >= (this._kind === "angle" ? 1 : 2)
+        ? "awaiting-second"
+        : "awaiting-first",
     );
     // The angle tool is a fixed three-click gesture: auto-finalise on the
     // third point so the user never has to double-click for a simple angle.
-    if (this._kind === 'angle' && this._polyPoints.length === 3) {
+    if (this._kind === "angle" && this._polyPoints.length === 3) {
       this.finaliseAngle();
     }
     this.sceneManager.requestRender();
@@ -392,7 +433,7 @@ export class MeasureManager {
     if (!this._pendingPoint) {
       this._pendingPoint = hitPoint.clone();
       this.placePendingMarker(hitPoint);
-      this.setState('awaiting-second');
+      this.setState("awaiting-second");
       this.sceneManager.requestRender();
       return;
     }
@@ -402,15 +443,17 @@ export class MeasureManager {
     if (this.pendingMarker) {
       this.sceneManager.scene.remove(this.pendingMarker);
       this.pendingMarker.geometry.dispose();
-      const m = this.pendingMarker.material as THREE.Material | THREE.Material[];
+      const m = this.pendingMarker.material as
+        | THREE.Material
+        | THREE.Material[];
       if (Array.isArray(m)) m.forEach((mm) => mm.dispose());
       else m.dispose();
       this.pendingMarker = null;
     }
-    this.setState('done');
+    this.setState("done");
     // Loop back immediately so the user can chain measurements without
     // re-clicking the toolbar button.
-    this.setState('awaiting-first');
+    this.setState("awaiting-first");
   }
 
   /** Double-click closes an in-progress area polygon (≥ 3 points). For the
@@ -418,7 +461,7 @@ export class MeasureManager {
    *  isolate behaviour is unaffected (this listener is only attached while
    *  the measure tool is active anyway). */
   private onDblClick(e: MouseEvent): void {
-    if (!this._active || this._kind !== 'area') return;
+    if (!this._active || this._kind !== "area") return;
     if (this._polyPoints.length < 3) return;
     e.preventDefault();
     e.stopPropagation();
@@ -443,55 +486,139 @@ export class MeasureManager {
     for (const h of hits) {
       if (!(h.object instanceof THREE.Mesh)) continue;
       const surface = h.point.clone();
-      const snapped = this._snapEnabled
-        ? this.snapToVertex(h, e)
-        : null;
-      return snapped ?? surface;
+      if (!this._snapEnabled || !h.face) {
+        this.lastSnapKind = "none";
+        return surface;
+      }
+      const result = this.snapDetector.refine(
+        surface,
+        h.face,
+        h.object,
+        this.sceneManager.camera,
+        this.canvas,
+        // THREE.Intersection.faceIndex is nullable when the geometry has no
+        // index buffer; in that case we fall back to the synthesized key
+        // inside SnapDetector.
+        h.faceIndex ?? undefined,
+      );
+      this.lastSnapKind = result.kind;
+      return result.point;
     }
+    this.lastSnapKind = "none";
     return null;
   }
 
-  /**
-   * If a triangle vertex of the hit face projects to within `snapPx` of the
-   * cursor, snap the picked point to it. This reuses the same picking path
-   * the existing code already supports (raycast intersection + face index)
-   * — we just inspect the three vertices of the hit triangle and pick the
-   * closest one in screen space. Returns null when nothing is close enough.
+  /** Hover handler — runs the snap pipeline against the geometry under the
+   *  cursor and draws a small glyph (square = vertex, circle = edge midpoint,
+   *  diamond = edge perpendicular) at the snap point so the user sees what
+   *  they will get on click. No state mutation here — clicks still drive the
+   *  pending-point machinery via raycastPoint(). */
+  private onPointerMove(e: PointerEvent): void {
+    if (!this._active) return;
+    const snapped = this.raycastPoint(e);
+    if (!snapped || this.lastSnapKind === "none") {
+      this.hideSnapGlyph();
+      return;
+    }
+    this.showSnapGlyph(snapped, this.lastSnapKind);
+  }
+
+  /** Lazily build a single sprite-based glyph and reuse its texture across
+   *  kinds by repainting the offscreen canvas. The sprite is parented to the
+   *  scene so it inherits the same world coordinates as the geometry under
+   *  the cursor — no DOM overlay math needed. */
+  private showSnapGlyph(point: THREE.Vector3, kind: SnapKind): void {
+    if (kind === "none") {
+      this.hideSnapGlyph();
+      return;
+    }
+    if (!this.snapGlyph) {
+      const tex = this.makeSnapGlyphTexture("vertex");
+      const mat = new THREE.SpriteMaterial({
+        map: tex,
+        depthTest: false,
+        transparent: true,
+        sizeAttenuation: false,
+      });
+      const sprite = new THREE.Sprite(mat);
+      // sizeAttenuation:false → scale interpreted as NDC. 0.04 ≈ 12 px on a
+      // 600-px-tall canvas; the integrator can fine-tune later.
+      sprite.scale.set(0.04, 0.04, 0.04);
+      sprite.renderOrder = 1000;
+      sprite.userData.kind = "vertex";
+      // TODO(W6.6 integration): expects an "overlay" group on SceneManager —
+      // until then we attach directly to the scene root.
+      this.sceneManager.scene.add(sprite);
+      this.snapGlyph = sprite;
+    }
+    // Repaint texture only when the glyph kind actually changes.
+    if (this.snapGlyph.userData.kind !== kind) {
+      const tex = this.makeSnapGlyphTexture(kind);
+      const mat = this.snapGlyph.material as THREE.SpriteMaterial;
+      mat.map?.dispose();
+      mat.map = tex;
+      mat.needsUpdate = true;
+      this.snapGlyph.userData.kind = kind;
+    }
+    this.snapGlyph.position.copy(point);
+    this.snapGlyph.visible = true;
+    this.sceneManager.requestRender();
+  }
+
+  private hideSnapGlyph(): void {
+    if (!this.snapGlyph) return;
+    if (this.snapGlyph.visible) {
+      this.snapGlyph.visible = false;
+      this.sceneManager.requestRender();
+    }
+  }
+
+  /** Paint a 32×32 glyph for the given snap kind onto an offscreen canvas
+   *  and wrap it in a CanvasTexture. The three kinds use distinct shapes so
+   *  experienced users can identify snap type at a glance:
+   *    - vertex        → filled square
+   *    - edge_midpoint → filled circle
+   *    - edge_perp     → diamond (square rotated 45°)
    */
-  private snapToVertex(
-    hit: THREE.Intersection,
-    e: MouseEvent,
-  ): THREE.Vector3 | null {
-    const obj = hit.object;
-    if (!(obj instanceof THREE.Mesh) || !obj.geometry) return null;
-    const face = hit.face;
-    if (!face) return null;
-    const pos = obj.geometry.getAttribute('position') as
-      | THREE.BufferAttribute
-      | undefined;
-    if (!pos) return null;
-
-    const rect = this.canvas.getBoundingClientRect();
-    const camera = this.sceneManager.camera;
-    const cursorX = e.clientX - rect.left;
-    const cursorY = e.clientY - rect.top;
-
-    let best: THREE.Vector3 | null = null;
-    let bestDistSq = this.snapPx * this.snapPx;
-    for (const idx of [face.a, face.b, face.c]) {
-      const local = new THREE.Vector3().fromBufferAttribute(pos, idx);
-      const world = local.applyMatrix4(obj.matrixWorld);
-      const projected = world.clone().project(camera);
-      if (projected.z < -1 || projected.z > 1) continue;
-      const sx = (projected.x * 0.5 + 0.5) * rect.width;
-      const sy = (1 - (projected.y * 0.5 + 0.5)) * rect.height;
-      const dsq = (sx - cursorX) ** 2 + (sy - cursorY) ** 2;
-      if (dsq < bestDistSq) {
-        bestDistSq = dsq;
-        best = world;
+  private makeSnapGlyphTexture(kind: SnapKind): THREE.CanvasTexture {
+    const size = 32;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+    // jsdom-friendly fallback: if 2D context is unavailable (rare in browsers,
+    // common in jest-style environments) build an empty texture anyway —
+    // tests don't exercise the glyph rendering.
+    if (ctx) {
+      ctx.clearRect(0, 0, size, size);
+      ctx.fillStyle = "rgba(255, 212, 0, 0.95)";
+      ctx.strokeStyle = "rgba(17, 24, 39, 0.95)";
+      ctx.lineWidth = 2;
+      const cx = size / 2;
+      const cy = size / 2;
+      const r = size / 2 - 4;
+      if (kind === "vertex") {
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+        ctx.strokeRect(cx - r, cy - r, r * 2, r * 2);
+      } else if (kind === "edge_midpoint") {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      } else if (kind === "edge_perp") {
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - r);
+        ctx.lineTo(cx + r, cy);
+        ctx.lineTo(cx, cy + r);
+        ctx.lineTo(cx - r, cy);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
       }
     }
-    return best;
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
   }
 
   private placePendingMarker(point: THREE.Vector3): void {
@@ -506,19 +633,19 @@ export class MeasureManager {
 
   /** Build a styled overlay label element (shared by every kind). */
   private makeLabel(text: string): HTMLDivElement {
-    const label = document.createElement('div');
-    label.className = 'oe-bim-measure-label';
-    label.style.position = 'absolute';
-    label.style.transform = 'translate(-50%, -50%)';
-    label.style.padding = '2px 6px';
-    label.style.fontSize = '11px';
-    label.style.fontWeight = '600';
-    label.style.borderRadius = '6px';
-    label.style.background = 'rgba(17, 24, 39, 0.92)';
-    label.style.color = '#ffd400';
-    label.style.border = '1px solid rgba(255, 212, 0, 0.5)';
-    label.style.whiteSpace = 'nowrap';
-    label.style.pointerEvents = 'none';
+    const label = document.createElement("div");
+    label.className = "oe-bim-measure-label";
+    label.style.position = "absolute";
+    label.style.transform = "translate(-50%, -50%)";
+    label.style.padding = "2px 6px";
+    label.style.fontSize = "11px";
+    label.style.fontWeight = "600";
+    label.style.borderRadius = "6px";
+    label.style.background = "rgba(17, 24, 39, 0.92)";
+    label.style.color = "#ffd400";
+    label.style.border = "1px solid rgba(255, 212, 0, 0.5)";
+    label.style.whiteSpace = "nowrap";
+    label.style.pointerEvents = "none";
     label.textContent = text;
     if (this.overlayHost) this.overlayHost.appendChild(label);
     return label;
@@ -546,7 +673,7 @@ export class MeasureManager {
     const label = this.makeLabel(`${dist.toFixed(2)} m`);
     const measurement: Measurement = {
       id: randomId(),
-      kind: 'distance',
+      kind: "distance",
       points: [p0.clone(), p1.clone()],
       distance: dist,
       value: dist,
@@ -577,7 +704,7 @@ export class MeasureManager {
     );
     const measurement: Measurement = {
       id: randomId(),
-      kind: 'area',
+      kind: "area",
       points: pts,
       distance: 0,
       value: area,
@@ -604,7 +731,7 @@ export class MeasureManager {
     const label = this.makeLabel(`${deg.toFixed(1)}°`);
     const measurement: Measurement = {
       id: randomId(),
-      kind: 'angle',
+      kind: "angle",
       points: [a, b, c],
       distance: 0,
       value: deg,
@@ -620,8 +747,8 @@ export class MeasureManager {
     this.callbacks.onMeasurementAdded?.(measurement);
     this.callbacks.onMeasurementsChanged?.(this.measurements.length);
     // Chain the next measurement of the same kind without re-clicking.
-    this.setState('done');
-    this.setState('awaiting-first');
+    this.setState("done");
+    this.setState("awaiting-first");
     this.sceneManager.requestRender();
   }
 
@@ -664,10 +791,10 @@ export class MeasureManager {
 
   /** Anchor point in world space for a measurement's overlay label. */
   private labelAnchor(m: Measurement): THREE.Vector3 {
-    if (m.kind === 'distance') {
+    if (m.kind === "distance") {
       return m.points[0]!.clone().add(m.points[1]!).multiplyScalar(0.5);
     }
-    if (m.kind === 'angle') {
+    if (m.kind === "angle") {
       // Sit the angle label on the vertex itself.
       return m.points[1]!.clone();
     }
@@ -686,10 +813,10 @@ export class MeasureManager {
       const projected = this.labelAnchor(m).project(camera);
       // Hide label when behind camera (z > 1 after projection).
       if (projected.z > 1 || projected.z < -1) {
-        m.labelEl.style.display = 'none';
+        m.labelEl.style.display = "none";
         continue;
       }
-      m.labelEl.style.display = '';
+      m.labelEl.style.display = "";
       const x = (projected.x * 0.5 + 0.5) * width;
       const y = (1 - (projected.y * 0.5 + 0.5)) * height;
       m.labelEl.style.left = `${x}px`;

@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 /**
  * Decode the `role` claim from a JWT access token without external deps.
@@ -10,13 +10,13 @@ import { create } from 'zustand';
 function decodeRoleFromToken(token: string | null): string | null {
   if (!token) return null;
   try {
-    const parts = token.split('.');
+    const parts = token.split(".");
     if (parts.length !== 3) return null;
     // base64url → base64
-    const payload = parts[1]!.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+    const payload = parts[1]!.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = payload + "=".repeat((4 - (payload.length % 4)) % 4);
     const json = JSON.parse(atob(padded)) as { role?: string };
-    return typeof json.role === 'string' ? json.role : null;
+    return typeof json.role === "string" ? json.role : null;
   } catch {
     return null;
   }
@@ -27,15 +27,20 @@ interface AuthState {
   isAuthenticated: boolean;
   userEmail: string | null;
   userRole: string | null;
-  setTokens: (access: string, refresh: string, remember?: boolean, email?: string) => void;
+  setTokens: (
+    access: string,
+    refresh: string,
+    remember?: boolean,
+    email?: string,
+  ) => void;
   logout: () => void;
   loadFromStorage: () => void;
 }
 
-const KEY_ACCESS = 'oe_access_token';
-const KEY_REFRESH = 'oe_refresh_token';
-const KEY_REMEMBER = 'oe_remember';
-const KEY_EMAIL = 'oe_user_email';
+const KEY_ACCESS = "oe_access_token";
+const KEY_REFRESH = "oe_refresh_token";
+const KEY_REMEMBER = "oe_remember";
+const KEY_EMAIL = "oe_user_email";
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
@@ -45,7 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   setTokens: (access, refresh, remember = false, email) => {
     if (remember) {
-      localStorage.setItem(KEY_REMEMBER, '1');
+      localStorage.setItem(KEY_REMEMBER, "1");
       localStorage.setItem(KEY_ACCESS, access);
       localStorage.setItem(KEY_REFRESH, refresh);
       sessionStorage.removeItem(KEY_ACCESS);
@@ -73,7 +78,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem(KEY_EMAIL);
     sessionStorage.removeItem(KEY_ACCESS);
     sessionStorage.removeItem(KEY_REFRESH);
-    set({ accessToken: null, isAuthenticated: false, userEmail: null, userRole: null });
+    set({
+      accessToken: null,
+      isAuthenticated: false,
+      userEmail: null,
+      userRole: null,
+    });
   },
 
   loadFromStorage: () => {

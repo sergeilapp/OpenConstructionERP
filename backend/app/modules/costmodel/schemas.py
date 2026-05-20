@@ -339,10 +339,6 @@ class VarianceResponse(BaseModel):
     budget: float = 0.0
     current: float = 0.0
     variance_abs: float = Field(0.0, description="current - budget")
-    variance_pct: float = Field(
-        0.0, description="(current - budget) / budget * 100 — 0.0 when budget is 0"
-    )
-    red_line: float = Field(
-        5.0, description="Absolute % threshold that flips the KPI to red"
-    )
+    variance_pct: float = Field(0.0, description="(current - budget) / budget * 100 — 0.0 when budget is 0")
+    red_line: float = Field(5.0, description="Absolute % threshold that flips the KPI to red")
     currency: str = ""

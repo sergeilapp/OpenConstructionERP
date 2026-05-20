@@ -5,7 +5,7 @@
 // Parametrized 2026-05-12 so other top-level pages can re-use the same
 // structure with a different top-spotlight tint (BOQ uses amber, etc).
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 interface Rgb {
   r: number;
@@ -13,7 +13,7 @@ interface Rgb {
   b: number;
 }
 
-export type BackdropVariant = 'dashboard' | 'estimation' | 'planning';
+export type BackdropVariant = "dashboard" | "estimation" | "planning";
 
 /**
  * Pick a backdrop variant from the current pathname. Mounted once in
@@ -27,33 +27,32 @@ export function backdropVariantForPath(pathname: string): BackdropVariant {
   // /bim/rules — and /files (Overview group but visually tied to
   // estimation per user direction on 2026-05-12).
   if (
-    pathname === '/boq' ||
-    pathname.startsWith('/boq/') ||
-    pathname.startsWith('/match-elements') ||
-    pathname.startsWith('/costs') ||
-    pathname.startsWith('/assemblies') ||
-    pathname.startsWith('/catalog') ||
-    pathname.startsWith('/bim/rules') ||
-    pathname === '/files' ||
-    pathname.startsWith('/files/') ||
+    pathname === "/boq" ||
+    pathname.startsWith("/boq/") ||
+    pathname.startsWith("/match-elements") ||
+    pathname.startsWith("/costs") ||
+    pathname.startsWith("/assemblies") ||
+    pathname.startsWith("/catalog") ||
+    pathname.startsWith("/bim/rules") ||
+    pathname === "/files" ||
+    pathname.startsWith("/files/") ||
     /^\/projects\/[^/]+\/files/.test(pathname)
   ) {
-    return 'estimation';
+    return "estimation";
   }
   // Planning section
   if (
-    pathname.startsWith('/schedule') ||
-    pathname.startsWith('/tasks') ||
-    pathname === '/5d' ||
-    pathname.startsWith('/5d/') ||
-    pathname.startsWith('/risks')
+    pathname.startsWith("/schedule") ||
+    pathname.startsWith("/tasks") ||
+    pathname === "/5d" ||
+    pathname.startsWith("/5d/") ||
+    pathname.startsWith("/risks")
   ) {
-    return 'planning';
+    return "planning";
   }
   // Everything else (dashboard, projects, …)
-  return 'dashboard';
+  return "dashboard";
 }
-
 
 interface DashboardBackdropProps {
   /** Named preset. 'dashboard' = blue, 'estimation' = amber, 'planning' = red. */
@@ -68,7 +67,10 @@ const APPLE_BLUE: Rgb = { r: 0, g: 113, b: 227 };
 const ESTIMATION_AMBER: Rgb = { r: 217, g: 119, b: 6 };
 const PLANNING_RED: Rgb = { r: 255, g: 59, b: 48 };
 
-const VARIANT_PRESETS: Record<BackdropVariant, { tint: Rgb; intensity: number }> = {
+const VARIANT_PRESETS: Record<
+  BackdropVariant,
+  { tint: Rgb; intensity: number }
+> = {
   dashboard: { tint: APPLE_BLUE, intensity: 1 },
   estimation: { tint: ESTIMATION_AMBER, intensity: 0.7 },
   // 0.45 → top alpha ≈ 0.09 — softer than estimation so it doesn't feel
@@ -77,7 +79,7 @@ const VARIANT_PRESETS: Record<BackdropVariant, { tint: Rgb; intensity: number }>
 };
 
 export function DashboardBackdrop({
-  variant = 'dashboard',
+  variant = "dashboard",
   tint,
   intensity,
 }: DashboardBackdropProps = {}) {
@@ -94,25 +96,27 @@ export function DashboardBackdrop({
       const rect = el.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
-      el.style.setProperty('--mx', `${x}%`);
-      el.style.setProperty('--my', `${y}%`);
+      el.style.setProperty("--mx", `${x}%`);
+      el.style.setProperty("--my", `${y}%`);
     };
-    el.addEventListener('pointermove', onMove);
-    return () => el.removeEventListener('pointermove', onMove);
+    el.addEventListener("pointermove", onMove);
+    return () => el.removeEventListener("pointermove", onMove);
   }, []);
 
   const rgb = `${effTint.r},${effTint.g},${effTint.b}`;
   const a1 = (0.2 * effIntensity).toFixed(3);
   const a2 = (0.06 * effIntensity).toFixed(3);
   const isDefaultTint =
-    effTint.r === APPLE_BLUE.r && effTint.g === APPLE_BLUE.g && effTint.b === APPLE_BLUE.b;
+    effTint.r === APPLE_BLUE.r &&
+    effTint.g === APPLE_BLUE.g &&
+    effTint.b === APPLE_BLUE.b;
 
   return (
     <div
       ref={ref}
       aria-hidden="true"
       className="dash-backdrop pointer-events-none fixed inset-0 -z-10 overflow-hidden"
-      style={{ '--mx': '50%', '--my': '40%' } as React.CSSProperties}
+      style={{ "--mx": "50%", "--my": "40%" } as React.CSSProperties}
     >
       {/* Layer 1 — base surface wash. */}
       <div className="absolute inset-0 bg-surface-secondary" />
@@ -130,8 +134,8 @@ export function DashboardBackdrop({
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(circle 380px at var(--mx) var(--my), rgba(99, 102, 241, 0.05), transparent 70%)',
-          transition: 'background 0.2s ease',
+            "radial-gradient(circle 380px at var(--mx) var(--my), rgba(99, 102, 241, 0.05), transparent 70%)",
+          transition: "background 0.2s ease",
         }}
       />
 
@@ -140,12 +144,12 @@ export function DashboardBackdrop({
         className="absolute inset-0"
         style={{
           backgroundImage:
-            'radial-gradient(circle, rgba(60,60,67,0.16) 0.9px, transparent 0.9px)',
-          backgroundSize: '24px 24px',
+            "radial-gradient(circle, rgba(60,60,67,0.16) 0.9px, transparent 0.9px)",
+          backgroundSize: "24px 24px",
           maskImage:
-            'radial-gradient(ellipse 80% 75% at center, #000 25%, transparent 95%)',
+            "radial-gradient(ellipse 80% 75% at center, #000 25%, transparent 95%)",
           WebkitMaskImage:
-            'radial-gradient(ellipse 80% 75% at center, #000 25%, transparent 95%)',
+            "radial-gradient(ellipse 80% 75% at center, #000 25%, transparent 95%)",
         }}
       />
 

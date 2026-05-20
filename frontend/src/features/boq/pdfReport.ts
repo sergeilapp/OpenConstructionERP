@@ -1,10 +1,6 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import {
-  groupPositionsIntoSections,
-  isSection,
-  type Position,
-} from './api';
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { groupPositionsIntoSections, isSection, type Position } from "./api";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -58,7 +54,12 @@ interface SectionEntry {
  * This is a pure function and is exported for unit testing.
  */
 export function buildSectionGroups(positions: Position[]): {
-  sections: Array<{ ordinal: string; description: string; children: Position[]; subtotal: number }>;
+  sections: Array<{
+    ordinal: string;
+    description: string;
+    children: Position[];
+    subtotal: number;
+  }>;
   ungrouped: Position[];
 } {
   const grouped = groupPositionsIntoSections(positions);
@@ -74,7 +75,11 @@ export function buildSectionGroups(positions: Position[]): {
 }
 
 /** Format a number with currency symbol and locale-aware separators. */
-function formatCurrency(value: number, currency: string, locale: string): string {
+function formatCurrency(
+  value: number,
+  currency: string,
+  locale: string,
+): string {
   try {
     const formatted = new Intl.NumberFormat(locale, {
       minimumFractionDigits: 2,
@@ -101,18 +106,22 @@ function formatNumber(value: number, locale: string): string {
 /** Format a date string or Date to a human-readable display string. */
 function formatDate(dateInput: string | undefined, locale: string): string {
   const d = dateInput ? new Date(dateInput) : new Date();
-  if (isNaN(d.getTime())) return dateInput ?? '';
+  if (isNaN(d.getTime())) return dateInput ?? "";
   try {
-    return d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+    return d.toLocaleDateString(locale, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   } catch {
-    return d.toISOString().split('T')[0] ?? '';
+    return d.toISOString().split("T")[0] ?? "";
   }
 }
 
 /* ── Brand colours ──────────────────────────────────────────────────────── */
 
-const BRAND_DARK = [15, 23, 42] as [number, number, number];     // slate-900
-const BRAND_MID = [71, 85, 105] as [number, number, number];     // slate-600
+const BRAND_DARK = [15, 23, 42] as [number, number, number]; // slate-900
+const BRAND_MID = [71, 85, 105] as [number, number, number]; // slate-600
 const BRAND_LIGHT = [226, 232, 240] as [number, number, number]; // slate-200
 const BRAND_ACCENT = [99, 102, 241] as [number, number, number]; // indigo-500
 const WHITE = [255, 255, 255] as [number, number, number];
@@ -129,28 +138,31 @@ function renderCoverPage(
 
   // Background header block
   doc.setFillColor(...BRAND_DARK);
-  doc.rect(0, 0, pageW, 80, 'F');
+  doc.rect(0, 0, pageW, 80, "F");
 
   // Accent stripe
   doc.setFillColor(...BRAND_ACCENT);
-  doc.rect(0, 78, pageW, 3, 'F');
+  doc.rect(0, 78, pageW, 3, "F");
 
   // Wordmark
-  doc.setFont('helvetica', 'bold');
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...WHITE);
-  doc.text('OpenConstructionERP', 20, 20);
+  doc.text("OpenConstructionERP", 20, 20);
 
   // BOQ title
   doc.setFontSize(26);
-  doc.setFont('helvetica', 'bold');
-  const titleLines = doc.splitTextToSize(options.boqTitle, pageW - 40) as string[];
+  doc.setFont("helvetica", "bold");
+  const titleLines = doc.splitTextToSize(
+    options.boqTitle,
+    pageW - 40,
+  ) as string[];
   doc.text(titleLines, 20, 45);
 
   // Project name
   if (options.projectName) {
     doc.setFontSize(13);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(...BRAND_LIGHT);
     doc.text(options.projectName, 20, 68);
   }
@@ -161,9 +173,12 @@ function renderCoverPage(
   const itemCount = options.positions.filter((p) => !isSection(p)).length;
   const sectionCount = buildSectionGroups(options.positions).sections.length;
   const resourceCount = options.positions.reduce((sum, p) => {
-    const meta = p.metadata ?? (p as unknown as Record<string, unknown>).metadata_;
-    const res = meta && Array.isArray((meta as Record<string, unknown>).resources)
-      ? ((meta as Record<string, unknown>).resources as unknown[]).length : 0;
+    const meta =
+      p.metadata ?? (p as unknown as Record<string, unknown>).metadata_;
+    const res =
+      meta && Array.isArray((meta as Record<string, unknown>).resources)
+        ? ((meta as Record<string, unknown>).resources as unknown[]).length
+        : 0;
     return sum + res;
   }, 0);
 
@@ -177,24 +192,37 @@ function renderCoverPage(
   doc.line(labelX, metaY - 4, pageW - 20, metaY - 4);
 
   const metaItems: Array<[string, string]> = [
-    ['Date', formatDate(options.date, locale)],
-    ['Sections', String(sectionCount)],
-    ['Positions', String(itemCount)],
-    ...(resourceCount > 0 ? [['Resources', String(resourceCount)] as [string, string]] : []),
-    ['Direct Cost', formatCurrency(options.directCost, options.currency, locale)],
-    ['Markups', options.markupTotals.map((m) => `${m.name} ${m.percentage}%`).join(', ') || 'None'],
-    ['Net Total', formatCurrency(options.netTotal, options.currency, locale)],
-    ['VAT', `${(options.vatRate * 100).toFixed(0)}% (${formatCurrency(options.vatAmount, options.currency, locale)})`],
+    ["Date", formatDate(options.date, locale)],
+    ["Sections", String(sectionCount)],
+    ["Positions", String(itemCount)],
+    ...(resourceCount > 0
+      ? [["Resources", String(resourceCount)] as [string, string]]
+      : []),
+    [
+      "Direct Cost",
+      formatCurrency(options.directCost, options.currency, locale),
+    ],
+    [
+      "Markups",
+      options.markupTotals
+        .map((m) => `${m.name} ${m.percentage}%`)
+        .join(", ") || "None",
+    ],
+    ["Net Total", formatCurrency(options.netTotal, options.currency, locale)],
+    [
+      "VAT",
+      `${(options.vatRate * 100).toFixed(0)}% (${formatCurrency(options.vatAmount, options.currency, locale)})`,
+    ],
   ];
 
   doc.setFontSize(9);
   for (let i = 0; i < metaItems.length; i++) {
     const item = metaItems[i]!;
     const y = metaY + i * 10;
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(...BRAND_MID);
     doc.text(item[0], labelX, y);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(...BRAND_DARK);
     doc.text(item[1], valueX, y);
   }
@@ -203,11 +231,15 @@ function renderCoverPage(
   const grossY = metaY + metaItems.length * 10 + 4;
   doc.setDrawColor(...BRAND_LIGHT);
   doc.line(labelX, grossY - 4, pageW - 20, grossY - 4);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.setTextColor(...BRAND_ACCENT);
-  doc.text('Gross Total', labelX, grossY + 2);
-  doc.text(formatCurrency(options.grossTotal, options.currency, locale), valueX, grossY + 2);
+  doc.text("Gross Total", labelX, grossY + 2);
+  doc.text(
+    formatCurrency(options.grossTotal, options.currency, locale),
+    valueX,
+    grossY + 2,
+  );
 
   // ── Signature block ─────────────────────────────────────────────────
   const sigY = pageH - 55;
@@ -217,59 +249,62 @@ function renderCoverPage(
 
   doc.setFontSize(8);
   doc.setTextColor(...BRAND_MID);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Prepared by:', labelX, sigY + 10);
-  doc.text('Approved by:', pageW / 2, sigY + 10);
+  doc.setFont("helvetica", "normal");
+  doc.text("Prepared by:", labelX, sigY + 10);
+  doc.text("Approved by:", pageW / 2, sigY + 10);
   doc.line(labelX, sigY + 28, labelX + 60, sigY + 28);
   doc.line(pageW / 2, sigY + 28, pageW / 2 + 60, sigY + 28);
-  doc.text('Name / Signature / Date', labelX, sigY + 33);
-  doc.text('Name / Signature / Date', pageW / 2, sigY + 33);
+  doc.text("Name / Signature / Date", labelX, sigY + 33);
+  doc.text("Name / Signature / Date", pageW / 2, sigY + 33);
 
   // Footer attribution
   doc.setFontSize(7);
   doc.setTextColor(...BRAND_MID);
-  doc.text('Generated by OpenConstructionERP  |  openconstructionerp.com', labelX, pageH - 10);
+  doc.text(
+    "Generated by OpenConstructionERP  |  openconstructionerp.com",
+    labelX,
+    pageH - 10,
+  );
 }
 
 /* ── Table of Contents ──────────────────────────────────────────────────── */
 
-function renderTableOfContents(
-  doc: jsPDF,
-  sections: SectionEntry[],
-): void {
+function renderTableOfContents(doc: jsPDF, sections: SectionEntry[]): void {
   const pageW = doc.internal.pageSize.getWidth();
 
   // Section heading
   doc.setFillColor(...BRAND_DARK);
-  doc.rect(0, 0, pageW, 18, 'F');
-  doc.setFont('helvetica', 'bold');
+  doc.rect(0, 0, pageW, 18, "F");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
   doc.setTextColor(...WHITE);
-  doc.text('Table of Contents', 20, 12);
+  doc.text("Table of Contents", 20, 12);
 
   doc.setTextColor(...BRAND_DARK);
 
   let y = 32;
   doc.setFontSize(9);
   for (const sec of sections) {
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     const label = `${sec.ordinal}  ${sec.description}`.trim();
     const lines = doc.splitTextToSize(label, pageW - 80) as string[];
     doc.text(lines, 20, y);
 
     // Dot leaders
-    const textW = doc.getTextWidth(lines[0] ?? '');
+    const textW = doc.getTextWidth(lines[0] ?? "");
     const dotsStart = 20 + textW + 2;
     const dotsEnd = pageW - 35;
     doc.setTextColor(...BRAND_LIGHT);
-    const dotStr = '.'.repeat(Math.max(0, Math.floor((dotsEnd - dotsStart) / 2)));
+    const dotStr = ".".repeat(
+      Math.max(0, Math.floor((dotsEnd - dotsStart) / 2)),
+    );
     doc.text(dotStr, dotsStart, y);
     doc.setTextColor(...BRAND_DARK);
 
     // Page reference (filled post-render; placeholder during TOC pass)
-    doc.setFont('helvetica', 'bold');
-    doc.text(String(sec.pageNumber || '—'), pageW - 30, y, { align: 'right' });
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "bold");
+    doc.text(String(sec.pageNumber || "—"), pageW - 30, y, { align: "right" });
+    doc.setFont("helvetica", "normal");
 
     y += lines.length * 6 + 2;
     if (y > doc.internal.pageSize.getHeight() - 25) {
@@ -282,7 +317,9 @@ function renderTableOfContents(
 /* ── Page footer ────────────────────────────────────────────────────────── */
 
 function addPageFooters(doc: jsPDF, options: PdfReportOptions): void {
-  const totalPages = (doc.internal as unknown as { getNumberOfPages: () => number }).getNumberOfPages();
+  const totalPages = (
+    doc.internal as unknown as { getNumberOfPages: () => number }
+  ).getNumberOfPages();
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
 
@@ -292,10 +329,12 @@ function addPageFooters(doc: jsPDF, options: PdfReportOptions): void {
     doc.setLineWidth(0.3);
     doc.line(15, pageH - 12, pageW - 15, pageH - 12);
     doc.setFontSize(7.5);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(...BRAND_MID);
     doc.text(options.boqTitle, 15, pageH - 7);
-    doc.text(`Page ${i} of ${totalPages}`, pageW - 15, pageH - 7, { align: 'right' });
+    doc.text(`Page ${i} of ${totalPages}`, pageW - 15, pageH - 7, {
+      align: "right",
+    });
   }
 }
 
@@ -312,19 +351,19 @@ function renderBOQTables(
 
   // Section heading bar
   doc.setFillColor(...BRAND_DARK);
-  doc.rect(0, 0, pageW, 18, 'F');
-  doc.setFont('helvetica', 'bold');
+  doc.rect(0, 0, pageW, 18, "F");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
   doc.setTextColor(...WHITE);
-  doc.text('Bill of Quantities', 20, 12);
+  doc.text("Bill of Quantities", 20, 12);
   doc.setTextColor(...BRAND_DARK);
 
   let currentY = 26;
 
-  const headerStyles: Parameters<typeof autoTable>[1]['headStyles'] = {
+  const headerStyles: Parameters<typeof autoTable>[1]["headStyles"] = {
     fillColor: BRAND_DARK,
     textColor: WHITE,
-    fontStyle: 'bold',
+    fontStyle: "bold",
     fontSize: 8,
   };
 
@@ -336,11 +375,14 @@ function renderBOQTables(
   ) => {
     // Section title row
     const sectionLabel = `${ordinal}  ${description}`.trim();
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
     doc.setTextColor(...BRAND_ACCENT);
 
-    const labelLines = doc.splitTextToSize(sectionLabel, pageW - 40) as string[];
+    const labelLines = doc.splitTextToSize(
+      sectionLabel,
+      pageW - 40,
+    ) as string[];
     doc.text(labelLines, 15, currentY);
     currentY += labelLines.length * 5 + 2;
 
@@ -355,14 +397,23 @@ function renderBOQTables(
         formatCurrency(p.total, options.currency, locale),
       ]);
       // Add resource sub-rows
-      const meta = p.metadata ?? (p as unknown as Record<string, unknown>).metadata_;
-      const resources = (meta && Array.isArray((meta as Record<string, unknown>).resources))
-        ? (meta as Record<string, unknown>).resources as Array<{ name: string; type: string; unit: string; quantity: number; unit_rate: number; total?: number }>
-        : [];
+      const meta =
+        p.metadata ?? (p as unknown as Record<string, unknown>).metadata_;
+      const resources =
+        meta && Array.isArray((meta as Record<string, unknown>).resources)
+          ? ((meta as Record<string, unknown>).resources as Array<{
+              name: string;
+              type: string;
+              unit: string;
+              quantity: number;
+              unit_rate: number;
+              total?: number;
+            }>)
+          : [];
       for (const r of resources) {
         const rTotal = r.total ?? r.quantity * r.unit_rate;
         body.push([
-          '',
+          "",
           `  \u2514 ${r.name}`,
           r.unit,
           formatNumber(r.quantity, locale),
@@ -374,21 +425,23 @@ function renderBOQTables(
 
     autoTable(doc, {
       startY: currentY,
-      head: [['No.', 'Description', 'Unit', 'Qty', 'Unit Rate', 'Total']],
+      head: [["No.", "Description", "Unit", "Qty", "Unit Rate", "Total"]],
       body,
       headStyles: headerStyles,
       bodyStyles: { fontSize: 8, textColor: BRAND_DARK },
-      alternateRowStyles: { fillColor: [248, 250, 252] as [number, number, number] },
+      alternateRowStyles: {
+        fillColor: [248, 250, 252] as [number, number, number],
+      },
       columnStyles: {
-        0: { cellWidth: 18, fontStyle: 'bold' },
-        1: { cellWidth: 'auto' },
-        2: { cellWidth: 16, halign: 'center' },
-        3: { cellWidth: 22, halign: 'right' },
-        4: { cellWidth: 28, halign: 'right' },
-        5: { cellWidth: 28, halign: 'right', fontStyle: 'bold' },
+        0: { cellWidth: 18, fontStyle: "bold" },
+        1: { cellWidth: "auto" },
+        2: { cellWidth: 16, halign: "center" },
+        3: { cellWidth: 22, halign: "right" },
+        4: { cellWidth: 28, halign: "right" },
+        5: { cellWidth: 28, halign: "right", fontStyle: "bold" },
       },
       margin: { left: 15, right: 15 },
-      theme: 'grid',
+      theme: "grid",
       tableLineColor: BRAND_LIGHT,
       tableLineWidth: 0.2,
       didDrawPage: () => {
@@ -396,18 +449,24 @@ function renderBOQTables(
       },
     });
 
-    const tableEndY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY;
+    const tableEndY = (doc as unknown as { lastAutoTable: { finalY: number } })
+      .lastAutoTable.finalY;
 
     // Subtotal row
     const subtotalY = tableEndY + 2;
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(8.5);
     doc.setTextColor(...BRAND_MID);
     const subtotalText = `Section Subtotal: ${formatCurrency(subtotal, options.currency, locale)}`;
-    doc.text(subtotalText, pageW - 15, subtotalY, { align: 'right' });
+    doc.text(subtotalText, pageW - 15, subtotalY, { align: "right" });
     doc.setDrawColor(...BRAND_ACCENT);
     doc.setLineWidth(0.4);
-    doc.line(pageW - 15 - doc.getTextWidth(subtotalText) - 2, subtotalY + 1, pageW - 15, subtotalY + 1);
+    doc.line(
+      pageW - 15 - doc.getTextWidth(subtotalText) - 2,
+      subtotalY + 1,
+      pageW - 15,
+      subtotalY + 1,
+    );
 
     currentY = subtotalY + 10;
     if (currentY > doc.internal.pageSize.getHeight() - 35) {
@@ -421,7 +480,11 @@ function renderBOQTables(
     const sec = sections[i]!;
     const entry = sectionEntries[i];
     if (entry) {
-      entry.pageNumber = (doc.internal as unknown as { getCurrentPageInfo: () => { pageNumber: number } }).getCurrentPageInfo().pageNumber;
+      entry.pageNumber = (
+        doc.internal as unknown as {
+          getCurrentPageInfo: () => { pageNumber: number };
+        }
+      ).getCurrentPageInfo().pageNumber;
     }
     renderSection(sec.ordinal, sec.description, sec.children, sec.subtotal);
   }
@@ -429,7 +492,7 @@ function renderBOQTables(
   // Ungrouped positions (if any)
   if (ungrouped.length > 0) {
     const ungroupedSubtotal = ungrouped.reduce((sum, p) => sum + p.total, 0);
-    renderSection('', 'Ungrouped Items', ungrouped, ungroupedSubtotal);
+    renderSection("", "Ungrouped Items", ungrouped, ungroupedSubtotal);
   }
 }
 
@@ -445,11 +508,11 @@ function renderSummary(
 
   // Heading
   doc.setFillColor(...BRAND_DARK);
-  doc.rect(0, 0, pageW, 18, 'F');
-  doc.setFont('helvetica', 'bold');
+  doc.rect(0, 0, pageW, 18, "F");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
   doc.setTextColor(...WHITE);
-  doc.text('Cost Summary', 20, 12);
+  doc.text("Cost Summary", 20, 12);
 
   // Section subtotals table
   const { sections, ungrouped } = buildSectionGroups(options.positions);
@@ -459,33 +522,43 @@ function renderSummary(
   ]);
   if (ungrouped.length > 0) {
     const ungroupedTotal = ungrouped.reduce((sum, p) => sum + p.total, 0);
-    sectionRows.push(['Ungrouped Items', formatCurrency(ungroupedTotal, options.currency, locale)]);
+    sectionRows.push([
+      "Ungrouped Items",
+      formatCurrency(ungroupedTotal, options.currency, locale),
+    ]);
   }
 
   if (sectionRows.length > 0) {
     autoTable(doc, {
       startY: 24,
-      head: [['Section', 'Subtotal']],
+      head: [["Section", "Subtotal"]],
       body: sectionRows,
       headStyles: { fillColor: BRAND_MID, textColor: WHITE, fontSize: 8.5 },
       bodyStyles: { fontSize: 8.5, textColor: BRAND_DARK },
-      alternateRowStyles: { fillColor: [248, 250, 252] as [number, number, number] },
+      alternateRowStyles: {
+        fillColor: [248, 250, 252] as [number, number, number],
+      },
       columnStyles: {
-        0: { cellWidth: 'auto' },
-        1: { cellWidth: 40, halign: 'right' },
+        0: { cellWidth: "auto" },
+        1: { cellWidth: 40, halign: "right" },
       },
       margin: { left: 15, right: 15 },
-      theme: 'grid',
+      theme: "grid",
       tableLineColor: BRAND_LIGHT,
       tableLineWidth: 0.2,
     });
   }
 
-  const afterSectionsY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable?.finalY ?? 24;
+  const afterSectionsY =
+    (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable
+      ?.finalY ?? 24;
 
   // Financial summary table
   const summaryRows: [string, string][] = [
-    ['Direct Cost', formatCurrency(options.directCost, options.currency, locale)],
+    [
+      "Direct Cost",
+      formatCurrency(options.directCost, options.currency, locale),
+    ],
   ];
 
   for (const m of options.markupTotals) {
@@ -499,37 +572,46 @@ function renderSummary(
 
   autoTable(doc, {
     startY: afterSectionsY + 10,
-    head: [['Item', 'Amount']],
+    head: [["Item", "Amount"]],
     body: [
       ...summaryRows,
-      ['Net Total', formatCurrency(options.netTotal, options.currency, locale)],
+      ["Net Total", formatCurrency(options.netTotal, options.currency, locale)],
       [vatLabel, formatCurrency(options.vatAmount, options.currency, locale)],
     ],
     headStyles: { fillColor: BRAND_MID, textColor: WHITE, fontSize: 8.5 },
     bodyStyles: { fontSize: 8.5, textColor: BRAND_DARK },
-    alternateRowStyles: { fillColor: [248, 250, 252] as [number, number, number] },
+    alternateRowStyles: {
+      fillColor: [248, 250, 252] as [number, number, number],
+    },
     columnStyles: {
-      0: { cellWidth: 'auto' },
-      1: { cellWidth: 40, halign: 'right' },
+      0: { cellWidth: "auto" },
+      1: { cellWidth: 40, halign: "right" },
     },
     margin: { left: 15, right: 15 },
-    theme: 'grid',
+    theme: "grid",
     tableLineColor: BRAND_LIGHT,
     tableLineWidth: 0.2,
   });
 
-  const afterSummaryY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable?.finalY ?? afterSectionsY + 10;
+  const afterSummaryY =
+    (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable
+      ?.finalY ?? afterSectionsY + 10;
 
   // Gross total highlight box
   const boxY = afterSummaryY + 8;
   doc.setFillColor(...BRAND_DARK);
-  doc.roundedRect(15, boxY, pageW - 30, 16, 3, 3, 'F');
+  doc.roundedRect(15, boxY, pageW - 30, 16, 3, 3, "F");
 
-  doc.setFont('helvetica', 'bold');
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...WHITE);
-  doc.text('GROSS TOTAL', 22, boxY + 10);
-  doc.text(formatCurrency(options.grossTotal, options.currency, locale), pageW - 22, boxY + 10, { align: 'right' });
+  doc.text("GROSS TOTAL", 22, boxY + 10);
+  doc.text(
+    formatCurrency(options.grossTotal, options.currency, locale),
+    pageW - 22,
+    boxY + 10,
+    { align: "right" },
+  );
 }
 
 /* ── Main export function ───────────────────────────────────────────────── */
@@ -544,21 +626,21 @@ function renderSummary(
  *  - Page footers with "Page X of Y"
  */
 export function generateBOQPdf(options: PdfReportOptions): void {
-  const locale = options.locale ?? 'en-US';
+  const locale = options.locale ?? "en-US";
 
   const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
   });
 
   // PDF metadata — embedded identity markers
   doc.setProperties({
-    title: options.projectName || 'BOQ Report',
-    subject: 'Bill of Quantities',
-    author: 'OpenConstructionERP — DataDrivenConstruction',
-    creator: 'DDC-CWICR-OE/1.5',
-    keywords: 'BOQ, OpenConstructionERP, DDC, CWICR',
+    title: options.projectName || "BOQ Report",
+    subject: "Bill of Quantities",
+    author: "OpenConstructionERP — DataDrivenConstruction",
+    creator: "DDC-CWICR-OE/1.5",
+    keywords: "BOQ, OpenConstructionERP, DDC, CWICR",
   });
 
   // ── 1. Cover page ──────────────────────────────────────────────────────
@@ -594,7 +676,7 @@ export function generateBOQPdf(options: PdfReportOptions): void {
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
     doc.setFillColor(...WHITE);
-    doc.rect(0, 0, pageW, pageH, 'F');
+    doc.rect(0, 0, pageW, pageH, "F");
     renderTableOfContents(doc, sectionEntries);
   }
 
@@ -605,6 +687,7 @@ export function generateBOQPdf(options: PdfReportOptions): void {
   addPageFooters(doc, options);
 
   // ── 8. Download ───────────────────────────────────────────────────────
-  const safeName = options.boqTitle.replace(/[^a-zA-Z0-9_\- ]/g, '').trim() || 'BOQ';
+  const safeName =
+    options.boqTitle.replace(/[^a-zA-Z0-9_\- ]/g, "").trim() || "BOQ";
   doc.save(`${safeName}.pdf`);
 }

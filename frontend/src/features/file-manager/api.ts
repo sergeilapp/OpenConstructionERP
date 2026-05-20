@@ -1,7 +1,7 @@
 /** API client for the project file manager (Issue #109). */
 
-import { apiDelete, apiGet, apiPost } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { apiDelete, apiGet, apiPost } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 import type {
   EmailLinkResponse,
   ExportOptions,
@@ -20,18 +20,20 @@ import type {
   ShareLinkPublicInfo,
   ShareLinkResponse,
   StorageLocations,
-} from './types';
+} from "./types";
 
-const PROJECTS_BASE = '/v1/projects';
+const PROJECTS_BASE = "/v1/projects";
 
 function buildAuthHeaders(): Headers {
-  const headers = new Headers({ Accept: 'application/json' });
+  const headers = new Headers({ Accept: "application/json" });
   const token = useAuthStore.getState().accessToken;
-  if (token) headers.set('Authorization', `Bearer ${token}`);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
   return headers;
 }
 
-export async function fetchFileTree(projectId: string): Promise<FileTreeNode[]> {
+export async function fetchFileTree(
+  projectId: string,
+): Promise<FileTreeNode[]> {
   return apiGet<FileTreeNode[]>(`${PROJECTS_BASE}/${projectId}/files/tree/`);
 }
 
@@ -40,19 +42,24 @@ export async function fetchFileList(
   filters: FileFilters = {},
 ): Promise<FileListResponse> {
   const params = new URLSearchParams();
-  if (filters.category) params.set('category', filters.category);
-  if (filters.extension) params.set('extension', filters.extension);
-  if (filters.q) params.set('q', filters.q);
-  if (filters.sort) params.set('sort', filters.sort);
-  if (filters.limit !== undefined) params.set('limit', String(filters.limit));
-  if (filters.offset !== undefined) params.set('offset', String(filters.offset));
+  if (filters.category) params.set("category", filters.category);
+  if (filters.extension) params.set("extension", filters.extension);
+  if (filters.q) params.set("q", filters.q);
+  if (filters.sort) params.set("sort", filters.sort);
+  if (filters.limit !== undefined) params.set("limit", String(filters.limit));
+  if (filters.offset !== undefined)
+    params.set("offset", String(filters.offset));
   const qs = params.toString();
-  const path = `${PROJECTS_BASE}/${projectId}/files/${qs ? `?${qs}` : ''}`;
+  const path = `${PROJECTS_BASE}/${projectId}/files/${qs ? `?${qs}` : ""}`;
   return apiGet<FileListResponse>(path);
 }
 
-export async function fetchStorageLocations(projectId: string): Promise<StorageLocations> {
-  return apiGet<StorageLocations>(`${PROJECTS_BASE}/${projectId}/files/locations/`);
+export async function fetchStorageLocations(
+  projectId: string,
+): Promise<StorageLocations> {
+  return apiGet<StorageLocations>(
+    `${PROJECTS_BASE}/${projectId}/files/locations/`,
+  );
 }
 
 export async function previewExport(
@@ -69,32 +76,35 @@ export async function previewExport(
 export async function downloadBundle(
   projectId: string,
   options: ExportOptions,
-  fallbackName = 'project.ocep',
+  fallbackName = "project.ocep",
 ): Promise<{ filename: string; sizeBytes: number }> {
   const res = await fetch(`/api${PROJECTS_BASE}/${projectId}/export/`, {
-    method: 'POST',
-    headers: { ...Object.fromEntries(buildAuthHeaders()), 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: {
+      ...Object.fromEntries(buildAuthHeaders()),
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(options),
   });
   if (!res.ok) {
     let detail = res.statusText;
     try {
       const body = await res.json();
-      if (typeof body?.detail === 'string') detail = body.detail;
+      if (typeof body?.detail === "string") detail = body.detail;
     } catch {
       // not JSON — keep statusText
     }
     throw new Error(detail || `Export failed (${res.status})`);
   }
   // Pull filename from Content-Disposition.
-  const cd = res.headers.get('content-disposition') || '';
+  const cd = res.headers.get("content-disposition") || "";
   const match = cd.match(/filename="?([^"]+)"?/);
   const filename = match?.[1] ?? fallbackName;
 
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
+  const a = document.createElement("a");
+  a.style.display = "none";
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);
@@ -108,9 +118,9 @@ export async function downloadBundle(
 
 export async function validateImport(file: File): Promise<ImportPreview> {
   const form = new FormData();
-  form.append('file', file);
+  form.append("file", file);
   const res = await fetch(`/api${PROJECTS_BASE}/import/validate/`, {
-    method: 'POST',
+    method: "POST",
     headers: buildAuthHeaders(),
     body: form,
   });
@@ -128,12 +138,13 @@ export async function commitImport(opts: {
   newProjectName?: string;
 }): Promise<ImportResult> {
   const form = new FormData();
-  form.append('file', opts.file);
-  form.append('mode', opts.mode);
-  if (opts.targetProjectId) form.append('target_project_id', opts.targetProjectId);
-  if (opts.newProjectName) form.append('new_project_name', opts.newProjectName);
+  form.append("file", opts.file);
+  form.append("mode", opts.mode);
+  if (opts.targetProjectId)
+    form.append("target_project_id", opts.targetProjectId);
+  if (opts.newProjectName) form.append("new_project_name", opts.newProjectName);
   const res = await fetch(`/api${PROJECTS_BASE}/import/`, {
-    method: 'POST',
+    method: "POST",
     headers: buildAuthHeaders(),
     body: form,
   });
@@ -155,7 +166,7 @@ export async function mintEmailLink(
 
 /* ── Password-protected share links ──────────────────────────────────── */
 
-const DOCUMENTS_BASE = '/v1/documents';
+const DOCUMENTS_BASE = "/v1/documents";
 
 /** Mint a new share link for the given document. */
 export async function createShareLink(
@@ -185,7 +196,7 @@ export async function revokeShareLink(
   const res = await fetch(
     `/api${DOCUMENTS_BASE}/${documentId}/share-links/${linkId}/`,
     {
-      method: 'DELETE',
+      method: "DELETE",
       headers: buildAuthHeaders(),
     },
   );
@@ -202,7 +213,7 @@ export async function fetchShareLinkInfo(
   token: string,
 ): Promise<ShareLinkPublicInfo> {
   const res = await fetch(`/api${DOCUMENTS_BASE}/share-links/${token}/`, {
-    headers: { Accept: 'application/json' },
+    headers: { Accept: "application/json" },
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
@@ -219,10 +230,10 @@ export async function listFolderPermissions(
   filters: { scope_kind?: string; scope_path?: string | null } = {},
 ): Promise<FolderPermissionRow[]> {
   const params = new URLSearchParams();
-  if (filters.scope_kind) params.set('scope_kind', filters.scope_kind);
-  if (filters.scope_path) params.set('scope_path', filters.scope_path);
+  if (filters.scope_kind) params.set("scope_kind", filters.scope_kind);
+  if (filters.scope_path) params.set("scope_path", filters.scope_path);
   const qs = params.toString();
-  const path = `${PROJECTS_BASE}/${projectId}/folder-permissions/${qs ? `?${qs}` : ''}`;
+  const path = `${PROJECTS_BASE}/${projectId}/folder-permissions/${qs ? `?${qs}` : ""}`;
   return apiGet<FolderPermissionRow[]>(path);
 }
 
@@ -245,7 +256,7 @@ export async function revokeFolderPermission(
   const res = await fetch(
     `/api${PROJECTS_BASE}/${projectId}/folder-permissions/${permissionId}/`,
     {
-      method: 'DELETE',
+      method: "DELETE",
       headers: buildAuthHeaders(),
     },
   );
@@ -265,13 +276,16 @@ export async function accessShareLink(
   const res = await fetch(
     `/api${DOCUMENTS_BASE}/share-links/${token}/access/`,
     {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify({ password: password ?? null }),
     },
   );
   if (res.status === 401) {
-    throw new Error('UNAUTHORIZED');
+    throw new Error("UNAUTHORIZED");
   }
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
@@ -300,15 +314,20 @@ export interface KindDeleteOutcome {
  * the receiving module exposes no batch endpoint. Errors bubble so the
  * dispatcher can record a per-id failure entry.
  */
-export async function deleteByKind(kind: FileKind, fileId: string): Promise<void> {
+export async function deleteByKind(
+  kind: FileKind,
+  fileId: string,
+): Promise<void> {
   const path = deletePathForKind(kind, fileId);
   await apiDelete(path);
 }
 
 /** Bulk-delete documents through the existing module-side batch endpoint. */
-export async function bulkDeleteDocuments(ids: string[]): Promise<BulkDeleteResponse> {
+export async function bulkDeleteDocuments(
+  ids: string[],
+): Promise<BulkDeleteResponse> {
   return apiPost<BulkDeleteResponse, { ids: string[] }>(
-    '/v1/documents/batch/delete/',
+    "/v1/documents/batch/delete/",
     { ids },
   );
 }
@@ -319,21 +338,21 @@ export async function bulkDeleteDocuments(ids: string[]): Promise<BulkDeleteResp
 export function deletePathForKind(kind: FileKind, fileId: string): string {
   const enc = encodeURIComponent(fileId);
   switch (kind) {
-    case 'document':
+    case "document":
       return `/v1/documents/${enc}`;
-    case 'photo':
+    case "photo":
       return `/v1/documents/photos/${enc}`;
-    case 'sheet':
+    case "sheet":
       return `/v1/documents/sheets/${enc}`;
-    case 'bim_model':
+    case "bim_model":
       return `/v1/bim_hub/${enc}`;
-    case 'dwg_drawing':
+    case "dwg_drawing":
       return `/v1/dwg_takeoff/drawings/${enc}`;
-    case 'takeoff':
+    case "takeoff":
       return `/v1/takeoff/documents/${enc}`;
-    case 'report':
+    case "report":
       return `/v1/reporting/reports/${enc}`;
-    case 'markup':
+    case "markup":
       return `/v1/markups/${enc}`;
   }
 }

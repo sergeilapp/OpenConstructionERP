@@ -3,8 +3,8 @@
 //
 // Reusable radio group with arrow-key navigation and ARIA roles.
 
-import clsx from 'clsx';
-import type { ReactNode } from 'react';
+import clsx from "clsx";
+import type { ReactNode } from "react";
 
 export interface RadioGroupOption<T extends string> {
   value: T;
@@ -22,7 +22,7 @@ export interface RadioGroupProps<T extends string> {
   legend?: string;
   className?: string;
   /** "stack" (default) | "row" — visual orientation */
-  orientation?: 'stack' | 'row';
+  orientation?: "stack" | "row";
 }
 
 export function RadioGroup<T extends string>({
@@ -32,11 +32,11 @@ export function RadioGroup<T extends string>({
   options,
   legend,
   className,
-  orientation = 'stack',
+  orientation = "stack",
 }: RadioGroupProps<T>) {
   return (
     <fieldset
-      className={clsx('border-0 p-0 m-0', className)}
+      className={clsx("border-0 p-0 m-0", className)}
       aria-label={legend}
     >
       {legend && (
@@ -47,7 +47,9 @@ export function RadioGroup<T extends string>({
       <div
         role="radiogroup"
         className={clsx(
-          orientation === 'stack' ? 'flex flex-col gap-1.5' : 'flex flex-row flex-wrap gap-2',
+          orientation === "stack"
+            ? "flex flex-col gap-1.5"
+            : "flex flex-row flex-wrap gap-2",
         )}
       >
         {options.map((opt) => {
@@ -59,11 +61,11 @@ export function RadioGroup<T extends string>({
               htmlFor={inputId}
               title={opt.disabled ? opt.disabledReason : undefined}
               className={clsx(
-                'flex items-start gap-2.5 rounded-lg border px-3 py-2 cursor-pointer transition',
+                "flex items-start gap-2.5 rounded-lg border px-3 py-2 cursor-pointer transition",
                 isSelected
-                  ? 'border-oe-blue bg-oe-blue/5'
-                  : 'border-border bg-surface-primary hover:border-oe-blue/40',
-                opt.disabled && 'opacity-50 cursor-not-allowed',
+                  ? "border-oe-blue bg-oe-blue/5"
+                  : "border-border bg-surface-primary hover:border-oe-blue/40",
+                opt.disabled && "opacity-50 cursor-not-allowed",
               )}
             >
               <input
@@ -79,7 +81,9 @@ export function RadioGroup<T extends string>({
               <div className="min-w-0 flex-1">
                 <div className="text-sm text-content-primary">{opt.label}</div>
                 {opt.description && (
-                  <div className="text-xs text-content-tertiary mt-0.5">{opt.description}</div>
+                  <div className="text-xs text-content-tertiary mt-0.5">
+                    {opt.description}
+                  </div>
                 )}
               </div>
             </label>

@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 import {
   Star,
   Github,
@@ -15,19 +15,20 @@ import {
   Megaphone,
   Mail,
   Send,
-} from 'lucide-react';
-import clsx from 'clsx';
+} from "lucide-react";
+import clsx from "clsx";
 
-const REPO_URL = 'https://github.com/datadrivenconstruction/OpenConstructionERP';
-const CASE_STUDY_EMAIL = 'info@datadrivenconstruction.io';
+const REPO_URL =
+  "https://github.com/datadrivenconstruction/OpenConstructionERP";
+const CASE_STUDY_EMAIL = "info@datadrivenconstruction.io";
 const CASE_STUDY_MAILTO = `mailto:${CASE_STUDY_EMAIL}?subject=${encodeURIComponent(
-  'Case study / article — OpenConstructionERP',
+  "Case study / article — OpenConstructionERP",
 )}&body=${encodeURIComponent(
-  'Hi DDC team,\n\nI have a case study / video / article about how we use OpenConstructionERP that you may want to share.\n\nLink / attachment:\n\nA few lines about the project:\n\n— ',
+  "Hi DDC team,\n\nI have a case study / video / article about how we use OpenConstructionERP that you may want to share.\n\nLink / attachment:\n\nA few lines about the project:\n\n— ",
 )}`;
 
 const SHARE_TEXT =
-  'OpenConstructionERP — free open-source construction cost estimation platform (BOQ, BIM takeoff, AI, 26 languages). Self-hosted. AGPL-3.0.';
+  "OpenConstructionERP — free open-source construction cost estimation platform (BOQ, BIM takeoff, AI, 26 languages). Self-hosted. AGPL-3.0.";
 
 const TWITTER_URL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
   SHARE_TEXT,
@@ -45,7 +46,7 @@ const LINKEDIN_URL = `https://www.linkedin.com/sharing/share-offsite/?url=${enco
  */
 const AUTO_POPUP_AFTER_MS = 20 * 60 * 1000; // 20 minutes of active tab time
 const COOLDOWN_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
-const SEEN_KEY = 'oe_support_seen_at';
+const SEEN_KEY = "oe_support_seen_at";
 const TICK_INTERVAL_MS = 10_000; // 10s — light-touch counter
 
 /** Hook: accumulate active-tab time across the session.
@@ -55,7 +56,9 @@ function useActiveTabTime(): number {
   const [activeMs, setActiveMs] = useState(0);
   const lastTick = useRef<number>(Date.now());
   const visible = useRef<boolean>(
-    typeof document !== 'undefined' ? document.visibilityState === 'visible' : true,
+    typeof document !== "undefined"
+      ? document.visibilityState === "visible"
+      : true,
   );
 
   useEffect(() => {
@@ -67,9 +70,9 @@ function useActiveTabTime(): number {
         setActiveMs((prev) => prev + (now - lastTick.current));
       }
       lastTick.current = now;
-      visible.current = document.visibilityState === 'visible';
+      visible.current = document.visibilityState === "visible";
     };
-    document.addEventListener('visibilitychange', onVisibility);
+    document.addEventListener("visibilitychange", onVisibility);
 
     const id = window.setInterval(() => {
       if (!visible.current) return;
@@ -79,7 +82,7 @@ function useActiveTabTime(): number {
     }, TICK_INTERVAL_MS);
 
     return () => {
-      document.removeEventListener('visibilitychange', onVisibility);
+      document.removeEventListener("visibilitychange", onVisibility);
       window.clearInterval(id);
     };
   }, []);
@@ -118,8 +121,8 @@ export function SupportUsButton() {
   // uses so we share the single /api/system/status fetch (queryKey +
   // queryFn match DemoBanner.tsx). React Query dedupes by key.
   const { data: sysInfo } = useQuery<{ demo_mode?: boolean }>({
-    queryKey: ['system-status'],
-    queryFn: () => fetch('/api/system/status').then((r) => r.json()),
+    queryKey: ["system-status"],
+    queryFn: () => fetch("/api/system/status").then((r) => r.json()),
     staleTime: Infinity,
     retry: false,
   });
@@ -159,21 +162,21 @@ export function SupportUsButton() {
         type="button"
         onClick={handleOpen}
         className={clsx(
-          'support-btn group hidden md:inline-flex relative items-center gap-1.5 h-8 px-3 rounded-lg overflow-hidden',
-          'border border-amber-400/60 dark:border-amber-500/40',
-          'bg-gradient-to-r from-amber-100/80 via-yellow-100/60 to-orange-100/80',
-          'dark:from-amber-900/40 dark:via-yellow-900/30 dark:to-orange-900/40',
-          'text-amber-800 dark:text-amber-200',
-          'hover:from-amber-200 hover:via-yellow-200 hover:to-orange-200',
-          'dark:hover:from-amber-800/60 dark:hover:via-yellow-800/50 dark:hover:to-orange-800/60',
-          'hover:border-amber-500 dark:hover:border-amber-400/60',
-          'hover:shadow-md hover:shadow-amber-400/30',
-          'transition-all duration-300 ease-out',
+          "support-btn group hidden md:inline-flex relative items-center gap-1.5 h-8 px-3 rounded-lg overflow-hidden",
+          "border border-amber-400/60 dark:border-amber-500/40",
+          "bg-gradient-to-r from-amber-100/80 via-yellow-100/60 to-orange-100/80",
+          "dark:from-amber-900/40 dark:via-yellow-900/30 dark:to-orange-900/40",
+          "text-amber-800 dark:text-amber-200",
+          "hover:from-amber-200 hover:via-yellow-200 hover:to-orange-200",
+          "dark:hover:from-amber-800/60 dark:hover:via-yellow-800/50 dark:hover:to-orange-800/60",
+          "hover:border-amber-500 dark:hover:border-amber-400/60",
+          "hover:shadow-md hover:shadow-amber-400/30",
+          "transition-all duration-300 ease-out",
         )}
-        title={t('support.button_tooltip', {
-          defaultValue: 'Support the project — star us or share‌⁠‍',
+        title={t("support.button_tooltip", {
+          defaultValue: "Support the project — star us or share‌⁠‍",
         })}
-        aria-label={t('support.button_aria', { defaultValue: 'Support us‌⁠‍' })}
+        aria-label={t("support.button_aria", { defaultValue: "Support us‌⁠‍" })}
       >
         {/* Animated shine sweep on hover */}
         <span
@@ -186,7 +189,7 @@ export function SupportUsButton() {
           className="relative fill-amber-400 text-amber-500 drop-shadow-[0_0_3px_rgba(251,191,36,0.6)] group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300"
         />
         <span className="relative text-xs font-semibold whitespace-nowrap tracking-wide">
-          {t('support.button_label', { defaultValue: 'Support us‌⁠‍' })}
+          {t("support.button_label", { defaultValue: "Support us‌⁠‍" })}
         </span>
       </button>
 
@@ -195,15 +198,19 @@ export function SupportUsButton() {
         type="button"
         onClick={handleOpen}
         className={clsx(
-          'md:hidden inline-flex h-8 w-8 items-center justify-center rounded-lg',
-          'text-amber-500 hover:bg-surface-secondary transition-colors',
+          "md:hidden inline-flex h-8 w-8 items-center justify-center rounded-lg",
+          "text-amber-500 hover:bg-surface-secondary transition-colors",
         )}
-        title={t('support.button_tooltip', {
-          defaultValue: 'Support the project‌⁠‍',
+        title={t("support.button_tooltip", {
+          defaultValue: "Support the project‌⁠‍",
         })}
-        aria-label={t('support.button_aria', { defaultValue: 'Support us‌⁠‍' })}
+        aria-label={t("support.button_aria", { defaultValue: "Support us‌⁠‍" })}
       >
-        <Star size={16} strokeWidth={1.75} className="fill-amber-400 text-amber-500" />
+        <Star
+          size={16}
+          strokeWidth={1.75}
+          className="fill-amber-400 text-amber-500"
+        />
       </button>
 
       {open && (
@@ -229,19 +236,19 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         onClose();
       }
     };
-    document.addEventListener('keydown', handler, { capture: true });
+    document.addEventListener("keydown", handler, { capture: true });
     return () =>
-      document.removeEventListener('keydown', handler, { capture: true });
+      document.removeEventListener("keydown", handler, { capture: true });
   }, [onClose]);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
@@ -293,7 +300,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="absolute top-3 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={18} />
@@ -306,14 +313,14 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
               id="support-us-title"
               className="text-xl sm:text-2xl font-bold text-content-primary leading-tight"
             >
-              {t('support.modal_title', {
-                defaultValue: 'Help OpenConstructionERP grow',
+              {t("support.modal_title", {
+                defaultValue: "Help OpenConstructionERP grow",
               })}
             </h2>
             <p className="mt-3 mx-auto max-w-[560px] text-sm text-content-secondary leading-relaxed">
-              {t('support.modal_subtitle', {
+              {t("support.modal_subtitle", {
                 defaultValue:
-                  'We build OpenConstructionERP in the open and ship every feature for free. If you share a video, case study or article about your work – there is a very high chance industry professionals will notice it: senior estimators, BIM managers, planning leads and cost engineers from the largest construction and engineering firms follow DataDrivenConstruction across LinkedIn, X and our newsletter (tens of thousands of subscribers). One repost from us can put your project in front of the right people overnight.',
+                  "We build OpenConstructionERP in the open and ship every feature for free. If you share a video, case study or article about your work – there is a very high chance industry professionals will notice it: senior estimators, BIM managers, planning leads and cost engineers from the largest construction and engineering firms follow DataDrivenConstruction across LinkedIn, X and our newsletter (tens of thousands of subscribers). One repost from us can put your project in front of the right people overnight.",
               })}
             </p>
           </div>
@@ -328,10 +335,10 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
             rel="noopener noreferrer"
             data-firstfocus="true"
             className={clsx(
-              'group flex items-start gap-3 rounded-xl border-2 p-4',
-              'border-amber-300/50 bg-gradient-to-br from-amber-50/60 to-orange-50/30',
-              'dark:border-amber-500/30 dark:from-amber-950/30 dark:to-orange-950/20',
-              'hover:border-amber-500 hover:shadow-md hover:-translate-y-0.5 transition-all',
+              "group flex items-start gap-3 rounded-xl border-2 p-4",
+              "border-amber-300/50 bg-gradient-to-br from-amber-50/60 to-orange-50/30",
+              "dark:border-amber-500/30 dark:from-amber-950/30 dark:to-orange-950/20",
+              "hover:border-amber-500 hover:shadow-md hover:-translate-y-0.5 transition-all",
             )}
           >
             <div className="shrink-0 h-11 w-11 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-300 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition-colors">
@@ -339,15 +346,15 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-sm sm:text-base font-semibold text-content-primary flex items-center gap-2">
-                {t('support.action_star_title', {
-                  defaultValue: 'Star us on GitHub',
+                {t("support.action_star_title", {
+                  defaultValue: "Star us on GitHub",
                 })}
                 <Github size={14} className="text-content-tertiary" />
               </h3>
               <p className="mt-0.5 text-xs text-content-secondary leading-relaxed">
-                {t('support.action_star_body', {
+                {t("support.action_star_body", {
                   defaultValue:
-                    '30 seconds. Stars are how new construction teams discover the project and how we secure time for the next release.',
+                    "30 seconds. Stars are how new construction teams discover the project and how we secure time for the next release.",
                 })}
               </p>
             </div>
@@ -361,9 +368,9 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
           {/* 2. Share on social */}
           <div
             className={clsx(
-              'group rounded-xl border-2 p-4',
-              'border-sky-300/50 bg-gradient-to-br from-sky-50/60 to-blue-50/30',
-              'dark:border-sky-500/30 dark:from-sky-950/30 dark:to-blue-950/20',
+              "group rounded-xl border-2 p-4",
+              "border-sky-300/50 bg-gradient-to-br from-sky-50/60 to-blue-50/30",
+              "dark:border-sky-500/30 dark:from-sky-950/30 dark:to-blue-950/20",
             )}
           >
             <div className="flex items-start gap-3 mb-2">
@@ -372,14 +379,14 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm sm:text-base font-semibold text-content-primary">
-                  {t('support.action_share_title', {
-                    defaultValue: 'Share with your team or network',
+                  {t("support.action_share_title", {
+                    defaultValue: "Share with your team or network",
                   })}
                 </h3>
                 <p className="mt-0.5 text-xs text-content-secondary leading-relaxed">
-                  {t('support.action_share_body', {
+                  {t("support.action_share_body", {
                     defaultValue:
-                      'One post on LinkedIn or X / Twitter reaches dozens of estimators, planners and BIM managers. Help us put open-source construction software on the map.',
+                      "One post on LinkedIn or X / Twitter reaches dozens of estimators, planners and BIM managers. Help us put open-source construction software on the map.",
                   })}
                 </p>
               </div>
@@ -392,7 +399,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-primary hover:bg-sky-50 hover:border-sky-400 dark:hover:bg-sky-950/40 transition-colors"
               >
                 <Twitter size={12} />
-                {t('support.share_twitter', { defaultValue: 'Post on X' })}
+                {t("support.share_twitter", { defaultValue: "Post on X" })}
               </a>
               <a
                 href={LINKEDIN_URL}
@@ -401,17 +408,25 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-primary hover:bg-sky-50 hover:border-sky-400 dark:hover:bg-sky-950/40 transition-colors"
               >
                 <Linkedin size={12} />
-                {t('support.share_linkedin', { defaultValue: 'Post on LinkedIn' })}
+                {t("support.share_linkedin", {
+                  defaultValue: "Post on LinkedIn",
+                })}
               </a>
               <button
                 type="button"
                 onClick={copyShareText}
                 className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-primary hover:bg-sky-50 hover:border-sky-400 dark:hover:bg-sky-950/40 transition-colors"
               >
-                {copied ? <Check size={12} className="text-semantic-success" /> : <Copy size={12} />}
+                {copied ? (
+                  <Check size={12} className="text-semantic-success" />
+                ) : (
+                  <Copy size={12} />
+                )}
                 {copied
-                  ? t('support.share_copied', { defaultValue: 'Copied!' })
-                  : t('support.share_copy', { defaultValue: 'Copy text + link' })}
+                  ? t("support.share_copied", { defaultValue: "Copied!" })
+                  : t("support.share_copy", {
+                      defaultValue: "Copy text + link",
+                    })}
               </button>
             </div>
           </div>
@@ -420,10 +435,10 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
           <a
             href={CASE_STUDY_MAILTO}
             className={clsx(
-              'group flex items-start gap-3 rounded-xl border-2 p-4',
-              'border-purple-300/50 bg-gradient-to-br from-purple-50/60 to-fuchsia-50/30',
-              'dark:border-purple-500/30 dark:from-purple-950/30 dark:to-fuchsia-950/20',
-              'hover:border-purple-500 hover:shadow-md hover:-translate-y-0.5 transition-all',
+              "group flex items-start gap-3 rounded-xl border-2 p-4",
+              "border-purple-300/50 bg-gradient-to-br from-purple-50/60 to-fuchsia-50/30",
+              "dark:border-purple-500/30 dark:from-purple-950/30 dark:to-fuchsia-950/20",
+              "hover:border-purple-500 hover:shadow-md hover:-translate-y-0.5 transition-all",
             )}
           >
             <div className="shrink-0 h-11 w-11 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-300 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors">
@@ -431,19 +446,19 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-sm sm:text-base font-semibold text-content-primary flex items-center gap-2">
-                {t('support.action_case_study_title', {
-                  defaultValue: 'Got a case study, video or article?',
+                {t("support.action_case_study_title", {
+                  defaultValue: "Got a case study, video or article?",
                 })}
                 <span className="text-2xs font-semibold uppercase tracking-wider text-purple-600 dark:text-purple-300 px-1.5 py-0.5 rounded bg-purple-500/10">
-                  {t('support.action_case_study_tag', {
-                    defaultValue: 'We amplify it',
+                  {t("support.action_case_study_tag", {
+                    defaultValue: "We amplify it",
                   })}
                 </span>
               </h3>
               <p className="mt-1 text-xs text-content-secondary leading-relaxed">
-                {t('support.action_case_study_body', {
+                {t("support.action_case_study_body", {
                   defaultValue:
-                    'Show us how you use OpenConstructionERP — a video, a case study, a LinkedIn write-up. You can send us the link directly, or just tag @DataDrivenConstruction in your post — we will spot it and re-share through our newsletter and social channels, where tens of thousands of construction professionals and senior industry experts follow our work. Email for links: ',
+                    "Show us how you use OpenConstructionERP — a video, a case study, a LinkedIn write-up. You can send us the link directly, or just tag @DataDrivenConstruction in your post — we will spot it and re-share through our newsletter and social channels, where tens of thousands of construction professionals and senior industry experts follow our work. Email for links: ",
                 })}
                 <span className="font-semibold text-purple-700 dark:text-purple-300">
                   {CASE_STUDY_EMAIL}
@@ -462,9 +477,9 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
         {/* Thank-you footer */}
         <div className="mt-5 px-6 sm:px-8 py-4 border-t border-border-light bg-surface-secondary/40 rounded-b-2xl text-center">
           <p className="text-xs text-content-secondary leading-relaxed">
-            {t('support.thanks', {
+            {t("support.thanks", {
               defaultValue:
-                'Thank you. Every star and every share genuinely keeps this project alive — built with ❤️ for the construction community.',
+                "Thank you. Every star and every share genuinely keeps this project alive — built with ❤️ for the construction community.",
             })}
           </p>
         </div>

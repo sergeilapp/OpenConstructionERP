@@ -8,12 +8,12 @@
  * asserts no violations on each so future regressions surface.
  */
 
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, waitFor } from '@testing-library/react';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { describe, expect, it, vi, beforeEach } from "vitest";
+import { render, waitFor } from "@testing-library/react";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-vi.mock('../api', () => ({
+vi.mock("../api", () => ({
   matchElement: vi.fn(),
   submitMatchFeedback: vi.fn(),
   acceptMatch: vi.fn(),
@@ -24,9 +24,9 @@ vi.mock('../api', () => ({
   setProjectCatalog: vi.fn().mockResolvedValue({}),
 }));
 
-import { matchElement, submitMatchFeedback } from '../api';
-import { MatchSuggestionsPanel } from '../MatchSuggestionsPanel';
-import type { MatchResponse } from '../types';
+import { matchElement, submitMatchFeedback } from "../api";
+import { MatchSuggestionsPanel } from "../MatchSuggestionsPanel";
+import type { MatchResponse } from "../types";
 
 expect.extend(toHaveNoViolations);
 
@@ -34,34 +34,34 @@ function makeResponse(): MatchResponse {
   return {
     request: {
       envelope: {
-        source: 'bim',
-        source_lang: 'en',
-        category: 'wall',
-        description: 'wall',
+        source: "bim",
+        source_lang: "en",
+        category: "wall",
+        description: "wall",
         properties: {},
         quantities: {},
         unit_hint: null,
         classifier_hint: null,
       },
-      project_id: 'proj-1',
+      project_id: "proj-1",
       top_k: 5,
       use_reranker: false,
     },
     candidates: [
       {
-        code: '03.30.00',
-        description: 'Concrete wall',
-        unit: 'm2',
+        code: "03.30.00",
+        description: "Concrete wall",
+        unit: "m2",
         unit_rate: 145.5,
-        currency: 'EUR',
+        currency: "EUR",
         score: 0.84,
         vector_score: 0.79,
         boosts_applied: { classifier_match: 0.05 },
-        confidence_band: 'high',
-        region_code: 'DE',
-        source: 'cwicr',
-        language: 'de',
-        classification: { din276: '330' },
+        confidence_band: "high",
+        region_code: "DE",
+        source: "cwicr",
+        language: "de",
+        classification: { din276: "330" },
         reasoning: null,
       },
     ],
@@ -81,50 +81,48 @@ function renderPanel(autoFetch = true) {
       <MatchSuggestionsPanel
         source="bim"
         projectId="proj-1"
-        rawElementData={{ description: 'wall' }}
+        rawElementData={{ description: "wall" }}
         autoFetch={autoFetch}
       />
     </QueryClientProvider>,
   );
 }
 
-describe('MatchSuggestionsPanel — a11y', () => {
+describe("MatchSuggestionsPanel — a11y", () => {
   beforeEach(() => {
     vi.mocked(matchElement).mockReset();
     vi.mocked(submitMatchFeedback).mockReset();
     vi.mocked(submitMatchFeedback).mockResolvedValue(undefined);
   });
 
-  it('has no axe violations in the empty state', async () => {
+  it("has no axe violations in the empty state", async () => {
     vi.mocked(matchElement).mockResolvedValue({
       ...makeResponse(),
       candidates: [],
     });
     const { container, findByTestId } = renderPanel();
-    await findByTestId('match-empty-state');
+    await findByTestId("match-empty-state");
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('has no axe violations in the populated state', async () => {
+  it("has no axe violations in the populated state", async () => {
     vi.mocked(matchElement).mockResolvedValue(makeResponse());
     const { container, findByTestId } = renderPanel();
-    await findByTestId('match-candidate-03.30.00');
+    await findByTestId("match-candidate-03.30.00");
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('has no axe violations in the loading state', async () => {
-    vi.mocked(matchElement).mockImplementation(
-      () => new Promise(() => {}),
-    );
+  it("has no axe violations in the loading state", async () => {
+    vi.mocked(matchElement).mockImplementation(() => new Promise(() => {}));
     const { container, findByTestId } = renderPanel();
-    await findByTestId('match-skeleton-list');
+    await findByTestId("match-skeleton-list");
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('has no axe violations when autoFetch is disabled', async () => {
+  it("has no axe violations when autoFetch is disabled", async () => {
     const { container } = renderPanel(false);
     await waitFor(() => {
       // No fetch should have been called.

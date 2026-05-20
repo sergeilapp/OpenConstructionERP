@@ -9,9 +9,9 @@
 // Dismissal is automatic: as soon as the parent's `treeLoading` and
 // `locLoading` both become false, the parent stops rendering this overlay.
 
-import { useTranslation } from 'react-i18next';
-import { CheckCircle2, FolderOpen, Loader2 } from 'lucide-react';
-import clsx from 'clsx';
+import { useTranslation } from "react-i18next";
+import { CheckCircle2, FolderOpen, Loader2 } from "lucide-react";
+import clsx from "clsx";
 
 interface InitialLoadProgressProps {
   storageDone: boolean;
@@ -20,7 +20,7 @@ interface InitialLoadProgressProps {
 }
 
 interface Step {
-  id: 'storage' | 'tree' | 'ready';
+  id: "storage" | "tree" | "ready";
   labelKey: string;
   defaultLabel: string;
   done: boolean;
@@ -35,21 +35,21 @@ export function InitialLoadProgress({
 
   const steps: Step[] = [
     {
-      id: 'storage',
-      labelKey: 'files.loading.storage',
-      defaultLabel: 'Connecting to project storage',
+      id: "storage",
+      labelKey: "files.loading.storage",
+      defaultLabel: "Connecting to project storage",
       done: storageDone,
     },
     {
-      id: 'tree',
-      labelKey: 'files.loading.tree',
-      defaultLabel: 'Reading folder structure',
+      id: "tree",
+      labelKey: "files.loading.tree",
+      defaultLabel: "Reading folder structure",
       done: treeDone,
     },
     {
-      id: 'ready',
-      labelKey: 'files.loading.ready',
-      defaultLabel: 'Indexing files & permissions',
+      id: "ready",
+      labelKey: "files.loading.ready",
+      defaultLabel: "Indexing files & permissions",
       done: storageDone && treeDone,
     },
   ];
@@ -68,16 +68,22 @@ export function InitialLoadProgress({
           </div>
           <div className="flex-1 min-w-0">
             <h2 className="text-base font-semibold text-content-primary leading-tight">
-              {t('files.loading.title', { defaultValue: 'Preparing your file manager‌⁠‍' })}
+              {t("files.loading.title", {
+                defaultValue: "Preparing your file manager‌⁠‍",
+              })}
             </h2>
             {projectName ? (
-              <p className="text-xs text-content-tertiary truncate mt-0.5" title={projectName}>
+              <p
+                className="text-xs text-content-tertiary truncate mt-0.5"
+                title={projectName}
+              >
                 {projectName}
               </p>
             ) : (
               <p className="text-xs text-content-tertiary mt-0.5">
-                {t('files.loading.subtitle', {
-                  defaultValue: 'Gathering documents, BIM models, drawings and photos…‌⁠‍',
+                {t("files.loading.subtitle", {
+                  defaultValue:
+                    "Gathering documents, BIM models, drawings and photos…‌⁠‍",
                 })}
               </p>
             )}
@@ -93,8 +99,8 @@ export function InitialLoadProgress({
         </div>
         <div className="flex items-center justify-between text-2xs text-content-tertiary mb-4 tabular-nums">
           <span>
-            {t('files.loading.step_of', {
-              defaultValue: 'Step {{n}} of {{total}}‌⁠‍',
+            {t("files.loading.step_of", {
+              defaultValue: "Step {{n}} of {{total}}‌⁠‍",
               n: Math.min(doneCount + 1, steps.length),
               total: steps.length,
             })}
@@ -109,20 +115,26 @@ export function InitialLoadProgress({
             return (
               <li key={step.id} className="flex items-center gap-2.5 text-sm">
                 {step.done ? (
-                  <CheckCircle2 size={16} className="text-semantic-success shrink-0" />
+                  <CheckCircle2
+                    size={16}
+                    className="text-semantic-success shrink-0"
+                  />
                 ) : isCurrent ? (
-                  <Loader2 size={16} className="text-oe-blue shrink-0 animate-spin" />
+                  <Loader2
+                    size={16}
+                    className="text-oe-blue shrink-0 animate-spin"
+                  />
                 ) : (
                   <div className="h-4 w-4 rounded-full border border-border-default shrink-0" />
                 )}
                 <span
                   className={clsx(
-                    'truncate',
+                    "truncate",
                     step.done
-                      ? 'text-content-secondary'
+                      ? "text-content-secondary"
                       : isCurrent
-                        ? 'text-content-primary font-medium'
-                        : 'text-content-tertiary',
+                        ? "text-content-primary font-medium"
+                        : "text-content-tertiary",
                   )}
                 >
                   {t(step.labelKey, { defaultValue: step.defaultLabel })}
@@ -134,9 +146,9 @@ export function InitialLoadProgress({
 
         {/* Hint — context for what's happening behind the scenes. */}
         <p className="mt-5 text-2xs text-content-quaternary text-center leading-snug">
-          {t('files.loading.hint', {
+          {t("files.loading.hint", {
             defaultValue:
-              'This usually takes a few seconds. Larger projects with many BIM models can take longer.‌⁠‍',
+              "This usually takes a few seconds. Larger projects with many BIM models can take longer.‌⁠‍",
           })}
         </p>
       </div>

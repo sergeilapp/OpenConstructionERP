@@ -7,10 +7,10 @@ interface RiskItem {
 
 function riskZone(prob: number, impact: number): string {
   const score = prob * impact;
-  if (score >= 16) return 'var(--chat-tool-error)';
-  if (score >= 9) return 'var(--chat-accent)';
-  if (score >= 4) return '#c09c3e';
-  return 'var(--chat-tool-done)';
+  if (score >= 16) return "var(--chat-tool-error)";
+  if (score >= 9) return "var(--chat-accent)";
+  if (score >= 4) return "#c09c3e";
+  return "var(--chat-tool-done)";
 }
 
 export default function RiskMatrixRenderer({ data }: { data: unknown }) {
@@ -18,7 +18,14 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
 
   if (risks.length === 0) {
     return (
-      <div style={{ padding: 24, color: 'var(--chat-text-tertiary)', textAlign: 'center', fontFamily: 'var(--chat-font-body)' }}>
+      <div
+        style={{
+          padding: 24,
+          color: "var(--chat-text-tertiary)",
+          textAlign: "center",
+          fontFamily: "var(--chat-font-body)",
+        }}
+      >
         No risk data available
       </div>
     );
@@ -37,17 +44,24 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
   const cellSize = 52;
 
   return (
-    <div style={{ overflow: 'auto', height: '100%', padding: 16, fontFamily: 'var(--chat-font-body)' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
+    <div
+      style={{
+        overflow: "auto",
+        height: "100%",
+        padding: 16,
+        fontFamily: "var(--chat-font-body)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 4 }}>
         {/* Y-axis label */}
         <div
           style={{
-            writingMode: 'vertical-lr',
-            transform: 'rotate(180deg)',
+            writingMode: "vertical-lr",
+            transform: "rotate(180deg)",
             fontSize: 11,
-            fontFamily: 'var(--chat-font-mono)',
-            color: 'var(--chat-text-tertiary)',
-            textAlign: 'center',
+            fontFamily: "var(--chat-font-mono)",
+            color: "var(--chat-text-tertiary)",
+            textAlign: "center",
             paddingBottom: 20,
           }}
         >
@@ -56,14 +70,17 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
         <div>
           {/* Grid rows: impact 5 (top) to 1 (bottom) */}
           {[5, 4, 3, 2, 1].map((impact) => (
-            <div key={impact} style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <div
+              key={impact}
+              style={{ display: "flex", alignItems: "center", gap: 2 }}
+            >
               <div
                 style={{
                   width: 18,
                   fontSize: 10,
-                  fontFamily: 'var(--chat-font-mono)',
-                  color: 'var(--chat-text-tertiary)',
-                  textAlign: 'right',
+                  fontFamily: "var(--chat-font-mono)",
+                  color: "var(--chat-text-tertiary)",
+                  textAlign: "right",
                 }}
               >
                 {impact}
@@ -75,19 +92,22 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
                 return (
                   <div
                     key={prob}
-                    title={items.map((r) => r.name ?? r.id).join(', ') || `P${prob} I${impact}`}
+                    title={
+                      items.map((r) => r.name ?? r.id).join(", ") ||
+                      `P${prob} I${impact}`
+                    }
                     style={{
                       width: cellSize,
                       height: cellSize,
                       background: bgColor,
                       opacity: items.length > 0 ? 0.85 : 0.15,
-                      borderRadius: 'var(--chat-radius-sm)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      borderRadius: "var(--chat-radius-sm)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       margin: 1,
-                      cursor: items.length > 0 ? 'default' : undefined,
-                      transition: 'opacity 0.15s',
+                      cursor: items.length > 0 ? "default" : undefined,
+                      transition: "opacity 0.15s",
                     }}
                   >
                     {items.length > 0 && (
@@ -95,8 +115,8 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
                         style={{
                           fontSize: 14,
                           fontWeight: 700,
-                          fontFamily: 'var(--chat-font-mono)',
-                          color: '#0d1117',
+                          fontFamily: "var(--chat-font-mono)",
+                          color: "#0d1117",
                         }}
                       >
                         {items.length}
@@ -108,16 +128,16 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
             </div>
           ))}
           {/* X-axis labels */}
-          <div style={{ display: 'flex', marginLeft: 20, marginTop: 4 }}>
+          <div style={{ display: "flex", marginLeft: 20, marginTop: 4 }}>
             {[1, 2, 3, 4, 5].map((p) => (
               <div
                 key={p}
                 style={{
                   width: cellSize + 2,
-                  textAlign: 'center',
+                  textAlign: "center",
                   fontSize: 10,
-                  fontFamily: 'var(--chat-font-mono)',
-                  color: 'var(--chat-text-tertiary)',
+                  fontFamily: "var(--chat-font-mono)",
+                  color: "var(--chat-text-tertiary)",
                 }}
               >
                 {p}
@@ -126,11 +146,11 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
           </div>
           <div
             style={{
-              textAlign: 'center',
+              textAlign: "center",
               marginLeft: 20,
               fontSize: 11,
-              fontFamily: 'var(--chat-font-mono)',
-              color: 'var(--chat-text-tertiary)',
+              fontFamily: "var(--chat-font-mono)",
+              color: "var(--chat-text-tertiary)",
               marginTop: 2,
             }}
           >
@@ -144,10 +164,10 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
         style={{
           marginTop: 16,
           paddingTop: 10,
-          borderTop: '1px solid var(--chat-border-subtle)',
+          borderTop: "1px solid var(--chat-border-subtle)",
           fontSize: 12,
-          color: 'var(--chat-text-secondary)',
-          fontFamily: 'var(--chat-font-mono)',
+          color: "var(--chat-text-secondary)",
+          fontFamily: "var(--chat-font-mono)",
         }}
       >
         {risks.length} total risks

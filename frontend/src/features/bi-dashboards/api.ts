@@ -4,37 +4,37 @@
  * Backed by /api/v1/bi-dashboards/ — see backend/app/modules/bi_dashboards/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type DashboardScope = 'personal' | 'role' | 'global' | 'project';
-export type ReportScope = 'personal' | 'role' | 'global';
+export type DashboardScope = "personal" | "role" | "global" | "project";
+export type ReportScope = "personal" | "role" | "global";
 export type WidgetType =
-  | 'kpi_card'
-  | 'line_chart'
-  | 'bar_chart'
-  | 'pie'
-  | 'table'
-  | 'heatmap'
-  | 'gauge'
-  | 'timeline';
-export type ReportFrequency = 'daily' | 'weekly' | 'monthly' | 'quarterly';
-export type OutputFormat = 'pdf' | 'xlsx' | 'csv' | 'json';
+  | "kpi_card"
+  | "line_chart"
+  | "bar_chart"
+  | "pie"
+  | "table"
+  | "heatmap"
+  | "gauge"
+  | "timeline";
+export type ReportFrequency = "daily" | "weekly" | "monthly" | "quarterly";
+export type OutputFormat = "pdf" | "xlsx" | "csv" | "json";
 export type AlertCondition =
-  | 'above'
-  | 'below'
-  | 'equals'
-  | 'not_equals'
-  | 'changed_by_more_than';
-export type AlertSeverity = 'info' | 'warning' | 'critical';
+  | "above"
+  | "below"
+  | "equals"
+  | "not_equals"
+  | "changed_by_more_than";
+export type AlertSeverity = "info" | "warning" | "critical";
 export type KpiCategory =
-  | 'financial'
-  | 'schedule'
-  | 'quality'
-  | 'safety'
-  | 'sustainability'
-  | 'operational';
+  | "financial"
+  | "schedule"
+  | "quality"
+  | "safety"
+  | "sustainability"
+  | "operational";
 
 export interface KpiDefinition {
   id: string;
@@ -100,8 +100,44 @@ export interface Dashboard {
   layout_json: Record<string, unknown>;
   is_default: boolean;
   refresh_interval_seconds: number;
+  /**
+   * Wave 4 / T11 — opt-in flag. When true the dashboard's evaluate endpoint
+   * propagates click-driven filters into every widget. False (the default)
+   * keeps the v3.x static-render behaviour.
+   */
+  cross_filter_enabled: boolean;
   created_at: string;
   updated_at: string;
+}
+
+/**
+ * Describes how a click on a widget propagates a filter to the rest of the
+ * dashboard. ``filter_value_from`` is a lightweight expression — currently
+ * either a literal value or ``"row.<field>"`` to pull a per-row value out
+ * of the clicked table/chart record.
+ */
+export interface DrillPath {
+  filter_field: string;
+  filter_value_from?: string;
+}
+
+export interface WidgetEvaluateResult {
+  id: string;
+  kpi_code: string | null;
+  widget_type: WidgetType | string;
+  value: number | string | null;
+  unit: string | null;
+  series: Array<Record<string, unknown>>;
+  drill_path: DrillPath | null;
+  breakdown: Record<string, unknown>;
+}
+
+export interface DashboardEvaluateResponse {
+  dashboard_id: string;
+  cross_filter_enabled: boolean;
+  applied_filters: Record<string, unknown>;
+  widgets: WidgetEvaluateResult[];
+  evaluated_at: string;
 }
 
 export interface WidgetRead {
@@ -115,6 +151,7 @@ export interface WidgetRead {
   width: number;
   height: number;
   order_seq: number;
+  drill_path: DrillPath | null;
   created_at: string;
   updated_at: string;
 }
@@ -199,6 +236,7 @@ export interface CreateDashboardPayload {
   role_ref?: string | null;
   project_id?: string | null;
   refresh_interval_seconds?: number;
+  cross_filter_enabled?: boolean;
 }
 
 export interface CreateReportPayload {
@@ -220,15 +258,17 @@ export interface CreateAlertPayload {
   expression_json?: Record<string, unknown>;
 }
 
-const BASE = '/v1/bi-dashboards';
+const BASE = "/v1/bi-dashboards";
 
 /* ── KPI ───────────────────────────────────────────────────────────────── */
 
-export function listKpis(params?: { category?: string }): Promise<KpiDefinition[]> {
+export function listKpis(params?: {
+  category?: string;
+}): Promise<KpiDefinition[]> {
   const qs = new URLSearchParams();
-  if (params?.category) qs.set('category', params.category);
+  if (params?.category) qs.set("category", params.category);
   const q = qs.toString();
-  return apiGet<KpiDefinition[]>(`${BASE}/kpis${q ? `?${q}` : ''}`);
+  return apiGet<KpiDefinition[]>(`${BASE}/kpis${q ? `?${q}` : ""}`);
 }
 
 export function getKpiHistory(
@@ -236,11 +276,11 @@ export function getKpiHistory(
   params?: { project_id?: string; limit?: number },
 ): Promise<KpiHistoryResponse> {
   const qs = new URLSearchParams();
-  if (params?.project_id) qs.set('project_id', params.project_id);
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.project_id) qs.set("project_id", params.project_id);
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return apiGet<KpiHistoryResponse>(
-    `${BASE}/kpis/${encodeURIComponent(code)}/history${q ? `?${q}` : ''}`,
+    `${BASE}/kpis/${encodeURIComponent(code)}/history${q ? `?${q}` : ""}`,
   );
 }
 
@@ -262,11 +302,31 @@ export function computeKpi(
 
 /* ── Dashboards ───────────────────────────────────────────────────────── */
 
+export interface StarterPackResult {
+  kpi_definitions: number;
+  dashboards: number;
+  reports: number;
+  schedules: number;
+  alerts: number;
+  kpi_history_rows: number;
+}
+
+/** Idempotent fresh-install bootstrap. Materialises 5 role-based
+ *  dashboards + their widgets + system KPIs + reports + schedules +
+ *  alert rules so a brand-new tenant sees actual charts on /bi-dashboards
+ *  instead of an empty grid. Re-running is safe — only missing rows are
+ *  inserted. v3.12.1 / Wave 1. */
+export function installStarterPack(): Promise<StarterPackResult> {
+  return apiPost<StarterPackResult>(`${BASE}/install-starter-pack`, {});
+}
+
 export function listDashboards(): Promise<Dashboard[]> {
   return apiGet<Dashboard[]>(`${BASE}/dashboards`);
 }
 
-export function createDashboard(data: CreateDashboardPayload): Promise<Dashboard> {
+export function createDashboard(
+  data: CreateDashboardPayload,
+): Promise<Dashboard> {
   return apiPost<Dashboard>(`${BASE}/dashboards`, data);
 }
 
@@ -285,13 +345,33 @@ export function renderDashboard(id: string): Promise<DashboardRenderResponse> {
   return apiGet<DashboardRenderResponse>(`${BASE}/dashboards/${id}/render`);
 }
 
+/**
+ * Cross-filter evaluate (Wave 4 / T11).
+ *
+ * Re-evaluates every widget on the dashboard against the supplied filter
+ * dict. When the dashboard's ``cross_filter_enabled`` flag is false the
+ * filters are dropped server-side and each widget returns its static
+ * aggregate — safe to call either way.
+ */
+export function evaluateDashboard(
+  id: string,
+  filters: Record<string, unknown> = {},
+): Promise<DashboardEvaluateResponse> {
+  return apiPost<DashboardEvaluateResponse>(
+    `${BASE}/dashboards/${id}/evaluate`,
+    { filters },
+  );
+}
+
 /* ── Reports ──────────────────────────────────────────────────────────── */
 
 export function listReports(): Promise<ReportDefinition[]> {
   return apiGet<ReportDefinition[]>(`${BASE}/reports`);
 }
 
-export function createReport(data: CreateReportPayload): Promise<ReportDefinition> {
+export function createReport(
+  data: CreateReportPayload,
+): Promise<ReportDefinition> {
   return apiPost<ReportDefinition>(`${BASE}/reports`, data);
 }
 
@@ -319,7 +399,10 @@ export function updateSchedule(
 }
 
 export function runScheduleNow(id: string): Promise<ReportRunResponse> {
-  return apiPost<ReportRunResponse>(`${BASE}/report-schedules/${id}/run-now`, {});
+  return apiPost<ReportRunResponse>(
+    `${BASE}/report-schedules/${id}/run-now`,
+    {},
+  );
 }
 
 /* ── Alerts ───────────────────────────────────────────────────────────── */
@@ -334,7 +417,7 @@ export function createAlert(data: CreateAlertPayload): Promise<AlertRule> {
 
 export function toggleAlert(id: string, enabled: boolean): Promise<AlertRule> {
   return apiPatch<AlertRule>(
-    `${BASE}/alerts/${id}/toggle?enabled=${enabled ? 'true' : 'false'}`,
+    `${BASE}/alerts/${id}/toggle?enabled=${enabled ? "true" : "false"}`,
     {},
   );
 }
@@ -373,7 +456,7 @@ export interface SavedFilter {
 }
 
 export function listSavedFilters(module?: string): Promise<SavedFilter[]> {
-  const q = module ? `?module=${encodeURIComponent(module)}` : '';
+  const q = module ? `?module=${encodeURIComponent(module)}` : "";
   return apiGet<SavedFilter[]>(`${BASE}/saved-filters${q}`);
 }
 
@@ -407,7 +490,7 @@ export function reportRunDownloadUrl(runId: string): string {
 
 export function widgetExportUrl(
   widgetId: string,
-  format: 'csv' | 'svg' = 'csv',
+  format: "csv" | "svg" = "csv",
 ): string {
   return `/api/v1/bi-dashboards/widgets/${widgetId}/export?format=${format}`;
 }

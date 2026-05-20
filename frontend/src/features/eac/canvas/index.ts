@@ -5,31 +5,35 @@
  * rather than reaching into individual components, so the internal layout
  * can evolve without breaking call sites.
  */
-export { BlockCanvas, CANVAS_DROPPABLE_ID } from './BlockCanvas';
-export type { BlockCanvasProps } from './BlockCanvas';
+export { BlockCanvas, CANVAS_DROPPABLE_ID } from "./BlockCanvas";
+export type { BlockCanvasProps } from "./BlockCanvas";
 
-export { BlockNode } from './BlockNode';
-export type { BlockNodeData, BlockNodeProps } from './BlockNode';
+export { BlockNode } from "./BlockNode";
+export type { BlockNodeData, BlockNodeProps } from "./BlockNode";
 
-export { SlotConnection } from './SlotConnection';
-export type { SlotConnectionData, SlotConnectionEdge, SlotConnectionProps } from './SlotConnection';
+export { SlotConnection } from "./SlotConnection";
+export type {
+  SlotConnectionData,
+  SlotConnectionEdge,
+  SlotConnectionProps,
+} from "./SlotConnection";
 
-export { CanvasToolbar } from './CanvasToolbar';
-export type { CanvasToolbarProps } from './CanvasToolbar';
+export { CanvasToolbar } from "./CanvasToolbar";
+export type { CanvasToolbarProps } from "./CanvasToolbar";
 
 export {
   useBlockCanvasStore,
   selectCanRedo,
   selectCanUndo,
   selectSelectedBlocks,
-} from './useBlockCanvasStore';
+} from "./useBlockCanvasStore";
 export type {
   BlockCanvasActions,
   BlockCanvasState,
   BlockCanvasStore,
   CanvasBlock,
   CanvasConnection,
-} from './useBlockCanvasStore';
+} from "./useBlockCanvasStore";
 
 export {
   BLOCK_KIND_TO_COLOR,
@@ -38,10 +42,10 @@ export {
   canConnectSlots,
   colorForKind,
   isSlotCompatible,
-} from './dnd';
+} from "./dnd";
 export type {
   CanvasDropPayload,
   SlotDataType,
   SlotDefinition,
   SlotDirection,
-} from './dnd';
+} from "./dnd";

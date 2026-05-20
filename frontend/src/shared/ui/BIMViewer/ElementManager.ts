@@ -11,10 +11,10 @@
  *   electrical = yellow, plumbing = purple
  */
 
-import * as THREE from 'three';
-import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import type { SceneManager } from './SceneManager';
+import * as THREE from "three";
+import { ColladaLoader } from "three/addons/loaders/ColladaLoader.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import type { SceneManager } from "./SceneManager";
 
 // Module-level in-flight buffer fetches, shared across ElementManager
 // instances. React StrictMode's dev double-mount creates two managers
@@ -23,7 +23,7 @@ import type { SceneManager } from './SceneManager';
 // browser issued the same N00-KB request twice on every BIM page mount.
 const inFlightGeometryFetches = new Map<
   string,
-  Promise<{ buffer: ArrayBuffer; format: 'glb' | 'dae' }>
+  Promise<{ buffer: ArrayBuffer; format: "glb" | "dae" }>
 >();
 
 /**
@@ -37,20 +37,25 @@ const inFlightGeometryFetches = new Map<
  *   ``<COLLADA`` somewhere; case-insensitive because some exporters
  *   write ``<Collada``.
  */
-function detectGeometryKind(buffer: ArrayBuffer): 'glb' | 'dae' | null {
+function detectGeometryKind(buffer: ArrayBuffer): "glb" | "dae" | null {
   if (buffer.byteLength < 12) return null;
   const view = new Uint8Array(buffer);
-  if (view[0] === 0x67 && view[1] === 0x6c && view[2] === 0x54 && view[3] === 0x46) {
-    return 'glb';
+  if (
+    view[0] === 0x67 &&
+    view[1] === 0x6c &&
+    view[2] === 0x54 &&
+    view[3] === 0x46
+  ) {
+    return "glb";
   }
   // Decode up to first 4 KiB as UTF-8 and look for the COLLADA root.
   // We slice rather than decode the whole buffer (large DAEs can be 30+ MB).
-  const head = new TextDecoder('utf-8', { fatal: false }).decode(
+  const head = new TextDecoder("utf-8", { fatal: false }).decode(
     view.subarray(0, Math.min(4096, view.byteLength)),
   );
   // Strip BOM for the check.
   const stripped = head.charCodeAt(0) === 0xfeff ? head.slice(1) : head;
-  if (/<COLLADA[\s>]/i.test(stripped)) return 'dae';
+  if (/<COLLADA[\s>]/i.test(stripped)) return "dae";
   return null;
 }
 
@@ -76,7 +81,7 @@ export interface BIMBOQLinkBrief {
   boq_position_unit: string | null;
   boq_position_unit_rate: number | null;
   boq_position_total: number | null;
-  link_type: 'manual' | 'auto' | 'rule_based';
+  link_type: "manual" | "auto" | "rule_based";
   confidence: string | null;
 }
 
@@ -86,7 +91,7 @@ export interface BIMDocumentLinkBrief {
   document_id: string;
   document_name: string | null;
   document_category: string | null;
-  link_type: 'manual' | 'auto';
+  link_type: "manual" | "auto";
   confidence: string | null;
 }
 
@@ -125,16 +130,56 @@ export interface BIMRequirementBrief {
   constraint_value: string;
   unit: string;
   category: string;
-  priority: 'must' | 'should' | 'may' | string;
-  status: 'open' | 'verified' | 'linked' | 'conflict' | string;
+  priority: "must" | "should" | "may" | string;
+  status: "open" | "verified" | "linked" | "conflict" | string;
 }
 
 /** Per-element validation summary embedded in the element response after
  *  the user runs POST /validation/check-bim-model. */
 export interface BIMValidationSummary {
   rule_id: string;
-  severity: 'error' | 'warning' | 'info';
+  severity: "error" | "warning" | "info";
   message: string;
+}
+
+/* ── Color-by-property types (W6.6) ──────────────────────────────────────── */
+
+/**
+ * Palette identifiers supported by `ElementManager.setColorByProperty`.
+ *
+ *   - categorical-12       — distinct colors for up to 12 unique values
+ *   - sequential-blue      — light → dark blue for numeric ranges
+ *   - sequential-red-blue  — diverging red ← white → blue
+ *   - fire-rating          — domain-specific lookup (F30/F60/F90/F120 → fixed hues)
+ */
+export type ColorByPropertyPalette =
+  | "categorical-12"
+  | "sequential-blue"
+  | "sequential-red-blue"
+  | "fire-rating";
+
+/** Configuration object passed to `setColorByProperty`. */
+export interface ColorByPropertyConfig {
+  /** Property key to colour by — e.g. ``fire_rating``, ``level``, ``category``,
+   *  ``volume``.  Read from `element.properties[key]` first, falling back to
+   *  the well-known top-level fields (`element_type`, `discipline`, `storey`,
+   *  `category`) so users get sensible results for both raw IFC psets and
+   *  the canonical-format keys. */
+  propertyKey: string;
+  /** Which palette to apply. */
+  palette: ColorByPropertyPalette;
+  /** Required when palette is `sequential-*`; ignored otherwise. */
+  numericRange?: [number, number];
+  /** Hex string used for elements whose property is missing (or non-numeric
+   *  in a sequential palette). Default `#888888`. */
+  unknownColor?: string;
+}
+
+/** A distinct value + occurrence count for a property — returned by
+ *  `getDistinctPropertyValues` for legend / range UI. */
+export interface PropertyValueCount {
+  value: string | number;
+  count: number;
 }
 
 export interface BIMElementData {
@@ -169,7 +214,7 @@ export interface BIMElementData {
    *  /validation/check-bim-model run. */
   validation_results?: BIMValidationSummary[];
   /** Worst-severity rollup: 'error' > 'warning' > 'pass' > 'unchecked'. */
-  validation_status?: 'pass' | 'warning' | 'error' | 'unchecked';
+  validation_status?: "pass" | "warning" | "error" | "unchecked";
   /** True when this element's geometry is a synthesized placeholder box
    *  (text-IFC fallback path, DDC cad2data not installed). The viewer
    *  shows a non-blocking warning banner when ANY element has this set. */
@@ -221,20 +266,20 @@ export interface BIMModelData {
 
 const DISCIPLINE_COLORS: Record<string, number> = {
   architectural: 0x64b5f6, // light blue
-  structural: 0xff9800,    // orange
-  mechanical: 0x66bb6a,    // green
-  electrical: 0xfdd835,    // yellow
-  plumbing: 0xab47bc,      // purple
-  piping: 0xab47bc,        // purple (alias)
+  structural: 0xff9800, // orange
+  mechanical: 0x66bb6a, // green
+  electrical: 0xfdd835, // yellow
+  plumbing: 0xab47bc, // purple
+  piping: 0xab47bc, // purple (alias)
   fire_protection: 0xef5350, // red
-  civil: 0x8d6e63,         // brown
-  landscape: 0x4caf50,     // darker green
+  civil: 0x8d6e63, // brown
+  landscape: 0x4caf50, // darker green
 };
 
 const DEFAULT_COLOR = 0x90a4ae; // blue-grey
 
 function getDisciplineColor(discipline: string): number {
-  const key = discipline.toLowerCase().replace(/[\s-]/g, '_');
+  const key = discipline.toLowerCase().replace(/[\s-]/g, "_");
   return DISCIPLINE_COLORS[key] ?? DEFAULT_COLOR;
 }
 
@@ -244,74 +289,240 @@ function getDisciplineColor(discipline: string): number {
  *  placeholder boxes are immediately distinguishable by building trade.
  *  Exported for reuse in the filter panel (colored dots on chips). */
 export const CATEGORY_COLORS: Record<string, number> = {
-  'Walls': 0x4488cc,
-  'Doors': 0x44aa44,
-  'Windows': 0x66ccdd,
-  'Structural Columns': 0x888888,
-  'Structural Framing': 0x999999,
-  'Floors': 0xccaa66,
-  'Roofs': 0xcc6644,
-  'Ceilings': 0xddccaa,
-  'Stairs': 0xaa6644,
-  'Furniture': 0x886644,
-  'Curtain Wall Mullions': 0x6688aa,
-  'Curtain Wall Panels': 0x88aacc,
-  'Planting': 0x55bb55,
-  'Rooms': 0xeeeecc,
-  'Columns': 0x888888,
-  'Mechanical Equipment': 0x66bb6a,
-  'Electrical Equipment': 0xfdd835,
-  'Plumbing Fixtures': 0xab47bc,
-  'Railings': 0x9e8e7e,
-  'Generic Models': 0xbbbbbb,
-  'Pipes': 0xab47bc,
-  'Ducts': 0x66bb6a,
-  'Cable Trays': 0xfdd835,
+  Walls: 0x4488cc,
+  Doors: 0x44aa44,
+  Windows: 0x66ccdd,
+  "Structural Columns": 0x888888,
+  "Structural Framing": 0x999999,
+  Floors: 0xccaa66,
+  Roofs: 0xcc6644,
+  Ceilings: 0xddccaa,
+  Stairs: 0xaa6644,
+  Furniture: 0x886644,
+  "Curtain Wall Mullions": 0x6688aa,
+  "Curtain Wall Panels": 0x88aacc,
+  Planting: 0x55bb55,
+  Rooms: 0xeeeecc,
+  Columns: 0x888888,
+  "Mechanical Equipment": 0x66bb6a,
+  "Electrical Equipment": 0xfdd835,
+  "Plumbing Fixtures": 0xab47bc,
+  Railings: 0x9e8e7e,
+  "Generic Models": 0xbbbbbb,
+  Pipes: 0xab47bc,
+  Ducts: 0x66bb6a,
+  "Cable Trays": 0xfdd835,
   // IFC entities
-  'IfcWall': 0x4488cc,
-  'IfcWallStandardCase': 0x4488cc,
-  'IfcDoor': 0x44aa44,
-  'IfcWindow': 0x66ccdd,
-  'IfcColumn': 0x888888,
-  'IfcBeam': 0x999999,
-  'IfcSlab': 0xccaa66,
-  'IfcRoof': 0xcc6644,
-  'IfcCovering': 0xddccaa,
-  'IfcStair': 0xaa6644,
-  'IfcFurnishingElement': 0x886644,
-  'IfcCurtainWall': 0x88aacc,
-  'IfcSpace': 0xeeeecc,
-  'IfcRailing': 0x9e8e7e,
-  'IfcBuildingElementProxy': 0xbbbbbb,
+  IfcWall: 0x4488cc,
+  IfcWallStandardCase: 0x4488cc,
+  IfcDoor: 0x44aa44,
+  IfcWindow: 0x66ccdd,
+  IfcColumn: 0x888888,
+  IfcBeam: 0x999999,
+  IfcSlab: 0xccaa66,
+  IfcRoof: 0xcc6644,
+  IfcCovering: 0xddccaa,
+  IfcStair: 0xaa6644,
+  IfcFurnishingElement: 0x886644,
+  IfcCurtainWall: 0x88aacc,
+  IfcSpace: 0xeeeecc,
+  IfcRailing: 0x9e8e7e,
+  IfcBuildingElementProxy: 0xbbbbbb,
   // Civil infrastructure (IFC4x3)
-  'Alignment': 0xe91e63,
-  'Horizontal Alignment': 0xe91e63,
-  'Vertical Alignment': 0xc2185b,
-  'Alignment Segment': 0xf06292,
-  'Bridge': 0x5d4037,
-  'Bridge Part': 0x6d4c41,
-  'Road': 0x455a64,
-  'Road Part': 0x546e7a,
-  'Railway': 0x37474f,
-  'Railway Part': 0x455a64,
-  'Pavement': 0x78909c,
-  'Kerb': 0x607d8b,
-  'Course': 0x90a4ae,
-  'Earthworks Fill': 0x795548,
-  'Earthworks Cut': 0xa1887f,
-  'Earthworks Element': 0x8d6e63,
-  'Reinforced Soil': 0x6d4c41,
-  'Civil Element': 0x8d6e63,
-  'Facility': 0x546e7a,
-  'Surface Feature': 0x80cbc4,
-  'Geotechnic Element': 0x4e342e,
-  'Deep Foundation': 0x3e2723,
-  'Bearing': 0x757575,
-  'Tendon': 0x9e9e9e,
+  Alignment: 0xe91e63,
+  "Horizontal Alignment": 0xe91e63,
+  "Vertical Alignment": 0xc2185b,
+  "Alignment Segment": 0xf06292,
+  Bridge: 0x5d4037,
+  "Bridge Part": 0x6d4c41,
+  Road: 0x455a64,
+  "Road Part": 0x546e7a,
+  Railway: 0x37474f,
+  "Railway Part": 0x455a64,
+  Pavement: 0x78909c,
+  Kerb: 0x607d8b,
+  Course: 0x90a4ae,
+  "Earthworks Fill": 0x795548,
+  "Earthworks Cut": 0xa1887f,
+  "Earthworks Element": 0x8d6e63,
+  "Reinforced Soil": 0x6d4c41,
+  "Civil Element": 0x8d6e63,
+  Facility: 0x546e7a,
+  "Surface Feature": 0x80cbc4,
+  "Geotechnic Element": 0x4e342e,
+  "Deep Foundation": 0x3e2723,
+  Bearing: 0x757575,
+  Tendon: 0x9e9e9e,
 };
 
 export function getCategoryColor(elementType: string): number {
   return CATEGORY_COLORS[elementType] ?? 0xdd8833; // default warm orange
+}
+
+/* ── Color-by-property palettes (W6.6) ───────────────────────────────────── */
+
+/** 12 visually distinct hues, ColorBrewer-derived. Ordered roughly by
+ *  hue so adjacent indices read as different categories.  Used by the
+ *  ``categorical-12`` palette in `setColorByProperty`. */
+export const CATEGORICAL_12: readonly string[] = [
+  "#1f77b4", // blue
+  "#ff7f0e", // orange
+  "#2ca02c", // green
+  "#d62728", // red
+  "#9467bd", // purple
+  "#8c564b", // brown
+  "#e377c2", // pink
+  "#7f7f7f", // grey
+  "#bcbd22", // olive
+  "#17becf", // teal
+  "#aec7e8", // light blue
+  "#ffbb78", // peach
+] as const;
+
+/** Fire-rating lookup table.  Keys are the lowercase property value
+ *  (so ``F90`` is matched as ``f90``).  Anything not in this map falls
+ *  back to `unknownColor`. */
+export const FIRE_RATING_PALETTE: Readonly<Record<string, string>> = {
+  f30: "#fde047", // yellow
+  f60: "#f97316", // orange
+  f90: "#dc2626", // red
+  f120: "#7c3aed", // purple
+  f180: "#1e3a8a", // dark blue (very rare, kept for completeness)
+} as const;
+
+const SEQ_BLUE_LOW = "#e0f2fe";
+const SEQ_BLUE_HIGH = "#0c4a6e";
+const DIVERGING_LOW = "#b91c1c"; // red (low)
+const DIVERGING_MID = "#ffffff"; // white (mid)
+const DIVERGING_HIGH = "#1d4ed8"; // blue (high)
+
+/** Parse a CSS-hex string into a THREE.Color (no #-less or rgb() support). */
+function hexToColor(hex: string): THREE.Color {
+  return new THREE.Color(hex);
+}
+
+/** Linear interpolation between two hex colours at fraction t ∈ [0, 1]. */
+function lerpHex(low: string, high: string, t: number): THREE.Color {
+  const a = hexToColor(low);
+  const b = hexToColor(high);
+  const clamped = Math.max(0, Math.min(1, t));
+  return new THREE.Color(
+    a.r + (b.r - a.r) * clamped,
+    a.g + (b.g - a.g) * clamped,
+    a.b + (b.b - a.b) * clamped,
+  );
+}
+
+/** Three-stop interpolation used for `sequential-red-blue`. */
+function lerpHex3(
+  low: string,
+  mid: string,
+  high: string,
+  t: number,
+): THREE.Color {
+  const clamped = Math.max(0, Math.min(1, t));
+  if (clamped < 0.5) {
+    return lerpHex(low, mid, clamped / 0.5);
+  }
+  return lerpHex(mid, high, (clamped - 0.5) / 0.5);
+}
+
+/**
+ * Resolve a property value off an element. Looks first in
+ * `element.properties[key]`, then in the well-known top-level fields. Numbers
+ * (e.g. ``volume``) are returned as-is; everything else is coerced to string.
+ * Returns `undefined` when no value is present.
+ *
+ * Exported for tests and for `ColorByPropertyPanel` (so its preview legend
+ * uses the exact same lookup as the colouring).
+ */
+export function resolveElementProperty(
+  el: BIMElementData,
+  key: string,
+): string | number | undefined {
+  const props = el.properties;
+  if (props && Object.prototype.hasOwnProperty.call(props, key)) {
+    const v = props[key];
+    if (typeof v === "number") return v;
+    if (v === null || v === undefined) return undefined;
+    return String(v);
+  }
+  // Convenience fall-throughs for canonical-format top-level fields.
+  switch (key) {
+    case "element_type":
+    case "category":
+      return el.element_type || el.category;
+    case "discipline":
+      return el.discipline;
+    case "storey":
+    case "level":
+      return el.storey;
+    case "name":
+      return el.name;
+    default:
+      break;
+  }
+  // Last resort: numeric quantities (volume / area / length).
+  const q = el.quantities;
+  if (q && Object.prototype.hasOwnProperty.call(q, key)) {
+    const v = q[key];
+    return typeof v === "number" ? v : undefined;
+  }
+  return undefined;
+}
+
+/**
+ * Pure helper: compute the hex color a config would assign to a given value.
+ * Centralised so the legend in `ColorByPropertyPanel` and the runtime
+ * material colouring stay in lock-step.
+ *
+ *  - `valueOrderIndex` is the rank of the value among the distinct keys
+ *    (most-common first); used only by `categorical-12`.
+ *  - `unknownColor` is returned for sequential palettes when the value
+ *    is not numeric.
+ */
+export function colorForPropertyValue(
+  config: ColorByPropertyConfig,
+  value: string | number | undefined,
+  valueOrderIndex: number,
+): string {
+  const unknown = config.unknownColor ?? "#888888";
+  if (value === undefined || value === null || value === "") return unknown;
+
+  if (config.palette === "fire-rating") {
+    const key = String(value).toLowerCase().replace(/\s+/g, "");
+    // Try exact key match first, then a "f30 in f30-min" style partial
+    // (some converters emit "F30 (REI)" or "REI 90").
+    if (FIRE_RATING_PALETTE[key]) return FIRE_RATING_PALETTE[key]!;
+    for (const fkey of Object.keys(FIRE_RATING_PALETTE)) {
+      if (key.includes(fkey)) return FIRE_RATING_PALETTE[fkey]!;
+    }
+    // Numeric fall-through: bare "30" / "90" → f30 / f90.
+    const numMatch = key.match(/(\d+)/);
+    if (numMatch) {
+      const fkey = `f${numMatch[1]}`;
+      if (FIRE_RATING_PALETTE[fkey]) return FIRE_RATING_PALETTE[fkey]!;
+    }
+    return unknown;
+  }
+
+  if (config.palette === "categorical-12") {
+    if (valueOrderIndex < 0) return unknown;
+    return CATEGORICAL_12[valueOrderIndex % CATEGORICAL_12.length]!;
+  }
+
+  // Sequential palettes — value must be numeric.
+  const num = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(num)) return unknown;
+  const range = config.numericRange ?? [0, 1];
+  const [lo, hi] = range;
+  const span = hi - lo;
+  const t = span === 0 ? 0 : (num - lo) / span;
+  if (config.palette === "sequential-blue") {
+    return `#${lerpHex(SEQ_BLUE_LOW, SEQ_BLUE_HIGH, t).getHexString()}`;
+  }
+  // sequential-red-blue
+  return `#${lerpHex3(DIVERGING_LOW, DIVERGING_MID, DIVERGING_HIGH, t).getHexString()}`;
 }
 
 /* ── Glass detection ──────────────────────────────────────────────────────
@@ -336,7 +547,7 @@ export function isGlassLikeElement(
   el: { element_type?: string | null; name?: string | null } | undefined,
   materialName?: string | null,
 ): boolean {
-  const type = (el?.element_type || '').toLowerCase();
+  const type = (el?.element_type || "").toLowerCase();
   // Frames / mullions / hardware are opaque even on glazed assemblies.
   if (
     /mullion|frame|hardware|sill|astragal|spider|fitting|bracket/.test(type)
@@ -416,10 +627,27 @@ export class ElementManager {
    */
   private meshMatchRatio = 0;
 
+  /* ── W6.6 color-by-property + hide/isolate state ────────────────────── */
+
+  /** Current color-by-property overlay, or null when off. Replaces the
+   *  legacy `colorBy()` rainbow when set. */
+  private colorByPropertyConfig: ColorByPropertyConfig | null = null;
+  /** Element IDs the user has explicitly hidden via `hide()` / `isolate()`.
+   *  Separate from filter-driven visibility (which uses `applyFilter`) so
+   *  the two systems don't fight. */
+  private hiddenElementIds = new Set<string>();
+  /** True after the most recent `isolate()` call; cleared by `showAll()`.
+   *  Used so `hasHidden()` returns the intuitive answer when "everything
+   *  but X" is the current state. */
+  private isolateActive = false;
+  /** Subscribers for hidden-count changes — wired by BIMViewer to drive a
+   *  small "{n} hidden — Show all" badge above the canvas. */
+  private hiddenCountSubscribers = new Set<(count: number) => void>();
+
   constructor(sceneManager: SceneManager) {
     this.sceneManager = sceneManager;
     this.elementGroup = new THREE.Group();
-    this.elementGroup.name = 'bim_elements';
+    this.elementGroup.name = "bim_elements";
     // Placeholder boxes have Z_UP→Y_UP conversion baked into
     // createBoxMesh() (Y↔Z swap), so no group rotation needed.
     this.sceneManager.scene.add(this.elementGroup);
@@ -457,7 +685,10 @@ export class ElementManager {
     // Zoom to fit only when we actually have visible content. Without
     // placeholders the scene is empty until the DAE loader finishes
     // — BIMViewer schedules its own zoomToFit chain at that point.
-    if (this.meshMap.size > 0 || (this.daeGroup && this.daeGroup.children.length > 0)) {
+    if (
+      this.meshMap.size > 0 ||
+      (this.daeGroup && this.daeGroup.children.length > 0)
+    ) {
       this.sceneManager.zoomToFit();
     }
   }
@@ -503,10 +734,10 @@ export class ElementManager {
     geometryUrl: string,
     onProgress?: (fraction: number) => void,
     cache?: {
-      lookup: (url: string) =>
-        | { buffer: ArrayBuffer; format: 'glb' | 'dae' }
-        | null;
-      store: (url: string, buffer: ArrayBuffer, format: 'glb' | 'dae') => void;
+      lookup: (
+        url: string,
+      ) => { buffer: ArrayBuffer; format: "glb" | "dae" } | null;
+      store: (url: string, buffer: ArrayBuffer, format: "glb" | "dae") => void;
     },
   ): Promise<void> {
     // 0. Concurrency guard — if a load for this exact URL is already in
@@ -545,13 +776,12 @@ export class ElementManager {
     geometryUrl: string,
     onProgress?: (fraction: number) => void,
     cache?: {
-      lookup: (url: string) =>
-        | { buffer: ArrayBuffer; format: 'glb' | 'dae' }
-        | null;
-      store: (url: string, buffer: ArrayBuffer, format: 'glb' | 'dae') => void;
+      lookup: (
+        url: string,
+      ) => { buffer: ArrayBuffer; format: "glb" | "dae" } | null;
+      store: (url: string, buffer: ArrayBuffer, format: "glb" | "dae") => void;
     },
   ): Promise<void> {
-
     // 2. Cache miss — fetch the bytes. The actual network IO is funnelled
     //    through a module-level in-flight Map so that a parallel
     //    ElementManager (e.g. the second StrictMode mount, which creates
@@ -559,7 +789,7 @@ export class ElementManager {
     //    issuing a duplicate GET. Each manager still parses the buffer
     //    into its own scene independently — only the bytes are shared.
     let buffer: ArrayBuffer;
-    let format: 'glb' | 'dae' = 'glb';
+    let format: "glb" | "dae" = "glb";
     const inFlight = inFlightGeometryFetches.get(geometryUrl);
     if (inFlight) {
       const result = await inFlight;
@@ -567,14 +797,21 @@ export class ElementManager {
       format = result.format;
       onProgress?.(0.95);
     } else {
-      const fetchPromise = (async (): Promise<{ buffer: ArrayBuffer; format: 'glb' | 'dae' }> => {
-        let detectedFormat: 'glb' | 'dae' = 'glb';
+      const fetchPromise = (async (): Promise<{
+        buffer: ArrayBuffer;
+        format: "glb" | "dae";
+      }> => {
+        let detectedFormat: "glb" | "dae" = "glb";
         try {
-          const headResp = await fetch(geometryUrl, { method: 'HEAD' });
+          const headResp = await fetch(geometryUrl, { method: "HEAD" });
           if (headResp.ok) {
-            const ct = headResp.headers.get('content-type') || '';
-            if (ct.includes('collada') || ct.includes('xml') || ct.includes('dae')) {
-              detectedFormat = 'dae';
+            const ct = headResp.headers.get("content-type") || "";
+            if (
+              ct.includes("collada") ||
+              ct.includes("xml") ||
+              ct.includes("dae")
+            ) {
+              detectedFormat = "dae";
             }
           }
         } catch {
@@ -585,7 +822,7 @@ export class ElementManager {
         if (!resp.ok) {
           throw new Error(`Failed to fetch geometry: ${resp.status}`);
         }
-        const total = Number(resp.headers.get('content-length')) || 0;
+        const total = Number(resp.headers.get("content-length")) || 0;
         const reader = resp.body?.getReader();
         if (!reader) {
           const buf = await resp.arrayBuffer();
@@ -647,29 +884,31 @@ export class ElementManager {
    */
   private async parseGeometryBuffer(
     buffer: ArrayBuffer,
-    format: 'glb' | 'dae',
+    format: "glb" | "dae",
   ): Promise<void> {
     if (buffer.byteLength === 0) {
-      throw new Error('Geometry buffer is empty (0 bytes)');
+      throw new Error("Geometry buffer is empty (0 bytes)");
     }
     const detected = detectGeometryKind(buffer);
     // If we can detect from bytes, prefer that over the server hint —
     // Content-Type headers lie often enough to be untrustworthy.
-    const order: Array<'glb' | 'dae'> =
-      detected === 'glb' ? ['glb', 'dae']
-      : detected === 'dae' ? ['dae', 'glb']
-      : [format, format === 'glb' ? 'dae' : 'glb'];
+    const order: Array<"glb" | "dae"> =
+      detected === "glb"
+        ? ["glb", "dae"]
+        : detected === "dae"
+          ? ["dae", "glb"]
+          : [format, format === "glb" ? "dae" : "glb"];
 
     const errors: Error[] = [];
     for (const kind of order) {
       try {
-        if (kind === 'glb') await this.parseGLBBuffer(buffer);
+        if (kind === "glb") await this.parseGLBBuffer(buffer);
         else await this.parseDAEBuffer(buffer);
         return; // success
       } catch (err) {
         const e = err instanceof Error ? err : new Error(String(err));
         errors.push(new Error(`${kind.toUpperCase()} parse: ${e.message}`));
-        if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+        if (typeof import.meta !== "undefined" && import.meta.env?.DEV) {
           console.warn(`[BIM] ${kind.toUpperCase()} parse failed:`, e);
         }
       }
@@ -677,12 +916,41 @@ export class ElementManager {
     // Both parsers failed — surface the first few bytes (hex) so the
     // user / bug report has a fingerprint of what the server returned
     // even when the file is no longer available (cache eviction, etc.).
-    const head = Array.from(new Uint8Array(buffer.slice(0, 8)))
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join(' ');
-    const aggregate = errors.map((e) => e.message).join(' | ');
+    const headBytes = new Uint8Array(buffer.slice(0, 8));
+    const head = Array.from(headBytes)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join(" ");
+    const aggregate = errors.map((e) => e.message).join(" | ");
+
+    // Sniff common non-geometry payloads and give the user actionable
+    // advice instead of raw hex. Most external bug reports we have seen
+    // fall into one of these buckets — the server delivered something
+    // that isn't COLLADA / GLB / glTF.
+    const asAscii = new TextDecoder("ascii", { fatal: false })
+      .decode(buffer.slice(0, 1024))
+      .trimStart()
+      .toLowerCase();
+
+    let hint = "";
+    if (asAscii.startsWith("<?xml")) {
+      // Generic XML — most common cause is an .ifcXML / gbXML / wrapper
+      // file the converter wrote next to the model, picked up because
+      // it shares the same prefix. The viewer needs COLLADA DAE (which
+      // is also XML but with a <COLLADA root) or a GLB binary.
+      hint =
+        " — The file is XML but not COLLADA. This usually means the DDC cad2data converter did not emit 3D geometry for this model (an older converter version, or a source format without geometry — e.g. .ifcXML / gbXML). Try re-running the conversion with the latest DDC cad2data (v0.3+) or upload the source as RVT/IFC/DWG/DGN to trigger geometry export.";
+    } else if (asAscii.startsWith("<!doctype") || asAscii.startsWith("<html")) {
+      // HTML — almost always an auth/redirect or error page.
+      hint =
+        " — The geometry URL returned an HTML page (likely an auth redirect, a 404, or a proxy/CDN error). Reload the page to refresh credentials; if it persists, check that your session hasn't expired.";
+    } else if (asAscii.startsWith("{")) {
+      // JSON — server sent an error envelope instead of binary.
+      hint =
+        " — The geometry URL returned a JSON response, not 3D geometry. Open the browser network panel to see the server message — common causes are expired presigned URLs or a converter still running in the background.";
+    }
+
     throw new Error(
-      `Geometry parse failed (${buffer.byteLength} bytes, head=${head}): ${aggregate}`,
+      `Geometry parse failed (${buffer.byteLength} bytes, head=${head}): ${aggregate}${hint}`,
     );
   }
 
@@ -695,33 +963,46 @@ export class ElementManager {
       // 'getAttribute')") that bubble up unhelpfully. A 4-byte check
       // returns a clear message instead.
       if (buffer.byteLength < 12) {
-        reject(new Error(`GLB buffer too small (${buffer.byteLength} bytes; need ≥12)`));
+        reject(
+          new Error(
+            `GLB buffer too small (${buffer.byteLength} bytes; need ≥12)`,
+          ),
+        );
         return;
       }
       const magic = new Uint32Array(buffer.slice(0, 4))[0] ?? 0;
       // ASCII 'glTF' little-endian = 0x46546C67
       if (magic !== 0x46546c67) {
-        reject(new Error(`Not a GLB file (magic=0x${magic.toString(16)}, expected 0x46546c67)`));
+        reject(
+          new Error(
+            `Not a GLB file (magic=0x${magic.toString(16)}, expected 0x46546c67)`,
+          ),
+        );
         return;
       }
       const loader = new GLTFLoader();
       try {
         loader.parse(
           buffer,
-          '',
+          "",
           (gltf) => {
             try {
               if (!gltf || !gltf.scene) {
-                reject(new Error('GLTFLoader returned empty result'));
+                reject(new Error("GLTFLoader returned empty result"));
                 return;
               }
               this.processLoadedScene(gltf.scene, undefined, true);
               resolve();
             } catch (sceneErr) {
-              reject(sceneErr instanceof Error ? sceneErr : new Error(String(sceneErr)));
+              reject(
+                sceneErr instanceof Error
+                  ? sceneErr
+                  : new Error(String(sceneErr)),
+              );
             }
           },
-          (error) => reject(error instanceof Error ? error : new Error(String(error))),
+          (error) =>
+            reject(error instanceof Error ? error : new Error(String(error))),
         );
       } catch (syncErr) {
         // GLTFLoader.parse usually reports via the onError callback, but
@@ -740,7 +1021,7 @@ export class ElementManager {
         const loader = new ColladaLoader();
         // Strip UTF-8 BOM (some Revit exports prepend one) — leaving it
         // in confuses ColladaLoader's XML parser on some platforms.
-        let text = new TextDecoder('utf-8').decode(new Uint8Array(buffer));
+        let text = new TextDecoder("utf-8").decode(new Uint8Array(buffer));
         if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
 
         // Cheap structural pre-check: every legal COLLADA document must
@@ -749,19 +1030,25 @@ export class ElementManager {
         // error somewhere inside the parser instead of telling us it's
         // not COLLADA. Bail out early with a clear message.
         if (!/<COLLADA[\s>]/i.test(text.slice(0, 4096))) {
-          reject(new Error('Not a COLLADA document — <COLLADA> root tag not found in first 4096 chars'));
+          reject(
+            new Error(
+              "Not a COLLADA document — <COLLADA> root tag not found in first 4096 chars",
+            ),
+          );
           return;
         }
 
-        const collada = loader.parse(text, '');
+        const collada = loader.parse(text, "");
         if (!collada || !collada.scene) {
-          reject(new Error('ColladaLoader returned empty result'));
+          reject(new Error("ColladaLoader returned empty result"));
           return;
         }
         try {
           this.processLoadedScene(collada.scene);
         } catch (sceneErr) {
-          reject(sceneErr instanceof Error ? sceneErr : new Error(String(sceneErr)));
+          reject(
+            sceneErr instanceof Error ? sceneErr : new Error(String(sceneErr)),
+          );
           return;
         }
         resolve();
@@ -774,8 +1061,8 @@ export class ElementManager {
         // shows the actual cause instead of the cryptic JS message.
         const baseMessage = err instanceof Error ? err.message : String(err);
         const hint = baseMessage.includes("reading 'getAttribute'")
-          ? ' — DAE contains broken cross-references (a node referenced an id that does not exist)'
-          : '';
+          ? " — DAE contains broken cross-references (a node referenced an id that does not exist)"
+          : "";
         const wrapped = new Error(`COLLADA parse: ${baseMessage}${hint}`);
         if (err instanceof Error && err.stack) wrapped.stack = err.stack;
         reject(wrapped);
@@ -829,7 +1116,7 @@ export class ElementManager {
     this.geometryLoaded = false;
 
     this.daeGroup = new THREE.Group();
-    this.daeGroup.name = 'bim_dae_geometry';
+    this.daeGroup.name = "bim_dae_geometry";
 
     // Up-axis handling — must branch by loader, otherwise the model ends up
     // upside-down + laterally mirrored (regression of fix 1f0530f / 1f80522).
@@ -947,16 +1234,16 @@ export class ElementManager {
         const chain: string[] = [];
         let cursor: THREE.Object3D | null = child;
         while (cursor && cursor !== scene) {
-          chain.push(cursor.name || '');
+          chain.push(cursor.name || "");
           cursor = cursor.parent;
         }
         // Drop the empty strings so lookups don't accidentally hit
         // `stableIdToElement.get('')`.
-        const namedChain = chain.filter((n) => n !== '');
+        const namedChain = chain.filter((n) => n !== "");
 
         // Outermost numeric ancestor — used as mesh_ref on stubs and as the
         // user-facing ID for ancestor-matched elements.
-        let outerNumericName = '';
+        let outerNumericName = "";
         for (let i = namedChain.length - 1; i >= 0; i--) {
           if (/^\d+$/.test(namedChain[i]!)) {
             outerNumericName = namedChain[i]!;
@@ -988,7 +1275,7 @@ export class ElementManager {
         // Scan every ancestor name for such segments, outer → inner.
         if (!element) {
           outer: for (let i = namedChain.length - 1; i >= 0; i--) {
-            const segments = namedChain[i]!.split('-');
+            const segments = namedChain[i]!.split("-");
             for (const seg of segments) {
               if (/^\d+$/.test(seg)) {
                 const candidate = stableIdToElement.get(seg);
@@ -1046,14 +1333,16 @@ export class ElementManager {
         }
 
         if (!child.material) {
-          child.material = this.getMaterial(element?.discipline || 'other');
+          child.material = this.getMaterial(element?.discipline || "other");
         } else {
           // IFC files frequently arrive with no IfcSurfaceStyle, so DDC's
           // DAE export emits <color>0 0 0 1</color>. Trimesh preserves that,
           // and the whole model renders pitch-black (Three.js issue tracker
           // OE-#bim-ifc-black). Detect near-black albedo and swap in the
           // discipline-coloured fallback so the user sees something usable.
-          const matsArr = Array.isArray(child.material) ? child.material : [child.material];
+          const matsArr = Array.isArray(child.material)
+            ? child.material
+            : [child.material];
           const isNearBlack = (m: THREE.Material): boolean => {
             const c = (m as { color?: THREE.Color }).color;
             if (!c) return false;
@@ -1061,7 +1350,7 @@ export class ElementManager {
             return c.r * 0.299 + c.g * 0.587 + c.b * 0.114 < 0.04;
           };
           if (matsArr.length > 0 && matsArr.every(isNearBlack)) {
-            child.material = this.getMaterial(element?.discipline || 'other');
+            child.material = this.getMaterial(element?.discipline || "other");
           }
         }
 
@@ -1084,36 +1373,47 @@ export class ElementManager {
       for (const obj of malformed) {
         if (obj.parent) obj.parent.remove(obj);
       }
-      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+      if (typeof import.meta !== "undefined" && import.meta.env?.DEV) {
         console.warn(
           `[BIM] skipped ${skippedMalformedMeshes} malformed mesh(es) from loaded scene`,
         );
       }
     }
 
-    if (strippedLights > 0 && typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
-      console.info(`[BIM] stripped ${strippedLights} lights/cameras from loaded scene`);
+    if (
+      strippedLights > 0 &&
+      typeof import.meta !== "undefined" &&
+      import.meta.env?.DEV
+    ) {
+      console.info(
+        `[BIM] stripped ${strippedLights} lights/cameras from loaded scene`,
+      );
     }
 
-    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+    if (typeof import.meta !== "undefined" && import.meta.env?.DEV) {
       console.info(
         `[BIM] mesh matching: ${matchedCount}/${this.allDaeMeshes.length} meshes matched ` +
-        `to ${this.elementDataMap.size} elements ` +
-        `(${this.elementDataMap.size > 0 ? Math.round((matchedCount / this.elementDataMap.size) * 100) : 0}% element coverage)`,
+          `to ${this.elementDataMap.size} elements ` +
+          `(${this.elementDataMap.size > 0 ? Math.round((matchedCount / this.elementDataMap.size) * 100) : 0}% element coverage)`,
       );
       // Log first 5 unmatched mesh names + first 5 element mesh_refs for debugging
       const unmatchedNames = this.allDaeMeshes
         .filter((m) => !(m.userData as { elementId?: string | null }).elementId)
         .slice(0, 5)
         .map((m) => {
-          const ud = m.userData as { ancestorNames?: string[]; outerNodeId?: string };
-          const chain = ud.ancestorNames?.join(' ← ') || m.name;
-          return `outer="${ud.outerNodeId || ''}" chain=[${chain}]`;
+          const ud = m.userData as {
+            ancestorNames?: string[];
+            outerNodeId?: string;
+          };
+          const chain = ud.ancestorNames?.join(" ← ") || m.name;
+          return `outer="${ud.outerNodeId || ""}" chain=[${chain}]`;
         });
-      const sampleRefs = Array.from(this.elementDataMap.values()).slice(0, 5).map((e) => `id="${e.id}" mesh_ref="${e.mesh_ref}" name="${e.name}"`);
+      const sampleRefs = Array.from(this.elementDataMap.values())
+        .slice(0, 5)
+        .map((e) => `id="${e.id}" mesh_ref="${e.mesh_ref}" name="${e.name}"`);
       if (unmatchedNames.length > 0) {
-        console.info('[BIM] sample unmatched meshes:', unmatchedNames);
-        console.info('[BIM] sample element refs:', sampleRefs);
+        console.info("[BIM] sample unmatched meshes:", unmatchedNames);
+        console.info("[BIM] sample element refs:", sampleRefs);
       }
     }
 
@@ -1158,7 +1458,8 @@ export class ElementManager {
 
       // Pre-compute element bounding box centers (only elements that have bbox).
       // Elements without bounding_box cannot be spatially matched and are skipped.
-      const elementCenters: { el: BIMElementData; center: THREE.Vector3 }[] = [];
+      const elementCenters: { el: BIMElementData; center: THREE.Vector3 }[] =
+        [];
       for (const el of unmatchedElements) {
         if (el.bounding_box) {
           const bb = el.bounding_box;
@@ -1167,7 +1468,7 @@ export class ElementManager {
           // world positions: swap Y ↔ Z, negate new-Z (the rotation is
           // -90° around X which maps Z→Y, Y→-Z).
           const cx = (bb.min_x + bb.max_x) / 2;
-          const cy = (bb.min_z + bb.max_z) / 2;  // Z_UP height → Y_UP height
+          const cy = (bb.min_z + bb.max_z) / 2; // Z_UP height → Y_UP height
           const cz = -(bb.min_y + bb.max_y) / 2; // Y_UP depth (negated by rotation)
           elementCenters.push({ el, center: new THREE.Vector3(cx, cy, cz) });
         }
@@ -1209,10 +1510,11 @@ export class ElementManager {
         }
       }
       matchedCount += pairedCount;
-      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) console.info(
-        `[BIM] positional fallback: paired ${pairedCount} meshes with element data ` +
-        `by nearest bounding-box center (${unreliableCount} unreliable, distance > ${UNRELIABLE_DISTANCE_M}m)`,
-      );
+      if (typeof import.meta !== "undefined" && import.meta.env?.DEV)
+        console.info(
+          `[BIM] positional fallback: paired ${pairedCount} meshes with element data ` +
+            `by nearest bounding-box center (${unreliableCount} unreliable, distance > ${UNRELIABLE_DISTANCE_M}m)`,
+        );
     }
 
     // Assign temporary IDs AND stub BIMElementData entries to any remaining
@@ -1237,21 +1539,24 @@ export class ElementManager {
         // value the Excel parquet row uses as its `id`). Falling through
         // to inner node names would display a sub-component id that is
         // not what the user reads from their CAD tool.
-        const outerNodeId = ud.outerNodeId || '';
+        const outerNodeId = ud.outerNodeId || "";
         const chain = ud.ancestorNames || [];
-        const innerNodeName = chain[0] || '';
+        const innerNodeName = chain[0] || "";
         const meshRef = outerNodeId || innerNodeName || undefined;
         const stubName = meshRef || `Unmatched element ${tempIdCounter}`;
         const stub: BIMElementData = {
           id: tempId,
           mesh_ref: meshRef,
           name: stubName,
-          element_type: 'Unmatched',
-          discipline: 'other',
+          element_type: "Unmatched",
+          discipline: "other",
           properties: {
             node_name: outerNodeId || innerNodeName,
-            inner_node: innerNodeName && innerNodeName !== outerNodeId ? innerNodeName : '',
-            ancestor_chain: chain.join(' › '),
+            inner_node:
+              innerNodeName && innerNodeName !== outerNodeId
+                ? innerNodeName
+                : "",
+            ancestor_chain: chain.join(" › "),
           },
         };
         mesh.userData = {
@@ -1265,7 +1570,10 @@ export class ElementManager {
     }
     if (tempIdCounter > 0) {
       matchedCount += tempIdCounter;
-      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) console.info(`[BIM] assigned ${tempIdCounter} temporary IDs+stubs to unmatched meshes (clickable)`);
+      if (typeof import.meta !== "undefined" && import.meta.env?.DEV)
+        console.info(
+          `[BIM] assigned ${tempIdCounter} temporary IDs+stubs to unmatched meshes (clickable)`,
+        );
     }
 
     const totalElements = this.elementDataMap.size;
@@ -1291,13 +1599,14 @@ export class ElementManager {
       mesh.material = this.getGlassMaterial(cur);
       // Keep the swapped material as the "original" so resetColors() /
       // ghost-restore put the glass look back, not the opaque slab.
-      (mesh.userData as { originalMaterial?: THREE.Material }).originalMaterial =
-        mesh.material as THREE.Material;
+      (
+        mesh.userData as { originalMaterial?: THREE.Material }
+      ).originalMaterial = mesh.material as THREE.Material;
       glassMeshCount++;
     }
     if (
       glassMeshCount > 0 &&
-      typeof import.meta !== 'undefined' &&
+      typeof import.meta !== "undefined" &&
       import.meta.env?.DEV
     ) {
       console.info(
@@ -1321,7 +1630,11 @@ export class ElementManager {
       try {
         this.batchMeshesByMaterial();
       } catch (err) {
-        if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) console.warn('[BIM] BatchedMesh path failed, falling back to individual meshes', err);
+        if (typeof import.meta !== "undefined" && import.meta.env?.DEV)
+          console.warn(
+            "[BIM] BatchedMesh path failed, falling back to individual meshes",
+            err,
+          );
       }
     }
 
@@ -1357,7 +1670,9 @@ export class ElementManager {
     const groups = new Map<string, Group>();
 
     for (const mesh of this.allDaeMeshes) {
-      const mat = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+      const mat = Array.isArray(mesh.material)
+        ? mesh.material[0]
+        : mesh.material;
       if (!mat) continue;
       // Skip any mesh whose geometry was disposed or arrived without a
       // position attribute (defense in depth — these should have been
@@ -1366,7 +1681,8 @@ export class ElementManager {
       const geom = mesh.geometry as THREE.BufferGeometry | undefined;
       if (!geom || !geom.attributes || !geom.attributes.position) continue;
       const key = mat.uuid;
-      const posCount = (geom.attributes.position as THREE.BufferAttribute).count;
+      const posCount = (geom.attributes.position as THREE.BufferAttribute)
+        .count;
       const idxCount = geom.index?.count ?? posCount;
       let g = groups.get(key);
       if (!g) {
@@ -1405,7 +1721,11 @@ export class ElementManager {
           group.material,
         );
       } catch (err) {
-        if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) console.warn('[BIM] BatchedMesh ctor failed for material group, falling back', err);
+        if (typeof import.meta !== "undefined" && import.meta.env?.DEV)
+          console.warn(
+            "[BIM] BatchedMesh ctor failed for material group, falling back",
+            err,
+          );
         drawCallsAfter += group.meshes.length;
         continue;
       }
@@ -1420,7 +1740,11 @@ export class ElementManager {
           const geomId = batched.addGeometry(mesh.geometry);
           const instId = batched.addInstance(geomId);
           batched.setMatrixAt(instId, mesh.matrixWorld);
-          (mesh.userData as { batchHandle?: { batched: THREE.BatchedMesh; instanceId: number } }).batchHandle = {
+          (
+            mesh.userData as {
+              batchHandle?: { batched: THREE.BatchedMesh; instanceId: number };
+            }
+          ).batchHandle = {
             batched,
             instanceId: instId,
           };
@@ -1432,7 +1756,11 @@ export class ElementManager {
         } catch (err) {
           // Geometry didn't fit (e.g. because of mismatched attribute formats
           // between source meshes); leave this one as an individual mesh.
-          if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) console.warn('[BIM] addInstance failed, leaving mesh standalone', err);
+          if (typeof import.meta !== "undefined" && import.meta.env?.DEV)
+            console.warn(
+              "[BIM] addInstance failed, leaving mesh standalone",
+              err,
+            );
         }
       }
 
@@ -1452,11 +1780,12 @@ export class ElementManager {
       }
     }
 
-    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) console.info(
-      `[BIM] BatchedMesh: ${batchedMeshes} batches holding ${batchedInstances} instances; ` +
-        `draw calls ${drawCallsBefore} → ${drawCallsAfter} ` +
-        `(${Math.round((1 - drawCallsAfter / Math.max(1, drawCallsBefore)) * 100)}% reduction)`,
-    );
+    if (typeof import.meta !== "undefined" && import.meta.env?.DEV)
+      console.info(
+        `[BIM] BatchedMesh: ${batchedMeshes} batches holding ${batchedInstances} instances; ` +
+          `draw calls ${drawCallsBefore} → ${drawCallsAfter} ` +
+          `(${Math.round((1 - drawCallsAfter / Math.max(1, drawCallsBefore)) * 100)}% reduction)`,
+      );
   }
 
   /** Returns true if DAE geometry was loaded. */
@@ -1498,19 +1827,22 @@ export class ElementManager {
     // upright instead of being perpendicular to the ground plane.
     const width = Math.abs(bb.max_x - bb.min_x) || 0.1;
     const height = Math.abs(bb.max_z - bb.min_z) || 0.1; // Z → Y (height)
-    const depth = Math.abs(bb.max_y - bb.min_y) || 0.1;  // Y → Z (depth)
+    const depth = Math.abs(bb.max_y - bb.min_y) || 0.1; // Y → Z (depth)
 
     const geometry = new THREE.BoxGeometry(width, height, depth);
     // Color by element category (type) for immediate visual distinction,
     // falling back to discipline color if no category mapping exists.
     const catColor = getCategoryColor(element.element_type);
-    const material = this.getOrCreateCategoryMaterial(element.element_type, catColor);
+    const material = this.getOrCreateCategoryMaterial(
+      element.element_type,
+      catColor,
+    );
 
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(
       (bb.min_x + bb.max_x) / 2,
-      (bb.min_z + bb.max_z) / 2,  // Z → Y (height)
-      (bb.min_y + bb.max_y) / 2,  // Y → Z (depth)
+      (bb.min_z + bb.max_z) / 2, // Z → Y (height)
+      (bb.min_y + bb.max_y) / 2, // Y → Z (depth)
     );
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -1567,7 +1899,7 @@ export class ElementManager {
    * extra materials regardless of pane count.
    */
   private getGlassMaterial(source: THREE.Material | undefined): THREE.Material {
-    const key = source?.uuid ?? '_fallback';
+    const key = source?.uuid ?? "_fallback";
     const cached = this.glassMaterials.get(key);
     if (cached) return cached;
 
@@ -1663,9 +1995,11 @@ export class ElementManager {
     }
     // Also toggle DAE-loaded meshes whose materials are NOT in baseMaterials
     for (const mesh of this.allDaeMeshes) {
-      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      const mats = Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material];
       for (const mat of mats) {
-        if (mat && 'wireframe' in mat) {
+        if (mat && "wireframe" in mat) {
           (mat as THREE.MeshStandardMaterial).wireframe = this.wireframeEnabled;
         }
       }
@@ -1682,7 +2016,9 @@ export class ElementManager {
   setDisciplineVisible(discipline: string, visible: boolean): void {
     for (const [, mesh] of this.meshMap) {
       const data = mesh.userData as { elementData?: BIMElementData };
-      if (data.elementData?.discipline.toLowerCase() === discipline.toLowerCase()) {
+      if (
+        data.elementData?.discipline.toLowerCase() === discipline.toLowerCase()
+      ) {
         mesh.visible = visible;
       }
     }
@@ -1720,7 +2056,7 @@ export class ElementManager {
   getTypeCounts(): Map<string, number> {
     const map = new Map<string, number>();
     for (const el of this.elementDataMap.values()) {
-      const key = el.element_type || 'Unknown';
+      const key = el.element_type || "Unknown";
       map.set(key, (map.get(key) ?? 0) + 1);
     }
     return map;
@@ -1730,7 +2066,7 @@ export class ElementManager {
   getDisciplineCounts(): Map<string, number> {
     const map = new Map<string, number>();
     for (const el of this.elementDataMap.values()) {
-      const key = el.discipline || 'other';
+      const key = el.discipline || "other";
       map.set(key, (map.get(key) ?? 0) + 1);
     }
     return map;
@@ -1740,7 +2076,7 @@ export class ElementManager {
   getStoreyCounts(): Map<string, number> {
     const map = new Map<string, number>();
     for (const el of this.elementDataMap.values()) {
-      const key = el.storey || 'Unassigned';
+      const key = el.storey || "Unassigned";
       map.set(key, (map.get(key) ?? 0) + 1);
     }
     return map;
@@ -1768,7 +2104,10 @@ export class ElementManager {
     for (const [elementId] of this.meshMap) {
       const el = this.elementDataMap.get(elementId);
       const elFromUserData = this.meshMap.get(elementId);
-      const effectiveEl = el || (elFromUserData?.userData as { elementData?: BIMElementData })?.elementData;
+      const effectiveEl =
+        el ||
+        (elFromUserData?.userData as { elementData?: BIMElementData })
+          ?.elementData;
       if (!effectiveEl) {
         noDataCount++;
         continue;
@@ -1778,14 +2117,19 @@ export class ElementManager {
         visibleCount++;
       }
     }
-    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) console.info(
-      `[BIM filter] meshMap=${this.meshMap.size} visible=${visibleCount} hidden=${this.meshMap.size - visibleCount - noDataCount} noData=${noDataCount}`,
-    );
+    if (typeof import.meta !== "undefined" && import.meta.env?.DEV)
+      console.info(
+        `[BIM filter] meshMap=${this.meshMap.size} visible=${visibleCount} hidden=${this.meshMap.size - visibleCount - noDataCount} noData=${noDataCount}`,
+      );
 
     // Apply visibility to meshMap entries (placeholder boxes + matched DAE)
     for (const [elementId, mesh] of this.meshMap) {
       const shouldShow = visibleIds.has(elementId);
-      const handle = (mesh.userData as { batchHandle?: { batched: THREE.BatchedMesh; instanceId: number } }).batchHandle;
+      const handle = (
+        mesh.userData as {
+          batchHandle?: { batched: THREE.BatchedMesh; instanceId: number };
+        }
+      ).batchHandle;
       if (handle) {
         handle.batched.setVisibleAt(handle.instanceId, shouldShow);
       } else {
@@ -1817,25 +2161,39 @@ export class ElementManager {
   }
 
   /** Hide specific elements by ID. Sets mesh.visible = false for each.
-   *  Other elements remain unaffected. */
+   *  Other elements remain unaffected.
+   *
+   *  Tracks the hidden set internally so `hasHidden()` / the W6.6
+   *  hidden-count badge can react. */
   hideElements(ids: Set<string>): void {
     for (const id of ids) {
       const mesh = this.meshMap.get(id);
       if (!mesh) continue;
-      const handle = (mesh.userData as { batchHandle?: { batched: THREE.BatchedMesh; instanceId: number } }).batchHandle;
+      const handle = (
+        mesh.userData as {
+          batchHandle?: { batched: THREE.BatchedMesh; instanceId: number };
+        }
+      ).batchHandle;
       if (handle) {
         handle.batched.setVisibleAt(handle.instanceId, false);
       } else {
         mesh.visible = false;
       }
+      this.hiddenElementIds.add(id);
     }
+    this.notifyHiddenCount();
     this.sceneManager.requestRender();
   }
 
-  /** Reset all element visibility to visible. */
+  /** Reset all element visibility to visible. Also clears the hide/isolate
+   *  state so `hasHidden()` returns false until the next hide call. */
   showAll(): void {
     for (const mesh of this.meshMap.values()) {
-      const handle = (mesh.userData as { batchHandle?: { batched: THREE.BatchedMesh; instanceId: number } }).batchHandle;
+      const handle = (
+        mesh.userData as {
+          batchHandle?: { batched: THREE.BatchedMesh; instanceId: number };
+        }
+      ).batchHandle;
       if (handle) {
         handle.batched.setVisibleAt(handle.instanceId, true);
       } else {
@@ -1849,6 +2207,9 @@ export class ElementManager {
       });
       this.daeGroup.visible = true;
     }
+    this.hiddenElementIds.clear();
+    this.isolateActive = false;
+    this.notifyHiddenCount();
     this.sceneManager.requestRender();
   }
 
@@ -1877,15 +2238,21 @@ export class ElementManager {
           originalMaterial?: THREE.Material | THREE.Material[];
         };
         // Clone material so we can recolour independently of the base.
-        const base = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
-        if (base && 'clone' in base) {
-          const cloned = (base as THREE.Material & { clone(): THREE.Material }).clone();
+        const base = Array.isArray(mesh.material)
+          ? mesh.material[0]
+          : mesh.material;
+        if (base && "clone" in base) {
+          const cloned = (
+            base as THREE.Material & { clone(): THREE.Material }
+          ).clone();
           mesh.material = cloned;
           this.createdMaterials.add(cloned);
           ud.customMaterial = true;
         }
-        const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhongMaterial;
-        if (mat && 'color' in mat && mat.color) {
+        const mat = mesh.material as
+          | THREE.MeshStandardMaterial
+          | THREE.MeshPhongMaterial;
+        if (mat && "color" in mat && mat.color) {
           mat.color.copy(highlightColor);
         }
       }
@@ -1893,33 +2260,51 @@ export class ElementManager {
     this.sceneManager.requestRender();
   }
 
-  /** Isolate given element IDs — hide everything else. */
+  /** Isolate given element IDs — hide everything else.
+   *
+   *  Tracks the hidden set internally so `hasHidden()` / the W6.6
+   *  hidden-count badge can surface a "Show all" affordance. */
   isolate(elementIds: string[]): void {
     const keep = new Set(elementIds);
+    // Reset state: an isolate completely replaces any previous hide/isolate.
+    this.hiddenElementIds.clear();
     for (const [id, mesh] of this.meshMap) {
       const v = keep.has(id);
-      const handle = (mesh.userData as { batchHandle?: { batched: THREE.BatchedMesh; instanceId: number } }).batchHandle;
+      const handle = (
+        mesh.userData as {
+          batchHandle?: { batched: THREE.BatchedMesh; instanceId: number };
+        }
+      ).batchHandle;
       if (handle) {
         handle.batched.setVisibleAt(handle.instanceId, v);
       } else {
         mesh.visible = v;
       }
+      if (!v) this.hiddenElementIds.add(id);
     }
     // When isolating specific elements, hide unmatched DAE background so the
     // isolated part actually stands out. If no meshes are matched at all we
     // keep the DAE group visible — users still need to see the model.
     if (this.meshMap.size > 0) {
       for (const mesh of this.allDaeMeshes) {
-        const ud = mesh.userData as { elementId?: string | null; batchHandle?: { batched: THREE.BatchedMesh; instanceId: number } };
+        const ud = mesh.userData as {
+          elementId?: string | null;
+          batchHandle?: { batched: THREE.BatchedMesh; instanceId: number };
+        };
         if (!ud.elementId) {
           if (ud.batchHandle) {
-            ud.batchHandle.batched.setVisibleAt(ud.batchHandle.instanceId, false);
+            ud.batchHandle.batched.setVisibleAt(
+              ud.batchHandle.instanceId,
+              false,
+            );
           } else {
             mesh.visible = false;
           }
         }
       }
     }
+    this.isolateActive = keep.size > 0;
+    this.notifyHiddenCount();
     this.sceneManager.requestRender();
   }
 
@@ -2021,6 +2406,208 @@ export class ElementManager {
     return this.ghostedIds.size > 0;
   }
 
+  /* ── W6.6 hide / isolate (selection-aware wrappers) ─────────────────── */
+
+  /** Active selection seen from the parent UI. Settable so callers can
+   *  resolve `'selected'` shorthand without reaching back into BIMViewer
+   *  state. Kept tiny — no events. */
+  private activeSelectionIds: string[] = [];
+
+  /** Set the active selection — used by `hide('selected')` /
+   *  `isolate('selected')` so the parent UI can keep its own selection
+   *  state while ElementManager remains the source of truth for what's
+   *  actually visible. */
+  setActiveSelection(ids: readonly string[]): void {
+    this.activeSelectionIds = [...ids];
+  }
+
+  /**
+   * Hide one or more elements. Pass `'selected'` to hide whatever was last
+   * passed to `setActiveSelection`. Other elements stay visible.
+   */
+  hide(elementIds: string[] | "selected"): void {
+    const ids =
+      elementIds === "selected" ? this.activeSelectionIds : elementIds;
+    if (ids.length === 0) return;
+    this.hideElements(new Set(ids));
+  }
+
+  /** Returns true when at least one element is hidden by `hide()`
+   *  or `isolate()`. Used to gate the "Show all" affordance. */
+  hasHidden(): boolean {
+    return this.hiddenElementIds.size > 0 || this.isolateActive;
+  }
+
+  /** Current count of hidden elements (driven by hide/isolate, not by
+   *  filter or layer toggles). */
+  hiddenCount(): number {
+    return this.hiddenElementIds.size;
+  }
+
+  /** Subscribe to hidden-count changes. Returns an unsubscribe callback.
+   *
+   *  TODO(W6.6 integration): wire hidden-count badge in BIMViewer.tsx —
+   *  render a small "{n} hidden — Show all" pill above the canvas while
+   *  `hasHidden()` is true. The pill should call `elementMgr.showAll()`
+   *  when clicked. */
+  onHiddenCountChange(cb: (count: number) => void): () => void {
+    this.hiddenCountSubscribers.add(cb);
+    // Fire once with the current value so subscribers can render synchronously.
+    cb(this.hiddenCount());
+    return () => {
+      this.hiddenCountSubscribers.delete(cb);
+    };
+  }
+
+  /** Internal — push the current hidden count to every subscriber. */
+  private notifyHiddenCount(): void {
+    if (this.hiddenCountSubscribers.size === 0) return;
+    const count = this.hiddenCount();
+    for (const cb of this.hiddenCountSubscribers) {
+      try {
+        cb(count);
+      } catch (err) {
+        if (typeof import.meta !== "undefined" && import.meta.env?.DEV) {
+          console.warn("[BIM] hidden-count subscriber threw", err);
+        }
+      }
+    }
+  }
+
+  /* ── W6.6 color-by-property ─────────────────────────────────────────── */
+
+  /** Every unique property key found across loaded elements, sorted with
+   *  the well-known top-level fields first (so they're easy to find in a
+   *  picker UI). */
+  getAvailablePropertyKeys(): string[] {
+    const fromProps = new Set<string>();
+    for (const el of this.elementDataMap.values()) {
+      if (el.properties) {
+        for (const k of Object.keys(el.properties)) fromProps.add(k);
+      }
+      if (el.quantities) {
+        for (const k of Object.keys(el.quantities)) fromProps.add(k);
+      }
+    }
+    // Always offer canonical-format top-level fields, even when no element
+    // has the key in its `properties` bag.
+    const wellKnown = ["element_type", "discipline", "storey", "category"];
+    const out: string[] = [];
+    for (const k of wellKnown) {
+      if (this.hasAnyValueForCanonicalKey(k)) {
+        out.push(k);
+        fromProps.delete(k); // avoid duplicate when the key also sits in properties
+      }
+    }
+    for (const k of Array.from(fromProps).sort()) {
+      out.push(k);
+    }
+    return out;
+  }
+
+  private hasAnyValueForCanonicalKey(k: string): boolean {
+    for (const el of this.elementDataMap.values()) {
+      if (resolveElementProperty(el, k) !== undefined) return true;
+    }
+    return false;
+  }
+
+  /** Every distinct value for a property, with element counts, sorted
+   *  most-frequent-first. Used to drive the legend in
+   *  `ColorByPropertyPanel` and to assign categorical-12 ordering. */
+  getDistinctPropertyValues(key: string): PropertyValueCount[] {
+    const counts = new Map<string | number, number>();
+    for (const el of this.elementDataMap.values()) {
+      const v = resolveElementProperty(el, key);
+      if (v === undefined || v === "") continue;
+      counts.set(v, (counts.get(v) ?? 0) + 1);
+    }
+    return Array.from(counts.entries())
+      .map(([value, count]) => ({ value, count }))
+      .sort((a, b) => b.count - a.count);
+  }
+
+  /**
+   * Apply a property-based colouring overlay. Replaces any previous overlay.
+   * Pass null to restore base materials.
+   *
+   * Implementation notes:
+   *  - Materials are cloned per mesh (matching the pattern used by every
+   *    other colorBy* path) and tracked in `createdMaterials` for disposal.
+   *  - Selection highlighting (a separate emissive/outline pass owned by
+   *    SelectionManager) sits on top of the base diffuse colour, so this
+   *    overlay does NOT interfere with selection visuals.
+   *  - For `categorical-12` the value-to-color order is by frequency,
+   *    most-common first.  For sequential palettes, the value is clamped
+   *    to `numericRange` and linearly interpolated.
+   */
+  setColorByProperty(config: ColorByPropertyConfig | null): void {
+    // Off → restore originals.
+    if (config === null) {
+      this.colorByPropertyConfig = null;
+      this.resetColors();
+      return;
+    }
+
+    this.colorByPropertyConfig = config;
+
+    // Pre-compute the value→rank map (only meaningful for categorical-12,
+    // but cheap enough to compute unconditionally so the code path is one).
+    const distinct = this.getDistinctPropertyValues(config.propertyKey);
+    const rank = new Map<string | number, number>();
+    distinct.forEach((d, i) => rank.set(d.value, i));
+
+    // Dispose previous overlay materials before applying new ones.
+    this.disposeCreatedMaterials();
+
+    for (const [elementId, mesh] of this.meshMap) {
+      const el = this.elementDataMap.get(elementId);
+      if (!el) continue;
+      const value = resolveElementProperty(el, config.propertyKey);
+      const idx = value !== undefined ? (rank.get(value) ?? -1) : -1;
+      const hex = colorForPropertyValue(config, value, idx);
+      const colour = new THREE.Color(hex);
+
+      const ud = mesh.userData as {
+        customMaterial?: boolean;
+        originalMaterial?: THREE.Material | THREE.Material[];
+      };
+
+      if (!ud.customMaterial) {
+        const base = Array.isArray(mesh.material)
+          ? mesh.material[0]
+          : mesh.material;
+        if (base && "clone" in base) {
+          // Record the base material so resetColors() / disposeCreatedMaterials()
+          // can put it back when the overlay is cleared. Box-placeholder meshes
+          // (no DAE geometry) never had originalMaterial set during load — we
+          // set it here, the first time we replace their material, so the
+          // off-overlay path restores the shared per-category material.
+          if (!ud.originalMaterial) ud.originalMaterial = mesh.material;
+          const cloned = (
+            base as THREE.Material & { clone(): THREE.Material }
+          ).clone();
+          mesh.material = cloned;
+          this.createdMaterials.add(cloned);
+          ud.customMaterial = true;
+        }
+      }
+      const mat = mesh.material as
+        | THREE.MeshStandardMaterial
+        | THREE.MeshPhongMaterial;
+      if (mat && "color" in mat && mat.color) {
+        mat.color.copy(colour);
+      }
+    }
+    this.sceneManager.requestRender();
+  }
+
+  /** Active color-by-property config (or null when off). Read-only — for
+   *  the integrator to render the legend / "X" close button. */
+  getColorByPropertyConfig(): ColorByPropertyConfig | null {
+    return this.colorByPropertyConfig;
+  }
+
   /**
    * Apply an opacity (0..1) to every mesh whose element_type matches the
    * given category. Clones the base material on first use per category so
@@ -2036,9 +2623,13 @@ export class ElementManager {
       const el = this.elementDataMap.get(elementId);
       if (!el || el.element_type !== category) continue;
       if (!categoryMat) {
-        const base = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
-        if (!base || !('clone' in base)) continue;
-        const cloned = (base as THREE.Material & { clone(): THREE.Material }).clone();
+        const base = Array.isArray(mesh.material)
+          ? mesh.material[0]
+          : mesh.material;
+        if (!base || !("clone" in base)) continue;
+        const cloned = (
+          base as THREE.Material & { clone(): THREE.Material }
+        ).clone();
         categoryMat = cloned;
         this.categoryMaterials.set(category, cloned);
       }
@@ -2050,8 +2641,11 @@ export class ElementManager {
       mesh.material = categoryMat;
       ud.categoryMaterial = true;
     }
-    if (categoryMat && 'opacity' in categoryMat) {
-      const m = categoryMat as THREE.Material & { opacity: number; transparent: boolean };
+    if (categoryMat && "opacity" in categoryMat) {
+      const m = categoryMat as THREE.Material & {
+        opacity: number;
+        transparent: boolean;
+      };
       m.opacity = clamped;
       m.transparent = clamped < 1;
       m.needsUpdate = true;
@@ -2132,8 +2726,10 @@ export class ElementManager {
 
       // Clone material on first recolor so we don't mutate the shared one
       if (!ud.customMaterial) {
-        const base = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
-        if (base && 'clone' in base) {
+        const base = Array.isArray(mesh.material)
+          ? mesh.material[0]
+          : mesh.material;
+        if (base && "clone" in base) {
           const cloned = (
             base as THREE.Material & { clone(): THREE.Material }
           ).clone();
@@ -2142,17 +2738,20 @@ export class ElementManager {
           ud.customMaterial = true;
         }
       }
-      const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhongMaterial;
-      if (mat && 'color' in mat && mat.color) {
+      const mat = mesh.material as
+        | THREE.MeshStandardMaterial
+        | THREE.MeshPhongMaterial;
+      if (mat && "color" in mat && mat.color) {
         mat.color.copy(color);
       }
       // Apply opacity. `transparent` must toggle in lockstep so the GPU
       // picks the correct depth-write/blend path; at 1.0 we restore
       // non-transparent rendering to avoid sort-order artefacts.
-      if (mat && 'opacity' in mat) {
+      if (mat && "opacity" in mat) {
         const clamped = Math.max(0, Math.min(1, opacity));
         (mat as THREE.Material & { opacity: number }).opacity = clamped;
-        (mat as THREE.Material & { transparent: boolean }).transparent = clamped < 1;
+        (mat as THREE.Material & { transparent: boolean }).transparent =
+          clamped < 1;
       }
     }
     this.sceneManager.requestRender();
@@ -2211,7 +2810,9 @@ export class ElementManager {
       // Clone material on first recolor so we don't mutate the shared one
       const ud = mesh.userData as { customMaterial?: boolean };
       if (!ud.customMaterial) {
-        const base = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+        const base = Array.isArray(mesh.material)
+          ? mesh.material[0]
+          : mesh.material;
         if (base instanceof THREE.MeshStandardMaterial) {
           const cloned = base.clone();
           mesh.material = cloned;
@@ -2231,6 +2832,10 @@ export class ElementManager {
   resetColors(): void {
     // Dispose all cloned materials and restore originals in one pass.
     this.disposeCreatedMaterials();
+    // Clear any color-by-property overlay so the next callsite gets a
+    // clean baseline (otherwise getColorByPropertyConfig() would still
+    // report an active overlay even though the meshes are at base colour).
+    this.colorByPropertyConfig = null;
     // For meshes that had no originalMaterial cached, fall back to the
     // flat discipline material so they stay visible.
     for (const [elementId, mesh] of this.meshMap) {
@@ -2240,7 +2845,7 @@ export class ElementManager {
         originalMaterial?: THREE.Material | THREE.Material[];
       };
       if (!ud.originalMaterial) {
-        mesh.material = this.getMaterial(el.discipline || 'other');
+        mesh.material = this.getMaterial(el.discipline || "other");
       }
     }
     this.sceneManager.requestRender();
@@ -2277,6 +2882,14 @@ export class ElementManager {
     // Ghost references point at meshes that were just disposed above —
     // drop them so a fresh model doesn't try to restore stale materials.
     this.ghostedIds.clear();
+    // W6.6: hidden / isolate / color-by-property state is per-model — wipe.
+    if (this.hiddenElementIds.size > 0 || this.isolateActive) {
+      this.hiddenElementIds.clear();
+      this.isolateActive = false;
+      this.notifyHiddenCount();
+    }
+    this.colorByPropertyConfig = null;
+    this.activeSelectionIds = [];
     // Materials are reused — dispose them only on full destroy
   }
 
@@ -2305,6 +2918,8 @@ export class ElementManager {
       this.ghostMaterial = null;
     }
     this.ghostedIds.clear();
+    // W6.6: drop hidden-count subscribers so the next mount starts clean.
+    this.hiddenCountSubscribers.clear();
     this.sceneManager.scene.remove(this.elementGroup);
   }
 }

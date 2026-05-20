@@ -13,7 +13,7 @@
  * The store is intentionally tiny — it's a signalling layer, not a cache.
  * Nothing is persisted.
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface BIMLinkSelectionState {
   /** The BOQ position currently selected in the editor, if any. Used by
@@ -36,27 +36,29 @@ interface BIMLinkSelectionState {
   clear: () => void;
 }
 
-export const useBIMLinkSelectionStore = create<BIMLinkSelectionState>((set) => ({
-  selectedBOQPositionId: null,
-  highlightedBIMElementIds: [],
-  selectedBIMElementIds: [],
+export const useBIMLinkSelectionStore = create<BIMLinkSelectionState>(
+  (set) => ({
+    selectedBOQPositionId: null,
+    highlightedBIMElementIds: [],
+    selectedBIMElementIds: [],
 
-  setBOQSelection: (positionId, cadElementIds) =>
-    set({
-      selectedBOQPositionId: positionId,
-      highlightedBIMElementIds: cadElementIds,
-    }),
+    setBOQSelection: (positionId, cadElementIds) =>
+      set({
+        selectedBOQPositionId: positionId,
+        highlightedBIMElementIds: cadElementIds,
+      }),
 
-  setBIMSelection: (elementIds) =>
-    set({
-      selectedBIMElementIds: elementIds,
-      highlightedBIMElementIds: elementIds,
-    }),
+    setBIMSelection: (elementIds) =>
+      set({
+        selectedBIMElementIds: elementIds,
+        highlightedBIMElementIds: elementIds,
+      }),
 
-  clear: () =>
-    set({
-      selectedBOQPositionId: null,
-      highlightedBIMElementIds: [],
-      selectedBIMElementIds: [],
-    }),
-}));
+    clear: () =>
+      set({
+        selectedBOQPositionId: null,
+        highlightedBIMElementIds: [],
+        selectedBIMElementIds: [],
+      }),
+  }),
+);

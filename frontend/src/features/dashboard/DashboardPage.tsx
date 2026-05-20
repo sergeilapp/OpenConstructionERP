@@ -1,14 +1,26 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import { SUPPORTED_LANGUAGES } from '@/app/i18n';
-import { uploadDocument, fetchDocuments, type DocumentItem } from '@/features/documents/api';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import { SUPPORTED_LANGUAGES } from "@/app/i18n";
+import {
+  uploadDocument,
+  fetchDocuments,
+  type DocumentItem,
+} from "@/features/documents/api";
 import {
   FolderPlus,
   ArrowRight,
@@ -37,13 +49,29 @@ import {
   Lightbulb,
   CircleDashed,
   Activity,
-} from 'lucide-react';
-import { Card, CardHeader, CardContent, Button, Badge, Skeleton, ActivityFeed as CrossModuleActivityFeed, EmptyState } from '@/shared/ui';
-import BIMCoverageCard from './BIMCoverageCard';
-import { CompactProjectCard } from './components/CompactProjectCard';
-import { DashboardProjectsMap } from './components/DashboardProjectsMap';
-import { ShowAllProjectsCard } from './components/ShowAllProjectsCard';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
+  LayoutGrid,
+} from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  Badge,
+  Skeleton,
+  ActivityFeed as CrossModuleActivityFeed,
+  EmptyState,
+} from "@/shared/ui";
+import BIMCoverageCard from "./BIMCoverageCard";
+import { CompactProjectCard } from "./components/CompactProjectCard";
+import { DashboardProjectsMap } from "./components/DashboardProjectsMap";
+import { ShowAllProjectsCard } from "./components/ShowAllProjectsCard";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { DashboardLayoutManager } from "./DashboardLayoutManager";
+import { DASHBOARD_WIDGET_IDS } from "./widgetRegistry";
+import {
+  useDashboardLayoutStore,
+  reconcileOrder,
+} from "@/stores/useDashboardLayoutStore";
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 
@@ -155,8 +183,16 @@ interface OnboardingStep {
 interface SystemStatusData {
   api: { status: string; version: string };
   database: { status: string; engine?: string; error?: string };
-  vector_db: { status: string; engine: string; collections?: number; vectors?: number };
-  ai: { providers: { name: string; configured: boolean }[]; configured: boolean };
+  vector_db: {
+    status: string;
+    engine: string;
+    collections?: number;
+    vectors?: number;
+  };
+  ai: {
+    providers: { name: string; configured: boolean }[];
+    configured: boolean;
+  };
 }
 
 interface DemoCatalogEntry {
@@ -184,18 +220,18 @@ interface DemoInstallResult {
 }
 
 const COUNTRY_FLAGS: Record<string, string> = {
-  DE: '\uD83C\uDDE9\uD83C\uDDEA',
-  GB: '\uD83C\uDDEC\uD83C\uDDE7',
-  AE: '\uD83C\uDDE6\uD83C\uDDEA',
-  FR: '\uD83C\uDDEB\uD83C\uDDF7',
+  DE: "\uD83C\uDDE9\uD83C\uDDEA",
+  GB: "\uD83C\uDDEC\uD83C\uDDE7",
+  AE: "\uD83C\uDDE6\uD83C\uDDEA",
+  FR: "\uD83C\uDDEB\uD83C\uDDF7",
 };
 
 const DEMO_TYPE_COLORS: Record<string, string> = {
-  Residential: '#2563eb',
-  Commercial: '#7c3aed',
-  Healthcare: '#dc2626',
-  Industrial: '#ca8a04',
-  Education: '#16a34a',
+  Residential: "#2563eb",
+  Commercial: "#7c3aed",
+  Healthcare: "#dc2626",
+  Industrial: "#ca8a04",
+  Education: "#16a34a",
 };
 
 /* ── Import Demo Modal ─────────────────────────────────────────────────── */
@@ -216,15 +252,15 @@ function ImportDemoModal({
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
   const { data: catalog } = useQuery({
-    queryKey: ['demo-catalog'],
-    queryFn: () => apiGet<DemoCatalogEntry[]>('/demo/catalog'),
+    queryKey: ["demo-catalog"],
+    queryFn: () => apiGet<DemoCatalogEntry[]>("/demo/catalog"),
     enabled: open,
     retry: false,
   });
@@ -233,12 +269,18 @@ function ImportDemoModal({
     mutationFn: (demoId: string) =>
       apiPost<DemoInstallResult>(`/demo/install/${demoId}`),
     onSuccess: (result) => {
-      void queryClient.invalidateQueries({ queryKey: ['projects'] });
+      void queryClient.invalidateQueries({ queryKey: ["projects"] });
       onClose();
       navigate(`/projects/${result.project_id}`);
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('demo.install_failed', { defaultValue: 'Failed to install demo‌⁠‍' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("demo.install_failed", {
+          defaultValue: "Failed to install demo‌⁠‍",
+        }),
+        message: err.message,
+      });
     },
     onSettled: () => {
       setInstallingId(null);
@@ -265,7 +307,12 @@ function ImportDemoModal({
       />
 
       {/* Modal */}
-      <div role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" className="relative z-10 w-full max-w-2xl mx-4 rounded-xl bg-surface-primary shadow-2xl border border-border-light animate-card-in">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="demo-modal-title"
+        className="relative z-10 w-full max-w-2xl mx-4 rounded-xl bg-surface-primary shadow-2xl border border-border-light animate-card-in"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
           <div className="flex items-center gap-3">
@@ -273,18 +320,24 @@ function ImportDemoModal({
               <Download size={16} className="text-oe-blue" strokeWidth={2} />
             </div>
             <div>
-              <h3 id="demo-modal-title" className="text-base font-semibold text-content-primary">
-                {t('demo.modal_title', 'Import Demo Project')}
+              <h3
+                id="demo-modal-title"
+                className="text-base font-semibold text-content-primary"
+              >
+                {t("demo.modal_title", "Import Demo Project")}
               </h3>
               <p className="text-xs text-content-tertiary">
-                {t('demo.modal_subtitle', 'Install a complete project with BOQ, schedule, budget, and tendering')}
+                {t(
+                  "demo.modal_subtitle",
+                  "Install a complete project with BOQ, schedule, budget, and tendering",
+                )}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary transition-colors"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -301,7 +354,7 @@ function ImportDemoModal({
           ) : (
             catalog.map((demo) => {
               const isInstalling = installingId === demo.demo_id;
-              const typeColor = DEMO_TYPE_COLORS[demo.type] || '#6b7280';
+              const typeColor = DEMO_TYPE_COLORS[demo.type] || "#6b7280";
               return (
                 <div
                   key={demo.demo_id}
@@ -315,7 +368,7 @@ function ImportDemoModal({
                       style={{ color: typeColor }}
                     />
                     <span className="absolute -bottom-1 -right-1 text-sm leading-none">
-                      {COUNTRY_FLAGS[demo.country] || ''}
+                      {COUNTRY_FLAGS[demo.country] || ""}
                     </span>
                   </div>
 
@@ -334,8 +387,14 @@ function ImportDemoModal({
                     </p>
                     <div className="mt-1 flex items-center gap-3 text-2xs text-content-quaternary">
                       <span>{demo.type}</span>
-                      <span>{demo.sections} {t('demo.sections', { defaultValue: 'sections‌⁠‍' })}</span>
-                      <span>{demo.positions} {t('demo.positions', { defaultValue: 'positions‌⁠‍' })}</span>
+                      <span>
+                        {demo.sections}{" "}
+                        {t("demo.sections", { defaultValue: "sections‌⁠‍" })}
+                      </span>
+                      <span>
+                        {demo.positions}{" "}
+                        {t("demo.positions", { defaultValue: "positions‌⁠‍" })}
+                      </span>
                       <span>{demo.currency}</span>
                     </div>
                   </div>
@@ -355,8 +414,8 @@ function ImportDemoModal({
                     }
                   >
                     {isInstalling
-                      ? t('demo.installing', 'Installing...')
-                      : t('demo.install', 'Install')}
+                      ? t("demo.installing", "Installing...")
+                      : t("demo.install", "Install")}
                   </Button>
                 </div>
               );
@@ -365,7 +424,10 @@ function ImportDemoModal({
 
           {installMutation.isError && (
             <div className="rounded-lg bg-red-50 p-3 text-xs text-red-700">
-              {t('demo.install_error', 'Failed to install demo project. Please try again.')}
+              {t(
+                "demo.install_error",
+                "Failed to install demo project. Please try again.",
+              )}
             </div>
           )}
         </div>
@@ -396,12 +458,13 @@ function OnboardingSteps({
   const hasBoqs = Boolean(boqs && boqs.length > 0);
   const hasVectors = Boolean(vectorCount && vectorCount > 0);
   const hasQuantities = Boolean(
-    boqs && boqs.some((b) => b.positions && b.positions.some((p) => p.total > 0)),
+    boqs &&
+    boqs.some((b) => b.positions && b.positions.some((p) => p.total > 0)),
   );
 
   const aiConfigured = (() => {
     try {
-      return Boolean(localStorage.getItem('oe_ai_provider'));
+      return Boolean(localStorage.getItem("oe_ai_provider"));
     } catch {
       return false;
     }
@@ -422,84 +485,84 @@ function OnboardingSteps({
     {
       id: 1,
       icon: <Database size={22} strokeWidth={1.5} />,
-      titleKey: 'dashboard.step_load_db',
-      titleDefault: 'Load Cost Database',
-      descKey: 'dashboard.step_load_db_desc',
-      descDefault: 'Import regional pricing data with 55,000+ items',
-      buttonKey: 'dashboard.import_database',
-      buttonDefault: 'Import Database',
+      titleKey: "dashboard.step_load_db",
+      titleDefault: "Load Cost Database",
+      descKey: "dashboard.step_load_db_desc",
+      descDefault: "Import regional pricing data with 55,000+ items",
+      buttonKey: "dashboard.import_database",
+      buttonDefault: "Import Database",
       done: hasDatabase,
       disabled: false,
-      onClick: () => navigate('/costs/import'),
+      onClick: () => navigate("/costs/import"),
     },
     {
       id: 2,
       icon: <Sparkles size={22} strokeWidth={1.5} />,
-      titleKey: 'dashboard.step_ai_search',
-      titleDefault: 'Enable AI Search',
-      descKey: 'dashboard.step_ai_search_desc',
-      descDefault: 'Generate vector embeddings for semantic cost matching',
-      buttonKey: 'dashboard.configure',
-      buttonDefault: 'Configure',
+      titleKey: "dashboard.step_ai_search",
+      titleDefault: "Enable AI Search",
+      descKey: "dashboard.step_ai_search_desc",
+      descDefault: "Generate vector embeddings for semantic cost matching",
+      buttonKey: "dashboard.configure",
+      buttonDefault: "Configure",
       done: hasVectors,
       disabled: !hasDatabase,
-      onClick: () => navigate('/costs/import'),
+      onClick: () => navigate("/costs/import"),
     },
     {
       id: 3,
       icon: <Cpu size={22} strokeWidth={1.5} />,
-      titleKey: 'dashboard.step_connect_ai',
-      titleDefault: 'Connect AI',
-      descKey: 'dashboard.step_connect_ai_desc',
-      descDefault: 'Add your API keys for AI-powered estimation',
-      buttonKey: 'dashboard.add_api_keys',
-      buttonDefault: 'Add API Keys',
+      titleKey: "dashboard.step_connect_ai",
+      titleDefault: "Connect AI",
+      descKey: "dashboard.step_connect_ai_desc",
+      descDefault: "Add your API keys for AI-powered estimation",
+      buttonKey: "dashboard.add_api_keys",
+      buttonDefault: "Add API Keys",
       done: aiConfigured,
       disabled: false,
-      onClick: () => navigate('/settings'),
+      onClick: () => navigate("/settings"),
     },
     {
       id: 4,
       icon: <FolderPlus size={22} strokeWidth={1.5} />,
-      titleKey: 'dashboard.step_create_project',
-      titleDefault: 'Create Project',
-      descKey: 'dashboard.step_create_project_desc',
-      descDefault: 'Start your first construction estimation project',
-      buttonKey: 'dashboard.new_project',
-      buttonDefault: 'New Project',
+      titleKey: "dashboard.step_create_project",
+      titleDefault: "Create Project",
+      descKey: "dashboard.step_create_project_desc",
+      descDefault: "Start your first construction estimation project",
+      buttonKey: "dashboard.new_project",
+      buttonDefault: "New Project",
       done: hasProjects,
       disabled: false,
-      onClick: () => navigate('/projects/new'),
+      onClick: () => navigate("/projects/new"),
     },
     {
       id: 5,
       icon: <FileSpreadsheet size={22} strokeWidth={1.5} />,
-      titleKey: 'dashboard.step_build_boq',
-      titleDefault: 'Build Your BOQ',
-      descKey: 'dashboard.step_build_boq_desc',
-      descDefault: 'Create a Bill of Quantities with AI assistance',
-      buttonKey: 'dashboard.create_boq',
-      buttonDefault: 'Create BOQ',
+      titleKey: "dashboard.step_build_boq",
+      titleDefault: "Build Your BOQ",
+      descKey: "dashboard.step_build_boq_desc",
+      descDefault: "Create a Bill of Quantities with AI assistance",
+      buttonKey: "dashboard.create_boq",
+      buttonDefault: "Create BOQ",
       done: hasBoqs,
       disabled: !hasProjects,
-      onClick: () => navigate(hasProjects ? '/projects' : '/projects/new'),
+      onClick: () => navigate(hasProjects ? "/projects" : "/projects/new"),
     },
     {
       id: 6,
       icon: <BarChart3 size={22} strokeWidth={1.5} />,
-      titleKey: 'dashboard.step_set_quantities',
-      titleDefault: 'Set Quantities',
-      descKey: 'dashboard.step_set_quantities_desc',
-      descDefault: 'Add quantities and unit rates to your BOQ positions',
-      buttonKey: 'dashboard.open_boq',
-      buttonDefault: 'Open BOQ',
+      titleKey: "dashboard.step_set_quantities",
+      titleDefault: "Set Quantities",
+      descKey: "dashboard.step_set_quantities_desc",
+      descDefault: "Add quantities and unit rates to your BOQ positions",
+      buttonKey: "dashboard.open_boq",
+      buttonDefault: "Open BOQ",
       done: hasQuantities,
       disabled: !hasBoqs,
       onClick: () => {
         if (boqs && boqs.length > 0) {
           navigate(`/boq/${boqs[0]!.id}`);
         } else {
-          navigate('/projects');
+          navigate("/projects");
         }
       },
     },
@@ -510,14 +573,16 @@ function OnboardingSteps({
       {/* Section header */}
       <div
         className="mb-5 flex items-center justify-between animate-card-in"
-        style={{ animationDelay: '80ms' }}
+        style={{ animationDelay: "80ms" }}
       >
         <div className="flex items-center gap-3">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue-subtle">
             <Zap size={14} className="text-oe-blue" strokeWidth={2} />
           </div>
           <h2 className="text-lg font-semibold text-content-primary">
-            {t('dashboard.getting_started', { defaultValue: 'Getting Started‌⁠‍' })}
+            {t("dashboard.getting_started", {
+              defaultValue: "Getting Started‌⁠‍",
+            })}
           </h2>
           <Badge variant="blue" size="sm">
             {completedCount}/{TOTAL_STEPS}
@@ -526,16 +591,13 @@ function OnboardingSteps({
       </div>
 
       {/* Progress bar */}
-      <div
-        className="mb-5 animate-card-in"
-        style={{ animationDelay: '100ms' }}
-      >
+      <div className="mb-5 animate-card-in" style={{ animationDelay: "100ms" }}>
         <div className="h-1.5 w-full rounded-full bg-surface-secondary overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-slow ease-oe"
             style={{
               width: `${(completedCount / TOTAL_STEPS) * 100}%`,
-              background: 'linear-gradient(90deg, var(--oe-blue), #5856d6)',
+              background: "linear-gradient(90deg, var(--oe-blue), #5856d6)",
             }}
           />
         </div>
@@ -552,13 +614,17 @@ function OnboardingSteps({
             <Card
               padding="none"
               hoverable={!step.disabled}
-              className={`relative overflow-hidden h-full flex flex-col ${step.done ? 'opacity-75' : ''} ${step.disabled ? 'opacity-50' : ''}`}
+              className={`relative overflow-hidden h-full flex flex-col ${step.done ? "opacity-75" : ""} ${step.disabled ? "opacity-50" : ""}`}
             >
               {/* Completed overlay checkmark */}
               {step.done && (
                 <div className="absolute top-3 right-3 z-10">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-semantic-success">
-                    <CheckCircle2 size={14} className="text-content-inverse" strokeWidth={2.5} />
+                    <CheckCircle2
+                      size={14}
+                      className="text-content-inverse"
+                      strokeWidth={2.5}
+                    />
                   </div>
                 </div>
               )}
@@ -569,14 +635,14 @@ function OnboardingSteps({
                   <div
                     className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                       step.done
-                        ? 'bg-semantic-success-bg text-semantic-success'
-                        : 'bg-oe-blue-subtle text-oe-blue'
+                        ? "bg-semantic-success-bg text-semantic-success"
+                        : "bg-oe-blue-subtle text-oe-blue"
                     }`}
                   >
                     {step.id}
                   </div>
                   <div
-                    className={`${step.done ? 'text-semantic-success' : 'text-content-tertiary'}`}
+                    className={`${step.done ? "text-semantic-success" : "text-content-tertiary"}`}
                   >
                     {step.icon}
                   </div>
@@ -604,22 +670,24 @@ function OnboardingSteps({
                         icon={<ArrowRight size={13} strokeWidth={2} />}
                         iconPosition="right"
                       >
-                        {t(step.buttonKey, { defaultValue: step.buttonDefault })}
+                        {t(step.buttonKey, {
+                          defaultValue: step.buttonDefault,
+                        })}
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setDemoModalOpen(true)}
                         className="flex-1 !px-2"
-                        title={t('demo.import_demo', 'Import Demo')}
+                        title={t("demo.import_demo", "Import Demo")}
                         icon={<Download size={13} strokeWidth={2} />}
                       >
-                        {t('dashboard.demo', { defaultValue: 'Demo' })}
+                        {t("dashboard.demo", { defaultValue: "Demo" })}
                       </Button>
                     </div>
                   ) : (
                     <Button
-                      variant={step.done ? 'ghost' : 'secondary'}
+                      variant={step.done ? "ghost" : "secondary"}
                       size="sm"
                       disabled={step.disabled}
                       onClick={step.onClick}
@@ -634,8 +702,12 @@ function OnboardingSteps({
                       iconPosition="right"
                     >
                       {step.done
-                        ? t('dashboard.completed', { defaultValue: 'Completed‌⁠‍' })
-                        : t(step.buttonKey, { defaultValue: step.buttonDefault })}
+                        ? t("dashboard.completed", {
+                            defaultValue: "Completed‌⁠‍",
+                          })
+                        : t(step.buttonKey, {
+                            defaultValue: step.buttonDefault,
+                          })}
                     </Button>
                   )}
                 </div>
@@ -646,10 +718,10 @@ function OnboardingSteps({
                 className="h-0.5 w-full"
                 style={{
                   background: step.done
-                    ? 'var(--oe-success)'
+                    ? "var(--oe-success)"
                     : step.disabled
-                      ? 'var(--oe-border-light)'
-                      : 'linear-gradient(90deg, var(--oe-blue), #5856d6)',
+                      ? "var(--oe-border-light)"
+                      : "linear-gradient(90deg, var(--oe-blue), #5856d6)",
                   opacity: step.done ? 1 : step.disabled ? 0.3 : 0.6,
                 }}
               />
@@ -659,7 +731,10 @@ function OnboardingSteps({
       </div>
 
       {/* Demo import modal */}
-      <ImportDemoModal open={demoModalOpen} onClose={() => setDemoModalOpen(false)} />
+      <ImportDemoModal
+        open={demoModalOpen}
+        onClose={() => setDemoModalOpen(false)}
+      />
     </div>
   );
 }
@@ -695,8 +770,9 @@ function KpiRibbon({
     // "Active" = anything not archived/closed/cancelled. Previously this
     // counted only `draft` and silently dropped tendered/in-review BOQs,
     // which made the tile misleading for late-stage projects.
-    const INACTIVE = new Set(['archived', 'closed', 'cancelled', 'rejected']);
-    return boqs.filter((b) => !INACTIVE.has((b.status ?? '').toLowerCase())).length;
+    const INACTIVE = new Set(["archived", "closed", "cancelled", "rejected"]);
+    return boqs.filter((b) => !INACTIVE.has((b.status ?? "").toLowerCase()))
+      .length;
   }, [boqs]);
 
   const scheduleCount = schedules?.length ?? 0;
@@ -704,9 +780,14 @@ function KpiRibbon({
   const qualityScore = useMemo(() => {
     if (!boqs || boqs.length === 0) return null;
     // Compute average validation "completeness" from positions that have totals > 0
-    const withPositions = boqs.filter((b) => b.positions && b.positions.length > 0);
+    const withPositions = boqs.filter(
+      (b) => b.positions && b.positions.length > 0,
+    );
     if (withPositions.length === 0) return null;
-    const totalPositions = withPositions.reduce((s, b) => s + b.positions.length, 0);
+    const totalPositions = withPositions.reduce(
+      (s, b) => s + b.positions.length,
+      0,
+    );
     const positionsWithPrice = withPositions.reduce(
       (s, b) => s + b.positions.filter((p) => p.total > 0).length,
       0,
@@ -715,7 +796,7 @@ function KpiRibbon({
     return Math.round((positionsWithPrice / totalPositions) * 100);
   }, [boqs]);
 
-  const currency = projects?.[0]?.currency ?? 'EUR';
+  const currency = projects?.[0]?.currency ?? "EUR";
 
   // Compact currency formatter using Intl.NumberFormat \u2014 handles every ISO
   // 4217 code natively (BRL, INR, JPY, etc.). For values \u2265 1M we use the
@@ -725,9 +806,9 @@ function KpiRibbon({
     try {
       const compact = value >= 1_000;
       return new Intl.NumberFormat(getIntlLocale(), {
-        style: 'currency',
+        style: "currency",
         currency,
-        notation: compact ? 'compact' : 'standard',
+        notation: compact ? "compact" : "standard",
         maximumFractionDigits: compact ? 1 : 2,
       }).format(value);
     } catch {
@@ -740,88 +821,124 @@ function KpiRibbon({
     {
       icon: <DollarSign size={20} strokeWidth={1.75} />,
       value: boqs ? formatMoney(totalValue) : null,
-      label: t('dashboard.kpi_total_value', { defaultValue: 'Total Value' }),
-      color: 'text-oe-blue',
-      bg: 'bg-oe-blue-subtle',
+      label: t("dashboard.kpi_total_value", { defaultValue: "Total Value" }),
+      color: "text-oe-blue",
+      bg: "bg-oe-blue-subtle",
     },
     {
       icon: <FileText size={20} strokeWidth={1.75} />,
       value: boqs ? `${activeEstimates}` : null,
       sublabel: boqs
-        ? t('dashboard.kpi_estimates_unit', {
-            defaultValue: 'estimate{{s}}',
-            s: activeEstimates === 1 ? '' : 's',
-          }).replace('{{s}}', activeEstimates === 1 ? '' : 's')
-        : '',
-      label: t('dashboard.kpi_active_estimates', { defaultValue: 'Active Estimates' }),
-      color: 'text-violet-600 dark:text-violet-400',
-      bg: 'bg-violet-500/10',
+        ? t("dashboard.kpi_estimates_unit", {
+            defaultValue: "estimate{{s}}",
+            s: activeEstimates === 1 ? "" : "s",
+          }).replace("{{s}}", activeEstimates === 1 ? "" : "s")
+        : "",
+      label: t("dashboard.kpi_active_estimates", {
+        defaultValue: "Active Estimates",
+      }),
+      color: "text-violet-600 dark:text-violet-400",
+      bg: "bg-violet-500/10",
     },
     {
       icon: <Calendar size={20} strokeWidth={1.75} />,
       value: schedules ? `${scheduleCount}` : null,
       sublabel: schedules
         ? scheduleCount > 0
-          ? t('dashboard.kpi_schedule_active', { defaultValue: 'active' })
-          : t('dashboard.kpi_no_schedules', { defaultValue: 'No schedules' })
-        : '',
-      label: t('dashboard.kpi_schedule', { defaultValue: 'Schedule Status' }),
-      color: 'text-cyan-600 dark:text-cyan-400',
-      bg: 'bg-cyan-500/10',
+          ? t("dashboard.kpi_schedule_active", { defaultValue: "active" })
+          : t("dashboard.kpi_no_schedules", { defaultValue: "No schedules" })
+        : "",
+      label: t("dashboard.kpi_schedule", { defaultValue: "Schedule Status" }),
+      color: "text-cyan-600 dark:text-cyan-400",
+      bg: "bg-cyan-500/10",
     },
     {
       icon: <ShieldCheck size={20} strokeWidth={1.75} />,
       // When no validation report exists yet we swap the "N/A" string for a
       // dashed-circle icon — reads as "not measured" and doesn't compete
       // with the percentage on validated tiles. The sublabel keeps the CTA.
-      value: qualityScore !== null
-        ? `${qualityScore}%`
-        : (<CircleDashed size={18} strokeWidth={1.75} className="text-content-quaternary opacity-70" />),
-      sublabel: qualityScore !== null
-        ? t('dashboard.kpi_priced_label', { defaultValue: 'priced' })
-        : t('dashboard.kpi_run_validation', { defaultValue: 'run validation' }),
+      value:
+        qualityScore !== null ? (
+          `${qualityScore}%`
+        ) : (
+          <CircleDashed
+            size={18}
+            strokeWidth={1.75}
+            className="text-content-quaternary opacity-70"
+          />
+        ),
+      sublabel:
+        qualityScore !== null
+          ? t("dashboard.kpi_priced_label", { defaultValue: "priced" })
+          : t("dashboard.kpi_run_validation", {
+              defaultValue: "run validation",
+            }),
       // Renamed 2026-05-11 from "Quality Score" → "Priced positions".
       // Previously the label implied DIN/NRM validation but the math was
       // just `positions_with_unit_rate / total_positions`. The renamed tile
       // is accurate to what it measures.
-      label: t('dashboard.kpi_priced_positions', { defaultValue: 'Priced positions' }),
-      color: qualityScore !== null && qualityScore >= 80 ? 'text-semantic-success' : qualityScore !== null && qualityScore >= 50 ? 'text-[#b45309]' : 'text-content-tertiary',
-      bg: qualityScore !== null && qualityScore >= 80 ? 'bg-semantic-success-bg' : qualityScore !== null && qualityScore >= 50 ? 'bg-semantic-warning-bg' : 'bg-surface-secondary',
-      onClick: qualityScore === null ? () => navigate('/validation') : undefined,
+      label: t("dashboard.kpi_priced_positions", {
+        defaultValue: "Priced positions",
+      }),
+      color:
+        qualityScore !== null && qualityScore >= 80
+          ? "text-semantic-success"
+          : qualityScore !== null && qualityScore >= 50
+            ? "text-[#b45309]"
+            : "text-content-tertiary",
+      bg:
+        qualityScore !== null && qualityScore >= 80
+          ? "bg-semantic-success-bg"
+          : qualityScore !== null && qualityScore >= 50
+            ? "bg-semantic-warning-bg"
+            : "bg-surface-secondary",
+      onClick:
+        qualityScore === null ? () => navigate("/validation") : undefined,
     },
   ];
 
   return (
     <div
       className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4 animate-card-in"
-      style={{ animationDelay: '50ms' }}
+      style={{ animationDelay: "50ms" }}
     >
       {cards.map((card, i) => {
-        const clickable = 'onClick' in card && typeof card.onClick === 'function';
-        const TileTag = clickable ? 'button' : 'div';
+        const clickable =
+          "onClick" in card && typeof card.onClick === "function";
+        const TileTag = clickable ? "button" : "div";
         return (
           <TileTag
             key={card.label}
-            type={clickable ? 'button' : undefined}
+            type={clickable ? "button" : undefined}
             onClick={clickable ? card.onClick : undefined}
             className={`group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-primary p-4 text-left transition-all duration-normal ease-oe hover:border-oe-blue/20 hover:shadow-sm animate-stagger-in ${
-              clickable ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-oe-blue/30' : ''
+              clickable
+                ? "cursor-pointer focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+                : ""
             }`}
             style={{ animationDelay: `${80 + i * 50}ms` }}
           >
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${card.bg} ${card.color} transition-transform duration-normal ease-oe group-hover:scale-105`}>
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${card.bg} ${card.color} transition-transform duration-normal ease-oe group-hover:scale-105`}
+            >
               {card.icon}
             </div>
             <div className="min-w-0">
               <div className="flex items-baseline gap-1.5">
                 <span className="text-lg font-bold tabular-nums text-content-primary leading-tight truncate">
-                  {card.value ?? <span className="inline-block h-5 w-14 animate-pulse rounded bg-surface-tertiary" />}
+                  {card.value ?? (
+                    <span className="inline-block h-5 w-14 animate-pulse rounded bg-surface-tertiary" />
+                  )}
                 </span>
-                {'sublabel' in card && card.sublabel && (
-                  <span className="text-xs text-content-tertiary">{card.sublabel}</span>
+                {"sublabel" in card && card.sublabel && (
+                  <span className="text-xs text-content-tertiary">
+                    {card.sublabel}
+                  </span>
                 )}
               </div>
-              <div className="text-xs text-content-tertiary mt-0.5 truncate">{card.label}</div>
+              <div className="text-xs text-content-tertiary mt-0.5 truncate">
+                {card.label}
+              </div>
             </div>
           </TileTag>
         );
@@ -850,13 +967,18 @@ interface AnalyticsOverview {
   }[];
 }
 
-function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[] }) {
+function PortfolioOverview({
+  projects: _projects,
+}: {
+  projects: ProjectSummary[];
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { data: analytics } = useQuery({
-    queryKey: ['portfolio-analytics', _projects.length],
-    queryFn: () => apiGet<AnalyticsOverview>('/v1/projects/analytics/overview/'),
+    queryKey: ["portfolio-analytics", _projects.length],
+    queryFn: () =>
+      apiGet<AnalyticsOverview>("/v1/projects/analytics/overview/"),
     retry: false,
     staleTime: 60_000,
   });
@@ -864,37 +986,47 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
   if (!analytics) return null;
 
   const hasWarnings = analytics.over_budget_count > 0;
-  const totalBudgetFormatted = analytics.total_planned >= 1_000_000
-    ? `${(analytics.total_planned / 1_000_000).toFixed(1)}M`
-    : analytics.total_planned >= 1_000
-      ? `${(analytics.total_planned / 1_000).toFixed(0)}K`
-      : analytics.total_planned.toLocaleString();
+  const totalBudgetFormatted =
+    analytics.total_planned >= 1_000_000
+      ? `${(analytics.total_planned / 1_000_000).toFixed(1)}M`
+      : analytics.total_planned >= 1_000
+        ? `${(analytics.total_planned / 1_000).toFixed(0)}K`
+        : analytics.total_planned.toLocaleString();
 
   const overBudgetProjects = (analytics.projects || []).filter(
-    (p) => p.status === 'over_budget',
+    (p) => p.status === "over_budget",
   );
 
   return (
     <div
       className="rounded-xl border border-border-light bg-surface-primary p-4 animate-card-in"
-      style={{ animationDelay: '70ms' }}
+      style={{ animationDelay: "70ms" }}
     >
       <div className="flex items-center gap-2 mb-3">
-        <TrendingUp size={16} className="text-content-tertiary" strokeWidth={1.75} />
+        <TrendingUp
+          size={16}
+          className="text-content-tertiary"
+          strokeWidth={1.75}
+        />
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('dashboard.portfolio_overview', { defaultValue: 'Portfolio Overview' })}
+          {t("dashboard.portfolio_overview", {
+            defaultValue: "Portfolio Overview",
+          })}
         </h3>
         {hasWarnings && (
           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-2xs font-medium text-amber-700">
             <AlertTriangle size={10} />
-            {analytics.over_budget_count} {t('dashboard.over_budget', { defaultValue: 'over budget' })}
+            {analytics.over_budget_count}{" "}
+            {t("dashboard.over_budget", { defaultValue: "over budget" })}
           </span>
         )}
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="rounded-lg bg-surface-secondary p-3">
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
-            {t('dashboard.active_projects', { defaultValue: 'Active Projects' })}
+            {t("dashboard.active_projects", {
+              defaultValue: "Active Projects",
+            })}
           </div>
           <div className="mt-1 text-xl font-bold tabular-nums text-content-primary">
             {analytics.total_projects}
@@ -902,7 +1034,7 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
         </div>
         <div className="rounded-lg bg-surface-secondary p-3">
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
-            {t('dashboard.total_budget_all', { defaultValue: 'Total Budget' })}
+            {t("dashboard.total_budget_all", { defaultValue: "Total Budget" })}
           </div>
           <div className="mt-1 text-xl font-bold tabular-nums text-content-primary">
             {totalBudgetFormatted}
@@ -910,17 +1042,23 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
         </div>
         <div className="rounded-lg bg-surface-secondary p-3">
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
-            {t('dashboard.with_budget', { defaultValue: 'With Budget' })}
+            {t("dashboard.with_budget", { defaultValue: "With Budget" })}
           </div>
           <div className="mt-1 text-xl font-bold tabular-nums text-content-primary">
             {analytics.projects_with_budget}
           </div>
         </div>
-        <div className={`rounded-lg p-3 ${hasWarnings ? 'bg-amber-50 dark:bg-amber-900/10' : 'bg-surface-secondary'}`}>
+        <div
+          className={`rounded-lg p-3 ${hasWarnings ? "bg-amber-50 dark:bg-amber-900/10" : "bg-surface-secondary"}`}
+        >
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
-            {t('dashboard.budget_warnings', { defaultValue: 'Budget Warnings' })}
+            {t("dashboard.budget_warnings", {
+              defaultValue: "Budget Warnings",
+            })}
           </div>
-          <div className={`mt-1 text-xl font-bold tabular-nums ${hasWarnings ? 'text-amber-600' : 'text-content-primary'}`}>
+          <div
+            className={`mt-1 text-xl font-bold tabular-nums ${hasWarnings ? "text-amber-600" : "text-content-primary"}`}
+          >
             {analytics.over_budget_count}
           </div>
         </div>
@@ -928,7 +1066,9 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
       {overBudgetProjects.length > 0 && (
         <div className="mt-3 pt-3 border-t border-border-light">
           <p className="text-2xs font-medium text-amber-600 uppercase tracking-wider mb-2">
-            {t('dashboard.projects_over_budget', { defaultValue: 'Projects Over Budget' })}
+            {t("dashboard.projects_over_budget", {
+              defaultValue: "Projects Over Budget",
+            })}
           </p>
           <div className="space-y-1.5">
             {overBudgetProjects.slice(0, 3).map((p) => (
@@ -937,9 +1077,12 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
                 onClick={() => navigate(`/projects/${p.id}`)}
                 className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs hover:bg-surface-secondary transition-colors text-left"
               >
-                <span className="text-content-primary font-medium truncate">{p.name}</span>
+                <span className="text-content-primary font-medium truncate">
+                  {p.name}
+                </span>
                 <span className="text-amber-600 tabular-nums shrink-0 ml-2">
-                  {p.variance_pct > 0 ? '+' : ''}{p.variance_pct}%
+                  {p.variance_pct > 0 ? "+" : ""}
+                  {p.variance_pct}%
                 </span>
               </button>
             ))}
@@ -975,10 +1118,10 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
   const totals = useMemo(() => {
     if (activeCard) {
       return {
-        tasks:     activeCard.open_tasks ?? 0,
-        rfis:      activeCard.open_rfis ?? 0,
+        tasks: activeCard.open_tasks ?? 0,
+        rfis: activeCard.open_rfis ?? 0,
         incidents: activeCard.safety_incidents ?? 0,
-        projects:  1,
+        projects: 1,
       };
     }
     if (!cards || cards.length === 0) {
@@ -986,27 +1129,32 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
     }
     return cards.reduce(
       (acc, c) => ({
-        tasks:     acc.tasks     + (c.open_tasks ?? 0),
-        rfis:      acc.rfis      + (c.open_rfis ?? 0),
+        tasks: acc.tasks + (c.open_tasks ?? 0),
+        rfis: acc.rfis + (c.open_rfis ?? 0),
         incidents: acc.incidents + (c.safety_incidents ?? 0),
-        projects:  acc.projects  + 1,
+        projects: acc.projects + 1,
       }),
       { tasks: 0, rfis: 0, incidents: 0, projects: 0 },
     );
   }, [activeCard, cards]);
 
-  const everythingClear = totals.tasks === 0 && totals.rfis === 0 && totals.incidents === 0;
+  const everythingClear =
+    totals.tasks === 0 && totals.rfis === 0 && totals.incidents === 0;
   if (everythingClear || !cards || cards.length === 0) return null;
 
-  type ItemTone = 'urgent' | 'attention' | 'info';
-  const tone = (count: number, urgentAt: number, attentionAt: number): ItemTone =>
-    count >= urgentAt ? 'urgent' : count >= attentionAt ? 'attention' : 'info';
+  type ItemTone = "urgent" | "attention" | "info";
+  const tone = (
+    count: number,
+    urgentAt: number,
+    attentionAt: number,
+  ): ItemTone =>
+    count >= urgentAt ? "urgent" : count >= attentionAt ? "attention" : "info";
 
   // When we're in portfolio mode, clicking a tile sends the user to the
   // project list so they can pick one — the destination pages need a
   // project context to render anything meaningful.
   const tileUrl = (singleProjectUrl: string) =>
-    activeCard ? singleProjectUrl : '/projects';
+    activeCard ? singleProjectUrl : "/projects";
 
   const items: Array<{
     id: string;
@@ -1018,68 +1166,87 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
     url: string;
   }> = [
     {
-      id: 'tasks',
+      id: "tasks",
       value: totals.tasks,
-      label: t('dashboard.today_tasks', { defaultValue: 'Open tasks' }),
-      sublabel: t('dashboard.today_tasks_sub', { defaultValue: 'awaiting your attention' }),
+      label: t("dashboard.today_tasks", { defaultValue: "Open tasks" }),
+      sublabel: t("dashboard.today_tasks_sub", {
+        defaultValue: "awaiting your attention",
+      }),
       icon: <CheckCircle2 size={18} strokeWidth={1.75} />,
       tone: tone(totals.tasks, 10, 3),
-      url: tileUrl('/tasks'),
+      url: tileUrl("/tasks"),
     },
     {
-      id: 'rfis',
+      id: "rfis",
       value: totals.rfis,
-      label: t('dashboard.today_rfis', { defaultValue: 'Open RFIs' }),
-      sublabel: t('dashboard.today_rfis_sub', { defaultValue: 'awaiting response' }),
+      label: t("dashboard.today_rfis", { defaultValue: "Open RFIs" }),
+      sublabel: t("dashboard.today_rfis_sub", {
+        defaultValue: "awaiting response",
+      }),
       icon: <FileText size={18} strokeWidth={1.75} />,
       tone: tone(totals.rfis, 5, 1),
-      url: tileUrl('/rfi'),
+      url: tileUrl("/rfi"),
     },
     {
-      id: 'incidents',
+      id: "incidents",
       value: totals.incidents,
-      label: t('dashboard.today_incidents', { defaultValue: 'Safety incidents' }),
-      sublabel: t('dashboard.today_incidents_sub', { defaultValue: 'open this week' }),
+      label: t("dashboard.today_incidents", {
+        defaultValue: "Safety incidents",
+      }),
+      sublabel: t("dashboard.today_incidents_sub", {
+        defaultValue: "open this week",
+      }),
       icon: <AlertTriangle size={18} strokeWidth={1.75} />,
       tone: tone(totals.incidents, 1, 1),
-      url: tileUrl('/safety'),
+      url: tileUrl("/safety"),
     },
   ];
 
-  const toneStyles: Record<ItemTone, { dot: string; value: string; iconColor: string }> = {
+  const toneStyles: Record<
+    ItemTone,
+    { dot: string; value: string; iconColor: string }
+  > = {
     urgent: {
-      dot:       'bg-semantic-error',
-      value:     'text-semantic-error',
-      iconColor: 'text-semantic-error',
+      dot: "bg-semantic-error",
+      value: "text-semantic-error",
+      iconColor: "text-semantic-error",
     },
     attention: {
-      dot:       'bg-semantic-warning',
-      value:     'text-[#b45309] dark:text-amber-400',
-      iconColor: 'text-[#b45309] dark:text-amber-400',
+      dot: "bg-semantic-warning",
+      value: "text-[#b45309] dark:text-amber-400",
+      iconColor: "text-[#b45309] dark:text-amber-400",
     },
     info: {
-      dot:       'bg-content-quaternary',
-      value:     'text-content-secondary',
-      iconColor: 'text-content-tertiary',
+      dot: "bg-content-quaternary",
+      value: "text-content-secondary",
+      iconColor: "text-content-tertiary",
     },
   };
 
   return (
     <div
       className="rounded-xl border border-border-light bg-surface-primary p-4 animate-card-in"
-      style={{ animationDelay: '80ms' }}
+      style={{ animationDelay: "80ms" }}
     >
       <div className="flex items-center gap-2 mb-3">
         <Activity size={14} className="text-oe-blue" strokeWidth={2} />
         <h3 className="text-sm font-semibold text-content-primary">
           {activeCard
-            ? t('dashboard.today_title_single', { defaultValue: 'Today · {{project}}', project: activeProjectName || activeCard.name })
-            : t('dashboard.today_title', { defaultValue: 'Today across your portfolio' })}
+            ? t("dashboard.today_title_single", {
+                defaultValue: "Today · {{project}}",
+                project: activeProjectName || activeCard.name,
+              })
+            : t("dashboard.today_title", {
+                defaultValue: "Today across your portfolio",
+              })}
         </h3>
         <span className="text-2xs text-content-tertiary tabular-nums">
           {activeCard
-            ? t('dashboard.today_meta_single', { defaultValue: 'this project' })
-            : t('dashboard.today_meta', { defaultValue: '{{count}} projects · pick one to drill in', count: totals.projects })}
+            ? t("dashboard.today_meta_single", { defaultValue: "this project" })
+            : t("dashboard.today_meta", {
+                defaultValue: "{{count}} projects · pick one to drill in",
+                count: totals.projects,
+              })}
         </span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1095,21 +1262,32 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
               <span className={`${s.iconColor} shrink-0`}>{it.icon}</span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-2">
-                  <span className={`text-xl font-bold tabular-nums ${hasItems ? s.value : 'text-content-tertiary'}`}>
+                  <span
+                    className={`text-xl font-bold tabular-nums ${hasItems ? s.value : "text-content-tertiary"}`}
+                  >
                     {it.value}
                   </span>
-                  <span className="text-xs text-content-tertiary truncate">{it.label}</span>
+                  <span className="text-xs text-content-tertiary truncate">
+                    {it.label}
+                  </span>
                 </div>
-                <div className="text-2xs text-content-tertiary mt-0.5 truncate">{it.sublabel}</div>
+                <div className="text-2xs text-content-tertiary mt-0.5 truncate">
+                  {it.sublabel}
+                </div>
               </div>
               {hasItems && (
-                <span className={`relative flex h-1.5 w-1.5 shrink-0 ${s.dot} rounded-full`}>
-                  {it.tone === 'urgent' && (
+                <span
+                  className={`relative flex h-1.5 w-1.5 shrink-0 ${s.dot} rounded-full`}
+                >
+                  {it.tone === "urgent" && (
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-semantic-error opacity-60" />
                   )}
                 </span>
               )}
-              <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+              <ArrowRight
+                size={14}
+                className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all"
+              />
             </button>
           );
         })}
@@ -1152,7 +1330,8 @@ function NextSteps({
       boqs && boqs.some((b) => b.positions && b.positions.length > 0),
     );
     const hasRates = Boolean(
-      boqs && boqs.some((b) => b.positions && b.positions.some((p) => p.total > 0)),
+      boqs &&
+      boqs.some((b) => b.positions && b.positions.some((p) => p.total > 0)),
     );
     const hasSchedules = Boolean(schedules && schedules.length > 0);
     const hasContacts = Boolean(allContacts && allContacts > 0);
@@ -1160,24 +1339,39 @@ function NextSteps({
     // If no BOQ -- suggest creating one
     if (hasProjects && !hasBoqs) {
       items.push({
-        id: 'create-boq',
+        id: "create-boq",
         icon: <FileSpreadsheet size={18} strokeWidth={1.75} />,
-        title: t('dashboard.next_create_boq', { defaultValue: 'Create your first Bill of Quantities' }),
-        description: t('dashboard.next_create_boq_desc', { defaultValue: 'A BOQ is the foundation of your estimate. Add sections and positions to start building your cost breakdown.' }),
-        actionLabel: t('dashboard.next_create_boq_action', { defaultValue: 'Create BOQ' }),
+        title: t("dashboard.next_create_boq", {
+          defaultValue: "Create your first Bill of Quantities",
+        }),
+        description: t("dashboard.next_create_boq_desc", {
+          defaultValue:
+            "A BOQ is the foundation of your estimate. Add sections and positions to start building your cost breakdown.",
+        }),
+        actionLabel: t("dashboard.next_create_boq_action", {
+          defaultValue: "Create BOQ",
+        }),
         url: `/projects/${projects![0]!.id}`,
       });
     }
 
     // If BOQ has no positions -- suggest adding them
     if (hasBoqs && !hasPositions) {
-      const firstBoq = boqs!.find((b) => !b.positions || b.positions.length === 0) ?? boqs![0];
+      const firstBoq =
+        boqs!.find((b) => !b.positions || b.positions.length === 0) ?? boqs![0];
       items.push({
-        id: 'add-positions',
+        id: "add-positions",
         icon: <FileText size={18} strokeWidth={1.75} />,
-        title: t('dashboard.next_add_positions', { defaultValue: 'Add positions to your estimate' }),
-        description: t('dashboard.next_add_positions_desc', { defaultValue: 'Your BOQ is empty. Add trade sections and work item positions with quantities and unit descriptions.' }),
-        actionLabel: t('dashboard.next_add_positions_action', { defaultValue: 'Open BOQ Editor' }),
+        title: t("dashboard.next_add_positions", {
+          defaultValue: "Add positions to your estimate",
+        }),
+        description: t("dashboard.next_add_positions_desc", {
+          defaultValue:
+            "Your BOQ is empty. Add trade sections and work item positions with quantities and unit descriptions.",
+        }),
+        actionLabel: t("dashboard.next_add_positions_action", {
+          defaultValue: "Open BOQ Editor",
+        }),
         url: `/boq/${firstBoq!.id}`,
       });
     }
@@ -1185,48 +1379,76 @@ function NextSteps({
     // If positions have no rates -- suggest importing cost database
     if (hasPositions && !hasRates) {
       items.push({
-        id: 'import-costs',
+        id: "import-costs",
         icon: <Database size={18} strokeWidth={1.75} />,
-        title: t('dashboard.next_import_costs', { defaultValue: 'Import cost database to auto-fill rates' }),
-        description: t('dashboard.next_import_costs_desc', { defaultValue: 'Load regional pricing data with 55,000+ items to automatically match unit rates to your BOQ positions.' }),
-        actionLabel: t('dashboard.next_import_costs_action', { defaultValue: 'Import Database' }),
-        url: '/costs/import',
+        title: t("dashboard.next_import_costs", {
+          defaultValue: "Import cost database to auto-fill rates",
+        }),
+        description: t("dashboard.next_import_costs_desc", {
+          defaultValue:
+            "Load regional pricing data with 55,000+ items to automatically match unit rates to your BOQ positions.",
+        }),
+        actionLabel: t("dashboard.next_import_costs_action", {
+          defaultValue: "Import Database",
+        }),
+        url: "/costs/import",
       });
     }
 
     // If BOQ has rates but not validated -- suggest validation
     if (hasRates) {
       items.push({
-        id: 'run-validation',
+        id: "run-validation",
         icon: <ShieldCheck size={18} strokeWidth={1.75} />,
-        title: t('dashboard.next_validate', { defaultValue: 'Run validation to check quality' }),
-        description: t('dashboard.next_validate_desc', { defaultValue: 'Check your estimate for missing quantities, zero prices, duplicates, and compliance with industry standards.' }),
-        actionLabel: t('dashboard.next_validate_action', { defaultValue: 'Run Validation' }),
-        url: '/validation',
+        title: t("dashboard.next_validate", {
+          defaultValue: "Run validation to check quality",
+        }),
+        description: t("dashboard.next_validate_desc", {
+          defaultValue:
+            "Check your estimate for missing quantities, zero prices, duplicates, and compliance with industry standards.",
+        }),
+        actionLabel: t("dashboard.next_validate_action", {
+          defaultValue: "Run Validation",
+        }),
+        url: "/validation",
       });
     }
 
     // If no schedule -- suggest creating one
     if (hasProjects && !hasSchedules) {
       items.push({
-        id: 'create-schedule',
+        id: "create-schedule",
         icon: <Calendar size={18} strokeWidth={1.75} />,
-        title: t('dashboard.next_create_schedule', { defaultValue: 'Create a project schedule' }),
-        description: t('dashboard.next_create_schedule_desc', { defaultValue: 'Plan your project timeline with activities, dependencies, and milestones. The Gantt chart updates automatically.' }),
-        actionLabel: t('dashboard.next_create_schedule_action', { defaultValue: 'Go to Schedule' }),
-        url: '/schedule',
+        title: t("dashboard.next_create_schedule", {
+          defaultValue: "Create a project schedule",
+        }),
+        description: t("dashboard.next_create_schedule_desc", {
+          defaultValue:
+            "Plan your project timeline with activities, dependencies, and milestones. The Gantt chart updates automatically.",
+        }),
+        actionLabel: t("dashboard.next_create_schedule_action", {
+          defaultValue: "Go to Schedule",
+        }),
+        url: "/schedule",
       });
     }
 
     // If no contacts -- suggest adding them
     if (!hasContacts) {
       items.push({
-        id: 'add-contacts',
+        id: "add-contacts",
         icon: <Users size={18} strokeWidth={1.75} />,
-        title: t('dashboard.next_add_contacts', { defaultValue: 'Add your team contacts' }),
-        description: t('dashboard.next_add_contacts_desc', { defaultValue: 'Store clients, subcontractors, and suppliers in your contacts directory. Import from CSV or add manually.' }),
-        actionLabel: t('dashboard.next_add_contacts_action', { defaultValue: 'Add Contacts' }),
-        url: '/contacts',
+        title: t("dashboard.next_add_contacts", {
+          defaultValue: "Add your team contacts",
+        }),
+        description: t("dashboard.next_add_contacts_desc", {
+          defaultValue:
+            "Store clients, subcontractors, and suppliers in your contacts directory. Import from CSV or add manually.",
+        }),
+        actionLabel: t("dashboard.next_add_contacts_action", {
+          defaultValue: "Add Contacts",
+        }),
+        url: "/contacts",
       });
     }
 
@@ -1235,30 +1457,51 @@ function NextSteps({
     // Guarantees the 3-card grid stays visually complete regardless of
     // the user's setup. (Added 2026-05-11.)
     items.push({
-      id: 'try-ai-estimate',
+      id: "try-ai-estimate",
       icon: <Sparkles size={18} strokeWidth={1.75} />,
-      title: t('dashboard.next_ai_estimate', { defaultValue: 'Try the AI Quick Estimate' }),
-      description: t('dashboard.next_ai_estimate_desc', { defaultValue: 'Describe a project in plain language and get a draft BOQ in seconds — review, adjust, and ship.' }),
-      actionLabel: t('dashboard.next_ai_estimate_action', { defaultValue: 'Open AI Estimate' }),
-      url: '/ai-estimate',
+      title: t("dashboard.next_ai_estimate", {
+        defaultValue: "Try the AI Quick Estimate",
+      }),
+      description: t("dashboard.next_ai_estimate_desc", {
+        defaultValue:
+          "Describe a project in plain language and get a draft BOQ in seconds — review, adjust, and ship.",
+      }),
+      actionLabel: t("dashboard.next_ai_estimate_action", {
+        defaultValue: "Open AI Estimate",
+      }),
+      url: "/ai-estimate",
     });
 
     items.push({
-      id: 'upload-cad',
+      id: "upload-cad",
       icon: <Layers size={18} strokeWidth={1.75} />,
-      title: t('dashboard.next_upload_cad', { defaultValue: 'Upload a CAD or BIM model' }),
-      description: t('dashboard.next_upload_cad_desc', { defaultValue: 'Drop a RVT, IFC, DWG or DGN file — the converter extracts quantities and matches elements to cost positions.' }),
-      actionLabel: t('dashboard.next_upload_cad_action', { defaultValue: 'Open BIM' }),
-      url: '/bim',
+      title: t("dashboard.next_upload_cad", {
+        defaultValue: "Upload a CAD or BIM model",
+      }),
+      description: t("dashboard.next_upload_cad_desc", {
+        defaultValue:
+          "Drop a RVT, IFC, DWG or DGN file — the converter extracts quantities and matches elements to cost positions.",
+      }),
+      actionLabel: t("dashboard.next_upload_cad_action", {
+        defaultValue: "Open BIM",
+      }),
+      url: "/bim",
     });
 
     items.push({
-      id: 'explore-costs',
+      id: "explore-costs",
       icon: <Database size={18} strokeWidth={1.75} />,
-      title: t('dashboard.next_explore_costs', { defaultValue: 'Explore the cost database' }),
-      description: t('dashboard.next_explore_costs_desc', { defaultValue: 'Browse 55,000+ regional unit rates with semantic search across CWICR / RSMeans / GAEB sources.' }),
-      actionLabel: t('dashboard.next_explore_costs_action', { defaultValue: 'Open Costs' }),
-      url: '/costs',
+      title: t("dashboard.next_explore_costs", {
+        defaultValue: "Explore the cost database",
+      }),
+      description: t("dashboard.next_explore_costs_desc", {
+        defaultValue:
+          "Browse 55,000+ regional unit rates with semantic search across CWICR / RSMeans / GAEB sources.",
+      }),
+      actionLabel: t("dashboard.next_explore_costs_action", {
+        defaultValue: "Open Costs",
+      }),
+      url: "/costs",
     });
 
     return items.slice(0, 3);
@@ -1267,14 +1510,11 @@ function NextSteps({
   if (suggestions.length === 0) return null;
 
   return (
-    <div
-      className="animate-card-in"
-      style={{ animationDelay: '90ms' }}
-    >
+    <div className="animate-card-in" style={{ animationDelay: "90ms" }}>
       <div className="flex items-center gap-2 mb-3">
         <Lightbulb size={16} className="text-amber-500" strokeWidth={1.75} />
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('dashboard.next_steps', { defaultValue: 'Suggested Next Steps' })}
+          {t("dashboard.next_steps", { defaultValue: "Suggested Next Steps" })}
         </h3>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -1323,12 +1563,16 @@ function ProjectMetricCards({
 
   if (loading) {
     return (
-      <div className="animate-card-in" style={{ animationDelay: '130ms' }}>
+      <div className="animate-card-in" style={{ animationDelay: "130ms" }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Layers size={16} className="text-content-tertiary" strokeWidth={1.75} />
+            <Layers
+              size={16}
+              className="text-content-tertiary"
+              strokeWidth={1.75}
+            />
             <h3 className="text-sm font-semibold text-content-primary">
-              {t('dashboard.project_cards_title', { defaultValue: 'Projects' })}
+              {t("dashboard.project_cards_title", { defaultValue: "Projects" })}
             </h3>
           </div>
         </div>
@@ -1344,23 +1588,29 @@ function ProjectMetricCards({
   if (!cards || cards.length === 0) return null;
 
   return (
-    <div className="animate-card-in" style={{ animationDelay: '130ms' }}>
+    <div className="animate-card-in" style={{ animationDelay: "130ms" }}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Layers size={16} className="text-content-tertiary" strokeWidth={1.75} />
+          <Layers
+            size={16}
+            className="text-content-tertiary"
+            strokeWidth={1.75}
+          />
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('dashboard.project_cards_title', { defaultValue: 'Projects' })}
+            {t("dashboard.project_cards_title", { defaultValue: "Projects" })}
           </h3>
-          <Badge variant="blue" size="sm">{cards.length}</Badge>
+          <Badge variant="blue" size="sm">
+            {cards.length}
+          </Badge>
         </div>
         <Button
           variant="ghost"
           size="sm"
           icon={<ArrowRight size={14} />}
           iconPosition="right"
-          onClick={() => navigate('/projects')}
+          onClick={() => navigate("/projects")}
         >
-          {t('dashboard.view_all', { defaultValue: 'View All' })}
+          {t("dashboard.view_all", { defaultValue: "View All" })}
         </Button>
       </div>
 
@@ -1426,8 +1676,11 @@ function SystemStatusSummary({
   const navigate = useNavigate();
 
   const { data: modules } = useQuery({
-    queryKey: ['modules'],
-    queryFn: () => apiGet<{ modules: unknown[] }>('/system/modules').catch(() => ({ modules: [] })),
+    queryKey: ["modules"],
+    queryFn: () =>
+      apiGet<{ modules: unknown[] }>("/system/modules").catch(() => ({
+        modules: [],
+      })),
     retry: false,
     staleTime: 60_000,
   });
@@ -1436,10 +1689,10 @@ function SystemStatusSummary({
   // have (v2.0.0 BUG-327/386 security hardening). Skip the fetch for them
   // so the team-count badge doesn't log a red 403 in the browser console.
   const userRole = useAuthStore((s) => s.userRole);
-  const canListUsers = userRole === 'admin' || userRole === 'editor';
+  const canListUsers = userRole === "admin" || userRole === "editor";
   const { data: usersList } = useQuery({
-    queryKey: ['dashboard-users-count'],
-    queryFn: () => apiGet<{ id: string }[]>('/v1/users/').catch(() => []),
+    queryKey: ["dashboard-users-count"],
+    queryFn: () => apiGet<{ id: string }[]>("/v1/users/").catch(() => []),
     retry: false,
     staleTime: 60_000,
     enabled: canListUsers,
@@ -1454,41 +1707,41 @@ function SystemStatusSummary({
     {
       icon: <Layers size={12} strokeWidth={2} />,
       value: projectCount,
-      label: t('dashboard.ss_projects', { defaultValue: 'Projects' }),
-      color: 'text-oe-blue',
-      bg: 'bg-oe-blue-subtle',
-      to: '/projects',
+      label: t("dashboard.ss_projects", { defaultValue: "Projects" }),
+      color: "text-oe-blue",
+      bg: "bg-oe-blue-subtle",
+      to: "/projects",
     },
     {
       icon: <FileSpreadsheet size={12} strokeWidth={2} />,
       value: boqCount,
-      label: t('dashboard.ss_boqs', { defaultValue: 'BOQs' }),
-      color: 'text-[#7c3aed]',
-      bg: 'bg-[#7c3aed]/10',
-      to: '/boq',
+      label: t("dashboard.ss_boqs", { defaultValue: "BOQs" }),
+      color: "text-[#7c3aed]",
+      bg: "bg-[#7c3aed]/10",
+      to: "/boq",
     },
     {
       icon: <Cpu size={12} strokeWidth={2} />,
       value: moduleCount,
-      label: t('dashboard.ss_modules', { defaultValue: 'Modules' }),
-      color: 'text-[#0891b2]',
-      bg: 'bg-[#0891b2]/10',
-      to: '/modules',
+      label: t("dashboard.ss_modules", { defaultValue: "Modules" }),
+      color: "text-[#0891b2]",
+      bg: "bg-[#0891b2]/10",
+      to: "/modules",
     },
     {
       icon: <Users size={12} strokeWidth={2} />,
       value: userCount,
-      label: t('dashboard.ss_users', { defaultValue: 'Users' }),
-      color: 'text-[#16a34a]',
-      bg: 'bg-[#16a34a]/10',
-      to: '/users',
+      label: t("dashboard.ss_users", { defaultValue: "Users" }),
+      color: "text-[#16a34a]",
+      bg: "bg-[#16a34a]/10",
+      to: "/users",
     },
   ];
 
   return (
     <div
       className="flex flex-wrap items-center gap-2 animate-card-in"
-      style={{ animationDelay: '40ms' }}
+      style={{ animationDelay: "40ms" }}
     >
       {badges.map((b) => (
         <button
@@ -1499,7 +1752,9 @@ function SystemStatusSummary({
           aria-label={`${b.value} ${b.label}`}
         >
           <span className={b.color}>{b.icon}</span>
-          <span className={`text-xs font-bold tabular-nums ${b.color}`}>{b.value}</span>
+          <span className={`text-xs font-bold tabular-nums ${b.color}`}>
+            {b.value}
+          </span>
           <span className="text-2xs text-content-tertiary">{b.label}</span>
         </button>
       ))}
@@ -1521,8 +1776,8 @@ function QuickUploadCard() {
   const [uploading, setUploading] = useState(false);
 
   const { data: documents } = useQuery({
-    queryKey: ['documents', activeProjectId],
-    queryFn: () => fetchDocuments(activeProjectId ?? ''),
+    queryKey: ["documents", activeProjectId],
+    queryFn: () => fetchDocuments(activeProjectId ?? ""),
     enabled: !!activeProjectId,
     staleTime: 30_000,
   });
@@ -1531,12 +1786,12 @@ function QuickUploadCard() {
     async (files: FileList | File[]) => {
       if (!activeProjectId) {
         addToast({
-          type: 'warning',
-          title: t('dashboard.upload_no_project', {
-            defaultValue: 'Select a project first',
+          type: "warning",
+          title: t("dashboard.upload_no_project", {
+            defaultValue: "Select a project first",
           }),
-          message: t('dashboard.upload_no_project_desc', {
-            defaultValue: 'Choose an active project to upload files.',
+          message: t("dashboard.upload_no_project_desc", {
+            defaultValue: "Choose an active project to upload files.",
           }),
         });
         return;
@@ -1553,35 +1808,40 @@ function QuickUploadCard() {
 
       for (const file of validFiles) {
         try {
-          await uploadDocument(activeProjectId, file, 'other');
+          await uploadDocument(activeProjectId, file, "other");
           successCount += 1;
         } catch (err) {
           failCount += 1;
           addToast({
-            type: 'error',
-            title: t('dashboard.upload_failed', { defaultValue: 'Upload failed' }),
+            type: "error",
+            title: t("dashboard.upload_failed", {
+              defaultValue: "Upload failed",
+            }),
             message: err instanceof Error ? err.message : file.name,
           });
         }
       }
 
       setUploading(false);
-      await queryClient.invalidateQueries({ queryKey: ['documents', activeProjectId] });
-      await queryClient.invalidateQueries({ queryKey: ['documents'] });
+      await queryClient.invalidateQueries({
+        queryKey: ["documents", activeProjectId],
+      });
+      await queryClient.invalidateQueries({ queryKey: ["documents"] });
 
       if (successCount > 0) {
         addToast({
-          type: 'success',
-          title: t('dashboard.upload_success', {
-            defaultValue: '{{count}} file(s) uploaded',
+          type: "success",
+          title: t("dashboard.upload_success", {
+            defaultValue: "{{count}} file(s) uploaded",
             count: successCount,
           }),
-          message: failCount > 0
-            ? t('dashboard.upload_partial', {
-                defaultValue: '{{failed}} failed',
-                failed: failCount,
-              })
-            : undefined,
+          message:
+            failCount > 0
+              ? t("dashboard.upload_partial", {
+                  defaultValue: "{{failed}} failed",
+                  failed: failCount,
+                })
+              : undefined,
         });
       }
     },
@@ -1613,22 +1873,24 @@ function QuickUploadCard() {
   const hasProject = !!activeProjectId;
 
   return (
-    <div className="animate-card-in" style={{ animationDelay: '120ms' }}>
+    <div className="animate-card-in" style={{ animationDelay: "120ms" }}>
       <Card padding="none">
         <div
           onDrop={onDrop}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           className={[
-            'relative flex items-center gap-4 rounded-xl border-2 border-dashed px-5 py-5 transition-all',
+            "relative flex items-center gap-4 rounded-xl border-2 border-dashed px-5 py-5 transition-all",
             dragOver
-              ? 'border-oe-blue bg-oe-blue-subtle/40'
-              : 'border-border-light bg-surface-secondary/30 hover:border-oe-blue/40',
-            !hasProject ? 'opacity-60' : '',
-          ].join(' ')}
+              ? "border-oe-blue bg-oe-blue-subtle/40"
+              : "border-border-light bg-surface-secondary/30 hover:border-oe-blue/40",
+            !hasProject ? "opacity-60" : "",
+          ].join(" ")}
           style={{ minHeight: 160 }}
           role="region"
-          aria-label={t('dashboard.upload_zone', { defaultValue: 'File upload area' })}
+          aria-label={t("dashboard.upload_zone", {
+            defaultValue: "File upload area",
+          })}
         >
           <input
             ref={fileInputRef}
@@ -1638,7 +1900,7 @@ function QuickUploadCard() {
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {
                 void handleFiles(e.target.files);
-                e.target.value = '';
+                e.target.value = "";
               }
             }}
           />
@@ -1651,31 +1913,36 @@ function QuickUploadCard() {
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-semibold text-content-primary">
-              {t('dashboard.upload_title', {
-                defaultValue: 'Drop files here',
+              {t("dashboard.upload_title", {
+                defaultValue: "Drop files here",
               })}
             </div>
             <p className="mt-0.5 text-xs text-content-tertiary line-clamp-1">
               {hasProject
-                ? t('dashboard.upload_desc', {
-                    defaultValue: 'Upload to {{project}} — PDF, DWG, IFC, RVT, images.',
-                    project: activeProjectName || t('dashboard.active_project', { defaultValue: 'active project' }),
+                ? t("dashboard.upload_desc", {
+                    defaultValue:
+                      "Upload to {{project}} — PDF, DWG, IFC, RVT, images.",
+                    project:
+                      activeProjectName ||
+                      t("dashboard.active_project", {
+                        defaultValue: "active project",
+                      }),
                   })
-                : t('dashboard.upload_select_project', {
-                    defaultValue: 'Select an active project to upload files.',
+                : t("dashboard.upload_select_project", {
+                    defaultValue: "Select an active project to upload files.",
                   })}
             </p>
             <div className="mt-2 flex items-center gap-3 text-2xs text-content-tertiary">
               <button
                 type="button"
                 className="inline-flex items-center gap-1 text-oe-blue hover:text-oe-blue-dark transition-colors"
-                onClick={() => navigate('/documents')}
+                onClick={() => navigate("/documents")}
                 disabled={!hasProject}
               >
                 <FileText size={11} />
                 <span>
-                  {t('dashboard.upload_count_link', {
-                    defaultValue: '{{count}} documents · open in Documents →',
+                  {t("dashboard.upload_count_link", {
+                    defaultValue: "{{count}} documents · open in Documents →",
                     count: documentCount,
                   })}
                 </span>
@@ -1690,7 +1957,7 @@ function QuickUploadCard() {
               disabled={!hasProject || uploading}
               onClick={() => fileInputRef.current?.click()}
             >
-              {t('dashboard.upload_browse', { defaultValue: 'Upload Files' })}
+              {t("dashboard.upload_browse", { defaultValue: "Upload Files" })}
             </Button>
           </div>
         </div>
@@ -1706,10 +1973,18 @@ export function DashboardPage() {
   const navigate = useNavigate();
 
   const [showAllActivity, setShowAllActivity] = useState(false);
+  const [customizing, setCustomizing] = useState(false);
+
+  const widgetOrder = useDashboardLayoutStore((s) => s.order);
+  const widgetHidden = useDashboardLayoutStore((s) => s.hidden);
+  const resolvedWidgets = useMemo(
+    () => reconcileOrder(widgetOrder, DASHBOARD_WIDGET_IDS),
+    [widgetOrder],
+  );
 
   const { data: projects } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<ProjectSummary[]>('/v1/projects/').catch(() => []),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<ProjectSummary[]>("/v1/projects/").catch(() => []),
     retry: false,
     staleTime: 5 * 60_000,
   });
@@ -1721,39 +1996,49 @@ export function DashboardPage() {
   // Skip is also honoured when the user pressed the `g d` chord.
   useEffect(() => {
     try {
-      const skip = sessionStorage.getItem('oe_skip_onboarding_redirect') === '1';
+      const skip =
+        sessionStorage.getItem("oe_skip_onboarding_redirect") === "1";
       if (skip) {
-        sessionStorage.removeItem('oe_skip_onboarding_redirect');
+        sessionStorage.removeItem("oe_skip_onboarding_redirect");
         return;
       }
-      if (localStorage.getItem('oe_onboarding_completed') === 'true') return;
+      if (localStorage.getItem("oe_onboarding_completed") === "true") return;
       if (projects === undefined) return; // wait for fetch
       if (projects.length > 0) {
-        localStorage.setItem('oe_onboarding_completed', 'true');
+        localStorage.setItem("oe_onboarding_completed", "true");
         return;
       }
-      navigate('/onboarding', { replace: true });
-    } catch { /* storage unavailable */ }
+      navigate("/onboarding", { replace: true });
+    } catch {
+      /* storage unavailable */
+    }
   }, [navigate, projects]);
 
   // Fetch lightweight per-project summary metrics for dashboard cards (single endpoint)
   const { data: projectCards, isLoading: cardsLoading } = useQuery({
-    queryKey: ['dashboard-project-cards'],
-    queryFn: () => apiGet<ProjectCardMetrics[]>('/v1/projects/dashboard/cards/').catch(() => []),
+    queryKey: ["dashboard-project-cards"],
+    queryFn: () =>
+      apiGet<ProjectCardMetrics[]>("/v1/projects/dashboard/cards/").catch(
+        () => [],
+      ),
     retry: false,
     staleTime: 30_000,
   });
 
   const { data: regionStats } = useQuery({
-    queryKey: ['costs', 'regions', 'stats'],
-    queryFn: () => apiGet<RegionStat[]>('/v1/costs/regions/stats/').catch(() => []),
+    queryKey: ["costs", "regions", "stats"],
+    queryFn: () =>
+      apiGet<RegionStat[]>("/v1/costs/regions/stats/").catch(() => []),
     retry: false,
   });
 
   // Fetch system status for vector DB count (used in onboarding steps)
   const { data: systemStatus } = useQuery({
-    queryKey: ['system-status'],
-    queryFn: () => fetch('/api/system/status').then((r) => r.json()) as Promise<SystemStatusData>,
+    queryKey: ["system-status"],
+    queryFn: () =>
+      fetch("/api/system/status").then((r) =>
+        r.json(),
+      ) as Promise<SystemStatusData>,
     retry: false,
     staleTime: 30_000,
   });
@@ -1762,7 +2047,7 @@ export function DashboardPage() {
 
   // Fetch all BOQs across projects for KPI ribbon + analytics
   const { data: allBoqs } = useQuery({
-    queryKey: ['dashboard-all-boqs', projects?.map((p) => p.id).join(',')],
+    queryKey: ["dashboard-all-boqs", projects?.map((p) => p.id).join(",")],
     queryFn: () =>
       fanOutPooled(projects ?? [], 8, (project) =>
         apiGet<BOQWithTotal[]>(`/v1/boq/boqs/?project_id=${project.id}`),
@@ -1773,7 +2058,7 @@ export function DashboardPage() {
 
   // Fetch schedules across projects for KPI ribbon
   const { data: allSchedules } = useQuery({
-    queryKey: ['dashboard-all-schedules', projects?.map((p) => p.id).join(',')],
+    queryKey: ["dashboard-all-schedules", projects?.map((p) => p.id).join(",")],
     queryFn: () =>
       fanOutPooled(projects ?? [], 8, (project) =>
         apiGet<ScheduleSummary[]>(
@@ -1786,8 +2071,8 @@ export function DashboardPage() {
 
   // Fetch contacts count for NextSteps suggestions
   const { data: contactsList } = useQuery({
-    queryKey: ['dashboard-contacts-count'],
-    queryFn: () => apiGet<{ id: string }[]>('/v1/contacts/').catch(() => []),
+    queryKey: ["dashboard-contacts-count"],
+    queryFn: () => apiGet<{ id: string }[]>("/v1/contacts/").catch(() => []),
     retry: false,
     staleTime: 60_000,
   });
@@ -1814,13 +2099,221 @@ export function DashboardPage() {
       id: picked.id,
       name: picked.name,
       status: picked.status,
-      projectName: project?.name ?? '',
-      positionCount: (picked as unknown as { position_count?: number }).position_count ?? 0,
-      grandTotal: (picked as unknown as { grand_total?: number }).grand_total ?? 0,
-      currency: project?.currency ?? 'EUR',
+      projectName: project?.name ?? "",
+      positionCount:
+        (picked as unknown as { position_count?: number }).position_count ?? 0,
+      grandTotal:
+        (picked as unknown as { grand_total?: number }).grand_total ?? 0,
+      currency: project?.currency ?? "EUR",
       updatedAt: (picked as unknown as { updated_at?: string }).updated_at,
     };
   }, [allBoqs, projects]);
+
+  // ── Widget node map — keyed by registry id. The dashboard renders these
+  //    in the user's saved order (`resolvedWidgets`), skipping hidden ones.
+  //    Conditional widgets resolve to `null` (and contribute nothing) just
+  //    as they did when they were inline. */
+  const widgetNodes: Record<string, ReactNode> = {
+    continue_work: lastBoq ? (
+      <button
+        type="button"
+        onClick={() => navigate(`/boq/${lastBoq.id}`)}
+        className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-left transition-all duration-normal ease-oe hover:border-oe-blue/40 hover:bg-oe-blue-subtle/20 hover:shadow-sm animate-card-in focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+        style={{ animationDelay: "60ms" }}
+        title={t("dashboard.continue_work", {
+          defaultValue: "Continue your work",
+        })}
+      >
+        <span className="relative flex h-2 w-2 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-oe-blue/40 opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-oe-blue" />
+        </span>
+        <span className="text-2xs uppercase tracking-wider font-semibold text-oe-blue shrink-0">
+          {t("dashboard.continue_work", { defaultValue: "Resume" })}
+        </span>
+        <span className="text-sm font-semibold text-content-primary truncate min-w-0">
+          {lastBoq.name}
+        </span>
+        {lastBoq.projectName && (
+          <>
+            <span aria-hidden className="text-content-quaternary shrink-0">
+              ·
+            </span>
+            <span className="text-xs text-content-tertiary truncate min-w-0 hidden sm:inline">
+              {lastBoq.projectName}
+            </span>
+          </>
+        )}
+        <span className="ml-auto flex items-center gap-3 shrink-0">
+          {lastBoq.positionCount > 0 && (
+            <span className="text-xs text-content-secondary tabular-nums hidden md:inline">
+              <strong className="text-content-primary">
+                {lastBoq.positionCount}
+              </strong>{" "}
+              {t("boq.positions", { defaultValue: "positions" })}
+            </span>
+          )}
+          {lastBoq.grandTotal > 0 && (
+            <span className="text-xs font-semibold text-content-primary tabular-nums">
+              {lastBoq.currency}{" "}
+              {lastBoq.grandTotal.toLocaleString(undefined, {
+                maximumFractionDigits: 0,
+              })}
+            </span>
+          )}
+          <ArrowRight
+            size={16}
+            className="text-content-tertiary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all"
+          />
+        </span>
+      </button>
+    ) : null,
+
+    today: <TodaySnapshot cards={projectCards} />,
+
+    kpi: (
+      <KpiRibbon boqs={allBoqs} schedules={allSchedules} projects={projects} />
+    ),
+
+    projects: (
+      <>
+        <ProjectMetricCards cards={projectCards} loading={cardsLoading} />
+        {(!projectCards || projectCards.length === 0) && (
+          <div className="animate-card-in" style={{ animationDelay: "150ms" }}>
+            <Card padding="none">
+              <div className="p-6 pb-0">
+                <CardHeader
+                  title={t("dashboard.recent_projects")}
+                  action={
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      icon={<ArrowRight size={14} />}
+                      iconPosition="right"
+                      onClick={() => navigate("/projects")}
+                    >
+                      {t("projects.title")}
+                    </Button>
+                  }
+                />
+              </div>
+              <CardContent className="!mt-0">
+                <ProjectsList projects={projects} />
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </>
+    ),
+
+    portfolio:
+      projects && projects.length > 1 ? (
+        <PortfolioOverview projects={projects} />
+      ) : null,
+
+    map:
+      projects && projects.length > 0 ? (
+        <div className="animate-card-in" style={{ animationDelay: "220ms" }}>
+          <DashboardProjectsMap
+            projects={projects.slice(0, 30).map((p) => ({
+              id: p.id,
+              name: p.name,
+              region: p.region,
+              lat: p.address?.lat ?? null,
+              lng: p.address?.lng ?? null,
+              address: p.address?.street ?? null,
+              city: p.address?.city ?? null,
+              country: p.address?.country ?? null,
+            }))}
+          />
+        </div>
+      ) : null,
+
+    bim_coverage: <BIMCoverageCard />,
+
+    quick_upload: <QuickUploadCard />,
+
+    onboarding: (
+      <OnboardingSteps
+        projects={projects}
+        regionStats={regionStats}
+        boqs={allBoqs}
+        vectorCount={vectorCount}
+      />
+    ),
+
+    next_steps: (
+      <NextSteps
+        projects={projects}
+        boqs={allBoqs}
+        schedules={allSchedules}
+        allContacts={contactsCount}
+      />
+    ),
+
+    analytics:
+      projects && projects.length > 0 ? (
+        <div className="animate-card-in" style={{ animationDelay: "180ms" }}>
+          <div className="mb-4 flex items-center gap-2">
+            <BarChart3
+              size={18}
+              className="text-content-tertiary"
+              strokeWidth={1.75}
+            />
+            <h2 className="text-lg font-semibold text-content-primary">
+              {t("dashboard.analytics", { defaultValue: "Analytics" })}
+            </h2>
+          </div>
+          <AnalyticsSection projects={projects} />
+        </div>
+      ) : null,
+
+    activity: (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {projects && projects.length > 0 && (
+          <div
+            className="lg:col-span-2 animate-card-in"
+            style={{ animationDelay: "200ms" }}
+          >
+            <Card className="h-full">
+              <CardHeader
+                title={t("dashboard.activity", {
+                  defaultValue: "Recent Activity",
+                })}
+                action={
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon={<ArrowRight size={14} />}
+                    iconPosition="right"
+                    onClick={() => setShowAllActivity((prev) => !prev)}
+                  >
+                    {showAllActivity
+                      ? t("common.show_less", { defaultValue: "Show less" })
+                      : t("common.show_more", { defaultValue: "Show more" })}
+                  </Button>
+                }
+              />
+              <CardContent>
+                <CrossModuleActivityFeed limit={showAllActivity ? 25 : 6} />
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        <div
+          className={`${projects && projects.length > 0 ? "lg:col-start-3" : ""} animate-card-in`}
+          style={{ animationDelay: "220ms" }}
+        >
+          <Card className="h-full">
+            <CardHeader title={t("dashboard.system_status")} />
+            <CardContent>
+              <SystemStatus />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    ),
+  };
 
   return (
     <div className="space-y-5 animate-fade-in">
@@ -1834,26 +2327,35 @@ export function DashboardPage() {
           {(() => {
             const h = new Date().getHours();
             const key =
-              h < 5  ? 'dashboard.greet_night'
-            : h < 12 ? 'dashboard.greet_morning'
-            : h < 18 ? 'dashboard.greet_afternoon'
-            :          'dashboard.greet_evening';
+              h < 5
+                ? "dashboard.greet_night"
+                : h < 12
+                  ? "dashboard.greet_morning"
+                  : h < 18
+                    ? "dashboard.greet_afternoon"
+                    : "dashboard.greet_evening";
             const fallback =
-              h < 5  ? 'Welcome back'
-            : h < 12 ? 'Good morning'
-            : h < 18 ? 'Good afternoon'
-            :          'Good evening';
+              h < 5
+                ? "Welcome back"
+                : h < 12
+                  ? "Good morning"
+                  : h < 18
+                    ? "Good afternoon"
+                    : "Good evening";
             return t(key, { defaultValue: fallback });
           })()}
         </h1>
-        <div className="flex items-center gap-2 flex-wrap animate-stagger-in" style={{ animationDelay: '100ms' }}>
+        <div
+          className="flex items-center gap-2 flex-wrap animate-stagger-in"
+          style={{ animationDelay: "100ms" }}
+        >
           <Button
             variant="primary"
             size="md"
             icon={<FolderPlus size={16} />}
-            onClick={() => navigate('/projects/new')}
+            onClick={() => navigate("/projects/new")}
           >
-            {t('projects.new_project')}
+            {t("projects.new_project")}
           </Button>
           <Button
             variant="secondary"
@@ -1864,38 +2366,71 @@ export function DashboardPage() {
               if (firstProject) {
                 navigate(`/projects/${firstProject.id}/boq/new`);
               } else {
-                navigate('/projects/new');
+                navigate("/projects/new");
               }
             }}
-            title={t('dashboard.new_estimate_hint', { defaultValue: 'Start a new Bill of Quantities for an existing project' })}
+            title={t("dashboard.new_estimate_hint", {
+              defaultValue:
+                "Start a new Bill of Quantities for an existing project",
+            })}
           >
-            {t('dashboard.new_estimate', { defaultValue: 'New Estimate' })}
+            {t("dashboard.new_estimate", { defaultValue: "New Estimate" })}
           </Button>
           <Button
             variant="ghost"
             size="md"
             icon={<Sparkles size={14} />}
             onClick={() => {
-              if (lastBoq) { navigate(`/boq/${lastBoq.id}`); return; }
+              if (lastBoq) {
+                navigate(`/boq/${lastBoq.id}`);
+                return;
+              }
               const firstProject = projects?.[0];
-              if (firstProject) navigate(`/projects/${firstProject.id}/boq/new`);
-              else navigate('/projects/new');
+              if (firstProject)
+                navigate(`/projects/${firstProject.id}/boq/new`);
+              else navigate("/projects/new");
             }}
             title={
               lastBoq
-                ? t('dashboard.quick_start_resume_hint', { defaultValue: 'Continue your most recent estimate: {{name}}', name: lastBoq.name })
-                : t('dashboard.quick_start_hint', { defaultValue: 'Jump into an estimate — resumes the latest or starts a new one' })
+                ? t("dashboard.quick_start_resume_hint", {
+                    defaultValue:
+                      "Continue your most recent estimate: {{name}}",
+                    name: lastBoq.name,
+                  })
+                : t("dashboard.quick_start_hint", {
+                    defaultValue:
+                      "Jump into an estimate — resumes the latest or starts a new one",
+                  })
             }
           >
             {lastBoq
-              ? t('dashboard.quick_resume', { defaultValue: 'Resume last estimate' })
-              : t('dashboard.quick_start', { defaultValue: 'Quick Start' })}
+              ? t("dashboard.quick_resume", {
+                  defaultValue: "Resume last estimate",
+                })
+              : t("dashboard.quick_start", { defaultValue: "Quick Start" })}
+          </Button>
+          <Button
+            variant={customizing ? "primary" : "ghost"}
+            size="md"
+            icon={<LayoutGrid size={15} />}
+            onClick={() => setCustomizing((v) => !v)}
+            aria-pressed={customizing}
+            title={t("dashboard.layout.customize_hint", {
+              defaultValue: "Reorder, show or hide dashboard sections",
+            })}
+          >
+            {customizing
+              ? t("dashboard.layout.done", { defaultValue: "Done" })
+              : t("dashboard.layout.customize", { defaultValue: "Customize" })}
           </Button>
         </div>
       </div>
 
       {/* ─── 2. Hero · row B — thin meta-strip ───────────────────────── */}
-      <div className="flex items-center flex-wrap gap-x-4 gap-y-2 pl-2 animate-stagger-in" style={{ animationDelay: '140ms' }}>
+      <div
+        className="flex items-center flex-wrap gap-x-4 gap-y-2 pl-2 animate-stagger-in"
+        style={{ animationDelay: "140ms" }}
+      >
         {/* DDC attribution — slim inline link with tiny logo */}
         <a
           href="https://datadrivenconstruction.io/?utm_source=erp"
@@ -1909,7 +2444,9 @@ export function DashboardPage() {
             className="h-3.5 w-auto opacity-60 group-hover/ddc:opacity-100 transition-opacity"
           />
           <span className="hidden sm:inline">
-            {t('dashboard.developed_by_short', { defaultValue: 'by DataDrivenConstruction' })}
+            {t("dashboard.developed_by_short", {
+              defaultValue: "by DataDrivenConstruction",
+            })}
           </span>
         </a>
 
@@ -1926,8 +2463,15 @@ export function DashboardPage() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
-          <span>{t('dashboard.open_source_badge', { defaultValue: 'Open-source construction ERP' })}</span>
-          <ExternalLink size={11} className="text-content-quaternary group-hover/oss:text-oe-blue transition-colors" />
+          <span>
+            {t("dashboard.open_source_badge", {
+              defaultValue: "Open-source construction ERP",
+            })}
+          </span>
+          <ExternalLink
+            size={11}
+            className="text-content-quaternary group-hover/oss:text-oe-blue transition-colors"
+          />
         </a>
 
         <span aria-hidden className="h-3 w-px bg-border-light" />
@@ -1936,163 +2480,32 @@ export function DashboardPage() {
         <SystemStatusSummary projects={projects} boqs={allBoqs} />
       </div>
 
-      {/* ─── 3. Continue Your Work — slim strip ────────────────────────
-          Was a 124px gradient banner with a 48px chip + h2. Now a single
-          line (~52px) — name + project · positions · total · arrow. The
-          heavy gradient + border-2 removed per audit 2026-05-11. */}
-      {lastBoq && (
-        <button
-          type="button"
-          onClick={() => navigate(`/boq/${lastBoq.id}`)}
-          className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-left transition-all duration-normal ease-oe hover:border-oe-blue/40 hover:bg-oe-blue-subtle/20 hover:shadow-sm animate-card-in focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
-          style={{ animationDelay: '60ms' }}
-          title={t('dashboard.continue_work', { defaultValue: 'Continue your work' })}
-        >
-          <span className="relative flex h-2 w-2 shrink-0">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-oe-blue/40 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-oe-blue" />
-          </span>
-          <span className="text-2xs uppercase tracking-wider font-semibold text-oe-blue shrink-0">
-            {t('dashboard.continue_work', { defaultValue: 'Resume' })}
-          </span>
-          <span className="text-sm font-semibold text-content-primary truncate min-w-0">
-            {lastBoq.name}
-          </span>
-          {lastBoq.projectName && (
-            <>
-              <span aria-hidden className="text-content-quaternary shrink-0">·</span>
-              <span className="text-xs text-content-tertiary truncate min-w-0 hidden sm:inline">
-                {lastBoq.projectName}
-              </span>
-            </>
-          )}
-          <span className="ml-auto flex items-center gap-3 shrink-0">
-            {lastBoq.positionCount > 0 && (
-              <span className="text-xs text-content-secondary tabular-nums hidden md:inline">
-                <strong className="text-content-primary">{lastBoq.positionCount}</strong>{' '}
-                {t('boq.positions', { defaultValue: 'positions' })}
-              </span>
-            )}
-            {lastBoq.grandTotal > 0 && (
-              <span className="text-xs font-semibold text-content-primary tabular-nums">
-                {lastBoq.currency} {lastBoq.grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </span>
-            )}
-            <ArrowRight size={16} className="text-content-tertiary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
-          </span>
-        </button>
-      )}
-
-      {/* ─── 3b. Today Snapshot — aggregated alerts across projects ──── */}
-      <TodaySnapshot cards={projectCards} />
-
-      {/* ─── 4. KPI Ribbon ───────────────────────────────────────────── */}
-      <KpiRibbon boqs={allBoqs} schedules={allSchedules} projects={projects} />
-
-      {/* ─── 4. Project Cards (primary content) ──────────────────────── */}
-      <ProjectMetricCards cards={projectCards} loading={cardsLoading} />
-
-      {/* Fallback project list when no metric cards available */}
-      {(!projectCards || projectCards.length === 0) && (
-        <div className="animate-card-in" style={{ animationDelay: '150ms' }}>
-          <Card padding="none">
-            <div className="p-6 pb-0">
-              <CardHeader
-                title={t('dashboard.recent_projects')}
-                action={
-                  <Button variant="ghost" size="sm" icon={<ArrowRight size={14} />} iconPosition="right" onClick={() => navigate('/projects')}>
-                    {t('projects.title')}
-                  </Button>
-                }
-              />
-            </div>
-            <CardContent className="!mt-0">
-              <ProjectsList projects={projects} />
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* ─── 5. Portfolio Overview (multi-project users) ─────────────── */}
-      {projects && projects.length > 1 && (
-        <PortfolioOverview projects={projects} />
-      )}
-
-      {/* ─── 5b. Project locations map (compact, lazy MapLibre) ──────── */}
-      {projects && projects.length > 0 && (
-        <div className="animate-card-in" style={{ animationDelay: '220ms' }}>
-          <DashboardProjectsMap
-            projects={projects.slice(0, 30).map((p) => ({
-              id: p.id,
-              name: p.name,
-              region: p.region,
-              lat: p.address?.lat ?? null,
-              lng: p.address?.lng ?? null,
-              address: p.address?.street ?? null,
-              city: p.address?.city ?? null,
-              country: p.address?.country ?? null,
-            }))}
+      {/* ─── Customize panel (collapsible) — same manager as Settings ─── */}
+      {customizing && (
+        <Card className="animate-card-in border-oe-blue/30">
+          <CardHeader
+            title={t("dashboard.layout.title", {
+              defaultValue: "Customize dashboard",
+            })}
+            subtitle={t("dashboard.layout.subtitle", {
+              defaultValue:
+                "Reorder, show or hide the sections below. Your layout is saved to this browser.",
+            })}
           />
-        </div>
+          <CardContent>
+            <DashboardLayoutManager onClose={() => setCustomizing(false)} />
+          </CardContent>
+        </Card>
       )}
 
-      {/* ─── 6. BIM Coverage ─────────────────────────────────────────── */}
-      <BIMCoverageCard />
-
-      {/* ─── 6b. Quick Upload ─────────────────────────────────────────── */}
-      <QuickUploadCard />
-
-      {/* ─── 7. Getting Started (onboarding — hidden once all done) ─── */}
-      <OnboardingSteps projects={projects} regionStats={regionStats} boqs={allBoqs} vectorCount={vectorCount} />
-
-      {/* ─── 8. Context-aware suggestions ────────────────────────────── */}
-      <NextSteps
-        projects={projects}
-        boqs={allBoqs}
-        schedules={allSchedules}
-        allContacts={contactsCount}
-      />
-
-      {/* ─── 9. Analytics + Activity + System Status ─────────────────── */}
-      {projects && projects.length > 0 && (
-        <div className="animate-card-in" style={{ animationDelay: '180ms' }}>
-          <div className="mb-4 flex items-center gap-2">
-            <BarChart3 size={18} className="text-content-tertiary" strokeWidth={1.75} />
-            <h2 className="text-lg font-semibold text-content-primary">
-              {t('dashboard.analytics', { defaultValue: 'Analytics' })}
-            </h2>
-          </div>
-          <AnalyticsSection projects={projects} />
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {projects && projects.length > 0 && (
-          <div className="lg:col-span-2 animate-card-in" style={{ animationDelay: '200ms' }}>
-            <Card className="h-full">
-              <CardHeader
-                title={t('dashboard.activity', { defaultValue: 'Recent Activity' })}
-                action={
-                  <Button variant="ghost" size="sm" icon={<ArrowRight size={14} />} iconPosition="right" onClick={() => setShowAllActivity((prev) => !prev)}>
-                    {showAllActivity ? t('common.show_less', { defaultValue: 'Show less' }) : t('common.show_more', { defaultValue: 'Show more' })}
-                  </Button>
-                }
-              />
-              <CardContent>
-                <CrossModuleActivityFeed limit={showAllActivity ? 25 : 6} />
-              </CardContent>
-            </Card>
-          </div>
-        )}
-        <div className={`${projects && projects.length > 0 ? 'lg:col-start-3' : ''} animate-card-in`} style={{ animationDelay: '220ms' }}>
-          <Card className="h-full">
-            <CardHeader title={t('dashboard.system_status')} />
-            <CardContent>
-              <SystemStatus />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      {/* ─── Widgets — rendered in the user's saved order, hidden ones
+          skipped. Conditional widgets resolve to null and contribute
+          nothing (same behaviour as when they were inline). ──────────── */}
+      {resolvedWidgets.map((id) => {
+        if (widgetHidden.includes(id)) return null;
+        const node = widgetNodes[id];
+        return node ? <Fragment key={id}>{node}</Fragment> : null;
+      })}
     </div>
   );
 }
@@ -2113,21 +2526,25 @@ function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
       <div className="flex h-full min-h-[60vh] items-center justify-center px-6 py-8">
         <EmptyState
           icon={<FolderPlus size={28} strokeWidth={1.5} />}
-          title={t('dashboard.empty.title', {
+          title={t("dashboard.empty.title", {
             defaultValue: "Welcome — let's start with your first project",
           })}
-          description={t('dashboard.empty.desc', {
-            defaultValue: 'Projects organise your BOQs, schedules, and reports.',
+          description={t("dashboard.empty.desc", {
+            defaultValue:
+              "Projects organise your BOQs, schedules, and reports.",
           })}
           action={
             <div className="flex flex-col items-center gap-3">
-              <Button onClick={() => navigate('/projects/new')}>
+              <Button onClick={() => navigate("/projects/new")}>
                 <FolderPlus size={16} strokeWidth={1.75} />
-                {t('dashboard.empty.cta_create', { defaultValue: 'Create project' })}
+                {t("dashboard.empty.cta_create", {
+                  defaultValue: "Create project",
+                })}
               </Button>
               <p className="text-xs text-content-tertiary">
-                {t('dashboard.empty.demo_hint', {
-                  defaultValue: 'Or load a demo project from Settings → Demo data',
+                {t("dashboard.empty.demo_hint", {
+                  defaultValue:
+                    "Or load a demo project from Settings → Demo data",
                 })}
               </p>
             </div>
@@ -2141,7 +2558,8 @@ function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
   // US and German demos anchor the dashboard's "recent projects" tile.
   // Same priority rule as ProjectsPage; keep them in sync if you change it.
   const seen = new Set<string>();
-  const localePriority = (loc?: string) => (loc === 'en' ? 0 : loc === 'de' ? 1 : 2);
+  const localePriority = (loc?: string) =>
+    loc === "en" ? 0 : loc === "de" ? 1 : 2;
   const unique = projects
     .filter((p) => {
       if (seen.has(p.id)) return false;
@@ -2164,9 +2582,12 @@ function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
             {p.name.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium text-content-primary truncate">{p.name}</div>
+            <div className="text-sm font-medium text-content-primary truncate">
+              {p.name}
+            </div>
             <div className="text-xs text-content-tertiary truncate">
-              {p.description || `${p.classification_standard.toUpperCase()} · ${p.currency}`}
+              {p.description ||
+                `${p.classification_standard.toUpperCase()} · ${p.currency}`}
             </div>
           </div>
           <div className="text-xs text-content-tertiary">
@@ -2190,7 +2611,7 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
     // with the KPI ribbon's ``['dashboard-all-boqs', …]`` query above. React
     // Query dedupes when keys match, so the analytics section gets the same
     // ``allBoqs`` data without firing a second 1×N round of GETs.
-    queryKey: ['dashboard-all-boqs', projects.map((p) => p.id).join(',')],
+    queryKey: ["dashboard-all-boqs", projects.map((p) => p.id).join(",")],
     queryFn: () =>
       fanOutPooled(projects, 8, (project) =>
         apiGet<BOQWithTotal[]>(`/v1/boq/boqs/?project_id=${project.id}`),
@@ -2203,7 +2624,10 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
     if (!allBoqs) return null;
 
     const totalBoqs = allBoqs.length;
-    const totalValue = allBoqs.reduce((sum, b) => sum + (b.grand_total ?? 0), 0);
+    const totalValue = allBoqs.reduce(
+      (sum, b) => sum + (b.grand_total ?? 0),
+      0,
+    );
 
     // Value per project
     // Deduplicate projects by name (merge values for same-named projects)
@@ -2214,14 +2638,16 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
         .reduce((sum, b) => sum + (b.grand_total ?? 0), 0);
       valueByName.set(p.name, (valueByName.get(p.name) ?? 0) + val);
     }
-    const projectValues: { name: string; value: number }[] = Array.from(valueByName.entries())
+    const projectValues: { name: string; value: number }[] = Array.from(
+      valueByName.entries(),
+    )
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
     // BOQ status distribution
     const statusCounts: Record<string, number> = {};
     for (const boq of allBoqs) {
-      const s = boq.status || 'draft';
+      const s = boq.status || "draft";
       statusCounts[s] = (statusCounts[s] || 0) + 1;
     }
 
@@ -2249,13 +2675,19 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
 
   return (
     <Card>
-      <CardHeader title={t('dashboard.project_overview', { defaultValue: 'Project Overview' })} />
+      <CardHeader
+        title={t("dashboard.project_overview", {
+          defaultValue: "Project Overview",
+        })}
+      />
       <CardContent>
         {/* Aggregate Stats */}
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-6">
           <div className="rounded-lg bg-surface-secondary p-3">
             <div className="text-xs font-medium uppercase tracking-wider text-content-tertiary">
-              {t('dashboard.total_projects', { defaultValue: 'Total Projects' })}
+              {t("dashboard.total_projects", {
+                defaultValue: "Total Projects",
+              })}
             </div>
             <div className="mt-1 text-xl font-bold tabular-nums text-content-primary">
               {stats.totalProjects}
@@ -2263,7 +2695,7 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
           </div>
           <div className="rounded-lg bg-surface-secondary p-3">
             <div className="text-xs font-medium uppercase tracking-wider text-content-tertiary">
-              {t('dashboard.total_boqs', { defaultValue: 'Total BOQs' })}
+              {t("dashboard.total_boqs", { defaultValue: "Total BOQs" })}
             </div>
             <div className="mt-1 text-xl font-bold tabular-nums text-content-primary">
               {stats.totalBoqs}
@@ -2271,14 +2703,14 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
           </div>
           <div className="rounded-lg bg-surface-secondary p-3 sm:col-span-2">
             <div className="text-xs font-medium uppercase tracking-wider text-content-tertiary">
-              {t('dashboard.total_value', { defaultValue: 'Total Value' })}
+              {t("dashboard.total_value", { defaultValue: "Total Value" })}
             </div>
             <div className="mt-1 text-xl font-bold tabular-nums text-content-primary">
               {stats.totalValue >= 1_000_000
                 ? `${(stats.totalValue / 1_000_000).toFixed(1)}M`
                 : stats.totalValue >= 1_000
                   ? `${(stats.totalValue / 1_000).toFixed(0)}K`
-                  : stats.totalValue.toLocaleString('de-DE', {
+                  : stats.totalValue.toLocaleString("de-DE", {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
                     })}
@@ -2291,43 +2723,48 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
             Bars now span full-width with slimmer height (h-2 vs h-6) and
             use the oe-blue brand color instead of a 10-colour rainbow. */}
         <div className="text-xs font-medium uppercase tracking-wider text-content-tertiary mb-3">
-          {t('dashboard.value_by_project', 'Value by Project')}
+          {t("dashboard.value_by_project", "Value by Project")}
         </div>
         <div className="space-y-3">
-          {stats.projectValues.filter((pv) => pv.value > 0).slice(0, 10).map((pv, i) => {
-            const barWidth = maxValue > 0 ? (pv.value / maxValue) * 100 : 0;
-            const formattedValue =
-              pv.value >= 1_000_000
-                ? `${(pv.value / 1_000_000).toFixed(1)}M`
-                : pv.value >= 1_000
-                  ? `${(pv.value / 1_000).toFixed(0)}K`
-                  : pv.value.toLocaleString();
-            const shareLabel = `${Math.round(barWidth)}%`;
-            return (
-              <div key={`${pv.name}-${i}`}>
-                <div className="flex items-baseline justify-between gap-3 mb-1">
-                  <span className="text-xs font-medium text-content-primary truncate">
-                    {pv.name}
-                  </span>
-                  <span className="flex items-baseline gap-2 shrink-0">
-                    <span className="text-2xs text-content-tertiary tabular-nums">{shareLabel}</span>
-                    <span className="text-xs font-semibold tabular-nums text-content-primary">
-                      {formattedValue}
+          {stats.projectValues
+            .filter((pv) => pv.value > 0)
+            .slice(0, 10)
+            .map((pv, i) => {
+              const barWidth = maxValue > 0 ? (pv.value / maxValue) * 100 : 0;
+              const formattedValue =
+                pv.value >= 1_000_000
+                  ? `${(pv.value / 1_000_000).toFixed(1)}M`
+                  : pv.value >= 1_000
+                    ? `${(pv.value / 1_000).toFixed(0)}K`
+                    : pv.value.toLocaleString();
+              const shareLabel = `${Math.round(barWidth)}%`;
+              return (
+                <div key={`${pv.name}-${i}`}>
+                  <div className="flex items-baseline justify-between gap-3 mb-1">
+                    <span className="text-xs font-medium text-content-primary truncate">
+                      {pv.name}
                     </span>
-                  </span>
+                    <span className="flex items-baseline gap-2 shrink-0">
+                      <span className="text-2xs text-content-tertiary tabular-nums">
+                        {shareLabel}
+                      </span>
+                      <span className="text-xs font-semibold tabular-nums text-content-primary">
+                        {formattedValue}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-surface-secondary rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-oe-blue to-oe-blue-hover transition-all duration-500 ease-out"
+                      style={{ width: `${Math.max(barWidth, 2)}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="h-2 w-full bg-surface-secondary rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-oe-blue to-oe-blue-hover transition-all duration-500 ease-out"
-                    style={{ width: `${Math.max(barWidth, 2)}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
           {stats.projectValues.length === 0 && (
             <p className="text-xs text-content-tertiary text-center py-4">
-              {t('dashboard.no_boq_data', 'No BOQ data available')}
+              {t("dashboard.no_boq_data", "No BOQ data available")}
             </p>
           )}
         </div>
@@ -2338,17 +2775,25 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
 
 /* ── System Status ────────────────────────────────────────────────────── */
 
-function StatusDot({ status }: { status: 'connected' | 'healthy' | 'offline' | 'error' | string }) {
+function StatusDot({
+  status,
+}: {
+  status: "connected" | "healthy" | "offline" | "error" | string;
+}) {
   const color =
-    status === 'connected' || status === 'healthy'
-      ? 'bg-semantic-success'
-      : status === 'offline'
-        ? 'bg-content-quaternary'
-        : 'bg-semantic-error';
-  const pulse = status === 'connected' || status === 'healthy';
+    status === "connected" || status === "healthy"
+      ? "bg-semantic-success"
+      : status === "offline"
+        ? "bg-content-quaternary"
+        : "bg-semantic-error";
+  const pulse = status === "connected" || status === "healthy";
   return (
     <span className="relative flex h-2 w-2">
-      {pulse && <span className={`absolute inset-0 rounded-full ${color} opacity-50 animate-ping`} />}
+      {pulse && (
+        <span
+          className={`absolute inset-0 rounded-full ${color} opacity-50 animate-ping`}
+        />
+      )}
       <span className={`relative inline-flex h-2 w-2 rounded-full ${color}`} />
     </span>
   );
@@ -2358,22 +2803,30 @@ function SystemStatus() {
   const { t } = useTranslation();
 
   const { data: status } = useQuery({
-    queryKey: ['system-status'],
-    queryFn: () => fetch('/api/system/status').then((r) => r.json()) as Promise<SystemStatusData>,
+    queryKey: ["system-status"],
+    queryFn: () =>
+      fetch("/api/system/status").then((r) =>
+        r.json(),
+      ) as Promise<SystemStatusData>,
     retry: false,
     refetchInterval: 15000,
   });
 
   const { data: modules } = useQuery({
-    queryKey: ['modules'],
-    queryFn: () => apiGet<{ modules: unknown[] }>('/system/modules').catch(() => ({ modules: [] })),
+    queryKey: ["modules"],
+    queryFn: () =>
+      apiGet<{ modules: unknown[] }>("/system/modules").catch(() => ({
+        modules: [],
+      })),
     retry: false,
   });
 
   const { data: rules } = useQuery({
-    queryKey: ['validation-rules'],
+    queryKey: ["validation-rules"],
     queryFn: () =>
-      apiGet<{ rule_sets: unknown[]; rules: unknown[] }>('/system/validation-rules').catch(() => ({
+      apiGet<{ rule_sets: unknown[]; rules: unknown[] }>(
+        "/system/validation-rules",
+      ).catch(() => ({
         rule_sets: [],
         rules: [],
       })),
@@ -2381,44 +2834,52 @@ function SystemStatus() {
   });
 
   // Check user AI keys from localStorage
-  const hasUserAiKey = typeof window !== 'undefined' && (
-    !!localStorage.getItem('oe_ai_provider') ||
-    !!localStorage.getItem('oe_openai_key') ||
-    !!localStorage.getItem('oe_anthropic_key')
-  );
+  const hasUserAiKey =
+    typeof window !== "undefined" &&
+    (!!localStorage.getItem("oe_ai_provider") ||
+      !!localStorage.getItem("oe_openai_key") ||
+      !!localStorage.getItem("oe_anthropic_key"));
 
-  const apiStatus = status?.api?.status ?? 'offline';
-  const dbStatus = status?.database?.status ?? 'offline';
-  const vectorStatus = status?.vector_db?.status ?? 'offline';
+  const apiStatus = status?.api?.status ?? "offline";
+  const dbStatus = status?.database?.status ?? "offline";
+  const vectorStatus = status?.vector_db?.status ?? "offline";
   const vectorVectors = status?.vector_db?.vectors ?? 0;
   const aiConfigured = status?.ai?.configured || hasUserAiKey;
 
   const services = [
     {
-      name: t('dashboard.api_server', { defaultValue: 'API Server' }),
+      name: t("dashboard.api_server", { defaultValue: "API Server" }),
       status: apiStatus,
-      detail: status?.api?.version ? `v${status.api.version}` : '',
+      detail: status?.api?.version ? `v${status.api.version}` : "",
       icon: <Zap size={13} />,
       delay: 400,
     },
     {
-      name: t('dashboard.database', { defaultValue: 'Database' }),
+      name: t("dashboard.database", { defaultValue: "Database" }),
       status: dbStatus,
-      detail: status?.database?.engine === 'sqlite' ? 'SQLite' : status?.database?.engine ?? '',
+      detail:
+        status?.database?.engine === "sqlite"
+          ? "SQLite"
+          : (status?.database?.engine ?? ""),
       icon: <Layers size={13} />,
       delay: 460,
     },
     {
-      name: t('dashboard.vector_db', { defaultValue: 'Vector DB' }),
+      name: t("dashboard.vector_db", { defaultValue: "Vector DB" }),
       status: vectorStatus,
-      detail: vectorVectors > 0 ? `${vectorVectors.toLocaleString()} vectors` : '',
+      detail:
+        vectorVectors > 0 ? `${vectorVectors.toLocaleString()} vectors` : "",
       icon: <Globe size={13} />,
       delay: 520,
     },
     {
-      name: t('dashboard.ai_providers', { defaultValue: 'AI Providers' }),
-      status: aiConfigured ? 'connected' : 'offline',
-      detail: status?.ai?.providers?.map((p) => p.name).join(', ') || (hasUserAiKey ? 'User keys' : t('dashboard.not_configured', { defaultValue: 'Not configured' })),
+      name: t("dashboard.ai_providers", { defaultValue: "AI Providers" }),
+      status: aiConfigured ? "connected" : "offline",
+      detail:
+        status?.ai?.providers?.map((p) => p.name).join(", ") ||
+        (hasUserAiKey
+          ? "User keys"
+          : t("dashboard.not_configured", { defaultValue: "Not configured" })),
       icon: <ShieldCheck size={13} />,
       delay: 580,
     },
@@ -2439,7 +2900,9 @@ function SystemStatus() {
           </span>
           <div className="flex items-center gap-2">
             {svc.detail && (
-              <span className="text-2xs text-content-quaternary">{svc.detail}</span>
+              <span className="text-2xs text-content-quaternary">
+                {svc.detail}
+              </span>
             )}
             <StatusDot status={svc.status} />
           </div>
@@ -2452,28 +2915,36 @@ function SystemStatus() {
       {/* Modules & Rules */}
       <div
         className="flex items-center justify-between animate-stagger-in"
-        style={{ animationDelay: '180ms' }}
+        style={{ animationDelay: "180ms" }}
       >
-        <span className="text-sm text-content-secondary">{t('dashboard.modules_loaded')}</span>
+        <span className="text-sm text-content-secondary">
+          {t("dashboard.modules_loaded")}
+        </span>
         <span className="text-sm font-semibold text-content-primary tabular-nums">
-          {modules?.modules?.length ?? '\u2014'}
+          {modules?.modules?.length ?? "\u2014"}
         </span>
       </div>
       <div
         className="flex items-center justify-between animate-stagger-in"
-        style={{ animationDelay: '200ms' }}
+        style={{ animationDelay: "200ms" }}
       >
-        <span className="text-sm text-content-secondary">{t('dashboard.validation_rules')}</span>
+        <span className="text-sm text-content-secondary">
+          {t("dashboard.validation_rules")}
+        </span>
         <span className="text-sm font-semibold text-content-primary tabular-nums">
-          {rules?.rules?.length ?? '\u2014'}
+          {rules?.rules?.length ?? "\u2014"}
         </span>
       </div>
       <div
         className="flex items-center justify-between animate-stagger-in"
-        style={{ animationDelay: '220ms' }}
+        style={{ animationDelay: "220ms" }}
       >
-        <span className="text-sm text-content-secondary">{t('dashboard.languages')}</span>
-        <span className="text-sm font-semibold text-content-primary tabular-nums">{SUPPORTED_LANGUAGES.length}</span>
+        <span className="text-sm text-content-secondary">
+          {t("dashboard.languages")}
+        </span>
+        <span className="text-sm font-semibold text-content-primary tabular-nums">
+          {SUPPORTED_LANGUAGES.length}
+        </span>
       </div>
     </div>
   );

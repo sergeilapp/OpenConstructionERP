@@ -16,12 +16,12 @@
  * real signal is the toast + dock badge that appear on completion.
  */
 
-import { create } from 'zustand';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { create } from "zustand";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type CatalogueInstallStatus = 'downloading' | 'ready' | 'error';
+export type CatalogueInstallStatus = "downloading" | "ready" | "error";
 
 export interface CatalogueInstallJob {
   /** Region id is unique per install — also used as the job id. */
@@ -111,12 +111,12 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
       const startedAt = Date.now();
       const stageFor = (elapsedMs: number): string => {
         const s = Math.floor(elapsedMs / 1000);
-        if (s < 20) return 'catalogue_install.stage_downloading';
-        if (s < 120) return 'catalogue_install.stage_restoring';
-        if (s < 360) return 'catalogue_install.stage_indexing';
-        return 'catalogue_install.stage_finalizing';
+        if (s < 20) return "catalogue_install.stage_downloading";
+        if (s < 120) return "catalogue_install.stage_restoring";
+        if (s < 360) return "catalogue_install.stage_indexing";
+        return "catalogue_install.stage_finalizing";
       };
-      let lastStage = 'catalogue_install.stage_downloading';
+      let lastStage = "catalogue_install.stage_downloading";
       const tick = () => {
         const remaining = 95 - pct;
         if (remaining > 0.3) {
@@ -124,7 +124,9 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
           pct = Math.min(95, pct + step);
         }
         const nextStage = stageFor(Date.now() - startedAt);
-        const patch: Partial<CatalogueInstallJob> = { progress: Math.round(pct) };
+        const patch: Partial<CatalogueInstallJob> = {
+          progress: Math.round(pct),
+        };
         if (nextStage !== lastStage) {
           patch.stage = nextStage;
           lastStage = nextStage;
@@ -148,7 +150,7 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
         const res = await fetch(
           `/api/v1/costs/catalogues-v3/${encodeURIComponent(region)}/install`,
           {
-            method: 'POST',
+            method: "POST",
             headers: token ? { Authorization: `Bearer ${token}` } : {},
           },
         );
@@ -162,9 +164,9 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
             // ignore
           }
           patchJob(region, {
-            status: 'error',
+            status: "error",
             progress: 0,
-            stage: 'catalogue_install.stage_failed',
+            stage: "catalogue_install.stage_failed",
             errorMessage: detail,
             completedAt: Date.now(),
           });
@@ -172,9 +174,9 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
           return;
         }
         patchJob(region, {
-          status: 'ready',
+          status: "ready",
           progress: 100,
-          stage: 'catalogue_install.stage_done',
+          stage: "catalogue_install.stage_done",
           completedAt: Date.now(),
         });
         callbacks?.onSuccess?.(region);
@@ -182,9 +184,9 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
         clearProgressTimer(region);
         const msg = err instanceof Error ? err.message : String(err);
         patchJob(region, {
-          status: 'error',
+          status: "error",
           progress: 0,
-          stage: 'catalogue_install.stage_failed',
+          stage: "catalogue_install.stage_failed",
           errorMessage: msg,
           completedAt: Date.now(),
         });
@@ -198,16 +200,16 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
       startInstall: (params, callbacks) => {
         // Coalesce: if the same region is already in flight, do nothing.
         const existing = get().jobs.get(params.region);
-        if (existing && existing.status === 'downloading') return;
+        if (existing && existing.status === "downloading") return;
 
         const job: CatalogueInstallJob = {
           region: params.region,
           label: params.label,
           language: params.language,
           sizeMb: params.sizeMb,
-          status: 'downloading',
+          status: "downloading",
           progress: 5,
-          stage: 'catalogue_install.stage_downloading',
+          stage: "catalogue_install.stage_downloading",
           errorMessage: null,
           startedAt: Date.now(),
           completedAt: null,
@@ -235,7 +237,7 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
         set((state) => {
           const jobs = new Map(state.jobs);
           for (const [id, job] of jobs) {
-            if (job.status === 'ready' || job.status === 'error') {
+            if (job.status === "ready" || job.status === "error") {
               jobs.delete(id);
             }
           }
@@ -245,7 +247,7 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
 
       hasActive: () => {
         for (const j of get().jobs.values()) {
-          if (j.status === 'downloading') return true;
+          if (j.status === "downloading") return true;
         }
         return false;
       },
@@ -253,7 +255,7 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
       activeJobs: () => {
         const out: CatalogueInstallJob[] = [];
         for (const j of get().jobs.values()) {
-          if (j.status === 'downloading') out.push(j);
+          if (j.status === "downloading") out.push(j);
         }
         return out;
       },
@@ -266,7 +268,7 @@ export const useCatalogueInstallStore = create<CatalogueInstallState>(
  * If the install POST hangs (proxy disconnect, browser tab throttled)
  * the dock would otherwise sit on "Downloading" forever. After 10 min flip
  * abandoned jobs to error so the indicator clears and the user can retry. */
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   const MAX_ACTIVE_MS = 10 * 60 * 1000;
   setInterval(() => {
     const state = useCatalogueInstallStore.getState();
@@ -274,16 +276,16 @@ if (typeof window !== 'undefined') {
     let dirty = false;
     const next = new Map(state.jobs);
     for (const [id, job] of next) {
-      if (job.status !== 'downloading') continue;
+      if (job.status !== "downloading") continue;
       if (now - job.startedAt < MAX_ACTIVE_MS) continue;
       next.set(id, {
         ...job,
-        status: 'error',
+        status: "error",
         progress: 0,
-        stage: 'catalogue_install.stage_stalled',
+        stage: "catalogue_install.stage_stalled",
         errorMessage:
           job.errorMessage ??
-          'Install abandoned after 10 min — try again or check the backend log.',
+          "Install abandoned after 10 min — try again or check the backend log.",
         completedAt: now,
       });
       clearProgressTimer(id);

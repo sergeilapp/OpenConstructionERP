@@ -21,7 +21,9 @@ class PurchaseOrder(Base):
     __tablename__ = "oe_procurement_po"
     __table_args__ = (
         UniqueConstraint(
-            "project_id", "po_number", name="uq_procurement_po_project_number",
+            "project_id",
+            "po_number",
+            name="uq_procurement_po_project_number",
         ),
     )
 

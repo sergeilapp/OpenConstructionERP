@@ -295,12 +295,15 @@ async def list_documents(
     # Admin bypass — _verify_project_membership_or_404 already let them
     # through, but we still need to skip filtering for them.
     from app.modules.users.repository import UserRepository
+
     user = await UserRepository(session).get_by_id(user_uuid)
     if user is not None and getattr(user, "role", "") == "admin":
         return [_doc_to_response(d) for d in docs]
 
     grants = await effective_permissions_for(
-        session, project_id=project_id, user_id=user_uuid,
+        session,
+        project_id=project_id,
+        user_id=user_uuid,
     )
     restricted = await restricted_scopes_for_project(session, project_id)
 
@@ -309,10 +312,7 @@ async def list_documents(
         kind, path = kind_and_path_for_document(doc.category)
         # If the folder has any grant, only show docs the user has
         # an explicit grant on (exact scope OR wildcard for the kind).
-        is_restricted = (
-            (kind, path) in restricted
-            or (kind, None) in restricted
-        )
+        is_restricted = (kind, path) in restricted or (kind, None) in restricted
         if not is_restricted:
             visible.append(doc)
             continue
@@ -345,10 +345,14 @@ async def file_types_by_project(
     if user_id is None:
         return {}
     own_ids = (
-        await session.execute(
-            _select(Project.id).where(Project.owner_id == uuid.UUID(str(user_id))),
+        (
+            await session.execute(
+                _select(Project.id).where(Project.owner_id == uuid.UUID(str(user_id))),
+            )
         )
-    ).scalars().all()
+        .scalars()
+        .all()
+    )
     if not own_ids:
         return {}
 
@@ -1029,14 +1033,12 @@ async def batch_delete_documents(
     from app.modules.projects.repository import ProjectRepository
 
     proj_repo = ProjectRepository(session)
-    owned_projects, _ = await proj_repo.list_for_user(
-        owner_id=user_id, offset=0, limit=10000, exclude_archived=False
-    )
+    owned_projects, _ = await proj_repo.list_for_user(owner_id=user_id, offset=0, limit=10000, exclude_archived=False)
     owned_project_ids = {str(p.id) for p in owned_projects}
 
-    rows = (await session.execute(
-        _select(Document.id, Document.project_id, Document.name).where(Document.id.in_(body.ids))
-    )).all()
+    rows = (
+        await session.execute(_select(Document.id, Document.project_id, Document.name).where(Document.id.in_(body.ids)))
+    ).all()
     allowed = [r[0] for r in rows if str(r[1]) in owned_project_ids]
     name_by_id = {r[0]: r[2] for r in rows if str(r[1]) in owned_project_ids}
 
@@ -1058,7 +1060,9 @@ async def batch_delete_documents(
     deleted = await bulk_delete(session, Document, allowed)
     logger.info(
         "Bulk delete documents: requested=%d deleted=%d user=%s",
-        len(body.ids), deleted, user_id,
+        len(body.ids),
+        deleted,
+        user_id,
     )
     return {"requested": len(body.ids), "deleted": deleted}
 
@@ -1116,7 +1120,9 @@ async def access_share_link_endpoint(
     from app.modules.documents.share_service import access_share_link
 
     link, doc = await access_share_link(
-        session, token=token, password=body.password,
+        session,
+        token=token,
+        password=body.password,
     )
     return ShareLinkAccessResponse(
         download_url=f"/api/v1/documents/share-links/{link.token}/file/",
@@ -1298,12 +1304,15 @@ async def download_document(
             file_path = (upload_base / "demo" / f"{doc.id}.pdf").resolve()
             logger.info(
                 "Re-anchored demo doc %s to %s (stored path outside upload_base)",
-                doc.id, file_path,
+                doc.id,
+                file_path,
             )
         else:
             logger.warning(
                 "Document %s file_path %s resolves outside upload_base %s",
-                doc.id, doc.file_path, upload_base,
+                doc.id,
+                doc.file_path,
+                upload_base,
             )
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

@@ -7,20 +7,20 @@
  * a programmatic ``fetch`` + ``Blob`` download so we can reuse the
  * standard Bearer token (an `<a download>` anchor wouldn't carry it).
  */
-import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Download, FileSpreadsheet, FileText, Database } from 'lucide-react';
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Download, FileSpreadsheet, FileText, Database } from "lucide-react";
 
-import { Button } from '@/shared/ui';
-import { triggerDownload } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useToastStore } from '@/stores/useToastStore';
+import { Button } from "@/shared/ui";
+import { triggerDownload } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToastStore } from "@/stores/useToastStore";
 
 import {
   buildSnapshotExportUrl,
   type ExportFormat,
   type SnapshotRowsQuery,
-} from './api';
+} from "./api";
 
 export interface ExportButtonProps {
   snapshotId: string;
@@ -41,10 +41,10 @@ export function ExportButton({ snapshotId, query }: ExportButtonProps) {
         const url = buildSnapshotExportUrl(snapshotId, format, query);
         const token = useAuthStore.getState().accessToken;
         const headers: Record<string, string> = {
-          'X-DDC-Client': 'OE/1.0',
+          "X-DDC-Client": "OE/1.0",
         };
-        if (token) headers['Authorization'] = `Bearer ${token}`;
-        const resp = await fetch(url, { method: 'GET', headers });
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+        const resp = await fetch(url, { method: "GET", headers });
         if (!resp.ok) {
           throw new Error(`Export failed (HTTP ${resp.status})`);
         }
@@ -53,9 +53,9 @@ export function ExportButton({ snapshotId, query }: ExportButtonProps) {
         triggerDownload(blob, filename);
       } catch (err) {
         toast({
-          type: 'error',
-          title: t('dashboards.export_failed', {
-            defaultValue: 'Export failed‌⁠‍',
+          type: "error",
+          title: t("dashboards.export_failed", {
+            defaultValue: "Export failed‌⁠‍",
           }),
           message: err instanceof Error ? err.message : String(err),
         });
@@ -76,7 +76,7 @@ export function ExportButton({ snapshotId, query }: ExportButtonProps) {
         data-testid="export-button-trigger"
       >
         <Download className="mr-1 h-3 w-3" />
-        {t('common.export', { defaultValue: 'Export‌⁠‍' })}
+        {t("common.export", { defaultValue: "Export‌⁠‍" })}
       </Button>
       {open && (
         <div
@@ -88,21 +88,21 @@ export function ExportButton({ snapshotId, query }: ExportButtonProps) {
             label="CSV"
             icon={<FileText className="h-3 w-3" />}
             disabled={pending !== null}
-            onClick={() => handlePick('csv')}
+            onClick={() => handlePick("csv")}
             testId="export-csv"
           />
           <ExportMenuItem
             label="XLSX"
             icon={<FileSpreadsheet className="h-3 w-3" />}
             disabled={pending !== null}
-            onClick={() => handlePick('xlsx')}
+            onClick={() => handlePick("xlsx")}
             testId="export-xlsx"
           />
           <ExportMenuItem
             label="Parquet"
             icon={<Database className="h-3 w-3" />}
             disabled={pending !== null}
-            onClick={() => handlePick('parquet')}
+            onClick={() => handlePick("parquet")}
             testId="export-parquet"
           />
         </div>

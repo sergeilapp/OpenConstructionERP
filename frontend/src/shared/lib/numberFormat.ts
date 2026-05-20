@@ -8,9 +8,9 @@
  * — not "format currency" — so reusing it keeps the BarChart tooltip
  * axis label in sync with the chart value column.
  */
-import { getIntlLocale } from './formatters';
+import { getIntlLocale } from "./formatters";
 
-export type ValueFormatKind = 'number' | 'currency' | 'percent';
+export type ValueFormatKind = "number" | "currency" | "percent";
 
 export interface FormatOptions {
   /** ISO 4217 code, only used when kind === 'currency'. Defaults to EUR. */
@@ -25,14 +25,18 @@ export interface FormatOptions {
   maximumFractionDigits?: number;
 }
 
-function cacheKey(kind: ValueFormatKind, locale: string, opts: FormatOptions): string {
+function cacheKey(
+  kind: ValueFormatKind,
+  locale: string,
+  opts: FormatOptions,
+): string {
   return [
     kind,
     locale,
-    opts.currency ?? '',
+    opts.currency ?? "",
     opts.minimumFractionDigits ?? -1,
     opts.maximumFractionDigits ?? -1,
-  ].join('|');
+  ].join("|");
 }
 
 const formatterCache = new Map<string, Intl.NumberFormat>();
@@ -44,19 +48,21 @@ function buildFormatter(
 ): Intl.NumberFormat {
   const base: Intl.NumberFormatOptions = {};
   switch (kind) {
-    case 'currency':
-      base.style = 'currency';
+    case "currency":
+      base.style = "currency";
       base.currency =
-        opts.currency && /^[A-Z]{3}$/.test(opts.currency) ? opts.currency : 'EUR';
+        opts.currency && /^[A-Z]{3}$/.test(opts.currency)
+          ? opts.currency
+          : "EUR";
       base.minimumFractionDigits = opts.minimumFractionDigits ?? 0;
       base.maximumFractionDigits = opts.maximumFractionDigits ?? 2;
       break;
-    case 'percent':
-      base.style = 'percent';
+    case "percent":
+      base.style = "percent";
       base.minimumFractionDigits = opts.minimumFractionDigits ?? 0;
       base.maximumFractionDigits = opts.maximumFractionDigits ?? 2;
       break;
-    case 'number':
+    case "number":
     default:
       base.minimumFractionDigits = opts.minimumFractionDigits ?? 0;
       base.maximumFractionDigits = opts.maximumFractionDigits ?? 2;
@@ -93,12 +99,12 @@ export function formatValue(
   kind: ValueFormatKind,
   opts: FormatOptions = {},
 ): string {
-  if (value == null || !Number.isFinite(value)) return '-';
+  if (value == null || !Number.isFinite(value)) return "-";
   const locale = getIntlLocale();
 
-  if (kind === 'percent' && opts.percentAsRatio !== true) {
+  if (kind === "percent" && opts.percentAsRatio !== true) {
     // Value is already a percentage (e.g. 42.5 means 42.5%).
-    const fmt = getFormatter('number', locale, opts);
+    const fmt = getFormatter("number", locale, opts);
     return `${fmt.format(value)}%`;
   }
 
@@ -114,6 +120,6 @@ export function formatChartValue(
   kind: ValueFormatKind,
   opts: FormatOptions = {},
 ): string {
-  if (typeof value === 'string') return value;
+  if (typeof value === "string") return value;
   return formatValue(value, kind, opts);
 }

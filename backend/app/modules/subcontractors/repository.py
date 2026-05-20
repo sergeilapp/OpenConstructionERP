@@ -42,9 +42,7 @@ class _BaseRepo:
     async def update_fields(self, entity_id: uuid.UUID, **fields: object) -> None:
         if not fields:
             return
-        await self.session.execute(
-            update(self.model).where(self.model.id == entity_id).values(**fields)
-        )
+        await self.session.execute(update(self.model).where(self.model.id == entity_id).values(**fields))
         await self.session.flush()
         self.session.expire_all()
 
@@ -73,9 +71,7 @@ class SubcontractorRepository(_BaseRepo):
         if active_only:
             base = base.where(Subcontractor.is_active.is_(True))
         if prequalification_status is not None:
-            base = base.where(
-                Subcontractor.prequalification_status == prequalification_status
-            )
+            base = base.where(Subcontractor.prequalification_status == prequalification_status)
         if trade_category is not None:
             # JSON contains check — keep simple/portable: load and filter in Python
             # for cross-dialect parity. For the typical N≤1000 catalogue this is
@@ -91,6 +87,28 @@ class SubcontractorRepository(_BaseRepo):
             rows = [r for r in rows if trade_category in (r.trade_categories or [])]
         return rows, total
 
+    async def list_with_insurance_expiry_within(
+        self,
+        *,
+        upper_bound: date,
+        active_only: bool = True,
+    ) -> list[Subcontractor]:
+        """Return subs whose ``insurance_expiry_date`` is on/before ``upper_bound``.
+
+        This includes already-past expiries — the sweep surfaces both
+        "expiring soon" and "already expired" so the GC can chase
+        renewals on a single list.  Subs whose expiry is NULL are NOT
+        included (they need a separate "missing insurance" report).
+        """
+        stmt = select(Subcontractor).where(
+            Subcontractor.insurance_expiry_date.is_not(None),
+            Subcontractor.insurance_expiry_date <= upper_bound,
+        )
+        if active_only:
+            stmt = stmt.where(Subcontractor.is_active.is_(True))
+        stmt = stmt.order_by(Subcontractor.insurance_expiry_date)
+        return list((await self.session.execute(stmt)).scalars().all())
+
 
 class SubcontractorContactRepository(_BaseRepo):
     """CRUD for SubcontractorContact."""
@@ -98,7 +116,8 @@ class SubcontractorContactRepository(_BaseRepo):
     model = SubcontractorContact
 
     async def list_by_subcontractor(
-        self, subcontractor_id: uuid.UUID,
+        self,
+        subcontractor_id: uuid.UUID,
     ) -> list[SubcontractorContact]:
         stmt = (
             select(SubcontractorContact)
@@ -114,7 +133,8 @@ class PrequalificationRepository(_BaseRepo):
     model = PrequalificationApplication
 
     async def list_for_subcontractor(
-        self, subcontractor_id: uuid.UUID,
+        self,
+        subcontractor_id: uuid.UUID,
     ) -> list[PrequalificationApplication]:
         stmt = (
             select(PrequalificationApplication)
@@ -124,7 +144,11 @@ class PrequalificationRepository(_BaseRepo):
         return list((await self.session.execute(stmt)).scalars().all())
 
     async def list_by_status(
-        self, status: str, *, offset: int = 0, limit: int = 50,
+        self,
+        status: str,
+        *,
+        offset: int = 0,
+        limit: int = 50,
     ) -> list[PrequalificationApplication]:
         stmt = (
             select(PrequalificationApplication)
@@ -142,7 +166,8 @@ class CertificateRepository(_BaseRepo):
     model = Certificate
 
     async def list_by_subcontractor(
-        self, subcontractor_id: uuid.UUID,
+        self,
+        subcontractor_id: uuid.UUID,
     ) -> list[Certificate]:
         stmt = (
             select(Certificate)
@@ -211,12 +236,11 @@ class WorkPackageRepository(_BaseRepo):
     model = WorkPackage
 
     async def list_for_agreement(
-        self, agreement_id: uuid.UUID,
+        self,
+        agreement_id: uuid.UUID,
     ) -> list[WorkPackage]:
         stmt = (
-            select(WorkPackage)
-            .where(WorkPackage.agreement_id == agreement_id)
-            .order_by(WorkPackage.created_at.asc())
+            select(WorkPackage).where(WorkPackage.agreement_id == agreement_id).order_by(WorkPackage.created_at.asc())
         )
         return list((await self.session.execute(stmt)).scalars().all())
 
@@ -242,9 +266,7 @@ class PaymentApplicationRepository(_BaseRepo):
 
     async def next_application_number(self, agreement_id: uuid.UUID) -> str:
         stmt = (
-            select(func.count())
-            .select_from(PaymentApplication)
-            .where(PaymentApplication.agreement_id == agreement_id)
+            select(func.count()).select_from(PaymentApplication).where(PaymentApplication.agreement_id == agreement_id)
         )
         count = (await self.session.execute(stmt)).scalar_one()
         return f"PA-{count + 1:04d}"
@@ -256,7 +278,8 @@ class PaymentApplicationLineRepository(_BaseRepo):
     model = PaymentApplicationLine
 
     async def list_for_application(
-        self, payment_application_id: uuid.UUID,
+        self,
+        payment_application_id: uuid.UUID,
     ) -> list[PaymentApplicationLine]:
         stmt = select(PaymentApplicationLine).where(
             PaymentApplicationLine.payment_application_id == payment_application_id,
@@ -270,7 +293,8 @@ class RetentionLedgerRepository(_BaseRepo):
     model = RetentionLedger
 
     async def list_for_agreement(
-        self, agreement_id: uuid.UUID,
+        self,
+        agreement_id: uuid.UUID,
     ) -> list[RetentionLedger]:
         stmt = (
             select(RetentionLedger)
@@ -280,7 +304,8 @@ class RetentionLedgerRepository(_BaseRepo):
         return list((await self.session.execute(stmt)).scalars().all())
 
     async def list_for_payment_application(
-        self, payment_application_id: uuid.UUID,
+        self,
+        payment_application_id: uuid.UUID,
     ) -> list[RetentionLedger]:
         """Return ledger entries tied to a single payment application."""
         stmt = (
@@ -297,7 +322,8 @@ class RatingRepository(_BaseRepo):
     model = SubcontractorRating
 
     async def list_for_subcontractor(
-        self, subcontractor_id: uuid.UUID,
+        self,
+        subcontractor_id: uuid.UUID,
     ) -> list[SubcontractorRating]:
         stmt = (
             select(SubcontractorRating)
@@ -307,7 +333,9 @@ class RatingRepository(_BaseRepo):
         return list((await self.session.execute(stmt)).scalars().all())
 
     async def get_for_period(
-        self, subcontractor_id: uuid.UUID, period: str,
+        self,
+        subcontractor_id: uuid.UUID,
+        period: str,
     ) -> SubcontractorRating | None:
         stmt = select(SubcontractorRating).where(
             SubcontractorRating.subcontractor_id == subcontractor_id,

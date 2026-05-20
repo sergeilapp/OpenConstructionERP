@@ -12,8 +12,8 @@
  * until they're translated.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Image as ImageIcon,
   Upload,
@@ -21,20 +21,21 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-} from 'lucide-react';
-import { Button, EmptyState, Skeleton, AuthImage } from '@/shared/ui';
-import { useFileList } from '@/features/file-manager/hooks';
-import { UploadDialog } from '@/features/file-manager/components/UploadDialog';
-import type { FileRow } from '@/features/file-manager/types';
+} from "lucide-react";
+import { Button, EmptyState, Skeleton, AuthImage } from "@/shared/ui";
+import { useFileList } from "@/features/file-manager/hooks";
+import { UploadDialog } from "@/features/file-manager/components/UploadDialog";
+import type { FileRow } from "@/features/file-manager/types";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Pretty-print a byte count using the same step sizes as FilePreviewPane. */
 export function fmtBytes(bytes: number): string {
-  if (!bytes) return '0 B';
+  if (!bytes) return "0 B";
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
@@ -48,41 +49,41 @@ function pickCapturedAt(row: FileRow): string | null {
     (extra as Record<string, unknown>).captured_at ??
     (extra as Record<string, unknown>).exif_date ??
     (extra as Record<string, unknown>).date_taken;
-  if (typeof exif === 'string' && exif) return exif;
+  if (typeof exif === "string" && exif) return exif;
   return row.modified_at;
 }
 
-function fmtDate(iso: string | null, locale = 'en'): string {
-  if (!iso) return '';
+function fmtDate(iso: string | null, locale = "en"): string {
+  if (!iso) return "";
   try {
     return new Date(iso).toLocaleDateString(locale, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   } catch {
     return iso;
   }
 }
 
-type SortKey = 'newest' | 'oldest' | 'largest';
+type SortKey = "newest" | "oldest" | "largest";
 
 function sortRows(rows: FileRow[], sort: SortKey): FileRow[] {
   const copy = rows.slice();
   switch (sort) {
-    case 'newest':
+    case "newest":
       return copy.sort((a, b) => {
-        const at = pickCapturedAt(a) ?? '';
-        const bt = pickCapturedAt(b) ?? '';
+        const at = pickCapturedAt(a) ?? "";
+        const bt = pickCapturedAt(b) ?? "";
         return bt.localeCompare(at);
       });
-    case 'oldest':
+    case "oldest":
       return copy.sort((a, b) => {
-        const at = pickCapturedAt(a) ?? '';
-        const bt = pickCapturedAt(b) ?? '';
+        const at = pickCapturedAt(a) ?? "";
+        const bt = pickCapturedAt(b) ?? "";
         return at.localeCompare(bt);
       });
-    case 'largest':
+    case "largest":
       return copy.sort((a, b) => (b.size_bytes ?? 0) - (a.size_bytes ?? 0));
   }
 }
@@ -97,17 +98,20 @@ export interface PhotosTabProps {
 
 export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   const { t, i18n } = useTranslation();
-  const locale = i18n?.language ?? 'en';
+  const locale = i18n?.language ?? "en";
 
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<SortKey>('newest');
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortKey>("newest");
   const [uploadOpen, setUploadOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   // Pull every photo for this project. Backend already filters by kind,
   // so we don't need to refilter client-side — but we do want to sort &
   // text-filter locally without paying a round-trip per keystroke.
-  const list = useFileList(projectId ?? null, { category: 'photo', limit: 500 });
+  const list = useFileList(projectId ?? null, {
+    category: "photo",
+    limit: 500,
+  });
 
   const photos: FileRow[] = useMemo(() => list.data?.items ?? [], [list.data]);
 
@@ -143,12 +147,12 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   useEffect(() => {
     if (lightboxIndex === null) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeLightbox();
-      else if (e.key === 'ArrowLeft') stepLightbox(-1);
-      else if (e.key === 'ArrowRight') stepLightbox(1);
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [lightboxIndex, closeLightbox, stepLightbox]);
 
   // ── No active project ────────────────────────────────────────────────────
@@ -157,11 +161,11 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
       <div data-testid="photos-tab-no-project" className="py-10">
         <EmptyState
           icon={<ImageIcon size={28} strokeWidth={1.5} />}
-          title={t('projects.photos.no_project', {
-            defaultValue: 'No active project‌⁠‍',
+          title={t("projects.photos.no_project", {
+            defaultValue: "No active project‌⁠‍",
           })}
-          description={t('projects.photos.no_project_desc', {
-            defaultValue: 'Open a project to view and upload photos.‌⁠‍',
+          description={t("projects.photos.no_project_desc", {
+            defaultValue: "Open a project to view and upload photos.‌⁠‍",
           })}
         />
       </div>
@@ -189,12 +193,12 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
         <div data-testid="photos-tab-empty" className="py-10">
           <EmptyState
             icon={<ImageIcon size={28} strokeWidth={1.5} />}
-            title={t('projects.photos.empty_title', {
-              defaultValue: 'No photos yet‌⁠‍',
+            title={t("projects.photos.empty_title", {
+              defaultValue: "No photos yet‌⁠‍",
             })}
-            description={t('projects.photos.empty_desc', {
+            description={t("projects.photos.empty_desc", {
               defaultValue:
-                'Upload site photos to keep visual records alongside the project.‌⁠‍',
+                "Upload site photos to keep visual records alongside the project.‌⁠‍",
             })}
             action={
               <Button
@@ -204,7 +208,9 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 onClick={() => setUploadOpen(true)}
                 data-testid="photos-tab-upload-empty"
               >
-                {t('projects.photos.upload_cta', { defaultValue: 'Upload photos‌⁠‍' })}
+                {t("projects.photos.upload_cta", {
+                  defaultValue: "Upload photos‌⁠‍",
+                })}
               </Button>
             }
           />
@@ -221,7 +227,9 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
 
   // ── Photos present: filter bar + grid + (optional) lightbox ──────────────
   const activePhoto =
-    lightboxIndex !== null && lightboxIndex >= 0 && lightboxIndex < filtered.length
+    lightboxIndex !== null &&
+    lightboxIndex >= 0 &&
+    lightboxIndex < filtered.length
       ? filtered[lightboxIndex]
       : null;
 
@@ -238,13 +246,13 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('projects.photos.search_placeholder', {
-              defaultValue: 'Search filename…',
+            placeholder={t("projects.photos.search_placeholder", {
+              defaultValue: "Search filename…",
             })}
             className="w-full h-9 pl-8 pr-3 text-sm rounded-lg bg-surface-secondary/60 border border-border-light text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
             data-testid="photos-tab-search"
-            aria-label={t('projects.photos.search_aria', {
-              defaultValue: 'Search photos by filename',
+            aria-label={t("projects.photos.search_aria", {
+              defaultValue: "Search photos by filename",
             })}
           />
         </div>
@@ -253,16 +261,20 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
           onChange={(e) => setSort(e.target.value as SortKey)}
           className="h-9 px-3 text-sm rounded-lg bg-surface-secondary/60 border border-border-light text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
           data-testid="photos-tab-sort"
-          aria-label={t('projects.photos.sort_aria', { defaultValue: 'Sort photos' })}
+          aria-label={t("projects.photos.sort_aria", {
+            defaultValue: "Sort photos",
+          })}
         >
           <option value="newest">
-            {t('projects.photos.sort_newest', { defaultValue: 'Newest first' })}
+            {t("projects.photos.sort_newest", { defaultValue: "Newest first" })}
           </option>
           <option value="oldest">
-            {t('projects.photos.sort_oldest', { defaultValue: 'Oldest first' })}
+            {t("projects.photos.sort_oldest", { defaultValue: "Oldest first" })}
           </option>
           <option value="largest">
-            {t('projects.photos.sort_largest', { defaultValue: 'Largest first' })}
+            {t("projects.photos.sort_largest", {
+              defaultValue: "Largest first",
+            })}
           </option>
         </select>
         <Button
@@ -272,14 +284,14 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
           onClick={() => setUploadOpen(true)}
           data-testid="photos-tab-upload"
         >
-          {t('projects.photos.upload_cta', { defaultValue: 'Upload photos' })}
+          {t("projects.photos.upload_cta", { defaultValue: "Upload photos" })}
         </Button>
       </div>
 
       {/* Result count */}
       <div className="text-xs text-content-tertiary tabular-nums">
-        {t('projects.photos.count_label', {
-          defaultValue: '{{count}} of {{total}} photos',
+        {t("projects.photos.count_label", {
+          defaultValue: "{{count}} of {{total}} photos",
           count: filtered.length,
           total: photos.length,
         })}
@@ -290,11 +302,11 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
         <div data-testid="photos-tab-no-matches" className="py-10">
           <EmptyState
             icon={<Search size={28} strokeWidth={1.5} />}
-            title={t('projects.photos.no_matches', {
-              defaultValue: 'No matching photos',
+            title={t("projects.photos.no_matches", {
+              defaultValue: "No matching photos",
             })}
-            description={t('projects.photos.no_matches_desc', {
-              defaultValue: 'Try adjusting your search query.',
+            description={t("projects.photos.no_matches_desc", {
+              defaultValue: "Try adjusting your search query.",
             })}
           />
         </div>
@@ -312,8 +324,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 onClick={() => openLightbox(idx)}
                 data-testid={`photos-tab-tile-${row.id}`}
                 className="group relative flex flex-col text-left rounded-lg overflow-hidden bg-surface-secondary border border-border-light hover:border-oe-blue hover:shadow-md focus:outline-none focus:ring-2 focus:ring-oe-blue transition-all"
-                aria-label={t('projects.photos.open_photo_aria', {
-                  defaultValue: 'Open {{name}}',
+                aria-label={t("projects.photos.open_photo_aria", {
+                  defaultValue: "Open {{name}}",
                   name: row.name,
                 })}
               >
@@ -350,7 +362,9 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-content-tertiary">
                     <span>{fmtDate(captured, locale)}</span>
-                    <span className="tabular-nums">{fmtBytes(row.size_bytes ?? 0)}</span>
+                    <span className="tabular-nums">
+                      {fmtBytes(row.size_bytes ?? 0)}
+                    </span>
                   </div>
                 </div>
               </button>
@@ -364,8 +378,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={t('projects.photos.lightbox_aria', {
-            defaultValue: 'Photo viewer',
+          aria-label={t("projects.photos.lightbox_aria", {
+            defaultValue: "Photo viewer",
           })}
           data-testid="photos-tab-lightbox"
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm"
@@ -380,7 +394,9 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
             }}
             className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
             data-testid="photos-tab-lightbox-close"
-            aria-label={t('projects.photos.close_aria', { defaultValue: 'Close' })}
+            aria-label={t("projects.photos.close_aria", {
+              defaultValue: "Close",
+            })}
           >
             <X size={20} />
           </button>
@@ -395,7 +411,9 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               }}
               className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
               data-testid="photos-tab-lightbox-prev"
-              aria-label={t('projects.photos.prev_aria', { defaultValue: 'Previous' })}
+              aria-label={t("projects.photos.prev_aria", {
+                defaultValue: "Previous",
+              })}
             >
               <ChevronLeft size={22} />
             </button>
@@ -411,7 +429,9 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               }}
               className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
               data-testid="photos-tab-lightbox-next"
-              aria-label={t('projects.photos.next_aria', { defaultValue: 'Next' })}
+              aria-label={t("projects.photos.next_aria", {
+                defaultValue: "Next",
+              })}
             >
               <ChevronRight size={22} />
             </button>
@@ -430,7 +450,11 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 data-testid="photos-tab-lightbox-image"
                 placeholder={
                   <div className="flex h-64 w-64 items-center justify-center rounded bg-white/10 text-white">
-                    <ImageIcon size={40} strokeWidth={1.25} className="animate-pulse" />
+                    <ImageIcon
+                      size={40}
+                      strokeWidth={1.25}
+                      className="animate-pulse"
+                    />
                   </div>
                 }
                 fallback={
@@ -450,11 +474,11 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               </div>
               <div className="text-xs text-white/70 mt-0.5">
                 {fmtDate(pickCapturedAt(activePhoto), locale)}
-                {' · '}
+                {" · "}
                 {fmtBytes(activePhoto.size_bytes ?? 0)}
-                {' · '}
-                {t('projects.photos.position_label', {
-                  defaultValue: '{{current}} / {{total}}',
+                {" · "}
+                {t("projects.photos.position_label", {
+                  defaultValue: "{{current}} / {{total}}",
                   current: (lightboxIndex ?? 0) + 1,
                   total: filtered.length,
                 })}

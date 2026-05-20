@@ -51,7 +51,8 @@ class TestDemoLoginEndpoint:
     """v2.6.22 demo-login coverage."""
 
     async def test_whitelisted_email_returns_tokens(
-        self, demo_client: AsyncClient,
+        self,
+        demo_client: AsyncClient,
     ) -> None:
         # Hit the endpoint a few times in case the seeder is still warming
         # up — the lifespan completes before yield, but on slow CI Postgres
@@ -75,7 +76,8 @@ class TestDemoLoginEndpoint:
         assert body["expires_in"] > 0
 
     async def test_non_whitelisted_email_returns_401(
-        self, demo_client: AsyncClient,
+        self,
+        demo_client: AsyncClient,
     ) -> None:
         resp = await demo_client.post(
             "/api/v1/users/auth/demo-login/",
@@ -83,12 +85,13 @@ class TestDemoLoginEndpoint:
         )
         assert resp.status_code == 401, resp.text
         # Must NOT leak whitelist membership in the detail string.
-        assert (
-            "demo" not in (resp.json().get("detail") or "").lower()
-        ), "Endpoint must not reveal demo whitelist contents."
+        assert "demo" not in (resp.json().get("detail") or "").lower(), (
+            "Endpoint must not reveal demo whitelist contents."
+        )
 
     async def test_seed_demo_disabled_returns_404(
-        self, demo_client: AsyncClient,
+        self,
+        demo_client: AsyncClient,
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         monkeypatch.setenv("SEED_DEMO", "false")
@@ -109,25 +112,21 @@ class TestDemoLoginEndpoint:
         also need to add it to ``_DEMO_EMAIL_WHITELIST`` (and vice versa)
         or demo login silently breaks for one of them.
         """
-        from app.modules.users.router import _DEMO_EMAIL_WHITELIST
-
         # Pull the seeder's spec list by importing the function module
         # and reading the literal — keeps the test independent of any
         # runtime side-effects.
         import inspect
 
         from app.main import _seed_demo_account
+        from app.modules.users.router import _DEMO_EMAIL_WHITELIST
 
         src = inspect.getsource(_seed_demo_account)
         seeded_emails = {
             line.split('"email":')[1].split('"')[1]
             for line in src.splitlines()
-            if '"email":' in line and '@openestimator.io' in line
+            if '"email":' in line and "@openestimator.io" in line
         }
-        assert seeded_emails, (
-            "Could not parse seeder spec list — has _seed_demo_account changed?"
-        )
+        assert seeded_emails, "Could not parse seeder spec list — has _seed_demo_account changed?"
         assert seeded_emails == set(_DEMO_EMAIL_WHITELIST), (
-            f"Whitelist drift: seeder={seeded_emails!r} vs "
-            f"router whitelist={set(_DEMO_EMAIL_WHITELIST)!r}"
+            f"Whitelist drift: seeder={seeded_emails!r} vs router whitelist={set(_DEMO_EMAIL_WHITELIST)!r}"
         )

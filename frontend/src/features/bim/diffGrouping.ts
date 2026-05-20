@@ -13,9 +13,9 @@ import type {
   BIMModelDiff,
   BIMDiffModifiedEntry,
   BIMDiffSimpleEntry,
-} from './api';
+} from "./api";
 
-export type DiffChangeType = 'added' | 'deleted' | 'modified';
+export type DiffChangeType = "added" | "deleted" | "modified";
 
 /** A single element row in the grouped diff list. */
 export interface DiffElementRow {
@@ -50,11 +50,9 @@ export interface GroupedDiff {
   changeByStableId: Map<string, DiffChangeType>;
 }
 
-const UNCATEGORISED = 'Uncategorised';
+const UNCATEGORISED = "Uncategorised";
 
-function categoryOf(
-  entry: BIMDiffSimpleEntry | BIMDiffModifiedEntry,
-): string {
+function categoryOf(entry: BIMDiffSimpleEntry | BIMDiffModifiedEntry): string {
   const t = entry.element_type;
   if (t && t.trim()) return t.trim();
   return UNCATEGORISED;
@@ -64,9 +62,9 @@ function categoryOf(
  *  are JSON-encoded and truncated so a 200-key property bag delta doesn't
  *  blow out the panel. */
 export function formatDiffValue(v: unknown): string {
-  if (v === null || v === undefined) return '—';
-  if (typeof v === 'string') return v === '' ? '—' : v;
-  if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+  if (v === null || v === undefined) return "—";
+  if (typeof v === "string") return v === "" ? "—" : v;
+  if (typeof v === "number" || typeof v === "boolean") return String(v);
   try {
     const json = JSON.stringify(v);
     return json.length > 120 ? `${json.slice(0, 117)}…` : json;
@@ -78,7 +76,7 @@ export function formatDiffValue(v: unknown): string {
 function modifiedToRow(entry: BIMDiffModifiedEntry): DiffElementRow {
   return {
     stableId: entry.stable_id,
-    changeType: 'modified',
+    changeType: "modified",
     category: categoryOf(entry),
     name: null,
     fieldDeltas: (entry.changes ?? []).map((c) => ({
@@ -91,7 +89,7 @@ function modifiedToRow(entry: BIMDiffModifiedEntry): DiffElementRow {
 
 function simpleToRow(
   entry: BIMDiffSimpleEntry,
-  changeType: 'added' | 'deleted',
+  changeType: "added" | "deleted",
 ): DiffElementRow {
   return {
     stableId: entry.stable_id,
@@ -114,16 +112,16 @@ export function groupModelDiff(diff: BIMModelDiff): GroupedDiff {
 
   if (details) {
     for (const e of details.deleted ?? []) {
-      rows.push(simpleToRow(e, 'deleted'));
-      changeByStableId.set(e.stable_id, 'deleted');
+      rows.push(simpleToRow(e, "deleted"));
+      changeByStableId.set(e.stable_id, "deleted");
     }
     for (const e of details.modified ?? []) {
       rows.push(modifiedToRow(e));
-      changeByStableId.set(e.stable_id, 'modified');
+      changeByStableId.set(e.stable_id, "modified");
     }
     for (const e of details.added ?? []) {
-      rows.push(simpleToRow(e, 'added'));
-      changeByStableId.set(e.stable_id, 'added');
+      rows.push(simpleToRow(e, "added"));
+      changeByStableId.set(e.stable_id, "added");
     }
   }
 
@@ -146,9 +144,9 @@ export function groupModelDiff(diff: BIMModelDiff): GroupedDiff {
     );
     groups.push({
       category,
-      added: list.filter((r) => r.changeType === 'added').length,
-      deleted: list.filter((r) => r.changeType === 'deleted').length,
-      modified: list.filter((r) => r.changeType === 'modified').length,
+      added: list.filter((r) => r.changeType === "added").length,
+      deleted: list.filter((r) => r.changeType === "deleted").length,
+      modified: list.filter((r) => r.changeType === "modified").length,
       total: list.length,
       rows: sorted,
     });

@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 export interface ProjectAddress {
   street?: string | null;
@@ -81,7 +81,7 @@ export interface DashboardBudget {
   actual: string;
   forecast: string;
   consumed_pct: string;
-  warning_level: 'normal' | 'warning' | 'critical';
+  warning_level: "normal" | "warning" | "critical";
 }
 
 export interface DashboardSchedule {
@@ -134,7 +134,13 @@ export interface DashboardActivity {
 }
 
 export interface ProjectDashboard {
-  project: { id: string; name: string; status: string; phase: string | null; currency: string };
+  project: {
+    id: string;
+    name: string;
+    status: string;
+    phase: string | null;
+    currency: string;
+  };
   budget: DashboardBudget;
   schedule: DashboardSchedule;
   quality: DashboardQuality;
@@ -183,7 +189,7 @@ export interface ProfileSpec {
 export interface ProjectModule {
   module_name: string;
   enabled: boolean;
-  tier: 'must' | 'recommended' | 'optional' | 'hidden';
+  tier: "must" | "recommended" | "optional" | "hidden";
   score: number;
   phase: string;
   source: string;
@@ -213,9 +219,9 @@ export interface ProjectProfileResult {
 }
 
 export const projectsApi = {
-  list: () => apiGet<Project[]>('/v1/projects/'),
+  list: () => apiGet<Project[]>("/v1/projects/"),
   get: (id: string) => apiGet<Project>(`/v1/projects/${id}`),
-  create: (data: CreateProjectData) => apiPost<Project>('/v1/projects/', data),
+  create: (data: CreateProjectData) => apiPost<Project>("/v1/projects/", data),
   update: (id: string, data: UpdateProjectData) =>
     apiPatch<Project>(`/v1/projects/${id}`, data),
   archive: (id: string) => apiDelete(`/v1/projects/${id}`),
@@ -229,10 +235,11 @@ export const projectsApi = {
    */
   duplicate: (id: string) =>
     apiPost<Project>(`/v1/projects/${id}/duplicate/`, {}),
-  dashboard: (id: string) => apiGet<ProjectDashboard>(`/v1/projects/${id}/dashboard/`),
+  dashboard: (id: string) =>
+    apiGet<ProjectDashboard>(`/v1/projects/${id}/dashboard/`),
 
   /* ── setup wizard / profile ─────────────────────────────────────── */
-  wizardPresets: () => apiGet<WizardPreset[]>('/v1/projects/wizard/presets'),
+  wizardPresets: () => apiGet<WizardPreset[]>("/v1/projects/wizard/presets"),
   getProfile: (id: string) =>
     apiGet<ProjectProfileResult>(`/v1/projects/${id}/profile`),
   applyProfile: (id: string, spec: ProfileSpec) =>

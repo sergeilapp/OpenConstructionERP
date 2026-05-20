@@ -10,13 +10,21 @@
  * haven't uploaded a model yet.
  */
 
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { Cuboid, Link2, FileText, ShieldCheck, CheckSquare, Calendar, ArrowRight } from 'lucide-react';
-import { apiGet } from '@/shared/lib/api';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import {
+  Cuboid,
+  Link2,
+  FileText,
+  ShieldCheck,
+  CheckSquare,
+  Calendar,
+  ArrowRight,
+} from "lucide-react";
+import { apiGet } from "@/shared/lib/api";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
 
 interface BIMCoverageSummary {
   project_id: string;
@@ -44,11 +52,20 @@ interface MetricRowProps {
   color: string;
 }
 
-function MetricRow({ icon, label, count, total, percent, color }: MetricRowProps) {
+function MetricRow({
+  icon,
+  label,
+  count,
+  total,
+  percent,
+  color,
+}: MetricRowProps) {
   const pctDisplay = Math.round(percent * 100);
   return (
     <div className="flex items-center gap-3">
-      <div className={`shrink-0 h-7 w-7 rounded-md ${color} flex items-center justify-center`}>
+      <div
+        className={`shrink-0 h-7 w-7 rounded-md ${color} flex items-center justify-center`}
+      >
         {icon}
       </div>
       <div className="flex-1 min-w-0">
@@ -57,7 +74,7 @@ function MetricRow({ icon, label, count, total, percent, color }: MetricRowProps
             {label}
           </span>
           <span className="text-xs font-mono text-content-tertiary tabular-nums shrink-0">
-            {count.toLocaleString()} / {total.toLocaleString()}{' '}
+            {count.toLocaleString()} / {total.toLocaleString()}{" "}
             <span className="text-content-quaternary">({pctDisplay}%)</span>
           </span>
         </div>
@@ -78,7 +95,7 @@ export default function BIMCoverageCard() {
   const projectId = useProjectContextStore((s) => s.activeProjectId);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['bim-coverage-summary', projectId],
+    queryKey: ["bim-coverage-summary", projectId],
     queryFn: () =>
       apiGet<BIMCoverageSummary>(
         `/v1/bim_hub/coverage-summary/?project_id=${encodeURIComponent(projectId!)}`,
@@ -117,15 +134,15 @@ export default function BIMCoverageCard() {
 
   const headlineColor =
     headlinePercent >= 75
-      ? 'text-emerald-600'
+      ? "text-emerald-600"
       : headlinePercent >= 40
-        ? 'text-amber-600'
-        : 'text-rose-600';
+        ? "text-amber-600"
+        : "text-rose-600";
 
   return (
     <div
       className="mb-6 rounded-xl border border-border-light bg-surface-primary p-5 animate-card-in"
-      style={{ animationDelay: '120ms' }}
+      style={{ animationDelay: "120ms" }}
     >
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
@@ -134,14 +151,14 @@ export default function BIMCoverageCard() {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-content-primary">
-              {t('dashboard.bim_coverage_title', {
-                defaultValue: 'BIM Integration Coverage‌⁠‍',
+              {t("dashboard.bim_coverage_title", {
+                defaultValue: "BIM Integration Coverage‌⁠‍",
               })}
             </h3>
             <p className="text-xs text-content-tertiary">
-              {t('dashboard.bim_coverage_subtitle', {
+              {t("dashboard.bim_coverage_subtitle", {
                 defaultValue:
-                  '{{count}} elements across all BIM models in this project‌⁠‍',
+                  "{{count}} elements across all BIM models in this project‌⁠‍",
                 count: totalElements,
               })}
             </p>
@@ -152,7 +169,9 @@ export default function BIMCoverageCard() {
             {headlinePercent}%
           </div>
           <div className="text-[10px] uppercase tracking-wider text-content-quaternary">
-            {t('dashboard.bim_coverage_headline', { defaultValue: 'avg coverage‌⁠‍' })}
+            {t("dashboard.bim_coverage_headline", {
+              defaultValue: "avg coverage‌⁠‍",
+            })}
           </div>
         </div>
       </div>
@@ -160,8 +179,8 @@ export default function BIMCoverageCard() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <MetricRow
           icon={<Link2 size={12} className="text-blue-600" />}
-          label={t('dashboard.bim_linked_boq', {
-            defaultValue: 'Linked to BOQ‌⁠‍',
+          label={t("dashboard.bim_linked_boq", {
+            defaultValue: "Linked to BOQ‌⁠‍",
           })}
           count={data.elements_linked_to_boq}
           total={totalElements}
@@ -170,7 +189,7 @@ export default function BIMCoverageCard() {
         />
         <MetricRow
           icon={<ShieldCheck size={12} className="text-emerald-600" />}
-          label={t('dashboard.bim_costed', { defaultValue: 'Costed‌⁠‍' })}
+          label={t("dashboard.bim_costed", { defaultValue: "Costed‌⁠‍" })}
           count={data.elements_costed}
           total={totalElements}
           percent={data.percent_costed}
@@ -178,7 +197,7 @@ export default function BIMCoverageCard() {
         />
         <MetricRow
           icon={<ShieldCheck size={12} className="text-amber-600" />}
-          label={t('dashboard.bim_validated', { defaultValue: 'Validated' })}
+          label={t("dashboard.bim_validated", { defaultValue: "Validated" })}
           count={data.elements_validated}
           total={totalElements}
           percent={data.percent_validated}
@@ -186,8 +205,8 @@ export default function BIMCoverageCard() {
         />
         <MetricRow
           icon={<FileText size={12} className="text-violet-600" />}
-          label={t('dashboard.bim_with_documents', {
-            defaultValue: 'With documents',
+          label={t("dashboard.bim_with_documents", {
+            defaultValue: "With documents",
           })}
           count={data.elements_with_documents}
           total={totalElements}
@@ -196,7 +215,7 @@ export default function BIMCoverageCard() {
         />
         <MetricRow
           icon={<CheckSquare size={12} className="text-rose-600" />}
-          label={t('dashboard.bim_with_tasks', { defaultValue: 'With tasks' })}
+          label={t("dashboard.bim_with_tasks", { defaultValue: "With tasks" })}
           count={data.elements_with_tasks}
           total={totalElements}
           percent={data.percent_with_tasks}
@@ -204,8 +223,8 @@ export default function BIMCoverageCard() {
         />
         <MetricRow
           icon={<Calendar size={12} className="text-cyan-600" />}
-          label={t('dashboard.bim_with_activities', {
-            defaultValue: 'With 4D activities',
+          label={t("dashboard.bim_with_activities", {
+            defaultValue: "With 4D activities",
           })}
           count={data.elements_with_activities}
           total={totalElements}
@@ -217,10 +236,10 @@ export default function BIMCoverageCard() {
       <div className="mt-4 flex justify-end">
         <button
           type="button"
-          onClick={() => navigate('/bim')}
+          onClick={() => navigate("/bim")}
           className="inline-flex items-center gap-1.5 text-xs text-oe-blue hover:underline"
         >
-          {t('dashboard.bim_open_viewer', { defaultValue: 'Open BIM viewer' })}
+          {t("dashboard.bim_open_viewer", { defaultValue: "Open BIM viewer" })}
           <ArrowRight size={11} />
         </button>
       </div>

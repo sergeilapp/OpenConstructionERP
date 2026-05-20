@@ -7,18 +7,18 @@
  * Persists to localStorage so the user's choice is remembered.
  */
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
-export type ViewMode = 'simple' | 'advanced';
+export type ViewMode = "simple" | "advanced";
 
-const STORAGE_KEY = 'oe_view_mode';
+const STORAGE_KEY = "oe_view_mode";
 
 function readMode(): ViewMode {
   try {
     const v = localStorage.getItem(STORAGE_KEY);
-    return v === 'simple' ? 'simple' : 'advanced';
+    return v === "simple" ? "simple" : "advanced";
   } catch {
-    return 'advanced';
+    return "advanced";
   }
 }
 
@@ -31,15 +31,19 @@ interface ViewModeState {
 
 export const useViewModeStore = create<ViewModeState>((set, get) => ({
   mode: readMode(),
-  isAdvanced: readMode() === 'advanced',
+  isAdvanced: readMode() === "advanced",
 
   setMode: (mode: ViewMode) => {
-    try { localStorage.setItem(STORAGE_KEY, mode); } catch { /* ignore */ }
-    set({ mode, isAdvanced: mode === 'advanced' });
+    try {
+      localStorage.setItem(STORAGE_KEY, mode);
+    } catch {
+      /* ignore */
+    }
+    set({ mode, isAdvanced: mode === "advanced" });
   },
 
   toggle: () => {
-    const next = get().mode === 'simple' ? 'advanced' : 'simple';
+    const next = get().mode === "simple" ? "advanced" : "simple";
     get().setMode(next);
   },
 }));

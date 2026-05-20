@@ -1,11 +1,11 @@
-import { useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 /** How long (ms) to wait for the second key in a two-key sequence. */
 const SEQUENCE_TIMEOUT = 500;
 
 /** Tags where we should never intercept keyboard input. */
-const INTERACTIVE_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
+const INTERACTIVE_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
 
 /** Check whether the active element is an interactive form control. */
 function isTyping(): boolean {
@@ -74,25 +74,25 @@ export function useKeyboardShortcuts({
     /** Two-key navigation map: first key -> second key -> path. */
     const sequences: Record<string, Record<string, string>> = {
       g: {
-        d: '/',
-        p: '/projects',
-        b: '/boq',
-        c: '/costs',
-        a: '/assemblies',
-        v: '/validation',
-        s: '/schedule',
-        f: '/finance',
-        '5': '/5d',
-        r: '/reports',
-        t: '/tendering',
-        m: '/meetings',
-        i: '/rfi',
-        o: '/contacts',
+        d: "/",
+        p: "/projects",
+        b: "/boq",
+        c: "/costs",
+        a: "/assemblies",
+        v: "/validation",
+        s: "/schedule",
+        f: "/finance",
+        "5": "/5d",
+        r: "/reports",
+        t: "/tendering",
+        m: "/meetings",
+        i: "/rfi",
+        o: "/contacts",
       },
       n: {
-        p: '/projects/new',
-        b: '/boq',
-        t: '/tasks',
+        p: "/projects/new",
+        b: "/boq",
+        t: "/tasks",
       },
     };
 
@@ -126,13 +126,13 @@ export function useKeyboardShortcuts({
       }
 
       // ── Single-key shortcuts ──────────────────────────────────────────
-      if (key === '/') {
+      if (key === "/") {
         e.preventDefault();
         onOpenSearch();
         return;
       }
 
-      if (key === '?') {
+      if (key === "?") {
         e.preventDefault();
         onToggleShortcutsDialog();
         return;
@@ -150,9 +150,9 @@ export function useKeyboardShortcuts({
       }
     };
 
-    document.addEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
     return () => {
-      document.removeEventListener('keydown', handler);
+      document.removeEventListener("keydown", handler);
       clearPending();
     };
   }, [navigate, onOpenSearch, onToggleShortcutsDialog, clearPending]);

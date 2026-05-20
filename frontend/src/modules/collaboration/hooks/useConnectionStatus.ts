@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
-import type { ProviderType } from './useYDoc';
+import { useEffect, useState, useRef, useCallback } from "react";
+import type { ProviderType } from "./useYDoc";
 
-export type ConnectionState = 'connected' | 'connecting' | 'disconnected';
+export type ConnectionState = "connected" | "connecting" | "disconnected";
 
 export interface ConnectionStatusInfo {
   /** Current connection state */
@@ -18,8 +18,10 @@ export interface ConnectionStatusInfo {
  * Subscribe to a y-webrtc provider's connection events and
  * return reactive connection status information.
  */
-export function useConnectionStatus(provider: ProviderType | null): ConnectionStatusInfo {
-  const [status, setStatus] = useState<ConnectionState>('disconnected');
+export function useConnectionStatus(
+  provider: ProviderType | null,
+): ConnectionStatusInfo {
+  const [status, setStatus] = useState<ConnectionState>("disconnected");
   const [peerCount, setPeerCount] = useState(0);
   const [lastSyncTime, setLastSyncTime] = useState<number | null>(null);
   const [secondsSinceSync, setSecondsSinceSync] = useState<number | null>(null);
@@ -35,26 +37,26 @@ export function useConnectionStatus(provider: ProviderType | null): ConnectionSt
 
   useEffect(() => {
     if (!provider) {
-      setStatus('disconnected');
+      setStatus("disconnected");
       setPeerCount(0);
       return;
     }
 
     // Start as "connecting" when we have a provider but haven't synced yet
-    setStatus('connecting');
+    setStatus("connecting");
 
     const onSynced = () => {
-      setStatus('connected');
+      setStatus("connected");
       setLastSyncTime(Date.now());
       updatePeerCount(provider);
     };
 
     const onStatus = (event: { connected: boolean }) => {
       if (event.connected) {
-        setStatus('connected');
+        setStatus("connected");
         setLastSyncTime(Date.now());
       } else {
-        setStatus('disconnected');
+        setStatus("disconnected");
       }
     };
 
@@ -64,17 +66,17 @@ export function useConnectionStatus(provider: ProviderType | null): ConnectionSt
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const p = provider as any;
-    p.on('synced', onSynced);
-    p.on('status', onStatus);
-    provider.awareness.on('change', onPeersChange);
+    p.on("synced", onSynced);
+    p.on("status", onStatus);
+    provider.awareness.on("change", onPeersChange);
 
     // Initial peer count read
     updatePeerCount(provider);
 
     return () => {
-      p.off('synced', onSynced);
-      p.off('status', onStatus);
-      provider.awareness.off('change', onPeersChange);
+      p.off("synced", onSynced);
+      p.off("status", onStatus);
+      provider.awareness.off("change", onPeersChange);
     };
   }, [provider, updatePeerCount]);
 

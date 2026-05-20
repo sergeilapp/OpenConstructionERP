@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
-import type { Toast as ToastType } from '@/stores/useToastStore';
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
+import type { Toast as ToastType } from "@/stores/useToastStore";
 
 const iconMap = {
   success: CheckCircle,
@@ -12,32 +12,32 @@ const iconMap = {
 
 const styleMap = {
   success: {
-    bg: 'bg-semantic-success-bg',
-    border: 'border-semantic-success/30',
-    icon: 'text-semantic-success',
-    title: 'text-content-primary',
-    message: 'text-content-secondary',
+    bg: "bg-semantic-success-bg",
+    border: "border-semantic-success/30",
+    icon: "text-semantic-success",
+    title: "text-content-primary",
+    message: "text-content-secondary",
   },
   error: {
-    bg: 'bg-semantic-error-bg',
-    border: 'border-semantic-error/30',
-    icon: 'text-semantic-error',
-    title: 'text-content-primary',
-    message: 'text-content-secondary',
+    bg: "bg-semantic-error-bg",
+    border: "border-semantic-error/30",
+    icon: "text-semantic-error",
+    title: "text-content-primary",
+    message: "text-content-secondary",
   },
   warning: {
-    bg: 'bg-semantic-warning-bg',
-    border: 'border-semantic-warning/30',
-    icon: 'text-semantic-warning',
-    title: 'text-content-primary',
-    message: 'text-content-secondary',
+    bg: "bg-semantic-warning-bg",
+    border: "border-semantic-warning/30",
+    icon: "text-semantic-warning",
+    title: "text-content-primary",
+    message: "text-content-secondary",
   },
   info: {
-    bg: 'bg-semantic-info-bg',
-    border: 'border-semantic-info/30',
-    icon: 'text-semantic-info',
-    title: 'text-content-primary',
-    message: 'text-content-secondary',
+    bg: "bg-semantic-info-bg",
+    border: "border-semantic-info/30",
+    icon: "text-semantic-info",
+    title: "text-content-primary",
+    message: "text-content-secondary",
   },
 } as const;
 
@@ -83,7 +83,7 @@ export function Toast({ toast, onDismiss }: ToastProps) {
       <button
         onClick={handleDismiss}
         className="shrink-0 mt-0.5 h-5 w-5 flex items-center justify-center rounded text-content-tertiary hover:text-content-primary transition-colors"
-        aria-label={t('common.close', 'Close')}
+        aria-label={t("common.close", "Close")}
       >
         <X size={14} />
       </button>

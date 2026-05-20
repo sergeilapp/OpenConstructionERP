@@ -228,7 +228,11 @@ def is_within_response_window(notice: Any, today: dt_date | None = None) -> bool
     """
     if today is None:
         today = dt_date.today()
-    target = getattr(notice, "target_response_date", None) if not isinstance(notice, dict) else notice.get("target_response_date")
+    target = (
+        getattr(notice, "target_response_date", None)
+        if not isinstance(notice, dict)
+        else notice.get("target_response_date")
+    )
     if not target:
         return True
     try:
@@ -294,9 +298,7 @@ def validate_variation_request(payload: Any) -> tuple[bool, list[str]]:
     classification = _get("classification") or "scope_change"
     title = (_get("title") or "").strip() if isinstance(_get("title"), str) else (_get("title") or "")
     description = (
-        (_get("description") or "").strip()
-        if isinstance(_get("description"), str)
-        else (_get("description") or "")
+        (_get("description") or "").strip() if isinstance(_get("description"), str) else (_get("description") or "")
     )
 
     if classification == "regulatory":
@@ -393,7 +395,8 @@ def compute_nec4_timers(
 
 
 def is_nec4_overdue(
-    request: Any, today: dt_date | None = None,
+    request: Any,
+    today: dt_date | None = None,
 ) -> dict[str, bool]:
     """Return overdue flags for the NEC4 quotation + assessment timers.
 
@@ -477,9 +480,7 @@ def compute_disruption_lost_hours(
         return Decimal("0")
     hours_per_unit_impacted = Decimal("1") / impacted
     hours_per_unit_baseline = Decimal("1") / baseline
-    return (qty * (hours_per_unit_impacted - hours_per_unit_baseline)).quantize(
-        Decimal("0.01")
-    )
+    return (qty * (hours_per_unit_impacted - hours_per_unit_baseline)).quantize(Decimal("0.01"))
 
 
 # ── FIDIC 20.1 time-bar (Red/Yellow/Silver 2017) ──────────────────────────
@@ -608,11 +609,9 @@ def recommend_rerate(
     else:
         direction = "decrease"
     reason = (
-        f"Quantity variance {variance.quantize(Decimal('0.01'))}% exceeds "
-        f"±{thr}% threshold — re-rating recommended"
+        f"Quantity variance {variance.quantize(Decimal('0.01'))}% exceeds ±{thr}% threshold — re-rating recommended"
         if rerate
-        else f"Quantity variance {variance.quantize(Decimal('0.01'))}% "
-        f"within ±{thr}% threshold — contract rate stands"
+        else f"Quantity variance {variance.quantize(Decimal('0.01'))}% within ±{thr}% threshold — contract rate stands"
     )
     return {
         "variance_pct": variance.quantize(Decimal("0.01")),
@@ -754,10 +753,7 @@ class VariationsService:
         # Clause 62.5 — 4 weeks for assessment).
         quotation_due = getattr(data, "quotation_due_at", None)
         assessment_due = getattr(data, "assessment_due_at", None)
-        if (
-            standard.startswith("NEC4")
-            and (quotation_due is None or assessment_due is None)
-        ):
+        if standard.startswith("NEC4") and (quotation_due is None or assessment_due is None):
             timers = compute_nec4_timers(data.requested_at or _now_iso())
             quotation_due = quotation_due or timers["quotation_due_at"]
             assessment_due = assessment_due or timers["assessment_due_at"]
@@ -815,10 +811,7 @@ class VariationsService:
         if vr.status in {"approved", "rejected", "converted_to_vo"}:
             raise HTTPException(
                 status_code=http_status.HTTP_409_CONFLICT,
-                detail=(
-                    f"Variation request is {vr.status} and can no longer be "
-                    "edited; create a new request instead"
-                ),
+                detail=(f"Variation request is {vr.status} and can no longer be edited; create a new request instead"),
             )
         fields = data.model_dump(exclude_unset=True)
         if "metadata" in fields:
@@ -949,10 +942,7 @@ class VariationsService:
         if vo.status in {"completed", "voided"}:
             raise HTTPException(
                 status_code=http_status.HTTP_409_CONFLICT,
-                detail=(
-                    f"Variation order is {vo.status} and is no longer "
-                    "editable"
-                ),
+                detail=(f"Variation order is {vo.status} and is no longer editable"),
             )
         fields = data.model_dump(exclude_unset=True)
         if "metadata" in fields:
@@ -1068,7 +1058,8 @@ class VariationsService:
     # ── Cost impact lines ─────────────────────────────────────────────────
 
     async def add_cost_impact(
-        self, data: VariationCostImpactCreate,
+        self,
+        data: VariationCostImpactCreate,
     ) -> VariationCostImpact:
         # Validate VO exists.
         await self.get_order(data.variation_order_id)
@@ -1127,7 +1118,8 @@ class VariationsService:
     # ── Schedule impact lines ─────────────────────────────────────────────
 
     async def add_schedule_impact(
-        self, data: VariationScheduleImpactCreate,
+        self,
+        data: VariationScheduleImpactCreate,
     ) -> VariationScheduleImpact:
         await self.get_order(data.variation_order_id)
         row = VariationScheduleImpact(
@@ -1190,9 +1182,7 @@ class VariationsService:
             {
                 "project_id": str(data.project_id),
                 "measurement_id": str(sm.id),
-                "variation_order_id": (
-                    str(data.variation_order_id) if data.variation_order_id else None
-                ),
+                "variation_order_id": (str(data.variation_order_id) if data.variation_order_id else None),
                 "quantity": str(sm.measured_quantity),
                 "unit": sm.unit,
             },
@@ -1227,7 +1217,8 @@ class VariationsService:
         if sm is None:
             raise HTTPException(status_code=404, detail="Site measurement not found")
         await self.site_measurement_repo.update_fields(
-            sm_id, agreed_with_owner_at=_now_iso(),
+            sm_id,
+            agreed_with_owner_at=_now_iso(),
         )
         await self.session.refresh(sm)
         _safe_publish(
@@ -1290,7 +1281,9 @@ class VariationsService:
         return ds
 
     async def sign_daywork_sheet(
-        self, sheet_id: uuid.UUID, signer_id: str | None,
+        self,
+        sheet_id: uuid.UUID,
+        signer_id: str | None,
     ) -> DayworkSheet:
         ds = await self.get_daywork_sheet(sheet_id)
         if "signed" not in allowed_daywork_transitions(ds.status):
@@ -1327,7 +1320,9 @@ class VariationsService:
         return ds
 
     async def transition_daywork(
-        self, sheet_id: uuid.UUID, to_status: str,
+        self,
+        sheet_id: uuid.UUID,
+        to_status: str,
     ) -> DayworkSheet:
         ds = await self.get_daywork_sheet(sheet_id)
         if to_status not in allowed_daywork_transitions(ds.status):
@@ -1350,7 +1345,8 @@ class VariationsService:
     # ── Daywork lines ─────────────────────────────────────────────────────
 
     async def add_daywork_line(
-        self, data: DayworkSheetLineCreate,
+        self,
+        data: DayworkSheetLineCreate,
     ) -> DayworkSheetLine:
         await self.get_daywork_sheet(data.sheet_id)
         qty = _to_decimal(data.quantity)
@@ -1373,7 +1369,9 @@ class VariationsService:
         sheet = await self.get_daywork_sheet(data.sheet_id)
         total = apply_daywork_markup(subtotal, getattr(sheet, "markup_percent", 0))
         await self.daywork_repo.update_fields(
-            data.sheet_id, subtotal_amount=subtotal, total_amount=total,
+            data.sheet_id,
+            subtotal_amount=subtotal,
+            total_amount=total,
         )
         # ``update_fields`` calls ``session.expire_all()`` which also
         # expires the just-created ``row``. Re-load it so the caller can
@@ -1406,7 +1404,9 @@ class VariationsService:
         sheet = await self.get_daywork_sheet(row.sheet_id)
         total = apply_daywork_markup(subtotal, getattr(sheet, "markup_percent", 0))
         await self.daywork_repo.update_fields(
-            row.sheet_id, subtotal_amount=subtotal, total_amount=total,
+            row.sheet_id,
+            subtotal_amount=subtotal,
+            total_amount=total,
         )
         # The sheet ``update_fields`` above ran ``session.expire_all()``,
         # re-expiring ``row``; reload before returning so the response
@@ -1425,7 +1425,9 @@ class VariationsService:
         sheet = await self.get_daywork_sheet(sheet_id)
         total = apply_daywork_markup(subtotal, getattr(sheet, "markup_percent", 0))
         await self.daywork_repo.update_fields(
-            sheet_id, subtotal_amount=subtotal, total_amount=total,
+            sheet_id,
+            subtotal_amount=subtotal,
+            total_amount=total,
         )
 
     async def bulk_daywork_lines(
@@ -1455,7 +1457,9 @@ class VariationsService:
         labour_hours = getattr(data, "labour_hours_lost", None)
         if labour_hours is None and baseline is not None and impacted is not None:
             labour_hours = compute_disruption_lost_hours(
-                baseline, impacted, measured_qty,
+                baseline,
+                impacted,
+                measured_qty,
             )
         claim = DisruptionClaim(
             project_id=data.project_id,
@@ -1479,9 +1483,7 @@ class VariationsService:
         claim = await self.disruption_repo.create(claim)
         # If status is submitted at creation, emit submitted event too.
         _safe_publish(
-            "variations.disruption.submitted"
-            if claim.status == "submitted"
-            else "variations.disruption.created",
+            "variations.disruption.submitted" if claim.status == "submitted" else "variations.disruption.created",
             {
                 "project_id": str(data.project_id),
                 "claim_id": str(claim.id),
@@ -1498,7 +1500,9 @@ class VariationsService:
         return row
 
     async def update_disruption_claim(
-        self, claim_id: uuid.UUID, data: DisruptionClaimUpdate,
+        self,
+        claim_id: uuid.UUID,
+        data: DisruptionClaimUpdate,
     ) -> DisruptionClaim:
         claim = await self.get_disruption_claim(claim_id)
         fields = data.model_dump(exclude_unset=True)
@@ -1568,9 +1572,7 @@ class VariationsService:
         )
         claim = await self.eot_repo.create(claim)
         _safe_publish(
-            "variations.eot.submitted"
-            if claim.status == "submitted"
-            else "variations.eot.created",
+            "variations.eot.submitted" if claim.status == "submitted" else "variations.eot.created",
             {
                 "project_id": str(data.project_id),
                 "claim_id": str(claim.id),
@@ -1587,7 +1589,9 @@ class VariationsService:
         return row
 
     async def update_eot_claim(
-        self, claim_id: uuid.UUID, data: ExtensionOfTimeClaimUpdate,
+        self,
+        claim_id: uuid.UUID,
+        data: ExtensionOfTimeClaimUpdate,
     ) -> ExtensionOfTimeClaim:
         claim = await self.get_eot_claim(claim_id)
         fields = data.model_dump(exclude_unset=True)
@@ -1650,10 +1654,7 @@ class VariationsService:
         doesn't override.
         """
         claim = await self.get_eot_claim(claim_id)
-        cp_impact = (
-            critical_path_impact if critical_path_impact is not None
-            else (tia_delta_days > 0)
-        )
+        cp_impact = critical_path_impact if critical_path_impact is not None else (tia_delta_days > 0)
         await self.eot_repo.update_fields(
             claim_id,
             tia_delta_days=int(tia_delta_days),
@@ -1675,7 +1676,8 @@ class VariationsService:
     # ── Final account ─────────────────────────────────────────────────────
 
     async def create_final_account(
-        self, data: FinalAccountCreate,
+        self,
+        data: FinalAccountCreate,
     ) -> FinalAccount:
         existing = await self.final_account_repo.for_project(data.project_id)
         if existing is not None:
@@ -1702,7 +1704,9 @@ class VariationsService:
         return row
 
     async def update_final_account(
-        self, fa_id: uuid.UUID, data: FinalAccountUpdate,
+        self,
+        fa_id: uuid.UUID,
+        data: FinalAccountUpdate,
     ) -> FinalAccount:
         fa = await self.get_final_account(fa_id)
         fields = data.model_dump(exclude_unset=True)
@@ -1726,7 +1730,9 @@ class VariationsService:
         return fa
 
     async def close_final_account(
-        self, fa_id: uuid.UUID, signer_id: str | None = None,
+        self,
+        fa_id: uuid.UUID,
+        signer_id: str | None = None,
     ) -> FinalAccount:
         fa = await self.get_final_account(fa_id)
         if "closed" not in allowed_final_account_transitions(fa.status):
@@ -1736,7 +1742,9 @@ class VariationsService:
             )
         now = _now_iso()
         await self.final_account_repo.update_fields(
-            fa_id, status="closed", closed_at=now,
+            fa_id,
+            status="closed",
+            closed_at=now,
         )
         await self.session.refresh(fa)
         _safe_publish(
@@ -1752,7 +1760,9 @@ class VariationsService:
         return fa
 
     async def apply_variation_to_final_account(
-        self, vo_id: uuid.UUID, final_account_id: uuid.UUID,
+        self,
+        vo_id: uuid.UUID,
+        final_account_id: uuid.UUID,
     ) -> FinalAccount:
         """Add the VO total to ``variations_total`` and recompute ``final_value``."""
         vo = await self.get_order(vo_id)
@@ -1789,19 +1799,23 @@ class VariationsService:
         # revised contract sum is not overstated.
         vos = await self.vo_repo.list_valued_for_project(project_id)
         variations_total = sum(
-            (_to_decimal(v.final_cost_impact) for v in vos), Decimal("0"),
+            (_to_decimal(v.final_cost_impact) for v in vos),
+            Decimal("0"),
         )
 
         daywork_sheets = await self.daywork_repo.list_signed(project_id)
         daywork_total = sum(
-            (_to_decimal(ds.total_amount) for ds in daywork_sheets), Decimal("0"),
+            (_to_decimal(ds.total_amount) for ds in daywork_sheets),
+            Decimal("0"),
         )
 
         disruption_claims = await self.disruption_repo.pending_claims(project_id)
         # Only agreed claims count toward totals -- pending_claims excludes agreed,
         # so re-query agreed via a list-for-project filter.
         agreed_disruption, _ = await self.disruption_repo.list_for_project(
-            project_id, limit=1000, status="agreed",
+            project_id,
+            limit=1000,
+            status="agreed",
         )
         disruption_total = sum(
             (_to_decimal(c.decided_amount or c.cost_amount) for c in agreed_disruption),
@@ -1845,7 +1859,8 @@ class VariationsService:
         row = await self.schedule_impact_repo.get_by_id(line_id)
         if row is None:
             raise HTTPException(
-                status_code=404, detail="Schedule-impact line not found",
+                status_code=404,
+                detail="Schedule-impact line not found",
             )
         vo = await self.get_order(row.variation_order_id)
         return vo.project_id
@@ -1864,25 +1879,17 @@ class VariationsService:
         # Status histograms via GROUP BY (no row materialisation / N+1).
         notice_counts = await self.notice_repo.status_counts(project_id)
         n_total = sum(notice_counts.values())
-        notices_open = sum(
-            c for s, c in notice_counts.items()
-            if s in {"issued", "acknowledged", "responded"}
-        )
+        notices_open = sum(c for s, c in notice_counts.items() if s in {"issued", "acknowledged", "responded"})
 
         vr_counts = await self.vr_repo.status_counts(project_id)
         vr_total = sum(vr_counts.values())
-        vr_pending = sum(
-            c for s, c in vr_counts.items()
-            if s in {"draft", "submitted", "under_review"}
-        )
+        vr_pending = sum(c for s, c in vr_counts.items() if s in {"draft", "submitted", "under_review"})
         vr_approved = vr_counts.get("approved", 0)
         vr_rejected = vr_counts.get("rejected", 0)
 
         vo_counts = await self.vo_repo.status_counts(project_id)
         vo_total = sum(vo_counts.values())
-        vo_active = sum(
-            c for s, c in vo_counts.items() if s in {"issued", "in_progress"}
-        )
+        vo_active = sum(c for s, c in vo_counts.items() if s in {"issued", "in_progress"})
         vo_completed = vo_counts.get("completed", 0)
         # Money / schedule roll-ups exclude voided VOs (no commercial value).
         cost_total = await self.vo_repo.cost_impact_sum(project_id)
@@ -1890,9 +1897,7 @@ class VariationsService:
 
         dw_counts = await self.daywork_repo.status_counts(project_id)
         dw_total = sum(dw_counts.values())
-        dw_signed = sum(
-            c for s, c in dw_counts.items() if s in {"signed", "billed"}
-        )
+        dw_signed = sum(c for s, c in dw_counts.items() if s in {"signed", "billed"})
         dw_value = await self.daywork_repo.signed_value(project_id)
 
         pending_disruption = await self.disruption_repo.pending_claims(project_id)

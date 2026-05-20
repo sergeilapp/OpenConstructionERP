@@ -13,10 +13,10 @@
  * recolour keeps up without overwhelming the renderer.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Play, Pause, Calendar } from 'lucide-react';
-import type { FourDTimelinePlaybackSpeed } from './use4dTimeline';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Play, Pause, Calendar } from "lucide-react";
+import type { FourDTimelinePlaybackSpeed } from "./use4dTimeline";
 
 export interface TimelineScrubberProps {
   /** Schedule start, in UTC ms. */
@@ -42,11 +42,11 @@ export interface TimelineScrubberProps {
 /** Format a UTC timestamp as `YYYY-MM-DD` — locale-independent so two
  *  users in different timezones see the same date under the same cursor. */
 function fmtDate(ms: number): string {
-  if (!Number.isFinite(ms)) return '—';
+  if (!Number.isFinite(ms)) return "—";
   const d = new Date(ms);
   const yyyy = d.getUTCFullYear();
-  const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(d.getUTCDate()).padStart(2, '0');
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(d.getUTCDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
 
@@ -143,10 +143,7 @@ export function TimelineScrubber({
       if (!el) return currentMs;
       const rect = el.getBoundingClientRect();
       if (rect.width <= 0) return currentMs;
-      const frac = Math.max(
-        0,
-        Math.min(1, (clientX - rect.left) / rect.width),
-      );
+      const frac = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       return startMs + frac * (endMs - startMs);
     },
     [currentMs, startMs, endMs],
@@ -192,11 +189,11 @@ export function TimelineScrubber({
       if (span <= 0) return;
       const step = span * 0.01;
       let next = currentMs;
-      if (e.key === 'ArrowLeft') next = currentMs - step;
-      else if (e.key === 'ArrowRight') next = currentMs + step;
-      else if (e.key === 'Home') next = startMs;
-      else if (e.key === 'End') next = endMs;
-      else if (e.key === ' ') {
+      if (e.key === "ArrowLeft") next = currentMs - step;
+      else if (e.key === "ArrowRight") next = currentMs + step;
+      else if (e.key === "Home") next = startMs;
+      else if (e.key === "End") next = endMs;
+      else if (e.key === " ") {
         e.preventDefault();
         onPlayToggle();
         return;
@@ -212,7 +209,9 @@ export function TimelineScrubber({
       className="absolute bottom-3 start-1/2 -translate-x-1/2 z-20 w-[min(720px,calc(100%-24px))] rounded-xl bg-surface-primary border border-border-light shadow-lg px-4 py-3 flex flex-col gap-2"
       data-testid="bim-4d-scrubber"
       role="group"
-      aria-label={t('bim.4d_scrubber_label', { defaultValue: '4D timeline scrubber‌⁠‍' })}
+      aria-label={t("bim.4d_scrubber_label", {
+        defaultValue: "4D timeline scrubber‌⁠‍",
+      })}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Top row: play button · rail · speed selector */}
@@ -223,12 +222,16 @@ export function TimelineScrubber({
           className="shrink-0 inline-flex items-center justify-center h-8 w-8 rounded-full bg-oe-blue text-white hover:bg-oe-blue/90 transition-colors"
           aria-label={
             playing
-              ? t('bim.4d_pause', { defaultValue: 'Pause' })
-              : t('bim.4d_play', { defaultValue: 'Play' })
+              ? t("bim.4d_pause", { defaultValue: "Pause" })
+              : t("bim.4d_play", { defaultValue: "Play" })
           }
           data-testid="bim-4d-play"
         >
-          {playing ? <Pause size={14} /> : <Play size={14} className="ms-0.5" />}
+          {playing ? (
+            <Pause size={14} />
+          ) : (
+            <Play size={14} className="ms-0.5" />
+          )}
         </button>
 
         <div
@@ -275,7 +278,7 @@ export function TimelineScrubber({
             if (SPEEDS.includes(v)) onSpeedChange(v);
           }}
           className="shrink-0 text-[11px] py-1 px-1.5 rounded border border-border-light bg-surface-secondary text-content-secondary hover:bg-surface-tertiary focus:outline-none focus:ring-1 focus:ring-oe-blue"
-          aria-label={t('bim.4d_speed', { defaultValue: 'Playback speed‌⁠‍' })}
+          aria-label={t("bim.4d_speed", { defaultValue: "Playback speed‌⁠‍" })}
           data-testid="bim-4d-speed"
         >
           {SPEEDS.map((s) => (
@@ -291,21 +294,21 @@ export function TimelineScrubber({
       <div className="relative h-3 text-[9px] text-content-tertiary tabular-nums select-none">
         <span
           className="absolute -translate-x-1/2"
-          style={{ left: '25%' }}
+          style={{ left: "25%" }}
           aria-hidden="true"
         >
           {fmtDate(quarterMs)}
         </span>
         <span
           className="absolute -translate-x-1/2"
-          style={{ left: '50%' }}
+          style={{ left: "50%" }}
           aria-hidden="true"
         >
           {fmtDate(midMs)}
         </span>
         <span
           className="absolute -translate-x-1/2"
-          style={{ left: '75%' }}
+          style={{ left: "75%" }}
           aria-hidden="true"
         >
           {fmtDate(threeQuarterMs)}
@@ -327,7 +330,9 @@ export function TimelineScrubber({
           data-testid="bim-4d-active-activity"
         >
           {activeActivity ??
-            t('bim.4d_no_activity', { defaultValue: 'No activity at this date‌⁠‍' })}
+            t("bim.4d_no_activity", {
+              defaultValue: "No activity at this date‌⁠‍",
+            })}
         </span>
       </div>
     </div>

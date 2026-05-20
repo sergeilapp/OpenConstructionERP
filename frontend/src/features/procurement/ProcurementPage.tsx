@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import clsx from "clsx";
 import {
   Package,
   ClipboardCheck,
@@ -16,7 +16,7 @@ import {
   Trash2,
   Pencil,
   AlertTriangle,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -25,14 +25,16 @@ import {
   Breadcrumb,
   SkeletonTable,
   InfoHint,
-} from '@/shared/ui';
-import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { ContactSearchInput } from '@/shared/ui/ContactSearchInput';
-import { apiGet, apiPost, apiPatch } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useAuthStore } from '@/stores/useAuthStore';
+} from "@/shared/ui";
+import { MoneyDisplay } from "@/shared/ui/MoneyDisplay";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { ContactSearchInput } from "@/shared/ui/ContactSearchInput";
+import { apiGet, apiPost, apiPatch } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { getPOMatchStatus, type POLineMatchTag } from "./api";
+import { SupplierScorecardModal } from "./SupplierScorecardModal";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -106,48 +108,58 @@ interface POLineItemForm {
 /* ── Constants ────────────────────────────────────────────────────────── */
 
 const inputCls =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 /** Common currency shortlist — NOT a default. The PO's actual currency is
  *  inherited from the project (task #217); the project's resolved currency
  *  is merged in so any project currency stays selectable. */
 const COMMON_CURRENCIES = [
-  'EUR', 'USD', 'GBP', 'CHF', 'PLN', 'CZK', 'SEK', 'NOK', 'DKK', 'AED', 'SAR',
+  "EUR",
+  "USD",
+  "GBP",
+  "CHF",
+  "PLN",
+  "CZK",
+  "SEK",
+  "NOK",
+  "DKK",
+  "AED",
+  "SAR",
 ] as const;
 
 function currencyOptions(active: string): string[] {
-  const a = (active || '').trim().toUpperCase();
+  const a = (active || "").trim().toUpperCase();
   if (a && /^[A-Z]{3}$/.test(a) && !COMMON_CURRENCIES.includes(a as never)) {
     return [a, ...COMMON_CURRENCIES];
   }
   return [...COMMON_CURRENCIES];
 }
 
-type ProcurementTab = 'purchase-orders' | 'goods-receipts';
+type ProcurementTab = "purchase-orders" | "goods-receipts";
 
 const PO_STATUS_COLORS: Record<
   string,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  draft: 'neutral',
-  pending: 'warning',
-  approved: 'blue',
-  issued: 'blue',
-  partial: 'warning',
-  received: 'success',
-  completed: 'success',
-  cancelled: 'error',
-  closed: 'neutral',
+  draft: "neutral",
+  pending: "warning",
+  approved: "blue",
+  issued: "blue",
+  partial: "warning",
+  received: "success",
+  completed: "success",
+  cancelled: "error",
+  closed: "neutral",
 };
 
 const GR_STATUS_COLORS: Record<
   string,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  pending: 'warning',
-  partial: 'warning',
-  complete: 'success',
-  rejected: 'error',
+  pending: "warning",
+  partial: "warning",
+  complete: "success",
+  rejected: "error",
 };
 
 /* ── Main Page ────────────────────────────────────────────────────────── */
@@ -158,30 +170,35 @@ export function ProcurementPage() {
   const projectId = useProjectContextStore((s) => s.activeProjectId);
   const projectName = useProjectContextStore((s) => s.activeProjectName);
 
-  const [activeTab, setActiveTab] = useState<ProcurementTab>('purchase-orders');
+  const [activeTab, setActiveTab] = useState<ProcurementTab>("purchase-orders");
 
-  const tabs: { key: ProcurementTab; label: string; icon: React.ReactNode }[] = [
-    {
-      key: 'purchase-orders',
-      label: t('procurement.purchase_orders', { defaultValue: 'Purchase Orders‌⁠‍' }),
-      icon: <Package size={15} />,
-    },
-    {
-      key: 'goods-receipts',
-      label: t('procurement.goods_receipts', { defaultValue: 'Goods Receipts‌⁠‍' }),
-      icon: <ClipboardCheck size={15} />,
-    },
-  ];
+  const tabs: { key: ProcurementTab; label: string; icon: React.ReactNode }[] =
+    [
+      {
+        key: "purchase-orders",
+        label: t("procurement.purchase_orders", {
+          defaultValue: "Purchase Orders‌⁠‍",
+        }),
+        icon: <Package size={15} />,
+      },
+      {
+        key: "goods-receipts",
+        label: t("procurement.goods_receipts", {
+          defaultValue: "Goods Receipts‌⁠‍",
+        }),
+        icon: <ClipboardCheck size={15} />,
+      },
+    ];
 
   return (
     <div className="w-full animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
+          { label: t("nav.dashboard", "Dashboard"), to: "/" },
           ...(projectName
             ? [{ label: projectName, to: `/projects/${projectId}` }]
             : []),
-          { label: t('procurement.title', { defaultValue: 'Procurement‌⁠‍' }) },
+          { label: t("procurement.title", { defaultValue: "Procurement‌⁠‍" }) },
         ]}
         className="mb-4"
       />
@@ -189,11 +206,11 @@ export function ProcurementPage() {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-content-primary">
-          {t('procurement.title', { defaultValue: 'Procurement‌⁠‍' })}
+          {t("procurement.title", { defaultValue: "Procurement‌⁠‍" })}
         </h1>
         <p className="mt-1 text-sm text-content-secondary">
-          {t('procurement.subtitle', {
-            defaultValue: 'Purchase orders and goods receipts‌⁠‍',
+          {t("procurement.subtitle", {
+            defaultValue: "Purchase orders and goods receipts‌⁠‍",
           })}
         </p>
       </div>
@@ -201,7 +218,7 @@ export function ProcurementPage() {
       {/* Workflow explanation — where procurement sits in the money flow */}
       <InfoHint
         className="mb-4"
-        text={t('procurement.workflow_desc', {
+        text={t("procurement.workflow_desc", {
           defaultValue:
             'A Purchase Order commits budget with a vendor. When goods arrive you record a Goods Receipt; then "Create Invoice from PO" pushes the committed amount into Finance as a payable. PO totals roll up into the project budget as Committed, and into Actual once the invoice is paid.',
         })}
@@ -209,20 +226,32 @@ export function ProcurementPage() {
 
       {/* Cross-module links */}
       <div className="flex flex-wrap gap-1.5 mb-4">
-        <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate('/finance')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs"
+          onClick={() => navigate("/finance")}
+        >
           <Wallet size={13} className="me-1" />
-          {t('procurement.link_finance', { defaultValue: 'Finance' })}
+          {t("procurement.link_finance", { defaultValue: "Finance" })}
         </Button>
-        <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate('/contacts')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs"
+          onClick={() => navigate("/contacts")}
+        >
           <Contact size={13} className="me-1" />
-          {t('procurement.link_contacts', { defaultValue: 'Contacts' })}
+          {t("procurement.link_contacts", { defaultValue: "Contacts" })}
         </Button>
       </div>
 
       {/* No-project warning */}
       {!projectId && (
         <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
-          {t('common.select_project_hint', { defaultValue: 'Select a project from the header to get started.' })}
+          {t("common.select_project_hint", {
+            defaultValue: "Select a project from the header to get started.",
+          })}
         </div>
       )}
 
@@ -236,8 +265,8 @@ export function ProcurementPage() {
               flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all
               ${
                 activeTab === tab.key
-                  ? 'border-oe-blue text-oe-blue'
-                  : 'border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary'
+                  ? "border-oe-blue text-oe-blue"
+                  : "border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
               }
             `}
           >
@@ -251,23 +280,22 @@ export function ProcurementPage() {
       {!projectId ? (
         <EmptyState
           icon={<Package size={28} strokeWidth={1.5} />}
-          title={t('procurement.no_project', {
-            defaultValue: 'No project selected',
+          title={t("procurement.no_project", {
+            defaultValue: "No project selected",
           })}
-          description={t('procurement.select_project', {
-            defaultValue:
-              'Open a project first to view its procurement data',
+          description={t("procurement.select_project", {
+            defaultValue: "Open a project first to view its procurement data",
           })}
         />
       ) : (
         <>
-          {activeTab === 'purchase-orders' && (
+          {activeTab === "purchase-orders" && (
             <PurchaseOrdersTab projectId={projectId} />
           )}
-          {activeTab === 'goods-receipts' && (
+          {activeTab === "goods-receipts" && (
             <GoodsReceiptsTab
               projectId={projectId}
-              onGoToPurchaseOrders={() => setActiveTab('purchase-orders')}
+              onGoToPurchaseOrders={() => setActiveTab("purchase-orders")}
             />
           )}
         </>
@@ -281,20 +309,31 @@ export function ProcurementPage() {
 function PurchaseOrdersTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const addToast = useToastStore((s) => s.addToast);
   const userRole = useAuthStore((s) => s.userRole);
-  const isManager = userRole === 'admin' || userRole === 'manager';
+  const isManager = userRole === "admin" || userRole === "manager";
+
+  // 3-way match: rows hovered or focused fetch their match status on demand
+  // (we never bulk-fetch on list load to avoid N×fetch on big projects).
+  const [matchActive, setMatchActive] = useState<Record<string, boolean>>({});
+  // Supplier scorecard modal — opened from the supplier name link in a row.
+  const [scorecardOpen, setScorecardOpen] = useState<{
+    contactId: string;
+    name?: string | null;
+  } | null>(null);
 
   // Resolve the project's currency from the finance dashboard so new POs
   // default to it instead of a hardcoded EUR (task #217). Empty string when
   // the project has no priced financial records yet.
   const { data: poDashboard } = useQuery({
-    queryKey: ['finance', 'dashboard', projectId],
+    queryKey: ["finance", "dashboard", projectId],
     queryFn: () =>
-      apiGet<{ currency: string }>(`/v1/finance/dashboard/?project_id=${projectId}`),
+      apiGet<{ currency: string }>(
+        `/v1/finance/dashboard/?project_id=${projectId}`,
+      ),
   });
-  const projectCurrency = poDashboard?.currency || '';
+  const projectCurrency = poDashboard?.currency || "";
 
   /* ── PO create / edit modal state ──
      The same modal serves both flows. When `editingPO` holds a PO id the
@@ -302,27 +341,38 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
      order; otherwise it POSTs a new one. */
   const [showCreate, setShowCreate] = useState(false);
   const [editingPO, setEditingPO] = useState<string | null>(null);
-  const todayStr = new Date().toISOString().split('T')[0];
-  const emptyLine: POLineItemForm = { description: '', quantity: '1', unit: '', unit_rate: '', amount: '' };
+  const todayStr = new Date().toISOString().split("T")[0];
+  const emptyLine: POLineItemForm = {
+    description: "",
+    quantity: "1",
+    unit: "",
+    unit_rate: "",
+    amount: "",
+  };
 
   const [poForm, setPoForm] = useState({
-    vendor_contact_id: '',
-    vendor_display: '',
-    po_type: 'standard' as 'standard' | 'blanket' | 'service',
-    delivery_date: '',
-    currency: '',
-    payment_terms: '30',
-    notes: '',
+    vendor_contact_id: "",
+    vendor_display: "",
+    po_type: "standard" as "standard" | "blanket" | "service",
+    delivery_date: "",
+    currency: "",
+    payment_terms: "30",
+    notes: "",
     items: [{ ...emptyLine }] as POLineItemForm[],
   });
   const [poErrors, setPoErrors] = useState<Record<string, string>>({});
-  const [poTaxInput, setPoTaxInput] = useState('0');
+  const [poTaxInput, setPoTaxInput] = useState("0");
   const firstFieldRef = useRef<HTMLDivElement>(null);
 
   const emptyPoForm = {
-    vendor_contact_id: '', vendor_display: '', po_type: 'standard' as 'standard' | 'blanket' | 'service',
-    delivery_date: '', currency: '', payment_terms: '30',
-    notes: '', items: [{ ...emptyLine }] as POLineItemForm[],
+    vendor_contact_id: "",
+    vendor_display: "",
+    po_type: "standard" as "standard" | "blanket" | "service",
+    delivery_date: "",
+    currency: "",
+    payment_terms: "30",
+    notes: "",
+    items: [{ ...emptyLine }] as POLineItemForm[],
   };
 
   // Seed the currency from the resolved project currency when the create
@@ -338,7 +388,7 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
     setShowCreate(false);
     setEditingPO(null);
     setPoForm({ ...emptyPoForm, items: [{ ...emptyLine }] });
-    setPoTaxInput('0');
+    setPoTaxInput("0");
     setPoErrors({});
   };
 
@@ -346,21 +396,27 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
   useEffect(() => {
     if (!showCreate) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeModal();
+      if (e.key === "Escape") closeModal();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCreate]);
 
   // Auto-calc line amounts
-  const updateLineItem = (idx: number, field: keyof POLineItemForm, value: string) => {
+  const updateLineItem = (
+    idx: number,
+    field: keyof POLineItemForm,
+    value: string,
+  ) => {
     setPoForm((prev) => {
-      const items: POLineItemForm[] = prev.items.map((li, i) => (i === idx ? { ...li, [field]: value } : li));
+      const items: POLineItemForm[] = prev.items.map((li, i) =>
+        i === idx ? { ...li, [field]: value } : li,
+      );
       const updated = items[idx];
-      if (updated && (field === 'quantity' || field === 'unit_rate')) {
-        const qty = parseFloat(updated.quantity || '0');
-        const rate = parseFloat(updated.unit_rate || '0');
+      if (updated && (field === "quantity" || field === "unit_rate")) {
+        const qty = parseFloat(updated.quantity || "0");
+        const rate = parseFloat(updated.unit_rate || "0");
         updated.amount = (qty * rate).toFixed(2);
       }
       return { ...prev, items };
@@ -368,39 +424,53 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
   };
 
   const addLineItem = () => {
-    setPoForm((prev) => ({ ...prev, items: [...prev.items, { ...emptyLine }] }));
+    setPoForm((prev) => ({
+      ...prev,
+      items: [...prev.items, { ...emptyLine }],
+    }));
   };
 
   const removeLineItem = (idx: number) => {
     setPoForm((prev) => {
       const items = prev.items.filter((_, i) => i !== idx);
-      return { ...prev, items: items.length === 0 ? [{ ...emptyLine }] : items };
+      return {
+        ...prev,
+        items: items.length === 0 ? [{ ...emptyLine }] : items,
+      };
     });
   };
 
   // Computed totals
-  const poSubtotal = poForm.items.reduce((s, li) => s + parseFloat(li.amount || '0'), 0);
-  const poTotal = poSubtotal + parseFloat(poTaxInput || '0');
+  const poSubtotal = poForm.items.reduce(
+    (s, li) => s + parseFloat(li.amount || "0"),
+    0,
+  );
+  const poTotal = poSubtotal + parseFloat(poTaxInput || "0");
   // What to show as the amount prefix in the modal — the chosen currency,
   // else the resolved project currency, else a neutral label (never EUR).
   const displayCurrency =
     poForm.currency ||
     projectCurrency ||
-    t('procurement.project_currency', { defaultValue: 'project currency' });
+    t("procurement.project_currency", { defaultValue: "project currency" });
 
-  const canSubmitPO = poForm.items.some((li) => li.description.trim().length > 0);
+  const canSubmitPO = poForm.items.some(
+    (li) => li.description.trim().length > 0,
+  );
 
   const validatePO = (): boolean => {
     const e: Record<string, string> = {};
     const hasAnyItem = poForm.items.some((li) => li.description.trim());
-    if (!hasAnyItem) e.items = t('validation.required', { defaultValue: 'Add at least one item' });
+    if (!hasAnyItem)
+      e.items = t("validation.required", {
+        defaultValue: "Add at least one item",
+      });
     setPoErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const createPOMut = useMutation({
     mutationFn: (data: typeof poForm) =>
-      apiPost('/v1/procurement/', {
+      apiPost("/v1/procurement/", {
         project_id: projectId,
         vendor_contact_id: data.vendor_contact_id || undefined,
         po_type: data.po_type,
@@ -408,29 +478,40 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
         delivery_date: data.delivery_date || undefined,
         currency_code: data.currency,
         amount_subtotal: String(poSubtotal.toFixed(2)),
-        tax_amount: poTaxInput || '0',
+        tax_amount: poTaxInput || "0",
         amount_total: String(poTotal.toFixed(2)),
         payment_terms: `Net ${data.payment_terms}`,
         notes: data.notes || undefined,
-        status: 'draft',
+        status: "draft",
         items: data.items
           .filter((li) => li.description.trim())
           .map((li, idx) => ({
             description: li.description,
-            quantity: li.quantity || '1',
+            quantity: li.quantity || "1",
             unit: li.unit || undefined,
-            unit_rate: li.unit_rate || '0',
-            amount: li.amount || '0',
+            unit_rate: li.unit_rate || "0",
+            amount: li.amount || "0",
             sort_order: idx,
           })),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['procurement-po', projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["procurement-po", projectId],
+      });
       closeModal();
-      addToast({ type: 'success', title: t('procurement.po_created', { defaultValue: 'Purchase order created' }) });
+      addToast({
+        type: "success",
+        title: t("procurement.po_created", {
+          defaultValue: "Purchase order created",
+        }),
+      });
     },
     onError: (e: Error) =>
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   /* ── PO edit ──
@@ -447,7 +528,7 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
         delivery_date: data.delivery_date || undefined,
         currency_code: data.currency,
         amount_subtotal: String(poSubtotal.toFixed(2)),
-        tax_amount: poTaxInput || '0',
+        tax_amount: poTaxInput || "0",
         amount_total: String(poTotal.toFixed(2)),
         payment_terms: `Net ${data.payment_terms}`,
         notes: data.notes || undefined,
@@ -455,20 +536,31 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
           .filter((li) => li.description.trim())
           .map((li, idx) => ({
             description: li.description,
-            quantity: li.quantity || '1',
+            quantity: li.quantity || "1",
             unit: li.unit || undefined,
-            unit_rate: li.unit_rate || '0',
-            amount: li.amount || '0',
+            unit_rate: li.unit_rate || "0",
+            amount: li.amount || "0",
             sort_order: idx,
           })),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['procurement-po', projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["procurement-po", projectId],
+      });
       closeModal();
-      addToast({ type: 'success', title: t('procurement.po_updated', { defaultValue: 'Purchase order updated' }) });
+      addToast({
+        type: "success",
+        title: t("procurement.po_updated", {
+          defaultValue: "Purchase order updated",
+        }),
+      });
     },
     onError: (e: Error) =>
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   /* Fetch full PO (incl. line items the list omits) then prefill the shared
@@ -476,67 +568,82 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
   const openEditMut = useMutation({
     mutationFn: (poId: string) => apiGet<POResponse>(`/v1/procurement/${poId}`),
     onSuccess: (po) => {
-      const payTermMatch = (po.payment_terms ?? '').match(/(\d+)/);
-      const poType: 'standard' | 'blanket' | 'service' =
-        po.po_type === 'blanket' || po.po_type === 'service' ? po.po_type : 'standard';
+      const payTermMatch = (po.payment_terms ?? "").match(/(\d+)/);
+      const poType: "standard" | "blanket" | "service" =
+        po.po_type === "blanket" || po.po_type === "service"
+          ? po.po_type
+          : "standard";
       setPoForm({
-        vendor_contact_id: po.vendor_contact_id ?? '',
-        vendor_display: po.vendor_name ?? '',
+        vendor_contact_id: po.vendor_contact_id ?? "",
+        vendor_display: po.vendor_name ?? "",
         po_type: poType,
-        delivery_date: po.delivery_date ?? '',
-        currency: po.currency_code || projectCurrency || '',
-        payment_terms: payTermMatch?.[1] ?? '30',
-        notes: po.notes ?? '',
+        delivery_date: po.delivery_date ?? "",
+        currency: po.currency_code || projectCurrency || "",
+        payment_terms: payTermMatch?.[1] ?? "30",
+        notes: po.notes ?? "",
         items:
           po.items && po.items.length > 0
             ? po.items.map((it) => ({
-                description: it.description ?? '',
-                quantity: it.quantity != null ? String(it.quantity) : '1',
-                unit: it.unit ?? '',
-                unit_rate: it.unit_rate != null ? String(it.unit_rate) : '',
-                amount: it.amount != null ? String(it.amount) : '',
+                description: it.description ?? "",
+                quantity: it.quantity != null ? String(it.quantity) : "1",
+                unit: it.unit ?? "",
+                unit_rate: it.unit_rate != null ? String(it.unit_rate) : "",
+                amount: it.amount != null ? String(it.amount) : "",
               }))
             : [{ ...emptyLine }],
       });
-      setPoTaxInput(po.tax_amount != null ? String(po.tax_amount) : '0');
+      setPoTaxInput(po.tax_amount != null ? String(po.tax_amount) : "0");
       setPoErrors({});
       setEditingPO(po.id);
       setShowCreate(true);
     },
     onError: (e: Error) =>
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
   });
 
   const createInvoiceMut = useMutation({
     mutationFn: (poId: string) =>
-      apiPost<{ invoice_id: string; invoice_number: string; po_number: string }>(
-        `/v1/procurement/${poId}/create-invoice`,
-        {},
-      ),
+      apiPost<{
+        invoice_id: string;
+        invoice_number: string;
+        po_number: string;
+      }>(`/v1/procurement/${poId}/create-invoice`, {}),
     onSuccess: (data) => {
       addToast({
-        type: 'success',
-        title: t('procurement.invoice_created', { defaultValue: 'Invoice created' }),
+        type: "success",
+        title: t("procurement.invoice_created", {
+          defaultValue: "Invoice created",
+        }),
         message: `${data.invoice_number} from PO ${data.po_number}`,
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: e.message,
       }),
   });
 
-  const { data: orders, isLoading, isError, refetch } = useQuery({
-    queryKey: ['procurement-po', projectId],
+  const {
+    data: orders,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["procurement-po", projectId],
     queryFn: () =>
-      apiGet<{ items: Array<PurchaseOrder & { vendor_contact_id?: string | null }>; total: number }>(
-        `/v1/procurement/?project_id=${projectId}`,
-      ).then((res) =>
+      apiGet<{
+        items: Array<PurchaseOrder & { vendor_contact_id?: string | null }>;
+        total: number;
+      }>(`/v1/procurement/?project_id=${projectId}`).then((res) =>
         res.items.map((po) => ({
           ...po,
-          vendor_name: po.vendor_name ?? po.vendor_contact_id ?? '',
+          vendor_name: po.vendor_name ?? po.vendor_contact_id ?? "",
         })),
       ),
   });
@@ -547,8 +654,8 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
     const q = search.toLowerCase();
     return orders.filter(
       (po) =>
-        (po.po_number ?? '').toLowerCase().includes(q) ||
-        (po.vendor_name ?? '').toLowerCase().includes(q),
+        (po.po_number ?? "").toLowerCase().includes(q) ||
+        (po.vendor_name ?? "").toLowerCase().includes(q),
     );
   }, [orders, search]);
 
@@ -559,12 +666,12 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('procurement.po_load_error', {
-            defaultValue: 'Failed to load purchase orders. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("procurement.po_load_error", {
+            defaultValue: "Failed to load purchase orders. Please try again.",
           })}
           action={{
-            label: t('common.retry', { defaultValue: 'Retry' }),
+            label: t("common.retry", { defaultValue: "Retry" }),
             onClick: () => refetch(),
           }}
         />
@@ -577,14 +684,17 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
       <>
         <EmptyState
           icon={<Package size={28} strokeWidth={1.5} />}
-          title={t('procurement.no_po', {
-            defaultValue: 'No purchase orders yet',
+          title={t("procurement.no_po", {
+            defaultValue: "No purchase orders yet",
           })}
-          description={t('procurement.no_po_desc', {
-            defaultValue: 'Create your first purchase order to start tracking procurement.',
+          description={t("procurement.no_po_desc", {
+            defaultValue:
+              "Create your first purchase order to start tracking procurement.",
           })}
           action={{
-            label: t('procurement.new_po', { defaultValue: 'New Purchase Order' }),
+            label: t("procurement.new_po", {
+              defaultValue: "New Purchase Order",
+            }),
             onClick: () => setShowCreate(true),
           }}
         />
@@ -597,18 +707,22 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
   function renderPOModal() {
     const isEdit = editingPO !== null;
     const modalTitle = isEdit
-      ? t('procurement.edit_po', { defaultValue: 'Edit purchase order' })
-      : t('procurement.new_po', { defaultValue: 'New Purchase Order' });
+      ? t("procurement.edit_po", { defaultValue: "Edit purchase order" })
+      : t("procurement.new_po", { defaultValue: "New Purchase Order" });
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg animate-fade-in">
-        <div className="w-full max-w-5xl bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4 max-h-[88vh] flex flex-col" role="dialog" aria-label={modalTitle}>
+        <div
+          className="w-full max-w-5xl bg-surface-elevated rounded-xl shadow-xl border border-border animate-card-in mx-4 max-h-[88vh] flex flex-col"
+          role="dialog"
+          aria-label={modalTitle}
+        >
           <div className="flex items-center justify-between px-6 py-4 border-b border-border-light sticky top-0 z-10 bg-surface-elevated rounded-t-xl">
             <h2 className="text-lg font-semibold text-content-primary">
               {modalTitle}
             </h2>
             <button
               onClick={closeModal}
-              aria-label={t('common.close', { defaultValue: 'Close' })}
+              aria-label={t("common.close", { defaultValue: "Close" })}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
             >
               <X size={18} />
@@ -623,56 +737,80 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                 feel "narrow" even on a 27" monitor. */}
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3">
-                {t('procurement.section_order_details', { defaultValue: 'Order Details' })}
+                {t("procurement.section_order_details", {
+                  defaultValue: "Order Details",
+                })}
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Vendor — takes 2 columns on lg to keep the search input usable */}
                 <div ref={firstFieldRef} className="lg:col-span-2">
                   <label className="block text-sm font-medium text-content-primary mb-1.5">
-                    {t('procurement.vendor', { defaultValue: 'Vendor' })}
+                    {t("procurement.vendor", { defaultValue: "Vendor" })}
                   </label>
                   <ContactSearchInput
                     value={poForm.vendor_contact_id}
                     displayValue={poForm.vendor_display}
-                    onChange={(id, name) => setPoForm((f) => ({ ...f, vendor_contact_id: id, vendor_display: name }))}
-                    placeholder={t('procurement.search_vendor', { defaultValue: 'Search vendor...' })}
+                    onChange={(id, name) =>
+                      setPoForm((f) => ({
+                        ...f,
+                        vendor_contact_id: id,
+                        vendor_display: name,
+                      }))
+                    }
+                    placeholder={t("procurement.search_vendor", {
+                      defaultValue: "Search vendor...",
+                    })}
                     showBrowse
-                    browseContactTypes={['supplier', 'subcontractor']}
+                    browseContactTypes={["supplier", "subcontractor"]}
                   />
                 </div>
                 {/* Delivery date */}
                 <div>
                   <label className="block text-sm font-medium text-content-primary mb-1.5">
-                    {t('procurement.delivery_date', { defaultValue: 'Delivery Date' })}
+                    {t("procurement.delivery_date", {
+                      defaultValue: "Delivery Date",
+                    })}
                   </label>
                   <input
                     type="date"
                     value={poForm.delivery_date}
-                    onChange={(e) => setPoForm((f) => ({ ...f, delivery_date: e.target.value }))}
+                    onChange={(e) =>
+                      setPoForm((f) => ({
+                        ...f,
+                        delivery_date: e.target.value,
+                      }))
+                    }
                     className={inputCls}
                   />
                 </div>
                 {/* PO Type — visual toggle, full-row */}
                 <div className="lg:col-span-3">
                   <label className="block text-sm font-medium text-content-primary mb-2">
-                    {t('procurement.po_type', { defaultValue: 'PO Type' })}
+                    {t("procurement.po_type", { defaultValue: "PO Type" })}
                   </label>
                   <div className="flex flex-wrap items-center gap-2">
-                    {(['standard', 'blanket', 'service'] as const).map((typ) => (
-                      <button
-                        key={typ}
-                        type="button"
-                        onClick={() => setPoForm((f) => ({ ...f, po_type: typ }))}
-                        className={clsx(
-                          'rounded-lg px-3.5 py-1.5 text-xs font-medium border transition-all',
-                          poForm.po_type === typ
-                            ? 'bg-oe-blue text-white border-oe-blue shadow-sm'
-                            : 'border-border text-content-secondary hover:border-oe-blue/40 hover:bg-surface-secondary',
-                        )}
-                      >
-                        {t(`procurement.po_type_${typ}`, { defaultValue: typ.charAt(0).toUpperCase() + typ.slice(1) })}
-                      </button>
-                    ))}
+                    {(["standard", "blanket", "service"] as const).map(
+                      (typ) => (
+                        <button
+                          key={typ}
+                          type="button"
+                          onClick={() =>
+                            setPoForm((f) => ({ ...f, po_type: typ }))
+                          }
+                          className={clsx(
+                            "rounded-lg px-3.5 py-1.5 text-xs font-medium border transition-all",
+                            poForm.po_type === typ
+                              ? "bg-oe-blue text-white border-oe-blue shadow-sm"
+                              : "border-border text-content-secondary hover:border-oe-blue/40 hover:bg-surface-secondary",
+                          )}
+                        >
+                          {t(`procurement.po_type_${typ}`, {
+                            defaultValue:
+                              typ.charAt(0).toUpperCase() + typ.slice(1),
+                          })}
+                        </button>
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
@@ -681,61 +819,90 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
             {/* ── Section: Items ── */}
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3">
-                {t('procurement.section_items', { defaultValue: 'Items' })} <span className="text-semantic-error">*</span>
+                {t("procurement.section_items", { defaultValue: "Items" })}{" "}
+                <span className="text-semantic-error">*</span>
               </h3>
               <div className="space-y-2">
                 {/* Header row */}
                 <div className="hidden sm:grid grid-cols-[1fr_70px_60px_80px_80px_32px] gap-2 text-2xs font-medium text-content-tertiary uppercase tracking-wider px-1">
-                  <span>{t('procurement.item_description', { defaultValue: 'Description' })}</span>
-                  <span>{t('procurement.item_qty', { defaultValue: 'Qty' })}</span>
-                  <span>{t('procurement.item_unit', { defaultValue: 'Unit' })}</span>
-                  <span>{t('procurement.item_rate', { defaultValue: 'Rate' })}</span>
-                  <span>{t('procurement.item_amount', { defaultValue: 'Amount' })}</span>
+                  <span>
+                    {t("procurement.item_description", {
+                      defaultValue: "Description",
+                    })}
+                  </span>
+                  <span>
+                    {t("procurement.item_qty", { defaultValue: "Qty" })}
+                  </span>
+                  <span>
+                    {t("procurement.item_unit", { defaultValue: "Unit" })}
+                  </span>
+                  <span>
+                    {t("procurement.item_rate", { defaultValue: "Rate" })}
+                  </span>
+                  <span>
+                    {t("procurement.item_amount", { defaultValue: "Amount" })}
+                  </span>
                   <span />
                 </div>
                 {poForm.items.map((li, idx) => (
-                  <div key={`item-${li.description.slice(0, 20)}-${idx}`} className="grid grid-cols-1 sm:grid-cols-[1fr_70px_60px_80px_80px_32px] gap-2 items-start">
+                  <div
+                    key={`item-${li.description.slice(0, 20)}-${idx}`}
+                    className="grid grid-cols-1 sm:grid-cols-[1fr_70px_60px_80px_80px_32px] gap-2 items-start"
+                  >
                     <input
                       value={li.description}
-                      onChange={(e) => updateLineItem(idx, 'description', e.target.value)}
-                      placeholder={t('procurement.item_desc_placeholder', { defaultValue: 'Item description' })}
-                      className={clsx(inputCls, 'h-9 text-xs')}
+                      onChange={(e) =>
+                        updateLineItem(idx, "description", e.target.value)
+                      }
+                      placeholder={t("procurement.item_desc_placeholder", {
+                        defaultValue: "Item description",
+                      })}
+                      className={clsx(inputCls, "h-9 text-xs")}
                     />
                     <input
                       type="number"
                       step="any"
                       value={li.quantity}
-                      onChange={(e) => updateLineItem(idx, 'quantity', e.target.value)}
+                      onChange={(e) =>
+                        updateLineItem(idx, "quantity", e.target.value)
+                      }
                       placeholder="1"
-                      className={clsx(inputCls, 'h-9 text-xs')}
+                      className={clsx(inputCls, "h-9 text-xs")}
                     />
                     <input
                       value={li.unit}
-                      onChange={(e) => updateLineItem(idx, 'unit', e.target.value)}
+                      onChange={(e) =>
+                        updateLineItem(idx, "unit", e.target.value)
+                      }
                       placeholder="pcs"
-                      className={clsx(inputCls, 'h-9 text-xs')}
+                      className={clsx(inputCls, "h-9 text-xs")}
                     />
                     <input
                       type="number"
                       step="0.01"
                       value={li.unit_rate}
-                      onChange={(e) => updateLineItem(idx, 'unit_rate', e.target.value)}
+                      onChange={(e) =>
+                        updateLineItem(idx, "unit_rate", e.target.value)
+                      }
                       placeholder="0.00"
-                      className={clsx(inputCls, 'h-9 text-xs')}
+                      className={clsx(inputCls, "h-9 text-xs")}
                     />
                     <input
                       type="text"
                       readOnly
-                      value={li.amount && li.amount !== '0.00' ? li.amount : ''}
+                      value={li.amount && li.amount !== "0.00" ? li.amount : ""}
                       placeholder="0.00"
-                      className={clsx(inputCls, 'h-9 text-xs bg-surface-secondary/50 cursor-default')}
+                      className={clsx(
+                        inputCls,
+                        "h-9 text-xs bg-surface-secondary/50 cursor-default",
+                      )}
                       tabIndex={-1}
                     />
                     <button
                       type="button"
                       onClick={() => removeLineItem(idx)}
                       className="flex h-9 w-8 items-center justify-center rounded-lg text-content-tertiary hover:text-semantic-error hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
-                      title={t('common.remove', { defaultValue: 'Remove' })}
+                      title={t("common.remove", { defaultValue: "Remove" })}
                     >
                       <Trash2 size={14} />
                     </button>
@@ -748,19 +915,29 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                   onClick={addLineItem}
                   className="mt-1"
                 >
-                  {t('procurement.add_item', { defaultValue: 'Add Item' })}
+                  {t("procurement.add_item", { defaultValue: "Add Item" })}
                 </Button>
               </div>
-              {poErrors.items && <p className="mt-1.5 text-xs text-semantic-error">{poErrors.items}</p>}
+              {poErrors.items && (
+                <p className="mt-1.5 text-xs text-semantic-error">
+                  {poErrors.items}
+                </p>
+              )}
 
               {/* Totals */}
               <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-content-secondary">{t('procurement.subtotal', { defaultValue: 'Subtotal' })}</span>
-                  <span className="tabular-nums font-medium text-content-primary">{displayCurrency} {poSubtotal.toFixed(2)}</span>
+                  <span className="text-content-secondary">
+                    {t("procurement.subtotal", { defaultValue: "Subtotal" })}
+                  </span>
+                  <span className="tabular-nums font-medium text-content-primary">
+                    {displayCurrency} {poSubtotal.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-content-secondary">{t('procurement.tax', { defaultValue: 'Tax' })}</span>
+                  <span className="text-content-secondary">
+                    {t("procurement.tax", { defaultValue: "Tax" })}
+                  </span>
                   <div className="relative w-32">
                     <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-2xs text-content-tertiary font-medium">
                       {poForm.currency || projectCurrency}
@@ -770,14 +947,18 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                       step="0.01"
                       value={poTaxInput}
                       onChange={(e) => setPoTaxInput(e.target.value)}
-                      className={clsx(inputCls, 'h-8 text-xs pl-10 text-right')}
+                      className={clsx(inputCls, "h-8 text-xs pl-10 text-right")}
                       placeholder="0.00"
                     />
                   </div>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-surface-secondary/60 px-3 py-2.5">
-                  <span className="text-sm font-semibold text-content-primary">{t('procurement.total', { defaultValue: 'Total' })}</span>
-                  <span className="text-base font-bold tabular-nums text-content-primary">{displayCurrency} {poTotal.toFixed(2)}</span>
+                  <span className="text-sm font-semibold text-content-primary">
+                    {t("procurement.total", { defaultValue: "Total" })}
+                  </span>
+                  <span className="text-base font-bold tabular-nums text-content-primary">
+                    {displayCurrency} {poTotal.toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -785,24 +966,26 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
             {/* ── Section: Terms ── */}
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3">
-                {t('procurement.section_terms', { defaultValue: 'Terms' })}
+                {t("procurement.section_terms", { defaultValue: "Terms" })}
               </h3>
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   {/* Currency */}
                   <div>
                     <label className="block text-sm font-medium text-content-primary mb-1.5">
-                      {t('procurement.currency', { defaultValue: 'Currency' })}
+                      {t("procurement.currency", { defaultValue: "Currency" })}
                     </label>
                     <select
                       value={poForm.currency}
-                      onChange={(e) => setPoForm((f) => ({ ...f, currency: e.target.value }))}
+                      onChange={(e) =>
+                        setPoForm((f) => ({ ...f, currency: e.target.value }))
+                      }
                       className={inputCls}
                     >
                       {!poForm.currency && (
                         <option value="">
-                          {t('procurement.currency_from_project', {
-                            defaultValue: 'Use project currency',
+                          {t("procurement.currency_from_project", {
+                            defaultValue: "Use project currency",
                           })}
                         </option>
                       )}
@@ -816,39 +999,74 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                   {/* Payment terms */}
                   <div>
                     <label className="block text-sm font-medium text-content-primary mb-1.5">
-                      {t('procurement.payment_terms', { defaultValue: 'Payment Terms' })}
+                      {t("procurement.payment_terms", {
+                        defaultValue: "Payment Terms",
+                      })}
                     </label>
                     <select
                       value={poForm.payment_terms}
-                      onChange={(e) => setPoForm((f) => ({ ...f, payment_terms: e.target.value }))}
+                      onChange={(e) =>
+                        setPoForm((f) => ({
+                          ...f,
+                          payment_terms: e.target.value,
+                        }))
+                      }
                       className={inputCls}
                     >
-                      <option value="30">{t('procurement.net_days', { defaultValue: 'Net {{days}} days', days: 30 })}</option>
-                      <option value="45">{t('procurement.net_days', { defaultValue: 'Net {{days}} days', days: 45 })}</option>
-                      <option value="60">{t('procurement.net_days', { defaultValue: 'Net {{days}} days', days: 60 })}</option>
-                      <option value="90">{t('procurement.net_days', { defaultValue: 'Net {{days}} days', days: 90 })}</option>
+                      <option value="30">
+                        {t("procurement.net_days", {
+                          defaultValue: "Net {{days}} days",
+                          days: 30,
+                        })}
+                      </option>
+                      <option value="45">
+                        {t("procurement.net_days", {
+                          defaultValue: "Net {{days}} days",
+                          days: 45,
+                        })}
+                      </option>
+                      <option value="60">
+                        {t("procurement.net_days", {
+                          defaultValue: "Net {{days}} days",
+                          days: 60,
+                        })}
+                      </option>
+                      <option value="90">
+                        {t("procurement.net_days", {
+                          defaultValue: "Net {{days}} days",
+                          days: 90,
+                        })}
+                      </option>
                     </select>
                   </div>
                 </div>
                 {/* Notes */}
                 <div>
                   <label className="block text-sm font-medium text-content-primary mb-1.5">
-                    {t('procurement.notes', { defaultValue: 'Notes' })}
+                    {t("procurement.notes", { defaultValue: "Notes" })}
                   </label>
                   <textarea
                     value={poForm.notes}
-                    onChange={(e) => setPoForm((f) => ({ ...f, notes: e.target.value }))}
+                    onChange={(e) =>
+                      setPoForm((f) => ({ ...f, notes: e.target.value }))
+                    }
                     rows={2}
-                    className={clsx(inputCls, 'h-auto py-2.5 resize-none')}
-                    placeholder={t('procurement.notes_placeholder', { defaultValue: 'Optional notes or special instructions...' })}
+                    className={clsx(inputCls, "h-auto py-2.5 resize-none")}
+                    placeholder={t("procurement.notes_placeholder", {
+                      defaultValue: "Optional notes or special instructions...",
+                    })}
                   />
                 </div>
               </div>
             </div>
           </div>
           <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border-light sticky bottom-0 z-10 bg-surface-elevated rounded-b-xl">
-            <Button variant="ghost" onClick={closeModal} disabled={createPOMut.isPending || editPOMut.isPending}>
-              {t('common.cancel', { defaultValue: 'Cancel' })}
+            <Button
+              variant="ghost"
+              onClick={closeModal}
+              disabled={createPOMut.isPending || editPOMut.isPending}
+            >
+              {t("common.cancel", { defaultValue: "Cancel" })}
             </Button>
             <Button
               variant="primary"
@@ -860,7 +1078,9 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                   createPOMut.mutate(poForm);
                 }
               }}
-              disabled={createPOMut.isPending || editPOMut.isPending || !canSubmitPO}
+              disabled={
+                createPOMut.isPending || editPOMut.isPending || !canSubmitPO
+              }
             >
               {createPOMut.isPending || editPOMut.isPending ? (
                 <Loader2 size={16} className="animate-spin mr-1.5" />
@@ -871,8 +1091,8 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
               )}
               <span>
                 {isEdit
-                  ? t('common.save', { defaultValue: 'Save' })
-                  : t('common.create', { defaultValue: 'Create' })}
+                  ? t("common.save", { defaultValue: "Save" })
+                  : t("common.create", { defaultValue: "Create" })}
               </span>
             </Button>
           </div>
@@ -883,140 +1103,239 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
 
   return (
     <>
-    <Card padding="none">
-      {/* Search + New PO button */}
-      <div className="p-4 border-b border-border-light flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
-            <Search size={16} />
+      <Card padding="none">
+        {/* Search + New PO button */}
+        <div className="p-4 border-b border-border-light flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="relative flex-1 max-w-sm">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
+              <Search size={16} />
+            </div>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("procurement.search_po", {
+                defaultValue: "Search by PO # or vendor...",
+              })}
+              className="h-10 w-full rounded-lg border border-border bg-surface-primary pl-10 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+            />
           </div>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('procurement.search_po', {
-              defaultValue: 'Search by PO # or vendor...',
-            })}
-            className="h-10 w-full rounded-lg border border-border bg-surface-primary pl-10 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-          />
+          <div className="shrink-0">
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Plus size={14} />}
+              onClick={() => setShowCreate(true)}
+            >
+              {t("procurement.new_po", { defaultValue: "New Purchase Order" })}
+            </Button>
+          </div>
         </div>
-        <div className="shrink-0">
-          <Button
-            variant="primary"
-            size="sm"
-            icon={<Plus size={14} />}
-            onClick={() => setShowCreate(true)}
-          >
-            {t('procurement.new_po', { defaultValue: 'New Purchase Order' })}
-          </Button>
-        </div>
-      </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                {t('procurement.po_number', { defaultValue: 'PO #' })}
-              </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                {t('procurement.vendor', { defaultValue: 'Vendor' })}
-              </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                {t('procurement.issue_date', { defaultValue: 'Date' })}
-              </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                {t('procurement.delivery_date', { defaultValue: 'Delivery' })}
-              </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
-                {t('procurement.amount', { defaultValue: 'Amount' })}
-              </th>
-              <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                {t('common.status', { defaultValue: 'Status' })}
-              </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
-                {t('common.actions', { defaultValue: 'Actions' })}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                  {t('procurement.no_po_match', { defaultValue: 'No matching purchase orders' })}
-                </td>
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border-light bg-surface-secondary/50">
+                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                  {t("procurement.po_number", { defaultValue: "PO #" })}
+                </th>
+                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                  {t("procurement.vendor", { defaultValue: "Vendor" })}
+                </th>
+                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                  {t("procurement.issue_date", { defaultValue: "Date" })}
+                </th>
+                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                  {t("procurement.delivery_date", { defaultValue: "Delivery" })}
+                </th>
+                <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+                  {t("procurement.amount", { defaultValue: "Amount" })}
+                </th>
+                <th className="px-4 py-3 text-center font-medium text-content-tertiary">
+                  {t("common.status", { defaultValue: "Status" })}
+                </th>
+                <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+                  {t("common.actions", { defaultValue: "Actions" })}
+                </th>
               </tr>
-            ) : filtered.map((po) => (
-              <tr
-                key={po.id}
-                className="border-b border-border-light hover:bg-surface-secondary/30 transition-colors"
-              >
-                <td className="px-4 py-3 font-mono text-xs text-content-primary">
-                  {po.po_number}
-                </td>
-                <td className="px-4 py-3 text-content-secondary">
-                  {po.vendor_name}
-                </td>
-                <td className="px-4 py-3 text-content-secondary">
-                  <DateDisplay value={po.issue_date} />
-                </td>
-                <td className="px-4 py-3 text-content-secondary">
-                  <DateDisplay value={po.delivery_date} />
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <MoneyDisplay amount={po.total_amount} currency={po.currency} />
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <Badge
-                    variant={PO_STATUS_COLORS[po.status] ?? 'neutral'}
-                    size="sm"
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="px-4 py-8 text-center text-sm text-content-tertiary"
                   >
-                    {t(`procurement.po_status_${po.status}`, {
-                      defaultValue: po.status,
+                    {t("procurement.no_po_match", {
+                      defaultValue: "No matching purchase orders",
                     })}
-                  </Badge>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  {isManager && (
-                  <div className="flex items-center justify-end gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => openEditMut.mutate(po.id)}
-                      disabled={openEditMut.isPending || editPOMut.isPending}
-                      title={t('procurement.edit_po', { defaultValue: 'Edit purchase order' })}
-                      className="!p-1.5 text-content-tertiary hover:text-oe-blue"
-                    >
-                      {openEditMut.isPending && openEditMut.variables === po.id ? (
-                        <Loader2 size={14} className="animate-spin" />
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((po) => (
+                  <tr
+                    key={po.id}
+                    className="border-b border-border-light hover:bg-surface-secondary/30 transition-colors"
+                    onMouseEnter={() =>
+                      setMatchActive((m) => ({ ...m, [po.id]: true }))
+                    }
+                    onFocus={() =>
+                      setMatchActive((m) => ({ ...m, [po.id]: true }))
+                    }
+                  >
+                    <td className="px-4 py-3 font-mono text-xs text-content-primary">
+                      {po.po_number}
+                    </td>
+                    <td className="px-4 py-3 text-content-secondary">
+                      {po.vendor_contact_id ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setScorecardOpen({
+                              contactId: po.vendor_contact_id as string,
+                              name: po.vendor_name,
+                            })
+                          }
+                          className="text-left text-oe-blue hover:underline focus:underline focus:outline-none"
+                          title={t("procurement.open_scorecard", {
+                            defaultValue: "Open supplier scorecard",
+                          })}
+                        >
+                          {po.vendor_name}
+                        </button>
                       ) : (
-                        <Pencil size={14} />
+                        po.vendor_name
                       )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => createInvoiceMut.mutate(po.id)}
-                      disabled={createInvoiceMut.isPending}
-                      title={t('procurement.create_invoice', { defaultValue: 'Create Invoice from PO' })}
-                    >
-                      <FileText size={14} className="mr-1" />
-                      {t('procurement.create_invoice_short', { defaultValue: 'Invoice' })}
-                    </Button>
-                  </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
+                    </td>
+                    <td className="px-4 py-3 text-content-secondary">
+                      <DateDisplay value={po.issue_date} />
+                    </td>
+                    <td className="px-4 py-3 text-content-secondary">
+                      <DateDisplay value={po.delivery_date} />
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <MoneyDisplay
+                        amount={po.total_amount}
+                        currency={po.currency}
+                      />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <Badge
+                          variant={PO_STATUS_COLORS[po.status] ?? "neutral"}
+                          size="sm"
+                        >
+                          {t(`procurement.po_status_${po.status}`, {
+                            defaultValue: po.status,
+                          })}
+                        </Badge>
+                        <MatchStatusBadge
+                          poId={po.id}
+                          active={Boolean(matchActive[po.id])}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {isManager && (
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEditMut.mutate(po.id)}
+                            disabled={
+                              openEditMut.isPending || editPOMut.isPending
+                            }
+                            title={t("procurement.edit_po", {
+                              defaultValue: "Edit purchase order",
+                            })}
+                            className="!p-1.5 text-content-tertiary hover:text-oe-blue"
+                          >
+                            {openEditMut.isPending &&
+                            openEditMut.variables === po.id ? (
+                              <Loader2 size={14} className="animate-spin" />
+                            ) : (
+                              <Pencil size={14} />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => createInvoiceMut.mutate(po.id)}
+                            disabled={createInvoiceMut.isPending}
+                            title={t("procurement.create_invoice", {
+                              defaultValue: "Create Invoice from PO",
+                            })}
+                          >
+                            <FileText size={14} className="mr-1" />
+                            {t("procurement.create_invoice_short", {
+                              defaultValue: "Invoice",
+                            })}
+                          </Button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
 
-    {/* PO Create Modal */}
-    {showCreate && renderPOModal()}
+      {/* PO Create Modal */}
+      {showCreate && renderPOModal()}
+
+      {/* Supplier scorecard modal */}
+      {scorecardOpen && (
+        <SupplierScorecardModal
+          open
+          onClose={() => setScorecardOpen(null)}
+          contactId={scorecardOpen.contactId}
+          contactName={scorecardOpen.name ?? undefined}
+          projectId={projectId}
+        />
+      )}
     </>
+  );
+}
+
+/* ── Match status badge (lazy fetch per row) ──────────────────────────── */
+
+const MATCH_BADGE_VARIANT: Record<
+  POLineMatchTag,
+  "neutral" | "success" | "warning" | "error"
+> = {
+  ok: "success",
+  partial: "warning",
+  unmatched: "neutral",
+  over_received: "warning",
+  over_invoiced: "error",
+};
+
+function MatchStatusBadge({ poId, active }: { poId: string; active: boolean }) {
+  const { t } = useTranslation();
+  const { data, isLoading } = useQuery({
+    queryKey: ["procurement-match", poId],
+    queryFn: () => getPOMatchStatus(poId),
+    enabled: active,
+    staleTime: 30_000,
+  });
+
+  if (!active && !data) return null;
+  if (isLoading || !data) {
+    return (
+      <span className="inline-flex items-center text-2xs text-content-tertiary">
+        <Loader2 size={10} className="animate-spin" />
+      </span>
+    );
+  }
+
+  const tag = data.overall_status;
+  return (
+    <Badge variant={MATCH_BADGE_VARIANT[tag] ?? "neutral"} size="sm" dot>
+      {t(`procurement.match_${tag}`, { defaultValue: tag.replace("_", " ") })}
+    </Badge>
   );
 }
 
@@ -1030,10 +1349,15 @@ function GoodsReceiptsTab({
   onGoToPurchaseOrders: () => void;
 }) {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
-  const { data: receipts, isLoading, isError, refetch } = useQuery({
-    queryKey: ['procurement-gr', projectId],
+  const {
+    data: receipts,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["procurement-gr", projectId],
     queryFn: () =>
       apiGet<{ items: GoodsReceipt[]; total: number }>(
         `/v1/procurement/goods-receipts/?project_id=${projectId}`,
@@ -1058,12 +1382,12 @@ function GoodsReceiptsTab({
       <Card className="py-12">
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('common.error', { defaultValue: 'Error' })}
-          description={t('procurement.gr_load_error', {
-            defaultValue: 'Failed to load goods receipts. Please try again.',
+          title={t("common.error", { defaultValue: "Error" })}
+          description={t("procurement.gr_load_error", {
+            defaultValue: "Failed to load goods receipts. Please try again.",
           })}
           action={{
-            label: t('common.retry', { defaultValue: 'Retry' }),
+            label: t("common.retry", { defaultValue: "Retry" }),
             onClick: () => refetch(),
           }}
         />
@@ -1075,16 +1399,16 @@ function GoodsReceiptsTab({
     return (
       <EmptyState
         icon={<ClipboardCheck size={28} strokeWidth={1.5} />}
-        title={t('procurement.no_gr', {
-          defaultValue: 'No goods receipts yet',
+        title={t("procurement.no_gr", {
+          defaultValue: "No goods receipts yet",
         })}
-        description={t('procurement.no_gr_desc', {
+        description={t("procurement.no_gr_desc", {
           defaultValue:
-            'Goods receipts record deliveries against a purchase order. They are created when a PO delivery is logged — start by creating or issuing a purchase order.',
+            "Goods receipts record deliveries against a purchase order. They are created when a PO delivery is logged — start by creating or issuing a purchase order.",
         })}
         action={{
-          label: t('procurement.view_purchase_orders', {
-            defaultValue: 'View Purchase Orders',
+          label: t("procurement.view_purchase_orders", {
+            defaultValue: "View Purchase Orders",
           }),
           onClick: onGoToPurchaseOrders,
         }}
@@ -1104,8 +1428,8 @@ function GoodsReceiptsTab({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('procurement.search_gr', {
-              defaultValue: 'Search by GR reference or PO #...',
+            placeholder={t("procurement.search_gr", {
+              defaultValue: "Search by GR reference or PO #...",
             })}
             className="h-10 w-full rounded-lg border border-border bg-surface-primary pl-10 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
           />
@@ -1118,68 +1442,79 @@ function GoodsReceiptsTab({
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
               <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                {t('procurement.gr_ref', { defaultValue: 'GR Reference' })}
+                {t("procurement.gr_ref", { defaultValue: "GR Reference" })}
               </th>
               <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                {t('procurement.po_ref', { defaultValue: 'PO Reference' })}
+                {t("procurement.po_ref", { defaultValue: "PO Reference" })}
               </th>
               <th className="px-4 py-3 text-left font-medium text-content-tertiary">
-                {t('procurement.receipt_date', { defaultValue: 'Date' })}
+                {t("procurement.receipt_date", { defaultValue: "Date" })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                {t('procurement.quantities', { defaultValue: 'Qty (Recv / Ord)' })}
+                {t("procurement.quantities", {
+                  defaultValue: "Qty (Recv / Ord)",
+                })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
-                {t('common.status', { defaultValue: 'Status' })}
+                {t("common.status", { defaultValue: "Status" })}
               </th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-sm text-content-tertiary">
-                  {t('procurement.no_gr_match', { defaultValue: 'No matching goods receipts' })}
+                <td
+                  colSpan={5}
+                  className="px-4 py-8 text-center text-sm text-content-tertiary"
+                >
+                  {t("procurement.no_gr_match", {
+                    defaultValue: "No matching goods receipts",
+                  })}
                 </td>
               </tr>
-            ) : filtered.map((gr) => (
-              <tr
-                key={gr.id}
-                className="border-b border-border-light hover:bg-surface-secondary/30 transition-colors"
-              >
-                <td className="px-4 py-3 font-mono text-xs text-content-primary">
-                  {gr.gr_reference}
-                </td>
-                <td className="px-4 py-3 font-mono text-xs text-content-secondary">
-                  {gr.po_number}
-                </td>
-                <td className="px-4 py-3 text-content-secondary">
-                  <DateDisplay value={gr.receipt_date} />
-                </td>
-                <td className="px-4 py-3 text-center tabular-nums">
-                  <span
-                    className={
-                      gr.received_qty >= gr.ordered_qty
-                        ? 'text-semantic-success'
-                        : 'text-content-primary'
-                    }
-                  >
-                    {gr.received_qty}
-                  </span>
-                  <span className="text-content-tertiary mx-1">/</span>
-                  <span className="text-content-secondary">{gr.ordered_qty}</span>
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <Badge
-                    variant={GR_STATUS_COLORS[gr.status] ?? 'neutral'}
-                    size="sm"
-                  >
-                    {t(`procurement.gr_status_${gr.status}`, {
-                      defaultValue: gr.status,
-                    })}
-                  </Badge>
-                </td>
-              </tr>
-            ))}
+            ) : (
+              filtered.map((gr) => (
+                <tr
+                  key={gr.id}
+                  className="border-b border-border-light hover:bg-surface-secondary/30 transition-colors"
+                >
+                  <td className="px-4 py-3 font-mono text-xs text-content-primary">
+                    {gr.gr_reference}
+                  </td>
+                  <td className="px-4 py-3 font-mono text-xs text-content-secondary">
+                    {gr.po_number}
+                  </td>
+                  <td className="px-4 py-3 text-content-secondary">
+                    <DateDisplay value={gr.receipt_date} />
+                  </td>
+                  <td className="px-4 py-3 text-center tabular-nums">
+                    <span
+                      className={
+                        gr.received_qty >= gr.ordered_qty
+                          ? "text-semantic-success"
+                          : "text-content-primary"
+                      }
+                    >
+                      {gr.received_qty}
+                    </span>
+                    <span className="text-content-tertiary mx-1">/</span>
+                    <span className="text-content-secondary">
+                      {gr.ordered_qty}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <Badge
+                      variant={GR_STATUS_COLORS[gr.status] ?? "neutral"}
+                      size="sm"
+                    >
+                      {t(`procurement.gr_status_${gr.status}`, {
+                        defaultValue: gr.status,
+                      })}
+                    </Badge>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

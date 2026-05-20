@@ -19,26 +19,19 @@
  * test deterministic and matches the convention used by the sibling
  * `SmartValueAutocomplete.test.tsx`.
  */
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cleanup,
   fireEvent,
   render,
   screen,
   waitFor,
-} from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { useState } from 'react';
+} from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useState } from "react";
 
-vi.mock('../api', async () => {
-  const actual = await vi.importActual<typeof import('../api')>('../api');
+vi.mock("../api", async () => {
+  const actual = await vi.importActual<typeof import("../api")>("../api");
   return {
     ...actual,
     getCascadeValues: vi.fn(),
@@ -46,28 +39,28 @@ vi.mock('../api', async () => {
   };
 });
 
-import { getCascadeRowCount, getCascadeValues } from '../api';
+import { getCascadeRowCount, getCascadeValues } from "../api";
 import {
   CascadeFilterPanel,
   type CascadeSelection,
-} from '../CascadeFilterPanel';
+} from "../CascadeFilterPanel";
 
 /* ── Fixture stubs ───────────────────────────────────────────────────── */
 
-const SNAPSHOT_ID = 'snap-1';
+const SNAPSHOT_ID = "snap-1";
 
 const cascadeValuesByColumn: Record<
   string,
   Array<{ value: string; count: number }>
 > = {
   category: [
-    { value: 'Concrete', count: 12 },
-    { value: 'Steel', count: 8 },
-    { value: 'Wood', count: 1 },
+    { value: "Concrete", count: 12 },
+    { value: "Steel", count: 8 },
+    { value: "Wood", count: 1 },
   ],
   supplier: [
-    { value: 'AcmeCo', count: 14 },
-    { value: 'BetaCo', count: 5 },
+    { value: "AcmeCo", count: 14 },
+    { value: "BetaCo", count: 5 },
   ],
 };
 
@@ -89,7 +82,7 @@ beforeEach(() => {
       return Promise.resolve({
         snapshot_id: SNAPSHOT_ID,
         target_column: body.target_column,
-        q: body.q ?? '',
+        q: body.q ?? "",
         values: filtered,
       });
     },
@@ -126,7 +119,7 @@ function renderPanel(initial: CascadeSelection = {}, debounceMs = 30) {
     return (
       <CascadeFilterPanel
         snapshotId={SNAPSHOT_ID}
-        columns={['category', 'supplier']}
+        columns={["category", "supplier"]}
         value={value}
         onChange={setValue}
         debounceMs={debounceMs}
@@ -147,8 +140,8 @@ function renderPanel(initial: CascadeSelection = {}, debounceMs = 30) {
 
 /* ── Tests ───────────────────────────────────────────────────────────── */
 
-describe('CascadeFilterPanel', () => {
-  it('calls getCascadeRowCount on mount and renders the row counter', async () => {
+describe("CascadeFilterPanel", () => {
+  it("calls getCascadeRowCount on mount and renders the row counter", async () => {
     renderPanel();
     // The row-count endpoint is called with the empty selection on
     // mount. Once it resolves, the counter element switches off the
@@ -160,7 +153,7 @@ describe('CascadeFilterPanel', () => {
       expect(getCascadeRowCount).toHaveBeenCalledWith(SNAPSHOT_ID, {});
     });
     await waitFor(() => {
-      const text = screen.getByTestId('cascade-row-count').textContent ?? '';
+      const text = screen.getByTestId("cascade-row-count").textContent ?? "";
       // After the fetch resolves the loading template ('Counting rows…')
       // must have been swapped for the rows-match template.
       expect(text).not.toMatch(/Counting rows/);
@@ -168,35 +161,35 @@ describe('CascadeFilterPanel', () => {
     });
   });
 
-  it('renders a card per column with options from the cascade endpoint', async () => {
+  it("renders a card per column with options from the cascade endpoint", async () => {
     renderPanel();
     await waitFor(() => {
-      expect(screen.getByTestId('cascade-card-category')).toBeInTheDocument();
-      expect(screen.getByTestId('cascade-card-supplier')).toBeInTheDocument();
+      expect(screen.getByTestId("cascade-card-category")).toBeInTheDocument();
+      expect(screen.getByTestId("cascade-card-supplier")).toBeInTheDocument();
     });
     await waitFor(() => {
       expect(
-        screen.getByTestId('cascade-option-category-Concrete'),
+        screen.getByTestId("cascade-option-category-Concrete"),
       ).toBeInTheDocument();
       expect(
-        screen.getByTestId('cascade-option-supplier-AcmeCo'),
+        screen.getByTestId("cascade-option-supplier-AcmeCo"),
       ).toBeInTheDocument();
     });
   });
 
-  it('clicking a candidate adds it as a chip and the supplier card refetches with the new selection', async () => {
+  it("clicking a candidate adds it as a chip and the supplier card refetches with the new selection", async () => {
     renderPanel();
     await waitFor(() =>
       expect(
-        screen.getByTestId('cascade-option-category-Concrete'),
+        screen.getByTestId("cascade-option-category-Concrete"),
       ).toBeInTheDocument(),
     );
 
-    fireEvent.click(screen.getByTestId('cascade-option-category-Concrete'));
+    fireEvent.click(screen.getByTestId("cascade-option-category-Concrete"));
 
     await waitFor(() => {
       expect(
-        screen.getByTestId('cascade-chip-category-Concrete'),
+        screen.getByTestId("cascade-chip-category-Concrete"),
       ).toBeInTheDocument();
     });
 
@@ -205,123 +198,121 @@ describe('CascadeFilterPanel', () => {
     await waitFor(() => {
       const supplierCalls = (
         getCascadeValues as ReturnType<typeof vi.fn>
-      ).mock.calls.filter((c) => c[1]?.target_column === 'supplier');
+      ).mock.calls.filter((c) => c[1]?.target_column === "supplier");
       const last = supplierCalls[supplierCalls.length - 1];
-      expect(last?.[1]?.selected).toEqual({ category: ['Concrete'] });
+      expect(last?.[1]?.selected).toEqual({ category: ["Concrete"] });
     });
   });
 
-  it('removing a chip clears it from the selection', async () => {
-    renderPanel({ category: ['Concrete'] });
+  it("removing a chip clears it from the selection", async () => {
+    renderPanel({ category: ["Concrete"] });
     await waitFor(() =>
       expect(
-        screen.getByTestId('cascade-chip-category-Concrete'),
+        screen.getByTestId("cascade-chip-category-Concrete"),
       ).toBeInTheDocument(),
     );
 
-    fireEvent.click(
-      screen.getByTestId('cascade-chip-x-category-Concrete'),
-    );
+    fireEvent.click(screen.getByTestId("cascade-chip-x-category-Concrete"));
 
     await waitFor(() => {
       expect(
-        screen.queryByTestId('cascade-chip-category-Concrete'),
+        screen.queryByTestId("cascade-chip-category-Concrete"),
       ).not.toBeInTheDocument();
     });
   });
 
-  it('Reset all wipes every selection in one click', async () => {
+  it("Reset all wipes every selection in one click", async () => {
     renderPanel({
-      category: ['Concrete', 'Steel'],
-      supplier: ['AcmeCo'],
+      category: ["Concrete", "Steel"],
+      supplier: ["AcmeCo"],
     });
 
     await waitFor(() => {
       expect(
-        screen.getByTestId('cascade-chip-category-Concrete'),
+        screen.getByTestId("cascade-chip-category-Concrete"),
       ).toBeInTheDocument();
       expect(
-        screen.getByTestId('cascade-chip-supplier-AcmeCo'),
+        screen.getByTestId("cascade-chip-supplier-AcmeCo"),
       ).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByTestId('cascade-reset-all'));
+    fireEvent.click(screen.getByTestId("cascade-reset-all"));
 
     await waitFor(() => {
       expect(
-        screen.queryByTestId('cascade-chip-category-Concrete'),
+        screen.queryByTestId("cascade-chip-category-Concrete"),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByTestId('cascade-chip-category-Steel'),
+        screen.queryByTestId("cascade-chip-category-Steel"),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByTestId('cascade-chip-supplier-AcmeCo'),
+        screen.queryByTestId("cascade-chip-supplier-AcmeCo"),
       ).not.toBeInTheDocument();
     });
   });
 
-  it('Clear-on-column wipes only that column', async () => {
+  it("Clear-on-column wipes only that column", async () => {
     renderPanel({
-      category: ['Concrete'],
-      supplier: ['AcmeCo'],
+      category: ["Concrete"],
+      supplier: ["AcmeCo"],
     });
     await waitFor(() =>
       expect(
-        screen.getByTestId('cascade-chip-category-Concrete'),
+        screen.getByTestId("cascade-chip-category-Concrete"),
       ).toBeInTheDocument(),
     );
 
-    fireEvent.click(screen.getByTestId('cascade-clear-category'));
+    fireEvent.click(screen.getByTestId("cascade-clear-category"));
 
     await waitFor(() => {
       expect(
-        screen.queryByTestId('cascade-chip-category-Concrete'),
+        screen.queryByTestId("cascade-chip-category-Concrete"),
       ).not.toBeInTheDocument();
       expect(
-        screen.getByTestId('cascade-chip-supplier-AcmeCo'),
+        screen.getByTestId("cascade-chip-supplier-AcmeCo"),
       ).toBeInTheDocument();
     });
   });
 
-  it('debounces the cascade fetch — typing fast does not fire a request per keystroke', async () => {
+  it("debounces the cascade fetch — typing fast does not fire a request per keystroke", async () => {
     renderPanel({}, 60);
     // Wait for the initial mount fetches to settle.
     await waitFor(() =>
       expect(
-        screen.getByTestId('cascade-option-category-Concrete'),
+        screen.getByTestId("cascade-option-category-Concrete"),
       ).toBeInTheDocument(),
     );
 
-    const baseline = (getCascadeValues as ReturnType<typeof vi.fn>).mock.calls
-      .filter((c) => c[1]?.target_column === 'category')
-      .length;
+    const baseline = (
+      getCascadeValues as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((c) => c[1]?.target_column === "category").length;
 
-    const input = screen.getByTestId('cascade-input-category');
-    fireEvent.change(input, { target: { value: 'c' } });
-    fireEvent.change(input, { target: { value: 'co' } });
-    fireEvent.change(input, { target: { value: 'con' } });
+    const input = screen.getByTestId("cascade-input-category");
+    fireEvent.change(input, { target: { value: "c" } });
+    fireEvent.change(input, { target: { value: "co" } });
+    fireEvent.change(input, { target: { value: "con" } });
 
     // Wait until the debounced fetch with 'con' actually fires.
     await waitFor(
       () => {
         const calls = (
           getCascadeValues as ReturnType<typeof vi.fn>
-        ).mock.calls.filter((c) => c[1]?.target_column === 'category');
+        ).mock.calls.filter((c) => c[1]?.target_column === "category");
         const last = calls[calls.length - 1];
-        expect(last?.[1]?.q).toBe('con');
+        expect(last?.[1]?.q).toBe("con");
       },
       { timeout: 1500 },
     );
 
     const finalCalls = (
       getCascadeValues as ReturnType<typeof vi.fn>
-    ).mock.calls.filter((c) => c[1]?.target_column === 'category');
+    ).mock.calls.filter((c) => c[1]?.target_column === "category");
 
     // Exactly one new call beyond the baseline — every keystroke
     // restarted the debounce timer, so only the final string fires.
     expect(finalCalls.length).toBe(baseline + 1);
     // Intermediate prefixes never reach the network.
-    expect(finalCalls.some((c) => c[1]?.q === 'c')).toBe(false);
-    expect(finalCalls.some((c) => c[1]?.q === 'co')).toBe(false);
+    expect(finalCalls.some((c) => c[1]?.q === "c")).toBe(false);
+    expect(finalCalls.some((c) => c[1]?.q === "co")).toBe(false);
   });
 });

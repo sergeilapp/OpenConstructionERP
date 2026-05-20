@@ -13,7 +13,7 @@
  * Tailwind's `darkMode: 'class'` strategy (already configured in
  * `tailwind.config.js`).
  */
-import type { ComponentType } from 'react';
+import type { ComponentType } from "react";
 import {
   Filter,
   GitBranch,
@@ -21,9 +21,9 @@ import {
   Sliders,
   Variable,
   type LucideProps,
-} from 'lucide-react';
+} from "lucide-react";
 
-import type { BlockColor } from './types';
+import type { BlockColor } from "./types";
 
 /** Tailwind class set for one block color in both light and dark themes. */
 export interface BlockClassSet {
@@ -66,73 +66,74 @@ export interface BlockTokenEntry {
 export const BLOCK_COLORS: Record<BlockColor, BlockTokenEntry> = {
   selector: {
     classes: {
-      bg: 'bg-gray-100 dark:bg-gray-800',
-      bgSelected: 'bg-gray-200 dark:bg-gray-700',
-      border: 'border-gray-300 dark:border-gray-600',
-      borderSelected: 'border-gray-500 dark:border-gray-400',
-      text: 'text-gray-900 dark:text-gray-100',
-      textSubtle: 'text-gray-600 dark:text-gray-400',
-      icon: 'text-gray-700 dark:text-gray-300',
+      bg: "bg-gray-100 dark:bg-gray-800",
+      bgSelected: "bg-gray-200 dark:bg-gray-700",
+      border: "border-gray-300 dark:border-gray-600",
+      borderSelected: "border-gray-500 dark:border-gray-400",
+      text: "text-gray-900 dark:text-gray-100",
+      textSubtle: "text-gray-600 dark:text-gray-400",
+      icon: "text-gray-700 dark:text-gray-300",
     },
     Icon: Filter,
-    label: 'Selector',
-    description: 'Match elements by category, classification, or spatial container',
+    label: "Selector",
+    description:
+      "Match elements by category, classification, or spatial container",
   },
   logic: {
     classes: {
-      bg: 'bg-green-100 dark:bg-green-900/40',
-      bgSelected: 'bg-green-200 dark:bg-green-800/60',
-      border: 'border-green-300 dark:border-green-700',
-      borderSelected: 'border-green-500 dark:border-green-500',
-      text: 'text-green-900 dark:text-green-100',
-      textSubtle: 'text-green-700 dark:text-green-300',
-      icon: 'text-green-700 dark:text-green-300',
+      bg: "bg-green-100 dark:bg-green-900/40",
+      bgSelected: "bg-green-200 dark:bg-green-800/60",
+      border: "border-green-300 dark:border-green-700",
+      borderSelected: "border-green-500 dark:border-green-500",
+      text: "text-green-900 dark:text-green-100",
+      textSubtle: "text-green-700 dark:text-green-300",
+      icon: "text-green-700 dark:text-green-300",
     },
     Icon: GitBranch,
-    label: 'Logic',
-    description: 'Combine predicates with AND, OR, or NOT',
+    label: "Logic",
+    description: "Combine predicates with AND, OR, or NOT",
   },
   attribute: {
     classes: {
-      bg: 'bg-purple-100 dark:bg-purple-900/40',
-      bgSelected: 'bg-purple-200 dark:bg-purple-800/60',
-      border: 'border-purple-300 dark:border-purple-700',
-      borderSelected: 'border-purple-500 dark:border-purple-500',
-      text: 'text-purple-900 dark:text-purple-100',
-      textSubtle: 'text-purple-700 dark:text-purple-300',
-      icon: 'text-purple-700 dark:text-purple-300',
+      bg: "bg-purple-100 dark:bg-purple-900/40",
+      bgSelected: "bg-purple-200 dark:bg-purple-800/60",
+      border: "border-purple-300 dark:border-purple-700",
+      borderSelected: "border-purple-500 dark:border-purple-500",
+      text: "text-purple-900 dark:text-purple-100",
+      textSubtle: "text-purple-700 dark:text-purple-300",
+      icon: "text-purple-700 dark:text-purple-300",
     },
     Icon: Tag,
-    label: 'Attribute',
-    description: 'Reference a property, alias, or regex pattern',
+    label: "Attribute",
+    description: "Reference a property, alias, or regex pattern",
   },
   constraint: {
     classes: {
-      bg: 'bg-blue-100 dark:bg-blue-900/40',
-      bgSelected: 'bg-blue-200 dark:bg-blue-800/60',
-      border: 'border-blue-300 dark:border-blue-700',
-      borderSelected: 'border-blue-500 dark:border-blue-500',
-      text: 'text-blue-900 dark:text-blue-100',
-      textSubtle: 'text-blue-700 dark:text-blue-300',
-      icon: 'text-blue-700 dark:text-blue-300',
+      bg: "bg-blue-100 dark:bg-blue-900/40",
+      bgSelected: "bg-blue-200 dark:bg-blue-800/60",
+      border: "border-blue-300 dark:border-blue-700",
+      borderSelected: "border-blue-500 dark:border-blue-500",
+      text: "text-blue-900 dark:text-blue-100",
+      textSubtle: "text-blue-700 dark:text-blue-300",
+      icon: "text-blue-700 dark:text-blue-300",
     },
     Icon: Sliders,
-    label: 'Constraint',
-    description: 'Compare an attribute against a value or range',
+    label: "Constraint",
+    description: "Compare an attribute against a value or range",
   },
   variable: {
     classes: {
-      bg: 'bg-yellow-100 dark:bg-yellow-900/40',
-      bgSelected: 'bg-yellow-200 dark:bg-yellow-800/60',
-      border: 'border-yellow-300 dark:border-yellow-700',
-      borderSelected: 'border-yellow-600 dark:border-yellow-500',
-      text: 'text-yellow-900 dark:text-yellow-100',
-      textSubtle: 'text-yellow-700 dark:text-yellow-300',
-      icon: 'text-yellow-700 dark:text-yellow-300',
+      bg: "bg-yellow-100 dark:bg-yellow-900/40",
+      bgSelected: "bg-yellow-200 dark:bg-yellow-800/60",
+      border: "border-yellow-300 dark:border-yellow-700",
+      borderSelected: "border-yellow-600 dark:border-yellow-500",
+      text: "text-yellow-900 dark:text-yellow-100",
+      textSubtle: "text-yellow-700 dark:text-yellow-300",
+      icon: "text-yellow-700 dark:text-yellow-300",
     },
     Icon: Variable,
-    label: 'Variable',
-    description: 'Define a local or global variable with an aggregate function',
+    label: "Variable",
+    description: "Define a local or global variable with an aggregate function",
   },
 };
 

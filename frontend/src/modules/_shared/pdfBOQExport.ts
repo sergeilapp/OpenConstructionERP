@@ -5,15 +5,15 @@
  * No heavy PDF library needed — we open a print window.
  */
 
-import type { ExchangePosition, CountryTemplate } from './templateTypes';
+import type { ExchangePosition, CountryTemplate } from "./templateTypes";
 
 const htmlEscape = (value: string | number): string =>
   String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
 /** Generate a printable HTML string for a BOQ report. */
 export function generateBOQPrintHTML(
@@ -26,9 +26,17 @@ export function generateBOQPrintHTML(
     date?: string;
   } = {},
 ): string {
-  const { projectName = 'Project', boqName = 'Bill of Quantities', includePrices = true, date = new Date().toLocaleDateString() } = options;
+  const {
+    projectName = "Project",
+    boqName = "Bill of Quantities",
+    includePrices = true,
+    date = new Date().toLocaleDateString(),
+  } = options;
 
-  const totalValue = positions.reduce((sum, p) => sum + (p.isSection ? 0 : p.total), 0);
+  const totalValue = positions.reduce(
+    (sum, p) => sum + (p.isSection ? 0 : p.total),
+    0,
+  );
   const posCount = positions.filter((p) => !p.isSection).length;
 
   const formatCurrency = (val: number) =>
@@ -44,10 +52,10 @@ export function generateBOQPrintHTML(
         <td>${htmlEscape(pos.description)}</td>
         <td class="center">${htmlEscape(pos.unit)}</td>
         <td class="right">${pos.quantity.toFixed(3)}</td>
-        ${includePrices ? `<td class="right">${formatCurrency(pos.unitRate)}</td><td class="right">${formatCurrency(pos.total)}</td>` : ''}
+        ${includePrices ? `<td class="right">${formatCurrency(pos.unitRate)}</td><td class="right">${formatCurrency(pos.total)}</td>` : ""}
       </tr>`;
     })
-    .join('\n');
+    .join("\n");
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>${htmlEscape(boqName)}</title>
@@ -76,13 +84,13 @@ export function generateBOQPrintHTML(
         <th>Description</th>
         <th style="width:6%" class="center">Unit</th>
         <th style="width:10%" class="right">Qty</th>
-        ${includePrices ? `<th style="width:12%" class="right">Rate</th><th style="width:12%" class="right">Total</th>` : ''}
+        ${includePrices ? `<th style="width:12%" class="right">Rate</th><th style="width:12%" class="right">Total</th>` : ""}
       </tr>
     </thead>
     <tbody>
       ${rows}
     </tbody>
-    ${includePrices ? `<tfoot><tr class="total"><td colspan="5" class="right">Grand Total:</td><td class="right">${formatCurrency(totalValue)}</td></tr></tfoot>` : ''}
+    ${includePrices ? `<tfoot><tr class="total"><td colspan="5" class="right">Grand Total:</td><td class="right">${formatCurrency(totalValue)}</td></tr></tfoot>` : ""}
   </table>
 </body></html>`;
 }
@@ -94,7 +102,7 @@ export function printBOQReport(
   options?: { projectName?: string; boqName?: string; includePrices?: boolean },
 ): void {
   const html = generateBOQPrintHTML(positions, template, options);
-  const win = window.open('', '_blank');
+  const win = window.open("", "_blank");
   if (win) {
     win.document.write(html);
     win.document.close();

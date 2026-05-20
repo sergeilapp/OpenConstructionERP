@@ -21,9 +21,7 @@ class InvestigationCreate(BaseModel):
     method: str = Field(default="5_whys", pattern=r"^(5_whys|fishbone|timeline|swot)$")
     findings: str = Field(default="", max_length=20000)
     recommendations: str = Field(default="", max_length=20000)
-    status: str = Field(
-        default="in_progress", pattern=r"^(in_progress|completed|abandoned)$"
-    )
+    status: str = Field(default="in_progress", pattern=r"^(in_progress|completed|abandoned)$")
     report_url: str | None = Field(default=None, max_length=1000)
 
 
@@ -34,14 +32,10 @@ class InvestigationUpdate(BaseModel):
 
     investigation_lead: UUID | None = None
     completed_at: datetime | None = None
-    method: str | None = Field(
-        default=None, pattern=r"^(5_whys|fishbone|timeline|swot)$"
-    )
+    method: str | None = Field(default=None, pattern=r"^(5_whys|fishbone|timeline|swot)$")
     findings: str | None = Field(default=None, max_length=20000)
     recommendations: str | None = Field(default=None, max_length=20000)
-    status: str | None = Field(
-        default=None, pattern=r"^(in_progress|completed|abandoned)$"
-    )
+    status: str | None = Field(default=None, pattern=r"^(in_progress|completed|abandoned)$")
     report_url: str | None = Field(default=None, max_length=1000)
 
 
@@ -307,14 +301,10 @@ class ToolboxAttendanceEntry(BaseModel):
 
     attendee_name: str = Field(..., min_length=1, max_length=255)
     attendee_company: str | None = Field(default=None, max_length=255)
-    attendee_role: str = Field(
-        default="worker", pattern=r"^(worker|foreman|visitor)$"
-    )
+    attendee_role: str = Field(default="worker", pattern=r"^(worker|foreman|visitor)$")
     signature_ref: str | None = Field(default=None, max_length=500)
     signed_at: datetime | None = None
-    attendance_status: str = Field(
-        default="present", pattern=r"^(present|absent|late)$"
-    )
+    attendance_status: str = Field(default="present", pattern=r"^(present|absent|late)$")
 
 
 class ToolboxTalkCreate(BaseModel):
@@ -551,9 +541,7 @@ class AuditFindingPayload(BaseModel):
     item_description: str = Field(..., min_length=1, max_length=2000)
     category: str = Field(
         default="other",
-        pattern=(
-            r"^(PPE|permit|housekeeping|electrical|fire|environmental|other)$"
-        ),
+        pattern=(r"^(PPE|permit|housekeeping|electrical|fire|environmental|other)$"),
     )
     severity: str = Field(default="low", pattern=r"^(low|med|high|critical)$")
     is_passed: bool = True
@@ -637,9 +625,7 @@ class CAPACreate(BaseModel):
     )
     root_cause_category: str | None = Field(
         default=None,
-        pattern=(
-            r"^(manpower|method|material|machine|environment|management|other)$"
-        ),
+        pattern=(r"^(manpower|method|material|machine|environment|management|other)$"),
     )
 
 
@@ -659,9 +645,7 @@ class CAPAUpdate(BaseModel):
     verification_notes: str | None = Field(default=None, max_length=10000)
     root_cause_category: str | None = Field(
         default=None,
-        pattern=(
-            r"^(manpower|method|material|machine|environment|management|other)$"
-        ),
+        pattern=(r"^(manpower|method|material|machine|environment|management|other)$"),
     )
 
 
@@ -688,9 +672,7 @@ class CAPAFiveWhysPayload(BaseModel):
     steps: list[FiveWhyStep] = Field(default_factory=list)
     root_cause_category: str | None = Field(
         default=None,
-        pattern=(
-            r"^(manpower|method|material|machine|environment|management|other)$"
-        ),
+        pattern=(r"^(manpower|method|material|machine|environment|management|other)$"),
     )
 
 
@@ -762,9 +744,7 @@ class CertificationCreate(BaseModel):
     issue_date: date
     valid_until: date
     document_url: str | None = Field(default=None, max_length=1000)
-    status: str = Field(
-        default="valid", pattern=r"^(valid|expired|revoked)$"
-    )
+    status: str = Field(default="valid", pattern=r"^(valid|expired|revoked)$")
 
 
 class CertificationUpdate(BaseModel):
@@ -777,9 +757,7 @@ class CertificationUpdate(BaseModel):
     issued_by: str | None = Field(default=None, max_length=255)
     valid_until: date | None = None
     document_url: str | None = Field(default=None, max_length=1000)
-    status: str | None = Field(
-        default=None, pattern=r"^(valid|expired|revoked)$"
-    )
+    status: str | None = Field(default=None, pattern=r"^(valid|expired|revoked)$")
 
 
 class CertificationResponse(BaseModel):
@@ -859,3 +837,72 @@ class HSEDashboardResponse(BaseModel):
     toolbox_talks_this_month: int = 0
     expiring_certs_30d: int = 0
     avg_audit_score: float | None = None
+
+
+# ── OSHA 300 + slim CorrectiveAction FSM (T6 / v3086) ───────────────────────
+
+
+class OshaLogQuery(BaseModel):
+    """Query parameters for the OSHA Form 300 CSV export."""
+
+    project_id: UUID
+    year: int = Field(..., ge=1900, le=2100)
+
+
+class CorrectiveActionCreate(BaseModel):
+    """Create a slim incident-scoped corrective action."""
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    incident_id: UUID
+    description: str = Field(..., min_length=1, max_length=10000)
+    assigned_to_user_id: UUID | None = None
+    due_date: date | None = None
+    status: str = Field(
+        default="pending",
+        pattern=r"^(pending|in_progress|verified|closed)$",
+    )
+
+
+class CorrectiveActionUpdate(BaseModel):
+    """Partial update for a slim corrective action (no status changes)."""
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    description: str | None = Field(default=None, min_length=1, max_length=10000)
+    assigned_to_user_id: UUID | None = None
+    due_date: date | None = None
+
+
+class CATransitionRequest(BaseModel):
+    """Body for ``POST /corrective-actions/{id}/transition``.
+
+    The FSM is intentionally strict — ``pending → in_progress → verified
+    → closed`` — so any other ``to_status`` is rejected with a 409.
+    """
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    to_status: str = Field(
+        ...,
+        pattern=r"^(pending|in_progress|verified|closed)$",
+    )
+    verification_notes: str | None = Field(default=None, max_length=10000)
+
+
+class CorrectiveActionResponse(BaseModel):
+    """Slim corrective action returned from the API."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    incident_id: UUID
+    description: str
+    assigned_to_user_id: UUID | None = None
+    due_date: date | None = None
+    status: str
+    verified_by_user_id: UUID | None = None
+    verified_at: datetime | None = None
+    verification_notes: str | None = None
+    created_at: datetime
+    updated_at: datetime

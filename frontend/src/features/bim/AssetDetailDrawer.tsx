@@ -17,10 +17,10 @@
  * Lazy fetch keeps the list page fast: properties only load when the
  * drawer opens for that asset. Closes on Esc or backdrop click.
  */
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpRight,
   Box,
@@ -31,19 +31,19 @@ import {
   Package,
   Ruler,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Badge, Button, KvList, Kv, QtyTile } from '@/shared/ui';
+import { Badge, Button, KvList, Kv, QtyTile } from "@/shared/ui";
 
-import { useToastStore } from '@/stores/useToastStore';
+import { useToastStore } from "@/stores/useToastStore";
 
-import { AssetEditModal } from './AssetEditModal';
+import { AssetEditModal } from "./AssetEditModal";
 import {
   downloadCobieXlsx,
   fetchBIMElementProperties,
   fetchBIMElementsByIds,
   type AssetSummary,
-} from './api';
+} from "./api";
 
 interface AssetDetailDrawerProps {
   asset: AssetSummary;
@@ -51,15 +51,19 @@ interface AssetDetailDrawerProps {
 }
 
 const STATUS_TONES: Record<string, string> = {
-  operational: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-  under_maintenance: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-  decommissioned: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
-  planned: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+  operational: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  under_maintenance: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  decommissioned: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  planned: "bg-sky-500/15 text-sky-300 border-sky-500/30",
 };
 
 function statusTone(status?: string | null): string {
-  if (!status) return 'bg-neutral-700/40 text-neutral-300 border-neutral-600/50';
-  return STATUS_TONES[status] ?? 'bg-neutral-700/40 text-neutral-300 border-neutral-600/50';
+  if (!status)
+    return "bg-neutral-700/40 text-neutral-300 border-neutral-600/50";
+  return (
+    STATUS_TONES[status] ??
+    "bg-neutral-700/40 text-neutral-300 border-neutral-600/50"
+  );
 }
 
 const PROP_PRIORITY: Record<string, number> = {
@@ -77,16 +81,14 @@ function isEmpty(v: unknown): boolean {
   return (
     v === null ||
     v === undefined ||
-    v === '' ||
-    (typeof v === 'number' && Number.isNaN(v)) ||
+    v === "" ||
+    (typeof v === "number" && Number.isNaN(v)) ||
     (Array.isArray(v) && v.length === 0)
   );
 }
 
 function prettyKey(key: string): string {
-  return key
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function sortProps(props: Record<string, unknown>): Array<[string, unknown]> {
@@ -109,15 +111,15 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
   // Esc to close
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   // Quantities + storey from the BIMElement row (cheap, single round-trip).
   const elementQuery = useQuery({
-    queryKey: ['bim-element-detail', asset.model_id, asset.id],
+    queryKey: ["bim-element-detail", asset.model_id, asset.id],
     queryFn: () => fetchBIMElementsByIds(asset.model_id, [asset.id]),
     staleTime: 30_000,
   });
@@ -127,7 +129,7 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
 
   // Full Parquet row — same endpoint the BIM viewer uses for parity.
   const propsQuery = useQuery({
-    queryKey: ['bim-element-props', asset.model_id, asset.stable_id],
+    queryKey: ["bim-element-props", asset.model_id, asset.stable_id],
     queryFn: () => fetchBIMElementProperties(asset.model_id, asset.stable_id),
     staleTime: 60_000,
     enabled: !!asset.stable_id,
@@ -142,7 +144,7 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
     navigate(`/bim/${asset.model_id}?element=${asset.id}`);
   };
 
-  const headerName = asset.name || asset.element_type || 'Element';
+  const headerName = asset.name || asset.element_type || "Element";
 
   return (
     <>
@@ -192,7 +194,7 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
             type="button"
             onClick={onClose}
             className="rounded-md p-1.5 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             data-testid="asset-detail-close"
           >
             <X size={16} />
@@ -208,7 +210,9 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
             data-testid="asset-detail-open-viewer"
           >
             <ArrowUpRight size={14} />
-            {t('assets.detail.open_in_viewer', { defaultValue: 'Open in 3D Viewer‌⁠‍' })}
+            {t("assets.detail.open_in_viewer", {
+              defaultValue: "Open in 3D Viewer‌⁠‍",
+            })}
           </Button>
           <Button
             variant="secondary"
@@ -217,26 +221,28 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
             data-testid="asset-detail-edit"
           >
             <Edit3 size={14} />
-            {t('assets.detail.edit', { defaultValue: 'Edit asset info‌⁠‍' })}
+            {t("assets.detail.edit", { defaultValue: "Edit asset info‌⁠‍" })}
           </Button>
           <button
             type="button"
             onClick={() =>
               downloadCobieXlsx(
                 asset.model_id,
-                `${asset.model_name || 'model'}-cobie.xlsx`,
+                `${asset.model_name || "model"}-cobie.xlsx`,
               ).catch((err) => {
                 toast({
-                  type: 'error',
-                  title: t('assets.cobie_failed', {
-                    defaultValue: 'COBie export failed‌⁠‍',
+                  type: "error",
+                  title: t("assets.cobie_failed", {
+                    defaultValue: "COBie export failed‌⁠‍",
                   }),
                   message: err instanceof Error ? err.message : undefined,
                 });
               })
             }
             className="inline-flex items-center gap-1 rounded-md border border-border-medium px-2.5 py-1 text-xs text-content-secondary hover:bg-surface-secondary hover:text-oe-blue"
-            title={t('assets.cobie_export', { defaultValue: 'Download COBie (XLSX)‌⁠‍' })}
+            title={t("assets.cobie_export", {
+              defaultValue: "Download COBie (XLSX)‌⁠‍",
+            })}
           >
             <Download size={12} />
             COBie
@@ -248,24 +254,30 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
           {/* Asset info section */}
           <Section
             icon={<Package size={13} className="text-primary-400" />}
-            title={t('assets.detail.section.asset_info', { defaultValue: 'Asset info‌⁠‍' })}
+            title={t("assets.detail.section.asset_info", {
+              defaultValue: "Asset info‌⁠‍",
+            })}
           >
             <KvList>
               <Kv
-                label={t('assets.field.manufacturer', { defaultValue: 'Manufacturer' })}
+                label={t("assets.field.manufacturer", {
+                  defaultValue: "Manufacturer",
+                })}
                 value={asset.asset_info.manufacturer ?? null}
               />
               <Kv
-                label={t('assets.field.model', { defaultValue: 'Model' })}
+                label={t("assets.field.model", { defaultValue: "Model" })}
                 value={asset.asset_info.model ?? null}
               />
               <Kv
-                label={t('assets.field.serial', { defaultValue: 'Serial number' })}
+                label={t("assets.field.serial", {
+                  defaultValue: "Serial number",
+                })}
                 value={asset.asset_info.serial_number ?? null}
                 mono
               />
               <Kv
-                label={t('assets.field.status', { defaultValue: 'Status' })}
+                label={t("assets.field.status", { defaultValue: "Status" })}
                 value={
                   asset.asset_info.operational_status ? (
                     <span
@@ -273,25 +285,31 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
                         asset.asset_info.operational_status,
                       )}`}
                     >
-                      {asset.asset_info.operational_status.replace('_', ' ')}
+                      {asset.asset_info.operational_status.replace("_", " ")}
                     </span>
                   ) : null
                 }
               />
               <Kv
-                label={t('assets.field.installation_date', { defaultValue: 'Installation date' })}
+                label={t("assets.field.installation_date", {
+                  defaultValue: "Installation date",
+                })}
                 value={asset.asset_info.installation_date ?? null}
               />
               <Kv
-                label={t('assets.field.warranty_until', { defaultValue: 'Warranty until' })}
+                label={t("assets.field.warranty_until", {
+                  defaultValue: "Warranty until",
+                })}
                 value={asset.asset_info.warranty_until ?? null}
               />
               <Kv
-                label={t('assets.field.parent_system', { defaultValue: 'Parent system' })}
+                label={t("assets.field.parent_system", {
+                  defaultValue: "Parent system",
+                })}
                 value={asset.asset_info.parent_system ?? null}
               />
               <Kv
-                label={t('assets.field.notes', { defaultValue: 'Notes' })}
+                label={t("assets.field.notes", { defaultValue: "Notes" })}
                 value={asset.asset_info.notes ?? null}
               />
             </KvList>
@@ -304,7 +322,9 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
             quantities.height) && (
             <Section
               icon={<Ruler size={13} className="text-emerald-400" />}
-              title={t('assets.detail.section.quantities', { defaultValue: 'Quantities' })}
+              title={t("assets.detail.section.quantities", {
+                defaultValue: "Quantities",
+              })}
             >
               <div className="grid grid-cols-2 gap-2">
                 {quantities.area != null && (
@@ -323,7 +343,11 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
                   <QtyTile label="Width" value={quantities.width} unit="m" />
                 )}
                 {quantities.thickness != null && (
-                  <QtyTile label="Thickness" value={quantities.thickness} unit="m" />
+                  <QtyTile
+                    label="Thickness"
+                    value={quantities.thickness}
+                    unit="m"
+                  />
                 )}
               </div>
             </Section>
@@ -332,24 +356,27 @@ export function AssetDetailDrawer({ asset, onClose }: AssetDetailDrawerProps) {
           {/* All BIM properties */}
           <Section
             icon={<Box size={13} className="text-sky-400" />}
-            title={t('assets.detail.section.properties', { defaultValue: 'BIM properties' })}
+            title={t("assets.detail.section.properties", {
+              defaultValue: "BIM properties",
+            })}
             count={sortedProps.length || undefined}
           >
             {propsQuery.isLoading ? (
               <div className="flex items-center gap-2 py-4 text-xs text-content-tertiary">
                 <Loader2 size={12} className="animate-spin" />
-                {t('common.loading', { defaultValue: 'Loading…' })}
+                {t("common.loading", { defaultValue: "Loading…" })}
               </div>
             ) : propsQuery.isError ? (
               <p className="py-2 text-xs text-rose-500">
-                {t('assets.detail.props_error', {
-                  defaultValue: 'Could not load BIM properties.',
+                {t("assets.detail.props_error", {
+                  defaultValue: "Could not load BIM properties.",
                 })}
               </p>
             ) : sortedProps.length === 0 ? (
               <p className="py-2 text-xs italic text-content-tertiary">
-                {t('assets.detail.no_props', {
-                  defaultValue: 'No additional BIM properties stored for this element.',
+                {t("assets.detail.no_props", {
+                  defaultValue:
+                    "No additional BIM properties stored for this element.",
                 })}
               </p>
             ) : (

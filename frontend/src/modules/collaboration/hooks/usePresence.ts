@@ -6,7 +6,7 @@
  * When a real WebSocket/WebRTC backend is available,
  * this hook will use the Yjs awareness protocol instead.
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface PresenceUser {
   id: string;
@@ -36,10 +36,20 @@ interface PresenceState {
   clearPresence: () => void;
 }
 
-const DEMO_USERS: Omit<PresenceUser, 'boqId' | 'lastSeen'>[] = [
-  { id: 'demo-1', name: 'Sarah K.', email: 'sarah@example.com', color: '#3b82f6' },
-  { id: 'demo-2', name: 'Max M.', email: 'max@example.com', color: '#10b981' },
-  { id: 'demo-3', name: 'Lena B.', email: 'lena@example.com', color: '#f59e0b' },
+const DEMO_USERS: Omit<PresenceUser, "boqId" | "lastSeen">[] = [
+  {
+    id: "demo-1",
+    name: "Sarah K.",
+    email: "sarah@example.com",
+    color: "#3b82f6",
+  },
+  { id: "demo-2", name: "Max M.", email: "max@example.com", color: "#10b981" },
+  {
+    id: "demo-3",
+    name: "Lena B.",
+    email: "lena@example.com",
+    color: "#f59e0b",
+  },
 ];
 
 export const usePresenceStore = create<PresenceState>((set, get) => ({
@@ -63,10 +73,13 @@ export const usePresenceStore = create<PresenceState>((set, get) => ({
     if (boqIds.length === 0) return;
     const users: Record<string, PresenceUser> = {};
     // Assign 1-2 demo users to random BOQs
-    const count = Math.min(DEMO_USERS.length, Math.max(1, Math.floor(boqIds.length * 0.4)));
+    const count = Math.min(
+      DEMO_USERS.length,
+      Math.max(1, Math.floor(boqIds.length * 0.4)),
+    );
     for (let i = 0; i < count; i++) {
       const user = DEMO_USERS[i]!;
-      const boqId = boqIds[i % boqIds.length] ?? '';
+      const boqId = boqIds[i % boqIds.length] ?? "";
       users[user.id] = {
         ...user,
         boqId,

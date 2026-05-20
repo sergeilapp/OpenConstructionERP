@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import type { ProviderType } from './useYDoc';
-import type { AwarenessState, CollabUser, CursorPosition } from '../types';
-import { pickColor } from '../types';
+import { useEffect, useState, useCallback, useMemo } from "react";
+import type { ProviderType } from "./useYDoc";
+import type { AwarenessState, CollabUser, CursorPosition } from "../types";
+import { pickColor } from "../types";
 
 /**
  * Track local + remote user presence via Yjs awareness protocol.
@@ -14,7 +14,9 @@ export function useAwareness(
   users: CollabUser[];
   setCursor: (cursor: CursorPosition | null) => void;
 } {
-  const [remoteStates, setRemoteStates] = useState<Map<number, AwarenessState>>(new Map());
+  const [remoteStates, setRemoteStates] = useState<Map<number, AwarenessState>>(
+    new Map(),
+  );
   const [localClientId, setLocalClientId] = useState<number | null>(null);
 
   // Set local awareness state
@@ -38,19 +40,19 @@ export function useAwareness(
     const onChange = () => {
       const states = new Map<number, AwarenessState>();
       awareness.getStates().forEach((state, clientId) => {
-        if (state && typeof state === 'object' && 'userId' in state) {
+        if (state && typeof state === "object" && "userId" in state) {
           states.set(clientId, state as AwarenessState);
         }
       });
       setRemoteStates(new Map(states));
     };
 
-    awareness.on('change', onChange);
+    awareness.on("change", onChange);
     // Trigger initial read
     onChange();
 
     return () => {
-      awareness.off('change', onChange);
+      awareness.off("change", onChange);
     };
   }, [provider, localUser.userId, localUser.userName]);
 

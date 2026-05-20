@@ -17,17 +17,14 @@
  * Pagination is cursor-based: when the user scrolls to the bottom
  * we re-issue the query with `before = oldestVisible.created_at`.
  */
-import { Fragment, useCallback, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { Check, GitCompareArrows, Layers, Loader2 } from 'lucide-react';
+import { Fragment, useCallback, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { Check, GitCompareArrows, Layers, Loader2 } from "lucide-react";
 
-import { Badge, Button, Card, EmptyState, Skeleton } from '@/shared/ui';
+import { Badge, Button, Card, EmptyState, Skeleton } from "@/shared/ui";
 
-import {
-  getSnapshotTimeline,
-  type SnapshotTimelineItem,
-} from './api';
+import { getSnapshotTimeline, type SnapshotTimelineItem } from "./api";
 
 export interface SnapshotTimelineProps {
   projectId: string;
@@ -54,7 +51,7 @@ export function SnapshotTimeline({
   const [comparing, setComparing] = useState<string[]>([]);
 
   const timelineQuery = useQuery({
-    queryKey: ['dashboards-snapshot-timeline', projectId, pageSize],
+    queryKey: ["dashboards-snapshot-timeline", projectId, pageSize],
     queryFn: () => getSnapshotTimeline({ projectId, limit: pageSize }),
     enabled: !!projectId,
     staleTime: 60 * 1000,
@@ -102,26 +99,26 @@ export function SnapshotTimeline({
       <div className="flex items-center justify-between border-b border-border-light px-4 py-2">
         <div>
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('dashboards.timeline_title', {
-              defaultValue: 'Snapshot history‌⁠‍',
+            {t("dashboards.timeline_title", {
+              defaultValue: "Snapshot history‌⁠‍",
             })}
           </h3>
           <p className="text-xs text-content-tertiary">
-            {t('dashboards.timeline_subtitle', {
+            {t("dashboards.timeline_subtitle", {
               defaultValue:
-                'Pick any snapshot to drive the dashboards, or tick two to compare schemas.‌⁠‍',
+                "Pick any snapshot to drive the dashboards, or tick two to compare schemas.‌⁠‍",
             })}
           </p>
         </div>
         <Button
           size="sm"
-          variant={compareEnabled ? 'primary' : 'ghost'}
+          variant={compareEnabled ? "primary" : "ghost"}
           disabled={!compareEnabled}
           onClick={handleCompareClick}
           data-testid="snapshot-timeline-compare-button"
         >
           <GitCompareArrows className="mr-1 h-3 w-3" />
-          {t('dashboards.timeline_compare', { defaultValue: 'Compare‌⁠‍' })}
+          {t("dashboards.timeline_compare", { defaultValue: "Compare‌⁠‍" })}
           {comparing.length > 0 && ` (${comparing.length}/2)`}
         </Button>
       </div>
@@ -140,8 +137,8 @@ export function SnapshotTimeline({
             className="rounded border border-rose-400/30 bg-rose-500/10 p-3 text-xs text-rose-300"
             data-testid="snapshot-timeline-error"
           >
-            {t('dashboards.timeline_error', {
-              defaultValue: 'Could not load the snapshot history.‌⁠‍',
+            {t("dashboards.timeline_error", {
+              defaultValue: "Could not load the snapshot history.‌⁠‍",
             })}
           </div>
         )}
@@ -151,12 +148,12 @@ export function SnapshotTimeline({
           items.length === 0 && (
             <EmptyState
               icon={<Layers className="h-8 w-8 text-content-tertiary" />}
-              title={t('dashboards.timeline_empty_title', {
-                defaultValue: 'No snapshots yet‌⁠‍',
+              title={t("dashboards.timeline_empty_title", {
+                defaultValue: "No snapshots yet‌⁠‍",
               })}
-              description={t('dashboards.timeline_empty_desc', {
+              description={t("dashboards.timeline_empty_desc", {
                 defaultValue:
-                  'Upload a CAD or BIM file to create the first snapshot of this project.',
+                  "Upload a CAD or BIM file to create the first snapshot of this project.",
               })}
             />
           )}
@@ -186,8 +183,8 @@ export function SnapshotTimeline({
             data-testid="snapshot-timeline-refreshing"
           >
             <Loader2 className="h-3 w-3 animate-spin" />
-            {t('dashboards.timeline_refreshing', {
-              defaultValue: 'Refreshing…',
+            {t("dashboards.timeline_refreshing", {
+              defaultValue: "Refreshing…",
             })}
           </div>
         )}
@@ -215,11 +212,11 @@ function TimelineCard({
 }: TimelineCardProps) {
   const { t } = useTranslation();
   const dotClass = isActive
-    ? 'bg-emerald-400 ring-2 ring-emerald-300/40'
-    : 'bg-border-light';
+    ? "bg-emerald-400 ring-2 ring-emerald-300/40"
+    : "bg-border-light";
   const cardClass = useMemo(() => {
     const base =
-      'relative flex w-full cursor-pointer items-start gap-3 rounded border px-3 py-2 text-left transition hover:bg-surface-secondary';
+      "relative flex w-full cursor-pointer items-start gap-3 rounded border px-3 py-2 text-left transition hover:bg-surface-secondary";
     if (isActive) return `${base} border-emerald-500/40 bg-emerald-500/5`;
     if (isComparing) return `${base} border-sky-500/40 bg-sky-500/5`;
     return `${base} border-border-light/60`;
@@ -235,7 +232,7 @@ function TimelineCard({
       <button
         type="button"
         onClick={onSetActive}
-        aria-current={isActive ? 'true' : undefined}
+        aria-current={isActive ? "true" : undefined}
         className={cardClass}
         data-testid={`snapshot-timeline-card-${item.id}`}
       >
@@ -249,8 +246,8 @@ function TimelineCard({
             </span>
             {isActive && (
               <Badge variant="success" className="text-[10px]">
-                {t('dashboards.timeline_active_badge', {
-                  defaultValue: 'Active',
+                {t("dashboards.timeline_active_badge", {
+                  defaultValue: "Active",
                 })}
               </Badge>
             )}
@@ -260,14 +257,14 @@ function TimelineCard({
               {formatTimestamp(item.created_at)}
             </span>
             <span>
-              {t('dashboards.timeline_entities', {
-                defaultValue: '{{count}} entities',
+              {t("dashboards.timeline_entities", {
+                defaultValue: "{{count}} entities",
                 count: item.total_entities,
               })}
             </span>
             <span>
-              {t('dashboards.timeline_sources', {
-                defaultValue: '{{count}} sources',
+              {t("dashboards.timeline_sources", {
+                defaultValue: "{{count}} sources",
                 count: item.source_file_count,
               })}
             </span>
@@ -291,15 +288,15 @@ function TimelineCard({
           role="checkbox"
           tabIndex={0}
           aria-checked={isComparing}
-          aria-label={t('dashboards.timeline_compare_toggle', {
-            defaultValue: 'Toggle this snapshot for comparison',
+          aria-label={t("dashboards.timeline_compare_toggle", {
+            defaultValue: "Toggle this snapshot for comparison",
           })}
           onClick={(e) => {
             e.stopPropagation();
             onToggleCompare();
           }}
           onKeyDown={(e) => {
-            if (e.key === ' ' || e.key === 'Enter') {
+            if (e.key === " " || e.key === "Enter") {
               e.preventDefault();
               e.stopPropagation();
               onToggleCompare();
@@ -308,8 +305,8 @@ function TimelineCard({
           data-testid={`snapshot-timeline-compare-toggle-${item.id}`}
           className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border ${
             isComparing
-              ? 'border-sky-400 bg-sky-500/30 text-sky-100'
-              : 'border-border-light bg-surface-secondary text-transparent hover:text-content-tertiary'
+              ? "border-sky-400 bg-sky-500/30 text-sky-100"
+              : "border-border-light bg-surface-secondary text-transparent hover:text-content-tertiary"
           }`}
         >
           <Check className="h-3 w-3" />
@@ -325,10 +322,10 @@ function CompletenessChip({ score }: { score: number }) {
   const pct = Math.round(score * 100);
   const tone =
     score >= 0.95
-      ? 'bg-emerald-500/15 text-emerald-300'
+      ? "bg-emerald-500/15 text-emerald-300"
       : score >= 0.7
-        ? 'bg-amber-500/15 text-amber-300'
-        : 'bg-rose-500/15 text-rose-300';
+        ? "bg-amber-500/15 text-amber-300"
+        : "bg-rose-500/15 text-rose-300";
   return (
     <span
       data-testid={`snapshot-timeline-completeness-${pct}`}

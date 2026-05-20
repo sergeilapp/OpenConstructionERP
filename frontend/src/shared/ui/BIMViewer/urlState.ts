@@ -38,7 +38,7 @@ function roundTo(v: number, decimals: number): number {
 
 /** Safely parse a string as a finite float. Returns null for NaN / Infinity / undefined. */
 function parseFiniteFloat(raw: string | null | undefined): number | null {
-  if (raw == null || raw === '') return null;
+  if (raw == null || raw === "") return null;
   const n = Number(raw);
   return Number.isFinite(n) ? n : null;
 }
@@ -53,7 +53,9 @@ function parseFiniteFloat(raw: string | null | undefined): number | null {
  *
  * Precision: 3 decimals (≈ 1 mm at metre scale) — see module header.
  */
-export function serializeBIMUrlState(state: BIMUrlState): Record<string, string> {
+export function serializeBIMUrlState(
+  state: BIMUrlState,
+): Record<string, string> {
   const out: Record<string, string> = {};
   if (state.camera) {
     const { position, target } = state.camera;
@@ -65,7 +67,7 @@ export function serializeBIMUrlState(state: BIMUrlState): Record<string, string>
     out.tz = String(roundTo(target.z, 3));
   }
   if (state.selection.length > 0) {
-    out.sel = state.selection.join(',');
+    out.sel = state.selection.join(",");
   }
   return out;
 }
@@ -78,15 +80,19 @@ export function serializeBIMUrlState(state: BIMUrlState): Record<string, string>
  * safely.  Selection is an empty array when `sel` is missing.
  */
 export function parseBIMUrlState(params: URLSearchParams): BIMUrlState {
-  const cx = parseFiniteFloat(params.get('cx'));
-  const cy = parseFiniteFloat(params.get('cy'));
-  const cz = parseFiniteFloat(params.get('cz'));
-  const tx = parseFiniteFloat(params.get('tx'));
-  const ty = parseFiniteFloat(params.get('ty'));
-  const tz = parseFiniteFloat(params.get('tz'));
+  const cx = parseFiniteFloat(params.get("cx"));
+  const cy = parseFiniteFloat(params.get("cy"));
+  const cz = parseFiniteFloat(params.get("cz"));
+  const tx = parseFiniteFloat(params.get("tx"));
+  const ty = parseFiniteFloat(params.get("ty"));
+  const tz = parseFiniteFloat(params.get("tz"));
   const allCamParamsPresent =
-    cx !== null && cy !== null && cz !== null &&
-    tx !== null && ty !== null && tz !== null;
+    cx !== null &&
+    cy !== null &&
+    cz !== null &&
+    tx !== null &&
+    ty !== null &&
+    tz !== null;
   const camera = allCamParamsPresent
     ? {
         position: { x: cx, y: cy, z: cz },
@@ -94,13 +100,24 @@ export function parseBIMUrlState(params: URLSearchParams): BIMUrlState {
       }
     : null;
 
-  const selRaw = params.get('sel');
+  const selRaw = params.get("sel");
   const selection = selRaw
-    ? selRaw.split(',').map((s) => s.trim()).filter(Boolean)
+    ? selRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
 
   return { camera, selection };
 }
 
 /** All param keys this module reads / writes — used to clear stale state. */
-export const BIM_URL_STATE_KEYS = ['cx', 'cy', 'cz', 'tx', 'ty', 'tz', 'sel'] as const;
+export const BIM_URL_STATE_KEYS = [
+  "cx",
+  "cy",
+  "cz",
+  "tx",
+  "ty",
+  "tz",
+  "sel",
+] as const;

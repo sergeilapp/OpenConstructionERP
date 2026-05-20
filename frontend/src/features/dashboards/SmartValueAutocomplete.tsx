@@ -23,11 +23,11 @@ import {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { useTranslation } from 'react-i18next';
-import { Search, ChevronDown, Loader2, X } from 'lucide-react';
+} from "react";
+import { useTranslation } from "react-i18next";
+import { Search, ChevronDown, Loader2, X } from "lucide-react";
 
-import { getSmartValues, type SmartValue } from './api';
+import { getSmartValues, type SmartValue } from "./api";
 
 export interface SmartValueAutocompleteProps {
   snapshotId: string;
@@ -75,7 +75,7 @@ export function SmartValueAutocomplete({
   const { t } = useTranslation();
   const listboxId = useId();
 
-  const [internalValue, setInternalValue] = useState(externalValue ?? '');
+  const [internalValue, setInternalValue] = useState(externalValue ?? "");
   const [isOpen, setIsOpen] = useState(false);
   const [highlight, setHighlight] = useState<number>(-1);
   const [items, setItems] = useState<SmartValue[]>([]);
@@ -132,8 +132,8 @@ export function SmartValueAutocomplete({
         setIsOpen(false);
       }
     }
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
   }, [isOpen]);
 
   const handleAccept = useCallback(
@@ -148,21 +148,21 @@ export function SmartValueAutocomplete({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+      if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
         setIsOpen(true);
         return;
       }
-      if (e.key === 'ArrowDown') {
+      if (e.key === "ArrowDown") {
         e.preventDefault();
         setHighlight((h) => Math.min(items.length - 1, h + 1));
         return;
       }
-      if (e.key === 'ArrowUp') {
+      if (e.key === "ArrowUp") {
         e.preventDefault();
         setHighlight((h) => Math.max(0, h - 1));
         return;
       }
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         e.preventDefault();
         const picked = highlight >= 0 ? items[highlight] : undefined;
         if (picked) {
@@ -172,7 +172,7 @@ export function SmartValueAutocomplete({
         }
         return;
       }
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         setIsOpen(false);
         setHighlight(-1);
@@ -183,26 +183,26 @@ export function SmartValueAutocomplete({
   );
 
   const handleClear = useCallback(() => {
-    setInternalValue('');
+    setInternalValue("");
     setIsOpen(false);
     setItems([]);
     setHighlight(-1);
     onClear?.();
-    onChange?.('');
+    onChange?.("");
     inputRef.current?.focus();
   }, [onChange, onClear]);
 
   const showClear = useMemo(() => internalValue.length > 0, [internalValue]);
   const ph =
     placeholder ??
-    t('dashboards.value_autocomplete_ph', {
-      defaultValue: 'Filter values…‌⁠‍',
+    t("dashboards.value_autocomplete_ph", {
+      defaultValue: "Filter values…‌⁠‍",
     });
 
   return (
     <div
       ref={containerRef}
-      className={`relative ${className ?? ''}`}
+      className={`relative ${className ?? ""}`}
       data-testid="smart-value-autocomplete"
     >
       <div className="relative">
@@ -238,7 +238,7 @@ export function SmartValueAutocomplete({
               type="button"
               onClick={handleClear}
               className="rounded p-0.5 text-content-tertiary hover:text-content-primary"
-              aria-label={t('common.clear', { defaultValue: 'Clear' })}
+              aria-label={t("common.clear", { defaultValue: "Clear" })}
               data-testid="smart-value-clear"
             >
               <X className="h-3 w-3" />
@@ -262,8 +262,8 @@ export function SmartValueAutocomplete({
           )}
           {!error && items.length === 0 && !isLoading && (
             <li className="px-3 py-2 text-xs text-content-tertiary">
-              {t('dashboards.no_values_found', {
-                defaultValue: 'No matching values‌⁠‍',
+              {t("dashboards.no_values_found", {
+                defaultValue: "No matching values‌⁠‍",
               })}
             </li>
           )}
@@ -282,8 +282,8 @@ export function SmartValueAutocomplete({
               }}
               className={`flex cursor-pointer items-center justify-between gap-2 px-3 py-1.5 text-sm ${
                 highlight === idx
-                  ? 'bg-oe-blue/10 text-content-primary'
-                  : 'text-content-secondary hover:bg-surface-secondary'
+                  ? "bg-oe-blue/10 text-content-primary"
+                  : "text-content-secondary hover:bg-surface-secondary"
               }`}
               data-testid={`smart-value-option-${idx}`}
             >

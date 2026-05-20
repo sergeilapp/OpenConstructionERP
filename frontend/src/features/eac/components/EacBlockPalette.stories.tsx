@@ -5,14 +5,14 @@
  * `<DraggablePaletteItem>` children call `useDraggable`. Stories provide one
  * via the decorator.
  */
-import { DndContext } from '@dnd-kit/core';
-import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import { DndContext } from "@dnd-kit/core";
+import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
 
-import { EacBlockPalette } from './EacBlockPalette';
+import { EacBlockPalette } from "./EacBlockPalette";
 
 const meta: Meta<typeof EacBlockPalette> = {
-  title: 'EAC/Palette',
+  title: "EAC/Palette",
   component: EacBlockPalette,
   decorators: [
     (Story) => (
@@ -24,7 +24,7 @@ const meta: Meta<typeof EacBlockPalette> = {
     ),
   ],
   parameters: {
-    a11y: { config: { rules: [{ id: 'color-contrast', enabled: true }] } },
+    a11y: { config: { rules: [{ id: "color-contrast", enabled: true }] } },
   },
 };
 export default meta;

@@ -1,11 +1,13 @@
-import { useMemo } from 'react';
-import type { ChatMessage } from '../../types';
-import ToolCallCard from './ToolCallCard';
-import StreamingCursor from './StreamingCursor';
+import { useMemo, useState } from "react";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
+import type { ChatMessage } from "../../types";
+import { submitFeedback } from "../../api";
+import ToolCallCard from "./ToolCallCard";
+import StreamingCursor from "./StreamingCursor";
 
 function formatTime(d: Date): string {
-  const h = d.getHours().toString().padStart(2, '0');
-  const m = d.getMinutes().toString().padStart(2, '0');
+  const h = d.getHours().toString().padStart(2, "0");
+  const m = d.getMinutes().toString().padStart(2, "0");
   return `${h}:${m}`;
 }
 
@@ -19,10 +21,10 @@ function formatTime(d: Date): string {
 function renderMarkdown(text: string): string {
   // Escape ALL HTML entities first to prevent XSS injection
   let html = text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 
   // Fenced code blocks: ```...```
   html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_m, _lang, code) => {
@@ -43,21 +45,23 @@ function renderMarkdown(text: string): string {
     (_m, label: string, href: string) => {
       // Allow-list URL schemes to prevent javascript:, data:, vbscript: injection.
       const isExternal = /^https?:\/\//i.test(href);
-      const isInternal = href.startsWith('/') || href.startsWith('#');
+      const isInternal = href.startsWith("/") || href.startsWith("#");
       const isMailto = /^mailto:/i.test(href);
       if (!isExternal && !isInternal && !isMailto) {
         return `<span style="color:var(--chat-accent,#3b82f6)">${label}</span>`;
       }
-      const attrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+      const attrs = isExternal
+        ? ' target="_blank" rel="noopener noreferrer"'
+        : "";
       return `<a href="${href}"${attrs} style="color:var(--chat-accent,#3b82f6);text-decoration:underline;font-weight:500">${label}</a>`;
     },
   );
 
   // Bold: **text**
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 
   // Italic: *text*  (but not inside words with asterisks)
-  html = html.replace(/(?<!\w)\*([^*\n]+?)\*(?!\w)/g, '<em>$1</em>');
+  html = html.replace(/(?<!\w)\*([^*\n]+?)\*(?!\w)/g, "<em>$1</em>");
 
   // Headings: ### h3, ## h2, # h1
   html = html.replace(
@@ -80,33 +84,32 @@ function renderMarkdown(text: string): string {
   );
 
   // Bullet lists: lines starting with "- " or "* "
-  html = html.replace(
-    /^(?:[*-] .+(?:\n|$))+/gm,
-    (block) => {
-      const items = block
-        .trim()
-        .split('\n')
-        .map((line) => `<li style="margin:2px 0">${line.replace(/^[*-] /, '')}</li>`)
-        .join('');
-      return `<ul style="margin:4px 0;padding-left:20px;list-style:disc">${items}</ul>`;
-    },
-  );
+  html = html.replace(/^(?:[*-] .+(?:\n|$))+/gm, (block) => {
+    const items = block
+      .trim()
+      .split("\n")
+      .map(
+        (line) => `<li style="margin:2px 0">${line.replace(/^[*-] /, "")}</li>`,
+      )
+      .join("");
+    return `<ul style="margin:4px 0;padding-left:20px;list-style:disc">${items}</ul>`;
+  });
 
   // Numbered lists: lines starting with "1. ", "2. ", etc.
-  html = html.replace(
-    /^(?:\d+\. .+(?:\n|$))+/gm,
-    (block) => {
-      const items = block
-        .trim()
-        .split('\n')
-        .map((line) => `<li style="margin:2px 0">${line.replace(/^\d+\. /, '')}</li>`)
-        .join('');
-      return `<ol style="margin:4px 0;padding-left:20px;list-style:decimal">${items}</ol>`;
-    },
-  );
+  html = html.replace(/^(?:\d+\. .+(?:\n|$))+/gm, (block) => {
+    const items = block
+      .trim()
+      .split("\n")
+      .map(
+        (line) =>
+          `<li style="margin:2px 0">${line.replace(/^\d+\. /, "")}</li>`,
+      )
+      .join("");
+    return `<ol style="margin:4px 0;padding-left:20px;list-style:decimal">${items}</ol>`;
+  });
 
   // Line breaks (preserve newlines that aren't already handled)
-  html = html.replace(/\n/g, '<br/>');
+  html = html.replace(/\n/g, "<br/>");
 
   return html;
 }
@@ -116,20 +119,105 @@ interface MessageBubbleProps {
   isStreaming?: boolean;
 }
 
-export default function MessageBubble({ message, isStreaming }: MessageBubbleProps) {
-  const { role, content, toolCalls, ts } = message;
-  const renderedHtml = useMemo(() => (content ? renderMarkdown(content) : ''), [content]);
+/**
+ * T8 thumbs-up / thumbs-down on assistant messages. Optimistically toggles
+ * locally, fires `submitFeedback` against the backend, and rolls back on
+ * failure so a network error doesn't leave the UI lying.
+ */
+function FeedbackBar({ messageId }: { messageId: string }) {
+  const [rating, setRating] = useState<1 | -1 | 0>(0);
+  const [busy, setBusy] = useState(false);
 
-  if (role === 'system') {
+  async function click(next: 1 | -1) {
+    if (busy) return;
+    const prior = rating;
+    // Tap again on the active thumb → no change (we don't support
+    // un-rating server-side yet, so just no-op rather than lie).
+    if (prior === next) return;
+    setBusy(true);
+    setRating(next);
+    try {
+      await submitFeedback(messageId, next);
+    } catch {
+      setRating(prior);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const baseStyle: React.CSSProperties = {
+    background: "transparent",
+    border: "none",
+    cursor: busy ? "wait" : "pointer",
+    padding: 2,
+    color: "var(--chat-text-tertiary)",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 4,
+    transition: "color 0.15s ease, background 0.15s ease",
+  };
+  const activeStyle: React.CSSProperties = {
+    ...baseStyle,
+    color: "var(--chat-accent, #3b82f6)",
+    background: "var(--chat-surface-3, rgba(0,0,0,.06))",
+  };
+
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        gap: 4,
+        marginLeft: 8,
+        verticalAlign: "middle",
+      }}
+      title="Was this helpful?"
+      aria-label="Feedback on this answer"
+    >
+      <button
+        type="button"
+        onClick={() => void click(1)}
+        style={rating === 1 ? activeStyle : baseStyle}
+        aria-label="Thumbs up"
+        aria-pressed={rating === 1}
+        disabled={busy}
+      >
+        <ThumbsUp size={13} />
+      </button>
+      <button
+        type="button"
+        onClick={() => void click(-1)}
+        style={rating === -1 ? activeStyle : baseStyle}
+        aria-label="Thumbs down"
+        aria-pressed={rating === -1}
+        disabled={busy}
+      >
+        <ThumbsDown size={13} />
+      </button>
+    </span>
+  );
+}
+
+export default function MessageBubble({
+  message,
+  isStreaming,
+}: MessageBubbleProps) {
+  const { id, role, content, toolCalls, ts } = message;
+  const renderedHtml = useMemo(
+    () => (content ? renderMarkdown(content) : ""),
+    [content],
+  );
+
+  if (role === "system") {
     return (
       <div
         style={{
-          textAlign: 'center',
-          padding: '6px 0',
-          color: 'var(--chat-text-tertiary)',
+          textAlign: "center",
+          padding: "6px 0",
+          color: "var(--chat-text-tertiary)",
           fontSize: 12,
-          fontFamily: 'var(--chat-font-mono)',
-          animation: 'msgIn 0.3s ease-out',
+          fontFamily: "var(--chat-font-mono)",
+          animation: "msgIn 0.3s ease-out",
         }}
       >
         {content}
@@ -137,29 +225,29 @@ export default function MessageBubble({ message, isStreaming }: MessageBubblePro
     );
   }
 
-  if (role === 'user') {
+  if (role === "user") {
     return (
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          padding: '4px 0',
-          animation: 'msgIn 0.3s ease-out',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          padding: "4px 0",
+          animation: "msgIn 0.3s ease-out",
         }}
       >
         <div
           style={{
-            background: 'var(--chat-surface-3)',
-            color: 'var(--chat-text-primary)',
-            padding: '10px 14px',
-            borderRadius: '16px 16px 4px 16px',
-            maxWidth: '85%',
+            background: "var(--chat-surface-3)",
+            color: "var(--chat-text-primary)",
+            padding: "10px 14px",
+            borderRadius: "16px 16px 4px 16px",
+            maxWidth: "85%",
             fontSize: 14,
             lineHeight: 1.55,
-            fontFamily: 'var(--chat-font-body)',
-            wordBreak: 'break-word',
-            whiteSpace: 'pre-wrap',
+            fontFamily: "var(--chat-font-body)",
+            wordBreak: "break-word",
+            whiteSpace: "pre-wrap",
           }}
         >
           {content}
@@ -167,8 +255,8 @@ export default function MessageBubble({ message, isStreaming }: MessageBubblePro
         <span
           style={{
             fontSize: 11,
-            color: 'var(--chat-text-tertiary)',
-            fontFamily: 'var(--chat-font-mono)',
+            color: "var(--chat-text-tertiary)",
+            fontFamily: "var(--chat-font-mono)",
             marginTop: 3,
             paddingRight: 2,
           }}
@@ -183,18 +271,18 @@ export default function MessageBubble({ message, isStreaming }: MessageBubblePro
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        padding: '4px 0',
-        animation: 'msgIn 0.3s ease-out',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        padding: "4px 0",
+        animation: "msgIn 0.3s ease-out",
       }}
     >
       <div
         style={{
-          borderLeft: '2px solid var(--chat-accent)',
+          borderLeft: "2px solid var(--chat-accent)",
           paddingLeft: 12,
-          maxWidth: '92%',
+          maxWidth: "92%",
         }}
       >
         {/* Tool call cards */}
@@ -210,11 +298,11 @@ export default function MessageBubble({ message, isStreaming }: MessageBubblePro
         {(content || isStreaming) && (
           <div
             style={{
-              color: 'var(--chat-text-primary)',
+              color: "var(--chat-text-primary)",
               fontSize: 14,
               lineHeight: 1.6,
-              fontFamily: 'var(--chat-font-body)',
-              wordBreak: 'break-word',
+              fontFamily: "var(--chat-font-body)",
+              wordBreak: "break-word",
             }}
           >
             {content ? (
@@ -227,13 +315,21 @@ export default function MessageBubble({ message, isStreaming }: MessageBubblePro
       <span
         style={{
           fontSize: 11,
-          color: 'var(--chat-text-tertiary)',
-          fontFamily: 'var(--chat-font-mono)',
+          color: "var(--chat-text-tertiary)",
+          fontFamily: "var(--chat-font-mono)",
           marginTop: 3,
           paddingLeft: 14,
+          display: "inline-flex",
+          alignItems: "center",
         }}
       >
         {formatTime(ts)}
+        {/* Show thumbs only after streaming completes. The bubble id is a
+            client-generated UUID during the stream and gets reconciled
+            against the backend row when the session is re-fetched; if the
+            user thumbs an unreconciled id the backend returns 404 and
+            FeedbackBar quietly rolls the optimistic state back. */}
+        {!isStreaming && content && id && <FeedbackBar messageId={id} />}
       </span>
     </div>
   );

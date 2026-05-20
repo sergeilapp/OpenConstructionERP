@@ -10,20 +10,23 @@
  * glance and trigger a backfill without dropping into the API or CLI.
  */
 
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Database,
   Loader2,
   RefreshCw,
   CheckCircle2,
   AlertCircle,
-} from 'lucide-react';
-import { Card, CardHeader, CardContent, Button } from '@/shared/ui';
-import { apiPost } from '@/shared/lib/api';
-import { fetchSearchStatus, type SearchStatusCollection } from '@/features/search/api';
-import { useToastStore } from '@/stores/useToastStore';
+} from "lucide-react";
+import { Card, CardHeader, CardContent, Button } from "@/shared/ui";
+import { apiPost } from "@/shared/lib/api";
+import {
+  fetchSearchStatus,
+  type SearchStatusCollection,
+} from "@/features/search/api";
+import { useToastStore } from "@/stores/useToastStore";
 
 /** Map of collection name → backend reindex endpoint path.
  *
@@ -32,14 +35,14 @@ import { useToastStore } from '@/stores/useToastStore';
  * A stray ``/api`` prefix here turned every reindex click into a 404
  * hitting ``/api/api/v1/...`` ("Not Found" in the Settings toast). */
 const REINDEX_PATH: Record<string, string> = {
-  oe_boq_positions: '/v1/boq/vector/reindex/',
-  oe_documents: '/v1/documents/vector/reindex/',
-  oe_tasks: '/v1/tasks/vector/reindex/',
-  oe_risks: '/v1/risk/vector/reindex/',
-  oe_bim_elements: '/v1/bim_hub/vector/reindex/',
-  oe_requirements: '/v1/requirements/vector/reindex/',
-  oe_validation: '/v1/validation/vector/reindex/',
-  oe_chat: '/v1/erp_chat/vector/reindex/',
+  oe_boq_positions: "/v1/boq/vector/reindex/",
+  oe_documents: "/v1/documents/vector/reindex/",
+  oe_tasks: "/v1/tasks/vector/reindex/",
+  oe_risks: "/v1/risk/vector/reindex/",
+  oe_bim_elements: "/v1/bim_hub/vector/reindex/",
+  oe_requirements: "/v1/requirements/vector/reindex/",
+  oe_validation: "/v1/validation/vector/reindex/",
+  oe_chat: "/v1/erp_chat/vector/reindex/",
 };
 
 interface ReindexResult {
@@ -56,7 +59,7 @@ export default function VectorStatusCard() {
   const [purgeFirst, setPurgeFirst] = useState(false);
 
   const statusQuery = useQuery({
-    queryKey: ['vector-search-status'],
+    queryKey: ["vector-search-status"],
     queryFn: fetchSearchStatus,
     staleTime: 30 * 1000,
   });
@@ -67,29 +70,30 @@ export default function VectorStatusCard() {
       if (!path) {
         throw new Error(`No reindex endpoint for ${collection}`);
       }
-      const url = `${path}${purgeFirst ? '?purge_first=true' : ''}`;
+      const url = `${path}${purgeFirst ? "?purge_first=true" : ""}`;
       return apiPost<ReindexResult>(url, {});
     },
     onSuccess: (result, collection) => {
       addToast({
-        type: 'success',
-        title: t('vector_status.reindex_done', {
-          defaultValue: 'Reindex complete‌⁠‍',
+        type: "success",
+        title: t("vector_status.reindex_done", {
+          defaultValue: "Reindex complete‌⁠‍",
         }),
-        message: t('vector_status.reindex_summary', {
-          defaultValue: '{{collection}}: {{indexed}} indexed, {{skipped}} skipped‌⁠‍',
+        message: t("vector_status.reindex_summary", {
+          defaultValue:
+            "{{collection}}: {{indexed}} indexed, {{skipped}} skipped‌⁠‍",
           collection,
           indexed: result.indexed,
           skipped: result.skipped,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['vector-search-status'] });
+      qc.invalidateQueries({ queryKey: ["vector-search-status"] });
     },
     onError: (err: Error, collection) => {
       addToast({
-        type: 'error',
-        title: t('vector_status.reindex_failed', {
-          defaultValue: 'Reindex failed‌⁠‍',
+        type: "error",
+        title: t("vector_status.reindex_failed", {
+          defaultValue: "Reindex failed‌⁠‍",
         }),
         message: `${collection}: ${err.message || String(err)}`,
       });
@@ -104,19 +108,21 @@ export default function VectorStatusCard() {
   }, [statusQuery.data]);
 
   return (
-    <Card className="animate-card-in" style={{ animationDelay: '480ms' }}>
+    <Card className="animate-card-in" style={{ animationDelay: "480ms" }}>
       <CardHeader
-        title={t('vector_status.title', { defaultValue: 'Semantic Search Status‌⁠‍' })}
-        subtitle={t('vector_status.subtitle', {
+        title={t("vector_status.title", {
+          defaultValue: "Semantic Search Status‌⁠‍",
+        })}
+        subtitle={t("vector_status.subtitle", {
           defaultValue:
-            'Per-collection indexing health for the cross-module vector store‌⁠‍',
+            "Per-collection indexing health for the cross-module vector store‌⁠‍",
         })}
       />
       <CardContent>
         {statusQuery.isLoading && (
           <div className="flex items-center gap-2 text-sm text-content-tertiary py-4">
             <Loader2 size={14} className="animate-spin" />
-            {t('common.loading', { defaultValue: 'Loading…' })}
+            {t("common.loading", { defaultValue: "Loading…" })}
           </div>
         )}
 
@@ -126,12 +132,16 @@ export default function VectorStatusCard() {
             <div className="mb-4 flex flex-wrap items-center gap-3 text-xs text-content-secondary">
               <div className="inline-flex items-center gap-1.5">
                 <Database size={12} className="text-content-tertiary" />
-                <span className="font-mono">{statusQuery.data.engine || 'unknown'}</span>
+                <span className="font-mono">
+                  {statusQuery.data.engine || "unknown"}
+                </span>
               </div>
               {statusQuery.data.model_name && (
                 <div className="inline-flex items-center gap-1.5">
                   <span className="text-content-tertiary">model:</span>
-                  <span className="font-mono">{statusQuery.data.model_name}</span>
+                  <span className="font-mono">
+                    {statusQuery.data.model_name}
+                  </span>
                 </div>
               )}
               {statusQuery.data.embedding_dim > 0 && (
@@ -151,12 +161,14 @@ export default function VectorStatusCard() {
               {statusQuery.data.connected ? (
                 <div className="inline-flex items-center gap-1 text-emerald-600">
                   <CheckCircle2 size={11} />
-                  {t('vector_status.connected', { defaultValue: 'Connected' })}
+                  {t("vector_status.connected", { defaultValue: "Connected" })}
                 </div>
               ) : (
                 <div className="inline-flex items-center gap-1 text-amber-600">
                   <AlertCircle size={11} />
-                  {t('vector_status.disconnected', { defaultValue: 'Disconnected' })}
+                  {t("vector_status.disconnected", {
+                    defaultValue: "Disconnected",
+                  })}
                 </div>
               )}
             </div>
@@ -166,7 +178,8 @@ export default function VectorStatusCard() {
               {(statusQuery.data.collections ?? []).map(
                 (col: SearchStatusCollection) => {
                   const isReindexing =
-                    reindexMut.isPending && reindexMut.variables === col.collection;
+                    reindexMut.isPending &&
+                    reindexMut.variables === col.collection;
                   return (
                     <div
                       key={col.collection}
@@ -192,10 +205,10 @@ export default function VectorStatusCard() {
                         </div>
                         <div className="text-[11px] text-content-tertiary font-mono">
                           {col.collection}
-                          {' • '}
+                          {" • "}
                           <span className="tabular-nums">
                             {col.vectors_count.toLocaleString()}
-                          </span>{' '}
+                          </span>{" "}
                           vectors
                         </div>
                       </div>
@@ -208,15 +221,15 @@ export default function VectorStatusCard() {
                         {isReindexing ? (
                           <>
                             <Loader2 size={12} className="animate-spin me-1" />
-                            {t('vector_status.reindexing', {
-                              defaultValue: 'Reindexing…',
+                            {t("vector_status.reindexing", {
+                              defaultValue: "Reindexing…",
                             })}
                           </>
                         ) : (
                           <>
                             <RefreshCw size={12} className="me-1" />
-                            {t('vector_status.reindex', {
-                              defaultValue: 'Reindex',
+                            {t("vector_status.reindex", {
+                              defaultValue: "Reindex",
                             })}
                           </>
                         )}
@@ -235,9 +248,9 @@ export default function VectorStatusCard() {
                 onChange={(e) => setPurgeFirst(e.target.checked)}
                 className="h-3 w-3 accent-oe-blue"
               />
-              {t('vector_status.purge_first', {
+              {t("vector_status.purge_first", {
                 defaultValue:
-                  'Purge collection before reindex (use after changing the embedding model)',
+                  "Purge collection before reindex (use after changing the embedding model)",
               })}
             </label>
           </>
@@ -245,8 +258,8 @@ export default function VectorStatusCard() {
 
         {statusQuery.isError && (
           <div className="text-sm text-rose-600 py-2">
-            {t('vector_status.error', {
-              defaultValue: 'Could not load vector store status',
+            {t("vector_status.error", {
+              defaultValue: "Could not load vector store status",
             })}
           </div>
         )}

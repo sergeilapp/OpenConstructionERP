@@ -5,7 +5,7 @@
  * Displays score number and grade letter in the center.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
 interface ScoreRingProps {
   score: number; // 0-100
@@ -89,7 +89,7 @@ export function ScoreRing({
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
           style={{
-            transition: 'stroke 0.3s ease',
+            transition: "stroke 0.3s ease",
           }}
         />
       </svg>

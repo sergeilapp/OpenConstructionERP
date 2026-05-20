@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import type { CollabUser, CursorPosition } from '../types';
+import { useEffect, useState, useCallback } from "react";
+import type { CollabUser, CursorPosition } from "../types";
 
 interface RemoteCursorsProps {
   /** Remote users currently editing cells */
@@ -19,10 +19,14 @@ interface CursorOverlay {
 }
 
 /** Find a cell DOM element inside AG Grid by row-id + col-id. */
-function findCellElement(container: HTMLDivElement, positionId: string, field: string): HTMLElement | null {
-  const rows = container.querySelectorAll<HTMLElement>('.ag-row');
+function findCellElement(
+  container: HTMLDivElement,
+  positionId: string,
+  field: string,
+): HTMLElement | null {
+  const rows = container.querySelectorAll<HTMLElement>(".ag-row");
   for (const row of rows) {
-    if (row.getAttribute('row-id') === positionId) {
+    if (row.getAttribute("row-id") === positionId) {
       return row.querySelector<HTMLElement>(`[col-id="${field}"]`);
     }
   }
@@ -33,19 +37,30 @@ function findCellElement(container: HTMLDivElement, positionId: string, field: s
  * Overlay that shows colored cell highlights + name tags for cells
  * being edited by remote collaborators in the AG Grid.
  */
-export function RemoteCursors({ users, gridContainerRef, columnLabels }: RemoteCursorsProps) {
+export function RemoteCursors({
+  users,
+  gridContainerRef,
+  columnLabels,
+}: RemoteCursorsProps) {
   const [overlays, setOverlays] = useState<CursorOverlay[]>([]);
 
   const updateOverlays = useCallback(() => {
     const container = gridContainerRef.current;
-    if (!container) { setOverlays([]); return; }
+    if (!container) {
+      setOverlays([]);
+      return;
+    }
 
     const containerRect = container.getBoundingClientRect();
     const result: CursorOverlay[] = [];
 
     for (const user of users) {
       if (user.isLocal || !user.cursor) continue;
-      const cell = findCellElement(container, user.cursor.positionId, user.cursor.field);
+      const cell = findCellElement(
+        container,
+        user.cursor.positionId,
+        user.cursor.field,
+      );
       if (cell) {
         const r = cell.getBoundingClientRect();
         result.push({
@@ -53,7 +68,12 @@ export function RemoteCursors({ users, gridContainerRef, columnLabels }: RemoteC
           userName: user.userName,
           color: user.color,
           cursor: user.cursor,
-          rect: new DOMRect(r.x - containerRect.x, r.y - containerRect.y, r.width, r.height),
+          rect: new DOMRect(
+            r.x - containerRect.x,
+            r.y - containerRect.y,
+            r.width,
+            r.height,
+          ),
         });
       }
     }
@@ -65,15 +85,15 @@ export function RemoteCursors({ users, gridContainerRef, columnLabels }: RemoteC
     const container = gridContainerRef.current;
     if (!container) return;
 
-    const viewport = container.querySelector('.ag-body-viewport');
+    const viewport = container.querySelector(".ag-body-viewport");
     const handler = () => updateOverlays();
-    viewport?.addEventListener('scroll', handler, { passive: true });
-    window.addEventListener('resize', handler, { passive: true });
+    viewport?.addEventListener("scroll", handler, { passive: true });
+    window.addEventListener("resize", handler, { passive: true });
     const interval = setInterval(updateOverlays, 1000);
 
     return () => {
-      viewport?.removeEventListener('scroll', handler);
-      window.removeEventListener('resize', handler);
+      viewport?.removeEventListener("scroll", handler);
+      window.removeEventListener("resize", handler);
       clearInterval(interval);
     };
   }, [updateOverlays, gridContainerRef]);
@@ -81,7 +101,10 @@ export function RemoteCursors({ users, gridContainerRef, columnLabels }: RemoteC
   if (overlays.length === 0) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden="true">
+    <div
+      className="pointer-events-none absolute inset-0 z-20 overflow-hidden"
+      aria-hidden="true"
+    >
       {overlays.map((o) => {
         if (!o.rect) return null;
         return (
@@ -90,8 +113,10 @@ export function RemoteCursors({ users, gridContainerRef, columnLabels }: RemoteC
             <div
               className="absolute rounded-sm transition-all duration-200"
               style={{
-                left: o.rect.x, top: o.rect.y,
-                width: o.rect.width, height: o.rect.height,
+                left: o.rect.x,
+                top: o.rect.y,
+                width: o.rect.width,
+                height: o.rect.height,
                 boxShadow: `inset 0 0 0 2px ${o.color}`,
                 backgroundColor: `${o.color}10`,
               }}
@@ -100,9 +125,11 @@ export function RemoteCursors({ users, gridContainerRef, columnLabels }: RemoteC
             <div
               className="absolute flex items-center gap-1 rounded-b-md px-1.5 py-0.5 text-white shadow-sm transition-all duration-200"
               style={{
-                left: o.rect.x, top: o.rect.y - 18,
+                left: o.rect.x,
+                top: o.rect.y - 18,
                 backgroundColor: o.color,
-                fontSize: '10px', lineHeight: '14px',
+                fontSize: "10px",
+                lineHeight: "14px",
                 maxWidth: o.rect.width,
               }}
               title={`${o.userName} — ${columnLabels?.[o.cursor.field] ?? o.cursor.field}`}

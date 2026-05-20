@@ -137,9 +137,7 @@ def compute_pipeline_metrics(opportunities: Iterable[Any]) -> dict[str, Any]:
     by_stage: dict[str, dict[str, Any]] = {}
     for o in open_opps:
         sid = str(getattr(o, "stage_id", "") or "")
-        bucket = by_stage.setdefault(
-            sid, {"count": 0, "weighted": Decimal(0), "total": Decimal(0)}
-        )
+        bucket = by_stage.setdefault(sid, {"count": 0, "weighted": Decimal(0), "total": Decimal(0)})
         bucket["count"] += 1
         bucket["weighted"] += _opp_weighted(o)
         bucket["total"] += _opp_value(o)
@@ -168,9 +166,7 @@ def compute_pipeline_metrics(opportunities: Iterable[Any]) -> dict[str, Any]:
                 pass
 
     denom = recent_won + recent_lost
-    win_rate_30d = (
-        _q2(Decimal(recent_won) * Decimal(100) / Decimal(denom)) if denom else Decimal("0.00")
-    )
+    win_rate_30d = _q2(Decimal(recent_won) * Decimal(100) / Decimal(denom)) if denom else Decimal("0.00")
 
     return {
         "open_count": len(open_opps),
@@ -361,27 +357,17 @@ def convert_opportunity_to_project_payload(opportunity: Any) -> dict[str, Any]:
         "description": getattr(opportunity, "description", "") or "",
         "estimated_value": float(_opp_value(opportunity)),
         "currency": getattr(opportunity, "currency", "") or "",
-        "owner_user_id": (
-            str(opportunity.owner_user_id)
-            if getattr(opportunity, "owner_user_id", None)
-            else None
-        ),
+        "owner_user_id": (str(opportunity.owner_user_id) if getattr(opportunity, "owner_user_id", None) else None),
         "source_module": "crm",
         "source_entity": "opportunity",
         "source_id": str(getattr(opportunity, "id", "") or ""),
-        "account_id": (
-            str(opportunity.account_id) if getattr(opportunity, "account_id", None) else None
-        ),
+        "account_id": (str(opportunity.account_id) if getattr(opportunity, "account_id", None) else None),
         # If the deal was already linked to a delivery/estimate project,
         # surface it so the Projects subscriber reuses it instead of
         # spawning a duplicate.
-        "existing_project_id": (
-            str(opportunity.project_id) if getattr(opportunity, "project_id", None) else None
-        ),
+        "existing_project_id": (str(opportunity.project_id) if getattr(opportunity, "project_id", None) else None),
         "primary_contact_id": (
-            str(opportunity.primary_contact_id)
-            if getattr(opportunity, "primary_contact_id", None)
-            else None
+            str(opportunity.primary_contact_id) if getattr(opportunity, "primary_contact_id", None) else None
         ),
     }
 
@@ -405,9 +391,7 @@ class CrmService:
 
     # ── Accounts ─────────────────────────────────────────────────────────
 
-    async def create_account(
-        self, data: AccountCreate, user_id: str | None = None
-    ) -> Account:
+    async def create_account(self, data: AccountCreate, user_id: str | None = None) -> Account:
         account = Account(
             name=data.name,
             industry=data.industry,
@@ -430,9 +414,7 @@ class CrmService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")
         return account
 
-    async def update_account(
-        self, account_id: uuid.UUID, data: AccountUpdate
-    ) -> Account:
+    async def update_account(self, account_id: uuid.UUID, data: AccountUpdate) -> Account:
         account = await self.get_account(account_id)
         fields = data.model_dump(exclude_unset=True)
         if fields:
@@ -531,9 +513,7 @@ class CrmService:
         logger.info("CRM lead %s → %s", lead_id, target)
         return lead
 
-    async def disqualify_lead(
-        self, lead_id: uuid.UUID, user_id: str | None = None
-    ) -> Lead:
+    async def disqualify_lead(self, lead_id: uuid.UUID, user_id: str | None = None) -> Lead:
         lead = await self.get_lead(lead_id)
         self._check_lead_transition(lead.status, "disqualified")
         await self.lead_repo.update_fields(lead_id, status="disqualified")
@@ -575,9 +555,7 @@ class CrmService:
             expected_close_date=payload.expected_close_date,
             probability_percent=payload.probability_percent,
             stage_id=payload.stage_id,
-            weighted_value=compute_weighted_value(
-                payload.estimated_value, payload.probability_percent
-            ),
+            weighted_value=compute_weighted_value(payload.estimated_value, payload.probability_percent),
             owner_user_id=lead.assigned_to,
             status="open",
         )
@@ -618,9 +596,7 @@ class CrmService:
 
     # ── Opportunities ────────────────────────────────────────────────────
 
-    async def create_opportunity(
-        self, data: OpportunityCreate, user_id: str | None = None
-    ) -> Opportunity:
+    async def create_opportunity(self, data: OpportunityCreate, user_id: str | None = None) -> Opportunity:
         stage = await self.stage_repo.get_by_id(data.stage_id)
         if stage is None:
             raise HTTPException(
@@ -642,9 +618,7 @@ class CrmService:
             expected_close_date=data.expected_close_date,
             probability_percent=data.probability_percent,
             stage_id=data.stage_id,
-            weighted_value=compute_weighted_value(
-                data.estimated_value, data.probability_percent
-            ),
+            weighted_value=compute_weighted_value(data.estimated_value, data.probability_percent),
             source=data.source,
             owner_user_id=data.owner_user_id,
             status=data.status,
@@ -670,14 +644,10 @@ class CrmService:
     async def get_opportunity(self, opportunity_id: uuid.UUID) -> Opportunity:
         opp = await self.opportunity_repo.get_by_id(opportunity_id)
         if opp is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Opportunity not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Opportunity not found")
         return opp
 
-    async def update_opportunity(
-        self, opportunity_id: uuid.UUID, data: OpportunityUpdate
-    ) -> Opportunity:
+    async def update_opportunity(self, opportunity_id: uuid.UUID, data: OpportunityUpdate) -> Opportunity:
         opp = await self.get_opportunity(opportunity_id)
         fields = data.model_dump(exclude_unset=True)
 
@@ -686,10 +656,7 @@ class CrmService:
             if target_status not in allowed_opportunity_transitions(opp.status):
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=(
-                        f"Invalid opportunity status transition: "
-                        f"{opp.status} → {target_status}"
-                    ),
+                    detail=(f"Invalid opportunity status transition: {opp.status} → {target_status}"),
                 )
             # ``won``/``lost`` carry mandatory side-effects (won_at/lost_at
             # stamping, probability + weighted recompute, loss-reason
@@ -702,8 +669,7 @@ class CrmService:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=(
-                        f"Cannot set status '{target_status}' via update — "
-                        f"use the dedicated win/lose endpoint instead"
+                        f"Cannot set status '{target_status}' via update — use the dedicated win/lose endpoint instead"
                     ),
                 )
 
@@ -751,10 +717,7 @@ class CrmService:
             # Stages marked won/lost must go through win_opportunity / lose_opportunity
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "Cannot move directly to a final won/lost stage — "
-                    "use the dedicated win/lose endpoint instead"
-                ),
+                detail=("Cannot move directly to a final won/lost stage — use the dedicated win/lose endpoint instead"),
             )
 
         # Update probability if user did not override and stage carries a default
@@ -776,11 +739,7 @@ class CrmService:
                     prev_change_ts = int(last_dt.timestamp())
         except Exception:  # noqa: BLE001
             prev_change_ts = None
-        duration = (
-            int(datetime.now(UTC).timestamp()) - prev_change_ts
-            if prev_change_ts is not None
-            else None
-        )
+        duration = int(datetime.now(UTC).timestamp()) - prev_change_ts if prev_change_ts is not None else None
 
         now_iso = datetime.now(UTC).isoformat()
         fields: dict[str, Any] = {
@@ -916,14 +875,10 @@ class CrmService:
         await self.stage_repo.create(stage)
         return stage
 
-    async def update_stage(
-        self, stage_id: uuid.UUID, data: PipelineStageUpdate
-    ) -> Any:
+    async def update_stage(self, stage_id: uuid.UUID, data: PipelineStageUpdate) -> Any:
         stage = await self.stage_repo.get_by_id(stage_id)
         if stage is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Pipeline stage not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pipeline stage not found")
         fields = data.model_dump(exclude_unset=True)
         if fields:
             await self.stage_repo.update_fields(stage_id, **fields)
@@ -933,9 +888,7 @@ class CrmService:
     async def delete_stage(self, stage_id: uuid.UUID) -> None:
         stage = await self.stage_repo.get_by_id(stage_id)
         if stage is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Pipeline stage not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pipeline stage not found")
         await self.stage_repo.delete(stage_id)
 
     # ── Win/loss reasons (catalog) ───────────────────────────────────────
@@ -947,14 +900,10 @@ class CrmService:
         await self.reason_repo.create(reason)
         return reason
 
-    async def update_reason(
-        self, reason_id: uuid.UUID, data: WinLossReasonUpdate
-    ) -> Any:
+    async def update_reason(self, reason_id: uuid.UUID, data: WinLossReasonUpdate) -> Any:
         reason = await self.reason_repo.get_by_id(reason_id)
         if reason is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Reason not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reason not found")
         fields = data.model_dump(exclude_unset=True)
         if fields:
             await self.reason_repo.update_fields(reason_id, **fields)
@@ -964,16 +913,12 @@ class CrmService:
     async def delete_reason(self, reason_id: uuid.UUID) -> None:
         reason = await self.reason_repo.get_by_id(reason_id)
         if reason is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Reason not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reason not found")
         await self.reason_repo.delete(reason_id)
 
     # ── Activities ───────────────────────────────────────────────────────
 
-    async def create_activity(
-        self, data: ActivityCreate, user_id: str | None = None
-    ) -> CrmActivity:
+    async def create_activity(self, data: ActivityCreate, user_id: str | None = None) -> CrmActivity:
         activity = CrmActivity(
             owner_user_id=data.owner_user_id or _to_uuid_or_none(user_id),
             account_id=data.account_id,
@@ -993,14 +938,10 @@ class CrmService:
     async def get_activity(self, activity_id: uuid.UUID) -> CrmActivity:
         activity = await self.activity_repo.get_by_id(activity_id)
         if activity is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
         return activity
 
-    async def update_activity(
-        self, activity_id: uuid.UUID, data: ActivityUpdate
-    ) -> CrmActivity:
+    async def update_activity(self, activity_id: uuid.UUID, data: ActivityUpdate) -> CrmActivity:
         activity = await self.get_activity(activity_id)
         fields = data.model_dump(exclude_unset=True)
         if fields:
@@ -1036,9 +977,7 @@ class CrmService:
         )
         return await self.forecast_repo.upsert(forecast)
 
-    async def get_forecast(
-        self, period: str, owner_user_id: uuid.UUID | None = None
-    ) -> Forecast:
+    async def get_forecast(self, period: str, owner_user_id: uuid.UUID | None = None) -> Forecast:
         existing = await self.forecast_repo.get_by_period(period, owner_user_id)
         if existing is not None:
             return existing
@@ -1047,7 +986,8 @@ class CrmService:
     # ── Hierarchy ────────────────────────────────────────────────────────
 
     async def account_tree(
-        self, root_id: uuid.UUID | None = None,
+        self,
+        root_id: uuid.UUID | None = None,
     ) -> list[dict[str, Any]]:
         """Return the full account-tree, or the sub-tree rooted at ``root_id``."""
         accounts, _ = await self.account_repo.list_all(limit=10000)
@@ -1082,7 +1022,8 @@ class CrmService:
                 current = row.parent_account_id
                 depth += 1
         await self.account_repo.update_fields(
-            account_id, parent_account_id=parent_account_id,
+            account_id,
+            parent_account_id=parent_account_id,
         )
         await self.session.refresh(account)
         return account
@@ -1175,20 +1116,18 @@ class CrmService:
         )
 
         for act in activities:
-            ts = (
-                getattr(act, "completed_at", None)
-                or getattr(act, "due_at", None)
-                or getattr(act, "created_at", None)
+            ts = getattr(act, "completed_at", None) or getattr(act, "due_at", None) or getattr(act, "created_at", None)
+            rows.append(
+                {
+                    "kind": getattr(act, "kind", "note"),
+                    "entry_type": "activity",
+                    "timestamp": str(ts) if ts is not None else None,
+                    "subject": getattr(act, "subject", ""),
+                    "body": getattr(act, "body", ""),
+                    "outcome": getattr(act, "outcome", None),
+                    "source_id": str(getattr(act, "id", "")),
+                }
             )
-            rows.append({
-                "kind": getattr(act, "kind", "note"),
-                "entry_type": "activity",
-                "timestamp": str(ts) if ts is not None else None,
-                "subject": getattr(act, "subject", ""),
-                "body": getattr(act, "body", ""),
-                "outcome": getattr(act, "outcome", None),
-                "source_id": str(getattr(act, "id", "")),
-            })
 
         if opportunity_id is not None:
             try:
@@ -1196,21 +1135,20 @@ class CrmService:
             except Exception:  # noqa: BLE001
                 history = []
             for h in history:
-                rows.append({
-                    "kind": "stage_change",
-                    "entry_type": "stage_history",
-                    "timestamp": (
-                        getattr(h, "changed_at", None)
-                        or str(getattr(h, "created_at", "") or "")
-                    ),
-                    "subject": "Stage changed",
-                    "body": (
-                        f"{getattr(h, 'from_stage_id', None)} → "
-                        f"{getattr(h, 'to_stage_id', None)} "
-                        f"(duration={getattr(h, 'duration_in_previous_seconds', None)}s)"
-                    ),
-                    "source_id": str(getattr(h, "id", "")),
-                })
+                rows.append(
+                    {
+                        "kind": "stage_change",
+                        "entry_type": "stage_history",
+                        "timestamp": (getattr(h, "changed_at", None) or str(getattr(h, "created_at", "") or "")),
+                        "subject": "Stage changed",
+                        "body": (
+                            f"{getattr(h, 'from_stage_id', None)} → "
+                            f"{getattr(h, 'to_stage_id', None)} "
+                            f"(duration={getattr(h, 'duration_in_previous_seconds', None)}s)"
+                        ),
+                        "source_id": str(getattr(h, "id", "")),
+                    }
+                )
 
         # Sort newest-first by timestamp string (ISO-friendly).
         rows.sort(key=lambda r: r.get("timestamp") or "", reverse=True)
@@ -1289,10 +1227,7 @@ def compute_opportunity_score(
     a = _clamp(authority_score)
     n = _clamp(need_score)
     t = _clamp(timeline_score)
-    total = (
-        b * w["budget"] + a * w["authority"]
-        + n * w["need"] + t * w["timeline"]
-    ) / 100.0
+    total = (b * w["budget"] + a * w["authority"] + n * w["need"] + t * w["timeline"]) / 100.0
     total = round(total, 2)
     if total >= 90:
         band = "hot"
@@ -1384,11 +1319,7 @@ def compute_stage_weighted_forecast(
             continue
         sid_str = str(sid)
         stage_meta = stages_by_id.get(sid) if isinstance(sid, uuid.UUID) else None
-        stage_name = (
-            getattr(stage_meta, "name", "")
-            or getattr(stage_meta, "code", "")
-            or sid_str
-        )
+        stage_name = getattr(stage_meta, "name", "") or getattr(stage_meta, "code", "") or sid_str
         prob = getattr(o, "probability_percent", 0) or 0
         if stage_meta is not None and getattr(stage_meta, "default_probability_percent", None) is not None:
             # Prefer per-opp prob but record stage default as reference
@@ -1397,24 +1328,24 @@ def compute_stage_weighted_forecast(
             stage_default = prob
         value = _opp_value(o)
         weighted = _opp_weighted(o)
-        bucket = by_stage.setdefault(sid_str, {
-            "stage_id": sid_str,
-            "stage_name": stage_name,
-            "stage_default_probability": int(stage_default),
-            "count": 0,
-            "total": Decimal(0),
-            "weighted": Decimal(0),
-        })
+        bucket = by_stage.setdefault(
+            sid_str,
+            {
+                "stage_id": sid_str,
+                "stage_name": stage_name,
+                "stage_default_probability": int(stage_default),
+                "count": 0,
+                "total": Decimal(0),
+                "weighted": Decimal(0),
+            },
+        )
         bucket["count"] += 1
         bucket["total"] += value
         bucket["weighted"] += weighted
         grand_total += value
         grand_weighted += weighted
     return {
-        "by_stage": {
-            k: {**v, "total": _q2(v["total"]), "weighted": _q2(v["weighted"])}
-            for k, v in by_stage.items()
-        },
+        "by_stage": {k: {**v, "total": _q2(v["total"]), "weighted": _q2(v["weighted"])} for k, v in by_stage.items()},
         "grand_total": _q2(grand_total),
         "grand_weighted": _q2(grand_weighted),
     }

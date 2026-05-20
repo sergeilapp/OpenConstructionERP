@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   FileText,
   Receipt,
@@ -21,7 +21,7 @@ import {
   ShieldAlert,
   Users,
   FilePlus2,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -29,19 +29,19 @@ import {
   EmptyState,
   Breadcrumb,
   SkeletonTable,
-} from '@/shared/ui';
+} from "@/shared/ui";
 import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui/WideModal';
-import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { PipelineBanner } from './PipelineBanner';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { getErrorMessage } from '@/shared/lib/api';
-import { projectsApi, type Project } from '@/features/projects/api';
+} from "@/shared/ui/WideModal";
+import { MoneyDisplay } from "@/shared/ui/MoneyDisplay";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { PipelineBanner } from "./PipelineBanner";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { getErrorMessage } from "@/shared/lib/api";
+import { projectsApi, type Project } from "@/features/projects/api";
 import {
   listContracts,
   listProgressClaims,
@@ -67,79 +67,107 @@ import {
   type ClaimStatus,
   type CounterpartyType,
   type ContractDashboard,
-} from './api';
+} from "./api";
 
-type Tab = 'contracts' | 'claims' | 'final_accounts';
+type Tab = "contracts" | "claims" | "final_accounts";
 
 const CONTRACT_TYPE_COLORS: Record<
   ContractType,
   { bg: string; ring: string; text: string }
 > = {
-  lump_sum: { bg: 'bg-blue-50 dark:bg-blue-950/40', ring: 'ring-blue-200 dark:ring-blue-800', text: 'text-blue-700 dark:text-blue-300' },
-  gmp: { bg: 'bg-violet-50 dark:bg-violet-950/40', ring: 'ring-violet-200 dark:ring-violet-800', text: 'text-violet-700 dark:text-violet-300' },
-  cost_plus: { bg: 'bg-amber-50 dark:bg-amber-950/40', ring: 'ring-amber-200 dark:ring-amber-800', text: 'text-amber-700 dark:text-amber-300' },
-  tm: { bg: 'bg-emerald-50 dark:bg-emerald-950/40', ring: 'ring-emerald-200 dark:ring-emerald-800', text: 'text-emerald-700 dark:text-emerald-300' },
-  unit_price: { bg: 'bg-sky-50 dark:bg-sky-950/40', ring: 'ring-sky-200 dark:ring-sky-800', text: 'text-sky-700 dark:text-sky-300' },
-  design_build: { bg: 'bg-fuchsia-50 dark:bg-fuchsia-950/40', ring: 'ring-fuchsia-200 dark:ring-fuchsia-800', text: 'text-fuchsia-700 dark:text-fuchsia-300' },
-  combination: { bg: 'bg-slate-50 dark:bg-slate-800/60', ring: 'ring-slate-200 dark:ring-slate-700', text: 'text-slate-700 dark:text-slate-300' },
+  lump_sum: {
+    bg: "bg-blue-50 dark:bg-blue-950/40",
+    ring: "ring-blue-200 dark:ring-blue-800",
+    text: "text-blue-700 dark:text-blue-300",
+  },
+  gmp: {
+    bg: "bg-violet-50 dark:bg-violet-950/40",
+    ring: "ring-violet-200 dark:ring-violet-800",
+    text: "text-violet-700 dark:text-violet-300",
+  },
+  cost_plus: {
+    bg: "bg-amber-50 dark:bg-amber-950/40",
+    ring: "ring-amber-200 dark:ring-amber-800",
+    text: "text-amber-700 dark:text-amber-300",
+  },
+  tm: {
+    bg: "bg-emerald-50 dark:bg-emerald-950/40",
+    ring: "ring-emerald-200 dark:ring-emerald-800",
+    text: "text-emerald-700 dark:text-emerald-300",
+  },
+  unit_price: {
+    bg: "bg-sky-50 dark:bg-sky-950/40",
+    ring: "ring-sky-200 dark:ring-sky-800",
+    text: "text-sky-700 dark:text-sky-300",
+  },
+  design_build: {
+    bg: "bg-fuchsia-50 dark:bg-fuchsia-950/40",
+    ring: "ring-fuchsia-200 dark:ring-fuchsia-800",
+    text: "text-fuchsia-700 dark:text-fuchsia-300",
+  },
+  combination: {
+    bg: "bg-slate-50 dark:bg-slate-800/60",
+    ring: "ring-slate-200 dark:ring-slate-700",
+    text: "text-slate-700 dark:text-slate-300",
+  },
 };
 
 const CONTRACT_STATUS_VARIANT: Record<
   ContractStatus,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  draft: 'neutral',
-  active: 'success',
-  suspended: 'warning',
-  completed: 'blue',
-  terminated: 'error',
+  draft: "neutral",
+  active: "success",
+  suspended: "warning",
+  completed: "blue",
+  terminated: "error",
 };
 
 const CLAIM_STATUS_VARIANT: Record<
   ClaimStatus,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  draft: 'neutral',
-  submitted: 'blue',
-  approved: 'success',
-  certified: 'success',
-  paid: 'success',
-  rejected: 'error',
+  draft: "neutral",
+  submitted: "blue",
+  approved: "success",
+  certified: "success",
+  paid: "success",
+  rejected: "error",
 };
 
 const CONTRACT_TYPES: ContractType[] = [
-  'lump_sum',
-  'gmp',
-  'cost_plus',
-  'tm',
-  'unit_price',
-  'design_build',
-  'combination',
+  "lump_sum",
+  "gmp",
+  "cost_plus",
+  "tm",
+  "unit_price",
+  "design_build",
+  "combination",
 ];
 
 const CONTRACT_STATUSES: ContractStatus[] = [
-  'draft',
-  'active',
-  'suspended',
-  'completed',
-  'terminated',
+  "draft",
+  "active",
+  "suspended",
+  "completed",
+  "terminated",
 ];
 
 const CLAIM_STATUSES: ClaimStatus[] = [
-  'draft',
-  'submitted',
-  'approved',
-  'certified',
-  'paid',
-  'rejected',
+  "draft",
+  "submitted",
+  "approved",
+  "certified",
+  "paid",
+  "rejected",
 ];
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 function toNum(v: number | string | null | undefined): number {
   if (v === null || v === undefined) return 0;
-  const n = typeof v === 'string' ? Number(v) : v;
+  const n = typeof v === "string" ? Number(v) : v;
   return Number.isFinite(n) ? n : 0;
 }
 
@@ -151,12 +179,12 @@ function ContractTypeChip({ type }: { type: ContractType }) {
   const { t } = useTranslation();
   const c = CONTRACT_TYPE_COLORS[type];
   const label = t(`contracts.type_${type}`, {
-    defaultValue: type === 'tm' ? 'T&M' : type.replace(/_/g, ' '),
+    defaultValue: type === "tm" ? "T&M" : type.replace(/_/g, " "),
   });
   return (
     <span
       className={clsx(
-        'inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset',
+        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset",
         c.bg,
         c.ring,
         c.text,
@@ -171,18 +199,20 @@ function ContractTypeChip({ type }: { type: ContractType }) {
 
 export function ContractsPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>('contracts');
+  const [tab, setTab] = useState<Tab>("contracts");
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
-  const [projectId, setProjectId] = useState<string>('');
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<ContractType | ''>('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [selectedContractId, setSelectedContractId] = useState<string | null>(null);
+  const [projectId, setProjectId] = useState<string>("");
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<ContractType | "">("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [selectedContractId, setSelectedContractId] = useState<string | null>(
+    null,
+  );
   const [createOpen, setCreateOpen] = useState(false);
   const [newClaimOpen, setNewClaimOpen] = useState(false);
 
   const projectsQ = useQuery({
-    queryKey: ['contracts', 'projects'],
+    queryKey: ["contracts", "projects"],
     queryFn: () => projectsApi.list(),
   });
 
@@ -193,20 +223,20 @@ export function ContractsPage() {
   }, [activeProjectId, projectsQ.data, projectId]);
 
   const contractsQ = useQuery({
-    queryKey: ['contracts', 'list', projectId],
+    queryKey: ["contracts", "list", projectId],
     queryFn: () => listContracts({ project_id: projectId, limit: 200 }),
     enabled: !!projectId,
   });
 
   const contracts = contractsQ.data ?? [];
-  const [claimsContractId, setClaimsContractId] = useState<string>('');
-  const effectiveClaimsContract = claimsContractId || contracts[0]?.id || '';
+  const [claimsContractId, setClaimsContractId] = useState<string>("");
+  const effectiveClaimsContract = claimsContractId || contracts[0]?.id || "";
 
   const claimsQ = useQuery({
-    queryKey: ['contracts', 'claims', effectiveClaimsContract],
+    queryKey: ["contracts", "claims", effectiveClaimsContract],
     queryFn: () =>
       listProgressClaims({ contract_id: effectiveClaimsContract, limit: 200 }),
-    enabled: tab !== 'contracts' && !!effectiveClaimsContract,
+    enabled: tab !== "contracts" && !!effectiveClaimsContract,
   });
 
   const filteredContracts = useMemo(() => {
@@ -216,8 +246,7 @@ export function ContractsPage() {
       if (statusFilter && c.status !== statusFilter) return false;
       if (!s) return true;
       return (
-        c.code.toLowerCase().includes(s) ||
-        c.title.toLowerCase().includes(s)
+        c.code.toLowerCase().includes(s) || c.title.toLowerCase().includes(s)
       );
     });
   }, [contracts, search, typeFilter, statusFilter]);
@@ -233,41 +262,39 @@ export function ContractsPage() {
   }, [claimsQ.data, search, statusFilter]);
 
   const isLoading =
-    (tab === 'contracts' && contractsQ.isLoading) ||
-    (tab !== 'contracts' && (contractsQ.isLoading || claimsQ.isLoading));
+    (tab === "contracts" && contractsQ.isLoading) ||
+    (tab !== "contracts" && (contractsQ.isLoading || claimsQ.isLoading));
 
   // A failed query must NOT look like an empty success — surface it with a
   // retry, matching the established sibling error-state pattern.
   const loadError =
-    tab === 'claims'
-      ? contractsQ.error ?? claimsQ.error
-      : contractsQ.error;
+    tab === "claims" ? (contractsQ.error ?? claimsQ.error) : contractsQ.error;
   const isError =
-    tab === 'claims'
+    tab === "claims"
       ? contractsQ.isError || claimsQ.isError
       : contractsQ.isError;
   const retryLoad = () => {
     void contractsQ.refetch();
-    if (tab === 'claims') void claimsQ.refetch();
+    if (tab === "claims") void claimsQ.refetch();
   };
 
   return (
     <div className="space-y-5">
       <Breadcrumb
         items={[
-          { label: t('contracts.title', { defaultValue: 'Contracts‌⁠‍' }) },
+          { label: t("contracts.title", { defaultValue: "Contracts‌⁠‍" }) },
         ]}
       />
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('contracts.title', { defaultValue: 'Contracts‌⁠‍' })}
+            {t("contracts.title", { defaultValue: "Contracts‌⁠‍" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('contracts.subtitle', {
+            {t("contracts.subtitle", {
               defaultValue:
-                'Type-aware contracts with schedule of values, retention, claims and final accounts.‌⁠‍',
+                "Type-aware contracts with schedule of values, retention, claims and final accounts.‌⁠‍",
             })}
           </p>
         </div>
@@ -275,35 +302,40 @@ export function ContractsPage() {
           variant="primary"
           icon={<Plus size={14} />}
           onClick={() => {
-            if (tab === 'claims') setNewClaimOpen(true);
+            if (tab === "claims") setNewClaimOpen(true);
             else setCreateOpen(true);
           }}
           disabled={!projectId}
         >
-          {tab === 'claims'
-            ? t('contracts.new_claim', { defaultValue: 'New Claim‌⁠‍' })
-            : t('contracts.new_contract', { defaultValue: 'New Contract‌⁠‍' })}
+          {tab === "claims"
+            ? t("contracts.new_claim", { defaultValue: "New Claim‌⁠‍" })
+            : t("contracts.new_contract", { defaultValue: "New Contract‌⁠‍" })}
         </Button>
       </div>
 
       <PipelineBanner
-        intro={t('contracts.pipeline_intro', {
+        intro={t("contracts.pipeline_intro", {
           defaultValue:
-            'A contract formalises a won opportunity or an awarded bid package. Build the schedule of values, then bill work through progress claims and settle in the final account. Variations adjust the contract sum mid-flight.',
+            "A contract formalises a won opportunity or an awarded bid package. Build the schedule of values, then bill work through progress claims and settle in the final account. Variations adjust the contract sum mid-flight.",
         })}
         steps={[
-          { label: t('contracts.step_crm', { defaultValue: 'CRM' }), to: '/crm' },
           {
-            label: t('contracts.step_bid', { defaultValue: 'Bid Management' }),
-            to: '/bid-management',
+            label: t("contracts.step_crm", { defaultValue: "CRM" }),
+            to: "/crm",
           },
           {
-            label: t('contracts.step_contract', { defaultValue: 'Contracts' }),
+            label: t("contracts.step_bid", { defaultValue: "Bid Management" }),
+            to: "/bid-management",
+          },
+          {
+            label: t("contracts.step_contract", { defaultValue: "Contracts" }),
             current: true,
           },
           {
-            label: t('contracts.step_variations', { defaultValue: 'Variations' }),
-            to: '/variations',
+            label: t("contracts.step_variations", {
+              defaultValue: "Variations",
+            }),
+            to: "/variations",
           },
         ]}
       />
@@ -314,18 +346,24 @@ export function ContractsPage() {
           {(
             [
               {
-                id: 'contracts',
-                label: t('contracts.tab_contracts', { defaultValue: 'Contracts' }),
+                id: "contracts",
+                label: t("contracts.tab_contracts", {
+                  defaultValue: "Contracts",
+                }),
                 icon: FileText,
               },
               {
-                id: 'claims',
-                label: t('contracts.tab_claims', { defaultValue: 'Progress Claims' }),
+                id: "claims",
+                label: t("contracts.tab_claims", {
+                  defaultValue: "Progress Claims",
+                }),
                 icon: Receipt,
               },
               {
-                id: 'final_accounts',
-                label: t('contracts.tab_final_accounts', { defaultValue: 'Final Accounts' }),
+                id: "final_accounts",
+                label: t("contracts.tab_final_accounts", {
+                  defaultValue: "Final Accounts",
+                }),
                 icon: Archive,
               },
             ] as { id: Tab; label: string; icon: React.ElementType }[]
@@ -337,14 +375,14 @@ export function ContractsPage() {
                 type="button"
                 onClick={() => {
                   setTab(it.id);
-                  setSearch('');
-                  setStatusFilter('');
+                  setSearch("");
+                  setStatusFilter("");
                 }}
                 className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
                   tab === it.id
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-secondary hover:text-content-primary',
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -360,10 +398,12 @@ export function ContractsPage() {
         <select
           value={projectId}
           onChange={(e) => setProjectId(e.target.value)}
-          className={clsx(inputCls, 'max-w-[260px]')}
+          className={clsx(inputCls, "max-w-[260px]")}
         >
           <option value="">
-            — {t('contracts.select_project', { defaultValue: 'Select project' })} —
+            —{" "}
+            {t("contracts.select_project", { defaultValue: "Select project" })}{" "}
+            —
           </option>
           {(projectsQ.data ?? []).map((p: Project) => (
             <option key={p.id} value={p.id}>
@@ -379,41 +419,41 @@ export function ContractsPage() {
           />
           <input
             type="text"
-            placeholder={t('common.search', { defaultValue: 'Search…' })}
+            placeholder={t("common.search", { defaultValue: "Search…" })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, "pl-8")}
           />
         </div>
 
-        {tab === 'contracts' && (
+        {tab === "contracts" && (
           <select
             value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as ContractType | '')}
-            className={clsx(inputCls, 'max-w-[200px]')}
+            onChange={(e) => setTypeFilter(e.target.value as ContractType | "")}
+            className={clsx(inputCls, "max-w-[200px]")}
           >
             <option value="">
-              {t('contracts.all_types', { defaultValue: 'All types' })}
+              {t("contracts.all_types", { defaultValue: "All types" })}
             </option>
             {CONTRACT_TYPES.map((tp) => (
               <option key={tp} value={tp}>
                 {t(`contracts.type_${tp}`, {
-                  defaultValue: tp === 'tm' ? 'T&M' : tp.replace(/_/g, ' '),
+                  defaultValue: tp === "tm" ? "T&M" : tp.replace(/_/g, " "),
                 })}
               </option>
             ))}
           </select>
         )}
 
-        {tab !== 'contracts' && contracts.length > 0 && (
+        {tab !== "contracts" && contracts.length > 0 && (
           <select
             value={effectiveClaimsContract}
             onChange={(e) => setClaimsContractId(e.target.value)}
-            className={clsx(inputCls, 'max-w-[260px]')}
+            className={clsx(inputCls, "max-w-[260px]")}
           >
             {contracts.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.code} — {c.title || 'Untitled'}
+                {c.code} — {c.title || "Untitled"}
               </option>
             ))}
           </select>
@@ -422,25 +462,25 @@ export function ContractsPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className={clsx(inputCls, 'max-w-[180px]')}
+          className={clsx(inputCls, "max-w-[180px]")}
         >
           <option value="">
-            {t('common.all_statuses', { defaultValue: 'All statuses' })}
+            {t("common.all_statuses", { defaultValue: "All statuses" })}
           </option>
-          {tab === 'contracts' &&
+          {tab === "contracts" &&
             CONTRACT_STATUSES.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
-          {tab === 'claims' &&
+          {tab === "claims" &&
             CLAIM_STATUSES.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
-          {tab === 'final_accounts' &&
-            ['draft', 'agreed', 'disputed', 'closed'].map((s) => (
+          {tab === "final_accounts" &&
+            ["draft", "agreed", "disputed", "closed"].map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
@@ -453,9 +493,11 @@ export function ContractsPage() {
         {!projectId ? (
           <EmptyState
             icon={<FileText size={22} />}
-            title={t('contracts.no_project', { defaultValue: 'No project selected' })}
-            description={t('contracts.no_project_desc', {
-              defaultValue: 'Pick a project above to view its contracts.',
+            title={t("contracts.no_project", {
+              defaultValue: "No project selected",
+            })}
+            description={t("contracts.no_project_desc", {
+              defaultValue: "Pick a project above to view its contracts.",
             })}
           />
         ) : isLoading ? (
@@ -465,22 +507,22 @@ export function ContractsPage() {
         ) : isError ? (
           <EmptyState
             icon={<ShieldAlert size={22} />}
-            title={t('contracts.load_error', {
-              defaultValue: 'Could not load contracts',
+            title={t("contracts.load_error", {
+              defaultValue: "Could not load contracts",
             })}
             description={getErrorMessage(loadError)}
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: retryLoad,
             }}
           />
-        ) : tab === 'contracts' ? (
+        ) : tab === "contracts" ? (
           <ContractTable
             rows={filteredContracts}
             onSelect={setSelectedContractId}
             emptyAction={() => setCreateOpen(true)}
           />
-        ) : tab === 'claims' ? (
+        ) : tab === "claims" ? (
           <ClaimsTable
             rows={filteredClaims}
             onCreate={() => setNewClaimOpen(true)}
@@ -489,7 +531,7 @@ export function ContractsPage() {
         ) : (
           <FinalAccountsView
             contracts={contracts.filter(
-              (c) => c.status === 'completed' || c.status === 'terminated',
+              (c) => c.status === "completed" || c.status === "terminated",
             )}
             onSelect={setSelectedContractId}
           />
@@ -516,7 +558,7 @@ export function ContractsPage() {
       {/* New claim modal */}
       {newClaimOpen && (
         <NewClaimModal
-          contracts={contracts.filter((c) => c.status === 'active')}
+          contracts={contracts.filter((c) => c.status === "active")}
           defaultContractId={effectiveClaimsContract}
           onClose={() => setNewClaimOpen(false)}
         />
@@ -541,13 +583,13 @@ function ContractTable({
     return (
       <EmptyState
         icon={<FileText size={22} />}
-        title={t('contracts.empty', { defaultValue: 'No contracts yet' })}
-        description={t('contracts.empty_desc', {
+        title={t("contracts.empty", { defaultValue: "No contracts yet" })}
+        description={t("contracts.empty_desc", {
           defaultValue:
-            'Create your first contract — pick the contract type and the engine wires up the right schedule of values, fees and gainshare rules.',
+            "Create your first contract — pick the contract type and the engine wires up the right schedule of values, fees and gainshare rules.",
         })}
         action={{
-          label: t('contracts.new_contract', { defaultValue: 'New Contract' }),
+          label: t("contracts.new_contract", { defaultValue: "New Contract" }),
           onClick: emptyAction,
         }}
       />
@@ -559,22 +601,22 @@ function ContractTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.code', { defaultValue: 'Code' })}
+              {t("contracts.code", { defaultValue: "Code" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.title_col', { defaultValue: 'Title' })}
+              {t("contracts.title_col", { defaultValue: "Title" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.type', { defaultValue: 'Type' })}
+              {t("contracts.type", { defaultValue: "Type" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.counterparty', { defaultValue: 'Counterparty' })}
+              {t("contracts.counterparty", { defaultValue: "Counterparty" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.status', { defaultValue: 'Status' })}
+              {t("contracts.status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('contracts.value', { defaultValue: 'Value' })}
+              {t("contracts.value", { defaultValue: "Value" })}
             </th>
           </tr>
         </thead>
@@ -589,7 +631,7 @@ function ContractTable({
                 {r.code}
               </td>
               <td className="px-4 py-2 font-medium text-content-primary truncate max-w-[320px]">
-                {r.title || '—'}
+                {r.title || "—"}
               </td>
               <td className="px-4 py-2">
                 <ContractTypeChip type={r.contract_type} />
@@ -632,11 +674,11 @@ function ClaimsTable({
     return (
       <EmptyState
         icon={<Receipt size={22} />}
-        title={t('contracts.no_contract_for_claims', {
-          defaultValue: 'No contract selected',
+        title={t("contracts.no_contract_for_claims", {
+          defaultValue: "No contract selected",
         })}
-        description={t('contracts.no_contract_for_claims_desc', {
-          defaultValue: 'Pick a contract above to view its progress claims.',
+        description={t("contracts.no_contract_for_claims_desc", {
+          defaultValue: "Pick a contract above to view its progress claims.",
         })}
       />
     );
@@ -645,13 +687,13 @@ function ClaimsTable({
     return (
       <EmptyState
         icon={<Receipt size={22} />}
-        title={t('contracts.empty_claims', { defaultValue: 'No claims yet' })}
-        description={t('contracts.empty_claims_desc', {
+        title={t("contracts.empty_claims", { defaultValue: "No claims yet" })}
+        description={t("contracts.empty_claims_desc", {
           defaultValue:
-            'Generate a progress claim from the schedule of values to bill completed work.',
+            "Generate a progress claim from the schedule of values to bill completed work.",
         })}
         action={{
-          label: t('contracts.new_claim', { defaultValue: 'New Claim' }),
+          label: t("contracts.new_claim", { defaultValue: "New Claim" }),
           onClick: onCreate,
         }}
       />
@@ -663,22 +705,22 @@ function ClaimsTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.claim_number', { defaultValue: 'Claim #' })}
+              {t("contracts.claim_number", { defaultValue: "Claim #" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.period', { defaultValue: 'Period' })}
+              {t("contracts.period", { defaultValue: "Period" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('contracts.gross', { defaultValue: 'Gross' })}
+              {t("contracts.gross", { defaultValue: "Gross" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('contracts.retention', { defaultValue: 'Retention' })}
+              {t("contracts.retention", { defaultValue: "Retention" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('contracts.net_due', { defaultValue: 'Net due' })}
+              {t("contracts.net_due", { defaultValue: "Net due" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.status', { defaultValue: 'Status' })}
+              {t("contracts.status", { defaultValue: "Status" })}
             </th>
           </tr>
         </thead>
@@ -701,18 +743,33 @@ function ClaimRow({ claim }: { claim: ProgressClaimItem }) {
     useMutation({
       mutationFn: () => fn(claim.id),
       onSuccess: () => {
-        qc.invalidateQueries({ queryKey: ['contracts', 'claims'] });
-        addToast({ type: 'success', title: okMsg });
+        qc.invalidateQueries({ queryKey: ["contracts", "claims"] });
+        addToast({ type: "success", title: okMsg });
       },
       onError: (err) =>
-        addToast({ type: 'error', title: getErrorMessage(err) }),
+        addToast({ type: "error", title: getErrorMessage(err) }),
     });
 
-  const submit = mut(submitClaim, t('contracts.claim_submitted', { defaultValue: 'Claim submitted' }));
-  const approve = mut(approveClaim, t('contracts.claim_approved', { defaultValue: 'Claim approved' }));
-  const certify = mut(certifyClaim, t('contracts.claim_certified', { defaultValue: 'Claim certified' }));
-  const reject = mut(rejectClaim, t('contracts.claim_rejected', { defaultValue: 'Claim rejected' }));
-  const paid = mut(markClaimPaid, t('contracts.claim_paid', { defaultValue: 'Claim marked paid' }));
+  const submit = mut(
+    submitClaim,
+    t("contracts.claim_submitted", { defaultValue: "Claim submitted" }),
+  );
+  const approve = mut(
+    approveClaim,
+    t("contracts.claim_approved", { defaultValue: "Claim approved" }),
+  );
+  const certify = mut(
+    certifyClaim,
+    t("contracts.claim_certified", { defaultValue: "Claim certified" }),
+  );
+  const reject = mut(
+    rejectClaim,
+    t("contracts.claim_rejected", { defaultValue: "Claim rejected" }),
+  );
+  const paid = mut(
+    markClaimPaid,
+    t("contracts.claim_paid", { defaultValue: "Claim marked paid" }),
+  );
 
   return (
     <tr className="border-t border-border-light hover:bg-surface-secondary">
@@ -720,9 +777,9 @@ function ClaimRow({ claim }: { claim: ProgressClaimItem }) {
         {claim.claim_number}
       </td>
       <td className="px-4 py-2 text-xs text-content-secondary">
-        {claim.period_start ? <DateDisplay value={claim.period_start} /> : '—'}
-        {' → '}
-        {claim.period_end ? <DateDisplay value={claim.period_end} /> : '—'}
+        {claim.period_start ? <DateDisplay value={claim.period_start} /> : "—"}
+        {" → "}
+        {claim.period_end ? <DateDisplay value={claim.period_end} /> : "—"}
       </td>
       <td className="px-4 py-2 text-right">
         <MoneyDisplay
@@ -748,7 +805,7 @@ function ClaimRow({ claim }: { claim: ProgressClaimItem }) {
             {claim.status}
           </Badge>
           <div className="flex gap-1">
-            {claim.status === 'draft' && (
+            {claim.status === "draft" && (
               <Button
                 size="sm"
                 variant="ghost"
@@ -756,10 +813,10 @@ function ClaimRow({ claim }: { claim: ProgressClaimItem }) {
                 loading={submit.isPending}
                 icon={<Send size={12} />}
               >
-                {t('contracts.submit', { defaultValue: 'Submit' })}
+                {t("contracts.submit", { defaultValue: "Submit" })}
               </Button>
             )}
-            {claim.status === 'submitted' && (
+            {claim.status === "submitted" && (
               <>
                 <Button
                   size="sm"
@@ -768,7 +825,7 @@ function ClaimRow({ claim }: { claim: ProgressClaimItem }) {
                   loading={approve.isPending}
                   icon={<CheckCircle2 size={12} />}
                 >
-                  {t('contracts.approve', { defaultValue: 'Approve' })}
+                  {t("contracts.approve", { defaultValue: "Approve" })}
                 </Button>
                 <Button
                   size="sm"
@@ -777,21 +834,21 @@ function ClaimRow({ claim }: { claim: ProgressClaimItem }) {
                   loading={reject.isPending}
                   icon={<XCircle size={12} />}
                 >
-                  {t('contracts.reject', { defaultValue: 'Reject' })}
+                  {t("contracts.reject", { defaultValue: "Reject" })}
                 </Button>
               </>
             )}
-            {claim.status === 'approved' && (
+            {claim.status === "approved" && (
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => certify.mutate()}
                 loading={certify.isPending}
               >
-                {t('contracts.certify', { defaultValue: 'Certify' })}
+                {t("contracts.certify", { defaultValue: "Certify" })}
               </Button>
             )}
-            {claim.status === 'certified' && (
+            {claim.status === "certified" && (
               <Button
                 size="sm"
                 variant="ghost"
@@ -799,7 +856,7 @@ function ClaimRow({ claim }: { claim: ProgressClaimItem }) {
                 loading={paid.isPending}
                 icon={<DollarSign size={12} />}
               >
-                {t('contracts.mark_paid', { defaultValue: 'Mark paid' })}
+                {t("contracts.mark_paid", { defaultValue: "Mark paid" })}
               </Button>
             )}
           </div>
@@ -823,12 +880,12 @@ function FinalAccountsView({
     return (
       <EmptyState
         icon={<Archive size={22} />}
-        title={t('contracts.empty_final_accounts', {
-          defaultValue: 'No final accounts',
+        title={t("contracts.empty_final_accounts", {
+          defaultValue: "No final accounts",
         })}
-        description={t('contracts.empty_final_accounts_desc', {
+        description={t("contracts.empty_final_accounts_desc", {
           defaultValue:
-            'Final accounts are opened when a contract is closed — completed or terminated contracts will appear here.',
+            "Final accounts are opened when a contract is closed — completed or terminated contracts will appear here.",
         })}
       />
     );
@@ -839,19 +896,19 @@ function FinalAccountsView({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.code', { defaultValue: 'Code' })}
+              {t("contracts.code", { defaultValue: "Code" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.title_col', { defaultValue: 'Title' })}
+              {t("contracts.title_col", { defaultValue: "Title" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.type', { defaultValue: 'Type' })}
+              {t("contracts.type", { defaultValue: "Type" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('contracts.status', { defaultValue: 'Status' })}
+              {t("contracts.status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('contracts.value', { defaultValue: 'Value' })}
+              {t("contracts.value", { defaultValue: "Value" })}
             </th>
           </tr>
         </thead>
@@ -865,7 +922,7 @@ function FinalAccountsView({
               <td className="px-4 py-2 font-mono text-xs text-content-secondary">
                 {c.code}
               </td>
-              <td className="px-4 py-2 font-medium">{c.title || '—'}</td>
+              <td className="px-4 py-2 font-medium">{c.title || "—"}</td>
               <td className="px-4 py-2">
                 <ContractTypeChip type={c.contract_type} />
               </td>
@@ -905,24 +962,24 @@ function ContractDetailDrawer({
   const contract = contracts.find((c) => c.id === contractId);
 
   const linesQ = useQuery({
-    queryKey: ['contracts', 'lines', contractId],
+    queryKey: ["contracts", "lines", contractId],
     queryFn: () => listContractLines(contractId),
   });
 
   const claimsQ = useQuery({
-    queryKey: ['contracts', 'claim-history', contractId],
+    queryKey: ["contracts", "claim-history", contractId],
     queryFn: () => listProgressClaims({ contract_id: contractId, limit: 50 }),
   });
 
   const dashQ = useQuery<ContractDashboard>({
-    queryKey: ['contracts', 'dashboard', contractId],
+    queryKey: ["contracts", "dashboard", contractId],
     queryFn: () => getContractDashboard(contractId),
     retry: false,
   });
 
   const invalidate = () => {
-    qc.invalidateQueries({ queryKey: ['contracts', 'list'] });
-    qc.invalidateQueries({ queryKey: ['contracts', 'dashboard', contractId] });
+    qc.invalidateQueries({ queryKey: ["contracts", "list"] });
+    qc.invalidateQueries({ queryKey: ["contracts", "dashboard", contractId] });
   };
 
   const signMut = useMutation({
@@ -930,11 +987,11 @@ function ContractDetailDrawer({
     onSuccess: () => {
       invalidate();
       addToast({
-        type: 'success',
-        title: t('contracts.signed_ok', { defaultValue: 'Contract signed' }),
+        type: "success",
+        title: t("contracts.signed_ok", { defaultValue: "Contract signed" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const suspendMut = useMutation({
@@ -942,11 +999,13 @@ function ContractDetailDrawer({
     onSuccess: () => {
       invalidate();
       addToast({
-        type: 'success',
-        title: t('contracts.suspended_ok', { defaultValue: 'Contract suspended' }),
+        type: "success",
+        title: t("contracts.suspended_ok", {
+          defaultValue: "Contract suspended",
+        }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const resumeMut = useMutation({
@@ -954,11 +1013,11 @@ function ContractDetailDrawer({
     onSuccess: () => {
       invalidate();
       addToast({
-        type: 'success',
-        title: t('contracts.resumed_ok', { defaultValue: 'Contract resumed' }),
+        type: "success",
+        title: t("contracts.resumed_ok", { defaultValue: "Contract resumed" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const terminateMut = useMutation({
@@ -966,11 +1025,13 @@ function ContractDetailDrawer({
     onSuccess: () => {
       invalidate();
       addToast({
-        type: 'success',
-        title: t('contracts.terminated_ok', { defaultValue: 'Contract terminated' }),
+        type: "success",
+        title: t("contracts.terminated_ok", {
+          defaultValue: "Contract terminated",
+        }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const closeMut = useMutation({
@@ -978,24 +1039,24 @@ function ContractDetailDrawer({
       closeContract(contractId, {
         contract_id: contractId,
         final_contract_value: toNum(contract?.total_value),
-        status: 'agreed',
+        status: "agreed",
       }),
     onSuccess: () => {
       invalidate();
       addToast({
-        type: 'success',
-        title: t('contracts.closed_ok', { defaultValue: 'Contract closed' }),
+        type: "success",
+        title: t("contracts.closed_ok", { defaultValue: "Contract closed" }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   if (!contract) return null;
@@ -1018,7 +1079,7 @@ function ContractDetailDrawer({
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-light bg-surface-elevated px-5 py-3">
           <div>
             <h2 id="contract-drawer-title" className="text-base font-semibold">
-              {contract.code} — {contract.title || 'Untitled'}
+              {contract.code} — {contract.title || "Untitled"}
             </h2>
             <div className="mt-1 flex items-center gap-2">
               <ContractTypeChip type={contract.contract_type} />
@@ -1031,7 +1092,7 @@ function ContractDetailDrawer({
             type="button"
             onClick={onClose}
             className="rounded p-1 hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -1041,7 +1102,7 @@ function ContractDetailDrawer({
           {/* Headline KPIs */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <KPI
-              label={t('contracts.value', { defaultValue: 'Value' })}
+              label={t("contracts.value", { defaultValue: "Value" })}
               value={
                 <MoneyDisplay
                   amount={toNum(contract.total_value)}
@@ -1050,7 +1111,9 @@ function ContractDetailDrawer({
               }
             />
             <KPI
-              label={t('contracts.paid_to_date', { defaultValue: 'Paid to date' })}
+              label={t("contracts.paid_to_date", {
+                defaultValue: "Paid to date",
+              })}
               value={
                 <MoneyDisplay
                   amount={toNum(dashQ.data?.paid_to_date)}
@@ -1059,7 +1122,9 @@ function ContractDetailDrawer({
               }
             />
             <KPI
-              label={t('contracts.retention_held', { defaultValue: 'Retention held' })}
+              label={t("contracts.retention_held", {
+                defaultValue: "Retention held",
+              })}
               value={
                 <MoneyDisplay
                   amount={toNum(dashQ.data?.retention_held)}
@@ -1068,7 +1133,9 @@ function ContractDetailDrawer({
               }
             />
             <KPI
-              label={t('contracts.outstanding', { defaultValue: 'Outstanding' })}
+              label={t("contracts.outstanding", {
+                defaultValue: "Outstanding",
+              })}
               value={
                 <MoneyDisplay
                   amount={toNum(dashQ.data?.outstanding)}
@@ -1080,37 +1147,38 @@ function ContractDetailDrawer({
 
           {/* Workflow buttons */}
           <div className="flex flex-wrap gap-2 pt-1">
-            {contract.status === 'draft' && (
+            {contract.status === "draft" && (
               <Button
                 variant="primary"
                 icon={<PenLine size={14} />}
                 onClick={() => signMut.mutate()}
                 loading={signMut.isPending}
               >
-                {t('contracts.sign', { defaultValue: 'Sign' })}
+                {t("contracts.sign", { defaultValue: "Sign" })}
               </Button>
             )}
-            {contract.status === 'active' && (
+            {contract.status === "active" && (
               <Button
                 variant="secondary"
                 icon={<PauseCircle size={14} />}
                 onClick={() => suspendMut.mutate()}
                 loading={suspendMut.isPending}
               >
-                {t('contracts.suspend', { defaultValue: 'Suspend' })}
+                {t("contracts.suspend", { defaultValue: "Suspend" })}
               </Button>
             )}
-            {contract.status === 'suspended' && (
+            {contract.status === "suspended" && (
               <Button
                 variant="primary"
                 icon={<PlayCircle size={14} />}
                 onClick={() => resumeMut.mutate()}
                 loading={resumeMut.isPending}
               >
-                {t('contracts.resume', { defaultValue: 'Resume' })}
+                {t("contracts.resume", { defaultValue: "Resume" })}
               </Button>
             )}
-            {(contract.status === 'active' || contract.status === 'suspended') && (
+            {(contract.status === "active" ||
+              contract.status === "suspended") && (
               <>
                 <Button
                   variant="secondary"
@@ -1118,7 +1186,7 @@ function ContractDetailDrawer({
                   onClick={() => closeMut.mutate()}
                   loading={closeMut.isPending}
                 >
-                  {t('contracts.close', { defaultValue: 'Close' })}
+                  {t("contracts.close", { defaultValue: "Close" })}
                 </Button>
                 <Button
                   variant="ghost"
@@ -1126,7 +1194,7 @@ function ContractDetailDrawer({
                   onClick={() => terminateMut.mutate()}
                   loading={terminateMut.isPending}
                 >
-                  {t('contracts.terminate', { defaultValue: 'Terminate' })}
+                  {t("contracts.terminate", { defaultValue: "Terminate" })}
                 </Button>
               </>
             )}
@@ -1135,16 +1203,16 @@ function ContractDetailDrawer({
           {/* Cross-module pipeline links */}
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="text-content-tertiary">
-              {t('contracts.related', { defaultValue: 'Related:' })}
+              {t("contracts.related", { defaultValue: "Related:" })}
             </span>
-            {contract.counterparty_type === 'subcontractor' && (
+            {contract.counterparty_type === "subcontractor" && (
               <Link
                 to="/subcontractors"
                 className="inline-flex items-center gap-1 rounded-md border border-border-light px-2 py-1 text-content-secondary hover:text-oe-blue hover:border-oe-blue transition-colors"
               >
                 <Users size={12} />
-                {t('contracts.view_subcontractor', {
-                  defaultValue: 'Subcontractor',
+                {t("contracts.view_subcontractor", {
+                  defaultValue: "Subcontractor",
                 })}
               </Link>
             )}
@@ -1153,8 +1221,8 @@ function ContractDetailDrawer({
               className="inline-flex items-center gap-1 rounded-md border border-border-light px-2 py-1 text-content-secondary hover:text-oe-blue hover:border-oe-blue transition-colors"
             >
               <FilePlus2 size={12} />
-              {t('contracts.raise_variation', {
-                defaultValue: 'Variations on this contract',
+              {t("contracts.raise_variation", {
+                defaultValue: "Variations on this contract",
               })}
             </Link>
           </div>
@@ -1162,11 +1230,13 @@ function ContractDetailDrawer({
           {/* Header fields */}
           <Card padding="sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-              {t('contracts.section_header', { defaultValue: 'Header' })}
+              {t("contracts.section_header", { defaultValue: "Header" })}
             </p>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <Field
-                label={t('contracts.counterparty', { defaultValue: 'Counterparty' })}
+                label={t("contracts.counterparty", {
+                  defaultValue: "Counterparty",
+                })}
                 value={
                   <span className="capitalize">
                     {contract.counterparty_type}
@@ -1174,38 +1244,38 @@ function ContractDetailDrawer({
                 }
               />
               <Field
-                label={t('contracts.currency', { defaultValue: 'Currency' })}
-                value={contract.currency || '—'}
+                label={t("contracts.currency", { defaultValue: "Currency" })}
+                value={contract.currency || "—"}
               />
               <Field
-                label={t('contracts.start_date', { defaultValue: 'Start' })}
+                label={t("contracts.start_date", { defaultValue: "Start" })}
                 value={
                   contract.start_date ? (
                     <DateDisplay value={contract.start_date} />
                   ) : (
-                    '—'
+                    "—"
                   )
                 }
               />
               <Field
-                label={t('contracts.end_date', { defaultValue: 'End' })}
+                label={t("contracts.end_date", { defaultValue: "End" })}
                 value={
                   contract.end_date ? (
                     <DateDisplay value={contract.end_date} />
                   ) : (
-                    '—'
+                    "—"
                   )
                 }
               />
               <Field
-                label={t('contracts.retention_pct', {
-                  defaultValue: 'Retention %',
+                label={t("contracts.retention_pct", {
+                  defaultValue: "Retention %",
                 })}
                 value={`${toNum(contract.retention_percent).toFixed(2)} %`}
               />
               <Field
-                label={t('contracts.release_event', {
-                  defaultValue: 'Retention release',
+                label={t("contracts.release_event", {
+                  defaultValue: "Retention release",
                 })}
                 value={contract.retention_release_event}
               />
@@ -1215,10 +1285,10 @@ function ContractDetailDrawer({
           {/* SoV */}
           <Card padding="sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-              {t('contracts.sov', { defaultValue: 'Schedule of Values' })}
+              {t("contracts.sov", { defaultValue: "Schedule of Values" })}
               <span className="ml-2 text-content-tertiary normal-case">
-                ({(linesQ.data ?? []).length}{' '}
-                {t('contracts.lines', { defaultValue: 'lines' })} ·{' '}
+                ({(linesQ.data ?? []).length}{" "}
+                {t("contracts.lines", { defaultValue: "lines" })} ·{" "}
                 <MoneyDisplay
                   amount={lineTotal}
                   currency={contract.currency || undefined}
@@ -1230,8 +1300,8 @@ function ContractDetailDrawer({
               <SkeletonTable rows={3} columns={4} />
             ) : (linesQ.data ?? []).length === 0 ? (
               <p className="text-sm text-content-tertiary py-2">
-                {t('contracts.no_sov', {
-                  defaultValue: 'No schedule of values yet.',
+                {t("contracts.no_sov", {
+                  defaultValue: "No schedule of values yet.",
                 })}
               </p>
             ) : (
@@ -1240,19 +1310,21 @@ function ContractDetailDrawer({
                   <thead className="text-xs uppercase tracking-wide text-content-tertiary">
                     <tr>
                       <th className="text-left py-1">
-                        {t('contracts.code', { defaultValue: 'Code' })}
+                        {t("contracts.code", { defaultValue: "Code" })}
                       </th>
                       <th className="text-left py-1">
-                        {t('contracts.description', { defaultValue: 'Description' })}
+                        {t("contracts.description", {
+                          defaultValue: "Description",
+                        })}
                       </th>
                       <th className="text-right py-1">
-                        {t('contracts.qty', { defaultValue: 'Qty' })}
+                        {t("contracts.qty", { defaultValue: "Qty" })}
                       </th>
                       <th className="text-right py-1">
-                        {t('contracts.unit_rate', { defaultValue: 'Rate' })}
+                        {t("contracts.unit_rate", { defaultValue: "Rate" })}
                       </th>
                       <th className="text-right py-1">
-                        {t('contracts.total', { defaultValue: 'Total' })}
+                        {t("contracts.total", { defaultValue: "Total" })}
                       </th>
                     </tr>
                   </thead>
@@ -1260,13 +1332,13 @@ function ContractDetailDrawer({
                     {(linesQ.data ?? []).map((l: ContractLine) => (
                       <tr key={l.id} className="border-t border-border-light">
                         <td className="py-1 font-mono text-xs text-content-secondary">
-                          {l.code || '—'}
+                          {l.code || "—"}
                         </td>
                         <td className="py-1 truncate max-w-[260px]">
-                          {l.description || '—'}
+                          {l.description || "—"}
                         </td>
                         <td className="py-1 text-right text-content-secondary">
-                          {toNum(l.quantity).toLocaleString()} {l.unit || ''}
+                          {toNum(l.quantity).toLocaleString()} {l.unit || ""}
                         </td>
                         <td className="py-1 text-right text-content-secondary">
                           <MoneyDisplay
@@ -1291,11 +1363,13 @@ function ContractDetailDrawer({
           {/* Retention ledger placeholder */}
           <Card padding="sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-              {t('contracts.retention_ledger', { defaultValue: 'Retention ledger' })}
+              {t("contracts.retention_ledger", {
+                defaultValue: "Retention ledger",
+              })}
             </p>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <Field
-                label={t('contracts.held', { defaultValue: 'Held' })}
+                label={t("contracts.held", { defaultValue: "Held" })}
                 value={
                   <MoneyDisplay
                     amount={toNum(dashQ.data?.retention_held)}
@@ -1304,8 +1378,8 @@ function ContractDetailDrawer({
                 }
               />
               <Field
-                label={t('contracts.release_event_short', {
-                  defaultValue: 'Release on',
+                label={t("contracts.release_event_short", {
+                  defaultValue: "Release on",
                 })}
                 value={contract.retention_release_event}
               />
@@ -1315,15 +1389,15 @@ function ContractDetailDrawer({
           {/* Claim history */}
           <Card padding="sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-              {t('contracts.claim_history', { defaultValue: 'Claim history' })}
+              {t("contracts.claim_history", { defaultValue: "Claim history" })}
               <span className="ml-2 text-content-tertiary normal-case">
                 ({(claimsQ.data ?? []).length})
               </span>
             </p>
             {(claimsQ.data ?? []).length === 0 ? (
               <p className="text-sm text-content-tertiary py-2">
-                {t('contracts.no_claims_yet', {
-                  defaultValue: 'No progress claims yet.',
+                {t("contracts.no_claims_yet", {
+                  defaultValue: "No progress claims yet.",
                 })}
               </p>
             ) : (
@@ -1352,24 +1426,24 @@ function ContractDetailDrawer({
           </Card>
 
           {/* Gainshare (only for GMP) */}
-          {contract.contract_type === 'gmp' && (
+          {contract.contract_type === "gmp" && (
             <Card padding="sm">
               <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
-                {t('contracts.gainshare', { defaultValue: 'Gainshare config' })}
+                {t("contracts.gainshare", { defaultValue: "Gainshare config" })}
               </p>
               <p className="text-sm text-content-secondary">
-                {t('contracts.gainshare_hint', {
+                {t("contracts.gainshare_hint", {
                   defaultValue:
-                    'GMP contract — configure target cost, GMP cap and savings split via the API.',
+                    "GMP contract — configure target cost, GMP cap and savings split via the API.",
                 })}
               </p>
               {dashQ.data?.gainshare_estimate !== null &&
                 dashQ.data?.gainshare_estimate !== undefined && (
                   <p className="mt-2 text-sm">
-                    {t('contracts.gainshare_estimate', {
-                      defaultValue: 'Estimated gainshare',
+                    {t("contracts.gainshare_estimate", {
+                      defaultValue: "Estimated gainshare",
                     })}
-                    :{' '}
+                    :{" "}
                     <strong>
                       <MoneyDisplay
                         amount={toNum(dashQ.data.gainshare_estimate)}
@@ -1386,7 +1460,13 @@ function ContractDetailDrawer({
   );
 }
 
-function KPI({ label, value }: { label: React.ReactNode; value: React.ReactNode }) {
+function KPI({
+  label,
+  value,
+}: {
+  label: React.ReactNode;
+  value: React.ReactNode;
+}) {
   return (
     <div className="rounded-lg border border-border-light bg-surface-secondary px-3 py-2">
       <p className="text-[10px] uppercase tracking-wide text-content-tertiary">
@@ -1399,7 +1479,13 @@ function KPI({ label, value }: { label: React.ReactNode; value: React.ReactNode 
   );
 }
 
-function Field({ label, value }: { label: React.ReactNode; value: React.ReactNode }) {
+function Field({
+  label,
+  value,
+}: {
+  label: React.ReactNode;
+  value: React.ReactNode;
+}) {
   return (
     <div>
       <p className="text-xs uppercase tracking-wide text-content-tertiary">
@@ -1425,22 +1511,24 @@ function CreateContractModal({
   const [busy, setBusy] = useState(false);
 
   const [form, setForm] = useState({
-    code: '',
-    title: '',
-    contract_type: 'lump_sum' as ContractType,
-    counterparty_type: 'subcontractor' as CounterpartyType,
-    total_value: '0',
-    currency: 'EUR',
-    retention_percent: '5',
+    code: "",
+    title: "",
+    contract_type: "lump_sum" as ContractType,
+    counterparty_type: "subcontractor" as CounterpartyType,
+    total_value: "0",
+    currency: "EUR",
+    retention_percent: "5",
     start_date: todayIso(),
-    end_date: '',
+    end_date: "",
   });
 
   const submit = async () => {
     if (!form.code.trim()) {
       addToast({
-        type: 'error',
-        title: t('contracts.code_required', { defaultValue: 'Code is required' }),
+        type: "error",
+        title: t("contracts.code_required", {
+          defaultValue: "Code is required",
+        }),
       });
       return;
     }
@@ -1459,13 +1547,13 @@ function CreateContractModal({
         end_date: form.end_date || null,
       });
       addToast({
-        type: 'success',
-        title: t('contracts.created_ok', { defaultValue: 'Contract created' }),
+        type: "success",
+        title: t("contracts.created_ok", { defaultValue: "Contract created" }),
       });
-      qc.invalidateQueries({ queryKey: ['contracts', 'list'] });
+      qc.invalidateQueries({ queryKey: ["contracts", "list"] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1475,13 +1563,13 @@ function CreateContractModal({
     <WideModal
       open
       onClose={onClose}
-      title={t('contracts.new_contract', { defaultValue: 'New Contract' })}
+      title={t("contracts.new_contract", { defaultValue: "New Contract" })}
       size="xl"
       busy={busy}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -1489,17 +1577,17 @@ function CreateContractModal({
             loading={busy}
             icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
           >
-            {t('common.create', { defaultValue: 'Create' })}
+            {t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
       <WideModalSection
-        title={t('contracts.section_basic', { defaultValue: 'Basic info' })}
+        title={t("contracts.section_basic", { defaultValue: "Basic info" })}
         columns={2}
       >
         <WideModalField
-          label={t('contracts.code', { defaultValue: 'Code' })}
+          label={t("contracts.code", { defaultValue: "Code" })}
           required
         >
           <input
@@ -1510,7 +1598,7 @@ function CreateContractModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('contracts.title_col', { defaultValue: 'Title' })}
+          label={t("contracts.title_col", { defaultValue: "Title" })}
         >
           <input
             value={form.title}
@@ -1518,25 +1606,28 @@ function CreateContractModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('contracts.type', { defaultValue: 'Type' })}>
+        <WideModalField label={t("contracts.type", { defaultValue: "Type" })}>
           <select
             value={form.contract_type}
             onChange={(e) =>
-              setForm({ ...form, contract_type: e.target.value as ContractType })
+              setForm({
+                ...form,
+                contract_type: e.target.value as ContractType,
+              })
             }
             className={inputCls}
           >
             {CONTRACT_TYPES.map((tp) => (
               <option key={tp} value={tp}>
                 {t(`contracts.type_${tp}`, {
-                  defaultValue: tp === 'tm' ? 'T&M' : tp.replace(/_/g, ' '),
+                  defaultValue: tp === "tm" ? "T&M" : tp.replace(/_/g, " "),
                 })}
               </option>
             ))}
           </select>
         </WideModalField>
         <WideModalField
-          label={t('contracts.counterparty', { defaultValue: 'Counterparty' })}
+          label={t("contracts.counterparty", { defaultValue: "Counterparty" })}
         >
           <select
             value={form.counterparty_type}
@@ -1549,11 +1640,11 @@ function CreateContractModal({
             className={inputCls}
           >
             <option value="client">
-              {t('contracts.cp_client', { defaultValue: 'Client' })}
+              {t("contracts.cp_client", { defaultValue: "Client" })}
             </option>
             <option value="subcontractor">
-              {t('contracts.cp_subcontractor', {
-                defaultValue: 'Subcontractor',
+              {t("contracts.cp_subcontractor", {
+                defaultValue: "Subcontractor",
               })}
             </option>
           </select>
@@ -1561,10 +1652,10 @@ function CreateContractModal({
       </WideModalSection>
 
       <WideModalSection
-        title={t('contracts.section_value', { defaultValue: 'Value' })}
+        title={t("contracts.section_value", { defaultValue: "Value" })}
         columns={3}
       >
-        <WideModalField label={t('contracts.value', { defaultValue: 'Value' })}>
+        <WideModalField label={t("contracts.value", { defaultValue: "Value" })}>
           <input
             type="number"
             value={form.total_value}
@@ -1573,7 +1664,7 @@ function CreateContractModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('contracts.currency', { defaultValue: 'Currency' })}
+          label={t("contracts.currency", { defaultValue: "Currency" })}
         >
           <input
             value={form.currency}
@@ -1583,7 +1674,7 @@ function CreateContractModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('contracts.retention_pct', { defaultValue: 'Retention %' })}
+          label={t("contracts.retention_pct", { defaultValue: "Retention %" })}
         >
           <input
             type="number"
@@ -1598,11 +1689,11 @@ function CreateContractModal({
       </WideModalSection>
 
       <WideModalSection
-        title={t('contracts.section_schedule', { defaultValue: 'Schedule' })}
+        title={t("contracts.section_schedule", { defaultValue: "Schedule" })}
         columns={2}
       >
         <WideModalField
-          label={t('contracts.start_date', { defaultValue: 'Start' })}
+          label={t("contracts.start_date", { defaultValue: "Start" })}
         >
           <input
             type="date"
@@ -1612,7 +1703,7 @@ function CreateContractModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('contracts.end_date', { defaultValue: 'End' })}
+          label={t("contracts.end_date", { defaultValue: "End" })}
         >
           <input
             type="date"
@@ -1644,18 +1735,18 @@ function NewClaimModal({
 
   const [form, setForm] = useState({
     contract_id: defaultContractId,
-    claim_number: '',
+    claim_number: "",
     period_start: todayIso(),
     period_end: todayIso(),
-    currency: 'EUR',
+    currency: "EUR",
   });
 
   const submit = async () => {
     if (!form.contract_id) {
       addToast({
-        type: 'error',
-        title: t('contracts.contract_required', {
-          defaultValue: 'Contract is required',
+        type: "error",
+        title: t("contracts.contract_required", {
+          defaultValue: "Contract is required",
         }),
       });
       return;
@@ -1670,13 +1761,13 @@ function NewClaimModal({
         currency: form.currency.trim().toUpperCase() || undefined,
       });
       addToast({
-        type: 'success',
-        title: t('contracts.claim_created', { defaultValue: 'Claim created' }),
+        type: "success",
+        title: t("contracts.claim_created", { defaultValue: "Claim created" }),
       });
-      qc.invalidateQueries({ queryKey: ['contracts', 'claims'] });
+      qc.invalidateQueries({ queryKey: ["contracts", "claims"] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1686,13 +1777,13 @@ function NewClaimModal({
     <WideModal
       open
       onClose={onClose}
-      title={t('contracts.new_claim', { defaultValue: 'New Progress Claim' })}
+      title={t("contracts.new_claim", { defaultValue: "New Progress Claim" })}
       size="lg"
       busy={busy}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -1700,14 +1791,14 @@ function NewClaimModal({
             loading={busy}
             icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
           >
-            {t('common.create', { defaultValue: 'Create' })}
+            {t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('contracts.contract', { defaultValue: 'Contract' })}
+          label={t("contracts.contract", { defaultValue: "Contract" })}
           required
           span={2}
         >
@@ -1717,27 +1808,27 @@ function NewClaimModal({
             className={inputCls}
           >
             <option value="">
-              — {t('common.select', { defaultValue: 'Select' })} —
+              — {t("common.select", { defaultValue: "Select" })} —
             </option>
             {contracts.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.code} — {c.title || ''}
+                {c.code} — {c.title || ""}
               </option>
             ))}
           </select>
         </WideModalField>
         <WideModalField
-          label={t('contracts.claim_number', { defaultValue: 'Claim number' })}
+          label={t("contracts.claim_number", { defaultValue: "Claim number" })}
         >
           <input
             value={form.claim_number}
             onChange={(e) => setForm({ ...form, claim_number: e.target.value })}
             className={inputCls}
-            placeholder={t('contracts.auto', { defaultValue: 'auto' })}
+            placeholder={t("contracts.auto", { defaultValue: "auto" })}
           />
         </WideModalField>
         <WideModalField
-          label={t('contracts.currency', { defaultValue: 'Currency' })}
+          label={t("contracts.currency", { defaultValue: "Currency" })}
         >
           <input
             value={form.currency}
@@ -1747,7 +1838,7 @@ function NewClaimModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('contracts.period_start', { defaultValue: 'Period start' })}
+          label={t("contracts.period_start", { defaultValue: "Period start" })}
         >
           <input
             type="date"
@@ -1757,7 +1848,7 @@ function NewClaimModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('contracts.period_end', { defaultValue: 'Period end' })}
+          label={t("contracts.period_end", { defaultValue: "Period end" })}
         >
           <input
             type="date"

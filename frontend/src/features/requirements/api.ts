@@ -4,8 +4,8 @@
  * All endpoints are prefixed with /v1/requirements/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -48,7 +48,7 @@ export interface GateResult {
   requirement_set_id: string;
   gate_number: number;
   gate_name: string;
-  status: 'pass' | 'fail' | 'warning' | 'pending' | 'skipped';
+  status: "pass" | "fail" | "warning" | "pending" | "skipped";
   score: number;
   findings: Array<Record<string, unknown>>;
   created_at: string;
@@ -102,27 +102,44 @@ export interface UpdateRequirementPayload {
 
 /* ── API Functions ─────────────────────────────────────────────────────── */
 
-export async function fetchRequirementSets(projectId: string): Promise<RequirementSet[]> {
+export async function fetchRequirementSets(
+  projectId: string,
+): Promise<RequirementSet[]> {
   if (!projectId) return [];
   const res = await apiGet<RequirementSet[] | { items: RequirementSet[] }>(
     `/v1/requirements/?project_id=${projectId}`,
   );
-  return Array.isArray(res) ? res : res.items ?? [];
+  return Array.isArray(res) ? res : (res.items ?? []);
 }
 
-export async function fetchRequirementSetDetail(setId: string): Promise<RequirementSetDetail> {
+export async function fetchRequirementSetDetail(
+  setId: string,
+): Promise<RequirementSetDetail> {
   return apiGet<RequirementSetDetail>(`/v1/requirements/${setId}`);
 }
 
-export async function fetchRequirementStats(projectId: string): Promise<RequirementStats> {
-  if (!projectId) return { total_requirements: 0, total_sets: 0, by_priority: {}, by_status: {}, by_category: {}, linked_count: 0, unlinked_count: 0 };
-  return apiGet<RequirementStats>(`/v1/requirements/stats/?project_id=${projectId}`);
+export async function fetchRequirementStats(
+  projectId: string,
+): Promise<RequirementStats> {
+  if (!projectId)
+    return {
+      total_requirements: 0,
+      total_sets: 0,
+      by_priority: {},
+      by_status: {},
+      by_category: {},
+      linked_count: 0,
+      unlinked_count: 0,
+    };
+  return apiGet<RequirementStats>(
+    `/v1/requirements/stats/?project_id=${projectId}`,
+  );
 }
 
 export async function createRequirementSet(
   data: CreateRequirementSetPayload,
 ): Promise<RequirementSet> {
-  return apiPost<RequirementSet>('/v1/requirements/', data);
+  return apiPost<RequirementSet>("/v1/requirements/", data);
 }
 
 export async function deleteRequirementSet(setId: string): Promise<void> {
@@ -141,22 +158,33 @@ export async function updateRequirement(
   reqId: string,
   data: UpdateRequirementPayload,
 ): Promise<Requirement> {
-  return apiPatch<Requirement>(`/v1/requirements/${setId}/requirements/${reqId}`, data);
+  return apiPatch<Requirement>(
+    `/v1/requirements/${setId}/requirements/${reqId}`,
+    data,
+  );
 }
 
-export async function deleteRequirement(setId: string, reqId: string): Promise<void> {
+export async function deleteRequirement(
+  setId: string,
+  reqId: string,
+): Promise<void> {
   return apiDelete(`/v1/requirements/${setId}/requirements/${reqId}`);
 }
 
-export async function runGate(setId: string, gateNumber: number): Promise<GateResult> {
-  return apiPost<GateResult>(`/v1/requirements/${setId}/gates/${gateNumber}/run/`);
+export async function runGate(
+  setId: string,
+  gateNumber: number,
+): Promise<GateResult> {
+  return apiPost<GateResult>(
+    `/v1/requirements/${setId}/gates/${gateNumber}/run/`,
+  );
 }
 
 export async function fetchGates(setId: string): Promise<GateResult[]> {
   const res = await apiGet<GateResult[] | { items: GateResult[] }>(
     `/v1/requirements/${setId}/gates`,
   );
-  return Array.isArray(res) ? res : res.items ?? [];
+  return Array.isArray(res) ? res : (res.items ?? []);
 }
 
 export async function linkToPosition(
@@ -197,29 +225,37 @@ export async function fetchRequirementsByBIMElement(
   projectId?: string,
 ): Promise<Requirement[]> {
   const params = new URLSearchParams();
-  params.set('bim_element_id', bimElementId);
-  if (projectId) params.set('project_id', projectId);
-  return apiGet<Requirement[]>(`/v1/requirements/by-bim-element/?${params.toString()}`);
+  params.set("bim_element_id", bimElementId);
+  if (projectId) params.set("project_id", projectId);
+  return apiGet<Requirement[]>(
+    `/v1/requirements/by-bim-element/?${params.toString()}`,
+  );
 }
 
-export async function importFromText(setId: string, text: string): Promise<RequirementSetDetail> {
-  return apiPost<RequirementSetDetail>(`/v1/requirements/${setId}/import/text/`, { text });
+export async function importFromText(
+  setId: string,
+  text: string,
+): Promise<RequirementSetDetail> {
+  return apiPost<RequirementSetDetail>(
+    `/v1/requirements/${setId}/import/text/`,
+    { text },
+  );
 }
 
 /* ── Export Functions ─────────────────────────────────────────────────────── */
 
 const EXPORT_COLUMNS = [
-  'entity',
-  'attribute',
-  'constraint_type',
-  'constraint_value',
-  'unit',
-  'category',
-  'priority',
-  'status',
-  'confidence',
-  'source_ref',
-  'notes',
+  "entity",
+  "attribute",
+  "constraint_type",
+  "constraint_value",
+  "unit",
+  "category",
+  "priority",
+  "status",
+  "confidence",
+  "source_ref",
+  "notes",
 ] as const;
 
 /**
@@ -231,12 +267,15 @@ export async function exportRequirementsCSV(
   requirements?: Requirement[],
 ): Promise<Blob> {
   try {
-    const res = await fetch(`/api/v1/requirements/${setId}/export/?format=csv`, {
-      headers: {
-        Authorization: `Bearer ${useAuthStore.getState().accessToken ?? ''}`,
-        'X-DDC-Client': 'OE/1.0',
+    const res = await fetch(
+      `/api/v1/requirements/${setId}/export/?format=csv`,
+      {
+        headers: {
+          Authorization: `Bearer ${useAuthStore.getState().accessToken ?? ""}`,
+          "X-DDC-Client": "OE/1.0",
+        },
       },
-    });
+    );
     if (res.ok) {
       return await res.blob();
     }
@@ -245,20 +284,21 @@ export async function exportRequirementsCSV(
   }
 
   // Client-side fallback
-  const reqs = requirements ?? (await fetchRequirementSetDetail(setId)).requirements;
-  const header = EXPORT_COLUMNS.join(',');
+  const reqs =
+    requirements ?? (await fetchRequirementSetDetail(setId)).requirements;
+  const header = EXPORT_COLUMNS.join(",");
   const rows = reqs.map((r) =>
     EXPORT_COLUMNS.map((col) => {
-      const val = String(r[col as keyof Requirement] ?? '');
+      const val = String(r[col as keyof Requirement] ?? "");
       // Escape CSV values containing commas, quotes, or newlines
-      if (val.includes(',') || val.includes('"') || val.includes('\n')) {
+      if (val.includes(",") || val.includes('"') || val.includes("\n")) {
         return `"${val.replace(/"/g, '""')}"`;
       }
       return val;
-    }).join(','),
+    }).join(","),
   );
-  const csv = [header, ...rows].join('\n');
-  return new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const csv = [header, ...rows].join("\n");
+  return new Blob([csv], { type: "text/csv;charset=utf-8" });
 }
 
 /**
@@ -273,8 +313,8 @@ export async function exportRequirementsExcel(
   try {
     const res = await fetch(`/api/v1/requirements/${setId}/export.xlsx`, {
       headers: {
-        Authorization: `Bearer ${useAuthStore.getState().accessToken ?? ''}`,
-        'X-DDC-Client': 'OE/1.0',
+        Authorization: `Bearer ${useAuthStore.getState().accessToken ?? ""}`,
+        "X-DDC-Client": "OE/1.0",
       },
     });
     if (res.ok) {
@@ -285,17 +325,18 @@ export async function exportRequirementsExcel(
   }
 
   // Best-effort fallback: TSV with UTF-8 BOM Excel can still open
-  const reqs = requirements ?? (await fetchRequirementSetDetail(setId)).requirements;
-  const header = EXPORT_COLUMNS.join('\t');
+  const reqs =
+    requirements ?? (await fetchRequirementSetDetail(setId)).requirements;
+  const header = EXPORT_COLUMNS.join("\t");
   const rows = reqs.map((r) =>
     EXPORT_COLUMNS.map((col) => {
-      const val = String(r[col as keyof Requirement] ?? '');
-      return val.replace(/\t/g, ' ');
-    }).join('\t'),
+      const val = String(r[col as keyof Requirement] ?? "");
+      return val.replace(/\t/g, " ");
+    }).join("\t"),
   );
-  const tsv = '\uFEFF' + [header, ...rows].join('\n');
+  const tsv = "\uFEFF" + [header, ...rows].join("\n");
   return new Blob([tsv], {
-    type: 'application/vnd.ms-excel;charset=utf-8',
+    type: "application/vnd.ms-excel;charset=utf-8",
   });
 }
 
@@ -303,7 +344,7 @@ export async function exportRequirementsExcel(
 
 /** URL to download the Excel template (headers + sample row + legend). */
 export function requirementsTemplateUrl(): string {
-  return '/api/v1/requirements/template.xlsx';
+  return "/api/v1/requirements/template.xlsx";
 }
 
 export interface ImportFromFileResponse {
@@ -319,17 +360,17 @@ export async function importRequirementsFromFile(
   file: File,
 ): Promise<ImportFromFileResponse> {
   const fd = new FormData();
-  fd.append('file', file);
+  fd.append("file", file);
   const res = await fetch(`/api/v1/requirements/${setId}/import/file/`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      Authorization: `Bearer ${useAuthStore.getState().accessToken ?? ''}`,
-      'X-DDC-Client': 'OE/1.0',
+      Authorization: `Bearer ${useAuthStore.getState().accessToken ?? ""}`,
+      "X-DDC-Client": "OE/1.0",
     },
     body: fd,
   });
   if (!res.ok) {
-    const text = await res.text().catch(() => '');
+    const text = await res.text().catch(() => "");
     throw new Error(`Import failed (${res.status}): ${text}`);
   }
   return res.json();
@@ -337,7 +378,7 @@ export async function importRequirementsFromFile(
 
 export interface ValidateBIMResult {
   report_id: string;
-  status: 'passed' | 'warnings' | 'errors';
+  status: "passed" | "warnings" | "errors";
   score: number;
   total_checks: number;
   passed: number;
@@ -368,14 +409,148 @@ export async function exportRequirementsJSON(
   setId: string,
   requirements?: Requirement[],
 ): Promise<string> {
-  const reqs = requirements ?? (await fetchRequirementSetDetail(setId)).requirements;
+  const reqs =
+    requirements ?? (await fetchRequirementSetDetail(setId)).requirements;
   const data = reqs.map((r) => {
     const obj: Record<string, unknown> = {};
     for (const col of EXPORT_COLUMNS) {
-      obj[col] = r[col as keyof Requirement] ?? '';
+      obj[col] = r[col as keyof Requirement] ?? "";
     }
     return obj;
   });
   return JSON.stringify(data, null, 2);
 }
 
+/* ── ISO 19650 EIR deliverables (T13) ────────────────────────────────────── */
+
+export type DeliverableStatus = "accepted" | "submitted" | "missing";
+
+export type DeliverableType =
+  | "model"
+  | "drawing"
+  | "schedule"
+  | "report"
+  | "cobie"
+  | "pset"
+  | "other";
+
+export interface Deliverable {
+  id: string;
+  requirement_id: string;
+  deliverable_type: string;
+  lod: string | null;
+  loi: string | null;
+  due_milestone_id: string | null;
+  submitted_at: string | null;
+  accepted_at: string | null;
+  notes: string;
+  status: DeliverableStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateDeliverablePayload {
+  deliverable_type: DeliverableType | string;
+  lod?: string | null;
+  loi?: string | null;
+  due_milestone_id?: string | null;
+  submitted_at?: string | null;
+  accepted_at?: string | null;
+  notes?: string;
+}
+
+export interface UpdateDeliverablePayload {
+  deliverable_type?: DeliverableType | string;
+  lod?: string | null;
+  loi?: string | null;
+  due_milestone_id?: string | null;
+  submitted_at?: string | null;
+  accepted_at?: string | null;
+  notes?: string;
+}
+
+export interface MatrixCell {
+  deliverable_id: string | null;
+  lod: string | null;
+  loi: string | null;
+  status: DeliverableStatus;
+  due_milestone_id: string | null;
+  submitted_at: string | null;
+  accepted_at: string | null;
+}
+
+export interface MatrixRow {
+  requirement_id: string;
+  requirement_set_id: string;
+  entity: string;
+  attribute: string;
+  priority: string;
+  cells: Record<string, MatrixCell>;
+  coverage_pct: number;
+}
+
+export interface MatrixResponse {
+  project_id: string;
+  deliverable_types: string[];
+  rows: MatrixRow[];
+  coverage_pct: number;
+}
+
+/** List EIR deliverables attached to a requirement. */
+export async function listDeliverables(
+  requirementId: string,
+  deliverableType?: string,
+): Promise<Deliverable[]> {
+  const qs = deliverableType
+    ? `?deliverable_type=${encodeURIComponent(deliverableType)}`
+    : "";
+  return apiGet<Deliverable[]>(
+    `/v1/requirements/requirements/${requirementId}/deliverables/${qs}`,
+  );
+}
+
+/** Attach a new deliverable row to a requirement. */
+export async function createDeliverable(
+  requirementId: string,
+  data: CreateDeliverablePayload,
+): Promise<Deliverable> {
+  return apiPost<Deliverable>(
+    `/v1/requirements/requirements/${requirementId}/deliverables/`,
+    data,
+  );
+}
+
+/** Patch fields on an existing deliverable row. */
+export async function updateDeliverable(
+  requirementId: string,
+  deliverableId: string,
+  data: UpdateDeliverablePayload,
+): Promise<Deliverable> {
+  return apiPatch<Deliverable>(
+    `/v1/requirements/requirements/${requirementId}/deliverables/${deliverableId}`,
+    data,
+  );
+}
+
+/** Hard delete a deliverable row. */
+export async function deleteDeliverable(
+  requirementId: string,
+  deliverableId: string,
+): Promise<void> {
+  return apiDelete(
+    `/v1/requirements/requirements/${requirementId}/deliverables/${deliverableId}`,
+  );
+}
+
+/** Fetch the project EIR matrix (rows × deliverable-type columns). */
+export async function getMatrix(
+  projectId: string,
+  deliverableType?: string,
+): Promise<MatrixResponse> {
+  const qs = deliverableType
+    ? `?deliverable_type=${encodeURIComponent(deliverableType)}`
+    : "";
+  return apiGet<MatrixResponse>(
+    `/v1/requirements/projects/${projectId}/matrix/${qs}`,
+  );
+}

@@ -5,28 +5,30 @@
  * tab is active on the right panel. The store is intentionally tiny; model
  * data itself lives in React Query + ElementManager.
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export type BIMRightPanelTab =
-  | 'properties'
-  | 'layers'
-  | 'tools'
-  | 'groups'
-  | 'match';
+  | "properties"
+  | "layers"
+  | "tools"
+  | "trait-lens"
+  | "bundles"
+  | "groups"
+  | "match";
 
 /** Which quantity the measure tool captures on the next clicks. */
-export type BIMMeasureKind = 'distance' | 'area' | 'angle';
+export type BIMMeasureKind = "distance" | "area" | "angle";
 
 /** Active section/clip mode. `none` = no cut applied. */
-export type BIMClipMode = 'none' | 'box' | 'plane';
+export type BIMClipMode = "none" | "box" | "plane";
 
-const ASSET_CARD_KEY = 'oe_bim_asset_card_enabled';
+const ASSET_CARD_KEY = "oe_bim_asset_card_enabled";
 
 function readAssetCardEnabled(): boolean {
   try {
     const raw = localStorage.getItem(ASSET_CARD_KEY);
     if (raw === null) return true;
-    return raw === '1';
+    return raw === "1";
   } catch {
     return true;
   }
@@ -34,7 +36,7 @@ function readAssetCardEnabled(): boolean {
 
 function writeAssetCardEnabled(enabled: boolean): void {
   try {
-    localStorage.setItem(ASSET_CARD_KEY, enabled ? '1' : '0');
+    localStorage.setItem(ASSET_CARD_KEY, enabled ? "1" : "0");
   } catch {
     /* ignore quota errors */
   }
@@ -91,12 +93,12 @@ interface BIMViewerState {
 export const useBIMViewerStore = create<BIMViewerState>((set) => ({
   categoryOpacity: {},
   hiddenCategories: {},
-  rightPanelTab: 'properties',
+  rightPanelTab: "properties",
   rightPanelOpen: false,
   measureActive: false,
-  measureKind: 'distance',
+  measureKind: "distance",
   measureSnap: true,
-  clipMode: 'none',
+  clipMode: "none",
   clipPanelOpen: false,
   ghostActive: false,
   summaryPanelOpen: true,
@@ -116,7 +118,8 @@ export const useBIMViewerStore = create<BIMViewerState>((set) => ({
       hiddenCategories: { ...state.hiddenCategories, [category]: hidden },
     })),
 
-  resetCategoryOverrides: () => set({ categoryOpacity: {}, hiddenCategories: {} }),
+  resetCategoryOverrides: () =>
+    set({ categoryOpacity: {}, hiddenCategories: {} }),
 
   setRightPanelTab: (tab) => set({ rightPanelTab: tab, rightPanelOpen: true }),
   setRightPanelOpen: (open) => set({ rightPanelOpen: open }),

@@ -1,1 +1,1 @@
-export { BIDashboardsPage } from './BIDashboardsPage';
+export { BIDashboardsPage } from "./BIDashboardsPage";

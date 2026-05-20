@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   LayoutDashboard,
   Activity,
@@ -16,7 +16,8 @@ import {
   Minus,
   Loader2,
   AlertOctagon,
-} from 'lucide-react';
+  Sparkles,
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -27,16 +28,18 @@ import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { useToastStore } from '@/stores/useToastStore';
-import { getErrorMessage } from '@/shared/lib/api';
+} from "@/shared/ui";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { useToastStore } from "@/stores/useToastStore";
+import { getErrorMessage } from "@/shared/lib/api";
 import {
   listKpis,
   getKpiHistory,
   listDashboards,
   renderDashboard,
+  evaluateDashboard,
   createDashboard,
+  installStarterPack,
   listReports,
   runReport,
   createReport,
@@ -48,49 +51,58 @@ import {
   type AlertSeverity,
   type Dashboard,
   type DashboardScope,
+  type DrillPath,
   type KpiDefinition,
   type ReportDefinition,
+  type WidgetEvaluateResult,
   type WidgetRenderResult,
-} from './api';
+} from "./api";
+import { useDashboardFilters } from "@/stores/useDashboardFilters";
 
-type Tab = 'dashboards' | 'kpis' | 'reports' | 'schedules' | 'alerts';
+type Tab = "dashboards" | "kpis" | "reports" | "schedules" | "alerts";
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 // Legacy `labelCls` removed when CreateModal moved to <WideModalField>.
 
-const SEVERITY_VARIANT: Record<AlertSeverity, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  info: 'blue',
-  warning: 'warning',
-  critical: 'error',
+const SEVERITY_VARIANT: Record<
+  AlertSeverity,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  info: "blue",
+  warning: "warning",
+  critical: "error",
 };
 
-const SCOPE_VARIANT: Record<DashboardScope, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  personal: 'neutral',
-  role: 'blue',
-  global: 'success',
-  project: 'warning',
+const SCOPE_VARIANT: Record<
+  DashboardScope,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  personal: "neutral",
+  role: "blue",
+  global: "success",
+  project: "warning",
 };
 
 /* ─── helpers ─── */
 
 function toNumber(v: number | string | null | undefined): number {
   if (v == null) return 0;
-  if (typeof v === 'number') return v;
+  if (typeof v === "number") return v;
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
 }
 
 function formatValue(value: number, unit: string | null | undefined): string {
-  if (!Number.isFinite(value)) return '—';
+  if (!Number.isFinite(value)) return "—";
   const abs = Math.abs(value);
   let formatted: string;
   if (abs >= 1_000_000) formatted = `${(value / 1_000_000).toFixed(2)}M`;
   else if (abs >= 1_000) formatted = `${(value / 1_000).toFixed(1)}k`;
   else if (Number.isInteger(value)) formatted = String(value);
   else formatted = value.toFixed(2);
-  if (unit === 'percent') return `${formatted}%`;
-  if (unit === 'currency') return formatted;
+  if (unit === "percent") return `${formatted}%`;
+  if (unit === "currency") return formatted;
   return formatted;
 }
 
@@ -98,39 +110,76 @@ function formatValue(value: number, unit: string | null | undefined): string {
 
 export function BIDashboardsPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>('dashboards');
+  const qc = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+  const [tab, setTab] = useState<Tab>("dashboards");
   const [createOpen, setCreateOpen] = useState(false);
-  const [activeDashboardId, setActiveDashboardId] = useState<string | null>(null);
+  const [activeDashboardId, setActiveDashboardId] = useState<string | null>(
+    null,
+  );
 
   const dashboardsQ = useQuery({
-    queryKey: ['bi', 'dashboards'],
+    queryKey: ["bi", "dashboards"],
     queryFn: listDashboards,
-    enabled: tab === 'dashboards',
+    enabled: tab === "dashboards",
+  });
+
+  // Wave 1 — one-click starter pack install for fresh tenants. Wired
+  // into the DashboardsGrid empty-state CTA so the user can go from "no
+  // dashboards yet" to 5 role-based dashboards with widgets + KPI
+  // history without leaving the page.
+  const installStarterM = useMutation({
+    mutationFn: installStarterPack,
+    onSuccess: (r) => {
+      qc.invalidateQueries({ queryKey: ["bi"] });
+      addToast({
+        type: "success",
+        title: t("bi.starter_installed_title", {
+          defaultValue: "Starter pack installed",
+        }),
+        message: t("bi.starter_installed_body", {
+          defaultValue:
+            "{{d}} dashboards · {{k}} KPIs · {{r}} reports · {{a}} alerts",
+          d: r.dashboards,
+          k: r.kpi_definitions,
+          r: r.reports,
+          a: r.alerts,
+        }),
+      });
+    },
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("bi.starter_failed", {
+          defaultValue: "Could not install starter pack",
+        }),
+        message: getErrorMessage(e),
+      }),
   });
   const kpisQ = useQuery({
-    queryKey: ['bi', 'kpis'],
+    queryKey: ["bi", "kpis"],
     queryFn: () => listKpis(),
     // Also load on the Alerts tab so the "New Alert" modal can offer a
     // real KPI dropdown instead of degrading to a free-text code field.
-    enabled: tab === 'kpis' || tab === 'alerts',
+    enabled: tab === "kpis" || tab === "alerts",
   });
   const reportsQ = useQuery({
-    queryKey: ['bi', 'reports'],
+    queryKey: ["bi", "reports"],
     queryFn: listReports,
-    enabled: tab === 'reports' || tab === 'schedules',
+    enabled: tab === "reports" || tab === "schedules",
   });
   const alertsQ = useQuery({
-    queryKey: ['bi', 'alerts'],
+    queryKey: ["bi", "alerts"],
     queryFn: listAlerts,
-    enabled: tab === 'alerts',
+    enabled: tab === "alerts",
   });
 
   const activeQuery =
-    tab === 'dashboards'
+    tab === "dashboards"
       ? dashboardsQ
-      : tab === 'kpis'
+      : tab === "kpis"
         ? kpisQ
-        : tab === 'reports' || tab === 'schedules'
+        : tab === "reports" || tab === "schedules"
           ? reportsQ
           : alertsQ;
   const isLoading = activeQuery.isLoading;
@@ -143,33 +192,33 @@ export function BIDashboardsPage() {
     <div className="space-y-5">
       <Breadcrumb
         items={[
-          { label: t('bi.title', { defaultValue: 'BI & Dashboards‌⁠‍' }) },
+          { label: t("bi.title", { defaultValue: "BI & Dashboards‌⁠‍" }) },
         ]}
       />
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('bi.title', { defaultValue: 'BI & Dashboards‌⁠‍' })}
+            {t("bi.title", { defaultValue: "BI & Dashboards‌⁠‍" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('bi.subtitle', {
+            {t("bi.subtitle", {
               defaultValue:
-                'KPIs, scheduled reports, executive dashboards and alert rules — all in one place.‌⁠‍',
+                "KPIs, scheduled reports, executive dashboards and alert rules — all in one place.‌⁠‍",
             })}
           </p>
         </div>
-        {(tab === 'dashboards' || tab === 'reports' || tab === 'alerts') && (
+        {(tab === "dashboards" || tab === "reports" || tab === "alerts") && (
           <Button
             variant="primary"
             icon={<Plus size={14} />}
             onClick={() => setCreateOpen(true)}
           >
-            {tab === 'dashboards'
-              ? t('bi.new_dashboard', { defaultValue: 'New Dashboard‌⁠‍' })
-              : tab === 'reports'
-                ? t('bi.new_report', { defaultValue: 'New Report‌⁠‍' })
-                : t('bi.new_alert', { defaultValue: 'New Alert' })}
+            {tab === "dashboards"
+              ? t("bi.new_dashboard", { defaultValue: "New Dashboard‌⁠‍" })
+              : tab === "reports"
+                ? t("bi.new_report", { defaultValue: "New Report‌⁠‍" })
+                : t("bi.new_alert", { defaultValue: "New Alert" })}
           </Button>
         )}
       </div>
@@ -179,11 +228,31 @@ export function BIDashboardsPage() {
         <nav className="flex gap-1 -mb-px">
           {(
             [
-              { id: 'dashboards', label: t('bi.dashboards', { defaultValue: 'My Dashboards' }), icon: LayoutDashboard },
-              { id: 'kpis', label: t('bi.kpis', { defaultValue: 'KPIs' }), icon: Activity },
-              { id: 'reports', label: t('bi.reports', { defaultValue: 'Reports' }), icon: FileText },
-              { id: 'schedules', label: t('bi.schedules', { defaultValue: 'Schedules' }), icon: CalendarClock },
-              { id: 'alerts', label: t('bi.alerts', { defaultValue: 'Alerts' }), icon: Bell },
+              {
+                id: "dashboards",
+                label: t("bi.dashboards", { defaultValue: "My Dashboards" }),
+                icon: LayoutDashboard,
+              },
+              {
+                id: "kpis",
+                label: t("bi.kpis", { defaultValue: "KPIs" }),
+                icon: Activity,
+              },
+              {
+                id: "reports",
+                label: t("bi.reports", { defaultValue: "Reports" }),
+                icon: FileText,
+              },
+              {
+                id: "schedules",
+                label: t("bi.schedules", { defaultValue: "Schedules" }),
+                icon: CalendarClock,
+              },
+              {
+                id: "alerts",
+                label: t("bi.alerts", { defaultValue: "Alerts" }),
+                icon: Bell,
+              },
             ] as { id: Tab; label: string; icon: React.ElementType }[]
           ).map((tabItem) => {
             const Icon = tabItem.icon;
@@ -193,10 +262,10 @@ export function BIDashboardsPage() {
                 type="button"
                 onClick={() => setTab(tabItem.id)}
                 className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
                   tab === tabItem.id
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-secondary hover:text-content-primary',
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -216,28 +285,38 @@ export function BIDashboardsPage() {
         <Card padding="md">
           <EmptyState
             icon={<AlertOctagon size={22} />}
-            title={t('bi.load_error', { defaultValue: 'Could not load BI data' })}
+            title={t("bi.load_error", {
+              defaultValue: "Could not load BI data",
+            })}
             description={getErrorMessage(loadError)}
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: () => activeQuery.refetch(),
             }}
           />
         </Card>
-      ) : tab === 'dashboards' ? (
+      ) : tab === "dashboards" ? (
         <DashboardsGrid
           rows={dashboardsQ.data ?? []}
           onOpen={(id) => setActiveDashboardId(id)}
           onCreate={() => setCreateOpen(true)}
+          onInstallStarter={() => installStarterM.mutate()}
+          installingStarter={installStarterM.isPending}
         />
-      ) : tab === 'kpis' ? (
+      ) : tab === "kpis" ? (
         <KpiLibrary rows={kpisQ.data ?? []} />
-      ) : tab === 'reports' ? (
-        <ReportList rows={reportsQ.data ?? []} onCreate={() => setCreateOpen(true)} />
-      ) : tab === 'schedules' ? (
+      ) : tab === "reports" ? (
+        <ReportList
+          rows={reportsQ.data ?? []}
+          onCreate={() => setCreateOpen(true)}
+        />
+      ) : tab === "schedules" ? (
         <SchedulesList reports={reportsQ.data ?? []} />
       ) : (
-        <AlertsList rows={alertsQ.data ?? []} onCreate={() => setCreateOpen(true)} />
+        <AlertsList
+          rows={alertsQ.data ?? []}
+          onCreate={() => setCreateOpen(true)}
+        />
       )}
 
       {/* Dashboard render drawer */}
@@ -251,7 +330,7 @@ export function BIDashboardsPage() {
       {/* Create modal */}
       {createOpen && (
         <CreateModal
-          kind={tab as 'dashboards' | 'reports' | 'alerts'}
+          kind={tab as "dashboards" | "reports" | "alerts"}
           kpis={kpisQ.data ?? []}
           onClose={() => setCreateOpen(false)}
         />
@@ -266,35 +345,73 @@ function DashboardsGrid({
   rows,
   onOpen,
   onCreate,
+  onInstallStarter,
+  installingStarter,
 }: {
   rows: Dashboard[];
   onOpen: (id: string) => void;
   onCreate: () => void;
+  onInstallStarter: () => void;
+  installingStarter: boolean;
 }) {
   const { t } = useTranslation();
   if (rows.length === 0) {
     return (
       <Card padding="md">
-        <EmptyState
-          icon={<LayoutDashboard size={22} />}
-          title={t('bi.empty_dashboards', { defaultValue: 'No dashboards yet' })}
-          description={t('bi.empty_dashboards_desc', {
-            defaultValue:
-              'Create a dashboard for your role or project — pin KPI cards, charts and gauges.',
-          })}
-          action={{
-            label: t('bi.new_dashboard', { defaultValue: 'New Dashboard' }),
-            onClick: onCreate,
-          }}
-        />
+        <div className="flex flex-col items-center text-center py-8 px-4 max-w-lg mx-auto">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-50 text-sky-600 dark:bg-sky-900/30 dark:text-sky-300">
+            <Sparkles size={22} />
+          </div>
+          <h3 className="mt-3 text-base font-semibold text-content-primary">
+            {t("bi.starter_title", {
+              defaultValue: "Install the starter pack to see your data live",
+            })}
+          </h3>
+          <p className="mt-1.5 text-sm text-content-secondary">
+            {t("bi.starter_desc", {
+              defaultValue:
+                "One click installs 5 role-based dashboards (CEO · CFO · PM · Site · Safety), 14 system KPIs with 12-week history, 3 reports, 2 schedules and 4 alert rules. Idempotent — safe to re-run.",
+            })}
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            <Button
+              variant="primary"
+              icon={
+                installingStarter ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Sparkles size={14} />
+                )
+              }
+              onClick={onInstallStarter}
+              disabled={installingStarter}
+            >
+              {installingStarter
+                ? t("bi.starter_installing", { defaultValue: "Installing…" })
+                : t("bi.starter_install_cta", {
+                    defaultValue: "Install starter pack",
+                  })}
+            </Button>
+            <Button
+              variant="secondary"
+              icon={<Plus size={14} />}
+              onClick={onCreate}
+            >
+              {t("bi.new_dashboard", { defaultValue: "New Dashboard" })}
+            </Button>
+          </div>
+        </div>
       </Card>
     );
   }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
       {rows.map((d) => {
-        const widgets = Array.isArray((d.layout_json as { widgets?: unknown[] } | null)?.widgets)
-          ? ((d.layout_json as { widgets?: unknown[] }).widgets as unknown[]).length
+        const widgets = Array.isArray(
+          (d.layout_json as { widgets?: unknown[] } | null)?.widgets,
+        )
+          ? ((d.layout_json as { widgets?: unknown[] }).widgets as unknown[])
+              .length
           : 0;
         return (
           <Card key={d.id} padding="md" hoverable>
@@ -304,16 +421,20 @@ function DashboardsGrid({
               className="text-left w-full focus:outline-none"
             >
               <div className="flex items-start justify-between gap-2">
-                <h3 className="font-semibold text-content-primary truncate">{d.name}</h3>
+                <h3 className="font-semibold text-content-primary truncate">
+                  {d.name}
+                </h3>
                 <Badge variant={SCOPE_VARIANT[d.scope]}>{d.scope}</Badge>
               </div>
               {d.description && (
-                <p className="mt-1 text-xs text-content-secondary line-clamp-2">{d.description}</p>
+                <p className="mt-1 text-xs text-content-secondary line-clamp-2">
+                  {d.description}
+                </p>
               )}
               <div className="mt-3 flex items-center justify-between text-xs text-content-tertiary">
                 <span>
-                  {t('bi.widgets_count', {
-                    defaultValue: '{{count}} widgets',
+                  {t("bi.widgets_count", {
+                    defaultValue: "{{count}} widgets",
                     count: widgets,
                   })}
                 </span>
@@ -324,7 +445,7 @@ function DashboardsGrid({
               {d.is_default && (
                 <div className="mt-2">
                   <Badge variant="success">
-                    {t('bi.default', { defaultValue: 'Default' })}
+                    {t("bi.default", { defaultValue: "Default" })}
                   </Badge>
                 </div>
               )}
@@ -345,10 +466,10 @@ function KpiLibrary({ rows }: { rows: KpiDefinition[] }) {
       <Card padding="md">
         <EmptyState
           icon={<Activity size={22} />}
-          title={t('bi.empty_kpis', { defaultValue: 'No KPIs registered' })}
-          description={t('bi.empty_kpis_desc', {
+          title={t("bi.empty_kpis", { defaultValue: "No KPIs registered" })}
+          description={t("bi.empty_kpis_desc", {
             defaultValue:
-              'KPIs (CPI, SPI, cost variance, schedule health…) are provisioned per role. None are available for your account yet — an administrator can enable the relevant KPI pack.',
+              "KPIs (CPI, SPI, cost variance, schedule health…) are provisioned per role. None are available for your account yet — an administrator can enable the relevant KPI pack.",
           })}
         />
       </Card>
@@ -366,7 +487,7 @@ function KpiLibrary({ rows }: { rows: KpiDefinition[] }) {
 function KpiLibraryCard({ kpi }: { kpi: KpiDefinition }) {
   const { t } = useTranslation();
   const historyQ = useQuery({
-    queryKey: ['bi', 'kpi-history', kpi.code],
+    queryKey: ["bi", "kpi-history", kpi.code],
     queryFn: () => getKpiHistory(kpi.code, { limit: 12 }),
     staleTime: 60_000,
   });
@@ -383,40 +504,56 @@ function KpiLibraryCard({ kpi }: { kpi: KpiDefinition }) {
     <Card padding="md">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="font-semibold text-content-primary truncate" title={kpi.name}>
+          <h3
+            className="font-semibold text-content-primary truncate"
+            title={kpi.name}
+          >
             {kpi.name}
           </h3>
-          <p className="mt-0.5 text-xs font-mono text-content-tertiary">{kpi.code}</p>
+          <p className="mt-0.5 text-xs font-mono text-content-tertiary">
+            {kpi.code}
+          </p>
         </div>
         <Badge variant="neutral">{kpi.category}</Badge>
       </div>
       <div className="mt-3 flex items-end justify-between gap-2">
         <div>
           <p className="text-2xl font-semibold text-content-primary leading-none">
-            {latest != null ? formatValue(latest, kpi.unit) : '—'}
+            {latest != null ? formatValue(latest, kpi.unit) : "—"}
           </p>
           <p className="mt-1 text-xs text-content-tertiary">{kpi.unit}</p>
         </div>
-        {delta != null && (
-          <DeltaChip delta={delta} />
-        )}
+        {delta != null && <DeltaChip delta={delta} />}
       </div>
       <div className="mt-3">
         <Sparkline values={values} loading={historyQ.isLoading} />
       </div>
       {kpi.description && (
-        <p className="mt-3 text-xs text-content-secondary line-clamp-2">{kpi.description}</p>
+        <p className="mt-3 text-xs text-content-secondary line-clamp-2">
+          {kpi.description}
+        </p>
       )}
       <p className="mt-2 text-[10px] uppercase tracking-wide text-content-tertiary">
-        {t('bi.last_n_periods', { defaultValue: 'Last {{n}} periods', n: values.length })}
+        {t("bi.last_n_periods", {
+          defaultValue: "Last {{n}} periods",
+          n: values.length,
+        })}
       </p>
     </Card>
   );
 }
 
-function Sparkline({ values, loading }: { values: number[]; loading?: boolean }) {
+function Sparkline({
+  values,
+  loading,
+}: {
+  values: number[];
+  loading?: boolean;
+}) {
   if (loading) {
-    return <div className="h-10 w-full animate-pulse rounded bg-surface-secondary" />;
+    return (
+      <div className="h-10 w-full animate-pulse rounded bg-surface-secondary" />
+    );
   }
   if (values.length === 0) {
     return <div className="h-10 w-full rounded bg-surface-secondary/40" />;
@@ -433,12 +570,16 @@ function Sparkline({ values, loading }: { values: number[]; loading?: boolean })
       const y = H - ((v - min) / range) * (H - 4) - 2;
       return `${x.toFixed(2)},${y.toFixed(2)}`;
     })
-    .join(' ');
+    .join(" ");
   const last = values[values.length - 1] ?? 0;
   const lastX = (values.length - 1) * step;
   const lastY = H - ((last - min) / range) * (H - 4) - 2;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-10 w-full">
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      preserveAspectRatio="none"
+      className="h-10 w-full"
+    >
       <polyline
         fill="none"
         stroke="currentColor"
@@ -460,9 +601,9 @@ function Sparkline({ values, loading }: { values: number[]; loading?: boolean })
 
 function DeltaChip({ delta }: { delta: number }) {
   const Icon = delta > 0.5 ? TrendingUp : delta < -0.5 ? TrendingDown : Minus;
-  const variant: 'success' | 'error' | 'neutral' =
-    delta > 0.5 ? 'success' : delta < -0.5 ? 'error' : 'neutral';
-  const sign = delta > 0 ? '+' : '';
+  const variant: "success" | "error" | "neutral" =
+    delta > 0.5 ? "success" : delta < -0.5 ? "error" : "neutral";
+  const sign = delta > 0 ? "+" : "";
   return (
     <Badge variant={variant}>
       <span className="flex items-center gap-1">
@@ -490,13 +631,13 @@ function ReportList({
     mutationFn: (id: string) => runReport(id),
     onSuccess: (data) => {
       addToast({
-        type: 'success',
-        title: t('bi.report_run_ok', { defaultValue: 'Report generated' }),
-        message: `${data.row_count} ${t('bi.rows', { defaultValue: 'rows' })}`,
+        type: "success",
+        title: t("bi.report_run_ok", { defaultValue: "Report generated" }),
+        message: `${data.row_count} ${t("bi.rows", { defaultValue: "rows" })}`,
       });
-      qc.invalidateQueries({ queryKey: ['bi', 'reports'] });
+      qc.invalidateQueries({ queryKey: ["bi", "reports"] });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   if (rows.length === 0) {
@@ -504,13 +645,13 @@ function ReportList({
       <Card padding="md">
         <EmptyState
           icon={<FileText size={22} />}
-          title={t('bi.empty_reports', { defaultValue: 'No reports yet' })}
-          description={t('bi.empty_reports_desc', {
+          title={t("bi.empty_reports", { defaultValue: "No reports yet" })}
+          description={t("bi.empty_reports_desc", {
             defaultValue:
-              'Define a report (PDF/Excel/CSV) and schedule it for stakeholders.',
+              "Define a report (PDF/Excel/CSV) and schedule it for stakeholders.",
           })}
           action={{
-            label: t('bi.new_report', { defaultValue: 'New Report' }),
+            label: t("bi.new_report", { defaultValue: "New Report" }),
             onClick: onCreate,
           }}
         />
@@ -523,20 +664,36 @@ function ReportList({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('bi.code', { defaultValue: 'Code' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.name', { defaultValue: 'Name' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.scope', { defaultValue: 'Scope' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.format', { defaultValue: 'Format' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.code", { defaultValue: "Code" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.name", { defaultValue: "Name" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.scope", { defaultValue: "Scope" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.format", { defaultValue: "Format" })}
+              </th>
+              <th className="px-4 py-2.5 text-right">
+                {t("common.actions", { defaultValue: "Actions" })}
+              </th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className="border-t border-border-light">
-                <td className="px-4 py-2 font-mono text-xs text-content-secondary">{r.code}</td>
+                <td className="px-4 py-2 font-mono text-xs text-content-secondary">
+                  {r.code}
+                </td>
                 <td className="px-4 py-2 font-medium">{r.name}</td>
-                <td className="px-4 py-2"><Badge variant="neutral">{r.scope}</Badge></td>
-                <td className="px-4 py-2 text-xs text-content-secondary uppercase">{r.output_format}</td>
+                <td className="px-4 py-2">
+                  <Badge variant="neutral">{r.scope}</Badge>
+                </td>
+                <td className="px-4 py-2 text-xs text-content-secondary uppercase">
+                  {r.output_format}
+                </td>
                 <td className="px-4 py-2 text-right">
                   <Button
                     variant="secondary"
@@ -544,7 +701,7 @@ function ReportList({
                     onClick={() => runMut.mutate(r.id)}
                     loading={runMut.isPending && runMut.variables === r.id}
                   >
-                    {t('bi.run_now', { defaultValue: 'Run now' })}
+                    {t("bi.run_now", { defaultValue: "Run now" })}
                   </Button>
                 </td>
               </tr>
@@ -574,10 +731,12 @@ function SchedulesList({ reports }: { reports: ReportDefinition[] }) {
       <Card padding="md">
         <EmptyState
           icon={<CalendarClock size={22} />}
-          title={t('bi.empty_schedules', { defaultValue: 'No scheduled reports' })}
-          description={t('bi.empty_schedules_desc', {
+          title={t("bi.empty_schedules", {
+            defaultValue: "No scheduled reports",
+          })}
+          description={t("bi.empty_schedules_desc", {
             defaultValue:
-              'Create a report first, then attach a recurring schedule with recipients.',
+              "Create a report first, then attach a recurring schedule with recipients.",
           })}
         />
       </Card>
@@ -590,10 +749,18 @@ function SchedulesList({ reports }: { reports: ReportDefinition[] }) {
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('bi.report', { defaultValue: 'Report' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.frequency', { defaultValue: 'Frequency' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.next_run', { defaultValue: 'Next run' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.recipients', { defaultValue: 'Recipients' })}</th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.report", { defaultValue: "Report" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.frequency", { defaultValue: "Frequency" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.next_run", { defaultValue: "Next run" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.recipients", { defaultValue: "Recipients" })}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -601,7 +768,7 @@ function SchedulesList({ reports }: { reports: ReportDefinition[] }) {
               <tr key={r.id} className="border-t border-border-light">
                 <td className="px-4 py-2 font-medium">{r.name}</td>
                 <td className="px-4 py-2 text-xs text-content-secondary">
-                  {t('bi.frequency_value', { defaultValue: 'On demand' })}
+                  {t("bi.frequency_value", { defaultValue: "On demand" })}
                 </td>
                 <td className="px-4 py-2 text-xs text-content-secondary">—</td>
                 <td className="px-4 py-2 text-xs text-content-secondary">—</td>
@@ -611,9 +778,9 @@ function SchedulesList({ reports }: { reports: ReportDefinition[] }) {
         </table>
       </div>
       <div className="border-t border-border-light px-4 py-2.5 text-xs text-content-tertiary">
-        {t('bi.schedules_run_hint', {
+        {t("bi.schedules_run_hint", {
           defaultValue:
-            'Run a report on demand from the Reports tab. Recurring delivery is configured server-side.',
+            "Run a report on demand from the Reports tab. Recurring delivery is configured server-side.",
         })}
       </div>
     </Card>
@@ -633,12 +800,16 @@ function AlertsList({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const toggleMut = useMutation({
-    mutationFn: (args: { id: string; enabled: boolean }) => toggleAlert(args.id, args.enabled),
+    mutationFn: (args: { id: string; enabled: boolean }) =>
+      toggleAlert(args.id, args.enabled),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['bi', 'alerts'] });
-      addToast({ type: 'success', title: t('bi.alert_toggled', { defaultValue: 'Alert updated' }) });
+      qc.invalidateQueries({ queryKey: ["bi", "alerts"] });
+      addToast({
+        type: "success",
+        title: t("bi.alert_toggled", { defaultValue: "Alert updated" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   if (rows.length === 0) {
@@ -646,12 +817,13 @@ function AlertsList({
       <Card padding="md">
         <EmptyState
           icon={<Bell size={22} />}
-          title={t('bi.empty_alerts', { defaultValue: 'No alert rules' })}
-          description={t('bi.empty_alerts_desc', {
-            defaultValue: 'Watch a KPI and notify your team when it crosses a threshold.',
+          title={t("bi.empty_alerts", { defaultValue: "No alert rules" })}
+          description={t("bi.empty_alerts_desc", {
+            defaultValue:
+              "Watch a KPI and notify your team when it crosses a threshold.",
           })}
           action={{
-            label: t('bi.new_alert', { defaultValue: 'New Alert' }),
+            label: t("bi.new_alert", { defaultValue: "New Alert" }),
             onClick: onCreate,
           }}
         />
@@ -664,19 +836,33 @@ function AlertsList({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('bi.name', { defaultValue: 'Name' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.kpi', { defaultValue: 'KPI' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.condition', { defaultValue: 'Condition' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.severity', { defaultValue: 'Severity' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.last_triggered', { defaultValue: 'Last fired' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('bi.enabled', { defaultValue: 'Enabled' })}</th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.name", { defaultValue: "Name" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.kpi", { defaultValue: "KPI" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.condition", { defaultValue: "Condition" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.severity", { defaultValue: "Severity" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("bi.last_triggered", { defaultValue: "Last fired" })}
+              </th>
+              <th className="px-4 py-2.5 text-right">
+                {t("bi.enabled", { defaultValue: "Enabled" })}
+              </th>
             </tr>
           </thead>
           <tbody>
             {rows.map((a) => (
               <tr key={a.id} className="border-t border-border-light">
                 <td className="px-4 py-2 font-medium">{a.name}</td>
-                <td className="px-4 py-2 font-mono text-xs text-content-secondary">{a.kpi_code}</td>
+                <td className="px-4 py-2 font-mono text-xs text-content-secondary">
+                  {a.kpi_code}
+                </td>
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {a.condition} {String(a.threshold_value)}
                 </td>
@@ -686,7 +872,11 @@ function AlertsList({
                   </Badge>
                 </td>
                 <td className="px-4 py-2 text-xs text-content-secondary">
-                  {a.last_triggered_at ? <DateDisplay value={a.last_triggered_at} /> : '—'}
+                  {a.last_triggered_at ? (
+                    <DateDisplay value={a.last_triggered_at} />
+                  ) : (
+                    "—"
+                  )}
                 </td>
                 <td className="px-4 py-2 text-right">
                   <label className="inline-flex items-center gap-2 cursor-pointer">
@@ -694,7 +884,10 @@ function AlertsList({
                       type="checkbox"
                       checked={a.enabled}
                       onChange={(e) =>
-                        toggleMut.mutate({ id: a.id, enabled: e.target.checked })
+                        toggleMut.mutate({
+                          id: a.id,
+                          enabled: e.target.checked,
+                        })
                       }
                       className="h-4 w-4 rounded border-border accent-oe-blue"
                     />
@@ -715,10 +908,10 @@ function AlertsList({
 function useEscapeToClose(onClose: () => void) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 }
 
@@ -731,11 +924,67 @@ function DashboardRenderPanel({
 }) {
   const { t } = useTranslation();
   useEscapeToClose(onClose);
+
+  // Wave 4 / T11 — cross-filter wiring. The store is keyed by the active
+  // dashboard so opening a different board starts with a clean slate.
+  const {
+    activeDashboardId,
+    filters,
+    setActiveDashboard,
+    setFilter,
+    removeFilter,
+    clearFilters,
+  } = useDashboardFilters();
+  useEffect(() => {
+    setActiveDashboard(dashboardId);
+    // Wipe on unmount so closing the drawer doesn't leak filters into the next open.
+    return () => setActiveDashboard(null);
+  }, [dashboardId, setActiveDashboard]);
+
+  // Two query paths:
+  //  * /render — the legacy static path, used for the dashboard header
+  //    (name + cross_filter_enabled flag).
+  //  * /evaluate — the new path that honours cross-filter chips. Keyed on
+  //    the active filter dict so React Query re-fetches whenever the user
+  //    adds / removes a chip.
   const renderQ = useQuery({
-    queryKey: ['bi', 'dashboard-render', dashboardId],
+    queryKey: ["bi", "dashboard-render", dashboardId],
     queryFn: () => renderDashboard(dashboardId),
   });
+
+  const filtersForQuery = activeDashboardId === dashboardId ? filters : {};
+  const filterKeysJson = JSON.stringify(
+    Object.keys(filtersForQuery)
+      .sort()
+      .reduce<Record<string, unknown>>((acc, k) => {
+        acc[k] = filtersForQuery[k];
+        return acc;
+      }, {}),
+  );
+  const evaluateQ = useQuery({
+    queryKey: ["bi", "dashboard-evaluate", dashboardId, filterKeysJson],
+    queryFn: () => evaluateDashboard(dashboardId, filtersForQuery),
+    enabled: Boolean(renderQ.data),
+  });
+
   const data = renderQ.data;
+  const evalData = evaluateQ.data;
+  const widgetMap = new Map(
+    data?.widgets.map((w) => [w.widget.id, w.widget]) ?? [],
+  );
+  const evaluatedWidgets = evalData?.widgets ?? [];
+
+  const handleCellClick = (
+    widget: WidgetEvaluateResult,
+    row?: Record<string, unknown>,
+  ) => {
+    if (!data?.dashboard.cross_filter_enabled || !widget.drill_path) return;
+    const path = widget.drill_path;
+    const value = resolveDrillValue(path, row, widget);
+    if (value == null || value === "") return;
+    setFilter(path.filter_field, value);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex justify-end" onClick={onClose}>
       <div className="absolute inset-0 bg-black/30" />
@@ -748,8 +997,12 @@ function DashboardRenderPanel({
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-light bg-surface-elevated px-5 py-3">
           <div>
-            <h2 id="bi-dashboard-drawer-title" className="text-base font-semibold">
-              {data?.dashboard.name ?? t('bi.dashboard', { defaultValue: 'Dashboard' })}
+            <h2
+              id="bi-dashboard-drawer-title"
+              className="text-base font-semibold"
+            >
+              {data?.dashboard.name ??
+                t("bi.dashboard", { defaultValue: "Dashboard" })}
             </h2>
             {data?.rendered_at && (
               <p className="text-xs text-content-tertiary">
@@ -761,30 +1014,77 @@ function DashboardRenderPanel({
             type="button"
             onClick={onClose}
             className="rounded p-1 hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
         </div>
         <div className="space-y-3 p-5">
+          {data?.dashboard.cross_filter_enabled &&
+            Object.keys(filtersForQuery).length > 0 && (
+              <CrossFilterChips
+                filters={filtersForQuery}
+                onRemove={removeFilter}
+                onClear={clearFilters}
+              />
+            )}
           {renderQ.isLoading && <SkeletonTable rows={4} columns={3} />}
           {renderQ.isError && (
-            <p className="text-sm text-rose-600">{getErrorMessage(renderQ.error)}</p>
+            <p className="text-sm text-rose-600">
+              {getErrorMessage(renderQ.error)}
+            </p>
+          )}
+          {evaluateQ.isError && !renderQ.isError && (
+            <p className="text-sm text-rose-600">
+              {getErrorMessage(evaluateQ.error)}
+            </p>
           )}
           {data && data.widgets.length === 0 && (
             <EmptyState
               icon={<LayoutDashboard size={22} />}
-              title={t('bi.empty_widgets', { defaultValue: 'No widgets pinned' })}
-              description={t('bi.empty_widgets_desc', {
-                defaultValue: 'Edit the dashboard layout to pin KPI cards or charts.',
+              title={t("bi.empty_widgets", {
+                defaultValue: "No widgets pinned",
+              })}
+              description={t("bi.empty_widgets_desc", {
+                defaultValue:
+                  "Edit the dashboard layout to pin KPI cards or charts.",
               })}
             />
           )}
           {data && data.widgets.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {data.widgets.map((w) => (
-                <WidgetCard key={w.widget.id} widget={w} />
-              ))}
+              {evaluatedWidgets.length > 0
+                ? evaluatedWidgets.map((w) => {
+                    const widgetMeta = widgetMap.get(w.id);
+                    if (!widgetMeta) return null;
+                    // Map evaluate result to the WidgetRenderResult shape the
+                    // existing <WidgetCard> understands so we don't fork the
+                    // chart rendering code.
+                    const mapped: WidgetRenderResult = {
+                      widget: widgetMeta,
+                      value: w.value,
+                      unit: w.unit,
+                      breakdown: {
+                        ...w.breakdown,
+                        // Inject the series into ``trend`` so the line/bar
+                        // charts pick it up via their existing extraction.
+                        ...(w.series.length > 0 ? { trend: w.series } : {}),
+                      },
+                      from_cache: false,
+                    };
+                    return (
+                      <WidgetCard
+                        key={w.id}
+                        widget={mapped}
+                        crossFilterEnabled={data.dashboard.cross_filter_enabled}
+                        drillPath={w.drill_path}
+                        onCellClick={(row) => handleCellClick(w, row)}
+                      />
+                    );
+                  })
+                : data.widgets.map((w) => (
+                    <WidgetCard key={w.widget.id} widget={w} />
+                  ))}
             </div>
           )}
         </div>
@@ -793,25 +1093,116 @@ function DashboardRenderPanel({
   );
 }
 
-function WidgetCard({ widget }: { widget: WidgetRenderResult }) {
+/**
+ * Pull the per-click value off either the row (table/chart row click) or a
+ * literal value the widget config carries. ``filter_value_from`` is a
+ * lightweight expression — ``"row.<field>"`` reaches into the clicked row,
+ * any other string is treated as a literal.
+ */
+function resolveDrillValue(
+  path: DrillPath,
+  row: Record<string, unknown> | undefined,
+  widget: WidgetEvaluateResult,
+): unknown {
+  const expr = path.filter_value_from;
+  if (!expr) {
+    // No expression — fall back to the widget's kpi_code so a card click
+    // can at least filter "this KPI" out of the dashboard.
+    return widget.kpi_code ?? widget.id;
+  }
+  if (expr.startsWith("row.") && row) {
+    const key = expr.slice(4);
+    return row[key];
+  }
+  return expr;
+}
+
+function CrossFilterChips({
+  filters,
+  onRemove,
+  onClear,
+}: {
+  filters: Record<string, unknown>;
+  onRemove: (key: string) => void;
+  onClear: () => void;
+}) {
+  const { t } = useTranslation();
+  const entries = Object.entries(filters);
+  if (entries.length === 0) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border-light bg-surface-secondary/40 px-3 py-2">
+      <span className="text-xs font-medium uppercase tracking-wide text-content-tertiary">
+        {t("bi.active_filters", { defaultValue: "Active filters" })}
+      </span>
+      {entries.map(([key, value]) => (
+        <button
+          key={key}
+          type="button"
+          onClick={() => onRemove(key)}
+          className="inline-flex items-center gap-1 rounded-full bg-oe-blue/10 px-2.5 py-1 text-xs font-medium text-oe-blue hover:bg-oe-blue/20"
+        >
+          <span>
+            {key}: {String(value)}
+          </span>
+          <X size={10} />
+        </button>
+      ))}
+      {entries.length > 1 && (
+        <button
+          type="button"
+          onClick={onClear}
+          className="ml-auto text-xs text-content-tertiary hover:text-content-primary"
+        >
+          {t("bi.clear_filters", { defaultValue: "Clear all" })}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function WidgetCard({
+  widget,
+  crossFilterEnabled = false,
+  drillPath = null,
+  onCellClick,
+}: {
+  widget: WidgetRenderResult;
+  crossFilterEnabled?: boolean;
+  drillPath?: DrillPath | null;
+  onCellClick?: (row?: Record<string, unknown>) => void;
+}) {
   const { t } = useTranslation();
   const type = widget.widget.widget_type;
   const value = toNumber(widget.value);
-  const trend = (widget.breakdown?.['trend'] as unknown[]) || [];
+  const trend = (widget.breakdown?.["trend"] as unknown[]) || [];
   const trendValues = Array.isArray(trend)
     ? trend.map((p) => toNumber((p as { value?: number | string }).value ?? 0))
     : [];
-  const tableRows = (widget.breakdown?.['rows'] as unknown[]) || [];
+  const tableRows = (widget.breakdown?.["rows"] as unknown[]) || [];
 
-  if (type === 'kpi_card') {
+  // A widget is "drillable" only when the dashboard is opted in and the
+  // widget defines a drill_path. Otherwise we render the static card so
+  // we don't bait the user with a clickable cursor for nothing.
+  const drillable = crossFilterEnabled && !!drillPath;
+  const cardClickable = drillable && Boolean(onCellClick);
+  const cardOnClick = cardClickable ? () => onCellClick?.() : undefined;
+
+  if (type === "kpi_card") {
     const prev =
       trendValues.length > 1 ? trendValues[trendValues.length - 2] : null;
     const delta =
-      prev != null && prev !== 0 ? ((value - prev) / Math.abs(prev)) * 100 : null;
+      prev != null && prev !== 0
+        ? ((value - prev) / Math.abs(prev)) * 100
+        : null;
     return (
-      <Card padding="md">
+      <Card
+        padding="md"
+        hoverable={cardClickable || undefined}
+        onClick={cardOnClick}
+        className={cardClickable ? "cursor-pointer" : undefined}
+      >
         <p className="text-xs uppercase tracking-wide text-content-tertiary">
-          {widget.widget.kpi_code || t('bi.kpi', { defaultValue: 'KPI' })}
+          {widget.widget.kpi_code || t("bi.kpi", { defaultValue: "KPI" })}
         </p>
         <div className="mt-2 flex items-end justify-between">
           <p className="text-3xl font-semibold">
@@ -819,19 +1210,26 @@ function WidgetCard({ widget }: { widget: WidgetRenderResult }) {
           </p>
           {delta != null && <DeltaChip delta={delta} />}
         </div>
-        <p className="mt-1 text-xs text-content-tertiary">{widget.unit ?? ''}</p>
+        <p className="mt-1 text-xs text-content-tertiary">
+          {widget.unit ?? ""}
+        </p>
       </Card>
     );
   }
 
-  if (type === 'line_chart' || type === 'bar_chart') {
+  if (type === "line_chart" || type === "bar_chart") {
     return (
-      <Card padding="md">
+      <Card
+        padding="md"
+        hoverable={cardClickable || undefined}
+        onClick={cardOnClick}
+        className={cardClickable ? "cursor-pointer" : undefined}
+      >
         <p className="text-xs uppercase tracking-wide text-content-tertiary">
-          {widget.widget.kpi_code || t('bi.chart', { defaultValue: 'Chart' })}
+          {widget.widget.kpi_code || t("bi.chart", { defaultValue: "Chart" })}
         </p>
         <div className="mt-2">
-          {type === 'line_chart' ? (
+          {type === "line_chart" ? (
             <Sparkline values={trendValues.length ? trendValues : [value]} />
           ) : (
             <MiniBarChart values={trendValues.length ? trendValues : [value]} />
@@ -841,14 +1239,24 @@ function WidgetCard({ widget }: { widget: WidgetRenderResult }) {
     );
   }
 
-  if (type === 'gauge') {
-    const threshold = toNumber(widget.breakdown?.['threshold'] as number | string);
+  if (type === "gauge") {
+    const threshold = toNumber(
+      widget.breakdown?.["threshold"] as number | string,
+    );
     return (
-      <Card padding="md">
+      <Card
+        padding="md"
+        hoverable={cardClickable || undefined}
+        onClick={cardOnClick}
+        className={cardClickable ? "cursor-pointer" : undefined}
+      >
         <p className="text-xs uppercase tracking-wide text-content-tertiary">
-          {widget.widget.kpi_code || t('bi.gauge', { defaultValue: 'Gauge' })}
+          {widget.widget.kpi_code || t("bi.gauge", { defaultValue: "Gauge" })}
         </p>
-        <HalfGauge value={value} threshold={threshold || Math.max(1, value * 1.5)} />
+        <HalfGauge
+          value={value}
+          threshold={threshold || Math.max(1, value * 1.5)}
+        />
         <p className="mt-1 text-center text-sm font-semibold">
           {formatValue(value, widget.unit ?? null)}
         </p>
@@ -856,17 +1264,20 @@ function WidgetCard({ widget }: { widget: WidgetRenderResult }) {
     );
   }
 
-  if (type === 'table') {
-    const rows = Array.isArray(tableRows) ? (tableRows as Array<Record<string, unknown>>) : [];
+  if (type === "table") {
+    const rows = Array.isArray(tableRows)
+      ? (tableRows as Array<Record<string, unknown>>)
+      : [];
     const cols = rows.length > 0 ? Object.keys(rows[0] ?? {}) : [];
+    const rowClickable = drillable && Boolean(onCellClick);
     return (
       <Card padding="md" className="md:col-span-2">
         <p className="text-xs uppercase tracking-wide text-content-tertiary mb-2">
-          {widget.widget.kpi_code || t('bi.table', { defaultValue: 'Table' })}
+          {widget.widget.kpi_code || t("bi.table", { defaultValue: "Table" })}
         </p>
         {rows.length === 0 ? (
           <p className="text-xs text-content-tertiary">
-            {t('bi.no_rows', { defaultValue: 'No rows' })}
+            {t("bi.no_rows", { defaultValue: "No rows" })}
           </p>
         ) : (
           <div className="overflow-x-auto">
@@ -874,15 +1285,29 @@ function WidgetCard({ widget }: { widget: WidgetRenderResult }) {
               <thead className="text-content-tertiary">
                 <tr>
                   {cols.map((c) => (
-                    <th key={c} className="px-2 py-1 text-left font-medium">{c}</th>
+                    <th key={c} className="px-2 py-1 text-left font-medium">
+                      {c}
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {rows.slice(0, 10).map((row, i) => (
-                  <tr key={i} className="border-t border-border-light">
+                  <tr
+                    key={i}
+                    onClick={
+                      rowClickable ? () => onCellClick?.(row) : undefined
+                    }
+                    className={clsx(
+                      "border-t border-border-light",
+                      rowClickable &&
+                        "cursor-pointer hover:bg-surface-secondary/60",
+                    )}
+                  >
                     {cols.map((c) => (
-                      <td key={c} className="px-2 py-1">{String(row[c] ?? '')}</td>
+                      <td key={c} className="px-2 py-1">
+                        {String(row[c] ?? "")}
+                      </td>
                     ))}
                   </tr>
                 ))}
@@ -895,21 +1320,35 @@ function WidgetCard({ widget }: { widget: WidgetRenderResult }) {
   }
 
   return (
-    <Card padding="md">
-      <p className="text-xs uppercase tracking-wide text-content-tertiary">{type}</p>
-      <p className="mt-2 text-lg font-semibold">{formatValue(value, widget.unit ?? null)}</p>
+    <Card
+      padding="md"
+      hoverable={cardClickable || undefined}
+      onClick={cardOnClick}
+      className={cardClickable ? "cursor-pointer" : undefined}
+    >
+      <p className="text-xs uppercase tracking-wide text-content-tertiary">
+        {type}
+      </p>
+      <p className="mt-2 text-lg font-semibold">
+        {formatValue(value, widget.unit ?? null)}
+      </p>
     </Card>
   );
 }
 
 function MiniBarChart({ values }: { values: number[] }) {
-  if (values.length === 0) return <div className="h-16 w-full bg-surface-secondary/40" />;
+  if (values.length === 0)
+    return <div className="h-16 w-full bg-surface-secondary/40" />;
   const W = 200;
   const H = 60;
   const max = Math.max(...values, 1);
   const bw = W / values.length;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-16 w-full">
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      preserveAspectRatio="none"
+      className="h-16 w-full"
+    >
       {values.map((v, i) => {
         const h = (v / max) * (H - 4);
         return (
@@ -957,9 +1396,22 @@ function HalfGauge({ value, threshold }: { value: number; threshold: number }) {
         fill="none"
         stroke="currentColor"
         strokeWidth={6}
-        className={pct > 0.85 ? 'text-rose-500' : pct > 0.6 ? 'text-amber-500' : 'text-oe-blue'}
+        className={
+          pct > 0.85
+            ? "text-rose-500"
+            : pct > 0.6
+              ? "text-amber-500"
+              : "text-oe-blue"
+        }
       />
-      <line x1={cx} y1={cy} x2={nx} y2={ny} strokeWidth={2} className="stroke-content-primary" />
+      <line
+        x1={cx}
+        y1={cy}
+        x2={nx}
+        y2={ny}
+        strokeWidth={2}
+        className="stroke-content-primary"
+      />
       <circle cx={cx} cy={cy} r={3} className="fill-content-primary" />
     </svg>
   );
@@ -972,7 +1424,7 @@ function CreateModal({
   kpis,
   onClose,
 }: {
-  kind: 'dashboards' | 'reports' | 'alerts';
+  kind: "dashboards" | "reports" | "alerts";
   kpis: KpiDefinition[];
   onClose: () => void;
 }) {
@@ -982,39 +1434,50 @@ function CreateModal({
   const [busy, setBusy] = useState(false);
 
   const [dashForm, setDashForm] = useState({
-    name: '',
-    description: '',
-    scope: 'personal' as DashboardScope,
+    name: "",
+    description: "",
+    scope: "personal" as DashboardScope,
+    cross_filter_enabled: false,
   });
   const [reportForm, setReportForm] = useState({
-    code: '',
-    name: '',
-    description: '',
-    output_format: 'pdf' as 'pdf' | 'xlsx' | 'csv' | 'json',
+    code: "",
+    name: "",
+    description: "",
+    output_format: "pdf" as "pdf" | "xlsx" | "csv" | "json",
   });
   const [alertForm, setAlertForm] = useState({
-    name: '',
-    kpi_code: kpis[0]?.code ?? '',
-    condition: 'below' as AlertCondition,
-    threshold_value: '0',
-    severity: 'warning' as AlertSeverity,
+    name: "",
+    kpi_code: kpis[0]?.code ?? "",
+    condition: "below" as AlertCondition,
+    threshold_value: "0",
+    severity: "warning" as AlertSeverity,
   });
 
   const submit = async () => {
     setBusy(true);
     try {
-      if (kind === 'dashboards') {
-        if (!dashForm.name.trim()) throw new Error('Name required');
+      if (kind === "dashboards") {
+        if (!dashForm.name.trim()) throw new Error("Name required");
         await createDashboard(dashForm);
-        addToast({ type: 'success', title: t('bi.dashboard_created', { defaultValue: 'Dashboard created' }) });
-        qc.invalidateQueries({ queryKey: ['bi', 'dashboards'] });
-      } else if (kind === 'reports') {
-        if (!reportForm.code.trim() || !reportForm.name.trim()) throw new Error('Code & name required');
+        addToast({
+          type: "success",
+          title: t("bi.dashboard_created", {
+            defaultValue: "Dashboard created",
+          }),
+        });
+        qc.invalidateQueries({ queryKey: ["bi", "dashboards"] });
+      } else if (kind === "reports") {
+        if (!reportForm.code.trim() || !reportForm.name.trim())
+          throw new Error("Code & name required");
         await createReport(reportForm);
-        addToast({ type: 'success', title: t('bi.report_created', { defaultValue: 'Report created' }) });
-        qc.invalidateQueries({ queryKey: ['bi', 'reports'] });
+        addToast({
+          type: "success",
+          title: t("bi.report_created", { defaultValue: "Report created" }),
+        });
+        qc.invalidateQueries({ queryKey: ["bi", "reports"] });
       } else {
-        if (!alertForm.name.trim() || !alertForm.kpi_code.trim()) throw new Error('Name & KPI required');
+        if (!alertForm.name.trim() || !alertForm.kpi_code.trim())
+          throw new Error("Name & KPI required");
         await createAlert({
           name: alertForm.name,
           kpi_code: alertForm.kpi_code,
@@ -1022,34 +1485,37 @@ function CreateModal({
           threshold_value: Number(alertForm.threshold_value) || 0,
           severity: alertForm.severity,
         });
-        addToast({ type: 'success', title: t('bi.alert_created', { defaultValue: 'Alert created' }) });
-        qc.invalidateQueries({ queryKey: ['bi', 'alerts'] });
+        addToast({
+          type: "success",
+          title: t("bi.alert_created", { defaultValue: "Alert created" }),
+        });
+        qc.invalidateQueries({ queryKey: ["bi", "alerts"] });
       }
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
   };
 
   const titleByKind: Record<typeof kind, string> = {
-    dashboards: t('bi.new_dashboard', { defaultValue: 'New dashboard' }),
-    reports: t('bi.new_report', { defaultValue: 'New scheduled report' }),
-    alerts: t('bi.new_alert', { defaultValue: 'New KPI alert rule' }),
+    dashboards: t("bi.new_dashboard", { defaultValue: "New dashboard" }),
+    reports: t("bi.new_report", { defaultValue: "New scheduled report" }),
+    alerts: t("bi.new_alert", { defaultValue: "New KPI alert rule" }),
   };
   const subtitleByKind: Record<typeof kind, string> = {
-    dashboards: t('bi.new_dashboard_subtitle', {
+    dashboards: t("bi.new_dashboard_subtitle", {
       defaultValue:
-        'Start with the basics — you can add KPI cards, charts and gauges after the dashboard is created.',
+        "Start with the basics — you can add KPI cards, charts and gauges after the dashboard is created.",
     }),
-    reports: t('bi.new_report_subtitle', {
+    reports: t("bi.new_report_subtitle", {
       defaultValue:
-        'Define a report once, then schedule it for recurring delivery or run it on demand.',
+        "Define a report once, then schedule it for recurring delivery or run it on demand.",
     }),
-    alerts: t('bi.new_alert_subtitle', {
+    alerts: t("bi.new_alert_subtitle", {
       defaultValue:
-        'Trigger a notification whenever a KPI crosses a threshold. Throttling is on by default.',
+        "Trigger a notification whenever a KPI crosses a threshold. Throttling is on by default.",
     }),
   };
 
@@ -1059,12 +1525,12 @@ function CreateModal({
       onClose={onClose}
       title={titleByKind[kind]}
       subtitle={subtitleByKind[kind]}
-      size={kind === 'alerts' ? 'lg' : 'md'}
+      size={kind === "alerts" ? "lg" : "md"}
       busy={busy}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -1072,107 +1538,163 @@ function CreateModal({
             loading={busy}
             icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
           >
-            {t('common.create', { defaultValue: 'Create' })}
+            {t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
-      {kind === 'dashboards' && (
+      {kind === "dashboards" && (
         <WideModalSection columns={2}>
           <WideModalField
-            label={t('bi.name', { defaultValue: 'Name' })}
+            label={t("bi.name", { defaultValue: "Name" })}
             required
             span={2}
           >
             <input
               value={dashForm.name}
-              onChange={(e) => setDashForm({ ...dashForm, name: e.target.value })}
+              onChange={(e) =>
+                setDashForm({ ...dashForm, name: e.target.value })
+              }
               className={inputCls}
-              placeholder={t('bi.dashboard_name_placeholder', {
-                defaultValue: 'PM weekly overview',
+              placeholder={t("bi.dashboard_name_placeholder", {
+                defaultValue: "PM weekly overview",
               })}
             />
           </WideModalField>
           <WideModalField
-            label={t('bi.description', { defaultValue: 'Description' })}
-            hint={t('bi.description_hint', {
-              defaultValue: 'Shown in the dashboard tile and the share link.',
+            label={t("bi.description", { defaultValue: "Description" })}
+            hint={t("bi.description_hint", {
+              defaultValue: "Shown in the dashboard tile and the share link.",
             })}
             span={2}
           >
             <textarea
               value={dashForm.description}
-              onChange={(e) => setDashForm({ ...dashForm, description: e.target.value })}
+              onChange={(e) =>
+                setDashForm({ ...dashForm, description: e.target.value })
+              }
               rows={3}
-              className={clsx(inputCls, 'h-auto py-2 resize-y')}
+              className={clsx(inputCls, "h-auto py-2 resize-y")}
             />
           </WideModalField>
           <WideModalField
-            label={t('bi.scope', { defaultValue: 'Visibility scope' })}
-            hint={t('bi.scope_hint', {
+            label={t("bi.scope", { defaultValue: "Visibility scope" })}
+            hint={t("bi.scope_hint", {
               defaultValue:
-                'Personal = only you. Role = everyone in your role. Project = all members. Global = company-wide.',
+                "Personal = only you. Role = everyone in your role. Project = all members. Global = company-wide.",
             })}
             span={2}
           >
             <select
               value={dashForm.scope}
-              onChange={(e) => setDashForm({ ...dashForm, scope: e.target.value as DashboardScope })}
+              onChange={(e) =>
+                setDashForm({
+                  ...dashForm,
+                  scope: e.target.value as DashboardScope,
+                })
+              }
               className={inputCls}
             >
-              <option value="personal">{t('bi.scope_personal', { defaultValue: 'Personal — only me' })}</option>
-              <option value="role">{t('bi.scope_role', { defaultValue: 'Role — my team' })}</option>
-              <option value="project">{t('bi.scope_project', { defaultValue: 'Project — project members' })}</option>
-              <option value="global">{t('bi.scope_global', { defaultValue: 'Global — entire company' })}</option>
+              <option value="personal">
+                {t("bi.scope_personal", { defaultValue: "Personal — only me" })}
+              </option>
+              <option value="role">
+                {t("bi.scope_role", { defaultValue: "Role — my team" })}
+              </option>
+              <option value="project">
+                {t("bi.scope_project", {
+                  defaultValue: "Project — project members",
+                })}
+              </option>
+              <option value="global">
+                {t("bi.scope_global", {
+                  defaultValue: "Global — entire company",
+                })}
+              </option>
             </select>
+          </WideModalField>
+          <WideModalField
+            label={t("bi.cross_filter", {
+              defaultValue: "Cross-filter on click",
+            })}
+            hint={t("bi.cross_filter_hint", {
+              defaultValue:
+                "Power BI-style. When a tile defines a drill-path, clicking it scopes every other tile on the board to the clicked value.",
+            })}
+            span={2}
+          >
+            <label className="inline-flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={dashForm.cross_filter_enabled}
+                onChange={(e) =>
+                  setDashForm({
+                    ...dashForm,
+                    cross_filter_enabled: e.target.checked,
+                  })
+                }
+                className="h-4 w-4 rounded border-border accent-oe-blue"
+              />
+              {t("bi.cross_filter_enable", {
+                defaultValue: "Enable click-to-filter for this dashboard",
+              })}
+            </label>
           </WideModalField>
         </WideModalSection>
       )}
 
-      {kind === 'reports' && (
+      {kind === "reports" && (
         <WideModalSection columns={2}>
           <WideModalField
-            label={t('bi.code', { defaultValue: 'Report code' })}
+            label={t("bi.code", { defaultValue: "Report code" })}
             required
-            hint={t('bi.code_hint', {
-              defaultValue: 'Short identifier used in URLs and webhooks. Lowercase + underscores.',
+            hint={t("bi.code_hint", {
+              defaultValue:
+                "Short identifier used in URLs and webhooks. Lowercase + underscores.",
             })}
           >
             <input
               value={reportForm.code}
-              onChange={(e) => setReportForm({ ...reportForm, code: e.target.value })}
+              onChange={(e) =>
+                setReportForm({ ...reportForm, code: e.target.value })
+              }
               className={inputCls}
               placeholder="weekly_cost_summary"
             />
           </WideModalField>
           <WideModalField
-            label={t('bi.name', { defaultValue: 'Display name' })}
+            label={t("bi.name", { defaultValue: "Display name" })}
             required
           >
             <input
               value={reportForm.name}
-              onChange={(e) => setReportForm({ ...reportForm, name: e.target.value })}
+              onChange={(e) =>
+                setReportForm({ ...reportForm, name: e.target.value })
+              }
               className={inputCls}
-              placeholder={t('bi.report_name_placeholder', {
-                defaultValue: 'Weekly cost summary',
+              placeholder={t("bi.report_name_placeholder", {
+                defaultValue: "Weekly cost summary",
               })}
             />
           </WideModalField>
           <WideModalField
-            label={t('bi.description', { defaultValue: 'Description' })}
+            label={t("bi.description", { defaultValue: "Description" })}
             span={2}
           >
             <textarea
               value={reportForm.description}
-              onChange={(e) => setReportForm({ ...reportForm, description: e.target.value })}
+              onChange={(e) =>
+                setReportForm({ ...reportForm, description: e.target.value })
+              }
               rows={3}
-              className={clsx(inputCls, 'h-auto py-2 resize-y')}
+              className={clsx(inputCls, "h-auto py-2 resize-y")}
             />
           </WideModalField>
           <WideModalField
-            label={t('bi.format', { defaultValue: 'Output format' })}
-            hint={t('bi.format_hint', {
-              defaultValue: 'PDF for executives, XLSX for analysts, CSV/JSON for integrations.',
+            label={t("bi.format", { defaultValue: "Output format" })}
+            hint={t("bi.format_hint", {
+              defaultValue:
+                "PDF for executives, XLSX for analysts, CSV/JSON for integrations.",
             })}
             span={2}
           >
@@ -1181,7 +1703,11 @@ function CreateModal({
               onChange={(e) =>
                 setReportForm({
                   ...reportForm,
-                  output_format: e.target.value as 'pdf' | 'xlsx' | 'csv' | 'json',
+                  output_format: e.target.value as
+                    | "pdf"
+                    | "xlsx"
+                    | "csv"
+                    | "json",
                 })
               }
               className={inputCls}
@@ -1195,31 +1721,35 @@ function CreateModal({
         </WideModalSection>
       )}
 
-      {kind === 'alerts' && (
+      {kind === "alerts" && (
         <WideModalSection columns={2}>
           <WideModalField
-            label={t('bi.name', { defaultValue: 'Rule name' })}
+            label={t("bi.name", { defaultValue: "Rule name" })}
             required
             span={2}
           >
             <input
               value={alertForm.name}
-              onChange={(e) => setAlertForm({ ...alertForm, name: e.target.value })}
+              onChange={(e) =>
+                setAlertForm({ ...alertForm, name: e.target.value })
+              }
               className={inputCls}
-              placeholder={t('bi.alert_name_placeholder', {
-                defaultValue: 'CPI dropped below 0.9',
+              placeholder={t("bi.alert_name_placeholder", {
+                defaultValue: "CPI dropped below 0.9",
               })}
             />
           </WideModalField>
           <WideModalField
-            label={t('bi.kpi', { defaultValue: 'KPI to monitor' })}
+            label={t("bi.kpi", { defaultValue: "KPI to monitor" })}
             required
             span={2}
           >
             {kpis.length > 0 ? (
               <select
                 value={alertForm.kpi_code}
-                onChange={(e) => setAlertForm({ ...alertForm, kpi_code: e.target.value })}
+                onChange={(e) =>
+                  setAlertForm({ ...alertForm, kpi_code: e.target.value })
+                }
                 className={inputCls}
               >
                 {kpis.map((k) => (
@@ -1231,28 +1761,49 @@ function CreateModal({
             ) : (
               <input
                 value={alertForm.kpi_code}
-                onChange={(e) => setAlertForm({ ...alertForm, kpi_code: e.target.value })}
+                onChange={(e) =>
+                  setAlertForm({ ...alertForm, kpi_code: e.target.value })
+                }
                 className={inputCls}
                 placeholder="cost_variance_pct"
               />
             )}
           </WideModalField>
-          <WideModalField label={t('bi.condition', { defaultValue: 'Trigger when value is' })}>
+          <WideModalField
+            label={t("bi.condition", { defaultValue: "Trigger when value is" })}
+          >
             <select
               value={alertForm.condition}
               onChange={(e) =>
-                setAlertForm({ ...alertForm, condition: e.target.value as AlertCondition })
+                setAlertForm({
+                  ...alertForm,
+                  condition: e.target.value as AlertCondition,
+                })
               }
               className={inputCls}
             >
-              <option value="above">{t('bi.cond_above', { defaultValue: 'Above threshold' })}</option>
-              <option value="below">{t('bi.cond_below', { defaultValue: 'Below threshold' })}</option>
-              <option value="equals">{t('bi.cond_equals', { defaultValue: 'Equal to threshold' })}</option>
-              <option value="not_equals">{t('bi.cond_not_equals', { defaultValue: 'Not equal to threshold' })}</option>
-              <option value="changed_by_more_than">{t('bi.cond_change', { defaultValue: 'Changed by more than' })}</option>
+              <option value="above">
+                {t("bi.cond_above", { defaultValue: "Above threshold" })}
+              </option>
+              <option value="below">
+                {t("bi.cond_below", { defaultValue: "Below threshold" })}
+              </option>
+              <option value="equals">
+                {t("bi.cond_equals", { defaultValue: "Equal to threshold" })}
+              </option>
+              <option value="not_equals">
+                {t("bi.cond_not_equals", {
+                  defaultValue: "Not equal to threshold",
+                })}
+              </option>
+              <option value="changed_by_more_than">
+                {t("bi.cond_change", { defaultValue: "Changed by more than" })}
+              </option>
             </select>
           </WideModalField>
-          <WideModalField label={t('bi.threshold', { defaultValue: 'Threshold value' })}>
+          <WideModalField
+            label={t("bi.threshold", { defaultValue: "Threshold value" })}
+          >
             <input
               type="number"
               value={alertForm.threshold_value}
@@ -1263,22 +1814,36 @@ function CreateModal({
             />
           </WideModalField>
           <WideModalField
-            label={t('bi.severity', { defaultValue: 'Severity' })}
-            hint={t('bi.severity_hint', {
-              defaultValue: 'Drives notification channel & escalation behaviour.',
+            label={t("bi.severity", { defaultValue: "Severity" })}
+            hint={t("bi.severity_hint", {
+              defaultValue:
+                "Drives notification channel & escalation behaviour.",
             })}
             span={2}
           >
             <select
               value={alertForm.severity}
               onChange={(e) =>
-                setAlertForm({ ...alertForm, severity: e.target.value as AlertSeverity })
+                setAlertForm({
+                  ...alertForm,
+                  severity: e.target.value as AlertSeverity,
+                })
               }
               className={inputCls}
             >
-              <option value="info">{t('bi.sev_info', { defaultValue: 'Info — log only' })}</option>
-              <option value="warning">{t('bi.sev_warning', { defaultValue: 'Warning — in-app banner' })}</option>
-              <option value="critical">{t('bi.sev_critical', { defaultValue: 'Critical — email + Slack' })}</option>
+              <option value="info">
+                {t("bi.sev_info", { defaultValue: "Info — log only" })}
+              </option>
+              <option value="warning">
+                {t("bi.sev_warning", {
+                  defaultValue: "Warning — in-app banner",
+                })}
+              </option>
+              <option value="critical">
+                {t("bi.sev_critical", {
+                  defaultValue: "Critical — email + Slack",
+                })}
+              </option>
             </select>
           </WideModalField>
         </WideModalSection>
@@ -1286,4 +1851,3 @@ function CreateModal({
     </WideModal>
   );
 }
-

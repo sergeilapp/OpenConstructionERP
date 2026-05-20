@@ -5,33 +5,33 @@
  * 2D context, the entity data, and the current viewport state.
  */
 
-import type { DxfEntity } from '../api';
-import type { ViewportState } from './viewport';
-import { worldToScreen } from './viewport';
+import type { DxfEntity } from "../api";
+import type { ViewportState } from "./viewport";
+import { worldToScreen } from "./viewport";
 
 /* ── AutoCAD Color Index → CSS hex ─────────────────────────────────────── */
 
 const ACI_TABLE: Record<number, string> = {
-  0: '#000000', // ByBlock
-  1: '#FF0000', // Red
-  2: '#FFFF00', // Yellow
-  3: '#00FF00', // Green
-  4: '#00FFFF', // Cyan
-  5: '#0000FF', // Blue
-  6: '#FF00FF', // Magenta
-  7: '#FFFFFF', // White / Black (display-dependent)
-  8: '#808080', // Dark grey
-  9: '#C0C0C0', // Light grey
+  0: "#000000", // ByBlock
+  1: "#FF0000", // Red
+  2: "#FFFF00", // Yellow
+  3: "#00FF00", // Green
+  4: "#00FFFF", // Cyan
+  5: "#0000FF", // Blue
+  6: "#FF00FF", // Magenta
+  7: "#FFFFFF", // White / Black (display-dependent)
+  8: "#808080", // Dark grey
+  9: "#C0C0C0", // Light grey
 };
 
 /** Convert an entity color (ACI number or hex string) to a CSS hex color. */
 export function resolveColor(color: string | number): string {
-  if (typeof color === 'string') {
+  if (typeof color === "string") {
     // Already a hex color string
-    if (color.startsWith('#')) return color;
-    return '#CCCCCC';
+    if (color.startsWith("#")) return color;
+    return "#CCCCCC";
   }
-  return ACI_TABLE[color] ?? '#CCCCCC';
+  return ACI_TABLE[color] ?? "#CCCCCC";
 }
 
 /** @deprecated Use resolveColor instead */
@@ -86,14 +86,24 @@ function isInViewport(
       for (const idx of checkIndices) {
         const v = entity.vertices[idx]!;
         const s = worldToScreen(v.x, v.y, vp);
-        if (s.x > -margin && s.x < canvasW + margin && s.y > -margin && s.y < canvasH + margin) {
+        if (
+          s.x > -margin &&
+          s.x < canvasW + margin &&
+          s.y > -margin &&
+          s.y < canvasH + margin
+        ) {
           return true;
         }
       }
       // For LINE entities, also check end point
     } else if (entity.end) {
       const s = worldToScreen(entity.end.x, entity.end.y, vp);
-      if (s.x > -margin && s.x < canvasW + margin && s.y > -margin && s.y < canvasH + margin) {
+      if (
+        s.x > -margin &&
+        s.x < canvasW + margin &&
+        s.y > -margin &&
+        s.y < canvasH + margin
+      ) {
         return true;
       }
     }
@@ -119,7 +129,7 @@ export function renderEntities(
 
   // Render hatches first (background fill)
   for (const entity of entities) {
-    if (entity.type === 'HATCH' && visibleLayers.has(entity.layer)) {
+    if (entity.type === "HATCH" && visibleLayers.has(entity.layer)) {
       if (!isInViewport(entity, vp, cw, ch)) continue;
       applyStyle(ctx, entity, selectedId);
       renderHatch(ctx, entity, vp);
@@ -129,34 +139,34 @@ export function renderEntities(
   // Render geometry entities
   for (const entity of entities) {
     if (!visibleLayers.has(entity.layer)) continue;
-    if (entity.type === 'HATCH') continue; // already rendered
+    if (entity.type === "HATCH") continue; // already rendered
     if (!isInViewport(entity, vp, cw, ch)) continue;
 
     applyStyle(ctx, entity, selectedId);
 
     switch (entity.type) {
-      case 'LINE':
+      case "LINE":
         renderLine(ctx, entity, vp);
         break;
-      case 'LWPOLYLINE':
+      case "LWPOLYLINE":
         renderPolyline(ctx, entity, vp);
         break;
-      case 'ARC':
+      case "ARC":
         renderArc(ctx, entity, vp);
         break;
-      case 'CIRCLE':
+      case "CIRCLE":
         renderCircle(ctx, entity, vp);
         break;
-      case 'ELLIPSE':
+      case "ELLIPSE":
         renderEllipse(ctx, entity, vp);
         break;
-      case 'TEXT':
+      case "TEXT":
         renderText(ctx, entity, vp);
         break;
-      case 'POINT':
+      case "POINT":
         renderPoint(ctx, entity, vp);
         break;
-      case 'INSERT':
+      case "INSERT":
         renderInsert(ctx, entity, vp);
         break;
     }
@@ -170,18 +180,18 @@ function applyStyle(
 ): void {
   const isSelected = entity.id === selectedId;
   if (isSelected) {
-    ctx.strokeStyle = '#60a5fa';
-    ctx.fillStyle = '#60a5fa';
+    ctx.strokeStyle = "#60a5fa";
+    ctx.fillStyle = "#60a5fa";
     ctx.lineWidth = 2.5;
     // Glow effect via shadow
-    ctx.shadowColor = 'rgba(96, 165, 250, 0.5)';
+    ctx.shadowColor = "rgba(96, 165, 250, 0.5)";
     ctx.shadowBlur = 8;
   } else {
     const color = resolveColor(entity.color);
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
     ctx.lineWidth = 1;
-    ctx.shadowColor = 'transparent';
+    ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
   }
 }
@@ -297,10 +307,10 @@ function createDiagonalPattern(
   if (hatchPatternCache.has(cacheKey)) return hatchPatternCache.get(cacheKey)!;
 
   const size = spacing;
-  const offscreen = document.createElement('canvas');
+  const offscreen = document.createElement("canvas");
   offscreen.width = size;
   offscreen.height = size;
-  const pctx = offscreen.getContext('2d');
+  const pctx = offscreen.getContext("2d");
   if (!pctx) return null;
 
   pctx.strokeStyle = color;
@@ -316,7 +326,7 @@ function createDiagonalPattern(
   pctx.lineTo(size * 2, 0);
   pctx.stroke();
 
-  const pattern = ctx.createPattern(offscreen, 'repeat');
+  const pattern = ctx.createPattern(offscreen, "repeat");
   hatchPatternCache.set(cacheKey, pattern);
   return pattern;
 }
@@ -340,13 +350,17 @@ export function renderHatch(
 
   ctx.save();
 
-  const patternName = (entity.pattern_name ?? '').toUpperCase();
+  const patternName = (entity.pattern_name ?? "").toUpperCase();
 
-  if (entity.is_solid || patternName === 'SOLID') {
+  if (entity.is_solid || patternName === "SOLID") {
     // Solid fill
     ctx.globalAlpha = 0.15;
     ctx.fill();
-  } else if (patternName === 'ANSI31' || patternName === 'ANSI32' || patternName === 'ANSI37') {
+  } else if (
+    patternName === "ANSI31" ||
+    patternName === "ANSI32" ||
+    patternName === "ANSI37"
+  ) {
     // Diagonal line patterns
     const color = ctx.fillStyle as string;
     const pattern = createDiagonalPattern(ctx, color, 8);
@@ -388,11 +402,11 @@ export function renderText(
     ctx.translate(pos.x, pos.y);
     ctx.rotate(-entity.rotation); // negate for screen Y-flip
     ctx.font = `${fontSize}px monospace`;
-    ctx.textBaseline = 'bottom';
+    ctx.textBaseline = "bottom";
     ctx.fillText(entity.text, 0, 0);
   } else {
     ctx.font = `${fontSize}px monospace`;
-    ctx.textBaseline = 'bottom';
+    ctx.textBaseline = "bottom";
     ctx.fillText(entity.text, pos.x, pos.y);
   }
   ctx.restore();
@@ -427,8 +441,8 @@ function renderInsert(
   ctx.closePath();
   ctx.stroke();
   if (entity.block_name) {
-    ctx.font = '9px monospace';
-    ctx.textBaseline = 'top';
+    ctx.font = "9px monospace";
+    ctx.textBaseline = "top";
     ctx.fillText(entity.block_name, pos.x + s + 2, pos.y - s);
   }
 }

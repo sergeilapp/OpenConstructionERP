@@ -10,18 +10,18 @@
  * client so a 500k-row model stays responsive).
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { Card, Badge } from '@/shared/ui';
-import { Copy as CopyIcon, Loader2 } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { Card, Badge } from "@/shared/ui";
+import { Copy as CopyIcon, Loader2 } from "lucide-react";
 import {
   fetchMissingness,
   valueCounts,
   type ColumnMissingness,
   type MissingnessSortKey,
-} from './api';
-import { useToastStore } from '@/stores/useToastStore';
+} from "./api";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface MissingDataPanelProps {
   sessionId: string;
@@ -34,11 +34,14 @@ interface TooltipState {
 }
 
 /* ── Canvas colours (aligned with OE palette) ───────────────────────── */
-const CELL_PRESENT = '#1f2937'; // slate-800 — "black"
-const CELL_MISSING = '#e5e7eb'; // gray-200 — "light-gray"
-const ROW_LINE = '#2563eb'; // oe-blue
+const CELL_PRESENT = "#1f2937"; // slate-800 — "black"
+const CELL_MISSING = "#e5e7eb"; // gray-200 — "light-gray"
+const ROW_LINE = "#2563eb"; // oe-blue
 
-function pickFilterColumn(columnNames: string[], candidates: string[]): string | null {
+function pickFilterColumn(
+  columnNames: string[],
+  candidates: string[],
+): string | null {
   const lower = columnNames.reduce<Record<string, string>>((acc, c) => {
     acc[c.toLowerCase()] = c;
     return acc;
@@ -54,9 +57,9 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [categoryFilter, setCategoryFilter] = useState<string>('');
-  const [elementTypeFilter, setElementTypeFilter] = useState<string>('');
-  const [sortKey, setSortKey] = useState<MissingnessSortKey>('fill_desc');
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [elementTypeFilter, setElementTypeFilter] = useState<string>("");
+  const [sortKey, setSortKey] = useState<MissingnessSortKey>("fill_desc");
 
   const [hover, setHover] = useState<TooltipState | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -65,7 +68,13 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
 
   /* ── Primary fetch (matrix + fill-rates) ──────────────────────────── */
   const { data, isLoading, isFetching, error } = useQuery({
-    queryKey: ['cad-missingness', sessionId, categoryFilter, elementTypeFilter, sortKey],
+    queryKey: [
+      "cad-missingness",
+      sessionId,
+      categoryFilter,
+      elementTypeFilter,
+      sortKey,
+    ],
     queryFn: () =>
       fetchMissingness(sessionId, {
         categoryFilter: categoryFilter || undefined,
@@ -76,23 +85,29 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
   });
 
   /* ── Dropdown options — load via value-counts on category / type ──── */
-  const columnNames = useMemo(() => (data?.columns ?? []).map((c) => c.name), [data]);
+  const columnNames = useMemo(
+    () => (data?.columns ?? []).map((c) => c.name),
+    [data],
+  );
 
-  const categoryCol = useMemo(() => pickFilterColumn(columnNames, ['category']), [columnNames]);
+  const categoryCol = useMemo(
+    () => pickFilterColumn(columnNames, ["category"]),
+    [columnNames],
+  );
   const typeCol = useMemo(
-    () => pickFilterColumn(columnNames, ['type name', 'type', 'family']),
+    () => pickFilterColumn(columnNames, ["type name", "type", "family"]),
     [columnNames],
   );
 
   const { data: categoryOpts } = useQuery({
-    queryKey: ['cad-value-counts-missing', sessionId, categoryCol],
+    queryKey: ["cad-value-counts-missing", sessionId, categoryCol],
     queryFn: () => valueCounts(sessionId, categoryCol!, 100),
     enabled: !!categoryCol,
     staleTime: 60_000,
   });
 
   const { data: typeOpts } = useQuery({
-    queryKey: ['cad-value-counts-missing', sessionId, typeCol],
+    queryKey: ["cad-value-counts-missing", sessionId, typeCol],
     queryFn: () => valueCounts(sessionId, typeCol!, 200),
     enabled: !!typeCol,
     staleTime: 60_000,
@@ -113,7 +128,7 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
     canvas.style.width = `${cssWidth}px`;
     canvas.style.height = `${cssHeight}px`;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.scale(dpr, dpr);
 
@@ -139,7 +154,12 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
         if (bit === 1) {
           if (runStart === -1) runStart = r;
         } else if (runStart !== -1) {
-          ctx.fillRect(x, runStart * rowHeight, Math.max(colWidth - 0.5, 0.5), (r - runStart) * rowHeight);
+          ctx.fillRect(
+            x,
+            runStart * rowHeight,
+            Math.max(colWidth - 0.5, 0.5),
+            (r - runStart) * rowHeight,
+          );
           runStart = -1;
         }
       }
@@ -167,15 +187,15 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
     canvas.style.width = `${cssWidth}px`;
     canvas.style.height = `${cssHeight}px`;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.scale(dpr, dpr);
 
-    ctx.fillStyle = '#f9fafb';
+    ctx.fillStyle = "#f9fafb";
     ctx.fillRect(0, 0, cssWidth, cssHeight);
 
     // Reference lines at 0%, 50%, 100%
-    ctx.strokeStyle = '#e5e7eb';
+    ctx.strokeStyle = "#e5e7eb";
     ctx.lineWidth = 1;
     [0, 0.25, 0.5, 0.75, 1].forEach((pct) => {
       const x = Math.round(pct * (cssWidth - 1)) + 0.5;
@@ -207,10 +227,17 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
     const rect = canvas.getBoundingClientRect();
     const relX = e.clientX - rect.left;
     const colWidth = rect.width / data.columns.length;
-    const colIdx = Math.min(Math.floor(relX / colWidth), data.columns.length - 1);
+    const colIdx = Math.min(
+      Math.floor(relX / colWidth),
+      data.columns.length - 1,
+    );
     const col = data.columns[colIdx];
     if (!col) return;
-    setHover({ x: e.clientX - rect.left, y: e.clientY - rect.top, column: col });
+    setHover({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      column: col,
+    });
   }
 
   function handleCanvasLeave() {
@@ -220,18 +247,20 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
   /* ── Copy CSV summary ─────────────────────────────────────────────── */
   function handleCopyCsv() {
     if (!data) return;
-    const header = 'column,non_null_count,fill_rate_pct,dtype\n';
+    const header = "column,non_null_count,fill_rate_pct,dtype\n";
     const body = data.columns
       .map(
         (c) =>
           `"${c.name.replaceAll('"', '""')}",${c.non_null_count},${(c.fill_rate * 100).toFixed(2)},${c.dtype}`,
       )
-      .join('\n');
+      .join("\n");
     const csv = header + body;
     void navigator.clipboard.writeText(csv).then(() => {
       addToast({
-        type: 'success',
-        title: t('explorer.missingness_csv_copied', { defaultValue: 'CSV summary copied to clipboard‌⁠‍' }),
+        type: "success",
+        title: t("explorer.missingness_csv_copied", {
+          defaultValue: "CSV summary copied to clipboard‌⁠‍",
+        }),
       });
     });
   }
@@ -242,7 +271,9 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
       <div className="flex items-center justify-center py-12 text-content-tertiary">
         <Loader2 className="animate-spin mr-2" size={16} />
         <span className="text-xs">
-          {t('explorer.missingness_loading', { defaultValue: 'Computing fill-rates...‌⁠‍' })}
+          {t("explorer.missingness_loading", {
+            defaultValue: "Computing fill-rates...‌⁠‍",
+          })}
         </span>
       </div>
     );
@@ -252,8 +283,9 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
     return (
       <Card className="p-4 border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900">
         <p className="text-xs text-red-700 dark:text-red-300">
-          {t('explorer.missingness_error', {
-            defaultValue: 'Unable to compute column fill-rates for this session.‌⁠‍',
+          {t("explorer.missingness_error", {
+            defaultValue:
+              "Unable to compute column fill-rates for this session.‌⁠‍",
           })}
         </p>
       </Card>
@@ -263,13 +295,13 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
   if (!data) return null;
 
   const footerLabel = data.sampled
-    ? t('explorer.missingness_footer_sampled', {
-        defaultValue: 'Showing {{n}} of {{m}} rows (random sample)‌⁠‍',
+    ? t("explorer.missingness_footer_sampled", {
+        defaultValue: "Showing {{n}} of {{m}} rows (random sample)‌⁠‍",
         n: data.sampled_rows.toLocaleString(),
         m: data.total_rows.toLocaleString(),
       })
-    : t('explorer.missingness_footer_full', {
-        defaultValue: 'Showing all {{n}} rows‌⁠‍',
+    : t("explorer.missingness_footer_full", {
+        defaultValue: "Showing all {{n}} rows‌⁠‍",
         n: data.total_rows.toLocaleString(),
       });
 
@@ -281,7 +313,9 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
           {categoryCol && (
             <label className="flex items-center gap-2">
               <span className="text-2xs font-semibold text-content-secondary uppercase tracking-wide">
-                {t('explorer.missingness_category', { defaultValue: 'Category' })}
+                {t("explorer.missingness_category", {
+                  defaultValue: "Category",
+                })}
               </span>
               <select
                 value={categoryFilter}
@@ -290,7 +324,7 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
                 data-testid="missingness-category-filter"
               >
                 <option value="">
-                  {t('explorer.missingness_all', { defaultValue: 'All' })}
+                  {t("explorer.missingness_all", { defaultValue: "All" })}
                 </option>
                 {(categoryOpts?.values ?? []).map((v) => (
                   <option key={v.value} value={v.value}>
@@ -303,7 +337,9 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
           {typeCol && (
             <label className="flex items-center gap-2">
               <span className="text-2xs font-semibold text-content-secondary uppercase tracking-wide">
-                {t('explorer.missingness_element_type', { defaultValue: 'Element Type' })}
+                {t("explorer.missingness_element_type", {
+                  defaultValue: "Element Type",
+                })}
               </span>
               <select
                 value={elementTypeFilter}
@@ -312,7 +348,7 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
                 data-testid="missingness-type-filter"
               >
                 <option value="">
-                  {t('explorer.missingness_all', { defaultValue: 'All' })}
+                  {t("explorer.missingness_all", { defaultValue: "All" })}
                 </option>
                 {(typeOpts?.values ?? []).map((v) => (
                   <option key={v.value} value={v.value}>
@@ -325,7 +361,7 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
 
           <label className="flex items-center gap-2">
             <span className="text-2xs font-semibold text-content-secondary uppercase tracking-wide">
-              {t('explorer.missingness_sort', { defaultValue: 'Sort columns' })}
+              {t("explorer.missingness_sort", { defaultValue: "Sort columns" })}
             </span>
             <select
               value={sortKey}
@@ -334,29 +370,44 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
               data-testid="missingness-sort"
             >
               <option value="fill_desc">
-                {t('explorer.missingness_sort_fill_desc', { defaultValue: 'Fill-rate (high → low)' })}
+                {t("explorer.missingness_sort_fill_desc", {
+                  defaultValue: "Fill-rate (high → low)",
+                })}
               </option>
               <option value="fill_asc">
-                {t('explorer.missingness_sort_fill_asc', { defaultValue: 'Fill-rate (low → high)' })}
+                {t("explorer.missingness_sort_fill_asc", {
+                  defaultValue: "Fill-rate (low → high)",
+                })}
               </option>
               <option value="alpha_asc">
-                {t('explorer.missingness_sort_alpha_asc', { defaultValue: 'Alphabetical (A → Z)' })}
+                {t("explorer.missingness_sort_alpha_asc", {
+                  defaultValue: "Alphabetical (A → Z)",
+                })}
               </option>
               <option value="alpha_desc">
-                {t('explorer.missingness_sort_alpha_desc', { defaultValue: 'Alphabetical (Z → A)' })}
+                {t("explorer.missingness_sort_alpha_desc", {
+                  defaultValue: "Alphabetical (Z → A)",
+                })}
               </option>
             </select>
           </label>
 
           <div className="ml-auto flex items-center gap-3">
             <div className="flex items-center gap-1.5 text-2xs text-content-tertiary">
-              <span className="inline-block w-3 h-3 rounded-sm" style={{ background: CELL_PRESENT }} />
-              {t('explorer.missingness_legend_present', { defaultValue: 'Present' })}
+              <span
+                className="inline-block w-3 h-3 rounded-sm"
+                style={{ background: CELL_PRESENT }}
+              />
+              {t("explorer.missingness_legend_present", {
+                defaultValue: "Present",
+              })}
               <span
                 className="inline-block w-3 h-3 rounded-sm border border-border-light ml-2"
                 style={{ background: CELL_MISSING }}
               />
-              {t('explorer.missingness_legend_missing', { defaultValue: 'Missing' })}
+              {t("explorer.missingness_legend_missing", {
+                defaultValue: "Missing",
+              })}
             </div>
             <button
               type="button"
@@ -365,7 +416,7 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
               data-testid="missingness-copy-csv"
             >
               <CopyIcon size={12} />
-              {t('explorer.missingness_copy_csv', { defaultValue: 'Copy CSV' })}
+              {t("explorer.missingness_copy_csv", { defaultValue: "Copy CSV" })}
             </button>
           </div>
         </div>
@@ -375,13 +426,19 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
       <Card padding="none" className="overflow-hidden">
         <div className="px-4 py-2.5 border-b border-border-light bg-surface-secondary/30 flex items-center gap-2">
           <h3 className="text-xs font-semibold text-content-primary">
-            {t('explorer.missingness_title', { defaultValue: 'Column Fill-Rate Matrix' })}
+            {t("explorer.missingness_title", {
+              defaultValue: "Column Fill-Rate Matrix",
+            })}
           </h3>
           <Badge size="sm" variant="neutral">
-            {data.columns.length}{' '}
-            {t('explorer.missingness_columns_suffix', { defaultValue: 'columns' })}
+            {data.columns.length}{" "}
+            {t("explorer.missingness_columns_suffix", {
+              defaultValue: "columns",
+            })}
           </Badge>
-          {isFetching && <Loader2 className="animate-spin text-content-tertiary" size={12} />}
+          {isFetching && (
+            <Loader2 className="animate-spin text-content-tertiary" size={12} />
+          )}
         </div>
 
         <div ref={containerRef} className="relative flex p-3 gap-2">
@@ -397,20 +454,29 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
               <div
                 className="pointer-events-none absolute z-10 px-2 py-1 rounded-md bg-content-primary text-surface-primary text-2xs shadow-lg whitespace-nowrap"
                 style={{
-                  left: Math.min(hover.x + 8, (containerRef.current?.clientWidth ?? 800) - 240),
+                  left: Math.min(
+                    hover.x + 8,
+                    (containerRef.current?.clientWidth ?? 800) - 240,
+                  ),
                   top: Math.max(hover.y - 36, 4),
                 }}
               >
-                <div className="font-semibold truncate max-w-[220px]">{hover.column.name}</div>
+                <div className="font-semibold truncate max-w-[220px]">
+                  {hover.column.name}
+                </div>
                 <div className="opacity-80">
-                  {(hover.column.fill_rate * 100).toFixed(1)}%{' '}
-                  {t('explorer.missingness_tooltip_filled', { defaultValue: 'filled' })}
-                  {' · '}
-                  {hover.column.non_null_count.toLocaleString()}{' / '}
+                  {(hover.column.fill_rate * 100).toFixed(1)}%{" "}
+                  {t("explorer.missingness_tooltip_filled", {
+                    defaultValue: "filled",
+                  })}
+                  {" · "}
+                  {hover.column.non_null_count.toLocaleString()}
+                  {" / "}
                   {data.total_rows.toLocaleString()}
                 </div>
                 <div className="opacity-60">
-                  {t('explorer.missingness_dtype', { defaultValue: 'type' })}: {hover.column.dtype}
+                  {t("explorer.missingness_dtype", { defaultValue: "type" })}:{" "}
+                  {hover.column.dtype}
                 </div>
               </div>
             )}
@@ -419,7 +485,9 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
           {/* Per-row completeness sparkline */}
           <div className="shrink-0">
             <div className="text-2xs text-content-tertiary mb-1 text-center">
-              {t('explorer.missingness_row_completeness', { defaultValue: 'Row completeness' })}
+              {t("explorer.missingness_row_completeness", {
+                defaultValue: "Row completeness",
+              })}
             </div>
             <canvas
               ref={sparkRef}
@@ -437,11 +505,11 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
           <span data-testid="missingness-footer">{footerLabel}</span>
           {Object.keys(data.applied_filters).length > 0 && (
             <span className="text-content-secondary">
-              {t('explorer.missingness_filters_applied', {
-                defaultValue: 'Filters: {{summary}}',
+              {t("explorer.missingness_filters_applied", {
+                defaultValue: "Filters: {{summary}}",
                 summary: Object.entries(data.applied_filters)
                   .map(([k, v]) => `${k}=${v}`)
-                  .join(', '),
+                  .join(", "),
               })}
             </span>
           )}

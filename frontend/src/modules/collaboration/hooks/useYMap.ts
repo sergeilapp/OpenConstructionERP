@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import * as Y from 'yjs';
+import { useEffect, useState, useCallback } from "react";
+import * as Y from "yjs";
 
 /**
  * Subscribe to a Y.Map and return its contents as a reactive Record.

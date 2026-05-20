@@ -13,14 +13,14 @@
  * canvas remains the single source of truth; `props` only carry what xyflow
  * passes (`id`, `data`, `selected`).
  */
-import { Handle, Position, type NodeProps } from '@xyflow/react';
-import clsx from 'clsx';
-import { ChevronDown, ChevronRight } from 'lucide-react';
-import { useCallback, useMemo, useState, type KeyboardEvent } from 'react';
+import { Handle, Position, type NodeProps } from "@xyflow/react";
+import clsx from "clsx";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { useCallback, useMemo, useState, type KeyboardEvent } from "react";
 
-import { getBlockTokens } from '../tokens';
-import type { SlotDataType, SlotDefinition } from './dnd';
-import { useBlockCanvasStore, type CanvasBlock } from './useBlockCanvasStore';
+import { getBlockTokens } from "../tokens";
+import type { SlotDataType, SlotDefinition } from "./dnd";
+import { useBlockCanvasStore, type CanvasBlock } from "./useBlockCanvasStore";
 
 export interface BlockNodeData extends Record<string, unknown> {
   block: CanvasBlock;
@@ -30,15 +30,15 @@ export type BlockNodeProps = NodeProps;
 
 /** Tailwind text colour per slot type — used for the small slot label. */
 const SLOT_TYPE_TEXT_COLOR: Record<SlotDataType, string> = {
-  selector: 'text-gray-600 dark:text-gray-300',
-  predicate: 'text-green-700 dark:text-green-300',
-  attribute: 'text-purple-700 dark:text-purple-300',
-  constraint: 'text-blue-700 dark:text-blue-300',
-  variable: 'text-yellow-700 dark:text-yellow-300',
-  number: 'text-cyan-700 dark:text-cyan-300',
-  string: 'text-pink-700 dark:text-pink-300',
-  boolean: 'text-teal-700 dark:text-teal-300',
-  any: 'text-slate-500 dark:text-slate-400',
+  selector: "text-gray-600 dark:text-gray-300",
+  predicate: "text-green-700 dark:text-green-300",
+  attribute: "text-purple-700 dark:text-purple-300",
+  constraint: "text-blue-700 dark:text-blue-300",
+  variable: "text-yellow-700 dark:text-yellow-300",
+  number: "text-cyan-700 dark:text-cyan-300",
+  string: "text-pink-700 dark:text-pink-300",
+  boolean: "text-teal-700 dark:text-teal-300",
+  any: "text-slate-500 dark:text-slate-400",
 };
 
 export function BlockNode({ id, data, selected }: BlockNodeProps) {
@@ -47,7 +47,7 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
   const toggleBlockExpanded = useBlockCanvasStore((s) => s.toggleBlockExpanded);
 
   const [editingTitle, setEditingTitle] = useState(false);
-  const [draftTitle, setDraftTitle] = useState(block?.title ?? '');
+  const [draftTitle, setDraftTitle] = useState(block?.title ?? "");
 
   // Memoise the slot partition because a block typically renders 50–100
   // times per drag, and the array filter is the hottest line.
@@ -55,12 +55,15 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
     const inputs: SlotDefinition[] = [];
     const outputs: SlotDefinition[] = [];
     for (const slot of block?.slots ?? []) {
-      (slot.direction === 'input' ? inputs : outputs).push(slot);
+      (slot.direction === "input" ? inputs : outputs).push(slot);
     }
     return { inputs, outputs };
   }, [block?.slots]);
 
-  const tokens = useMemo(() => (block ? getBlockTokens(block.color) : null), [block?.color]);
+  const tokens = useMemo(
+    () => (block ? getBlockTokens(block.color) : null),
+    [block?.color],
+  );
 
   const commitTitle = useCallback(() => {
     if (!block) return;
@@ -73,12 +76,12 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
 
   const handleTitleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
+      if (event.key === "Enter") {
         event.preventDefault();
         commitTitle();
-      } else if (event.key === 'Escape') {
+      } else if (event.key === "Escape") {
         event.preventDefault();
-        setDraftTitle(block?.title ?? '');
+        setDraftTitle(block?.title ?? "");
         setEditingTitle(false);
       }
     },
@@ -90,16 +93,18 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
   }
 
   const Icon = tokens.Icon;
-  const paramChips = Object.entries(block.params).filter(([, value]) => value !== undefined && value !== null);
+  const paramChips = Object.entries(block.params).filter(
+    ([, value]) => value !== undefined && value !== null,
+  );
 
   return (
     <div
       data-testid={`eac-block-node-${id}`}
       data-block-color={block.color}
-      data-block-selected={selected ? 'true' : 'false'}
+      data-block-selected={selected ? "true" : "false"}
       className={clsx(
-        'relative min-w-[200px] max-w-[320px] rounded-lg border-2 px-3 py-2 text-sm shadow-sm',
-        'transition-colors',
+        "relative min-w-[200px] max-w-[320px] rounded-lg border-2 px-3 py-2 text-sm shadow-sm",
+        "transition-colors",
         selected ? tokens.classes.bgSelected : tokens.classes.bg,
         selected ? tokens.classes.borderSelected : tokens.classes.border,
         tokens.classes.text,
@@ -107,7 +112,12 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
     >
       {/* Header — icon + editable title + expand caret */}
       <div className="flex items-center gap-2">
-        <span className={clsx('flex h-5 w-5 shrink-0 items-center justify-center', tokens.classes.icon)}>
+        <span
+          className={clsx(
+            "flex h-5 w-5 shrink-0 items-center justify-center",
+            tokens.classes.icon,
+          )}
+        >
           <Icon size={16} aria-hidden="true" />
         </span>
         {editingTitle ? (
@@ -137,12 +147,14 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
         )}
         <button
           type="button"
-          aria-label={block.expanded ? 'Collapse parameters' : 'Expand parameters'}
+          aria-label={
+            block.expanded ? "Collapse parameters" : "Expand parameters"
+          }
           data-testid={`eac-block-node-toggle-${id}`}
           onClick={() => toggleBlockExpanded(block.id)}
           className={clsx(
-            'ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded',
-            'hover:bg-black/5 dark:hover:bg-white/10',
+            "ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded",
+            "hover:bg-black/5 dark:hover:bg-white/10",
             tokens.classes.icon,
           )}
         >
@@ -158,18 +170,23 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
       {paramChips.length > 0 && (
         <div
           data-testid={`eac-block-node-params-${id}`}
-          className={clsx('mt-1 flex flex-wrap gap-1 text-xs', tokens.classes.textSubtle)}
+          className={clsx(
+            "mt-1 flex flex-wrap gap-1 text-xs",
+            tokens.classes.textSubtle,
+          )}
         >
-          {(block.expanded ? paramChips : paramChips.slice(0, 3)).map(([key, value]) => (
-            <span
-              key={key}
-              className="inline-flex items-center rounded bg-black/5 px-1.5 py-0.5 dark:bg-white/10"
-            >
-              <span className="font-medium">{key}</span>
-              <span className="mx-1">:</span>
-              <span className="truncate max-w-[120px]">{String(value)}</span>
-            </span>
-          ))}
+          {(block.expanded ? paramChips : paramChips.slice(0, 3)).map(
+            ([key, value]) => (
+              <span
+                key={key}
+                className="inline-flex items-center rounded bg-black/5 px-1.5 py-0.5 dark:bg-white/10"
+              >
+                <span className="font-medium">{key}</span>
+                <span className="mx-1">:</span>
+                <span className="truncate max-w-[120px]">{String(value)}</span>
+              </span>
+            ),
+          )}
           {!block.expanded && paramChips.length > 3 && (
             <span className="inline-flex items-center px-1 text-xs italic">
               +{paramChips.length - 3} more
@@ -181,42 +198,67 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
       {/* Slot rows — input handles on the left, output handles on the right */}
       <div className="mt-2 space-y-1">
         {Math.max(inputs.length, outputs.length) > 0 &&
-          Array.from({ length: Math.max(inputs.length, outputs.length) }).map((_, idx) => {
-            const input = inputs[idx];
-            const output = outputs[idx];
-            return (
-              <div key={idx} className="relative flex items-center justify-between text-xs">
-                <span className={clsx('flex items-center gap-1', input ? SLOT_TYPE_TEXT_COLOR[input.dataType] : '')}>
-                  {input && (
-                    <>
-                      <Handle
-                        type="target"
-                        position={Position.Left}
-                        id={input.id}
-                        data-testid={`eac-block-node-input-${id}-${input.id}`}
-                        style={{ background: '#fff', border: '1px solid #94a3b8', width: 8, height: 8 }}
-                      />
-                      <span>{input.label}</span>
-                    </>
-                  )}
-                </span>
-                <span className={clsx('flex items-center gap-1', output ? SLOT_TYPE_TEXT_COLOR[output.dataType] : '')}>
-                  {output && (
-                    <>
-                      <span>{output.label}</span>
-                      <Handle
-                        type="source"
-                        position={Position.Right}
-                        id={output.id}
-                        data-testid={`eac-block-node-output-${id}-${output.id}`}
-                        style={{ background: '#fff', border: '1px solid #94a3b8', width: 8, height: 8 }}
-                      />
-                    </>
-                  )}
-                </span>
-              </div>
-            );
-          })}
+          Array.from({ length: Math.max(inputs.length, outputs.length) }).map(
+            (_, idx) => {
+              const input = inputs[idx];
+              const output = outputs[idx];
+              return (
+                <div
+                  key={idx}
+                  className="relative flex items-center justify-between text-xs"
+                >
+                  <span
+                    className={clsx(
+                      "flex items-center gap-1",
+                      input ? SLOT_TYPE_TEXT_COLOR[input.dataType] : "",
+                    )}
+                  >
+                    {input && (
+                      <>
+                        <Handle
+                          type="target"
+                          position={Position.Left}
+                          id={input.id}
+                          data-testid={`eac-block-node-input-${id}-${input.id}`}
+                          style={{
+                            background: "#fff",
+                            border: "1px solid #94a3b8",
+                            width: 8,
+                            height: 8,
+                          }}
+                        />
+                        <span>{input.label}</span>
+                      </>
+                    )}
+                  </span>
+                  <span
+                    className={clsx(
+                      "flex items-center gap-1",
+                      output ? SLOT_TYPE_TEXT_COLOR[output.dataType] : "",
+                    )}
+                  >
+                    {output && (
+                      <>
+                        <span>{output.label}</span>
+                        <Handle
+                          type="source"
+                          position={Position.Right}
+                          id={output.id}
+                          data-testid={`eac-block-node-output-${id}-${output.id}`}
+                          style={{
+                            background: "#fff",
+                            border: "1px solid #94a3b8",
+                            width: 8,
+                            height: 8,
+                          }}
+                        />
+                      </>
+                    )}
+                  </span>
+                </div>
+              );
+            },
+          )}
       </div>
     </div>
   );

@@ -11,8 +11,8 @@
  * re-export everything; that would mask real type errors when the package
  * lands.
  */
-declare module '@storybook/react' {
-  import type { ComponentType, ReactElement } from 'react';
+declare module "@storybook/react" {
+  import type { ComponentType, ReactElement } from "react";
 
   // ── Decorator: a function that wraps a story's render output. ──────────────
   type StoryFn = () => ReactElement;

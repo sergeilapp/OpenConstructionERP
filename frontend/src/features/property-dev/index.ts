@@ -1,1 +1,1 @@
-export { PropertyDevPage } from './PropertyDevPage';
+export { PropertyDevPage } from "./PropertyDevPage";

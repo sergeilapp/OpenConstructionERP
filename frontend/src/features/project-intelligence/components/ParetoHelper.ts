@@ -38,11 +38,12 @@ export function buildPareto(items: ParetoInput[], topN = 5): ParetoEntry[] {
   const normalised: ParetoEntry[] = items.map((item) => {
     const value = Number(item.total_cost) || 0;
     const share =
-      typeof item.share_of_total === 'number' && Number.isFinite(item.share_of_total)
+      typeof item.share_of_total === "number" &&
+      Number.isFinite(item.share_of_total)
         ? item.share_of_total
         : total > 0
-        ? value / total
-        : 0;
+          ? value / total
+          : 0;
     return {
       key: item.position_id,
       label: (item.description || item.position_id).slice(0, 80),
@@ -65,8 +66,8 @@ export function buildPareto(items: ParetoInput[], topN = 5): ParetoEntry[] {
     const restValue = rest.reduce((acc, r) => acc + r.value, 0);
     const restShare = rest.reduce((acc, r) => acc + r.share, 0);
     top.push({
-      key: '__other__',
-      label: 'other',
+      key: "__other__",
+      label: "other",
       value: restValue,
       share: restShare,
       cumulative: 0,

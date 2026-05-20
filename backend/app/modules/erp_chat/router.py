@@ -16,12 +16,21 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
 
-from app.dependencies import CurrentUserId, SessionDep, check_ai_rate_limit, verify_project_access
+from app.dependencies import (
+    CurrentUserId,
+    RequirePermission,
+    SessionDep,
+    check_ai_rate_limit,
+    verify_project_access,
+)
 from app.modules.erp_chat.models import ChatMessage, ChatSession
 from app.modules.erp_chat.schemas import (
+    AdminStatsResponse,
     ChatMessageResponse,
     ChatSessionCreate,
     ChatSessionResponse,
+    FeedbackRequest,
+    FeedbackResponse,
     SessionListResponse,
     StreamChatRequest,
 )
@@ -202,11 +211,7 @@ async def chat_message_similar(
     from app.core.vector_index import find_similar
     from app.modules.erp_chat.vector_adapter import chat_message_adapter
 
-    stmt = (
-        select(ChatMessage)
-        .options(selectinload(ChatMessage.session))
-        .where(ChatMessage.id == message_id)
-    )
+    stmt = select(ChatMessage).options(selectinload(ChatMessage.session)).where(ChatMessage.id == message_id)
     row = (await session.execute(stmt)).scalar_one_or_none()
     if row is None:
         raise HTTPException(status_code=404, detail="Chat message not found")
@@ -216,9 +221,7 @@ async def chat_message_similar(
     if row.session is None or str(row.session.user_id) != str(user_id):
         raise HTTPException(status_code=404, detail="Chat message not found")
     project_id = (
-        str(row.session.project_id)
-        if row.session is not None and getattr(row.session, "project_id", None)
-        else None
+        str(row.session.project_id) if row.session is not None and getattr(row.session, "project_id", None) else None
     )
     hits = await find_similar(
         chat_message_adapter,
@@ -235,6 +238,76 @@ async def chat_message_similar(
     }
 
 
+# ── T8: Per-turn feedback + admin observability ──────────────────────────
+
+
+@router.post(
+    "/messages/{message_id}/feedback/",
+    response_model=FeedbackResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def submit_message_feedback(
+    message_id: uuid.UUID,
+    body: FeedbackRequest,
+    user_id: CurrentUserId,
+    session: SessionDep,
+) -> FeedbackResponse:
+    """‌⁠‍Record a thumbs up/down on a single assistant message.
+
+    Idempotent per ``(message_id, user_id)`` — re-submitting flips the
+    rating in place. The IDOR guard inside the service treats messages
+    owned by another user as 404 to avoid leaking existence.
+    """
+    service = ERPChatService(session)
+    try:
+        row = await service.submit_feedback(
+            message_id=message_id,
+            user_id=user_id,
+            rating=body.rating,
+            comment=body.comment,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+    except LookupError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+
+    return FeedbackResponse(
+        id=row.id,
+        message_id=row.message_id,
+        user_id=row.user_id,
+        rating=row.rating,
+        comment=row.comment,
+        created_at=row.created_at,
+        updated_at=row.updated_at,
+    )
+
+
+@router.get(
+    "/admin/stats/",
+    response_model=AdminStatsResponse,
+    dependencies=[Depends(RequirePermission("erp_chat.admin"))],
+)
+async def admin_stats(
+    session: SessionDep,
+    window_days: int = Query(default=30, ge=1, le=365),
+) -> AdminStatsResponse:
+    """‌⁠‍Return the T8 observability dashboard rollup.
+
+    Manager+ only (admin role bypasses all permission checks). Covers
+    token spend, prompt-cache hit rate, thumbs feedback totals, top-5
+    user prompts that received thumbs-down, and a per-day breakdown.
+    """
+    service = ERPChatService(session)
+    stats = await service.get_admin_stats(window_days=window_days)
+    return AdminStatsResponse(**stats)
+
+
 # ── Mount vector status + reindex via the shared factory ────────────────
 from sqlalchemy import select as _select  # noqa: E402
 from sqlalchemy.orm import selectinload as _selectinload  # noqa: E402
@@ -249,9 +322,9 @@ from app.modules.erp_chat.vector_adapter import (  # noqa: E402
 async def _chat_loader(session: Any, project_id: uuid.UUID | None) -> list[Any]:
     stmt = _select(ChatMessage).options(_selectinload(ChatMessage.session))
     if project_id is not None:
-        stmt = stmt.join(
-            ChatSession, ChatMessage.session_id == ChatSession.id
-        ).where(ChatSession.project_id == project_id)
+        stmt = stmt.join(ChatSession, ChatMessage.session_id == ChatSession.id).where(
+            ChatSession.project_id == project_id
+        )
     return list((await session.execute(stmt)).scalars().all())
 
 
@@ -264,4 +337,3 @@ router.include_router(
         write_permission=None,
     )
 )
-

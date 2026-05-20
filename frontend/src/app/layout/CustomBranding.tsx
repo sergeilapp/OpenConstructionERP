@@ -22,18 +22,18 @@
 // reads the file as a base64 data URL so we do not need a backend
 // endpoint — branding lives entirely in localStorage and survives
 // reload without server state.
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import clsx from 'clsx';
-import { Pencil, Upload, Trash2, X, Building2 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import clsx from "clsx";
+import { Pencil, Upload, Trash2, X, Building2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-import { Logo } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+import { Logo } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 import {
   useBrandingStore,
   BRANDING_MAX_LOGO_BYTES,
-} from '@/stores/useBrandingStore';
+} from "@/stores/useBrandingStore";
 
 interface CustomBrandingProps {
   /** When true (icon-only sidebar), render a compact logo without text. */
@@ -41,12 +41,17 @@ interface CustomBrandingProps {
 }
 
 const MAX_NAME_LEN = 60;
-const ACCEPTED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'];
+const ACCEPTED_IMAGE_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/svg+xml",
+  "image/webp",
+];
 
 /** Read a File into a base64 data URL, with size + mime gating. */
 async function fileToDataUrl(file: File): Promise<string> {
   if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-    throw new Error('Unsupported image type. Use PNG, JPG, SVG, or WebP.');
+    throw new Error("Unsupported image type. Use PNG, JPG, SVG, or WebP.");
   }
   if (file.size > BRANDING_MAX_LOGO_BYTES) {
     throw new Error(
@@ -57,11 +62,11 @@ async function fileToDataUrl(file: File): Promise<string> {
   }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(reader.error ?? new Error('Read failed'));
+    reader.onerror = () => reject(reader.error ?? new Error("Read failed"));
     reader.onload = () => {
       const v = reader.result;
-      if (typeof v !== 'string') {
-        reject(new Error('Read produced non-string'));
+      if (typeof v !== "string") {
+        reject(new Error("Read produced non-string"));
         return;
       }
       resolve(v);
@@ -78,18 +83,23 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
   // Iconified sidebar — render only the brand glyph (user logo if set,
   // otherwise the OE logo). No subtitle / company name in this mode.
   if (iconified) {
-    if (mode === 'logo' && logoDataUrl) {
+    if (mode === "logo" && logoDataUrl) {
       return (
         <button
           type="button"
           onClick={() => setEditing(true)}
           className="hover:opacity-80 transition-opacity"
-          title={companyName || t('branding.edit', { defaultValue: 'Customise branding‌⁠‍' })}
-          aria-label={t('branding.edit', { defaultValue: 'Customise branding‌⁠‍' })}
+          title={
+            companyName ||
+            t("branding.edit", { defaultValue: "Customise branding‌⁠‍" })
+          }
+          aria-label={t("branding.edit", {
+            defaultValue: "Customise branding‌⁠‍",
+          })}
         >
           <img
             src={logoDataUrl}
-            alt={companyName || 'Custom logo'}
+            alt={companyName || "Custom logo"}
             className="h-7 w-7 object-contain rounded"
             draggable={false}
           />
@@ -113,7 +123,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
   // edit button on the right (fixed 36px so it never crowds the
   // wordmark). The edit button is always visible, not hover-revealed,
   // per user request — discoverability of white-labelling matters.
-  const customised = mode === 'logo' || mode === 'text';
+  const customised = mode === "logo" || mode === "text";
 
   return (
     <>
@@ -127,13 +137,17 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
               type="button"
               onClick={() => setEditing(true)}
               className="block w-full text-left rounded-lg p-1 -m-1 hover:bg-surface-secondary/40 transition-colors"
-              aria-label={t('branding.edit', { defaultValue: 'Customise branding‌⁠‍' })}
-              title={t('branding.edit', { defaultValue: 'Customise branding‌⁠‍' })}
+              aria-label={t("branding.edit", {
+                defaultValue: "Customise branding‌⁠‍",
+              })}
+              title={t("branding.edit", {
+                defaultValue: "Customise branding‌⁠‍",
+              })}
             >
-              {mode === 'logo' && logoDataUrl ? (
+              {mode === "logo" && logoDataUrl ? (
                 <img
                   src={logoDataUrl}
-                  alt={companyName || 'Custom logo'}
+                  alt={companyName || "Custom logo"}
                   className="block max-h-[40px] w-auto max-w-full object-contain"
                   draggable={false}
                 />
@@ -142,27 +156,27 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
                   className="block truncate text-[17px] font-extrabold text-content-primary leading-none"
                   style={{
                     fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-                    letterSpacing: '-0.02em',
+                    letterSpacing: "-0.02em",
                   }}
                   title={companyName}
                 >
                   {companyName}
                 </span>
               )}
-              {/* "by OpenConstructionERP" — ~1/3 size, sits below user
-                  brand as a subordinate attribution. AGPL-3.0
-                  requirement satisfied via the wordmark + the
-                  colourised "Construction" highlight. */}
+              {/* "by OpenConstructionERP" — minimal subordinate attribution
+                  under the user's brand. AGPL-3.0 attribution requirement
+                  is satisfied while the user's logo stays the dominant
+                  visual; font is small + muted on purpose. */}
               <span
-                className="mt-1.5 block text-[10px] leading-none text-content-tertiary truncate"
+                className="mt-1 block text-[8px] leading-none text-content-quaternary truncate"
                 style={{
                   fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-                  letterSpacing: '0.02em',
+                  letterSpacing: "0.03em",
                 }}
               >
-                by{' '}
+                by{" "}
                 <span className="font-semibold tracking-tight">
-                  Open<span className="text-oe-blue/80">Construction</span>
+                  Open<span className="text-oe-blue/60">Construction</span>
                   <span className="text-content-quaternary">ERP</span>
                 </span>
               </span>
@@ -184,11 +198,13 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
                 className="text-[13px] font-extrabold text-content-primary whitespace-nowrap leading-none"
                 style={{
                   fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-                  letterSpacing: '-0.02em',
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Open<span className="text-oe-blue">Construction</span>
-                <span className="text-content-quaternary font-semibold">ERP</span>
+                <span className="text-content-quaternary font-semibold">
+                  ERP
+                </span>
               </span>
             </a>
           )}
@@ -202,16 +218,18 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
           type="button"
           onClick={() => setEditing(true)}
           className={clsx(
-            'shrink-0 h-8 w-8 flex items-center justify-center rounded-lg',
-            'border border-border-light bg-surface-secondary/30',
-            'text-content-tertiary hover:text-oe-blue',
-            'hover:border-oe-blue/40 hover:bg-oe-blue/5',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
-            'transition-colors',
+            "shrink-0 h-8 w-8 flex items-center justify-center rounded-lg",
+            "border border-border-light bg-surface-secondary/30",
+            "text-content-tertiary hover:text-oe-blue",
+            "hover:border-oe-blue/40 hover:bg-oe-blue/5",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
+            "transition-colors",
           )}
-          aria-label={t('branding.edit', { defaultValue: 'Customise branding‌⁠‍' })}
-          title={t('branding.edit_tooltip', {
-            defaultValue: 'Add your logo or company name',
+          aria-label={t("branding.edit", {
+            defaultValue: "Customise branding‌⁠‍",
+          })}
+          title={t("branding.edit_tooltip", {
+            defaultValue: "Add your logo or company name",
           })}
         >
           <Pencil size={13} strokeWidth={2.25} />
@@ -247,14 +265,16 @@ export function BrandingEditorModal({ onClose }: { onClose: () => void }) {
           const url = await fileToDataUrl(file);
           setLogo(url);
           addToast({
-            type: 'success',
-            title: t('branding.logo_saved', { defaultValue: 'Logo updated' }),
+            type: "success",
+            title: t("branding.logo_saved", { defaultValue: "Logo updated" }),
           });
           onClose();
         } catch (e) {
           addToast({
-            type: 'error',
-            title: t('branding.logo_error', { defaultValue: 'Could not load logo' }),
+            type: "error",
+            title: t("branding.logo_error", {
+              defaultValue: "Could not load logo",
+            }),
             message: e instanceof Error ? e.message : String(e),
           });
         }
@@ -262,16 +282,20 @@ export function BrandingEditorModal({ onClose }: { onClose: () => void }) {
       onApplyName={(name) => {
         setCompanyName(name);
         addToast({
-          type: 'success',
-          title: t('branding.name_saved', { defaultValue: 'Company name updated' }),
+          type: "success",
+          title: t("branding.name_saved", {
+            defaultValue: "Company name updated",
+          }),
         });
         onClose();
       }}
       onReset={() => {
         reset();
         addToast({
-          type: 'info',
-          title: t('branding.reset', { defaultValue: 'Restored default branding' }),
+          type: "info",
+          title: t("branding.reset", {
+            defaultValue: "Restored default branding",
+          }),
         });
         onClose();
       }}
@@ -282,7 +306,7 @@ export function BrandingEditorModal({ onClose }: { onClose: () => void }) {
 /* ── Modal ───────────────────────────────────────────────────────────── */
 
 interface EditorProps {
-  mode: 'default' | 'logo' | 'text';
+  mode: "default" | "logo" | "text";
   logoDataUrl: string | null;
   companyName: string;
   onClose: () => void;
@@ -301,7 +325,9 @@ function BrandingEditor({
   onReset,
 }: EditorProps) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<'logo' | 'name'>(mode === 'text' ? 'name' : 'logo');
+  const [tab, setTab] = useState<"logo" | "name">(
+    mode === "text" ? "name" : "logo",
+  );
   const [nameDraft, setNameDraft] = useState(companyName);
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -310,14 +336,14 @@ function BrandingEditor({
   useEffect(() => {
     // Escape closes
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   useEffect(() => {
-    if (tab === 'name') nameInputRef.current?.focus();
+    if (tab === "name") nameInputRef.current?.focus();
   }, [tab]);
 
   return createPortal(
@@ -336,13 +362,13 @@ function BrandingEditor({
             id="branding-editor-heading"
             className="text-base font-semibold text-content-primary"
           >
-            {t('branding.title', { defaultValue: 'Customise branding' })}
+            {t("branding.title", { defaultValue: "Customise branding" })}
           </h2>
           <button
             type="button"
             onClick={onClose}
             className="h-7 w-7 flex items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -354,7 +380,7 @@ function BrandingEditor({
             role="tablist"
             className="inline-flex rounded-lg bg-surface-secondary p-1"
           >
-            {(['logo', 'name'] as const).map((id) => (
+            {(["logo", "name"] as const).map((id) => (
               <button
                 key={id}
                 role="tab"
@@ -362,15 +388,15 @@ function BrandingEditor({
                 aria-selected={tab === id}
                 onClick={() => setTab(id)}
                 className={clsx(
-                  'px-3 py-1.5 text-sm rounded-md transition-colors',
+                  "px-3 py-1.5 text-sm rounded-md transition-colors",
                   tab === id
-                    ? 'bg-surface-primary text-content-primary shadow-sm'
-                    : 'text-content-secondary hover:text-content-primary',
+                    ? "bg-surface-primary text-content-primary shadow-sm"
+                    : "text-content-secondary hover:text-content-primary",
                 )}
               >
-                {id === 'logo'
-                  ? t('branding.tab_logo', { defaultValue: 'Logo' })
-                  : t('branding.tab_name', { defaultValue: 'Company name' })}
+                {id === "logo"
+                  ? t("branding.tab_logo", { defaultValue: "Logo" })
+                  : t("branding.tab_name", { defaultValue: "Company name" })}
               </button>
             ))}
           </div>
@@ -378,7 +404,7 @@ function BrandingEditor({
 
         {/* Body */}
         <div className="px-5 py-5">
-          {tab === 'logo' ? (
+          {tab === "logo" ? (
             <div>
               <input
                 ref={fileRef}
@@ -395,7 +421,7 @@ function BrandingEditor({
                 tabIndex={0}
                 onClick={() => fileRef.current?.click()}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     fileRef.current?.click();
                   }
@@ -412,10 +438,10 @@ function BrandingEditor({
                   if (f) void onApplyLogo(f);
                 }}
                 className={clsx(
-                  'flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed py-10 px-4 cursor-pointer transition-colors',
+                  "flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed py-10 px-4 cursor-pointer transition-colors",
                   dragging
-                    ? 'border-oe-blue bg-oe-blue/5'
-                    : 'border-border hover:border-oe-blue/60 hover:bg-surface-secondary/40',
+                    ? "border-oe-blue bg-oe-blue/5"
+                    : "border-border hover:border-oe-blue/60 hover:bg-surface-secondary/40",
                 )}
               >
                 <div className="h-12 w-12 rounded-xl bg-oe-blue/10 border border-oe-blue/20 flex items-center justify-center">
@@ -423,13 +449,13 @@ function BrandingEditor({
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-medium text-content-primary">
-                    {t('branding.logo_drop', {
-                      defaultValue: 'Drop your logo here, or click to browse',
+                    {t("branding.logo_drop", {
+                      defaultValue: "Drop your logo here, or click to browse",
                     })}
                   </p>
                   <p className="text-xs text-content-tertiary mt-1">
-                    {t('branding.logo_hint', {
-                      defaultValue: 'PNG, JPG, SVG, or WebP — up to 2 MB',
+                    {t("branding.logo_hint", {
+                      defaultValue: "PNG, JPG, SVG, or WebP — up to 2 MB",
                     })}
                   </p>
                 </div>
@@ -444,8 +470,8 @@ function BrandingEditor({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-content-secondary">
-                      {t('branding.current_logo', {
-                        defaultValue: 'Current logo',
+                      {t("branding.current_logo", {
+                        defaultValue: "Current logo",
                       })}
                     </p>
                     <p className="text-[11px] text-content-tertiary truncate">
@@ -466,8 +492,8 @@ function BrandingEditor({
                 htmlFor="branding-company-name"
                 className="block text-xs font-medium text-content-secondary mb-1.5"
               >
-                {t('branding.name_label', {
-                  defaultValue: 'Display name shown in the sidebar',
+                {t("branding.name_label", {
+                  defaultValue: "Display name shown in the sidebar",
                 })}
               </label>
               <div className="relative">
@@ -480,9 +506,11 @@ function BrandingEditor({
                   id="branding-company-name"
                   type="text"
                   value={nameDraft}
-                  onChange={(e) => setNameDraft(e.target.value.slice(0, MAX_NAME_LEN))}
-                  placeholder={t('branding.name_placeholder', {
-                    defaultValue: 'Acme Construction GmbH',
+                  onChange={(e) =>
+                    setNameDraft(e.target.value.slice(0, MAX_NAME_LEN))
+                  }
+                  placeholder={t("branding.name_placeholder", {
+                    defaultValue: "Acme Construction GmbH",
                   })}
                   maxLength={MAX_NAME_LEN}
                   className="w-full pl-9 pr-3 py-2 rounded-lg bg-surface-secondary border border-border-light focus:border-oe-blue focus:ring-2 focus:ring-oe-blue/20 focus:outline-none text-sm text-content-primary placeholder:text-content-tertiary"
@@ -495,20 +523,20 @@ function BrandingEditor({
                 type="submit"
                 disabled={nameDraft.trim() === companyName.trim()}
                 className={clsx(
-                  'mt-4 w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                  "mt-4 w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   nameDraft.trim() === companyName.trim()
-                    ? 'bg-surface-secondary text-content-tertiary cursor-not-allowed'
-                    : 'bg-oe-blue text-white hover:bg-oe-blue/90',
+                    ? "bg-surface-secondary text-content-tertiary cursor-not-allowed"
+                    : "bg-oe-blue text-white hover:bg-oe-blue/90",
                 )}
               >
-                {t('branding.name_apply', { defaultValue: 'Save name' })}
+                {t("branding.name_apply", { defaultValue: "Save name" })}
               </button>
             </form>
           )}
         </div>
 
         {/* Footer — reset is destructive so keep it secondary */}
-        {(mode === 'logo' || mode === 'text') && (
+        {(mode === "logo" || mode === "text") && (
           <footer className="flex items-center justify-between px-5 py-3 border-t border-border-light bg-surface-secondary/20">
             <button
               type="button"
@@ -516,8 +544,8 @@ function BrandingEditor({
               className="inline-flex items-center gap-1.5 text-xs text-content-tertiary hover:text-error-content transition-colors"
             >
               <Trash2 size={13} />
-              {t('branding.reset_action', {
-                defaultValue: 'Restore default branding',
+              {t("branding.reset_action", {
+                defaultValue: "Restore default branding",
               })}
             </button>
             <button
@@ -525,7 +553,7 @@ function BrandingEditor({
               onClick={onClose}
               className="text-xs text-content-secondary hover:text-content-primary transition-colors"
             >
-              {t('common.done', { defaultValue: 'Done' })}
+              {t("common.done", { defaultValue: "Done" })}
             </button>
           </footer>
         )}

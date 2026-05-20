@@ -1,26 +1,45 @@
 import {
-  useState, useEffect, useRef,
-  type ChangeEvent, type KeyboardEvent,
-} from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+  useState,
+  useEffect,
+  useRef,
+  type ChangeEvent,
+  type KeyboardEvent,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import {
-  X, FolderPlus, AlertTriangle, MapPin, Map as MapIcon, CloudSun,
-  Check, ChevronLeft, ChevronRight, ChevronDown, Layers, Wand2, Zap,
-  ArrowRight, Plus, Globe, Hash, CalendarDays, FileText,
-} from 'lucide-react';
-import { Button, Input, InfoHint } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
-import { useWidgetSettingsStore } from '@/stores/useWidgetSettingsStore';
+  X,
+  FolderPlus,
+  AlertTriangle,
+  MapPin,
+  Map as MapIcon,
+  CloudSun,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Layers,
+  Wand2,
+  Zap,
+  ArrowRight,
+  Plus,
+  Globe,
+  Hash,
+  CalendarDays,
+  FileText,
+} from "lucide-react";
+import { Button, Input, InfoHint } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
+import { useWidgetSettingsStore } from "@/stores/useWidgetSettingsStore";
 import {
   projectsApi,
   type CreateProjectData,
   type Project,
   type WizardPreset,
   type ProfileSpec,
-} from './api';
-import { useTelemetry } from '@/shared/lib/telemetry';
+} from "./api";
+import { useTelemetry } from "@/shared/lib/telemetry";
 
 // ── Regions (grouped by continent) ────────────────────────────────────────
 
@@ -31,64 +50,64 @@ export interface OptionGroup {
 
 const REGION_GROUPS: OptionGroup[] = [
   {
-    group: 'Europe',
+    group: "Europe",
     options: [
-      { value: 'DACH', label: 'DACH (Germany, Austria, Switzerland)' },
-      { value: 'UK', label: 'United Kingdom' },
-      { value: 'Nordics', label: 'Nordics (Sweden, Norway, Denmark, Finland)' },
-      { value: 'France', label: 'France' },
-      { value: 'Spain', label: 'Spain' },
-      { value: 'Italy', label: 'Italy' },
-      { value: 'Netherlands', label: 'Netherlands' },
-      { value: 'Poland', label: 'Poland' },
-      { value: 'Czech', label: 'Czech Republic' },
-      { value: 'Turkey', label: 'Turkey' },
-      { value: 'Russia', label: 'Russia' },
+      { value: "DACH", label: "DACH (Germany, Austria, Switzerland)" },
+      { value: "UK", label: "United Kingdom" },
+      { value: "Nordics", label: "Nordics (Sweden, Norway, Denmark, Finland)" },
+      { value: "France", label: "France" },
+      { value: "Spain", label: "Spain" },
+      { value: "Italy", label: "Italy" },
+      { value: "Netherlands", label: "Netherlands" },
+      { value: "Poland", label: "Poland" },
+      { value: "Czech", label: "Czech Republic" },
+      { value: "Turkey", label: "Turkey" },
+      { value: "Russia", label: "Russia" },
     ],
   },
   {
-    group: 'Americas',
+    group: "Americas",
     options: [
-      { value: 'US', label: 'United States' },
-      { value: 'Canada', label: 'Canada' },
-      { value: 'Brazil', label: 'Brazil' },
-      { value: 'Mexico', label: 'Mexico' },
-      { value: 'LatinAmerica', label: 'Latin America (Other)' },
+      { value: "US", label: "United States" },
+      { value: "Canada", label: "Canada" },
+      { value: "Brazil", label: "Brazil" },
+      { value: "Mexico", label: "Mexico" },
+      { value: "LatinAmerica", label: "Latin America (Other)" },
     ],
   },
   {
-    group: 'Asia & Middle East',
+    group: "Asia & Middle East",
     options: [
-      { value: 'China', label: 'China' },
-      { value: 'Japan', label: 'Japan' },
-      { value: 'Korea', label: 'South Korea' },
-      { value: 'India', label: 'India' },
-      { value: 'SoutheastAsia', label: 'Southeast Asia' },
-      { value: 'MiddleEast', label: 'Middle East (General)' },
-      { value: 'GulfStates', label: 'Gulf States (UAE, Saudi Arabia, Qatar)' },
+      { value: "China", label: "China" },
+      { value: "Japan", label: "Japan" },
+      { value: "Korea", label: "South Korea" },
+      { value: "India", label: "India" },
+      { value: "SoutheastAsia", label: "Southeast Asia" },
+      { value: "MiddleEast", label: "Middle East (General)" },
+      { value: "GulfStates", label: "Gulf States (UAE, Saudi Arabia, Qatar)" },
     ],
   },
   {
-    group: 'Africa',
+    group: "Africa",
     options: [
-      { value: 'NorthAfrica', label: 'North Africa' },
-      { value: 'SouthAfrica', label: 'South Africa' },
-      { value: 'EastAfrica', label: 'East Africa' },
-      { value: 'WestAfrica', label: 'West Africa' },
+      { value: "NorthAfrica", label: "North Africa" },
+      { value: "SouthAfrica", label: "South Africa" },
+      { value: "EastAfrica", label: "East Africa" },
+      { value: "WestAfrica", label: "West Africa" },
     ],
   },
   {
-    group: 'Oceania',
+    group: "Oceania",
     options: [
-      { value: 'Australia', label: 'Australia' },
-      { value: 'NewZealand', label: 'New Zealand' },
+      { value: "Australia", label: "Australia" },
+      { value: "NewZealand", label: "New Zealand" },
     ],
   },
   {
-    group: 'Other',
+    group: "Other",
     options: [
-      { value: 'INTL', label: 'International / Multi-region' },
-      { value: '__custom__', label: 'Custom...' },
+      { value: "INTL", label: "International / Multi-region" },
+      { value: "__custom__", label: "Custom..." },
     ],
   },
 ];
@@ -98,44 +117,44 @@ const REGION_GROUPS: OptionGroup[] = [
 // — an unknown region simply contributes 0 to the region axis, which
 // is a graceful no-op, not an error).
 const REGION_TO_PACK: Record<string, string> = {
-  DACH: 'dach',
-  UK: 'uk',
-  US: 'us',
-  Canada: 'us',
-  Russia: 'russia_cis',
-  Brazil: 'latam',
-  Mexico: 'latam',
-  LatinAmerica: 'latam',
-  MiddleEast: 'mena',
-  GulfStates: 'mena',
-  NorthAfrica: 'mena',
-  China: 'asia_pacific',
-  Japan: 'asia_pacific',
-  Korea: 'asia_pacific',
-  SoutheastAsia: 'asia_pacific',
-  Australia: 'asia_pacific',
-  NewZealand: 'asia_pacific',
-  India: 'india',
+  DACH: "dach",
+  UK: "uk",
+  US: "us",
+  Canada: "us",
+  Russia: "russia_cis",
+  Brazil: "latam",
+  Mexico: "latam",
+  LatinAmerica: "latam",
+  MiddleEast: "mena",
+  GulfStates: "mena",
+  NorthAfrica: "mena",
+  China: "asia_pacific",
+  Japan: "asia_pacific",
+  Korea: "asia_pacific",
+  SoutheastAsia: "asia_pacific",
+  Australia: "asia_pacific",
+  NewZealand: "asia_pacific",
+  India: "india",
 };
 
 // ── Classification Standards ──────────────────────────────────────────────
 
 const STANDARD_GROUPS: OptionGroup[] = [
   {
-    group: 'Common Standards',
+    group: "Common Standards",
     options: [
-      { value: 'din276', label: 'DIN 276 (Germany / DACH)' },
-      { value: 'nrm', label: 'NRM 1/2 (United Kingdom)' },
-      { value: 'masterformat', label: 'MasterFormat (US / Canada)' },
-      { value: 'uniformat', label: 'UniFormat (US)' },
-      { value: 'uniclass', label: 'Uniclass (UK)' },
-      { value: 'omniclass', label: 'OmniClass (International)' },
-      { value: 'gbt', label: 'GB/T (China)' },
+      { value: "din276", label: "DIN 276 (Germany / DACH)" },
+      { value: "nrm", label: "NRM 1/2 (United Kingdom)" },
+      { value: "masterformat", label: "MasterFormat (US / Canada)" },
+      { value: "uniformat", label: "UniFormat (US)" },
+      { value: "uniclass", label: "Uniclass (UK)" },
+      { value: "omniclass", label: "OmniClass (International)" },
+      { value: "gbt", label: "GB/T (China)" },
     ],
   },
   {
-    group: 'Other',
-    options: [{ value: '__custom__', label: 'Custom...' }],
+    group: "Other",
+    options: [{ value: "__custom__", label: "Custom..." }],
   },
 ];
 
@@ -143,156 +162,199 @@ const STANDARD_GROUPS: OptionGroup[] = [
 
 export const CURRENCY_GROUPS: OptionGroup[] = [
   {
-    group: 'Europe',
+    group: "Europe",
     options: [
-      { value: 'EUR', label: 'EUR (€) — Euro' },
-      { value: 'GBP', label: 'GBP (£) — British Pound' },
-      { value: 'CHF', label: 'CHF (Fr.) — Swiss Franc' },
-      { value: 'SEK', label: 'SEK (kr) — Swedish Krona' },
-      { value: 'NOK', label: 'NOK (kr) — Norwegian Krone' },
-      { value: 'DKK', label: 'DKK (kr) — Danish Krone' },
-      { value: 'PLN', label: 'PLN (zł) — Polish Zloty' },
-      { value: 'CZK', label: 'CZK (Kč) — Czech Koruna' },
-      { value: 'TRY', label: 'TRY (₺) — Turkish Lira' },
-      { value: 'RUB', label: 'RUB (₽) — Russian Ruble' },
-      { value: 'HUF', label: 'HUF (Ft) — Hungarian Forint' },
-      { value: 'RON', label: 'RON (lei) — Romanian Leu' },
-      { value: 'BGN', label: 'BGN (лв) — Bulgarian Lev' },
-      { value: 'HRK', label: 'HRK (kn) — Croatian Kuna' },
-      { value: 'ISK', label: 'ISK (kr) — Icelandic Krona' },
+      { value: "EUR", label: "EUR (€) — Euro" },
+      { value: "GBP", label: "GBP (£) — British Pound" },
+      { value: "CHF", label: "CHF (Fr.) — Swiss Franc" },
+      { value: "SEK", label: "SEK (kr) — Swedish Krona" },
+      { value: "NOK", label: "NOK (kr) — Norwegian Krone" },
+      { value: "DKK", label: "DKK (kr) — Danish Krone" },
+      { value: "PLN", label: "PLN (zł) — Polish Zloty" },
+      { value: "CZK", label: "CZK (Kč) — Czech Koruna" },
+      { value: "TRY", label: "TRY (₺) — Turkish Lira" },
+      { value: "RUB", label: "RUB (₽) — Russian Ruble" },
+      { value: "HUF", label: "HUF (Ft) — Hungarian Forint" },
+      { value: "RON", label: "RON (lei) — Romanian Leu" },
+      { value: "BGN", label: "BGN (лв) — Bulgarian Lev" },
+      { value: "HRK", label: "HRK (kn) — Croatian Kuna" },
+      { value: "ISK", label: "ISK (kr) — Icelandic Krona" },
     ],
   },
   {
-    group: 'Americas',
+    group: "Americas",
     options: [
-      { value: 'USD', label: 'USD ($) — US Dollar' },
-      { value: 'CAD', label: 'CAD (C$) — Canadian Dollar' },
-      { value: 'BRL', label: 'BRL (R$) — Brazilian Real' },
-      { value: 'MXN', label: 'MXN (Mex$) — Mexican Peso' },
-      { value: 'ARS', label: 'ARS (AR$) — Argentine Peso' },
-      { value: 'CLP', label: 'CLP (CL$) — Chilean Peso' },
-      { value: 'PEN', label: 'PEN (S/) — Peruvian Sol' },
-      { value: 'COP', label: 'COP (COL$) — Colombian Peso' },
+      { value: "USD", label: "USD ($) — US Dollar" },
+      { value: "CAD", label: "CAD (C$) — Canadian Dollar" },
+      { value: "BRL", label: "BRL (R$) — Brazilian Real" },
+      { value: "MXN", label: "MXN (Mex$) — Mexican Peso" },
+      { value: "ARS", label: "ARS (AR$) — Argentine Peso" },
+      { value: "CLP", label: "CLP (CL$) — Chilean Peso" },
+      { value: "PEN", label: "PEN (S/) — Peruvian Sol" },
+      { value: "COP", label: "COP (COL$) — Colombian Peso" },
     ],
   },
   {
-    group: 'Asia & Middle East',
+    group: "Asia & Middle East",
     options: [
-      { value: 'CNY', label: 'CNY (¥) — Chinese Yuan' },
-      { value: 'JPY', label: 'JPY (¥) — Japanese Yen' },
-      { value: 'KRW', label: 'KRW (₩) — South Korean Won' },
-      { value: 'INR', label: 'INR (₹) — Indian Rupee' },
-      { value: 'AED', label: 'AED (د.إ) — UAE Dirham' },
-      { value: 'SAR', label: 'SAR (﷼) — Saudi Riyal' },
-      { value: 'QAR', label: 'QAR (﷼) — Qatari Riyal' },
-      { value: 'BHD', label: 'BHD (BD) — Bahraini Dinar' },
-      { value: 'KWD', label: 'KWD (د.ك) — Kuwaiti Dinar' },
-      { value: 'OMR', label: 'OMR (ر.ع.) — Omani Rial' },
-      { value: 'SGD', label: 'SGD (S$) — Singapore Dollar' },
-      { value: 'MYR', label: 'MYR (RM) — Malaysian Ringgit' },
-      { value: 'THB', label: 'THB (฿) — Thai Baht' },
-      { value: 'IDR', label: 'IDR (Rp) — Indonesian Rupiah' },
-      { value: 'PHP', label: 'PHP (₱) — Philippine Peso' },
-      { value: 'VND', label: 'VND (₫) — Vietnamese Dong' },
-      { value: 'HKD', label: 'HKD (HK$) — Hong Kong Dollar' },
-      { value: 'TWD', label: 'TWD (NT$) — Taiwan Dollar' },
-      { value: 'ILS', label: 'ILS (₪) — Israeli Shekel' },
-      { value: 'JOD', label: 'JOD (JD) — Jordanian Dinar' },
-      { value: 'LBP', label: 'LBP (ل.ل) — Lebanese Pound' },
-      { value: 'PKR', label: 'PKR (₨) — Pakistani Rupee' },
-      { value: 'BDT', label: 'BDT (৳) — Bangladeshi Taka' },
-      { value: 'LKR', label: 'LKR (Rs) — Sri Lankan Rupee' },
+      { value: "CNY", label: "CNY (¥) — Chinese Yuan" },
+      { value: "JPY", label: "JPY (¥) — Japanese Yen" },
+      { value: "KRW", label: "KRW (₩) — South Korean Won" },
+      { value: "INR", label: "INR (₹) — Indian Rupee" },
+      { value: "AED", label: "AED (د.إ) — UAE Dirham" },
+      { value: "SAR", label: "SAR (﷼) — Saudi Riyal" },
+      { value: "QAR", label: "QAR (﷼) — Qatari Riyal" },
+      { value: "BHD", label: "BHD (BD) — Bahraini Dinar" },
+      { value: "KWD", label: "KWD (د.ك) — Kuwaiti Dinar" },
+      { value: "OMR", label: "OMR (ر.ع.) — Omani Rial" },
+      { value: "SGD", label: "SGD (S$) — Singapore Dollar" },
+      { value: "MYR", label: "MYR (RM) — Malaysian Ringgit" },
+      { value: "THB", label: "THB (฿) — Thai Baht" },
+      { value: "IDR", label: "IDR (Rp) — Indonesian Rupiah" },
+      { value: "PHP", label: "PHP (₱) — Philippine Peso" },
+      { value: "VND", label: "VND (₫) — Vietnamese Dong" },
+      { value: "HKD", label: "HKD (HK$) — Hong Kong Dollar" },
+      { value: "TWD", label: "TWD (NT$) — Taiwan Dollar" },
+      { value: "ILS", label: "ILS (₪) — Israeli Shekel" },
+      { value: "JOD", label: "JOD (JD) — Jordanian Dinar" },
+      { value: "LBP", label: "LBP (ل.ل) — Lebanese Pound" },
+      { value: "PKR", label: "PKR (₨) — Pakistani Rupee" },
+      { value: "BDT", label: "BDT (৳) — Bangladeshi Taka" },
+      { value: "LKR", label: "LKR (Rs) — Sri Lankan Rupee" },
     ],
   },
   {
-    group: 'Africa',
+    group: "Africa",
     options: [
-      { value: 'ZAR', label: 'ZAR (R) — South African Rand' },
-      { value: 'EGP', label: 'EGP (E£) — Egyptian Pound' },
-      { value: 'NGN', label: 'NGN (₦) — Nigerian Naira' },
-      { value: 'KES', label: 'KES (KSh) — Kenyan Shilling' },
-      { value: 'MAD', label: 'MAD (د.م.) — Moroccan Dirham' },
-      { value: 'TND', label: 'TND (DT) — Tunisian Dinar' },
-      { value: 'GHS', label: 'GHS (GH₵) — Ghanaian Cedi' },
-      { value: 'TZS', label: 'TZS (TSh) — Tanzanian Shilling' },
-      { value: 'UGX', label: 'UGX (USh) — Ugandan Shilling' },
-      { value: 'ETB', label: 'ETB (Br) — Ethiopian Birr' },
+      { value: "ZAR", label: "ZAR (R) — South African Rand" },
+      { value: "EGP", label: "EGP (E£) — Egyptian Pound" },
+      { value: "NGN", label: "NGN (₦) — Nigerian Naira" },
+      { value: "KES", label: "KES (KSh) — Kenyan Shilling" },
+      { value: "MAD", label: "MAD (د.م.) — Moroccan Dirham" },
+      { value: "TND", label: "TND (DT) — Tunisian Dinar" },
+      { value: "GHS", label: "GHS (GH₵) — Ghanaian Cedi" },
+      { value: "TZS", label: "TZS (TSh) — Tanzanian Shilling" },
+      { value: "UGX", label: "UGX (USh) — Ugandan Shilling" },
+      { value: "ETB", label: "ETB (Br) — Ethiopian Birr" },
     ],
   },
   {
-    group: 'Oceania',
+    group: "Oceania",
     options: [
-      { value: 'AUD', label: 'AUD (A$) — Australian Dollar' },
-      { value: 'NZD', label: 'NZD (NZ$) — New Zealand Dollar' },
-      { value: 'FJD', label: 'FJD (FJ$) — Fijian Dollar' },
+      { value: "AUD", label: "AUD (A$) — Australian Dollar" },
+      { value: "NZD", label: "NZD (NZ$) — New Zealand Dollar" },
+      { value: "FJD", label: "FJD (FJ$) — Fijian Dollar" },
     ],
   },
   {
-    group: 'Other',
-    options: [{ value: '__custom__', label: 'Custom...' }],
+    group: "Other",
+    options: [{ value: "__custom__", label: "Custom..." }],
   },
 ];
 
 // ── Languages ─────────────────────────────────────────────────────────────
 
 const LANGUAGES = [
-  { value: 'en', label: 'English' },
-  { value: 'de', label: 'Deutsch' },
-  { value: 'fr', label: 'Français' },
-  { value: 'es', label: 'Español' },
-  { value: 'it', label: 'Italiano' },
-  { value: 'pt', label: 'Português' },
-  { value: 'nl', label: 'Nederlands' },
-  { value: 'pl', label: 'Polski' },
-  { value: 'cs', label: 'Čeština' },
-  { value: 'ru', label: 'Русский' },
-  { value: 'tr', label: 'Türkçe' },
-  { value: 'ar', label: 'العربية' },
-  { value: 'zh', label: '中文' },
-  { value: 'ja', label: '日本語' },
-  { value: 'ko', label: '한국어' },
-  { value: 'hi', label: 'हिन्दी' },
-  { value: 'th', label: 'ไทย' },
-  { value: 'vi', label: 'Tiếng Việt' },
-  { value: 'id', label: 'Bahasa Indonesia' },
-  { value: 'sv', label: 'Svenska' },
-  { value: 'no', label: 'Norsk' },
-  { value: 'da', label: 'Dansk' },
-  { value: 'fi', label: 'Suomi' },
+  { value: "en", label: "English" },
+  { value: "de", label: "Deutsch" },
+  { value: "fr", label: "Français" },
+  { value: "es", label: "Español" },
+  { value: "it", label: "Italiano" },
+  { value: "pt", label: "Português" },
+  { value: "nl", label: "Nederlands" },
+  { value: "pl", label: "Polski" },
+  { value: "cs", label: "Čeština" },
+  { value: "ru", label: "Русский" },
+  { value: "tr", label: "Türkçe" },
+  { value: "ar", label: "العربية" },
+  { value: "zh", label: "中文" },
+  { value: "ja", label: "日本語" },
+  { value: "ko", label: "한국어" },
+  { value: "hi", label: "हिन्दी" },
+  { value: "th", label: "ไทย" },
+  { value: "vi", label: "Tiếng Việt" },
+  { value: "id", label: "Bahasa Indonesia" },
+  { value: "sv", label: "Svenska" },
+  { value: "no", label: "Norsk" },
+  { value: "da", label: "Dansk" },
+  { value: "fi", label: "Suomi" },
 ];
 
 // ── Profile scoring axes (valid values mirror the backend) ────────────────
 
 const ACTIVITIES = [
-  'bim_quality_check', 'cost_estimation', 'tender_preparation',
-  'construction_execution', 'property_development', 'site_management',
-  'consulting', 'facility_management',
+  "bim_quality_check",
+  "cost_estimation",
+  "tender_preparation",
+  "construction_execution",
+  "property_development",
+  "site_management",
+  "consulting",
+  "facility_management",
 ];
-const PHASES = ['concept', 'design', 'tender', 'procurement', 'construction', 'handover'];
+const PHASES = [
+  "concept",
+  "design",
+  "tender",
+  "procurement",
+  "construction",
+  "handover",
+];
 const ROLES = [
-  'client_owner', 'general_contractor', 'bim_consultant', 'bim_manager',
-  'designer_architect', 'subcontractor', 'cost_engineer', 'developer',
+  "client_owner",
+  "general_contractor",
+  "bim_consultant",
+  "bim_manager",
+  "designer_architect",
+  "subcontractor",
+  "cost_engineer",
+  "developer",
 ];
-const SIZES = ['small', 'medium', 'large', 'enterprise'];
+const SIZES = ["small", "medium", "large", "enterprise"];
 
 // Sensible activity/phase defaults per preset so a user who just picks a
 // preset and clicks through still gets a well-scored profile. These only
 // seed the multi-selects; the user can change anything.
-const PRESET_DEFAULTS: Record<string, { activity: string[]; phases: string[] }> = {
-  bim_quality_check: { activity: ['bim_quality_check'], phases: ['design'] },
-  cost_estimation_only: { activity: ['cost_estimation'], phases: ['design', 'tender'] },
-  tender_preparation: { activity: ['tender_preparation'], phases: ['tender', 'procurement'] },
+const PRESET_DEFAULTS: Record<
+  string,
+  { activity: string[]; phases: string[] }
+> = {
+  bim_quality_check: { activity: ["bim_quality_check"], phases: ["design"] },
+  cost_estimation_only: {
+    activity: ["cost_estimation"],
+    phases: ["design", "tender"],
+  },
+  tender_preparation: {
+    activity: ["tender_preparation"],
+    phases: ["tender", "procurement"],
+  },
   full_construction_lifecycle: {
-    activity: ['cost_estimation', 'construction_execution'],
-    phases: ['concept', 'design', 'tender', 'procurement', 'construction', 'handover'],
+    activity: ["cost_estimation", "construction_execution"],
+    phases: [
+      "concept",
+      "design",
+      "tender",
+      "procurement",
+      "construction",
+      "handover",
+    ],
   },
   property_development: {
-    activity: ['property_development'],
-    phases: ['concept', 'design', 'construction'],
+    activity: ["property_development"],
+    phases: ["concept", "design", "construction"],
   },
-  site_management: { activity: ['site_management'], phases: ['construction', 'handover'] },
-  bim_consulting: { activity: ['consulting', 'bim_quality_check'], phases: ['design'] },
-  facility_management: { activity: ['facility_management'], phases: ['handover'] },
+  site_management: {
+    activity: ["site_management"],
+    phases: ["construction", "handover"],
+  },
+  bim_consulting: {
+    activity: ["consulting", "bim_quality_check"],
+    phases: ["design"],
+  },
+  facility_management: {
+    activity: ["facility_management"],
+    phases: ["handover"],
+  },
   custom: { activity: [], phases: [] },
 };
 
@@ -309,7 +371,7 @@ const STEP_COUNT = 5;
 // landing screen that offers the two paths; 'wizard' = the 5-step
 // guided setup; 'classic' = the old single-window form (essentials
 // only — region/type/scope use sensible defaults under the hood).
-type CreateMode = 'choose' | 'wizard' | 'classic';
+type CreateMode = "choose" | "wizard" | "classic";
 
 // ── Modal ─────────────────────────────────────────────────────────────────
 
@@ -340,7 +402,7 @@ export function CreateProjectModal({
 
   // Which create flow we're in. Always starts on the chooser so the
   // user is offered the wizard vs. the old single-window form.
-  const [mode, setMode] = useState<CreateMode>('choose');
+  const [mode, setMode] = useState<CreateMode>("choose");
   const [step, setStep] = useState(1);
   // Furthest step the user has reached — gates which stepper dots are
   // clickable (you can jump back to a visited step, never skip forward).
@@ -357,46 +419,46 @@ export function CreateProjectModal({
   const keepEditingRef = useRef<HTMLButtonElement>(null);
 
   const [form, setForm] = useState<CreateProjectData>({
-    name: '',
-    description: '',
-    region: '',
-    classification_standard: '',
-    currency: '',
-    locale: 'en',
+    name: "",
+    description: "",
+    region: "",
+    classification_standard: "",
+    currency: "",
+    locale: "en",
   });
 
-  const [customRegion, setCustomRegion] = useState('');
-  const [customStandard, setCustomStandard] = useState('');
-  const [customCurrency, setCustomCurrency] = useState('');
+  const [customRegion, setCustomRegion] = useState("");
+  const [customStandard, setCustomStandard] = useState("");
+  const [customCurrency, setCustomCurrency] = useState("");
   // String-backed so the user can clear / type freely; parsed + clamped
   // to [0.5, 2.0] on blur and at submit (0 / empty no longer snap to 1).
-  const [regionalFactorStr, setRegionalFactorStr] = useState('1.00');
+  const [regionalFactorStr, setRegionalFactorStr] = useState("1.00");
   const [duplicateConfirmed, setDuplicateConfirmed] = useState(false);
 
   // Profile (Slice 1) answers
-  const [preset, setPreset] = useState('full_construction_lifecycle');
-  const [size, setSize] = useState('medium');
-  const [role, setRole] = useState('general_contractor');
+  const [preset, setPreset] = useState("full_construction_lifecycle");
+  const [size, setSize] = useState("medium");
+  const [role, setRole] = useState("general_contractor");
   const [activity, setActivity] = useState<string[]>(INITIAL_AXES.activity);
   const [phases, setPhases] = useState<string[]>(INITIAL_AXES.phases);
   const [focusMode, setFocusMode] = useState(true);
 
   // Address — assembled into the JSON `address` object on submit.
-  const [addressStreet, setAddressStreet] = useState('');
-  const [addressCity, setAddressCity] = useState('');
-  const [addressCountry, setAddressCountry] = useState('');
-  const [addressPostal, setAddressPostal] = useState('');
+  const [addressStreet, setAddressStreet] = useState("");
+  const [addressCity, setAddressCity] = useState("");
+  const [addressCountry, setAddressCountry] = useState("");
+  const [addressPostal, setAddressPostal] = useState("");
 
   // Quick-create extras — all optional Phase-12 expansion fields the
   // backend `ProjectCreate` schema already accepts. Empty string means
   // "not provided" and is normalised to null/omitted in the payload.
-  const [projectCode, setProjectCode] = useState('');
-  const [projectType, setProjectType] = useState('');
-  const [clientName, setClientName] = useState('');
-  const [contractValue, setContractValue] = useState('');
-  const [budgetEstimate, setBudgetEstimate] = useState('');
-  const [plannedStart, setPlannedStart] = useState('');
-  const [plannedEnd, setPlannedEnd] = useState('');
+  const [projectCode, setProjectCode] = useState("");
+  const [projectType, setProjectType] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [contractValue, setContractValue] = useState("");
+  const [budgetEstimate, setBudgetEstimate] = useState("");
+  const [plannedStart, setPlannedStart] = useState("");
+  const [plannedEnd, setPlannedEnd] = useState("");
 
   // Quick-create progressive disclosure. The whole "Optional details"
   // block is user-collapsible (open by default so the first few fields
@@ -418,7 +480,7 @@ export function CreateProjectModal({
   const close = () => {
     onClose();
     const el = returnFocusRef.current;
-    if (el && typeof el.focus === 'function') {
+    if (el && typeof el.focus === "function") {
       // Defer so the trigger is back in the DOM/tab order first.
       requestAnimationFrame(() => el.focus());
     }
@@ -431,44 +493,51 @@ export function CreateProjectModal({
         document.activeElement instanceof HTMLElement
           ? document.activeElement
           : null;
-      setMode('choose');
+      setMode("choose");
       setStep(1);
       setMaxStep(1);
       setConfirmingClose(false);
-      setForm({ name: '', description: '', region: '', classification_standard: '', currency: '', locale: 'en' });
-      setCustomRegion('');
-      setCustomStandard('');
-      setCustomCurrency('');
-      setRegionalFactorStr('1.00');
+      setForm({
+        name: "",
+        description: "",
+        region: "",
+        classification_standard: "",
+        currency: "",
+        locale: "en",
+      });
+      setCustomRegion("");
+      setCustomStandard("");
+      setCustomCurrency("");
+      setRegionalFactorStr("1.00");
       setDuplicateConfirmed(false);
-      setPreset('full_construction_lifecycle');
-      setSize('medium');
-      setRole('general_contractor');
+      setPreset("full_construction_lifecycle");
+      setSize("medium");
+      setRole("general_contractor");
       setActivity(INITIAL_AXES.activity);
       setPhases(INITIAL_AXES.phases);
       setFocusMode(true);
-      setAddressStreet('');
-      setAddressCity('');
-      setAddressCountry('');
-      setAddressPostal('');
-      setProjectCode('');
-      setProjectType('');
-      setClientName('');
-      setContractValue('');
-      setBudgetEstimate('');
-      setPlannedStart('');
-      setPlannedEnd('');
+      setAddressStreet("");
+      setAddressCity("");
+      setAddressCountry("");
+      setAddressPostal("");
+      setProjectCode("");
+      setProjectType("");
+      setClientName("");
+      setContractValue("");
+      setBudgetEstimate("");
+      setPlannedStart("");
+      setPlannedEnd("");
       // Force the edit-mode prefill to re-run on (re)open; the prefill
       // effect then overrides the defaults above once data arrives.
       setPrefilledFor(null);
       // Create flow opens the wizard funnel here; edit flow emits
       // `setup_rerun` from the prefill effect instead.
-      if (!isEdit) track('wizard_started', { mode: 'create' });
+      if (!isEdit) track("wizard_started", { mode: "create" });
     }
   }, [open, isEdit, track]);
 
   const { data: existingProjects = [] } = useQuery<Project[]>({
-    queryKey: ['projects'],
+    queryKey: ["projects"],
     queryFn: projectsApi.list,
     enabled: open,
     staleTime: 5 * 60_000,
@@ -479,7 +548,7 @@ export function CreateProjectModal({
     isLoading: presetsLoading,
     isError: presetsError,
   } = useQuery<WizardPreset[]>({
-    queryKey: ['wizard-presets'],
+    queryKey: ["wizard-presets"],
     queryFn: projectsApi.wizardPresets,
     enabled: open,
     staleTime: 30 * 60_000,
@@ -488,13 +557,13 @@ export function CreateProjectModal({
   // ── Edit mode (Slice 4) — load the existing project + its profile so
   // every step prefills. Component is shared, not forked. ───────────────
   const { data: editProject } = useQuery<Project>({
-    queryKey: ['project', editProjectId],
+    queryKey: ["project", editProjectId],
     queryFn: () => projectsApi.get(editProjectId!),
     enabled: open && isEdit,
     staleTime: 60_000,
   });
   const { data: editProfile } = useQuery({
-    queryKey: ['project-profile', editProjectId],
+    queryKey: ["project-profile", editProjectId],
     queryFn: () => projectsApi.getProfile(editProjectId!),
     enabled: open && isEdit,
     staleTime: 60_000,
@@ -509,27 +578,27 @@ export function CreateProjectModal({
     if (prefilledFor === editProject.id) return;
     setForm({
       name: editProject.name,
-      description: editProject.description ?? '',
-      region: editProject.region ?? '',
-      classification_standard: editProject.classification_standard ?? '',
-      currency: editProject.currency ?? '',
-      locale: editProject.locale ?? 'en',
+      description: editProject.description ?? "",
+      region: editProject.region ?? "",
+      classification_standard: editProject.classification_standard ?? "",
+      currency: editProject.currency ?? "",
+      locale: editProject.locale ?? "en",
     });
     if (editProfile) {
-      setPreset(editProfile.profile.preset || 'custom');
+      setPreset(editProfile.profile.preset || "custom");
       setActivity(editProfile.profile.activity ?? []);
       setPhases(editProfile.profile.phases ?? []);
-      setRole(editProfile.profile.role || 'general_contractor');
-      setSize(editProfile.profile.size || 'medium');
+      setRole(editProfile.profile.role || "general_contractor");
+      setSize(editProfile.profile.size || "medium");
       setFocusMode(editProfile.profile.focus_mode_enabled);
     }
     // Skip the chooser — jump straight into the guided wizard with
     // every visited step navigable for step-back editing.
-    setMode('wizard');
+    setMode("wizard");
     setStep(1);
     setMaxStep(STEP_COUNT);
     setPrefilledFor(editProject.id);
-    track('setup_rerun', { project_id: editProject.id });
+    track("setup_rerun", { project_id: editProject.id });
   }, [open, isEdit, editProject, editProfile, prefilledFor, track]);
 
   const trimmedName = form.name.trim();
@@ -552,7 +621,7 @@ export function CreateProjectModal({
     // the user may have made on the next step.
     if (id === preset) return;
     setPreset(id);
-    track('preset_selected', { preset: id, edit: isEdit });
+    track("preset_selected", { preset: id, edit: isEdit });
     const d = PRESET_DEFAULTS[id];
     if (d) {
       setActivity(d.activity);
@@ -566,13 +635,15 @@ export function CreateProjectModal({
   // used for the gate, the submit payload, and the review summary so
   // none of them ever shows or stores the literal "__custom__".
   const effectiveRegion =
-    form.region === '__custom__' ? customRegion.trim() : (form.region ?? '');
+    form.region === "__custom__" ? customRegion.trim() : (form.region ?? "");
   const effectiveStandard =
-    form.classification_standard === '__custom__'
+    form.classification_standard === "__custom__"
       ? customStandard.trim()
-      : (form.classification_standard ?? '');
+      : (form.classification_standard ?? "");
   const effectiveCurrency =
-    form.currency === '__custom__' ? customCurrency.trim() : (form.currency ?? '');
+    form.currency === "__custom__"
+      ? customCurrency.trim()
+      : (form.currency ?? "");
 
   // Any meaningful input → closing should confirm before discarding.
   const dirty =
@@ -582,8 +653,10 @@ export function CreateProjectModal({
     !!form.region ||
     !!form.currency ||
     !!form.classification_standard ||
-    addressStreet !== '' || addressCity !== '' ||
-    addressCountry !== '' || addressPostal !== '';
+    addressStreet !== "" ||
+    addressCity !== "" ||
+    addressCountry !== "" ||
+    addressPostal !== "";
 
   // Move focus into the step body when the step changes so keyboard /
   // screen-reader users land on the new content (step 1 keeps the
@@ -603,13 +676,15 @@ export function CreateProjectModal({
   useEffect(() => {
     if (!open) return;
     const onTab = (e: globalThis.KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== "Tab") return;
       // While the discard confirm is up it is itself a modal layer —
       // trap inside it so Tab can't reach the step controls behind it.
       const root =
         (dialogRef.current?.querySelector<HTMLElement>(
           '[role="alertdialog"]',
-        ) ?? dialogRef.current) || null;
+        ) ??
+          dialogRef.current) ||
+        null;
       if (!root) return;
       const focusable = Array.from(
         root.querySelectorAll<HTMLElement>(
@@ -636,8 +711,8 @@ export function CreateProjectModal({
         first.focus();
       }
     };
-    document.addEventListener('keydown', onTab, true);
-    return () => document.removeEventListener('keydown', onTab, true);
+    document.addEventListener("keydown", onTab, true);
+    return () => document.removeEventListener("keydown", onTab, true);
   }, [open]);
 
   const buildSpec = (): ProfileSpec => ({
@@ -646,11 +721,14 @@ export function CreateProjectModal({
     phases,
     role,
     size,
-    region: REGION_TO_PACK[form.region ?? ''] ?? '',
-    language: form.locale || 'en',
+    region: REGION_TO_PACK[form.region ?? ""] ?? "",
+    language: form.locale || "en",
     extensions_enabled: [],
     focus_mode_enabled: focusMode,
-    setup_completion: { wizard: 'slice2', completed_at: new Date().toISOString() },
+    setup_completion: {
+      wizard: "slice2",
+      completed_at: new Date().toISOString(),
+    },
     manual_overrides: {},
   });
 
@@ -666,12 +744,13 @@ export function CreateProjectModal({
 
       const data: CreateProjectData = {
         ...form,
-        region: form.region === '__custom__' ? customRegion : form.region,
+        region: form.region === "__custom__" ? customRegion : form.region,
         classification_standard:
-          form.classification_standard === '__custom__'
+          form.classification_standard === "__custom__"
             ? customStandard
             : form.classification_standard,
-        currency: form.currency === '__custom__' ? customCurrency : form.currency,
+        currency:
+          form.currency === "__custom__" ? customCurrency : form.currency,
         regional_factor: clampFactor(regionalFactorStr),
         address: hasAnyAddress ? addressParts : null,
         // Optional Phase-12 expansion fields — only include when filled
@@ -708,33 +787,34 @@ export function CreateProjectModal({
         await projectsApi.applyProfile(project.id, buildSpec());
       } catch {
         addToast({
-          type: 'warning',
-          title: t('project_wizard.profile_apply_failed', {
-            defaultValue: 'Project created, but the module setup could not be applied — you can re-run it from Project Settings.‌⁠‍',
+          type: "warning",
+          title: t("project_wizard.profile_apply_failed", {
+            defaultValue:
+              "Project created, but the module setup could not be applied — you can re-run it from Project Settings.‌⁠‍",
           }),
         });
       }
       return project;
     },
     onSuccess: (project) => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-      queryClient.invalidateQueries({ queryKey: ['project', project.id] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project", project.id] });
       queryClient.invalidateQueries({
-        queryKey: ['project-profile', project.id],
+        queryKey: ["project-profile", project.id],
       });
-      track('setup_completed', {
+      track("setup_completed", {
         project_id: project.id,
         preset,
         edit: isEdit,
       });
       addToast({
-        type: 'success',
+        type: "success",
         title: isEdit
-          ? t('project_wizard.setup_updated', {
-              defaultValue: 'Project setup updated‌⁠‍',
+          ? t("project_wizard.setup_updated", {
+              defaultValue: "Project setup updated‌⁠‍",
             })
-          : t('toasts.project_created', {
-              defaultValue: 'Project created successfully‌⁠‍',
+          : t("toasts.project_created", {
+              defaultValue: "Project created successfully‌⁠‍",
             }),
       });
       // Navigate away — no focus return here (we're leaving the page).
@@ -742,7 +822,13 @@ export function CreateProjectModal({
       navigate(`/projects/${project.id}`);
     },
     onError: (error: Error) => {
-      addToast({ type: 'error', title: t('toasts.project_create_failed', { defaultValue: 'Failed to create project‌⁠‍' }), message: error.message });
+      addToast({
+        type: "error",
+        title: t("toasts.project_create_failed", {
+          defaultValue: "Failed to create project‌⁠‍",
+        }),
+        message: error.message,
+      });
     },
   });
 
@@ -762,14 +848,14 @@ export function CreateProjectModal({
     list: string[],
     val: string,
     setter: (v: string[]) => void,
-    kind?: 'activity' | 'phase',
+    kind?: "activity" | "phase",
   ) => {
     const present = list.includes(val);
     setter(present ? list.filter((x) => x !== val) : [...list, val]);
     if (kind) {
       // Scope chips change the resolved module set — closest
       // user-meaningful "module toggled" signal in this wizard.
-      track('module_toggled', { kind, value: val, on: !present });
+      track("module_toggled", { kind, value: val, on: !present });
     }
   };
 
@@ -787,7 +873,7 @@ export function CreateProjectModal({
       // effectiveX being blank already blocks it. Standard stays
       // optional unless the user explicitly chose "Custom…".
       if (!effectiveRegion || !effectiveCurrency) return false;
-      if (form.classification_standard === '__custom__' && !effectiveStandard)
+      if (form.classification_standard === "__custom__" && !effectiveStandard)
         return false;
       return true;
     }
@@ -801,20 +887,20 @@ export function CreateProjectModal({
   // invariants here and names the first missing one for the user.
   const submitBlockReason = (() => {
     if (!trimmedName)
-      return t('project_wizard.need_name', {
-        defaultValue: 'Enter a project name (step 1).‌⁠‍',
+      return t("project_wizard.need_name", {
+        defaultValue: "Enter a project name (step 1).‌⁠‍",
       });
     if (!effectiveRegion)
-      return t('project_wizard.need_region', {
-        defaultValue: 'Pick a region (step 2).',
+      return t("project_wizard.need_region", {
+        defaultValue: "Pick a region (step 2).",
       });
     if (!effectiveCurrency)
-      return t('project_wizard.need_currency', {
-        defaultValue: 'Pick a currency (step 2).',
+      return t("project_wizard.need_currency", {
+        defaultValue: "Pick a currency (step 2).",
       });
-    if (form.classification_standard === '__custom__' && !effectiveStandard)
-      return t('project_wizard.need_standard', {
-        defaultValue: 'Enter the custom classification standard (step 2).',
+    if (form.classification_standard === "__custom__" && !effectiveStandard)
+      return t("project_wizard.need_standard", {
+        defaultValue: "Enter the custom classification standard (step 2).",
       });
     return null;
   })();
@@ -844,10 +930,10 @@ export function CreateProjectModal({
   // (those have their own Enter semantics). Escape requests close.
   const onKeyDownModal = (e: KeyboardEvent<HTMLDivElement>) => {
     const tag = (e.target as HTMLElement).tagName;
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       // A focused native <select> uses Escape to close its own
       // dropdown — don't also tear down the wizard in that case.
-      if (tag === 'SELECT') return;
+      if (tag === "SELECT") return;
       e.stopPropagation();
       // When the discard confirm is up, Escape takes the safe,
       // non-destructive path: dismiss the confirm and keep editing
@@ -859,13 +945,13 @@ export function CreateProjectModal({
       requestClose();
       return;
     }
-    if (e.key !== 'Enter') return;
-    if (tag === 'TEXTAREA' || tag === 'BUTTON' || tag === 'SELECT') return;
+    if (e.key !== "Enter") return;
+    if (tag === "TEXTAREA" || tag === "BUTTON" || tag === "SELECT") return;
     if (confirmingClose) return;
     // The chooser screen has no Enter action — let focus/click handle it.
-    if (mode === 'choose') return;
+    if (mode === "choose") return;
     e.preventDefault();
-    if (mode === 'classic' || isLast) {
+    if (mode === "classic" || isLast) {
       if (canSubmit && !mutation.isPending) mutation.mutate();
     } else {
       next();
@@ -873,11 +959,11 @@ export function CreateProjectModal({
   };
 
   const STEP_TITLES = [
-    t('project_wizard.step_basics', { defaultValue: 'Basics' }),
-    t('project_wizard.step_region', { defaultValue: 'Region & currency' }),
-    t('project_wizard.step_type', { defaultValue: 'Project type' }),
-    t('project_wizard.step_scope', { defaultValue: 'Scope' }),
-    t('project_wizard.step_review', { defaultValue: 'Site & review' }),
+    t("project_wizard.step_basics", { defaultValue: "Basics" }),
+    t("project_wizard.step_region", { defaultValue: "Region & currency" }),
+    t("project_wizard.step_type", { defaultValue: "Project type" }),
+    t("project_wizard.step_scope", { defaultValue: "Scope" }),
+    t("project_wizard.step_review", { defaultValue: "Site & review" }),
   ];
 
   return (
@@ -905,32 +991,38 @@ export function CreateProjectModal({
               <FolderPlus size={20} className="text-oe-blue" />
             </div>
             <div>
-              <h2 id="cpw-title" className="text-lg font-semibold text-content-primary">
+              <h2
+                id="cpw-title"
+                className="text-lg font-semibold text-content-primary"
+              >
                 {isEdit
-                  ? t('project_wizard.edit_setup_title', {
-                      defaultValue: 'Edit project setup',
+                  ? t("project_wizard.edit_setup_title", {
+                      defaultValue: "Edit project setup",
                     })
-                  : t('projects.new_project', { defaultValue: 'New Project' })}
+                  : t("projects.new_project", { defaultValue: "New Project" })}
               </h2>
               <p className="text-xs text-content-tertiary">
-                {mode === 'choose'
-                  ? t('project_wizard.choose_subtitle', {
-                      defaultValue: 'Choose how you want to set this project up',
+                {mode === "choose"
+                  ? t("project_wizard.choose_subtitle", {
+                      defaultValue:
+                        "Choose how you want to set this project up",
                     })
-                  : mode === 'classic'
-                    ? t('project_wizard.classic_subtitle', {
-                        defaultValue: 'Quick create — just the essentials',
+                  : mode === "classic"
+                    ? t("project_wizard.classic_subtitle", {
+                        defaultValue: "Quick create — just the essentials",
                       })
-                    : t('project_wizard.step_of', {
-                        defaultValue: 'Step {{n}} of {{total}} · {{title}}',
-                        n: step, total: STEP_COUNT, title: STEP_TITLES[step - 1],
+                    : t("project_wizard.step_of", {
+                        defaultValue: "Step {{n}} of {{total}} · {{title}}",
+                        n: step,
+                        total: STEP_COUNT,
+                        title: STEP_TITLES[step - 1],
                       })}
               </p>
             </div>
           </div>
           <button
             onClick={requestClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-hover transition-colors"
           >
             <X size={18} />
@@ -941,59 +1033,68 @@ export function CreateProjectModal({
             non-collapsing columns. Visited dots are buttons (jump
             back); the current + future dots are not navigable
             forward (no step skipping). */}
-        {mode === 'wizard' && (
-        <div className="px-6 pb-4 shrink-0">
-          <div className="relative">
-            {/* neutral track behind the dots — the dots themselves carry
+        {mode === "wizard" && (
+          <div className="px-6 pb-4 shrink-0">
+            <div className="relative">
+              {/* neutral track behind the dots — the dots themselves carry
                 all progress state, so no same-colour camouflage. */}
-            <div className="absolute left-3 right-3 top-3 h-px bg-border-light" />
-            <div
-              className="relative grid"
-              style={{ gridTemplateColumns: `repeat(${STEP_COUNT}, minmax(0, 1fr))` }}
-            >
-              {Array.from({ length: STEP_COUNT }, (_, i) => i + 1).map((s) => {
-                const navigable = s <= maxStep && s !== step;
-                const dotCls = `flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold ring-4 ring-surface-elevated transition-colors ${
-                  s < step
-                    ? 'bg-oe-blue text-white'
-                    : s === step
-                      ? 'bg-oe-blue text-white ring-oe-blue/25'
-                      : 'bg-surface-secondary text-content-tertiary border border-border-light'
-                }`;
-                return (
-                  <div key={s} className="flex flex-col items-center gap-1.5 min-w-0">
-                    {navigable ? (
-                      <button
-                        type="button"
-                        onClick={() => setStep(s)}
-                        aria-label={STEP_TITLES[s - 1]}
-                        className={dotCls + ' cursor-pointer hover:opacity-90'}
-                      >
-                        {s < step ? <Check size={13} /> : s}
-                      </button>
-                    ) : (
+              <div className="absolute left-3 right-3 top-3 h-px bg-border-light" />
+              <div
+                className="relative grid"
+                style={{
+                  gridTemplateColumns: `repeat(${STEP_COUNT}, minmax(0, 1fr))`,
+                }}
+              >
+                {Array.from({ length: STEP_COUNT }, (_, i) => i + 1).map(
+                  (s) => {
+                    const navigable = s <= maxStep && s !== step;
+                    const dotCls = `flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold ring-4 ring-surface-elevated transition-colors ${
+                      s < step
+                        ? "bg-oe-blue text-white"
+                        : s === step
+                          ? "bg-oe-blue text-white ring-oe-blue/25"
+                          : "bg-surface-secondary text-content-tertiary border border-border-light"
+                    }`;
+                    return (
                       <div
-                        className={dotCls}
-                        aria-current={s === step ? 'step' : undefined}
+                        key={s}
+                        className="flex flex-col items-center gap-1.5 min-w-0"
                       >
-                        {s < step ? <Check size={13} /> : s}
+                        {navigable ? (
+                          <button
+                            type="button"
+                            onClick={() => setStep(s)}
+                            aria-label={STEP_TITLES[s - 1]}
+                            className={
+                              dotCls + " cursor-pointer hover:opacity-90"
+                            }
+                          >
+                            {s < step ? <Check size={13} /> : s}
+                          </button>
+                        ) : (
+                          <div
+                            className={dotCls}
+                            aria-current={s === step ? "step" : undefined}
+                          >
+                            {s < step ? <Check size={13} /> : s}
+                          </div>
+                        )}
+                        <span
+                          className={`hidden sm:block text-[10px] leading-tight text-center truncate max-w-[88px] ${
+                            s === step
+                              ? "text-content-secondary font-medium"
+                              : "text-content-quaternary"
+                          }`}
+                        >
+                          {STEP_TITLES[s - 1]}
+                        </span>
                       </div>
-                    )}
-                    <span
-                      className={`hidden sm:block text-[10px] leading-tight text-center truncate max-w-[88px] ${
-                        s === step
-                          ? 'text-content-secondary font-medium'
-                          : 'text-content-quaternary'
-                      }`}
-                    >
-                      {STEP_TITLES[s - 1]}
-                    </span>
-                  </div>
-                );
-              })}
+                    );
+                  },
+                )}
+              </div>
             </div>
           </div>
-        </div>
         )}
 
         {/* Body — scrollable */}
@@ -1001,27 +1102,35 @@ export function CreateProjectModal({
           ref={bodyRef}
           tabIndex={-1}
           aria-label={
-            mode === 'choose'
-              ? t('project_wizard.choose_subtitle', { defaultValue: 'Choose how you want to set this project up' })
-              : mode === 'classic'
-                ? t('project_wizard.classic_subtitle', { defaultValue: 'Quick create — just the essentials' })
+            mode === "choose"
+              ? t("project_wizard.choose_subtitle", {
+                  defaultValue: "Choose how you want to set this project up",
+                })
+              : mode === "classic"
+                ? t("project_wizard.classic_subtitle", {
+                    defaultValue: "Quick create — just the essentials",
+                  })
                 : STEP_TITLES[step - 1]
           }
           className="overflow-y-auto px-6 pb-6 flex-1 outline-none"
         >
           {/* Mode chooser — the landing screen. Offers the guided
               wizard or the old single-window quick form. */}
-          {mode === 'choose' && (
+          {mode === "choose" && (
             <div className="space-y-3">
               <InfoHint
-                text={t('project_wizard.choose_hint', {
+                text={t("project_wizard.choose_hint", {
                   defaultValue:
-                    'New here, or want a tailored module setup? Use the guided wizard. Know exactly what you need? Quick create gets you a project in one screen.',
+                    "New here, or want a tailored module setup? Use the guided wizard. Know exactly what you need? Quick create gets you a project in one screen.",
                 })}
               />
               <button
                 type="button"
-                onClick={() => { setMode('wizard'); setStep(1); setMaxStep(1); }}
+                onClick={() => {
+                  setMode("wizard");
+                  setStep(1);
+                  setMaxStep(1);
+                }}
                 className="group w-full text-left rounded-xl border border-border-light hover:border-oe-blue hover:bg-oe-blue/5 transition-all p-4 flex items-start gap-3.5"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue/10 text-oe-blue">
@@ -1030,24 +1139,32 @@ export function CreateProjectModal({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-content-primary">
-                      {t('project_wizard.choose_wizard_title', { defaultValue: 'Guided setup' })}
+                      {t("project_wizard.choose_wizard_title", {
+                        defaultValue: "Guided setup",
+                      })}
                     </span>
                     <span className="rounded-full bg-oe-blue/10 px-2 py-0.5 text-[10px] font-semibold text-oe-blue">
-                      {t('common.recommended', { defaultValue: 'Recommended' })}
+                      {t("common.recommended", { defaultValue: "Recommended" })}
                     </span>
                   </div>
                   <p className="mt-1 text-xs leading-relaxed text-content-tertiary">
-                    {t('project_wizard.choose_wizard_blurb', {
+                    {t("project_wizard.choose_wizard_blurb", {
                       defaultValue:
-                        '5 short steps — region, project type and scope. Pre-selects the right modules and a focused sidebar for the work you do.',
+                        "5 short steps — region, project type and scope. Pre-selects the right modules and a focused sidebar for the work you do.",
                     })}
                   </p>
                 </div>
-                <ArrowRight size={16} className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue" />
+                <ArrowRight
+                  size={16}
+                  className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue"
+                />
               </button>
               <button
                 type="button"
-                onClick={() => { setMode('classic'); setStep(1); }}
+                onClick={() => {
+                  setMode("classic");
+                  setStep(1);
+                }}
                 className="group w-full text-left rounded-xl border border-border-light hover:border-oe-blue hover:bg-oe-blue/5 transition-all p-4 flex items-start gap-3.5"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface-secondary text-content-secondary">
@@ -1055,16 +1172,21 @@ export function CreateProjectModal({
                 </div>
                 <div className="min-w-0 flex-1">
                   <span className="text-sm font-semibold text-content-primary">
-                    {t('project_wizard.choose_classic_title', { defaultValue: 'Quick create' })}
+                    {t("project_wizard.choose_classic_title", {
+                      defaultValue: "Quick create",
+                    })}
                   </span>
                   <p className="mt-1 text-xs leading-relaxed text-content-tertiary">
-                    {t('project_wizard.choose_classic_blurb', {
+                    {t("project_wizard.choose_classic_blurb", {
                       defaultValue:
-                        'Every project setting on one screen — name, region, currency, address, client, dates and budget. Only the name is required; everything else is optional and editable later.',
+                        "Every project setting on one screen — name, region, currency, address, client, dates and budget. Only the name is required; everything else is optional and editable later.",
                     })}
                   </p>
                 </div>
-                <ArrowRight size={16} className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue" />
+                <ArrowRight
+                  size={16}
+                  className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue"
+                />
               </button>
             </div>
           )}
@@ -1074,12 +1196,12 @@ export function CreateProjectModal({
               project name is required (it is the sole non-defaulted field
               on the backend `ProjectCreate` schema); everything else is
               grouped under an explicit Optional section. */}
-          {mode === 'classic' && (
+          {mode === "classic" && (
             <div className="space-y-5">
               <InfoHint
-                text={t('projects.create.required_hint', {
+                text={t("projects.create.required_hint", {
                   defaultValue:
-                    'Only the project name is required — everything else is optional and can be edited later in Project Settings.',
+                    "Only the project name is required — everything else is optional and can be edited later in Project Settings.",
                 })}
               />
 
@@ -1090,32 +1212,53 @@ export function CreateProjectModal({
                     htmlFor="qc-name"
                     className="text-sm font-medium text-content-primary block mb-1.5"
                   >
-                    {t('projects.project_name')}
-                    <span aria-hidden className="ml-0.5 text-red-600 dark:text-red-400">*</span>
+                    {t("projects.project_name")}
+                    <span
+                      aria-hidden
+                      className="ml-0.5 text-red-600 dark:text-red-400"
+                    >
+                      *
+                    </span>
                     <span className="ml-1.5 rounded-full bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600 dark:bg-red-900/30 dark:text-red-300">
-                      {t('projects.create.required_badge', { defaultValue: 'Required' })}
+                      {t("projects.create.required_badge", {
+                        defaultValue: "Required",
+                      })}
                     </span>
                   </label>
                   <Input
                     id="qc-name"
                     aria-required="true"
                     value={form.name}
-                    onChange={(e) => set('name', e.target.value)}
-                    placeholder={t('projects.project_name_placeholder', { defaultValue: 'e.g. Office Tower Downtown' })}
+                    onChange={(e) => set("name", e.target.value)}
+                    placeholder={t("projects.project_name_placeholder", {
+                      defaultValue: "e.g. Office Tower Downtown",
+                    })}
                     autoFocus
                   />
                 </div>
                 {duplicateExists && (
                   <div className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800 px-3 py-2 -mt-2">
-                    <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                    <AlertTriangle
+                      size={16}
+                      className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"
+                    />
                     <div className="text-xs">
                       <p className="font-medium text-amber-900 dark:text-amber-200">
-                        {t('projects.duplicate_name_warning', { defaultValue: 'A project with this name already exists.' })}
+                        {t("projects.duplicate_name_warning", {
+                          defaultValue:
+                            "A project with this name already exists.",
+                        })}
                       </p>
                       <p className="text-amber-800 dark:text-amber-300 mt-0.5">
                         {duplicateConfirmed
-                          ? t('projects.duplicate_name_confirm_again_create', { defaultValue: 'Click Create again to proceed anyway.' })
-                          : t('projects.duplicate_name_confirm_hint_create', { defaultValue: 'Change the name, or click Create again to proceed anyway.' })}
+                          ? t("projects.duplicate_name_confirm_again_create", {
+                              defaultValue:
+                                "Click Create again to proceed anyway.",
+                            })
+                          : t("projects.duplicate_name_confirm_hint_create", {
+                              defaultValue:
+                                "Change the name, or click Create again to proceed anyway.",
+                            })}
                       </p>
                     </div>
                   </div>
@@ -1134,15 +1277,21 @@ export function CreateProjectModal({
                   className="flex w-full items-center justify-between gap-2 text-left -m-1 p-1 rounded-lg hover:bg-surface-secondary/40 transition-colors"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wide text-content-tertiary">
-                    {t('projects.create.optional_section', { defaultValue: 'Optional details' })}
+                    {t("projects.create.optional_section", {
+                      defaultValue: "Optional details",
+                    })}
                   </span>
                   <span className="flex items-center gap-1 text-[11px] font-medium text-content-tertiary">
                     {optionalOpen
-                      ? t('projects.create.optional_hide', { defaultValue: 'Hide' })
-                      : t('projects.create.optional_show', { defaultValue: 'Show' })}
+                      ? t("projects.create.optional_hide", {
+                          defaultValue: "Hide",
+                        })
+                      : t("projects.create.optional_show", {
+                          defaultValue: "Show",
+                        })}
                     <ChevronDown
                       size={14}
-                      className={`transition-transform duration-fast ease-oe ${optionalOpen ? 'rotate-180' : ''}`}
+                      className={`transition-transform duration-fast ease-oe ${optionalOpen ? "rotate-180" : ""}`}
                     />
                   </span>
                 </button>
@@ -1152,408 +1301,620 @@ export function CreateProjectModal({
                   hidden={!optionalOpen}
                   className="space-y-4"
                 >
-                {/* Description & notes */}
-                <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
-                      <FileText size={15} />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-content-primary">
-                        {t('projects.create.grp_description_title', { defaultValue: 'Description & notes' })}
-                      </p>
-                      <p className="text-[11px] text-content-tertiary">
-                        {t('projects.create.grp_description_sub', { defaultValue: 'Scope, context — anything useful later. Optional.' })}
-                      </p>
+                  {/* Description & notes */}
+                  <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
+                        <FileText size={15} />
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold text-content-primary">
+                          {t("projects.create.grp_description_title", {
+                            defaultValue: "Description & notes",
+                          })}
+                        </p>
+                        <p className="text-[11px] text-content-tertiary">
+                          {t("projects.create.grp_description_sub", {
+                            defaultValue:
+                              "Scope, context — anything useful later. Optional.",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    <textarea
+                      id="qc-description"
+                      value={form.description}
+                      onChange={(e) => set("description", e.target.value)}
+                      placeholder={t("projects.description_placeholder", {
+                        defaultValue: "Project description, scope, notes...",
+                      })}
+                      rows={2}
+                      className="w-full rounded-lg border border-border px-3 py-2.5 text-sm text-content-primary placeholder:text-content-tertiary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent transition-all duration-fast ease-oe hover:border-content-tertiary resize-none"
+                    />
+                  </div>
+
+                  {/* Classification & localization */}
+                  <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
+                        <Globe size={15} />
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold text-content-primary">
+                          {t("projects.create.grp_localization_title", {
+                            defaultValue: "Classification & localization",
+                          })}
+                        </p>
+                        <p className="text-[11px] text-content-tertiary">
+                          {t("projects.create.grp_localization_sub", {
+                            defaultValue:
+                              "Region, standard, currency and language. Optional — editable later.",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <GroupedSelectField
+                          label={t("projects.region", {
+                            defaultValue: "Region",
+                          })}
+                          optional
+                          optionalText={t("projects.create.optional_badge", {
+                            defaultValue: "Optional",
+                          })}
+                          value={form.region ?? ""}
+                          groups={REGION_GROUPS}
+                          placeholder={t("projects.select_region", {
+                            defaultValue: "-- Select region --",
+                          })}
+                          onChange={(v) => set("region", v)}
+                        />
+                        {form.region === "__custom__" && (
+                          <CustomValueInput
+                            value={customRegion}
+                            onChange={setCustomRegion}
+                            placeholder={t("projects.enter_custom_region", {
+                              defaultValue: "Enter custom region...",
+                            })}
+                            emptyHint={t(
+                              "project_wizard.custom_region_required",
+                              { defaultValue: "Type your region to continue." },
+                            )}
+                          />
+                        )}
+                      </div>
+                      <div>
+                        <GroupedSelectField
+                          label={t("projects.classification_standard", {
+                            defaultValue: "Classification Standard",
+                          })}
+                          optional
+                          optionalText={t("projects.create.optional_badge", {
+                            defaultValue: "Optional",
+                          })}
+                          value={form.classification_standard ?? ""}
+                          groups={STANDARD_GROUPS}
+                          placeholder={t("projects.select_standard", {
+                            defaultValue: "-- Select standard --",
+                          })}
+                          onChange={(v) => set("classification_standard", v)}
+                        />
+                        {form.classification_standard === "__custom__" && (
+                          <CustomValueInput
+                            value={customStandard}
+                            onChange={setCustomStandard}
+                            placeholder={t("projects.enter_custom_standard", {
+                              defaultValue: "Enter custom standard...",
+                            })}
+                            emptyHint={t(
+                              "project_wizard.custom_standard_required",
+                              {
+                                defaultValue:
+                                  "Type the standard name to continue.",
+                              },
+                            )}
+                          />
+                        )}
+                      </div>
+                      <div>
+                        <GroupedSelectField
+                          label={t("projects.currency", {
+                            defaultValue: "Currency",
+                          })}
+                          optional
+                          optionalText={t("projects.create.optional_badge", {
+                            defaultValue: "Optional",
+                          })}
+                          value={form.currency ?? ""}
+                          groups={CURRENCY_GROUPS}
+                          placeholder={t("projects.select_currency", {
+                            defaultValue: "-- Select currency --",
+                          })}
+                          onChange={(v) => set("currency", v)}
+                        />
+                        {form.currency === "__custom__" && (
+                          <CustomValueInput
+                            value={customCurrency}
+                            onChange={setCustomCurrency}
+                            placeholder={t("projects.enter_custom_currency", {
+                              defaultValue: "e.g. XAF",
+                            })}
+                            emptyHint={t(
+                              "project_wizard.custom_currency_required",
+                              {
+                                defaultValue:
+                                  "Type the ISO currency code to continue.",
+                              },
+                            )}
+                            maxLength={10}
+                          />
+                        )}
+                      </div>
+                      <SelectField
+                        label={t("projects.language", {
+                          defaultValue: "Language",
+                        })}
+                        optional
+                        optionalText={t("projects.create.optional_badge", {
+                          defaultValue: "Optional",
+                        })}
+                        value={form.locale ?? "en"}
+                        options={LANGUAGES}
+                        onChange={(v) => set("locale", v)}
+                      />
                     </div>
                   </div>
-                  <textarea
-                    id="qc-description"
-                    value={form.description}
-                    onChange={(e) => set('description', e.target.value)}
-                    placeholder={t('projects.description_placeholder', { defaultValue: 'Project description, scope, notes...' })}
-                    rows={2}
-                    className="w-full rounded-lg border border-border px-3 py-2.5 text-sm text-content-primary placeholder:text-content-tertiary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent transition-all duration-fast ease-oe hover:border-content-tertiary resize-none"
-                  />
-                </div>
 
-                {/* Classification & localization */}
-                <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
-                      <Globe size={15} />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-content-primary">
-                        {t('projects.create.grp_localization_title', { defaultValue: 'Classification & localization' })}
-                      </p>
-                      <p className="text-[11px] text-content-tertiary">
-                        {t('projects.create.grp_localization_sub', { defaultValue: 'Region, standard, currency and language. Optional — editable later.' })}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <GroupedSelectField
-                      label={t('projects.region', { defaultValue: 'Region' })}
-                      optional
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                      value={form.region ?? ''}
-                      groups={REGION_GROUPS}
-                      placeholder={t('projects.select_region', { defaultValue: '-- Select region --' })}
-                      onChange={(v) => set('region', v)}
-                    />
-                    {form.region === '__custom__' && (
-                      <CustomValueInput
-                        value={customRegion}
-                        onChange={setCustomRegion}
-                        placeholder={t('projects.enter_custom_region', { defaultValue: 'Enter custom region...' })}
-                        emptyHint={t('project_wizard.custom_region_required', { defaultValue: 'Type your region to continue.' })}
-                      />
-                    )}
-                  </div>
-                  <div>
-                    <GroupedSelectField
-                      label={t('projects.classification_standard', { defaultValue: 'Classification Standard' })}
-                      optional
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                      value={form.classification_standard ?? ''}
-                      groups={STANDARD_GROUPS}
-                      placeholder={t('projects.select_standard', { defaultValue: '-- Select standard --' })}
-                      onChange={(v) => set('classification_standard', v)}
-                    />
-                    {form.classification_standard === '__custom__' && (
-                      <CustomValueInput
-                        value={customStandard}
-                        onChange={setCustomStandard}
-                        placeholder={t('projects.enter_custom_standard', { defaultValue: 'Enter custom standard...' })}
-                        emptyHint={t('project_wizard.custom_standard_required', { defaultValue: 'Type the standard name to continue.' })}
-                      />
-                    )}
-                  </div>
-                  <div>
-                    <GroupedSelectField
-                      label={t('projects.currency', { defaultValue: 'Currency' })}
-                      optional
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                      value={form.currency ?? ''}
-                      groups={CURRENCY_GROUPS}
-                      placeholder={t('projects.select_currency', { defaultValue: '-- Select currency --' })}
-                      onChange={(v) => set('currency', v)}
-                    />
-                    {form.currency === '__custom__' && (
-                      <CustomValueInput
-                        value={customCurrency}
-                        onChange={setCustomCurrency}
-                        placeholder={t('projects.enter_custom_currency', { defaultValue: 'e.g. XAF' })}
-                        emptyHint={t('project_wizard.custom_currency_required', { defaultValue: 'Type the ISO currency code to continue.' })}
-                        maxLength={10}
-                      />
-                    )}
-                  </div>
-                  <SelectField
-                    label={t('projects.language', { defaultValue: 'Language' })}
-                    optional
-                    optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    value={form.locale ?? 'en'}
-                    options={LANGUAGES}
-                    onChange={(v) => set('locale', v)}
-                  />
-                  </div>
-                </div>
-
-                {/* Progressive disclosure — one click reveals every
+                  {/* Progressive disclosure — one click reveals every
                     remaining optional group as visual cards. */}
-                {!showAllOptional && (
-                  <button
-                    type="button"
-                    onClick={() => setShowAllOptional(true)}
-                    aria-expanded={false}
-                    aria-controls="qc-optional-more"
-                    className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-oe-blue/40 bg-oe-blue/5 px-4 py-3 text-sm font-medium text-oe-blue transition-colors hover:bg-oe-blue/10"
+                  {!showAllOptional && (
+                    <button
+                      type="button"
+                      onClick={() => setShowAllOptional(true)}
+                      aria-expanded={false}
+                      aria-controls="qc-optional-more"
+                      className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-oe-blue/40 bg-oe-blue/5 px-4 py-3 text-sm font-medium text-oe-blue transition-colors hover:bg-oe-blue/10"
+                    >
+                      <Plus size={15} />
+                      {t("projects.create.show_more", {
+                        defaultValue: "Show all options",
+                      })}
+                      <ChevronDown
+                        size={14}
+                        className="transition-transform group-hover:translate-y-0.5"
+                      />
+                    </button>
+                  )}
+
+                  <div
+                    id="qc-optional-more"
+                    hidden={!showAllOptional}
+                    className="space-y-4"
                   >
-                    <Plus size={15} />
-                    {t('projects.create.show_more', { defaultValue: 'Show all options' })}
-                    <ChevronDown size={14} className="transition-transform group-hover:translate-y-0.5" />
-                  </button>
-                )}
+                    {/* Identification */}
+                    <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
+                          <Hash size={15} />
+                        </span>
+                        <div>
+                          <p className="text-sm font-semibold text-content-primary">
+                            {t("projects.create.grp_identification_title", {
+                              defaultValue: "Identification",
+                            })}
+                          </p>
+                          <p className="text-[11px] text-content-tertiary">
+                            {t("projects.create.grp_identification_sub", {
+                              defaultValue:
+                                "Code, type and client. Optional — auto-filled where possible.",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <OptionalLabel
+                            htmlFor="qc-project-code"
+                            text={t("projects.project_code", {
+                              defaultValue: "Project number / code",
+                            })}
+                            optionalText={t("projects.create.optional_badge", {
+                              defaultValue: "Optional",
+                            })}
+                          />
+                          <input
+                            id="qc-project-code"
+                            type="text"
+                            value={projectCode}
+                            onChange={(e) => setProjectCode(e.target.value)}
+                            maxLength={50}
+                            placeholder={t(
+                              "projects.project_code_placeholder",
+                              { defaultValue: "Auto-generated if left blank" },
+                            )}
+                            className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <OptionalLabel
+                            htmlFor="qc-project-type"
+                            text={t("projects.project_type", {
+                              defaultValue: "Project type",
+                            })}
+                            optionalText={t("projects.create.optional_badge", {
+                              defaultValue: "Optional",
+                            })}
+                          />
+                          <input
+                            id="qc-project-type"
+                            type="text"
+                            value={projectType}
+                            onChange={(e) => setProjectType(e.target.value)}
+                            maxLength={50}
+                            placeholder={t(
+                              "projects.project_type_placeholder",
+                              {
+                                defaultValue:
+                                  "e.g. Residential, Infrastructure",
+                              },
+                            )}
+                            className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <OptionalLabel
+                            htmlFor="qc-client"
+                            text={t("projects.client_owner", {
+                              defaultValue: "Client / owner",
+                            })}
+                            optionalText={t("projects.create.optional_badge", {
+                              defaultValue: "Optional",
+                            })}
+                          />
+                          <input
+                            id="qc-client"
+                            type="text"
+                            value={clientName}
+                            onChange={(e) => setClientName(e.target.value)}
+                            maxLength={36}
+                            placeholder={t(
+                              "projects.client_owner_placeholder",
+                              { defaultValue: "Client or owner name" },
+                            )}
+                            className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                    </div>
 
-                <div
-                  id="qc-optional-more"
-                  hidden={!showAllOptional}
-                  className="space-y-4"
-                >
-                {/* Identification */}
-                <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
-                      <Hash size={15} />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-content-primary">
-                        {t('projects.create.grp_identification_title', { defaultValue: 'Identification' })}
-                      </p>
-                      <p className="text-[11px] text-content-tertiary">
-                        {t('projects.create.grp_identification_sub', { defaultValue: 'Code, type and client. Optional — auto-filled where possible.' })}
-                      </p>
+                    {/* Site address */}
+                    <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
+                          <MapPin size={15} />
+                        </span>
+                        <div>
+                          <p className="text-sm font-semibold text-content-primary">
+                            {t("projects.address", {
+                              defaultValue: "Site address",
+                            })}
+                          </p>
+                          <p className="text-[11px] text-content-tertiary">
+                            {t("projects.address_hint", {
+                              defaultValue:
+                                "Optional — enables the location map and weather forecast",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input
+                          type="text"
+                          value={addressStreet}
+                          onChange={(e) => setAddressStreet(e.target.value)}
+                          aria-label={t("projects.address_street", {
+                            defaultValue: "Street & number",
+                          })}
+                          placeholder={t("projects.address_street", {
+                            defaultValue: "Street & number",
+                          })}
+                          className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                        />
+                        <input
+                          type="text"
+                          value={addressCity}
+                          onChange={(e) => setAddressCity(e.target.value)}
+                          aria-label={t("projects.address_city", {
+                            defaultValue: "City",
+                          })}
+                          placeholder={t("projects.address_city", {
+                            defaultValue: "City",
+                          })}
+                          className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                        />
+                        <input
+                          type="text"
+                          value={addressCountry}
+                          onChange={(e) => setAddressCountry(e.target.value)}
+                          aria-label={t("projects.address_country", {
+                            defaultValue: "Country",
+                          })}
+                          placeholder={t("projects.address_country", {
+                            defaultValue: "Country",
+                          })}
+                          className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                        />
+                        <input
+                          type="text"
+                          value={addressPostal}
+                          onChange={(e) => setAddressPostal(e.target.value)}
+                          aria-label={t("projects.address_postal", {
+                            defaultValue: "Postal code",
+                          })}
+                          placeholder={t("projects.address_postal", {
+                            defaultValue: "Postal code",
+                          })}
+                          className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                        />
+                      </div>
+                      <div className="flex items-center gap-4 pt-1 border-t border-border-light/60 mt-1">
+                        <span className="text-xs text-content-tertiary">
+                          {t("projects.widgets_for_project", {
+                            defaultValue: "Show on this project:",
+                          })}
+                        </span>
+                        <label className="inline-flex items-center gap-1.5 text-xs text-content-primary cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={mapEnabled}
+                            onChange={toggleMap}
+                            className="h-3.5 w-3.5 rounded border-border accent-oe-blue"
+                          />
+                          <MapIcon size={11} className="text-oe-blue" />
+                          {t("widget_settings.map", { defaultValue: "Map" })}
+                        </label>
+                        <label className="inline-flex items-center gap-1.5 text-xs text-content-primary cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={weatherEnabled}
+                            onChange={toggleWeather}
+                            className="h-3.5 w-3.5 rounded border-border accent-oe-blue"
+                          />
+                          <CloudSun size={11} className="text-oe-blue" />
+                          {t("widget_settings.weather", {
+                            defaultValue: "Weather",
+                          })}
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Schedule & budget */}
+                    <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
+                          <CalendarDays size={15} />
+                        </span>
+                        <div>
+                          <p className="text-sm font-semibold text-content-primary">
+                            {t("projects.create.grp_schedule_title", {
+                              defaultValue: "Schedule & budget",
+                            })}
+                          </p>
+                          <p className="text-[11px] text-content-tertiary">
+                            {t("projects.create.grp_schedule_sub", {
+                              defaultValue:
+                                "Dates, budget, contract value and the regional cost factor. Optional.",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <OptionalLabel
+                            htmlFor="qc-start"
+                            text={t("projects.planned_start_date", {
+                              defaultValue: "Planned start date",
+                            })}
+                            optionalText={t("projects.create.optional_badge", {
+                              defaultValue: "Optional",
+                            })}
+                          />
+                          <input
+                            id="qc-start"
+                            type="date"
+                            value={plannedStart}
+                            onChange={(e) => setPlannedStart(e.target.value)}
+                            className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <OptionalLabel
+                            htmlFor="qc-end"
+                            text={t("projects.planned_end_date", {
+                              defaultValue: "Planned end date",
+                            })}
+                            optionalText={t("projects.create.optional_badge", {
+                              defaultValue: "Optional",
+                            })}
+                          />
+                          <input
+                            id="qc-end"
+                            type="date"
+                            value={plannedEnd}
+                            onChange={(e) => setPlannedEnd(e.target.value)}
+                            min={plannedStart || undefined}
+                            className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <OptionalLabel
+                            htmlFor="qc-budget"
+                            text={t("projects.budget_estimate", {
+                              defaultValue: "Budget estimate",
+                            })}
+                            optionalText={t("projects.create.optional_badge", {
+                              defaultValue: "Optional",
+                            })}
+                          />
+                          <input
+                            id="qc-budget"
+                            type="text"
+                            inputMode="decimal"
+                            value={budgetEstimate}
+                            onChange={(e) => setBudgetEstimate(e.target.value)}
+                            maxLength={50}
+                            placeholder={t(
+                              "projects.budget_estimate_placeholder",
+                              { defaultValue: "e.g. 1500000" },
+                            )}
+                            className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary tabular-nums placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <OptionalLabel
+                            htmlFor="qc-contract"
+                            text={t("projects.contract_value", {
+                              defaultValue: "Contract value",
+                            })}
+                            optionalText={t("projects.create.optional_badge", {
+                              defaultValue: "Optional",
+                            })}
+                          />
+                          <input
+                            id="qc-contract"
+                            type="text"
+                            inputMode="decimal"
+                            value={contractValue}
+                            onChange={(e) => setContractValue(e.target.value)}
+                            maxLength={50}
+                            placeholder={t(
+                              "projects.contract_value_placeholder",
+                              { defaultValue: "e.g. 1800000" },
+                            )}
+                            className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary tabular-nums placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <OptionalLabel
+                          htmlFor="qc-regional-factor"
+                          text={t("projects.regional_factor", {
+                            defaultValue: "Regional Factor",
+                          })}
+                          optionalText={t("projects.create.optional_badge", {
+                            defaultValue: "Optional",
+                          })}
+                        />
+                        <input
+                          id="qc-regional-factor"
+                          type="number"
+                          min="0.5"
+                          max="2.0"
+                          step="0.01"
+                          inputMode="decimal"
+                          value={regionalFactorStr}
+                          onChange={(e) => setRegionalFactorStr(e.target.value)}
+                          onBlur={() =>
+                            setRegionalFactorStr(
+                              clampFactor(regionalFactorStr).toFixed(2),
+                            )
+                          }
+                          placeholder="1.00"
+                          className="h-10 w-full max-w-[200px] rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary tabular-nums placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                        />
+                        <p className="mt-1 text-xs text-content-tertiary">
+                          {t("projects.regional_factor_hint", {
+                            defaultValue:
+                              "Multiply all rates by this factor (e.g. 1.12 = +12% over base).",
+                          })}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <OptionalLabel
-                      htmlFor="qc-project-code"
-                      text={t('projects.project_code', { defaultValue: 'Project number / code' })}
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    />
-                    <input
-                      id="qc-project-code"
-                      type="text"
-                      value={projectCode}
-                      onChange={(e) => setProjectCode(e.target.value)}
-                      maxLength={50}
-                      placeholder={t('projects.project_code_placeholder', { defaultValue: 'Auto-generated if left blank' })}
-                      className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <OptionalLabel
-                      htmlFor="qc-project-type"
-                      text={t('projects.project_type', { defaultValue: 'Project type' })}
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    />
-                    <input
-                      id="qc-project-type"
-                      type="text"
-                      value={projectType}
-                      onChange={(e) => setProjectType(e.target.value)}
-                      maxLength={50}
-                      placeholder={t('projects.project_type_placeholder', { defaultValue: 'e.g. Residential, Infrastructure' })}
-                      className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <OptionalLabel
-                      htmlFor="qc-client"
-                      text={t('projects.client_owner', { defaultValue: 'Client / owner' })}
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    />
-                    <input
-                      id="qc-client"
-                      type="text"
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      maxLength={36}
-                      placeholder={t('projects.client_owner_placeholder', { defaultValue: 'Client or owner name' })}
-                      className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                    />
-                  </div>
-                  </div>
-                </div>
 
-                {/* Site address */}
-                <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
-                      <MapPin size={15} />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-content-primary">
-                        {t('projects.address', { defaultValue: 'Site address' })}
-                      </p>
-                      <p className="text-[11px] text-content-tertiary">
-                        {t('projects.address_hint', { defaultValue: 'Optional — enables the location map and weather forecast' })}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input type="text" value={addressStreet} onChange={(e) => setAddressStreet(e.target.value)} aria-label={t('projects.address_street', { defaultValue: 'Street & number' })} placeholder={t('projects.address_street', { defaultValue: 'Street & number' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
-                    <input type="text" value={addressCity} onChange={(e) => setAddressCity(e.target.value)} aria-label={t('projects.address_city', { defaultValue: 'City' })} placeholder={t('projects.address_city', { defaultValue: 'City' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
-                    <input type="text" value={addressCountry} onChange={(e) => setAddressCountry(e.target.value)} aria-label={t('projects.address_country', { defaultValue: 'Country' })} placeholder={t('projects.address_country', { defaultValue: 'Country' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
-                    <input type="text" value={addressPostal} onChange={(e) => setAddressPostal(e.target.value)} aria-label={t('projects.address_postal', { defaultValue: 'Postal code' })} placeholder={t('projects.address_postal', { defaultValue: 'Postal code' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
-                  </div>
-                  <div className="flex items-center gap-4 pt-1 border-t border-border-light/60 mt-1">
-                    <span className="text-xs text-content-tertiary">
-                      {t('projects.widgets_for_project', { defaultValue: 'Show on this project:' })}
-                    </span>
-                    <label className="inline-flex items-center gap-1.5 text-xs text-content-primary cursor-pointer">
-                      <input type="checkbox" checked={mapEnabled} onChange={toggleMap} className="h-3.5 w-3.5 rounded border-border accent-oe-blue" />
-                      <MapIcon size={11} className="text-oe-blue" />
-                      {t('widget_settings.map', { defaultValue: 'Map' })}
-                    </label>
-                    <label className="inline-flex items-center gap-1.5 text-xs text-content-primary cursor-pointer">
-                      <input type="checkbox" checked={weatherEnabled} onChange={toggleWeather} className="h-3.5 w-3.5 rounded border-border accent-oe-blue" />
-                      <CloudSun size={11} className="text-oe-blue" />
-                      {t('widget_settings.weather', { defaultValue: 'Weather' })}
-                    </label>
-                  </div>
-                </div>
-
-                {/* Schedule & budget */}
-                <div className="rounded-xl border border-border-light bg-surface-primary/40 p-4 space-y-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
-                      <CalendarDays size={15} />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-content-primary">
-                        {t('projects.create.grp_schedule_title', { defaultValue: 'Schedule & budget' })}
-                      </p>
-                      <p className="text-[11px] text-content-tertiary">
-                        {t('projects.create.grp_schedule_sub', { defaultValue: 'Dates, budget, contract value and the regional cost factor. Optional.' })}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <OptionalLabel
-                      htmlFor="qc-start"
-                      text={t('projects.planned_start_date', { defaultValue: 'Planned start date' })}
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    />
-                    <input
-                      id="qc-start"
-                      type="date"
-                      value={plannedStart}
-                      onChange={(e) => setPlannedStart(e.target.value)}
-                      className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <OptionalLabel
-                      htmlFor="qc-end"
-                      text={t('projects.planned_end_date', { defaultValue: 'Planned end date' })}
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    />
-                    <input
-                      id="qc-end"
-                      type="date"
-                      value={plannedEnd}
-                      onChange={(e) => setPlannedEnd(e.target.value)}
-                      min={plannedStart || undefined}
-                      className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <OptionalLabel
-                      htmlFor="qc-budget"
-                      text={t('projects.budget_estimate', { defaultValue: 'Budget estimate' })}
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    />
-                    <input
-                      id="qc-budget"
-                      type="text"
-                      inputMode="decimal"
-                      value={budgetEstimate}
-                      onChange={(e) => setBudgetEstimate(e.target.value)}
-                      maxLength={50}
-                      placeholder={t('projects.budget_estimate_placeholder', { defaultValue: 'e.g. 1500000' })}
-                      className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary tabular-nums placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <OptionalLabel
-                      htmlFor="qc-contract"
-                      text={t('projects.contract_value', { defaultValue: 'Contract value' })}
-                      optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                    />
-                    <input
-                      id="qc-contract"
-                      type="text"
-                      inputMode="decimal"
-                      value={contractValue}
-                      onChange={(e) => setContractValue(e.target.value)}
-                      maxLength={50}
-                      placeholder={t('projects.contract_value_placeholder', { defaultValue: 'e.g. 1800000' })}
-                      className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary tabular-nums placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <OptionalLabel
-                    htmlFor="qc-regional-factor"
-                    text={t('projects.regional_factor', { defaultValue: 'Regional Factor' })}
-                    optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
-                  />
-                  <input
-                    id="qc-regional-factor"
-                    type="number"
-                    min="0.5"
-                    max="2.0"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={regionalFactorStr}
-                    onChange={(e) => setRegionalFactorStr(e.target.value)}
-                    onBlur={() => setRegionalFactorStr(clampFactor(regionalFactorStr).toFixed(2))}
-                    placeholder="1.00"
-                    className="h-10 w-full max-w-[200px] rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary tabular-nums placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
-                  />
-                  <p className="mt-1 text-xs text-content-tertiary">
-                    {t('projects.regional_factor_hint', { defaultValue: 'Multiply all rates by this factor (e.g. 1.12 = +12% over base).' })}
-                  </p>
-                </div>
-                </div>
-                </div>
-
-                {showAllOptional && (
-                  <button
-                    type="button"
-                    onClick={() => setShowAllOptional(false)}
-                    aria-expanded
-                    aria-controls="qc-optional-more"
-                    className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-border-light px-4 py-2 text-xs font-medium text-content-tertiary transition-colors hover:bg-surface-secondary/40 hover:text-content-primary"
-                  >
-                    <ChevronDown size={14} className="rotate-180" />
-                    {t('projects.create.show_less', { defaultValue: 'Show fewer options' })}
-                  </button>
-                )}
+                  {showAllOptional && (
+                    <button
+                      type="button"
+                      onClick={() => setShowAllOptional(false)}
+                      aria-expanded
+                      aria-controls="qc-optional-more"
+                      className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-border-light px-4 py-2 text-xs font-medium text-content-tertiary transition-colors hover:bg-surface-secondary/40 hover:text-content-primary"
+                    >
+                      <ChevronDown size={14} className="rotate-180" />
+                      {t("projects.create.show_less", {
+                        defaultValue: "Show fewer options",
+                      })}
+                    </button>
+                  )}
                 </div>
               </div>
 
               <p className="text-[11px] text-content-quaternary">
-                {t('project_wizard.classic_defaults_note', {
+                {t("project_wizard.classic_defaults_note", {
                   defaultValue:
-                    'Modules and lifecycle scope use the full-lifecycle default. Switch to the guided setup to tailor them, or change everything later in Project Settings.',
+                    "Modules and lifecycle scope use the full-lifecycle default. Switch to the guided setup to tailor them, or change everything later in Project Settings.",
                 })}
               </p>
             </div>
           )}
 
           {/* Step 1 — Basics */}
-          {mode === 'wizard' && step === 1 && (
+          {mode === "wizard" && step === 1 && (
             <div className="space-y-4">
-              <InfoHint text={t('project_wizard.basics_hint', { defaultValue: 'Give the project a clear, unique name. You can change everything later in Project Settings.' })} />
+              <InfoHint
+                text={t("project_wizard.basics_hint", {
+                  defaultValue:
+                    "Give the project a clear, unique name. You can change everything later in Project Settings.",
+                })}
+              />
               <Input
-                label={t('projects.project_name')}
+                label={t("projects.project_name")}
                 value={form.name}
-                onChange={(e) => set('name', e.target.value)}
-                placeholder={t('projects.project_name_placeholder', { defaultValue: 'e.g. Office Tower Downtown' })}
+                onChange={(e) => set("name", e.target.value)}
+                placeholder={t("projects.project_name_placeholder", {
+                  defaultValue: "e.g. Office Tower Downtown",
+                })}
                 required
                 autoFocus
               />
               {duplicateExists && (
                 <div className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800 px-3 py-2 -mt-2">
-                  <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                  <AlertTriangle
+                    size={16}
+                    className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"
+                  />
                   <div className="text-xs">
                     <p className="font-medium text-amber-900 dark:text-amber-200">
-                      {t('projects.duplicate_name_warning', { defaultValue: 'A project with this name already exists.' })}
+                      {t("projects.duplicate_name_warning", {
+                        defaultValue:
+                          "A project with this name already exists.",
+                      })}
                     </p>
                     <p className="text-amber-800 dark:text-amber-300 mt-0.5">
                       {duplicateConfirmed
-                        ? t('projects.duplicate_name_confirm_again', { defaultValue: 'Click Next again to proceed anyway.' })
-                        : t('projects.duplicate_name_confirm_hint', { defaultValue: 'Change the name, or click Next again to proceed anyway.' })}
+                        ? t("projects.duplicate_name_confirm_again", {
+                            defaultValue: "Click Next again to proceed anyway.",
+                          })
+                        : t("projects.duplicate_name_confirm_hint", {
+                            defaultValue:
+                              "Change the name, or click Next again to proceed anyway.",
+                          })}
                     </p>
                   </div>
                 </div>
               )}
               <div>
                 <label className="text-sm font-medium text-content-primary block mb-1.5">
-                  {t('projects.description', { defaultValue: 'Description' })}
+                  {t("projects.description", { defaultValue: "Description" })}
                 </label>
                 <textarea
                   value={form.description}
-                  onChange={(e) => set('description', e.target.value)}
-                  placeholder={t('projects.description_placeholder', { defaultValue: 'Project description, scope, notes...' })}
+                  onChange={(e) => set("description", e.target.value)}
+                  placeholder={t("projects.description_placeholder", {
+                    defaultValue: "Project description, scope, notes...",
+                  })}
                   rows={3}
                   className="w-full rounded-lg border border-border px-3 py-2.5 text-sm text-content-primary placeholder:text-content-tertiary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent transition-all duration-fast ease-oe hover:border-content-tertiary resize-none"
                 />
@@ -1562,41 +1923,60 @@ export function CreateProjectModal({
           )}
 
           {/* Step 2 — Region & currency */}
-          {mode === 'wizard' && step === 2 && (
+          {mode === "wizard" && step === 2 && (
             <div className="space-y-4">
-              <InfoHint text={t('projects.create_hint', { defaultValue: 'Region determines available cost databases and VAT rates. Classification standard defines the cost-structure schema for your BOQ. Currency sets all pricing in the BOQ.' })} />
+              <InfoHint
+                text={t("projects.create_hint", {
+                  defaultValue:
+                    "Region determines available cost databases and VAT rates. Classification standard defines the cost-structure schema for your BOQ. Currency sets all pricing in the BOQ.",
+                })}
+              />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <GroupedSelectField
-                    label={t('projects.region', { defaultValue: 'Region' })}
-                    value={form.region ?? ''}
+                    label={t("projects.region", { defaultValue: "Region" })}
+                    value={form.region ?? ""}
                     groups={REGION_GROUPS}
-                    placeholder={t('projects.select_region', { defaultValue: '-- Select region --' })}
-                    onChange={(v) => set('region', v)}
+                    placeholder={t("projects.select_region", {
+                      defaultValue: "-- Select region --",
+                    })}
+                    onChange={(v) => set("region", v)}
                   />
-                  {form.region === '__custom__' && (
+                  {form.region === "__custom__" && (
                     <CustomValueInput
                       value={customRegion}
                       onChange={setCustomRegion}
-                      placeholder={t('projects.enter_custom_region', { defaultValue: 'Enter custom region...' })}
-                      emptyHint={t('project_wizard.custom_region_required', { defaultValue: 'Type your region to continue.' })}
+                      placeholder={t("projects.enter_custom_region", {
+                        defaultValue: "Enter custom region...",
+                      })}
+                      emptyHint={t("project_wizard.custom_region_required", {
+                        defaultValue: "Type your region to continue.",
+                      })}
                     />
                   )}
                 </div>
                 <div>
                   <GroupedSelectField
-                    label={t('projects.classification_standard', { defaultValue: 'Classification Standard' })}
-                    value={form.classification_standard ?? ''}
+                    label={t("projects.classification_standard", {
+                      defaultValue: "Classification Standard",
+                    })}
+                    value={form.classification_standard ?? ""}
                     groups={STANDARD_GROUPS}
-                    placeholder={t('projects.select_standard', { defaultValue: '-- Select standard --' })}
-                    onChange={(v) => set('classification_standard', v)}
+                    placeholder={t("projects.select_standard", {
+                      defaultValue: "-- Select standard --",
+                    })}
+                    onChange={(v) => set("classification_standard", v)}
                   />
-                  {form.classification_standard === '__custom__' && (
+                  {form.classification_standard === "__custom__" && (
                     <CustomValueInput
                       value={customStandard}
                       onChange={setCustomStandard}
-                      placeholder={t('projects.enter_custom_standard', { defaultValue: 'Enter custom standard...' })}
-                      emptyHint={t('project_wizard.custom_standard_required', { defaultValue: 'Type the standard name to continue.' })}
+                      placeholder={t("projects.enter_custom_standard", {
+                        defaultValue: "Enter custom standard...",
+                      })}
+                      emptyHint={t("project_wizard.custom_standard_required", {
+                        defaultValue: "Type the standard name to continue.",
+                      })}
                     />
                   )}
                 </div>
@@ -1604,32 +1984,40 @@ export function CreateProjectModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <GroupedSelectField
-                    label={t('projects.currency', { defaultValue: 'Currency' })}
-                    value={form.currency ?? ''}
+                    label={t("projects.currency", { defaultValue: "Currency" })}
+                    value={form.currency ?? ""}
                     groups={CURRENCY_GROUPS}
-                    placeholder={t('projects.select_currency', { defaultValue: '-- Select currency --' })}
-                    onChange={(v) => set('currency', v)}
+                    placeholder={t("projects.select_currency", {
+                      defaultValue: "-- Select currency --",
+                    })}
+                    onChange={(v) => set("currency", v)}
                   />
-                  {form.currency === '__custom__' && (
+                  {form.currency === "__custom__" && (
                     <CustomValueInput
                       value={customCurrency}
                       onChange={setCustomCurrency}
-                      placeholder={t('projects.enter_custom_currency', { defaultValue: 'e.g. XAF' })}
-                      emptyHint={t('project_wizard.custom_currency_required', { defaultValue: 'Type the ISO currency code to continue.' })}
+                      placeholder={t("projects.enter_custom_currency", {
+                        defaultValue: "e.g. XAF",
+                      })}
+                      emptyHint={t("project_wizard.custom_currency_required", {
+                        defaultValue: "Type the ISO currency code to continue.",
+                      })}
                       maxLength={10}
                     />
                   )}
                 </div>
                 <SelectField
-                  label={t('projects.language', { defaultValue: 'Language' })}
-                  value={form.locale ?? 'en'}
+                  label={t("projects.language", { defaultValue: "Language" })}
+                  value={form.locale ?? "en"}
                   options={LANGUAGES}
-                  onChange={(v) => set('locale', v)}
+                  onChange={(v) => set("locale", v)}
                 />
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-content-secondary">
-                  {t('projects.regional_factor', { defaultValue: 'Regional Factor' })}
+                  {t("projects.regional_factor", {
+                    defaultValue: "Regional Factor",
+                  })}
                 </label>
                 <input
                   type="number"
@@ -1640,22 +2028,32 @@ export function CreateProjectModal({
                   value={regionalFactorStr}
                   onChange={(e) => setRegionalFactorStr(e.target.value)}
                   onBlur={() =>
-                    setRegionalFactorStr(clampFactor(regionalFactorStr).toFixed(2))
+                    setRegionalFactorStr(
+                      clampFactor(regionalFactorStr).toFixed(2),
+                    )
                   }
                   placeholder="1.00"
                   className="h-10 w-full max-w-[200px] rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary tabular-nums placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
                 />
                 <p className="mt-1 text-xs text-content-tertiary">
-                  {t('projects.regional_factor_hint', { defaultValue: 'Multiply all rates by this factor (e.g. 1.12 = +12% over base).' })}
+                  {t("projects.regional_factor_hint", {
+                    defaultValue:
+                      "Multiply all rates by this factor (e.g. 1.12 = +12% over base).",
+                  })}
                 </p>
               </div>
             </div>
           )}
 
           {/* Step 3 — Project type (preset) */}
-          {mode === 'wizard' && step === 3 && (
+          {mode === "wizard" && step === 3 && (
             <div className="space-y-3">
-              <InfoHint text={t('project_wizard.type_hint', { defaultValue: 'Pick the closest match. This pre-selects the modules and route for your project — nothing is locked, you can refine on the next step.' })} />
+              <InfoHint
+                text={t("project_wizard.type_hint", {
+                  defaultValue:
+                    "Pick the closest match. This pre-selects the modules and route for your project — nothing is locked, you can refine on the next step.",
+                })}
+              />
               {presetsLoading && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {Array.from({ length: 6 }).map((_, i) => (
@@ -1672,15 +2070,21 @@ export function CreateProjectModal({
               )}
               {presetsError && !presetsLoading && (
                 <div className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800 px-3 py-2 text-xs">
-                  <AlertTriangle size={15} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                  <AlertTriangle
+                    size={15}
+                    className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"
+                  />
                   <span className="text-amber-800 dark:text-amber-300">
-                    {t('project_wizard.presets_error', { defaultValue: 'Couldn’t load project types. You can still continue with the default and refine modules later in Project Settings.' })}
+                    {t("project_wizard.presets_error", {
+                      defaultValue:
+                        "Couldn’t load project types. You can still continue with the default and refine modules later in Project Settings.",
+                    })}
                   </span>
                 </div>
               )}
               <div
                 className={`grid grid-cols-1 sm:grid-cols-2 gap-2.5 ${
-                  presetsLoading || presetsError ? 'hidden' : ''
+                  presetsLoading || presetsError ? "hidden" : ""
                 }`}
               >
                 {presets.map((p) => {
@@ -1692,15 +2096,17 @@ export function CreateProjectModal({
                       onClick={() => choosePreset(p.id)}
                       className={`text-left rounded-xl border p-3 transition-all ${
                         selected
-                          ? 'border-oe-blue bg-oe-blue/5 ring-1 ring-oe-blue'
-                          : 'border-border-light hover:border-content-tertiary bg-surface-primary'
+                          ? "border-oe-blue bg-oe-blue/5 ring-1 ring-oe-blue"
+                          : "border-border-light hover:border-content-tertiary bg-surface-primary"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-sm font-semibold text-content-primary">
                           {t(p.label_key, { defaultValue: p.label_en })}
                         </span>
-                        {selected && <Check size={15} className="text-oe-blue shrink-0" />}
+                        {selected && (
+                          <Check size={15} className="text-oe-blue shrink-0" />
+                        )}
                       </div>
                       <p className="text-xs text-content-tertiary mt-1 leading-snug">
                         {t(`project_wizard.preset_blurb.${p.id}`, {
@@ -1709,8 +2115,8 @@ export function CreateProjectModal({
                       </p>
                       <p className="text-[11px] text-content-quaternary mt-1.5 flex items-center gap-1">
                         <Layers size={11} />
-                        {t('project_wizard.module_count', {
-                          defaultValue: '{{n}} modules',
+                        {t("project_wizard.module_count", {
+                          defaultValue: "{{n}} modules",
                           n: p.module_count,
                         })}
                       </p>
@@ -1720,20 +2126,28 @@ export function CreateProjectModal({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                 <SelectField
-                  label={t('project_wizard.size', { defaultValue: 'Project size' })}
+                  label={t("project_wizard.size", {
+                    defaultValue: "Project size",
+                  })}
                   value={size}
                   options={SIZES.map((s) => ({
                     value: s,
-                    label: t(`project_wizard.size_opt.${s}`, { defaultValue: cap(s) }),
+                    label: t(`project_wizard.size_opt.${s}`, {
+                      defaultValue: cap(s),
+                    }),
                   }))}
                   onChange={setSize}
                 />
                 <SelectField
-                  label={t('project_wizard.role', { defaultValue: 'Your role' })}
+                  label={t("project_wizard.role", {
+                    defaultValue: "Your role",
+                  })}
                   value={role}
                   options={ROLES.map((r) => ({
                     value: r,
-                    label: t(`project_wizard.role_opt.${r}`, { defaultValue: humanize(r) }),
+                    label: t(`project_wizard.role_opt.${r}`, {
+                      defaultValue: humanize(r),
+                    }),
                   }))}
                   onChange={setRole}
                 />
@@ -1742,35 +2156,50 @@ export function CreateProjectModal({
           )}
 
           {/* Step 4 — Scope (activity / phases / focus) */}
-          {mode === 'wizard' && step === 4 && (
+          {mode === "wizard" && step === 4 && (
             <div className="space-y-5">
-              <InfoHint text={t('project_wizard.scope_hint', { defaultValue: 'These refine which modules are emphasised. Defaults come from the project type you picked — adjust only if needed.' })} />
+              <InfoHint
+                text={t("project_wizard.scope_hint", {
+                  defaultValue:
+                    "These refine which modules are emphasised. Defaults come from the project type you picked — adjust only if needed.",
+                })}
+              />
               <div>
                 <p className="text-sm font-semibold text-content-primary mb-2">
-                  {t('project_wizard.activities', { defaultValue: 'What will you do on this project?' })}
+                  {t("project_wizard.activities", {
+                    defaultValue: "What will you do on this project?",
+                  })}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {ACTIVITIES.map((a) => (
                     <Chip
                       key={a}
                       active={activity.includes(a)}
-                      onClick={() => toggleIn(activity, a, setActivity, 'activity')}
-                      label={t(`project_wizard.activity_opt.${a}`, { defaultValue: humanize(a) })}
+                      onClick={() =>
+                        toggleIn(activity, a, setActivity, "activity")
+                      }
+                      label={t(`project_wizard.activity_opt.${a}`, {
+                        defaultValue: humanize(a),
+                      })}
                     />
                   ))}
                 </div>
               </div>
               <div>
                 <p className="text-sm font-semibold text-content-primary mb-2">
-                  {t('project_wizard.phases', { defaultValue: 'Lifecycle phases in scope' })}
+                  {t("project_wizard.phases", {
+                    defaultValue: "Lifecycle phases in scope",
+                  })}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {PHASES.map((ph) => (
                     <Chip
                       key={ph}
                       active={phases.includes(ph)}
-                      onClick={() => toggleIn(phases, ph, setPhases, 'phase')}
-                      label={t(`project_wizard.phase_opt.${ph}`, { defaultValue: cap(ph) })}
+                      onClick={() => toggleIn(phases, ph, setPhases, "phase")}
+                      label={t(`project_wizard.phase_opt.${ph}`, {
+                        defaultValue: cap(ph),
+                      })}
                     />
                   ))}
                 </div>
@@ -1784,10 +2213,15 @@ export function CreateProjectModal({
                 />
                 <span className="text-xs">
                   <span className="block font-medium text-content-primary">
-                    {t('project_wizard.focus_mode', { defaultValue: 'Focus mode' })}
+                    {t("project_wizard.focus_mode", {
+                      defaultValue: "Focus mode",
+                    })}
                   </span>
                   <span className="text-content-tertiary">
-                    {t('project_wizard.focus_mode_hint', { defaultValue: 'Show a numbered, phase-grouped sidebar with off-scope modules greyed out. You can toggle this any time.' })}
+                    {t("project_wizard.focus_mode_hint", {
+                      defaultValue:
+                        "Show a numbered, phase-grouped sidebar with off-scope modules greyed out. You can toggle this any time.",
+                    })}
                   </span>
                 </span>
               </label>
@@ -1795,37 +2229,84 @@ export function CreateProjectModal({
           )}
 
           {/* Step 5 — Site & review */}
-          {mode === 'wizard' && step === 5 && (
+          {mode === "wizard" && step === 5 && (
             <div className="space-y-4">
               <div className="rounded-xl border border-border-light bg-surface-secondary/30 p-4 space-y-3">
                 <div className="flex items-center gap-2">
                   <MapPin size={14} className="text-oe-blue" />
                   <label className="text-sm font-semibold text-content-primary">
-                    {t('projects.address', { defaultValue: 'Site address' })}
+                    {t("projects.address", { defaultValue: "Site address" })}
                   </label>
                   <span className="text-[10px] text-content-quaternary">
-                    {t('projects.address_hint', { defaultValue: 'Optional — enables the location map and weather forecast' })}
+                    {t("projects.address_hint", {
+                      defaultValue:
+                        "Optional — enables the location map and weather forecast",
+                    })}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <input type="text" value={addressStreet} onChange={(e) => setAddressStreet(e.target.value)} placeholder={t('projects.address_street', { defaultValue: 'Street & number' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
-                  <input type="text" value={addressCity} onChange={(e) => setAddressCity(e.target.value)} placeholder={t('projects.address_city', { defaultValue: 'City' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
-                  <input type="text" value={addressCountry} onChange={(e) => setAddressCountry(e.target.value)} placeholder={t('projects.address_country', { defaultValue: 'Country' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
-                  <input type="text" value={addressPostal} onChange={(e) => setAddressPostal(e.target.value)} placeholder={t('projects.address_postal', { defaultValue: 'Postal code' })} className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent" />
+                  <input
+                    type="text"
+                    value={addressStreet}
+                    onChange={(e) => setAddressStreet(e.target.value)}
+                    placeholder={t("projects.address_street", {
+                      defaultValue: "Street & number",
+                    })}
+                    className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                  />
+                  <input
+                    type="text"
+                    value={addressCity}
+                    onChange={(e) => setAddressCity(e.target.value)}
+                    placeholder={t("projects.address_city", {
+                      defaultValue: "City",
+                    })}
+                    className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                  />
+                  <input
+                    type="text"
+                    value={addressCountry}
+                    onChange={(e) => setAddressCountry(e.target.value)}
+                    placeholder={t("projects.address_country", {
+                      defaultValue: "Country",
+                    })}
+                    className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                  />
+                  <input
+                    type="text"
+                    value={addressPostal}
+                    onChange={(e) => setAddressPostal(e.target.value)}
+                    placeholder={t("projects.address_postal", {
+                      defaultValue: "Postal code",
+                    })}
+                    className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
+                  />
                 </div>
                 <div className="flex items-center gap-4 pt-1 border-t border-border-light/60 mt-2">
                   <span className="text-xs text-content-tertiary">
-                    {t('projects.widgets_for_project', { defaultValue: 'Show on this project:' })}
+                    {t("projects.widgets_for_project", {
+                      defaultValue: "Show on this project:",
+                    })}
                   </span>
                   <label className="inline-flex items-center gap-1.5 text-xs text-content-primary cursor-pointer">
-                    <input type="checkbox" checked={mapEnabled} onChange={toggleMap} className="h-3.5 w-3.5 rounded border-border accent-oe-blue" />
+                    <input
+                      type="checkbox"
+                      checked={mapEnabled}
+                      onChange={toggleMap}
+                      className="h-3.5 w-3.5 rounded border-border accent-oe-blue"
+                    />
                     <MapIcon size={11} className="text-oe-blue" />
-                    {t('widget_settings.map', { defaultValue: 'Map' })}
+                    {t("widget_settings.map", { defaultValue: "Map" })}
                   </label>
                   <label className="inline-flex items-center gap-1.5 text-xs text-content-primary cursor-pointer">
-                    <input type="checkbox" checked={weatherEnabled} onChange={toggleWeather} className="h-3.5 w-3.5 rounded border-border accent-oe-blue" />
+                    <input
+                      type="checkbox"
+                      checked={weatherEnabled}
+                      onChange={toggleWeather}
+                      className="h-3.5 w-3.5 rounded border-border accent-oe-blue"
+                    />
                     <CloudSun size={11} className="text-oe-blue" />
-                    {t('widget_settings.weather', { defaultValue: 'Weather' })}
+                    {t("widget_settings.weather", { defaultValue: "Weather" })}
                   </label>
                 </div>
               </div>
@@ -1833,72 +2314,112 @@ export function CreateProjectModal({
               {/* Summary */}
               <div className="rounded-xl border border-border-light p-4">
                 <p className="text-sm font-semibold text-content-primary mb-2.5">
-                  {t('project_wizard.review', { defaultValue: 'Review' })}
+                  {t("project_wizard.review", { defaultValue: "Review" })}
                 </p>
                 <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
-                  <SummaryRow label={t('projects.project_name')} value={trimmedName || '—'} />
                   <SummaryRow
-                    label={t('projects.region', { defaultValue: 'Region' })}
+                    label={t("projects.project_name")}
+                    value={trimmedName || "—"}
+                  />
+                  <SummaryRow
+                    label={t("projects.region", { defaultValue: "Region" })}
                     value={
-                      form.region === '__custom__'
-                        ? (customRegion.trim() || '—')
-                        : (labelFor(REGION_GROUPS, form.region ?? '') || '—')
+                      form.region === "__custom__"
+                        ? customRegion.trim() || "—"
+                        : labelFor(REGION_GROUPS, form.region ?? "") || "—"
                     }
                   />
                   <SummaryRow
-                    label={t('projects.currency', { defaultValue: 'Currency' })}
+                    label={t("projects.currency", { defaultValue: "Currency" })}
                     value={
-                      form.currency === '__custom__'
-                        ? (customCurrency.trim() || '—')
-                        : (labelFor(CURRENCY_GROUPS, form.currency ?? '') || '—')
+                      form.currency === "__custom__"
+                        ? customCurrency.trim() || "—"
+                        : labelFor(CURRENCY_GROUPS, form.currency ?? "") || "—"
                     }
                   />
                   <SummaryRow
-                    label={t('projects.classification_standard', { defaultValue: 'Classification Standard' })}
+                    label={t("projects.classification_standard", {
+                      defaultValue: "Classification Standard",
+                    })}
                     value={
-                      form.classification_standard === '__custom__'
-                        ? (customStandard.trim() || '—')
-                        : (labelFor(STANDARD_GROUPS, form.classification_standard ?? '') || '—')
+                      form.classification_standard === "__custom__"
+                        ? customStandard.trim() || "—"
+                        : labelFor(
+                            STANDARD_GROUPS,
+                            form.classification_standard ?? "",
+                          ) || "—"
                     }
                   />
                   <SummaryRow
-                    label={t('projects.language', { defaultValue: 'Language' })}
+                    label={t("projects.language", { defaultValue: "Language" })}
                     value={
                       LANGUAGES.find((l) => l.value === form.locale)?.label ??
-                      (form.locale || '—')
+                      (form.locale || "—")
                     }
                   />
                   <SummaryRow
-                    label={t('projects.regional_factor', { defaultValue: 'Regional Factor' })}
+                    label={t("projects.regional_factor", {
+                      defaultValue: "Regional Factor",
+                    })}
                     value={clampFactor(regionalFactorStr).toFixed(2)}
                   />
                   <SummaryRow
-                    label={t('project_wizard.step_type', { defaultValue: 'Project type' })}
-                    value={selectedPreset ? t(selectedPreset.label_key, { defaultValue: selectedPreset.label_en }) : humanize(preset)}
+                    label={t("project_wizard.step_type", {
+                      defaultValue: "Project type",
+                    })}
+                    value={
+                      selectedPreset
+                        ? t(selectedPreset.label_key, {
+                            defaultValue: selectedPreset.label_en,
+                          })
+                        : humanize(preset)
+                    }
                   />
                   <SummaryRow
-                    label={t('project_wizard.role', { defaultValue: 'Your role' })}
-                    value={t(`project_wizard.role_opt.${role}`, { defaultValue: humanize(role) })}
+                    label={t("project_wizard.role", {
+                      defaultValue: "Your role",
+                    })}
+                    value={t(`project_wizard.role_opt.${role}`, {
+                      defaultValue: humanize(role),
+                    })}
                   />
                   <SummaryRow
-                    label={t('project_wizard.size', { defaultValue: 'Project size' })}
-                    value={t(`project_wizard.size_opt.${size}`, { defaultValue: cap(size) })}
+                    label={t("project_wizard.size", {
+                      defaultValue: "Project size",
+                    })}
+                    value={t(`project_wizard.size_opt.${size}`, {
+                      defaultValue: cap(size),
+                    })}
                   />
                   <SummaryRow
-                    label={t('project_wizard.activities', { defaultValue: 'Activities' })}
+                    label={t("project_wizard.activities", {
+                      defaultValue: "Activities",
+                    })}
                     value={String(activity.length)}
                   />
                   <SummaryRow
-                    label={t('project_wizard.phases', { defaultValue: 'Phases' })}
+                    label={t("project_wizard.phases", {
+                      defaultValue: "Phases",
+                    })}
                     value={String(phases.length)}
                   />
                   <SummaryRow
-                    label={t('project_wizard.modules', { defaultValue: 'Modules' })}
-                    value={selectedPreset ? String(selectedPreset.module_count) : '—'}
+                    label={t("project_wizard.modules", {
+                      defaultValue: "Modules",
+                    })}
+                    value={
+                      selectedPreset ? String(selectedPreset.module_count) : "—"
+                    }
                   />
                   <SummaryRow
-                    label={t('project_wizard.focus_mode', { defaultValue: 'Focus mode' })}
-                    value={focusMode ? t('common.on', { defaultValue: 'On' }) : t('common.off', { defaultValue: 'Off' })}
+                    label={t("project_wizard.focus_mode", {
+                      defaultValue: "Focus mode",
+                    })}
+                    value={
+                      focusMode
+                        ? t("common.on", { defaultValue: "On" })
+                        : t("common.off", { defaultValue: "Off" })
+                    }
                   />
                 </dl>
               </div>
@@ -1915,25 +2436,32 @@ export function CreateProjectModal({
             variant="secondary"
             type="button"
             onClick={
-              mode === 'choose'
+              mode === "choose"
                 ? requestClose
-                : mode === 'classic'
-                  ? () => setMode('choose')
+                : mode === "classic"
+                  ? () => setMode("choose")
                   : step === 1
-                    // Edit mode has no chooser to fall back to — step-1
-                    // Back closes the re-wizard instead.
-                    ? (isEdit ? requestClose : () => setMode('choose'))
+                    ? // Edit mode has no chooser to fall back to — step-1
+                      // Back closes the re-wizard instead.
+                      isEdit
+                      ? requestClose
+                      : () => setMode("choose")
                     : back
             }
             disabled={mutation.isPending}
           >
-            {mode === 'choose'
-              ? t('common.cancel')
-              : (step === 1 && isEdit)
-                ? t('common.cancel')
-                : <span className="flex items-center gap-1"><ChevronLeft size={15} />{t('common.back', { defaultValue: 'Back' })}</span>}
+            {mode === "choose" ? (
+              t("common.cancel")
+            ) : step === 1 && isEdit ? (
+              t("common.cancel")
+            ) : (
+              <span className="flex items-center gap-1">
+                <ChevronLeft size={15} />
+                {t("common.back", { defaultValue: "Back" })}
+              </span>
+            )}
           </Button>
-          {mode === 'choose' ? null : mode === 'classic' || isLast ? (
+          {mode === "choose" ? null : mode === "classic" || isLast ? (
             <div className="flex items-center gap-3 min-w-0">
               {!canSubmit && submitBlockReason && (
                 <span className="hidden sm:flex items-center gap-1 text-xs text-amber-700 dark:text-amber-300 min-w-0">
@@ -1952,7 +2480,11 @@ export function CreateProjectModal({
                   // confirm, so the first Create on a dup name arms it
                   // and the second proceeds (mirrors the wizard's
                   // two-click "proceed anyway").
-                  if (mode === 'classic' && duplicateExists && !duplicateConfirmed) {
+                  if (
+                    mode === "classic" &&
+                    duplicateExists &&
+                    !duplicateConfirmed
+                  ) {
                     setDuplicateConfirmed(true);
                     return;
                   }
@@ -1960,13 +2492,15 @@ export function CreateProjectModal({
                 }}
                 loading={mutation.isPending}
                 disabled={!canSubmit || mutation.isPending}
-                title={!canSubmit ? (submitBlockReason ?? undefined) : undefined}
+                title={
+                  !canSubmit ? (submitBlockReason ?? undefined) : undefined
+                }
               >
                 {isEdit
-                  ? t('project_wizard.save_setup', {
-                      defaultValue: 'Save setup',
+                  ? t("project_wizard.save_setup", {
+                      defaultValue: "Save setup",
                     })
-                  : t('common.create')}
+                  : t("common.create")}
               </Button>
             </div>
           ) : (
@@ -1977,7 +2511,7 @@ export function CreateProjectModal({
               disabled={!canAdvance}
             >
               <span className="flex items-center gap-1">
-                {t('common.next', { defaultValue: 'Next' })}
+                {t("common.next", { defaultValue: "Next" })}
                 <ChevronRight size={15} />
               </span>
             </Button>
@@ -1996,16 +2530,24 @@ export function CreateProjectModal({
               className="mx-6 max-w-sm rounded-xl border border-border-light bg-surface-elevated p-5 shadow-xl text-center"
             >
               <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-                <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400" />
+                <AlertTriangle
+                  size={18}
+                  className="text-amber-600 dark:text-amber-400"
+                />
               </div>
               <p
                 id="cpw-discard-title"
                 className="text-sm font-semibold text-content-primary"
               >
-                {t('project_wizard.discard_title', { defaultValue: 'Discard this project setup?' })}
+                {t("project_wizard.discard_title", {
+                  defaultValue: "Discard this project setup?",
+                })}
               </p>
               <p className="mt-1 text-xs text-content-tertiary">
-                {t('project_wizard.discard_body', { defaultValue: 'Your answers on every step will be lost. This cannot be undone.' })}
+                {t("project_wizard.discard_body", {
+                  defaultValue:
+                    "Your answers on every step will be lost. This cannot be undone.",
+                })}
               </p>
               <div className="mt-4 flex items-center justify-center gap-2">
                 <Button
@@ -2014,7 +2556,9 @@ export function CreateProjectModal({
                   type="button"
                   onClick={() => setConfirmingClose(false)}
                 >
-                  {t('project_wizard.keep_editing', { defaultValue: 'Keep editing' })}
+                  {t("project_wizard.keep_editing", {
+                    defaultValue: "Keep editing",
+                  })}
                 </Button>
                 <Button
                   variant="danger"
@@ -2024,7 +2568,7 @@ export function CreateProjectModal({
                     close();
                   }}
                 >
-                  {t('project_wizard.discard', { defaultValue: 'Discard' })}
+                  {t("project_wizard.discard", { defaultValue: "Discard" })}
                 </Button>
               </div>
             </div>
@@ -2039,7 +2583,7 @@ export function CreateProjectModal({
 export function CreateProjectPage() {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate('/projects', { state: { openCreateModal: true }, replace: true });
+    navigate("/projects", { state: { openCreateModal: true }, replace: true });
   }, [navigate]);
   return null;
 }
@@ -2050,13 +2594,13 @@ function cap(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 function humanize(s: string): string {
-  return s.split('_').map(cap).join(' ');
+  return s.split("_").map(cap).join(" ");
 }
 
 /** Resolve a select value to its human label by scanning the option
  *  groups. Falls back to the raw value (custom entries, unknown keys). */
 function labelFor(groups: OptionGroup[], value: string): string {
-  if (!value) return '';
+  if (!value) return "";
   for (const g of groups) {
     const o = g.options.find((x) => x.value === value);
     if (o) return o.label;
@@ -2093,14 +2637,16 @@ function CustomValueInput({
       <input
         type="text"
         value={value}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onChange(e.target.value)
+        }
         placeholder={placeholder}
         maxLength={maxLength}
         aria-invalid={invalid}
         className={`mt-2 h-10 w-full rounded-lg border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:border-transparent ${
           invalid
-            ? 'border-amber-400 focus:ring-amber-400'
-            : 'border-border focus:ring-oe-blue'
+            ? "border-amber-400 focus:ring-amber-400"
+            : "border-border focus:ring-oe-blue"
         }`}
       />
       {invalid && (
@@ -2136,15 +2682,23 @@ function OptionalLabel({
   );
 }
 
-function Chip({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+function Chip({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
         active
-          ? 'border-oe-blue bg-oe-blue text-white'
-          : 'border-border-light bg-surface-primary text-content-secondary hover:border-content-tertiary'
+          ? "border-oe-blue bg-oe-blue text-white"
+          : "border-border-light bg-surface-primary text-content-secondary hover:border-content-tertiary"
       }`}
     >
       {label}
@@ -2169,7 +2723,13 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 // ── Grouped Select (with <optgroup>) ──────────────────────────────────────
 
 function GroupedSelectField({
-  label, value, groups, placeholder, onChange, optional, optionalText,
+  label,
+  value,
+  groups,
+  placeholder,
+  onChange,
+  optional,
+  optionalText,
 }: {
   label: string;
   value: string;
@@ -2201,7 +2761,13 @@ function GroupedSelectField({
           </option>
         )}
         {groups.map((g) => (
-          <optgroup key={g.group} label={t(`projects.group_${g.group.toLowerCase().replace(/[^a-z0-9]/g, '_')}`, { defaultValue: g.group })}>
+          <optgroup
+            key={g.group}
+            label={t(
+              `projects.group_${g.group.toLowerCase().replace(/[^a-z0-9]/g, "_")}`,
+              { defaultValue: g.group },
+            )}
+          >
             {g.options.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
@@ -2217,7 +2783,12 @@ function GroupedSelectField({
 // ── Flat Select (for language etc.) ───────────────────────────────────────
 
 function SelectField({
-  label, value, options, onChange, optional, optionalText,
+  label,
+  value,
+  options,
+  onChange,
+  optional,
+  optionalText,
 }: {
   label: string;
   value: string;

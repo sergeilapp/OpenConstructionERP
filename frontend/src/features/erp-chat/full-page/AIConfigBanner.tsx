@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Settings } from 'lucide-react';
-import { aiApi, type AISettings } from '@/features/ai/api';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Settings } from "lucide-react";
+import { aiApi, type AISettings } from "@/features/ai/api";
 
 /**
  * Banner shown above the chat panel when the user has not configured an
@@ -51,13 +51,13 @@ export default function AIConfigBanner() {
   return (
     <div
       style={{
-        background: 'var(--chat-surface-1)',
-        borderBottom: '1px solid var(--chat-border)',
-        padding: '12px 16px',
-        display: 'flex',
-        alignItems: 'center',
+        background: "var(--chat-surface-1)",
+        borderBottom: "1px solid var(--chat-border)",
+        padding: "12px 16px",
+        display: "flex",
+        alignItems: "center",
         gap: 12,
-        fontFamily: 'var(--chat-font-body)',
+        fontFamily: "var(--chat-font-body)",
         fontSize: 13,
       }}
     >
@@ -65,25 +65,27 @@ export default function AIConfigBanner() {
         style={{
           width: 32,
           height: 32,
-          borderRadius: '50%',
-          background: 'var(--chat-accent)',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          borderRadius: "50%",
+          background: "var(--chat-accent)",
+          color: "#ffffff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           flexShrink: 0,
         }}
       >
         <Settings size={16} strokeWidth={1.85} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 600, color: 'var(--chat-text-primary)' }}>
-          {t('chat.config_banner_title', { defaultValue: 'AI provider not configured‌⁠‍' })}
+        <div style={{ fontWeight: 600, color: "var(--chat-text-primary)" }}>
+          {t("chat.config_banner_title", {
+            defaultValue: "AI provider not configured‌⁠‍",
+          })}
         </div>
-        <div style={{ color: 'var(--chat-text-secondary)', marginTop: 2 }}>
-          {t('chat.config_banner_desc', {
+        <div style={{ color: "var(--chat-text-secondary)", marginTop: 2 }}>
+          {t("chat.config_banner_desc", {
             defaultValue:
-              'Add an API key (Anthropic / OpenAI / Gemini / OpenRouter / Mistral / Groq) to start chatting with your data.‌⁠‍',
+              "Add an API key (Anthropic / OpenAI / Gemini / OpenRouter / Mistral / Groq) to start chatting with your data.‌⁠‍",
           })}
         </div>
       </div>
@@ -91,17 +93,17 @@ export default function AIConfigBanner() {
         to="/settings"
         style={{
           flexShrink: 0,
-          padding: '8px 14px',
-          borderRadius: 'var(--chat-radius)',
-          background: 'var(--chat-accent)',
-          color: '#ffffff',
-          textDecoration: 'none',
+          padding: "8px 14px",
+          borderRadius: "var(--chat-radius)",
+          background: "var(--chat-accent)",
+          color: "#ffffff",
+          textDecoration: "none",
           fontWeight: 600,
           fontSize: 12,
-          whiteSpace: 'nowrap',
+          whiteSpace: "nowrap",
         }}
       >
-        {t('chat.open_settings', { defaultValue: 'Open Settings‌⁠‍' })}
+        {t("chat.open_settings", { defaultValue: "Open Settings‌⁠‍" })}
       </Link>
     </div>
   );

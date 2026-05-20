@@ -5,8 +5,8 @@
  * Clickable to select/expand domain details.
  */
 
-import { useState, useEffect } from 'react';
-import clsx from 'clsx';
+import { useState, useEffect } from "react";
+import clsx from "clsx";
 
 interface DomainBarProps {
   label: string;
@@ -16,7 +16,13 @@ interface DomainBarProps {
   isSelected?: boolean;
 }
 
-export function DomainBar({ label, score, color, onClick, isSelected }: DomainBarProps) {
+export function DomainBar({
+  label,
+  score,
+  color,
+  onClick,
+  isSelected,
+}: DomainBarProps) {
   const [animatedWidth, setAnimatedWidth] = useState(0);
 
   useEffect(() => {
@@ -30,10 +36,8 @@ export function DomainBar({ label, score, color, onClick, isSelected }: DomainBa
     <button
       onClick={onClick}
       className={clsx(
-        'w-full flex items-center gap-2 py-1 px-1 rounded-md transition-colors text-left',
-        isSelected
-          ? 'bg-surface-tertiary'
-          : 'hover:bg-surface-tertiary/50'
+        "w-full flex items-center gap-2 py-1 px-1 rounded-md transition-colors text-left",
+        isSelected ? "bg-surface-tertiary" : "hover:bg-surface-tertiary/50",
       )}
       aria-label={`${label}: ${Math.round(score)}%`}
     >

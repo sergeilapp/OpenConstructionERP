@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   Calendar,
   LayoutGrid,
@@ -19,7 +19,7 @@ import {
   GanttChart,
   Sparkles,
   PlayCircle,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -30,13 +30,13 @@ import {
   WideModal,
   ConfirmDialog,
   InfoHint,
-} from '@/shared/ui';
-import { PlanningCrossLinks } from '@/features/schedule/PlanningCrossLinks';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { getErrorMessage } from '@/shared/lib/api';
-import { projectsApi } from '@/features/projects/api';
+} from "@/shared/ui";
+import { PlanningCrossLinks } from "@/features/schedule/PlanningCrossLinks";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { getErrorMessage } from "@/shared/lib/api";
+import { projectsApi } from "@/features/projects/api";
 import {
   listMasterSchedules,
   createMasterSchedule,
@@ -83,57 +83,63 @@ import {
   type RNCCategory,
   type Baseline,
   type BaselineDeltaEntry,
-} from './api';
+} from "./api";
 
 type Tab =
-  | 'master'
-  | 'phases'
-  | 'look_ahead'
-  | 'weekly'
-  | 'constraints'
-  | 'baselines';
+  | "master"
+  | "phases"
+  | "look_ahead"
+  | "weekly"
+  | "constraints"
+  | "baselines";
 
-const PHASE_VARIANT: Record<PhaseStatus, 'neutral' | 'blue' | 'success' | 'warning'> = {
-  in_planning: 'neutral',
-  pulled: 'blue',
-  active: 'warning',
-  completed: 'success',
+const PHASE_VARIANT: Record<
+  PhaseStatus,
+  "neutral" | "blue" | "success" | "warning"
+> = {
+  in_planning: "neutral",
+  pulled: "blue",
+  active: "warning",
+  completed: "success",
 };
 
 const CONSTRAINT_VARIANT: Record<
   ConstraintStatus,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  open: 'warning',
-  in_progress: 'blue',
-  cleared: 'success',
-  escalated: 'error',
-  cannot_clear: 'error',
+  open: "warning",
+  in_progress: "blue",
+  cleared: "success",
+  escalated: "error",
+  cannot_clear: "error",
 };
 
 const COMMITMENT_VARIANT: Record<
   CommitmentStatus,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  planned: 'neutral',
-  committed: 'blue',
-  in_progress: 'warning',
-  completed: 'success',
-  at_risk: 'warning',
-  missed: 'error',
+  planned: "neutral",
+  committed: "blue",
+  in_progress: "warning",
+  completed: "success",
+  at_risk: "warning",
+  missed: "error",
 };
 
-const WEEKLY_VARIANT: Record<WeeklyStatus, 'neutral' | 'blue' | 'success' | 'warning'> = {
-  draft: 'neutral',
-  committed: 'blue',
-  in_progress: 'warning',
-  closed: 'success',
+const WEEKLY_VARIANT: Record<
+  WeeklyStatus,
+  "neutral" | "blue" | "success" | "warning"
+> = {
+  draft: "neutral",
+  committed: "blue",
+  in_progress: "warning",
+  closed: "success",
 };
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
-const labelCls = 'block text-xs font-medium text-content-secondary mb-1';
+const labelCls = "block text-xs font-medium text-content-secondary mb-1";
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
@@ -145,7 +151,7 @@ function todayIso(offsetDays = 0): string {
 
 function pctNumber(value: string | number | null | undefined): number {
   if (value == null) return 0;
-  const n = typeof value === 'string' ? Number(value) : value;
+  const n = typeof value === "string" ? Number(value) : value;
   if (Number.isNaN(n)) return 0;
   // Backend ppc_percent is always a 0-100 percentage (Numeric(5,2) from
   // compute_ppc, which already multiplies by 100). The old `n > 1 ? n
@@ -158,13 +164,13 @@ function pctNumber(value: string | number | null | undefined): number {
 
 export function ScheduleAdvancedPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>('master');
+  const [tab, setTab] = useState<Tab>("master");
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
-  const [projectId, setProjectId] = useState<string>('');
-  const [masterId, setMasterId] = useState<string>('');
-  const [lookAheadId, setLookAheadId] = useState<string>('');
-  const [weekPlanId, setWeekPlanId] = useState<string>('');
-  const [constraintFilter, setConstraintFilter] = useState<string>('');
+  const [projectId, setProjectId] = useState<string>("");
+  const [masterId, setMasterId] = useState<string>("");
+  const [lookAheadId, setLookAheadId] = useState<string>("");
+  const [weekPlanId, setWeekPlanId] = useState<string>("");
+  const [constraintFilter, setConstraintFilter] = useState<string>("");
   const [createMaster, setCreateMaster] = useState(false);
   const [editMaster, setEditMaster] = useState<MasterSchedule | null>(null);
   const [deleteMaster, setDeleteMaster] = useState<MasterSchedule | null>(null);
@@ -173,7 +179,7 @@ export function ScheduleAdvancedPage() {
   const [createBaselineOpen, setCreateBaselineOpen] = useState(false);
 
   const projectsQ = useQuery({
-    queryKey: ['projects-list-for-schedule'],
+    queryKey: ["projects-list-for-schedule"],
     queryFn: () => projectsApi.list(),
   });
 
@@ -187,7 +193,7 @@ export function ScheduleAdvancedPage() {
   }, [activeProjectId, projectsQ.data, projectId]);
 
   const masterQ = useQuery({
-    queryKey: ['schedule-advanced', 'master', projectId],
+    queryKey: ["schedule-advanced", "master", projectId],
     queryFn: () => listMasterSchedules({ project_id: projectId, limit: 100 }),
     enabled: !!projectId,
   });
@@ -201,38 +207,34 @@ export function ScheduleAdvancedPage() {
   }, [masterId, masterQ.data]);
 
   const phasesQ = useQuery({
-    queryKey: ['schedule-advanced', 'phases', masterId],
+    queryKey: ["schedule-advanced", "phases", masterId],
     queryFn: () => listPhasePlans(masterId),
-    enabled: !!masterId && tab === 'phases',
+    enabled: !!masterId && tab === "phases",
   });
 
   const lookAheadsQ = useQuery({
-    queryKey: ['schedule-advanced', 'look-aheads', masterId],
+    queryKey: ["schedule-advanced", "look-aheads", masterId],
     queryFn: () => listLookAheads(masterId),
-    enabled: !!masterId && (tab === 'look_ahead' || tab === 'constraints'),
+    enabled: !!masterId && (tab === "look_ahead" || tab === "constraints"),
   });
 
   useEffect(() => {
-    if (
-      !lookAheadId &&
-      lookAheadsQ.data &&
-      lookAheadsQ.data.length > 0
-    ) {
+    if (!lookAheadId && lookAheadsQ.data && lookAheadsQ.data.length > 0) {
       const first = lookAheadsQ.data[0];
       if (first) setLookAheadId(first.id);
     }
   }, [lookAheadId, lookAheadsQ.data]);
 
   const constraintsQ = useQuery({
-    queryKey: ['schedule-advanced', 'constraints', lookAheadId],
+    queryKey: ["schedule-advanced", "constraints", lookAheadId],
     queryFn: () => listConstraints(lookAheadId),
-    enabled: !!lookAheadId && tab === 'constraints',
+    enabled: !!lookAheadId && tab === "constraints",
   });
 
   const weeklyQ = useQuery({
-    queryKey: ['schedule-advanced', 'weekly', masterId],
+    queryKey: ["schedule-advanced", "weekly", masterId],
     queryFn: () => listWeeklyPlans(masterId, 52),
-    enabled: !!masterId && tab === 'weekly',
+    enabled: !!masterId && tab === "weekly",
   });
 
   useEffect(() => {
@@ -243,15 +245,15 @@ export function ScheduleAdvancedPage() {
   }, [weekPlanId, weeklyQ.data]);
 
   const commitmentsQ = useQuery({
-    queryKey: ['schedule-advanced', 'commitments', weekPlanId],
+    queryKey: ["schedule-advanced", "commitments", weekPlanId],
     queryFn: () => listCommitments(weekPlanId),
-    enabled: !!weekPlanId && tab === 'weekly',
+    enabled: !!weekPlanId && tab === "weekly",
   });
 
   const baselinesQ = useQuery({
-    queryKey: ['schedule-advanced', 'baselines', masterId],
+    queryKey: ["schedule-advanced", "baselines", masterId],
     queryFn: () => listBaselines(masterId),
-    enabled: !!masterId && tab === 'baselines',
+    enabled: !!masterId && tab === "baselines",
   });
 
   const filteredConstraints = useMemo(() => {
@@ -277,26 +279,26 @@ export function ScheduleAdvancedPage() {
     mutationFn: (id: string) => deleteMasterSchedule(id),
     onSuccess: (_data, id) => {
       qc.invalidateQueries({
-        queryKey: ['schedule-advanced', 'master', projectId],
+        queryKey: ["schedule-advanced", "master", projectId],
       });
       // If the deleted master was the active selection, drop every
       // dependent selection so child tabs don't query a dangling parent.
       if (id === masterId) {
-        setMasterId('');
-        setLookAheadId('');
-        setWeekPlanId('');
+        setMasterId("");
+        setLookAheadId("");
+        setWeekPlanId("");
       }
       setDeleteMaster(null);
       addToast({
-        type: 'success',
-        title: t('schedule_advanced.master_deleted', {
-          defaultValue: 'Master schedule deleted',
+        type: "success",
+        title: t("schedule_advanced.master_deleted", {
+          defaultValue: "Master schedule deleted",
         }),
       });
     },
     onError: (err) => {
       setDeleteMaster(null);
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     },
   });
 
@@ -305,8 +307,8 @@ export function ScheduleAdvancedPage() {
       <Breadcrumb
         items={[
           {
-            label: t('schedule_advanced.title', {
-              defaultValue: 'Last Planner / CPM‌⁠‍',
+            label: t("schedule_advanced.title", {
+              defaultValue: "Last Planner / CPM‌⁠‍",
             }),
           },
         ]}
@@ -318,12 +320,14 @@ export function ScheduleAdvancedPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('schedule_advanced.title', { defaultValue: 'Last Planner / CPM‌⁠‍' })}
+            {t("schedule_advanced.title", {
+              defaultValue: "Last Planner / CPM‌⁠‍",
+            })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('schedule_advanced.subtitle', {
+            {t("schedule_advanced.subtitle", {
               defaultValue:
-                'Pull-planning, lookaheads, weekly commitments, constraints and baselines.‌⁠‍',
+                "Pull-planning, lookaheads, weekly commitments, constraints and baselines.‌⁠‍",
             })}
           </p>
         </div>
@@ -332,11 +336,11 @@ export function ScheduleAdvancedPage() {
             value={projectId}
             onChange={(e) => {
               setProjectId(e.target.value);
-              setMasterId('');
-              setLookAheadId('');
-              setWeekPlanId('');
+              setMasterId("");
+              setLookAheadId("");
+              setWeekPlanId("");
             }}
-            className={clsx(inputCls, 'max-w-xs')}
+            className={clsx(inputCls, "max-w-xs")}
           >
             {projectsQ.data.map((p) => (
               <option key={p.id} value={p.id}>
@@ -349,9 +353,9 @@ export function ScheduleAdvancedPage() {
 
       {/* How Last Planner connects to the rest of the platform */}
       <InfoHint
-        text={t('schedule_advanced.what_is_lps', {
+        text={t("schedule_advanced.what_is_lps", {
           defaultValue:
-            'The Last Planner System is pull-based production control that complements the 4D Schedule. Master schedule sets milestones, Phase Plans pull work backwards from them, Look-Aheads (6 weeks) make work ready by removing constraints, and Weekly Work Plans capture crew commitments. PPC (Percent Plan Complete) and constraint logs measure reliability. Use the 4D Schedule for the CPM critical path; use this for what the team actually commits to do next.‌⁠‍',
+            "The Last Planner System is pull-based production control that complements the 4D Schedule. Master schedule sets milestones, Phase Plans pull work backwards from them, Look-Aheads (6 weeks) make work ready by removing constraints, and Weekly Work Plans capture crew commitments. PPC (Percent Plan Complete) and constraint logs measure reliability. Use the 4D Schedule for the CPM critical path; use this for what the team actually commits to do next.‌⁠‍",
         })}
       />
 
@@ -360,12 +364,48 @@ export function ScheduleAdvancedPage() {
         <nav className="flex gap-1 -mb-px overflow-x-auto">
           {(
             [
-              { id: 'master', label: t('schedule_advanced.tab_master', { defaultValue: 'Master‌⁠‍' }), icon: Calendar },
-              { id: 'phases', label: t('schedule_advanced.tab_phases', { defaultValue: 'Phase Plans' }), icon: LayoutGrid },
-              { id: 'look_ahead', label: t('schedule_advanced.tab_look_ahead', { defaultValue: 'Look-Ahead' }), icon: Clock },
-              { id: 'weekly', label: t('schedule_advanced.tab_weekly', { defaultValue: 'Weekly Plan' }), icon: ClipboardCheck },
-              { id: 'constraints', label: t('schedule_advanced.tab_constraints', { defaultValue: 'Constraints' }), icon: AlertCircle },
-              { id: 'baselines', label: t('schedule_advanced.tab_baselines', { defaultValue: 'Baselines' }), icon: GitBranch },
+              {
+                id: "master",
+                label: t("schedule_advanced.tab_master", {
+                  defaultValue: "Master‌⁠‍",
+                }),
+                icon: Calendar,
+              },
+              {
+                id: "phases",
+                label: t("schedule_advanced.tab_phases", {
+                  defaultValue: "Phase Plans",
+                }),
+                icon: LayoutGrid,
+              },
+              {
+                id: "look_ahead",
+                label: t("schedule_advanced.tab_look_ahead", {
+                  defaultValue: "Look-Ahead",
+                }),
+                icon: Clock,
+              },
+              {
+                id: "weekly",
+                label: t("schedule_advanced.tab_weekly", {
+                  defaultValue: "Weekly Plan",
+                }),
+                icon: ClipboardCheck,
+              },
+              {
+                id: "constraints",
+                label: t("schedule_advanced.tab_constraints", {
+                  defaultValue: "Constraints",
+                }),
+                icon: AlertCircle,
+              },
+              {
+                id: "baselines",
+                label: t("schedule_advanced.tab_baselines", {
+                  defaultValue: "Baselines",
+                }),
+                icon: GitBranch,
+              },
             ] as { id: Tab; label: string; icon: React.ElementType }[]
           ).map((it) => {
             const Icon = it.icon;
@@ -375,10 +415,10 @@ export function ScheduleAdvancedPage() {
                 type="button"
                 onClick={() => setTab(it.id)}
                 className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap',
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap",
                   tab === it.id
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-secondary hover:text-content-primary',
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -397,26 +437,28 @@ export function ScheduleAdvancedPage() {
           ) : projectsQ.isError ? (
             <EmptyState
               icon={<AlertCircle size={22} strokeWidth={1.5} />}
-              title={t('common.error', { defaultValue: 'Error' })}
-              description={t('schedule_advanced.projects_load_error', {
-                defaultValue: 'Failed to load projects. Please try again.',
+              title={t("common.error", { defaultValue: "Error" })}
+              description={t("schedule_advanced.projects_load_error", {
+                defaultValue: "Failed to load projects. Please try again.",
               })}
               action={{
-                label: t('common.retry', { defaultValue: 'Retry' }),
+                label: t("common.retry", { defaultValue: "Retry" }),
                 onClick: () => projectsQ.refetch(),
               }}
             />
           ) : (
             <EmptyState
               icon={<Calendar size={22} />}
-              title={t('schedule_advanced.no_project', { defaultValue: 'No project selected' })}
-              description={t('schedule_advanced.no_project_desc', {
-                defaultValue: 'Create a project first to start pull-planning.',
+              title={t("schedule_advanced.no_project", {
+                defaultValue: "No project selected",
+              })}
+              description={t("schedule_advanced.no_project_desc", {
+                defaultValue: "Create a project first to start pull-planning.",
               })}
             />
           )}
         </Card>
-      ) : tab === 'master' ? (
+      ) : tab === "master" ? (
         <MasterTab
           masters={masterQ.data ?? []}
           loading={masterQ.isLoading}
@@ -433,20 +475,24 @@ export function ScheduleAdvancedPage() {
         <Card>
           <EmptyState
             icon={<Calendar size={22} />}
-            title={t('schedule_advanced.no_master', { defaultValue: 'No master schedule yet' })}
-            description={t('schedule_advanced.no_master_desc', {
-              defaultValue: 'Create a master schedule on the Master tab first.',
+            title={t("schedule_advanced.no_master", {
+              defaultValue: "No master schedule yet",
+            })}
+            description={t("schedule_advanced.no_master_desc", {
+              defaultValue: "Create a master schedule on the Master tab first.",
             })}
             action={{
-              label: t('schedule_advanced.create_master', { defaultValue: 'Create Master' }),
+              label: t("schedule_advanced.create_master", {
+                defaultValue: "Create Master",
+              }),
               onClick: () => {
-                setTab('master');
+                setTab("master");
                 setCreateMaster(true);
               },
             }}
           />
         </Card>
-      ) : tab === 'phases' ? (
+      ) : tab === "phases" ? (
         <PhasesTab
           phases={phasesQ.data ?? []}
           loading={phasesQ.isLoading}
@@ -454,7 +500,7 @@ export function ScheduleAdvancedPage() {
           onRetry={() => phasesQ.refetch()}
           masterId={masterId}
         />
-      ) : tab === 'look_ahead' ? (
+      ) : tab === "look_ahead" ? (
         <LookAheadTab
           lookAheads={lookAheadsQ.data ?? []}
           loading={lookAheadsQ.isLoading}
@@ -464,7 +510,7 @@ export function ScheduleAdvancedPage() {
           onSelect={setLookAheadId}
           onCreate={() => setCreateLA(true)}
         />
-      ) : tab === 'weekly' ? (
+      ) : tab === "weekly" ? (
         <WeeklyTab
           plans={weeklyQ.data ?? []}
           loading={weeklyQ.isLoading}
@@ -479,7 +525,7 @@ export function ScheduleAdvancedPage() {
           currentWeek={currentWeek}
           onCreate={() => setCreateWeek(true)}
         />
-      ) : tab === 'constraints' ? (
+      ) : tab === "constraints" ? (
         <ConstraintsTab
           lookAheads={lookAheadsQ.data ?? []}
           lookAheadId={lookAheadId}
@@ -517,17 +563,17 @@ export function ScheduleAdvancedPage() {
       )}
       <ConfirmDialog
         open={!!deleteMaster}
-        title={t('schedule_advanced.delete_master_title', {
-          defaultValue: 'Delete master schedule?',
+        title={t("schedule_advanced.delete_master_title", {
+          defaultValue: "Delete master schedule?",
         })}
         message={
           deleteMaster
-            ? t('schedule_advanced.delete_master_message', {
+            ? t("schedule_advanced.delete_master_message", {
                 name: deleteMaster.name,
                 defaultValue:
                   '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
               })
-            : ''
+            : ""
         }
         onConfirm={() =>
           deleteMaster && deleteMasterMut.mutate(deleteMaster.id)
@@ -598,13 +644,17 @@ function MasterTab({
       <Card>
         <EmptyState
           icon={<Calendar size={22} />}
-          title={t('schedule_advanced.no_master_yet', { defaultValue: 'No master schedule yet' })}
-          description={t('schedule_advanced.no_master_yet_desc', {
+          title={t("schedule_advanced.no_master_yet", {
+            defaultValue: "No master schedule yet",
+          })}
+          description={t("schedule_advanced.no_master_yet_desc", {
             defaultValue:
-              'The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.',
+              "The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.",
           })}
           action={{
-            label: t('schedule_advanced.create_master', { defaultValue: 'Create Master' }),
+            label: t("schedule_advanced.create_master", {
+              defaultValue: "Create Master",
+            }),
             onClick: onCreate,
           }}
         />
@@ -614,9 +664,9 @@ function MasterTab({
   return (
     <div className="space-y-4">
       <InfoHint
-        text={t('schedule_advanced.master_hint', {
+        text={t("schedule_advanced.master_hint", {
           defaultValue:
-            'Select a master schedule to make it the working plan for the Phases, Look-Ahead, Weekly and Constraints tabs. Use the row actions to rename it, change its planned dates and status, or delete it.‌⁠‍',
+            "Select a master schedule to make it the working plan for the Phases, Look-Ahead, Weekly and Constraints tabs. Use the row actions to rename it, change its planned dates and status, or delete it.‌⁠‍",
         })}
       />
 
@@ -627,7 +677,9 @@ function MasterTab({
           icon={<Plus size={14} />}
           onClick={onCreate}
         >
-          {t('schedule_advanced.create_master', { defaultValue: 'Create Master' })}
+          {t("schedule_advanced.create_master", {
+            defaultValue: "Create Master",
+          })}
         </Button>
       </div>
 
@@ -636,11 +688,25 @@ function MasterTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">{t('common.name', { defaultValue: 'Name' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("common.name", { defaultValue: "Name" })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("schedule_advanced.planned_start", {
+                    defaultValue: "Planned start",
+                  })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("schedule_advanced.planned_finish", {
+                    defaultValue: "Planned finish",
+                  })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("common.status", { defaultValue: "Status" })}
+                </th>
+                <th className="px-4 py-2.5 text-right">
+                  {t("common.actions", { defaultValue: "Actions" })}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -651,36 +717,53 @@ function MasterTab({
                     key={m.id}
                     onClick={() => onSelect(m.id)}
                     className={clsx(
-                      'border-t border-border-light hover:bg-surface-secondary cursor-pointer',
-                      selected && 'bg-oe-blue-subtle/30',
+                      "border-t border-border-light hover:bg-surface-secondary cursor-pointer",
+                      selected && "bg-oe-blue-subtle/30",
                     )}
                   >
                     <td className="px-4 py-2 font-medium">
                       <span className="flex items-center gap-2">
                         <span
                           className={clsx(
-                            'inline-block h-1.5 w-1.5 shrink-0 rounded-full',
-                            selected ? 'bg-oe-blue' : 'bg-transparent',
+                            "inline-block h-1.5 w-1.5 shrink-0 rounded-full",
+                            selected ? "bg-oe-blue" : "bg-transparent",
                           )}
                           aria-hidden
                         />
-                        <span className="truncate" title={m.name}>{m.name}</span>
+                        <span className="truncate" title={m.name}>
+                          {m.name}
+                        </span>
                         {selected && (
                           <Badge variant="blue">
-                            {t('schedule_advanced.active_selection', { defaultValue: 'Working plan' })}
+                            {t("schedule_advanced.active_selection", {
+                              defaultValue: "Working plan",
+                            })}
                           </Badge>
                         )}
                       </span>
                     </td>
                     <td className="px-4 py-2 text-content-secondary text-xs">
-                      {m.planned_start ? <DateDisplay value={m.planned_start} /> : '—'}
+                      {m.planned_start ? (
+                        <DateDisplay value={m.planned_start} />
+                      ) : (
+                        "—"
+                      )}
                     </td>
                     <td className="px-4 py-2 text-content-secondary text-xs">
-                      {m.planned_finish ? <DateDisplay value={m.planned_finish} /> : '—'}
+                      {m.planned_finish ? (
+                        <DateDisplay value={m.planned_finish} />
+                      ) : (
+                        "—"
+                      )}
                     </td>
                     <td className="px-4 py-2">
-                      <Badge variant={m.status === 'active' ? 'success' : 'neutral'} dot>
-                        {t(`schedule_advanced.master_status.${m.status}`, { defaultValue: m.status })}
+                      <Badge
+                        variant={m.status === "active" ? "success" : "neutral"}
+                        dot
+                      >
+                        {t(`schedule_advanced.master_status.${m.status}`, {
+                          defaultValue: m.status,
+                        })}
                       </Badge>
                     </td>
                     <td className="px-4 py-2">
@@ -693,7 +776,9 @@ function MasterTab({
                             e.stopPropagation();
                             onEdit(m);
                           }}
-                          aria-label={t('common.edit', { defaultValue: 'Edit' })}
+                          aria-label={t("common.edit", {
+                            defaultValue: "Edit",
+                          })}
                         />
                         <Button
                           size="sm"
@@ -703,7 +788,9 @@ function MasterTab({
                             e.stopPropagation();
                             onDelete(m);
                           }}
-                          aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                          aria-label={t("common.delete", {
+                            defaultValue: "Delete",
+                          })}
                         />
                       </div>
                     </td>
@@ -718,24 +805,55 @@ function MasterTab({
       {current && (
         <Card padding="md">
           <h3 className="text-base font-semibold mb-3">
-            {t('schedule_advanced.summary', { defaultValue: 'Summary' })}
+            {t("schedule_advanced.summary", { defaultValue: "Summary" })}
           </h3>
           <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
             <Stat
-              label={t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}
-              value={current.planned_start ? <DateDisplay value={current.planned_start} /> : '—'}
+              label={t("schedule_advanced.planned_start", {
+                defaultValue: "Planned start",
+              })}
+              value={
+                current.planned_start ? (
+                  <DateDisplay value={current.planned_start} />
+                ) : (
+                  "—"
+                )
+              }
             />
             <Stat
-              label={t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}
-              value={current.planned_finish ? <DateDisplay value={current.planned_finish} /> : '—'}
+              label={t("schedule_advanced.planned_finish", {
+                defaultValue: "Planned finish",
+              })}
+              value={
+                current.planned_finish ? (
+                  <DateDisplay value={current.planned_finish} />
+                ) : (
+                  "—"
+                )
+              }
             />
             <Stat
-              label={t('schedule_advanced.baseline_date', { defaultValue: 'Baseline date' })}
-              value={current.baseline_date ? <DateDisplay value={current.baseline_date} /> : '—'}
+              label={t("schedule_advanced.baseline_date", {
+                defaultValue: "Baseline date",
+              })}
+              value={
+                current.baseline_date ? (
+                  <DateDisplay value={current.baseline_date} />
+                ) : (
+                  "—"
+                )
+              }
             />
             <Stat
-              label={t('common.status', { defaultValue: 'Status' })}
-              value={<Badge variant={current.status === 'active' ? 'success' : 'neutral'} dot>{current.status}</Badge>}
+              label={t("common.status", { defaultValue: "Status" })}
+              value={
+                <Badge
+                  variant={current.status === "active" ? "success" : "neutral"}
+                  dot
+                >
+                  {current.status}
+                </Badge>
+              }
             />
           </dl>
           {current.notes && (
@@ -769,14 +887,14 @@ function ErrorCard({ onRetry }: { onRetry?: () => void }) {
     <Card className="py-12">
       <EmptyState
         icon={<AlertCircle size={28} strokeWidth={1.5} />}
-        title={t('common.error', { defaultValue: 'Error' })}
-        description={t('schedule_advanced.load_error', {
-          defaultValue: 'Failed to load schedule data. Please try again.',
+        title={t("common.error", { defaultValue: "Error" })}
+        description={t("schedule_advanced.load_error", {
+          defaultValue: "Failed to load schedule data. Please try again.",
         })}
         action={
           onRetry
             ? {
-                label: t('common.retry', { defaultValue: 'Retry' }),
+                label: t("common.retry", { defaultValue: "Retry" }),
                 onClick: onRetry,
               }
             : undefined
@@ -788,12 +906,12 @@ function ErrorCard({ onRetry }: { onRetry?: () => void }) {
 
 /* ── Phase plans tab (fully built out — replaces v3.0.x placeholder) ──── */
 
-type PhasesView = 'cards' | 'table' | 'timeline';
+type PhasesView = "cards" | "table" | "timeline";
 
 function phasePercent(p: PhasePlan): number {
-  if (p.pulled_status === 'completed') return 100;
-  if (p.pulled_status === 'in_planning') return 0;
-  if (p.pulled_status === 'pulled') return 10;
+  if (p.pulled_status === "completed") return 100;
+  if (p.pulled_status === "in_planning") return 0;
+  if (p.pulled_status === "pulled") return 10;
   if (!p.planned_start || !p.planned_finish) return 50;
   const s = new Date(p.planned_start).getTime();
   const f = new Date(p.planned_finish).getTime();
@@ -813,7 +931,7 @@ function phaseDurationDays(p: PhasePlan): number | null {
 
 function isPhaseDelayed(p: PhasePlan): boolean {
   if (!p.planned_finish) return false;
-  if (p.pulled_status === 'completed') return false;
+  if (p.pulled_status === "completed") return false;
   return new Date(p.planned_finish).getTime() < Date.now();
 }
 
@@ -834,8 +952,8 @@ function PhasesTab({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [view, setView] = useState<PhasesView>('cards');
-  const [statusFilter, setStatusFilter] = useState<PhaseStatus | ''>('');
+  const [view, setView] = useState<PhasesView>("cards");
+  const [statusFilter, setStatusFilter] = useState<PhaseStatus | "">("");
   const [createOpen, setCreateOpen] = useState(false);
   const [editPhase, setEditPhase] = useState<PhasePlan | null>(null);
   const [deletePhase, setDeletePhase] = useState<PhasePlan | null>(null);
@@ -847,42 +965,64 @@ function PhasesTab({
   }, [phases, statusFilter]);
 
   const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ['schedule-advanced', 'phases', masterId] });
+    qc.invalidateQueries({
+      queryKey: ["schedule-advanced", "phases", masterId],
+    });
 
   const pullMut = useMutation({
     mutationFn: (id: string) => pullPhase(id),
     onSuccess: () => {
       invalidate();
-      addToast({ type: 'success', title: t('schedule_advanced.phase_pulled', { defaultValue: 'Phase pulled' }) });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.phase_pulled", {
+          defaultValue: "Phase pulled",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const startMut = useMutation({
     mutationFn: (id: string) => startPhase(id),
     onSuccess: () => {
       invalidate();
-      addToast({ type: 'success', title: t('schedule_advanced.phase_started', { defaultValue: 'Phase started' }) });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.phase_started", {
+          defaultValue: "Phase started",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const completeMut = useMutation({
     mutationFn: (id: string) => completePhase(id),
     onSuccess: () => {
       invalidate();
-      addToast({ type: 'success', title: t('schedule_advanced.phase_completed', { defaultValue: 'Phase completed' }) });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.phase_completed", {
+          defaultValue: "Phase completed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const deleteMut = useMutation({
     mutationFn: (id: string) => deletePhasePlan(id),
     onSuccess: () => {
       invalidate();
       setDeletePhase(null);
-      addToast({ type: 'success', title: t('schedule_advanced.phase_deleted', { defaultValue: 'Phase deleted' }) });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.phase_deleted", {
+          defaultValue: "Phase deleted",
+        }),
+      });
     },
     onError: (err) => {
       setDeletePhase(null);
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     },
   });
 
@@ -904,13 +1044,17 @@ function PhasesTab({
         <Card>
           <EmptyState
             icon={<LayoutGrid size={22} />}
-            title={t('schedule_advanced.no_phases', { defaultValue: 'No phase plans yet' })}
-            description={t('schedule_advanced.no_phases_desc', {
+            title={t("schedule_advanced.no_phases", {
+              defaultValue: "No phase plans yet",
+            })}
+            description={t("schedule_advanced.no_phases_desc", {
               defaultValue:
-                'Phase plans break the project into high-level construction phases (foundation, structure, MEP, finishes…) so weekly commitments can roll up to a milestone target.',
+                "Phase plans break the project into high-level construction phases (foundation, structure, MEP, finishes…) so weekly commitments can roll up to a milestone target.",
             })}
             action={{
-              label: t('schedule_advanced.create_phase', { defaultValue: 'New phase' }),
+              label: t("schedule_advanced.create_phase", {
+                defaultValue: "New phase",
+              }),
               onClick: () => setCreateOpen(true),
             }}
           />
@@ -921,7 +1065,9 @@ function PhasesTab({
               icon={<Sparkles size={14} />}
               onClick={() => setTemplateOpen(true)}
             >
-              {t('schedule_advanced.use_template', { defaultValue: 'Use a template' })}
+              {t("schedule_advanced.use_template", {
+                defaultValue: "Use a template",
+              })}
             </Button>
           </div>
         </Card>
@@ -943,12 +1089,12 @@ function PhasesTab({
     );
   }
 
-  const counts: Record<PhaseStatus | 'all', number> = {
+  const counts: Record<PhaseStatus | "all", number> = {
     all: phases.length,
-    in_planning: phases.filter((p) => p.pulled_status === 'in_planning').length,
-    pulled: phases.filter((p) => p.pulled_status === 'pulled').length,
-    active: phases.filter((p) => p.pulled_status === 'active').length,
-    completed: phases.filter((p) => p.pulled_status === 'completed').length,
+    in_planning: phases.filter((p) => p.pulled_status === "in_planning").length,
+    pulled: phases.filter((p) => p.pulled_status === "pulled").length,
+    active: phases.filter((p) => p.pulled_status === "active").length,
+    completed: phases.filter((p) => p.pulled_status === "completed").length,
   };
 
   return (
@@ -956,62 +1102,99 @@ function PhasesTab({
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex flex-wrap items-center gap-1.5 text-xs">
           <FilterChip
-            label={t('common.all', { defaultValue: 'All' })}
+            label={t("common.all", { defaultValue: "All" })}
             count={counts.all}
-            active={statusFilter === ''}
-            onClick={() => setStatusFilter('')}
+            active={statusFilter === ""}
+            onClick={() => setStatusFilter("")}
           />
           <FilterChip
-            label={t('schedule_advanced.phase_status.in_planning', { defaultValue: 'In planning' })}
+            label={t("schedule_advanced.phase_status.in_planning", {
+              defaultValue: "In planning",
+            })}
             count={counts.in_planning}
-            active={statusFilter === 'in_planning'}
-            onClick={() => setStatusFilter('in_planning')}
+            active={statusFilter === "in_planning"}
+            onClick={() => setStatusFilter("in_planning")}
           />
           <FilterChip
-            label={t('schedule_advanced.phase_status.pulled', { defaultValue: 'Pulled' })}
+            label={t("schedule_advanced.phase_status.pulled", {
+              defaultValue: "Pulled",
+            })}
             count={counts.pulled}
-            active={statusFilter === 'pulled'}
-            onClick={() => setStatusFilter('pulled')}
+            active={statusFilter === "pulled"}
+            onClick={() => setStatusFilter("pulled")}
           />
           <FilterChip
-            label={t('schedule_advanced.phase_status.active', { defaultValue: 'Active' })}
+            label={t("schedule_advanced.phase_status.active", {
+              defaultValue: "Active",
+            })}
             count={counts.active}
-            active={statusFilter === 'active'}
-            onClick={() => setStatusFilter('active')}
+            active={statusFilter === "active"}
+            onClick={() => setStatusFilter("active")}
           />
           <FilterChip
-            label={t('schedule_advanced.phase_status.completed', { defaultValue: 'Completed' })}
+            label={t("schedule_advanced.phase_status.completed", {
+              defaultValue: "Completed",
+            })}
             count={counts.completed}
-            active={statusFilter === 'completed'}
-            onClick={() => setStatusFilter('completed')}
+            active={statusFilter === "completed"}
+            onClick={() => setStatusFilter("completed")}
           />
         </div>
         <div
           role="tablist"
-          aria-label={t('schedule_advanced.view', { defaultValue: 'View' })}
+          aria-label={t("schedule_advanced.view", { defaultValue: "View" })}
           className="ml-auto inline-flex rounded-lg border border-border-light bg-surface-secondary p-0.5"
         >
-          <ViewToggle active={view === 'cards'} onClick={() => setView('cards')} icon={<ListIcon size={12} />} label={t('schedule_advanced.view_cards', { defaultValue: 'Cards' })} />
-          <ViewToggle active={view === 'table'} onClick={() => setView('table')} icon={<TableIcon size={12} />} label={t('schedule_advanced.view_table', { defaultValue: 'Table' })} />
-          <ViewToggle active={view === 'timeline'} onClick={() => setView('timeline')} icon={<GanttChart size={12} />} label={t('schedule_advanced.view_timeline', { defaultValue: 'Timeline' })} />
+          <ViewToggle
+            active={view === "cards"}
+            onClick={() => setView("cards")}
+            icon={<ListIcon size={12} />}
+            label={t("schedule_advanced.view_cards", { defaultValue: "Cards" })}
+          />
+          <ViewToggle
+            active={view === "table"}
+            onClick={() => setView("table")}
+            icon={<TableIcon size={12} />}
+            label={t("schedule_advanced.view_table", { defaultValue: "Table" })}
+          />
+          <ViewToggle
+            active={view === "timeline"}
+            onClick={() => setView("timeline")}
+            icon={<GanttChart size={12} />}
+            label={t("schedule_advanced.view_timeline", {
+              defaultValue: "Timeline",
+            })}
+          />
         </div>
-        <Button variant="ghost" size="sm" icon={<Sparkles size={14} />} onClick={() => setTemplateOpen(true)}>
-          {t('schedule_advanced.use_template', { defaultValue: 'Use a template' })}
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Sparkles size={14} />}
+          onClick={() => setTemplateOpen(true)}
+        >
+          {t("schedule_advanced.use_template", {
+            defaultValue: "Use a template",
+          })}
         </Button>
-        <Button variant="primary" size="sm" icon={<Plus size={14} />} onClick={() => setCreateOpen(true)}>
-          {t('schedule_advanced.create_phase', { defaultValue: 'New phase' })}
+        <Button
+          variant="primary"
+          size="sm"
+          icon={<Plus size={14} />}
+          onClick={() => setCreateOpen(true)}
+        >
+          {t("schedule_advanced.create_phase", { defaultValue: "New phase" })}
         </Button>
       </div>
 
       {filtered.length === 0 ? (
         <Card padding="md">
           <p className="text-center text-sm text-content-tertiary py-6">
-            {t('schedule_advanced.no_phases_for_filter', {
-              defaultValue: 'No phases match this filter.',
+            {t("schedule_advanced.no_phases_for_filter", {
+              defaultValue: "No phases match this filter.",
             })}
           </p>
         </Card>
-      ) : view === 'cards' ? (
+      ) : view === "cards" ? (
         <PhasesCardGrid
           phases={filtered}
           onEdit={setEditPhase}
@@ -1023,7 +1206,7 @@ function PhasesTab({
           starting={startMut.isPending}
           completing={completeMut.isPending}
         />
-      ) : view === 'table' ? (
+      ) : view === "table" ? (
         <PhasesTableView
           phases={filtered}
           onEdit={setEditPhase}
@@ -1037,25 +1220,40 @@ function PhasesTab({
       )}
 
       {createOpen && (
-        <PhaseFormModal masterId={masterId} onClose={() => setCreateOpen(false)} onSaved={invalidate} />
+        <PhaseFormModal
+          masterId={masterId}
+          onClose={() => setCreateOpen(false)}
+          onSaved={invalidate}
+        />
       )}
       {editPhase && (
-        <PhaseFormModal masterId={masterId} phase={editPhase} onClose={() => setEditPhase(null)} onSaved={invalidate} />
+        <PhaseFormModal
+          masterId={masterId}
+          phase={editPhase}
+          onClose={() => setEditPhase(null)}
+          onSaved={invalidate}
+        />
       )}
       {templateOpen && (
-        <PhaseTemplateModal masterId={masterId} onClose={() => setTemplateOpen(false)} onSaved={invalidate} />
+        <PhaseTemplateModal
+          masterId={masterId}
+          onClose={() => setTemplateOpen(false)}
+          onSaved={invalidate}
+        />
       )}
       <ConfirmDialog
         open={!!deletePhase}
-        title={t('schedule_advanced.delete_phase_title', { defaultValue: 'Delete phase?' })}
+        title={t("schedule_advanced.delete_phase_title", {
+          defaultValue: "Delete phase?",
+        })}
         message={
           deletePhase
-            ? t('schedule_advanced.delete_phase_message', {
+            ? t("schedule_advanced.delete_phase_message", {
                 name: deletePhase.name,
                 defaultValue:
                   '"{{name}}" will be permanently removed. Any commitments linked to this phase will need to be re-targeted.',
               })
-            : ''
+            : ""
         }
         onConfirm={() => deletePhase && deleteMut.mutate(deletePhase.id)}
         onCancel={() => setDeletePhase(null)}
@@ -1081,17 +1279,19 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={clsx(
-        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 transition-colors',
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 transition-colors",
         active
-          ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue'
-          : 'border-border-light bg-surface-secondary text-content-secondary hover:bg-surface-tertiary',
+          ? "border-oe-blue bg-oe-blue-subtle text-oe-blue"
+          : "border-border-light bg-surface-secondary text-content-secondary hover:bg-surface-tertiary",
       )}
     >
       {label}
       <span
         className={clsx(
-          'rounded-full px-1.5 py-px text-2xs',
-          active ? 'bg-oe-blue/10 text-oe-blue' : 'bg-surface-primary text-content-tertiary',
+          "rounded-full px-1.5 py-px text-2xs",
+          active
+            ? "bg-oe-blue/10 text-oe-blue"
+            : "bg-surface-primary text-content-tertiary",
         )}
       >
         {count}
@@ -1118,10 +1318,10 @@ function ViewToggle({
       aria-selected={active}
       onClick={onClick}
       className={clsx(
-        'inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
+        "inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
         active
-          ? 'bg-surface-primary text-content-primary shadow-xs'
-          : 'text-content-secondary hover:text-content-primary',
+          ? "bg-surface-primary text-content-primary shadow-xs"
+          : "text-content-secondary hover:text-content-primary",
       )}
     >
       {icon}
@@ -1157,66 +1357,117 @@ function PhasesCardGrid({
       {phases.map((p) => {
         const delayed = isPhaseDelayed(p);
         const colorClass =
-          p.pulled_status === 'completed'
-            ? 'border-semantic-success/30 bg-semantic-success-bg/40'
-            : p.pulled_status === 'active'
-              ? 'border-semantic-warning/40 bg-semantic-warning-bg/40'
-              : p.pulled_status === 'pulled'
-                ? 'border-oe-blue/30 bg-oe-blue-subtle/30'
-                : 'border-border-light bg-surface-secondary/40';
+          p.pulled_status === "completed"
+            ? "border-semantic-success/30 bg-semantic-success-bg/40"
+            : p.pulled_status === "active"
+              ? "border-semantic-warning/40 bg-semantic-warning-bg/40"
+              : p.pulled_status === "pulled"
+                ? "border-oe-blue/30 bg-oe-blue-subtle/30"
+                : "border-border-light bg-surface-secondary/40";
         const pct = phasePercent(p);
         return (
-          <Card key={p.id} padding="md" className={clsx('border flex flex-col', colorClass)}>
+          <Card
+            key={p.id}
+            padding="md"
+            className={clsx("border flex flex-col", colorClass)}
+          >
             <div className="flex items-start justify-between gap-2">
-              <h4 className="text-sm font-semibold truncate" title={p.name}>{p.name}</h4>
-              <Badge variant={delayed ? 'error' : PHASE_VARIANT[p.pulled_status]} dot>
+              <h4 className="text-sm font-semibold truncate" title={p.name}>
+                {p.name}
+              </h4>
+              <Badge
+                variant={delayed ? "error" : PHASE_VARIANT[p.pulled_status]}
+                dot
+              >
                 {delayed
-                  ? t('schedule_advanced.phase_status.delayed', { defaultValue: 'Delayed' })
-                  : t(`schedule_advanced.phase_status.${p.pulled_status}`, { defaultValue: p.pulled_status })}
+                  ? t("schedule_advanced.phase_status.delayed", {
+                      defaultValue: "Delayed",
+                    })
+                  : t(`schedule_advanced.phase_status.${p.pulled_status}`, {
+                      defaultValue: p.pulled_status,
+                    })}
               </Badge>
             </div>
             <p className="mt-1 text-xs text-content-tertiary">
               {p.planned_start && p.planned_finish ? (
                 <>
-                  <DateDisplay value={p.planned_start} /> → <DateDisplay value={p.planned_finish} />
+                  <DateDisplay value={p.planned_start} /> →{" "}
+                  <DateDisplay value={p.planned_finish} />
                 </>
-              ) : '—'}
+              ) : (
+                "—"
+              )}
             </p>
             <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-primary/60">
               <div
                 className={clsx(
-                  'h-full transition-all',
-                  p.pulled_status === 'completed'
-                    ? 'bg-emerald-500'
+                  "h-full transition-all",
+                  p.pulled_status === "completed"
+                    ? "bg-emerald-500"
                     : delayed
-                      ? 'bg-rose-500'
-                      : 'bg-blue-500',
+                      ? "bg-rose-500"
+                      : "bg-blue-500",
                 )}
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <p className="mt-1 text-2xs text-content-tertiary tabular-nums">{pct}%</p>
+            <p className="mt-1 text-2xs text-content-tertiary tabular-nums">
+              {pct}%
+            </p>
             {p.notes && (
-              <p className="mt-2 text-xs text-content-secondary line-clamp-3">{p.notes}</p>
+              <p className="mt-2 text-xs text-content-secondary line-clamp-3">
+                {p.notes}
+              </p>
             )}
             <div className="mt-auto pt-3 flex flex-wrap gap-1.5">
-              {p.pulled_status === 'in_planning' && (
-                <Button size="sm" variant="secondary" onClick={() => onPull(p.id)} loading={pulling}>
-                  {t('schedule_advanced.pull', { defaultValue: 'Pull' })}
+              {p.pulled_status === "in_planning" && (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => onPull(p.id)}
+                  loading={pulling}
+                >
+                  {t("schedule_advanced.pull", { defaultValue: "Pull" })}
                 </Button>
               )}
-              {p.pulled_status === 'pulled' && (
-                <Button size="sm" variant="secondary" icon={<PlayCircle size={12} />} onClick={() => onStart(p.id)} loading={starting}>
-                  {t('schedule_advanced.start', { defaultValue: 'Start' })}
+              {p.pulled_status === "pulled" && (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  icon={<PlayCircle size={12} />}
+                  onClick={() => onStart(p.id)}
+                  loading={starting}
+                >
+                  {t("schedule_advanced.start", { defaultValue: "Start" })}
                 </Button>
               )}
-              {p.pulled_status === 'active' && (
-                <Button size="sm" variant="primary" icon={<Check size={12} />} onClick={() => onComplete(p.id)} loading={completing}>
-                  {t('schedule_advanced.complete', { defaultValue: 'Complete' })}
+              {p.pulled_status === "active" && (
+                <Button
+                  size="sm"
+                  variant="primary"
+                  icon={<Check size={12} />}
+                  onClick={() => onComplete(p.id)}
+                  loading={completing}
+                >
+                  {t("schedule_advanced.complete", {
+                    defaultValue: "Complete",
+                  })}
                 </Button>
               )}
-              <Button size="sm" variant="ghost" icon={<Pencil size={12} />} onClick={() => onEdit(p)} aria-label={t('common.edit', { defaultValue: 'Edit' })} />
-              <Button size="sm" variant="ghost" icon={<Trash2 size={12} />} onClick={() => onDelete(p)} aria-label={t('common.delete', { defaultValue: 'Delete' })} />
+              <Button
+                size="sm"
+                variant="ghost"
+                icon={<Pencil size={12} />}
+                onClick={() => onEdit(p)}
+                aria-label={t("common.edit", { defaultValue: "Edit" })}
+              />
+              <Button
+                size="sm"
+                variant="ghost"
+                icon={<Trash2 size={12} />}
+                onClick={() => onDelete(p)}
+                aria-label={t("common.delete", { defaultValue: "Delete" })}
+              />
             </div>
           </Card>
         );
@@ -1248,13 +1499,31 @@ function PhasesTableView({
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
               <th className="px-4 py-2.5 text-left">#</th>
-              <th className="px-4 py-2.5 text-left">{t('common.name', { defaultValue: 'Name' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_start', { defaultValue: 'Start' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_finish', { defaultValue: 'Finish' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('schedule_advanced.duration_days', { defaultValue: 'Days' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('schedule_advanced.progress', { defaultValue: 'Progress' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+              <th className="px-4 py-2.5 text-left">
+                {t("common.name", { defaultValue: "Name" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("schedule_advanced.planned_start", {
+                  defaultValue: "Start",
+                })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("schedule_advanced.planned_finish", {
+                  defaultValue: "Finish",
+                })}
+              </th>
+              <th className="px-4 py-2.5 text-right">
+                {t("schedule_advanced.duration_days", { defaultValue: "Days" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("common.status", { defaultValue: "Status" })}
+              </th>
+              <th className="px-4 py-2.5 text-right">
+                {t("schedule_advanced.progress", { defaultValue: "Progress" })}
+              </th>
+              <th className="px-4 py-2.5 text-right">
+                {t("common.actions", { defaultValue: "Actions" })}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -1263,25 +1532,54 @@ function PhasesTableView({
               const pct = phasePercent(p);
               const days = phaseDurationDays(p);
               return (
-                <tr key={p.id} className="border-t border-border-light hover:bg-surface-secondary">
-                  <td className="px-4 py-2 text-xs text-content-tertiary tabular-nums">{idx + 1}</td>
+                <tr
+                  key={p.id}
+                  className="border-t border-border-light hover:bg-surface-secondary"
+                >
+                  <td className="px-4 py-2 text-xs text-content-tertiary tabular-nums">
+                    {idx + 1}
+                  </td>
                   <td className="px-4 py-2 font-medium">
-                    <button type="button" className="text-left hover:text-oe-blue" onClick={() => onEdit(p)}>
+                    <button
+                      type="button"
+                      className="text-left hover:text-oe-blue"
+                      onClick={() => onEdit(p)}
+                    >
                       {p.name}
                     </button>
                   </td>
                   <td className="px-4 py-2 text-xs text-content-secondary">
-                    {p.planned_start ? <DateDisplay value={p.planned_start} /> : '—'}
+                    {p.planned_start ? (
+                      <DateDisplay value={p.planned_start} />
+                    ) : (
+                      "—"
+                    )}
                   </td>
                   <td className="px-4 py-2 text-xs text-content-secondary">
-                    {p.planned_finish ? <DateDisplay value={p.planned_finish} /> : '—'}
+                    {p.planned_finish ? (
+                      <DateDisplay value={p.planned_finish} />
+                    ) : (
+                      "—"
+                    )}
                   </td>
-                  <td className="px-4 py-2 text-right font-mono text-xs">{days == null ? '—' : days}</td>
+                  <td className="px-4 py-2 text-right font-mono text-xs">
+                    {days == null ? "—" : days}
+                  </td>
                   <td className="px-4 py-2">
-                    <Badge variant={delayed ? 'error' : PHASE_VARIANT[p.pulled_status]} dot>
+                    <Badge
+                      variant={
+                        delayed ? "error" : PHASE_VARIANT[p.pulled_status]
+                      }
+                      dot
+                    >
                       {delayed
-                        ? t('schedule_advanced.phase_status.delayed', { defaultValue: 'Delayed' })
-                        : t(`schedule_advanced.phase_status.${p.pulled_status}`, { defaultValue: p.pulled_status })}
+                        ? t("schedule_advanced.phase_status.delayed", {
+                            defaultValue: "Delayed",
+                          })
+                        : t(
+                            `schedule_advanced.phase_status.${p.pulled_status}`,
+                            { defaultValue: p.pulled_status },
+                          )}
                     </Badge>
                   </td>
                   <td className="px-4 py-2">
@@ -1289,36 +1587,72 @@ function PhasesTableView({
                       <div className="h-1.5 w-20 overflow-hidden rounded-full bg-surface-secondary">
                         <div
                           className={clsx(
-                            'h-full',
-                            p.pulled_status === 'completed'
-                              ? 'bg-emerald-500'
+                            "h-full",
+                            p.pulled_status === "completed"
+                              ? "bg-emerald-500"
                               : delayed
-                                ? 'bg-rose-500'
-                                : 'bg-blue-500',
+                                ? "bg-rose-500"
+                                : "bg-blue-500",
                           )}
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="font-mono text-2xs text-content-tertiary tabular-nums w-8 text-right">{pct}%</span>
+                      <span className="font-mono text-2xs text-content-tertiary tabular-nums w-8 text-right">
+                        {pct}%
+                      </span>
                     </div>
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex justify-end gap-1">
-                      {p.pulled_status === 'in_planning' && (
-                        <Button size="sm" variant="ghost" onClick={() => onPull(p.id)}>
-                          {t('schedule_advanced.pull', { defaultValue: 'Pull' })}
+                      {p.pulled_status === "in_planning" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => onPull(p.id)}
+                        >
+                          {t("schedule_advanced.pull", {
+                            defaultValue: "Pull",
+                          })}
                         </Button>
                       )}
-                      {p.pulled_status === 'pulled' && (
-                        <Button size="sm" variant="ghost" onClick={() => onStart(p.id)}>
-                          {t('schedule_advanced.start', { defaultValue: 'Start' })}
+                      {p.pulled_status === "pulled" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => onStart(p.id)}
+                        >
+                          {t("schedule_advanced.start", {
+                            defaultValue: "Start",
+                          })}
                         </Button>
                       )}
-                      {p.pulled_status === 'active' && (
-                        <Button size="sm" variant="ghost" icon={<Check size={12} />} onClick={() => onComplete(p.id)} aria-label={t('schedule_advanced.complete', { defaultValue: 'Complete' })} />
+                      {p.pulled_status === "active" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          icon={<Check size={12} />}
+                          onClick={() => onComplete(p.id)}
+                          aria-label={t("schedule_advanced.complete", {
+                            defaultValue: "Complete",
+                          })}
+                        />
                       )}
-                      <Button size="sm" variant="ghost" icon={<Pencil size={12} />} onClick={() => onEdit(p)} aria-label={t('common.edit', { defaultValue: 'Edit' })} />
-                      <Button size="sm" variant="ghost" icon={<Trash2 size={12} />} onClick={() => onDelete(p)} aria-label={t('common.delete', { defaultValue: 'Delete' })} />
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        icon={<Pencil size={12} />}
+                        onClick={() => onEdit(p)}
+                        aria-label={t("common.edit", { defaultValue: "Edit" })}
+                      />
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        icon={<Trash2 size={12} />}
+                        onClick={() => onDelete(p)}
+                        aria-label={t("common.delete", {
+                          defaultValue: "Delete",
+                        })}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -1344,31 +1678,47 @@ function PhasesTimelineView({
     return (
       <Card padding="md">
         <p className="text-center text-sm text-content-tertiary py-4">
-          {t('schedule_advanced.timeline_no_dates', {
-            defaultValue: 'Add start and finish dates to phases to see them on the timeline.',
+          {t("schedule_advanced.timeline_no_dates", {
+            defaultValue:
+              "Add start and finish dates to phases to see them on the timeline.",
           })}
         </p>
       </Card>
     );
   }
-  const minStart = Math.min(...dated.map((p) => new Date(p.planned_start!).getTime()));
-  const maxEnd = Math.max(...dated.map((p) => new Date(p.planned_finish!).getTime()));
+  const minStart = Math.min(
+    ...dated.map((p) => new Date(p.planned_start!).getTime()),
+  );
+  const maxEnd = Math.max(
+    ...dated.map((p) => new Date(p.planned_finish!).getTime()),
+  );
   const span = Math.max(1, maxEnd - minStart);
   const todayMs = Date.now();
-  const todayPct = todayMs >= minStart && todayMs <= maxEnd ? ((todayMs - minStart) / span) * 100 : null;
+  const todayPct =
+    todayMs >= minStart && todayMs <= maxEnd
+      ? ((todayMs - minStart) / span) * 100
+      : null;
 
   const sorted = [...phases].sort((a, b) => {
-    const sa = a.planned_start ? new Date(a.planned_start).getTime() : Number.MAX_SAFE_INTEGER;
-    const sb = b.planned_start ? new Date(b.planned_start).getTime() : Number.MAX_SAFE_INTEGER;
+    const sa = a.planned_start
+      ? new Date(a.planned_start).getTime()
+      : Number.MAX_SAFE_INTEGER;
+    const sb = b.planned_start
+      ? new Date(b.planned_start).getTime()
+      : Number.MAX_SAFE_INTEGER;
     return sa - sb;
   });
 
   return (
     <Card padding="md">
       <div className="flex items-center justify-between text-xs text-content-tertiary mb-3">
-        <span><DateDisplay value={new Date(minStart).toISOString().slice(0, 10)} /></span>
-        <span>{t('schedule_advanced.today', { defaultValue: 'Today' })}</span>
-        <span><DateDisplay value={new Date(maxEnd).toISOString().slice(0, 10)} /></span>
+        <span>
+          <DateDisplay value={new Date(minStart).toISOString().slice(0, 10)} />
+        </span>
+        <span>{t("schedule_advanced.today", { defaultValue: "Today" })}</span>
+        <span>
+          <DateDisplay value={new Date(maxEnd).toISOString().slice(0, 10)} />
+        </span>
       </div>
       <div className="relative">
         {todayPct != null && (
@@ -1381,23 +1731,30 @@ function PhasesTimelineView({
         <ul className="space-y-2">
           {sorted.map((p) => {
             const hasDates = p.planned_start && p.planned_finish;
-            const s = hasDates ? new Date(p.planned_start!).getTime() : minStart;
-            const f = hasDates ? new Date(p.planned_finish!).getTime() : minStart;
+            const s = hasDates
+              ? new Date(p.planned_start!).getTime()
+              : minStart;
+            const f = hasDates
+              ? new Date(p.planned_finish!).getTime()
+              : minStart;
             const left = ((s - minStart) / span) * 100;
             const width = Math.max(2, ((f - s) / span) * 100);
             const delayed = isPhaseDelayed(p);
             const barColor =
-              p.pulled_status === 'completed'
-                ? 'bg-emerald-500'
-                : p.pulled_status === 'active'
+              p.pulled_status === "completed"
+                ? "bg-emerald-500"
+                : p.pulled_status === "active"
                   ? delayed
-                    ? 'bg-rose-500'
-                    : 'bg-amber-500'
-                  : p.pulled_status === 'pulled'
-                    ? 'bg-blue-500'
-                    : 'bg-slate-400';
+                    ? "bg-rose-500"
+                    : "bg-amber-500"
+                  : p.pulled_status === "pulled"
+                    ? "bg-blue-500"
+                    : "bg-slate-400";
             return (
-              <li key={p.id} className="grid grid-cols-[160px_1fr] items-center gap-3">
+              <li
+                key={p.id}
+                className="grid grid-cols-[160px_1fr] items-center gap-3"
+              >
                 <button
                   type="button"
                   className="truncate text-left text-sm font-medium text-content-primary hover:text-oe-blue"
@@ -1410,7 +1767,7 @@ function PhasesTimelineView({
                   {hasDates && (
                     <div
                       className={clsx(
-                        'absolute top-1 bottom-1 rounded-sm flex items-center justify-center text-2xs font-medium text-white px-2 truncate',
+                        "absolute top-1 bottom-1 rounded-sm flex items-center justify-center text-2xs font-medium text-white px-2 truncate",
                         barColor,
                       )}
                       style={{ left: `${left}%`, width: `${width}%` }}
@@ -1443,20 +1800,26 @@ function PhaseFormModal({
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
   const isEdit = !!phase;
-  const [name, setName] = useState(phase?.name ?? '');
+  const [name, setName] = useState(phase?.name ?? "");
   const [start, setStart] = useState(phase?.planned_start ?? todayIso());
   const [finish, setFinish] = useState(phase?.planned_finish ?? todayIso(30));
-  const [notes, setNotes] = useState(phase?.notes ?? '');
+  const [notes, setNotes] = useState(phase?.notes ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const validate = (): string | null => {
     if (!name.trim()) {
-      return t('schedule_advanced.err_name_required', { defaultValue: 'Phase name is required.' });
+      return t("schedule_advanced.err_name_required", {
+        defaultValue: "Phase name is required.",
+      });
     }
-    if (start && finish && new Date(finish).getTime() < new Date(start).getTime()) {
-      return t('schedule_advanced.err_finish_after_start', {
-        defaultValue: 'Planned finish must be on or after planned start.',
+    if (
+      start &&
+      finish &&
+      new Date(finish).getTime() < new Date(start).getTime()
+    ) {
+      return t("schedule_advanced.err_finish_after_start", {
+        defaultValue: "Planned finish must be on or after planned start.",
       });
     }
     return null;
@@ -1478,7 +1841,12 @@ function PhaseFormModal({
           planned_finish: finish || null,
           notes,
         });
-        addToast({ type: 'success', title: t('schedule_advanced.phase_updated', { defaultValue: 'Phase updated' }) });
+        addToast({
+          type: "success",
+          title: t("schedule_advanced.phase_updated", {
+            defaultValue: "Phase updated",
+          }),
+        });
       } else {
         await createPhasePlan({
           master_schedule_id: masterId,
@@ -1487,12 +1855,17 @@ function PhaseFormModal({
           planned_finish: finish || undefined,
           notes,
         });
-        addToast({ type: 'success', title: t('schedule_advanced.phase_created', { defaultValue: 'Phase created' }) });
+        addToast({
+          type: "success",
+          title: t("schedule_advanced.phase_created", {
+            defaultValue: "Phase created",
+          }),
+        });
       }
       onSaved();
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1502,61 +1875,108 @@ function PhaseFormModal({
     <WideModal
       open
       onClose={onClose}
-      title={isEdit ? t('schedule_advanced.edit_phase', { defaultValue: 'Edit phase' }) : t('schedule_advanced.create_phase', { defaultValue: 'New phase' })}
-      subtitle={t('schedule_advanced.phase_modal_subtitle', {
+      title={
+        isEdit
+          ? t("schedule_advanced.edit_phase", { defaultValue: "Edit phase" })
+          : t("schedule_advanced.create_phase", { defaultValue: "New phase" })
+      }
+      subtitle={t("schedule_advanced.phase_modal_subtitle", {
         defaultValue:
-          'Phases are high-level project segments — typically 4–12 weeks each. Use the lifecycle buttons on the card to pull, start, and complete a phase.',
+          "Phases are high-level project segments — typically 4–12 weeks each. Use the lifecycle buttons on the card to pull, start, and complete a phase.",
       })}
       size="lg"
       busy={busy}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>{t('common.cancel', { defaultValue: 'Cancel' })}</Button>
-          <Button variant="primary" onClick={submit} loading={busy} disabled={!name.trim()}>
-            {isEdit ? t('common.save', { defaultValue: 'Save' }) : t('common.create', { defaultValue: 'Create' })}
+          <Button variant="ghost" onClick={onClose} disabled={busy}>
+            {t("common.cancel", { defaultValue: "Cancel" })}
+          </Button>
+          <Button
+            variant="primary"
+            onClick={submit}
+            loading={busy}
+            disabled={!name.trim()}
+          >
+            {isEdit
+              ? t("common.save", { defaultValue: "Save" })
+              : t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
       <div className="space-y-3">
         {error && (
-          <div className="rounded-md border border-semantic-error/30 bg-semantic-error-bg/40 px-3 py-2 text-sm text-semantic-error">{error}</div>
+          <div className="rounded-md border border-semantic-error/30 bg-semantic-error-bg/40 px-3 py-2 text-sm text-semantic-error">
+            {error}
+          </div>
         )}
         <div>
-          <label className={labelCls}>{t('schedule_advanced.phase_name', { defaultValue: 'Phase name' })} *</label>
+          <label className={labelCls}>
+            {t("schedule_advanced.phase_name", { defaultValue: "Phase name" })}{" "}
+            *
+          </label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             className={inputCls}
-            placeholder={t('schedule_advanced.phase_name_placeholder', { defaultValue: 'e.g. Foundation, Structure, MEP rough-in…' })}
+            placeholder={t("schedule_advanced.phase_name_placeholder", {
+              defaultValue: "e.g. Foundation, Structure, MEP rough-in…",
+            })}
             autoFocus
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className={labelCls}>{t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}</label>
-            <input type="date" value={start} onChange={(e) => setStart(e.target.value)} className={inputCls} />
+            <label className={labelCls}>
+              {t("schedule_advanced.planned_start", {
+                defaultValue: "Planned start",
+              })}
+            </label>
+            <input
+              type="date"
+              value={start}
+              onChange={(e) => setStart(e.target.value)}
+              className={inputCls}
+            />
           </div>
           <div>
-            <label className={labelCls}>{t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}</label>
-            <input type="date" value={finish} onChange={(e) => setFinish(e.target.value)} className={inputCls} />
+            <label className={labelCls}>
+              {t("schedule_advanced.planned_finish", {
+                defaultValue: "Planned finish",
+              })}
+            </label>
+            <input
+              type="date"
+              value={finish}
+              onChange={(e) => setFinish(e.target.value)}
+              className={inputCls}
+            />
           </div>
         </div>
         <div>
-          <label className={labelCls}>{t('common.notes', { defaultValue: 'Notes' })}</label>
+          <label className={labelCls}>
+            {t("common.notes", { defaultValue: "Notes" })}
+          </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className={clsx(inputCls, 'h-auto py-2')}
-            placeholder={t('schedule_advanced.phase_notes_placeholder', { defaultValue: 'Scope, owner, key deliverables…' })}
+            className={clsx(inputCls, "h-auto py-2")}
+            placeholder={t("schedule_advanced.phase_notes_placeholder", {
+              defaultValue: "Scope, owner, key deliverables…",
+            })}
           />
         </div>
         {isEdit && phase && (
           <p className="text-xs text-content-tertiary">
-            {t('schedule_advanced.current_status', { defaultValue: 'Current status' })}:{' '}
+            {t("schedule_advanced.current_status", {
+              defaultValue: "Current status",
+            })}
+            :{" "}
             <Badge variant={PHASE_VARIANT[phase.pulled_status]} dot>
-              {t(`schedule_advanced.phase_status.${phase.pulled_status}`, { defaultValue: phase.pulled_status })}
+              {t(`schedule_advanced.phase_status.${phase.pulled_status}`, {
+                defaultValue: phase.pulled_status,
+              })}
             </Badge>
           </p>
         )}
@@ -1576,7 +1996,9 @@ function PhaseTemplateModal({
 }) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
-  const [template, setTemplate] = useState<'residential' | 'commercial' | 'infrastructure'>('residential');
+  const [template, setTemplate] = useState<
+    "residential" | "commercial" | "infrastructure"
+  >("residential");
   const [start, setStart] = useState(todayIso());
   const [busy, setBusy] = useState(false);
 
@@ -1585,38 +2007,54 @@ function PhaseTemplateModal({
     try {
       const created = await applyPhaseTemplate(masterId, template, start);
       addToast({
-        type: 'success',
-        title: t('schedule_advanced.template_applied', { count: created.length, defaultValue: '{{count}} phases created' }),
+        type: "success",
+        title: t("schedule_advanced.template_applied", {
+          count: created.length,
+          defaultValue: "{{count}} phases created",
+        }),
       });
       onSaved();
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
   };
 
-  const templateOptions: Array<{ key: typeof template; title: string; description: string }> = [
+  const templateOptions: Array<{
+    key: typeof template;
+    title: string;
+    description: string;
+  }> = [
     {
-      key: 'residential',
-      title: t('schedule_advanced.template_residential', { defaultValue: 'Residential' }),
-      description: t('schedule_advanced.template_residential_desc', {
-        defaultValue: 'Single-family / multi-family build — site prep through handover.',
+      key: "residential",
+      title: t("schedule_advanced.template_residential", {
+        defaultValue: "Residential",
+      }),
+      description: t("schedule_advanced.template_residential_desc", {
+        defaultValue:
+          "Single-family / multi-family build — site prep through handover.",
       }),
     },
     {
-      key: 'commercial',
-      title: t('schedule_advanced.template_commercial', { defaultValue: 'Commercial' }),
-      description: t('schedule_advanced.template_commercial_desc', {
-        defaultValue: 'Office / retail / institutional — includes commissioning phase.',
+      key: "commercial",
+      title: t("schedule_advanced.template_commercial", {
+        defaultValue: "Commercial",
+      }),
+      description: t("schedule_advanced.template_commercial_desc", {
+        defaultValue:
+          "Office / retail / institutional — includes commissioning phase.",
       }),
     },
     {
-      key: 'infrastructure',
-      title: t('schedule_advanced.template_infrastructure', { defaultValue: 'Infrastructure' }),
-      description: t('schedule_advanced.template_infrastructure_desc', {
-        defaultValue: 'Roads / utilities — earthworks-heavy with final inspection.',
+      key: "infrastructure",
+      title: t("schedule_advanced.template_infrastructure", {
+        defaultValue: "Infrastructure",
+      }),
+      description: t("schedule_advanced.template_infrastructure_desc", {
+        defaultValue:
+          "Roads / utilities — earthworks-heavy with final inspection.",
       }),
     },
   ];
@@ -1627,18 +2065,25 @@ function PhaseTemplateModal({
     <WideModal
       open
       onClose={onClose}
-      title={t('schedule_advanced.apply_template', { defaultValue: 'Apply phase template' })}
-      subtitle={t('schedule_advanced.apply_template_subtitle', {
+      title={t("schedule_advanced.apply_template", {
+        defaultValue: "Apply phase template",
+      })}
+      subtitle={t("schedule_advanced.apply_template_subtitle", {
         defaultValue:
-          'Pick a starter set of construction phases. Each phase gets a default duration — you can edit names, dates, and notes after applying.',
+          "Pick a starter set of construction phases. Each phase gets a default duration — you can edit names, dates, and notes after applying.",
       })}
       size="xl"
       busy={busy}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>{t('common.cancel', { defaultValue: 'Cancel' })}</Button>
+          <Button variant="ghost" onClick={onClose} disabled={busy}>
+            {t("common.cancel", { defaultValue: "Cancel" })}
+          </Button>
           <Button variant="primary" onClick={apply} loading={busy}>
-            {t('schedule_advanced.apply_n_phases', { count: preview.length, defaultValue: 'Create {{count}} phases' })}
+            {t("schedule_advanced.apply_n_phases", {
+              count: preview.length,
+              defaultValue: "Create {{count}} phases",
+            })}
           </Button>
         </>
       }
@@ -1651,31 +2096,58 @@ function PhaseTemplateModal({
               type="button"
               onClick={() => setTemplate(opt.key)}
               className={clsx(
-                'rounded-lg border p-3 text-left transition-all',
+                "rounded-lg border p-3 text-left transition-all",
                 template === opt.key
-                  ? 'border-oe-blue bg-oe-blue-subtle/30 ring-1 ring-oe-blue'
-                  : 'border-border-light hover:border-border hover:bg-surface-secondary',
+                  ? "border-oe-blue bg-oe-blue-subtle/30 ring-1 ring-oe-blue"
+                  : "border-border-light hover:border-border hover:bg-surface-secondary",
               )}
             >
-              <div className="text-sm font-semibold text-content-primary">{opt.title}</div>
-              <div className="mt-0.5 text-xs text-content-secondary">{opt.description}</div>
+              <div className="text-sm font-semibold text-content-primary">
+                {opt.title}
+              </div>
+              <div className="mt-0.5 text-xs text-content-secondary">
+                {opt.description}
+              </div>
             </button>
           ))}
         </div>
         <div>
-          <label className={labelCls}>{t('schedule_advanced.template_start_date', { defaultValue: 'Start date (first phase)' })}</label>
-          <input type="date" value={start} onChange={(e) => setStart(e.target.value)} className={clsx(inputCls, 'max-w-xs')} />
+          <label className={labelCls}>
+            {t("schedule_advanced.template_start_date", {
+              defaultValue: "Start date (first phase)",
+            })}
+          </label>
+          <input
+            type="date"
+            value={start}
+            onChange={(e) => setStart(e.target.value)}
+            className={clsx(inputCls, "max-w-xs")}
+          />
         </div>
         <div>
-          <div className="text-xs uppercase tracking-wide text-content-tertiary mb-2">{t('schedule_advanced.template_preview', { defaultValue: 'Preview' })}</div>
+          <div className="text-xs uppercase tracking-wide text-content-tertiary mb-2">
+            {t("schedule_advanced.template_preview", {
+              defaultValue: "Preview",
+            })}
+          </div>
           <ul className="space-y-1 text-sm">
             {preview.map((p, idx) => (
-              <li key={p.name} className="flex items-center justify-between rounded-md bg-surface-secondary/60 px-3 py-1.5">
+              <li
+                key={p.name}
+                className="flex items-center justify-between rounded-md bg-surface-secondary/60 px-3 py-1.5"
+              >
                 <span className="flex items-center gap-2">
-                  <span className="font-mono text-2xs text-content-tertiary tabular-nums w-6 text-right">{idx + 1}.</span>
-                  {t(`schedule_advanced.template_phase.${slug(p.name)}`, { defaultValue: p.name })}
+                  <span className="font-mono text-2xs text-content-tertiary tabular-nums w-6 text-right">
+                    {idx + 1}.
+                  </span>
+                  {t(`schedule_advanced.template_phase.${slug(p.name)}`, {
+                    defaultValue: p.name,
+                  })}
                 </span>
-                <span className="font-mono text-2xs text-content-tertiary">{p.days} {t('schedule_advanced.days', { defaultValue: 'days' })}</span>
+                <span className="font-mono text-2xs text-content-tertiary">
+                  {p.days}{" "}
+                  {t("schedule_advanced.days", { defaultValue: "days" })}
+                </span>
               </li>
             ))}
           </ul>
@@ -1686,7 +2158,10 @@ function PhaseTemplateModal({
 }
 
 function slug(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
 }
 
 /* ── Look-ahead tab ──────────────────────────────────────────────────── */
@@ -1714,10 +2189,15 @@ function LookAheadTab({
   const publishMut = useMutation({
     mutationFn: (id: string) => publishLookAhead(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'look-aheads'] });
-      addToast({ type: 'success', title: t('schedule_advanced.la_published', { defaultValue: 'Look-ahead published' }) });
+      qc.invalidateQueries({ queryKey: ["schedule-advanced", "look-aheads"] });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.la_published", {
+          defaultValue: "Look-ahead published",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   if (loading) {
@@ -1737,12 +2217,17 @@ function LookAheadTab({
       <Card>
         <EmptyState
           icon={<Clock size={22} />}
-          title={t('schedule_advanced.no_la', { defaultValue: 'No look-ahead plans yet' })}
-          description={t('schedule_advanced.no_la_desc', {
-            defaultValue: 'Look-aheads roll a 6-week window for constraint clearing.',
+          title={t("schedule_advanced.no_la", {
+            defaultValue: "No look-ahead plans yet",
+          })}
+          description={t("schedule_advanced.no_la_desc", {
+            defaultValue:
+              "Look-aheads roll a 6-week window for constraint clearing.",
           })}
           action={{
-            label: t('schedule_advanced.create_la', { defaultValue: 'Create Look-Ahead' }),
+            label: t("schedule_advanced.create_la", {
+              defaultValue: "Create Look-Ahead",
+            }),
             onClick: onCreate,
           }}
         />
@@ -1759,7 +2244,9 @@ function LookAheadTab({
           icon={<Plus size={14} />}
           onClick={onCreate}
         >
-          {t('schedule_advanced.create_la', { defaultValue: 'Create Look-Ahead' })}
+          {t("schedule_advanced.create_la", {
+            defaultValue: "Create Look-Ahead",
+          })}
         </Button>
       </div>
       <Card padding="none">
@@ -1767,11 +2254,23 @@ function LookAheadTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.period_start', { defaultValue: 'Start' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.period_end', { defaultValue: 'End' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.weeks', { defaultValue: 'Weeks' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("schedule_advanced.period_start", {
+                    defaultValue: "Start",
+                  })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("schedule_advanced.period_end", { defaultValue: "End" })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("schedule_advanced.weeks", { defaultValue: "Weeks" })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("common.status", { defaultValue: "Status" })}
+                </th>
+                <th className="px-4 py-2.5 text-right">
+                  {t("common.actions", { defaultValue: "Actions" })}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -1780,8 +2279,8 @@ function LookAheadTab({
                   key={la.id}
                   onClick={() => onSelect(la.id)}
                   className={clsx(
-                    'border-t border-border-light hover:bg-surface-secondary cursor-pointer',
-                    la.id === lookAheadId && 'bg-oe-blue-subtle/30',
+                    "border-t border-border-light hover:bg-surface-secondary cursor-pointer",
+                    la.id === lookAheadId && "bg-oe-blue-subtle/30",
                   )}
                 >
                   <td className="px-4 py-2 text-xs text-content-secondary">
@@ -1796,11 +2295,11 @@ function LookAheadTab({
                   <td className="px-4 py-2">
                     <Badge
                       variant={
-                        la.status === 'published'
-                          ? 'success'
-                          : la.status === 'reviewed'
-                            ? 'blue'
-                            : 'neutral'
+                        la.status === "published"
+                          ? "success"
+                          : la.status === "reviewed"
+                            ? "blue"
+                            : "neutral"
                       }
                       dot
                     >
@@ -1808,7 +2307,7 @@ function LookAheadTab({
                     </Badge>
                   </td>
                   <td className="px-4 py-2 text-right">
-                    {la.status !== 'published' && (
+                    {la.status !== "published" && (
                       <Button
                         size="sm"
                         variant="ghost"
@@ -1817,7 +2316,9 @@ function LookAheadTab({
                           publishMut.mutate(la.id);
                         }}
                       >
-                        {t('schedule_advanced.publish', { defaultValue: 'Publish' })}
+                        {t("schedule_advanced.publish", {
+                          defaultValue: "Publish",
+                        })}
                       </Button>
                     )}
                   </td>
@@ -1867,18 +2368,28 @@ function WeeklyTab({
   const commitMut = useMutation({
     mutationFn: (id: string) => commitWeeklyPlan(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'weekly'] });
-      addToast({ type: 'success', title: t('schedule_advanced.week_committed', { defaultValue: 'Week committed' }) });
+      qc.invalidateQueries({ queryKey: ["schedule-advanced", "weekly"] });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.week_committed", {
+          defaultValue: "Week committed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const closeMut = useMutation({
     mutationFn: (id: string) => closeWeeklyPlan(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'weekly'] });
-      addToast({ type: 'success', title: t('schedule_advanced.week_closed', { defaultValue: 'Week closed' }) });
+      qc.invalidateQueries({ queryKey: ["schedule-advanced", "weekly"] });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.week_closed", {
+          defaultValue: "Week closed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const [addCommitment, setAddCommitment] = useState(false);
@@ -1886,35 +2397,57 @@ function WeeklyTab({
 
   const invalidateCommitments = () =>
     qc.invalidateQueries({
-      queryKey: ['schedule-advanced', 'commitments', weekPlanId],
+      queryKey: ["schedule-advanced", "commitments", weekPlanId],
     });
 
   const commitCommitmentMut = useMutation({
     mutationFn: (id: string) => commitCommitment(id),
     onSuccess: () => {
       invalidateCommitments();
-      addToast({ type: 'success', title: t('schedule_advanced.commitment_made', { defaultValue: 'Commitment made' }) });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.commitment_made", {
+          defaultValue: "Commitment made",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const completeCommitmentMut = useMutation({
     mutationFn: (id: string) => completeCommitment(id),
     onSuccess: () => {
       invalidateCommitments();
-      addToast({ type: 'success', title: t('schedule_advanced.commitment_completed', { defaultValue: 'Commitment completed' }) });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.commitment_completed", {
+          defaultValue: "Commitment completed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const missCommitmentMut = useMutation({
-    mutationFn: (vars: { id: string; category: RNCCategory; description: string }) =>
-      missCommitment(vars.id, { category: vars.category, description: vars.description }),
+    mutationFn: (vars: {
+      id: string;
+      category: RNCCategory;
+      description: string;
+    }) =>
+      missCommitment(vars.id, {
+        category: vars.category,
+        description: vars.description,
+      }),
     onSuccess: () => {
       invalidateCommitments();
       setMissTarget(null);
-      addToast({ type: 'success', title: t('schedule_advanced.commitment_missed', { defaultValue: 'Commitment marked missed' }) });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.commitment_missed", {
+          defaultValue: "Commitment marked missed",
+        }),
+      });
     },
     onError: (err) => {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     },
   });
 
@@ -1935,12 +2468,17 @@ function WeeklyTab({
       <Card>
         <EmptyState
           icon={<ClipboardCheck size={22} />}
-          title={t('schedule_advanced.no_weekly', { defaultValue: 'No weekly plans yet' })}
-          description={t('schedule_advanced.no_weekly_desc', {
-            defaultValue: 'Weekly work plans capture the commitments due this week.',
+          title={t("schedule_advanced.no_weekly", {
+            defaultValue: "No weekly plans yet",
+          })}
+          description={t("schedule_advanced.no_weekly_desc", {
+            defaultValue:
+              "Weekly work plans capture the commitments due this week.",
           })}
           action={{
-            label: t('schedule_advanced.create_weekly', { defaultValue: 'Create Weekly Plan' }),
+            label: t("schedule_advanced.create_weekly", {
+              defaultValue: "Create Weekly Plan",
+            }),
             onClick: onCreate,
           }}
         />
@@ -1949,8 +2487,8 @@ function WeeklyTab({
   }
 
   const ppc = pctNumber(currentWeek?.ppc_percent);
-  const completed = commitments.filter((c) => c.status === 'completed').length;
-  const missed = commitments.filter((c) => c.status === 'missed').length;
+  const completed = commitments.filter((c) => c.status === "completed").length;
+  const missed = commitments.filter((c) => c.status === "missed").length;
 
   return (
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
@@ -1962,7 +2500,9 @@ function WeeklyTab({
             icon={<Plus size={14} />}
             onClick={onCreate}
           >
-            {t('schedule_advanced.create_weekly', { defaultValue: 'Create Weekly Plan' })}
+            {t("schedule_advanced.create_weekly", {
+              defaultValue: "Create Weekly Plan",
+            })}
           </Button>
         </div>
 
@@ -1971,11 +2511,25 @@ function WeeklyTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.week_start', { defaultValue: 'Week start' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.week_end', { defaultValue: 'Week end' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('schedule_advanced.ppc', { defaultValue: 'PPC' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-4 py-2.5 text-left">
+                    {t("schedule_advanced.week_start", {
+                      defaultValue: "Week start",
+                    })}
+                  </th>
+                  <th className="px-4 py-2.5 text-left">
+                    {t("schedule_advanced.week_end", {
+                      defaultValue: "Week end",
+                    })}
+                  </th>
+                  <th className="px-4 py-2.5 text-left">
+                    {t("common.status", { defaultValue: "Status" })}
+                  </th>
+                  <th className="px-4 py-2.5 text-right">
+                    {t("schedule_advanced.ppc", { defaultValue: "PPC" })}
+                  </th>
+                  <th className="px-4 py-2.5 text-right">
+                    {t("common.actions", { defaultValue: "Actions" })}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -1984,8 +2538,8 @@ function WeeklyTab({
                     key={w.id}
                     onClick={() => onSelect(w.id)}
                     className={clsx(
-                      'border-t border-border-light hover:bg-surface-secondary cursor-pointer',
-                      w.id === weekPlanId && 'bg-oe-blue-subtle/30',
+                      "border-t border-border-light hover:bg-surface-secondary cursor-pointer",
+                      w.id === weekPlanId && "bg-oe-blue-subtle/30",
                     )}
                   >
                     <td className="px-4 py-2 text-xs text-content-secondary">
@@ -2003,7 +2557,7 @@ function WeeklyTab({
                       {pctNumber(w.ppc_percent).toFixed(0)}%
                     </td>
                     <td className="px-4 py-2 text-right">
-                      {w.status === 'draft' && (
+                      {w.status === "draft" && (
                         <Button
                           size="sm"
                           variant="ghost"
@@ -2012,10 +2566,13 @@ function WeeklyTab({
                             commitMut.mutate(w.id);
                           }}
                         >
-                          {t('schedule_advanced.commit', { defaultValue: 'Commit' })}
+                          {t("schedule_advanced.commit", {
+                            defaultValue: "Commit",
+                          })}
                         </Button>
                       )}
-                      {(w.status === 'committed' || w.status === 'in_progress') && (
+                      {(w.status === "committed" ||
+                        w.status === "in_progress") && (
                         <Button
                           size="sm"
                           variant="ghost"
@@ -2024,7 +2581,9 @@ function WeeklyTab({
                             closeMut.mutate(w.id);
                           }}
                         >
-                          {t('schedule_advanced.close', { defaultValue: 'Close' })}
+                          {t("schedule_advanced.close", {
+                            defaultValue: "Close",
+                          })}
                         </Button>
                       )}
                     </td>
@@ -2039,16 +2598,20 @@ function WeeklyTab({
           <Card padding="none">
             <div className="flex items-center justify-between border-b border-border-light px-4 py-2.5 bg-surface-secondary/50">
               <h3 className="text-sm font-semibold">
-                {t('schedule_advanced.commitments', { defaultValue: 'Commitments' })}
+                {t("schedule_advanced.commitments", {
+                  defaultValue: "Commitments",
+                })}
               </h3>
               <Button
                 size="sm"
                 variant="secondary"
                 icon={<Plus size={12} />}
                 onClick={() => setAddCommitment(true)}
-                disabled={currentWeek?.status === 'closed'}
+                disabled={currentWeek?.status === "closed"}
               >
-                {t('schedule_advanced.add_commitment', { defaultValue: 'Add commitment' })}
+                {t("schedule_advanced.add_commitment", {
+                  defaultValue: "Add commitment",
+                })}
               </Button>
             </div>
             {commitmentsLoading ? (
@@ -2058,14 +2621,14 @@ function WeeklyTab({
             ) : commitmentsError ? (
               <EmptyState
                 icon={<AlertCircle size={20} strokeWidth={1.5} />}
-                title={t('common.error', { defaultValue: 'Error' })}
-                description={t('schedule_advanced.commitments_load_error', {
-                  defaultValue: 'Failed to load commitments. Please try again.',
+                title={t("common.error", { defaultValue: "Error" })}
+                description={t("schedule_advanced.commitments_load_error", {
+                  defaultValue: "Failed to load commitments. Please try again.",
                 })}
                 action={
                   onRetryCommitments
                     ? {
-                        label: t('common.retry', { defaultValue: 'Retry' }),
+                        label: t("common.retry", { defaultValue: "Retry" }),
                         onClick: onRetryCommitments,
                       }
                     : undefined
@@ -2074,12 +2637,17 @@ function WeeklyTab({
             ) : commitments.length === 0 ? (
               <EmptyState
                 icon={<ClipboardCheck size={20} />}
-                title={t('schedule_advanced.no_commitments', { defaultValue: 'No commitments' })}
-                description={t('schedule_advanced.no_commitments_desc', {
-                  defaultValue: 'Add commitments to this week to track progress.',
+                title={t("schedule_advanced.no_commitments", {
+                  defaultValue: "No commitments",
+                })}
+                description={t("schedule_advanced.no_commitments_desc", {
+                  defaultValue:
+                    "Add commitments to this week to track progress.",
                 })}
                 action={{
-                  label: t('schedule_advanced.add_commitment', { defaultValue: 'Add commitment' }),
+                  label: t("schedule_advanced.add_commitment", {
+                    defaultValue: "Add commitment",
+                  }),
                   onClick: () => setAddCommitment(true),
                 }}
               />
@@ -2088,20 +2656,35 @@ function WeeklyTab({
                 <table className="w-full text-sm">
                   <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                     <tr>
-                      <th className="px-4 py-2 text-left">{t('schedule_advanced.crew', { defaultValue: 'Crew' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule_advanced.promised', { defaultValue: 'Promised' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule_advanced.actual', { defaultValue: 'Actual' })}</th>
-                      <th className="px-4 py-2 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                      <th className="px-4 py-2 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                      <th className="px-4 py-2 text-left">
+                        {t("schedule_advanced.crew", { defaultValue: "Crew" })}
+                      </th>
+                      <th className="px-4 py-2 text-right">
+                        {t("schedule_advanced.promised", {
+                          defaultValue: "Promised",
+                        })}
+                      </th>
+                      <th className="px-4 py-2 text-right">
+                        {t("schedule_advanced.actual", {
+                          defaultValue: "Actual",
+                        })}
+                      </th>
+                      <th className="px-4 py-2 text-left">
+                        {t("common.status", { defaultValue: "Status" })}
+                      </th>
+                      <th className="px-4 py-2 text-right">
+                        {t("common.actions", { defaultValue: "Actions" })}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {commitments.map((c) => {
-                      const canCommit = c.status === 'planned' || c.status === 'at_risk';
+                      const canCommit =
+                        c.status === "planned" || c.status === "at_risk";
                       const canResolve =
-                        c.status === 'committed' ||
-                        c.status === 'in_progress' ||
-                        c.status === 'at_risk';
+                        c.status === "committed" ||
+                        c.status === "in_progress" ||
+                        c.status === "at_risk";
                       const busy =
                         (commitCommitmentMut.isPending &&
                           commitCommitmentMut.variables === c.id) ||
@@ -2110,13 +2693,13 @@ function WeeklyTab({
                       return (
                         <tr key={c.id} className="border-t border-border-light">
                           <td className="px-4 py-2 truncate max-w-[200px]">
-                            {c.worker_or_crew || '—'}
+                            {c.worker_or_crew || "—"}
                           </td>
                           <td className="px-4 py-2 text-right font-mono text-xs">
                             {String(c.promised_qty)} {c.unit}
                           </td>
                           <td className="px-4 py-2 text-right font-mono text-xs">
-                            {c.actual_qty != null ? String(c.actual_qty) : '—'}
+                            {c.actual_qty != null ? String(c.actual_qty) : "—"}
                           </td>
                           <td className="px-4 py-2">
                             <Badge variant={COMMITMENT_VARIANT[c.status]} dot>
@@ -2130,9 +2713,13 @@ function WeeklyTab({
                                   size="sm"
                                   variant="ghost"
                                   loading={busy}
-                                  onClick={() => commitCommitmentMut.mutate(c.id)}
+                                  onClick={() =>
+                                    commitCommitmentMut.mutate(c.id)
+                                  }
                                 >
-                                  {t('schedule_advanced.commit', { defaultValue: 'Commit' })}
+                                  {t("schedule_advanced.commit", {
+                                    defaultValue: "Commit",
+                                  })}
                                 </Button>
                               )}
                               {canResolve && (
@@ -2142,15 +2729,22 @@ function WeeklyTab({
                                     variant="ghost"
                                     icon={<Check size={12} />}
                                     loading={busy}
-                                    onClick={() => completeCommitmentMut.mutate(c.id)}
-                                    aria-label={t('schedule_advanced.complete', { defaultValue: 'Complete' })}
+                                    onClick={() =>
+                                      completeCommitmentMut.mutate(c.id)
+                                    }
+                                    aria-label={t(
+                                      "schedule_advanced.complete",
+                                      { defaultValue: "Complete" },
+                                    )}
                                   />
                                   <Button
                                     size="sm"
                                     variant="ghost"
                                     onClick={() => setMissTarget(c)}
                                   >
-                                    {t('schedule_advanced.miss', { defaultValue: 'Miss' })}
+                                    {t("schedule_advanced.miss", {
+                                      defaultValue: "Miss",
+                                    })}
                                   </Button>
                                 </>
                               )}
@@ -2169,7 +2763,9 @@ function WeeklyTab({
 
       <Card padding="md" className="h-fit">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary mb-3">
-          {t('schedule_advanced.ppc_title', { defaultValue: 'Percent Plan Complete' })}
+          {t("schedule_advanced.ppc_title", {
+            defaultValue: "Percent Plan Complete",
+          })}
         </h3>
         <div className="flex flex-col items-center justify-center py-6">
           <div className="text-5xl font-bold text-oe-blue">
@@ -2182,27 +2778,31 @@ function WeeklyTab({
             />
           </div>
           <p className="mt-4 text-xs text-content-tertiary">
-            {t('schedule_advanced.this_week', { defaultValue: 'This week' })}
+            {t("schedule_advanced.this_week", { defaultValue: "This week" })}
           </p>
         </div>
         <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
           <div>
             <dt className="text-2xs uppercase tracking-wide text-content-tertiary">
-              {t('schedule_advanced.total', { defaultValue: 'Total' })}
+              {t("schedule_advanced.total", { defaultValue: "Total" })}
             </dt>
             <dd className="text-base font-semibold">{commitments.length}</dd>
           </div>
           <div>
             <dt className="text-2xs uppercase tracking-wide text-content-tertiary">
-              {t('schedule_advanced.completed', { defaultValue: 'Completed' })}
+              {t("schedule_advanced.completed", { defaultValue: "Completed" })}
             </dt>
-            <dd className="text-base font-semibold text-semantic-success">{completed}</dd>
+            <dd className="text-base font-semibold text-semantic-success">
+              {completed}
+            </dd>
           </div>
           <div>
             <dt className="text-2xs uppercase tracking-wide text-content-tertiary">
-              {t('schedule_advanced.missed', { defaultValue: 'Missed' })}
+              {t("schedule_advanced.missed", { defaultValue: "Missed" })}
             </dt>
-            <dd className="text-base font-semibold text-semantic-error">{missed}</dd>
+            <dd className="text-base font-semibold text-semantic-error">
+              {missed}
+            </dd>
           </div>
         </dl>
       </Card>
@@ -2238,10 +2838,10 @@ function AddCommitmentModal({
 }) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
-  const [taskRef, setTaskRef] = useState('');
-  const [crew, setCrew] = useState('');
-  const [qty, setQty] = useState('');
-  const [unit, setUnit] = useState('');
+  const [taskRef, setTaskRef] = useState("");
+  const [crew, setCrew] = useState("");
+  const [qty, setQty] = useState("");
+  const [unit, setUnit] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -2253,8 +2853,8 @@ function AddCommitmentModal({
   const submit = async () => {
     if (!isUuid(taskRef)) {
       setError(
-        t('schedule_advanced.err_task_ref', {
-          defaultValue: 'A valid task reference (UUID) is required.',
+        t("schedule_advanced.err_task_ref", {
+          defaultValue: "A valid task reference (UUID) is required.",
         }),
       );
       return;
@@ -2270,13 +2870,15 @@ function AddCommitmentModal({
         unit: unit || undefined,
       });
       addToast({
-        type: 'success',
-        title: t('schedule_advanced.commitment_created', { defaultValue: 'Commitment added' }),
+        type: "success",
+        title: t("schedule_advanced.commitment_created", {
+          defaultValue: "Commitment added",
+        }),
       });
       onSaved();
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -2284,10 +2886,12 @@ function AddCommitmentModal({
 
   return (
     <ModalShell
-      title={t('schedule_advanced.add_commitment', { defaultValue: 'Add commitment' })}
-      subtitle={t('schedule_advanced.add_commitment_subtitle', {
+      title={t("schedule_advanced.add_commitment", {
+        defaultValue: "Add commitment",
+      })}
+      subtitle={t("schedule_advanced.add_commitment_subtitle", {
         defaultValue:
-          'A weekly promise made by a trade foreman. Link it to the task it delivers and the promised quantity.',
+          "A weekly promise made by a trade foreman. Link it to the task it delivers and the promised quantity.",
       })}
       onClose={onClose}
       onSubmit={submit}
@@ -2301,7 +2905,10 @@ function AddCommitmentModal({
       )}
       <div>
         <label className={labelCls}>
-          {t('schedule_advanced.task_ref', { defaultValue: 'Task reference (UUID)' })} *
+          {t("schedule_advanced.task_ref", {
+            defaultValue: "Task reference (UUID)",
+          })}{" "}
+          *
         </label>
         <input
           value={taskRef}
@@ -2312,17 +2919,23 @@ function AddCommitmentModal({
         />
       </div>
       <div>
-        <label className={labelCls}>{t('schedule_advanced.crew', { defaultValue: 'Crew' })}</label>
+        <label className={labelCls}>
+          {t("schedule_advanced.crew", { defaultValue: "Crew" })}
+        </label>
         <input
           value={crew}
           onChange={(e) => setCrew(e.target.value)}
           className={inputCls}
-          placeholder={t('schedule_advanced.crew_placeholder', { defaultValue: 'e.g. Concrete crew A' })}
+          placeholder={t("schedule_advanced.crew_placeholder", {
+            defaultValue: "e.g. Concrete crew A",
+          })}
         />
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className={labelCls}>{t('schedule_advanced.promised', { defaultValue: 'Promised' })}</label>
+          <label className={labelCls}>
+            {t("schedule_advanced.promised", { defaultValue: "Promised" })}
+          </label>
           <input
             type="number"
             min={0}
@@ -2332,7 +2945,9 @@ function AddCommitmentModal({
           />
         </div>
         <div>
-          <label className={labelCls}>{t('schedule_advanced.unit', { defaultValue: 'Unit' })}</label>
+          <label className={labelCls}>
+            {t("schedule_advanced.unit", { defaultValue: "Unit" })}
+          </label>
           <input
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
@@ -2346,15 +2961,15 @@ function AddCommitmentModal({
 }
 
 const RNC_CATEGORIES: RNCCategory[] = [
-  'manpower',
-  'material',
-  'equipment',
-  'info',
-  'weather',
-  'predecessor',
-  'changes',
-  'quality',
-  'other',
+  "manpower",
+  "material",
+  "equipment",
+  "info",
+  "weather",
+  "predecessor",
+  "changes",
+  "quality",
+  "other",
 ];
 
 function MissCommitmentDialog({
@@ -2369,13 +2984,13 @@ function MissCommitmentDialog({
   loading: boolean;
 }) {
   const { t } = useTranslation();
-  const [category, setCategory] = useState<RNCCategory>('manpower');
-  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<RNCCategory>("manpower");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     if (commitment) {
-      setCategory('manpower');
-      setDescription('');
+      setCategory("manpower");
+      setDescription("");
     }
   }, [commitment]);
 
@@ -2383,10 +2998,12 @@ function MissCommitmentDialog({
 
   return (
     <ModalShell
-      title={t('schedule_advanced.miss_commitment_title', { defaultValue: 'Mark commitment missed' })}
-      subtitle={t('schedule_advanced.miss_commitment_subtitle', {
+      title={t("schedule_advanced.miss_commitment_title", {
+        defaultValue: "Mark commitment missed",
+      })}
+      subtitle={t("schedule_advanced.miss_commitment_subtitle", {
         defaultValue:
-          'Last Planner® requires a documented Reason-for-Non-Completion. This feeds the RNC Pareto for root-cause analysis.',
+          "Last Planner® requires a documented Reason-for-Non-Completion. This feeds the RNC Pareto for root-cause analysis.",
       })}
       onClose={onCancel}
       onSubmit={() => onConfirm(category, description)}
@@ -2394,7 +3011,10 @@ function MissCommitmentDialog({
     >
       <div>
         <label className={labelCls}>
-          {t('schedule_advanced.rnc_category', { defaultValue: 'Reason category' })} *
+          {t("schedule_advanced.rnc_category", {
+            defaultValue: "Reason category",
+          })}{" "}
+          *
         </label>
         <select
           value={category}
@@ -2409,14 +3029,16 @@ function MissCommitmentDialog({
         </select>
       </div>
       <div>
-        <label className={labelCls}>{t('common.description', { defaultValue: 'Description' })}</label>
+        <label className={labelCls}>
+          {t("common.description", { defaultValue: "Description" })}
+        </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          className={clsx(inputCls, 'h-auto py-2')}
-          placeholder={t('schedule_advanced.rnc_desc_placeholder', {
-            defaultValue: 'What blocked completion?',
+          className={clsx(inputCls, "h-auto py-2")}
+          placeholder={t("schedule_advanced.rnc_desc_placeholder", {
+            defaultValue: "What blocked completion?",
           })}
         />
       </div>
@@ -2454,25 +3076,35 @@ function ConstraintsTab({
   const clearMut = useMutation({
     mutationFn: (id: string) => clearConstraint(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'constraints'] });
-      addToast({ type: 'success', title: t('schedule_advanced.constraint_cleared', { defaultValue: 'Constraint cleared' }) });
+      qc.invalidateQueries({ queryKey: ["schedule-advanced", "constraints"] });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.constraint_cleared", {
+          defaultValue: "Constraint cleared",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const escalateMut = useMutation({
     mutationFn: (id: string) => escalateConstraint(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'constraints'] });
-      addToast({ type: 'success', title: t('schedule_advanced.constraint_escalated', { defaultValue: 'Constraint escalated' }) });
+      qc.invalidateQueries({ queryKey: ["schedule-advanced", "constraints"] });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.constraint_escalated", {
+          defaultValue: "Constraint escalated",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteConstraint(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'constraints'] });
+      qc.invalidateQueries({ queryKey: ["schedule-advanced", "constraints"] });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   if (lookAheads.length === 0) {
@@ -2480,17 +3112,20 @@ function ConstraintsTab({
       <Card>
         <EmptyState
           icon={<AlertCircle size={22} />}
-          title={t('schedule_advanced.no_la_for_constraints', { defaultValue: 'No look-aheads' })}
-          description={t('schedule_advanced.no_la_for_constraints_desc', {
-            defaultValue: 'Constraints belong to a look-ahead — create one first.',
+          title={t("schedule_advanced.no_la_for_constraints", {
+            defaultValue: "No look-aheads",
+          })}
+          description={t("schedule_advanced.no_la_for_constraints_desc", {
+            defaultValue:
+              "Constraints belong to a look-ahead — create one first.",
           })}
         />
       </Card>
     );
   }
 
-  const openCount = constraints.filter((c) => c.status === 'open').length;
-  const clearedCount = constraints.filter((c) => c.status === 'cleared').length;
+  const openCount = constraints.filter((c) => c.status === "open").length;
+  const clearedCount = constraints.filter((c) => c.status === "cleared").length;
 
   return (
     <div className="space-y-4">
@@ -2498,7 +3133,7 @@ function ConstraintsTab({
         <select
           value={lookAheadId}
           onChange={(e) => onSelectLA(e.target.value)}
-          className={clsx(inputCls, 'max-w-[260px]')}
+          className={clsx(inputCls, "max-w-[260px]")}
         >
           {lookAheads.map((la) => (
             <option key={la.id} value={la.id}>
@@ -2509,12 +3144,20 @@ function ConstraintsTab({
         <select
           value={filter}
           onChange={(e) => onFilter(e.target.value)}
-          className={clsx(inputCls, 'max-w-[180px]')}
+          className={clsx(inputCls, "max-w-[180px]")}
         >
           <option value="">
-            {t('common.all_statuses', { defaultValue: 'All statuses' })}
+            {t("common.all_statuses", { defaultValue: "All statuses" })}
           </option>
-          {(['open', 'in_progress', 'cleared', 'escalated', 'cannot_clear'] as const).map((s) => (
+          {(
+            [
+              "open",
+              "in_progress",
+              "cleared",
+              "escalated",
+              "cannot_clear",
+            ] as const
+          ).map((s) => (
             <option key={s} value={s}>
               {s}
             </option>
@@ -2522,10 +3165,16 @@ function ConstraintsTab({
         </select>
         <div className="flex items-center gap-2 ml-auto text-xs">
           <span className="rounded-md bg-semantic-warning-bg px-2 py-1 text-[#b45309]">
-            {t('schedule_advanced.open_count', { count: openCount, defaultValue: '{{count}} open' })}
+            {t("schedule_advanced.open_count", {
+              count: openCount,
+              defaultValue: "{{count}} open",
+            })}
           </span>
           <span className="rounded-md bg-semantic-success-bg px-2 py-1 text-semantic-success">
-            {t('schedule_advanced.cleared_count', { count: clearedCount, defaultValue: '{{count}} cleared' })}
+            {t("schedule_advanced.cleared_count", {
+              count: clearedCount,
+              defaultValue: "{{count}} cleared",
+            })}
           </span>
         </div>
       </div>
@@ -2538,14 +3187,14 @@ function ConstraintsTab({
         ) : isError ? (
           <EmptyState
             icon={<AlertCircle size={22} strokeWidth={1.5} />}
-            title={t('common.error', { defaultValue: 'Error' })}
-            description={t('schedule_advanced.load_error', {
-              defaultValue: 'Failed to load schedule data. Please try again.',
+            title={t("common.error", { defaultValue: "Error" })}
+            description={t("schedule_advanced.load_error", {
+              defaultValue: "Failed to load schedule data. Please try again.",
             })}
             action={
               onRetry
                 ? {
-                    label: t('common.retry', { defaultValue: 'Retry' }),
+                    label: t("common.retry", { defaultValue: "Retry" }),
                     onClick: onRetry,
                   }
                 : undefined
@@ -2554,9 +3203,11 @@ function ConstraintsTab({
         ) : constraints.length === 0 ? (
           <EmptyState
             icon={<AlertCircle size={22} />}
-            title={t('schedule_advanced.no_constraints', { defaultValue: 'No constraints' })}
-            description={t('schedule_advanced.no_constraints_desc', {
-              defaultValue: 'Add constraints from the look-ahead detail view.',
+            title={t("schedule_advanced.no_constraints", {
+              defaultValue: "No constraints",
+            })}
+            description={t("schedule_advanced.no_constraints_desc", {
+              defaultValue: "Add constraints from the look-ahead detail view.",
             })}
           />
         ) : (
@@ -2564,24 +3215,43 @@ function ConstraintsTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.type', { defaultValue: 'Type' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('common.description', { defaultValue: 'Description' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.target_clear', { defaultValue: 'Target clear' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-4 py-2.5 text-left">
+                    {t("schedule_advanced.type", { defaultValue: "Type" })}
+                  </th>
+                  <th className="px-4 py-2.5 text-left">
+                    {t("common.description", { defaultValue: "Description" })}
+                  </th>
+                  <th className="px-4 py-2.5 text-left">
+                    {t("schedule_advanced.target_clear", {
+                      defaultValue: "Target clear",
+                    })}
+                  </th>
+                  <th className="px-4 py-2.5 text-left">
+                    {t("common.status", { defaultValue: "Status" })}
+                  </th>
+                  <th className="px-4 py-2.5 text-right">
+                    {t("common.actions", { defaultValue: "Actions" })}
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {constraints.map((c) => (
-                  <tr key={c.id} className="border-t border-border-light hover:bg-surface-secondary">
+                  <tr
+                    key={c.id}
+                    className="border-t border-border-light hover:bg-surface-secondary"
+                  >
                     <td className="px-4 py-2 text-xs text-content-secondary">
                       {c.constraint_type}
                     </td>
                     <td className="px-4 py-2 truncate max-w-[360px]">
-                      {c.description || '—'}
+                      {c.description || "—"}
                     </td>
                     <td className="px-4 py-2 text-xs text-content-secondary">
-                      {c.target_clear_date ? <DateDisplay value={c.target_clear_date} /> : '—'}
+                      {c.target_clear_date ? (
+                        <DateDisplay value={c.target_clear_date} />
+                      ) : (
+                        "—"
+                      )}
                     </td>
                     <td className="px-4 py-2">
                       <Badge variant={CONSTRAINT_VARIANT[c.status]} dot>
@@ -2590,24 +3260,30 @@ function ConstraintsTab({
                     </td>
                     <td className="px-4 py-2">
                       <div className="flex justify-end gap-1">
-                        {c.status !== 'cleared' && (
+                        {c.status !== "cleared" && (
                           <Button
                             size="sm"
                             variant="ghost"
                             icon={<Check size={12} />}
                             onClick={() => clearMut.mutate(c.id)}
-                            aria-label={t('schedule_advanced.clear', { defaultValue: 'Clear' })}
+                            aria-label={t("schedule_advanced.clear", {
+                              defaultValue: "Clear",
+                            })}
                           >
-                            {t('schedule_advanced.clear', { defaultValue: 'Clear' })}
+                            {t("schedule_advanced.clear", {
+                              defaultValue: "Clear",
+                            })}
                           </Button>
                         )}
-                        {c.status === 'open' && (
+                        {c.status === "open" && (
                           <Button
                             size="sm"
                             variant="ghost"
                             icon={<ArrowUpCircle size={12} />}
                             onClick={() => escalateMut.mutate(c.id)}
-                            aria-label={t('schedule_advanced.escalate', { defaultValue: 'Escalate' })}
+                            aria-label={t("schedule_advanced.escalate", {
+                              defaultValue: "Escalate",
+                            })}
                           />
                         )}
                         <Button
@@ -2615,7 +3291,9 @@ function ConstraintsTab({
                           variant="ghost"
                           icon={<Trash2 size={12} />}
                           onClick={() => deleteMut.mutate(c.id)}
-                          aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                          aria-label={t("common.delete", {
+                            defaultValue: "Delete",
+                          })}
                         />
                       </div>
                     </td>
@@ -2646,7 +3324,7 @@ function BaselinesTab({
   onCapture: () => void;
 }) {
   const { t } = useTranslation();
-  const [compareId, setCompareId] = useState<string>('');
+  const [compareId, setCompareId] = useState<string>("");
   const [deltaEntries, setDeltaEntries] = useState<BaselineDeltaEntry[]>([]);
   const [delaying, setDelaying] = useState(0);
   const [accelerating, setAccelerating] = useState(0);
@@ -2662,7 +3340,7 @@ function BaselinesTab({
       setDelaying(res.delayed_tasks);
       setAccelerating(res.accelerated_tasks);
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setComparing(false);
     }
@@ -2685,12 +3363,17 @@ function BaselinesTab({
       <Card>
         <EmptyState
           icon={<GitBranch size={22} />}
-          title={t('schedule_advanced.no_baselines', { defaultValue: 'No baselines yet' })}
-          description={t('schedule_advanced.no_baselines_desc', {
-            defaultValue: 'Capture a baseline to track variance against today’s schedule.',
+          title={t("schedule_advanced.no_baselines", {
+            defaultValue: "No baselines yet",
+          })}
+          description={t("schedule_advanced.no_baselines_desc", {
+            defaultValue:
+              "Capture a baseline to track variance against today’s schedule.",
           })}
           action={{
-            label: t('schedule_advanced.capture_baseline', { defaultValue: 'Capture Baseline' }),
+            label: t("schedule_advanced.capture_baseline", {
+              defaultValue: "Capture Baseline",
+            }),
             onClick: onCapture,
           }}
         />
@@ -2707,7 +3390,9 @@ function BaselinesTab({
           icon={<Plus size={14} />}
           onClick={onCapture}
         >
-          {t('schedule_advanced.capture_baseline', { defaultValue: 'Capture Baseline' })}
+          {t("schedule_advanced.capture_baseline", {
+            defaultValue: "Capture Baseline",
+          })}
         </Button>
       </div>
       <Card padding="none">
@@ -2715,10 +3400,22 @@ function BaselinesTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">{t('common.name', { defaultValue: 'Name' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.captured_at', { defaultValue: 'Captured' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('schedule_advanced.delta', { defaultValue: 'Delta vs current' })}</th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("common.name", { defaultValue: "Name" })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("schedule_advanced.captured_at", {
+                    defaultValue: "Captured",
+                  })}
+                </th>
+                <th className="px-4 py-2.5 text-left">
+                  {t("common.status", { defaultValue: "Status" })}
+                </th>
+                <th className="px-4 py-2.5 text-right">
+                  {t("schedule_advanced.delta", {
+                    defaultValue: "Delta vs current",
+                  })}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -2726,22 +3423,26 @@ function BaselinesTab({
                 <tr
                   key={b.id}
                   className={clsx(
-                    'border-t border-border-light hover:bg-surface-secondary',
-                    b.id === compareId && 'bg-oe-blue-subtle/30',
+                    "border-t border-border-light hover:bg-surface-secondary",
+                    b.id === compareId && "bg-oe-blue-subtle/30",
                   )}
                 >
                   <td className="px-4 py-2 font-medium">{b.name}</td>
                   <td className="px-4 py-2 text-xs text-content-secondary">
-                    {b.captured_at ? <DateDisplay value={b.captured_at} /> : '—'}
+                    {b.captured_at ? (
+                      <DateDisplay value={b.captured_at} />
+                    ) : (
+                      "—"
+                    )}
                   </td>
                   <td className="px-4 py-2">
                     <Badge
                       variant={
-                        b.status === 'active'
-                          ? 'success'
-                          : b.status === 'superseded'
-                            ? 'warning'
-                            : 'neutral'
+                        b.status === "active"
+                          ? "success"
+                          : b.status === "superseded"
+                            ? "warning"
+                            : "neutral"
                       }
                       dot
                     >
@@ -2755,7 +3456,9 @@ function BaselinesTab({
                       onClick={() => compare(b.id)}
                       loading={comparing && b.id === compareId}
                     >
-                      {t('schedule_advanced.compare', { defaultValue: 'Compare' })}
+                      {t("schedule_advanced.compare", {
+                        defaultValue: "Compare",
+                      })}
                     </Button>
                   </td>
                 </tr>
@@ -2768,26 +3471,36 @@ function BaselinesTab({
       {compareId && (
         <Card padding="md">
           <h3 className="text-sm font-semibold mb-3">
-            {t('schedule_advanced.variance_summary', { defaultValue: 'Variance summary' })}
+            {t("schedule_advanced.variance_summary", {
+              defaultValue: "Variance summary",
+            })}
           </h3>
           <dl className="grid grid-cols-3 gap-3 text-center">
             <div>
               <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('schedule_advanced.tasks_total', { defaultValue: 'Total tasks' })}
+                {t("schedule_advanced.tasks_total", {
+                  defaultValue: "Total tasks",
+                })}
               </dt>
               <dd className="text-xl font-semibold">{deltaEntries.length}</dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('schedule_advanced.delayed', { defaultValue: 'Delayed' })}
+                {t("schedule_advanced.delayed", { defaultValue: "Delayed" })}
               </dt>
-              <dd className="text-xl font-semibold text-semantic-error">{delaying}</dd>
+              <dd className="text-xl font-semibold text-semantic-error">
+                {delaying}
+              </dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('schedule_advanced.accelerated', { defaultValue: 'Accelerated' })}
+                {t("schedule_advanced.accelerated", {
+                  defaultValue: "Accelerated",
+                })}
               </dt>
-              <dd className="text-xl font-semibold text-semantic-success">{accelerating}</dd>
+              <dd className="text-xl font-semibold text-semantic-success">
+                {accelerating}
+              </dd>
             </div>
           </dl>
         </Card>
@@ -2832,7 +3545,7 @@ function ModalShell({
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -2840,7 +3553,7 @@ function ModalShell({
             loading={busy}
             disabled={disabled}
           >
-            {t('common.create', { defaultValue: 'Create' })}
+            {t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
@@ -2863,25 +3576,29 @@ function MasterFormModal({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const isEdit = !!master;
-  const [name, setName] = useState(master?.name ?? '');
+  const [name, setName] = useState(master?.name ?? "");
   const [start, setStart] = useState(master?.planned_start ?? todayIso());
   const [finish, setFinish] = useState(master?.planned_finish ?? todayIso(180));
-  const [status, setStatus] = useState<'active' | 'archived'>(
-    master?.status ?? 'active',
+  const [status, setStatus] = useState<"active" | "archived">(
+    master?.status ?? "active",
   );
-  const [notes, setNotes] = useState(master?.notes ?? '');
+  const [notes, setNotes] = useState(master?.notes ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const validate = (): string | null => {
     if (!name.trim()) {
-      return t('schedule_advanced.err_master_name_required', {
-        defaultValue: 'Master schedule name is required.',
+      return t("schedule_advanced.err_master_name_required", {
+        defaultValue: "Master schedule name is required.",
       });
     }
-    if (start && finish && new Date(finish).getTime() < new Date(start).getTime()) {
-      return t('schedule_advanced.err_finish_after_start', {
-        defaultValue: 'Planned finish must be on or after planned start.',
+    if (
+      start &&
+      finish &&
+      new Date(finish).getTime() < new Date(start).getTime()
+    ) {
+      return t("schedule_advanced.err_finish_after_start", {
+        defaultValue: "Planned finish must be on or after planned start.",
       });
     }
     return null;
@@ -2905,9 +3622,9 @@ function MasterFormModal({
           notes,
         });
         addToast({
-          type: 'success',
-          title: t('schedule_advanced.master_updated', {
-            defaultValue: 'Master schedule updated',
+          type: "success",
+          title: t("schedule_advanced.master_updated", {
+            defaultValue: "Master schedule updated",
           }),
         });
       } else {
@@ -2919,16 +3636,18 @@ function MasterFormModal({
           notes,
         });
         addToast({
-          type: 'success',
-          title: t('schedule_advanced.master_created', {
-            defaultValue: 'Master schedule created',
+          type: "success",
+          title: t("schedule_advanced.master_created", {
+            defaultValue: "Master schedule created",
           }),
         });
       }
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'master', projectId] });
+      qc.invalidateQueries({
+        queryKey: ["schedule-advanced", "master", projectId],
+      });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -2940,19 +3659,23 @@ function MasterFormModal({
       onClose={onClose}
       title={
         isEdit
-          ? t('schedule_advanced.edit_master', { defaultValue: 'Edit master schedule' })
-          : t('schedule_advanced.create_master', { defaultValue: 'New master schedule' })
+          ? t("schedule_advanced.edit_master", {
+              defaultValue: "Edit master schedule",
+            })
+          : t("schedule_advanced.create_master", {
+              defaultValue: "New master schedule",
+            })
       }
-      subtitle={t('schedule_advanced.create_master_subtitle', {
+      subtitle={t("schedule_advanced.create_master_subtitle", {
         defaultValue:
-          'The master schedule is the top-level plan for this project. Phase plans, weekly plans and look-aheads all roll up to it.',
+          "The master schedule is the top-level plan for this project. Phase plans, weekly plans and look-aheads all roll up to it.",
       })}
       size="lg"
       busy={busy}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -2961,8 +3684,8 @@ function MasterFormModal({
             disabled={!name.trim()}
           >
             {isEdit
-              ? t('common.save', { defaultValue: 'Save' })
-              : t('common.create', { defaultValue: 'Create' })}
+              ? t("common.save", { defaultValue: "Save" })
+              : t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
@@ -2974,13 +3697,15 @@ function MasterFormModal({
           </div>
         )}
         <div>
-          <label className={labelCls}>{t('common.name', { defaultValue: 'Name' })} *</label>
+          <label className={labelCls}>
+            {t("common.name", { defaultValue: "Name" })} *
+          </label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             className={inputCls}
-            placeholder={t('schedule_advanced.master_name_placeholder', {
-              defaultValue: 'e.g. Construction master schedule',
+            placeholder={t("schedule_advanced.master_name_placeholder", {
+              defaultValue: "e.g. Construction master schedule",
             })}
             autoFocus
           />
@@ -2988,7 +3713,9 @@ function MasterFormModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>
-              {t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}
+              {t("schedule_advanced.planned_start", {
+                defaultValue: "Planned start",
+              })}
             </label>
             <input
               type="date"
@@ -2999,7 +3726,9 @@ function MasterFormModal({
           </div>
           <div>
             <label className={labelCls}>
-              {t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}
+              {t("schedule_advanced.planned_finish", {
+                defaultValue: "Planned finish",
+              })}
             </label>
             <input
               type="date"
@@ -3011,36 +3740,46 @@ function MasterFormModal({
         </div>
         {isEdit && (
           <div>
-            <label className={labelCls}>{t('common.status', { defaultValue: 'Status' })}</label>
+            <label className={labelCls}>
+              {t("common.status", { defaultValue: "Status" })}
+            </label>
             <select
               value={status}
-              onChange={(e) => setStatus(e.target.value as 'active' | 'archived')}
+              onChange={(e) =>
+                setStatus(e.target.value as "active" | "archived")
+              }
               className={inputCls}
             >
               <option value="active">
-                {t('schedule_advanced.master_status.active', { defaultValue: 'Active' })}
+                {t("schedule_advanced.master_status.active", {
+                  defaultValue: "Active",
+                })}
               </option>
               <option value="archived">
-                {t('schedule_advanced.master_status.archived', { defaultValue: 'Archived' })}
+                {t("schedule_advanced.master_status.archived", {
+                  defaultValue: "Archived",
+                })}
               </option>
             </select>
             <p className="mt-1 text-xs text-content-tertiary">
-              {t('schedule_advanced.master_status_hint', {
+              {t("schedule_advanced.master_status_hint", {
                 defaultValue:
-                  'Archive a schedule to keep its history without it being the working plan. Archived schedules can be reactivated here at any time.',
+                  "Archive a schedule to keep its history without it being the working plan. Archived schedules can be reactivated here at any time.",
               })}
             </p>
           </div>
         )}
         <div>
-          <label className={labelCls}>{t('common.notes', { defaultValue: 'Notes' })}</label>
+          <label className={labelCls}>
+            {t("common.notes", { defaultValue: "Notes" })}
+          </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className={clsx(inputCls, 'h-auto py-2')}
-            placeholder={t('schedule_advanced.master_notes_placeholder', {
-              defaultValue: 'Scope, contract reference, key milestones…',
+            className={clsx(inputCls, "h-auto py-2")}
+            placeholder={t("schedule_advanced.master_notes_placeholder", {
+              defaultValue: "Scope, contract reference, key milestones…",
             })}
           />
         </div>
@@ -3071,11 +3810,18 @@ function CreateWeeklyModal({
         week_start_date: start,
         week_end_date: end,
       });
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'weekly', masterId] });
-      addToast({ type: 'success', title: t('schedule_advanced.week_created', { defaultValue: 'Weekly plan created' }) });
+      qc.invalidateQueries({
+        queryKey: ["schedule-advanced", "weekly", masterId],
+      });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.week_created", {
+          defaultValue: "Weekly plan created",
+        }),
+      });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -3083,10 +3829,12 @@ function CreateWeeklyModal({
 
   return (
     <ModalShell
-      title={t('schedule_advanced.create_weekly', { defaultValue: 'New weekly work plan' })}
-      subtitle={t('schedule_advanced.create_weekly_subtitle', {
+      title={t("schedule_advanced.create_weekly", {
+        defaultValue: "New weekly work plan",
+      })}
+      subtitle={t("schedule_advanced.create_weekly_subtitle", {
         defaultValue:
-          'Last Planner® weekly plan — pick the work week you want to commit to delivering.',
+          "Last Planner® weekly plan — pick the work week you want to commit to delivering.",
       })}
       onClose={onClose}
       onSubmit={submit}
@@ -3095,7 +3843,7 @@ function CreateWeeklyModal({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelCls}>
-            {t('schedule_advanced.week_start', { defaultValue: 'Week start' })}
+            {t("schedule_advanced.week_start", { defaultValue: "Week start" })}
           </label>
           <input
             type="date"
@@ -3106,7 +3854,7 @@ function CreateWeeklyModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('schedule_advanced.week_end', { defaultValue: 'Week end' })}
+            {t("schedule_advanced.week_end", { defaultValue: "Week end" })}
           </label>
           <input
             type="date"
@@ -3144,11 +3892,18 @@ function CreateLookAheadModal({
         period_end: end,
         window_weeks: weeks,
       });
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'look-aheads', masterId] });
-      addToast({ type: 'success', title: t('schedule_advanced.la_created', { defaultValue: 'Look-ahead created' }) });
+      qc.invalidateQueries({
+        queryKey: ["schedule-advanced", "look-aheads", masterId],
+      });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.la_created", {
+          defaultValue: "Look-ahead created",
+        }),
+      });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -3156,10 +3911,12 @@ function CreateLookAheadModal({
 
   return (
     <ModalShell
-      title={t('schedule_advanced.create_la', { defaultValue: 'New look-ahead plan' })}
-      subtitle={t('schedule_advanced.create_la_subtitle', {
+      title={t("schedule_advanced.create_la", {
+        defaultValue: "New look-ahead plan",
+      })}
+      subtitle={t("schedule_advanced.create_la_subtitle", {
         defaultValue:
-          '6-week rolling window of activities ready to be planned at the weekly level. Surfaces constraints that need clearing.',
+          "6-week rolling window of activities ready to be planned at the weekly level. Surfaces constraints that need clearing.",
       })}
       onClose={onClose}
       onSubmit={submit}
@@ -3168,7 +3925,9 @@ function CreateLookAheadModal({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelCls}>
-            {t('schedule_advanced.period_start', { defaultValue: 'Period start' })}
+            {t("schedule_advanced.period_start", {
+              defaultValue: "Period start",
+            })}
           </label>
           <input
             type="date"
@@ -3179,7 +3938,7 @@ function CreateLookAheadModal({
         </div>
         <div>
           <label className={labelCls}>
-            {t('schedule_advanced.period_end', { defaultValue: 'Period end' })}
+            {t("schedule_advanced.period_end", { defaultValue: "Period end" })}
           </label>
           <input
             type="date"
@@ -3191,7 +3950,9 @@ function CreateLookAheadModal({
       </div>
       <div>
         <label className={labelCls}>
-          {t('schedule_advanced.window_weeks', { defaultValue: 'Window (weeks)' })}
+          {t("schedule_advanced.window_weeks", {
+            defaultValue: "Window (weeks)",
+          })}
         </label>
         <input
           type="number"
@@ -3216,8 +3977,8 @@ function CreateBaselineModal({
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [name, setName] = useState('');
-  const [notes, setNotes] = useState('');
+  const [name, setName] = useState("");
+  const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
 
   const submit = async () => {
@@ -3225,14 +3986,21 @@ function CreateBaselineModal({
     try {
       await captureBaseline({
         master_schedule_id: masterId,
-        name: name || 'Baseline',
+        name: name || "Baseline",
         notes,
       });
-      qc.invalidateQueries({ queryKey: ['schedule-advanced', 'baselines', masterId] });
-      addToast({ type: 'success', title: t('schedule_advanced.baseline_created', { defaultValue: 'Baseline captured' }) });
+      qc.invalidateQueries({
+        queryKey: ["schedule-advanced", "baselines", masterId],
+      });
+      addToast({
+        type: "success",
+        title: t("schedule_advanced.baseline_created", {
+          defaultValue: "Baseline captured",
+        }),
+      });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -3240,8 +4008,10 @@ function CreateBaselineModal({
 
   return (
     <ModalShell
-      title={t('schedule_advanced.capture_baseline', { defaultValue: 'Capture baseline' })}
-      subtitle={t('schedule_advanced.capture_baseline_subtitle', {
+      title={t("schedule_advanced.capture_baseline", {
+        defaultValue: "Capture baseline",
+      })}
+      subtitle={t("schedule_advanced.capture_baseline_subtitle", {
         defaultValue:
           'Snapshot the current schedule so you can measure variance later. Pick a meaningful label, e.g. "Contract signed" or "Q2 rebaseline".',
       })}
@@ -3251,7 +4021,9 @@ function CreateBaselineModal({
       disabled={!name.trim()}
     >
       <div>
-        <label className={labelCls}>{t('common.name', { defaultValue: 'Name' })} *</label>
+        <label className={labelCls}>
+          {t("common.name", { defaultValue: "Name" })} *
+        </label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -3259,12 +4031,14 @@ function CreateBaselineModal({
         />
       </div>
       <div>
-        <label className={labelCls}>{t('common.notes', { defaultValue: 'Notes' })}</label>
+        <label className={labelCls}>
+          {t("common.notes", { defaultValue: "Notes" })}
+        </label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          className={clsx(inputCls, 'h-auto py-2')}
+          className={clsx(inputCls, "h-auto py-2")}
         />
       </div>
     </ModalShell>

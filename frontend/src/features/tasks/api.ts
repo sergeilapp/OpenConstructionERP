@@ -4,16 +4,27 @@
  * All endpoints are prefixed with /v1/tasks/.
  */
 
-import { apiGet, apiPost, apiPatch, triggerDownload, extractErrorMessageFromBody } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import {
+  apiGet,
+  apiPost,
+  apiPatch,
+  triggerDownload,
+  extractErrorMessageFromBody,
+} from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 /** Built-in task types. Custom category strings are also supported. */
-export type BuiltinTaskType = 'task' | 'topic' | 'information' | 'decision' | 'personal';
+export type BuiltinTaskType =
+  | "task"
+  | "topic"
+  | "information"
+  | "decision"
+  | "personal";
 export type TaskType = BuiltinTaskType | (string & {});
-export type TaskStatus = 'draft' | 'open' | 'in_progress' | 'completed';
-export type TaskPriority = 'low' | 'normal' | 'high' | 'urgent';
+export type TaskStatus = "draft" | "open" | "in_progress" | "completed";
+export type TaskPriority = "low" | "normal" | "high" | "urgent";
 
 /** Checklist item shape — mirrors the backend `ChecklistItemEntry`
  *  schema exactly (`{id, text, completed}`). The backend never emits
@@ -60,8 +71,8 @@ export interface Task {
 
 export interface TaskFilters {
   project_id?: string;
-  task_type?: TaskType | '';
-  status?: TaskStatus | '';
+  task_type?: TaskType | "";
+  status?: TaskStatus | "";
   /** Filter by assignee UUID. Maps to the backend `responsible_id`
    *  query param. */
   responsible_id?: string;
@@ -106,12 +117,13 @@ export interface UpdateTaskPayload {
 
 export async function fetchTasks(filters?: TaskFilters): Promise<Task[]> {
   const params = new URLSearchParams();
-  if (filters?.project_id) params.set('project_id', filters.project_id);
-  if (filters?.task_type) params.set('type', filters.task_type);
-  if (filters?.status) params.set('status', filters.status);
-  if (filters?.responsible_id) params.set('responsible_id', filters.responsible_id);
+  if (filters?.project_id) params.set("project_id", filters.project_id);
+  if (filters?.task_type) params.set("type", filters.task_type);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.responsible_id)
+    params.set("responsible_id", filters.responsible_id);
   const qs = params.toString();
-  return apiGet<Task[]>(`/v1/tasks/${qs ? `?${qs}` : ''}`);
+  return apiGet<Task[]>(`/v1/tasks/${qs ? `?${qs}` : ""}`);
 }
 
 /**
@@ -122,16 +134,19 @@ export async function fetchTasks(filters?: TaskFilters): Promise<Task[]> {
  */
 export async function fetchMyTasks(status?: TaskStatus): Promise<Task[]> {
   const params = new URLSearchParams();
-  if (status) params.set('status', status);
+  if (status) params.set("status", status);
   const qs = params.toString();
-  return apiGet<Task[]>(`/v1/tasks/my-tasks/${qs ? `?${qs}` : ''}`);
+  return apiGet<Task[]>(`/v1/tasks/my-tasks/${qs ? `?${qs}` : ""}`);
 }
 
 export async function createTask(data: CreateTaskPayload): Promise<Task> {
-  return apiPost<Task>('/v1/tasks/', data);
+  return apiPost<Task>("/v1/tasks/", data);
 }
 
-export async function updateTask(id: string, data: UpdateTaskPayload): Promise<Task> {
+export async function updateTask(
+  id: string,
+  data: UpdateTaskPayload,
+): Promise<Task> {
   return apiPatch<Task>(`/v1/tasks/${id}`, data);
 }
 
@@ -140,20 +155,22 @@ export async function completeTask(id: string): Promise<Task> {
 }
 
 export async function deleteTask(id: string): Promise<void> {
-  const { apiDelete } = await import('@/shared/lib/api');
+  const { apiDelete } = await import("@/shared/lib/api");
   return apiDelete(`/v1/tasks/${id}`);
 }
 
 export async function exportTasks(projectId: string): Promise<void> {
   const token = useAuthStore.getState().accessToken;
-  const headers: Record<string, string> = { Accept: 'application/octet-stream' };
+  const headers: Record<string, string> = {
+    Accept: "application/octet-stream",
+  };
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(
     `/api/v1/tasks/export/?project_id=${encodeURIComponent(projectId)}`,
-    { method: 'GET', headers },
+    { method: "GET", headers },
   );
   if (!response.ok) {
     let detail = `Export failed (HTTP ${response.status})`;
@@ -167,7 +184,8 @@ export async function exportTasks(projectId: string): Promise<void> {
   }
 
   const blob = await response.blob();
-  const disposition = response.headers.get('Content-Disposition');
-  const filename = disposition?.match(/filename="?(.+)"?/)?.[1] || 'tasks_export.xlsx';
+  const disposition = response.headers.get("Content-Disposition");
+  const filename =
+    disposition?.match(/filename="?(.+)"?/)?.[1] || "tasks_export.xlsx";
   triggerDownload(blob, filename);
 }

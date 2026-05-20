@@ -16,26 +16,32 @@
  * deterministic and fast.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  cleanup,
+} from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
 
 // Mock apiGet BEFORE importing the component under test so the module
 // graph picks up the mock instead of the real implementation.
-vi.mock('@/shared/lib/api', () => ({
+vi.mock("@/shared/lib/api", () => ({
   apiGet: vi.fn(),
   apiPost: vi.fn(),
   apiPatch: vi.fn(),
   apiDelete: vi.fn(),
 }));
 
-import { apiGet } from '@/shared/lib/api';
-import { ActivityDrawer, type ActivityEvent } from './ActivityDrawer';
+import { apiGet } from "@/shared/lib/api";
+import { ActivityDrawer, type ActivityEvent } from "./ActivityDrawer";
 
 /* ── Fixtures ──────────────────────────────────────────────────────── */
 
-const DOCUMENT_ID = 'doc-abc';
+const DOCUMENT_ID = "doc-abc";
 
 function isoMinusHours(h: number): string {
   return new Date(Date.now() - h * 3600 * 1000).toISOString();
@@ -45,34 +51,36 @@ function isoMinusHours(h: number): string {
    labels are all exercised at once. */
 const SAMPLE_EVENTS: ActivityEvent[] = [
   {
-    id: 'ev-1',
+    id: "ev-1",
     document_id: DOCUMENT_ID,
-    user_id: 'user-1@example.com',
-    action: 'renamed',
-    meta: { old: 'a.pdf', new: 'b.pdf' },
+    user_id: "user-1@example.com",
+    action: "renamed",
+    meta: { old: "a.pdf", new: "b.pdf" },
     created_at: isoMinusHours(1),
   },
   {
-    id: 'ev-2',
+    id: "ev-2",
     document_id: DOCUMENT_ID,
-    user_id: 'user-2@example.com',
-    action: 'uploaded',
-    meta: { name: 'a.pdf' },
+    user_id: "user-2@example.com",
+    action: "uploaded",
+    meta: { name: "a.pdf" },
     created_at: isoMinusHours(28),
   },
   {
-    id: 'ev-3',
+    id: "ev-3",
     document_id: DOCUMENT_ID,
-    user_id: 'user-2@example.com',
-    action: 'cde_state_changed',
-    meta: { old: 'wip', new: 'shared' },
+    user_id: "user-2@example.com",
+    action: "cde_state_changed",
+    meta: { old: "wip", new: "shared" },
     created_at: isoMinusHours(96),
   },
 ];
 
 /* ── Helper ────────────────────────────────────────────────────────── */
 
-function renderDrawer(overrides: { open?: boolean; documentId?: string | null } = {}) {
+function renderDrawer(
+  overrides: { open?: boolean; documentId?: string | null } = {},
+) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -98,60 +106,60 @@ afterEach(() => {
 
 /* ── Tests ─────────────────────────────────────────────────────────── */
 
-describe('ActivityDrawer', () => {
-  it('loads and renders the audit list with bucket sections', async () => {
+describe("ActivityDrawer", () => {
+  it("loads and renders the audit list with bucket sections", async () => {
     (apiGet as ReturnType<typeof vi.fn>).mockResolvedValueOnce(SAMPLE_EVENTS);
     renderDrawer();
 
     // All three rows from the fixture should be present after load.
-    const rows = await screen.findAllByTestId('activity-row');
+    const rows = await screen.findAllByTestId("activity-row");
     expect(rows.length).toBe(SAMPLE_EVENTS.length);
 
     // All three bucket sections should render — one per fixture event.
-    expect(screen.getByTestId('activity-bucket-today')).toBeInTheDocument();
-    expect(screen.getByTestId('activity-bucket-yesterday')).toBeInTheDocument();
-    expect(screen.getByTestId('activity-bucket-earlier')).toBeInTheDocument();
+    expect(screen.getByTestId("activity-bucket-today")).toBeInTheDocument();
+    expect(screen.getByTestId("activity-bucket-yesterday")).toBeInTheDocument();
+    expect(screen.getByTestId("activity-bucket-earlier")).toBeInTheDocument();
   });
 
-  it('renders the empty state when the API returns no events', async () => {
+  it("renders the empty state when the API returns no events", async () => {
     (apiGet as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
     renderDrawer();
 
-    expect(await screen.findByTestId('activity-empty')).toBeInTheDocument();
+    expect(await screen.findByTestId("activity-empty")).toBeInTheDocument();
   });
 
-  it('renders the error state and recovers when retry succeeds', async () => {
+  it("renders the error state and recovers when retry succeeds", async () => {
     // First call rejects, second resolves — clicking retry should
     // re-fire the request and surface the success branch.
     (apiGet as ReturnType<typeof vi.fn>)
-      .mockRejectedValueOnce(new Error('boom'))
+      .mockRejectedValueOnce(new Error("boom"))
       .mockResolvedValueOnce(SAMPLE_EVENTS);
 
     renderDrawer();
 
     // Error UI renders with the retry button.
-    expect(await screen.findByTestId('activity-error')).toBeInTheDocument();
-    const retry = screen.getByTestId('activity-retry');
+    expect(await screen.findByTestId("activity-error")).toBeInTheDocument();
+    const retry = screen.getByTestId("activity-retry");
     expect(retry).toBeInTheDocument();
 
     fireEvent.click(retry);
 
-    const rows = await screen.findAllByTestId('activity-row');
+    const rows = await screen.findAllByTestId("activity-row");
     expect(rows.length).toBe(SAMPLE_EVENTS.length);
   });
 
-  it('tolerates the {items,total} envelope shape', async () => {
+  it("tolerates the {items,total} envelope shape", async () => {
     (apiGet as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       items: SAMPLE_EVENTS,
       total: SAMPLE_EVENTS.length,
     });
     renderDrawer();
 
-    const rows = await screen.findAllByTestId('activity-row');
+    const rows = await screen.findAllByTestId("activity-row");
     expect(rows.length).toBe(SAMPLE_EVENTS.length);
   });
 
-  it('does not fire the request when closed', async () => {
+  it("does not fire the request when closed", async () => {
     renderDrawer({ open: false });
 
     // Give the (disabled) query a tick to confirm no request fires.
@@ -160,6 +168,6 @@ describe('ActivityDrawer', () => {
     });
 
     // No timeline UI should be rendered either — disabled drawer is off-screen.
-    expect(screen.queryByTestId('activity-row')).toBeNull();
+    expect(screen.queryByTestId("activity-row")).toBeNull();
   });
 });

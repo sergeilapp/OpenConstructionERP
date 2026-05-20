@@ -14,12 +14,12 @@
  * the ``boq.uncategorized`` i18n key — the underlying path stays the sentinel
  * so the backend filter still resolves cleanly.
  */
-import { useMemo, useState, type KeyboardEvent } from 'react';
-import { ChevronRight, ChevronDown, Search } from 'lucide-react';
-import type { TFunction } from 'i18next';
-import type { CategoryTreeNode } from './api';
+import { useMemo, useState, type KeyboardEvent } from "react";
+import { ChevronRight, ChevronDown, Search } from "lucide-react";
+import type { TFunction } from "i18next";
+import type { CategoryTreeNode } from "./api";
 
-const UNSPECIFIED_SENTINEL = '__unspecified__';
+const UNSPECIFIED_SENTINEL = "__unspecified__";
 
 export interface CostCategoryTreeProps {
   tree: CategoryTreeNode[];
@@ -95,7 +95,7 @@ function TreeNodeRow({
 
   const displayName =
     node.name === UNSPECIFIED_SENTINEL
-      ? t('boq.uncategorized', { defaultValue: '(Uncategorized)‌⁠‍' })
+      ? t("boq.uncategorized", { defaultValue: "(Uncategorized)‌⁠‍" })
       : node.name;
 
   function toggleExpand(e: React.MouseEvent | KeyboardEvent) {
@@ -117,13 +117,13 @@ function TreeNodeRow({
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       handleSelect();
-    } else if (e.key === 'ArrowRight' && hasChildren && !isExpanded) {
+    } else if (e.key === "ArrowRight" && hasChildren && !isExpanded) {
       e.preventDefault();
       toggleExpand(e);
-    } else if (e.key === 'ArrowLeft' && isExpanded) {
+    } else if (e.key === "ArrowLeft" && isExpanded) {
       e.preventDefault();
       toggleExpand(e);
     }
@@ -140,8 +140,8 @@ function TreeNodeRow({
         onKeyDown={handleKeyDown}
         className={`group flex items-center gap-1 rounded-md py-1 pr-2 text-xs transition-colors cursor-pointer ${
           isSelected
-            ? 'bg-oe-blue text-white'
-            : 'text-content-secondary hover:bg-surface-secondary'
+            ? "bg-oe-blue text-white"
+            : "text-content-secondary hover:bg-surface-secondary"
         }`}
         style={{ paddingLeft: `${depth * 12 + 4}px` }}
       >
@@ -150,15 +150,15 @@ function TreeNodeRow({
           onClick={toggleExpand}
           aria-label={
             isExpanded
-              ? t('common.collapse', { defaultValue: 'Collapse‌⁠‍' })
-              : t('common.expand', { defaultValue: 'Expand‌⁠‍' })
+              ? t("common.collapse", { defaultValue: "Collapse‌⁠‍" })
+              : t("common.expand", { defaultValue: "Expand‌⁠‍" })
           }
           className={`flex h-4 w-4 shrink-0 items-center justify-center rounded ${
             hasChildren
               ? isSelected
-                ? 'text-white/80 hover:text-white'
-                : 'text-content-tertiary hover:text-content-primary'
-              : 'invisible'
+                ? "text-white/80 hover:text-white"
+                : "text-content-tertiary hover:text-content-primary"
+              : "invisible"
           }`}
           tabIndex={-1}
         >
@@ -176,8 +176,8 @@ function TreeNodeRow({
         <span
           className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium tabular-nums ${
             isSelected
-              ? 'bg-white/20 text-white'
-              : 'bg-surface-tertiary text-content-tertiary group-hover:bg-surface-primary'
+              ? "bg-white/20 text-white"
+              : "bg-surface-tertiary text-content-tertiary group-hover:bg-surface-primary"
           }`}
         >
           {node.count.toLocaleString()}
@@ -213,7 +213,7 @@ export function CostCategoryTree({
   isLoading = false,
 }: CostCategoryTreeProps) {
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState("");
 
   const visibleTree = useMemo(() => tree, [tree]);
 
@@ -231,11 +231,11 @@ export function CostCategoryTree({
             type="text"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder={t('boq.cost_tree_search_placeholder', {
-              defaultValue: 'Filter categories...‌⁠‍',
+            placeholder={t("boq.cost_tree_search_placeholder", {
+              defaultValue: "Filter categories...‌⁠‍",
             })}
-            aria-label={t('boq.cost_tree_search_placeholder', {
-              defaultValue: 'Filter categories...‌⁠‍',
+            aria-label={t("boq.cost_tree_search_placeholder", {
+              defaultValue: "Filter categories...‌⁠‍",
             })}
             className="h-7 w-full rounded-md border border-border-light bg-surface-primary pl-7 pr-2 text-xs text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue"
           />
@@ -246,25 +246,33 @@ export function CostCategoryTree({
       <div className="px-2 pb-1">
         <button
           type="button"
-          onClick={() => onSelect('')}
+          onClick={() => onSelect("")}
           className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-xs transition-colors ${
-            selectedPath === ''
-              ? 'bg-oe-blue text-white'
-              : 'text-content-secondary hover:bg-surface-secondary'
+            selectedPath === ""
+              ? "bg-oe-blue text-white"
+              : "text-content-secondary hover:bg-surface-secondary"
           }`}
         >
           <span className="font-medium">
-            {t('boq.cost_tree_all_categories', { defaultValue: 'All categories' })}
+            {t("boq.cost_tree_all_categories", {
+              defaultValue: "All categories",
+            })}
           </span>
         </button>
       </div>
 
       {/* Tree */}
-      <div role="tree" className="flex-1 overflow-y-auto px-1 pb-3" aria-busy={isLoading}>
+      <div
+        role="tree"
+        className="flex-1 overflow-y-auto px-1 pb-3"
+        aria-busy={isLoading}
+      >
         {isLoading && visibleTree.length === 0 ? (
           <div
             className="flex flex-col gap-1.5 px-2 pt-1"
-            aria-label={t('boq.cost_tree_loading', { defaultValue: 'Loading categories…' })}
+            aria-label={t("boq.cost_tree_loading", {
+              defaultValue: "Loading categories…",
+            })}
           >
             {/* Skeleton rows mimic real category density (varied widths so
                 the placeholder reads as content, not a single block). The
@@ -283,13 +291,15 @@ export function CostCategoryTree({
               </div>
             ))}
             <p className="mt-3 px-3 text-center text-2xs text-content-quaternary">
-              {t('boq.cost_tree_loading', { defaultValue: 'Loading categories…' })}
+              {t("boq.cost_tree_loading", {
+                defaultValue: "Loading categories…",
+              })}
             </p>
           </div>
         ) : visibleTree.length === 0 ? (
           <p className="px-3 py-6 text-center text-xs text-content-tertiary">
-            {t('boq.cost_tree_no_categories', {
-              defaultValue: 'No categories available',
+            {t("boq.cost_tree_no_categories", {
+              defaultValue: "No categories available",
             })}
           </p>
         ) : (

@@ -12,16 +12,16 @@
  *   - Esc cancels
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { X, Ruler } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { X, Ruler } from "lucide-react";
 import {
   type CalibrationUnit,
   deriveScale,
   toMeters,
   type ScaleConfig,
-} from '../../../modules/pdf-takeoff/data/scale-helpers';
-import { usePreferencesStore } from '@/stores/usePreferencesStore';
+} from "../../../modules/pdf-takeoff/data/scale-helpers";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
 
 /** What the user actually typed, for honest badge display.
  *
@@ -56,10 +56,10 @@ export interface CalibrationDialogProps {
 }
 
 const UNIT_OPTIONS: { value: CalibrationUnit; label: string }[] = [
-  { value: 'm', label: 'm (meters)' },
-  { value: 'mm', label: 'mm (millimeters)' },
-  { value: 'ft', label: 'ft (feet)' },
-  { value: 'in', label: 'in (inches)' },
+  { value: "m", label: "m (meters)" },
+  { value: "mm", label: "mm (millimeters)" },
+  { value: "ft", label: "ft (feet)" },
+  { value: "in", label: "in (inches)" },
 ];
 
 export function CalibrationDialog({
@@ -71,8 +71,11 @@ export function CalibrationDialog({
 }: CalibrationDialogProps) {
   const { t } = useTranslation();
   const measurementSystem = usePreferencesStore((s) => s.measurementSystem);
-  const defaultUnit: CalibrationUnit = initialUnit ?? (measurementSystem === 'imperial' ? 'ft' : 'm');
-  const [realLength, setRealLength] = useState<string>(String(initialRealLength));
+  const defaultUnit: CalibrationUnit =
+    initialUnit ?? (measurementSystem === "imperial" ? "ft" : "m");
+  const [realLength, setRealLength] = useState<string>(
+    String(initialRealLength),
+  );
   const [unit, setUnit] = useState<CalibrationUnit>(defaultUnit);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -112,21 +115,23 @@ export function CalibrationDialog({
             className="text-sm font-semibold text-content-primary flex items-center gap-1.5"
           >
             <Ruler size={14} className="text-purple-500" />
-            {t('takeoff_viewer.calibrate_title', { defaultValue: 'Calibrate Scale‌⁠‍' })}
+            {t("takeoff_viewer.calibrate_title", {
+              defaultValue: "Calibrate Scale‌⁠‍",
+            })}
           </h3>
           <button
             type="button"
             onClick={onCancel}
             className="text-content-tertiary hover:text-content-primary transition-colors"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={14} />
           </button>
         </div>
         <p className="text-xs text-content-tertiary mb-3">
-          {t('takeoff_viewer.calibrate_desc', {
+          {t("takeoff_viewer.calibrate_desc", {
             defaultValue:
-              'You picked a line of {{pixels}} pixels. Enter its real-world length:‌⁠‍',
+              "You picked a line of {{pixels}} pixels. Enter its real-world length:‌⁠‍",
             pixels: pixelDistance.toFixed(0),
           })}
         </p>
@@ -137,14 +142,14 @@ export function CalibrationDialog({
             value={realLength}
             onChange={(e) => setRealLength(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && isValid) handleConfirm();
-              if (e.key === 'Escape') onCancel();
+              if (e.key === "Enter" && isValid) handleConfirm();
+              if (e.key === "Escape") onCancel();
             }}
             className="rounded border border-border bg-surface-secondary px-2 py-1.5 text-sm text-content-primary"
             min={0}
             step={0.01}
-            aria-label={t('takeoff_viewer.calibrate_length', {
-              defaultValue: 'Real-world length‌⁠‍',
+            aria-label={t("takeoff_viewer.calibrate_length", {
+              defaultValue: "Real-world length‌⁠‍",
             })}
             data-testid="calibration-length-input"
           />
@@ -152,7 +157,9 @@ export function CalibrationDialog({
             value={unit}
             onChange={(e) => setUnit(e.target.value as CalibrationUnit)}
             className="rounded border border-border bg-surface-secondary px-2 py-1.5 text-sm text-content-primary"
-            aria-label={t('takeoff_viewer.calibrate_unit', { defaultValue: 'Unit' })}
+            aria-label={t("takeoff_viewer.calibrate_unit", {
+              defaultValue: "Unit",
+            })}
             data-testid="calibration-unit-select"
           >
             {UNIT_OPTIONS.map((opt) => (
@@ -162,14 +169,14 @@ export function CalibrationDialog({
             ))}
           </select>
         </div>
-        {isValid && unit !== 'm' && (
+        {isValid && unit !== "m" && (
           <p
             className="text-[10px] text-purple-500/90 mb-2 tabular-nums"
             data-testid="calibration-metric-note"
           >
-            {t('takeoff_viewer.calibrate_metric_note', {
+            {t("takeoff_viewer.calibrate_metric_note", {
               defaultValue:
-                '{{value}} {{unit}} = {{meters}} m — measurements display in metres (metric-canonical).',
+                "{{value}} {{unit}} = {{meters}} m — measurements display in metres (metric-canonical).",
               value: parsed,
               unit,
               meters: toMeters(parsed, unit).toFixed(3),
@@ -177,9 +184,9 @@ export function CalibrationDialog({
           </p>
         )}
         <p className="text-[10px] text-content-tertiary mb-3">
-          {t('takeoff_viewer.calibrate_hint', {
+          {t("takeoff_viewer.calibrate_hint", {
             defaultValue:
-              'Tip: pick two points along a known dimension (door, wall, grid line).‌⁠‍',
+              "Tip: pick two points along a known dimension (door, wall, grid line).‌⁠‍",
           })}
         </p>
         <div className="flex justify-end gap-2">
@@ -188,7 +195,7 @@ export function CalibrationDialog({
             onClick={onCancel}
             className="px-3 py-1.5 rounded-lg text-xs text-content-secondary hover:bg-surface-secondary transition-colors"
           >
-            {t('common.cancel', { defaultValue: 'Cancel‌⁠‍' })}
+            {t("common.cancel", { defaultValue: "Cancel‌⁠‍" })}
           </button>
           <button
             type="button"
@@ -197,7 +204,9 @@ export function CalibrationDialog({
             className="px-3 py-1.5 rounded-lg bg-oe-blue text-white text-xs font-medium hover:bg-oe-blue-hover transition-colors disabled:opacity-50"
             data-testid="calibration-confirm"
           >
-            {t('takeoff_viewer.calibrate_confirm', { defaultValue: 'Apply calibration' })}
+            {t("takeoff_viewer.calibrate_confirm", {
+              defaultValue: "Apply calibration",
+            })}
           </button>
         </div>
       </div>

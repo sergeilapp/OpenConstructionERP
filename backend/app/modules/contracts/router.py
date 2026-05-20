@@ -115,7 +115,9 @@ async def _load_claim_or_404(session, claim_id: uuid.UUID) -> ProgressClaim:
 
 
 async def _verify_contract_access(
-    session, contract_id: uuid.UUID, user_id: str,
+    session,
+    contract_id: uuid.UUID,
+    user_id: str,
 ) -> Contract:
     contract = await _load_contract_or_404(session, contract_id)
     await verify_project_access(contract.project_id, user_id, session)
@@ -123,7 +125,9 @@ async def _verify_contract_access(
 
 
 async def _verify_claim_access(
-    session, claim_id: uuid.UUID, user_id: str,
+    session,
+    claim_id: uuid.UUID,
+    user_id: str,
 ) -> ProgressClaim:
     claim = await _load_claim_or_404(session, claim_id)
     contract = await _load_contract_or_404(session, claim.contract_id)
@@ -220,7 +224,8 @@ async def list_contracts(
     service = ContractsService(session)
     items, _total = await service.contract_repo.list_for_project(
         project_id,
-        offset=offset, limit=limit,
+        offset=offset,
+        limit=limit,
         status=status,
         counterparty_type=counterparty_type,
         contract_type=contract_type,
@@ -363,7 +368,8 @@ async def create_contract_line(
 ) -> ContractLineResponse:
     if data.contract_id != contract_id:
         raise HTTPException(
-            status_code=400, detail="contract_id mismatch between URL and body",
+            status_code=400,
+            detail="contract_id mismatch between URL and body",
         )
     await _verify_contract_access(session, contract_id, user_id)
     service = ContractsService(session)
@@ -536,7 +542,9 @@ async def delete_retention_schedule(
 
 
 @router.post(
-    "/fee-structures/", response_model=FeeStructureResponse, status_code=201,
+    "/fee-structures/",
+    response_model=FeeStructureResponse,
+    status_code=201,
 )
 async def create_fee_structure(
     data: FeeStructureCreate,
@@ -685,7 +693,9 @@ async def delete_gainshare_config(
 
 
 @router.post(
-    "/ld-clauses/", response_model=LDClauseResponse, status_code=201,
+    "/ld-clauses/",
+    response_model=LDClauseResponse,
+    status_code=201,
 )
 async def create_ld_clause(
     data: LDClauseCreate,
@@ -769,7 +779,10 @@ async def list_progress_claims(
     await _verify_contract_access(session, contract_id, user_id)
     service = ContractsService(session)
     items, _total = await service.claim_repo.claims_for_contract(
-        contract_id, offset=offset, limit=limit, status=status,
+        contract_id,
+        offset=offset,
+        limit=limit,
+        status=status,
     )
     return [_claim_to_response(it) for it in items]
 
@@ -1021,7 +1034,9 @@ async def delete_claim_line(
 
 
 @router.post(
-    "/final-accounts/", response_model=FinalAccountResponse, status_code=201,
+    "/final-accounts/",
+    response_model=FinalAccountResponse,
+    status_code=201,
 )
 async def create_final_account(
     data: FinalAccountCreate,
@@ -1037,7 +1052,8 @@ async def create_final_account(
 
 
 @router.get(
-    "/final-accounts/{account_id}", response_model=FinalAccountResponse,
+    "/final-accounts/{account_id}",
+    response_model=FinalAccountResponse,
 )
 async def get_final_account(
     account_id: uuid.UUID,
@@ -1054,7 +1070,8 @@ async def get_final_account(
 
 
 @router.patch(
-    "/final-accounts/{account_id}", response_model=FinalAccountResponse,
+    "/final-accounts/{account_id}",
+    response_model=FinalAccountResponse,
 )
 async def update_final_account(
     account_id: uuid.UUID,
@@ -1106,7 +1123,8 @@ async def close_contract(
 ) -> FinalAccountResponse:
     if payload.contract_id != contract_id:
         raise HTTPException(
-            status_code=400, detail="contract_id mismatch between URL and body",
+            status_code=400,
+            detail="contract_id mismatch between URL and body",
         )
     await _verify_contract_access(session, contract_id, user_id)
     service = ContractsService(session)
@@ -1170,10 +1188,7 @@ async def sov_status(
             lid: {k: str(v) if hasattr(v, "as_tuple") else v for k, v in row.items()}
             for lid, row in result["by_line"].items()
         },
-        "totals": {
-            k: str(v) if hasattr(v, "as_tuple") else v
-            for k, v in result["totals"].items()
-        },
+        "totals": {k: str(v) if hasattr(v, "as_tuple") else v for k, v in result["totals"].items()},
     }
 
 
@@ -1210,7 +1225,10 @@ async def release_retention(
             detail="custom_schedule must be a dict",
         )
     return await service.release_retention(
-        contract_id, event_name, custom_schedule=custom, actor_id=user_id,
+        contract_id,
+        event_name,
+        custom_schedule=custom,
+        actor_id=user_id,
     )
 
 
@@ -1253,6 +1271,7 @@ async def list_clause_templates(
     _perm: None = Depends(RequirePermission("contracts.read")),
 ) -> list[dict]:
     from app.modules.contracts.service import list_contract_templates
+
     return list_contract_templates()
 
 
@@ -1262,9 +1281,11 @@ async def get_clause_template(
     _perm: None = Depends(RequirePermission("contracts.read")),
 ) -> dict:
     from app.modules.contracts.service import get_contract_template
+
     try:
         return get_contract_template(template_code)
     except KeyError as exc:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc),
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
         ) from exc

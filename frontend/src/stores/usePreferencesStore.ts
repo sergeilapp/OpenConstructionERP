@@ -7,13 +7,21 @@
  * Persists to localStorage so preferences survive page reloads.
  */
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
-const STORAGE_KEY = 'oe_preferences';
+const STORAGE_KEY = "oe_preferences";
 
-export type MeasurementSystem = 'metric' | 'imperial';
-export type DateFormat = 'DD.MM.YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
-export type NumberLocale = 'de-DE' | 'en-US' | 'en-GB' | 'fr-FR' | 'ru-RU' | 'ar-SA' | 'ja-JP' | 'zh-CN';
+export type MeasurementSystem = "metric" | "imperial";
+export type DateFormat = "DD.MM.YYYY" | "MM/DD/YYYY" | "YYYY-MM-DD";
+export type NumberLocale =
+  | "de-DE"
+  | "en-US"
+  | "en-GB"
+  | "fr-FR"
+  | "ru-RU"
+  | "ar-SA"
+  | "ja-JP"
+  | "zh-CN";
 
 interface Preferences {
   currency: string;
@@ -27,14 +35,14 @@ interface Preferences {
 }
 
 const DEFAULTS: Preferences = {
-  currency: 'EUR',
-  measurementSystem: 'metric',
-  dateFormat: 'DD.MM.YYYY',
-  numberLocale: 'de-DE',
+  currency: "EUR",
+  measurementSystem: "metric",
+  dateFormat: "DD.MM.YYYY",
+  numberLocale: "de-DE",
   vatRate: 19,
-  defaultRegion: 'DACH',
-  defaultCurrency: 'EUR',
-  defaultStandard: 'din276',
+  defaultRegion: "DACH",
+  defaultCurrency: "EUR",
+  defaultStandard: "din276",
 };
 
 function readPreferences(): Preferences {
@@ -50,11 +58,16 @@ function readPreferences(): Preferences {
 function persist(prefs: Preferences) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 interface PreferencesState extends Preferences {
-  setPreference: <K extends keyof Preferences>(key: K, value: Preferences[K]) => void;
+  setPreference: <K extends keyof Preferences>(
+    key: K,
+    value: Preferences[K],
+  ) => void;
   setPreferences: (updates: Partial<Preferences>) => void;
   resetPreferences: () => void;
 
@@ -87,10 +100,10 @@ export const usePreferencesStore = create<PreferencesState>((set, get) => ({
 
   formatCurrency: (amount: number) => {
     const { currency, numberLocale } = get();
-    const safe = /^[A-Z]{3}$/.test(currency) ? currency : 'EUR';
+    const safe = /^[A-Z]{3}$/.test(currency) ? currency : "EUR";
     try {
       return new Intl.NumberFormat(numberLocale, {
-        style: 'currency',
+        style: "currency",
         currency: safe,
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,

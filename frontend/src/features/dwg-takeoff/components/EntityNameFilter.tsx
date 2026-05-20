@@ -8,22 +8,24 @@
  * DxfViewer uses as an additional visibility filter alongside layers.
  */
 
-import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronRight, Search, Eye, EyeOff } from 'lucide-react';
-import clsx from 'clsx';
-import type { DxfEntity } from '../api';
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { ChevronDown, ChevronRight, Search, Eye, EyeOff } from "lucide-react";
+import clsx from "clsx";
+import type { DxfEntity } from "../api";
 
 /** How many names to show before the "Show all" button. */
 const TOP_N = 8;
 
 /** Derive a human-friendly display name for an entity. */
 function entityDisplayName(e: DxfEntity): string {
-  if (e.type === 'INSERT' && e.block_name) return e.block_name;
-  if (e.type === 'HATCH' && e.pattern_name) return `HATCH:${e.pattern_name}`;
-  if (e.type === 'TEXT' && e.text) {
+  if (e.type === "INSERT" && e.block_name) return e.block_name;
+  if (e.type === "HATCH" && e.pattern_name) return `HATCH:${e.pattern_name}`;
+  if (e.type === "TEXT" && e.text) {
     const trimmed = e.text.trim();
-    return trimmed.length > 30 ? `TEXT:${trimmed.slice(0, 27)}...` : `TEXT:${trimmed}`;
+    return trimmed.length > 30
+      ? `TEXT:${trimmed.slice(0, 27)}...`
+      : `TEXT:${trimmed}`;
   }
   return e.type;
 }
@@ -46,7 +48,7 @@ export function EntityNameFilter({
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [showAll, setShowAll] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   // Build name groups sorted by count descending
   const nameGroups = useMemo(() => {
@@ -81,7 +83,7 @@ export function EntityNameFilter({
         tabIndex={0}
         onClick={() => setCollapsed((v) => !v)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             setCollapsed((v) => !v);
           }
@@ -95,7 +97,7 @@ export function EntityNameFilter({
             <ChevronDown size={13} className="text-muted-foreground" />
           )}
           <h3 className="text-sm font-semibold text-foreground">
-            {t('dwg_takeoff.entity_names', 'Entity Names')}
+            {t("dwg_takeoff.entity_names", "Entity Names")}
           </h3>
           <span className="text-[10px] text-muted-foreground tabular-nums">
             ({nameGroups.length})
@@ -107,18 +109,18 @@ export function EntityNameFilter({
               type="button"
               onClick={onShowAllNames}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-              title={t('dwg_takeoff.show_all', 'Show all')}
+              title={t("dwg_takeoff.show_all", "Show all")}
             >
-              {t('dwg_takeoff.all_on', 'All on')}
+              {t("dwg_takeoff.all_on", "All on")}
             </button>
             <span className="text-muted-foreground">/</span>
             <button
               type="button"
               onClick={onHideAllNames}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-              title={t('dwg_takeoff.hide_all', 'Hide all')}
+              title={t("dwg_takeoff.hide_all", "Hide all")}
             >
-              {t('dwg_takeoff.all_off', 'All off')}
+              {t("dwg_takeoff.all_off", "All off")}
             </button>
           </div>
         )}
@@ -136,7 +138,7 @@ export function EntityNameFilter({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('dwg_takeoff.search_names', 'Filter names...')}
+              placeholder={t("dwg_takeoff.search_names", "Filter names...")}
               className="w-full rounded-md border border-border bg-surface-secondary py-1 pl-7 pr-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
             />
           </div>
@@ -151,23 +153,25 @@ export function EntityNameFilter({
                   type="button"
                   onClick={() => onToggleName(group.name)}
                   className={clsx(
-                    'flex items-center gap-2 rounded px-2 py-1 text-xs transition-colors',
+                    "flex items-center gap-2 rounded px-2 py-1 text-xs transition-colors",
                     visible
-                      ? 'text-foreground hover:bg-surface-secondary'
-                      : 'text-muted-foreground hover:bg-surface-secondary',
+                      ? "text-foreground hover:bg-surface-secondary"
+                      : "text-muted-foreground hover:bg-surface-secondary",
                   )}
                 >
                   {visible ? <Eye size={13} /> : <EyeOff size={13} />}
                   <span className="truncate flex-1 text-left font-mono text-[11px]">
                     {group.name}
                   </span>
-                  <span className="text-muted-foreground tabular-nums">{group.count}</span>
+                  <span className="text-muted-foreground tabular-nums">
+                    {group.count}
+                  </span>
                 </button>
               );
             })}
             {displayed.length === 0 && (
               <p className="py-4 text-center text-xs text-muted-foreground">
-                {t('dwg_takeoff.no_names_found', 'No names found')}
+                {t("dwg_takeoff.no_names_found", "No names found")}
               </p>
             )}
           </div>
@@ -180,8 +184,8 @@ export function EntityNameFilter({
               className="text-[11px] text-oe-blue hover:text-oe-blue-dark font-medium text-center py-1 transition-colors"
             >
               {showAll
-                ? t('dwg_takeoff.show_less', 'Show less')
-                : t('dwg_takeoff.show_all_names', 'Show all ({{count}})', {
+                ? t("dwg_takeoff.show_less", "Show less")
+                : t("dwg_takeoff.show_all_names", "Show all ({{count}})", {
                     count: filtered.length,
                   })}
             </button>

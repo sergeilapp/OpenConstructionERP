@@ -1,1 +1,1 @@
-export { InspectionsPage } from './InspectionsPage';
+export { InspectionsPage } from "./InspectionsPage";

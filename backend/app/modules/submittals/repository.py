@@ -45,20 +45,17 @@ class SubmittalRepository:
         from sqlalchemy import cast
         from sqlalchemy.sql import func as sqlfunc
 
-        stmt = (
-            select(
-                sqlfunc.coalesce(
-                    sqlfunc.max(
-                        cast(
-                            func.substr(Submittal.submittal_number, 5),
-                            SAInteger,
-                        )
-                    ),
-                    0,
-                )
+        stmt = select(
+            sqlfunc.coalesce(
+                sqlfunc.max(
+                    cast(
+                        func.substr(Submittal.submittal_number, 5),
+                        SAInteger,
+                    )
+                ),
+                0,
             )
-            .where(Submittal.project_id == project_id)
-        )
+        ).where(Submittal.project_id == project_id)
         max_num = (await self.session.execute(stmt)).scalar_one()
         return f"SUB-{max_num + 1:03d}"
 

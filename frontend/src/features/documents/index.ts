@@ -1,2 +1,2 @@
-export { DocumentsPage } from './DocumentsPage';
-export { PhotoGalleryPage } from './PhotoGalleryPage';
+export { DocumentsPage } from "./DocumentsPage";
+export { PhotoGalleryPage } from "./PhotoGalleryPage";

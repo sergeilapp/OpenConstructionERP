@@ -1,11 +1,11 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from "react";
 
 export interface ConfirmOptions {
   title: string;
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
-  variant?: 'danger' | 'warning';
+  variant?: "danger" | "warning";
 }
 
 export interface UseConfirmReturn {
@@ -14,7 +14,7 @@ export interface UseConfirmReturn {
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
-  variant: 'danger' | 'warning';
+  variant: "danger" | "warning";
   loading: boolean;
   onConfirm: () => void;
   onCancel: () => void;
@@ -44,11 +44,11 @@ export interface UseConfirmReturn {
 export function useConfirm(): UseConfirmReturn {
   const [state, setState] = useState({
     open: false,
-    title: '',
-    message: '',
+    title: "",
+    message: "",
     confirmLabel: undefined as string | undefined,
     cancelLabel: undefined as string | undefined,
-    variant: 'danger' as 'danger' | 'warning',
+    variant: "danger" as "danger" | "warning",
     loading: false,
   });
 
@@ -63,7 +63,7 @@ export function useConfirm(): UseConfirmReturn {
         message: opts.message,
         confirmLabel: opts.confirmLabel,
         cancelLabel: opts.cancelLabel,
-        variant: opts.variant ?? 'danger',
+        variant: opts.variant ?? "danger",
         loading: false,
       });
     });

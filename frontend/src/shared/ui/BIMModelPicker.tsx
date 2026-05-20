@@ -5,10 +5,10 @@
 // a ghost "+ Upload" tab that links to /bim. Reused by /match-elements,
 // /quantities, and the BIM viewer page.
 
-import clsx from 'clsx';
-import { Box, Plus, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import clsx from "clsx";
+import { Box, Plus, AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export interface BIMModelOption {
   id: string;
@@ -31,10 +31,11 @@ export interface BIMModelPickerProps {
 }
 
 function statusIcon(status: string) {
-  if (status === 'ready') return <CheckCircle2 className="w-3 h-3 text-emerald-500" />;
-  if (status === 'processing' || status === 'pending')
+  if (status === "ready")
+    return <CheckCircle2 className="w-3 h-3 text-emerald-500" />;
+  if (status === "processing" || status === "pending")
     return <Loader2 className="w-3 h-3 animate-spin text-content-tertiary" />;
-  if (status === 'failed' || status === 'error')
+  if (status === "failed" || status === "error")
     return <AlertTriangle className="w-3 h-3 text-rose-500" />;
   return <Box className="w-3 h-3 text-content-tertiary" />;
 }
@@ -43,7 +44,7 @@ export function BIMModelPicker({
   models,
   activeModelId,
   onSelect,
-  uploadHref = '/bim',
+  uploadHref = "/bim",
   isLoading,
   emptyMessage,
   className,
@@ -54,23 +55,23 @@ export function BIMModelPicker({
     return (
       <div
         className={clsx(
-          'flex items-center gap-2 text-sm text-content-tertiary py-2',
+          "flex items-center gap-2 text-sm text-content-tertiary py-2",
           className,
         )}
       >
         <Loader2 className="w-4 h-4 animate-spin" />
-        {t('bim.loading_models', { defaultValue: 'Loading BIM models…‌⁠‍' })}
+        {t("bim.loading_models", { defaultValue: "Loading BIM models…‌⁠‍" })}
       </div>
     );
   }
 
   if (models.length === 0) {
     return (
-      <div className={clsx('flex items-center gap-3 py-2', className)}>
+      <div className={clsx("flex items-center gap-3 py-2", className)}>
         <span className="text-sm text-content-tertiary">
           {emptyMessage ??
-            t('bim.no_models_in_project', {
-              defaultValue: 'No BIM models in this project yet.‌⁠‍',
+            t("bim.no_models_in_project", {
+              defaultValue: "No BIM models in this project yet.‌⁠‍",
             })}
         </span>
         <Link
@@ -78,17 +79,17 @@ export function BIMModelPicker({
           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-oe-blue/40 text-oe-blue text-xs hover:bg-oe-blue/5"
         >
           <Plus className="w-3.5 h-3.5" />
-          {t('bim.upload_model', { defaultValue: 'Upload BIM model‌⁠‍' })}
+          {t("bim.upload_model", { defaultValue: "Upload BIM model‌⁠‍" })}
         </Link>
       </div>
     );
   }
 
   return (
-    <div className={clsx('flex flex-wrap items-center gap-1.5', className)}>
+    <div className={clsx("flex flex-wrap items-center gap-1.5", className)}>
       {models.map((m) => {
         const isActive = m.id === activeModelId;
-        const isReady = m.status === 'ready';
+        const isReady = m.status === "ready";
         return (
           <button
             key={m.id}
@@ -97,18 +98,18 @@ export function BIMModelPicker({
             disabled={!isReady}
             title={
               !isReady
-                ? t('bim.model_not_ready', {
-                    defaultValue: 'Model not ready yet ({{status}})‌⁠‍',
+                ? t("bim.model_not_ready", {
+                    defaultValue: "Model not ready yet ({{status}})‌⁠‍",
                     status: m.status,
                   })
                 : `${m.name} · ${m.element_count} elements · ${m.storey_count} storeys`
             }
             className={clsx(
-              'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition max-w-[32ch]',
+              "inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition max-w-[32ch]",
               isActive
-                ? 'border-oe-blue bg-oe-blue/5 text-content-primary shadow-sm'
-                : 'border-border bg-surface-primary text-content-secondary hover:border-oe-blue/40',
-              !isReady && 'opacity-60 cursor-not-allowed',
+                ? "border-oe-blue bg-oe-blue/5 text-content-primary shadow-sm"
+                : "border-border bg-surface-primary text-content-secondary hover:border-oe-blue/40",
+              !isReady && "opacity-60 cursor-not-allowed",
             )}
           >
             {statusIcon(m.status)}
@@ -129,7 +130,7 @@ export function BIMModelPicker({
         className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border px-3 py-2 text-sm text-content-tertiary hover:border-oe-blue/40 hover:text-oe-blue"
       >
         <Plus className="w-3.5 h-3.5" />
-        {t('bim.upload_short', { defaultValue: 'Upload‌⁠‍' })}
+        {t("bim.upload_short", { defaultValue: "Upload‌⁠‍" })}
       </Link>
     </div>
   );

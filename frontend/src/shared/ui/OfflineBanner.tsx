@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { WifiOff, X } from 'lucide-react';
-import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { WifiOff, X } from "lucide-react";
+import { useOnlineStatus } from "@/shared/hooks/useOnlineStatus";
 
-const SESSION_DISMISS_KEY = 'oe_offline_banner_dismissed_session';
+const SESSION_DISMISS_KEY = "oe_offline_banner_dismissed_session";
 
 /**
  * Top-of-app banner surfaced whenever the browser reports `navigator.onLine = false`.
@@ -15,7 +15,7 @@ export function OfflineBanner() {
   const isOnline = useOnlineStatus();
   const [dismissed, setDismissed] = useState<boolean>(() => {
     try {
-      return sessionStorage.getItem(SESSION_DISMISS_KEY) === '1';
+      return sessionStorage.getItem(SESSION_DISMISS_KEY) === "1";
     } catch {
       return false;
     }
@@ -24,7 +24,11 @@ export function OfflineBanner() {
   // Coming back online clears the dismissal so the next disconnect surfaces it again
   useEffect(() => {
     if (isOnline) {
-      try { sessionStorage.removeItem(SESSION_DISMISS_KEY); } catch { /* ignore */ }
+      try {
+        sessionStorage.removeItem(SESSION_DISMISS_KEY);
+      } catch {
+        /* ignore */
+      }
       setDismissed(false);
     }
   }, [isOnline]);
@@ -32,7 +36,11 @@ export function OfflineBanner() {
   if (isOnline || dismissed) return null;
 
   const handleDismiss = () => {
-    try { sessionStorage.setItem(SESSION_DISMISS_KEY, '1'); } catch { /* ignore */ }
+    try {
+      sessionStorage.setItem(SESSION_DISMISS_KEY, "1");
+    } catch {
+      /* ignore */
+    }
     setDismissed(true);
   };
 
@@ -45,14 +53,14 @@ export function OfflineBanner() {
     >
       <WifiOff size={14} strokeWidth={2.25} className="shrink-0" />
       <span className="truncate">
-        {t('common.offline_banner', {
+        {t("common.offline_banner", {
           defaultValue: "You're offline — changes will not sync.‌⁠‍",
         })}
       </span>
       <button
         type="button"
         onClick={handleDismiss}
-        aria-label={t('common.dismiss', { defaultValue: 'Dismiss‌⁠‍' })}
+        aria-label={t("common.dismiss", { defaultValue: "Dismiss‌⁠‍" })}
         className="ml-2 flex h-5 w-5 items-center justify-center rounded text-white/80 hover:bg-white/15 hover:text-white transition-colors"
       >
         <X size={12} />

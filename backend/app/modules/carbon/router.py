@@ -120,7 +120,10 @@ async def list_epd(
     service: CarbonService = Depends(_get_service),
 ) -> list[EPDRecordResponse]:
     items, _ = await service.list_epds(
-        material_class=material_class, region=region, offset=offset, limit=limit,
+        material_class=material_class,
+        region=region,
+        offset=offset,
+        limit=limit,
     )
     return [EPDRecordResponse.model_validate(i) for i in items]
 
@@ -189,7 +192,10 @@ async def list_factors(
     service: CarbonService = Depends(_get_service),
 ) -> list[MaterialCarbonFactorResponse]:
     items, _ = await service.list_factors(
-        cost_item_id=cost_item_id, region=region, offset=offset, limit=limit,
+        cost_item_id=cost_item_id,
+        region=region,
+        offset=offset,
+        limit=limit,
     )
     return [MaterialCarbonFactorResponse.model_validate(i) for i in items]
 
@@ -368,7 +374,10 @@ async def list_embodied(
     service: CarbonService = Depends(_get_service),
 ) -> list[EmbodiedCarbonEntryResponse]:
     items, _ = await service.list_embodied_entries(
-        inventory_id, stage=stage, offset=offset, limit=limit,
+        inventory_id,
+        stage=stage,
+        offset=offset,
+        limit=limit,
     )
     return [EmbodiedCarbonEntryResponse.model_validate(i) for i in items]
 
@@ -400,9 +409,7 @@ async def bulk_create_embodied(
     _perm: None = Depends(RequirePermission("carbon.create")),
     service: CarbonService = Depends(_get_service),
 ) -> dict[str, int | str]:
-    entries = [
-        e.model_copy(update={"inventory_id": inventory_id}) for e in body.entries
-    ]
+    entries = [e.model_copy(update={"inventory_id": inventory_id}) for e in body.entries]
     n = await service.bulk_create_embodied(inventory_id, entries)
     return {"inventory_id": str(inventory_id), "created": n}
 
@@ -711,12 +718,14 @@ async def ingest_epd_by_identifier(
     identifier = payload.get("identifier")
     if not identifier:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="identifier is required",
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="identifier is required",
         )
     gwp = payload.get("gwp_a1a3")
     if gwp is None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="gwp_a1a3 is required",
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="gwp_a1a3 is required",
         )
     product_name = payload.get("product_name") or ""
     material_class = payload.get("material_class") or ""
@@ -739,7 +748,8 @@ async def ingest_epd_by_identifier(
         )
     except ValueError as exc:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc),
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
         ) from exc
     return {
         "id": str(record.id),

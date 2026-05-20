@@ -4,15 +4,15 @@
  * Backed by /api/v1/carbon/ — see backend/app/modules/carbon/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type EPDSource = 'oekobaudat' | 'ice' | 'ec3' | 'custom';
-export type Stage = 'a1a3' | 'a4' | 'a5' | 'b' | 'c' | 'd';
-export type InventoryStatus = 'draft' | 'baseline' | 'current' | 'archived';
-export type TargetStatus = 'active' | 'met' | 'missed' | 'abandoned';
-export type Framework = 'ghg_protocol' | 'gri' | 'issb' | 'custom';
+export type EPDSource = "oekobaudat" | "ice" | "ec3" | "custom";
+export type Stage = "a1a3" | "a4" | "a5" | "b" | "c" | "d";
+export type InventoryStatus = "draft" | "baseline" | "current" | "archived";
+export type TargetStatus = "active" | "met" | "missed" | "abandoned";
+export type Framework = "ghg_protocol" | "gri" | "issb" | "custom";
 
 export interface EPDRecord {
   id: string;
@@ -44,7 +44,7 @@ export interface MaterialCarbonFactor {
   unit_for_factor: string;
   region: string;
   last_reviewed_at?: string | null;
-  confidence: 'high' | 'medium' | 'low';
+  confidence: "high" | "medium" | "low";
   notes?: string | null;
   metadata: Record<string, unknown>;
   created_at: string;
@@ -55,7 +55,7 @@ export interface CarbonInventory {
   id: string;
   project_id: string;
   name: string;
-  scope: 'cradle_to_gate' | 'cradle_to_grave' | 'operational';
+  scope: "cradle_to_gate" | "cradle_to_grave" | "operational";
   as_of_date?: string | null;
   status: InventoryStatus;
   totals: Record<string, unknown>;
@@ -139,7 +139,7 @@ export interface CarbonTarget {
   id: string;
   project_id: string;
   name: string;
-  target_type: 'intensity_per_m2' | 'intensity_per_unit' | 'absolute';
+  target_type: "intensity_per_m2" | "intensity_per_unit" | "absolute";
   baseline_value: number | string;
   target_value: number | string;
   baseline_year: number;
@@ -216,11 +216,11 @@ export function listEPDs(params?: {
   limit?: number;
 }): Promise<EPDRecord[]> {
   const qs = new URLSearchParams();
-  if (params?.material_class) qs.set('material_class', params.material_class);
-  if (params?.region) qs.set('region', params.region);
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.material_class) qs.set("material_class", params.material_class);
+  if (params?.region) qs.set("region", params.region);
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
-  return apiGet<EPDRecord[]>(`/v1/carbon/epd${q ? `?${q}` : ''}`);
+  return apiGet<EPDRecord[]>(`/v1/carbon/epd${q ? `?${q}` : ""}`);
 }
 
 export function createEPD(data: {
@@ -240,7 +240,7 @@ export function createEPD(data: {
   validity_until?: string | null;
   document_url?: string | null;
 }): Promise<EPDRecord> {
-  return apiPost<EPDRecord>('/v1/carbon/epd', data);
+  return apiPost<EPDRecord>("/v1/carbon/epd", data);
 }
 
 export function updateEPD(
@@ -273,7 +273,7 @@ export function deleteEPD(id: string): Promise<void> {
 
 export function listInventories(projectId: string): Promise<CarbonInventory[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', projectId);
+  qs.set("project_id", projectId);
   return apiGet<CarbonInventory[]>(`/v1/carbon/inventories?${qs.toString()}`);
 }
 
@@ -284,19 +284,19 @@ export function getInventory(id: string): Promise<CarbonInventory> {
 export function createInventory(data: {
   project_id: string;
   name?: string;
-  scope?: 'cradle_to_gate' | 'cradle_to_grave' | 'operational';
+  scope?: "cradle_to_gate" | "cradle_to_grave" | "operational";
   as_of_date?: string;
   status?: InventoryStatus;
   notes?: string;
 }): Promise<CarbonInventory> {
-  return apiPost<CarbonInventory>('/v1/carbon/inventories', data);
+  return apiPost<CarbonInventory>("/v1/carbon/inventories", data);
 }
 
 export function updateInventory(
   id: string,
   data: Partial<{
     name: string;
-    scope: 'cradle_to_gate' | 'cradle_to_grave' | 'operational';
+    scope: "cradle_to_gate" | "cradle_to_grave" | "operational";
     as_of_date: string | null;
     status: InventoryStatus;
     notes: string | null;
@@ -318,11 +318,11 @@ export function listEmbodiedEntries(
   params?: { stage?: Stage; limit?: number },
 ): Promise<EmbodiedEntry[]> {
   const qs = new URLSearchParams();
-  if (params?.stage) qs.set('stage', params.stage);
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.stage) qs.set("stage", params.stage);
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return apiGet<EmbodiedEntry[]>(
-    `/v1/carbon/inventories/${inventoryId}/embodied${q ? `?${q}` : ''}`,
+    `/v1/carbon/inventories/${inventoryId}/embodied${q ? `?${q}` : ""}`,
   );
 }
 
@@ -386,7 +386,7 @@ export function createScope1(data: {
   source?: string;
   notes?: string | null;
 }): Promise<Scope1Entry> {
-  return apiPost<Scope1Entry>('/v1/carbon/scope1', data);
+  return apiPost<Scope1Entry>("/v1/carbon/scope1", data);
 }
 export function updateScope1(
   id: string,
@@ -417,7 +417,7 @@ export function createScope2(data: {
   supplier_name?: string | null;
   notes?: string | null;
 }): Promise<Scope2Entry> {
-  return apiPost<Scope2Entry>('/v1/carbon/scope2', data);
+  return apiPost<Scope2Entry>("/v1/carbon/scope2", data);
 }
 export function updateScope2(
   id: string,
@@ -448,7 +448,7 @@ export function createScope3(data: {
   activity_unit?: string;
   emission_factor?: number | string;
 }): Promise<Scope3Entry> {
-  return apiPost<Scope3Entry>('/v1/carbon/scope3', data);
+  return apiPost<Scope3Entry>("/v1/carbon/scope3", data);
 }
 export function updateScope3(
   id: string,
@@ -473,7 +473,7 @@ export function getAlternatives(
   entryId: string,
 ): Promise<AlternativeComparison> {
   const qs = new URLSearchParams();
-  qs.set('entry_id', entryId);
+  qs.set("entry_id", entryId);
   return apiGet<AlternativeComparison>(
     `/v1/carbon/inventories/${inventoryId}/alternatives?${qs.toString()}`,
   );
@@ -483,21 +483,21 @@ export function getAlternatives(
 
 export function listTargets(projectId: string): Promise<CarbonTarget[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', projectId);
+  qs.set("project_id", projectId);
   return apiGet<CarbonTarget[]>(`/v1/carbon/targets?${qs.toString()}`);
 }
 
 export function createTarget(data: {
   project_id: string;
   name?: string;
-  target_type?: 'intensity_per_m2' | 'intensity_per_unit' | 'absolute';
+  target_type?: "intensity_per_m2" | "intensity_per_unit" | "absolute";
   baseline_value: number | string;
   target_value: number | string;
   baseline_year: number;
   target_year: number;
   scope_set?: string[];
 }): Promise<CarbonTarget> {
-  return apiPost<CarbonTarget>('/v1/carbon/targets', data);
+  return apiPost<CarbonTarget>("/v1/carbon/targets", data);
 }
 
 export function updateTarget(
@@ -522,9 +522,11 @@ export function getTargetProgress(id: string): Promise<TargetProgress> {
 
 /* ── Reports ───────────────────────────────────────────────────────────── */
 
-export function listReports(projectId: string): Promise<SustainabilityReport[]> {
+export function listReports(
+  projectId: string,
+): Promise<SustainabilityReport[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', projectId);
+  qs.set("project_id", projectId);
   return apiGet<SustainabilityReport[]>(`/v1/carbon/reports?${qs.toString()}`);
 }
 
@@ -537,7 +539,7 @@ export function generateReport(payload: {
   project_area_m2?: number;
   narrative?: string;
 }): Promise<SustainabilityReport> {
-  return apiPost<SustainabilityReport>('/v1/carbon/reports/generate', payload);
+  return apiPost<SustainabilityReport>("/v1/carbon/reports/generate", payload);
 }
 
 export function deleteReport(id: string): Promise<void> {
@@ -546,8 +548,10 @@ export function deleteReport(id: string): Promise<void> {
 
 /* ── Dashboard ─────────────────────────────────────────────────────────── */
 
-export function getCarbonDashboard(projectId: string): Promise<CarbonDashboard> {
+export function getCarbonDashboard(
+  projectId: string,
+): Promise<CarbonDashboard> {
   const qs = new URLSearchParams();
-  qs.set('project_id', projectId);
+  qs.set("project_id", projectId);
   return apiGet<CarbonDashboard>(`/v1/carbon/dashboard?${qs.toString()}`);
 }

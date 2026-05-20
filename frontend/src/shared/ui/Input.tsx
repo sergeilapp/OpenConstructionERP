@@ -1,5 +1,5 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
-import clsx from 'clsx';
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
+import clsx from "clsx";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -13,10 +13,20 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    { label, hint, error, icon, suffix, floatingLabel = false, className, id, ...props },
+    {
+      label,
+      hint,
+      error,
+      icon,
+      suffix,
+      floatingLabel = false,
+      className,
+      id,
+      ...props
+    },
     ref,
   ) => {
-    const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
+    const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
     const hasError = Boolean(error);
 
     /* Static label variant (original behavior, enhanced with transition) */
@@ -41,22 +51,27 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ref={ref}
               id={inputId}
               className={clsx(
-                'h-9 w-full rounded-lg border bg-surface-primary px-3',
-                'text-sm text-content-primary placeholder:text-content-tertiary',
-                'transition-all duration-normal ease-oe',
-                'focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue',
-                'focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)]',
-                icon && 'pl-10',
-                suffix && 'pr-10',
+                "h-9 w-full rounded-lg border bg-surface-primary px-3",
+                "text-sm text-content-primary placeholder:text-content-tertiary",
+                "transition-all duration-normal ease-oe",
+                "focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue",
+                "focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)]",
+                icon && "pl-10",
+                suffix && "pr-10",
                 hasError
-                  ? 'border-semantic-error focus:ring-semantic-error/30 focus:border-semantic-error focus:shadow-[0_0_0_4px_rgba(255,59,48,0.08)]'
-                  : 'border-border hover:border-content-tertiary',
-                props.disabled && 'opacity-40 cursor-not-allowed bg-surface-secondary',
+                  ? "border-semantic-error focus:ring-semantic-error/30 focus:border-semantic-error focus:shadow-[0_0_0_4px_rgba(255,59,48,0.08)]"
+                  : "border-border hover:border-content-tertiary",
+                props.disabled &&
+                  "opacity-40 cursor-not-allowed bg-surface-secondary",
                 className,
               )}
               aria-invalid={hasError}
               aria-describedby={
-                hasError ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined
+                hasError
+                  ? `${inputId}-error`
+                  : hint
+                    ? `${inputId}-hint`
+                    : undefined
               }
               {...props}
             />
@@ -98,36 +113,41 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             placeholder=" "
             className={clsx(
-              'peer h-12 w-full rounded-lg border bg-surface-primary px-3 pt-4 pb-1',
-              'text-sm text-content-primary',
-              'transition-all duration-normal ease-oe',
-              'focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue',
-              'focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)]',
-              icon && 'pl-10',
-              suffix && 'pr-10',
+              "peer h-12 w-full rounded-lg border bg-surface-primary px-3 pt-4 pb-1",
+              "text-sm text-content-primary",
+              "transition-all duration-normal ease-oe",
+              "focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue",
+              "focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)]",
+              icon && "pl-10",
+              suffix && "pr-10",
               hasError
-                ? 'border-semantic-error focus:ring-semantic-error/30 focus:border-semantic-error focus:shadow-[0_0_0_4px_rgba(255,59,48,0.08)]'
-                : 'border-border hover:border-content-tertiary',
-              props.disabled && 'opacity-40 cursor-not-allowed bg-surface-secondary',
+                ? "border-semantic-error focus:ring-semantic-error/30 focus:border-semantic-error focus:shadow-[0_0_0_4px_rgba(255,59,48,0.08)]"
+                : "border-border hover:border-content-tertiary",
+              props.disabled &&
+                "opacity-40 cursor-not-allowed bg-surface-secondary",
               className,
             )}
             aria-invalid={hasError}
             aria-describedby={
-              hasError ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined
+              hasError
+                ? `${inputId}-error`
+                : hint
+                  ? `${inputId}-hint`
+                  : undefined
             }
             {...props}
           />
           <label
             htmlFor={inputId}
             className={clsx(
-              'absolute top-1/2 -translate-y-1/2 origin-left pointer-events-none',
-              'text-sm text-content-tertiary',
-              'transition-all duration-normal ease-oe',
+              "absolute top-1/2 -translate-y-1/2 origin-left pointer-events-none",
+              "text-sm text-content-tertiary",
+              "transition-all duration-normal ease-oe",
               /* Float up when focused or has value (placeholder-shown trick) */
-              'peer-focus:top-2.5 peer-focus:translate-y-0 peer-focus:text-2xs peer-focus:text-oe-blue',
-              'peer-[:not(:placeholder-shown)]:top-2.5 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-2xs',
-              hasError && 'peer-focus:text-semantic-error',
-              icon ? 'left-10' : 'left-3',
+              "peer-focus:top-2.5 peer-focus:translate-y-0 peer-focus:text-2xs peer-focus:text-oe-blue",
+              "peer-[:not(:placeholder-shown)]:top-2.5 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-2xs",
+              hasError && "peer-focus:text-semantic-error",
+              icon ? "left-10" : "left-3",
             )}
           >
             {label}
@@ -157,6 +177,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   },
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 export { Input };
 export type { InputProps };

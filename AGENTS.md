@@ -9,8 +9,8 @@
 ## Repo Structure
 
 ```
-backend/app/          # FastAPI app (60+ auto-discovered modules)
-frontend/src/         # React SPA
+backend/app/          # FastAPI app (103 auto-discovered modules)
+frontend/src/         # React SPA (24 languages)
 Makefile              # Root task runner
 ```
 

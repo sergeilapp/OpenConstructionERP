@@ -9,7 +9,7 @@
  * that actually need it.
  */
 
-import jsPDF from 'jspdf';
+import jsPDF from "jspdf";
 
 /** Options accepted by {@link exportCanvasToPdf}. */
 export interface PdfExportOptions {
@@ -27,8 +27,8 @@ export interface PdfExportOptions {
 /** Format a Date as YYYYMMDD for filenames. */
 function ymdStamp(d: Date = new Date()): string {
   const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
   return `${y}${m}${dd}`;
 }
 
@@ -36,9 +36,9 @@ function ymdStamp(d: Date = new Date()): string {
 function headerDate(d: Date = new Date()): string {
   try {
     return new Intl.DateTimeFormat(undefined, {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     }).format(d);
   } catch {
     return d.toDateString();
@@ -47,7 +47,7 @@ function headerDate(d: Date = new Date()): string {
 
 /** Strip common drawing extensions from a basename. */
 function stripExt(name: string): string {
-  return name.replace(/\.(dxf|dwg|rvt|ifc|pdf)$/i, '');
+  return name.replace(/\.(dxf|dwg|rvt|ifc|pdf)$/i, "");
 }
 
 /**
@@ -63,13 +63,13 @@ export function exportCanvasToPdf(opts: PdfExportOptions): void {
   const { canvas, filename, scale = 1, downloadName } = opts;
 
   if (canvas.width === 0 || canvas.height === 0) {
-    throw new Error('Canvas is empty — nothing to export.');
+    throw new Error("Canvas is empty — nothing to export.");
   }
 
-  const dataUrl = canvas.toDataURL('image/png');
+  const dataUrl = canvas.toDataURL("image/png");
 
   // A4 landscape: 297 × 210 mm. 10 mm margin on every side.
-  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 10;
@@ -77,24 +77,29 @@ export function exportCanvasToPdf(opts: PdfExportOptions): void {
   // ── Header ────────────────────────────────────────────────────────
   const headerY = margin;
   const headerHeight = 12;
-  const displayName = filename ? stripExt(filename) : 'Drawing';
+  const displayName = filename ? stripExt(filename) : "Drawing";
 
-  doc.setFont('helvetica', 'bold');
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.text(displayName, margin, headerY + 6);
 
-  doc.setFont('helvetica', 'normal');
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(90, 90, 90);
   const metaParts = [`Scale 1:${scale}`, headerDate()];
-  const metaStr = metaParts.join('    ');
+  const metaStr = metaParts.join("    ");
   const metaWidth = doc.getTextWidth(metaStr);
   doc.text(metaStr, pageWidth - margin - metaWidth, headerY + 6);
 
   // Thin underline between header and image
   doc.setDrawColor(200, 200, 200);
   doc.setLineWidth(0.2);
-  doc.line(margin, headerY + headerHeight, pageWidth - margin, headerY + headerHeight);
+  doc.line(
+    margin,
+    headerY + headerHeight,
+    pageWidth - margin,
+    headerY + headerHeight,
+  );
   doc.setTextColor(0, 0, 0);
 
   // ── Image (fit inside remaining area preserving aspect ratio) ─────
@@ -115,10 +120,10 @@ export function exportCanvasToPdf(opts: PdfExportOptions): void {
   const imgX = (pageWidth - imgW) / 2;
   const imgY = headerY + headerHeight + 2;
 
-  doc.addImage(dataUrl, 'PNG', imgX, imgY, imgW, imgH);
+  doc.addImage(dataUrl, "PNG", imgX, imgY, imgW, imgH);
 
   // ── Download ──────────────────────────────────────────────────────
-  const base = downloadName
-    ?? `${stripExt(filename || 'drawing')}-${ymdStamp()}`;
+  const base =
+    downloadName ?? `${stripExt(filename || "drawing")}-${ymdStamp()}`;
   doc.save(`${base}.pdf`);
 }

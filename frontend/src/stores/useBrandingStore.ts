@@ -13,12 +13,12 @@
  * without a backend round-trip. The logo is stored as a base64 data
  * URL (size-capped at 2 MB to keep localStorage healthy).
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
-const STORAGE_KEY = 'oe_custom_branding_v1';
+const STORAGE_KEY = "oe_custom_branding_v1";
 const MAX_LOGO_BYTES = 2 * 1024 * 1024; // 2 MB cap on base64 payload
 
-export type BrandingMode = 'default' | 'logo' | 'text';
+export type BrandingMode = "default" | "logo" | "text";
 
 export interface BrandingState {
   mode: BrandingMode;
@@ -49,21 +49,25 @@ interface Persisted {
 function load(): Persisted {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { mode: 'default', logoDataUrl: null, companyName: '' };
+    if (!raw) return { mode: "default", logoDataUrl: null, companyName: "" };
     const parsed = JSON.parse(raw) as Partial<Persisted>;
     const mode: BrandingMode =
-      parsed.mode === 'logo' || parsed.mode === 'text' ? parsed.mode : 'default';
+      parsed.mode === "logo" || parsed.mode === "text"
+        ? parsed.mode
+        : "default";
     const logoDataUrl =
-      typeof parsed.logoDataUrl === 'string' &&
-      parsed.logoDataUrl.startsWith('data:image/') &&
+      typeof parsed.logoDataUrl === "string" &&
+      parsed.logoDataUrl.startsWith("data:image/") &&
       parsed.logoDataUrl.length < MAX_LOGO_BYTES * 2 // base64 expansion
         ? parsed.logoDataUrl
         : null;
     const companyName =
-      typeof parsed.companyName === 'string' ? parsed.companyName.slice(0, 60) : '';
+      typeof parsed.companyName === "string"
+        ? parsed.companyName.slice(0, 60)
+        : "";
     return { mode, logoDataUrl, companyName };
   } catch {
-    return { mode: 'default', logoDataUrl: null, companyName: '' };
+    return { mode: "default", logoDataUrl: null, companyName: "" };
   }
 }
 
@@ -77,13 +81,35 @@ function save(s: Persisted) {
 
 export const useBrandingStore = create<BrandingState>((set, get) => {
   const initial = load();
+
+  // Cross-tab sync — when localStorage[STORAGE_KEY] changes in another
+  // tab (e.g. user edits branding on /login while the app is open in
+  // another window, or vice-versa), re-hydrate this tab's store so the
+  // sidebar / login screen stays consistent without a reload. Same-tab
+  // edits go through setLogo/setCompanyName so they bypass this path.
+  if (typeof window !== "undefined") {
+    window.addEventListener("storage", (e) => {
+      if (e.key !== STORAGE_KEY) return;
+      const fresh = load();
+      const current = get();
+      if (
+        fresh.mode === current.mode &&
+        fresh.logoDataUrl === current.logoDataUrl &&
+        fresh.companyName === current.companyName
+      ) {
+        return;
+      }
+      set(fresh);
+    });
+  }
+
   return {
     ...initial,
     setLogo: (dataUrl) => {
       const current = get();
       if (!dataUrl) {
         const next: Persisted = {
-          mode: current.companyName ? 'text' : 'default',
+          mode: current.companyName ? "text" : "default",
           logoDataUrl: null,
           companyName: current.companyName,
         };
@@ -92,7 +118,7 @@ export const useBrandingStore = create<BrandingState>((set, get) => {
         return;
       }
       const next: Persisted = {
-        mode: 'logo',
+        mode: "logo",
         logoDataUrl: dataUrl,
         companyName: current.companyName,
       };
@@ -104,8 +130,11 @@ export const useBrandingStore = create<BrandingState>((set, get) => {
       const current = get();
       // Logo wins over text — if a logo is set, we keep mode=logo
       // and just update the stored name so the user can flip back.
-      const mode: BrandingMode =
-        current.logoDataUrl ? 'logo' : trimmed ? 'text' : 'default';
+      const mode: BrandingMode = current.logoDataUrl
+        ? "logo"
+        : trimmed
+          ? "text"
+          : "default";
       const next: Persisted = {
         mode,
         logoDataUrl: current.logoDataUrl,
@@ -115,7 +144,11 @@ export const useBrandingStore = create<BrandingState>((set, get) => {
       set(next);
     },
     reset: () => {
-      const next: Persisted = { mode: 'default', logoDataUrl: null, companyName: '' };
+      const next: Persisted = {
+        mode: "default",
+        logoDataUrl: null,
+        companyName: "",
+      };
       save(next);
       set(next);
     },

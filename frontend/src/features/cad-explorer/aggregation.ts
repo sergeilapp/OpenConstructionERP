@@ -3,8 +3,8 @@
  * analysis-state tests. Pure functions — no React / store imports so
  * they can be unit-tested cheaply.
  */
-import type { AggregateGroup } from './api';
-import type { SlicerFilter } from '@/stores/useAnalysisStateStore';
+import type { AggregateGroup } from "./api";
+import type { SlicerFilter } from "@/stores/useAnalysisStateStore";
 
 /* ── Aggregation function vocabulary ──────────────────────────────────── */
 
@@ -17,18 +17,26 @@ import type { SlicerFilter } from '@/stores/useAnalysisStateStore';
  *  computed server-side; count_unique is computed client-side because the
  *  current backend endpoint rejects unknown aggregation names). */
 export const AGG_FUNCTIONS = [
-  'sum',
-  'avg',
-  'min',
-  'max',
-  'count',
-  'count_unique',
+  "sum",
+  "avg",
+  "min",
+  "max",
+  "count",
+  "count_unique",
 ] as const;
 
 export type AggFunction = (typeof AGG_FUNCTIONS)[number];
 
-const NUMERIC_AGG_FUNCTIONS = new Set<AggFunction>(['sum', 'avg', 'min', 'max']);
-const CATEGORICAL_AGG_FUNCTIONS = new Set<AggFunction>(['count', 'count_unique']);
+const NUMERIC_AGG_FUNCTIONS = new Set<AggFunction>([
+  "sum",
+  "avg",
+  "min",
+  "max",
+]);
+const CATEGORICAL_AGG_FUNCTIONS = new Set<AggFunction>([
+  "count",
+  "count_unique",
+]);
 
 /** `true` when the agg function requires the target column to be numeric
  *  (sum/avg/min/max). `false` when it accepts any column dtype. */
@@ -58,7 +66,7 @@ export function canAggregateColumn(fn: string, isNumeric: boolean): boolean {
  *  ASCII unit separator (U+001F) because group-by columns may contain any
  *  printable character including `|` and `,`. */
 function keyTupleString(tuple: readonly string[]): string {
-  return tuple.join('\u001F');
+  return tuple.join("\u001F");
 }
 
 /** Extract the group-by key for a row. Missing / nullish values become
@@ -70,7 +78,7 @@ function rowGroupKey(
 ): { tuple: string[]; keyStr: string } {
   const tuple = groupBy.map((c) => {
     const v = row[c];
-    return v == null ? '' : String(v);
+    return v == null ? "" : String(v);
   });
   return { tuple, keyStr: keyTupleString(tuple) };
 }
@@ -93,7 +101,7 @@ export function computeClientPivot(
   rows: readonly Record<string, unknown>[],
   groupBy: readonly string[],
   aggCols: readonly string[],
-  aggFn: 'count' | 'count_unique',
+  aggFn: "count" | "count_unique",
 ): {
   groups: AggregateGroup[];
   totals: Record<string, number>;
@@ -117,18 +125,18 @@ export function computeClientPivot(
   for (const { tuple, rows: groupRows } of groupsMap.values()) {
     const key: Record<string, string> = {};
     groupBy.forEach((c, i) => {
-      key[c] = tuple[i] ?? '';
+      key[c] = tuple[i] ?? "";
     });
     const results: Record<string, number> = {};
     for (const col of aggCols) {
-      if (aggFn === 'count') {
+      if (aggFn === "count") {
         // count = rows with a non-null / non-empty value in the column.
         // Matches what users intuitively expect when they pick a column
         // and ask for "count" — e.g. "how many rows have a client_name".
         let n = 0;
         for (const r of groupRows) {
           const v = r[col];
-          if (v != null && v !== '') n += 1;
+          if (v != null && v !== "") n += 1;
         }
         results[col] = n;
       } else {
@@ -136,7 +144,7 @@ export function computeClientPivot(
         const seen = new Set<string>();
         for (const r of groupRows) {
           const v = r[col];
-          if (v == null || v === '') continue;
+          if (v == null || v === "") continue;
           seen.add(String(v));
         }
         results[col] = seen.size;
@@ -148,18 +156,18 @@ export function computeClientPivot(
   // Totals across all rows (not all groups) — matches server-side semantics.
   const totals: Record<string, number> = {};
   for (const col of aggCols) {
-    if (aggFn === 'count') {
+    if (aggFn === "count") {
       let n = 0;
       for (const r of rows) {
         const v = r[col];
-        if (v != null && v !== '') n += 1;
+        if (v != null && v !== "") n += 1;
       }
       totals[col] = n;
     } else {
       const seen = new Set<string>();
       for (const r of rows) {
         const v = r[col];
-        if (v == null || v === '') continue;
+        if (v == null || v === "") continue;
         seen.add(String(v));
       }
       totals[col] = seen.size;
@@ -171,8 +179,8 @@ export function computeClientPivot(
   // deterministic across runs.
   groups.sort((a, b) => {
     for (const c of groupBy) {
-      const va = a.key[c] ?? '';
-      const vb = b.key[c] ?? '';
+      const va = a.key[c] ?? "";
+      const vb = b.key[c] ?? "";
       if (va !== vb) return va.localeCompare(vb);
     }
     return 0;
@@ -214,14 +222,14 @@ export function rollupParentValue(
   if (children.length === 0) return 0;
   const vals = children.map((g) => g.results[col] ?? 0);
   switch (aggFn) {
-    case 'sum':
-    case 'count':
+    case "sum":
+    case "count":
       return vals.reduce((s, v) => s + v, 0);
-    case 'min':
+    case "min":
       return Math.min(...vals);
-    case 'max':
+    case "max":
       return Math.max(...vals);
-    case 'avg': {
+    case "avg": {
       let num = 0;
       let den = 0;
       for (const g of children) {
@@ -231,7 +239,7 @@ export function rollupParentValue(
       }
       return den > 0 ? num / den : 0;
     }
-    case 'count_unique':
+    case "count_unique":
       // Distinct counts are not additive across groups and the raw
       // rows are not available at the rollup site — refuse to invent a
       // number.
@@ -246,7 +254,7 @@ export function rollupParentValue(
 /** Format an integer count for display in a pivot cell. No decimals,
  *  always locale-aware thousand separators — e.g. `1,234` or `1 234`. */
 export function formatCount(n: number | null | undefined): string {
-  if (n == null || !Number.isFinite(n)) return '-';
+  if (n == null || !Number.isFinite(n)) return "-";
   return Math.round(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
 
@@ -259,22 +267,24 @@ export function applyTopN(
   groups: AggregateGroup[],
   valueKey: string,
   topN: number | null,
-  direction: 'top' | 'bottom' = 'top',
+  direction: "top" | "bottom" = "top",
   categoryKey?: string,
 ): AggregateGroup[] {
   const sorted = [...groups].sort((a, b) => {
     const va = a.results[valueKey] ?? 0;
     const vb = b.results[valueKey] ?? 0;
-    if (vb !== va) return direction === 'top' ? vb - va : va - vb;
+    if (vb !== va) return direction === "top" ? vb - va : va - vb;
     // Tie-breaker: sort by category label alphabetically so ordering is
     // stable across re-renders and different JS engines.
     if (categoryKey) {
-      const la = String(a.key[categoryKey] ?? '');
-      const lb = String(b.key[categoryKey] ?? '');
+      const la = String(a.key[categoryKey] ?? "");
+      const lb = String(b.key[categoryKey] ?? "");
       return la.localeCompare(lb);
     }
     // Fallback: concatenate all key values.
-    return Object.values(a.key).join('|').localeCompare(Object.values(b.key).join('|'));
+    return Object.values(a.key)
+      .join("|")
+      .localeCompare(Object.values(b.key).join("|"));
   });
   if (topN == null || topN <= 0) return sorted;
   return sorted.slice(0, topN);
@@ -293,7 +303,7 @@ export function applySlicers(
     slicers.every((s) => {
       if (s.values.length === 0) return true;
       const cell = row[s.column];
-      const cellStr = cell == null ? '' : String(cell);
+      const cellStr = cell == null ? "" : String(cell);
       return s.values.includes(cellStr);
     }),
   );

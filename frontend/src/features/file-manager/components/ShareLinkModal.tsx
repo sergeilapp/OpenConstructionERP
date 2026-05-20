@@ -6,9 +6,9 @@
  * existing "Email link" button.
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -19,16 +19,12 @@ import {
   Share2,
   Trash2,
   X,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { useToastStore } from '@/stores/useToastStore';
-import { copyToClipboard } from '../lib/tauri';
-import {
-  createShareLink,
-  listShareLinks,
-  revokeShareLink,
-} from '../api';
-import type { FileRow, ShareLinkResponse } from '../types';
+} from "lucide-react";
+import clsx from "clsx";
+import { useToastStore } from "@/stores/useToastStore";
+import { copyToClipboard } from "../lib/tauri";
+import { createShareLink, listShareLinks, revokeShareLink } from "../api";
+import type { FileRow, ShareLinkResponse } from "../types";
 
 interface ShareLinkModalProps {
   open: boolean;
@@ -43,16 +39,16 @@ interface ExpiryPreset {
 }
 
 const EXPIRY_PRESETS: ExpiryPreset[] = [
-  { value: 1, labelKey: 'files.share.expiry_1d', defaultLabel: '1 day' },
-  { value: 7, labelKey: 'files.share.expiry_7d', defaultLabel: '7 days' },
-  { value: 30, labelKey: 'files.share.expiry_30d', defaultLabel: '30 days' },
-  { value: null, labelKey: 'files.share.expiry_never', defaultLabel: 'Never' },
+  { value: 1, labelKey: "files.share.expiry_1d", defaultLabel: "1 day" },
+  { value: 7, labelKey: "files.share.expiry_7d", defaultLabel: "7 days" },
+  { value: 30, labelKey: "files.share.expiry_30d", defaultLabel: "30 days" },
+  { value: null, labelKey: "files.share.expiry_never", defaultLabel: "Never" },
 ];
 
 /** Convert a token-relative path (``/share/abc``) to an absolute URL.
  *  Falls back to the path itself in non-browser contexts (SSR / tests). */
 function absoluteShareUrl(path: string): string {
-  if (typeof window === 'undefined' || !window.location) return path;
+  if (typeof window === "undefined" || !window.location) return path;
   return `${window.location.origin}${path}`;
 }
 
@@ -61,16 +57,18 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [expiryDays, setExpiryDays] = useState<number | null>(7);
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
-  const [justCreated, setJustCreated] = useState<ShareLinkResponse | null>(null);
+  const [justCreated, setJustCreated] = useState<ShareLinkResponse | null>(
+    null,
+  );
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
   const [revokingId, setRevokingId] = useState<string | null>(null);
 
   const { data: existingLinks = [], isLoading: listLoading } = useQuery({
-    queryKey: ['document-share-links', row?.id ?? null],
+    queryKey: ["document-share-links", row?.id ?? null],
     queryFn: () => (row ? listShareLinks(row.id) : Promise.resolve([])),
     enabled: open && !!row,
     staleTime: 10_000,
@@ -78,7 +76,7 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
 
   useEffect(() => {
     if (!open) {
-      setPassword('');
+      setPassword("");
       setExpiryDays(7);
       setCreating(false);
       setCreateError(null);
@@ -91,16 +89,16 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
   const invalidate = useCallback(() => {
     if (!row) return;
     queryClient.invalidateQueries({
-      queryKey: ['document-share-links', row.id],
+      queryKey: ["document-share-links", row.id],
     });
   }, [queryClient, row]);
 
@@ -114,14 +112,14 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
       if (expiryDays !== null) payload.expires_in_days = expiryDays;
       const link = await createShareLink(row.id, payload);
       setJustCreated(link);
-      setPassword('');
+      setPassword("");
       invalidate();
     } catch (e) {
       setCreateError((e as Error).message);
       addToast({
-        type: 'error',
-        title: t('files.share.error_create', {
-          defaultValue: 'Could not create the share link.‌⁠‍',
+        type: "error",
+        title: t("files.share.error_create", {
+          defaultValue: "Could not create the share link.‌⁠‍",
         }),
       });
     } finally {
@@ -146,13 +144,15 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
     try {
       await revokeShareLink(row.id, link.id);
       // Clear the freshly-minted card if it was just revoked.
-      setJustCreated((current) => (current && current.id === link.id ? null : current));
+      setJustCreated((current) =>
+        current && current.id === link.id ? null : current,
+      );
       invalidate();
     } catch (e) {
       addToast({
-        type: 'error',
-        title: t('files.share.error_revoke', {
-          defaultValue: 'Could not revoke the share link.‌⁠‍',
+        type: "error",
+        title: t("files.share.error_revoke", {
+          defaultValue: "Could not revoke the share link.‌⁠‍",
         }),
         message: (e as Error).message,
       });
@@ -182,18 +182,21 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
               className="text-sm font-semibold text-content-primary flex items-center gap-2"
             >
               <Share2 size={14} strokeWidth={2.25} />
-              {t('files.share.title', {
-                defaultValue: 'Password-protected share link‌⁠‍',
+              {t("files.share.title", {
+                defaultValue: "Password-protected share link‌⁠‍",
               })}
             </h2>
-            <p className="text-2xs text-content-tertiary truncate" title={row.name}>
+            <p
+              className="text-2xs text-content-tertiary truncate"
+              title={row.name}
+            >
               {row.name}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-7 w-7 items-center justify-center rounded text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
           >
             <X size={15} />
@@ -209,8 +212,8 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                 className="block text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1.5"
               >
                 <Lock size={10} className="inline-block me-1 -mt-0.5" />
-                {t('files.share.password_label', {
-                  defaultValue: 'Password (optional)‌⁠‍',
+                {t("files.share.password_label", {
+                  defaultValue: "Password (optional)‌⁠‍",
                 })}
               </label>
               <input
@@ -218,8 +221,8 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={t('files.share.password_placeholder', {
-                  defaultValue: 'Leave blank for an open link‌⁠‍',
+                placeholder={t("files.share.password_placeholder", {
+                  defaultValue: "Leave blank for an open link‌⁠‍",
                 })}
                 autoComplete="off"
                 className="w-full h-9 px-3 rounded-lg border border-border-light bg-surface-primary text-sm text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-2 focus:ring-oe-blue/50"
@@ -228,13 +231,15 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
 
             <div>
               <span className="block text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1.5">
-                {t('files.share.expiry_label', { defaultValue: 'Expires after' })}
+                {t("files.share.expiry_label", {
+                  defaultValue: "Expires after",
+                })}
               </span>
               <div
                 className="flex flex-wrap gap-1.5"
                 role="radiogroup"
-                aria-label={t('files.share.expiry_label', {
-                  defaultValue: 'Expires after',
+                aria-label={t("files.share.expiry_label", {
+                  defaultValue: "Expires after",
                 })}
               >
                 {EXPIRY_PRESETS.map((p) => (
@@ -245,10 +250,10 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                     aria-checked={expiryDays === p.value}
                     onClick={() => setExpiryDays(p.value)}
                     className={clsx(
-                      'px-3 h-8 rounded-full text-xs font-medium border transition-colors',
+                      "px-3 h-8 rounded-full text-xs font-medium border transition-colors",
                       expiryDays === p.value
-                        ? 'bg-oe-blue text-white border-oe-blue'
-                        : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                        ? "bg-oe-blue text-white border-oe-blue"
+                        : "border-border-light text-content-secondary hover:bg-surface-secondary",
                     )}
                   >
                     {t(p.labelKey, { defaultValue: p.defaultLabel })}
@@ -269,8 +274,8 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                 <Share2 size={14} />
               )}
               {creating
-                ? t('files.share.creating', { defaultValue: 'Creating link…' })
-                : t('files.share.create', { defaultValue: 'Create link' })}
+                ? t("files.share.creating", { defaultValue: "Creating link…" })
+                : t("files.share.create", { defaultValue: "Create link" })}
             </button>
 
             {createError && (
@@ -284,7 +289,7 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
               <div className="rounded-lg border border-border-light bg-surface-secondary/40 p-3 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-2xs uppercase tracking-wide text-content-tertiary">
-                    {t('files.share.url_label', { defaultValue: 'Share URL' })}
+                    {t("files.share.url_label", { defaultValue: "Share URL" })}
                   </span>
                   <button
                     type="button"
@@ -294,12 +299,12 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                     {copiedToken === justCreated.token ? (
                       <>
                         <CheckCircle2 size={11} />
-                        {t('files.share.copied', { defaultValue: 'Copied' })}
+                        {t("files.share.copied", { defaultValue: "Copied" })}
                       </>
                     ) : (
                       <>
                         <Copy size={11} />
-                        {t('files.share.copy', { defaultValue: 'Copy' })}
+                        {t("files.share.copy", { defaultValue: "Copy" })}
                       </>
                     )}
                   </button>
@@ -312,8 +317,10 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                 </div>
                 {justCreated.expires_at && (
                   <div className="text-2xs text-content-tertiary">
-                    {t('files.share.expires_label', { defaultValue: 'Expires' })}
-                    :{' '}
+                    {t("files.share.expires_label", {
+                      defaultValue: "Expires",
+                    })}
+                    :{" "}
                     <span className="text-content-secondary">
                       {new Date(justCreated.expires_at).toLocaleString()}
                     </span>
@@ -326,14 +333,16 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
           {/* ── Existing links ────────────────────────────────────── */}
           <section className="space-y-2 border-t border-border-light pt-4">
             <h3 className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
-              {t('files.share.existing_title', { defaultValue: 'Existing links' })}
+              {t("files.share.existing_title", {
+                defaultValue: "Existing links",
+              })}
             </h3>
             {listLoading ? (
               <div className="h-3 rounded bg-surface-secondary animate-pulse" />
             ) : existingLinks.length === 0 ? (
               <p className="text-xs text-content-tertiary">
-                {t('files.share.existing_empty', {
-                  defaultValue: 'No share links yet — create one above.',
+                {t("files.share.existing_empty", {
+                  defaultValue: "No share links yet — create one above.",
                 })}
               </p>
             ) : (
@@ -351,8 +360,8 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                             size={11}
                             strokeWidth={2}
                             className="text-content-tertiary shrink-0"
-                            aria-label={t('files.share.requires_password', {
-                              defaultValue: 'Password protected',
+                            aria-label={t("files.share.requires_password", {
+                              defaultValue: "Password protected",
                             })}
                           />
                         )}
@@ -364,9 +373,13 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                         <button
                           type="button"
                           onClick={() => handleCopy(link)}
-                          aria-label={t('files.share.copy', { defaultValue: 'Copy' })}
+                          aria-label={t("files.share.copy", {
+                            defaultValue: "Copy",
+                          })}
                           className="inline-flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:text-oe-blue hover:bg-surface-secondary"
-                          title={t('files.share.copy', { defaultValue: 'Copy' })}
+                          title={t("files.share.copy", {
+                            defaultValue: "Copy",
+                          })}
                         >
                           {copiedToken === link.token ? (
                             <CheckCircle2 size={12} />
@@ -378,12 +391,12 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                           href={absoluteShareUrl(link.url)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={t('files.share.open_link', {
-                            defaultValue: 'Open link',
+                          aria-label={t("files.share.open_link", {
+                            defaultValue: "Open link",
                           })}
                           className="inline-flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:text-oe-blue hover:bg-surface-secondary"
-                          title={t('files.share.open_link', {
-                            defaultValue: 'Open link',
+                          title={t("files.share.open_link", {
+                            defaultValue: "Open link",
                           })}
                         >
                           <ExternalLink size={12} />
@@ -392,9 +405,13 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                           type="button"
                           onClick={() => handleRevoke(link)}
                           disabled={revokingId === link.id}
-                          aria-label={t('files.share.revoke', { defaultValue: 'Revoke' })}
+                          aria-label={t("files.share.revoke", {
+                            defaultValue: "Revoke",
+                          })}
                           className="inline-flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:text-semantic-error hover:bg-semantic-error/10 disabled:opacity-50"
-                          title={t('files.share.revoke', { defaultValue: 'Revoke' })}
+                          title={t("files.share.revoke", {
+                            defaultValue: "Revoke",
+                          })}
                         >
                           {revokingId === link.id ? (
                             <Loader2 size={12} className="animate-spin" />
@@ -407,21 +424,21 @@ export function ShareLinkModal({ open, row, onClose }: ShareLinkModalProps) {
                     <div className="flex items-center justify-between text-[10px] text-content-tertiary">
                       <span>
                         {link.expires_at
-                          ? `${t('files.share.expires_label', { defaultValue: 'Expires' })}: ${new Date(link.expires_at).toLocaleString()}`
-                          : t('files.share.never_expires', {
-                              defaultValue: 'Never expires',
+                          ? `${t("files.share.expires_label", { defaultValue: "Expires" })}: ${new Date(link.expires_at).toLocaleString()}`
+                          : t("files.share.never_expires", {
+                              defaultValue: "Never expires",
                             })}
                       </span>
                       <span className="tabular-nums">
                         {t(
                           link.download_count === 1
-                            ? 'files.share.downloads'
-                            : 'files.share.downloads_plural',
+                            ? "files.share.downloads"
+                            : "files.share.downloads_plural",
                           {
                             defaultValue:
                               link.download_count === 1
-                                ? '{{count}} download'
-                                : '{{count}} downloads',
+                                ? "{{count}} download"
+                                : "{{count}} downloads",
                             count: link.download_count,
                           },
                         )}

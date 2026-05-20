@@ -4,14 +4,27 @@
  * All endpoints are prefixed with /v1/fieldreports/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete, triggerDownload, extractErrorMessageFromBody } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import {
+  apiGet,
+  apiPost,
+  apiPatch,
+  apiDelete,
+  triggerDownload,
+  extractErrorMessageFromBody,
+} from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type ReportType = 'daily' | 'inspection' | 'safety' | 'concrete_pour';
-export type ReportStatus = 'draft' | 'submitted' | 'approved';
-export type WeatherCondition = 'clear' | 'cloudy' | 'rain' | 'snow' | 'fog' | 'storm';
+export type ReportType = "daily" | "inspection" | "safety" | "concrete_pour";
+export type ReportStatus = "draft" | "submitted" | "approved";
+export type WeatherCondition =
+  | "clear"
+  | "cloudy"
+  | "rain"
+  | "snow"
+  | "fog"
+  | "storm";
 
 export interface WorkforceEntry {
   trade: string;
@@ -115,28 +128,30 @@ export async function fetchFieldReports(
   filters?: {
     date_from?: string;
     date_to?: string;
-    status?: ReportStatus | '';
-    type?: ReportType | '';
+    status?: ReportStatus | "";
+    type?: ReportType | "";
   },
 ): Promise<FieldReport[]> {
   if (!projectId) return [];
   const params = new URLSearchParams({ project_id: projectId });
-  if (filters?.date_from) params.set('date_from', filters.date_from);
-  if (filters?.date_to) params.set('date_to', filters.date_to);
-  if (filters?.status) params.set('status', filters.status);
-  if (filters?.type) params.set('type', filters.type);
+  if (filters?.date_from) params.set("date_from", filters.date_from);
+  if (filters?.date_to) params.set("date_to", filters.date_to);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.type) params.set("type", filters.type);
   const res = await apiGet<FieldReport[] | { items: FieldReport[] }>(
     `/v1/fieldreports/reports/?${params.toString()}`,
   );
-  return Array.isArray(res) ? res : res.items ?? [];
+  return Array.isArray(res) ? res : (res.items ?? []);
 }
 
 export async function fetchFieldReport(id: string): Promise<FieldReport> {
   return apiGet<FieldReport>(`/v1/fieldreports/reports/${id}`);
 }
 
-export async function createFieldReport(data: CreateFieldReportPayload): Promise<FieldReport> {
-  return apiPost<FieldReport>('/v1/fieldreports/reports/', data);
+export async function createFieldReport(
+  data: CreateFieldReportPayload,
+): Promise<FieldReport> {
+  return apiPost<FieldReport>("/v1/fieldreports/reports/", data);
 }
 
 export async function updateFieldReport(
@@ -158,9 +173,13 @@ export async function approveFieldReport(id: string): Promise<FieldReport> {
   return apiPost<FieldReport>(`/v1/fieldreports/reports/${id}/approve/`, {});
 }
 
-export async function fetchFieldReportSummary(projectId: string): Promise<FieldReportSummary | null> {
+export async function fetchFieldReportSummary(
+  projectId: string,
+): Promise<FieldReportSummary | null> {
   if (!projectId) return null;
-  return apiGet<FieldReportSummary>(`/v1/fieldreports/reports/summary/?project_id=${projectId}`);
+  return apiGet<FieldReportSummary>(
+    `/v1/fieldreports/reports/summary/?project_id=${projectId}`,
+  );
 }
 
 export async function fetchFieldReportCalendar(
@@ -171,7 +190,7 @@ export async function fetchFieldReportCalendar(
   const res = await apiGet<FieldReport[] | { items: FieldReport[] }>(
     `/v1/fieldreports/reports/calendar/?project_id=${projectId}&month=${month}`,
   );
-  return Array.isArray(res) ? res : res.items ?? [];
+  return Array.isArray(res) ? res : (res.items ?? []);
 }
 
 export function getFieldReportPdfUrl(id: string): string {
@@ -181,12 +200,12 @@ export function getFieldReportPdfUrl(id: string): string {
 /* ── Report Templates ──────────────────────────────────────────────────── */
 
 export type TemplateFieldType =
-  | 'text'
-  | 'textarea'
-  | 'number'
-  | 'select'
-  | 'date'
-  | 'checkbox';
+  | "text"
+  | "textarea"
+  | "number"
+  | "select"
+  | "date"
+  | "checkbox";
 
 export interface TemplateFieldDefinition {
   key: string;
@@ -234,7 +253,7 @@ export async function fetchFieldReportTemplates(
 export async function createFieldReportTemplate(
   data: CreateTemplatePayload,
 ): Promise<FieldReportTemplate> {
-  return apiPost<FieldReportTemplate>('/v1/fieldreports/templates/', data);
+  return apiPost<FieldReportTemplate>("/v1/fieldreports/templates/", data);
 }
 
 export async function deleteFieldReportTemplate(
@@ -289,24 +308,24 @@ export async function importFieldReportsFile(
 ): Promise<ImportResult> {
   const token = useAuthStore.getState().accessToken;
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
   const headers: Record<string, string> = {};
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(
     `/api/v1/fieldreports/reports/import/file/?project_id=${encodeURIComponent(projectId)}`,
     {
-      method: 'POST',
+      method: "POST",
       headers,
       body: formData,
     },
   );
 
   if (!response.ok) {
-    let detail = 'Import failed';
+    let detail = "Import failed";
     try {
       const body = await response.json();
       detail = body.detail || detail;
@@ -323,12 +342,12 @@ export async function exportFieldReports(projectId: string): Promise<void> {
   const token = useAuthStore.getState().accessToken;
   const headers: Record<string, string> = {};
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(
     `/api/v1/fieldreports/reports/export/?project_id=${encodeURIComponent(projectId)}`,
-    { method: 'GET', headers },
+    { method: "GET", headers },
   );
   if (!response.ok) {
     let detail = `Export failed (HTTP ${response.status})`;
@@ -342,9 +361,9 @@ export async function exportFieldReports(projectId: string): Promise<void> {
   }
 
   const blob = await response.blob();
-  const disposition = response.headers.get('Content-Disposition');
+  const disposition = response.headers.get("Content-Disposition");
   const filename =
-    disposition?.match(/filename="?(.+)"?/)?.[1] || 'field_reports_export.xlsx';
+    disposition?.match(/filename="?(.+)"?/)?.[1] || "field_reports_export.xlsx";
   triggerDownload(blob, filename);
 }
 
@@ -363,7 +382,10 @@ export interface WeatherData {
   error?: string;
 }
 
-export async function fetchWeather(lat: number, lon: number): Promise<WeatherData> {
+export async function fetchWeather(
+  lat: number,
+  lon: number,
+): Promise<WeatherData> {
   return apiGet<WeatherData>(`/v1/fieldreports/weather/?lat=${lat}&lon=${lon}`);
 }
 
@@ -373,18 +395,18 @@ export function downloadFieldReportsTemplate(): void {
   const token = useAuthStore.getState().accessToken;
   const headers: Record<string, string> = {};
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  fetch('/api/v1/fieldreports/reports/template/', { method: 'GET', headers })
+  fetch("/api/v1/fieldreports/reports/template/", { method: "GET", headers })
     .then((response) => {
-      if (!response.ok) throw new Error('Failed to download template');
+      if (!response.ok) throw new Error("Failed to download template");
       return response.blob();
     })
     .then((blob) => {
-      triggerDownload(blob, 'field_reports_import_template.xlsx');
+      triggerDownload(blob, "field_reports_import_template.xlsx");
     })
     .catch((err) => {
-      if (import.meta.env.DEV) console.error('Template download error:', err);
+      if (import.meta.env.DEV) console.error("Template download error:", err);
     });
 }

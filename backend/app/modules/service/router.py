@@ -36,6 +36,10 @@ from app.modules.service.schemas import (
     ContractDashboardResponse,
     NCRFromWorkOrderRequest,
     NCRFromWorkOrderResponse,
+    RecurringScheduleCreate,
+    RecurringScheduleMaterializeResponse,
+    RecurringScheduleResponse,
+    RecurringScheduleUpdate,
     ServiceAssetCreate,
     ServiceAssetResponse,
     ServiceAssetUpdate,
@@ -48,6 +52,7 @@ from app.modules.service.schemas import (
     ServiceTicketCreate,
     ServiceTicketResponse,
     ServiceTicketUpdate,
+    SLABreachCheckResponse,
     SLABreachScanResponse,
     SLADefinitionCreate,
     SLADefinitionResponse,
@@ -152,15 +157,22 @@ async def list_contracts(
         await verify_project_access(project_id, user_id, session)
     if customer_id is not None:
         items, _ = await service.contract_repo.list_for_customer(
-            customer_id, offset=offset, limit=limit, status=status_filter,
+            customer_id,
+            offset=offset,
+            limit=limit,
+            status=status_filter,
         )
     elif project_id is not None:
         items, _ = await service.contract_repo.list_for_project(
-            project_id, offset=offset, limit=limit,
+            project_id,
+            offset=offset,
+            limit=limit,
         )
     else:
         items, _ = await service.contract_repo.list_all(
-            offset=offset, limit=limit, status=status_filter,
+            offset=offset,
+            limit=limit,
+            status=status_filter,
         )
     return [ServiceContractResponse.model_validate(it) for it in items]
 
@@ -271,7 +283,10 @@ async def list_assets(
     """List service assets under a contract."""
     await _verify_contract_project(contract_id, user_id, session, service)
     items, _ = await service.asset_repo.list_for_contract(
-        contract_id, offset=offset, limit=limit, status=status_filter,
+        contract_id,
+        offset=offset,
+        limit=limit,
+        status=status_filter,
     )
     return [ServiceAssetResponse.model_validate(it) for it in items]
 
@@ -369,7 +384,9 @@ async def list_tickets(
         )
     elif project_id is not None:
         items, _ = await service.ticket_repo.list_for_project(
-            project_id, offset=offset, limit=limit,
+            project_id,
+            offset=offset,
+            limit=limit,
         )
     else:
         # No contract/project scope ⇒ tenant-wide dispatcher view. Previously
@@ -510,7 +527,10 @@ async def list_work_orders(
 ) -> list[WorkOrderResponse]:
     """List work orders."""
     items, _ = await service.work_order_repo.list_all(
-        offset=offset, limit=limit, status=status_filter, technician_id=technician_id,
+        offset=offset,
+        limit=limit,
+        status=status_filter,
+        technician_id=technician_id,
     )
     return [WorkOrderResponse.model_validate(it) for it in items]
 
@@ -686,6 +706,159 @@ async def scan_sla_breaches(
     return await service.scan_sla_breaches(contract_id=contract_id, notify=notify)
 
 
+# ── T10: SLA breach check + recurring schedules ─────────────────────────
+
+
+@router.post(
+    "/tickets/check-breaches",
+    response_model=SLABreachCheckResponse,
+)
+async def check_ticket_breaches(
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("service.dispatch")),
+    contract_id: uuid.UUID | None = Query(default=None),
+    service: ServiceService = Depends(_get_service),
+) -> SLABreachCheckResponse:
+    """Admin trigger: stamp ``sla_breached_at`` on every now-overdue ticket.
+
+    Idempotent — only tickets where ``sla_breached_at IS NULL`` are touched.
+    Emits ``service.sla.breached`` once per newly stamped ticket.
+    """
+    if contract_id is not None:
+        await _verify_contract_project(contract_id, user_id, session, service)
+    return await service.check_breaches(contract_id=contract_id)
+
+
+@router.get(
+    "/recurring-schedules/",
+    response_model=list[RecurringScheduleResponse],
+)
+async def list_recurring_schedules(
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("service.read")),
+    project_id: uuid.UUID | None = Query(default=None),
+    enabled: bool | None = Query(default=None),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=500),
+    service: ServiceService = Depends(_get_service),
+) -> list[RecurringScheduleResponse]:
+    """List recurring schedules (optionally filtered by project / enabled)."""
+    if project_id is not None:
+        await verify_project_access(project_id, user_id, session)
+    items, _ = await service.recurring_repo.list_for_project(
+        project_id,
+        offset=offset,
+        limit=limit,
+        enabled=enabled,
+    )
+    return [RecurringScheduleResponse.model_validate(it) for it in items]
+
+
+@router.post(
+    "/recurring-schedules/",
+    response_model=RecurringScheduleResponse,
+    status_code=201,
+)
+async def create_recurring_schedule(
+    data: RecurringScheduleCreate,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("service.create")),
+    service: ServiceService = Depends(_get_service),
+) -> RecurringScheduleResponse:
+    """Create a new RRULE-driven recurring schedule."""
+    if data.project_id is not None:
+        await verify_project_access(data.project_id, user_id, session)
+    if data.contract_id is not None:
+        await _verify_contract_project(data.contract_id, user_id, session, service)
+    sched = await service.create_recurring(data)
+    return RecurringScheduleResponse.model_validate(sched)
+
+
+@router.get(
+    "/recurring-schedules/{schedule_id}",
+    response_model=RecurringScheduleResponse,
+)
+async def get_recurring_schedule(
+    schedule_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("service.read")),
+    service: ServiceService = Depends(_get_service),
+) -> RecurringScheduleResponse:
+    """Get a single recurring schedule."""
+    existing = await service.recurring_repo.get_by_id(schedule_id)
+    if existing is not None and existing.project_id is not None:
+        await verify_project_access(existing.project_id, user_id, session)
+    sched = await service.get_recurring(schedule_id)
+    return RecurringScheduleResponse.model_validate(sched)
+
+
+@router.patch(
+    "/recurring-schedules/{schedule_id}",
+    response_model=RecurringScheduleResponse,
+)
+async def update_recurring_schedule(
+    schedule_id: uuid.UUID,
+    data: RecurringScheduleUpdate,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("service.update")),
+    service: ServiceService = Depends(_get_service),
+) -> RecurringScheduleResponse:
+    """Update a recurring schedule (e.g. toggle enabled, edit RRULE)."""
+    existing = await service.recurring_repo.get_by_id(schedule_id)
+    if existing is not None and existing.project_id is not None:
+        await verify_project_access(existing.project_id, user_id, session)
+    if data.project_id is not None:
+        await verify_project_access(data.project_id, user_id, session)
+    sched = await service.update_recurring(schedule_id, data)
+    return RecurringScheduleResponse.model_validate(sched)
+
+
+@router.delete("/recurring-schedules/{schedule_id}", status_code=204)
+async def delete_recurring_schedule(
+    schedule_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("service.delete")),
+    service: ServiceService = Depends(_get_service),
+) -> None:
+    """Delete a recurring schedule."""
+    existing = await service.recurring_repo.get_by_id(schedule_id)
+    if existing is not None and existing.project_id is not None:
+        await verify_project_access(existing.project_id, user_id, session)
+    await service.delete_recurring(schedule_id)
+
+
+@router.post(
+    "/recurring-schedules/{schedule_id}/materialize",
+    response_model=RecurringScheduleMaterializeResponse,
+)
+async def materialize_recurring_schedule(
+    schedule_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("service.dispatch")),
+    force: bool = Query(
+        default=False,
+        description="Force materialise even if not due / disabled",
+    ),
+    service: ServiceService = Depends(_get_service),
+) -> RecurringScheduleMaterializeResponse:
+    """Run a recurring schedule now: stamp one ticket + advance next_run_at."""
+    existing = await service.recurring_repo.get_by_id(schedule_id)
+    if existing is not None and existing.project_id is not None:
+        await verify_project_access(existing.project_id, user_id, session)
+    return await service.materialize_recurring(
+        schedule_id,
+        force=force,
+        user_id=user_id,
+    )
+
+
 # ── SLA definitions ───────────────────────────────────────────────────────
 
 
@@ -700,7 +873,9 @@ async def list_slas(
 ) -> list[SLADefinitionResponse]:
     """List SLA definitions."""
     items, _ = await service.sla_repo.list_all(
-        offset=offset, limit=limit, active_only=active_only,
+        offset=offset,
+        limit=limit,
+        active_only=active_only,
     )
     return [SLADefinitionResponse.model_validate(it) for it in items]
 
@@ -831,7 +1006,10 @@ async def list_checklists(
 ) -> list[AssetChecklistResponse]:
     """List inspection-checklist templates."""
     items, _ = await service.checklist_repo.list_all(
-        offset=offset, limit=limit, asset_type=asset_type, active_only=active_only,
+        offset=offset,
+        limit=limit,
+        asset_type=asset_type,
+        active_only=active_only,
     )
     return [AssetChecklistResponse.model_validate(it) for it in items]
 

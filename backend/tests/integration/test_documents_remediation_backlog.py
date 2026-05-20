@@ -153,11 +153,7 @@ async def _register_admin(client: AsyncClient) -> tuple[dict[str, str], str]:
     )
     assert reg.status_code == 201, reg.text
     async with async_session_factory() as session:
-        await session.execute(
-            sa_update(User)
-            .where(User.email == email.lower())
-            .values(role="admin", is_active=True)
-        )
+        await session.execute(sa_update(User).where(User.email == email.lower()).values(role="admin", is_active=True))
         await session.commit()
     resp = await client.post(
         "/api/v1/users/auth/login",
@@ -206,18 +202,13 @@ def test_get_photo_handler_is_idor_guarded() -> None:
     import ast
     from pathlib import Path
 
-    router_src = (
-        Path(__file__).resolve().parents[2]
-        / "app" / "modules" / "documents" / "router.py"
-    ).read_text(encoding="utf-8")
+    router_src = (Path(__file__).resolve().parents[2] / "app" / "modules" / "documents" / "router.py").read_text(
+        encoding="utf-8"
+    )
     tree = ast.parse(router_src)
 
     fn = next(
-        (
-            n
-            for n in ast.walk(tree)
-            if isinstance(n, ast.AsyncFunctionDef) and n.name == "get_photo"
-        ),
+        (n for n in ast.walk(tree) if isinstance(n, ast.AsyncFunctionDef) and n.name == "get_photo"),
         None,
     )
     assert fn is not None, "get_photo handler not found"
@@ -231,14 +222,8 @@ def test_get_photo_handler_is_idor_guarded() -> None:
         isinstance(node, ast.Await)
         and isinstance(node.value, ast.Call)
         and (
-            (
-                isinstance(node.value.func, ast.Name)
-                and node.value.func.id == "verify_project_access"
-            )
-            or (
-                isinstance(node.value.func, ast.Attribute)
-                and node.value.func.attr == "verify_project_access"
-            )
+            (isinstance(node.value.func, ast.Name) and node.value.func.id == "verify_project_access")
+            or (isinstance(node.value.func, ast.Attribute) and node.value.func.attr == "verify_project_access")
         )
         for node in ast.walk(fn)
     )
@@ -250,10 +235,7 @@ def test_get_photo_handler_is_idor_guarded() -> None:
     deco_src = ast.get_source_segment(router_src, fn) or ""
     # The dependency is on the @router.get(...) decorator immediately
     # above; assert it's wired by checking the decorator list.
-    deco_has_dep = any(
-        "RequirePermission" in (ast.get_source_segment(router_src, d) or "")
-        for d in fn.decorator_list
-    )
+    deco_has_dep = any("RequirePermission" in (ast.get_source_segment(router_src, d) or "") for d in fn.decorator_list)
     assert deco_has_dep, "get_photo missing RequirePermission dependency"
 
 
@@ -280,22 +262,16 @@ async def test_photo_delete_removes_cross_linked_document(
     assert up.status_code == 201, up.text
     photo_id = up.json()["id"]
 
-    s1 = await client.get(
-        f"/api/v1/documents/summary/?project_id={pid}", headers=headers
-    )
+    s1 = await client.get(f"/api/v1/documents/summary/?project_id={pid}", headers=headers)
     assert s1.status_code == 200, s1.text
     photo_count_before = s1.json()["by_category"].get("photo", 0)
     total_before = s1.json()["total"]
     assert photo_count_before >= 1
 
-    d = await client.delete(
-        f"/api/v1/documents/photos/{photo_id}", headers=headers
-    )
+    d = await client.delete(f"/api/v1/documents/photos/{photo_id}", headers=headers)
     assert d.status_code == 204, d.text
 
-    s2 = await client.get(
-        f"/api/v1/documents/summary/?project_id={pid}", headers=headers
-    )
+    s2 = await client.get(f"/api/v1/documents/summary/?project_id={pid}", headers=headers)
     assert s2.status_code == 200, s2.text
     body = s2.json()
     # The cross-linked Document is gone — the orphan no longer counts.

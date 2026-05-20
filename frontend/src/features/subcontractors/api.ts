@@ -4,26 +4,26 @@
  * Backed by /api/v1/subcontractors/ — see backend/app/modules/subcontractors/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type PrequalStatus = 'pending' | 'approved' | 'suspended' | 'rejected';
-export type AgreementStatus = 'draft' | 'active' | 'completed' | 'terminated';
-export type WorkPackageStatus = 'planned' | 'in_progress' | 'completed';
+export type PrequalStatus = "pending" | "approved" | "suspended" | "rejected";
+export type AgreementStatus = "draft" | "active" | "completed" | "terminated";
+export type WorkPackageStatus = "planned" | "in_progress" | "completed";
 export type PaymentApplicationStatus =
-  | 'submitted'
-  | 'foreman_approved'
-  | 'finance_approved'
-  | 'paid'
-  | 'rejected';
-export type CertType = 'insurance' | 'license' | 'iso' | 'safety' | 'bond';
+  | "submitted"
+  | "foreman_approved"
+  | "finance_approved"
+  | "paid"
+  | "rejected";
+export type CertType = "insurance" | "license" | "iso" | "safety" | "bond";
 export type PrequalApplicationStatus =
-  | 'draft'
-  | 'submitted'
-  | 'under_review'
-  | 'approved'
-  | 'rejected';
+  | "draft"
+  | "submitted"
+  | "under_review"
+  | "approved"
+  | "rejected";
 
 export interface Subcontractor {
   id: string;
@@ -39,10 +39,26 @@ export interface Subcontractor {
   website?: string | null;
   notes?: string | null;
   is_active: boolean;
+  // ── Wave 4 / T12: BuildingConnected-style prequal + insurance tracking ──
+  prequal_score?: number | null;
+  insurance_expiry_date?: string | null; // ISO date (yyyy-mm-dd)
+  insurance_doc_id?: string | null;
+  prequal_questionnaire?: Record<string, unknown> | null;
+  prequal_completed_at?: string | null;
+  blocked_reason?: string | null;
+  is_blocked?: boolean;
   created_by?: string | null;
   metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
+}
+
+export interface InsuranceExpiryEntry {
+  id: string;
+  legal_name: string;
+  insurance_expiry_date?: string | null;
+  days_until_expiry: number;
+  is_blocked: boolean;
 }
 
 export interface SubcontractorContact {
@@ -213,36 +229,49 @@ export function listSubcontractors(params?: {
   active_only?: boolean;
 }): Promise<Subcontractor[]> {
   const qs = new URLSearchParams();
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
-  if (params?.prequalification_status) qs.set('prequalification_status', params.prequalification_status);
-  if (params?.trade_category) qs.set('trade_category', params.trade_category);
-  if (params?.active_only !== undefined) qs.set('active_only', String(params.active_only));
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
+  if (params?.prequalification_status)
+    qs.set("prequalification_status", params.prequalification_status);
+  if (params?.trade_category) qs.set("trade_category", params.trade_category);
+  if (params?.active_only !== undefined)
+    qs.set("active_only", String(params.active_only));
   const q = qs.toString();
-  return apiGet<Subcontractor[]>(`/v1/subcontractors/subcontractors/${q ? `?${q}` : ''}`);
+  return apiGet<Subcontractor[]>(
+    `/v1/subcontractors/subcontractors/${q ? `?${q}` : ""}`,
+  );
 }
 
 export function getSubcontractor(id: string): Promise<Subcontractor> {
   return apiGet<Subcontractor>(`/v1/subcontractors/subcontractors/${id}`);
 }
 
-export function createSubcontractor(data: CreateSubcontractorPayload): Promise<Subcontractor> {
-  return apiPost<Subcontractor>('/v1/subcontractors/subcontractors/', data);
+export function createSubcontractor(
+  data: CreateSubcontractorPayload,
+): Promise<Subcontractor> {
+  return apiPost<Subcontractor>("/v1/subcontractors/subcontractors/", data);
 }
 
 export function updateSubcontractor(
   id: string,
   data: Partial<CreateSubcontractorPayload>,
 ): Promise<Subcontractor> {
-  return apiPatch<Subcontractor>(`/v1/subcontractors/subcontractors/${id}`, data);
+  return apiPatch<Subcontractor>(
+    `/v1/subcontractors/subcontractors/${id}`,
+    data,
+  );
 }
 
 export function deleteSubcontractor(id: string): Promise<void> {
   return apiDelete(`/v1/subcontractors/subcontractors/${id}`);
 }
 
-export function getSubcontractorDashboard(id: string): Promise<SubcontractorDashboard> {
-  return apiGet<SubcontractorDashboard>(`/v1/subcontractors/subcontractors/${id}/dashboard`);
+export function getSubcontractorDashboard(
+  id: string,
+): Promise<SubcontractorDashboard> {
+  return apiGet<SubcontractorDashboard>(
+    `/v1/subcontractors/subcontractors/${id}/dashboard`,
+  );
 }
 
 /* ── Agreements / Scope ────────────────────────────────────────────────── */
@@ -253,15 +282,18 @@ export function listAgreements(params: {
   status?: string;
 }): Promise<Agreement[]> {
   const qs = new URLSearchParams();
-  if (params.subcontractor_id) qs.set('subcontractor_id', params.subcontractor_id);
-  if (params.project_id) qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
+  if (params.subcontractor_id)
+    qs.set("subcontractor_id", params.subcontractor_id);
+  if (params.project_id) qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
   return apiGet<Agreement[]>(`/v1/subcontractors/agreements/?${qs.toString()}`);
 }
 
 export function listWorkPackages(agreementId: string): Promise<WorkPackage[]> {
   const qs = new URLSearchParams({ agreement_id: agreementId });
-  return apiGet<WorkPackage[]>(`/v1/subcontractors/work-packages/?${qs.toString()}`);
+  return apiGet<WorkPackage[]>(
+    `/v1/subcontractors/work-packages/?${qs.toString()}`,
+  );
 }
 
 /* ── Payments / Retention ──────────────────────────────────────────────── */
@@ -271,20 +303,30 @@ export function listPaymentApplications(params: {
   status?: string;
 }): Promise<PaymentApplication[]> {
   const qs = new URLSearchParams({ agreement_id: params.agreement_id });
-  if (params.status) qs.set('status', params.status);
-  return apiGet<PaymentApplication[]>(`/v1/subcontractors/payment-applications/?${qs.toString()}`);
+  if (params.status) qs.set("status", params.status);
+  return apiGet<PaymentApplication[]>(
+    `/v1/subcontractors/payment-applications/?${qs.toString()}`,
+  );
 }
 
-export function listRetentionLedger(agreementId: string): Promise<RetentionLedgerEntry[]> {
+export function listRetentionLedger(
+  agreementId: string,
+): Promise<RetentionLedgerEntry[]> {
   const qs = new URLSearchParams({ agreement_id: agreementId });
-  return apiGet<RetentionLedgerEntry[]>(`/v1/subcontractors/retention/ledger?${qs.toString()}`);
+  return apiGet<RetentionLedgerEntry[]>(
+    `/v1/subcontractors/retention/ledger?${qs.toString()}`,
+  );
 }
 
 /* ── Certificates ──────────────────────────────────────────────────────── */
 
-export function listCertificates(subcontractorId: string): Promise<Certificate[]> {
+export function listCertificates(
+  subcontractorId: string,
+): Promise<Certificate[]> {
   const qs = new URLSearchParams({ subcontractor_id: subcontractorId });
-  return apiGet<Certificate[]>(`/v1/subcontractors/certificates/?${qs.toString()}`);
+  return apiGet<Certificate[]>(
+    `/v1/subcontractors/certificates/?${qs.toString()}`,
+  );
 }
 
 /* ── Ratings ───────────────────────────────────────────────────────────── */
@@ -292,4 +334,48 @@ export function listCertificates(subcontractorId: string): Promise<Certificate[]
 export function listRatings(subcontractorId: string): Promise<Rating[]> {
   const qs = new URLSearchParams({ subcontractor_id: subcontractorId });
   return apiGet<Rating[]>(`/v1/subcontractors/ratings/?${qs.toString()}`);
+}
+
+/* ── Wave 4 / T12: Prequal + block + insurance ─────────────────────────── */
+
+export interface PrequalRequestPayload {
+  questionnaire: Record<string, unknown>;
+  score?: number | null;
+}
+
+export function submitPrequal(
+  subId: string,
+  payload: PrequalRequestPayload,
+): Promise<Subcontractor> {
+  return apiPost<Subcontractor>(
+    `/v1/subcontractors/subcontractors/${subId}/prequal`,
+    payload,
+  );
+}
+
+export function checkInsuranceExpiry(
+  daysAhead: number = 30,
+): Promise<InsuranceExpiryEntry[]> {
+  const qs = new URLSearchParams({ days_ahead: String(daysAhead) });
+  return apiPost<InsuranceExpiryEntry[]>(
+    `/v1/subcontractors/subcontractors/check-insurance-expiry?${qs.toString()}`,
+    {},
+  );
+}
+
+export function blockSubcontractor(
+  subId: string,
+  reason: string,
+): Promise<Subcontractor> {
+  return apiPost<Subcontractor>(
+    `/v1/subcontractors/subcontractors/${subId}/block`,
+    { reason },
+  );
+}
+
+export function unblockSubcontractor(subId: string): Promise<Subcontractor> {
+  return apiPost<Subcontractor>(
+    `/v1/subcontractors/subcontractors/${subId}/unblock`,
+    {},
+  );
 }

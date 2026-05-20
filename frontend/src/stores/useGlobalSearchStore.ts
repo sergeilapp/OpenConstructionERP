@@ -5,7 +5,7 @@
  * modal restores the previous results without a re-fetch.
  */
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface GlobalSearchState {
   open: boolean;
@@ -23,7 +23,7 @@ interface GlobalSearchState {
 
 export const useGlobalSearchStore = create<GlobalSearchState>((set) => ({
   open: false,
-  query: '',
+  query: "",
   selectedTypes: [],
 
   openModal: (initialQuery) =>

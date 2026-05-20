@@ -105,17 +105,14 @@ class FinanceService:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=(
-                    f"Invalid invoice status: '{data.status}'. "
-                    f"Allowed: {', '.join(sorted(_VALID_INVOICE_STATUSES))}"
+                    f"Invalid invoice status: '{data.status}'. Allowed: {', '.join(sorted(_VALID_INVOICE_STATUSES))}"
                 ),
             )
 
         # Auto-generate invoice number if not provided
         invoice_number = data.invoice_number
         if not invoice_number:
-            invoice_number = await self.invoices.next_invoice_number(
-                data.project_id, data.invoice_direction
-            )
+            invoice_number = await self.invoices.next_invoice_number(data.project_id, data.invoice_direction)
 
         # Server-side total computation: always override amount_total
         computed_total = _compute_invoice_total(data.amount_subtotal, data.tax_amount)
@@ -217,8 +214,7 @@ class FinanceService:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=(
-                        f"Invalid invoice status: '{new_status}'. "
-                        f"Allowed: {', '.join(sorted(_VALID_INVOICE_STATUSES))}"
+                        f"Invalid invoice status: '{new_status}'. Allowed: {', '.join(sorted(_VALID_INVOICE_STATUSES))}"
                     ),
                 )
             allowed = _INVOICE_STATUS_TRANSITIONS.get(invoice.status, set())
@@ -339,10 +335,7 @@ class FinanceService:
         if prior not in ("approved", "sent"):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    f"Cannot mark as paid invoice in status '{prior}'. "
-                    "Invoice must be sent first."
-                ),
+                detail=(f"Cannot mark as paid invoice in status '{prior}'. Invoice must be sent first."),
             )
         await self.invoices.update(invoice_id, status="paid")
         try:
@@ -403,9 +396,7 @@ class FinanceService:
             paid_invoices = paid_result.scalars().all()
 
             # key = (wbs_id, cost_category); both None means "uncategorized"
-            bucketed: dict[tuple[str | None, str | None], Decimal] = defaultdict(
-                lambda: Decimal("0")
-            )
+            bucketed: dict[tuple[str | None, str | None], Decimal] = defaultdict(lambda: Decimal("0"))
             total_actual = Decimal("0")
 
             for inv in paid_invoices:
@@ -429,9 +420,7 @@ class FinanceService:
                     total_actual += amt
 
             budget_result = await self.session.execute(
-                select(ProjectBudget).where(
-                    ProjectBudget.project_id == invoice.project_id
-                )
+                select(ProjectBudget).where(ProjectBudget.project_id == invoice.project_id)
             )
             budgets = list(budget_result.scalars().all())
 
@@ -442,8 +431,7 @@ class FinanceService:
                 budget.actual = str(bucketed.get(key, Decimal("0")))
 
             logger.info(
-                "Updated budget actuals for project %s: total_actual=%s "
-                "across %d budget row(s), %d bucket(s)",
+                "Updated budget actuals for project %s: total_actual=%s across %d budget row(s), %d bucket(s)",
                 invoice.project_id,
                 total_actual,
                 len(budgets),
@@ -499,9 +487,7 @@ class FinanceService:
         offset: int = 0,
     ) -> tuple[list[Payment], int]:
         """List payments with optional invoice filter."""
-        return await self.payments_repo.list(
-            invoice_id=invoice_id, limit=limit, offset=offset
-        )
+        return await self.payments_repo.list(invoice_id=invoice_id, limit=limit, offset=offset)
 
     # ── Budgets ──────────────────────────────────────────────────────────────
 
@@ -537,9 +523,7 @@ class FinanceService:
             # EUR — task #217).
             try:
                 proj = (
-                    await self.session.execute(
-                        select(Project.currency).where(Project.id == data.project_id)
-                    )
+                    await self.session.execute(select(Project.currency).where(Project.id == data.project_id))
                 ).scalar_one_or_none()
             except Exception:  # noqa: BLE001 — lookup is non-critical
                 proj = None
@@ -652,9 +636,7 @@ class FinanceService:
             budget_agg = await self.budgets.aggregate_for_dashboard(
                 project_id=data.project_id,
             )
-            derived_bac = Decimal(
-                str(budget_agg["total_budget_revised"] or budget_agg["total_budget_original"])
-            )
+            derived_bac = Decimal(str(budget_agg["total_budget_revised"] or budget_agg["total_budget_original"]))
             derived_ac = Decimal(str(budget_agg["total_actual"]))
             derived_committed = Decimal(str(budget_agg["total_committed"]))
             # PV approximation: planned spend up to snapshot date is the
@@ -724,7 +706,12 @@ class FinanceService:
         snapshot = await self.evm.create(snapshot)
         logger.info(
             "EVM snapshot created: project=%s date=%s EAC=%s VAC=%s SPI=%s CPI=%s",
-            data.project_id, data.snapshot_date, eac, vac, spi, cpi,
+            data.project_id,
+            data.snapshot_date,
+            eac,
+            vac,
+            spi,
+            cpi,
         )
         return snapshot
 
@@ -771,11 +758,7 @@ class FinanceService:
         total_actual = budget_agg["total_actual"]
 
         total_variance = total_budget_revised - total_actual
-        budget_consumed_pct = (
-            total_actual / total_budget_revised * 100
-            if total_budget_revised > 0
-            else 0.0
-        )
+        budget_consumed_pct = total_actual / total_budget_revised * 100 if total_budget_revised > 0 else 0.0
 
         # Budget warning level
         if budget_consumed_pct >= 95:

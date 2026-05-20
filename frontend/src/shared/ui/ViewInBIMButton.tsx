@@ -6,10 +6,10 @@
  * Navigation target: `/bim?isolate=id1,id2,...`
  */
 
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Cuboid } from 'lucide-react';
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Cuboid } from "lucide-react";
 
 export interface ViewInBIMButtonProps {
   /** Array of BIM element IDs to isolate in the 3D viewer. */
@@ -32,14 +32,14 @@ export function ViewInBIMButton({
   const { t } = useTranslation();
 
   const validIds = elementIds?.filter(
-    (x): x is string => typeof x === 'string' && x.length > 0,
+    (x): x is string => typeof x === "string" && x.length > 0,
   );
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       if (!validIds || validIds.length === 0) return;
-      navigate(`/bim?isolate=${validIds.join(',')}`);
+      navigate(`/bim?isolate=${validIds.join(",")}`);
     },
     [navigate, validIds],
   );
@@ -48,8 +48,8 @@ export function ViewInBIMButton({
 
   const displayLabel =
     label ??
-    t('common.view_in_bim_count', {
-      defaultValue: '{{count}} element(s)‌⁠‍',
+    t("common.view_in_bim_count", {
+      defaultValue: "{{count}} element(s)‌⁠‍",
       count: validIds.length,
     });
 
@@ -59,10 +59,10 @@ export function ViewInBIMButton({
       onClick={handleClick}
       className={
         className ??
-        'inline-flex items-center gap-1 text-xs text-oe-blue hover:text-oe-blue-dark transition-colors'
+        "inline-flex items-center gap-1 text-xs text-oe-blue hover:text-oe-blue-dark transition-colors"
       }
-      title={t('common.view_in_bim', {
-        defaultValue: 'View in BIM 3D‌⁠‍',
+      title={t("common.view_in_bim", {
+        defaultValue: "View in BIM 3D‌⁠‍",
       })}
     >
       <Cuboid size={iconSize} className="shrink-0" />

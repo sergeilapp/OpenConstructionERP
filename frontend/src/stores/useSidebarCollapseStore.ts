@@ -11,13 +11,13 @@
  * layout consistently.
  */
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
-const STORAGE_KEY = 'oe_sidebar_iconified';
+const STORAGE_KEY = "oe_sidebar_iconified";
 
 function readIconified(): boolean {
   try {
-    return localStorage.getItem(STORAGE_KEY) === '1';
+    return localStorage.getItem(STORAGE_KEY) === "1";
   } catch {
     return false;
   }
@@ -29,18 +29,20 @@ interface SidebarCollapseState {
   toggle: () => void;
 }
 
-export const useSidebarCollapseStore = create<SidebarCollapseState>((set, get) => ({
-  iconified: readIconified(),
-  setIconified: (v: boolean) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, v ? '1' : '0');
-    } catch {
-      /* storage unavailable */
-    }
-    set({ iconified: v });
-  },
-  toggle: () => get().setIconified(!get().iconified),
-}));
+export const useSidebarCollapseStore = create<SidebarCollapseState>(
+  (set, get) => ({
+    iconified: readIconified(),
+    setIconified: (v: boolean) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, v ? "1" : "0");
+      } catch {
+        /* storage unavailable */
+      }
+      set({ iconified: v });
+    },
+    toggle: () => get().setIconified(!get().iconified),
+  }),
+);
 
-export const SIDEBAR_WIDTH_FULL = '248px';
-export const SIDEBAR_WIDTH_ICON = '64px';
+export const SIDEBAR_WIDTH_FULL = "248px";
+export const SIDEBAR_WIDTH_ICON = "64px";

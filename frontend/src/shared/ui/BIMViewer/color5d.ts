@@ -24,13 +24,13 @@ export interface RateGradientStop {
 
 /** Default 3-stop gradient.  Exposed for the legend strip. */
 export const DEFAULT_5D_GRADIENT: readonly RateGradientStop[] = [
-  { t: 0.0, hex: '#0071e3' },
-  { t: 0.5, hex: '#f59e0b' },
-  { t: 1.0, hex: '#ef4444' },
+  { t: 0.0, hex: "#0071e3" },
+  { t: 0.5, hex: "#f59e0b" },
+  { t: 1.0, hex: "#ef4444" },
 ];
 
 /** Colour for elements without a linked BOQ position. */
-export const NO_LINK_COLOR = '#9ca3af';
+export const NO_LINK_COLOR = "#9ca3af";
 /** Opacity for no-link elements — keeps them visible but non-competing. */
 export const NO_LINK_OPACITY = 0.3;
 
@@ -41,7 +41,7 @@ function clamp01(x: number): number {
 }
 
 function parseHex(hex: string): { r: number; g: number; b: number } {
-  const h = hex.replace(/^#/, '');
+  const h = hex.replace(/^#/, "");
   const r = parseInt(h.slice(0, 2), 16);
   const g = parseInt(h.slice(2, 4), 16);
   const b = parseInt(h.slice(4, 6), 16);
@@ -50,7 +50,7 @@ function parseHex(hex: string): { r: number; g: number; b: number } {
 
 function toHex(r: number, g: number, b: number): string {
   const clamp = (v: number) => Math.max(0, Math.min(255, Math.round(v)));
-  const hx = (v: number) => clamp(v).toString(16).padStart(2, '0');
+  const hx = (v: number) => clamp(v).toString(16).padStart(2, "0");
   return `#${hx(r)}${hx(g)}${hx(b)}`;
 }
 

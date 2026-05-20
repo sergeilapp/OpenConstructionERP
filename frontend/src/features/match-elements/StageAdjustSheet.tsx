@@ -9,17 +9,13 @@
 // "Re-run from here" CTA. Running a stage marks every downstream
 // done-stage stale so the user always sees what still needs a re-run.
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, Play, Sparkles, X } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2, Play, Sparkles, X } from "lucide-react";
 
-import {
-  matchElementsApi,
-  LLM_PROVIDERS,
-  type StageState,
-} from './api';
-import { PromptEditor } from './PromptEditor';
+import { matchElementsApi, LLM_PROVIDERS, type StageState } from "./api";
+import { PromptEditor } from "./PromptEditor";
 
 interface Props {
   sessionId: string;
@@ -49,16 +45,16 @@ export function StageAdjustSheet({
   const [groupBy, setGroupBy] = useState<string>(() => {
     const fromInputs = (stage.inputs as { group_by?: unknown }).group_by;
     if (Array.isArray(fromInputs) && fromInputs.length > 0) {
-      return fromInputs.map(String).join(', ');
+      return fromInputs.map(String).join(", ");
     }
     const fromOutput = (stage.output as { group_by?: unknown }).group_by;
     if (Array.isArray(fromOutput) && fromOutput.length > 0) {
-      return fromOutput.map(String).join(', ');
+      return fromOutput.map(String).join(", ");
     }
-    return '';
+    return "";
   });
   const [method, setMethod] = useState<string>(
-    String((stage.inputs as { method?: string }).method ?? 'vector'),
+    String((stage.inputs as { method?: string }).method ?? "vector"),
   );
   const [maxGroups, setMaxGroups] = useState<number>(
     Number((stage.inputs as { max_groups?: number }).max_groups ?? 50),
@@ -71,7 +67,7 @@ export function StageAdjustSheet({
     stage.prompt_template_id,
   );
   const [provider, setProvider] = useState<string>(
-    stage.llm_provider ?? LLM_PROVIDERS[0]?.id ?? 'anthropic/claude-sonnet-4-6',
+    stage.llm_provider ?? LLM_PROVIDERS[0]?.id ?? "anthropic/claude-sonnet-4-6",
   );
 
   const panelRef = useRef<HTMLDivElement>(null);
@@ -85,14 +81,14 @@ export function StageAdjustSheet({
         ? document.activeElement
         : null;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         // A focused native <select> uses Escape for its own dropdown —
         // don't also tear down the sheet in that case.
-        if ((e.target as HTMLElement)?.tagName === 'SELECT') return;
+        if ((e.target as HTMLElement)?.tagName === "SELECT") return;
         onClose();
         return;
       }
-      if (e.key !== 'Tab') return;
+      if (e.key !== "Tab") return;
       const root = panelRef.current;
       if (!root) return;
       const f = Array.from(
@@ -118,14 +114,14 @@ export function StageAdjustSheet({
         first.focus();
       }
     };
-    window.addEventListener('keydown', onKey, true);
+    window.addEventListener("keydown", onKey, true);
     // Move focus into the slide-over so keyboard / SR users are not
     // stranded on the page behind it.
     panelRef.current?.focus();
     const returnTo = returnFocusRef.current;
     return () => {
-      window.removeEventListener('keydown', onKey, true);
-      if (returnTo && typeof returnTo.focus === 'function') {
+      window.removeEventListener("keydown", onKey, true);
+      if (returnTo && typeof returnTo.focus === "function") {
         requestAnimationFrame(() => returnTo.focus());
       }
     };
@@ -134,13 +130,13 @@ export function StageAdjustSheet({
   const runMut = useMutation({
     mutationFn: () => {
       const inputs: Record<string, unknown> = { ...stage.inputs };
-      if (stage.stage_name === 'group') {
+      if (stage.stage_name === "group") {
         inputs.group_by = groupBy
-          .split(',')
+          .split(",")
           .map((s) => s.trim())
           .filter(Boolean);
       }
-      if (stage.stage_name === 'match') {
+      if (stage.stage_name === "match") {
         inputs.method = method;
         inputs.max_groups = maxGroups;
         inputs.top_k = topK;
@@ -157,19 +153,19 @@ export function StageAdjustSheet({
       // way, but only auto-close on a real success — on a stage error
       // keep the sheet open and surface the message so the user can fix
       // the knobs and retry instead of the sheet vanishing silently.
-      qc.invalidateQueries({ queryKey: ['match-stages', sessionId] });
-      qc.invalidateQueries({ queryKey: ['match-groups', sessionId] });
-      qc.invalidateQueries({ queryKey: ['match-session', sessionId] });
-      if (res.status !== 'error') onRan();
+      qc.invalidateQueries({ queryKey: ["match-stages", sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-groups", sessionId] });
+      qc.invalidateQueries({ queryKey: ["match-session", sessionId] });
+      if (res.status !== "error") onRan();
     },
   });
 
   // Stage-level failure surfaced from a 200 response (vs. a transport
   // error, handled by ``runMut.isError`` below).
   const stageError =
-    runMut.data?.status === 'error'
-      ? runMut.data.error ??
-        t('match_elements.pipeline.run_failed', 'Stage run failed')
+    runMut.data?.status === "error"
+      ? (runMut.data.error ??
+        t("match_elements.pipeline.run_failed", "Stage run failed"))
       : null;
 
   return (
@@ -191,7 +187,7 @@ export function StageAdjustSheet({
         <div className="flex items-start justify-between gap-3 px-4 py-3 border-b border-border">
           <div className="min-w-0">
             <div className="text-[10px] uppercase tracking-wider text-content-tertiary font-semibold">
-              {t('match_elements.pipeline.adjust_stage', 'Adjust stage')}
+              {t("match_elements.pipeline.adjust_stage", "Adjust stage")}
             </div>
             <h2
               id="stage-adjust-title"
@@ -204,7 +200,7 @@ export function StageAdjustSheet({
           <button
             onClick={onClose}
             className="shrink-0 p-1.5 rounded-lg hover:bg-surface-secondary text-content-tertiary"
-            aria-label={t('common.close', 'Close')}
+            aria-label={t("common.close", "Close")}
           >
             <X className="w-4 h-4" />
           </button>
@@ -218,10 +214,10 @@ export function StageAdjustSheet({
           </p>
 
           {/* Group-by knob */}
-          {stage.stage_name === 'group' && (
+          {stage.stage_name === "group" && (
             <div>
               <label className="text-[11px] uppercase tracking-wider text-content-tertiary font-semibold">
-                {t('match_elements.pipeline.group_by', 'Group by keys')}
+                {t("match_elements.pipeline.group_by", "Group by keys")}
               </label>
               <input
                 value={groupBy}
@@ -231,31 +227,31 @@ export function StageAdjustSheet({
               />
               <p className="mt-1 text-[11px] text-content-tertiary">
                 {t(
-                  'match_elements.pipeline.group_by_hint',
-                  'Comma-separated. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name',
+                  "match_elements.pipeline.group_by_hint",
+                  "Comma-separated. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
                 )}
               </p>
             </div>
           )}
 
           {/* Match knobs */}
-          {stage.stage_name === 'match' && (
+          {stage.stage_name === "match" && (
             <div className="space-y-3">
               <div>
                 <label className="text-[11px] uppercase tracking-wider text-content-tertiary font-semibold">
-                  {t('match_elements.pipeline.method', 'Method')}
+                  {t("match_elements.pipeline.method", "Method")}
                 </label>
                 <div className="mt-1 flex gap-1.5 flex-wrap">
-                  {(['vector', 'resources', 'lexical', 'llm'] as const).map(
+                  {(["vector", "resources", "lexical", "llm"] as const).map(
                     (m) => (
                       <button
                         key={m}
                         onClick={() => setMethod(m)}
                         className={
-                          'px-2.5 py-1.5 rounded-lg text-xs font-medium border ' +
+                          "px-2.5 py-1.5 rounded-lg text-xs font-medium border " +
                           (method === m
-                            ? 'bg-oe-blue text-white border-oe-blue'
-                            : 'border-border text-content-secondary hover:bg-surface-secondary')
+                            ? "bg-oe-blue text-white border-oe-blue"
+                            : "border-border text-content-secondary hover:bg-surface-secondary")
                         }
                       >
                         {m}
@@ -267,7 +263,7 @@ export function StageAdjustSheet({
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-[11px] uppercase tracking-wider text-content-tertiary font-semibold">
-                    {t('match_elements.pipeline.max_groups', 'Max groups')}
+                    {t("match_elements.pipeline.max_groups", "Max groups")}
                   </label>
                   <input
                     type="number"
@@ -302,8 +298,8 @@ export function StageAdjustSheet({
                 <Sparkles className="w-3 h-3 mt-0.5 shrink-0 text-indigo-500" />
                 <span>
                   {t(
-                    'match_elements.pipeline.llm_pending_note',
-                    'This stage runs the deterministic heuristic today. Your prompt and provider are saved and versioned per session — they take effect automatically once LLM execution is enabled for this step. Tuning them now means you are ready the moment it is.',
+                    "match_elements.pipeline.llm_pending_note",
+                    "This stage runs the deterministic heuristic today. Your prompt and provider are saved and versioned per session — they take effect automatically once LLM execution is enabled for this step. Tuning them now means you are ready the moment it is.",
                   )}
                 </span>
               </div>
@@ -314,17 +310,17 @@ export function StageAdjustSheet({
               />
               <div>
                 <label className="text-[11px] uppercase tracking-wider text-content-tertiary font-semibold">
-                  {t('match_elements.pipeline.llm_provider', 'LLM provider')}
+                  {t("match_elements.pipeline.llm_provider", "LLM provider")}
                 </label>
                 <div className="mt-1 grid grid-cols-1 gap-1">
                   {LLM_PROVIDERS.map((p) => (
                     <label
                       key={p.id}
                       className={
-                        'flex items-center gap-2 px-2.5 py-1.5 rounded-lg border cursor-pointer text-xs ' +
+                        "flex items-center gap-2 px-2.5 py-1.5 rounded-lg border cursor-pointer text-xs " +
                         (provider === p.id
-                          ? 'border-oe-blue bg-oe-blue/5'
-                          : 'border-border hover:bg-surface-secondary')
+                          ? "border-oe-blue bg-oe-blue/5"
+                          : "border-border hover:bg-surface-secondary")
                       }
                     >
                       <input
@@ -352,7 +348,7 @@ export function StageAdjustSheet({
             >
               {runMut.isError
                 ? ((runMut.error as Error)?.message ??
-                  t('match_elements.pipeline.run_failed', 'Stage run failed'))
+                  t("match_elements.pipeline.run_failed", "Stage run failed"))
                 : stageError}
             </div>
           )}
@@ -366,8 +362,8 @@ export function StageAdjustSheet({
             title={
               busy
                 ? t(
-                    'match_elements.pipeline.busy_hint',
-                    'A stage is running — wait for it to finish before starting another.',
+                    "match_elements.pipeline.busy_hint",
+                    "A stage is running — wait for it to finish before starting another.",
                   )
                 : undefined
             }
@@ -378,13 +374,13 @@ export function StageAdjustSheet({
             ) : (
               <Play className="w-4 h-4" />
             )}
-            {t('match_elements.pipeline.rerun_from_here', 'Re-run from here')}
+            {t("match_elements.pipeline.rerun_from_here", "Re-run from here")}
           </button>
           <button
             onClick={onClose}
             className="px-3 py-2.5 rounded-lg text-sm font-medium border border-border text-content-secondary hover:bg-surface-secondary"
           >
-            {t('common.cancel', 'Cancel')}
+            {t("common.cancel", "Cancel")}
           </button>
         </div>
       </div>

@@ -9,9 +9,9 @@
  * Auto-searches when a grid position is selected (fills search with its description).
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   ChevronDown,
   ChevronRight,
@@ -19,16 +19,16 @@ import {
   Search,
   TrendingUp,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   boqApi,
   type CostItemSearchResult,
   type CreatePositionData,
   type Position,
-} from './api';
-import { useIsRTL } from '@/shared/hooks/useIsRTL';
-import { fmtWithCurrency, getUnitsForLocale } from './boqHelpers';
+} from "./api";
+import { useIsRTL } from "@/shared/hooks/useIsRTL";
+import { fmtWithCurrency, getUnitsForLocale } from "./boqHelpers";
 
 /* ── Props ─────────────────────────────────────────────────────────── */
 
@@ -52,18 +52,20 @@ interface AICostFinderPanelProps {
 
 /* ── Helpers ───────────────────────────────────────────────────────── */
 
-const UNITS = ['', ...getUnitsForLocale()];
+const UNITS = ["", ...getUnitsForLocale()];
 
 function scoreColor(score: number): string {
-  if (score >= 0.8) return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-  if (score >= 0.5) return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
-  return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+  if (score >= 0.8)
+    return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+  if (score >= 0.5)
+    return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
+  return "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400";
 }
 
 function scoreBorder(score: number): string {
-  if (score >= 0.8) return 'border-green-200 dark:border-green-800';
-  if (score >= 0.5) return 'border-amber-200 dark:border-amber-800';
-  return 'border-border-light';
+  if (score >= 0.8) return "border-green-200 dark:border-green-800";
+  if (score >= 0.5) return "border-amber-200 dark:border-amber-800";
+  return "border-border-light";
 }
 
 /* ── Component ─────────────────────────────────────────────────────── */
@@ -76,17 +78,17 @@ export function AICostFinderPanel({
   onAddPosition,
   onApplyRate,
   projectRegion,
-  currencyCode = 'EUR',
-  locale = 'de-DE',
+  currencyCode = "EUR",
+  locale = "de-DE",
 }: AICostFinderPanelProps) {
   const { t } = useTranslation();
   const isRTL = useIsRTL();
 
   /* ── State ─────────────────────────────────────────────────────── */
-  const [query, setQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
-  const [unitFilter, setUnitFilter] = useState('');
-  const [regionFilter, setRegionFilter] = useState('');
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [unitFilter, setUnitFilter] = useState("");
+  const [regionFilter, setRegionFilter] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
@@ -122,7 +124,7 @@ export function AICostFinderPanel({
 
   /* ── React Query search ────────────────────────────────────────── */
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['cost-item-search', debouncedQuery, unitFilter, regionFilter],
+    queryKey: ["cost-item-search", debouncedQuery, unitFilter, regionFilter],
     queryFn: () =>
       boqApi.searchCostItems({
         query: debouncedQuery,
@@ -142,7 +144,7 @@ export function AICostFinderPanel({
     (item: CostItemSearchResult) => {
       onAddPosition({
         boq_id: boqId,
-        ordinal: '',
+        ordinal: "",
         description: item.description,
         unit: item.unit,
         quantity: 1,
@@ -165,11 +167,11 @@ export function AICostFinderPanel({
   // Bug 13: offset by app header height (52px = --oe-header-height) so the panel
   // does not cover the top app header / toolbar.
   // RTL fix: see AISmartPanel for full explanation.
-  const offTranslate = isRTL ? '-translate-x-full' : 'translate-x-full';
+  const offTranslate = isRTL ? "-translate-x-full" : "translate-x-full";
   return (
     <div
       className={`fixed right-0 top-[52px] z-50 h-[calc(100%-52px)] w-[380px] bg-surface-elevated border-l border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
-        isOpen ? 'translate-x-0' : offTranslate
+        isOpen ? "translate-x-0" : offTranslate
       }`}
     >
       {/* ── Header ───────────────────────────────────────────────── */}
@@ -177,7 +179,7 @@ export function AICostFinderPanel({
         <div className="flex items-center gap-2">
           <Search size={16} className="text-primary" />
           <span className="font-semibold text-sm">
-            {t('boq.cost_finder_title', { defaultValue: 'AI Cost Finder‌⁠‍' })}
+            {t("boq.cost_finder_title", { defaultValue: "AI Cost Finder‌⁠‍" })}
           </span>
         </div>
         <button
@@ -204,8 +206,8 @@ export function AICostFinderPanel({
               setQuery(e.target.value);
               lastAutoFilledRef.current = null;
             }}
-            placeholder={t('boq.cost_finder_search_placeholder', {
-              defaultValue: 'Search cost items by description...‌⁠‍',
+            placeholder={t("boq.cost_finder_search_placeholder", {
+              defaultValue: "Search cost items by description...‌⁠‍",
             })}
             className="w-full pl-8 pr-3 py-2 text-sm border border-border-light rounded-md bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
@@ -219,7 +221,7 @@ export function AICostFinderPanel({
             className="flex-1 text-xs border border-border-light rounded px-2 py-1.5 bg-surface"
           >
             <option value="">
-              {t('boq.cost_finder_all_units', { defaultValue: 'All units‌⁠‍' })}
+              {t("boq.cost_finder_all_units", { defaultValue: "All units‌⁠‍" })}
             </option>
             {UNITS.filter(Boolean).map((u) => (
               <option key={u} value={u}>
@@ -233,7 +235,9 @@ export function AICostFinderPanel({
             className="flex-1 text-xs border border-border-light rounded px-2 py-1.5 bg-surface"
           >
             <option value="">
-              {t('boq.cost_finder_all_regions', { defaultValue: 'All regions‌⁠‍' })}
+              {t("boq.cost_finder_all_regions", {
+                defaultValue: "All regions‌⁠‍",
+              })}
             </option>
             {projectRegion && (
               <option value={projectRegion}>{projectRegion}</option>
@@ -248,32 +252,40 @@ export function AICostFinderPanel({
         {isLoading && debouncedQuery.length >= 2 && (
           <div className="flex items-center justify-center py-8 text-text-muted text-sm">
             <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full mr-2" />
-            {t('common.loading', { defaultValue: 'Searching...‌⁠‍' })}
+            {t("common.loading", { defaultValue: "Searching...‌⁠‍" })}
           </div>
         )}
 
         {/* Error */}
         {isError && (
           <div className="text-center py-8 text-red-500 text-sm">
-            {t('boq.cost_finder_error', { defaultValue: 'Search failed. Check vector database.' })}
+            {t("boq.cost_finder_error", {
+              defaultValue: "Search failed. Check vector database.",
+            })}
           </div>
         )}
 
         {/* Empty query */}
         {!isLoading && !isError && debouncedQuery.length < 2 && (
           <div className="text-center py-8 text-text-muted text-sm">
-            {t('boq.cost_finder_no_query', {
-              defaultValue: 'Enter a description to search the cost database',
+            {t("boq.cost_finder_no_query", {
+              defaultValue: "Enter a description to search the cost database",
             })}
           </div>
         )}
 
         {/* No results */}
-        {!isLoading && !isError && debouncedQuery.length >= 2 && results.length === 0 && data && (
-          <div className="text-center py-8 text-text-muted text-sm">
-            {t('boq.cost_finder_no_results', { defaultValue: 'No matching items found' })}
-          </div>
-        )}
+        {!isLoading &&
+          !isError &&
+          debouncedQuery.length >= 2 &&
+          results.length === 0 &&
+          data && (
+            <div className="text-center py-8 text-text-muted text-sm">
+              {t("boq.cost_finder_no_results", {
+                defaultValue: "No matching items found",
+              })}
+            </div>
+          )}
 
         {/* Result cards */}
         {results.map((item) => (
@@ -298,8 +310,8 @@ export function AICostFinderPanel({
       <div className="shrink-0 px-4 py-2 border-t border-border-light text-xs text-text-muted">
         {data && debouncedQuery.length >= 2 && (
           <span>
-            {t('boq.cost_finder_results_count', {
-              defaultValue: '{{count}} results ({{ms}}ms)',
+            {t("boq.cost_finder_results_count", {
+              defaultValue: "{{count}} results ({{ms}}ms)",
               count: data.total_found,
               ms: Math.round(data.search_ms),
             })}
@@ -307,9 +319,9 @@ export function AICostFinderPanel({
         )}
         {selectedPosition && (
           <div className="truncate mt-0.5 text-text-secondary">
-            {t('boq.cost_finder_for_position', {
-              defaultValue: 'For: {{description}}',
-              description: selectedPosition.description?.slice(0, 50) ?? '',
+            {t("boq.cost_finder_for_position", {
+              defaultValue: "For: {{description}}",
+              description: selectedPosition.description?.slice(0, 50) ?? "",
             })}
           </div>
         )}
@@ -346,7 +358,9 @@ function ResultCard({
   const hasComponents = item.components && item.components.length > 0;
 
   return (
-    <div className={`border rounded-lg p-3 ${scoreBorder(item.score)} bg-surface`}>
+    <div
+      className={`border rounded-lg p-3 ${scoreBorder(item.score)} bg-surface`}
+    >
       {/* Top row: score badge + description */}
       <div className="flex items-start gap-2">
         <span
@@ -385,8 +399,8 @@ function ResultCard({
           className="flex items-center gap-1 mt-2 text-xs text-text-muted hover:text-text-primary transition-colors"
         >
           {expanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-          {t('boq.cost_finder_components', {
-            defaultValue: '{{count}} components',
+          {t("boq.cost_finder_components", {
+            defaultValue: "{{count}} components",
             count: item.components.length,
           })}
         </button>
@@ -394,7 +408,10 @@ function ResultCard({
       {expanded && hasComponents && (
         <div className="mt-1 ml-4 space-y-0.5">
           {item.components.map((c, i) => (
-            <div key={`${c.description}-${c.unit}-${i}`} className="text-xs text-text-muted flex justify-between">
+            <div
+              key={`${c.description}-${c.unit}-${i}`}
+              className="text-xs text-text-muted flex justify-between"
+            >
               <span className="truncate mr-2">{c.description}</span>
               <span className="shrink-0">
                 {c.unit} {fmtWithCurrency(c.rate, locale, currencyCode)}
@@ -411,7 +428,7 @@ function ResultCard({
           className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
         >
           <Plus size={12} />
-          {t('boq.cost_finder_add_position', { defaultValue: 'Add Position' })}
+          {t("boq.cost_finder_add_position", { defaultValue: "Add Position" })}
         </button>
         {canApplyRate && (
           <button
@@ -419,7 +436,7 @@ function ResultCard({
             className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded bg-green-500/10 text-green-600 hover:bg-green-500/20 dark:text-green-400 transition-colors"
           >
             <TrendingUp size={12} />
-            {t('boq.cost_finder_apply_rate', { defaultValue: 'Apply Rate' })}
+            {t("boq.cost_finder_apply_rate", { defaultValue: "Apply Rate" })}
           </button>
         )}
       </div>

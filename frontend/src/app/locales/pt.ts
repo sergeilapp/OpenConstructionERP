@@ -2,35 +2,47 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  "translation": {
-    "about.ai_desc": "O OpenConstructionERP inclui ferramentas opcionais com inteligência artificial — estimativa rápida a partir de descrições textuais, sugestões inteligentes de custos e assistente de chat para orçamentos. Esses recursos exigem uma chave de API de um provedor de sua escolha (Anthropic, OpenAI, Google). A IA é sempre opcional: só é ativada quando você a configura, e você decide quais dados enviar. Sem uma chave de API, todos os outros recursos funcionam totalmente offline.",
+  translation: {
+    "about.ai_desc":
+      "O OpenConstructionERP inclui ferramentas opcionais com inteligência artificial — estimativa rápida a partir de descrições textuais, sugestões inteligentes de custos e assistente de chat para orçamentos. Esses recursos exigem uma chave de API de um provedor de sua escolha (Anthropic, OpenAI, Google). A IA é sempre opcional: só é ativada quando você a configura, e você decide quais dados enviar. Sem uma chave de API, todos os outros recursos funcionam totalmente offline.",
     "about.ai_title": "Sobre os recursos de IA",
     "about.cap.boq": "Planilha Orçamentária",
-    "about.cap.boq_desc": "Crie orçamentos detalhados com seções hierárquicas, itens, composições, margens (custos indiretos, lucro, impostos) e totais automáticos. Suporta DIN 276, NRM 1/2, MasterFormat e sistemas de classificação personalizados.",
+    "about.cap.boq_desc":
+      "Crie orçamentos detalhados com seções hierárquicas, itens, composições, margens (custos indiretos, lucro, impostos) e totais automáticos. Suporta DIN 276, NRM 1/2, MasterFormat e sistemas de classificação personalizados.",
     "about.cap.catalog": "Catálogo de Insumos",
-    "about.cap.catalog_desc": "7.000+ insumos — materiais, equipamentos, mão de obra, operadores e utilidades. Monte composições reutilizáveis a partir dos itens do catálogo e aplique-as diretamente aos itens do orçamento.",
+    "about.cap.catalog_desc":
+      "7.000+ insumos — materiais, equipamentos, mão de obra, operadores e utilidades. Monte composições reutilizáveis a partir dos itens do catálogo e aplique-as diretamente aos itens do orçamento.",
     "about.cap.costmodel": "Modelo de Custos 5D",
-    "about.cap.costmodel_desc": "Acompanhe orçamentos ao longo do tempo com Gerenciamento de Valor Agregado (IDP, IDC), visualização de curva S, projeções de fluxo de caixa, instantâneos de custos e modelagem de cenários hipotéticos para tomada de decisão informada.",
+    "about.cap.costmodel_desc":
+      "Acompanhe orçamentos ao longo do tempo com Gerenciamento de Valor Agregado (IDP, IDC), visualização de curva S, projeções de fluxo de caixa, instantâneos de custos e modelagem de cenários hipotéticos para tomada de decisão informada.",
     "about.cap.costs": "Bancos de Dados de Custos",
-    "about.cap.costs_desc": "55.000+ itens de custo em 11 bancos de dados regionais cobrindo DACH, Reino Unido, América do Norte, Oriente Médio e mais. Adicione seus próprios preços, importe do Excel ou crie um banco de dados personalizado do zero.",
+    "about.cap.costs_desc":
+      "55.000+ itens de custo em 11 bancos de dados regionais cobrindo DACH, Reino Unido, América do Norte, Oriente Médio e mais. Adicione seus próprios preços, importe do Excel ou crie um banco de dados personalizado do zero.",
     "about.cap.import": "Importação e Exportação",
-    "about.cap.import_desc": "Suporte completo para importação/exportação GAEB XML (X83), Excel e CSV. Gere relatórios profissionais em PDF. Integre-se perfeitamente com suas ferramentas e fluxos de trabalho existentes.",
+    "about.cap.import_desc":
+      "Suporte completo para importação/exportação GAEB XML (X83), Excel e CSV. Gere relatórios profissionais em PDF. Integre-se perfeitamente com suas ferramentas e fluxos de trabalho existentes.",
     "about.cap.schedule": "Cronograma 4D",
-    "about.cap.schedule_desc": "Crie cronogramas de projeto com cálculo de caminho crítico (CPM), gráficos de Gantt interativos, análise de risco Monte Carlo, alocação de recursos e geração automática de atividades a partir do seu orçamento.",
+    "about.cap.schedule_desc":
+      "Crie cronogramas de projeto com cálculo de caminho crítico (CPM), gráficos de Gantt interativos, análise de risco Monte Carlo, alocação de recursos e geração automática de atividades a partir do seu orçamento.",
     "about.cap.tendering": "Licitações e Propostas",
-    "about.cap.tendering_desc": "Crie pacotes de licitação com escopo e itens, distribua para subempreiteiros, colete e compare propostas lado a lado em um espelho de preços, e tome decisões de adjudicação baseadas em dados.",
+    "about.cap.tendering_desc":
+      "Crie pacotes de licitação com escopo e itens, distribua para subempreiteiros, colete e compare propostas lado a lado em um espelho de preços, e tome decisões de adjudicação baseadas em dados.",
     "about.cap.validation": "Validação de Qualidade",
-    "about.cap.validation_desc": "Motor de qualidade integrado que verifica automaticamente quantidades faltantes, preços zerados, itens duplicados, conformidade de classificação e anomalias de preços — com um painel semafórico.",
+    "about.cap.validation_desc":
+      "Motor de qualidade integrado que verifica automaticamente quantidades faltantes, preços zerados, itens duplicados, conformidade de classificação e anomalias de preços — com um painel semafórico.",
     "about.capabilities_title": "O que você pode fazer",
     "about.close": "Entendi",
-    "about.intro": "O OpenConstructionERP é uma plataforma moderna para gestão de custos de construção. Ele cobre todo o fluxo de orçamentação — desde a criação de uma planilha orçamentária até licitações e comparação de propostas. Projetado para profissionais do mundo todo, suporta padrões internacionais e funciona em 20 idiomas.",
-    "about.intro2": "Diferente das soluções comerciais tradicionais, o OpenConstructionERP roda inteiramente no seu computador. Os dados do seu projeto nunca saem da sua máquina — você tem total propriedade e controle. O código-fonte é aberto e auditável, então você sempre sabe exatamente o que o software faz.",
+    "about.intro":
+      "O OpenConstructionERP é uma plataforma moderna para gestão de custos de construção. Ele cobre todo o fluxo de orçamentação — desde a criação de uma planilha orçamentária até licitações e comparação de propostas. Projetado para profissionais do mundo todo, suporta padrões internacionais e funciona em 20 idiomas.",
+    "about.intro2":
+      "Diferente das soluções comerciais tradicionais, o OpenConstructionERP roda inteiramente no seu computador. Os dados do seu projeto nunca saem da sua máquina — você tem total propriedade e controle. O código-fonte é aberto e auditável, então você sempre sabe exatamente o que o software faz.",
     "about.numbers_title": "A plataforma em números",
     "about.stat.costs": "Itens de custo",
     "about.stat.free": "Gratuito e código aberto",
     "about.stat.languages": "Idiomas",
     "about.stat.regions": "Bancos de dados regionais",
-    "about.title": "Orçamentação profissional de obras — gratuita e de código aberto",
+    "about.title":
+      "Orçamentação profissional de obras — gratuita e de código aberto",
     "about.who.architects": "Arquitetos e engenheiros",
     "about.who.contractors": "Construtoras",
     "about.who.developers": "Incorporadoras imobiliárias",
@@ -41,11 +53,15 @@ const resource = {
     "about.who.qsurveyor": "Engenheiros de custos",
     "about.who.students": "Estudantes e educadores",
     "about.who.subs": "Subempreiteiros",
-    "about.who_desc": "O OpenConstructionERP é projetado para qualquer pessoa envolvida na gestão de custos de construção — seja trabalhando em projetos residenciais ou infraestrutura de grande escala, internamente ou como consultor.",
+    "about.who_desc":
+      "O OpenConstructionERP é projetado para qualquer pessoa envolvida na gestão de custos de construção — seja trabalhando em projetos residenciais ou infraestrutura de grande escala, internamente ou como consultor.",
     "about.who_title": "Para quem é",
-    "about.why_1": "Os dados de custos de construção são um dos ativos mais valiosos que uma empresa possui. Com software proprietário, seus dados frequentemente ficam presos em formatos que você não pode controlar. Se o fornecedor aumentar preços, alterar termos ou descontinuar o produto — você pode perder acesso a anos de trabalho.",
-    "about.why_2": "O OpenConstructionERP adota uma abordagem diferente. Seus dados são armazenados em formatos abertos (SQLite, JSON, CSV) no seu próprio hardware. Você pode exportar tudo a qualquer momento. O código-fonte é publicamente auditável sob AGPL-3.0, então não há transferências ocultas de dados, nem telemetria, nem surpresas.",
-    "about.why_3": "A plataforma é modular — instale apenas o que você precisa. Módulos da comunidade estendem a funcionalidade sem sobrecarregar o núcleo. E como roda localmente, funciona offline e tem desempenho rápido mesmo com projetos grandes.",
+    "about.why_1":
+      "Os dados de custos de construção são um dos ativos mais valiosos que uma empresa possui. Com software proprietário, seus dados frequentemente ficam presos em formatos que você não pode controlar. Se o fornecedor aumentar preços, alterar termos ou descontinuar o produto — você pode perder acesso a anos de trabalho.",
+    "about.why_2":
+      "O OpenConstructionERP adota uma abordagem diferente. Seus dados são armazenados em formatos abertos (SQLite, JSON, CSV) no seu próprio hardware. Você pode exportar tudo a qualquer momento. O código-fonte é publicamente auditável sob AGPL-3.0, então não há transferências ocultas de dados, nem telemetria, nem surpresas.",
+    "about.why_3":
+      "A plataforma é modular — instale apenas o que você precisa. Módulos da comunidade estendem a funcionalidade sem sobrecarregar o núcleo. E como roda localmente, funciona offline e tem desempenho rápido mesmo com projetos grandes.",
     "about.why_title": "Por que código aberto importa",
     "ai.analyze_photo": "Analisar Foto",
     "ai.area": "Área (m²)",
@@ -53,7 +69,8 @@ const resource = {
     "ai.boq_name_placeholder": "Nome para este orçamento...",
     "ai.boq_saved": "Orçamento salvo com sucesso",
     "ai.building_type": "Tipo de Edificação",
-    "ai.cad_info": "Arquivos CAD/BIM (.rvt, .ifc, .dwg, .dgn) requerem a instalação do conversor DDC. Os elementos serão extraídos e usados para gerar uma estimativa de custos. Baixe os conversores do GitHub e coloque-os em ~/.openestimator/converters/.",
+    "ai.cad_info":
+      "Arquivos CAD/BIM (.rvt, .ifc, .dwg, .dgn) requerem a instalação do conversor DDC. Os elementos serão extraídos e usados para gerar uma estimativa de custos. Baixe os conversores do GitHub e coloque-os em ~/.openestimator/converters/.",
     "ai.choose_project": "-- Escolha um projeto --",
     "ai.col_description": "Descrição",
     "ai.col_pos": "Item",
@@ -74,7 +91,8 @@ const resource = {
     "ai.estimate_failed": "Falha na estimativa",
     "ai.estimate_subtitle": "Crie uma estimativa a partir de qualquer fonte",
     "ai.estimate_title": "Estimativa com IA",
-    "ai.excel_hint": "Funciona melhor com colunas: Descrição, Unidade, Quantidade, Preço.",
+    "ai.excel_hint":
+      "Funciona melhor com colunas: Descrição, Unidade, Quantidade, Preço.",
     "ai.export_coming_soon": "Exportação em breve",
     "ai.export_pdf": "Exportar PDF",
     "ai.extract_estimate": "Extrair e Estimar",
@@ -89,9 +107,12 @@ const resource = {
     "ai.location_placeholder": "ex.: São Paulo",
     "ai.new_estimate": "Nova Estimativa",
     "ai.parse_import": "Processar e Importar",
-    "ai.paste_info": "Detecta automaticamente dados separados por tabulação, ponto e vírgula ou vírgula. A IA irá processar e estruturar seus dados em itens de estimativa.",
-    "ai.paste_placeholder": "Cole seus dados de orçamento aqui (do Excel, Word ou qualquer tabela)...\n\nExemplo:\nItem\\tDescrição\\tUnid.\\tQtd\\tPreço\n01.01\\tEscavação\\tm3\\t250\\t18,50\n01.02\\tConcreto C30/37\\tm3\\t120\\t145,00\n01.03\\tArmadura CA-50\\tkg\\t12000\\t1,85",
-    "ai.pdf_hint": "Envie documentos de orçamento, especificações ou desenhos em formato PDF.",
+    "ai.paste_info":
+      "Detecta automaticamente dados separados por tabulação, ponto e vírgula ou vírgula. A IA irá processar e estruturar seus dados em itens de estimativa.",
+    "ai.paste_placeholder":
+      "Cole seus dados de orçamento aqui (do Excel, Word ou qualquer tabela)...\n\nExemplo:\nItem\\tDescrição\\tUnid.\\tQtd\\tPreço\n01.01\\tEscavação\\tm3\\t250\\t18,50\n01.02\\tConcreto C30/37\\tm3\\t120\\t145,00\n01.03\\tArmadura CA-50\\tkg\\t12000\\t1,85",
+    "ai.pdf_hint":
+      "Envie documentos de orçamento, especificações ou desenhos em formato PDF.",
     "ai.powered_by": "Desenvolvido com {{model}}",
     "ai.results": "Resultados da Estimativa",
     "ai.save": "Salvar",
@@ -99,18 +120,22 @@ const resource = {
     "ai.save_failed": "Falha ao salvar orçamento",
     "ai.save_to_boq": "Salvar como Orçamento",
     "ai.select_project": "Selecionar Projeto",
-    "ai.setup_required_desc": "Adicione sua chave de API para Anthropic Claude, OpenAI ou Google Gemini para gerar estimativas a partir de texto, fotos, PDFs e arquivos CAD.",
+    "ai.setup_required_desc":
+      "Adicione sua chave de API para Anthropic Claude, OpenAI ou Google Gemini para gerar estimativas a partir de texto, fotos, PDFs e arquivos CAD.",
     "ai.setup_required_title": "Conecte sua IA para começar",
     "ai.standard_label": "Norma",
     "ai.supported_formats": "Formatos suportados: {{formats}}",
-    "ai.try_again": "Por favor, tente novamente ou verifique suas configurações de IA.",
+    "ai.try_again":
+      "Por favor, tente novamente ou verifique suas configurações de IA.",
     "ai.advisor_title": "Consultor IA de Custos",
-    "ai.advisor_desc": "Pergunte sobre custos, materiais e preços — do seu banco de dados e do conhecimento da IA",
+    "ai.advisor_desc":
+      "Pergunte sobre custos, materiais e preços — do seu banco de dados e do conhecimento da IA",
     "ai.advisor_empty": "Pergunte-me sobre custos de construção",
     "ai.advisor_placeholder": "Pergunte sobre custos, materiais, preços...",
     "ai.advisor_sources": "Fontes:",
     "ai.advisor_error": "Erro do consultor IA",
-    "ai.advisor_unavailable": "Não foi possível obter resposta. Verifique as configurações de IA.",
+    "ai.advisor_unavailable":
+      "Não foi possível obter resposta. Verifique as configurações de IA.",
     "ai.advisor_q1": "Qual o custo médio por m² de reboco?",
     "ai.advisor_q2": "Comparar preços do concreto por região",
     "ai.advisor_q3": "Sugerir alternativas mais baratas ao aço",
@@ -118,8 +143,10 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Plataforma profissional de orçamentação de obras",
     "assemblies.assemblies_found": "composições",
-    "assemblies.description": "Composições reutilizáveis para elementos comuns de construção",
-    "assemblies.what_are_assemblies": "Composições são receitas de custo reutilizáveis que combinam múltiplos insumos (materiais, mão de obra, equipamentos) em um único preço composto. Por exemplo, uma composição de \"Parede de Concreto Armado\" inclui concreto, armadura, fôrma e mão de obra. Aplique composições aos itens do orçamento para preencher automaticamente os custos dos componentes.",
+    "assemblies.description":
+      "Composições reutilizáveis para elementos comuns de construção",
+    "assemblies.what_are_assemblies":
+      'Composições são receitas de custo reutilizáveis que combinam múltiplos insumos (materiais, mão de obra, equipamentos) em um único preço composto. Por exemplo, uma composição de "Parede de Concreto Armado" inclui concreto, armadura, fôrma e mão de obra. Aplique composições aos itens do orçamento para preencher automaticamente os custos dos componentes.',
     "assemblies.new_assembly": "Nova Composição",
     "assemblies.no_results": "Nenhuma composição encontrada",
     "assemblies.no_results_hint": "Tente ajustar sua pesquisa ou filtros",
@@ -128,17 +155,20 @@ const resource = {
     "auth.check_email": "Verifique seu e-mail",
     "auth.confirm_password": "Confirmar Senha",
     "auth.confirm_password_placeholder": "Repita sua senha",
-    "auth.connection_error": "Não foi possível conectar ao servidor. Por favor, tente novamente.",
+    "auth.connection_error":
+      "Não foi possível conectar ao servidor. Por favor, tente novamente.",
     "auth.create_account": "Criar conta",
     "auth.email": "E-mail",
     "auth.forgot_password": "Esqueceu a senha?",
-    "auth.forgot_subtitle": "Digite seu e-mail e enviaremos um link de redefinição.",
+    "auth.forgot_subtitle":
+      "Digite seu e-mail e enviaremos um link de redefinição.",
     "auth.full_name": "Nome Completo",
     "auth.full_name_placeholder": "João Silva",
     "auth.has_account": "Já tem uma conta?",
     "auth.invalid_credentials": "E-mail ou senha inválidos",
     "auth.login": "Entrar",
-    "auth.login_subtitle": "Digite suas credenciais para acessar seu espaço de trabalho",
+    "auth.login_subtitle":
+      "Digite suas credenciais para acessar seu espaço de trabalho",
     "auth.logout": "Sair",
     "auth.no_account": "Não tem uma conta?",
     "auth.password": "Senha",
@@ -152,10 +182,13 @@ const resource = {
     "auth.register_subtitle": "Comece com o OpenEstimate",
     "auth.register_title": "Criar conta",
     "auth.remember_me": "Lembrar-me por 30 dias",
-    "auth.reset_error": "Não foi possível processar a solicitação de redefinição. Por favor, tente novamente.",
-    "auth.reset_sent": "Se existir uma conta para este e-mail, você receberá um link de redefinição de senha em breve.",
+    "auth.reset_error":
+      "Não foi possível processar a solicitação de redefinição. Por favor, tente novamente.",
+    "auth.reset_sent":
+      "Se existir uma conta para este e-mail, você receberá um link de redefinição de senha em breve.",
     "auth.send_reset_link": "Enviar link de redefinição",
-    "auth.server_error": "Não foi possível conectar ao servidor. Por favor, tente novamente.",
+    "auth.server_error":
+      "Não foi possível conectar ao servidor. Por favor, tente novamente.",
     "auth.sign_in": "Entrar",
     "boq.aace_accuracy": "Precisão",
     "boq.aace_accuracy_range": "Faixa de Precisão",
@@ -165,7 +198,8 @@ const resource = {
     "boq.aace_methodology": "Metodologia",
     "boq.aace_metrics": "Métricas de Classificação",
     "boq.aace_positions": "Itens",
-    "boq.aace_reference": "Baseado na Prática Recomendada 18R-97 da AACE International. A classificação é detectada automaticamente a partir das métricas de completude do orçamento.",
+    "boq.aace_reference":
+      "Baseado na Prática Recomendada 18R-97 da AACE International. A classificação é detectada automaticamente a partir das métricas de completude do orçamento.",
     "boq.aace_to": "a",
     "boq.aace_with_classification": "Com classificação",
     "boq.aace_with_rates": "Com preços unitários",
@@ -178,20 +212,24 @@ const resource = {
     "boq.add_n_positions": "Adicionar {{count}} ao orçamento",
     "boq.add_position": "Adicionar Item",
     "boq.add_resource": "Adicionar",
-    "boq.add_resource_hint": "Pressione Enter para adicionar, Escape para cancelar",
+    "boq.add_resource_hint":
+      "Pressione Enter para adicionar, Escape para cancelar",
     "boq.add_section": "Adicionar Seção",
     "boq.add_selected": "Adicionar selecionados ao orçamento",
     "boq.adding": "Adicionando...",
     "boq.ai_assistant": "Assistente IA",
-    "boq.ai_chat_error": "Solicitação de IA falhou. Por favor, tente novamente.",
-    "boq.ai_hint": "Peça-me para gerar itens de orçamento. Por exemplo: \"Adicione itens de instalações para um edifício comercial de 5 andares\"",
+    "boq.ai_chat_error":
+      "Solicitação de IA falhou. Por favor, tente novamente.",
+    "boq.ai_hint":
+      'Peça-me para gerar itens de orçamento. Por exemplo: "Adicione itens de instalações para um edifício comercial de 5 andares"',
     "boq.ai_placeholder": "Descreva os itens a gerar...",
     "boq.ai_welcome": "Peça-me para gerar itens de orçamento. Por exemplo: ",
     "boq.all_projects": "Todos os projetos",
     "boq.all_statuses": "Todos os status",
     "boq.area_m2": "Área (m²)",
     "boq.back_to_project": "Voltar ao projeto",
-    "boq.toolbar_hint": "Use a barra de ferramentas para adicionar seções e itens, importar do banco de dados de custos ou composições, exportar para GAEB/PDF/Excel ou executar estimativa com IA. Líquido = soma dos totais dos itens. Margens são aplicadas como percentuais. Total Geral = Líquido + Margens + Impostos.",
+    "boq.toolbar_hint":
+      "Use a barra de ferramentas para adicionar seções e itens, importar do banco de dados de custos ou composições, exportar para GAEB/PDF/Excel ou executar estimativa com IA. Líquido = soma dos totais dos itens. Margens são aplicadas como percentuais. Total Geral = Líquido + Margens + Impostos.",
     "boq.boq_created": "Orçamento criado",
     "boq.boq_name": "Nome do Orçamento",
     "boq.cancel_compare": "Cancelar Comparação",
@@ -202,7 +240,8 @@ const resource = {
     "boq.compare_by_section": "Por Seção",
     "boq.compare_diff": "Diferença",
     "boq.compare_difference": "Diferença (B vs A)",
-    "boq.compare_load_error": "Falha ao carregar dados do orçamento para comparação",
+    "boq.compare_load_error":
+      "Falha ao carregar dados do orçamento para comparação",
     "boq.compare_select_second": "Selecione um segundo orçamento para comparar",
     "boq.compare_selected": "Selecionado para comparação",
     "boq.compare_title": "Comparação de Orçamentos",
@@ -224,7 +263,8 @@ const resource = {
     "boq.cost_risk_contingency": "Contingência (P80 - P50)",
     "boq.cost_risk_distribution": "Distribuição de Custos",
     "boq.cost_risk_drivers": "Principais Fatores de Risco",
-    "boq.cost_risk_empty": "Adicione itens com custos para executar a simulação Monte Carlo.",
+    "boq.cost_risk_empty":
+      "Adicione itens com custos para executar a simulação Monte Carlo.",
     "boq.cost_risk_iterations": "Iterações",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Executando simulação Monte Carlo...",
@@ -250,7 +290,8 @@ const resource = {
     "boq.markup_bond": "Garantia",
     "boq.markup_other": "Outro",
     "boq.template_applied": "Modelo regional aplicado",
-    "boq.confirm_replace_markups": "Isso substituirá os acréscimos existentes. Continuar?",
+    "boq.confirm_replace_markups":
+      "Isso substituirá os acréscimos existentes. Continuar?",
     "boq.no_markups": "Sem acréscimos. Adicione ou aplique um modelo.",
     "boq.new_markup": "Novo acréscimo",
     "boq.markup_added": "Acréscimo adicionado",
@@ -264,7 +305,8 @@ const resource = {
     "boq.duplicate_failed": "Falha ao duplicar",
     "boq.duplicated": "Orçamento duplicado",
     "boq.editor": "Editor de Orçamento",
-    "boq.empty_section": "Nenhum item nesta seção. Clique em \"Adicionar Item\" para adicionar.",
+    "boq.empty_section":
+      'Nenhum item nesta seção. Clique em "Adicionar Item" para adicionar.',
     "boq.enter_description": "Digite a descrição...",
     "boq.estimated_total": "Total estimado",
     "boq.estimates": "estimativas",
@@ -293,12 +335,15 @@ const resource = {
     "boq.name_label": "Nome do Orçamento",
     "boq.net_total": "Total Líquido",
     "boq.new_estimate": "Nova Estimativa",
-    "boq.no_activity": "Nenhuma atividade ainda. As alterações aparecerão aqui.",
+    "boq.no_activity":
+      "Nenhuma atividade ainda. As alterações aparecerão aqui.",
     "boq.no_boqs": "Nenhuma estimativa ainda",
-    "boq.no_boqs_hint": "Crie um projeto primeiro, depois adicione uma Planilha Orçamentária",
+    "boq.no_boqs_hint":
+      "Crie um projeto primeiro, depois adicione uma Planilha Orçamentária",
     "boq.no_items_found": "Nenhum item encontrado",
     "boq.no_positions": "Nenhum item ainda. Adicione uma seção para começar.",
-    "boq.no_resources": "Nenhum insumo atribuído. Selecione um item de custo com o ícone ⚡ das sugestões de autocompletar para preencher automaticamente.",
+    "boq.no_resources":
+      "Nenhum insumo atribuído. Selecione um item de custo com o ícone ⚡ das sugestões de autocompletar para preencher automaticamente.",
     "boq.no_results": "Nenhuma estimativa encontrada",
     "boq.no_results_hint": "Tente ajustar sua pesquisa ou filtros",
     "boq.no_section": "Sem seção (nível superior)",
@@ -319,7 +364,8 @@ const resource = {
     "boq.quality_descriptions": "Descrições preenchidas",
     "boq.quality_fair": "Regular",
     "boq.quality_great": "Ótimo",
-    "boq.quality_hint": "Preencha todos os campos para atingir 100% e garantir a precisão da estimativa.",
+    "boq.quality_hint":
+      "Preencha todos os campos para atingir 100% e garantir a precisão da estimativa.",
     "boq.quality_markups": "Margens adicionadas",
     "boq.quality_missing": "Faltante",
     "boq.quality_needs_work": "Precisa melhorar",
@@ -330,15 +376,19 @@ const resource = {
     "boq.quick_add_position": "Adicionar Item",
     "boq.quick_add_position_desc": "Adicionar um item vazio à seção atual",
     "boq.quick_add_section": "Adicionar Seção",
-    "boq.quick_add_section_desc": "Criar uma nova seção para organizar os itens",
+    "boq.quick_add_section_desc":
+      "Criar uma nova seção para organizar os itens",
     "boq.quick_import_costs": "Importar do Banco de Dados de Custos",
-    "boq.quick_import_costs_desc": "Navegar e selecionar itens do banco de dados de custos",
+    "boq.quick_import_costs_desc":
+      "Navegar e selecionar itens do banco de dados de custos",
     "boq.quick_use_template": "Usar Modelo",
-    "boq.quick_use_template_desc": "Começar a partir de um modelo de estimativa pré-construído",
+    "boq.quick_use_template_desc":
+      "Começar a partir de um modelo de estimativa pré-construído",
     "boq.recalculate": "Recalcular",
     "boq.recalculate_complete": "Recálculo concluído",
     "boq.recalculate_failed": "Falha no recálculo",
-    "boq.recalculate_summary": "Recalculado: {{sections}} seções, {{positions}} itens",
+    "boq.recalculate_summary":
+      "Recalculado: {{sections}} seções, {{positions}} itens",
     "boq.recent_activity": "Atividade Recente",
     "boq.redo": "Refazer (Ctrl+Y)",
     "boq.redone": "Refeito",
@@ -398,7 +448,8 @@ const resource = {
     "boq.sections": "seções",
     "boq.select_project": "Selecione um projeto...",
     "boq.sensitivity_base_total": "Total Base",
-    "boq.sensitivity_empty": "Adicione itens com custos para ver a análise de sensibilidade.",
+    "boq.sensitivity_empty":
+      "Adicione itens com custos para ver a análise de sensibilidade.",
     "boq.sensitivity_impact_high": "Impacto (+)",
     "boq.sensitivity_impact_low": "Impacto (-)",
     "boq.sensitivity_overrun": "Aumento de custo",
@@ -409,16 +460,21 @@ const resource = {
     "boq.show_all_activity": "Mostrar toda a atividade...",
     "boq.showing_estimates": "{{shown}} de {{total}} estimativas",
     "boq.start_building": "Comece a montar sua estimativa",
-    "boq.start_building_desc": "Siga estes passos para criar uma Planilha Orçamentária profissional",
+    "boq.start_building_desc":
+      "Siga estes passos para criar uma Planilha Orçamentária profissional",
     "boq.status": "Status",
     "boq.step_add_positions": "Adicionar itens",
-    "boq.step_add_positions_desc": "Adicione linhas com descrições e unidades a cada seção",
+    "boq.step_add_positions_desc":
+      "Adicione linhas com descrições e unidades a cada seção",
     "boq.step_add_sections": "Adicionar seções",
-    "boq.step_add_sections_desc": "Organize sua estimativa em seções (ex.: Fundações, Paredes, Cobertura)",
+    "boq.step_add_sections_desc":
+      "Organize sua estimativa em seções (ex.: Fundações, Paredes, Cobertura)",
     "boq.step_review": "Revisar totais",
-    "boq.step_review_desc": "Adicione margens para custos indiretos e lucro, depois revise seu total geral",
+    "boq.step_review_desc":
+      "Adicione margens para custos indiretos e lucro, depois revise seu total geral",
     "boq.step_set_quantities": "Definir quantidades",
-    "boq.step_set_quantities_desc": "Insira quantidades e preços unitários para cada item para calcular os totais",
+    "boq.step_set_quantities_desc":
+      "Insira quantidades e preços unitários para cada item para calcular os totais",
     "boq.subtotal": "Subtotal",
     "boq.sync_rate": "Sincronizar preço",
     "boq.table_label": "Itens da Planilha Orçamentária",
@@ -426,13 +482,20 @@ const resource = {
     "boq.template_error": "Falha ao criar orçamento a partir do modelo",
     "boq.templates": "Modelos de Orçamento",
     "boq.templates_coming_soon": "Modelos em breve",
-    "boq.templates_coming_soon_desc": "O seletor de modelos estará disponível em uma atualização futura.",
-    "boq.templates_subtitle": "Comece com um modelo profissional para seu tipo de edificação. Selecione um modelo, defina a área e gere um orçamento completo instantaneamente.",
-    "boq.tip_autocomplete": "Preencha descrições para todos os itens — comece a digitar para ver sugestões do banco de dados de custos",
-    "boq.tip_markups": "Adicione margens para custos indiretos e lucro usando a seção Margens abaixo da tabela",
-    "boq.tip_menu": "Clique no menu (...) de uma seção para adicionar itens ou excluí-la",
-    "boq.tip_sections": "Adicione seções para organizar sua estimativa (ex.: Fundações, Paredes, Cobertura)",
-    "boq.tip_tab": "Use Tab para navegar entre campos, Enter para salvar alterações",
+    "boq.templates_coming_soon_desc":
+      "O seletor de modelos estará disponível em uma atualização futura.",
+    "boq.templates_subtitle":
+      "Comece com um modelo profissional para seu tipo de edificação. Selecione um modelo, defina a área e gere um orçamento completo instantaneamente.",
+    "boq.tip_autocomplete":
+      "Preencha descrições para todos os itens — comece a digitar para ver sugestões do banco de dados de custos",
+    "boq.tip_markups":
+      "Adicione margens para custos indiretos e lucro usando a seção Margens abaixo da tabela",
+    "boq.tip_menu":
+      "Clique no menu (...) de uma seção para adicionar itens ou excluí-la",
+    "boq.tip_sections":
+      "Adicione seções para organizar sua estimativa (ex.: Fundações, Paredes, Cobertura)",
+    "boq.tip_tab":
+      "Use Tab para navegar entre campos, Enter para salvar alterações",
     "boq.tips_title": "Dicas e Orientações",
     "boq.mvp.title": "Escolher materiais",
     "boq.mvp.subtitle_one": "{{count}} recurso precisa de escolha",
@@ -485,7 +548,8 @@ const resource = {
     "catalog.assembly_created": "Composição criada",
     "catalog.assembly_failed": "Falha ao criar composição",
     "catalog.assembly_name": "Nome da Composição",
-    "catalog.assembly_name_placeholder": "ex.: Parede de Concreto Armado C30/37",
+    "catalog.assembly_name_placeholder":
+      "ex.: Parede de Concreto Armado C30/37",
     "catalog.build_assembly": "Montar Composição",
     "catalog.category": "Categoria",
     "catalog.code": "Código",
@@ -499,12 +563,15 @@ const resource = {
     "catalog.creating": "Criando...",
     "catalog.delete_failed": "Falha ao excluir",
     "catalog.delete_region": "Excluir Região",
-    "catalog.empty_hint": "Importe um catálogo regional para preencher os insumos ou extraia dos itens de custo.",
-    "catalog.empty_with_regions": "Nenhum insumo corresponde aos filtros atuais. Tente alterar o tipo ou a região.",
+    "catalog.empty_hint":
+      "Importe um catálogo regional para preencher os insumos ou extraia dos itens de custo.",
+    "catalog.empty_with_regions":
+      "Nenhum insumo corresponde aos filtros atuais. Tente alterar o tipo ou a região.",
     "catalog.import": "Importar",
     "catalog.import_failed": "Falha na importação",
     "catalog.import_region": "Importar região",
-    "catalog.import_regions_desc": "Baixe catálogos de insumos pré-construídos dos bancos de dados regionais CWICR",
+    "catalog.import_regions_desc":
+      "Baixe catálogos de insumos pré-construídos dos bancos de dados regionais CWICR",
     "catalog.import_regions_title": "Importar Catálogo de Insumos",
     "catalog.import_success": "Importação concluída",
     "catalog.importing": "Importando...",
@@ -513,7 +580,8 @@ const resource = {
     "catalog.loaded": "Carregado",
     "catalog.my_catalog": "Meu Catálogo",
     "catalog.my_catalog_empty": "Seu catálogo está vazio",
-    "catalog.my_catalog_empty_desc": "Adicione seus próprios materiais, equipamentos e preços de mão de obra. Insumos personalizados podem ser usados em composições e aplicados aos itens do orçamento.",
+    "catalog.my_catalog_empty_desc":
+      "Adicione seus próprios materiais, equipamentos e preços de mão de obra. Insumos personalizados podem ser usados em composições e aplicados aos itens do orçamento.",
     "catalog.name": "Nome",
     "catalog.no_results": "Nenhum insumo encontrado",
     "catalog.no_results_hint": "Tente ajustar sua pesquisa ou filtros",
@@ -529,8 +597,10 @@ const resource = {
     "catalog.resources_found": "insumos encontrados",
     "catalog.resources_imported": "insumos importados",
     "catalog.resources_removed": "insumos removidos",
-    "catalog.search_hint": "Navegue por materiais, equipamentos, mão de obra e operadores",
-    "catalog.what_is_catalog": "Preços de materiais, mão de obra, equipamentos e operadores organizados por região. Instale catálogos regionais em Módulos, depois use-os para montar composições ou adicionar itens diretamente aos itens do orçamento.",
+    "catalog.search_hint":
+      "Navegue por materiais, equipamentos, mão de obra e operadores",
+    "catalog.what_is_catalog":
+      "Preços de materiais, mão de obra, equipamentos e operadores organizados por região. Instale catálogos regionais em Módulos, depois use-os para montar composições ou adicionar itens diretamente aos itens do orçamento.",
     "catalog.search_in": "Pesquisar em",
     "catalog.search_placeholder": "Pesquisar por nome ou código...",
     "catalog.selected": "selecionados",
@@ -555,12 +625,14 @@ const resource = {
     "command_palette.action_run_validation": "Executar Validação",
     "command_palette.action_import_database": "Importar Banco de Dados",
     "error.something_wrong": "Algo deu errado",
-    "error.unexpected_error": "Ocorreu um erro inesperado ao renderizar esta página. Você pode tentar recarregar ou voltar ao painel.",
+    "error.unexpected_error":
+      "Ocorreu um erro inesperado ao renderizar esta página. Você pode tentar recarregar ou voltar ao painel.",
     "error.details": "Detalhes do erro",
     "error.try_again": "Tentar novamente",
     "error.go_dashboard": "Ir para o Painel",
     "error.not_found": "Página não encontrada",
-    "error.not_found_desc": "A página que você está procurando não existe ou foi movida. Verifique a URL ou volte ao painel.",
+    "error.not_found_desc":
+      "A página que você está procurando não existe ou foi movida. Verifique a URL ou volte ao painel.",
     "error.go_back": "Voltar",
     "common.archive": "Arquivar",
     "common.back": "Voltar",
@@ -597,7 +669,8 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Custo / m²",
     "costmodel.benchmark_current_cost": "Atual: {{value}}/m²",
-    "costmodel.benchmark_enter_area": "Insira a área do projeto para ver a comparação de custo por m²",
+    "costmodel.benchmark_enter_area":
+      "Insira a área do projeto para ver a comparação de custo por m²",
     "costmodel.benchmark_per_m2": "por m²",
     "costmodel.benchmark_project_area": "Área do Projeto (m²)",
     "costmodel.benchmark_project_type": "Tipo de Projeto",
@@ -641,7 +714,8 @@ const resource = {
     "costmodel.evm_spi": "IDP",
     "costmodel.evm_status": "Status",
     "costmodel.evm_sv_label": "VPr",
-    "costmodel.evm_tcpi_hint": "Para terminar dentro do orçamento, você precisa de um IDC de {{tcpi}} daqui em diante",
+    "costmodel.evm_tcpi_hint":
+      "Para terminar dentro do orçamento, você precisa de um IDC de {{tcpi}} daqui em diante",
     "costmodel.evm_time_elapsed": "Tempo Decorrido",
     "costmodel.evm_title": "Análise de Valor Agregado",
     "costmodel.evm_unknown": "Desconhecido",
@@ -661,7 +735,8 @@ const resource = {
     "costmodel.s_curve": "Curva S (GVA)",
     "costmodel.s_curve_chart": "Gráfico de Curva S",
     "costmodel.title": "Modelo de Custos 5D",
-    "costmodel.what_is_5d": "O gerenciamento de custos 5D adiciona rastreamento de custos ao longo do tempo ao seu projeto. Monitore orçamento vs. gasto real com gráficos de Curva S, acompanhe o Valor Agregado (IDP = eficiência de cronograma, IDC = eficiência de custo — ambos >= 1,0 significa saudável) e execute cenários hipotéticos para prever resultados.",
+    "costmodel.what_is_5d":
+      "O gerenciamento de custos 5D adiciona rastreamento de custos ao longo do tempo ao seu projeto. Monitore orçamento vs. gasto real com gráficos de Curva S, acompanhe o Valor Agregado (IDP = eficiência de cronograma, IDC = eficiência de custo — ambos >= 1,0 significa saudável) e execute cenários hipotéticos para prever resultados.",
     "costmodel.total": "Total",
     "costmodel.total_budget": "Orçamento Total",
     "costmodel.variance": "Variação",
@@ -670,13 +745,15 @@ const resource = {
     "costmodel.whatif_adjusted_eac": "ENT Ajustado",
     "costmodel.whatif_calculate": "Calcular Impacto",
     "costmodel.whatif_duration": "Duração",
-    "costmodel.whatif_error": "Falha ao calcular cenário. Por favor, tente novamente.",
+    "costmodel.whatif_error":
+      "Falha ao calcular cenário. Por favor, tente novamente.",
     "costmodel.whatif_impact": "Impacto",
     "costmodel.whatif_labor": "Custo de Mão de Obra",
     "costmodel.whatif_material": "Custo de Material",
     "costmodel.whatif_original_bac": "ONT Original",
     "costmodel.whatif_reset": "Redefinir",
-    "costmodel.whatif_scenario_name": "E-se: M{{material}}% MO{{labor}}% D{{duration}}%",
+    "costmodel.whatif_scenario_name":
+      "E-se: M{{material}}% MO{{labor}}% D{{duration}}%",
     "costmodel.whatif_title": "Cenários Hipotéticos",
     "costs.add_database": "Importar",
     "costs.add_item": "Adicionar Item",
@@ -698,11 +775,13 @@ const resource = {
     "costs.copy_rate": "Copiar preço",
     "costs.create": "Criar Item",
     "costs.create_item": "Adicionar Item de Custo Personalizado",
-    "costs.create_item_desc": "Crie seu próprio item de custo para este projeto",
+    "costs.create_item_desc":
+      "Crie seu próprio item de custo para este projeto",
     "costs.creating": "Criando...",
     "costs.currency": "Moeda",
     "costs.delete_failed": "Falha ao excluir",
-    "costs.empty_hint": "Comece a digitar para pesquisar no banco de dados de custos",
+    "costs.empty_hint":
+      "Comece a digitar para pesquisar no banco de dados de custos",
     "costs.export": "Exportar",
     "costs.export_excel": "Exportar Excel",
     "costs.export_failed": "Falha na exportação",
@@ -714,18 +793,22 @@ const resource = {
     "costs.import_and_more": "e mais {{count}} erros",
     "costs.import_another": "Importar Outro",
     "costs.import_click_to_change": "Clique para escolher um arquivo diferente",
-    "costs.import_columns_hint": "As colunas são detectadas automaticamente. Cabeçalhos aceitos: Código, Descrição, Unidade, Preço/Custo, Moeda, DIN 276/Classificação.",
+    "costs.import_columns_hint":
+      "As colunas são detectadas automaticamente. Cabeçalhos aceitos: Código, Descrição, Unidade, Preço/Custo, Moeda, DIN 276/Classificação.",
     "costs.import_complete": "Importação Concluída",
     "costs.import_database": "Importar Banco de Dados",
     "costs.import_drop_here": "Solte seu arquivo aqui",
-    "costs.import_drop_or_click": "Solte seu arquivo aqui ou clique para procurar",
+    "costs.import_drop_or_click":
+      "Solte seu arquivo aqui ou clique para procurar",
     "costs.import_error_details": "Detalhes do erro",
     "costs.import_errors": "Erros",
     "costs.import_failed": "Falha na importação",
     "costs.import_file_too_large": "Arquivo muito grande",
-    "costs.import_first_hint": "Importe um banco de dados de custos regional para começar a pesquisar 55.000+ itens.",
+    "costs.import_first_hint":
+      "Importe um banco de dados de custos regional para começar a pesquisar 55.000+ itens.",
     "costs.import_format_csv": "CSV (.csv) com as mesmas colunas",
-    "costs.import_format_excel": "Excel (.xlsx) com colunas: Código, Descrição, Unidade, Preço",
+    "costs.import_format_excel":
+      "Excel (.xlsx) com colunas: Código, Descrição, Unidade, Preço",
     "costs.import_formats_title": "Formatos suportados",
     "costs.import_go_to_database": "Ir para Banco de Dados de Custos",
     "costs.import_imported": "Importado",
@@ -734,18 +817,22 @@ const resource = {
     "costs.import_row": "Linha",
     "costs.import_rows_processed": "linhas processadas",
     "costs.import_skipped": "Ignorados",
-    "costs.import_subtitle": "Carregue um banco de dados de preços ou envie seu próprio arquivo.",
+    "costs.import_subtitle":
+      "Carregue um banco de dados de preços ou envie seu próprio arquivo.",
     "costs.import_success": "Importação concluída",
-    "costs.import_supported_hint": "Por favor, envie um arquivo Excel (.xlsx) ou CSV (.csv).",
+    "costs.import_supported_hint":
+      "Por favor, envie um arquivo Excel (.xlsx) ou CSV (.csv).",
     "costs.import_title": "Importar Banco de Dados de Custos",
     "costs.import_unsupported_format": "Formato de arquivo não suportado",
     "costs.indexing_failed": "Falha na indexação",
     "costs.item_created": "Item de custo criado",
     "costs.items": "itens",
-    "costs.items_copied": "{{count}} itens copiados para a área de transferência",
+    "costs.items_copied":
+      "{{count}} itens copiados para a área de transferência",
     "costs.load_more": "Carregar mais",
     "costs.loaded_databases": "Bancos de Dados Carregados",
-    "costs.no_boqs_helper": "Nenhum orçamento neste projeto. Crie um primeiro no editor de orçamentos.",
+    "costs.no_boqs_helper":
+      "Nenhum orçamento neste projeto. Crie um primeiro no editor de orçamentos.",
     "costs.no_database_loaded": "Nenhum banco de dados carregado",
     "costs.no_results": "Nenhum item de custo encontrado",
     "costs.no_results_hint": "Tente ajustar sua pesquisa ou filtros",
@@ -757,16 +844,19 @@ const resource = {
     "costs.region_cleared": "Região limpa",
     "costs.results_found": "resultados encontrados",
     "costs.search_hint": "Pesquisar itens de custo por descrição ou código",
-    "costs.what_is_cost_db": "Preços unitários e compostos para materiais, mão de obra e equipamentos. Importe bancos de dados regionais (CWICR, BKI, RSMeans) em Módulos ou adicione preços personalizados. Ative a Pesquisa Semântica com IA para consultas em linguagem natural.",
+    "costs.what_is_cost_db":
+      "Preços unitários e compostos para materiais, mão de obra e equipamentos. Importe bancos de dados regionais (CWICR, BKI, RSMeans) em Módulos ou adicione preços personalizados. Ative a Pesquisa Semântica com IA para consultas em linguagem natural.",
     "costs.search_placeholder": "Pesquisar por descrição ou código...",
-    "costs.semantic_placeholder": "Descreva o que você precisa (IA encontra similares)...",
+    "costs.semantic_placeholder":
+      "Descreva o que você precisa (IA encontra similares)...",
     "costs.showing": "Exibindo",
     "costs.title": "Banco de Dados de Custos",
     "costs.yes_clear_all": "Sim, Limpar Tudo",
     "dashboard.add_api_keys": "Adicionar Chaves de API",
     "dashboard.ai_providers": "Provedores de IA",
     "dashboard.analytics": "Analítica",
-    "dashboard.kpi_hint": "Resumo de todos os projetos. Os valores são atualizados conforme você adiciona estimativas e atividades de cronograma.",
+    "dashboard.kpi_hint":
+      "Resumo de todos os projetos. Os valores são atualizados conforme você adiciona estimativas e atividades de cronograma.",
     "dashboard.api_server": "Servidor API",
     "dashboard.boq_status": "Status do Orçamento",
     "dashboard.completed": "Concluído",
@@ -797,17 +887,23 @@ const resource = {
     "dashboard.recent_projects": "Projetos Recentes",
     "dashboard.show_shortcuts": "Mostrar atalhos de teclado",
     "dashboard.step_ai_search": "Ativar Pesquisa com IA",
-    "dashboard.step_ai_search_desc": "Gerar embeddings vetoriais para correspondência semântica de custos",
+    "dashboard.step_ai_search_desc":
+      "Gerar embeddings vetoriais para correspondência semântica de custos",
     "dashboard.step_build_boq": "Monte seu Orçamento",
-    "dashboard.step_build_boq_desc": "Crie uma Planilha Orçamentária com assistência de IA",
+    "dashboard.step_build_boq_desc":
+      "Crie uma Planilha Orçamentária com assistência de IA",
     "dashboard.step_connect_ai": "Conectar IA",
-    "dashboard.step_connect_ai_desc": "Adicione suas chaves de API para estimativa com IA",
+    "dashboard.step_connect_ai_desc":
+      "Adicione suas chaves de API para estimativa com IA",
     "dashboard.step_create_project": "Criar Projeto",
-    "dashboard.step_create_project_desc": "Inicie seu primeiro projeto de orçamentação de obras",
+    "dashboard.step_create_project_desc":
+      "Inicie seu primeiro projeto de orçamentação de obras",
     "dashboard.step_load_db": "Carregar Banco de Dados de Custos",
-    "dashboard.step_load_db_desc": "Importe dados de preços regionais com 55.000+ itens",
+    "dashboard.step_load_db_desc":
+      "Importe dados de preços regionais com 55.000+ itens",
     "dashboard.subtitle": "Seu espaço de trabalho para orçamentação de obras",
-    "dashboard.subtitle_2": "Planejamento inteligente de recursos para seus projetos de construção",
+    "dashboard.subtitle_2":
+      "Planejamento inteligente de recursos para seus projetos de construção",
     "dashboard.developed_by": "Desenvolvido por",
     "dashboard.system_status": "Status do Sistema",
     "dashboard.total_boqs": "Total de Orçamentos",
@@ -819,18 +915,22 @@ const resource = {
     "dashboard.welcome": "Bem-vindo ao OpenConstructionERP",
     "demo.import_demo": "Importar Demonstração",
     "demo.install": "Instalar",
-    "demo.install_error": "Falha ao instalar projeto de demonstração. Por favor, tente novamente.",
+    "demo.install_error":
+      "Falha ao instalar projeto de demonstração. Por favor, tente novamente.",
     "demo.installing": "Instalando...",
-    "demo.modal_subtitle": "Instale um projeto completo com orçamento, cronograma, custo e licitação",
+    "demo.modal_subtitle":
+      "Instale um projeto completo com orçamento, cronograma, custo e licitação",
     "demo.modal_title": "Importar Projeto de Demonstração",
     "documents.title": "Documentos",
-    "documents.subtitle": "Carregue e gerencie ficheiros do projeto — desenhos, contratos, especificações",
+    "documents.subtitle":
+      "Carregue e gerencie ficheiros do projeto — desenhos, contratos, especificações",
     "documents.upload": "Carregar ficheiros",
     "documents.uploaded": "Carregado",
     "documents.upload_failed": "Falha no upload",
     "documents.upload_skipped": "Ficheiro ignorado",
     "documents.file_too_large": "{{name}} excede o limite de 100 MB",
-    "documents.upload_summary": "Upload concluído: {{success}} carregados, {{failed}} falhados",
+    "documents.upload_summary":
+      "Upload concluído: {{success}} carregados, {{failed}} falhados",
     "documents.delete_failed": "Eliminar falhou",
     "documents.deleted": "Documento eliminado",
     "documents.download": "Descarregar",
@@ -842,11 +942,14 @@ const resource = {
     "documents.no_results_hint": "Tente outro termo de pesquisa",
     "documents.clear_search": "Limpar pesquisa",
     "documents.drop_hint": "Arraste ficheiros para aqui, ou clique em Carregar",
-    "documents.drop_hint_types": "PDF, imagens, Excel, DWG, IFC — qualquer tipo de ficheiro",
+    "documents.drop_hint_types":
+      "PDF, imagens, Excel, DWG, IFC — qualquer tipo de ficheiro",
     "documents.empty": "Sem documentos ainda",
-    "documents.empty_hint": "Carregue o seu primeiro ficheiro — desenhos, contratos, fotos ou qualquer documento de projeto.",
+    "documents.empty_hint":
+      "Carregue o seu primeiro ficheiro — desenhos, contratos, fotos ou qualquer documento de projeto.",
     "documents.select_project": "Selecionar um projeto",
-    "documents.select_project_hint": "Use o seletor de projetos no cabeçalho para selecionar um projeto primeiro.",
+    "documents.select_project_hint":
+      "Use o seletor de projetos no cabeçalho para selecionar um projeto primeiro.",
     "documents.sort_date": "Por data",
     "documents.sort_name": "Por nome",
     "documents.sort_size": "Por tamanho",
@@ -860,33 +963,45 @@ const resource = {
     "documents.cat_correspondence": "Correspondência",
     "documents.cat_other": "Outro",
     "login.benefit.ai": "Estimativa assistida por IA",
-    "login.benefit.ai_desc": "Sugestões inteligentes com índices de confiança. Você decide, a IA auxilia.",
+    "login.benefit.ai_desc":
+      "Sugestões inteligentes com índices de confiança. Você decide, a IA auxilia.",
     "login.benefit.allinone": "Orçamento + 4D + 5D + Licitação",
-    "login.benefit.allinone_desc": "Fluxo completo da estimativa de custos à comparação de propostas em uma só ferramenta.",
+    "login.benefit.allinone_desc":
+      "Fluxo completo da estimativa de custos à comparação de propostas em uma só ferramenta.",
     "login.benefit.free": "Gratuito para todos",
-    "login.benefit.free_desc": "Sem taxas de licença. Sem limites. Feito por orçamentistas, para orçamentistas.",
+    "login.benefit.free_desc":
+      "Sem taxas de licença. Sem limites. Feito por orçamentistas, para orçamentistas.",
     "login.benefit.local": "Seus dados ficam no seu computador",
-    "login.benefit.local_desc": "Sem nuvem. Sem servidores de terceiros. Controle total sobre os dados do seu projeto.",
+    "login.benefit.local_desc":
+      "Sem nuvem. Sem servidores de terceiros. Controle total sobre os dados do seu projeto.",
     "login.benefit.open_source": "100% código aberto",
-    "login.benefit.open_source_desc": "Código transparente. Sem dependência de fornecedor. Exporte tudo, a qualquer momento.",
+    "login.benefit.open_source_desc":
+      "Código transparente. Sem dependência de fornecedor. Exporte tudo, a qualquer momento.",
     "login.benefit.standards": "Padrões internacionais",
-    "login.benefit.standards_desc": "Mais de 55.000 itens de custo em 11 bancos de dados regionais em todo o mundo.",
-    "login.hero_desc": "Orçamento profissional, cronograma 4D, modelo de custos 5D e licitação — tudo em uma plataforma de código aberto.",
+    "login.benefit.standards_desc":
+      "Mais de 55.000 itens de custo em 11 bancos de dados regionais em todo o mundo.",
+    "login.hero_desc":
+      "Orçamento profissional, cronograma 4D, modelo de custos 5D e licitação — tudo em uma plataforma de código aberto.",
     "login.hero_highlight": "reinventada",
     "login.hero_title": "Orçamentação de obras,",
     "login.open_source_badge": "Primeiro ERP de construção open-source",
     "dashboard.open_source_badge": "Primeiro ERP de construção open-source",
     "login.learn_more": "Saiba mais sobre a plataforma",
-    "login.privacy": "Todos os dados são processados e armazenados localmente na sua máquina. Nada é enviado para servidores externos. Você é dono dos seus dados — sempre.",
-    "login.privacy_ai": "Se você usar as ferramentas de IA integradas, alguns dados podem ser enviados ao provedor de IA que você configurar (OpenAI, Anthropic, etc.). Você controla qual provedor usar e quais dados compartilhar.",
+    "login.privacy":
+      "Todos os dados são processados e armazenados localmente na sua máquina. Nada é enviado para servidores externos. Você é dono dos seus dados — sempre.",
+    "login.privacy_ai":
+      "Se você usar as ferramentas de IA integradas, alguns dados podem ser enviados ao provedor de IA que você configurar (OpenAI, Anthropic, etc.). Você controla qual provedor usar e quais dados compartilhar.",
     "marketplace.active": "Ativo",
     "marketplace.available": "Módulos Disponíveis",
     "marketplace.builtin": "Integrado",
-    "marketplace.builtin_message": "Este módulo está integrado à sua instalação e pronto para uso.",
+    "marketplace.builtin_message":
+      "Este módulo está integrado à sua instalação e pronto para uso.",
     "marketplace.catalog_imported": "Catálogo importado",
-    "marketplace.catalog_imported_message": "{{imported}} insumos importados, {{skipped}} ignorados para {{region}}.",
+    "marketplace.catalog_imported_message":
+      "{{imported}} insumos importados, {{skipped}} ignorados para {{region}}.",
     "marketplace.demo_installed": "Demonstração instalada",
-    "marketplace.demo_installed_message": "{{name}} criado com orçamento completo, cronograma, custo e licitação.",
+    "marketplace.demo_installed_message":
+      "{{name}} criado com orçamento completo, cronograma, custo e licitação.",
     "marketplace.free": "Gratuito",
     "marketplace.import_failed": "Falha na importação",
     "marketplace.imported": "Importado",
@@ -895,7 +1010,8 @@ const resource = {
     "marketplace.install_failed": "Falha na instalação",
     "marketplace.installed_modules": "Módulos Principais Instalados",
     "marketplace.installing": "Instalando...",
-    "marketplace.language_activated": "Pacote de idioma ativado. Altere o idioma em Configurações.",
+    "marketplace.language_activated":
+      "Pacote de idioma ativado. Altere o idioma em Configurações.",
     "marketplace.language_already_included": "Este idioma já está incluído.",
     "marketplace.manage": "Gerenciar",
     "marketplace.module_disabled": "{{name}} desativado",
@@ -903,18 +1019,22 @@ const resource = {
     "marketplace.my_modules": "Módulos Instalados",
     "marketplace.no_region_mapping": "Sem mapeamento de região para {{id}}",
     "marketplace.no_results": "Nenhum módulo encontrado",
-    "marketplace.no_results_hint": "Tente ajustar sua pesquisa ou filtro de categoria.",
+    "marketplace.no_results_hint":
+      "Tente ajustar sua pesquisa ou filtro de categoria.",
     "marketplace.rules": "regras",
     "marketplace.search_placeholder": "Pesquisar módulos...",
-    "marketplace.subtitle": "Navegue e instale complementos para bancos de dados de custos, ferramentas de IA, conversores CAD e mais.",
-    "marketplace.description": "Estenda o OpenEstimate com bancos de dados de custos regionais, catálogos de insumos (CWICR), índices de busca vetorial para IA, pacotes de idiomas, projetos de demonstração e integrações. Instale um módulo para ativá-lo — desinstale a qualquer momento.",
+    "marketplace.subtitle":
+      "Navegue e instale complementos para bancos de dados de custos, ferramentas de IA, conversores CAD e mais.",
+    "marketplace.description":
+      "Estenda o OpenEstimate com bancos de dados de custos regionais, catálogos de insumos (CWICR), índices de busca vetorial para IA, pacotes de idiomas, projetos de demonstração e integrações. Instale um módulo para ativá-lo — desinstale a qualquer momento.",
     "marketplace.title": "Marketplace de Módulos",
     "marketplace.uninstall": "Desinstalar",
     "marketplace.unknown_region": "Região desconhecida",
     "marketplace.validation_rule_sets": "Conjuntos de Regras de Validação",
     "marketplace.validation_rules_active": "regras de validação ativas",
     "marketplace.vector_index": "Índice Vetorial",
-    "marketplace.vector_index_hint": "Importe o banco de dados de custos primeiro, depois gere os vetores.",
+    "marketplace.vector_index_hint":
+      "Importe o banco de dados de custos primeiro, depois gere os vetores.",
     "modules.title": "Módulos",
     "nav.5d_cost_model": "Modelo de Custos 5D",
     "nav.assemblies": "Composições",
@@ -940,13 +1060,16 @@ const resource = {
     "nav.bi_dashboards": "Painéis BI",
     "nav.match_elements": "Comparar elementos → Custos",
     "nav.group_operations": "Operações de obra",
-    "nav.group_operations_desc": "Operações diárias na obra — chamados, equipamentos, diário, portal de subempreiteiros, recursos",
+    "nav.group_operations_desc":
+      "Operações diárias na obra — chamados, equipamentos, diário, portal de subempreiteiros, recursos",
     "nav.group_commercial": "Comercial",
-    "nav.group_commercial_desc": "Pipeline comercial — CRM, contratos, propostas, aditivos, fornecedores, desenvolvimento imobiliário",
+    "nav.group_commercial_desc":
+      "Pipeline comercial — CRM, contratos, propostas, aditivos, fornecedores, desenvolvimento imobiliário",
     "nav.group_bi": "Analítica",
     "nav.group_bi_desc": "Painéis BI sobre projeções do data warehouse",
     "nav.group_estimation": "Orçamentação",
-    "nav.group_estimation_desc": "Ferramentas principais: projetos, orçamento, custos e composições",
+    "nav.group_estimation_desc":
+      "Ferramentas principais: projetos, orçamento, custos e composições",
     "nav.group_databases": "Bancos de dados",
     "nav.group_takeoff": "Levantamento",
     "nav.group_cad_bim": "CAD / BIM & BI",
@@ -960,7 +1083,8 @@ const resource = {
     "nav.group_procurement": "Licitações",
     "nav.group_procurement_desc": "Gestão de propostas, licitação e relatórios",
     "nav.group_tools": "Ferramentas",
-    "nav.group_tools_desc": "Validação, verificação de conformidade e sustentabilidade",
+    "nav.group_tools_desc":
+      "Validação, verificação de conformidade e sustentabilidade",
     "nav.mode_advanced": "Avançado",
     "nav.mode_pro_badge": "PRO",
     "nav.mode_simple": "Simples",
@@ -996,7 +1120,8 @@ const resource = {
     "requirements.entity": "Entidade",
     "requirements.entity_placeholder": "ex.: parede, piso, telhado",
     "requirements.attribute": "Atributo",
-    "requirements.attribute_placeholder": "ex.: espessura, classificação de incêndio",
+    "requirements.attribute_placeholder":
+      "ex.: espessura, classificação de incêndio",
     "requirements.constraint_type": "Tipo de Restrição",
     "requirements.constraint_value": "Valor",
     "requirements.value_placeholder": "ex.: 200, C30/37, F90",
@@ -1008,8 +1133,10 @@ const resource = {
     "requirements.notes": "Notas",
     "requirements.notes_placeholder": "Notas adicionais ou contexto...",
     "requirements.import_text": "Importar de Texto",
-    "requirements.import_text_desc": "Cole especificações de requisitos. Cada linha deve seguir o formato: entidade | atributo | tipo_restrição | valor | unidade | categoria | prioridade",
-    "requirements.import_placeholder": "parede | espessura | min | 200 | mm | estrutural | deve\ntelhado | valor_u | max | 0,20 | W/m²K | térmico | deve",
+    "requirements.import_text_desc":
+      "Cole especificações de requisitos. Cada linha deve seguir o formato: entidade | atributo | tipo_restrição | valor | unidade | categoria | prioridade",
+    "requirements.import_placeholder":
+      "parede | espessura | min | 200 | mm | estrutural | deve\ntelhado | valor_u | max | 0,20 | W/m²K | térmico | deve",
     "requirements.set_created": "Conjunto de requisitos criado",
     "requirements.new_set": "Novo Conjunto de Requisitos",
     "requirements.set_name_placeholder": "ex.: Requisitos Estruturais Fase 1",
@@ -1028,35 +1155,43 @@ const resource = {
     "requirements.all_priorities": "Todas as Prioridades",
     "requirements.all_statuses": "Todos os Estados",
     "requirements.no_sets": "Nenhum conjunto de requisitos",
-    "requirements.no_sets_desc": "Crie um conjunto de requisitos para começar a definir requisitos do projeto e portas de qualidade.",
+    "requirements.no_sets_desc":
+      "Crie um conjunto de requisitos para começar a definir requisitos do projeto e portas de qualidade.",
     "requirements.empty": "Ainda sem requisitos",
-    "requirements.empty_desc": "Adicione requisitos para definir triplas Entidade-Atributo-Restrição para o seu projeto.",
+    "requirements.empty_desc":
+      "Adicione requisitos para definir triplas Entidade-Atributo-Restrição para o seu projeto.",
     "requirements.no_match": "Nenhum requisito corresponde aos seus filtros.",
     "requirements.constraint": "Restrição",
     "requirements.confidence": "Conf.",
     "requirements.source": "Fonte",
     "requirements.showing": "{{count}} requisitos",
     "requirements.of_total": "de {{total}}",
-    "requirements.confirm_delete_set": "Excluir este conjunto de requisitos e todos os seus requisitos?",
+    "requirements.confirm_delete_set":
+      "Excluir este conjunto de requisitos e todos os seus requisitos?",
     "requirements.delete_set": "Excluir Conjunto",
     "requirements.and_more": "e mais {{count}}...",
     "requirements.click_to_upload_csv": "Clique para enviar arquivo CSV",
     "requirements.click_to_upload_json": "Clique para enviar arquivo JSON",
     "requirements.csv_loaded": "{{count}} linhas carregadas do CSV",
-    "requirements.csv_parse_error": "O CSV deve ter cabeçalhos: entity, attribute, constraint_value",
+    "requirements.csv_parse_error":
+      "O CSV deve ter cabeçalhos: entity, attribute, constraint_value",
     "requirements.export": "Exportar",
     "requirements.export_csv": "Exportar CSV",
     "requirements.export_excel": "Exportar Excel",
     "requirements.export_json": "Exportar JSON",
     "requirements.exported": "Requisitos exportados",
     "requirements.import_count": "Importando {{count}} requisitos...",
-    "requirements.import_csv_desc": "Envie um arquivo CSV com colunas: entity, attribute, constraint_value",
-    "requirements.import_json_desc": "Envie um array JSON de objetos de requisitos",
+    "requirements.import_csv_desc":
+      "Envie um arquivo CSV com colunas: entity, attribute, constraint_value",
+    "requirements.import_json_desc":
+      "Envie um array JSON de objetos de requisitos",
     "requirements.import_requirements": "Importar Requisitos",
     "requirements.json_loaded": "{{count}} itens carregados do JSON",
-    "requirements.json_parse_error": "O JSON deve ser um array de objetos com entity, attribute, constraint_value",
+    "requirements.json_parse_error":
+      "O JSON deve ser um array de objetos com entity, attribute, constraint_value",
     "requirements.preview": "Pré-visualizar",
-    "requirements.regex_hint": "Digite um padrão de expressão regular, ex. ^F[0-9]+$",
+    "requirements.regex_hint":
+      "Digite um padrão de expressão regular, ex. ^F[0-9]+$",
     "requirements.regex_invalid": "Padrão inválido",
     "requirements.regex_placeholder": "^F[0-9]+$",
     "requirements.regex_valid": "Padrão válido",
@@ -1108,11 +1243,13 @@ const resource = {
     "markups.col_measurement": "Medição",
     "markups.col_date": "Data",
     "markups.empty_title": "Nenhuma marcação encontrada",
-    "markups.empty_desc": "Marcações e anotações dos seus documentos de projeto aparecerão aqui.",
+    "markups.empty_desc":
+      "Marcações e anotações dos seus documentos de projeto aparecerão aqui.",
     "markups.action_resolve": "Resolver",
     "markups.action_archive": "Arquivar",
     "markups.add_markup": "Adicionar marcação",
-    "markups.add_first": "Adicione sua primeira marcação para começar a anotar documentos",
+    "markups.add_first":
+      "Adicione sua primeira marcação para começar a anotar documentos",
     "markups.active": "Ativo",
     "markups.all_documents": "Todos os documentos",
     "markups.clear_filters": "Limpar filtros",
@@ -1130,7 +1267,8 @@ const resource = {
     "markups.measurement_unit": "Unidade",
     "markups.measurement_value": "Valor",
     "markups.no_document": "Sem documento",
-    "markups.no_project_desc": "Selecione um projeto para visualizar e gerenciar marcações",
+    "markups.no_project_desc":
+      "Selecione um projeto para visualizar e gerenciar marcações",
     "markups.no_project_title": "Nenhum projeto selecionado",
     "markups.page": "Página",
     "markups.resolved": "Resolvido",
@@ -1189,7 +1327,8 @@ const resource = {
     "punch.all_assignees": "Todos os atribuídos",
     "punch.kanban_empty": "Sem itens",
     "punch.empty_title": "Nenhuma pendência",
-    "punch.empty_desc": "Crie pendências para acompanhar defeitos, falhas e trabalhos pendentes.",
+    "punch.empty_desc":
+      "Crie pendências para acompanhar defeitos, falhas e trabalhos pendentes.",
     "punch.col_title": "Título",
     "punch.col_priority": "Prioridade",
     "punch.col_status": "Status",
@@ -1210,7 +1349,8 @@ const resource = {
     "punch.action_close": "Fechar",
     "punch.no_project_desc": "Selecione um projeto para gerenciar pendências",
     "punch.no_project_title": "Nenhum projeto selecionado",
-    "punch.no_results_desc": "Tente ajustar seus filtros ou critérios de pesquisa",
+    "punch.no_results_desc":
+      "Tente ajustar seus filtros ou critérios de pesquisa",
     "punch.no_results_title": "Nenhum item correspondente",
     "punch.select_project": "Selecionar projeto...",
     "punch.title_required": "O título é obrigatório",
@@ -1255,7 +1395,8 @@ const resource = {
     "field_reports.total": "Total de Relatórios",
     "field_reports.workforce_hours": "Horas de Trabalho",
     "field_reports.empty": "Ainda sem relatórios",
-    "field_reports.empty_desc": "Crie seu primeiro relatório diário para começar a documentar o progresso da construção",
+    "field_reports.empty_desc":
+      "Crie seu primeiro relatório diário para começar a documentar o progresso da construção",
     "nav.photos": "Fotos do Projeto",
     "nav.project_files": "Arquivos do projeto",
     "files.title": "Arquivos do projeto",
@@ -1297,7 +1438,8 @@ const resource = {
     "files.preview.title": "Detalhes do arquivo",
     "files.preview.empty": "Selecione um arquivo para ver os detalhes.",
     "files.no_project_title": "Sem projeto ativo",
-    "files.no_project_desc": "Escolha um projeto no painel para ver todos os documentos, fotos, arquivos BIM e DWG em um só lugar.",
+    "files.no_project_desc":
+      "Escolha um projeto no painel para ver todos os documentos, fotos, arquivos BIM e DWG em um só lugar.",
     "files.go_to_projects": "Ir para projetos",
     "files.empty_category": "Ainda sem {{category}}",
     "files.cta.add_first": "Adicionar seu primeiro(a) {{category}}",
@@ -1307,7 +1449,8 @@ const resource = {
     "files.upload": "Enviar arquivos",
     "files.upload_drag": "Arraste e solte arquivos aqui",
     "files.upload_drop_here": "Solte os arquivos para enviar",
-    "files.upload_hint": "PDF, imagens, Excel, DWG, IFC — qualquer tipo de arquivo",
+    "files.upload_hint":
+      "PDF, imagens, Excel, DWG, IFC — qualquer tipo de arquivo",
     "files.upload_browse": "Procurar arquivos",
     "files.upload_no_project": "Sem projeto ativo",
     "files.uploading": "Enviando…",
@@ -1319,7 +1462,8 @@ const resource = {
     "files.bulk.deleted": "{{count}} arquivo(s) excluído(s)",
     "files.bulk.delete_failed": "Falha na exclusão em massa",
     "files.bulk.skip_unsupported": "{{count}} ignorado(s) (não suportado(s))",
-    "files.bulk.no_deletable": "Os arquivos selecionados ainda não podem ser excluídos daqui",
+    "files.bulk.no_deletable":
+      "Os arquivos selecionados ainda não podem ser excluídos daqui",
     "files.actions.open_in": "Abrir em {{module}}",
     "files.actions.open_in_short": "Abrir em {{module}}",
     "files.actions.share": "Compartilhar",
@@ -1330,7 +1474,8 @@ const resource = {
     "files.share.creating": "Criando link…",
     "files.share.downloads": "{{count}} download",
     "files.share.downloads_plural": "{{count}} downloads",
-    "files.share.error_create": "Não foi possível criar o link de compartilhamento.",
+    "files.share.error_create":
+      "Não foi possível criar o link de compartilhamento.",
     "files.share.error_revoke": "Não foi possível revogar o link.",
     "files.share.existing_empty": "Nenhum link ainda — crie um acima.",
     "files.share.existing_title": "Links existentes",
@@ -1362,19 +1507,26 @@ const resource = {
     "files.toast.copy_failed": "Não foi possível copiar",
     "files.upload_queued": "{{count}} arquivo(s) na fila",
     "files.upload_too_large": "Arquivos grandes demais",
-    "files.upload_too_large_msg": "{{count}} arquivo(s) excedem o limite de 100 MB e foram ignorados.",
+    "files.upload_too_large_msg":
+      "{{count}} arquivo(s) excedem o limite de 100 MB e foram ignorados.",
     "files.export.title": "Exportar pacote do projeto",
-    "files.export.intro": "Escolha o que incluir. Pacotes menores são transferidos mais rápido; maiores preservam mais dados.",
+    "files.export.intro":
+      "Escolha o que incluir. Pacotes menores são transferidos mais rápido; maiores preservam mais dados.",
     "files.export.scope_metadata": "Apenas metadados",
-    "files.export.scope_metadata_hint": "Compatível com e-mail. Quantitativos, tabelas e links — sem anexos.",
+    "files.export.scope_metadata_hint":
+      "Compatível com e-mail. Quantitativos, tabelas e links — sem anexos.",
     "files.export.scope_documents": "Documentos",
-    "files.export.scope_documents_hint": "Adiciona documentos e fotos enviados com suas miniaturas.",
+    "files.export.scope_documents_hint":
+      "Adiciona documentos e fotos enviados com suas miniaturas.",
     "files.export.scope_bim": "Modelos BIM",
-    "files.export.scope_bim_hint": "Adiciona modelos BIM, elementos e geometria canônica.",
+    "files.export.scope_bim_hint":
+      "Adiciona modelos BIM, elementos e geometria canônica.",
     "files.export.scope_dwg": "Desenhos DWG",
-    "files.export.scope_dwg_hint": "Adiciona desenhos DWG, versões e pranchas relacionadas.",
+    "files.export.scope_dwg_hint":
+      "Adiciona desenhos DWG, versões e pranchas relacionadas.",
     "files.export.scope_full": "Projeto completo",
-    "files.export.scope_full_hint": "Tudo — pacote de migração completo, incluindo todos os anexos.",
+    "files.export.scope_full_hint":
+      "Tudo — pacote de migração completo, incluindo todos os anexos.",
     "files.export.stat_scope": "Escopo",
     "files.export.stat_attachments": "Anexos",
     "files.export.stat_size": "Tamanho estimado",
@@ -1382,10 +1534,12 @@ const resource = {
     "files.export.tables": "Tabelas",
     "files.export.preview_btn": "Visualizar",
     "files.export.download_btn": "Baixar pacote",
-    "files.export.large_warn": "Pacote grande — mantenha esta aba aberta durante a exportação.",
+    "files.export.large_warn":
+      "Pacote grande — mantenha esta aba aberta durante a exportação.",
     "files.export.success_title": "Pacote baixado",
     "files.import.title": "Importar pacote do projeto",
-    "files.import.intro": "Selecione um pacote .ocep exportado deste ou de outro espaço de trabalho.",
+    "files.import.intro":
+      "Selecione um pacote .ocep exportado deste ou de outro espaço de trabalho.",
     "files.import.select_file": "Escolher arquivo .ocep",
     "files.import.drop_hint": "Clique para procurar",
     "files.import.validating": "Validando pacote…",
@@ -1397,15 +1551,19 @@ const resource = {
     "files.import.stat_format": "Formato",
     "files.import.choose_mode": "Modo de importação",
     "files.import.mode_new": "Criar novo projeto",
-    "files.import.mode_new_hint": "Mais seguro. Novos IDs em tudo; nada muda no seu espaço de trabalho.",
+    "files.import.mode_new_hint":
+      "Mais seguro. Novos IDs em tudo; nada muda no seu espaço de trabalho.",
     "files.import.mode_merge": "Mesclar em projeto existente",
-    "files.import.mode_merge_hint": "Adiciona linhas ao projeto escolhido. IDs existentes são ignorados.",
+    "files.import.mode_merge_hint":
+      "Adiciona linhas ao projeto escolhido. IDs existentes são ignorados.",
     "files.import.mode_replace": "Substituir projeto existente",
-    "files.import.mode_replace_hint": "Apaga as linhas do projeto escolhido geridas pelo pacote e depois importa. Destrutivo.",
+    "files.import.mode_replace_hint":
+      "Apaga as linhas do projeto escolhido geridas pelo pacote e depois importa. Destrutivo.",
     "files.import.rename": "Novo nome do projeto (opcional)",
     "files.import.target_project": "Projeto de destino",
     "files.import.pick_project": "— escolha um projeto —",
-    "files.import.destructive_warn": "Isto excluirá permanentemente as linhas geridas pelo pacote no projeto de destino antes de importar. Não pode ser desfeito.",
+    "files.import.destructive_warn":
+      "Isto excluirá permanentemente as linhas geridas pelo pacote no projeto de destino antes de importar. Não pode ser desfeito.",
     "files.import.confirm": "Importar",
     "files.import.result_done": "Importação concluída",
     "files.import.imported": "Importado",
@@ -1425,7 +1583,8 @@ const resource = {
     "files.email.paste_into_email": "Corpo de e-mail de exemplo",
     "files.email.open_mail_client": "Abrir cliente de e-mail",
     "files.email.sample_subject": "Arquivo: {{name}}",
-    "files.email.sample_body": "Olá,\n\nAqui está o arquivo solicitado — {{name}} ({{size}}).\nLink de download (expira em {{expires}}):\n{{url}}\n\n— enviado pelo OpenConstructionERP",
+    "files.email.sample_body":
+      "Olá,\n\nAqui está o arquivo solicitado — {{name}} ({{size}}).\nLink de download (expira em {{expires}}):\n{{url}}\n\n— enviado pelo OpenConstructionERP",
     "photos.title": "Fotos do Projeto",
     "photos.upload": "Enviar Fotos",
     "photos.upload_hint": "Arraste e solte fotos ou clique para procurar",
@@ -1443,22 +1602,27 @@ const resource = {
     "photos.grid": "Grade",
     "photos.timeline": "Linha do tempo",
     "photos.empty": "Nenhuma foto ainda",
-    "photos.empty_desc": "Envie fotos do canteiro de obras para documentar o progresso",
+    "photos.empty_desc":
+      "Envie fotos do canteiro de obras para documentar o progresso",
     "photos.delete_confirm": "Excluir esta foto?",
     "photos.edit": "Editar Foto",
-    "onboarding.ai_feature_1": "Gerar estimativas a partir de descrições textuais",
+    "onboarding.ai_feature_1":
+      "Gerar estimativas a partir de descrições textuais",
     "onboarding.ai_feature_2": "Analisar fotos de edificações",
     "onboarding.ai_feature_3": "Processar documentos PDF automaticamente",
     "onboarding.ai_saved": "Configurações de IA salvas",
-    "onboarding.ai_subtitle": "Conecte um provedor de IA para recursos inteligentes:",
+    "onboarding.ai_subtitle":
+      "Conecte um provedor de IA para recursos inteligentes:",
     "onboarding.ai_test_error": "Teste falhou",
     "onboarding.ai_test_failed": "Conexão falhou",
     "onboarding.ai_test_success": "Conexão bem-sucedida!",
     "onboarding.ai_title": "Provedor de IA (Opcional)",
     "onboarding.api_key": "Chave de API",
     "onboarding.api_key_placeholder": "Cole sua chave de API aqui...",
-    "onboarding.cost_db_hint": "Você pode adicionar mais bancos de dados depois em Banco de Dados de Custos → Importar.",
-    "onboarding.cost_db_subtitle": "Carregue um banco de dados de preços para estimativas precisas. Escolha sua região:",
+    "onboarding.cost_db_hint":
+      "Você pode adicionar mais bancos de dados depois em Banco de Dados de Custos → Importar.",
+    "onboarding.cost_db_subtitle":
+      "Carregue um banco de dados de preços para estimativas precisas. Escolha sua região:",
     "onboarding.cost_db_title": "Banco de Dados de Custos",
     "onboarding.create_error": "Falha ao criar projeto",
     "onboarding.create_project": "Criar e Começar a Orçar",
@@ -1468,13 +1632,16 @@ const resource = {
     "onboarding.get_started": "Começar",
     "onboarding.items_loaded": "itens carregados",
     "onboarding.loading_database": "Importando banco de dados...",
-    "onboarding.loading_database_hint": "Carregando ~55.000 itens. Isso leva de 1 a 3 minutos.",
+    "onboarding.loading_database_hint":
+      "Carregando ~55.000 itens. Isso leva de 1 a 3 minutos.",
     "onboarding.project_created": "Projeto criado!",
-    "onboarding.project_created_msg": "Seu espaço de trabalho está pronto. Vamos",
+    "onboarding.project_created_msg":
+      "Seu espaço de trabalho está pronto. Vamos",
     "onboarding.project_error": "Falha ao criar projeto",
     "onboarding.project_name": "Nome do Projeto",
     "onboarding.project_name_placeholder": "ex.: Torre Comercial Centro",
-    "onboarding.project_subtitle": "Configure seu primeiro projeto para começar.",
+    "onboarding.project_subtitle":
+      "Configure seu primeiro projeto para começar.",
     "onboarding.project_title": "Seu Primeiro Projeto",
     "onboarding.recommended": "Recomendado",
     "onboarding.region": "Região",
@@ -1483,8 +1650,10 @@ const resource = {
     "onboarding.standard": "Norma",
     "onboarding.test_connection": "Testar Conexão",
     "onboarding.testing": "Testando...",
-    "onboarding.welcome_hint": "Gratuito e de código aberto. Sem necessidade de cartão de crédito.",
-    "onboarding.welcome_subtitle": "A plataforma profissional de orçamentação de obras.\nConfigure seu espaço de trabalho em poucos passos simples.",
+    "onboarding.welcome_hint":
+      "Gratuito e de código aberto. Sem necessidade de cartão de crédito.",
+    "onboarding.welcome_subtitle":
+      "A plataforma profissional de orçamentação de obras.\nConfigure seu espaço de trabalho em poucos passos simples.",
     "onboarding.welcome_title": "Bem-vindo ao OpenConstructionERP",
     "onboarding.tour_step": "Etapa do tour",
     "onboarding.step_label": "Etapa",
@@ -1493,15 +1662,20 @@ const resource = {
     "onboarding.next": "Próximo",
     "onboarding.finish": "Concluir",
     "onboarding.step1.title": "Barra Lateral de Navegação",
-    "onboarding.step1.description": "A barra lateral dá acesso rápido a todos os módulos: projetos, estimativas, bancos de dados de custos, cronogramas e mais.",
+    "onboarding.step1.description":
+      "A barra lateral dá acesso rápido a todos os módulos: projetos, estimativas, bancos de dados de custos, cronogramas e mais.",
     "onboarding.step2.title": "Projetos",
-    "onboarding.step2.description": "Comece aqui criando seu primeiro projeto. Cada projeto reúne orçamentos, cronogramas e documentos em um só lugar.",
+    "onboarding.step2.description":
+      "Comece aqui criando seu primeiro projeto. Cada projeto reúne orçamentos, cronogramas e documentos em um só lugar.",
     "onboarding.step3.title": "Planilha Orçamentária",
-    "onboarding.step3.description": "Construa estimativas detalhadas com o editor de orçamento — itens hierárquicos, composições e totalização em tempo real.",
+    "onboarding.step3.description":
+      "Construa estimativas detalhadas com o editor de orçamento — itens hierárquicos, composições e totalização em tempo real.",
     "onboarding.step4.title": "Bancos de Dados de Custos",
-    "onboarding.step4.description": "Navegue e gerencie bancos de dados de preços incluindo o CWICR integrado com 55.000+ itens em 9 idiomas.",
+    "onboarding.step4.description":
+      "Navegue e gerencie bancos de dados de preços incluindo o CWICR integrado com 55.000+ itens em 9 idiomas.",
     "onboarding.step5.title": "Modo Simples / Avançado",
-    "onboarding.step5.description": "Alterne entre o modo Simples (ferramentas essenciais) e o modo Avançado (todos os recursos incluindo licitação e cronograma).",
+    "onboarding.step5.description":
+      "Alterne entre o modo Simples (ferramentas essenciais) e o modo Avançado (todos os recursos incluindo licitação e cronograma).",
     "projects.4d_schedule": "Cronograma 4D",
     "projects.5d_budget": "Orçamento 5D",
     "projects.active": "ativo",
@@ -1509,7 +1683,8 @@ const resource = {
     "projects.archived": "Projeto arquivado",
     "projects.boq_count": "{{count}} Orçamentos",
     "projects.boqs_for_project": "Planilhas orçamentárias deste projeto",
-    "projects.budget_subtitle": "Modelo de custos e acompanhamento orçamentário",
+    "projects.budget_subtitle":
+      "Modelo de custos e acompanhamento orçamentário",
     "projects.classification_standard": "Norma de Classificação",
     "projects.confirm_delete": "Excluir este projeto?",
     "projects.create_boq": "Criar Orçamento",
@@ -1519,7 +1694,8 @@ const resource = {
     "projects.delete_failed": "Falha ao excluir projeto",
     "projects.deleted": "Projeto arquivado",
     "projects.description": "Descrição",
-    "projects.description_placeholder": "Descrição do projeto, escopo, observações...",
+    "projects.description_placeholder":
+      "Descrição do projeto, escopo, observações...",
     "projects.duplicate_failed": "Falha ao duplicar",
     "projects.duplicated": "Projeto duplicado",
     "projects.enter_custom_currency": "ex.: BRL",
@@ -1533,21 +1709,28 @@ const resource = {
     "projects.name_placeholder": "ex.: Torre Comercial Centro",
     "projects.new_boq": "Novo Orçamento",
     "projects.new_project": "Novo Projeto",
-    "projects.create_hint": "A região determina os bancos de dados de custos e alíquotas de impostos disponíveis. A norma de classificação define a estrutura de custos: DIN 276 para países DACH, NRM para Reino Unido, MasterFormat para EUA/Canadá, UniFormat para Oceania. A moeda define todos os preços no orçamento.",
+    "projects.create_hint":
+      "A região determina os bancos de dados de custos e alíquotas de impostos disponíveis. A norma de classificação define a estrutura de custos: DIN 276 para países DACH, NRM para Reino Unido, MasterFormat para EUA/Canadá, UniFormat para Oceania. A moeda define todos os preços no orçamento.",
     "projects.no_boqs": "Nenhum orçamento ainda",
-    "projects.no_boqs_desc": "Crie uma Planilha Orçamentária para começar a estimar custos deste projeto.",
+    "projects.no_boqs_desc":
+      "Crie uma Planilha Orçamentária para começar a estimar custos deste projeto.",
     "projects.no_budget": "Sem dados de orçamento",
-    "projects.no_budget_desc": "Configure um modelo de custos 5D para acompanhar custos planejados vs. reais.",
+    "projects.no_budget_desc":
+      "Configure um modelo de custos 5D para acompanhar custos planejados vs. reais.",
     "projects.no_projects": "Nenhum projeto ainda",
-    "projects.no_projects_description": "Crie seu primeiro projeto de orçamentação de obras",
+    "projects.no_projects_description":
+      "Crie seu primeiro projeto de orçamentação de obras",
     "projects.no_results": "Nenhum projeto encontrado",
     "projects.no_results_hint": "Tente ajustar sua pesquisa ou filtros",
     "projects.no_schedules": "Nenhum cronograma ainda",
-    "projects.no_schedules_desc": "Crie um cronograma para gerenciar os prazos do projeto.",
+    "projects.no_schedules_desc":
+      "Crie um cronograma para gerenciar os prazos do projeto.",
     "projects.no_tenders": "Nenhum pacote de licitação",
-    "projects.no_tenders_desc": "Crie pacotes de licitação para gerenciar as propostas deste projeto.",
+    "projects.no_tenders_desc":
+      "Crie pacotes de licitação para gerenciar as propostas deste projeto.",
     "projects.not_found": "Projeto não encontrado",
-    "projects.not_found_desc": "O projeto que você procura não existe ou foi excluído.",
+    "projects.not_found_desc":
+      "O projeto que você procura não existe ou foi excluído.",
     "projects.of": "de",
     "projects.open_tendering": "Abrir Licitações",
     "projects.overview": "Visão Geral",
@@ -1560,7 +1743,8 @@ const resource = {
     "projects.projects_label": "projetos",
     "projects.region": "Região",
     "projects.regional_factor": "Fator Regional",
-    "projects.regional_factor_hint": "Multiplique todos os preços por este fator (ex.: São Paulo = 1,12, Interior = 0,85)",
+    "projects.regional_factor_hint":
+      "Multiplique todos os preços por este fator (ex.: São Paulo = 1,12, Interior = 0,85)",
     "projects.remaining": "Restante",
     "projects.schedule_subtitle": "Cronogramas e linha do tempo do projeto",
     "projects.search_placeholder": "Pesquisar projetos...",
@@ -1587,51 +1771,68 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Em Breve",
     "quantities.how_it_works": "Como funciona",
-    "quantities.manual_desc": "Precisa adicionar quantidades diretamente? Vá para o Editor de Orçamento.",
+    "quantities.manual_desc":
+      "Precisa adicionar quantidades diretamente? Vá para o Editor de Orçamento.",
     "quantities.manual_title": "Entrada Manual Rápida",
-    "quantities.method_ai_desc": "Descreva sua edificação e a IA gerará uma Planilha Orçamentária com volumes estimados e custos.",
+    "quantities.method_ai_desc":
+      "Descreva sua edificação e a IA gerará uma Planilha Orçamentária com volumes estimados e custos.",
     "quantities.method_ai_title": "Entrada de Texto com IA",
-    "quantities.method_cad_desc": "Importe arquivos DWG, RVT, IFC ou DGN e extraia quantidades diretamente da geometria 3D.",
+    "quantities.method_cad_desc":
+      "Importe arquivos DWG, RVT, IFC ou DGN e extraia quantidades diretamente da geometria 3D.",
     "quantities.method_cad_title": "Modelos CAD / BIM",
-    "quantities.method_pdf_desc": "Envie desenhos de construção (PDF) e extraia quantidades automaticamente com levantamento assistido por IA.",
+    "quantities.method_pdf_desc":
+      "Envie desenhos de construção (PDF) e extraia quantidades automaticamente com levantamento assistido por IA.",
     "quantities.method_pdf_title": "Desenhos em PDF",
     "quantities.open": "Abrir",
     "quantities.open_boq": "Abrir Editor de Orçamento",
-    "quantities.step1_desc": "Escolha seu método de entrada: texto, PDF ou modelo CAD.",
+    "quantities.step1_desc":
+      "Escolha seu método de entrada: texto, PDF ou modelo CAD.",
     "quantities.step1_title": "Envie ou descreva",
-    "quantities.step2_desc": "Nossa IA analisa sua entrada e extrai quantidades estruturadas.",
+    "quantities.step2_desc":
+      "Nossa IA analisa sua entrada e extrai quantidades estruturadas.",
     "quantities.step2_title": "IA extrai quantidades",
-    "quantities.step3_desc": "Verifique os resultados e adicione-os à sua Planilha Orçamentária.",
+    "quantities.step3_desc":
+      "Verifique os resultados e adicione-os à sua Planilha Orçamentária.",
     "quantities.step3_title": "Revise e adicione ao orçamento",
-    "quantities.subtitle": "Colete quantidades do projeto — a partir de texto com IA, desenhos PDF ou modelos CAD/BIM",
+    "quantities.subtitle":
+      "Colete quantidades do projeto — a partir de texto com IA, desenhos PDF ou modelos CAD/BIM",
     "quantities.converter_title": "Como Funciona a Conversão CAD/BIM",
-    "quantities.converter_desc": "Envie seus arquivos CAD/BIM (.rvt, .ifc, .dwg, .dgn) e o conversor DDC extrai todos os elementos em uma tabela estruturada — paredes, lajes, pilares, portas, janelas — com volumes, áreas e quantidades calculados. A IA então mapeia esses elementos para itens de custo e gera um orçamento completo automaticamente.",
+    "quantities.converter_desc":
+      "Envie seus arquivos CAD/BIM (.rvt, .ifc, .dwg, .dgn) e o conversor DDC extrai todos os elementos em uma tabela estruturada — paredes, lajes, pilares, portas, janelas — com volumes, áreas e quantidades calculados. A IA então mapeia esses elementos para itens de custo e gera um orçamento completo automaticamente.",
     "quantities.download_converters": "Baixar Conversores DDC",
     "quantities.converter_path": "Instalar em: ~/.openestimator/converters/",
     "quantities.title": "Levantamento de Quantidades",
     "reports.5d_report": "Relatório de Custos 5D",
-    "reports.5d_report_desc": "Análise de orçamento vs. real com Curva S e previsão de custos.",
+    "reports.5d_report_desc":
+      "Análise de orçamento vs. real com Curva S e previsão de custos.",
     "reports.boq_report": "Relatório de Orçamento",
-    "reports.boq_report_desc": "Planilha Orçamentária completa com seções, itens, margens e totais. Disponível em PDF ou Excel.",
+    "reports.boq_report_desc":
+      "Planilha Orçamentária completa com seções, itens, margens e totais. Disponível em PDF ou Excel.",
     "reports.coming_soon": "Em breve",
     "reports.cost_report": "Relatório de Custos",
-    "reports.cost_report_desc": "Composição de custos por categoria com gráficos resumidos e análise detalhada de custos.",
+    "reports.cost_report_desc":
+      "Composição de custos por categoria com gráficos resumidos e análise detalhada de custos.",
     "reports.download_error": "Falha ao gerar relatório",
     "reports.download_format": "Baixar {{format}}",
     "reports.download_success": "Relatório baixado com sucesso",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc": "Exportação de licitação GAEB X83 — o formato padrão de intercâmbio para o mercado de construção DACH.",
+    "reports.gaeb_xml_desc":
+      "Exportação de licitação GAEB X83 — o formato padrão de intercâmbio para o mercado de construção DACH.",
     "reports.no_boqs": "Nenhum orçamento neste projeto",
     "reports.no_projects": "Nenhum projeto disponível",
     "reports.schedule_report": "Relatório de Cronograma",
-    "reports.schedule_report_desc": "Gráfico de Gantt com linha do tempo do projeto, marcos e caminho crítico.",
-    "reports.select_boq_first": "Por favor, selecione um projeto e orçamento primeiro",
+    "reports.schedule_report_desc":
+      "Gráfico de Gantt com linha do tempo do projeto, marcos e caminho crítico.",
+    "reports.select_boq_first":
+      "Por favor, selecione um projeto e orçamento primeiro",
     "reports.select_project_first": "Por favor, selecione um projeto primeiro",
     "reports.subtitle": "Gere relatórios profissionais para seus projetos",
-    "reports.guide_desc": "Relatório de Orçamento = planilha orçamentária detalhada com totais. Relatório de Custos = composição por categoria. GAEB XML = formato alemão de licitação (.x83) para intercâmbio com subempreiteiros. Validação = resultados de verificação de conformidade. Cronograma = resumo das atividades Gantt. 5D = curvas de custo orçado vs. real.",
+    "reports.guide_desc":
+      "Relatório de Orçamento = planilha orçamentária detalhada com totais. Relatório de Custos = composição por categoria. GAEB XML = formato alemão de licitação (.x83) para intercâmbio com subempreiteiros. Validação = resultados de verificação de conformidade. Cronograma = resumo das atividades Gantt. 5D = curvas de custo orçado vs. real.",
     "reports.title": "Relatórios",
     "reports.validation_report": "Relatório de Validação",
-    "reports.validation_report_desc": "Relatório de verificação de conformidade segundo as normas DIN 276, NRM ou MasterFormat.",
+    "reports.validation_report_desc":
+      "Relatório de verificação de conformidade segundo as normas DIN 276, NRM ou MasterFormat.",
     "schedule.activity": "Atividade",
     "schedule.activity_name": "Nome da Atividade",
     "schedule.activity_name_placeholder": "ex.: Obras de Fundação",
@@ -1642,7 +1843,8 @@ const resource = {
     "schedule.buffer": "Folga",
     "schedule.calculate_cpm": "Caminho Crítico",
     "schedule.completed": "Concluído",
-    "schedule.cpm_result": "Caminho Crítico: {{duration}} dias, {{count}} atividades críticas",
+    "schedule.cpm_result":
+      "Caminho Crítico: {{duration}} dias, {{count}} atividades críticas",
     "schedule.create_activity": "Criar Atividade",
     "schedule.create_schedule": "Criar Cronograma",
     "schedule.critical_path": "Caminho Crítico",
@@ -1657,32 +1859,40 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% de confiança",
     "schedule.generate": "Gerar",
     "schedule.generate_from_boq": "Gerar a partir do Orçamento",
-    "schedule.generate_from_boq_description": "Selecione um orçamento para gerar atividades automaticamente. Uma atividade será criada por seção do orçamento com durações proporcionais ao custo.",
+    "schedule.generate_from_boq_description":
+      "Selecione um orçamento para gerar atividades automaticamente. Uma atividade será criada por seção do orçamento com durações proporcionais ao custo.",
     "schedule.in_progress": "Em Andamento",
     "schedule.mean_label": "Média (caminho crítico)",
     "schedule.ninetyfive_pct_confidence": "95% de confiança",
     "schedule.no_activities": "Nenhuma atividade ainda",
-    "schedule.no_activities_hint": "Adicione atividades para construir o cronograma do projeto",
-    "schedule.no_boqs_available": "Nenhum orçamento disponível para este projeto.",
+    "schedule.no_activities_hint":
+      "Adicione atividades para construir o cronograma do projeto",
+    "schedule.no_boqs_available":
+      "Nenhum orçamento disponível para este projeto.",
     "schedule.no_dates": "Sem datas definidas",
     "schedule.no_projects": "Nenhum projeto disponível",
-    "schedule.no_projects_hint": "Crie um projeto primeiro, depois adicione cronogramas a ele",
+    "schedule.no_projects_hint":
+      "Crie um projeto primeiro, depois adicione cronogramas a ele",
     "schedule.no_schedules": "Nenhum cronograma ainda",
-    "schedule.no_schedules_hint": "Crie um cronograma para começar a planejar a linha do tempo do projeto",
+    "schedule.no_schedules_hint":
+      "Crie um cronograma para começar a planejar a linha do tempo do projeto",
     "schedule.planned_duration": "Duração planejada",
     "schedule.project_schedules": "Cronogramas deste projeto",
     "schedule.risk_analysis": "Análise de Risco (PERT)",
     "schedule.risk_analysis_btn": "Análise de Risco",
     "schedule.schedule_name": "Nome do Cronograma",
     "schedule.schedule_name_placeholder": "ex.: Cronograma Principal da Obra",
-    "schedule.select_project": "Selecione um projeto para visualizar e gerenciar seu cronograma de obra",
+    "schedule.select_project":
+      "Selecione um projeto para visualizar e gerenciar seu cronograma de obra",
     "schedule.start": "Início",
     "schedule.start_date": "Data de Início",
     "schedule.status_active": "ativo",
     "schedule.status_draft": "rascunho",
     "schedule.std_dev_label": "Desvio padrão",
-    "schedule.subtitle": "Selecione um projeto para visualizar e gerenciar seu cronograma de obra",
-    "schedule.what_is_4d": "O cronograma 4D vincula os itens do seu orçamento a uma linha do tempo do projeto. Crie atividades, defina dependências e visualize o progresso em um gráfico de Gantt. A análise de caminho crítico destaca as atividades que afetam diretamente a data de término do projeto. Tipos de atividade: Tarefa = item de trabalho, Marco = ponto de verificação com duração zero, Resumo = cabeçalho de agrupamento.",
+    "schedule.subtitle":
+      "Selecione um projeto para visualizar e gerenciar seu cronograma de obra",
+    "schedule.what_is_4d":
+      "O cronograma 4D vincula os itens do seu orçamento a uma linha do tempo do projeto. Crie atividades, defina dependências e visualize o progresso em um gráfico de Gantt. A análise de caminho crítico destaca as atividades que afetam diretamente a data de término do projeto. Tipos de atividade: Tarefa = item de trabalho, Marco = ponto de verificação com duração zero, Resumo = cabeçalho de agrupamento.",
     "schedule.title": "Cronograma 4D",
     "schedule.total_activities": "Total",
     "schedule.type_milestone": "Marco",
@@ -1698,14 +1908,17 @@ const resource = {
     "settings.active": "Ativo",
     "settings.ai_api_key": "Chave de API",
     "settings.ai_connected": "Conectado",
-    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — melhor para orçamentação de obras",
+    "settings.ai_desc_anthropic":
+      "Claude 3.5 Sonnet / Opus — melhor para orçamentação de obras",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — capacidades multimodais",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — amplamente suportado",
     "settings.ai_error": "Erro de conexão",
     "settings.ai_get_key": "Obter uma chave de API",
-    "settings.ai_key_hint": "Sua chave de API é criptografada e armazenada com segurança. Ela nunca é compartilhada.",
+    "settings.ai_key_hint":
+      "Sua chave de API é criptografada e armazenada com segurança. Ela nunca é compartilhada.",
     "settings.ai_key_placeholder": "Digite sua chave de API...",
-    "settings.ai_key_placeholder_existing": "Digite uma nova chave para substituir a existente...",
+    "settings.ai_key_placeholder_existing":
+      "Digite uma nova chave para substituir a existente...",
     "settings.ai_key_set": "Chave configurada",
     "settings.ai_last_tested": "(último teste: {{time}})",
     "settings.ai_not_configured": "Não configurado",
@@ -1714,7 +1927,8 @@ const resource = {
     "settings.ai_save_btn": "Salvar Configurações",
     "settings.ai_save_error": "Falha ao salvar configurações",
     "settings.ai_saved": "Configurações de IA salvas",
-    "settings.ai_subtitle": "Escolha seu provedor de IA para estimativa e análise",
+    "settings.ai_subtitle":
+      "Escolha seu provedor de IA para estimativa e análise",
     "settings.ai_test": "Testar Conexão",
     "settings.ai_test_error": "Teste falhou",
     "settings.ai_test_failed": "Conexão falhou",
@@ -1736,7 +1950,8 @@ const resource = {
     "settings.sign_out": "Sair",
     "settings.status": "Status",
     "settings.subtitle": "Gerencie sua conta e preferências",
-    "settings.ai_guidance": "Os recursos de IA (estimativa, análise de levantamento, pesquisa semântica) requerem uma chave de API. Anthropic Claude é recomendado para melhor precisão. As chaves são armazenadas criptografadas e nunca saem do seu servidor.",
+    "settings.ai_guidance":
+      "Os recursos de IA (estimativa, análise de levantamento, pesquisa semântica) requerem uma chave de API. Anthropic Claude é recomendado para melhor precisão. As chaves são armazenadas criptografadas e nunca saem do seu servidor.",
     "settings.theme_dark": "Escuro",
     "settings.theme_light": "Claro",
     "settings.theme_system": "Sistema",
@@ -1745,7 +1960,8 @@ const resource = {
     "shortcuts.cancel_editing": "Cancelar edição",
     "shortcuts.command_palette": "Paleta de Comandos",
     "shortcuts.confirm_next_row": "Confirmar / Próxima linha",
-    "shortcuts.footer_hint": "Os atalhos são desativados quando o foco está em campos de entrada.",
+    "shortcuts.footer_hint":
+      "Os atalhos são desativados quando o foco está em campos de entrada.",
     "shortcuts.group.actions": "Ações",
     "shortcuts.group.boq_editor": "Editor de Orçamento",
     "shortcuts.group.general": "Geral",
@@ -1778,43 +1994,52 @@ const resource = {
     "shortcuts.group.module_pages": "Páginas de Módulos",
     "shortcuts.create_new_item": "Criar novo item (em páginas de lista)",
     "shortcuts.save_recalculate": "Salvar / Recalcular preços",
-    "errors.bad_request": "Não foi possível processar a solicitação. Verifique os dados.",
+    "errors.bad_request":
+      "Não foi possível processar a solicitação. Verifique os dados.",
     "errors.unauthorized": "Sua sessão expirou. Faça login novamente.",
     "errors.forbidden": "Você não tem permissão para esta ação.",
     "errors.not_found": "Item não encontrado.",
-    "errors.conflict": "Conflito com dados existentes — atualize e tente novamente.",
+    "errors.conflict":
+      "Conflito com dados existentes — atualize e tente novamente.",
     "errors.payload_too_large": "Arquivo muito grande. Tente um menor.",
     "errors.validation": "Alguns campos são inválidos. Revise os dados.",
     "errors.rate_limit": "Muitas solicitações. Aguarde um momento.",
     "errors.server": "Erro do servidor. Tente novamente em instantes.",
-    "errors.unavailable": "Servidor temporariamente indisponível. Tente novamente em breve.",
+    "errors.unavailable":
+      "Servidor temporariamente indisponível. Tente novamente em breve.",
     "errors.client": "A solicitação não pôde ser concluída.",
     "errors.unknown": "Algo deu errado. Tente novamente.",
-    "errors.network": "Não foi possível conectar ao servidor. Verifique sua conexão.",
-    "errors.timeout": "A solicitação demorou demais e foi cancelada. Tente novamente.",
+    "errors.network":
+      "Não foi possível conectar ao servidor. Verifique sua conexão.",
+    "errors.timeout":
+      "A solicitação demorou demais e foi cancelada. Tente novamente.",
     "shortcuts.undo": "Desfazer",
     "sustainability.area": "Área (m2)",
     "sustainability.benchmark": "Referência",
     "sustainability.boq": "Orçamento",
     "sustainability.breakdown_title": "Detalhamento por Material",
     "sustainability.calculate": "Calcular",
-    "sustainability.empty_desc": "Selecione um projeto e orçamento acima, depois clique em Calcular para analisar as emissões de CO2 com base nos tipos de materiais.",
+    "sustainability.empty_desc":
+      "Selecione um projeto e orçamento acima, depois clique em Calcular para analisar as emissões de CO2 com base nos tipos de materiais.",
     "sustainability.empty_title": "Análise de pegada de CO2",
     "sustainability.export_pdf": "Exportar Relatório de CO2 em PDF",
     "sustainability.material": "Material",
-    "sustainability.no_area": "Insira a área do projeto para ver a referência por m2",
+    "sustainability.no_area":
+      "Insira a área do projeto para ver a referência por m2",
     "sustainability.positions_matched": "itens correspondidos",
     "sustainability.project": "Projeto",
     "sustainability.project_area": "projeto",
     "sustainability.rating": "Classificação",
     "sustainability.select_boq": "-- Selecione o Orçamento --",
     "sustainability.select_project": "-- Selecione o projeto --",
-    "sustainability.subtitle": "Selecione projeto e orçamento para analisar a pegada de CO2",
+    "sustainability.subtitle":
+      "Selecione projeto e orçamento para analisar a pegada de CO2",
     "sustainability.title": "Sustentabilidade / CO2",
     "sustainability.total_co2": "CO2 Total",
     "takeoff.add_selected_to_boq": "Adicionar {{count}} ao orçamento",
     "takeoff.add_to_boq": "Adicionar ao orçamento",
-    "takeoff.added_to_boq_success": "Itens adicionados ao orçamento com sucesso",
+    "takeoff.added_to_boq_success":
+      "Itens adicionados ao orçamento com sucesso",
     "takeoff.ai_analysis_results": "Resultados da Análise com IA",
     "takeoff.analyze_with_ai": "Analisar com IA",
     "takeoff.analyzing": "Analisando...",
@@ -1831,7 +2056,8 @@ const resource = {
     "takeoff.just_now": "Agora mesmo",
     "takeoff.minutes_ago": "{{count}} min atrás",
     "takeoff.no_documents": "Nenhum documento enviado",
-    "takeoff.no_documents_description": "Envie desenhos de construção em PDF para começar a extrair quantidades com IA.",
+    "takeoff.no_documents_description":
+      "Envie desenhos de construção em PDF para começar a extrair quantidades com IA.",
     "takeoff.pages": "páginas",
     "takeoff.pdf_limit": "Arquivos .pdf até {{size}}MB",
     "takeoff.quick_measurements": "Medições Rápidas",
@@ -1839,14 +2065,16 @@ const resource = {
     "takeoff.select_all": "Selecionar todos",
     "takeoff.select_boq": "Planilha Orçamentária",
     "takeoff.select_boq_placeholder": "Escolha um orçamento...",
-    "takeoff.select_boq_to_add": "Selecione um projeto e orçamento acima para adicionar medições.",
+    "takeoff.select_boq_to_add":
+      "Selecione um projeto e orçamento acima para adicionar medições.",
     "takeoff.select_items_hint": "Selecione itens para adicionar ao orçamento",
     "takeoff.select_project": "Projeto",
     "takeoff.select_project_first": "Selecione um projeto primeiro",
     "takeoff.select_project_placeholder": "Escolha um projeto...",
     "takeoff.selected": "selecionados",
     "takeoff.subtitle": "Envie desenhos de construção para extrair quantidades",
-    "takeoff.workflow_desc": "Envie um desenho em PDF → IA analisa as páginas e extrai elementos (paredes, lajes, portas, etc.) com quantidades → Revise os resultados e ajuste → Adicione os itens selecionados ao seu orçamento. Índices de confiança: verde (>80%) = alta confiança, amarelo (50-80%) = revisão recomendada, vermelho (<50%) = verificação manual necessária.",
+    "takeoff.workflow_desc":
+      "Envie um desenho em PDF → IA analisa as páginas e extrai elementos (paredes, lajes, portas, etc.) com quantidades → Revise os resultados e ajuste → Adicione os itens selecionados ao seu orçamento. Índices de confiança: verde (>80%) = alta confiança, amarelo (50-80%) = revisão recomendada, vermelho (<50%) = verificação manual necessária.",
     "takeoff.summary": "Resumo",
     "takeoff.title": "Levantamento PDF",
     "takeoff.total_quantity": "total",
@@ -1861,7 +2089,8 @@ const resource = {
     "tendering.award": "Adjudicar",
     "tendering.award_bid": "Adjudicar esta proposta",
     "tendering.bid_comparison": "Comparação de Propostas",
-    "tendering.bid_comparison_chart_label": "Gráfico de barras comparando totais das propostas",
+    "tendering.bid_comparison_chart_label":
+      "Gráfico de barras comparando totais das propostas",
     "tendering.bid_totals_chart": "Visão Geral dos Totais das Propostas",
     "tendering.bids_count": "propostas",
     "tendering.bids_received": "Propostas Recebidas",
@@ -1873,7 +2102,8 @@ const resource = {
     "tendering.create_package": "Criar Pacote",
     "tendering.deadline": "Prazo",
     "tendering.description": "Descrição",
-    "tendering.description_placeholder": "Breve descrição do escopo do pacote...",
+    "tendering.description_placeholder":
+      "Breve descrição do escopo do pacote...",
     "tendering.empty_title": "Selecione um projeto",
     "tendering.export_comparison": "Exportar",
     "tendering.highest": "Maior",
@@ -1897,7 +2127,8 @@ const resource = {
     "tendering.source_boq": "Orçamento de Origem",
     "tendering.submit_bid": "Enviar Proposta",
     "tendering.title": "Licitação",
-    "tendering.workflow_desc": "Fluxo de licitação: Rascunho (preparar pacote) → Emitido (enviar para licitantes) → Coletando (receber propostas) → Avaliando (comparar ofertas lado a lado) → Adjudicado (selecionar vencedor). Crie um pacote a partir de um orçamento, adicione propostas de subempreiteiros, depois use a tabela de comparação para identificar a melhor oferta. Adicione 2+ propostas para ver uma análise comparativa.",
+    "tendering.workflow_desc":
+      "Fluxo de licitação: Rascunho (preparar pacote) → Emitido (enviar para licitantes) → Coletando (receber propostas) → Avaliando (comparar ofertas lado a lado) → Adjudicado (selecionar vencedor). Crie um pacote a partir de um orçamento, adicione propostas de subempreiteiros, depois use a tabela de comparação para identificar a melhor oferta. Adicione 2+ propostas para ver uma análise comparativa.",
     "tendering.total": "TOTAL",
     "tendering.total_amount": "Valor Total",
     "tendering.vs_budget": "vs orçamento",
@@ -1911,7 +2142,8 @@ const resource = {
     "validation.filter_errors": "Erros",
     "validation.filter_passed": "Aprovados",
     "validation.filter_warnings": "Avisos",
-    "validation.no_results_for_filter": "Nenhum resultado corresponde a este filtro.",
+    "validation.no_results_for_filter":
+      "Nenhum resultado corresponde a este filtro.",
     "validation.passed": "Aprovado",
     "validation.pending": "Pendente",
     "validation.results_title": "Resultados",
@@ -1957,7 +2189,8 @@ const resource = {
     "cde.label_revisions": "Histórico de revisões",
     "cde.new_container": "Novo contêiner",
     "cde.no_containers": "Nenhum contêiner ainda",
-    "cde.no_containers_hint": "Crie seu primeiro contêiner de documentos para começar.",
+    "cde.no_containers_hint":
+      "Crie seu primeiro contêiner de documentos para começar.",
     "cde.no_results": "Nenhum contêiner correspondente",
     "cde.no_results_hint": "Tente ajustar sua pesquisa ou filtros.",
     "cde.no_revisions": "Nenhuma revisão registrada",
@@ -2048,7 +2281,8 @@ const resource = {
     "correspondence.label_to": "To",
     "correspondence.new_entry": "Nova entrada",
     "correspondence.no_entries": "Nenhuma correspondência ainda",
-    "correspondence.no_entries_hint": "Registre sua primeira correspondência para começar.",
+    "correspondence.no_entries_hint":
+      "Registre sua primeira correspondência para começar.",
     "correspondence.no_results": "Nenhuma entrada correspondente",
     "correspondence.no_results_hint": "Tente ajustar sua pesquisa ou filtros.",
     "correspondence.notes_placeholder": "Notas adicionais...",
@@ -2093,14 +2327,19 @@ const resource = {
     "finance.mark_paid": "Marcar como pago",
     "finance.method": "Method",
     "finance.no_budgets": "Nenhum orçamento definido",
-    "finance.no_budgets_desc": "Os itens orçamentários aparecerão aqui após serem definidos.",
+    "finance.no_budgets_desc":
+      "Os itens orçamentários aparecerão aqui após serem definidos.",
     "finance.no_evm": "Nenhum dado EVM",
-    "finance.no_evm_desc": "Os dados de valor agregado aparecerão após os instantâneos serem gerados.",
+    "finance.no_evm_desc":
+      "Os dados de valor agregado aparecerão após os instantâneos serem gerados.",
     "finance.no_invoices": "Nenhuma fatura",
-    "finance.no_invoices_desc": "As faturas aparecerão aqui após serem criadas.",
+    "finance.no_invoices_desc":
+      "As faturas aparecerão aqui após serem criadas.",
     "finance.no_payments": "Nenhum pagamento",
-    "finance.no_payments_desc": "Os pagamentos aparecerão aqui após serem registrados.",
-    "finance.no_project": "Selecione um projeto para visualizar os dados financeiros.",
+    "finance.no_payments_desc":
+      "Os pagamentos aparecerão aqui após serem registrados.",
+    "finance.no_project":
+      "Selecione um projeto para visualizar os dados financeiros.",
     "finance.on_track": "No prazo",
     "finance.original": "Original",
     "finance.payable": "A pagar",
@@ -2149,7 +2388,8 @@ const resource = {
     "inspections.location_placeholder": "Local da inspeção",
     "inspections.new_inspection": "Nova inspeção",
     "inspections.no_inspections": "Nenhuma inspeção ainda",
-    "inspections.no_inspections_hint": "Agende sua primeira inspeção para começar.",
+    "inspections.no_inspections_hint":
+      "Agende sua primeira inspeção para começar.",
     "inspections.no_results": "Nenhuma inspeção correspondente",
     "inspections.no_results_hint": "Tente ajustar sua pesquisa ou filtros.",
     "inspections.page_title": "Inspections",
@@ -2251,15 +2491,21 @@ const resource = {
     "notifications.title": "Notificações",
     "notifications.unread": "Unread",
     "notifications.boq.created.title": "BOQ criado",
-    "notifications.boq.created.body": "Seu mapa de quantidades '{{boq_name}}' foi salvo.",
-    "notifications.meeting.action_assigned.title": "Item de ação atribuído a você",
-    "notifications.meeting.action_assigned.body": "Da reunião {{meeting_number}}: {{description}}",
-    "notifications.cde.state_transitioned.title": "Estado do documento alterado",
-    "notifications.cde.state_transitioned.body": "Container movido para '{{new_state}}'.",
+    "notifications.boq.created.body":
+      "Seu mapa de quantidades '{{boq_name}}' foi salvo.",
+    "notifications.meeting.action_assigned.title":
+      "Item de ação atribuído a você",
+    "notifications.meeting.action_assigned.body":
+      "Da reunião {{meeting_number}}: {{description}}",
+    "notifications.cde.state_transitioned.title":
+      "Estado do documento alterado",
+    "notifications.cde.state_transitioned.body":
+      "Container movido para '{{new_state}}'.",
     "notifications.rfi.assigned.title": "RFI atribuído a você",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI respondido",
-    "notifications.rfi.responded.body": "Sua solicitação {{code}} ({{title}}) tem resposta.",
+    "notifications.rfi.responded.body":
+      "Sua solicitação {{code}} ({{title}}) tem resposta.",
     "notifications.risk.assigned.title": "Risco atribuído a você",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal aguardando análise",
@@ -2267,25 +2513,33 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal aprovado",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal rejeitado",
-    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Motivo: {{reason}}",
-    "notifications.submittal.revise_resubmit.title": "Submittal precisa de revisão",
-    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Motivo: {{reason}}",
+    "notifications.submittal.rejected.body":
+      "{{code}} ({{title}}). Motivo: {{reason}}",
+    "notifications.submittal.revise_resubmit.title":
+      "Submittal precisa de revisão",
+    "notifications.submittal.revise_resubmit.body":
+      "{{code}} ({{title}}). Motivo: {{reason}}",
     "notifications.transmittal.issued.title": "Transmittal emitido para você",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal confirmado",
-    "notifications.transmittal.acknowledged.body": "Destinatário confirmou {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.body":
+      "Destinatário confirmou {{code}} ({{title}}).",
     "notifications.transmittal.responded.title": "Transmittal respondido",
-    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body":
+      "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Data de entrega",
     "procurement.goods_receipts": "Recebimentos",
     "procurement.gr_ref": "Ref. GR",
     "procurement.issue_date": "Data de emissão",
     "procurement.no_gr": "Nenhum recebimento de mercadorias",
-    "procurement.no_gr_desc": "Os recebimentos de mercadorias aparecerão aqui após serem registrados.",
+    "procurement.no_gr_desc":
+      "Os recebimentos de mercadorias aparecerão aqui após serem registrados.",
     "procurement.no_po": "Nenhuma ordem de compra",
-    "procurement.no_po_desc": "As ordens de compra aparecerão aqui após serem criadas.",
-    "procurement.no_project": "Selecione um projeto para visualizar os dados de suprimentos.",
+    "procurement.no_po_desc":
+      "As ordens de compra aparecerão aqui após serem criadas.",
+    "procurement.no_project":
+      "Selecione um projeto para visualizar os dados de suprimentos.",
     "procurement.po_number": "PO #",
     "procurement.po_ref": "Ref. OC",
     "procurement.purchase_orders": "Ordens de compra",
@@ -2349,10 +2603,13 @@ const resource = {
     "safety.incident_number": "Incident #",
     "safety.incidents": "Incidentes",
     "safety.no_incidents": "Nenhum incidente registrado",
-    "safety.no_incidents_desc": "Os incidentes aparecerão aqui após serem relatados.",
+    "safety.no_incidents_desc":
+      "Os incidentes aparecerão aqui após serem relatados.",
     "safety.no_observations": "Nenhuma observação registrada",
-    "safety.no_observations_desc": "As observações aparecerão aqui após serem relatadas.",
-    "safety.no_project": "Selecione um projeto para visualizar os dados de segurança.",
+    "safety.no_observations_desc":
+      "As observações aparecerão aqui após serem relatadas.",
+    "safety.no_project":
+      "Selecione um projeto para visualizar os dados de segurança.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observações",
     "safety.risk_critical": "Critical",
@@ -2374,22 +2631,28 @@ const resource = {
     "settings.edit_profile": "Editar nome do perfil",
     "settings.full_name": "Nome completo",
     "settings.imperial": "Imperial (pés, libras)",
-    "settings.interface_mode_subtitle": "Controlar quais recursos são visíveis na navegação",
+    "settings.interface_mode_subtitle":
+      "Controlar quais recursos são visíveis na navegação",
     "settings.interface_mode_title": "Modo de interface",
     "settings.measurement_system": "Sistema de medidas",
     "settings.metric": "Métrico (m, kg)",
-    "settings.mode_advanced_detail": "Conjunto completo de ferramentas profissionais com todos os módulos e recursos visíveis.",
-    "settings.mode_simple_detail": "Ferramentas essenciais de orçamento. Interface limpa para trabalho focado.",
-    "settings.modules_link_desc": "Ative, desative e configure módulos individuais na seção Módulos.",
+    "settings.mode_advanced_detail":
+      "Conjunto completo de ferramentas profissionais com todos os módulos e recursos visíveis.",
+    "settings.mode_simple_detail":
+      "Ferramentas essenciais de orçamento. Interface limpa para trabalho focado.",
+    "settings.modules_link_desc":
+      "Ative, desative e configure módulos individuais na seção Módulos.",
     "settings.modules_link_title": "Módulos",
     "settings.number_format": "Formato numérico",
     "settings.paper_size": "Tamanho do papel",
     "settings.preferences_error": "Falha ao salvar preferências",
     "settings.preferences_saved": "Preferências salvas",
-    "settings.regional_subtitle": "Formatos, unidades e preferências de localização",
+    "settings.regional_subtitle":
+      "Formatos, unidades e preferências de localização",
     "settings.regional_title": "Configurações regionais",
     "settings.restart_onboarding": "Abrir assistente de configuração",
-    "settings.setup_wizard_subtitle": "Execute novamente a configuração inicial para alterar idioma, instalar bases de dados, catálogos ou projetos de demonstração",
+    "settings.setup_wizard_subtitle":
+      "Execute novamente a configuração inicial para alterar idioma, instalar bases de dados, catálogos ou projetos de demonstração",
     "settings.setup_wizard_title": "Assistente de configuração",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -2414,7 +2677,8 @@ const resource = {
     "settings.tm_show_more": "Exibir mais ({{remaining}} restantes)",
     "settings.tm_total_keys": "Total de chaves",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle": "Visualizar e personalizar traduções para o idioma atual",
+    "settings.translation_manager_subtitle":
+      "Visualizar e personalizar traduções para o idioma atual",
     "settings.translation_manager_title": "Gerenciador de traduções",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -2445,7 +2709,8 @@ const resource = {
     "submittals.no_results": "Nenhuma submissão correspondente",
     "submittals.no_results_hint": "Tente ajustar sua pesquisa ou filtros.",
     "submittals.no_submittals": "Nenhuma submissão ainda",
-    "submittals.no_submittals_hint": "Crie sua primeira submissão para começar.",
+    "submittals.no_submittals_hint":
+      "Crie sua primeira submissão para começar.",
     "submittals.page_title": "Submittals",
     "submittals.review_title": "Revisar submissão",
     "submittals.reviewed": "Submissão revisada",
@@ -2497,7 +2762,8 @@ const resource = {
     "transmittals.col_recipients": "Recipients",
     "transmittals.col_status": "Status",
     "transmittals.col_subject": "Subject",
-    "transmittals.cover_note_placeholder": "Nota de cobertura da transmissão...",
+    "transmittals.cover_note_placeholder":
+      "Nota de cobertura da transmissão...",
     "transmittals.create_transmittal": "Criar transmissão",
     "transmittals.created": "Transmissão criada",
     "transmittals.field_cover_note": "Nota de cobertura",
@@ -2516,9 +2782,11 @@ const resource = {
     "transmittals.no_results": "Nenhuma transmissão correspondente",
     "transmittals.no_results_hint": "Tente ajustar sua pesquisa ou filtros.",
     "transmittals.no_transmittals": "Nenhuma transmissão ainda",
-    "transmittals.no_transmittals_hint": "Crie sua primeira transmissão para começar.",
+    "transmittals.no_transmittals_hint":
+      "Crie sua primeira transmissão para começar.",
     "transmittals.page_title": "Transmittals",
-    "transmittals.recipients_placeholder": "Digite os nomes dos destinatários...",
+    "transmittals.recipients_placeholder":
+      "Digite os nomes dos destinatários...",
     "transmittals.search_placeholder": "Pesquisar transmissões...",
     "transmittals.select_project": "Project...",
     "transmittals.showing_count": "Exibindo {{count}} transmissões",
@@ -2532,7 +2800,8 @@ const resource = {
     "transmittals.title": "Transmissões",
     "ai.tab_text_desc": "Descreva seu projeto em texto simples",
     "ai.tab_photo_desc": "Foto de obra ou documento digitalizado",
-    "ai.tab_pdf_desc": "Planilhas de BOQ, especificações, documentos de licitação",
+    "ai.tab_pdf_desc":
+      "Planilhas de BOQ, especificações, documentos de licitação",
     "ai.tab_excel_desc": "Planilha com dados de BOQ",
     "ai.tab_cad_desc": "Arquivos Revit, IFC, DWG, DGN",
     "ai.tab_paste_desc": "Copiar e colar de qualquer aplicativo",
@@ -2555,7 +2824,8 @@ const resource = {
     "boq.cost_tree_no_categories": "Nenhuma categoria disponível",
     "boq.cost_tree_search_placeholder": "Filtrar categorias...",
     "boq.cost_tree_title": "Categorias",
-    "boq.cursor_error_title": "Falha ao carregar resultados anteriores — atualizando",
+    "boq.cursor_error_title":
+      "Falha ao carregar resultados anteriores — atualizando",
     "boq.load_more": "Carregar mais",
     "boq.loaded_n_of_m": "{{loaded}} de {{total}} itens",
     "boq.tree_loading": "Carregando...",
@@ -2579,16 +2849,22 @@ const resource = {
     "costs.variant_per_unit": "Por unidade",
     "dashboard.activity": "Atividade recente",
     "modules.cat_regional": "Normas regionais",
-    "modules.cat_regional_desc": "Formatos de importação/exportação de planilha de quantitativos e normas de classificação específicos por país",
+    "modules.cat_regional_desc":
+      "Formatos de importação/exportação de planilha de quantitativos e normas de classificação específicos por país",
     "modules.community_title": "Crie seu próprio módulo",
-    "modules.community_desc": "OpenConstructionERP possui uma arquitetura modular de plugins. Qualquer pessoa pode criar módulos personalizados — bases de custos, normas regionais, conversores CAD, painéis de análise, integrações com sistemas externos ou qualquer outra funcionalidade. Seu módulo aparecerá nesta seção de Módulos e poderá ser instalado por qualquer usuário.",
+    "modules.community_desc":
+      "OpenConstructionERP possui uma arquitetura modular de plugins. Qualquer pessoa pode criar módulos personalizados — bases de custos, normas regionais, conversores CAD, painéis de análise, integrações com sistemas externos ou qualquer outra funcionalidade. Seu módulo aparecerá nesta seção de Módulos e poderá ser instalado por qualquer usuário.",
     "modules.community_type_data": "Módulos de dados",
-    "modules.community_type_data_desc": "Bases de custos regionais, catálogos de recursos, bibliotecas de materiais, normas de classificação (DIN, NRM, SNIP, etc.)",
+    "modules.community_type_data_desc":
+      "Bases de custos regionais, catálogos de recursos, bibliotecas de materiais, normas de classificação (DIN, NRM, SNIP, etc.)",
     "modules.community_type_integration": "Integrações",
-    "modules.community_type_integration_desc": "Conecte-se com SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera ou qualquer sistema externo via API",
+    "modules.community_type_integration_desc":
+      "Conecte-se com SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera ou qualquer sistema externo via API",
     "modules.community_type_tools": "Ferramentas & Análises",
-    "modules.community_type_tools_desc": "Relatórios personalizados, painéis, calculadoras, conversores de formato, modelos de IA ou qualquer ferramenta especializada de construção",
-    "modules.community_how": "Cada módulo é um pacote Python com um arquivo manifest.py. Crie seu módulo, teste localmente e compartilhe com a comunidade. Mesmo que você tenha apenas uma ideia — envie-nos uma descrição em texto e ajudaremos você a construí-lo.",
+    "modules.community_type_tools_desc":
+      "Relatórios personalizados, painéis, calculadoras, conversores de formato, modelos de IA ou qualquer ferramenta especializada de construção",
+    "modules.community_how":
+      "Cada módulo é um pacote Python com um arquivo manifest.py. Crie seu módulo, teste localmente e compartilhe com a comunidade. Mesmo que você tenha apenas uma ideia — envie-nos uma descrição em texto e ajudaremos você a construí-lo.",
     "modules.community_submit_email": "Enviar módulo por e-mail",
     "modules.community_submit_github": "Propor no GitHub",
     "modules.community_telegram": "Discutir no Telegram",
@@ -2610,13 +2886,17 @@ const resource = {
     "bim.loading_geometry": "A carregar geometria 3D…",
     "bim.loading_finalising": "A finalizar cena…",
     "bim.loading_streaming": "A transmitir geometria do servidor…",
-    "bim.loading_parsing": "A processar geometria 3D — para modelos grandes (>50 MB) pode demorar 20-60 s; não atualize a página",
-    "bim.loading_navigate_hint": "Pode navegar para outras páginas — o carregamento continuará em segundo plano",
+    "bim.loading_parsing":
+      "A processar geometria 3D — para modelos grandes (>50 MB) pode demorar 20-60 s; não atualize a página",
+    "bim.loading_navigate_hint":
+      "Pode navegar para outras páginas — o carregamento continuará em segundo plano",
     "bim.no_models": "Nenhum modelo carregado ainda",
     "bim.no_project": "Nenhum projeto selecionado",
-    "bim.no_project_desc": "Selecione um projeto para visualizar os modelos BIM.",
+    "bim.no_project_desc":
+      "Selecione um projeto para visualizar os modelos BIM.",
     "bim.select_model": "Selecionar um modelo",
-    "bim.select_model_desc": "Escolha um modelo BIM na lista para visualizá-lo em 3D.",
+    "bim.select_model_desc":
+      "Escolha um modelo BIM na lista para visualizá-lo em 3D.",
     "bim.search_elements": "Pesquisar elementos...",
     "bim.no_search_results": "Nenhum elemento correspondente",
     "bim.load_error": "Falha ao carregar os elementos do modelo",
@@ -2684,20 +2964,28 @@ const resource = {
     "onboarding.step_modules": "Módulos",
     "onboarding.step_mode": "Modo",
     "onboarding.company_type_title": "Que tipo de empresa você é?",
-    "onboarding.company_type_subtitle": "Vamos pré-configurar o melhor conjunto de módulos para seu fluxo de trabalho.",
+    "onboarding.company_type_subtitle":
+      "Vamos pré-configurar o melhor conjunto de módulos para seu fluxo de trabalho.",
     "onboarding.company_general_contractor": "Empreiteira Geral",
-    "onboarding.company_general_contractor_desc": "Construímos projetos — orçamento, suprimentos, gestão de obra",
+    "onboarding.company_general_contractor_desc":
+      "Construímos projetos — orçamento, suprimentos, gestão de obra",
     "onboarding.company_estimator": "Orçamentista / Consultor de custos",
-    "onboarding.company_estimator_desc": "Focamos em orçamento e levantamento de quantitativos",
-    "onboarding.company_project_management": "Empresa de Gerenciamento de Projetos",
-    "onboarding.company_project_management_desc": "Gerenciamos grandes projetos — planejamento, comunicação, documentos",
+    "onboarding.company_estimator_desc":
+      "Focamos em orçamento e levantamento de quantitativos",
+    "onboarding.company_project_management":
+      "Empresa de Gerenciamento de Projetos",
+    "onboarding.company_project_management_desc":
+      "Gerenciamos grandes projetos — planejamento, comunicação, documentos",
     "onboarding.company_architecture": "Escritório de Arquitetura / Engenharia",
-    "onboarding.company_architecture_desc": "Projetamos edificações — BIM, documentos, CDE",
+    "onboarding.company_architecture_desc":
+      "Projetamos edificações — BIM, documentos, CDE",
     "onboarding.company_full_enterprise": "Enterprise Completo",
-    "onboarding.company_full_enterprise_desc": "Precisamos de tudo — ciclo de vida completo da construção",
+    "onboarding.company_full_enterprise_desc":
+      "Precisamos de tudo — ciclo de vida completo da construção",
     "onboarding.modules_label": "módulos",
     "onboarding.modules_title": "Revise seus módulos",
-    "onboarding.modules_subtitle": "Pré-selecionados com base no tipo de empresa. Ative ou desative qualquer módulo.",
+    "onboarding.modules_subtitle":
+      "Pré-selecionados com base no tipo de empresa. Ative ou desative qualquer módulo.",
     "onboarding.modules_active": "módulos ativos",
     "onboarding.mod_group_core": "Orçamento principal",
     "onboarding.mod_group_takeoff": "Levantamento & IA",
@@ -2708,32 +2996,46 @@ const resource = {
     "onboarding.mod_group_quality": "Qualidade & Segurança",
     "onboarding.mod_group_field": "Campo",
     "onboarding.mod_group_analytics": "Análises & Extras",
-    "onboarding.mod_boq_desc": "Editor de planilha de quantitativos com itens hierárquicos",
+    "onboarding.mod_boq_desc":
+      "Editor de planilha de quantitativos com itens hierárquicos",
     "onboarding.mod_projects_desc": "Gestão e organização de projetos",
-    "onboarding.mod_costs_desc": "Bases de dados de custos e gestão de preços unitários",
-    "onboarding.mod_assemblies_desc": "Composições de preço e modelos de referência",
-    "onboarding.mod_catalog_desc": "Catálogo de materiais, mão de obra e equipamentos",
-    "onboarding.mod_templates_desc": "Modelos reutilizáveis de planilha de quantitativos",
-    "onboarding.mod_validation_desc": "Regras de qualidade e verificação de conformidade",
-    "onboarding.mod_takeoff_desc": "Visão geral do levantamento de quantitativos",
+    "onboarding.mod_costs_desc":
+      "Bases de dados de custos e gestão de preços unitários",
+    "onboarding.mod_assemblies_desc":
+      "Composições de preço e modelos de referência",
+    "onboarding.mod_catalog_desc":
+      "Catálogo de materiais, mão de obra e equipamentos",
+    "onboarding.mod_templates_desc":
+      "Modelos reutilizáveis de planilha de quantitativos",
+    "onboarding.mod_validation_desc":
+      "Regras de qualidade e verificação de conformidade",
+    "onboarding.mod_takeoff_desc":
+      "Visão geral do levantamento de quantitativos",
     "onboarding.mod_pdf_takeoff_desc": "Medições e anotações em PDF",
     "onboarding.mod_ai_estimate_desc": "Estimativa rápida com IA",
-    "onboarding.mod_advisor_desc": "Consultor de custos com IA e assistente de chat",
+    "onboarding.mod_advisor_desc":
+      "Consultor de custos com IA e assistente de chat",
     "onboarding.mod_data_explorer_desc": "Exploração de dados CAD/BIM",
     "onboarding.mod_bim_desc": "Visualizador de modelos BIM 3D",
     "onboarding.mod_schedule_desc": "Diagrama de Gantt 4D e programação CPM",
-    "onboarding.mod_5d_desc": "Modelo de custos 5D com acompanhamento de valor agregado",
+    "onboarding.mod_5d_desc":
+      "Modelo de custos 5D com acompanhamento de valor agregado",
     "onboarding.mod_tasks_desc": "Gestão de tarefas e atribuições",
-    "onboarding.mod_finance_desc": "Controle orçamentário e visão geral financeira",
-    "onboarding.mod_procurement_desc": "Ordens de compra e gestão de fornecedores",
-    "onboarding.mod_tendering_desc": "Pacotes de licitação e fluxos de trabalho de concorrência",
-    "onboarding.mod_changeorders_desc": "Acompanhamento e aprovação de aditivos",
+    "onboarding.mod_finance_desc":
+      "Controle orçamentário e visão geral financeira",
+    "onboarding.mod_procurement_desc":
+      "Ordens de compra e gestão de fornecedores",
+    "onboarding.mod_tendering_desc":
+      "Pacotes de licitação e fluxos de trabalho de concorrência",
+    "onboarding.mod_changeorders_desc":
+      "Acompanhamento e aprovação de aditivos",
     "onboarding.mod_contacts_desc": "Diretório de contatos e equipes",
     "onboarding.mod_meetings_desc": "Gestão de reuniões e atas",
     "onboarding.mod_rfi_desc": "Solicitações de esclarecimento",
     "onboarding.mod_submittals_desc": "Acompanhamento e revisão de submissões",
     "onboarding.mod_transmittals_desc": "Transmissão de documentos",
-    "onboarding.mod_correspondence_desc": "Registro de correspondência do projeto",
+    "onboarding.mod_correspondence_desc":
+      "Registro de correspondência do projeto",
     "onboarding.mod_documents_desc": "Sistema de gestão de documentos",
     "onboarding.mod_cde_desc": "Ambiente comum de dados",
     "onboarding.mod_photos_desc": "Galeria de fotos e anotações",
@@ -2741,33 +3043,43 @@ const resource = {
     "onboarding.mod_inspections_desc": "Inspeções de obra e checklists",
     "onboarding.mod_ncr_desc": "Relatórios de não conformidade",
     "onboarding.mod_safety_desc": "Gestão de segurança e incidentes",
-    "onboarding.mod_punchlist_desc": "Acompanhamento de punch list / lista de pendências",
+    "onboarding.mod_punchlist_desc":
+      "Acompanhamento de punch list / lista de pendências",
     "onboarding.mod_risks_desc": "Registro de riscos e mitigação",
     "onboarding.mod_field_reports_desc": "Diários de obra",
     "onboarding.mod_requirements_desc": "Requisitos e gates de qualidade",
     "onboarding.mod_reports_desc": "Geração e exportação de relatórios",
     "onboarding.mod_reporting_desc": "Painéis de relatórios",
     "onboarding.mod_analytics_desc": "Análise de dados e insights",
-    "onboarding.mod_sustainability_desc": "Sustentabilidade e rastreamento de carbono",
+    "onboarding.mod_sustainability_desc":
+      "Sustentabilidade e rastreamento de carbono",
     "onboarding.mod_cost_benchmark_desc": "Análise de benchmarking de custos",
-    "onboarding.mod_collaboration_desc": "Ferramentas de colaboração em tempo real",
+    "onboarding.mod_collaboration_desc":
+      "Ferramentas de colaboração em tempo real",
     "support.button_label": "Apoie-nos",
-    "support.button_tooltip": "Apoie o projeto — dê uma estrela, partilhe ou envie um estudo de caso",
+    "support.button_tooltip":
+      "Apoie o projeto — dê uma estrela, partilhe ou envie um estudo de caso",
     "support.button_aria": "Apoie-nos",
     "support.modal_title": "Ajude o OpenConstructionERP a crescer",
-    "support.modal_subtitle": "Desenvolvemos isto em código aberto e entregamos cada funcionalidade gratuitamente. Algumas pequenas ações suas mantêm o desenvolvimento em curso — não custam nada mas fazem uma enorme diferença.",
+    "support.modal_subtitle":
+      "Desenvolvemos isto em código aberto e entregamos cada funcionalidade gratuitamente. Algumas pequenas ações suas mantêm o desenvolvimento em curso — não custam nada mas fazem uma enorme diferença.",
     "support.action_star_title": "Dê-nos uma estrela no GitHub",
-    "support.action_star_body": "30 segundos. As estrelas são como novas equipas de construção descobrem o projeto e como garantimos tempo para a próxima versão.",
+    "support.action_star_body":
+      "30 segundos. As estrelas são como novas equipas de construção descobrem o projeto e como garantimos tempo para a próxima versão.",
     "support.action_share_title": "Partilhe com a sua equipa ou rede",
-    "support.action_share_body": "Uma publicação no LinkedIn ou X / Twitter alcança dezenas de orçamentistas, planeadores e gestores BIM. Ajude-nos a colocar o software de construção open source no mapa.",
+    "support.action_share_body":
+      "Uma publicação no LinkedIn ou X / Twitter alcança dezenas de orçamentistas, planeadores e gestores BIM. Ajude-nos a colocar o software de construção open source no mapa.",
     "support.share_twitter": "Publicar no X",
     "support.share_linkedin": "Publicar no LinkedIn",
     "support.share_copy": "Copiar texto + link",
     "support.share_copied": "Copiado!",
-    "support.action_case_study_title": "Tem um estudo de caso, vídeo ou artigo?",
+    "support.action_case_study_title":
+      "Tem um estudo de caso, vídeo ou artigo?",
     "support.action_case_study_tag": "Nós amplificamos",
-    "support.action_case_study_body": "Mostre-nos como usa o OpenConstructionERP — um vídeo, um estudo de caso, um artigo no LinkedIn. Pode enviar-nos o link diretamente, ou apenas marcar @DataDrivenConstruction na sua publicação — vamos vê-la e voltar a partilhá-la através da nossa newsletter e canais sociais, onde dezenas de milhares de profissionais da construção e especialistas seniores da indústria acompanham o nosso trabalho. Email para links: ",
-    "support.thanks": "Obrigado. Cada estrela, partilha e história mantém genuinamente este projeto vivo — construído com ❤️ para a comunidade da construção.",
+    "support.action_case_study_body":
+      "Mostre-nos como usa o OpenConstructionERP — um vídeo, um estudo de caso, um artigo no LinkedIn. Pode enviar-nos o link diretamente, ou apenas marcar @DataDrivenConstruction na sua publicação — vamos vê-la e voltar a partilhá-la através da nossa newsletter e canais sociais, onde dezenas de milhares de profissionais da construção e especialistas seniores da indústria acompanham o nosso trabalho. Email para links: ",
+    "support.thanks":
+      "Obrigado. Cada estrela, partilha e história mantém genuinamente este projeto vivo — construído com ❤️ para a comunidade da construção.",
     "onboarding.mod_group_estimation": "Orçamentação",
     "onboarding.mod_group_ai": "IA",
     "onboarding.mod_group_bim_advanced": "BIM & 3D",
@@ -2780,128 +3092,185 @@ const resource = {
     "onboarding.mod_group_regional": "Pacotes regionais",
     "onboarding.mod_group_platform": "Plataforma",
     "onboarding.mod_cost_match": "Correspondência de custos",
-    "onboarding.mod_cost_match_desc": "Correspondência automática de posições do orçamento com itens da base de custos",
+    "onboarding.mod_cost_match_desc":
+      "Correspondência automática de posições do orçamento com itens da base de custos",
     "onboarding.mod_match": "Correspondência de elementos",
-    "onboarding.mod_match_desc": "Associar elementos BIM/CAD a posições e preços do orçamento",
+    "onboarding.mod_match_desc":
+      "Associar elementos BIM/CAD a posições e preços do orçamento",
     "onboarding.mod_dwg_takeoff": "Medições DWG",
-    "onboarding.mod_dwg_takeoff_desc": "Medições de quantidades diretamente a partir de desenhos DWG",
+    "onboarding.mod_dwg_takeoff_desc":
+      "Medições de quantidades diretamente a partir de desenhos DWG",
     "onboarding.mod_cad": "Importar CAD",
-    "onboarding.mod_cad_desc": "Importar DWG/DGN/RVT/IFC via pipeline DDC cad2data",
+    "onboarding.mod_cad_desc":
+      "Importar DWG/DGN/RVT/IFC via pipeline DDC cad2data",
     "onboarding.mod_bim_requirements": "Requisitos BIM",
-    "onboarding.mod_bim_requirements_desc": "Definir e validar requisitos de modelo (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc":
+      "Definir e validar requisitos de modelo (IDS / EIR)",
     "onboarding.mod_match_elements": "Corresponder elementos",
-    "onboarding.mod_match_elements_desc": "Correspondência BIM-custo assistida por IA com pontuações de confiança",
+    "onboarding.mod_match_elements_desc":
+      "Correspondência BIM-custo assistida por IA com pontuações de confiança",
     "onboarding.mod_opencde_api": "API OpenCDE",
-    "onboarding.mod_opencde_api_desc": "API compatível com OpenCDE para BCF + Documentos + Foundation",
+    "onboarding.mod_opencde_api_desc":
+      "API compatível com OpenCDE para BCF + Documentos + Foundation",
     "onboarding.mod_erp_chat": "Chat ERP",
-    "onboarding.mod_erp_chat_desc": "Assistente de chat IA na aplicação com contexto ERP completo",
+    "onboarding.mod_erp_chat_desc":
+      "Assistente de chat IA na aplicação com contexto ERP completo",
     "onboarding.mod_compliance_ai": "IA de Conformidade",
-    "onboarding.mod_compliance_ai_desc": "Verificações de conformidade regulatória baseadas em LLM",
+    "onboarding.mod_compliance_ai_desc":
+      "Verificações de conformidade regulatória baseadas em LLM",
     "onboarding.mod_schedule_advanced": "Planeamento avançado",
-    "onboarding.mod_schedule_advanced_desc": "Last Planner System com look-ahead semanais e PPC",
+    "onboarding.mod_schedule_advanced_desc":
+      "Last Planner System com look-ahead semanais e PPC",
     "onboarding.mod_eac": "Motor EAC",
     "onboarding.mod_eac_desc": "Estimativa na conclusão com previsões rolantes",
     "onboarding.mod_bid_management": "Gestão de propostas",
-    "onboarding.mod_bid_management_desc": "Gerir propostas enviadas, estratégias de preços, tracking de ganhos/perdas",
+    "onboarding.mod_bid_management_desc":
+      "Gerir propostas enviadas, estratégias de preços, tracking de ganhos/perdas",
     "onboarding.mod_contracts": "Contratos",
-    "onboarding.mod_contracts_desc": "Motor de tipos de contrato (FIDIC, NEC, JCT, preço global, T&M)",
+    "onboarding.mod_contracts_desc":
+      "Motor de tipos de contrato (FIDIC, NEC, JCT, preço global, T&M)",
     "onboarding.mod_variations": "Trabalhos a mais",
-    "onboarding.mod_variations_desc": "Trabalhos a mais com medições em obra e workflow de aprovação",
+    "onboarding.mod_variations_desc":
+      "Trabalhos a mais com medições em obra e workflow de aprovação",
     "onboarding.mod_crm": "CRM",
-    "onboarding.mod_crm_desc": "Pipeline de vendas, leads, oportunidades, contas",
+    "onboarding.mod_crm_desc":
+      "Pipeline de vendas, leads, oportunidades, contas",
     "onboarding.mod_supplier_catalogs": "Catálogos de fornecedores",
-    "onboarding.mod_supplier_catalogs_desc": "Tabelas de preços ao vivo de fornecedores e gestão de fornecedores",
+    "onboarding.mod_supplier_catalogs_desc":
+      "Tabelas de preços ao vivo de fornecedores e gestão de fornecedores",
     "onboarding.mod_property_dev": "Desenvolvimento imobiliário",
-    "onboarding.mod_property_dev_desc": "Terreno, faseamento, mix de vendas, viabilidade para promotores",
+    "onboarding.mod_property_dev_desc":
+      "Terreno, faseamento, mix de vendas, viabilidade para promotores",
     "onboarding.mod_service": "Serviço & Manutenção",
-    "onboarding.mod_service_desc": "Pedidos de serviço pós-entrega, garantias, manutenção",
+    "onboarding.mod_service_desc":
+      "Pedidos de serviço pós-entrega, garantias, manutenção",
     "onboarding.mod_equipment": "Equipamento & Frota",
-    "onboarding.mod_equipment_desc": "Maquinaria, ferramentas, veículos — utilização, manutenção, tarifas de aluguer",
+    "onboarding.mod_equipment_desc":
+      "Maquinaria, ferramentas, veículos — utilização, manutenção, tarifas de aluguer",
     "onboarding.mod_resources": "Recursos",
-    "onboarding.mod_resources_desc": "Planeamento de recursos: mão de obra, materiais, equipamentos",
+    "onboarding.mod_resources_desc":
+      "Planeamento de recursos: mão de obra, materiais, equipamentos",
     "onboarding.mod_daily_diary": "Diário de obra",
-    "onboarding.mod_daily_diary_desc": "Diário diário de obra com clima, equipas, equipamentos, fotos",
+    "onboarding.mod_daily_diary_desc":
+      "Diário diário de obra com clima, equipas, equipamentos, fotos",
     "onboarding.mod_subcontractors": "Subempreiteiros",
-    "onboarding.mod_subcontractors_desc": "Onboarding de subempreiteiros, contratos, pagamentos, desempenho",
+    "onboarding.mod_subcontractors_desc":
+      "Onboarding de subempreiteiros, contratos, pagamentos, desempenho",
     "onboarding.mod_portal": "Portal do cliente",
-    "onboarding.mod_portal_desc": "Portal externo para clientes e parceiros com acesso limitado",
+    "onboarding.mod_portal_desc":
+      "Portal externo para clientes e parceiros com acesso limitado",
     "onboarding.mod_notifications": "Notificações",
-    "onboarding.mod_notifications_desc": "Notificações na aplicação, email e webhook",
+    "onboarding.mod_notifications_desc":
+      "Notificações na aplicação, email e webhook",
     "onboarding.mod_hse_advanced": "HSE avançado",
-    "onboarding.mod_hse_advanced_desc": "Saúde, Segurança, Ambiente avançado — toolbox talks, JHA, auditorias",
+    "onboarding.mod_hse_advanced_desc":
+      "Saúde, Segurança, Ambiente avançado — toolbox talks, JHA, auditorias",
     "onboarding.mod_qms": "Sistema de Gestão da Qualidade",
-    "onboarding.mod_qms_desc": "QMS alinhado com ISO 9001 — procedimentos, auditorias, KPIs",
+    "onboarding.mod_qms_desc":
+      "QMS alinhado com ISO 9001 — procedimentos, auditorias, KPIs",
     "onboarding.mod_compliance": "DSL de Conformidade",
-    "onboarding.mod_compliance_desc": "Linguagem específica de domínio code-as-rules para conformidade",
+    "onboarding.mod_compliance_desc":
+      "Linguagem específica de domínio code-as-rules para conformidade",
     "onboarding.mod_compliance_docs": "Documentos de conformidade",
-    "onboarding.mod_compliance_docs_desc": "Biblioteca de certificados, tracking de validade, lembretes de renovação",
+    "onboarding.mod_compliance_docs_desc":
+      "Biblioteca de certificados, tracking de validade, lembretes de renovação",
     "onboarding.mod_carbon": "Carbono & Sustentabilidade",
-    "onboarding.mod_carbon_desc": "Carbono incorporado + operacional, reporte ESG, EN 15978",
+    "onboarding.mod_carbon_desc":
+      "Carbono incorporado + operacional, reporte ESG, EN 15978",
     "onboarding.mod_bi_dashboards": "Dashboards BI",
-    "onboarding.mod_bi_dashboards_desc": "Análise interativa multi-módulo com drill-down",
+    "onboarding.mod_bi_dashboards_desc":
+      "Análise interativa multi-módulo com drill-down",
     "onboarding.mod_enterprise_workflows": "Fluxos enterprise",
-    "onboarding.mod_enterprise_workflows_desc": "Fluxos de aprovação personalizados baseados em FSM para grandes organizações",
+    "onboarding.mod_enterprise_workflows_desc":
+      "Fluxos de aprovação personalizados baseados em FSM para grandes organizações",
     "onboarding.mod_full_evm": "EVM completo",
-    "onboarding.mod_full_evm_desc": "Earned Value Management completo — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc":
+      "Earned Value Management completo — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ & Concursos",
-    "onboarding.mod_rfq_bidding_desc": "Fluxos RFQ multi-ronda, concursos selados, leilões eletrónicos",
+    "onboarding.mod_rfq_bidding_desc":
+      "Fluxos RFQ multi-ronda, concursos selados, leilões eletrónicos",
     "onboarding.mod_integrations": "Integrações",
-    "onboarding.mod_integrations_desc": "Webhooks, SAP, Procore, MS Project via n8n",
+    "onboarding.mod_integrations_desc":
+      "Webhooks, SAP, Procore, MS Project via n8n",
     "onboarding.mod_dach_pack": "Pacote regional — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc": "Padrões, classificações, moedas, formatos para DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc":
+      "Padrões, classificações, moedas, formatos para DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "Pacote regional — Reino Unido",
-    "onboarding.mod_uk_pack_desc": "Padrões, classificações, moedas, formatos para o Reino Unido",
+    "onboarding.mod_uk_pack_desc":
+      "Padrões, classificações, moedas, formatos para o Reino Unido",
     "onboarding.mod_us_pack": "Pacote regional — Estados Unidos",
-    "onboarding.mod_us_pack_desc": "Padrões, classificações, moedas, formatos para os Estados Unidos",
+    "onboarding.mod_us_pack_desc":
+      "Padrões, classificações, moedas, formatos para os Estados Unidos",
     "onboarding.mod_india_pack": "Pacote regional — Índia",
-    "onboarding.mod_india_pack_desc": "Padrões, classificações, moedas, formatos para a Índia",
+    "onboarding.mod_india_pack_desc":
+      "Padrões, classificações, moedas, formatos para a Índia",
     "onboarding.mod_middle_east_pack": "Pacote regional — Médio Oriente & CCG",
-    "onboarding.mod_middle_east_pack_desc": "Padrões, classificações, moedas, formatos para Médio Oriente & CCG",
+    "onboarding.mod_middle_east_pack_desc":
+      "Padrões, classificações, moedas, formatos para Médio Oriente & CCG",
     "onboarding.mod_latam_pack": "Pacote regional — América Latina",
-    "onboarding.mod_latam_pack_desc": "Padrões, classificações, moedas, formatos para América Latina",
+    "onboarding.mod_latam_pack_desc":
+      "Padrões, classificações, moedas, formatos para América Latina",
     "onboarding.mod_asia_pac_pack": "Pacote regional — Ásia-Pacífico",
-    "onboarding.mod_asia_pac_pack_desc": "Padrões, classificações, moedas, formatos para Ásia-Pacífico",
+    "onboarding.mod_asia_pac_pack_desc":
+      "Padrões, classificações, moedas, formatos para Ásia-Pacífico",
     "onboarding.mod_russia_pack": "Pacote regional — Rússia & CEI",
-    "onboarding.mod_russia_pack_desc": "Padrões, classificações, moedas, formatos para Rússia & CEI",
+    "onboarding.mod_russia_pack_desc":
+      "Padrões, classificações, moedas, formatos para Rússia & CEI",
     "onboarding.mod_users": "Utilizadores & Auth",
-    "onboarding.mod_users_desc": "Contas de utilizador, papéis, JWT, chaves API",
+    "onboarding.mod_users_desc":
+      "Contas de utilizador, papéis, JWT, chaves API",
     "onboarding.mod_teams": "Equipas",
-    "onboarding.mod_teams_desc": "Agrupamento de equipas, scope de visibilidade, atribuição de projetos",
+    "onboarding.mod_teams_desc":
+      "Agrupamento de equipas, scope de visibilidade, atribuição de projetos",
     "onboarding.mod_uploads": "Uploads",
-    "onboarding.mod_uploads_desc": "Uploads diretos de ficheiros grandes com retomada",
+    "onboarding.mod_uploads_desc":
+      "Uploads diretos de ficheiros grandes com retomada",
     "onboarding.mod_jobs": "Tarefas em background",
-    "onboarding.mod_jobs_desc": "Filas de workers para imports, exports, pipelines CV",
+    "onboarding.mod_jobs_desc":
+      "Filas de workers para imports, exports, pipelines CV",
     "onboarding.mod_search": "Pesquisa semântica",
-    "onboarding.mod_search_desc": "Pesquisa vetorial + lexical em orçamento, documentos, desenhos",
+    "onboarding.mod_search_desc":
+      "Pesquisa vetorial + lexical em orçamento, documentos, desenhos",
     "onboarding.mod_backup": "Backup & Restauro",
-    "onboarding.mod_backup_desc": "Backups automáticos com restauro point-in-time",
+    "onboarding.mod_backup_desc":
+      "Backups automáticos com restauro point-in-time",
     "onboarding.mod_admin": "Consola de administração",
-    "onboarding.mod_admin_desc": "Endpoints de operador, pipelines QA, manutenção do sistema",
+    "onboarding.mod_admin_desc":
+      "Endpoints de operador, pipelines QA, manutenção do sistema",
     "onboarding.mod_i18n_foundation": "Base i18n",
-    "onboarding.mod_i18n_foundation_desc": "Runtime i18n de 27 idiomas com chunks de locale lazy",
+    "onboarding.mod_i18n_foundation_desc":
+      "Runtime i18n de 27 idiomas com chunks de locale lazy",
     "onboarding.mod_collaboration_locks": "Bloqueios de colaboração",
-    "onboarding.mod_collaboration_locks_desc": "Bloqueio otimista e pessimista para edição multiutilizador",
+    "onboarding.mod_collaboration_locks_desc":
+      "Bloqueio otimista e pessimista para edição multiutilizador",
     "onboarding.mod_architecture_map": "Mapa de arquitetura",
-    "onboarding.mod_architecture_map_desc": "Mapa visual interativo da arquitetura do sistema",
+    "onboarding.mod_architecture_map_desc":
+      "Mapa visual interativo da arquitetura do sistema",
     "onboarding.mod_dashboards": "Dashboards",
     "onboarding.mod_dashboards_desc": "Dashboards por projeto e portefólio",
     "onboarding.mode_title": "Escolher modo de interface",
-    "onboarding.mode_subtitle": "Você pode alternar entre modos a qualquer momento nas Configurações.",
+    "onboarding.mode_subtitle":
+      "Você pode alternar entre modos a qualquer momento nas Configurações.",
     "onboarding.mode_simple": "Simples",
     "onboarding.mode_advanced": "Avançado",
     "onboarding.summary_company": "Tipo de empresa",
     "onboarding.summary_modules": "Módulos ativos",
     "onboarding.summary_mode": "Modo de interface",
     "reports.cash_flow": "Previsão de fluxo de caixa",
-    "reports.cash_flow_desc": "Projeção mensal do fluxo de caixa pela curva S: gastos planejados vs reais.",
+    "reports.cash_flow_desc":
+      "Projeção mensal do fluxo de caixa pela curva S: gastos planejados vs reais.",
     "reports.change_order_register": "Registro de aditivos",
-    "reports.change_order_register_desc": "Registro completo de alterações de escopo com impacto acumulado em custos e cronograma.",
+    "reports.change_order_register_desc":
+      "Registro completo de alterações de escopo com impacto acumulado em custos e cronograma.",
     "reports.tender_comparison": "Comparação de propostas",
-    "reports.tender_comparison_desc": "Comparação lado a lado das propostas de subempreiteiros com análise de desvios.",
+    "reports.tender_comparison_desc":
+      "Comparação lado a lado das propostas de subempreiteiros com análise de desvios.",
     "reports.risk_register": "Registro de riscos",
-    "reports.risk_register_desc": "Matriz de riscos com probabilidade, impacto, pontuações e planos de mitigação.",
+    "reports.risk_register_desc":
+      "Matriz de riscos com probabilidade, impacto, pontuações e planos de mitigação.",
     "reports.progress_report": "Relatório de avanço",
-    "reports.progress_report_desc": "Desempenho EVM, situação do cronograma e principais riscos em um único relatório.",
+    "reports.progress_report_desc":
+      "Desempenho EVM, situação do cronograma e principais riscos em um único relatório.",
     "reports.preset_monthly": "Avanço mensal",
     "reports.preset_client": "Apresentação ao cliente",
     "reports.preset_audit": "Relatório de auditoria",
@@ -2911,20 +3280,24 @@ const resource = {
     "cde.suitability_none": "— Nenhum —",
     "cde.view_history": "Histórico",
     "cde.history_title": "Histórico de transições de estado",
-    "cde.history_empty": "Nenhuma transição de estado ainda — promova o contêiner para iniciar a trilha de auditoria.",
+    "cde.history_empty":
+      "Nenhuma transição de estado ainda — promova o contêiner para iniciar a trilha de auditoria.",
     "cde.history_by_role": "Por: {{role}}",
     "cde.history_signature": "Assinado: {{signer}}",
     "cde.gate_label": "Gate {{code}}",
     "cde.transmittals_badge": "{{count}} transmissões",
-    "cde.transmittals_badge_aria": "{{count}} transmissões vinculadas a este contêiner",
+    "cde.transmittals_badge_aria":
+      "{{count}} transmissões vinculadas a este contêiner",
     "cde.transmittals_drawer_title": "Transmissões que carregam este contêiner",
     "cde.approval_modal_title": "Assinatura de aprovação — Gate B",
-    "cde.approval_modal_body": "Promover {{code}} de COMPARTILHADO para PUBLICADO requer uma aprovação assinada (ISO 19650). Sua assinatura e comentários são registrados no log de auditoria.",
+    "cde.approval_modal_body":
+      "Promover {{code}} de COMPARTILHADO para PUBLICADO requer uma aprovação assinada (ISO 19650). Sua assinatura e comentários são registrados no log de auditoria.",
     "cde.approval_field_signature": "Assinatura",
     "cde.approval_field_comments": "Comentários",
     "cde.approval_signature_placeholder": "Nome completo / iniciais",
     "cde.approval_signature_required": "A assinatura é obrigatória",
-    "cde.approval_comments_placeholder": "Notas opcionais para a trilha de auditoria...",
+    "cde.approval_comments_placeholder":
+      "Notas opcionais para a trilha de auditoria...",
     "cde.approval_submit": "Assinar e publicar",
     "transmittals.field_link_revision": "Vincular revisão CDE",
     "transmittals.picker_select_container": "Selecionar contêiner…",
@@ -2961,7 +3334,8 @@ const resource = {
     "users.role_viewer_desc": "Acesso somente leitura",
     "integrations.add_another": "Adicionar outro",
     "integrations.calendar": "Calendário",
-    "integrations.calendar_desc": "Assine no Google/Outlook Calendar (feed iCal)",
+    "integrations.calendar_desc":
+      "Assine no Google/Outlook Calendar (feed iCal)",
     "integrations.coming_soon": "Em breve",
     "integrations.confirm_disconnect": "Desconectar esta integração?",
     "integrations.connect": "Conectar",
@@ -2975,10 +3349,13 @@ const resource = {
     "integrations.email_desc": "Receber notificações por e-mail (SMTP)",
     "integrations.setup_steps": "Instruções de configuração",
     "integrations.slack": "Slack",
-    "integrations.slack_desc": "Enviar notificações para o Slack via Incoming Webhook",
-    "integrations.subtitle": "Conecte serviços externos para receber notificações do projeto em suas ferramentas favoritas.",
+    "integrations.slack_desc":
+      "Enviar notificações para o Slack via Incoming Webhook",
+    "integrations.subtitle":
+      "Conecte serviços externos para receber notificações do projeto em suas ferramentas favoritas.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc": "Enviar notificações para seu canal do Teams via Incoming Webhook",
+    "integrations.teams_desc":
+      "Enviar notificações para seu canal do Teams via Incoming Webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Receber notificações via bot do Telegram",
     "integrations.test": "Testar",
@@ -3025,7 +3402,8 @@ const resource = {
     "common.previous": "Anterior",
     "common.project": "Projeto",
     "common.quantity": "Quantidade",
-    "common.rate_limit_wait": "Aguarde {{seconds}} segundos antes de tentar novamente.",
+    "common.rate_limit_wait":
+      "Aguarde {{seconds}} segundos antes de tentar novamente.",
     "common.recommended": "Recomendado",
     "common.region": "Região",
     "common.remove": "Remover",
@@ -3051,11 +3429,14 @@ const resource = {
     "dashboard.budget_warnings": "Alertas de orçamento",
     "dashboard.continue_work": "Continuar seu trabalho",
     "dashboard.create_first_project": "Criar primeiro projeto",
-    "dashboard.create_first_project_desc": "Configurar um novo orçamento do zero",
+    "dashboard.create_first_project_desc":
+      "Configurar um novo orçamento do zero",
     "dashboard.import_existing_boq": "Importar planilha existente",
-    "dashboard.import_existing_boq_desc": "Usar IA para estimar a partir de um documento existente",
+    "dashboard.import_existing_boq_desc":
+      "Usar IA para estimar a partir de um documento existente",
     "dashboard.install_demo": "Instalar projeto de demonstração",
-    "dashboard.install_demo_desc": "Projeto residencial pré-configurado com dados realistas",
+    "dashboard.install_demo_desc":
+      "Projeto residencial pré-configurado com dados realistas",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "executar validação",
     "dashboard.over_budget": "acima do orçamento",
@@ -3064,14 +3445,19 @@ const resource = {
     "dashboard.quick_start": "Orçamento rápido",
     "dashboard.run_setup": "Executar assistente de configuração",
     "dashboard.total_budget_all": "Orçamento total",
-    "dashboard.welcome_body": "Este projeto é desenvolvido e mantido pela comunidade. Seu apoio nos ajuda a adicionar novos recursos, bases de dados regionais e a mantê-lo gratuito para todos.",
+    "dashboard.welcome_body":
+      "Este projeto é desenvolvido e mantido pela comunidade. Seu apoio nos ajuda a adicionar novos recursos, bases de dados regionais e a mantê-lo gratuito para todos.",
     "dashboard.welcome_consult": "Consultoria profissional",
-    "dashboard.welcome_consult_desc": "Implantação personalizada, treinamento e soluções enterprise no mundo todo",
-    "dashboard.welcome_desc": "Comece instalando um projeto de demonstração ou criando o seu próprio.",
+    "dashboard.welcome_consult_desc":
+      "Implantação personalizada, treinamento e soluções enterprise no mundo todo",
+    "dashboard.welcome_desc":
+      "Comece instalando um projeto de demonstração ou criando o seu próprio.",
     "dashboard.welcome_sponsor": "Tornar-se patrocinador",
-    "dashboard.welcome_sponsor_desc": "Financie novos recursos e mantenha o projeto gratuito para todos",
+    "dashboard.welcome_sponsor_desc":
+      "Financie novos recursos e mantenha o projeto gratuito para todos",
     "dashboard.welcome_star": "Dar estrela no GitHub",
-    "dashboard.welcome_star_desc": "Ajude outros a descobrir o projeto — leva 2 segundos",
+    "dashboard.welcome_star_desc":
+      "Ajude outros a descobrir o projeto — leva 2 segundos",
     "dashboard.welcome_start": "Começar",
     "dashboard.welcome_sub": "Orçamento de obras gratuito e de código aberto",
     "dashboard.welcome_title": "Bem-vindo ao OpenConstructionERP",
@@ -3092,7 +3478,8 @@ const resource = {
     "analytics.col_status": "Status",
     "analytics.col_variance": "Variação",
     "analytics.col_variance_pct": "Var. %",
-    "analytics.empty_description": "Crie projetos com orçamentos para ver as análises entre projetos.",
+    "analytics.empty_description":
+      "Crie projetos com orçamentos para ver as análises entre projetos.",
     "analytics.empty_title": "Nenhum dado analítico ainda",
     "analytics.export_csv": "Exportar CSV",
     "analytics.filter_region": "Filtrar por região",
@@ -3115,32 +3502,38 @@ const resource = {
     "analytics.total_projects": "Total de projetos",
     "analytics.with_budget": "{{count}} com orçamento",
     "backup.confirm_replace_btn": "Substituir todos os dados",
-    "backup.confirm_replace_message": "Isso substituirá todos os dados existentes pelo conteúdo do backup. Esta ação não pode ser desfeita.",
+    "backup.confirm_replace_message":
+      "Isso substituirá todos os dados existentes pelo conteúdo do backup. Esta ação não pode ser desfeita.",
     "backup.confirm_replace_title": "Substituir todos os dados?",
     "backup.drop_zone_hint": "Arquivo de backup .zip",
-    "backup.drop_zone_label": "Solte o arquivo de backup aqui ou clique para navegar",
+    "backup.drop_zone_label":
+      "Solte o arquivo de backup aqui ou clique para navegar",
     "backup.export_btn": "Criar backup",
-    "backup.export_desc": "Baixe um backup completo de todos os seus dados como arquivo ZIP.",
+    "backup.export_desc":
+      "Baixe um backup completo de todos os seus dados como arquivo ZIP.",
     "backup.export_error": "Falha na exportação",
     "backup.export_success": "Backup criado",
     "backup.export_success_detail": "Seu arquivo de backup foi baixado.",
     "backup.export_title": "Criar backup",
     "backup.exporting": "Criando backup...",
-    "backup.import_desc": "Restaure dados a partir de um arquivo de backup exportado anteriormente.",
+    "backup.import_desc":
+      "Restaure dados a partir de um arquivo de backup exportado anteriormente.",
     "backup.import_title": "Restaurar do backup",
     "backup.incompatible": "Versão de backup incompatível",
     "backup.invalid_file": "Arquivo inválido",
     "backup.mode_merge": "Mesclar (adicionar novo, manter existente)",
     "backup.mode_replace": "Substituir (sobrescrever tudo)",
     "backup.record_counts": "Contagem de registros",
-    "backup.replace_warning": "Atenção: o modo Substituir excluirá todos os dados existentes.",
+    "backup.replace_warning":
+      "Atenção: o modo Substituir excluirá todos os dados existentes.",
     "backup.restore_btn": "Restaurar",
     "backup.restore_error": "Erro na restauração",
     "backup.restore_failed": "Falha na restauração",
     "backup.restore_failed_detail": "Não foi possível restaurar do backup",
     "backup.restore_mode": "Modo de restauração",
     "backup.restore_success": "Backup restaurado",
-    "backup.restore_success_detail": "Todos os dados foram restaurados do backup.",
+    "backup.restore_success_detail":
+      "Todos os dados foram restaurados do backup.",
     "backup.restoring": "Restaurando...",
     "backup.subtitle": "Exportar e importar seus dados",
     "backup.title": "Backup & Restauração",
@@ -3152,7 +3545,8 @@ const resource = {
     "changeorders.add_item": "Adicionar item",
     "changeorders.all_statuses": "Todos os status",
     "changeorders.approve": "Aprovar",
-    "changeorders.approve_confirm": "Aprovar este aditivo? O impacto financeiro será aplicado ao orçamento do projeto.",
+    "changeorders.approve_confirm":
+      "Aprovar este aditivo? O impacto financeiro será aplicado ao orçamento do projeto.",
     "changeorders.approved": "Aditivo aprovado",
     "changeorders.approved_at": "Aprovado",
     "changeorders.approved_impact": "Impacto aprovado",
@@ -3164,24 +3558,28 @@ const resource = {
     "changeorders.delete_item_confirm": "Excluir este item?",
     "changeorders.deleted": "Aditivo excluído",
     "changeorders.empty": "Nenhum aditivo",
-    "changeorders.empty_desc": "Crie um aditivo para rastrear alterações de escopo com impacto em custos e cronograma",
+    "changeorders.empty_desc":
+      "Crie um aditivo para rastrear alterações de escopo com impacto em custos e cronograma",
     "changeorders.export_csv": "Exportar CSV",
     "changeorders.filter_status": "Filtrar por status",
     "changeorders.item_added": "Item adicionado",
     "changeorders.item_deleted": "Item excluído",
     "changeorders.items": "Linhas",
-    "changeorders.load_error": "Falha ao carregar os aditivos. Por favor, tente novamente.",
+    "changeorders.load_error":
+      "Falha ao carregar os aditivos. Por favor, tente novamente.",
     "changeorders.new": "Novo aditivo",
     "changeorders.new_qty": "Nova qtd.",
     "changeorders.new_rate": "Novo preço",
     "changeorders.no_items": "Nenhum item ainda",
-    "changeorders.no_items_desc": "Adicione linhas para definir a alteração de escopo",
+    "changeorders.no_items_desc":
+      "Adicione linhas para definir a alteração de escopo",
     "changeorders.of_total": "de",
     "changeorders.orig_qty": "Qtd. original",
     "changeorders.orig_rate": "Preço original",
     "changeorders.pending": "Pendente",
     "changeorders.pending_approval": "Aguardando aprovação",
-    "changeorders.pending_approval_hint": "Apenas gerentes e administradores podem aprovar.",
+    "changeorders.pending_approval_hint":
+      "Apenas gerentes e administradores podem aprovar.",
     "changeorders.reason": "Motivo",
     "changeorders.reject": "Rejeitar",
     "changeorders.reject_confirm": "Rejeitar este aditivo?",
@@ -3197,10 +3595,12 @@ const resource = {
     "changeorders.status_submitted": "Enviado",
     "changeorders.status_under_review": "Em análise",
     "changeorders.submit": "Enviar",
-    "changeorders.submit_confirm": "Enviar este aditivo para revisão? Esta ação não pode ser desfeita.",
+    "changeorders.submit_confirm":
+      "Enviar este aditivo para revisão? Esta ação não pode ser desfeita.",
     "changeorders.submitted": "Aditivo enviado",
     "changeorders.submitted_at": "Enviado",
-    "changeorders.subtitle": "Rastrear alterações de escopo com impacto em custos e cronograma",
+    "changeorders.subtitle":
+      "Rastrear alterações de escopo com impacto em custos e cronograma",
     "changeorders.title_placeholder": "ex.: Trabalhos adicionais de fundação",
     "changeorders.total": "Total de aditivos",
     "changeorders.type": "Tipo",
@@ -3209,15 +3609,19 @@ const resource = {
     "changeorders.type_removed": "Removido",
     "changeorders.unit_placeholder": "m2, m3, un...",
     "changeorders.workflow": "Fluxo de trabalho",
-    "changeorders.workflow_desc": "Fluxo de trabalho de aditivos: Rascunho (preparar alteração de escopo) → Enviado (encaminhar para revisão) → Aprovado ou Rejeitado. Cada aditivo rastreia impacto financeiro e impacto no cronograma em dias. Adicione linhas para detalhar o que mudou — quantidades e preços originais vs novos. O delta de custo é calculado automaticamente.",
+    "changeorders.workflow_desc":
+      "Fluxo de trabalho de aditivos: Rascunho (preparar alteração de escopo) → Enviado (encaminhar para revisão) → Aprovado ou Rejeitado. Cada aditivo rastreia impacto financeiro e impacto no cronograma em dias. Adicione linhas para detalhar o que mudou — quantidades e preços originais vs novos. O delta de custo é calculado automaticamente.",
     "explorer.analysis_name": "Nome",
     "explorer.apply_pivot": "Aplicar",
     "explorer.bar": "Barras",
-    "explorer.boq_create_failed": "Falha ao criar itens da planilha de quantitativos",
-    "explorer.boq_created_success": "{{count}} itens criados na planilha de quantitativos",
+    "explorer.boq_create_failed":
+      "Falha ao criar itens da planilha de quantitativos",
+    "explorer.boq_created_success":
+      "{{count}} itens criados na planilha de quantitativos",
     "explorer.categories": "Categorias",
     "explorer.chart_type": "Tipo",
-    "explorer.click_header_sort": "Clique nos cabeçalhos de coluna para ordenar",
+    "explorer.click_header_sort":
+      "Clique nos cabeçalhos de coluna para ordenar",
     "explorer.column": "Coluna",
     "explorer.column_statistics": "Estatísticas da coluna",
     "explorer.columns": "Colunas de parâmetros",
@@ -3225,17 +3629,22 @@ const resource = {
     "explorer.conversion_complete": "Conversão concluída",
     "explorer.conversion_failed": "Falha na conversão",
     "explorer.converters": "Conversores CAD",
-    "explorer.converters_desc": "Conversores DDC Community para extração de dados de elementos BIM",
-    "explorer.converters_external_hint": "Os conversores CAD requerem as ferramentas DDC cad2data instaladas no servidor",
+    "explorer.converters_desc":
+      "Conversores DDC Community para extração de dados de elementos BIM",
+    "explorer.converters_external_hint":
+      "Os conversores CAD requerem as ferramentas DDC cad2data instaladas no servidor",
     "explorer.converting": "Convertendo {{name}}...",
     "explorer.converting_msg": "Convertendo...",
     "explorer.count": "Contagem",
     "explorer.create_boq_from_pivot": "Criar planilha de quantitativos",
-    "explorer.create_boq_subtitle": "{{count}} grupos se tornarão itens da planilha de quantitativos",
-    "explorer.create_boq_title": "Criar planilha de quantitativos a partir do pivô",
+    "explorer.create_boq_subtitle":
+      "{{count}} grupos se tornarão itens da planilha de quantitativos",
+    "explorer.create_boq_title":
+      "Criar planilha de quantitativos a partir do pivô",
     "explorer.create_positions": "Criar {{count}} itens",
     "explorer.data_completeness": "Completude dos dados",
-    "explorer.delete_session_confirm": "Excluir esta análise? Esta ação não pode ser desfeita.",
+    "explorer.delete_session_confirm":
+      "Excluir esta análise? Esta ação não pode ser desfeita.",
     "explorer.documents": "Documentos",
     "explorer.done": "Conversão concluída! Carregando...",
     "explorer.drop_cad": "Solte um arquivo CAD/BIM para explorar",
@@ -3250,7 +3659,8 @@ const resource = {
     "explorer.heatmap": "Ativar/desativar mapa de calor",
     "explorer.heatmap_short": "Mapa de calor",
     "explorer.installed": "instalado",
-    "explorer.invalid_format": "Formato de arquivo não suportado. Use RVT, IFC, DWG ou DGN.",
+    "explorer.invalid_format":
+      "Formato de arquivo não suportado. Use RVT, IFC, DWG ou DGN.",
     "explorer.like_describe": "como df.describe()",
     "explorer.max": "Máx",
     "explorer.mean": "Média",
@@ -3261,7 +3671,8 @@ const resource = {
     "explorer.no_chart_data": "Sem dados de gráfico",
     "explorer.no_groups": "Nenhum grupo encontrado. Tente colunas diferentes.",
     "explorer.non_null": "Não nulo",
-    "explorer.or_click": "ou clique para navegar — tabela de dados, pivô, gráficos & estatísticas",
+    "explorer.or_click":
+      "ou clique para navegar — tabela de dados, pivô, gráficos & estatísticas",
     "explorer.page_of": "Página {{page}} de {{total}}",
     "explorer.page_summary": "Totais da página:",
     "explorer.pie": "Pizza",
@@ -3270,22 +3681,27 @@ const resource = {
     "explorer.powered_by": "Desenvolvido por",
     "explorer.project": "Projeto",
     "explorer.recent_models": "Modelos recentes",
-    "explorer.requires_external": "Ferramenta externa — clique para instruções de configuração",
+    "explorer.requires_external":
+      "Ferramenta externa — clique para instruções de configuração",
     "explorer.rows": "linhas",
     "explorer.save_analysis": "Salvar análise",
     "explorer.save_as_bim": "Salvar como modelo BIM",
     "explorer.save_permanently": "Salvar permanentemente",
     "explorer.save_to_project": "Salvar no projeto (BIM Hub)",
     "explorer.save_to_project_btn": "Salvar no projeto",
-    "explorer.save_to_project_desc": "Cria um modelo BIM com todos os elementos extraídos no projeto selecionado.",
+    "explorer.save_to_project_desc":
+      "Cria um modelo BIM com todos os elementos extraídos no projeto selecionado.",
     "explorer.saved": "Análise salva permanentemente",
     "explorer.saved_to_project": "Salvo no BIM Hub",
-    "explorer.saved_to_project_msg": "Elementos salvos no BIM Hub. Visualize-os no Visualizador BIM.",
+    "explorer.saved_to_project_msg":
+      "Elementos salvos no BIM Hub. Visualize-os no Visualizador BIM.",
     "explorer.search_all": "Pesquisar em todas as colunas...",
-    "explorer.select_columns_for_chart": "Selecione as colunas de agrupamento e valor para gerar um gráfico.",
+    "explorer.select_columns_for_chart":
+      "Selecione as colunas de agrupamento e valor para gerar um gráfico.",
     "explorer.select_project": "Selecionar projeto...",
     "explorer.selected": "selecionado",
-    "explorer.session_expired_desc": "As sessões CAD são válidas por 24 horas. Faça o upload do seu arquivo novamente para continuar.",
+    "explorer.session_expired_desc":
+      "As sessões CAD são válidas por 24 horas. Faça o upload do seu arquivo novamente para continuar.",
     "explorer.session_expired_title": "Sessão expirada ou não encontrada",
     "explorer.setup_guide": "Guia de configuração",
     "explorer.sparse_columns": "Esparsas (<10%)",
@@ -3305,7 +3721,8 @@ const resource = {
     "explorer.visible_columns": "Colunas visíveis",
     "explorer.active_filters": "Filtros ativos",
     "explorer.clear_all_filters": "Limpar tudo",
-    "explorer.no_active_filters": "Clique em qualquer barra, fatia ou ponto do gráfico para filtrar entre as abas.",
+    "explorer.no_active_filters":
+      "Clique em qualquer barra, fatia ou ponto do gráfico para filtrar entre as abas.",
     "explorer.line": "Linha",
     "explorer.scatter": "Dispersão",
     "explorer.format": "Formato",
@@ -3320,7 +3737,8 @@ const resource = {
     "explorer.save_view": "Salvar visualização",
     "explorer.save_view_prompt": "Nomear esta visualização",
     "explorer.saved_views": "Visualizações salvas",
-    "explorer.no_saved_views": "Nenhuma visualização salva ainda. Salve seus filtros, gráfico e configuração de pivô para uso posterior.",
+    "explorer.no_saved_views":
+      "Nenhuma visualização salva ainda. Salve seus filtros, gráfico e configuração de pivô para uso posterior.",
     "explorer.load_view": "Carregar",
     "explorer.delete_view": "Excluir",
     "explorer.view_saved": "Visualização salva",
@@ -3329,7 +3747,8 @@ const resource = {
     "explorer.drill_down_empty": "Nenhuma linha corresponde a esta fatia.",
     "explorer.close": "Fechar",
     "explorer.showing_rows": "Exibindo {{count}} linhas",
-    "explorer.chart_click_hint": "Clique em uma barra / fatia / ponto para filtro cruzado",
+    "explorer.chart_click_hint":
+      "Clique em uma barra / fatia / ponto para filtro cruzado",
     "fieldreports.add_trade": "Adicionar especialidade",
     "fieldreports.all_statuses": "Todos os status",
     "fieldreports.all_types": "Todos os tipos",
@@ -3352,12 +3771,15 @@ const resource = {
     "fieldreports.delays_placeholder": "Descreva os atrasos encontrados...",
     "fieldreports.deleted": "Diário de obra excluído",
     "fieldreports.deliveries": "Entregas",
-    "fieldreports.deliveries_placeholder": "Materiais ou equipamentos entregues...",
+    "fieldreports.deliveries_placeholder":
+      "Materiais ou equipamentos entregues...",
     "fieldreports.download_template": "Baixar modelo de importação",
-    "fieldreports.drop_file": "Solte o arquivo Excel ou CSV aqui, ou clique para navegar",
+    "fieldreports.drop_file":
+      "Solte o arquivo Excel ou CSV aqui, ou clique para navegar",
     "fieldreports.edit_report": "Editar diário de obra",
     "fieldreports.empty": "Nenhum diário de obra ainda",
-    "fieldreports.empty_desc": "Crie seu primeiro diário de obra para rastrear as atividades do canteiro.",
+    "fieldreports.empty_desc":
+      "Crie seu primeiro diário de obra para rastrear as atividades do canteiro.",
     "fieldreports.export": "Exportar",
     "fieldreports.export_failed": "Falha na exportação",
     "fieldreports.export_pdf": "Exportar PDF",
@@ -3369,20 +3791,23 @@ const resource = {
     "fieldreports.import": "Importar",
     "fieldreports.import_btn": "Importar",
     "fieldreports.import_reports": "Importar diários de obra",
-    "fieldreports.import_result": "Importados: {{imported}}, Ignorados: {{skipped}}, Erros: {{errors}}",
+    "fieldreports.import_result":
+      "Importados: {{imported}}, Ignorados: {{skipped}}, Erros: {{errors}}",
     "fieldreports.list_view": "Lista",
     "fieldreports.new_report": "Novo relatório",
     "fieldreports.no_match": "Nenhum relatório correspondente",
     "fieldreports.no_match_desc": "Tente ajustar os filtros de status ou tipo.",
     "fieldreports.no_project": "Selecionar projeto",
-    "fieldreports.no_project_desc": "Escolha um projeto na barra lateral para visualizar os diários de obra.",
+    "fieldreports.no_project_desc":
+      "Escolha um projeto na barra lateral para visualizar os diários de obra.",
     "fieldreports.notes": "Notas",
     "fieldreports.notes_placeholder": "Notas adicionais ou observações...",
     "fieldreports.report_date": "Data",
     "fieldreports.report_type": "Tipo de relatório",
     "fieldreports.row_error": "Linha {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Incidentes de segurança",
-    "fieldreports.safety_placeholder": "Relate qualquer incidente de segurança ou quase acidente...",
+    "fieldreports.safety_placeholder":
+      "Relate qualquer incidente de segurança ou quase acidente...",
     "fieldreports.show_errors": "Exibir detalhes dos erros",
     "fieldreports.stat_approved": "Aprovados",
     "fieldreports.stat_draft": "Rascunhos",
@@ -3405,7 +3830,8 @@ const resource = {
     "fieldreports.wind": "Vento",
     "fieldreports.wind_placeholder": "ex.: 15 km/h NO",
     "fieldreports.work_performed": "Serviços executados",
-    "fieldreports.work_performed_placeholder": "Descreva as atividades realizadas hoje...",
+    "fieldreports.work_performed_placeholder":
+      "Descreva as atividades realizadas hoje...",
     "fieldreports.workers": "trabalhadores",
     "fieldreports.workforce_section": "Mão de obra",
     "risk.all_categories": "Todas as categorias",
@@ -3417,17 +3843,20 @@ const resource = {
     "risk.contingency": "Plano de contingência",
     "risk.created": "Risco criado",
     "risk.critical": "Crítico (16-25)",
-    "risk.delete_message": "Este risco será removido permanentemente. Esta ação não pode ser desfeita.",
+    "risk.delete_message":
+      "Este risco será removido permanentemente. Esta ação não pode ser desfeita.",
     "risk.delete_title": "Excluir risco",
     "risk.deleted": "Risco excluído",
-    "risk.disclaimer": "A simulação Monte Carlo fornece apenas estimativas probabilísticas. Os resultados dependem das premissas de entrada.",
+    "risk.disclaimer":
+      "A simulação Monte Carlo fornece apenas estimativas probabilísticas. Os resultados dependem das premissas de entrada.",
     "risk.dist": "Distribuição",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Triangular",
     "risk.dist_uniform": "Uniforme",
     "risk.distribution": "Distribuição de custos (histograma)",
     "risk.empty": "Nenhum risco registrado",
-    "risk.empty_desc": "Adicione riscos para rastrear problemas potenciais e estratégias de mitigação",
+    "risk.empty_desc":
+      "Adicione riscos para rastrear problemas potenciais e estratégias de mitigação",
     "risk.export_csv": "Exportar CSV",
     "risk.exposure": "Exposição total",
     "risk.heatmap": "Matriz de riscos",
@@ -3468,7 +3897,8 @@ const resource = {
     "risk.severity": "Severidade do impacto",
     "risk.status": "Status",
     "risk.std_dev": "Desvio padrão",
-    "risk.subtitle": "Estimativa probabilística de custos com simulação Monte Carlo",
+    "risk.subtitle":
+      "Estimativa probabilística de custos com simulação Monte Carlo",
     "risk.title": "Análise de riscos (Monte Carlo)",
     "risk.title_placeholder": "ex.: Instabilidade do solo de fundação",
     "risk.top_drivers": "Top 10 fatores de risco",
@@ -3476,7 +3906,8 @@ const resource = {
     "risk.updated": "Risco atualizado",
     "risk.variance_share": "Participação na variância",
     "toasts.activity_created": "Atividade criada",
-    "toasts.assembly_applied": "Composição aplicada à planilha de quantitativos",
+    "toasts.assembly_applied":
+      "Composição aplicada à planilha de quantitativos",
     "toasts.assembly_deleted": "Composição excluída",
     "toasts.assembly_duplicated": "Composição duplicada",
     "toasts.bid_awarded": "Proposta adjudicada",
@@ -3497,14 +3928,18 @@ const resource = {
     "toasts.project_updated": "Projeto atualizado",
     "toasts.risk_analysis_complete": "Análise de riscos concluída",
     "toasts.schedule_created": "Cronograma criado",
-    "toasts.schedule_generated": "Cronograma gerado a partir da planilha de quantitativos",
+    "toasts.schedule_generated":
+      "Cronograma gerado a partir da planilha de quantitativos",
     "toasts.status_updated": "Status atualizado",
     "toasts.update_failed": "Falha na atualização",
-    "bim.cad_processing_note": "O processamento pode levar alguns minutos para arquivos grandes",
+    "bim.cad_processing_note":
+      "O processamento pode levar alguns minutos para arquivos grandes",
     "bim.cad_upload_queued": "Arquivo CAD na fila para processamento",
     "bim.cad_upload_success": "Arquivo CAD enviado",
-    "bim.cad_upload_success_desc": "Arquivo enviado com sucesso. O processamento começará em breve.",
-    "bim.confirm_delete_model": "Excluir \"{{name}}\"? Todos os elementos serão removidos.",
+    "bim.cad_upload_success_desc":
+      "Arquivo enviado com sucesso. O processamento começará em breve.",
+    "bim.confirm_delete_model":
+      'Excluir "{{name}}"? Todos os elementos serão removidos.',
     "bim.disc_architecture": "Arquitetura",
     "bim.disc_civil": "Engenharia civil",
     "bim.disc_electrical": "Elétrica",
@@ -3516,22 +3951,30 @@ const resource = {
     "bim.disc_structural": "Estrutural",
     "bim.discipline_label": "Disciplina",
     "bim.getting_started": "Visualizador BIM",
-    "bim.getting_started_desc": "Faça o upload de dados de elementos (CSV/Excel) e geometria 3D opcional (DAE) do seu conversor CAD para visualizar maquetes em 3D. Os elementos podem ser vinculados aos itens da planilha de quantitativos para verificação de quantitativos.",
+    "bim.getting_started_desc":
+      "Faça o upload de dados de elementos (CSV/Excel) e geometria 3D opcional (DAE) do seu conversor CAD para visualizar maquetes em 3D. Os elementos podem ser vinculados aos itens da planilha de quantitativos para verificação de quantitativos.",
     "bim.hide_upload": "Fechar",
     "bim.landing_drop_here": "Solte seu arquivo aqui",
-    "bim.landing_feat_3d_desc": "Visualizador Three.js interativo com filtragem por pavimento, coloração por disciplina e seleção de elementos.",
+    "bim.landing_feat_3d_desc":
+      "Visualizador Three.js interativo com filtragem por pavimento, coloração por disciplina e seleção de elementos.",
     "bim.landing_feat_3d_title": "Visualização 3D",
-    "bim.landing_feat_boq_desc": "Conecte elementos BIM a itens de custo para verificação automática de quantitativos e levantamento 5D.",
+    "bim.landing_feat_boq_desc":
+      "Conecte elementos BIM a itens de custo para verificação automática de quantitativos e levantamento 5D.",
     "bim.landing_feat_boq_title": "Vinculação à planilha de quantitativos",
-    "bim.landing_feat_compare_desc": "Compare versões para detectar automaticamente elementos adicionados, removidos e modificados.",
+    "bim.landing_feat_compare_desc":
+      "Compare versões para detectar automaticamente elementos adicionados, removidos e modificados.",
     "bim.landing_feat_compare_title": "Comparação de modelos",
-    "bim.landing_feat_extract_desc": "Paredes, lajes, pilares, vigas, MEP — com propriedades, áreas, volumes e classificação.",
+    "bim.landing_feat_extract_desc":
+      "Paredes, lajes, pilares, vigas, MEP — com propriedades, áreas, volumes e classificação.",
     "bim.landing_feat_extract_title": "Extração de elementos",
-    "bim.landing_feat_format_desc": "IFC processado instantaneamente. RVT via DDC cad2data. CSV/Excel para dados pré-convertidos.",
+    "bim.landing_feat_format_desc":
+      "IFC processado instantaneamente. RVT via DDC cad2data. CSV/Excel para dados pré-convertidos.",
     "bim.landing_feat_format_title": "Agnóstico de formato",
-    "bim.landing_feat_qty_desc": "Defina regras para extrair área, volume e comprimento — aplique em todo o modelo de uma só vez.",
+    "bim.landing_feat_qty_desc":
+      "Defina regras para extrair área, volume e comprimento — aplique em todo o modelo de uma só vez.",
     "bim.landing_feat_qty_title": "Mapas de quantitativos",
-    "bim.landing_hero_subtitle": "Faça o upload de arquivos IFC ou Revit para visualizar elementos do edifício, extrair quantitativos e vinculá-los à sua planilha de quantitativos.",
+    "bim.landing_hero_subtitle":
+      "Faça o upload de arquivos IFC ou Revit para visualizar elementos do edifício, extrair quantitativos e vinculá-los à sua planilha de quantitativos.",
     "bim.landing_hero_title": "Visualizador BIM 3D",
     "bim.landing_processing": "Processando...",
     "bim.landing_size_hint": "IFC, Revit, CSV ou Excel",
@@ -3542,11 +3985,14 @@ const resource = {
     "bim.model_name_placeholder": "ex.: Edifício A — Arquitetura",
     "bim.no_models_hint_upload": "Faça o upload de dados BIM para começar.",
     "bim.overlay_delete_btn": "Excluir",
-    "bim.overlay_error_desc": "Não foi possível extrair elementos. Tente converter para IFC primeiro ou faça o upload dos dados manualmente.",
+    "bim.overlay_error_desc":
+      "Não foi possível extrair elementos. Tente converter para IFC primeiro ou faça o upload dos dados manualmente.",
     "bim.overlay_error_title": "Falha no processamento",
-    "bim.overlay_needs_converter_desc": "Arquivos {{format}} requerem DDC cad2data para extração. Converta para IFC primeiro ou faça o upload de dados pré-convertidos.",
+    "bim.overlay_needs_converter_desc":
+      "Arquivos {{format}} requerem DDC cad2data para extração. Converta para IFC primeiro ou faça o upload de dados pré-convertidos.",
     "bim.overlay_needs_converter_title": "Conversor necessário",
-    "bim.overlay_processing_desc": "Extraindo elementos do seu arquivo {{format}}. Isso pode levar um momento.",
+    "bim.overlay_processing_desc":
+      "Extraindo elementos do seu arquivo {{format}}. Isso pode levar um momento.",
     "bim.overlay_processing_title": "Processando modelo...",
     "bim.overlay_upload_converted_btn": "Upload de dados convertidos",
     "bim.show_upload": "Upload de dados BIM",
@@ -3568,7 +4014,8 @@ const resource = {
     "bim.upload_data_columns": "Colunas detectadas",
     "bim.upload_data_hint": "CSV ou Excel do conversor CAD",
     "bim.upload_data_label": "Dados de elementos (obrigatório)",
-    "bim.upload_desc_full": "Upload de dados de elementos e geometria 3D opcional",
+    "bim.upload_desc_full":
+      "Upload de dados de elementos e geometria 3D opcional",
     "bim.upload_failed": "Falha no upload",
     "bim.upload_geo_hint": "Formato DAE (Collada) para visualização 3D",
     "bim.upload_geo_label": "Geometria 3D (opcional)",
@@ -3579,21 +4026,25 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "Geometria 3D",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle": "Já convertido? Faça upload de dados + geometria separadamente",
+    "bim.upload_advanced_mode_toggle":
+      "Já convertido? Faça upload de dados + geometria separadamente",
     "bim.upload_depth_label": "Profundidade de conversão",
     "bim.upload_depth_standard": "Padrão · categorias principais (rápido)",
     "bim.upload_depth_medium": "Médio · categorias estendidas (equilibrado)",
     "bim.upload_depth_complete": "Completo · todas as categorias (lento)",
-    "bim.upload_depth_help": "Controla quantas categorias do Revit são extraídas. IDs de elementos e propriedades completas são sempre preservados.",
+    "bim.upload_depth_help":
+      "Controla quantas categorias do Revit são extraídas. IDs de elementos e propriedades completas são sempre preservados.",
     "bim.upload_discipline_label": "Disciplina",
     "bim.upload_drop_here": "Solte o arquivo aqui",
-    "bim.upload_generate_pdf_label": "Exportar também as folhas do projeto como PDF (em segundo plano)",
+    "bim.upload_generate_pdf_label":
+      "Exportar também as folhas do projeto como PDF (em segundo plano)",
     "bim.upload_model_name_label": "Nome do modelo",
     "bim.upload_model_name_placeholder": "ex.: Edifício A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "Upload de modelo",
     "bim.upload_remove_file": "Remover",
-    "bim.upload_rvt_note": "Nota: arquivos RVT requerem DDC cad2data. Considere usar IFC.",
+    "bim.upload_rvt_note":
+      "Nota: arquivos RVT requerem DDC cad2data. Considere usar IFC.",
     "bim.upload_simple_mode_toggle": "Alternar para modo simples",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc)",
     "bim.upload_success_desc": "Modelo enviado com sucesso.",
@@ -3618,7 +4069,8 @@ const resource = {
     "modules.disabled": "{{name}} desativado",
     "modules.disabled_label": "Desativado",
     "modules.enabled": "{{name}} ativado",
-    "modules.page_subtitle": "Ativar, desativar e gerenciar módulos da plataforma",
+    "modules.page_subtitle":
+      "Ativar, desativar e gerenciar módulos da plataforma",
     "modules.page_title": "Módulos & Marketplace",
     "modules.required_by": "Necessário por: {{deps}}",
     "modules.required_by_short": "Necessário por {{count}} módulos",
@@ -3653,9 +4105,11 @@ const resource = {
     "reporting.invoices_month": "Faturas a vencer (mês)",
     "reporting.invoices_week": "Faturas a vencer (semana)",
     "reporting.no_boqs": "Nenhuma planilha de quantitativos neste projeto",
-    "reporting.no_finance_data": "Nenhum dado financeiro disponível para este projeto. Crie faturas e orçamentos primeiro.",
+    "reporting.no_finance_data":
+      "Nenhum dado financeiro disponível para este projeto. Crie faturas e orçamentos primeiro.",
     "reporting.no_projects": "Nenhum projeto encontrado",
-    "reporting.no_safety_data": "Nenhum dado de segurança disponível para este projeto.",
+    "reporting.no_safety_data":
+      "Nenhum dado de segurança disponível para este projeto.",
     "reporting.observations": "Observações",
     "reporting.on_track": "No prazo",
     "reporting.open": "Aberto",
@@ -3679,7 +4133,8 @@ const resource = {
     "reporting.schedule_progress": "Progresso do cronograma",
     "reporting.schedule_summary": "Resumo do cronograma",
     "reporting.select_project": "Projeto",
-    "reporting.select_project_prompt": "Selecione um projeto para visualizar o painel",
+    "reporting.select_project_prompt":
+      "Selecione um projeto para visualizar o painel",
     "reporting.spi": "SPI do cronograma",
     "reporting.subtitle": "Painéis de relatórios",
     "reporting.today_activities": "Total de atividades",
@@ -3694,12 +4149,14 @@ const resource = {
     "settings.tm_showing": "Exibindo {{count}} de {{total}} chaves",
     "punch.stat_avg_close": "Prazo médio de encerramento (dias)",
     "match_elements.title": "Associar elementos",
-    "match_elements.subtitle": "Mapear elementos BIM → posições CWICR. BIM está ativo; DWG / PDF / Foto chegam nas próximas fases.",
+    "match_elements.subtitle":
+      "Mapear elementos BIM → posições CWICR. BIM está ativo; DWG / PDF / Foto chegam nas próximas fases.",
     "match_elements.select_project": "Selecionar projeto…",
     "match_elements.source.bim_live": "BIM (ativo)",
     "match_elements.library": "Biblioteca",
     "match_elements.library_title": "Biblioteca de modelos entre projetos",
-    "match_elements.refresh_title": "Atualizar — busca os elementos BIM mais recentes",
+    "match_elements.refresh_title":
+      "Atualizar — busca os elementos BIM mais recentes",
     "match_elements.clear_filter": "limpar filtro",
     "match_elements.clear_selection": "limpar seleção",
     "match_elements.session_id": "Sessão {{id}}…",
@@ -3707,9 +4164,11 @@ const resource = {
     "match_elements.detail": "Detalhe",
     "match_elements.no_match": "Sem correspondência…",
     "match_elements.loading_groups": "Carregando grupos…",
-    "match_elements.no_groups": "Nenhum grupo ainda — importe um modelo BIM para preencher este projeto.",
+    "match_elements.no_groups":
+      "Nenhum grupo ainda — importe um modelo BIM para preencher este projeto.",
     "match_elements.loading_detail": "Carregando detalhe…",
-    "match_elements.footer": "Fases A.10–A.12 — seleção múltipla, confirmação por limiar, fluxo sem correspondência e biblioteca de modelos por inquilino estão ativos. Chips arrastáveis e destaque 3D chegam na fase B.",
+    "match_elements.footer":
+      "Fases A.10–A.12 — seleção múltipla, confirmação por limiar, fluxo sem correspondência e biblioteca de modelos por inquilino estão ativos. Chips arrastáveis e destaque 3D chegam na fase B.",
     "match_elements.aria.select_all": "Selecionar todos os grupos visíveis",
     "match_elements.aria.select_group": "Selecionar {{key}}",
     "match_elements.col.group": "Grupo",
@@ -3726,46 +4185,62 @@ const resource = {
     "match_elements.status.tbd": "a definir",
     "match_elements.status.applied": "aplicado",
     "match_elements.status.overridden": "sobrescrito",
-    "match_elements.action.vector_selected": "Correspondência vetorial ({{count}})",
+    "match_elements.action.vector_selected":
+      "Correspondência vetorial ({{count}})",
     "match_elements.action.vector_all": "Correspondência vetorial — top 10",
     "match_elements.action.lexical_selected": "Léxica ({{count}})",
     "match_elements.action.lexical_all": "Correspondência léxica — top 10",
     "match_elements.action.resources_selected": "Recursos ({{count}})",
-    "match_elements.action.resources_all": "Correspondência de recursos — top 10",
-    "match_elements.action.resources_title": "Associar com o catálogo de materiais/recursos",
+    "match_elements.action.resources_all":
+      "Correspondência de recursos — top 10",
+    "match_elements.action.resources_title":
+      "Associar com o catálogo de materiais/recursos",
     "match_elements.action.confirm_selected": "Confirmar {{count}} ≥ {{thr}}",
     "match_elements.action.confirm_all": "Confirmar tudo ≥ {{thr}}",
     "match_elements.action.skip_n": "Ignorar {{count}} (a definir)",
-    "match_elements.busy.run_selected": "Executando matcher {{method}} em {{count}} selecionados…",
-    "match_elements.busy.run_all": "Executando matcher {{method}} em todos os grupos…",
-    "match_elements.busy.bulk_confirm_selected": "Confirmando em lote {{count}} selecionados ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all": "Confirmando correspondências em lote ≥ {{thr}}…",
+    "match_elements.busy.run_selected":
+      "Executando matcher {{method}} em {{count}} selecionados…",
+    "match_elements.busy.run_all":
+      "Executando matcher {{method}} em todos os grupos…",
+    "match_elements.busy.bulk_confirm_selected":
+      "Confirmando em lote {{count}} selecionados ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all":
+      "Confirmando correspondências em lote ≥ {{thr}}…",
     "match_elements.busy.mark_tbd": "Marcando {{count}} grupos como a definir…",
     "match_elements.alert.confirmed": "{{count}} grupos confirmados",
-    "match_elements.alert.marked_tbd": "{{count}} grupos marcados como a definir",
+    "match_elements.alert.marked_tbd":
+      "{{count}} grupos marcados como a definir",
     "match_elements.detail.elements_count": "{{count}} elementos",
-    "match_elements.detail.no_matchers_run": "Nenhum matcher foi executado para este grupo ainda.",
-    "match_elements.detail.use_action_bar": "Use os botões da barra de ações acima.",
+    "match_elements.detail.no_matchers_run":
+      "Nenhum matcher foi executado para este grupo ainda.",
+    "match_elements.detail.use_action_bar":
+      "Use os botões da barra de ações acima.",
     "match_elements.detail.col.code": "Código",
     "match_elements.detail.col.description": "Descrição",
     "match_elements.detail.col.unit_rate": "Unidade · Preço",
     "match_elements.detail.col.conf": "Conf.",
     "match_elements.detail.confirm": "Confirmar",
-    "match_elements.detail.element_ids_count": "{{count}} ID(s) de elementos. Destaque 3D na fase A.12.",
+    "match_elements.detail.element_ids_count":
+      "{{count}} ID(s) de elementos. Destaque 3D na fase A.12.",
     "match_elements.detail.and_more": "…e mais {{count}}",
     "match_elements.detail.building_preview": "Construindo prévia…",
-    "match_elements.detail.auto_loaded_resources": "Recursos carregados automaticamente:",
-    "match_elements.detail.confirm_first": "Confirme primeiro uma correspondência para ver a prévia do orçamento.",
+    "match_elements.detail.auto_loaded_resources":
+      "Recursos carregados automaticamente:",
+    "match_elements.detail.confirm_first":
+      "Confirme primeiro uma correspondência para ver a prévia do orçamento.",
     "match_elements.tab.methods": "Candidatos à correspondência",
     "match_elements.tab.elements": "Elementos ({{count}})",
     "match_elements.tab.apply": "Prévia da aplicação",
     "match_elements.no_match.heading": "Sem correspondência — escolha uma ação",
     "match_elements.no_match.custom.title": "Criar posição personalizada",
-    "match_elements.no_match.custom.sub": "Adicionar uma posição específica do projeto com descrição, unidade e preço.",
+    "match_elements.no_match.custom.sub":
+      "Adicionar uma posição específica do projeto com descrição, unidade e preço.",
     "match_elements.no_match.rfq.title": "Enviar para concorrência",
-    "match_elements.no_match.rfq.sub": "Marcar para concorrência — solicitar cotações de subcontratados.",
+    "match_elements.no_match.rfq.sub":
+      "Marcar para concorrência — solicitar cotações de subcontratados.",
     "match_elements.no_match.tbd.title": "Marcar a definir",
-    "match_elements.no_match.tbd.sub": "Suspender o grupo; revisar mais tarde. Excluído dos totais do orçamento até a resolução.",
+    "match_elements.no_match.tbd.sub":
+      "Suspender o grupo; revisar mais tarde. Excluído dos totais do orçamento até a resolução.",
     "match_elements.no_match.placeholder.description": "Descrição da posição",
     "match_elements.no_match.placeholder.unit": "Unidade",
     "match_elements.no_match.placeholder.rate": "Preço unitário",
@@ -3775,38 +4250,49 @@ const resource = {
     "match_elements.templates.count": "{{count}} assinaturas",
     "match_elements.templates.loading": "Carregando biblioteca…",
     "match_elements.templates.empty": "Nenhum modelo salvo ainda.",
-    "match_elements.templates.empty_hint": "As correspondências confirmadas com «Salvar na biblioteca» ativado aparecem aqui e se propagam para projetos futuros.",
+    "match_elements.templates.empty_hint":
+      "As correspondências confirmadas com «Salvar na biblioteca» ativado aparecem aqui e se propagam para projetos futuros.",
     "match_elements.templates.unnamed": "(sem nome)",
     "match_elements.templates.sig": "assinatura: {{prefix}}…",
     "match_elements.templates.used": "Usado",
     "match_elements.templates.last": "último uso {{date}}",
-    "match_elements.templates.remove_confirm": "Remover este modelo da biblioteca?",
+    "match_elements.templates.remove_confirm":
+      "Remover este modelo da biblioteca?",
     "match_elements.templates.remove_title": "Remover da biblioteca",
-    "match_elements.templates.footer": "Os modelos são por inquilino. Assinaturas confirmadas sugerem correspondências automaticamente em projetos futuros.",
+    "match_elements.templates.footer":
+      "Os modelos são por inquilino. Assinaturas confirmadas sugerem correspondências automaticamente em projetos futuros.",
     "match_elements.no_project_title": "Nenhum projeto ativo selecionado.",
-    "match_elements.no_project_hint": "Abra o seletor de projetos no cabeçalho ou acesse",
+    "match_elements.no_project_hint":
+      "Abra o seletor de projetos no cabeçalho ou acesse",
     "match_elements.active_project": "Projeto ativo",
     "match_elements.loading_sessions": "Carregando sessões…",
-    "match_elements.no_prior_sessions": "Sem sessões de correspondência anteriores para este projeto.",
+    "match_elements.no_prior_sessions":
+      "Sem sessões de correspondência anteriores para este projeto.",
     "match_elements.session_default_name": "Sessão {{id}}",
     "match_elements.new_session": "Nova sessão",
     "match_elements.new_text.button": "De texto",
     "match_elements.new_text.button_title": "Cole descrições — uma por linha",
     "match_elements.new_text.title": "Nova sessão — cole descrições",
-    "match_elements.new_text.hint": "Uma linha por item. Cada linha torna-se um grupo; a busca semântica encontra os preços CWICR mais próximos. Qualquer idioma — o codificador multilíngue lida com consultas em vários idiomas.",
+    "match_elements.new_text.hint":
+      "Uma linha por item. Cada linha torna-se um grupo; a busca semântica encontra os preços CWICR mais próximos. Qualquer idioma — o codificador multilíngue lida com consultas em vários idiomas.",
     "match_elements.new_text.name_label": "Nome da sessão (opcional)",
     "match_elements.new_text.name_placeholder": "ex. Estimativa rápida T3",
     "match_elements.new_text.lines_label": "Descrições (uma por linha)",
-    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder":
+      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Criar sessão",
     "match_elements.new_excel.button": "De Excel BoQ",
     "match_elements.new_excel.button_title": "Carregar um Orçamento .xlsx",
     "match_elements.new_excel.title": "Nova sessão a partir de Excel BoQ",
-    "match_elements.new_excel.hint": "Carregue um .xlsx com pelo menos uma coluna « Descrição » (ou seu equivalente localizado — Description, Beschreibung, Описание, 描述, etc.). Colunas opcionais: Quantidade, Unidade, Código, Categoria. Quantidades com vírgula decimal são reconhecidas.",
+    "match_elements.new_excel.hint":
+      "Carregue um .xlsx com pelo menos uma coluna « Descrição » (ou seu equivalente localizado — Description, Beschreibung, Описание, 描述, etc.). Colunas opcionais: Quantidade, Unidade, Código, Categoria. Quantidades com vírgula decimal são reconhecidas.",
     "match_elements.new_excel.name_label": "Nome da sessão (opcional)",
-    "match_elements.new_excel.name_placeholder": "ex. Orçamento licitação rev 3",
-    "match_elements.new_excel.drop": "Solte seu .xlsx aqui ou clique para procurar",
-    "match_elements.new_excel.format_hint": "Apenas .xlsx · cabeçalhos multilíngues suportados",
+    "match_elements.new_excel.name_placeholder":
+      "ex. Orçamento licitação rev 3",
+    "match_elements.new_excel.drop":
+      "Solte seu .xlsx aqui ou clique para procurar",
+    "match_elements.new_excel.format_hint":
+      "Apenas .xlsx · cabeçalhos multilíngues suportados",
     "match_elements.new_excel.create": "Carregar e criar sessão",
     "match_elements.legend_label": "Confiança",
     "match_elements.legend_high": "Alta",
@@ -3814,16 +4300,21 @@ const resource = {
     "match_elements.legend_low": "Baixa",
     "match_elements.col.suggested": "Custo sugerido",
     "match_elements.subtractive_hint": "Subtrativo / não faturável",
-    "match_elements.detail.opening_warning": "o host tem aberturas mas bruto == líquido (bug de exportação IFC)",
-    "match_elements.detail.candidate_no_id": "Candidato sem id de BD — não é possível confirmar",
+    "match_elements.detail.opening_warning":
+      "o host tem aberturas mas bruto == líquido (bug de exportação IFC)",
+    "match_elements.detail.candidate_no_id":
+      "Candidato sem id de BD — não é possível confirmar",
     "match_elements.detail.apply_total": "Total",
     "match_elements.auto_confirm_threshold": "Limite de auto-confirmação",
-    "match_elements.auto_confirm_help": "Correspondências sugeridas a ou acima desta pontuação são auto-confirmadas.",
+    "match_elements.auto_confirm_help":
+      "Correspondências sugeridas a ou acima desta pontuação são auto-confirmadas.",
     "match_elements.use_net": "Usar quantidades líquidas (subtrair aberturas)",
-    "match_elements.use_net_help": "Desligado = bruto. Por padrão deduz IfcOpeningElement / IfcRelVoidsElement das quantidades do host.",
+    "match_elements.use_net_help":
+      "Desligado = bruto. Por padrão deduz IfcOpeningElement / IfcRelVoidsElement das quantidades do host.",
     "match_elements.trade_filter": "Filtrar por especialidade",
     "match_elements.stage_label": "Fase da obra",
-    "match_elements.stage_help": "Fixar correspondências a uma fase OmniClass. Deixe em branco para buscar em todas as fases.",
+    "match_elements.stage_help":
+      "Fixar correspondências a uma fase OmniClass. Deixe em branco para buscar em todas as fases.",
     "match_elements.stage_any": "Qualquer fase",
     "match_elements.stage.02_Demolition": "Demolição",
     "match_elements.stage.03_Earthwork": "Terraplenagem",
@@ -3844,9 +4335,11 @@ const resource = {
     "match_elements.group_by_sample": "ex.",
     "match_elements.loading_attributes": "Carregando…",
     "match_elements.action.apply": "Aplicar ao BOQ ({{n}})",
-    "match_elements.action.apply_title": "Gravar correspondências confirmadas no BOQ do projeto",
+    "match_elements.action.apply_title":
+      "Gravar correspondências confirmadas no BOQ do projeto",
     "match_elements.busy.applying": "Aplicando grupos confirmados ao BOQ…",
-    "match_elements.alert.applied": "Criadas {{n}} posições do BOQ · total {{total}} {{ccy}}",
+    "match_elements.alert.applied":
+      "Criadas {{n}} posições do BOQ · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visíveis",
     "match_elements.selected_count": "{{n}} selecionados",
     "match_elements.trade.architectural": "Arquitetura",
@@ -3861,10 +4354,12 @@ const resource = {
     "nav.add_module": "Adicionar módulo",
     "nav.add_module_hint": "Crie o seu · guia do desenvolvedor",
     "nav.request_custom_module": "Solicitar módulo personalizado",
-    "nav.request_custom_module_hint": "Está faltando algo? Diga-nos o que precisa",
+    "nav.request_custom_module_hint":
+      "Está faltando algo? Diga-nos o que precisa",
     "modules.dev_guide": "Criar um módulo — guia do desenvolvedor",
     "boq.accept": "Aceitar",
-    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions":
+      "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Adicionar coluna",
@@ -3886,54 +4381,68 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip":
+      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle":
+      "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic":
+      "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary":
+      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg":
+      "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs":
+      "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection":
+      "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc":
+      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle":
+      "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle":
+      "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer":
+      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip":
+      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count":
+      "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip":
+      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -3947,22 +4456,27 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available":
+      "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message":
+      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed":
+      "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title":
+      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip":
+      "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -3989,19 +4503,22 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
+    "boq.column_delete_confirm":
+      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
+    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint":
+      "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
+    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options": "Select column needs at least one option",
+    "boq.column_select_needs_options":
+      "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Tipo",
@@ -4021,13 +4538,17 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query": "Enter a description to search the cost database",
+    "boq.cost_finder_no_query":
+      "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder":
+      "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip":
+      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error":
+      "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4037,8 +4558,10 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint":
+      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle":
+      "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4047,7 +4570,8 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint":
+      "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Orçamento",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4060,28 +4584,35 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc":
+      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc":
+      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
+    "boq.grand_total_conversion_tooltip_v2":
+      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint":
+      "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint":
+      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint":
+      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout":
+      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4092,13 +4623,16 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count":
+      "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm":
+      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip":
+      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4109,7 +4643,8 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint":
+      "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4119,52 +4654,64 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns":
+      "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help":
+      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
+    "boq.no_quantities_hint_button":
+      'No quantities — press "Show all" above to surface every BIM property',
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title":
+      "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint":
+      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data":
+      "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder":
+      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc":
+      "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip":
+      "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
+    "boq.preset_already_applied":
+      "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint":
+      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc":
+      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4173,29 +4720,40 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources":
+      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1":
+      "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2":
+      "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3":
+      "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning":
+      "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped":
+      "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual":
+      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint":
+      "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip":
+      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle":
+      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint":
+      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4203,14 +4761,19 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc":
+      "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc":
+      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc":
+      "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc":
+      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning":
+      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4218,28 +4781,41 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Moeda",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom":
+      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint":
+      "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match":
+      "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge":
+      "Variant resource — multiple price options available",
     "boq.resource_name": "Nome",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate":
+      "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click":
+      "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base":
+      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Tipo",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip":
+      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default":
+      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked":
+      "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked":
+      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4247,19 +4823,25 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip":
+      "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip":
+      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog":
+      "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip":
+      "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip":
+      "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip":
+      "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4268,8 +4850,10 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources": "Search cost items to add as resources to position",
-    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources":
+      "Search cost items to add as resources to position",
+    "boq.search_catalog_resources":
+      "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4277,7 +4861,8 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error":
+      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4306,7 +4891,8 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint":
+      "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4317,9 +4903,11 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement":
+      "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title":
+      "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4327,20 +4915,25 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria":
+      "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default":
+      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked":
+      "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset":
+      "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip":
+      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4357,48 +4950,64 @@ const resource = {
     "boq.variables_description": "Descrição",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help":
+      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Nome",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Tipo",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg":
+      "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip":
+      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip":
+      "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip":
+      "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip":
+      "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip":
+      "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc":
+      "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc":
+      "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg":
+      "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg":
+      "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc":
+      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty":
+      "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial":
+      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum":
+      "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Conformidade",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle":
+      "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4429,8 +5038,10 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability": "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability":
+      "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp":
+      "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4444,9 +5055,11 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description":
+      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description":
+      "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4469,7 +5082,8 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body":
+      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -4477,7 +5091,8 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region":
+      "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -4495,23 +5110,30 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder":
+      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Pesquisar",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading":
+      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
-    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline":
+      "Cost items are saved locally and available offline.",
+    "costs.description_placeholder":
+      "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above":
+      "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Equipamento",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc":
+      "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer":
+      "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -4530,21 +5152,26 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed":
+      "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint":
+      "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint":
+      "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint": "Positions created with unit rates from cost database",
+    "costs.positions_created_hint":
+      "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
-    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": 'No regions match "{{q}}"',
+    "costs.region_filter_placeholder":
+      "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -4577,12 +5204,14 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip":
+      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding":
+      "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -4595,7 +5224,8 @@ const resource = {
     "files.activity.title": "Atividade",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint":
+      "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Usuário desconhecido",
@@ -4609,7 +5239,8 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle":
+      "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -4624,12 +5255,15 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural":
+      "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate": "This member already has access at this level.",
+    "files.permissions.error_duplicate":
+      "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle":
+      "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Senha",
@@ -4644,59 +5278,85 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed":
+      "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
-    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
-    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
-    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail":
+      "{{failed}} file(s) could not be deleted.",
+    "onboarding.mode_simple_desc":
+      "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_advanced_desc":
+      "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "project_intelligence.ai.cost_advisor_title":
+      "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc":
+      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title":
+      "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub":
+      "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub":
+      "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio":
+      "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub":
+      "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub":
+      "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration":
+      "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub":
+      "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint":
+      "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
+    "project_intelligence.chat_error":
+      "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt":
+      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact":
+      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub":
+      "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub":
+      "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin":
+      "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body":
+      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote":
+      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title":
+      "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc":
+      "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations":
+      "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -4705,18 +5365,24 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191":
+      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain":
+      "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc":
+      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt":
+      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Fotos",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc":
+      "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc":
+      "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -4736,7 +5402,8 @@ const resource = {
     "takeoff.markup.close": "Fechar",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Comentários",
-    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty":
+      "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -4746,7 +5413,8 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm":
+      "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Fechar",
@@ -4756,8 +5424,10 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description":
+      "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc":
+      "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -4773,7 +5443,8 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle":
+      "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -4787,14 +5458,18 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
+    "finance.boq_tip_desc":
+      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
     "finance.boq_tip_title": "Dica:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint":
+      "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Orçamento",
-    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder":
+      "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation":
+      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Equipamento",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -4808,8 +5483,10 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Moeda",
     "finance.direction": "Direction",
-    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file":
+      "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation":
+      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -4823,11 +5500,14 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result":
+      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder":
+      "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation":
+      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -4835,12 +5515,15 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc":
+      "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip":
+      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation":
+      "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -4871,15 +5554,19 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body":
+      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body":
+      "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body":
+      "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body":
+      "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Adicionar item",
@@ -4900,7 +5587,8 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder": "Optional notes or special instructions...",
+    "procurement.notes_placeholder":
+      "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -4911,60 +5599,87 @@ const resource = {
     "procurement.subtotal": "Subtotal",
     "procurement.tax": "Tax",
     "procurement.total": "Total",
-    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help":
+      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "match_elements.info.button_aria": "How matching works",
     "match_elements.info.button_title": "How matching works",
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer": "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract":
+      "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search":
+      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist":
+      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save":
+      "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer":
+      "Saved sessions live in the list on this page.",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help":
+      "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help":
+      "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help":
+      "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help":
+      "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help":
+      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help":
+      "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail":
+      "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail":
+      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
+    "match_elements.vector_status_missing_detail":
+      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail":
+      "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail":
+      "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail":
+      "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help":
+      "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title":
+      "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail":
+      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail":
+      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title":
+      "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail":
+      "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail":
+      "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available":
+      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint":
+      "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -4982,12 +5697,17 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body":
+      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
-    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption":
+      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption":
+      "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after":
+      "After install, restart the backend.",
+    "match_elements.embedder_size_caption":
+      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -4998,8 +5718,10 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption":
+      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption":
+      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5040,14 +5762,18 @@ const resource = {
     "match_progress.title_running": "Correspondência em andamento",
     "match_progress.title_done": "Correspondência concluída",
     "match_progress.title_error": "Correspondência falhou",
-    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running":
+      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done":
+      "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error":
+      "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Decorrido",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long": "Almost done — large projects can take a minute",
+    "match_progress.headline_long":
+      "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5057,7 +5783,8 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint":
+      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "Correspondência falhou",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5075,9 +5802,629 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Incorporadora imobiliária",
-    "onboarding.company_property_developer_desc": "Equipas de incorporação imobiliária",
+    "onboarding.company_property_developer_desc":
+      "Equipas de incorporação imobiliária",
     "onboarding.explore_all_modules": "Explorar todos os {{count}} módulos",
-  }
+    "boq.add_child_position": "Adicionar subitem",
+    "boq.add_sub_section": "Adicionar subseção",
+    "boq.ai_no_answer":
+      "O assistente não retornou uma resposta. Reformule ou tente novamente.",
+    "boq.compare_added": "Adicionados",
+    "boq.compare_against": "Comparar com",
+    "boq.compare_btn": "Comparar",
+    "boq.compare_btn_hint": "Comparar esta planilha com outra",
+    "boq.compare_col_delta": "Δ base",
+    "boq.compare_col_line": "Linha",
+    "boq.compare_col_qty": "Qtd.",
+    "boq.compare_col_rate": "PU",
+    "boq.compare_error": "Não foi possível comparar estas planilhas.",
+    "boq.compare_hide_unchanged": "Ocultar linhas inalteradas",
+    "boq.compare_no_diff": "Sem diferenças entre estas planilhas.",
+    "boq.compare_pick": "— Selecione uma planilha —",
+    "boq.compare_qty": "Qtd.",
+    "boq.compare_rate": "PU",
+    "boq.compare_removed": "Removidos",
+    "boq.compare_select_hint":
+      "Selecione outra planilha acima para ver a comparação linha a linha.",
+    "boq.compare_unchanged": "Inalterados",
+    "boq.compare_ct_added": "Adicionados",
+    "boq.compare_ct_removed": "Removidos",
+    "boq.compare_ct_qty_changed": "Qtd.",
+    "boq.compare_ct_rate_changed": "PU",
+    "boq.compare_ct_changed": "Alterados",
+    "boq.compare_ct_unchanged": "Inalterados",
+    "boq.model_link_action": "Vínculo ao modelo…",
+    "boq.model_link_aggregation": "Agregação",
+    "boq.model_link_agg_sum": "Soma",
+    "boq.model_link_agg_max": "Máx",
+    "boq.model_link_agg_min": "Mín",
+    "boq.model_link_agg_count": "Contagem",
+    "boq.model_link_agg_first": "Primeiro",
+    "boq.model_link_create": "Criar vínculo",
+    "boq.model_link_created": "Vínculo ao modelo criado",
+    "boq.model_link_created_hint":
+      "A quantidade ainda não foi atualizada — use «Atualizar do modelo» e depois Aplicar para trazê-la.",
+    "boq.model_link_delete": "Excluir vínculo",
+    "boq.model_link_delete_failed":
+      "Não foi possível remover o vínculo ao modelo",
+    "boq.model_link_deleted": "Vínculo ao modelo removido",
+    "boq.model_link_elem_count": "{{count}} elemento(s)",
+    "boq.model_link_elements": "Elementos ({{selected}} selecionados)",
+    "boq.model_link_existing": "Vínculos existentes",
+    "boq.model_link_failed": "Não foi possível criar o vínculo ao modelo",
+    "boq.model_link_model": "Modelo BIM",
+    "boq.model_link_new": "Novo vínculo",
+    "boq.model_link_no_elements": "Este modelo não tem elementos.",
+    "boq.model_link_no_models": "Este projeto ainda não tem modelos BIM.",
+    "boq.model_link_none": "Ainda não há vínculos ao modelo para este item.",
+    "boq.model_link_pick_field": "— Selecione uma quantidade —",
+    "boq.model_link_pick_model": "— Selecione um modelo —",
+    "boq.model_link_quantity_field": "Campo de quantidade",
+    "boq.model_link_status_active": "Sincronizado",
+    "boq.model_link_status_stale": "Desatualizado",
+    "boq.model_link_status_broken": "Rompido",
+    "boq.model_link_subtitle":
+      "Item {{ordinal}} — vincular a quantidade a elementos do modelo BIM",
+    "boq.model_link_title": "Vínculo ao modelo",
+    "boq.model_link_version": "modelo v{{v}}",
+    "boq.model_review_all_synced":
+      "Todas as quantidades vinculadas estão sincronizadas com o modelo.",
+    "boq.model_review_applied":
+      "{{count}} atualização(ões) de quantidade aplicada(s)",
+    "boq.model_review_apply": "Aplicar {{count}} selecionado(s)",
+    "boq.model_review_apply_failed": "Falha ao aplicar",
+    "boq.model_review_btn": "Sincr. modelo",
+    "boq.model_review_btn_hint":
+      "Recarregar quantidades dos modelos BIM vinculados",
+    "boq.model_review_hint":
+      "Recalcula as quantidades vinculadas contra a última versão do modelo. Nada muda até clicar em Aplicar.",
+    "boq.model_review_missing": "{{count}} ausente(s)",
+    "boq.model_review_no_links": "Sem vínculos ao modelo nesta planilha",
+    "boq.model_review_refresh": "Atualizar do modelo",
+    "boq.model_review_refresh_failed": "Falha ao atualizar do modelo",
+    "boq.model_review_run":
+      "Execute uma atualização para ver as mudanças vindas do modelo.",
+    "boq.model_review_title": "Revisão de quantidades do modelo",
+    "boq.position_added_edit_hint":
+      "Digite a descrição e use Tab para passar pela unidade, quantidade e PU",
+    "boq.link_badge_instance":
+      "Instância vinculada do código {{code}} — alterar sua definição fará com que divirja",
+    "boq.link_badge_master": "Mestre do código {{code}} — {{count}} vinculados",
+    "boq.link_master_badge": "Mestre",
+    "boq.link_propagated_msg":
+      "{{count}} item(ns) vinculado(s) atualizado(s) no projeto.",
+    "boq.link_propagated_title": "Definição propagada",
+    "boq.max_depth_reached_tooltip":
+      "Profundidade máxima de aninhamento de {{max}} níveis atingida — achate a estrutura ou use menos subníveis.",
+    "boq.resource_link_propagated_msg":
+      "Recurso compartilhado atualizado em {{count}} outro(s) item(ns) do projeto.",
+    "boq.resource_link_propagated_title": "Definição de recurso propagada",
+    "boq.link_role_instance": "Instância vinculada",
+    "boq.link_role_master": "Mestre (definição de referência)",
+    "boq.link_unlinked_msg":
+      "Sua edição alterou esta cópia vinculada, por isso ela não segue mais o código compartilhado. Se não pretendia diferenciá-la, restaure seu código original.",
+    "boq.link_unlinked_title": "Item desvinculado do código compartilhado",
+    "boq.linked_positions_count":
+      "{{total}} itens compartilham este código ({{instances}} instância(s) vinculada(s)). O mestre é a definição de referência; editá-lo se propaga a todas as instâncias do projeto.",
+    "boq.linked_positions_error":
+      "Não foi possível carregar os itens vinculados.",
+    "boq.linked_positions_none":
+      "Este item é autônomo — nenhum outro compartilha seu código.",
+    "boq.linked_positions_subtitle":
+      "Código {{code}} — visualização a partir do item {{ordinal}}",
+    "boq.linked_positions_title": "Itens vinculados",
+    "boq.no_description": "(sem descrição)",
+    "boq.reuse_code_action": "Reutilizar código existente…",
+    "boq.reuse_code_existing": "Códigos existentes: {{codes}}",
+    "boq.reuse_code_msg":
+      "Instância vinculada criada — {{count}} itens compartilham este código. A quantidade é editável de forma independente.",
+    "boq.reuse_code_prompt":
+      "Insira um código existente para reutilizá-lo aqui (definição e subitens são copiados; a quantidade permanece independente):",
+    "boq.reuse_code_title": "Código {{code}} reutilizado",
+    "boq.show_linked": "Mostrar itens vinculados",
+    "boq.unlink_done_msg":
+      "Código {{code}} mantido. Este item não segue mais o código compartilhado; seus valores foram preservados.",
+    "boq.unlink_done_title": "Item desvinculado",
+    "boq.unlink_failed": "Falha ao desvincular o item",
+    "boq.unlink_this": "Desvincular este item",
+    "login.github": "GitHub",
+    "login.github_sub": "Código-fonte",
+    "login.community": "Comunidade",
+    "login.community_sub": "Ajuda e discussão",
+    "login.brand_edit": "Personalizar logo",
+    "login.brand_title": "Personalização white-label",
+    "login.brand_desc":
+      "Exibido nesta tela de login e em todo o app. Armazenado apenas neste navegador.",
+    "login.brand_upload": "Enviar logo",
+    "login.brand_name_ph": "Nome da empresa",
+    "login.brand_reset": "Restaurar padrão",
+    "login.brand_too_big": "Imagem muito grande (máx. 512 KB).",
+    "login.brand_bad_type": "Escolha uma imagem PNG, JPG, SVG ou WebP.",
+    "nav.project_route": "Trajeto do projeto",
+    "nav.phase_estimation": "Orçamento",
+    "nav.phase_planning": "Planejamento",
+    "nav.phase_execution": "Execução",
+    "nav.phase_closure": "Qualidade e encerramento",
+    "nav.clash_detection": "Detecção de interferências",
+    "schedule_advanced.master_hint":
+      "Selecione um cronograma mestre para torná-lo o plano de trabalho das abas Fases, Look-Ahead, Semanal e Restrições. As ações de linha permitem renomear, alterar datas e status, ou excluir.",
+    "schedule_advanced.no_master_yet_desc":
+      "O cronograma mestre é o plano de nível superior ao qual convergem todos os planos de fase, look-ahead e semanais. Crie um para iniciar a pull-planning — pode ser renomeado, ter as datas alteradas ou ser excluído a qualquer momento.",
+    "schedule_advanced.active_selection": "Plano de trabalho",
+    "schedule_advanced.master_status.active": "Ativo",
+    "schedule_advanced.master_status.archived": "Arquivado",
+    "schedule_advanced.edit_master": "Editar cronograma mestre",
+    "schedule_advanced.master_updated": "Cronograma mestre atualizado",
+    "schedule_advanced.master_deleted": "Cronograma mestre excluído",
+    "schedule_advanced.delete_master_title": "Excluir o cronograma mestre?",
+    "schedule_advanced.delete_master_message":
+      "«{{name}}» e tudo o que está abaixo dele — planos de fase, look-aheads, planos semanais, compromissos e baselines — serão excluídos permanentemente. Isso não pode ser desfeito.",
+    "schedule_advanced.err_master_name_required":
+      "O nome do cronograma mestre é obrigatório.",
+    "schedule_advanced.master_name_placeholder":
+      "ex. Cronograma mestre da obra",
+    "schedule_advanced.master_status_hint":
+      "Arquive um cronograma para manter seu histórico sem que ele seja o plano de trabalho. Os arquivados podem ser reativados aqui a qualquer momento.",
+    "schedule_advanced.master_notes_placeholder":
+      "Escopo, referência contratual, marcos-chave…",
+    "files.cta.add_first_short": "Adicionar arquivos",
+    "files.folder.files_count": "arquivos",
+    "files.folder.subfolders": "{{count}} pastas",
+    "files.folder.share": "{{pct}}% do armazenamento total",
+    "notifications.safety.incident_created":
+      "Incidente de segurança registrado",
+    "notifications.safety.incident_created_body":
+      "Incidente {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation":
+      "Observação de segurança de alto risco",
+    "notifications.safety.high_risk_body":
+      "Observação {{observation_number}} (risco {{risk_score}}): {{description}}",
+    "notifications.bi.alert.title": "Alerta do dashboard disparado",
+    "notifications.bi.alert.body":
+      "{{alert_name}} — {{kpi_code}} está {{value}} ({{condition}} limite {{threshold}}).",
+    "notifications.bi.report.title": "Relatório agendado pronto",
+    "notifications.bi.report.body":
+      "Relatório {{report_code}} gerado com {{row_count}} linhas.",
+    "notifications.supplier_catalogs.po.sent.title": "Ordem de compra enviada",
+    "notifications.supplier_catalogs.po.sent.body":
+      "OC enviada ao fornecedor {{vendor_id}} no valor de {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title":
+      "Exceção em nota fiscal",
+    "notifications.supplier_catalogs.invoice.exception.body":
+      "Nota fiscal da OC {{po_id}} requer revisão: {{reason}}",
+    "notifications.supplier_catalogs.stock.low.title": "Estoque baixo",
+    "notifications.supplier_catalogs.stock.low.body":
+      "{{sku}}: restam {{available_qty}}, no ou abaixo do ponto de pedido {{reorder_point}}.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title":
+      "Fornecedor incluído na lista negra",
+    "notifications.supplier_catalogs.vendor.blacklisted.body":
+      "Fornecedor {{code}} colocado na lista negra: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title":
+      "Documento de conformidade do fornecedor expirado",
+    "notifications.supplier_catalogs.kyc.expired.body":
+      "{{doc_type}} expirou em {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title":
+      "Documento de conformidade do fornecedor expirando",
+    "notifications.supplier_catalogs.kyc.expiring.body":
+      "{{doc_type}} expira em {{expires_on}} (faltam {{days_until_expiry}} dias).",
+    "notifications.resources.cert_expiring.title": "Certificação expirando",
+    "notifications.resources.cert_expiring.body":
+      "{{resource_name}} — {{cert_type}} expira em {{valid_until}} (faltam {{days_left}} dias).",
+    "notifications.resources.assignment_proposed.title":
+      "Alocação de recurso proposta",
+    "notifications.resources.assignment_proposed.body":
+      "Proposta para a tarefa {{task}} a partir de {{start}}.",
+    "notifications.resources.assignment_confirmed.title":
+      "Alocação de recurso confirmada",
+    "notifications.resources.assignment_confirmed.body":
+      "Alocação confirmada para a tarefa {{task}}.",
+    "notifications.contracts.signed.title": "Contrato assinado",
+    "notifications.contracts.signed.body":
+      "Contrato {{code}} assinado no valor de {{value}} {{currency}}.",
+    "notifications.contracts.claim_submitted.title":
+      "Pleito contratual submetido",
+    "notifications.contracts.claim_submitted.body":
+      "Pleito submetido no valor de {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.title": "Pleito contratual pago",
+    "notifications.contracts.claim_paid.body":
+      "Pleito pago: {{amount}} {{currency}}.",
+    "notifications.contracts.retention_released.title": "Retenção liberada",
+    "notifications.contracts.retention_released.body":
+      "Contrato {{contract_code}}: {{amount_released}} liberados, {{remaining}} restantes.",
+    "notifications.crm.lead_qualified.title": "Lead qualificado",
+    "notifications.crm.lead_qualified.body": "O lead {{name}} foi qualificado.",
+    "notifications.crm.opportunity_won.title": "Oportunidade ganha",
+    "notifications.crm.opportunity_won.body":
+      "{{name}} ganha — valor {{value}}.",
+    "notifications.crm.opportunity_scored.title": "Oportunidade pontuada",
+    "notifications.crm.opportunity_scored.body":
+      "{{title}} pontuou {{score}} (faixa {{band}}).",
+    "notifications.carbon.boq_position_assigned.title":
+      "Fator de carbono atribuído",
+    "notifications.carbon.boq_position_assigned.body":
+      "Item {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title": "Comprador contratado",
+    "notifications.property_dev.buyer_contracted.body":
+      "{{buyer}} contratado para o lote {{plot}}.",
+    "notifications.property_dev.handover_completed.title": "Entrega concluída",
+    "notifications.property_dev.handover_completed.body":
+      "Entrega do lote {{plot}} concluída.",
+    "notifications.property_dev.warranty_raised.title":
+      "Reclamação de garantia aberta",
+    "notifications.property_dev.warranty_raised.body":
+      "Reclamação de garantia {{category}} aberta para o lote {{plot}}.",
+    "notifications.bid_management.invitation_sent.title":
+      "Convite à licitação enviado",
+    "notifications.bid_management.invitation_sent.body":
+      "Convite para {{package}} enviado, vence {{due}}.",
+    "notifications.bid_management.awarded.title": "Adjudicação realizada",
+    "notifications.bid_management.awarded.body":
+      "{{package}} adjudicado por {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title":
+      "Restrição de cronograma removida",
+    "notifications.schedule_advanced.constraint_cleared.body":
+      "A tarefa {{task}} não está mais bloqueada.",
+    "notifications.daily_diary.signed.title": "Diário de obra assinado",
+    "notifications.daily_diary.signed.body": "Diário de {{date}} foi assinado.",
+    "notifications.service.ticket_dispatched.title":
+      "Chamado de serviço despachado",
+    "notifications.service.ticket_dispatched.body":
+      "Chamado {{ticket_number}} despachado (prioridade {{priority}}).",
+    "notifications.service.ticket_resolved.title":
+      "Chamado de serviço resolvido",
+    "notifications.service.ticket_resolved.body":
+      "O chamado {{ticket_number}} foi resolvido.",
+    "notifications.service.work_order_billed.title":
+      "Ordem de serviço faturada",
+    "notifications.service.work_order_billed.body":
+      "Ordem de serviço {{wo_number}} faturada por {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.title":
+      "Pré-qualificação enviada",
+    "notifications.subcontractors.prequal_submitted.body":
+      "{{subcontractor_name}} enviou uma pré-qualificação.",
+    "notifications.subcontractors.payment_app_submitted.title":
+      "Pedido de pagamento submetido",
+    "notifications.subcontractors.payment_app_submitted.body":
+      "Pedido {{application_number}} submetido no valor de {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title":
+      "Retenção do subempreiteiro liberada",
+    "notifications.subcontractors.retention_released.body":
+      "Retenção liberada: {{amount}} {{currency}}.",
+    "notifications.equipment.assigned.title": "Equipamento alocado",
+    "notifications.equipment.assigned.body":
+      "{{equipment_code}} alocado a {{project_name}}.",
+    "notifications.equipment.damage_reported.title":
+      "Dano em equipamento reportado",
+    "notifications.equipment.damage_reported.body":
+      "Dano reportado em {{equipment_code}} ({{severity}}).",
+    "notifications.portal.user_invited.title": "Usuário do portal convidado",
+    "notifications.portal.user_invited.body":
+      "{{portal_user_email}} convidado como {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer":
+      "A busca vetorial semântica é opcional — refina as correspondências por significado mas requer um banco vetorial Qdrant em execução. Use o painel «Banco vetorial» abaixo para iniciar ou instalar o Qdrant nativamente (sem Docker), depois tente novamente.",
+    "match_elements.vector_status_disconnected_fallback":
+      "Você pode continuar mesmo assim: o pareamento recorre automaticamente ao scoring léxico (palavras-chave) e baseado em regras enquanto o banco vetorial estiver offline.",
+    "match_elements.vector_status_retry": "Tentar reconectar",
+    "match_elements.vector_status_open_costs_long":
+      "Abrir ferramentas da base de preços",
+    "match_elements.pipeline.title": "Pipeline de pareamento",
+    "match_elements.pipeline.subtitle":
+      "Sete passos do arquivo CAD à planilha precificada — cada passo é visível e ajustável",
+    "match_elements.pipeline.done_suffix": "concluído",
+    "match_elements.pipeline.run_all": "Executar todas as etapas",
+    "match_elements.pipeline.running_all": "Executando todas…",
+    "match_elements.pipeline.loading": "Carregando pipeline…",
+    "match_elements.pipeline.load_failed":
+      "Não foi possível carregar a pipeline.",
+    "match_elements.pipeline.loading_prompts": "Carregando prompts…",
+    "match_elements.pipeline.run": "Executar",
+    "match_elements.pipeline.rerun": "Reexecutar",
+    "match_elements.pipeline.adjust": "Ajustar",
+    "match_elements.pipeline.adjust_stage": "Ajustar etapa",
+    "match_elements.pipeline.rerun_from_here": "Reexecutar a partir daqui",
+    "match_elements.pipeline.status_pending": "Não executado",
+    "match_elements.pipeline.status_running": "Executando",
+    "match_elements.pipeline.status_done": "Concluído",
+    "match_elements.pipeline.status_error": "Erro",
+    "match_elements.pipeline.status_stale": "Reexecutar",
+    "match_elements.pipeline.status_skipped": "Ignorado",
+    "match_elements.pipeline.stale_hint":
+      "Uma etapa anterior mudou — reexecute este passo para atualizar a saída.",
+    "match_elements.pipeline.llm_badge": "LLM",
+    "match_elements.pipeline.llm_tunable":
+      "Aumentado por LLM — prompt editável",
+    "match_elements.pipeline.group_by": "Agrupar por chaves",
+    "match_elements.pipeline.group_by_hint":
+      "Separadas por vírgula. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.method": "Método",
+    "match_elements.pipeline.max_groups": "Máx. grupos",
+    "match_elements.pipeline.llm_provider": "Provedor LLM",
+    "match_elements.pipeline.prompt": "Prompt",
+    "match_elements.pipeline.system": "system",
+    "match_elements.pipeline.system_readonly":
+      "Prompt do sistema — somente leitura. Faça fork para editar e adaptar à sua empresa.",
+    "match_elements.pipeline.system_prompt": "Prompt do sistema",
+    "match_elements.pipeline.user_template": "Modelo do usuário",
+    "match_elements.pipeline.variables": "Variáveis que a etapa preenche:",
+    "match_elements.pipeline.fork": "Fazer fork para editar",
+    "match_elements.pipeline.duplicate": "Duplicar",
+    "match_elements.pipeline.save_prompt": "Salvar prompt",
+    "match_elements.pipeline.revert": "Reverter",
+    "match_elements.pipeline.run_failed": "Execução da etapa falhou",
+    "match_elements.pipeline.intro_title":
+      "Abrir o pipeline de pareamento visível",
+    "match_elements.pipeline.intro_blurb":
+      "Sete passos do arquivo CAD à planilha precificada — Converter, Carregar, Esquema, Filtrar, Agrupar, Parear, Consolidar. Cada passo é visível, explicado e ajustável (prompts, provedor LLM, chaves de agrupamento).",
+    "match_elements.pipeline.intro_cta": "Abrir o pipeline",
+    "match_elements.pipeline.intro_resume": "Retomar última sessão",
+    "match_elements.pipeline.busy_hint":
+      "Uma etapa está em execução — aguarde terminar antes de iniciar outra.",
+    "match_elements.pipeline.step_convert": "Converter",
+    "match_elements.pipeline.step_load": "Carregar",
+    "match_elements.pipeline.step_schema": "Esquema",
+    "match_elements.pipeline.step_filter": "Filtrar",
+    "match_elements.pipeline.step_group": "Agrupar",
+    "match_elements.pipeline.step_match": "Parear",
+    "match_elements.pipeline.step_rollup": "Consolidar",
+    "clash.title": "Detecção de interferências",
+    "clash.subtitle":
+      "Coordenação de interferências geométricas e folgas entre modelos BIM federados — com matriz de clashes e exportação BCF.",
+    "clash.pick_project": "Selecione um projeto",
+    "clash.new_run": "Nova execução",
+    "clash.models": "Modelos",
+    "clash.no_models": "Sem modelos BIM processados neste projeto.",
+    "clash.tolerance": "Tolerância (mm)",
+    "clash.clearance": "Folga (mm)",
+    "clash.mode": "Escopo do teste",
+    "clash.mode_cross": "Apenas entre disciplinas",
+    "clash.mode_all": "Todos os pares",
+    "clash.mode_sets": "Conjunto A vs. Conjunto B (por tipo)",
+    "clash.sets_hint":
+      "São testados apenas pares em que um elemento está no A e o outro no B — ex. todas as paredes (A) contra todos os tubos (B).",
+    "clash.set_a": "Conjunto A",
+    "clash.set_b": "Conjunto B",
+    "clash.sets_required":
+      "Escolha pelo menos um tipo ou disciplina para A e B.",
+    "clash.set_search": "Pesquisar tipos / disciplinas…",
+    "clash.set_empty":
+      "Sem elementos — selecione primeiro um modelo processado.",
+    "clash.disciplines": "Disciplinas",
+    "clash.element_types": "Tipos de elementos",
+    "clash.run": "Executar detecção",
+    "clash.history": "Histórico de execuções",
+    "clash.no_runs": "Ainda sem execuções.",
+    "clash.run_failed": "Falha na detecção",
+    "clash.run_done": "{{n}} interferências encontradas em {{e}} elementos",
+    "clash.status_failed": "Não foi possível atualizar o status",
+    "clash.status_saved": "Status atualizado",
+    "clash.bcf_done":
+      "{{n}} interferência(s) exportada(s) para BCF ({{s}} ignoradas)",
+    "clash.empty_title": "Sem execução selecionada",
+    "clash.empty_desc":
+      "Escolha os modelos BIM à esquerda e execute a detecção para construir a matriz de coordenação.",
+    "clash.kpi_total": "Total de interferências",
+    "clash.kpi_hard": "Duras",
+    "clash.kpi_clearance": "Folga",
+    "clash.kpi_open": "Abertas",
+    "clash.kpi_resolved": "Resolvidas",
+    "clash.kpi_disciplines": "Disciplinas",
+    "clash.kpi_matrix_cells": "Células da matriz",
+    "clash.matrix_title": "Matriz de interferências — disciplina × disciplina",
+    "clash.matrix_open": "{{n}} abertas",
+    "clash.clear_filter": "Limpar filtro",
+    "clash.no_clashes": "Sem interferências — os modelos estão limpos.",
+    "clash.no_clashes_title": "Nenhuma interferência detectada",
+    "clash.no_match_title": "Nenhuma interferência corresponde aos filtros",
+    "clash.no_match_desc": "Amplie ou limpe os filtros ativos.",
+    "clash.results_error": "Falha ao carregar os resultados",
+    "clash.results_error_desc":
+      "Os resultados não puderam ser carregados. Isso não significa que os modelos estejam limpos — tente novamente.",
+    "clash.retry": "Tentar novamente",
+    "clash.capped_notice":
+      "Exibindo as primeiras {{loaded}} de {{total}} interferências — refine os filtros para reduzir o conjunto.",
+    "clash.results": "Resultados de interferências",
+    "clash.count_of": "{{shown}} de {{total}}",
+    "clash.search_ph": "Pesquisar por nome de elemento…",
+    "clash.all_types": "Todos os tipos",
+    "clash.type_hard": "Dura",
+    "clash.type_clearance": "Folga",
+    "clash.export_sel": "Exportar {{n}} para BCF",
+    "clash.export_open": "Exportar abertas → BCF",
+    "clash.export_row": "Exportar esta interferência para BCF",
+    "clash.filter_status": "Status",
+    "clash.filter_min_pen": "Penetração mín.",
+    "clash.clear_all": "Limpar tudo",
+    "clash.col_a": "Elemento A",
+    "clash.col_b": "Elemento B",
+    "clash.col_type": "Tipo",
+    "clash.col_penetration": "Penetração",
+    "clash.col_distance": "Distância",
+    "clash.col_status": "Status",
+    "clash.col_actions": "Ações",
+    "clash.select_all": "Selecionar todos da página",
+    "clash.select_row": "Selecionar interferência",
+    "clash.bcf": "BCF",
+    "clash.isolate_3d": "Isolar em 3D",
+    "clash.isolate_3d_short": "3D",
+    "clash.n_selected": "{{n}} selecionadas",
+    "clash.clear_selection": "Limpar",
+    "clash.clear_filter_short": "Limpar",
+    "clash.page_range": "{{from}}–{{to}} de {{total}}",
+    "clash.page_of": "Pág. {{p}} / {{n}}",
+    "clash.prev": "Anterior",
+    "clash.next": "Próxima",
+    "clash.status.new": "Nova",
+    "clash.status.active": "Ativa",
+    "clash.status.reviewed": "Revisada",
+    "clash.status.approved": "Aprovada",
+    "clash.status.resolved": "Resolvida",
+    "clash.status.ignored": "Ignorada",
+    "nav.pipelines": "Construtor de pipelines",
+    "pipeline.untitled": "Pipeline sem título",
+    "pipeline.empty.title": "Construa sua primeira automação",
+    "pipeline.empty.description":
+      "Arraste um gatilho e alguns passos da paleta à esquerda, conecte-os e pressione Executar.",
+    "pipeline.toast.saved": "Pipeline salva",
+    "pipeline.toast.save_failed": "Não foi possível salvar a pipeline",
+    "pipeline.toast.run_failed": "Não foi possível iniciar a execução",
+    "pipeline.explain.coming_soon_title": "Explicar esta pipeline",
+    "pipeline.explain.coming_soon_body":
+      "A visão narrativa em linguagem natural chegará na próxima versão.",
+    "pipeline.tour.palette_title": "Escolha seus passos",
+    "pipeline.tour.palette_body":
+      "Arraste um passo daqui para o canvas, ou clique para colocá-lo no centro.",
+    "pipeline.tour.canvas_title": "Conecte os passos",
+    "pipeline.tour.canvas_body":
+      "Arraste da saída de um passo até a entrada do próximo. As cores indicam o tipo de dado.",
+    "pipeline.tour.run_title": "Execute",
+    "pipeline.tour.run_body":
+      "Pressione Executar para rodar a pipeline e ver cada passo acender em tempo real.",
+    "pipeline.toolbar.aria": "Barra de ferramentas da pipeline",
+    "pipeline.toolbar.undo": "Desfazer",
+    "pipeline.toolbar.redo": "Refazer",
+    "pipeline.toolbar.fit": "Ajustar visualização",
+    "pipeline.toolbar.explain": "Explicar esta pipeline",
+    "pipeline.toolbar.issues": "{{count}} problema(s)",
+    "pipeline.toolbar.save": "Salvar",
+    "pipeline.toolbar.run": "Executar",
+    "pipeline.toolbar.stop": "Parar",
+    "pipeline.palette.title": "Passos",
+    "pipeline.palette.aria": "Paleta de nós",
+    "pipeline.palette.expand": "Expandir paleta",
+    "pipeline.palette.collapse": "Recolher paleta",
+    "pipeline.palette.search": "Pesquisar passos",
+    "pipeline.palette.search_ph": "Pesquisar…",
+    "pipeline.palette.no_match": "Nenhum passo corresponde a «{{query}}»",
+    "pipeline.palette.none": "Nenhum tipo de nó disponível.",
+    "pipeline.palette.module_chip": "Afeta o módulo {{module}}",
+    "pipeline.palette.writes": "escreve",
+    "pipeline.palette.writes_chip":
+      "Este passo escreve dados — precisa de um gate antes",
+    "pipeline.palette.cat_trigger": "Fontes / Gatilhos",
+    "pipeline.palette.cat_source": "Obter dados",
+    "pipeline.palette.cat_transform": "Transformar",
+    "pipeline.palette.cat_gate": "Validar",
+    "pipeline.palette.cat_ai": "IA",
+    "pipeline.palette.cat_action": "Ações / Saídas",
+    "pipeline.palette.cat_flow": "Controle de fluxo",
+    "pipeline.inspector.aria": "Inspetor",
+    "pipeline.inspector.expand": "Expandir inspetor",
+    "pipeline.inspector.collapse": "Recolher inspetor",
+    "pipeline.inspector.tab_node": "Nó",
+    "pipeline.inspector.tab_pipeline": "Pipeline",
+    "pipeline.inspector.context_node": "Editando passo",
+    "pipeline.inspector.context_pipeline": "Editando pipeline",
+    "pipeline.inspector.no_params":
+      "Este passo não possui parâmetros configuráveis.",
+    "pipeline.inspector.enabled": "Habilitado",
+    "pipeline.inspector.choose": "Escolher…",
+    "pipeline.inspector.duplicate": "Duplicar",
+    "pipeline.inspector.delete": "Excluir",
+    "pipeline.inspector.name": "Nome",
+    "pipeline.inspector.name_ph": "Minha automação",
+    "pipeline.inspector.description": "Descrição",
+    "pipeline.inspector.published": "Publicada (pode ser disparada)",
+    "pipeline.inspector.summary_stub":
+      "Aqui aparecerá um resumo em linguagem natural desta pipeline. Use «Explicar esta pipeline» para a versão completa.",
+    "pipeline.canvas.aria": "Canvas do editor de pipeline",
+    "pipeline.canvas.hint":
+      "Arraste passos da paleta, conecte suas portas e pressione Executar.",
+    "pipeline.canvas.legend_sr":
+      "A cor, a forma e o tracejado da linha codificam juntos o tipo de dado.",
+    "pipeline.connect.incompatible_title":
+      "Estes passos não podem ser conectados",
+    "pipeline.connect.incompatible_body":
+      "Esta saída é um {{from}}; esta entrada espera um {{to}}.",
+    "pipeline.node.rename": "Renomear nó",
+    "pipeline.node.rename_hint": "Duplo clique para renomear",
+    "pipeline.node.ai_badge": "IA",
+    "pipeline.node.ai_confidence":
+      "Sugestão de IA — verifique a pontuação de confiança",
+    "pipeline.node.help": "O que este nó faz",
+    "pipeline.node.help_generic":
+      "Configure este passo no inspetor. Ele recebe dados do passo anterior conectado e passa seu resultado adiante.",
+    "pipeline.node.collapse": "Recolher",
+    "pipeline.node.expand": "Expandir",
+    "pipeline.node.more_params": "+{{count}} mais",
+    "pipeline.node.took_ms": "{{ms}} ms",
+    "pipeline.port.aria_input": "entrada: {{label}}, tipo {{type}}",
+    "pipeline.port.aria_output": "saída: {{label}}, tipo {{type}}",
+    "pipeline.port.table": "Tabela / linhas",
+    "pipeline.port.file": "Arquivo / documento",
+    "pipeline.port.bim": "Modelo BIM",
+    "pipeline.port.number": "Número",
+    "pipeline.port.boolean": "Booleano / flag",
+    "pipeline.port.any": "Qualquer / passthrough",
+    "pipeline.port.error": "Ramo de erro",
+    "pipeline.dock.run": "Executar",
+    "pipeline.dock.expand": "Expandir painel de execução",
+    "pipeline.dock.collapse": "Recolher painel de execução",
+    "pipeline.dock.idle": "Inativo",
+    "pipeline.dock.progress": "{{pct}}%",
+    "pipeline.dock.tab_run": "Execução",
+    "pipeline.dock.tab_history": "Histórico",
+    "pipeline.dock.no_steps":
+      "Adicione passos e pressione Executar para ver os dados fluírem pela pipeline.",
+    "pipeline.dock.loading_history": "Carregando histórico de execuções…",
+    "pipeline.dock.no_runs_title": "Ainda sem execuções",
+    "pipeline.dock.no_runs_desc":
+      "Pressione Executar para ver os dados fluírem pela pipeline.",
+    "pipeline.dock.manual": "Manual",
+    "pipeline.dock.queued_hint": "Aguardando um worker assumir a execução…",
+    "pipeline.runstatus.pending": "Pendente",
+    "pipeline.runstatus.queued": "Na fila",
+    "pipeline.runstatus.running": "Executando",
+    "pipeline.runstatus.started": "Executando",
+    "pipeline.runstatus.done": "Concluído",
+    "pipeline.runstatus.success": "Concluído",
+    "pipeline.runstatus.error": "Erro",
+    "pipeline.runstatus.failed": "Falhou",
+    "pipeline.runstatus.skipped": "Ignorado",
+    "pipeline.runstatus.stale": "Reexecutar",
+    "pipeline.runstatus.paused": "Pausado",
+    "pipeline.runstatus.cancelled": "Cancelado",
+    "pipeline.trigger.manual": "Manual",
+    "pipeline.trigger.schedule": "Agendado",
+    "pipeline.trigger.event": "Evento",
+    "pipeline.nodetype.trigger.manual": "Gatilho manual",
+    "pipeline.nodetype.trigger.manual.desc":
+      "Inicia a pipeline por uma chamada REST. Sem entradas.",
+    "pipeline.nodetype.source.project": "Obter projeto",
+    "pipeline.nodetype.source.project.desc":
+      "Carrega o id e o nome do projeto vinculado.",
+    "pipeline.nodetype.source.boq": "Obter itens da planilha",
+    "pipeline.nodetype.source.boq.desc":
+      "Carrega todos os itens da planilha como linhas (ids + pequena amostra).",
+    "pipeline.nodetype.transform.filter": "Filtrar linhas",
+    "pipeline.nodetype.transform.filter.desc":
+      "Mantém apenas as linhas que atendem a um teste simples campo/operador/valor.",
+    "pipeline.nodetype.gate.validation": "Gate de validação",
+    "pipeline.nodetype.gate.validation.desc":
+      "Executa o motor de validação sobre as linhas; interrompe em erros bloqueantes.",
+    "pipeline.nodetype.action.export.excel": "Exportar para Excel",
+    "pipeline.nodetype.action.export.excel.desc":
+      "Escreve as linhas em um .xlsx (devolve uma referência de download; não altera o banco).",
+    "pipeline.nodehelp.trigger.manual":
+      "Aqui começa a pipeline. Sem configurações — conecte-o em seguida a um passo de dados.",
+    "pipeline.nodehelp.source.project":
+      "Carrega o projeto ao qual esta pipeline está vinculada. Deixe o id em branco para usar o da URL.",
+    "pipeline.nodehelp.source.boq":
+      "Lê todos os itens da planilha do projeto. Entre os passos trafegam apenas ids e uma pequena amostra; os dados completos permanecem no servidor.",
+    "pipeline.nodehelp.transform.filter":
+      "Mantém apenas as linhas que passam no teste campo/operador/valor definido no inspetor. Campo vazio = passa tudo.",
+    "pipeline.nodehelp.gate.validation":
+      "Executa o motor de validação sobre as linhas. Se houver erros bloqueantes a execução para aqui, para que passos de escrita posteriores nunca operem sobre dados ruins.",
+    "pipeline.nodehelp.action.export.excel":
+      "Escreve as linhas de entrada em um arquivo Excel e devolve uma referência de download. Não altera dados.",
+    "pipeline.param.source.project.project_id": "Id do projeto (opcional)",
+    "pipeline.param.source.boq.project_id": "Id do projeto (opcional)",
+    "pipeline.param.transform.filter.field": "Campo",
+    "pipeline.param.transform.filter.op": "Operador",
+    "pipeline.param.transform.filter.value": "Valor",
+    "pipeline.param.gate.validation.rule_sets": "Conjuntos de regras",
+    "pipeline.param.action.export.excel.filename": "Nome do arquivo",
+    "pipeline.param.action.export.excel.columns": "Colunas",
+  },
 } as { translation: Record<string, string> };
 
 export default resource;

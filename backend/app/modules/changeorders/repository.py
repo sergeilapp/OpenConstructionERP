@@ -71,9 +71,7 @@ class ChangeOrderRepository:
         from app.modules.projects.models import Project
 
         base = (
-            select(ChangeOrder)
-            .join(Project, Project.id == ChangeOrder.project_id)
-            .where(Project.owner_id == owner_id)
+            select(ChangeOrder).join(Project, Project.id == ChangeOrder.project_id).where(Project.owner_id == owner_id)
         )
         if status is not None:
             base = base.where(ChangeOrder.status == status)
@@ -137,9 +135,7 @@ class ChangeOrderRepository:
         by_type: dict[str, int] = {}
         # Default to the project's own currency; later overridden if any
         # CO carries an explicit currency.
-        project = (
-            await self.session.execute(select(Project).where(Project.id == project_id))
-        ).scalar_one_or_none()
+        project = (await self.session.execute(select(Project).where(Project.id == project_id))).scalar_one_or_none()
         currency = (project.currency if project is not None else "") or ""
 
         for order in orders:

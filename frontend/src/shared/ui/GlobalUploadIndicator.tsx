@@ -10,9 +10,9 @@
  * the browser warns the user before they accidentally close the tab.
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Upload,
   Check,
@@ -23,18 +23,19 @@ import {
   AlertTriangle,
   ExternalLink,
   RotateCw,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   useBIMUploadStore,
   type BIMUploadJob,
-} from '@/stores/useBIMUploadStore';
+} from "@/stores/useBIMUploadStore";
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }
 
@@ -46,13 +47,24 @@ function elapsed(startedAt: number): string {
   return `${min}m ${rem}s`;
 }
 
-function timeSince(ts: number, t: (key: string, opts?: Record<string, unknown>) => string): string {
+function timeSince(
+  ts: number,
+  t: (key: string, opts?: Record<string, unknown>) => string,
+): string {
   const sec = Math.round((Date.now() - ts) / 1000);
-  if (sec < 60) return t('common.time_just_now', { defaultValue: 'just now‌⁠‍' });
+  if (sec < 60)
+    return t("common.time_just_now", { defaultValue: "just now‌⁠‍" });
   const min = Math.floor(sec / 60);
-  if (min < 60) return t('common.time_minutes_ago', { defaultValue: '{{count}}m ago‌⁠‍', count: min });
+  if (min < 60)
+    return t("common.time_minutes_ago", {
+      defaultValue: "{{count}}m ago‌⁠‍",
+      count: min,
+    });
   const hr = Math.floor(min / 60);
-  return t('common.time_hours_ago', { defaultValue: '{{count}}h ago‌⁠‍', count: hr });
+  return t("common.time_hours_ago", {
+    defaultValue: "{{count}}h ago‌⁠‍",
+    count: hr,
+  });
 }
 
 /* ── Component ─────────────────────────────────────────────────────────── */
@@ -78,7 +90,7 @@ export function GlobalUploadIndicator() {
     const pathMatch = location.pathname.match(/\/bim\/([0-9a-f-]{36})/i);
     if (pathMatch) return pathMatch[1];
     const searchParams = new URLSearchParams(location.search);
-    return searchParams.get('model');
+    return searchParams.get("model");
   }, [location.pathname, location.search]);
   // Note: `hasActiveUploads` from the store also returns true while a job is
   // in 'converting' state — but with the async backend that just means the
@@ -91,11 +103,17 @@ export function GlobalUploadIndicator() {
 
   const allJobs = useMemo(() => Array.from(jobs.values()), [jobs]);
   const active = useMemo(
-    () => allJobs.filter((j) => j.status === 'uploading' || j.status === 'converting'),
+    () =>
+      allJobs.filter(
+        (j) => j.status === "uploading" || j.status === "converting",
+      ),
     [allJobs],
   );
   const finished = useMemo(
-    () => allJobs.filter((j) => j.status !== 'uploading' && j.status !== 'converting'),
+    () =>
+      allJobs.filter(
+        (j) => j.status !== "uploading" && j.status !== "converting",
+      ),
     [allJobs],
   );
 
@@ -119,9 +137,12 @@ export function GlobalUploadIndicator() {
     for (const job of finished) {
       if (!job.completedAt) continue;
       const viewingThisModel = job.modelId && job.modelId === viewingModelId;
-      const lifetime = job.status === 'ready'
-        ? (viewingThisModel ? 0 : 8 * 1000)
-        : 5 * 60 * 1000;
+      const lifetime =
+        job.status === "ready"
+          ? viewingThisModel
+            ? 0
+            : 8 * 1000
+          : 5 * 60 * 1000;
       const remaining = lifetime - (Date.now() - job.completedAt);
       if (remaining <= 0) {
         dismissJob(job.id);
@@ -140,14 +161,14 @@ export function GlobalUploadIndicator() {
   // navigated after starting an upload — the warning interrupted the normal
   // "kick off and check back later" workflow.
   useEffect(() => {
-    const isTransferring = active.some((j) => j.status === 'uploading');
+    const isTransferring = active.some((j) => j.status === "uploading");
     if (!isTransferring) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = '';
+      e.returnValue = "";
     };
-    window.addEventListener('beforeunload', handler);
-    return () => window.removeEventListener('beforeunload', handler);
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
   }, [active]);
 
   const handleOpen = useCallback(
@@ -168,7 +189,8 @@ export function GlobalUploadIndicator() {
 
   // Minimized pill
   if (!expanded) {
-    const isActive = primary.status === 'uploading' || primary.status === 'converting';
+    const isActive =
+      primary.status === "uploading" || primary.status === "converting";
     return (
       <button
         onClick={() => setExpanded(true)}
@@ -176,9 +198,9 @@ export function GlobalUploadIndicator() {
       >
         {isActive ? (
           <Loader2 size={14} className="text-oe-blue animate-spin shrink-0" />
-        ) : primary.status === 'ready' ? (
+        ) : primary.status === "ready" ? (
           <Check size={14} className="text-emerald-500 shrink-0" />
-        ) : primary.status === 'error' ? (
+        ) : primary.status === "error" ? (
           <X size={14} className="text-red-500 shrink-0" />
         ) : (
           <AlertTriangle size={14} className="text-amber-500 shrink-0" />
@@ -200,10 +222,10 @@ export function GlobalUploadIndicator() {
               </span>
             </div>
           )}
-          {!isActive && primary.status === 'ready' && (
+          {!isActive && primary.status === "ready" && (
             <p className="text-[10px] text-emerald-600 mt-0.5">
-              {t('bim.upload_indicator_ready', {
-                defaultValue: '{{count}} elements‌⁠‍',
+              {t("bim.upload_indicator_ready", {
+                defaultValue: "{{count}} elements‌⁠‍",
                 count: primary.elementCount,
               })}
             </p>
@@ -227,13 +249,15 @@ export function GlobalUploadIndicator() {
         <div className="flex items-center gap-2">
           <Upload size={14} className="text-oe-blue" />
           <span className="text-xs font-semibold text-content-primary">
-            {t('bim.upload_indicator_title', { defaultValue: 'BIM Uploads‌⁠‍' })}
+            {t("bim.upload_indicator_title", {
+              defaultValue: "BIM Uploads‌⁠‍",
+            })}
           </span>
         </div>
         <button
           onClick={() => setExpanded(false)}
           className="p-1 rounded hover:bg-surface-secondary text-content-tertiary"
-          aria-label={t('common.collapse', { defaultValue: 'Collapse' })}
+          aria-label={t("common.collapse", { defaultValue: "Collapse" })}
         >
           <ChevronDown size={14} />
         </button>
@@ -272,19 +296,23 @@ function JobRow({
   onOpen: () => void;
 }) {
   const { t } = useTranslation();
-  const isActive = job.status === 'uploading' || job.status === 'converting';
-  const isDone = job.status === 'ready';
-  const isError = job.status === 'error';
-  const isConverterRequired = job.status === 'converter_required';
+  const isActive = job.status === "uploading" || job.status === "converting";
+  const isDone = job.status === "ready";
+  const isError = job.status === "error";
+  const isConverterRequired = job.status === "converter_required";
 
   return (
     <div className="px-4 py-3 flex items-start gap-3">
       {/* Status icon */}
       <div className="mt-0.5 shrink-0">
-        {isActive && <Loader2 size={16} className="text-oe-blue animate-spin" />}
+        {isActive && (
+          <Loader2 size={16} className="text-oe-blue animate-spin" />
+        )}
         {isDone && <Check size={16} className="text-emerald-500" />}
         {isError && <X size={16} className="text-red-500" />}
-        {isConverterRequired && <AlertTriangle size={16} className="text-amber-500" />}
+        {isConverterRequired && (
+          <AlertTriangle size={16} className="text-amber-500" />
+        )}
       </div>
 
       {/* Content */}
@@ -311,7 +339,8 @@ function JobRow({
               </span>
             </div>
             <p className="text-[10px] text-content-quaternary mt-0.5">
-              {t(job.stage, { defaultValue: 'Processing...' })} — {elapsed(job.startedAt)}
+              {t(job.stage, { defaultValue: "Processing..." })} —{" "}
+              {elapsed(job.startedAt)}
             </p>
           </div>
         )}
@@ -320,8 +349,8 @@ function JobRow({
         {isDone && (
           <div className="mt-1 flex items-center gap-2">
             <span className="text-[10px] text-emerald-600">
-              {t('bim.upload_indicator_ready', {
-                defaultValue: '{{count}} elements',
+              {t("bim.upload_indicator_ready", {
+                defaultValue: "{{count}} elements",
                 count: job.elementCount,
               })}
             </span>
@@ -336,7 +365,10 @@ function JobRow({
         {/* Error */}
         {isError && (
           <p className="text-[10px] text-red-500 mt-0.5 line-clamp-2">
-            {job.errorMessage || t('bim.upload_indicator_error', { defaultValue: 'Upload failed' })}
+            {job.errorMessage ||
+              t("bim.upload_indicator_error", {
+                defaultValue: "Upload failed",
+              })}
           </p>
         )}
 
@@ -344,8 +376,8 @@ function JobRow({
         {isConverterRequired && (
           <p className="text-[10px] text-amber-600 mt-0.5 line-clamp-2">
             {job.errorMessage ||
-              t('bim.upload_indicator_converter', {
-                defaultValue: 'Converter not installed',
+              t("bim.upload_indicator_converter", {
+                defaultValue: "Converter not installed",
               })}
           </p>
         )}
@@ -357,7 +389,7 @@ function JobRow({
               onClick={onCancel}
               className="text-[10px] text-content-tertiary hover:text-red-500 font-medium"
             >
-              {t('common.cancel', { defaultValue: 'Cancel' })}
+              {t("common.cancel", { defaultValue: "Cancel" })}
             </button>
           )}
           {isDone && job.modelId && (
@@ -366,7 +398,7 @@ function JobRow({
               className="inline-flex items-center gap-1 text-[10px] text-oe-blue hover:underline font-medium"
             >
               <ExternalLink size={10} />
-              {t('bim.upload_indicator_open', { defaultValue: 'Open' })}
+              {t("bim.upload_indicator_open", { defaultValue: "Open" })}
             </button>
           )}
           {(isError || isConverterRequired) && (
@@ -375,7 +407,7 @@ function JobRow({
               className="inline-flex items-center gap-1 text-[10px] text-oe-blue hover:underline font-medium"
             >
               <RotateCw size={10} />
-              {t('bim.upload_indicator_retry', { defaultValue: 'Retry' })}
+              {t("bim.upload_indicator_retry", { defaultValue: "Retry" })}
             </button>
           )}
           {/* Dismiss is always available — for finished jobs it's the
@@ -390,14 +422,14 @@ function JobRow({
             className="text-[10px] text-content-quaternary hover:text-content-secondary ms-auto"
             title={
               isActive
-                ? t('bim.upload_indicator_dismiss_active_tip', {
+                ? t("bim.upload_indicator_dismiss_active_tip", {
                     defaultValue:
-                      'Hide this entry from the dock. The conversion continues on the server.',
+                      "Hide this entry from the dock. The conversion continues on the server.",
                   })
                 : undefined
             }
           >
-            {t('common.dismiss', { defaultValue: 'Dismiss' })}
+            {t("common.dismiss", { defaultValue: "Dismiss" })}
           </button>
         </div>
       </div>

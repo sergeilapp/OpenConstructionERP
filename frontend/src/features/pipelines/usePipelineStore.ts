@@ -14,17 +14,17 @@
  * `tokens.ts` so the UI can rely on the store rejecting invalid edges
  * regardless of which surface (xyflow handle, paste) created them.
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import type { PortDataType } from './tokens';
-import { isPortCompatible } from './tokens';
+import type { PortDataType } from "./tokens";
+import { isPortCompatible } from "./tokens";
 import type {
   PipelineGraph,
   PipelineGraphEdge,
   PipelineGraphNode,
   RunNodeState,
   RunStatus,
-} from './api';
+} from "./api";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -32,7 +32,7 @@ export interface PipelinePort {
   id: string;
   label: string;
   dataType: PortDataType;
-  direction: 'input' | 'output';
+  direction: "input" | "output";
 }
 
 export interface CanvasNode {
@@ -114,15 +114,16 @@ export interface PipelineStoreActions {
   clearSelection: () => void;
   copySelection: () => void;
   pasteClipboard: (offset?: { x: number; y: number }) => string[];
-  addEdge: (
-    edge: Omit<CanvasEdge, 'id' | 'dataType'>,
-  ) => CanvasEdge | null;
+  addEdge: (edge: Omit<CanvasEdge, "id" | "dataType">) => CanvasEdge | null;
   removeEdge: (id: string) => void;
   undo: () => void;
   redo: () => void;
   reset: () => void;
   /** Replace the graph + meta (e.g. when loading a saved pipeline). */
-  loadGraph: (graph: PipelineGraph | null | undefined, meta: PipelineMeta) => void;
+  loadGraph: (
+    graph: PipelineGraph | null | undefined,
+    meta: PipelineMeta,
+  ) => void;
   /** Patch pipeline meta fields from the Inspector. */
   patchMeta: (patch: Partial<PipelineMeta>) => void;
   markSaved: (id: string) => void;
@@ -149,8 +150,8 @@ const EMPTY_SNAPSHOT: CanvasSnapshot = { nodes: [], edges: [] };
 
 const EMPTY_META: PipelineMeta = {
   id: null,
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   projectId: null,
   isPublished: false,
 };
@@ -168,7 +169,8 @@ const EMPTY_RUN: RunOverlay = {
 let _idCounter = 0;
 function genId(prefix: string): string {
   _idCounter += 1;
-  const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } })
+    .crypto;
   const suffix = cryptoLike?.randomUUID
     ? cryptoLike.randomUUID().slice(0, 8)
     : Math.random().toString(36).slice(2, 10);
@@ -196,10 +198,10 @@ function cloneSnapshot(s: CanvasSnapshot): CanvasSnapshot {
 function findPort(
   node: CanvasNode | undefined,
   portId: string,
-  direction: 'input' | 'output',
+  direction: "input" | "output",
 ): PipelinePort | undefined {
   if (!node) return undefined;
-  const list = direction === 'input' ? node.inputs : node.outputs;
+  const list = direction === "input" ? node.inputs : node.outputs;
   return list.find((p) => p.id === portId);
 }
 
@@ -226,7 +228,7 @@ export const usePipelineStore = create<PipelineStore>((set, get) => {
     dirty: false,
 
     addNode: (input) => {
-      const id = genId('node');
+      const id = genId("node");
       const node: CanvasNode = {
         id,
         type: input.type,
@@ -250,9 +252,7 @@ export const usePipelineStore = create<PipelineStore>((set, get) => {
       const nextSelection = new Set(get().selection);
       nextSelection.delete(id);
       const nextNodes = nodes.filter((n) => n.id !== id);
-      const nextEdges = edges.filter(
-        (e) => e.source !== id && e.target !== id,
-      );
+      const nextEdges = edges.filter((e) => e.source !== id && e.target !== id);
       set({ nodes: nextNodes, edges: nextEdges, selection: nextSelection });
       commitHistory({ nodes: nextNodes, edges: nextEdges });
     },
@@ -312,7 +312,7 @@ export const usePipelineStore = create<PipelineStore>((set, get) => {
       if (clipboard.length === 0) return [];
       const newIds: string[] = [];
       const fresh = clipboard.map((n) => {
-        const id = genId('node');
+        const id = genId("node");
         newIds.push(id);
         return {
           ...cloneNode(n),
@@ -331,8 +331,8 @@ export const usePipelineStore = create<PipelineStore>((set, get) => {
       if (raw.source === raw.target) return null;
       const sourceNode = nodes.find((n) => n.id === raw.source);
       const targetNode = nodes.find((n) => n.id === raw.target);
-      const sourcePort = findPort(sourceNode, raw.sourceHandle, 'output');
-      const targetPort = findPort(targetNode, raw.targetHandle, 'input');
+      const sourcePort = findPort(sourceNode, raw.sourceHandle, "output");
+      const targetPort = findPort(targetNode, raw.targetHandle, "input");
       if (!sourcePort || !targetPort) return null;
       if (!isPortCompatible(sourcePort.dataType, targetPort.dataType)) {
         return null;
@@ -346,7 +346,7 @@ export const usePipelineStore = create<PipelineStore>((set, get) => {
       );
       if (dup) return dup;
       const edge: CanvasEdge = {
-        id: genId('edge'),
+        id: genId("edge"),
         source: raw.source,
         sourceHandle: raw.sourceHandle,
         target: raw.target,
@@ -464,7 +464,7 @@ export const usePipelineStore = create<PipelineStore>((set, get) => {
       set({
         run: {
           runId,
-          status: 'queued',
+          status: "queued",
           progress: 0,
           error: null,
           nodeStates: {},
@@ -482,7 +482,7 @@ export const usePipelineStore = create<PipelineStore>((set, get) => {
           runId: get().run.runId,
           status: detail.status ?? get().run.status,
           progress:
-            typeof detail.progress_percent === 'number'
+            typeof detail.progress_percent === "number"
               ? detail.progress_percent
               : get().run.progress,
           error: detail.error ?? null,

@@ -320,7 +320,8 @@ def compute_photo_timeline(
             continue
         day_key = taken_at.date().isoformat()
         bucket = buckets.setdefault(
-            day_key, {"date": day_key, "photo_count": 0, "photo_ids": []},
+            day_key,
+            {"date": day_key, "photo_count": 0, "photo_ids": []},
         )
         bucket["photo_count"] += 1
         bucket["photo_ids"].append(photo.id)
@@ -481,16 +482,11 @@ class DailyDiaryService:
                     "opened ahead of the site date."
                 ),
             )
-        existing = await self.diary_repo.get_by_date_and_project(
-            data.project_id, data.diary_date
-        )
+        existing = await self.diary_repo.get_by_date_and_project(data.project_id, data.diary_date)
         if existing is not None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=(
-                    f"Daily diary for project {data.project_id} on "
-                    f"{data.diary_date} already exists"
-                ),
+                detail=(f"Daily diary for project {data.project_id} on {data.diary_date} already exists"),
             )
         diary = DailyDiary(
             project_id=data.project_id,
@@ -541,9 +537,7 @@ class DailyDiaryService:
             status=status_filter,
         )
 
-    async def update_diary(
-        self, diary_id: uuid.UUID, data: DailyDiaryUpdate
-    ) -> DailyDiary:
+    async def update_diary(self, diary_id: uuid.UUID, data: DailyDiaryUpdate) -> DailyDiary:
         diary = await self.get_diary(diary_id)
         if diary.status in ("signed", "archived"):
             # Enforce immutability for signed/archived diaries.
@@ -690,11 +684,7 @@ class DailyDiaryService:
             await self.signature_repo.delete(existing.id)
         signature = await self.signature_repo.create(signature)  # type: ignore[assignment]
 
-        sig_field = (
-            "owner_signature_ref"
-            if signer_role == "owner"
-            else "supervisor_signature_ref"
-        )
+        sig_field = "owner_signature_ref" if signer_role == "owner" else "supervisor_signature_ref"
         await self.diary_repo.update_fields(
             diary_id,
             status="signed",
@@ -754,9 +744,7 @@ class DailyDiaryService:
 
     # ── Weather ──────────────────────────────────────────────────────────
 
-    async def create_weather(
-        self, data: WeatherRecordCreate
-    ) -> WeatherRecord:
+    async def create_weather(self, data: WeatherRecordCreate) -> WeatherRecord:
         record = WeatherRecord(
             project_id=data.project_id,
             captured_at=data.captured_at,
@@ -791,13 +779,9 @@ class DailyDiaryService:
                 target = datetime.strptime(day, "%Y-%m-%d").date()
             except ValueError as exc:
                 raise HTTPException(422, f"Invalid day: {exc}") from exc
-        day_start = datetime(
-            target.year, target.month, target.day, tzinfo=UTC
-        )
+        day_start = datetime(target.year, target.month, target.day, tzinfo=UTC)
         day_end = day_start + timedelta(days=1)
-        return await self.weather_repo.for_project_on_day(
-            project_id, day_start, day_end
-        )
+        return await self.weather_repo.for_project_on_day(project_id, day_start, day_end)
 
     async def get_weather(self, weather_id: uuid.UUID) -> WeatherRecord:
         record = await self.weather_repo.get_by_id(weather_id)
@@ -805,9 +789,7 @@ class DailyDiaryService:
             raise HTTPException(status_code=404, detail="Weather record not found")
         return record  # type: ignore[return-value]
 
-    async def update_weather(
-        self, weather_id: uuid.UUID, data: WeatherRecordUpdate
-    ) -> WeatherRecord:
+    async def update_weather(self, weather_id: uuid.UUID, data: WeatherRecordUpdate) -> WeatherRecord:
         await self.get_weather(weather_id)
         fields = data.model_dump(exclude_unset=True)
         if "metadata" in fields:
@@ -880,9 +862,7 @@ class DailyDiaryService:
     ) -> list[DiaryEntry]:
         """List a diary's entries (chronological). Validates the diary exists."""
         await self.get_diary(diary_id)
-        return await self.entry_repo.list_for_diary(
-            diary_id, entry_type=entry_type
-        )
+        return await self.entry_repo.list_for_diary(diary_id, entry_type=entry_type)
 
     async def get_entry(self, entry_id: uuid.UUID) -> DiaryEntry:
         entry = await self.entry_repo.get_by_id(entry_id)
@@ -896,16 +876,11 @@ class DailyDiaryService:
         if diary.status in ("signed", "archived"):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=(
-                    f"Cannot modify entries of a {diary.status} diary — the "
-                    "signed snapshot would be invalidated."
-                ),
+                detail=(f"Cannot modify entries of a {diary.status} diary — the signed snapshot would be invalidated."),
             )
         return diary
 
-    async def update_entry(
-        self, entry_id: uuid.UUID, fields: dict[str, Any]
-    ) -> DiaryEntry:
+    async def update_entry(self, entry_id: uuid.UUID, fields: dict[str, Any]) -> DiaryEntry:
         entry = await self.get_entry(entry_id)
         await self._assert_entry_diary_mutable(entry)
         if "metadata" in fields:
@@ -926,9 +901,7 @@ class DailyDiaryService:
         if diary_id is None:
             # Auto-link to the diary for the photo's date, if one exists.
             day = data.taken_at.date().isoformat()
-            diary = await self.diary_repo.get_by_date_and_project(
-                data.project_id, day
-            )
+            diary = await self.diary_repo.get_by_date_and_project(data.project_id, day)
             if diary is not None:
                 diary_id = diary.id
 
@@ -962,9 +935,7 @@ class DailyDiaryService:
         )
         return photo
 
-    async def update_photo(
-        self, photo_id: uuid.UUID, data: DiaryPhotoUpdate
-    ) -> DiaryPhoto:
+    async def update_photo(self, photo_id: uuid.UUID, data: DiaryPhotoUpdate) -> DiaryPhoto:
         photo = await self.photo_repo.get_by_id(photo_id)
         if photo is None:
             raise HTTPException(status_code=404, detail="Diary photo not found")
@@ -995,9 +966,7 @@ class DailyDiaryService:
         )
         return await self.video_repo.create(video)  # type: ignore[return-value]
 
-    async def update_video(
-        self, video_id: uuid.UUID, data: DiaryVideoUpdate
-    ) -> DiaryVideo:
+    async def update_video(self, video_id: uuid.UUID, data: DiaryVideoUpdate) -> DiaryVideo:
         video = await self.video_repo.get_by_id(video_id)
         if video is None:
             raise HTTPException(status_code=404, detail="Diary video not found")
@@ -1040,9 +1009,7 @@ class DailyDiaryService:
         )
         return survey
 
-    async def update_drone_survey(
-        self, survey_id: uuid.UUID, data: DroneSurveyUpdate
-    ) -> DroneSurvey:
+    async def update_drone_survey(self, survey_id: uuid.UUID, data: DroneSurveyUpdate) -> DroneSurvey:
         survey = await self.drone_repo.get_by_id(survey_id)
         if survey is None:
             raise HTTPException(status_code=404, detail="Drone survey not found")
@@ -1059,9 +1026,7 @@ class DailyDiaryService:
 
     # ── Reality capture ──────────────────────────────────────────────────
 
-    async def attach_reality_capture(
-        self, data: RealityCaptureCreate
-    ) -> RealityCaptureDataset:
+    async def attach_reality_capture(self, data: RealityCaptureCreate) -> RealityCaptureDataset:
         ds = RealityCaptureDataset(
             project_id=data.project_id,
             captured_at=data.captured_at,
@@ -1087,13 +1052,12 @@ class DailyDiaryService:
         )
         return ds
 
-    async def update_reality_capture(
-        self, ds_id: uuid.UUID, data: RealityCaptureUpdate
-    ) -> RealityCaptureDataset:
+    async def update_reality_capture(self, ds_id: uuid.UUID, data: RealityCaptureUpdate) -> RealityCaptureDataset:
         ds = await self.reality_repo.get_by_id(ds_id)
         if ds is None:
             raise HTTPException(
-                status_code=404, detail="Reality capture dataset not found",
+                status_code=404,
+                detail="Reality capture dataset not found",
             )
         fields = data.model_dump(exclude_unset=True)
         if fields:
@@ -1104,7 +1068,8 @@ class DailyDiaryService:
         ds = await self.reality_repo.get_by_id(ds_id)
         if ds is None:
             raise HTTPException(
-                status_code=404, detail="Reality capture dataset not found",
+                status_code=404,
+                detail="Reality capture dataset not found",
             )
         await self.reality_repo.delete(ds_id)
 
@@ -1127,7 +1092,8 @@ class DailyDiaryService:
         diary = await self.get_diary(diary_id)
         entries = await self.entry_repo.list_for_diary(diary_id)
         photos_stmt = await self.photo_repo.photos_for_project_in_range(
-            diary.project_id, limit=10_000,
+            diary.project_id,
+            limit=10_000,
         )
         photos = [p for p in photos_stmt[0] if getattr(p, "diary_id", None) == diary_id]
         payload = compute_immutable_payload(diary, entries, photos)
@@ -1220,16 +1186,14 @@ class DailyDiaryService:
             "target_date": target_date,
             "fetched": True,
             "record_id": record_id,
-            "summary": {
-                k: (str(v) if isinstance(v, Decimal) else v)
-                for k, v in summary.items()
-            },
+            "summary": {k: (str(v) if isinstance(v, Decimal) else v) for k, v in summary.items()},
         }
 
     # ── Workforce summary event ──────────────────────────────────────────
 
     async def workforce_summary_for_diary(
-        self, diary_id: uuid.UUID,
+        self,
+        diary_id: uuid.UUID,
     ) -> dict[str, Any]:
         """Aggregate the day's workforce/equipment counts from entries.
 
@@ -1251,9 +1215,7 @@ class DailyDiaryService:
             equipment += entry_equipment
             company = meta.get("company")
             if company and entry_labour:
-                by_company[str(company)] = (
-                    by_company.get(str(company), 0) + entry_labour
-                )
+                by_company[str(company)] = by_company.get(str(company), 0) + entry_labour
         return {
             "diary_id": diary_id,
             "project_id": diary.project_id,
@@ -1264,7 +1226,8 @@ class DailyDiaryService:
         }
 
     async def emit_workforce_summary(
-        self, diary_id: uuid.UUID,
+        self,
+        diary_id: uuid.UUID,
     ) -> dict[str, Any]:
         """Compute the workforce summary AND publish to the event bus.
 
@@ -1324,11 +1287,15 @@ class DailyDiaryService:
         except ValueError:
             dt = None
         photos, _ = await self.photo_repo.photos_for_project_in_range(
-            project_id, date_from=df, date_to=dt, limit=10_000,
+            project_id,
+            date_from=df,
+            date_to=dt,
+            limit=10_000,
         )
         # Drones in range
         drones, _ = await self.drone_repo.list_for_project(
-            project_id, limit=10_000,
+            project_id,
+            limit=10_000,
         )
         if df is not None or dt is not None:
             kept: list = []
@@ -1356,47 +1323,51 @@ class DailyDiaryService:
         # sealed bundle is internally consistent.
         from sqlalchemy import select  # noqa: PLC0415 (local import)
 
-        weather_stmt = select(WeatherRecord).where(
-            WeatherRecord.project_id == project_id
-        )
+        weather_stmt = select(WeatherRecord).where(WeatherRecord.project_id == project_id)
         if df is not None:
             weather_stmt = weather_stmt.where(WeatherRecord.captured_at >= df)
         if dt is not None:
             weather_stmt = weather_stmt.where(WeatherRecord.captured_at <= dt)
-        weathers = list(
-            (await self.session.execute(weather_stmt)).scalars().all()
-        )
+        weathers = list((await self.session.execute(weather_stmt)).scalars().all())
 
         # Build deterministic manifest contents
         contents: list[dict[str, Any]] = []
         for diary in sorted(diaries, key=lambda d: d.diary_date):
-            contents.append({
-                "kind": "diary",
-                "diary_id": str(diary.id),
-                "diary_date": diary.diary_date,
-                "status": diary.status,
-            })
+            contents.append(
+                {
+                    "kind": "diary",
+                    "diary_id": str(diary.id),
+                    "diary_date": diary.diary_date,
+                    "status": diary.status,
+                }
+            )
         for w in sorted(weathers, key=lambda x: x.captured_at):
-            contents.append({
-                "kind": "weather",
-                "weather_id": str(w.id),
-                "captured_at": w.captured_at,
-                "source": w.source,
-            })
+            contents.append(
+                {
+                    "kind": "weather",
+                    "weather_id": str(w.id),
+                    "captured_at": w.captured_at,
+                    "source": w.source,
+                }
+            )
         for ph in sorted(photos, key=lambda x: str(x.taken_at)):
-            contents.append({
-                "kind": "photo",
-                "photo_id": str(ph.id),
-                "taken_at": str(ph.taken_at),
-                "file_url": ph.file_url,
-            })
+            contents.append(
+                {
+                    "kind": "photo",
+                    "photo_id": str(ph.id),
+                    "taken_at": str(ph.taken_at),
+                    "file_url": ph.file_url,
+                }
+            )
         for dr in sorted(drones, key=lambda x: str(x.flown_at)):
-            contents.append({
-                "kind": "drone",
-                "survey_id": str(dr.id),
-                "flown_at": str(dr.flown_at),
-                "ortho_file_url": dr.ortho_file_url,
-            })
+            contents.append(
+                {
+                    "kind": "drone",
+                    "survey_id": str(dr.id),
+                    "flown_at": str(dr.flown_at),
+                    "ortho_file_url": dr.ortho_file_url,
+                }
+            )
 
         manifest_payload = {
             "project_id": str(project_id),

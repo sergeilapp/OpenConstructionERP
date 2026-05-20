@@ -24,26 +24,21 @@
 // is intentionally not exercised — that surface is covered by the
 // Playwright probe under qa-tests/_match-currency-fix/.
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  render,
-  screen,
-  cleanup,
-  act,
-} from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, cleanup, act } from "@testing-library/react";
 
 // Stub the api module BEFORE importing the card so its getProgress
 // import binds to the spy. The default mock returns an idle snapshot
 // — individual tests override per-call as needed.
-vi.mock('../api', () => ({
+vi.mock("../api", () => ({
   matchElementsApi: {
     getProgress: vi.fn().mockResolvedValue({
-      stage: 'idle',
+      stage: "idle",
       stage_idx: 0,
       total_stages: 5,
       groups_done: 0,
       groups_total: 0,
-      status: 'idle',
+      status: "idle",
       started_at: null,
       updated_at: null,
       error: null,
@@ -51,8 +46,8 @@ vi.mock('../api', () => ({
   },
 }));
 
-import { matchElementsApi } from '../api';
-import { MatchProgressCard } from '../MatchProgressCard';
+import { matchElementsApi } from "../api";
+import { MatchProgressCard } from "../MatchProgressCard";
 
 const getProgressSpy = matchElementsApi.getProgress as ReturnType<typeof vi.fn>;
 
@@ -66,45 +61,35 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('MatchProgressCard — v3.0.6 hang regression', () => {
+describe("MatchProgressCard — v3.0.6 hang regression", () => {
   it('does not render a "Currency normalization" stage', () => {
     // The fake stage was the misleading label users saw freeze on.
     // The post-fix timeline carries only real backend stages.
-    render(
-      <MatchProgressCard
-        status="running"
-        onDone={() => {}}
-      />,
-    );
+    render(<MatchProgressCard status="running" onDone={() => {}} />);
     expect(screen.queryByText(/currency normalization/i)).toBeNull();
   });
 
-  it('renders all five real backend stages', () => {
-    render(
-      <MatchProgressCard
-        status="running"
-        onDone={() => {}}
-      />,
-    );
+  it("renders all five real backend stages", () => {
+    render(<MatchProgressCard status="running" onDone={() => {}} />);
     // Stage rows are stamped with data-stage-row so the test doesn't
     // depend on locale-specific copy. Real backend stages: init,
     // elements, ranking, save, done (the runner's _write_progress
     // payload keys, see app/modules/match_elements/service.py).
-    for (const stage of ['init', 'elements', 'ranking', 'save', 'done']) {
+    for (const stage of ["init", "elements", "ranking", "save", "done"]) {
       expect(
         document.querySelector(`[data-stage-row="${stage}"]`),
       ).not.toBeNull();
     }
   });
 
-  it('polls /progress when a sessionId is supplied', async () => {
+  it("polls /progress when a sessionId is supplied", async () => {
     getProgressSpy.mockResolvedValue({
-      stage: 'ranking',
+      stage: "ranking",
       stage_idx: 3,
       total_stages: 5,
       groups_done: 4,
       groups_total: 10,
-      status: 'running',
+      status: "running",
       started_at: null,
       updated_at: null,
       error: null,
@@ -129,32 +114,30 @@ describe('MatchProgressCard — v3.0.6 hang regression', () => {
       await Promise.resolve();
     });
 
-    expect(getProgressSpy).toHaveBeenCalledWith('session-xyz');
+    expect(getProgressSpy).toHaveBeenCalledWith("session-xyz");
 
     // Card data-source attribute flips to "backend" once the first
     // successful poll lands — proving the wall-clock fallback isn't
     // driving the timeline.
-    const card = screen.getByTestId('match-progress-card');
-    expect(card.getAttribute('data-progress-source')).toBe('backend');
+    const card = screen.getByTestId("match-progress-card");
+    expect(card.getAttribute("data-progress-source")).toBe("backend");
   });
 
-  it('does not poll /progress when no sessionId is supplied', async () => {
-    render(
-      <MatchProgressCard status="running" onDone={() => {}} />,
-    );
+  it("does not poll /progress when no sessionId is supplied", async () => {
+    render(<MatchProgressCard status="running" onDone={() => {}} />);
     await act(async () => {
       vi.advanceTimersByTime(2000);
     });
     expect(getProgressSpy).not.toHaveBeenCalled();
     // Without backend data the card stays on the heuristic fallback.
     expect(
-      screen.getByTestId('match-progress-card').getAttribute(
-        'data-progress-source',
-      ),
-    ).toBe('heuristic');
+      screen
+        .getByTestId("match-progress-card")
+        .getAttribute("data-progress-source"),
+    ).toBe("heuristic");
   });
 
-  it('shows a Cancel button after the 20s safety threshold', async () => {
+  it("shows a Cancel button after the 20s safety threshold", async () => {
     const onCancel = vi.fn();
     render(
       <MatchProgressCard
@@ -166,28 +149,26 @@ describe('MatchProgressCard — v3.0.6 hang regression', () => {
 
     // Cancel is hidden during the first 20s — it would be noise on
     // healthy short runs.
-    expect(screen.queryByTestId('match-progress-cancel')).toBeNull();
+    expect(screen.queryByTestId("match-progress-cancel")).toBeNull();
 
     // Advance the wall-clock past the threshold; the card's 1Hz
     // ticker updates `now` on every interval.
     await act(async () => {
       vi.advanceTimersByTime(21_000);
     });
-    expect(screen.getByTestId('match-progress-cancel')).not.toBeNull();
+    expect(screen.getByTestId("match-progress-cancel")).not.toBeNull();
   });
 
-  it('does not mount a Cancel button when onCancel is not provided', async () => {
-    render(
-      <MatchProgressCard status="running" onDone={() => {}} />,
-    );
+  it("does not mount a Cancel button when onCancel is not provided", async () => {
+    render(<MatchProgressCard status="running" onDone={() => {}} />);
     await act(async () => {
       vi.advanceTimersByTime(30_000);
     });
-    expect(screen.queryByTestId('match-progress-cancel')).toBeNull();
+    expect(screen.queryByTestId("match-progress-cancel")).toBeNull();
   });
 
-  it('falls back to the heuristic timeline after three failed polls', async () => {
-    getProgressSpy.mockRejectedValue(new Error('network down'));
+  it("falls back to the heuristic timeline after three failed polls", async () => {
+    getProgressSpy.mockRejectedValue(new Error("network down"));
     render(
       <MatchProgressCard
         status="running"
@@ -205,18 +186,18 @@ describe('MatchProgressCard — v3.0.6 hang regression', () => {
       });
     }
 
-    const card = screen.getByTestId('match-progress-card');
-    expect(card.getAttribute('data-progress-source')).toBe('heuristic');
+    const card = screen.getByTestId("match-progress-card");
+    expect(card.getAttribute("data-progress-source")).toBe("heuristic");
   });
 
-  it('renders groups_done / groups_total counter on the ranking stage', async () => {
+  it("renders groups_done / groups_total counter on the ranking stage", async () => {
     getProgressSpy.mockResolvedValue({
-      stage: 'ranking',
+      stage: "ranking",
       stage_idx: 3,
       total_stages: 5,
       groups_done: 7,
       groups_total: 12,
-      status: 'running',
+      status: "running",
       started_at: null,
       updated_at: null,
       error: null,
@@ -242,6 +223,6 @@ describe('MatchProgressCard — v3.0.6 hang regression', () => {
     // Counter text appears in the headline ("Ranking — 7 / 12") AND
     // on the ranking stage row. ``getAllByText`` covers both without
     // assuming a single mount point.
-    expect(screen.getAllByText('7 / 12').length).toBeGreaterThan(0);
+    expect(screen.getAllByText("7 / 12").length).toBeGreaterThan(0);
   });
 });

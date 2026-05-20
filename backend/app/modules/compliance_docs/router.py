@@ -68,7 +68,9 @@ async def list_compliance_docs(
     """‌⁠‍List compliance docs for a project."""
     await verify_project_access(project_id, user_id, session)
     items = await service.list_docs(
-        project_id, status=status_filter, doc_type=doc_type,
+        project_id,
+        status=status_filter,
+        doc_type=doc_type,
     )
     return [_to_response(i) for i in items]
 

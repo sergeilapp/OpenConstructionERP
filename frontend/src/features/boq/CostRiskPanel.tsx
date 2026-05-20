@@ -1,12 +1,8 @@
-import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { ChevronDown, ChevronRight, Dices, Loader2, Inbox } from 'lucide-react';
-import {
-  boqApi,
-  type CostRiskHistogramBin,
-  type CostRiskDriver,
-} from './api';
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, ChevronRight, Dices, Loader2, Inbox } from "lucide-react";
+import { boqApi, type CostRiskHistogramBin, type CostRiskDriver } from "./api";
 
 /* ── Helpers ─────────────────────────────────────────────────────────── */
 
@@ -20,10 +16,10 @@ function createCRFormatter(locale: string) {
 function fmtCurrency(n: number, fmt: Intl.NumberFormat): string {
   const abs = Math.abs(n);
   if (abs >= 1_000_000) {
-    return `${n < 0 ? '-' : ''}${(n / 1_000_000).toFixed(2)}M`;
+    return `${n < 0 ? "-" : ""}${(n / 1_000_000).toFixed(2)}M`;
   }
   if (abs >= 10_000) {
-    return `${n < 0 ? '-' : ''}${fmt.format(Math.round(n / 1_000))}K`;
+    return `${n < 0 ? "-" : ""}${fmt.format(Math.round(n / 1_000))}K`;
   }
   return fmt.format(n);
 }
@@ -34,26 +30,26 @@ function PercentileCard({
   label,
   value,
   fmt,
-  variant = 'default',
+  variant = "default",
 }: {
   label: string;
   value: number;
   fmt: Intl.NumberFormat;
-  variant?: 'default' | 'green' | 'orange';
+  variant?: "default" | "green" | "orange";
 }) {
   const borderClass =
-    variant === 'green'
-      ? 'border-emerald-400/50 bg-emerald-50/50 dark:bg-emerald-950/20'
-      : variant === 'orange'
-        ? 'border-amber-400/50 bg-amber-50/50 dark:bg-amber-950/20'
-        : 'border-border-light bg-surface-secondary/30';
+    variant === "green"
+      ? "border-emerald-400/50 bg-emerald-50/50 dark:bg-emerald-950/20"
+      : variant === "orange"
+        ? "border-amber-400/50 bg-amber-50/50 dark:bg-amber-950/20"
+        : "border-border-light bg-surface-secondary/30";
 
   const valueClass =
-    variant === 'green'
-      ? 'text-emerald-700 dark:text-emerald-400'
-      : variant === 'orange'
-        ? 'text-amber-700 dark:text-amber-400'
-        : 'text-content-primary';
+    variant === "green"
+      ? "text-emerald-700 dark:text-emerald-400"
+      : variant === "orange"
+        ? "text-amber-700 dark:text-amber-400"
+        : "text-content-primary";
 
   return (
     <div className={`rounded-lg border px-3 py-2.5 ${borderClass}`}>
@@ -87,10 +83,12 @@ function ContingencyCard({
       <div className="flex items-center justify-between">
         <div>
           <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wide">
-            {t('boq.cost_risk_contingency', { defaultValue: 'Contingency (P80 - P50)‌⁠‍' })}
+            {t("boq.cost_risk_contingency", {
+              defaultValue: "Contingency (P80 - P50)‌⁠‍",
+            })}
           </div>
           <div className="text-lg font-bold text-blue-700 dark:text-blue-400 tabular-nums mt-0.5">
-            {fmtCurrency(contingency, fmt)}{' '}
+            {fmtCurrency(contingency, fmt)}{" "}
             <span className="text-sm font-medium text-blue-600/70 dark:text-blue-400/70">
               ({contingencyPct}%)
             </span>
@@ -98,7 +96,9 @@ function ContingencyCard({
         </div>
         <div className="text-right">
           <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wide">
-            {t('boq.cost_risk_recommended_budget', { defaultValue: 'Recommended Budget‌⁠‍' })}
+            {t("boq.cost_risk_recommended_budget", {
+              defaultValue: "Recommended Budget‌⁠‍",
+            })}
           </div>
           <div className="text-lg font-bold text-content-primary tabular-nums mt-0.5">
             {fmtCurrency(recommendedBudget, fmt)}
@@ -124,7 +124,10 @@ function Histogram({
   fmt: Intl.NumberFormat;
   t: (key: string, opts?: Record<string, unknown>) => string;
 }) {
-  const maxCount = useMemo(() => Math.max(...bins.map((b) => b.count), 1), [bins]);
+  const maxCount = useMemo(
+    () => Math.max(...bins.map((b) => b.count), 1),
+    [bins],
+  );
   const firstBin = bins[0];
   const lastBin = bins[bins.length - 1];
   const minVal = firstBin ? firstBin.bin_start : 0;
@@ -138,7 +141,9 @@ function Histogram({
   return (
     <div className="space-y-2">
       <h4 className="text-xs font-semibold text-content-tertiary uppercase tracking-wide">
-        {t('boq.cost_risk_distribution', { defaultValue: 'Cost Distribution‌⁠‍' })}
+        {t("boq.cost_risk_distribution", {
+          defaultValue: "Cost Distribution‌⁠‍",
+        })}
       </h4>
       <div className="relative">
         {/* Bar chart */}
@@ -149,11 +154,11 @@ function Histogram({
             const isLeftOfP50 = binMid < p50;
             const isRightOfP80 = binMid > p80;
 
-            let barColor = 'bg-blue-400/70 hover:bg-blue-500';
+            let barColor = "bg-blue-400/70 hover:bg-blue-500";
             if (isLeftOfP50) {
-              barColor = 'bg-emerald-400/60 hover:bg-emerald-500';
+              barColor = "bg-emerald-400/60 hover:bg-emerald-500";
             } else if (isRightOfP80) {
-              barColor = 'bg-rose-400/60 hover:bg-rose-500';
+              barColor = "bg-rose-400/60 hover:bg-rose-500";
             }
 
             return (
@@ -204,21 +209,15 @@ function Histogram({
       <div className="flex items-center justify-center gap-5 pt-1">
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-5 rounded-sm bg-emerald-400/60" />
-          <span className="text-2xs text-content-tertiary">
-            {'< P50'}
-          </span>
+          <span className="text-2xs text-content-tertiary">{"< P50"}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-5 rounded-sm bg-blue-400/70" />
-          <span className="text-2xs text-content-tertiary">
-            P50 - P80
-          </span>
+          <span className="text-2xs text-content-tertiary">P50 - P80</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-5 rounded-sm bg-rose-400/60" />
-          <span className="text-2xs text-content-tertiary">
-            {'> P80'}
-          </span>
+          <span className="text-2xs text-content-tertiary">{"> P80"}</span>
         </div>
       </div>
     </div>
@@ -239,20 +238,22 @@ function RiskDriversTable({
   return (
     <div className="space-y-2">
       <h4 className="text-xs font-semibold text-content-tertiary uppercase tracking-wide">
-        {t('boq.cost_risk_drivers', { defaultValue: 'Top Risk Drivers‌⁠‍' })}
+        {t("boq.cost_risk_drivers", { defaultValue: "Top Risk Drivers‌⁠‍" })}
       </h4>
       <div className="border border-border-light rounded-lg overflow-hidden">
         <table className="w-full text-xs">
           <thead>
             <tr className="bg-surface-tertiary/50">
               <th className="px-3 py-2 text-left font-medium text-content-secondary">
-                {t('boq.ordinal')}
+                {t("boq.ordinal")}
               </th>
               <th className="px-3 py-2 text-left font-medium text-content-secondary">
-                {t('boq.description')}
+                {t("boq.description")}
               </th>
               <th className="px-3 py-2 text-right font-medium text-content-secondary">
-                {t('boq.cost_risk_variance_share', { defaultValue: 'Variance Share‌⁠‍' })}
+                {t("boq.cost_risk_variance_share", {
+                  defaultValue: "Variance Share‌⁠‍",
+                })}
               </th>
             </tr>
           </thead>
@@ -261,7 +262,7 @@ function RiskDriversTable({
               <tr
                 key={`${driver.ordinal}-${idx}`}
                 className={`hover:bg-surface-secondary/30 transition-colors ${
-                  idx % 2 === 0 ? 'bg-surface-primary/50' : ''
+                  idx % 2 === 0 ? "bg-surface-primary/50" : ""
                 }`}
               >
                 <td className="px-3 py-2 font-mono text-content-tertiary">
@@ -271,14 +272,16 @@ function RiskDriversTable({
                   className="px-3 py-2 text-content-primary max-w-[240px] truncate"
                   title={driver.description}
                 >
-                  {driver.description || '-'}
+                  {driver.description || "-"}
                 </td>
                 <td className="px-3 py-2 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <div className="w-20 h-2 bg-surface-tertiary rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full bg-rose-500/70 transition-all"
-                        style={{ width: `${Math.min(driver.contribution_pct, 100)}%` }}
+                        style={{
+                          width: `${Math.min(driver.contribution_pct, 100)}%`,
+                        }}
                       />
                     </div>
                     <span className="tabular-nums font-medium text-content-secondary w-12 text-right">
@@ -297,13 +300,19 @@ function RiskDriversTable({
 
 /* ── Main Component ──────────────────────────────────────────────────── */
 
-export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; locale?: string }) {
+export function CostRiskPanel({
+  boqId,
+  locale = "de-DE",
+}: {
+  boqId: string;
+  locale?: string;
+}) {
   const { t } = useTranslation();
   const fmt = useMemo(() => createCRFormatter(locale), [locale]);
   const [collapsed, setCollapsed] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['boq-cost-risk', boqId],
+    queryKey: ["boq-cost-risk", boqId],
     queryFn: () => boqApi.getCostRisk(boqId),
     enabled: !!boqId,
   });
@@ -316,19 +325,26 @@ export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; loca
       <button
         onClick={() => setCollapsed((prev) => !prev)}
         aria-expanded={!collapsed}
-        aria-label={t('boq.cost_risk_title', { defaultValue: 'Monte Carlo Cost Risk' })}
+        aria-label={t("boq.cost_risk_title", {
+          defaultValue: "Monte Carlo Cost Risk",
+        })}
         className="flex w-full items-center justify-between px-5 py-3.5 hover:bg-surface-secondary/50 transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <Dices size={16} className="text-content-tertiary" strokeWidth={1.75} />
+          <Dices
+            size={16}
+            className="text-content-tertiary"
+            strokeWidth={1.75}
+          />
           <span className="text-sm font-semibold text-content-primary">
-            {t('boq.cost_risk_title', { defaultValue: 'Monte Carlo Cost Risk' })}
+            {t("boq.cost_risk_title", {
+              defaultValue: "Monte Carlo Cost Risk",
+            })}
           </span>
           {hasData && (
             <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-surface-secondary px-1.5 text-2xs font-medium text-content-secondary tabular-nums">
-              {data.iterations.toLocaleString()}
-              {' '}
-              {t('boq.cost_risk_iterations_label', { defaultValue: 'iter.' })}
+              {data.iterations.toLocaleString()}{" "}
+              {t("boq.cost_risk_iterations_label", { defaultValue: "iter." })}
             </span>
           )}
         </div>
@@ -342,10 +358,13 @@ export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; loca
         <div className="border-t border-border-light">
           {isLoading ? (
             <div className="px-5 py-8 text-center">
-              <Loader2 size={20} className="mx-auto mb-2 animate-spin text-oe-blue" />
+              <Loader2
+                size={20}
+                className="mx-auto mb-2 animate-spin text-oe-blue"
+              />
               <p className="text-xs text-content-tertiary">
-                {t('boq.cost_risk_loading', {
-                  defaultValue: 'Running Monte Carlo simulation...',
+                {t("boq.cost_risk_loading", {
+                  defaultValue: "Running Monte Carlo simulation...",
                 })}
               </p>
             </div>
@@ -355,7 +374,10 @@ export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; loca
                 <Inbox size={18} className="text-semantic-error" />
               </div>
               <p className="text-xs text-content-secondary">
-                {t('boq.cost_risk_error', { defaultValue: 'Failed to load cost risk analysis. Please try again.' })}
+                {t("boq.cost_risk_error", {
+                  defaultValue:
+                    "Failed to load cost risk analysis. Please try again.",
+                })}
               </p>
             </div>
           ) : !hasData ? (
@@ -365,9 +387,9 @@ export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; loca
                   <Inbox size={18} className="text-content-tertiary" />
                 </div>
                 <p className="text-xs text-content-tertiary">
-                  {t('boq.cost_risk_empty', {
+                  {t("boq.cost_risk_empty", {
                     defaultValue:
-                      'Add positions with costs to run the Monte Carlo simulation.',
+                      "Add positions with costs to run the Monte Carlo simulation.",
                   })}
                 </p>
               </div>
@@ -377,14 +399,20 @@ export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; loca
               {/* ── Base Total info ──────────────────────────────────── */}
               <div className="flex items-center gap-4 text-xs text-content-secondary">
                 <span>
-                  {t('boq.cost_risk_base_total', { defaultValue: 'Base Total' })}:{' '}
+                  {t("boq.cost_risk_base_total", {
+                    defaultValue: "Base Total",
+                  })}
+                  :{" "}
                   <span className="font-semibold text-content-primary tabular-nums">
                     {fmtCurrency(data.base_total, fmt)}
                   </span>
                 </span>
                 <span className="text-content-quaternary">|</span>
                 <span>
-                  {t('boq.cost_risk_iterations', { defaultValue: 'Iterations' })}:{' '}
+                  {t("boq.cost_risk_iterations", {
+                    defaultValue: "Iterations",
+                  })}
+                  :{" "}
                   <span className="font-semibold text-content-primary">
                     {data.iterations.toLocaleString()}
                   </span>
@@ -393,22 +421,38 @@ export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; loca
 
               {/* ── Percentile cards (6) ─────────────────────────────── */}
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-                <PercentileCard label="P10" value={data.percentiles.p10} fmt={fmt} />
-                <PercentileCard label="P25" value={data.percentiles.p25} fmt={fmt} />
+                <PercentileCard
+                  label="P10"
+                  value={data.percentiles.p10}
+                  fmt={fmt}
+                />
+                <PercentileCard
+                  label="P25"
+                  value={data.percentiles.p25}
+                  fmt={fmt}
+                />
                 <PercentileCard
                   label="P50"
                   value={data.percentiles.p50}
                   fmt={fmt}
                   variant="green"
                 />
-                <PercentileCard label="P75" value={data.percentiles.p75} fmt={fmt} />
+                <PercentileCard
+                  label="P75"
+                  value={data.percentiles.p75}
+                  fmt={fmt}
+                />
                 <PercentileCard
                   label="P80"
                   value={data.percentiles.p80}
                   fmt={fmt}
                   variant="orange"
                 />
-                <PercentileCard label="P90" value={data.percentiles.p90} fmt={fmt} />
+                <PercentileCard
+                  label="P90"
+                  value={data.percentiles.p90}
+                  fmt={fmt}
+                />
               </div>
 
               {/* ── Contingency card ─────────────────────────────────── */}

@@ -25,31 +25,47 @@
  *   form hides irrelevant inputs.
  */
 
-import { useMemo, useState, useCallback, type FormEvent } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState, useCallback, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  X, Plus, Trash2, Columns3,
-  Type, Hash, Calendar, List, Sigma,
-  AlertCircle, Check, ChevronDown, Globe, PlayCircle,
-} from 'lucide-react';
-import { Button, Badge, ConfirmDialog } from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { useToastStore } from '@/stores/useToastStore';
-import { boqApi, type CustomColumnDef, type Position, type BOQVariable } from './api';
-import { getErrorMessage } from '@/shared/lib/api';
+  X,
+  Plus,
+  Trash2,
+  Columns3,
+  Type,
+  Hash,
+  Calendar,
+  List,
+  Sigma,
+  AlertCircle,
+  Check,
+  ChevronDown,
+  Globe,
+  PlayCircle,
+} from "lucide-react";
+import { Button, Badge, ConfirmDialog } from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { useToastStore } from "@/stores/useToastStore";
+import {
+  boqApi,
+  type CustomColumnDef,
+  type Position,
+  type BOQVariable,
+} from "./api";
+import { getErrorMessage } from "@/shared/lib/api";
 import {
   type ColumnPreset,
   getUniversalPresets,
   getRegionalPresets,
-} from './presets';
+} from "./presets";
 import {
   buildFormulaContext,
   evaluateFormulaRaw,
   isFormula,
   normaliseFormula,
   type FormulaVariable,
-} from './grid/formula';
+} from "./grid/formula";
 
 interface CustomColumnsDialogProps {
   open: boolean;
@@ -63,7 +79,7 @@ interface CustomColumnsDialogProps {
   variables?: BOQVariable[];
 }
 
-const COLUMN_TYPE_ICONS: Record<CustomColumnDef['column_type'], typeof Type> = {
+const COLUMN_TYPE_ICONS: Record<CustomColumnDef["column_type"], typeof Type> = {
   text: Type,
   number: Hash,
   date: Calendar,
@@ -73,45 +89,85 @@ const COLUMN_TYPE_ICONS: Record<CustomColumnDef['column_type'], typeof Type> = {
 
 /** Quick-insert formula presets surfaced as chips below the textarea. */
 const FORMULA_PRESETS: { label: string; snippet: string; hint: string }[] = [
-  { label: '× 1.19 (VAT)', snippet: '=$QUANTITY * $UNIT_RATE * 1.19', hint: 'Total with German VAT' },
-  { label: 'qty × rate', snippet: '=$QUANTITY * $UNIT_RATE', hint: 'Net total' },
-  { label: 'pos ref', snippet: '=pos("01.001").qty', hint: 'Pull qty from another row' },
-  { label: 'if branch', snippet: '=if($QUANTITY > 100, $UNIT_RATE * 0.95, $UNIT_RATE)', hint: 'Volume discount' },
-  { label: '$VAR', snippet: '=$QUANTITY * $LABOR_RATE', hint: 'Use a BOQ variable' },
-  { label: 'round', snippet: '=round($QUANTITY * $UNIT_RATE, 2)', hint: 'Round to 2 decimals' },
+  {
+    label: "× 1.19 (VAT)",
+    snippet: "=$QUANTITY * $UNIT_RATE * 1.19",
+    hint: "Total with German VAT",
+  },
+  {
+    label: "qty × rate",
+    snippet: "=$QUANTITY * $UNIT_RATE",
+    hint: "Net total",
+  },
+  {
+    label: "pos ref",
+    snippet: '=pos("01.001").qty',
+    hint: "Pull qty from another row",
+  },
+  {
+    label: "if branch",
+    snippet: "=if($QUANTITY > 100, $UNIT_RATE * 0.95, $UNIT_RATE)",
+    hint: "Volume discount",
+  },
+  {
+    label: "$VAR",
+    snippet: "=$QUANTITY * $LABOR_RATE",
+    hint: "Use a BOQ variable",
+  },
+  {
+    label: "round",
+    snippet: "=round($QUANTITY * $UNIT_RATE, 2)",
+    hint: "Round to 2 decimals",
+  },
 ];
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
 const RESERVED_NAMES = new Set([
-  'ordinal', 'description', 'unit', 'quantity', 'unit_rate',
-  'total', 'id', 'parent_id', 'classification', 'sort_order',
-  'metadata', 'created_at', 'updated_at',
+  "ordinal",
+  "description",
+  "unit",
+  "quantity",
+  "unit_rate",
+  "total",
+  "id",
+  "parent_id",
+  "classification",
+  "sort_order",
+  "metadata",
+  "created_at",
+  "updated_at",
 ]);
 
 function normalizeColumnName(input: string): string {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '_')
-    // Strip only characters that aren't Unicode letters/digits or
-    // underscore. \p{L}=any letter (Cyrillic, CJK, Arabic, etc.),
-    // \p{N}=any digit. Mirrors Python's str.isidentifier() so the
-    // frontend and backend agree on what's a valid key.
-    .replace(/[^\p{L}\p{N}_]/gu, '');
+  return (
+    input
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "_")
+      // Strip only characters that aren't Unicode letters/digits or
+      // underscore. \p{L}=any letter (Cyrillic, CJK, Arabic, etc.),
+      // \p{N}=any digit. Mirrors Python's str.isidentifier() so the
+      // frontend and backend agree on what's a valid key.
+      .replace(/[^\p{L}\p{N}_]/gu, "")
+  );
 }
 
 /** Count how many positions have a non-empty value for a given column name. */
-function fillRateFor(positions: Position[] | undefined, columnName: string): { filled: number; total: number } {
+function fillRateFor(
+  positions: Position[] | undefined,
+  columnName: string,
+): { filled: number; total: number } {
   if (!positions || positions.length === 0) return { filled: 0, total: 0 };
   // Skip section rows when computing fill rate — sections never carry custom values.
-  const dataRows = positions.filter((p) => p.unit !== '');
+  const dataRows = positions.filter((p) => p.unit !== "");
   let filled = 0;
   for (const p of dataRows) {
     const meta = (p.metadata as Record<string, unknown> | undefined) ?? {};
-    const cf = (meta.custom_fields as Record<string, unknown> | undefined) ?? {};
+    const cf =
+      (meta.custom_fields as Record<string, unknown> | undefined) ?? {};
     const v = cf[columnName];
-    if (v != null && v !== '') filled++;
+    if (v != null && v !== "") filled++;
   }
   return { filled, total: dataRows.length };
 }
@@ -131,11 +187,12 @@ export function CustomColumnsDialog({
   const { confirm, ...confirmProps } = useConfirm();
 
   // ── State for the manual "Add column" form ───────────────────────────
-  const [newName, setNewName] = useState('');
-  const [newType, setNewType] = useState<CustomColumnDef['column_type']>('text');
-  const [newOptions, setNewOptions] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newType, setNewType] =
+    useState<CustomColumnDef["column_type"]>("text");
+  const [newOptions, setNewOptions] = useState("");
   // v2.7.0/E — calculated-column-only state.
-  const [newFormula, setNewFormula] = useState('');
+  const [newFormula, setNewFormula] = useState("");
   const [newDecimals, setNewDecimals] = useState(2);
   const [testResult, setTestResult] = useState<string | null>(null);
   const [showCustomForm, setShowCustomForm] = useState(false);
@@ -145,15 +202,16 @@ export function CustomColumnsDialog({
    *  throws (mismatched quotes, etc) — actual evaluation errors surface
    *  via the Test button. */
   const formulaError = useMemo(() => {
-    if (newType !== 'calculated') return null;
+    if (newType !== "calculated") return null;
     const v = newFormula.trim();
     if (!v) return null;
-    if (!isFormula(v)) return 'Must start with `=` or contain a math operator / function.';
+    if (!isFormula(v))
+      return "Must start with `=` or contain a math operator / function.";
     try {
-      normaliseFormula(v.startsWith('=') ? v.slice(1) : v);
+      normaliseFormula(v.startsWith("=") ? v.slice(1) : v);
       return null;
     } catch (e) {
-      return e instanceof Error ? e.message : 'Invalid formula syntax.';
+      return e instanceof Error ? e.message : "Invalid formula syntax.";
     }
   }, [newType, newFormula]);
 
@@ -164,9 +222,9 @@ export function CustomColumnsDialog({
     setTestResult(null);
     const formula = newFormula.trim();
     if (!formula) return;
-    const sample = (positions ?? []).find((p) => p.unit !== '');
+    const sample = (positions ?? []).find((p) => p.unit !== "");
     if (!sample) {
-      setTestResult('No position to test against.');
+      setTestResult("No position to test against.");
       return;
     }
     const varMap = new Map<string, FormulaVariable>();
@@ -178,9 +236,12 @@ export function CustomColumnsDialog({
     // Same shape the runtime uses — quantity / unit_rate / total exposed
     // both via `col(...)` (currentRow) and as $-variables.
     const sampleRow = sample as unknown as Record<string, unknown>;
-    if (typeof sample.quantity === 'number') varMap.set('QUANTITY', { type: 'number', value: sample.quantity });
-    if (typeof sample.unit_rate === 'number') varMap.set('UNIT_RATE', { type: 'number', value: sample.unit_rate });
-    if (typeof sample.total === 'number') varMap.set('TOTAL', { type: 'number', value: sample.total });
+    if (typeof sample.quantity === "number")
+      varMap.set("QUANTITY", { type: "number", value: sample.quantity });
+    if (typeof sample.unit_rate === "number")
+      varMap.set("UNIT_RATE", { type: "number", value: sample.unit_rate });
+    if (typeof sample.total === "number")
+      varMap.set("TOTAL", { type: "number", value: sample.total });
     const ctx = buildFormulaContext({
       positions: positions ?? [],
       variables: varMap,
@@ -189,66 +250,75 @@ export function CustomColumnsDialog({
     });
     try {
       const r = evaluateFormulaRaw(formula, ctx);
-      if (r === null) setTestResult('(empty)');
-      else if (typeof r === 'number') setTestResult(r.toFixed(Math.max(0, Math.min(6, newDecimals))));
+      if (r === null) setTestResult("(empty)");
+      else if (typeof r === "number")
+        setTestResult(r.toFixed(Math.max(0, Math.min(6, newDecimals))));
       else setTestResult(String(r));
     } catch (e) {
-      setTestResult(`#ERR: ${e instanceof Error ? e.message : 'unknown'}`);
+      setTestResult(`#ERR: ${e instanceof Error ? e.message : "unknown"}`);
     }
   }, [newFormula, newDecimals, positions, variables]);
 
   const { data: columns = [], isLoading } = useQuery({
-    queryKey: ['boq-custom-columns', boqId],
+    queryKey: ["boq-custom-columns", boqId],
     queryFn: () => boqApi.listCustomColumns(boqId),
     enabled: open,
   });
 
-  const existingNames = useMemo(() => new Set(columns.map((c) => c.name)), [columns]);
+  const existingNames = useMemo(
+    () => new Set(columns.map((c) => c.name)),
+    [columns],
+  );
 
   const invalidateAll = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ['boq-custom-columns', boqId] });
-    queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
-    queryClient.invalidateQueries({ queryKey: ['boq-with-positions', boqId] });
+    queryClient.invalidateQueries({ queryKey: ["boq-custom-columns", boqId] });
+    queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
+    queryClient.invalidateQueries({ queryKey: ["boq-with-positions", boqId] });
   }, [queryClient, boqId]);
 
   const addMut = useMutation({
     mutationFn: (data: CustomColumnDef) => boqApi.addCustomColumn(boqId, data),
     onSuccess: () => {
       invalidateAll();
-      setNewName('');
-      setNewType('text');
-      setNewOptions('');
-      setNewFormula('');
+      setNewName("");
+      setNewType("text");
+      setNewOptions("");
+      setNewFormula("");
       setNewDecimals(2);
       setTestResult(null);
       setShowCustomForm(false);
       addToast({
-        type: 'success',
-        title: t('boq.column_added', { defaultValue: 'Column added‌⁠‍' }),
+        type: "success",
+        title: t("boq.column_added", { defaultValue: "Column added‌⁠‍" }),
       });
     },
     onError: (err) => {
       addToast({
-        type: 'error',
-        title: t('boq.column_add_failed', { defaultValue: 'Could not add column‌⁠‍' }),
+        type: "error",
+        title: t("boq.column_add_failed", {
+          defaultValue: "Could not add column‌⁠‍",
+        }),
         message: getErrorMessage(err),
       });
     },
   });
 
   const deleteMut = useMutation({
-    mutationFn: (columnName: string) => boqApi.deleteCustomColumn(boqId, columnName),
+    mutationFn: (columnName: string) =>
+      boqApi.deleteCustomColumn(boqId, columnName),
     onSuccess: () => {
       invalidateAll();
       addToast({
-        type: 'success',
-        title: t('boq.column_removed', { defaultValue: 'Column removed‌⁠‍' }),
+        type: "success",
+        title: t("boq.column_removed", { defaultValue: "Column removed‌⁠‍" }),
       });
     },
     onError: (err) => {
       addToast({
-        type: 'error',
-        title: t('boq.column_delete_failed', { defaultValue: 'Could not remove column‌⁠‍' }),
+        type: "error",
+        title: t("boq.column_delete_failed", {
+          defaultValue: "Could not remove column‌⁠‍",
+        }),
         message: getErrorMessage(err),
       });
     },
@@ -262,9 +332,9 @@ export function CustomColumnsDialog({
       const toAdd = preset.columns.filter((c) => !existingNames.has(c.name));
       if (toAdd.length === 0) {
         addToast({
-          type: 'info',
-          title: t('boq.preset_already_applied', {
-            defaultValue: 'All columns from this preset already exist‌⁠‍',
+          type: "info",
+          title: t("boq.preset_already_applied", {
+            defaultValue: "All columns from this preset already exist‌⁠‍",
           }),
         });
         return;
@@ -276,9 +346,9 @@ export function CustomColumnsDialog({
           added++;
         } catch (err) {
           addToast({
-            type: 'error',
-            title: t('boq.preset_partial', {
-              defaultValue: 'Preset partially applied',
+            type: "error",
+            title: t("boq.preset_partial", {
+              defaultValue: "Preset partially applied",
             }),
             message: getErrorMessage(err),
           });
@@ -288,8 +358,8 @@ export function CustomColumnsDialog({
       if (added > 0) {
         invalidateAll();
         addToast({
-          type: 'success',
-          title: t('boq.preset_applied', {
+          type: "success",
+          title: t("boq.preset_applied", {
             defaultValue: '{{count}} columns added from "{{name}}" preset',
             count: added,
             name: preset.name,
@@ -322,16 +392,18 @@ export function CustomColumnsDialog({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-content-primary">{preset.name}</p>
+              <p className="text-sm font-semibold text-content-primary">
+                {preset.name}
+              </p>
               {allApplied && (
                 <span className="inline-flex items-center gap-0.5 text-2xs font-medium text-emerald-600">
                   <Check size={11} />
-                  {t('boq.applied', { defaultValue: 'Applied' })}
+                  {t("boq.applied", { defaultValue: "Applied" })}
                 </span>
               )}
               {someApplied && !allApplied && (
                 <span className="text-2xs font-medium text-amber-600">
-                  {t('boq.partial', { defaultValue: 'Partial' })}
+                  {t("boq.partial", { defaultValue: "Partial" })}
                 </span>
               )}
             </div>
@@ -342,7 +414,7 @@ export function CustomColumnsDialog({
               {preset.columns.map((c) => (
                 <span
                   key={c.name}
-                  className={`inline-block rounded px-1.5 py-0.5 text-2xs ${existingNames.has(c.name) ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'bg-surface-secondary text-content-secondary'}`}
+                  className={`inline-block rounded px-1.5 py-0.5 text-2xs ${existingNames.has(c.name) ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-surface-secondary text-content-secondary"}`}
                 >
                   {c.display_name}
                 </span>
@@ -364,18 +436,21 @@ export function CustomColumnsDialog({
     const normalizedName = normalizeColumnName(trimmed);
     if (!normalizedName || /^\p{N}/u.test(normalizedName)) {
       addToast({
-        type: 'error',
-        title: t('boq.column_name_invalid', { defaultValue: 'Column name is invalid' }),
-        message: t('boq.column_name_invalid_hint', {
-          defaultValue: 'Use letters (any script), numbers and spaces. Must start with a letter.',
+        type: "error",
+        title: t("boq.column_name_invalid", {
+          defaultValue: "Column name is invalid",
+        }),
+        message: t("boq.column_name_invalid_hint", {
+          defaultValue:
+            "Use letters (any script), numbers and spaces. Must start with a letter.",
         }),
       });
       return;
     }
     if (RESERVED_NAMES.has(normalizedName)) {
       addToast({
-        type: 'error',
-        title: t('boq.column_name_reserved', {
+        type: "error",
+        title: t("boq.column_name_reserved", {
           defaultValue: '"{{name}}" is a reserved column name',
           name: normalizedName,
         }),
@@ -384,8 +459,8 @@ export function CustomColumnsDialog({
     }
     if (existingNames.has(normalizedName)) {
       addToast({
-        type: 'error',
-        title: t('boq.column_name_duplicate', {
+        type: "error",
+        title: t("boq.column_name_duplicate", {
           defaultValue: 'A column named "{{name}}" already exists',
           name: normalizedName,
         }),
@@ -398,37 +473,37 @@ export function CustomColumnsDialog({
       display_name: trimmed,
       column_type: newType,
     };
-    if (newType === 'select') {
+    if (newType === "select") {
       const opts = newOptions
         .split(/[,\n]/)
         .map((o) => o.trim())
         .filter(Boolean);
       if (opts.length === 0) {
         addToast({
-          type: 'error',
-          title: t('boq.column_select_needs_options', {
-            defaultValue: 'Select column needs at least one option',
+          type: "error",
+          title: t("boq.column_select_needs_options", {
+            defaultValue: "Select column needs at least one option",
           }),
         });
         return;
       }
       payload.options = opts;
-    } else if (newType === 'calculated') {
+    } else if (newType === "calculated") {
       const formula = newFormula.trim();
       if (!formula) {
         addToast({
-          type: 'error',
-          title: t('boq.column_calc_needs_formula', {
-            defaultValue: 'Calculated column needs a formula',
+          type: "error",
+          title: t("boq.column_calc_needs_formula", {
+            defaultValue: "Calculated column needs a formula",
           }),
         });
         return;
       }
       if (formulaError) {
         addToast({
-          type: 'error',
-          title: t('boq.column_calc_invalid_formula', {
-            defaultValue: 'Formula has a syntax error',
+          type: "error",
+          title: t("boq.column_calc_invalid_formula", {
+            defaultValue: "Formula has a syntax error",
           }),
           message: formulaError,
         });
@@ -460,18 +535,19 @@ export function CustomColumnsDialog({
             </div>
             <div>
               <h2 className="text-lg font-semibold text-content-primary">
-                {t('boq.custom_columns', { defaultValue: 'Custom Columns' })}
+                {t("boq.custom_columns", { defaultValue: "Custom Columns" })}
               </h2>
               <p className="text-xs text-content-tertiary">
-                {t('boq.custom_columns_subtitle', {
-                  defaultValue: 'Add your own fields — supplier, notes, procurement info…',
+                {t("boq.custom_columns_subtitle", {
+                  defaultValue:
+                    "Add your own fields — supplier, notes, procurement info…",
                 })}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={18} />
@@ -484,23 +560,27 @@ export function CustomColumnsDialog({
           <section>
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                {t('boq.existing_columns', { defaultValue: 'Existing custom columns' })}
+                {t("boq.existing_columns", {
+                  defaultValue: "Existing custom columns",
+                })}
               </h3>
               {columns.length > 0 && (
                 <span className="text-2xs text-content-tertiary tabular-nums">
-                  {columns.length} {t('boq.columns_count', { defaultValue: 'columns' })}
+                  {columns.length}{" "}
+                  {t("boq.columns_count", { defaultValue: "columns" })}
                 </span>
               )}
             </div>
             {isLoading ? (
               <p className="text-sm text-content-tertiary py-3">
-                {t('common.loading', { defaultValue: 'Loading…' })}
+                {t("common.loading", { defaultValue: "Loading…" })}
               </p>
             ) : columns.length === 0 ? (
               <div className="flex items-center gap-2 rounded-lg border border-dashed border-border-light px-4 py-5 text-sm text-content-tertiary">
                 <AlertCircle size={16} />
-                {t('boq.no_custom_columns', {
-                  defaultValue: 'No custom columns yet. Pick a preset below or add your own.',
+                {t("boq.no_custom_columns", {
+                  defaultValue:
+                    "No custom columns yet. Pick a preset below or add your own.",
                 })}
               </div>
             ) : (
@@ -511,10 +591,11 @@ export function CustomColumnsDialog({
                   // — fill rate is meaningless. Suppress the bar in both cases.
                   const isDerived = !!col.derived;
                   const fr =
-                    col.column_type === 'calculated' || isDerived
+                    col.column_type === "calculated" || isDerived
                       ? { filled: 0, total: 0 }
                       : fillRateFor(positions, col.name);
-                  const fillPct = fr.total > 0 ? Math.round((fr.filled / fr.total) * 100) : 0;
+                  const fillPct =
+                    fr.total > 0 ? Math.round((fr.filled / fr.total) * 100) : 0;
                   return (
                     <div
                       key={col.name}
@@ -533,23 +614,26 @@ export function CustomColumnsDialog({
                           </Badge>
                           {isDerived && (
                             <Badge variant="blue" size="sm">
-                              {t('boq.column_auto', { defaultValue: 'auto' })}
+                              {t("boq.column_auto", { defaultValue: "auto" })}
                               {col.resource_role
                                 ? ` · ${
                                     Array.isArray(col.resource_role)
-                                      ? col.resource_role.join(' / ')
+                                      ? col.resource_role.join(" / ")
                                       : col.resource_role
                                   }`
-                                : ''}
+                                : ""}
                             </Badge>
                           )}
-                          {col.column_type === 'select' && col.options && col.options.length > 0 && (
-                            <span className="text-2xs text-content-tertiary">
-                              {col.options.length} {t('boq.options', { defaultValue: 'options' })}
-                            </span>
-                          )}
+                          {col.column_type === "select" &&
+                            col.options &&
+                            col.options.length > 0 && (
+                              <span className="text-2xs text-content-tertiary">
+                                {col.options.length}{" "}
+                                {t("boq.options", { defaultValue: "options" })}
+                              </span>
+                            )}
                         </div>
-                        {col.column_type === 'calculated' && col.formula && (
+                        {col.column_type === "calculated" && col.formula && (
                           <div className="mt-0.5">
                             <code className="font-mono text-2xs text-content-secondary truncate block">
                               {col.formula}
@@ -562,11 +646,12 @@ export function CustomColumnsDialog({
                             <>
                               <span>·</span>
                               <span className="tabular-nums">
-                                {fr.filled}/{fr.total} {t('boq.filled', { defaultValue: 'filled' })}
+                                {fr.filled}/{fr.total}{" "}
+                                {t("boq.filled", { defaultValue: "filled" })}
                               </span>
                               <div className="h-1 w-16 rounded-full bg-surface-secondary overflow-hidden">
                                 <div
-                                  className={`h-full ${fillPct >= 50 ? 'bg-emerald-500' : fillPct >= 10 ? 'bg-amber-500' : 'bg-content-quaternary'}`}
+                                  className={`h-full ${fillPct >= 50 ? "bg-emerald-500" : fillPct >= 10 ? "bg-amber-500" : "bg-content-quaternary"}`}
                                   style={{ width: `${fillPct}%` }}
                                 />
                               </div>
@@ -577,8 +662,10 @@ export function CustomColumnsDialog({
                       <button
                         onClick={async () => {
                           const ok = await confirm({
-                            title: t('boq.column_delete_confirm_title', { defaultValue: 'Remove column?' }),
-                            message: t('boq.column_delete_confirm', {
+                            title: t("boq.column_delete_confirm_title", {
+                              defaultValue: "Remove column?",
+                            }),
+                            message: t("boq.column_delete_confirm", {
                               defaultValue:
                                 'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
                               name: col.display_name,
@@ -587,7 +674,9 @@ export function CustomColumnsDialog({
                           if (ok) deleteMut.mutate(col.name);
                         }}
                         disabled={deleteMut.isPending}
-                        aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                        aria-label={t("common.delete", {
+                          defaultValue: "Delete",
+                        })}
                         className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:text-semantic-error hover:bg-semantic-error-bg transition-colors shrink-0"
                       >
                         <Trash2 size={15} />
@@ -602,7 +691,9 @@ export function CustomColumnsDialog({
           {/* ── Presets ─────────────────────────────────────────────── */}
           <section>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-2">
-              {t('boq.preset_universal', { defaultValue: 'Quick start with a preset' })}
+              {t("boq.preset_universal", {
+                defaultValue: "Quick start with a preset",
+              })}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {getUniversalPresets().map((preset) => renderPresetCard(preset))}
@@ -612,7 +703,9 @@ export function CustomColumnsDialog({
               <summary className="flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-content-secondary hover:text-content-primary">
                 <span className="flex items-center gap-2">
                   <Globe size={14} className="text-content-tertiary" />
-                  {t('boq.preset_regional', { defaultValue: 'Regional standards' })}
+                  {t("boq.preset_regional", {
+                    defaultValue: "Regional standards",
+                  })}
                   <span className="rounded-full bg-surface-primary px-1.5 py-0.5 text-2xs font-medium text-content-tertiary">
                     {getRegionalPresets().length}
                   </span>
@@ -632,7 +725,9 @@ export function CustomColumnsDialog({
           <section>
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                {t('boq.add_custom_column', { defaultValue: 'Or add a custom one' })}
+                {t("boq.add_custom_column", {
+                  defaultValue: "Or add a custom one",
+                })}
               </h3>
               {!showCustomForm && (
                 <button
@@ -640,7 +735,7 @@ export function CustomColumnsDialog({
                   onClick={() => setShowCustomForm(true)}
                   className="text-xs font-medium text-oe-blue hover:underline"
                 >
-                  {t('boq.show_form', { defaultValue: 'Show form' })}
+                  {t("boq.show_form", { defaultValue: "Show form" })}
                 </button>
               )}
             </div>
@@ -653,23 +748,28 @@ export function CustomColumnsDialog({
                         htmlFor="column-name"
                         className="block text-xs font-medium text-content-secondary mb-1.5"
                       >
-                        {t('boq.column_name', { defaultValue: 'Column name' })}
+                        {t("boq.column_name", { defaultValue: "Column name" })}
                       </label>
                       <input
                         id="column-name"
                         type="text"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
-                        placeholder={t('boq.column_name_placeholder', {
-                          defaultValue: 'e.g. Supplier, Notes, PO Number',
+                        placeholder={t("boq.column_name_placeholder", {
+                          defaultValue: "e.g. Supplier, Notes, PO Number",
                         })}
                         className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all"
                         autoFocus
                       />
                       {newName && (
                         <p className="mt-1 text-2xs text-content-tertiary">
-                          {t('boq.internal_name', { defaultValue: 'Internal name' })}:{' '}
-                          <code className="font-mono">{normalizeColumnName(newName)}</code>
+                          {t("boq.internal_name", {
+                            defaultValue: "Internal name",
+                          })}
+                          :{" "}
+                          <code className="font-mono">
+                            {normalizeColumnName(newName)}
+                          </code>
                         </p>
                       )}
                     </div>
@@ -678,39 +778,47 @@ export function CustomColumnsDialog({
                         id="column-type-label"
                         className="block text-xs font-medium text-content-secondary mb-1.5"
                       >
-                        {t('boq.column_type', { defaultValue: 'Type' })}
+                        {t("boq.column_type", { defaultValue: "Type" })}
                       </span>
                       <div
                         role="radiogroup"
                         aria-labelledby="column-type-label"
                         className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-surface-primary p-1"
                       >
-                        {(['text', 'number', 'calculated'] as const).map((tp) => {
-                          const Icon = COLUMN_TYPE_ICONS[tp];
-                          const active = newType === tp;
-                          const labels: Record<typeof tp, string> = {
-                            text: t('boq.column_type_text', { defaultValue: 'Text' }),
-                            number: t('boq.column_type_number', { defaultValue: 'Number' }),
-                            calculated: t('boq.column_type_calculated', { defaultValue: 'Calculated' }),
-                          };
-                          return (
-                            <button
-                              key={tp}
-                              type="button"
-                              role="radio"
-                              aria-checked={active}
-                              onClick={() => setNewType(tp)}
-                              className={`flex h-7 items-center justify-center gap-1 rounded text-2xs font-medium transition-colors ${
-                                active
-                                  ? 'bg-oe-blue text-white shadow-sm'
-                                  : 'text-content-secondary hover:bg-surface-secondary'
-                              }`}
-                            >
-                              <Icon size={12} />
-                              {labels[tp]}
-                            </button>
-                          );
-                        })}
+                        {(["text", "number", "calculated"] as const).map(
+                          (tp) => {
+                            const Icon = COLUMN_TYPE_ICONS[tp];
+                            const active = newType === tp;
+                            const labels: Record<typeof tp, string> = {
+                              text: t("boq.column_type_text", {
+                                defaultValue: "Text",
+                              }),
+                              number: t("boq.column_type_number", {
+                                defaultValue: "Number",
+                              }),
+                              calculated: t("boq.column_type_calculated", {
+                                defaultValue: "Calculated",
+                              }),
+                            };
+                            return (
+                              <button
+                                key={tp}
+                                type="button"
+                                role="radio"
+                                aria-checked={active}
+                                onClick={() => setNewType(tp)}
+                                className={`flex h-7 items-center justify-center gap-1 rounded text-2xs font-medium transition-colors ${
+                                  active
+                                    ? "bg-oe-blue text-white shadow-sm"
+                                    : "text-content-secondary hover:bg-surface-secondary"
+                                }`}
+                              >
+                                <Icon size={12} />
+                                {labels[tp]}
+                              </button>
+                            );
+                          },
+                        )}
                       </div>
                       {/* Date / Select still reachable for power users via a
                           secondary control — kept off the primary radio so
@@ -718,30 +826,34 @@ export function CustomColumnsDialog({
                       <div className="mt-1 flex gap-2 text-2xs">
                         <button
                           type="button"
-                          onClick={() => setNewType('date')}
-                          className={`underline-offset-2 hover:underline ${newType === 'date' ? 'text-oe-blue' : 'text-content-tertiary'}`}
+                          onClick={() => setNewType("date")}
+                          className={`underline-offset-2 hover:underline ${newType === "date" ? "text-oe-blue" : "text-content-tertiary"}`}
                         >
-                          {t('boq.column_type_date', { defaultValue: 'Date' })}
+                          {t("boq.column_type_date", { defaultValue: "Date" })}
                         </button>
                         <span className="text-content-tertiary">·</span>
                         <button
                           type="button"
-                          onClick={() => setNewType('select')}
-                          className={`underline-offset-2 hover:underline ${newType === 'select' ? 'text-oe-blue' : 'text-content-tertiary'}`}
+                          onClick={() => setNewType("select")}
+                          className={`underline-offset-2 hover:underline ${newType === "select" ? "text-oe-blue" : "text-content-tertiary"}`}
                         >
-                          {t('boq.column_type_select', { defaultValue: 'Select' })}
+                          {t("boq.column_type_select", {
+                            defaultValue: "Select",
+                          })}
                         </button>
                       </div>
                     </div>
                   </div>
 
-                  {newType === 'select' && (
+                  {newType === "select" && (
                     <div>
                       <label
                         htmlFor="column-options"
                         className="block text-xs font-medium text-content-secondary mb-1.5"
                       >
-                        {t('boq.column_options', { defaultValue: 'Options (comma or newline separated)' })}
+                        {t("boq.column_options", {
+                          defaultValue: "Options (comma or newline separated)",
+                        })}
                       </label>
                       <textarea
                         id="column-options"
@@ -754,14 +866,14 @@ export function CustomColumnsDialog({
                     </div>
                   )}
 
-                  {newType === 'calculated' && (
+                  {newType === "calculated" && (
                     <div className="space-y-2">
                       <div>
                         <label
                           htmlFor="column-formula"
                           className="block text-xs font-medium text-content-secondary mb-1.5"
                         >
-                          {t('boq.column_formula', { defaultValue: 'Formula' })}
+                          {t("boq.column_formula", { defaultValue: "Formula" })}
                         </label>
                         <textarea
                           id="column-formula"
@@ -775,12 +887,14 @@ export function CustomColumnsDialog({
                           spellCheck={false}
                           className={`w-full rounded-lg border bg-surface-primary px-3 py-2 font-mono text-xs text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 transition-all resize-none ${
                             formulaError
-                              ? 'border-semantic-error focus:ring-semantic-error/30 focus:border-semantic-error'
-                              : 'border-border focus:ring-oe-blue/30 focus:border-oe-blue'
+                              ? "border-semantic-error focus:ring-semantic-error/30 focus:border-semantic-error"
+                              : "border-border focus:ring-oe-blue/30 focus:border-oe-blue"
                           }`}
                         />
                         {formulaError && (
-                          <p className="mt-1 text-2xs text-semantic-error">{formulaError}</p>
+                          <p className="mt-1 text-2xs text-semantic-error">
+                            {formulaError}
+                          </p>
                         )}
                       </div>
                       <div className="flex flex-wrap gap-1.5">
@@ -805,7 +919,9 @@ export function CustomColumnsDialog({
                             htmlFor="column-decimals"
                             className="block text-xs font-medium text-content-secondary mb-1.5"
                           >
-                            {t('boq.column_decimals', { defaultValue: 'Decimals' })}
+                            {t("boq.column_decimals", {
+                              defaultValue: "Decimals",
+                            })}
                           </label>
                           <input
                             id="column-decimals"
@@ -815,7 +931,9 @@ export function CustomColumnsDialog({
                             value={newDecimals}
                             onChange={(e) => {
                               const n = parseInt(e.target.value, 10);
-                              setNewDecimals(isNaN(n) ? 2 : Math.max(0, Math.min(6, n)));
+                              setNewDecimals(
+                                isNaN(n) ? 2 : Math.max(0, Math.min(6, n)),
+                              );
                             }}
                             className="h-9 w-20 rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all"
                           />
@@ -828,14 +946,20 @@ export function CustomColumnsDialog({
                           disabled={!newFormula.trim() || !!formulaError}
                         >
                           <PlayCircle size={14} className="mr-1.5" />
-                          {t('boq.column_test_formula', { defaultValue: 'Test' })}
+                          {t("boq.column_test_formula", {
+                            defaultValue: "Test",
+                          })}
                         </Button>
                         {testResult !== null && (
                           <div className="flex-1 rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 font-mono text-xs">
                             <span className="text-content-tertiary">
-                              {t('boq.column_test_result', { defaultValue: 'Result:' })}{' '}
+                              {t("boq.column_test_result", {
+                                defaultValue: "Result:",
+                              })}{" "}
                             </span>
-                            <span className="text-content-primary">{testResult}</span>
+                            <span className="text-content-primary">
+                              {testResult}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -849,14 +973,14 @@ export function CustomColumnsDialog({
                       size="sm"
                       onClick={() => {
                         setShowCustomForm(false);
-                        setNewName('');
-                        setNewOptions('');
-                        setNewFormula('');
+                        setNewName("");
+                        setNewOptions("");
+                        setNewFormula("");
                         setNewDecimals(2);
                         setTestResult(null);
                       }}
                     >
-                      {t('common.cancel', { defaultValue: 'Cancel' })}
+                      {t("common.cancel", { defaultValue: "Cancel" })}
                     </Button>
                     <Button
                       type="submit"
@@ -865,7 +989,7 @@ export function CustomColumnsDialog({
                       disabled={!newName.trim() || addMut.isPending}
                     >
                       <Plus size={14} className="mr-1.5" />
-                      {t('boq.add_column_btn', { defaultValue: 'Add column' })}
+                      {t("boq.add_column_btn", { defaultValue: "Add column" })}
                     </Button>
                   </div>
                 </form>
@@ -877,9 +1001,9 @@ export function CustomColumnsDialog({
         {/* Footer */}
         <div className="border-t border-border-light px-6 py-3 shrink-0">
           <p className="text-xs text-content-tertiary">
-            {t('boq.custom_columns_hint', {
+            {t("boq.custom_columns_hint", {
               defaultValue:
-                'Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.',
+                "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
             })}
           </p>
         </div>

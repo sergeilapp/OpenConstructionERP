@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { MemoryRouter } from 'react-router-dom';
+import { describe, it, expect } from "vitest";
+import { render } from "@testing-library/react";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { MemoryRouter } from "react-router-dom";
 
 expect.extend(toHaveNoViolations);
 
@@ -13,12 +13,16 @@ function RouterWrapper({ children }: { children: React.ReactNode }) {
 
 /* ── Import components lazily to avoid side-effect issues ────────────── */
 
-import { EmptyState } from '@/shared/ui/EmptyState';
-import { SkeletonText, SkeletonCard, SkeletonTable } from '@/shared/ui/SkeletonLoader';
-import { NotFoundPage } from '@/shared/ui/NotFoundPage';
+import { EmptyState } from "@/shared/ui/EmptyState";
+import {
+  SkeletonText,
+  SkeletonCard,
+  SkeletonTable,
+} from "@/shared/ui/SkeletonLoader";
+import { NotFoundPage } from "@/shared/ui/NotFoundPage";
 
-describe('Accessibility (axe-core)', () => {
-  it('EmptyState should have no a11y violations', async () => {
+describe("Accessibility (axe-core)", () => {
+  it("EmptyState should have no a11y violations", async () => {
     const { container } = render(
       <EmptyState
         icon="FolderOpen"
@@ -30,38 +34,38 @@ describe('Accessibility (axe-core)', () => {
     expect(results).toHaveNoViolations();
   });
 
-  it('EmptyState with action button should have no a11y violations', async () => {
+  it("EmptyState with action button should have no a11y violations", async () => {
     const { container } = render(
       <EmptyState
         icon="Plus"
         title="No projects"
         description="Get started by creating a project."
-        action={{ label: 'Create Project', onClick: () => {} }}
+        action={{ label: "Create Project", onClick: () => {} }}
       />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('SkeletonText should have no a11y violations', async () => {
+  it("SkeletonText should have no a11y violations", async () => {
     const { container } = render(<SkeletonText lines={3} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('SkeletonCard should have no a11y violations', async () => {
+  it("SkeletonCard should have no a11y violations", async () => {
     const { container } = render(<SkeletonCard count={2} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('SkeletonTable should have no a11y violations', async () => {
+  it("SkeletonTable should have no a11y violations", async () => {
     const { container } = render(<SkeletonTable rows={3} columns={4} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('NotFoundPage should have no a11y violations', async () => {
+  it("NotFoundPage should have no a11y violations", async () => {
     const { container } = render(
       <RouterWrapper>
         <NotFoundPage />

@@ -13,27 +13,56 @@ from pydantic import BaseModel, ConfigDict, Field
 # ── Canonical enumerations ─────────────────────────────────────────────
 
 KPI_UNITS: tuple[str, ...] = (
-    "currency", "percent", "days", "count", "ratio", "m2", "m3", "hours",
+    "currency",
+    "percent",
+    "days",
+    "count",
+    "ratio",
+    "m2",
+    "m3",
+    "hours",
 )
 KPI_AGGREGATIONS: tuple[str, ...] = (
-    "sum", "avg", "min", "max", "last", "derive",
+    "sum",
+    "avg",
+    "min",
+    "max",
+    "last",
+    "derive",
 )
 KPI_CATEGORIES: tuple[str, ...] = (
-    "financial", "schedule", "quality", "safety", "sustainability",
+    "financial",
+    "schedule",
+    "quality",
+    "safety",
+    "sustainability",
     "operational",
 )
 DASHBOARD_SCOPES: tuple[str, ...] = ("personal", "role", "global", "project")
 REPORT_SCOPES: tuple[str, ...] = ("personal", "role", "global")
 WIDGET_TYPES: tuple[str, ...] = (
-    "kpi_card", "line_chart", "bar_chart", "pie", "table", "heatmap",
-    "gauge", "timeline",
+    "kpi_card",
+    "line_chart",
+    "bar_chart",
+    "pie",
+    "table",
+    "heatmap",
+    "gauge",
+    "timeline",
 )
 REPORT_FREQUENCIES: tuple[str, ...] = (
-    "daily", "weekly", "monthly", "quarterly",
+    "daily",
+    "weekly",
+    "monthly",
+    "quarterly",
 )
 OUTPUT_FORMATS: tuple[str, ...] = ("pdf", "xlsx", "csv", "json")
 ALERT_CONDITIONS: tuple[str, ...] = (
-    "above", "below", "equals", "not_equals", "changed_by_more_than",
+    "above",
+    "below",
+    "equals",
+    "not_equals",
+    "changed_by_more_than",
 )
 ALERT_SEVERITIES: tuple[str, ...] = ("info", "warning", "critical")
 ALERT_CHANNELS: tuple[str, ...] = ("in_app", "email", "webhook")
@@ -105,6 +134,7 @@ class DashboardCreate(BaseModel):
     layout_json: dict[str, Any] = Field(default_factory=dict)
     is_default: bool = False
     refresh_interval_seconds: int = Field(default=300, ge=10, le=86400)
+    cross_filter_enabled: bool = False
 
 
 class DashboardUpdate(BaseModel):
@@ -116,6 +146,7 @@ class DashboardUpdate(BaseModel):
     layout_json: dict[str, Any] | None = None
     is_default: bool | None = None
     refresh_interval_seconds: int | None = Field(default=None, ge=10, le=86400)
+    cross_filter_enabled: bool | None = None
 
 
 class DashboardRead(BaseModel):
@@ -131,6 +162,7 @@ class DashboardRead(BaseModel):
     layout_json: dict[str, Any] = Field(default_factory=dict)
     is_default: bool = False
     refresh_interval_seconds: int = 300
+    cross_filter_enabled: bool = False
     created_at: datetime
     updated_at: datetime
 
@@ -148,6 +180,7 @@ class WidgetCreate(BaseModel):
     width: int = Field(default=3, ge=1, le=12)
     height: int = Field(default=2, ge=1, le=12)
     order_seq: int = 0
+    drill_path: dict[str, Any] | None = None
 
 
 class WidgetUpdate(BaseModel):
@@ -159,6 +192,7 @@ class WidgetUpdate(BaseModel):
     width: int | None = Field(default=None, ge=1, le=12)
     height: int | None = Field(default=None, ge=1, le=12)
     order_seq: int | None = None
+    drill_path: dict[str, Any] | None = None
 
 
 class WidgetRead(BaseModel):
@@ -174,6 +208,7 @@ class WidgetRead(BaseModel):
     width: int = 3
     height: int = 2
     order_seq: int = 0
+    drill_path: dict[str, Any] | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -403,6 +438,41 @@ class DrillDownResponse(BaseModel):
     aggregate_unit: str | None = None
 
 
+# ── Cross-filter evaluate (Wave 4 / T11) ───────────────────────────────
+
+
+class DashboardEvaluateRequest(BaseModel):
+    """Request body for ``POST /dashboards/{id}/evaluate``.
+
+    ``filters`` is a free-form dict of ``{field_name: value}`` pairs the
+    caller would like every widget on the dashboard to be scoped by.
+    Unknown keys are ignored gracefully (each KPI defines its own
+    compatible filter fields). When the dashboard's
+    ``cross_filter_enabled`` flag is False the dict is ignored entirely.
+    """
+
+    filters: dict[str, Any] = Field(default_factory=dict)
+
+
+class WidgetEvaluateResult(BaseModel):
+    id: UUID
+    kpi_code: str | None = None
+    widget_type: str
+    value: Decimal | None = None
+    unit: str | None = None
+    series: list[dict[str, Any]] = Field(default_factory=list)
+    drill_path: dict[str, Any] | None = None
+    breakdown: dict[str, Any] = Field(default_factory=dict)
+
+
+class DashboardEvaluateResponse(BaseModel):
+    dashboard_id: UUID
+    cross_filter_enabled: bool
+    applied_filters: dict[str, Any] = Field(default_factory=dict)
+    widgets: list[WidgetEvaluateResult] = Field(default_factory=list)
+    evaluated_at: datetime
+
+
 class ReportRunRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -428,6 +498,8 @@ __all__ = [
     "AlertRuleUpdate",
     "DASHBOARD_SCOPES",
     "DashboardCreate",
+    "DashboardEvaluateRequest",
+    "DashboardEvaluateResponse",
     "DashboardRead",
     "DashboardRenderResponse",
     "DashboardUpdate",
@@ -456,6 +528,7 @@ __all__ = [
     "SavedFilterRead",
     "WIDGET_TYPES",
     "WidgetCreate",
+    "WidgetEvaluateResult",
     "WidgetRead",
     "WidgetRenderResult",
     "WidgetUpdate",

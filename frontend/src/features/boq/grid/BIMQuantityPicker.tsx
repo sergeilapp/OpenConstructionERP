@@ -1,35 +1,35 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { createPortal } from 'react-dom';
-import { useQuery } from '@tanstack/react-query';
-import { X, Loader2, Cuboid, ArrowRight } from 'lucide-react';
-import { fetchBIMElementsByIds } from '@/features/bim/api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer/ElementManager';
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { useQuery } from "@tanstack/react-query";
+import { X, Loader2, Cuboid, ArrowRight } from "lucide-react";
+import { fetchBIMElementsByIds } from "@/features/bim/api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer/ElementManager";
 
 /* ── Unit inference from property/quantity key ─────────────────────── */
 
 function inferUnit(key: string): string {
-  if (key.includes('area') || key.endsWith('_m2')) return 'm\u00B2';
-  if (key.includes('volume') || key.endsWith('_m3')) return 'm\u00B3';
-  if (key.includes('length') || key.endsWith('_m')) return 'm';
-  if (key.includes('weight') || key.endsWith('_kg')) return 'kg';
-  if (key.includes('count')) return 'pcs';
-  if (key.includes('perimeter')) return 'm';
+  if (key.includes("area") || key.endsWith("_m2")) return "m\u00B2";
+  if (key.includes("volume") || key.endsWith("_m3")) return "m\u00B3";
+  if (key.includes("length") || key.endsWith("_m")) return "m";
+  if (key.includes("weight") || key.endsWith("_kg")) return "kg";
+  if (key.includes("count")) return "pcs";
+  if (key.includes("perimeter")) return "m";
   if (
-    key.includes('height') ||
-    key.includes('width') ||
-    key.includes('thickness') ||
-    key.includes('depth')
+    key.includes("height") ||
+    key.includes("width") ||
+    key.includes("thickness") ||
+    key.includes("depth")
   )
-    return 'm';
-  return '';
+    return "m";
+  return "";
 }
 
 /* ── Format key name for display ───────────────────────────────────── */
 
 function formatKeyName(key: string): string {
   return key
-    .replace(/_m2$|_m3$|_m$|_kg$/, '')
-    .replace(/_/g, ' ')
+    .replace(/_m2$|_m3$|_m$|_kg$/, "")
+    .replace(/_/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
@@ -40,7 +40,7 @@ interface QuantityEntry {
   label: string;
   value: number;
   unit: string;
-  source: 'quantities' | 'properties';
+  source: "quantities" | "properties";
 }
 
 interface ElementQuantities {
@@ -68,14 +68,14 @@ function extractQuantities(element: BIMElementData): QuantityEntry[] {
   // From quantities (primary source)
   if (element.quantities) {
     for (const [key, value] of Object.entries(element.quantities)) {
-      const num = typeof value === 'number' ? value : parseFloat(String(value));
+      const num = typeof value === "number" ? value : parseFloat(String(value));
       if (!isNaN(num) && num !== 0) {
         entries.push({
           key,
           label: formatKeyName(key),
           value: num,
           unit: inferUnit(key),
-          source: 'quantities',
+          source: "quantities",
         });
       }
     }
@@ -86,14 +86,14 @@ function extractQuantities(element: BIMElementData): QuantityEntry[] {
     const qKeys = new Set(Object.keys(element.quantities ?? {}));
     for (const [key, value] of Object.entries(element.properties)) {
       if (qKeys.has(key)) continue;
-      const num = typeof value === 'number' ? value : parseFloat(String(value));
+      const num = typeof value === "number" ? value : parseFloat(String(value));
       if (!isNaN(num) && num !== 0) {
         entries.push({
           key,
           label: formatKeyName(key),
           value: num,
           unit: inferUnit(key),
-          source: 'properties',
+          source: "properties",
         });
       }
     }
@@ -140,8 +140,12 @@ function computeSums(groups: ElementQuantities[]): SumEntry[] {
 /* ── Format number for display ─────────────────────────────────────── */
 
 function fmtNum(v: number): string {
-  if (Number.isInteger(v)) return v.toLocaleString('en', { maximumFractionDigits: 0 });
-  return v.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+  if (Number.isInteger(v))
+    return v.toLocaleString("en", { maximumFractionDigits: 0 });
+  return v.toLocaleString("en", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4,
+  });
 }
 
 /* ── Component ─────────────────────────────────────────────────────── */
@@ -159,27 +163,34 @@ export function BIMQuantityPicker({
   // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
         onClose();
       }
     }
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, [onClose]);
 
   // Close on Escape
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     }
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
   // Fetch ONLY the linked elements by their IDs (DB UUID or stable_id).
   // Uses a dedicated POST endpoint so we don't hit the 2000-element list limit.
-  const { data: elementsResp, isLoading, error: fetchError } = useQuery({
-    queryKey: ['bim-elements-by-ids', bimModelId, ...cadElementIds],
+  const {
+    data: elementsResp,
+    isLoading,
+    error: fetchError,
+  } = useQuery({
+    queryKey: ["bim-elements-by-ids", bimModelId, ...cadElementIds],
     queryFn: () => fetchBIMElementsByIds(bimModelId, cadElementIds),
     enabled: !!bimModelId && cadElementIds.length > 0,
     staleTime: 2 * 60 * 1000,
@@ -189,7 +200,12 @@ export function BIMQuantityPicker({
 
   const { groups, sums, totalFetched, totalMatched } = useMemo(() => {
     if (!elementsResp?.items)
-      return { groups: [] as ElementQuantities[], sums: [] as SumEntry[], totalFetched: 0, totalMatched: 0 };
+      return {
+        groups: [] as ElementQuantities[],
+        sums: [] as SumEntry[],
+        totalFetched: 0,
+        totalMatched: 0,
+      };
 
     // All returned items are already the matched elements
     const matched = elementsResp.items;
@@ -220,14 +236,24 @@ export function BIMQuantityPicker({
 
   // Compute portal position from anchor rect
   const style = useMemo(() => {
-    if (!anchorRect) return { position: 'absolute' as const, right: 0, top: '100%', marginTop: 4 };
+    if (!anchorRect)
+      return {
+        position: "absolute" as const,
+        right: 0,
+        top: "100%",
+        marginTop: 4,
+      };
     const top = anchorRect.bottom + 4;
     const left = Math.min(anchorRect.left, window.innerWidth - 330);
     // Flip up if near bottom of viewport
     if (top + 320 > window.innerHeight) {
-      return { position: 'fixed' as const, left, top: anchorRect.top - 320 - 4 };
+      return {
+        position: "fixed" as const,
+        left,
+        top: anchorRect.top - 320 - 4,
+      };
     }
-    return { position: 'fixed' as const, left, top };
+    return { position: "fixed" as const, left, top };
   }, [anchorRect]);
 
   const popover = (
@@ -244,9 +270,12 @@ export function BIMQuantityPicker({
       <div className="flex items-center justify-between px-3 py-2 border-b border-border-light dark:border-border-dark bg-surface-secondary/30">
         <div className="flex items-center gap-1.5">
           <Cuboid size={14} className="text-emerald-600" />
-          <span className="text-xs font-semibold text-content-primary">BIM Quantities</span>
+          <span className="text-xs font-semibold text-content-primary">
+            BIM Quantities
+          </span>
           <span className="text-[10px] text-content-tertiary tabular-nums">
-            ({cadElementIds.length} element{cadElementIds.length !== 1 ? 's' : ''})
+            ({cadElementIds.length} element
+            {cadElementIds.length !== 1 ? "s" : ""})
           </span>
         </div>
         <button
@@ -263,7 +292,9 @@ export function BIMQuantityPicker({
         {isLoading && (
           <div className="flex items-center justify-center gap-2 py-8">
             <Loader2 size={16} className="animate-spin text-content-tertiary" />
-            <span className="text-xs text-content-tertiary">Loading elements...</span>
+            <span className="text-xs text-content-tertiary">
+              Loading elements...
+            </span>
           </div>
         )}
 
@@ -272,19 +303,22 @@ export function BIMQuantityPicker({
             <Cuboid size={20} className="text-content-quaternary" />
             <span className="text-xs text-content-tertiary">
               {fetchError
-                ? 'Failed to load BIM elements'
+                ? "Failed to load BIM elements"
                 : totalFetched === 0
-                  ? 'No elements in BIM model'
+                  ? "No elements in BIM model"
                   : totalMatched === 0
-                    ? 'Linked IDs not found in model'
-                    : 'No numeric quantities found'}
+                    ? "Linked IDs not found in model"
+                    : "No numeric quantities found"}
             </span>
             <span className="text-[9px] text-content-quaternary tabular-nums">
-              {totalFetched} elements loaded, {totalMatched} matched, {cadElementIds.length} linked
+              {totalFetched} elements loaded, {totalMatched} matched,{" "}
+              {cadElementIds.length} linked
             </span>
             {fetchError && (
               <span className="text-[9px] text-red-400 mt-1 px-3 text-center">
-                {String(fetchError instanceof Error ? fetchError.message : fetchError)}
+                {String(
+                  fetchError instanceof Error ? fetchError.message : fetchError,
+                )}
               </span>
             )}
           </div>
@@ -294,7 +328,10 @@ export function BIMQuantityPicker({
           <>
             {/* Per-element sections */}
             {groups.map(({ element, entries }) => (
-              <div key={element.id} className="border-b border-border-light/50 dark:border-border-dark/50 last:border-b-0">
+              <div
+                key={element.id}
+                className="border-b border-border-light/50 dark:border-border-dark/50 last:border-b-0"
+              >
                 {/* Element header */}
                 <button
                   onClick={() => toggleElement(element.id)}
@@ -303,7 +340,7 @@ export function BIMQuantityPicker({
                              hover:bg-surface-secondary/60 transition-colors"
                 >
                   <span className="text-[10px] text-content-quaternary shrink-0">
-                    {expandedElements.has(element.id) ? '\u25BC' : '\u25B6'}
+                    {expandedElements.has(element.id) ? "\u25BC" : "\u25B6"}
                   </span>
                   <span className="text-[11px] font-medium text-content-secondary truncate min-w-0 flex-1">
                     {element.name || element.element_type}
@@ -386,15 +423,19 @@ function QuantityRow({
   return (
     <div
       className={`flex items-center gap-1 px-3 py-1 group/row hover:bg-emerald-50/80 dark:hover:bg-emerald-950/30 transition-colors ${
-        isSum ? 'font-medium' : ''
+        isSum ? "font-medium" : ""
       }`}
     >
-      <span className="text-[11px] text-content-secondary flex-1 truncate pl-3">{label}</span>
+      <span className="text-[11px] text-content-secondary flex-1 truncate pl-3">
+        {label}
+      </span>
       <span className="text-[11px] tabular-nums text-content-primary font-medium shrink-0">
         {fmtNum(value)}
       </span>
       {unit && (
-        <span className="text-[9px] text-content-quaternary font-mono shrink-0 w-5">{unit}</span>
+        <span className="text-[9px] text-content-quaternary font-mono shrink-0 w-5">
+          {unit}
+        </span>
       )}
       {isCurrent ? (
         <span className="text-[9px] text-emerald-600 font-medium shrink-0 w-9 text-center">

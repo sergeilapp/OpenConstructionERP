@@ -8,21 +8,21 @@
      - Delete      — fires onDelete(row) — caller shows confirm + DELETE
 */
 
-import { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Download,
   ExternalLink,
   Link as LinkIcon,
   Pencil,
   Trash2,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { useNavigate } from 'react-router-dom';
-import { useToastStore } from '@/stores/useToastStore';
-import { copyToClipboard } from '../lib/tauri';
-import { primaryModule } from '../kindModule';
-import type { FileRow } from '../types';
+} from "lucide-react";
+import clsx from "clsx";
+import { useNavigate } from "react-router-dom";
+import { useToastStore } from "@/stores/useToastStore";
+import { copyToClipboard } from "../lib/tauri";
+import { primaryModule } from "../kindModule";
+import type { FileRow } from "../types";
 
 interface FileContextMenuProps {
   row: FileRow;
@@ -52,20 +52,21 @@ export function FileContextMenu({
      menu opens then closes on the same gesture. */
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) onClose();
+      if (menuRef.current && !menuRef.current.contains(e.target as Node))
+        onClose();
     };
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('mousedown', handleClick, true);
-    document.addEventListener('keydown', handleKey);
-    window.addEventListener('scroll', onClose, true);
-    window.addEventListener('blur', onClose);
+    document.addEventListener("mousedown", handleClick, true);
+    document.addEventListener("keydown", handleKey);
+    window.addEventListener("scroll", onClose, true);
+    window.addEventListener("blur", onClose);
     return () => {
-      document.removeEventListener('mousedown', handleClick, true);
-      document.removeEventListener('keydown', handleKey);
-      window.removeEventListener('scroll', onClose, true);
-      window.removeEventListener('blur', onClose);
+      document.removeEventListener("mousedown", handleClick, true);
+      document.removeEventListener("keydown", handleKey);
+      window.removeEventListener("scroll", onClose, true);
+      window.removeEventListener("blur", onClose);
     };
   }, [onClose]);
 
@@ -80,15 +81,17 @@ export function FileContextMenu({
 
   async function handleCopyLink() {
     if (!row.download_url) return;
-    const absolute = row.download_url.startsWith('http')
+    const absolute = row.download_url.startsWith("http")
       ? row.download_url
       : `${window.location.origin}${row.download_url}`;
     const ok = await copyToClipboard(absolute);
     addToast({
-      type: ok ? 'success' : 'error',
+      type: ok ? "success" : "error",
       title: ok
-        ? t('files.context.link_copied', { defaultValue: 'Link copied‌⁠‍' })
-        : t('files.context.copy_failed', { defaultValue: 'Could not copy link‌⁠‍' }),
+        ? t("files.context.link_copied", { defaultValue: "Link copied‌⁠‍" })
+        : t("files.context.copy_failed", {
+            defaultValue: "Could not copy link‌⁠‍",
+          }),
     });
     onClose();
   }
@@ -98,16 +101,16 @@ export function FileContextMenu({
       ref={menuRef}
       role="menu"
       className={clsx(
-        'fixed z-50 w-48 rounded-lg border border-border-light bg-surface-elevated shadow-xl overflow-hidden',
-        'animate-fade-in',
+        "fixed z-50 w-48 rounded-lg border border-border-light bg-surface-elevated shadow-xl overflow-hidden",
+        "animate-fade-in",
       )}
       style={{ left: adjustedX, top: adjustedY }}
       onClick={(e) => e.stopPropagation()}
     >
       <MenuItem
         icon={<ExternalLink size={13} />}
-        label={t('files.context.open_in', {
-          defaultValue: 'Open in {{module}}‌⁠‍',
+        label={t("files.context.open_in", {
+          defaultValue: "Open in {{module}}‌⁠‍",
           module: moduleLabel,
         })}
         onClick={() => {
@@ -118,9 +121,13 @@ export function FileContextMenu({
       {row.download_url && (
         <MenuItem
           icon={<Download size={13} />}
-          label={t('files.context.download', { defaultValue: 'Download‌⁠‍' })}
+          label={t("files.context.download", { defaultValue: "Download‌⁠‍" })}
           onClick={() => {
-            window.open(row.download_url ?? undefined, '_blank', 'noopener,noreferrer');
+            window.open(
+              row.download_url ?? undefined,
+              "_blank",
+              "noopener,noreferrer",
+            );
             onClose();
           }}
         />
@@ -128,27 +135,27 @@ export function FileContextMenu({
       {row.download_url && (
         <MenuItem
           icon={<LinkIcon size={13} />}
-          label={t('files.context.copy_link', { defaultValue: 'Copy link‌⁠‍' })}
+          label={t("files.context.copy_link", { defaultValue: "Copy link‌⁠‍" })}
           onClick={handleCopyLink}
         />
       )}
       <div className="h-px bg-border-light" />
       <MenuItem
         icon={<Pencil size={13} />}
-        label={t('files.context.rename', { defaultValue: 'Rename' })}
+        label={t("files.context.rename", { defaultValue: "Rename" })}
         onClick={() => {
           onRename(row);
           onClose();
         }}
-        disabled={row.kind !== 'document'}
-        disabledTitle={t('files.context.rename_unsupported', {
-          defaultValue: 'Rename is only available for documents',
+        disabled={row.kind !== "document"}
+        disabledTitle={t("files.context.rename_unsupported", {
+          defaultValue: "Rename is only available for documents",
         })}
       />
       <div className="h-px bg-border-light" />
       <MenuItem
         icon={<Trash2 size={13} />}
-        label={t('files.context.delete', { defaultValue: 'Delete' })}
+        label={t("files.context.delete", { defaultValue: "Delete" })}
         onClick={() => {
           onDelete(row);
           onClose();
@@ -182,12 +189,12 @@ function MenuItem({
       disabled={disabled}
       title={disabled ? disabledTitle : undefined}
       className={clsx(
-        'flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors',
+        "flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors",
         disabled
-          ? 'text-content-quaternary cursor-not-allowed'
+          ? "text-content-quaternary cursor-not-allowed"
           : danger
-            ? 'text-semantic-error hover:bg-semantic-error-bg'
-            : 'text-content-primary hover:bg-surface-secondary',
+            ? "text-semantic-error hover:bg-semantic-error-bg"
+            : "text-content-primary hover:bg-surface-secondary",
       )}
     >
       <span className="shrink-0">{icon}</span>

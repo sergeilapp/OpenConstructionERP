@@ -46,7 +46,6 @@ from app.modules.crm.service import (
     convert_opportunity_to_project_payload,
 )
 
-
 # ── Stubs ────────────────────────────────────────────────────────────────
 
 
@@ -55,9 +54,7 @@ class _StubSession:
         pass
 
     async def execute(self, stmt: Any) -> Any:
-        return SimpleNamespace(
-            scalar_one_or_none=lambda: None, scalars=lambda: _EmptyScalars()
-        )
+        return SimpleNamespace(scalar_one_or_none=lambda: None, scalars=lambda: _EmptyScalars())
 
     async def commit(self) -> None:
         pass
@@ -127,16 +124,10 @@ class _StubOpportunityRepo(_StubRepo):
         return [r for r in self.rows.values() if r.status == "open"]
 
     async def list_won_between(self, start: str, end: str) -> list[Any]:
-        return [
-            r for r in self.rows.values()
-            if r.status == "won" and r.won_at and start <= r.won_at <= end
-        ]
+        return [r for r in self.rows.values() if r.status == "won" and r.won_at and start <= r.won_at <= end]
 
     async def list_lost_between(self, start: str, end: str) -> list[Any]:
-        return [
-            r for r in self.rows.values()
-            if r.status == "lost" and r.lost_at and start <= r.lost_at <= end
-        ]
+        return [r for r in self.rows.values() if r.status == "lost" and r.lost_at and start <= r.lost_at <= end]
 
 
 class _StubStageRepo(_StubRepo):
@@ -179,9 +170,7 @@ class _StubForecastRepo:
     def __init__(self) -> None:
         self.rows: list[Any] = []
 
-    async def get_by_period(
-        self, period: str, owner_user_id: uuid.UUID | None = None
-    ) -> Any:
+    async def get_by_period(self, period: str, owner_user_id: uuid.UUID | None = None) -> Any:
         for r in self.rows:
             if r.period == period and r.owner_user_id == owner_user_id:
                 return r
@@ -290,24 +279,40 @@ def test_compute_pipeline_metrics_mixed_stages() -> None:
     stage_b = uuid.uuid4()
     opps = [
         SimpleNamespace(
-            status="open", stage_id=stage_a, estimated_value=Decimal("1000"),
-            weighted_value=Decimal("500"), probability_percent=50,
-            won_at=None, lost_at=None,
+            status="open",
+            stage_id=stage_a,
+            estimated_value=Decimal("1000"),
+            weighted_value=Decimal("500"),
+            probability_percent=50,
+            won_at=None,
+            lost_at=None,
         ),
         SimpleNamespace(
-            status="open", stage_id=stage_a, estimated_value=Decimal("2000"),
-            weighted_value=Decimal("1500"), probability_percent=75,
-            won_at=None, lost_at=None,
+            status="open",
+            stage_id=stage_a,
+            estimated_value=Decimal("2000"),
+            weighted_value=Decimal("1500"),
+            probability_percent=75,
+            won_at=None,
+            lost_at=None,
         ),
         SimpleNamespace(
-            status="open", stage_id=stage_b, estimated_value=Decimal("500"),
-            weighted_value=Decimal("100"), probability_percent=20,
-            won_at=None, lost_at=None,
+            status="open",
+            stage_id=stage_b,
+            estimated_value=Decimal("500"),
+            weighted_value=Decimal("100"),
+            probability_percent=20,
+            won_at=None,
+            lost_at=None,
         ),
         SimpleNamespace(
-            status="won", stage_id=stage_a, estimated_value=Decimal("9999"),
-            weighted_value=Decimal("9999"), probability_percent=100,
-            won_at=datetime.now(UTC).date().isoformat(), lost_at=None,
+            status="won",
+            stage_id=stage_a,
+            estimated_value=Decimal("9999"),
+            weighted_value=Decimal("9999"),
+            probability_percent=100,
+            won_at=datetime.now(UTC).date().isoformat(),
+            lost_at=None,
         ),
     ]
     out = compute_pipeline_metrics(opps)
@@ -326,19 +331,31 @@ def test_compute_pipeline_metrics_win_rate_30d() -> None:
     old_won = (today - timedelta(days=200)).isoformat()
     opps = [
         SimpleNamespace(
-            status="won", stage_id=uuid.uuid4(), estimated_value=Decimal("100"),
-            weighted_value=Decimal("100"), probability_percent=100,
-            won_at=recent_won, lost_at=None,
+            status="won",
+            stage_id=uuid.uuid4(),
+            estimated_value=Decimal("100"),
+            weighted_value=Decimal("100"),
+            probability_percent=100,
+            won_at=recent_won,
+            lost_at=None,
         ),
         SimpleNamespace(
-            status="lost", stage_id=uuid.uuid4(), estimated_value=Decimal("100"),
-            weighted_value=Decimal("0"), probability_percent=0,
-            won_at=None, lost_at=recent_lost,
+            status="lost",
+            stage_id=uuid.uuid4(),
+            estimated_value=Decimal("100"),
+            weighted_value=Decimal("0"),
+            probability_percent=0,
+            won_at=None,
+            lost_at=recent_lost,
         ),
         SimpleNamespace(
-            status="won", stage_id=uuid.uuid4(), estimated_value=Decimal("100"),
-            weighted_value=Decimal("100"), probability_percent=100,
-            won_at=old_won, lost_at=None,
+            status="won",
+            stage_id=uuid.uuid4(),
+            estimated_value=Decimal("100"),
+            weighted_value=Decimal("100"),
+            probability_percent=100,
+            won_at=old_won,
+            lost_at=None,
         ),
     ]
     out = compute_pipeline_metrics(opps)
@@ -445,9 +462,12 @@ def test_compute_win_rate_window_filter() -> None:
 
 def test_compute_average_sales_cycle_empty() -> None:
     assert compute_average_sales_cycle([]) == 0
-    assert compute_average_sales_cycle(
-        [SimpleNamespace(status="open", created_at=datetime.now(UTC), won_at=None, lost_at=None)]
-    ) == 0
+    assert (
+        compute_average_sales_cycle(
+            [SimpleNamespace(status="open", created_at=datetime.now(UTC), won_at=None, lost_at=None)]
+        )
+        == 0
+    )
 
 
 def test_compute_average_sales_cycle_basic() -> None:
@@ -500,9 +520,7 @@ def test_convert_opportunity_to_project_payload() -> None:
 @pytest.mark.asyncio
 async def test_create_account() -> None:
     svc = _make_service()
-    account = await svc.create_account(
-        AccountCreate(name="ACME Construction", industry="Commercial")
-    )
+    account = await svc.create_account(AccountCreate(name="ACME Construction", industry="Commercial"))
     assert account.id is not None
     assert account.name == "ACME Construction"
     assert account.status == "active"
@@ -522,9 +540,7 @@ async def test_get_account_not_found() -> None:
 @pytest.mark.asyncio
 async def test_create_lead() -> None:
     svc = _make_service()
-    lead = await svc.create_lead(
-        LeadCreate(contact_name="Jane Doe", contact_email="jane@example.com")
-    )
+    lead = await svc.create_lead(LeadCreate(contact_name="Jane Doe", contact_email="jane@example.com"))
     assert lead.id is not None
     assert lead.status == "new"
 
@@ -588,17 +604,13 @@ async def test_convert_lead_creates_opportunity() -> None:
 @pytest.mark.asyncio
 async def test_convert_lead_not_qualified_fails() -> None:
     svc = _make_service()
-    stage = await svc.create_stage(
-        PipelineStageCreate(code="qualified", name="Qualified")
-    )
+    stage = await svc.create_stage(PipelineStageCreate(code="qualified", name="Qualified"))
     account = await svc.create_account(AccountCreate(name="Acme"))
     lead = await svc.create_lead(LeadCreate(contact_name="Jane"))  # status=new
     with pytest.raises(HTTPException) as exc_info:
         await svc.convert_lead(
             lead.id,
-            LeadConvertRequest(
-                account_id=account.id, title="No", stage_id=stage.id
-            ),
+            LeadConvertRequest(account_id=account.id, title="No", stage_id=stage.id),
         )
     assert exc_info.value.status_code == 400
 
@@ -644,9 +656,7 @@ async def test_create_opportunity_invalid_stage_fails() -> None:
 @pytest.mark.asyncio
 async def test_transition_opportunity_stage_valid() -> None:
     svc = _make_service()
-    stage_a = await svc.create_stage(
-        PipelineStageCreate(code="lead", name="Lead", default_probability_percent=10)
-    )
+    stage_a = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead", default_probability_percent=10))
     stage_b = await svc.create_stage(
         PipelineStageCreate(code="proposal", name="Proposal", default_probability_percent=60)
     )
@@ -676,22 +686,16 @@ async def test_transition_opportunity_stage_valid() -> None:
 @pytest.mark.asyncio
 async def test_transition_opportunity_stage_override_probability() -> None:
     svc = _make_service()
-    stage_a = await svc.create_stage(
-        PipelineStageCreate(code="lead", name="Lead", default_probability_percent=10)
-    )
+    stage_a = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead", default_probability_percent=10))
     stage_b = await svc.create_stage(
         PipelineStageCreate(code="proposal", name="Proposal", default_probability_percent=60)
     )
     account = await svc.create_account(AccountCreate(name="Acme"))
     opp = await svc.create_opportunity(
-        OpportunityCreate(
-            account_id=account.id, title="X", estimated_value=Decimal("1000"), stage_id=stage_a.id
-        )
+        OpportunityCreate(account_id=account.id, title="X", estimated_value=Decimal("1000"), stage_id=stage_a.id)
     )
     with patch("app.modules.crm.service.event_bus.publish_detached"):
-        out = await svc.transition_opportunity_stage(
-            opp.id, stage_b.id, override_probability_percent=33
-        )
+        out = await svc.transition_opportunity_stage(opp.id, stage_b.id, override_probability_percent=33)
     assert out.probability_percent == 33
     assert out.weighted_value == Decimal("330.00")
 
@@ -700,9 +704,7 @@ async def test_transition_opportunity_stage_override_probability() -> None:
 async def test_transition_opportunity_stage_to_final_won_blocked() -> None:
     """Moving directly to a won-final stage via move-stage must be blocked."""
     svc = _make_service()
-    stage_open = await svc.create_stage(
-        PipelineStageCreate(code="lead", name="Lead")
-    )
+    stage_open = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead"))
     stage_won = await svc.create_stage(
         PipelineStageCreate(
             code="won_stage",
@@ -712,9 +714,7 @@ async def test_transition_opportunity_stage_to_final_won_blocked() -> None:
         )
     )
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage_open.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage_open.id))
     with pytest.raises(HTTPException) as exc_info:
         await svc.transition_opportunity_stage(opp.id, stage_won.id)
     assert exc_info.value.status_code == 400
@@ -724,16 +724,10 @@ async def test_transition_opportunity_stage_to_final_won_blocked() -> None:
 async def test_transition_opportunity_non_open_fails() -> None:
     svc = _make_service()
     stage_a = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead"))
-    stage_b = await svc.create_stage(
-        PipelineStageCreate(code="proposal", name="Proposal")
-    )
-    reason = await svc.create_reason(
-        WinLossReasonCreate(code="r", label="r", is_loss_reason=True)
-    )
+    stage_b = await svc.create_stage(PipelineStageCreate(code="proposal", name="Proposal"))
+    reason = await svc.create_reason(WinLossReasonCreate(code="r", label="r", is_loss_reason=True))
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage_a.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage_a.id))
     with patch("app.modules.crm.service.event_bus.publish_detached"):
         await svc.lose_opportunity(opp.id, reason.code)
 
@@ -763,22 +757,16 @@ async def test_win_opportunity() -> None:
     assert out.weighted_value == Decimal("5000.00")
     assert out.won_at is not None
     # Event emitted
-    assert any(
-        c.args[0] == "crm.opportunity.won" for c in mock_publish.call_args_list
-    )
+    assert any(c.args[0] == "crm.opportunity.won" for c in mock_publish.call_args_list)
 
 
 @pytest.mark.asyncio
 async def test_win_opportunity_invalid_state() -> None:
     svc = _make_service()
     stage = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead"))
-    reason = await svc.create_reason(
-        WinLossReasonCreate(code="r", label="r", is_loss_reason=True)
-    )
+    reason = await svc.create_reason(WinLossReasonCreate(code="r", label="r", is_loss_reason=True))
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id))
     with patch("app.modules.crm.service.event_bus.publish_detached"):
         await svc.lose_opportunity(opp.id, reason.code)
 
@@ -792,14 +780,10 @@ async def test_lose_opportunity_with_reason() -> None:
     svc = _make_service()
     stage = await svc.create_stage(PipelineStageCreate(code="proposal", name="Proposal"))
     reason = await svc.create_reason(
-        WinLossReasonCreate(
-            code="price_too_high", label="Too pricey", is_loss_reason=True
-        )
+        WinLossReasonCreate(code="price_too_high", label="Too pricey", is_loss_reason=True)
     )
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id))
     with patch("app.modules.crm.service.event_bus.publish_detached"):
         out = await svc.lose_opportunity(opp.id, reason.code)
     assert out.status == "lost"
@@ -814,9 +798,7 @@ async def test_lose_opportunity_unknown_reason_fails() -> None:
     svc = _make_service()
     stage = await svc.create_stage(PipelineStageCreate(code="proposal", name="Proposal"))
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id))
     with pytest.raises(HTTPException) as exc_info:
         await svc.lose_opportunity(opp.id, "nonexistent")
     assert exc_info.value.status_code == 400
@@ -826,13 +808,9 @@ async def test_lose_opportunity_unknown_reason_fails() -> None:
 async def test_update_opportunity_invalid_status_transition() -> None:
     svc = _make_service()
     stage = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead"))
-    reason = await svc.create_reason(
-        WinLossReasonCreate(code="r", label="r", is_loss_reason=True)
-    )
+    reason = await svc.create_reason(WinLossReasonCreate(code="r", label="r", is_loss_reason=True))
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id))
     with patch("app.modules.crm.service.event_bus.publish_detached"):
         await svc.lose_opportunity(opp.id, reason.code)
 
@@ -850,13 +828,12 @@ async def test_update_opportunity_direct_won_blocked() -> None:
     svc = _make_service()
     stage = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead"))
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id))
     for terminal in ("won", "lost"):
         with pytest.raises(HTTPException) as exc_info:
             await svc.update_opportunity(
-                opp.id, OpportunityUpdate(status=terminal)  # type: ignore[arg-type]
+                opp.id,
+                OpportunityUpdate(status=terminal),  # type: ignore[arg-type]
             )
         assert exc_info.value.status_code == 400
 
@@ -868,9 +845,7 @@ async def test_update_opportunity_abandon_still_allowed() -> None:
     svc = _make_service()
     stage = await svc.create_stage(PipelineStageCreate(code="lead", name="Lead"))
     account = await svc.create_account(AccountCreate(name="Acme"))
-    opp = await svc.create_opportunity(
-        OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id)
-    )
+    opp = await svc.create_opportunity(OpportunityCreate(account_id=account.id, title="X", stage_id=stage.id))
     out = await svc.update_opportunity(opp.id, OpportunityUpdate(status="abandoned"))
     assert out.status == "abandoned"
 
@@ -893,9 +868,7 @@ async def test_create_opportunity_invalid_account_fails() -> None:
 @pytest.mark.asyncio
 async def test_convert_lead_invalid_account_fails() -> None:
     svc = _make_service()
-    stage = await svc.create_stage(
-        PipelineStageCreate(code="qualified", name="Qualified")
-    )
+    stage = await svc.create_stage(PipelineStageCreate(code="qualified", name="Qualified"))
     lead = await svc.create_lead(LeadCreate(contact_name="Jane"))
     with patch("app.modules.crm.service.event_bus.publish_detached"):
         await svc.qualify_lead(lead.id, "step 1")
@@ -919,13 +892,14 @@ async def test_update_opportunity_recomputes_weighted_value() -> None:
     account = await svc.create_account(AccountCreate(name="Acme"))
     opp = await svc.create_opportunity(
         OpportunityCreate(
-            account_id=account.id, title="X",
-            estimated_value=Decimal("1000"), probability_percent=10, stage_id=stage.id,
+            account_id=account.id,
+            title="X",
+            estimated_value=Decimal("1000"),
+            probability_percent=10,
+            stage_id=stage.id,
         )
     )
-    out = await svc.update_opportunity(
-        opp.id, OpportunityUpdate(probability_percent=75)
-    )
+    out = await svc.update_opportunity(opp.id, OpportunityUpdate(probability_percent=75))
     assert out.weighted_value == Decimal("750.00")
 
 
@@ -935,9 +909,7 @@ async def test_update_opportunity_recomputes_weighted_value() -> None:
 @pytest.mark.asyncio
 async def test_create_activity() -> None:
     svc = _make_service()
-    activity = await svc.create_activity(
-        ActivityCreate(kind="call", subject="First contact")
-    )
+    activity = await svc.create_activity(ActivityCreate(kind="call", subject="First contact"))
     assert activity.id is not None
     assert activity.kind == "call"
 
@@ -991,7 +963,10 @@ def test_compute_opportunity_score_default_weights_hot() -> None:
     from app.modules.crm.service import compute_opportunity_score
 
     score = compute_opportunity_score(
-        budget_score=100, authority_score=100, need_score=100, timeline_score=100,
+        budget_score=100,
+        authority_score=100,
+        need_score=100,
+        timeline_score=100,
     )
     assert score["total"] == 100.0
     assert score["band"] == "hot"
@@ -1002,7 +977,10 @@ def test_compute_opportunity_score_warm_band() -> None:
     from app.modules.crm.service import compute_opportunity_score
 
     score = compute_opportunity_score(
-        budget_score=80, authority_score=80, need_score=70, timeline_score=60,
+        budget_score=80,
+        authority_score=80,
+        need_score=70,
+        timeline_score=60,
     )
     # 80*30 + 80*25 + 70*25 + 60*20 = 2400 + 2000 + 1750 + 1200 = 7350 / 100 = 73.5
     assert score["total"] == 73.5
@@ -1013,7 +991,10 @@ def test_compute_opportunity_score_cold_band() -> None:
     from app.modules.crm.service import compute_opportunity_score
 
     score = compute_opportunity_score(
-        budget_score=20, authority_score=20, need_score=20, timeline_score=20,
+        budget_score=20,
+        authority_score=20,
+        need_score=20,
+        timeline_score=20,
     )
     assert score["total"] == 20.0
     assert score["band"] == "cold"
@@ -1023,7 +1004,10 @@ def test_compute_opportunity_score_clamps_oversized_inputs() -> None:
     from app.modules.crm.service import compute_opportunity_score
 
     score = compute_opportunity_score(
-        budget_score=999, authority_score=-5, need_score="abc", timeline_score=50,
+        budget_score=999,
+        authority_score=-5,
+        need_score="abc",
+        timeline_score=50,
     )
     assert score["budget"] == 100
     assert score["authority"] == 0
@@ -1035,7 +1019,10 @@ def test_compute_opportunity_score_custom_weights_normalise() -> None:
     from app.modules.crm.service import compute_opportunity_score
 
     score = compute_opportunity_score(
-        budget_score=100, authority_score=0, need_score=0, timeline_score=0,
+        budget_score=100,
+        authority_score=0,
+        need_score=0,
+        timeline_score=0,
         weights={"budget": 50, "authority": 50, "need": 0, "timeline": 0},
     )
     # After normalisation weights should be {budget:50, authority:50, need:0, timeline:0}
@@ -1054,16 +1041,31 @@ def test_build_account_tree_two_levels() -> None:
     child_b_id = uuid.uuid4()
     accounts = [
         SimpleNamespace(
-            id=parent_id, parent_account_id=None, name="Parent Owner",
-            role="owner", status="active", industry=None, country="DE",
+            id=parent_id,
+            parent_account_id=None,
+            name="Parent Owner",
+            role="owner",
+            status="active",
+            industry=None,
+            country="DE",
         ),
         SimpleNamespace(
-            id=child_a_id, parent_account_id=parent_id, name="GC Alpha",
-            role="general_contractor", status="active", industry=None, country="DE",
+            id=child_a_id,
+            parent_account_id=parent_id,
+            name="GC Alpha",
+            role="general_contractor",
+            status="active",
+            industry=None,
+            country="DE",
         ),
         SimpleNamespace(
-            id=child_b_id, parent_account_id=parent_id, name="GC Beta",
-            role="general_contractor", status="active", industry=None, country="DE",
+            id=child_b_id,
+            parent_account_id=parent_id,
+            name="GC Beta",
+            role="general_contractor",
+            status="active",
+            industry=None,
+            country="DE",
         ),
     ]
     tree = build_account_tree(accounts)
@@ -1081,8 +1083,13 @@ def test_build_account_tree_handles_orphan_as_root() -> None:
     child_id = uuid.uuid4()
     accounts = [
         SimpleNamespace(
-            id=child_id, parent_account_id=missing_parent, name="Orphan",
-            role="subcontractor", status="active", industry=None, country=None,
+            id=child_id,
+            parent_account_id=missing_parent,
+            name="Orphan",
+            role="subcontractor",
+            status="active",
+            industry=None,
+            country=None,
         ),
     ]
     tree = build_account_tree(accounts)
@@ -1099,26 +1106,27 @@ def test_compute_stage_weighted_forecast_groups_by_stage() -> None:
     stage1 = uuid.uuid4()
     stage2 = uuid.uuid4()
     stages = {
-        stage1: SimpleNamespace(id=stage1, name="Qualification", code="qual",
-                                default_probability_percent=10),
-        stage2: SimpleNamespace(id=stage2, name="Proposal", code="prop",
-                                default_probability_percent=50),
+        stage1: SimpleNamespace(id=stage1, name="Qualification", code="qual", default_probability_percent=10),
+        stage2: SimpleNamespace(id=stage2, name="Proposal", code="prop", default_probability_percent=50),
     }
     opps = [
         SimpleNamespace(
-            stage_id=stage1, status="open",
+            stage_id=stage1,
+            status="open",
             estimated_value=Decimal("100000"),
             probability_percent=10,
             weighted_value=Decimal("10000"),
         ),
         SimpleNamespace(
-            stage_id=stage2, status="open",
+            stage_id=stage2,
+            status="open",
             estimated_value=Decimal("200000"),
             probability_percent=50,
             weighted_value=Decimal("100000"),
         ),
         SimpleNamespace(
-            stage_id=stage1, status="won",
+            stage_id=stage1,
+            status="won",
             estimated_value=Decimal("50000"),
             probability_percent=100,
             weighted_value=Decimal("50000"),

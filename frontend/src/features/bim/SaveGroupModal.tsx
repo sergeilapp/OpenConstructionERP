@@ -8,19 +8,19 @@
  * a `BIMElementGroup` row that the parent caches.
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { X, Save, Loader2, Bookmark } from 'lucide-react';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { X, Save, Loader2, Bookmark } from "lucide-react";
 import {
   createElementGroup,
   resolveElementUUID,
   type BIMGroupFilterCriteria,
   type BIMElementGroup,
-} from './api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import { GROUP_COLORS } from './BIMGroupsPanel';
-import { useToastStore } from '@/stores/useToastStore';
+} from "./api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import { GROUP_COLORS } from "./BIMGroupsPanel";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface SaveGroupModalProps {
   projectId: string;
@@ -53,8 +53,8 @@ export default function SaveGroupModal({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   // Dynamic mode means "re-resolve from filter criteria every time".  If the
   // criteria are empty (e.g. the user only Ctrl+selected elements without
   // filtering), dynamic would resolve to *every* element in the project —
@@ -64,7 +64,7 @@ export default function SaveGroupModal({
   const [isDynamic, setIsDynamic] = useState(false);
   const dynamicAllowed = !criteriaEmpty;
   const effectiveDynamic = isDynamic && dynamicAllowed;
-  const [color, setColor] = useState('#2979ff');
+  const [color, setColor] = useState("#2979ff");
 
   const createMut = useMutation({
     mutationFn: async () => {
@@ -100,9 +100,9 @@ export default function SaveGroupModal({
     },
     onSuccess: (group) => {
       addToast({
-        type: 'success',
-        title: t('bim.group_saved_title', { defaultValue: 'Group saved‌⁠‍' }),
-        message: t('bim.group_saved_msg', {
+        type: "success",
+        title: t("bim.group_saved_title", { defaultValue: "Group saved‌⁠‍" }),
+        message: t("bim.group_saved_msg", {
           defaultValue: '"{{name}}" — {{count}} elements‌⁠‍',
           name: group.name,
           count: group.element_count,
@@ -111,7 +111,11 @@ export default function SaveGroupModal({
       qc.invalidateQueries({
         predicate: (q) => {
           const k = q.queryKey;
-          return Array.isArray(k) && k[0] === 'bim-element-groups' && k[1] === projectId;
+          return (
+            Array.isArray(k) &&
+            k[0] === "bim-element-groups" &&
+            k[1] === projectId
+          );
         },
       });
       onSaved?.(group);
@@ -119,8 +123,8 @@ export default function SaveGroupModal({
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -144,13 +148,15 @@ export default function SaveGroupModal({
           <div className="flex items-center gap-2">
             <Bookmark size={16} className="text-oe-blue" />
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('bim.save_group_title', { defaultValue: 'Save current filter as group‌⁠‍' })}
+              {t("bim.save_group_title", {
+                defaultValue: "Save current filter as group‌⁠‍",
+              })}
             </h2>
           </div>
           <button
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -160,7 +166,7 @@ export default function SaveGroupModal({
         <div className="p-5 space-y-3">
           <div>
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-              {t('bim.group_name', { defaultValue: 'Group name‌⁠‍' })}
+              {t("bim.group_name", { defaultValue: "Group name‌⁠‍" })}
               <span className="text-rose-500 ml-0.5">*</span>
             </label>
             <input
@@ -168,8 +174,8 @@ export default function SaveGroupModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoFocus
-              placeholder={t('bim.group_name_placeholder', {
-                defaultValue: 'e.g. Walls on Level 1‌⁠‍',
+              placeholder={t("bim.group_name_placeholder", {
+                defaultValue: "e.g. Walls on Level 1‌⁠‍",
               })}
               className="w-full px-2 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
             />
@@ -177,7 +183,9 @@ export default function SaveGroupModal({
 
           <div>
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-              {t('bim.group_description', { defaultValue: 'Description (optional)' })}
+              {t("bim.group_description", {
+                defaultValue: "Description (optional)",
+              })}
             </label>
             <textarea
               value={description}
@@ -189,7 +197,7 @@ export default function SaveGroupModal({
 
           <div>
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1.5">
-              {t('bim.group_color', { defaultValue: 'Color' })}
+              {t("bim.group_color", { defaultValue: "Color" })}
             </label>
             <div className="flex items-center gap-1.5">
               {GROUP_COLORS.map((c) => (
@@ -199,8 +207,8 @@ export default function SaveGroupModal({
                   onClick={() => setColor(c)}
                   className={`h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 ${
                     color === c
-                      ? 'border-content-primary scale-105'
-                      : 'border-transparent'
+                      ? "border-content-primary scale-105"
+                      : "border-transparent"
                   }`}
                   style={{ background: c }}
                   title={c}
@@ -213,14 +221,16 @@ export default function SaveGroupModal({
           <div className="rounded-md border border-border-light p-3 space-y-2">
             <label
               className={`flex items-start gap-2 ${
-                dynamicAllowed ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                dynamicAllowed
+                  ? "cursor-pointer"
+                  : "cursor-not-allowed opacity-50"
               }`}
               title={
                 dynamicAllowed
                   ? undefined
-                  : t('bim.group_dynamic_disabled_title', {
+                  : t("bim.group_dynamic_disabled_title", {
                       defaultValue:
-                        'Dynamic mode needs at least one filter (storey, type, or search). Apply a filter to enable it.',
+                        "Dynamic mode needs at least one filter (storey, type, or search). Apply a filter to enable it.",
                     })
               }
             >
@@ -233,17 +243,17 @@ export default function SaveGroupModal({
               />
               <div className="text-xs">
                 <div className="font-semibold text-content-primary">
-                  {t('bim.group_dynamic', { defaultValue: 'Dynamic' })}
+                  {t("bim.group_dynamic", { defaultValue: "Dynamic" })}
                 </div>
                 <div className="text-content-tertiary text-[11px]">
                   {dynamicAllowed
-                    ? t('bim.group_dynamic_desc', {
+                    ? t("bim.group_dynamic_desc", {
                         defaultValue:
-                          'Re-compute members from the filter every time. Auto-updates when the model is re-imported.',
+                          "Re-compute members from the filter every time. Auto-updates when the model is re-imported.",
                       })
-                    : t('bim.group_dynamic_desc_disabled', {
+                    : t("bim.group_dynamic_desc_disabled", {
                         defaultValue:
-                          'Disabled — no filter is active. Apply a storey, type or search filter to enable dynamic mode.',
+                          "Disabled — no filter is active. Apply a storey, type or search filter to enable dynamic mode.",
                       })}
                 </div>
               </div>
@@ -257,12 +267,12 @@ export default function SaveGroupModal({
               />
               <div className="text-xs">
                 <div className="font-semibold text-content-primary">
-                  {t('bim.group_static', { defaultValue: 'Static' })}
+                  {t("bim.group_static", { defaultValue: "Static" })}
                 </div>
                 <div className="text-content-tertiary text-[11px]">
-                  {t('bim.group_static_desc', {
+                  {t("bim.group_static_desc", {
                     defaultValue:
-                      'Snapshot the current {{count}} elements. Membership stays frozen even if the model changes.',
+                      "Snapshot the current {{count}} elements. Membership stays frozen even if the model changes.",
                     count: elements.length,
                   })}
                 </div>
@@ -273,11 +283,16 @@ export default function SaveGroupModal({
           {/* Counts pill — show what will actually be saved */}
           <div className="flex items-center gap-2 text-[11px] text-content-tertiary">
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-oe-blue/10 text-oe-blue font-medium">
-              {(effectiveDynamic ? visibleCount : elements.length).toLocaleString()}{' '}
-              {t('bim.elements', { defaultValue: 'elements' })}
+              {(effectiveDynamic
+                ? visibleCount
+                : elements.length
+              ).toLocaleString()}{" "}
+              {t("bim.elements", { defaultValue: "elements" })}
             </span>
             {modelId && (
-              <span>{t('bim.in_current_model', { defaultValue: 'in this model' })}</span>
+              <span>
+                {t("bim.in_current_model", { defaultValue: "in this model" })}
+              </span>
             )}
           </div>
         </div>
@@ -289,7 +304,7 @@ export default function SaveGroupModal({
             onClick={onClose}
             className="text-xs text-content-tertiary hover:text-content-primary px-2"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
           <button
             type="button"
@@ -302,7 +317,7 @@ export default function SaveGroupModal({
             ) : (
               <Save size={12} />
             )}
-            {t('bim.save_group', { defaultValue: 'Save group' })}
+            {t("bim.save_group", { defaultValue: "Save group" })}
           </button>
         </div>
       </div>

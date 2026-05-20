@@ -31,7 +31,7 @@ export function extractReferences(input: string): FormulaReferences {
   };
   const trimmed = input.trim();
   if (!trimmed) return refs;
-  const body = trimmed.startsWith('=') ? trimmed.slice(1) : trimmed;
+  const body = trimmed.startsWith("=") ? trimmed.slice(1) : trimmed;
 
   let i = 0;
   const n = body.length;
@@ -43,7 +43,7 @@ export function extractReferences(input: string): FormulaReferences {
       const quote = ch;
       i++;
       while (i < n && body[i] !== quote) {
-        if (body[i] === '\\' && i + 1 < n) {
+        if (body[i] === "\\" && i + 1 < n) {
           i += 2;
           continue;
         }
@@ -53,9 +53,9 @@ export function extractReferences(input: string): FormulaReferences {
       continue;
     }
     // $VAR
-    if (ch === '$' && i + 1 < n && /[A-Za-z_]/.test(body[i + 1]!)) {
+    if (ch === "$" && i + 1 < n && /[A-Za-z_]/.test(body[i + 1]!)) {
       i++;
-      let name = '';
+      let name = "";
       while (i < n && /[A-Za-z0-9_]/.test(body[i]!)) {
         name += body[i]!;
         i++;
@@ -65,7 +65,7 @@ export function extractReferences(input: string): FormulaReferences {
     }
     // pos("…") / section("…") / col("…")
     if (/[a-zA-Z_]/.test(ch)) {
-      let ident = '';
+      let ident = "";
       const start = i;
       while (i < n && /[a-zA-Z0-9_]/.test(body[i]!)) {
         ident += body[i]!;
@@ -75,16 +75,16 @@ export function extractReferences(input: string): FormulaReferences {
       let j = i;
       while (j < n && /\s/.test(body[j]!)) j++;
       const lc = ident.toLowerCase();
-      if (body[j] === '(' && (lc === 'pos' || lc === 'section')) {
+      if (body[j] === "(" && (lc === "pos" || lc === "section")) {
         // Find first string-literal arg
         j++; // skip (
         while (j < n && /\s/.test(body[j]!)) j++;
         if (body[j] === '"' || body[j] === "'") {
           const quote = body[j]!;
           j++;
-          let str = '';
+          let str = "";
           while (j < n && body[j] !== quote) {
-            if (body[j] === '\\' && j + 1 < n) {
+            if (body[j] === "\\" && j + 1 < n) {
               str += body[j + 1];
               j += 2;
               continue;
@@ -92,7 +92,7 @@ export function extractReferences(input: string): FormulaReferences {
             str += body[j]!;
             j++;
           }
-          if (lc === 'pos') refs.positionOrdinals.add(str);
+          if (lc === "pos") refs.positionOrdinals.add(str);
           else refs.sectionNames.add(str);
           // Don't skip ahead — let the main loop continue from `i` (after
           // the identifier). The string will then be skipped by the

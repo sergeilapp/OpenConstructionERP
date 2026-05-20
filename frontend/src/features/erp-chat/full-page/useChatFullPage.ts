@@ -1,19 +1,22 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { aiApi, type AISettings } from '@/features/ai/api';
-import type { ChatMessage, DataPanelEntry, ToolCallInfo } from '../types';
+import { useState, useCallback, useRef, useEffect } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { aiApi, type AISettings } from "@/features/ai/api";
+import type { ChatMessage, DataPanelEntry, ToolCallInfo } from "../types";
 
 const DEFAULT_SUGGESTIONS = [
-  'Show all projects',
-  'BOQ overview for this project',
-  'Run validation',
-  'Risk overview',
-  'Search CWICR database',
+  "Show all projects",
+  "BOQ overview for this project",
+  "Run validation",
+  "Risk overview",
+  "Search CWICR database",
 ];
 
 function uid(): string {
-  return crypto.randomUUID?.() ?? Math.random().toString(36).slice(2) + Date.now().toString(36);
+  return (
+    crypto.randomUUID?.() ??
+    Math.random().toString(36).slice(2) + Date.now().toString(36)
+  );
 }
 
 export interface UseChatFullPageReturn {
@@ -34,7 +37,9 @@ export function useChatFullPage(): UseChatFullPageReturn {
   const [isStreaming, setIsStreaming] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>(DEFAULT_SUGGESTIONS);
-  const [dataPanelEntries, setDataPanelEntries] = useState<DataPanelEntry[]>([]);
+  const [dataPanelEntries, setDataPanelEntries] = useState<DataPanelEntry[]>(
+    [],
+  );
   const [activePanelIndex, setActivePanelIndex] = useState(-1);
   const [aiConfigured, setAiConfigured] = useState<boolean | null>(null);
 
@@ -78,17 +83,17 @@ export function useChatFullPage(): UseChatFullPageReturn {
       if (aiConfigured === false) {
         const userMsg: ChatMessage = {
           id: uid(),
-          role: 'user',
+          role: "user",
           content: trimmed,
           ts: new Date(),
         };
         const onboardingMsg: ChatMessage = {
           id: uid(),
-          role: 'assistant',
+          role: "assistant",
           content:
-            '**AI assistant is not configured yet**\n\n' +
-            'Connect your AI provider (Anthropic, OpenAI, Google, or another supported provider) in **Settings** to enable the chat assistant.\n\n' +
-            'Go to [Settings](/settings) to add your API key.',
+            "**AI assistant is not configured yet**\n\n" +
+            "Connect your AI provider (Anthropic, OpenAI, Google, or another supported provider) in **Settings** to enable the chat assistant.\n\n" +
+            "Go to [Settings](/settings) to add your API key.",
           ts: new Date(),
         };
         setMessages((prev) => [...prev, userMsg, onboardingMsg]);
@@ -97,14 +102,14 @@ export function useChatFullPage(): UseChatFullPageReturn {
 
       const userMsg: ChatMessage = {
         id: uid(),
-        role: 'user',
+        role: "user",
         content: trimmed,
         ts: new Date(),
       };
       const aiMsg: ChatMessage = {
         id: uid(),
-        role: 'assistant',
-        content: '',
+        role: "assistant",
+        content: "",
         toolCalls: [],
         ts: new Date(),
       };
@@ -122,10 +127,10 @@ export function useChatFullPage(): UseChatFullPageReturn {
 
       (async () => {
         try {
-          const response = await fetch('/api/v1/erp_chat/stream/', {
-            method: 'POST',
+          const response = await fetch("/api/v1/erp_chat/stream/", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
               ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
             body: JSON.stringify({
@@ -137,10 +142,12 @@ export function useChatFullPage(): UseChatFullPageReturn {
           });
 
           if (!response.ok) {
-            const errText = await response.text().catch(() => 'Unknown error');
+            const errText = await response.text().catch(() => "Unknown error");
             setMessages((prev) =>
               prev.map((m) =>
-                m.id === aiMsgId ? { ...m, content: `Error: ${response.status} - ${errText}` } : m,
+                m.id === aiMsgId
+                  ? { ...m, content: `Error: ${response.status} - ${errText}` }
+                  : m,
               ),
             );
             setIsStreaming(false);
@@ -154,16 +161,16 @@ export function useChatFullPage(): UseChatFullPageReturn {
           }
 
           const decoder = new TextDecoder();
-          let buffer = '';
+          let buffer = "";
           // The backend emits standard SSE frames where the event name is on
           // an ``event:`` line and the JSON payload on the following
           // ``data:`` line (see backend _sse()). The previous parser only
           // read ``data:`` and switched on a non-existent ``chunk.type``
           // field, so NOTHING ever rendered. Track the current event name
           // and reset it after each blank-line-delimited frame.
-          let currentEvent = '';
+          let currentEvent = "";
 
-          const lastToolCallId = { id: '' };
+          const lastToolCallId = { id: "" };
 
           while (true) {
             const { done, value } = await reader.read();
@@ -171,25 +178,25 @@ export function useChatFullPage(): UseChatFullPageReturn {
 
             buffer += decoder.decode(value, { stream: true });
 
-            const lines = buffer.split('\n');
+            const lines = buffer.split("\n");
             // Keep the last (possibly incomplete) line in the buffer
-            buffer = lines.pop() ?? '';
+            buffer = lines.pop() ?? "";
 
             for (const rawLine of lines) {
-              const line = rawLine.replace(/\r$/, '');
+              const line = rawLine.replace(/\r$/, "");
               // Blank line terminates an SSE frame — reset the event name.
-              if (line.trim() === '') {
-                currentEvent = '';
+              if (line.trim() === "") {
+                currentEvent = "";
                 continue;
               }
-              if (line.startsWith('event:')) {
+              if (line.startsWith("event:")) {
                 currentEvent = line.slice(6).trim();
                 continue;
               }
-              if (!line.startsWith('data:')) continue;
+              if (!line.startsWith("data:")) continue;
 
               const jsonStr = line.slice(5).trim();
-              if (!jsonStr || jsonStr === '[DONE]') continue;
+              if (!jsonStr || jsonStr === "[DONE]") continue;
 
               let payload: Record<string, unknown>;
               try {
@@ -199,13 +206,13 @@ export function useChatFullPage(): UseChatFullPageReturn {
               }
 
               switch (currentEvent) {
-                case 'session_id': {
+                case "session_id": {
                   const sid = payload.session_id as string | undefined;
                   if (sid) setSessionId(sid);
                   break;
                 }
 
-                case 'text': {
+                case "text": {
                   const content = payload.content as string | undefined;
                   if (content) {
                     setMessages((prev) =>
@@ -219,12 +226,13 @@ export function useChatFullPage(): UseChatFullPageReturn {
                   break;
                 }
 
-                case 'tool_start': {
-                  const toolName = (payload.tool as string | undefined) ?? 'unknown';
+                case "tool_start": {
+                  const toolName =
+                    (payload.tool as string | undefined) ?? "unknown";
                   const toolCall: ToolCallInfo = {
                     id: uid(),
                     name: toolName,
-                    status: 'running',
+                    status: "running",
                     input: payload.args as Record<string, unknown> | undefined,
                     startedAt: Date.now(),
                   };
@@ -232,18 +240,23 @@ export function useChatFullPage(): UseChatFullPageReturn {
                   setMessages((prev) =>
                     prev.map((m) =>
                       m.id === aiMsgId
-                        ? { ...m, toolCalls: [...(m.toolCalls ?? []), toolCall] }
+                        ? {
+                            ...m,
+                            toolCalls: [...(m.toolCalls ?? []), toolCall],
+                          }
                         : m,
                     ),
                   );
                   break;
                 }
 
-                case 'tool_result': {
+                case "tool_result": {
                   // Backend payload: { tool, result }. There is no per-call
                   // id on the wire, so the most-recently-started running
                   // tool call for this message is the one being resolved.
-                  const result = payload.result as ToolCallInfo['result'] | undefined;
+                  const result = payload.result as
+                    | ToolCallInfo["result"]
+                    | undefined;
                   setMessages((prev) =>
                     prev.map((m) => {
                       if (m.id !== aiMsgId) return m;
@@ -252,11 +265,11 @@ export function useChatFullPage(): UseChatFullPageReturn {
                         .slice()
                         .reverse()
                         .map((tc) => {
-                          if (!matched && tc.status === 'running') {
+                          if (!matched && tc.status === "running") {
                             matched = true;
                             return {
                               ...tc,
-                              status: 'done' as const,
+                              status: "done" as const,
                               result,
                               durationMs: Date.now() - tc.startedAt,
                             };
@@ -273,8 +286,9 @@ export function useChatFullPage(): UseChatFullPageReturn {
                     const entry: DataPanelEntry = {
                       renderer: result.renderer,
                       data: result.data,
-                      toolName: (payload.tool as string | undefined) ?? 'unknown',
-                      summary: result.summary ?? '',
+                      toolName:
+                        (payload.tool as string | undefined) ?? "unknown",
+                      summary: result.summary ?? "",
                       timestamp: Date.now(),
                     };
                     setDataPanelEntries((prev) => [...prev, entry]);
@@ -283,8 +297,9 @@ export function useChatFullPage(): UseChatFullPageReturn {
                   break;
                 }
 
-                case 'error': {
-                  const errMsg = (payload.message as string | undefined) ?? 'Unknown error';
+                case "error": {
+                  const errMsg =
+                    (payload.message as string | undefined) ?? "Unknown error";
                   setMessages((prev) =>
                     prev.map((m) =>
                       m.id === aiMsgId
@@ -292,8 +307,12 @@ export function useChatFullPage(): UseChatFullPageReturn {
                             ...m,
                             content: m.content + `\n\n**Error:** ${errMsg}`,
                             toolCalls: (m.toolCalls ?? []).map((tc) =>
-                              tc.status === 'running'
-                                ? { ...tc, status: 'error' as const, durationMs: Date.now() - tc.startedAt }
+                              tc.status === "running"
+                                ? {
+                                    ...tc,
+                                    status: "error" as const,
+                                    durationMs: Date.now() - tc.startedAt,
+                                  }
                                 : tc,
                             ),
                           }
@@ -303,17 +322,18 @@ export function useChatFullPage(): UseChatFullPageReturn {
                   break;
                 }
 
-                case 'done': {
+                case "done": {
                   break;
                 }
               }
             }
           }
         } catch (err: unknown) {
-          if (err instanceof DOMException && err.name === 'AbortError') {
+          if (err instanceof DOMException && err.name === "AbortError") {
             // User-initiated abort
           } else {
-            const errorMsg = err instanceof Error ? err.message : 'Connection failed';
+            const errorMsg =
+              err instanceof Error ? err.message : "Connection failed";
             setMessages((prev) =>
               prev.map((m) =>
                 m.id === aiMsgId

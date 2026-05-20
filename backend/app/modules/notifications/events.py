@@ -147,9 +147,7 @@ async def _on_meeting_action_items_created(event: Event) -> None:
                 )
             await session.commit()
     except Exception:
-        logger.debug(
-            "notifications: _on_meeting_action_items_created failed", exc_info=True
-        )
+        logger.debug("notifications: _on_meeting_action_items_created failed", exc_info=True)
 
 
 async def _on_bim_element_deleted(event: Event) -> None:
@@ -191,9 +189,7 @@ async def _on_cde_state_transitioned(event: Event) -> None:
             )
             await session.commit()
     except Exception:
-        logger.debug(
-            "notifications: _on_cde_state_transitioned failed", exc_info=True
-        )
+        logger.debug("notifications: _on_cde_state_transitioned failed", exc_info=True)
 
 
 async def _on_rfi_assigned(event: Event) -> None:
@@ -201,11 +197,7 @@ async def _on_rfi_assigned(event: Event) -> None:
     if not await _can_open_isolated_session():
         return
     data = event.data or {}
-    assignee_id = (
-        data.get("assigned_to")
-        or data.get("assigned_to_user_id")
-        or data.get("assignee_id")
-    )
+    assignee_id = data.get("assigned_to") or data.get("assigned_to_user_id") or data.get("assignee_id")
     rfi_id = data.get("rfi_id") or data.get("id")
     if not assignee_id or not rfi_id:
         return
@@ -265,11 +257,7 @@ async def _on_rfi_responded(event: Event) -> None:
     if not await _can_open_isolated_session():
         return
     data = event.data or {}
-    requester_id = (
-        data.get("raised_by")
-        or data.get("requested_by_user_id")
-        or data.get("ball_in_court")
-    )
+    requester_id = data.get("raised_by") or data.get("requested_by_user_id") or data.get("ball_in_court")
     rfi_id = data.get("rfi_id") or data.get("id")
     if not requester_id or not rfi_id:
         return
@@ -446,9 +434,7 @@ async def _on_submittal_revise_resubmit(event: Event) -> None:
             )
             await session.commit()
     except Exception:
-        logger.debug(
-            "notifications: _on_submittal_revise_resubmit failed", exc_info=True
-        )
+        logger.debug("notifications: _on_submittal_revise_resubmit failed", exc_info=True)
 
 
 async def _on_transmittal_issued(event: Event) -> None:
@@ -508,9 +494,7 @@ async def _on_transmittal_acknowledged(event: Event) -> None:
             )
             await session.commit()
     except Exception:
-        logger.debug(
-            "notifications: _on_transmittal_acknowledged failed", exc_info=True
-        )
+        logger.debug("notifications: _on_transmittal_acknowledged failed", exc_info=True)
 
 
 async def _on_transmittal_responded(event: Event) -> None:
@@ -541,9 +525,7 @@ async def _on_transmittal_responded(event: Event) -> None:
             )
             await session.commit()
     except Exception:
-        logger.debug(
-            "notifications: _on_transmittal_responded failed", exc_info=True
-        )
+        logger.debug("notifications: _on_transmittal_responded failed", exc_info=True)
 
 
 # Declarative subscription map.  Adding a new event to this list
@@ -600,6 +582,7 @@ def register_notification_subscribers() -> None:
     from app.modules.notifications._wave23_subscribers import (
         register_wave23_notification_subscribers,
     )
+
     register_wave1_notification_subscribers()
     register_wave23_notification_subscribers()
     register_wave4_notification_subscribers()

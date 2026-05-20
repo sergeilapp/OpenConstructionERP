@@ -1,19 +1,19 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Search, Sparkles, CheckCircle2, Loader2 } from 'lucide-react';
-import { Badge } from '@/shared/ui';
-import { apiGet } from '@/shared/lib/api';
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Search, Sparkles, CheckCircle2, Loader2 } from "lucide-react";
+import { Badge } from "@/shared/ui";
+import { apiGet } from "@/shared/lib/api";
 import {
   matchCwicr,
   type CostItemMetadata,
   type CostVariant,
   type CwicrMatchMode,
   type CwicrMatchResult,
-} from './api';
-import { VariantPicker } from './VariantPicker';
+} from "./api";
+import { VariantPicker } from "./VariantPicker";
 
 /** Slim view of `CostItemResponse` — just the fields we need to drive
  *  the variant picker. */
@@ -63,13 +63,13 @@ function formatScore(score: number): string {
 
 export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
   const {
-    initialQuery = '',
+    initialQuery = "",
     unitHint,
     langHint,
     region,
     initialTopK = 10,
     onApply,
-    initialMode = 'lexical',
+    initialMode = "lexical",
     className,
   } = props;
 
@@ -83,7 +83,8 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
   /** While true, the row's Apply button shows a spinner (we're fetching
    *  the full CostItem to discover whether variants exist). */
   const [resolvingId, setResolvingId] = useState<string | null>(null);
-  const [activeVariantPick, setActiveVariantPick] = useState<PendingVariantPick | null>(null);
+  const [activeVariantPick, setActiveVariantPick] =
+    useState<PendingVariantPick | null>(null);
   /** Per-row Apply button refs so the picker can anchor next to the click. */
   const applyButtonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
@@ -137,7 +138,9 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
       setResolvingId(match.cost_item_id);
       let detail: CostItemDetail | null = null;
       try {
-        detail = await apiGet<CostItemDetail>(`/v1/costs/${match.cost_item_id}`);
+        detail = await apiGet<CostItemDetail>(
+          `/v1/costs/${match.cost_item_id}`,
+        );
       } catch {
         // Fetch failed — fall back to the original flow so the user
         // doesn't get stuck.  Apply with the matcher's scalar fields.
@@ -160,7 +163,12 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
       // button so positioning is stable.
       const anchorEl = applyButtonRefs.current.get(match.cost_item_id) ?? null;
       const chosen = await new Promise<CostVariant | null>((resolve) => {
-        setActiveVariantPick({ detail: detail as CostItemDetail, match, anchorEl, resolve });
+        setActiveVariantPick({
+          detail: detail as CostItemDetail,
+          match,
+          anchorEl,
+          resolve,
+        });
       });
 
       // Cancelled — leave the row untouched.
@@ -180,26 +188,41 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
     [onApply],
   );
 
-  const placeholder = t('costs.cwicr_match.placeholder', {
-    defaultValue: 'Describe the work item (e.g. reinforced concrete wall)‌⁠‍',
+  const placeholder = t("costs.cwicr_match.placeholder", {
+    defaultValue: "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
   });
 
-  const titleLabel = t('costs.cwicr_match.title', {
-    defaultValue: 'CWICR rate match‌⁠‍',
+  const titleLabel = t("costs.cwicr_match.title", {
+    defaultValue: "CWICR rate match‌⁠‍",
   });
 
   const modeOptions = useMemo(
     () => [
-      { value: 'lexical' as const, label: t('costs.cwicr_match.mode_lexical', { defaultValue: 'Lexical‌⁠‍' }) },
-      { value: 'semantic' as const, label: t('costs.cwicr_match.mode_semantic', { defaultValue: 'Semantic‌⁠‍' }) },
-      { value: 'hybrid' as const, label: t('costs.cwicr_match.mode_hybrid', { defaultValue: 'Hybrid‌⁠‍' }) },
+      {
+        value: "lexical" as const,
+        label: t("costs.cwicr_match.mode_lexical", {
+          defaultValue: "Lexical‌⁠‍",
+        }),
+      },
+      {
+        value: "semantic" as const,
+        label: t("costs.cwicr_match.mode_semantic", {
+          defaultValue: "Semantic‌⁠‍",
+        }),
+      },
+      {
+        value: "hybrid" as const,
+        label: t("costs.cwicr_match.mode_hybrid", {
+          defaultValue: "Hybrid‌⁠‍",
+        }),
+      },
     ],
     [t],
   );
 
   return (
     <div
-      className={['oe-cwicr-match-panel', className].filter(Boolean).join(' ')}
+      className={["oe-cwicr-match-panel", className].filter(Boolean).join(" ")}
       data-testid="cwicr-match-panel"
     >
       <header className="oe-cwicr-match-panel__header">
@@ -210,7 +233,7 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
       <form onSubmit={onSubmit} className="oe-cwicr-match-panel__form">
         <label className="oe-cwicr-match-panel__field">
           <span className="oe-cwicr-match-panel__label">
-            {t('costs.cwicr_match.query_label', { defaultValue: 'Query' })}
+            {t("costs.cwicr_match.query_label", { defaultValue: "Query" })}
           </span>
           <input
             type="search"
@@ -224,12 +247,14 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
 
         <label className="oe-cwicr-match-panel__field">
           <span className="oe-cwicr-match-panel__label">
-            {t('costs.cwicr_match.mode_label', { defaultValue: 'Mode' })}
+            {t("costs.cwicr_match.mode_label", { defaultValue: "Mode" })}
           </span>
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as CwicrMatchMode)}
-            aria-label={t('costs.cwicr_match.mode_label', { defaultValue: 'Mode' })}
+            aria-label={t("costs.cwicr_match.mode_label", {
+              defaultValue: "Mode",
+            })}
             data-testid="cwicr-match-mode"
           >
             {modeOptions.map((opt) => (
@@ -246,51 +271,90 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
           data-testid="cwicr-match-submit"
         >
           {loading ? (
-            <Loader2 size={14} className="oe-cwicr-match-panel__spinner" aria-hidden />
+            <Loader2
+              size={14}
+              className="oe-cwicr-match-panel__spinner"
+              aria-hidden
+            />
           ) : (
             <Search size={14} aria-hidden />
           )}
-          {t('costs.cwicr_match.search', { defaultValue: 'Search' })}
+          {t("costs.cwicr_match.search", { defaultValue: "Search" })}
         </button>
       </form>
 
       {error && (
-        <div role="alert" className="oe-cwicr-match-panel__error" data-testid="cwicr-match-error">
-          {t('costs.cwicr_match.error', {
-            defaultValue: 'Match failed: {{message}}',
+        <div
+          role="alert"
+          className="oe-cwicr-match-panel__error"
+          data-testid="cwicr-match-error"
+        >
+          {t("costs.cwicr_match.error", {
+            defaultValue: "Match failed: {{message}}",
             message: error,
           })}
         </div>
       )}
 
       {!error && !loading && trimmed && results.length === 0 && (
-        <div className="oe-cwicr-match-panel__empty" data-testid="cwicr-match-empty">
-          {t('costs.cwicr_match.empty', {
-            defaultValue: 'No matching CWICR items found.',
+        <div
+          className="oe-cwicr-match-panel__empty"
+          data-testid="cwicr-match-empty"
+        >
+          {t("costs.cwicr_match.empty", {
+            defaultValue: "No matching CWICR items found.",
           })}
         </div>
       )}
 
       {results.length > 0 && (
-        <table className="oe-cwicr-match-panel__table" data-testid="cwicr-match-results">
+        <table
+          className="oe-cwicr-match-panel__table"
+          data-testid="cwicr-match-results"
+        >
           <thead>
             <tr>
-              <th>{t('costs.cwicr_match.col_code', { defaultValue: 'Code' })}</th>
-              <th>{t('costs.cwicr_match.col_description', { defaultValue: 'Description' })}</th>
-              <th>{t('costs.cwicr_match.col_unit', { defaultValue: 'Unit' })}</th>
-              <th>{t('costs.cwicr_match.col_rate', { defaultValue: 'Rate' })}</th>
-              <th>{t('costs.cwicr_match.col_score', { defaultValue: 'Score' })}</th>
-              <th aria-label={t('costs.cwicr_match.col_actions', { defaultValue: 'Actions' })} />
+              <th>
+                {t("costs.cwicr_match.col_code", { defaultValue: "Code" })}
+              </th>
+              <th>
+                {t("costs.cwicr_match.col_description", {
+                  defaultValue: "Description",
+                })}
+              </th>
+              <th>
+                {t("costs.cwicr_match.col_unit", { defaultValue: "Unit" })}
+              </th>
+              <th>
+                {t("costs.cwicr_match.col_rate", { defaultValue: "Rate" })}
+              </th>
+              <th>
+                {t("costs.cwicr_match.col_score", { defaultValue: "Score" })}
+              </th>
+              <th
+                aria-label={t("costs.cwicr_match.col_actions", {
+                  defaultValue: "Actions",
+                })}
+              />
             </tr>
           </thead>
           <tbody>
             {results.map((row) => (
-              <tr key={row.cost_item_id} data-testid={`cwicr-match-row-${row.code}`}>
+              <tr
+                key={row.cost_item_id}
+                data-testid={`cwicr-match-row-${row.code}`}
+              >
                 <td>{row.code}</td>
                 <td title={row.description}>{row.description}</td>
                 <td>{row.unit}</td>
                 <td>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.375rem",
+                    }}
+                  >
                     <span>
                       {row.unit_rate.toFixed(2)} {row.currency}
                     </span>
@@ -306,9 +370,9 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
                               : undefined
                           }
                         >
-                          {t('costs.variants_count', {
+                          {t("costs.variants_count", {
                             count: row.variant_count ?? 0,
-                            defaultValue: '{{count}} variants',
+                            defaultValue: "{{count}} variants",
                           })}
                         </span>
                       </Badge>
@@ -328,14 +392,20 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
                     data-testid={`cwicr-match-apply-${row.code}`}
                   >
                     {resolvingId === row.cost_item_id ? (
-                      <Loader2 size={14} aria-hidden className="oe-cwicr-match-panel__spinner" />
+                      <Loader2
+                        size={14}
+                        aria-hidden
+                        className="oe-cwicr-match-panel__spinner"
+                      />
                     ) : appliedId === row.cost_item_id ? (
                       <>
                         <CheckCircle2 size={14} aria-hidden />
-                        {t('costs.cwicr_match.applied', { defaultValue: 'Applied' })}
+                        {t("costs.cwicr_match.applied", {
+                          defaultValue: "Applied",
+                        })}
                       </>
                     ) : (
-                      t('costs.cwicr_match.apply', { defaultValue: 'Apply' })
+                      t("costs.cwicr_match.apply", { defaultValue: "Apply" })
                     )}
                   </button>
                 </td>
@@ -346,27 +416,31 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
       )}
 
       {/* Variant picker — anchored at the row's Apply button. */}
-      {activeVariantPick
-        && activeVariantPick.detail.metadata?.variants
-        && activeVariantPick.detail.metadata?.variant_stats && (
-        <VariantPicker
-          variants={activeVariantPick.detail.metadata.variants}
-          stats={activeVariantPick.detail.metadata.variant_stats}
-          anchorEl={activeVariantPick.anchorEl}
-          unitLabel={activeVariantPick.detail.unit || ''}
-          currency={activeVariantPick.detail.currency || activeVariantPick.match.currency || 'USD'}
-          onApply={(chosen) => {
-            const pending = activeVariantPick;
-            setActiveVariantPick(null);
-            pending.resolve(chosen);
-          }}
-          onClose={() => {
-            const pending = activeVariantPick;
-            setActiveVariantPick(null);
-            pending.resolve(null);
-          }}
-        />
-      )}
+      {activeVariantPick &&
+        activeVariantPick.detail.metadata?.variants &&
+        activeVariantPick.detail.metadata?.variant_stats && (
+          <VariantPicker
+            variants={activeVariantPick.detail.metadata.variants}
+            stats={activeVariantPick.detail.metadata.variant_stats}
+            anchorEl={activeVariantPick.anchorEl}
+            unitLabel={activeVariantPick.detail.unit || ""}
+            currency={
+              activeVariantPick.detail.currency ||
+              activeVariantPick.match.currency ||
+              "USD"
+            }
+            onApply={(chosen) => {
+              const pending = activeVariantPick;
+              setActiveVariantPick(null);
+              pending.resolve(chosen);
+            }}
+            onClose={() => {
+              const pending = activeVariantPick;
+              setActiveVariantPick(null);
+              pending.resolve(null);
+            }}
+          />
+        )}
     </div>
   );
 }

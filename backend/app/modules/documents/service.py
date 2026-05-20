@@ -67,9 +67,25 @@ ALLOWED_IMAGE_TYPES = {
     "image/tiff",
 }
 BLOCKED_EXTENSIONS = {
-    ".exe", ".bat", ".cmd", ".sh", ".ps1", ".com", ".scr",
-    ".msi", ".dll", ".vbs", ".js", ".ws", ".wsf", ".pif",
-    ".hta", ".cpl", ".msp", ".mst", ".reg",
+    ".exe",
+    ".bat",
+    ".cmd",
+    ".sh",
+    ".ps1",
+    ".com",
+    ".scr",
+    ".msi",
+    ".dll",
+    ".vbs",
+    ".js",
+    ".ws",
+    ".wsf",
+    ".pif",
+    ".hta",
+    ".cpl",
+    ".msp",
+    ".mst",
+    ".reg",
 }
 
 
@@ -292,9 +308,7 @@ class DocumentService:
                 source_module="oe_documents",
             )
         except Exception as exc:
-            logger.debug(
-                "Failed to publish documents.document.created event: %s", exc
-            )
+            logger.debug("Failed to publish documents.document.created event: %s", exc)
 
         logger.info(
             "Document uploaded: %s (%d bytes) for project %s",
@@ -412,8 +426,7 @@ class DocumentService:
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST,
                         detail=(
-                            f"Invalid CDE state transition: '{current_state}' -> '{new_state}'. "
-                            f"Allowed: {allowed}"
+                            f"Invalid CDE state transition: '{current_state}' -> '{new_state}'. Allowed: {allowed}"
                         ),
                     )
 
@@ -457,9 +470,7 @@ class DocumentService:
                 source_module="oe_documents",
             )
         except Exception as exc:
-            logger.debug(
-                "Failed to publish documents.document.updated event: %s", exc
-            )
+            logger.debug("Failed to publish documents.document.updated event: %s", exc)
 
         return document
 
@@ -511,9 +522,7 @@ class DocumentService:
                 source_module="oe_documents",
             )
         except Exception as exc:
-            logger.debug(
-                "Failed to publish documents.document.deleted event: %s", exc
-            )
+            logger.debug("Failed to publish documents.document.deleted event: %s", exc)
 
         # Then remove file from disk (best-effort)
         try:
@@ -718,10 +727,17 @@ class PhotoService:
                     "VALUES (:id, :pid, :name, :desc, :cat, :fsize, :mime, :fpath, 1, :by, :tags, '{}', :now, :now)"
                 ),
                 {
-                    "id": doc_id, "pid": str(project_id), "name": safe_name,
-                    "desc": caption or "", "cat": "photo", "fsize": len(content),
-                    "mime": content_type, "fpath": str(file_path), "by": user_id or "",
-                    "tags": tags_json, "now": now,
+                    "id": doc_id,
+                    "pid": str(project_id),
+                    "name": safe_name,
+                    "desc": caption or "",
+                    "cat": "photo",
+                    "fsize": len(content),
+                    "mime": content_type,
+                    "fpath": str(file_path),
+                    "by": user_id or "",
+                    "tags": tags_json,
+                    "now": now,
                 },
             )
             logger.info("Cross-linked photo → document %s (tags: photo, %s)", doc_id, category)
@@ -835,14 +851,18 @@ class PhotoService:
         # cross-link is not a real FK.
         if file_path_str:
             cross_linked = (
-                await self.session.execute(
-                    select(Document).where(
-                        Document.project_id == photo.project_id,
-                        Document.category == "photo",
-                        Document.file_path == file_path_str,
+                (
+                    await self.session.execute(
+                        select(Document).where(
+                            Document.project_id == photo.project_id,
+                            Document.category == "photo",
+                            Document.file_path == file_path_str,
+                        )
                     )
                 )
-            ).scalars().all()
+                .scalars()
+                .all()
+            )
             for doc in cross_linked:
                 await self.session.delete(doc)
             if cross_linked:

@@ -1,14 +1,23 @@
-import type { ColDef, ValueFormatterParams, ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
-import { convertToBase, fmtWithCurrency, resourceAwareTotalInBase } from '../boqHelpers';
-import { unitColumnValueSetter } from './cellEditors';
+import type {
+  ColDef,
+  ValueFormatterParams,
+  ValueGetterParams,
+  ValueSetterParams,
+} from "ag-grid-community";
+import {
+  convertToBase,
+  fmtWithCurrency,
+  resourceAwareTotalInBase,
+} from "../boqHelpers";
+import { unitColumnValueSetter } from "./cellEditors";
 import {
   buildFormulaContext,
   evaluateFormulaStrict,
   isFormula,
   type FormulaContext,
   type FormulaVariable,
-} from './formula';
-import type { Position } from '../api';
+} from "./formula";
+import type { Position } from "../api";
 
 export interface BOQColumnContext {
   currencySymbol: string;
@@ -52,8 +61,8 @@ export interface BOQColumnContext {
 
 function totalFormatter(params: ValueFormatterParams): string {
   const ctx = params.context as BOQColumnContext | undefined;
-  if (params.value == null) return '';
-  const locale = ctx?.locale ?? 'de-DE';
+  if (params.value == null) return "";
+  const locale = ctx?.locale ?? "de-DE";
   // Apply display-currency conversion when set. Footer rows, section
   // subtotals and per-position totals all flow through this single
   // formatter, so flipping the display currency reformats the entire
@@ -62,7 +71,7 @@ function totalFormatter(params: ValueFormatterParams): string {
   if (dc && dc.rate > 0) {
     return fmtWithCurrency(params.value / dc.rate, locale, dc.code);
   }
-  const currencyCode = ctx?.currencyCode ?? 'EUR';
+  const currencyCode = ctx?.currencyCode ?? "EUR";
   return fmtWithCurrency(params.value, locale, currencyCode);
 }
 
@@ -71,8 +80,8 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
 
   return [
     {
-      headerName: '',
-      colId: '_drag',
+      headerName: "",
+      colId: "_drag",
       width: 30,
       maxWidth: 30,
       minWidth: 30,
@@ -85,21 +94,21 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       rowDrag: (params) => !params.data?._isFooter,
       rowDragText: (params) => {
         if (params.rowNode?.data?._isSection) {
-          return params.rowNode.data.description ?? '';
+          return params.rowNode.data.description ?? "";
         }
         return params.rowNode?.data?.ordinal
-          ? `${params.rowNode.data.ordinal} — ${params.rowNode.data.description ?? ''}`
-          : params.defaultTextValue ?? '';
+          ? `${params.rowNode.data.ordinal} — ${params.rowNode.data.description ?? ""}`
+          : (params.defaultTextValue ?? "");
       },
-      cellClass: 'oe-drag-handle-cell',
+      cellClass: "oe-drag-handle-cell",
       cellRenderer: (params: { data?: { _isFooter?: boolean } }) => {
         if (params.data?._isFooter) return null;
         return null; // AG Grid renders the drag handle icon automatically
       },
     },
     {
-      headerName: '',
-      colId: '_checkbox',
+      headerName: "",
+      colId: "_checkbox",
       width: 24,
       maxWidth: 24,
       minWidth: 24,
@@ -110,12 +119,12 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       resizable: false,
       suppressMovable: true,
       // checkboxSelection moved to rowSelection.checkboxes in GridOptions (AG Grid v32.2+)
-      cellClass: 'flex items-center justify-center',
+      cellClass: "flex items-center justify-center",
     },
     {
-      headerName: '',
-      colId: '_expand',
-      field: '_expand',
+      headerName: "",
+      colId: "_expand",
+      field: "_expand",
       width: 32,
       minWidth: 32,
       maxWidth: 32,
@@ -125,12 +134,12 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       resizable: false,
       suppressNavigable: true,
       suppressHeaderMenuButton: true,
-      cellRenderer: 'expandCellRenderer',
-      cellClass: 'oe-icon-cell',
+      cellRenderer: "expandCellRenderer",
+      cellClass: "oe-icon-cell",
     },
     {
-      headerName: t('boq.ordinal', { defaultValue: 'Pos.' }),
-      field: 'ordinal',
+      headerName: t("boq.ordinal", { defaultValue: "Pos." }),
+      field: "ordinal",
       width: 88,
       minWidth: 70,
       editable: (params) => {
@@ -138,17 +147,21 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
         return true;
       },
       cellClass: (params) => {
-        const base = 'font-mono text-xs text-right !pr-2';
-        const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
-        const isExpanded = !!params.data?.id && (ctx?.expandedPositions?.has(params.data.id) ?? false);
+        const base = "font-mono text-xs text-right !pr-2";
+        const ctx = params.context as
+          | { expandedPositions?: Set<string> }
+          | undefined;
+        const isExpanded =
+          !!params.data?.id &&
+          (ctx?.expandedPositions?.has(params.data.id) ?? false);
         return isExpanded ? `${base} font-bold` : base;
       },
-      headerClass: 'ag-right-aligned-header',
+      headerClass: "ag-right-aligned-header",
     },
     {
-      headerName: '',
-      colId: '_bim_link',
-      field: '_bim_link',
+      headerName: "",
+      colId: "_bim_link",
+      field: "_bim_link",
       width: 90,
       minWidth: 28,
       maxWidth: 120,
@@ -158,12 +171,12 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       resizable: false,
       suppressNavigable: true,
       suppressHeaderMenuButton: true,
-      cellRenderer: 'bimLinkCellRenderer',
-      cellClass: 'p-0',
+      cellRenderer: "bimLinkCellRenderer",
+      cellClass: "p-0",
     },
     {
-      headerName: t('boq.description', { defaultValue: 'Description‌⁠‍' }),
-      field: 'description',
+      headerName: t("boq.description", { defaultValue: "Description‌⁠‍" }),
+      field: "description",
       // Description gets a heavier flex weight so it absorbs ~20% of viewport
       // even when 6+ regional-preset columns are visible. Keep a non-zero
       // minWidth so a flood of custom cols doesn't squeeze the BOQ text into
@@ -172,16 +185,23 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       minWidth: 180,
       flex: 3,
       editable: true,
-      cellEditor: 'agTextCellEditor',
-      cellRenderer: 'descriptionCellRenderer',
+      cellEditor: "agTextCellEditor",
+      cellRenderer: "descriptionCellRenderer",
       // !pl-1 overrides AG Grid's default ~17px cell-horizontal-padding
       // so the position description sits flush-left within the column
       // (per UX request: remove the big empty indent on position rows).
       cellClass: (params) => {
-        if (params.data?._isSection) return 'font-bold uppercase tracking-wide text-xs !pl-1 !pr-1';
-        const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
-        const isExpanded = !!params.data?.id && (ctx?.expandedPositions?.has(params.data.id) ?? false);
-        return isExpanded ? 'text-xs font-bold !pl-1 !pr-1' : 'text-xs !pl-1 !pr-1';
+        if (params.data?._isSection)
+          return "font-bold uppercase tracking-wide text-xs !pl-1 !pr-1";
+        const ctx = params.context as
+          | { expandedPositions?: Set<string> }
+          | undefined;
+        const isExpanded =
+          !!params.data?.id &&
+          (ctx?.expandedPositions?.has(params.data.id) ?? false);
+        return isExpanded
+          ? "text-xs font-bold !pl-1 !pr-1"
+          : "text-xs !pl-1 !pr-1";
       },
       // Issue #136 — positions nested under a SUB-section get a left
       // indent proportional to their depth so the hierarchy is legible.
@@ -190,32 +210,36 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       cellStyle: (params) => {
         const d = params.data as Record<string, unknown> | undefined;
         if (
-          !d || d._isSection || d._isFooter || d._isResource ||
-          d._isAddResource || d._isVariantHeader
+          !d ||
+          d._isSection ||
+          d._isFooter ||
+          d._isResource ||
+          d._isAddResource ||
+          d._isVariantHeader
         ) {
           return null;
         }
-        const depth = typeof d._depth === 'number' ? d._depth : 0;
+        const depth = typeof d._depth === "number" ? d._depth : 0;
         return depth > 1 ? { paddingLeft: `${(depth - 1) * 18}px` } : null;
       },
     },
     {
-      headerName: t('boq.classification', { defaultValue: 'Code' }),
-      field: 'classification',
+      headerName: t("boq.classification", { defaultValue: "Code" }),
+      field: "classification",
       width: 100,
       hide: true,
       editable: false,
       valueGetter: (params) => {
-        if (params.data?._isSection || params.data?._isFooter) return '';
+        if (params.data?._isSection || params.data?._isFooter) return "";
         const cls = params.data?.classification;
-        if (!cls || typeof cls !== 'object') return '';
-        return cls.din276 || cls.nrm || cls.masterformat || '';
+        if (!cls || typeof cls !== "object") return "";
+        return cls.din276 || cls.nrm || cls.masterformat || "";
       },
-      cellClass: 'text-xs font-mono text-content-secondary',
+      cellClass: "text-xs font-mono text-content-secondary",
     },
     {
-      headerName: t('boq.unit', { defaultValue: 'Unit' }),
-      field: 'unit',
+      headerName: t("boq.unit", { defaultValue: "Unit" }),
+      field: "unit",
       width: 80,
       editable: (params) => !params.data?._isSection && !params.data?._isFooter,
       // Custom combobox: dropdown of standard SI / Cyrillic / labour
@@ -224,8 +248,8 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       // next time). Replaces the strict ``agSelectCellEditor`` whose
       // hard-coded list silently swallowed edits when the existing
       // value (e.g. "т", "маш.-ч") wasn't in the list.
-      cellEditor: 'unitCellEditor',
-      cellRenderer: 'unitCellRenderer',
+      cellEditor: "unitCellEditor",
+      cellRenderer: "unitCellRenderer",
       // StrictMode-proof commit path: the editor remounts up to 8x in
       // dev and AG Grid's ``getValue()`` may route through a stale
       // instance whose ``valueRef`` never saw the pick. ``valueSetter``
@@ -233,13 +257,16 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       // ``stopEditing()`` fires, so the pick survives regardless of
       // which mount instance AG Grid queries. See ``__unitPickCommitChannel``
       // and ``unitColumnValueSetter`` in ``cellEditors.tsx``.
-      valueSetter: (params: ValueSetterParams) => unitColumnValueSetter({
-        data: params.data,
-        newValue: params.newValue,
-        oldValue: params.oldValue,
-        node: params.node ? { id: params.node.id } : null,
-        column: params.column ? { getColId: () => params.column!.getColId() } : null,
-      }),
+      valueSetter: (params: ValueSetterParams) =>
+        unitColumnValueSetter({
+          data: params.data,
+          newValue: params.newValue,
+          oldValue: params.oldValue,
+          node: params.node ? { id: params.node.id } : null,
+          column: params.column
+            ? { getColId: () => params.column!.getColId() }
+            : null,
+        }),
       // Let the UnitCellEditor's own keyboard handler own Enter / ArrowUp
       // / ArrowDown when it's editing. AG Grid 32 default would intercept
       // Enter at the grid level (capture phase) and call ``stopEditing``
@@ -252,15 +279,19 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       suppressKeyboardEvent: (params) => {
         if (!params.editing) return false;
         const k = params.event.key;
-        return k === 'Enter' || k === 'ArrowUp' || k === 'ArrowDown';
+        return k === "Enter" || k === "ArrowUp" || k === "ArrowDown";
       },
-      cellClass: 'text-center text-2xs font-mono',
-      cellStyle: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
+      cellClass: "text-center text-2xs font-mono",
+      cellStyle: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
     },
     {
-      headerName: '',
-      colId: '_bim_qty',
-      field: '_bim_qty',
+      headerName: "",
+      colId: "_bim_qty",
+      field: "_bim_qty",
       width: 28,
       minWidth: 28,
       maxWidth: 28,
@@ -270,22 +301,25 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       resizable: false,
       suppressNavigable: true,
       suppressHeaderMenuButton: true,
-      cellRenderer: 'bimQtyPickerCellRenderer',
-      cellClass: 'p-0',
+      cellRenderer: "bimQtyPickerCellRenderer",
+      cellClass: "p-0",
     },
     {
-      headerName: t('boq.quantity', { defaultValue: 'Qty' }),
-      field: 'quantity',
+      headerName: t("boq.quantity", { defaultValue: "Qty" }),
+      field: "quantity",
       width: 110,
-      editable: (params) => !params.data?._isSection && !params.data?._isFooter && !params.data?._isResource,
+      editable: (params) =>
+        !params.data?._isSection &&
+        !params.data?._isFooter &&
+        !params.data?._isResource,
       // Issue #90: Excel-style formulas in Qty (=2*PI()^2*3, =sqrt(144),
       // 12.5 x 4, …). The editor is CSP-safe (no eval); the resolved
       // numeric value goes into the column and the source formula is
       // persisted in metadata.formula via onFormulaApplied.
-      cellEditor: 'formulaCellEditor',
+      cellEditor: "formulaCellEditor",
       cellEditorPopup: true,
-      cellEditorPopupPosition: 'over',
-      cellRenderer: 'quantityCellRenderer',
+      cellEditorPopupPosition: "over",
+      cellRenderer: "quantityCellRenderer",
       valueParser: (params) => {
         const val = parseFloat(params.newValue);
         return isNaN(val) ? params.oldValue : val;
@@ -293,25 +327,31 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       // Surface the source formula in the AG Grid tooltip — much easier to
       // see than a tiny badge alone (Issue #90 follow-up).
       tooltipValueGetter: (params) => {
-        const meta = params.data?.metadata as Record<string, unknown> | undefined;
+        const meta = params.data?.metadata as
+          | Record<string, unknown>
+          | undefined;
         const f = meta?.formula;
-        if (typeof f === 'string' && f) {
+        if (typeof f === "string" && f) {
           return `Formula: ${f}\nClick to edit.`;
         }
         return undefined;
       },
       cellClass: (params) => {
-        const base = 'text-right tabular-nums text-xs !pr-2 !pl-2';
-        const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
-        const isExpanded = !!params.data?.id && (ctx?.expandedPositions?.has(params.data.id) ?? false);
+        const base = "text-right tabular-nums text-xs !pr-2 !pl-2";
+        const ctx = params.context as
+          | { expandedPositions?: Set<string> }
+          | undefined;
+        const isExpanded =
+          !!params.data?.id &&
+          (ctx?.expandedPositions?.has(params.data.id) ?? false);
         return isExpanded ? `${base} font-bold` : base;
       },
-      headerClass: 'ag-right-aligned-header',
-      type: 'numericColumn',
+      headerClass: "ag-right-aligned-header",
+      type: "numericColumn",
     },
     {
-      headerName: t('boq.unit_rate', { defaultValue: 'Unit Rate‌⁠‍' }),
-      field: 'unit_rate',
+      headerName: t("boq.unit_rate", { defaultValue: "Unit Rate‌⁠‍" }),
+      field: "unit_rate",
       width: 130,
       editable: (params) => {
         if (params.data?._isSection || params.data?._isFooter) return false;
@@ -324,7 +364,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
         if (Array.isArray(res) && res.length > 0) return false;
         return true;
       },
-      cellEditor: 'agNumberCellEditor',
+      cellEditor: "agNumberCellEditor",
       cellEditorParams: { min: 0, precision: 2 },
       valueParser: (params) => {
         const val = parseFloat(params.newValue);
@@ -333,21 +373,29 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       // Custom renderer surfaces the inline CWICR variant picker pill when
       // the position carries `metadata.cost_item_variants` (cached at apply
       // time).  Falls through to a plain numeric span when no variants.
-      cellRenderer: 'unitRateCellRenderer',
+      cellRenderer: "unitRateCellRenderer",
       cellClass: (params) => {
-        let base = 'text-right tabular-nums text-xs !pr-2 !pl-2';
+        let base = "text-right tabular-nums text-xs !pr-2 !pl-2";
         const res = params.data?.metadata?.resources;
-        if (Array.isArray(res) && res.length > 0) base = `${base} text-content-tertiary`;
-        const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
-        const isExpanded = !!params.data?.id && (ctx?.expandedPositions?.has(params.data.id) ?? false);
+        if (Array.isArray(res) && res.length > 0)
+          base = `${base} text-content-tertiary`;
+        const ctx = params.context as
+          | { expandedPositions?: Set<string> }
+          | undefined;
+        const isExpanded =
+          !!params.data?.id &&
+          (ctx?.expandedPositions?.has(params.data.id) ?? false);
         return isExpanded ? `${base} font-bold` : base;
       },
-      headerClass: 'ag-right-aligned-header',
-      type: 'numericColumn',
+      headerClass: "ag-right-aligned-header",
+      type: "numericColumn",
       tooltipValueGetter: (params) => {
         const res = params.data?.metadata?.resources;
         if (Array.isArray(res) && res.length > 0) {
-          return t('boq.rate_from_resources', { defaultValue: 'Rate is calculated from resources. Edit individual resources to change.‌⁠‍' });
+          return t("boq.rate_from_resources", {
+            defaultValue:
+              "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+          });
         }
         return undefined;
       },
@@ -357,9 +405,9 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       // at the column never wonder which currency they're reading. When
       // displayCurrency is unset we keep the plain "Total" label.
       headerName: context.displayCurrency
-        ? `${t('boq.total', { defaultValue: 'Total' })} (${context.displayCurrency.code})`
-        : t('boq.total', { defaultValue: 'Total' }),
-      field: 'total',
+        ? `${t("boq.total", { defaultValue: "Total" })} (${context.displayCurrency.code})`
+        : t("boq.total", { defaultValue: "Total" }),
+      field: "total",
       width: 130,
       editable: false,
       // Compute total on-the-fly: for positions with resources, use
@@ -375,7 +423,10 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       valueGetter: (params) => {
         const d = params.data;
         if (!d || d._isFooter || d._isSection) return d?.total ?? 0;
-        const meta = (d.metadata || d.metadata_ || {}) as Record<string, unknown>;
+        const meta = (d.metadata || d.metadata_ || {}) as Record<
+          string,
+          unknown
+        >;
         const resources = meta.resources;
         const ctx = params.context as BOQColumnContext | undefined;
         if (Array.isArray(resources) && resources.length > 0) {
@@ -396,34 +447,50 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
         }
         // No resources: live compute quantity × unit_rate, then rebase
         // via the position-level metadata.currency (verified #131 path).
-        const q = typeof d.quantity === 'number' ? d.quantity : parseFloat(d.quantity) || 0;
-        const r = typeof d.unit_rate === 'number' ? d.unit_rate : parseFloat(d.unit_rate) || 0;
+        const q =
+          typeof d.quantity === "number"
+            ? d.quantity
+            : parseFloat(d.quantity) || 0;
+        const r =
+          typeof d.unit_rate === "number"
+            ? d.unit_rate
+            : parseFloat(d.unit_rate) || 0;
         const raw = q * r;
-        const sourceCurrency = (meta.currency as string | undefined) || ctx?.currencyCode;
-        return convertToBase(raw, sourceCurrency, ctx?.currencyCode, ctx?.fxRates);
+        const sourceCurrency =
+          (meta.currency as string | undefined) || ctx?.currencyCode;
+        return convertToBase(
+          raw,
+          sourceCurrency,
+          ctx?.currencyCode,
+          ctx?.fxRates,
+        );
       },
       valueFormatter: totalFormatter,
       cellClass: (params) => {
-        const base = 'text-right tabular-nums text-xs !pr-2 !pl-2';
+        const base = "text-right tabular-nums text-xs !pr-2 !pl-2";
         if (params.data?._isSection) return `${base} font-bold`;
         if (params.data?._isFooter) return `${base} font-bold`;
-        const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
-        const isExpanded = !!params.data?.id && (ctx?.expandedPositions?.has(params.data.id) ?? false);
+        const ctx = params.context as
+          | { expandedPositions?: Set<string> }
+          | undefined;
+        const isExpanded =
+          !!params.data?.id &&
+          (ctx?.expandedPositions?.has(params.data.id) ?? false);
         return isExpanded ? `${base} font-bold` : `${base} font-semibold`;
       },
-      headerClass: 'ag-right-aligned-header',
-      type: 'numericColumn',
+      headerClass: "ag-right-aligned-header",
+      type: "numericColumn",
     },
     {
-      headerName: '',
-      field: '_actions',
+      headerName: "",
+      field: "_actions",
       width: 44,
       editable: false,
       sortable: false,
       filter: false,
-      cellRenderer: 'actionsCellRenderer',
+      cellRenderer: "actionsCellRenderer",
       suppressHeaderMenuButton: true,
-      cellClass: 'flex items-center justify-center',
+      cellClass: "flex items-center justify-center",
     },
   ];
 }
@@ -433,7 +500,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
 export interface CustomColumnDef {
   name: string;
   display_name: string;
-  column_type: 'text' | 'number' | 'date' | 'select' | 'calculated';
+  column_type: "text" | "number" | "date" | "select" | "calculated";
   options?: string[];
   sort_order?: number;
   /** Formula source for `calculated` columns. e.g. `=quantity * unit_rate * 1.19`. */
@@ -457,7 +524,7 @@ export interface CustomColumnDef {
    * (right-align, tabular nums, formatting) applies. The flag is
    * forwarded through the backend untouched.
    */
-  derived?: 'resource_sum' | 'percentage_of_unit_rate';
+  derived?: "resource_sum" | "percentage_of_unit_rate";
   /**
    * Resource type filter for `derived` columns. Matches the `type` field
    * on `position.metadata.resources[]` (one of: 'material' | 'labor' |
@@ -468,13 +535,20 @@ export interface CustomColumnDef {
    * position carries operator / subcontractor resources.
    */
   resource_role?:
-    | 'material'
-    | 'labor'
-    | 'equipment'
-    | 'operator'
-    | 'subcontractor'
-    | 'other'
-    | Array<'material' | 'labor' | 'equipment' | 'operator' | 'subcontractor' | 'other'>;
+    | "material"
+    | "labor"
+    | "equipment"
+    | "operator"
+    | "subcontractor"
+    | "other"
+    | Array<
+        | "material"
+        | "labor"
+        | "equipment"
+        | "operator"
+        | "subcontractor"
+        | "other"
+      >;
 }
 
 /**
@@ -519,21 +593,32 @@ function buildRowFormulaContext(
   engineCtx: CustomColumnEngineContext,
 ): FormulaContext {
   const row_ = row ?? {};
-  const variables = new Map<string, FormulaVariable>(engineCtx.variables ?? new Map());
+  const variables = new Map<string, FormulaVariable>(
+    engineCtx.variables ?? new Map(),
+  );
   // Expose the current row's measure / rate / total as $-variables so the
   // user can write `=quantity * unit_rate * 1.19` without having to pull
   // them through `col()`. Names are uppercased to match the engine's
   // canonical $VAR convention.
-  const q = typeof row_.quantity === 'number' ? row_.quantity : parseFloat(String(row_.quantity ?? ''));
-  const r = typeof row_.unit_rate === 'number' ? row_.unit_rate : parseFloat(String(row_.unit_rate ?? ''));
-  const tot = typeof row_.total === 'number' ? row_.total : parseFloat(String(row_.total ?? ''));
-  if (!isNaN(q)) variables.set('QUANTITY', { type: 'number', value: q });
-  if (!isNaN(r)) variables.set('UNIT_RATE', { type: 'number', value: r });
-  if (!isNaN(tot)) variables.set('TOTAL', { type: 'number', value: tot });
+  const q =
+    typeof row_.quantity === "number"
+      ? row_.quantity
+      : parseFloat(String(row_.quantity ?? ""));
+  const r =
+    typeof row_.unit_rate === "number"
+      ? row_.unit_rate
+      : parseFloat(String(row_.unit_rate ?? ""));
+  const tot =
+    typeof row_.total === "number"
+      ? row_.total
+      : parseFloat(String(row_.total ?? ""));
+  if (!isNaN(q)) variables.set("QUANTITY", { type: "number", value: q });
+  if (!isNaN(r)) variables.set("UNIT_RATE", { type: "number", value: r });
+  if (!isNaN(tot)) variables.set("TOTAL", { type: "number", value: tot });
   return buildFormulaContext({
     positions: engineCtx.positions,
     variables,
-    currentPositionId: typeof row_.id === 'string' ? row_.id : undefined,
+    currentPositionId: typeof row_.id === "string" ? row_.id : undefined,
     currentRow: row_,
   });
 }
@@ -552,26 +637,30 @@ function makeCalculatedValueGetter(
   col: CustomColumnDef,
   engineCtx: CustomColumnEngineContext,
 ): (params: ValueGetterParams) => string {
-  const formula = col.formula ?? '';
+  const formula = col.formula ?? "";
   const decimals = col.decimals ?? 2;
   return (params: ValueGetterParams): string => {
     const data = params.data as Record<string, unknown> | undefined;
-    if (!data) return '';
-    if (data._isSection || data._isFooter) return '';
-    if (!isFormula(formula)) return '';
+    if (!data) return "";
+    if (data._isSection || data._isFooter) return "";
+    if (!isFormula(formula)) return "";
     // Self-reference guard: `col("X")` inside column X's own formula.
-    if (formula.includes(`col("${col.name}")`) || formula.includes(`col('${col.name}')`)) {
-      return '#CYCLE';
+    if (
+      formula.includes(`col("${col.name}")`) ||
+      formula.includes(`col('${col.name}')`)
+    ) {
+      return "#CYCLE";
     }
     try {
       const ctx = buildRowFormulaContext(data, engineCtx);
       const result = evaluateFormulaStrict(formula, ctx);
-      if (result === null) return '';
-      if (typeof result === 'number') return formatCalculatedNumber(result, decimals);
-      if (typeof result === 'boolean') return result ? '1' : '0';
+      if (result === null) return "";
+      if (typeof result === "number")
+        return formatCalculatedNumber(result, decimals);
+      if (typeof result === "boolean") return result ? "1" : "0";
       return String(result);
     } catch {
-      return '#ERR';
+      return "#ERR";
     }
   };
 }
@@ -598,9 +687,9 @@ export function getCustomColumnDefs(
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
     .map((col) => {
       // Migration: legacy rows without `column_type` default to 'text'.
-      const colType: CustomColumnDef['column_type'] = col.column_type ?? 'text';
-      const isCalculated = colType === 'calculated';
-      const isNumeric = colType === 'number' || isCalculated;
+      const colType: CustomColumnDef["column_type"] = col.column_type ?? "text";
+      const isCalculated = colType === "calculated";
+      const isNumeric = colType === "number" || isCalculated;
 
       // Stable widths so adding 5–10 columns from a regional preset doesn't
       // explode the grid horizontally. AG Grid still respects the user's
@@ -611,7 +700,9 @@ export function getCustomColumnDefs(
       // the valueGetter / valueSetter below. AG Grid never falls back to
       // direct field-based access when both getters are present, so the
       // chosen field string can never collide with anything on `data`.
-      const isDerived = col.derived === 'resource_sum' || col.derived === 'percentage_of_unit_rate';
+      const isDerived =
+        col.derived === "resource_sum" ||
+        col.derived === "percentage_of_unit_rate";
       const base: ColDef = {
         headerName: isCalculated ? `ƒ ${col.display_name}` : col.display_name,
         field: `custom_${col.name}`,
@@ -624,8 +715,8 @@ export function getCustomColumnDefs(
         // when 4-6 of them are added — combined with the heavier flex
         // weight on the description column the BOQ no longer overflows
         // horizontally on a normal laptop screen.
-        width: colType === 'text' ? 110 : 90,
-        minWidth: 56,  // ~3 chars header + padding (per UX spec)
+        width: colType === "text" ? 110 : 90,
+        minWidth: 56, // ~3 chars header + padding (per UX spec)
         maxWidth: 320,
         flex: 1,
         // Derived columns are computed from position.metadata.resources —
@@ -637,12 +728,13 @@ export function getCustomColumnDefs(
         // independent of the parent position. Derived (resource_sum /
         // percentage_of_unit_rate) and calculated (formula) columns stay
         // read-only because their value is auto-computed.
-        editable: isCalculated || isDerived
-          ? false
-          : (params) =>
-              !params.data?._isSection &&
-              !params.data?._isFooter &&
-              !params.data?._isAddResource,
+        editable:
+          isCalculated || isDerived
+            ? false
+            : (params) =>
+                !params.data?._isSection &&
+                !params.data?._isFooter &&
+                !params.data?._isAddResource,
         // ``cellClass`` is a function so we can mute the styling on
         // resource sub-rows — those cells either inherit from the
         // parent (text/number custom fields) or break a position-level
@@ -656,32 +748,35 @@ export function getCustomColumnDefs(
           // those values are still computed. Non-derived custom cols on
           // resources are now editable per-resource, so they read like
           // normal editable cells (no italic, no muted tone).
-          const computedOnResource = isResourceRow && (isCalculated || isDerived);
+          const computedOnResource =
+            isResourceRow && (isCalculated || isDerived);
           if (isNumeric) {
             const tone =
               isCalculated || isDerived || computedOnResource
-                ? 'text-content-secondary'
-                : '';
-            const italic = computedOnResource ? 'italic' : '';
+                ? "text-content-secondary"
+                : "";
+            const italic = computedOnResource ? "italic" : "";
             return `text-right tabular-nums text-xs ${tone} ${italic}`.trim();
           }
-          return computedOnResource ? 'text-xs italic text-content-tertiary' : 'text-xs';
+          return computedOnResource
+            ? "text-xs italic text-content-tertiary"
+            : "text-xs";
         },
-        headerClass: isNumeric ? 'ag-right-aligned-header' : '',
+        headerClass: isNumeric ? "ag-right-aligned-header" : "",
       };
 
       if (isCalculated) {
         base.valueGetter = makeCalculatedValueGetter(col, ctx);
         // Formula result IS the display value — no further formatting.
         base.valueFormatter = (params: ValueFormatterParams) =>
-          typeof params.value === 'string' ? params.value : '';
+          typeof params.value === "string" ? params.value : "";
         base.tooltipValueGetter = (params) => {
           const v = params.value;
-          if (v === '#CYCLE') {
-            return 'This calculated column references itself — cycle detected.';
+          if (v === "#CYCLE") {
+            return "This calculated column references itself — cycle detected.";
           }
-          if (v === '#ERR') {
-            return `Formula error in "${col.formula ?? ''}". Open Custom Columns to edit.`;
+          if (v === "#ERR") {
+            return `Formula error in "${col.formula ?? ""}". Open Custom Columns to edit.`;
           }
           return col.formula ? `Formula: ${col.formula}` : undefined;
         };
@@ -706,8 +801,13 @@ export function getCustomColumnDefs(
         const dec = Math.max(0, Math.min(6, col.decimals ?? 2));
         base.valueGetter = (params) => {
           const data = params.data;
-          if (!data || data._isSection || data._isFooter || data._isAddResource) {
-            return '';
+          if (
+            !data ||
+            data._isSection ||
+            data._isFooter ||
+            data._isAddResource
+          ) {
+            return "";
           }
 
           // Resource sub-row: render the per-resource value (its own
@@ -717,33 +817,41 @@ export function getCustomColumnDefs(
           // stay blank so the column visually attributes the
           // contribution to the right resource.
           if (data._isResource) {
-            const t = typeof data._resourceType === 'string' ? data._resourceType : 'other';
-            if (!matchesRole(t)) return '';
-            const q = typeof data._resourceQty === 'number'
-              ? data._resourceQty
-              : parseFloat(String(data._resourceQty ?? '0')) || 0;
-            const r = typeof data._resourceRate === 'number'
-              ? data._resourceRate
-              : parseFloat(String(data._resourceRate ?? '0')) || 0;
+            const t =
+              typeof data._resourceType === "string"
+                ? data._resourceType
+                : "other";
+            if (!matchesRole(t)) return "";
+            const q =
+              typeof data._resourceQty === "number"
+                ? data._resourceQty
+                : parseFloat(String(data._resourceQty ?? "0")) || 0;
+            const r =
+              typeof data._resourceRate === "number"
+                ? data._resourceRate
+                : parseFloat(String(data._resourceRate ?? "0")) || 0;
             const contribution = q * r;
-            if (col.derived === 'percentage_of_unit_rate') {
+            if (col.derived === "percentage_of_unit_rate") {
               const parent = data._parentPositionId
                 ? positionsById.get(String(data._parentPositionId))
                 : undefined;
               const parentResources =
                 ((parent?.metadata as Record<string, unknown> | undefined)
-                  ?.resources as Array<Record<string, unknown>> | undefined) ?? [];
+                  ?.resources as Array<Record<string, unknown>> | undefined) ??
+                [];
               let allSum = 0;
               for (const res of parentResources) {
-                const rq = typeof res.quantity === 'number'
-                  ? res.quantity
-                  : parseFloat(String(res.quantity ?? '0')) || 0;
-                const rr = typeof res.unit_rate === 'number'
-                  ? res.unit_rate
-                  : parseFloat(String(res.unit_rate ?? '0')) || 0;
+                const rq =
+                  typeof res.quantity === "number"
+                    ? res.quantity
+                    : parseFloat(String(res.quantity ?? "0")) || 0;
+                const rr =
+                  typeof res.unit_rate === "number"
+                    ? res.unit_rate
+                    : parseFloat(String(res.unit_rate ?? "0")) || 0;
                 allSum += rq * rr;
               }
-              if (allSum <= 0) return '';
+              if (allSum <= 0) return "";
               return ((contribution / allSum) * 100).toFixed(dec);
             }
             // resource_sum on a resource row = this resource's
@@ -754,30 +862,41 @@ export function getCustomColumnDefs(
           // Position row: existing aggregation across the position's
           // resources. Sums the per-unit subtotal of resources whose
           // `type` matches the role hint.
-          const meta = (data.metadata as Record<string, unknown> | undefined) ?? {};
-          const resources = (meta.resources as Array<Record<string, unknown>> | undefined) ?? [];
-          if (!Array.isArray(resources) || resources.length === 0) return '';
+          const meta =
+            (data.metadata as Record<string, unknown> | undefined) ?? {};
+          const resources =
+            (meta.resources as Array<Record<string, unknown>> | undefined) ??
+            [];
+          if (!Array.isArray(resources) || resources.length === 0) return "";
           let matched = 0;
           let allSum = 0;
           for (const res of resources) {
-            const t = typeof res.type === 'string' ? res.type : 'other';
-            const q = typeof res.quantity === 'number' ? res.quantity : parseFloat(String(res.quantity ?? '0')) || 0;
-            const r = typeof res.unit_rate === 'number' ? res.unit_rate : parseFloat(String(res.unit_rate ?? '0')) || 0;
+            const t = typeof res.type === "string" ? res.type : "other";
+            const q =
+              typeof res.quantity === "number"
+                ? res.quantity
+                : parseFloat(String(res.quantity ?? "0")) || 0;
+            const r =
+              typeof res.unit_rate === "number"
+                ? res.unit_rate
+                : parseFloat(String(res.unit_rate ?? "0")) || 0;
             const contribution = q * r;
             allSum += contribution;
             if (matchesRole(t)) matched += contribution;
           }
-          if (col.derived === 'percentage_of_unit_rate') {
-            if (allSum <= 0) return '';
+          if (col.derived === "percentage_of_unit_rate") {
+            if (allSum <= 0) return "";
             const pct = (matched / allSum) * 100;
             return pct.toFixed(dec);
           }
           // resource_sum
           return matched.toFixed(dec);
         };
-        const roleLabel = roleSet ? Array.from(roleSet).join(' / ') : 'matching';
+        const roleLabel = roleSet
+          ? Array.from(roleSet).join(" / ")
+          : "matching";
         base.tooltipValueGetter = () => {
-          if (col.derived === 'percentage_of_unit_rate') {
+          if (col.derived === "percentage_of_unit_rate") {
             return `${col.display_name} — share of unit rate from ${roleLabel} resources (auto-computed; edit resources to change)`;
           }
           return `${col.display_name} — sum of ${roleLabel} resources for this position (auto-computed; edit resources to change)`;
@@ -800,7 +919,7 @@ export function getCustomColumnDefs(
       // position level.
       base.valueGetter = (params) => {
         const data = params.data;
-        if (!data) return '';
+        if (!data) return "";
         // Resource sub-row — try the per-resource value first
         // (``parent.metadata.resources[i].metadata.custom_fields[name]``),
         // fall back to the parent position's value so a "globally true"
@@ -808,27 +927,41 @@ export function getCustomColumnDefs(
         // resource row that hasn't been overridden.
         if (data._isResource && data._parentPositionId) {
           const parent = positionsById.get(String(data._parentPositionId));
-          const resIdx = typeof data._resourceIndex === 'number' ? data._resourceIndex : -1;
+          const resIdx =
+            typeof data._resourceIndex === "number" ? data._resourceIndex : -1;
           if (resIdx >= 0) {
-            const parentMeta = parent?.metadata as Record<string, unknown> | undefined;
-            const resources = (parentMeta?.resources as Array<Record<string, unknown>> | undefined) ?? [];
+            const parentMeta = parent?.metadata as
+              | Record<string, unknown>
+              | undefined;
+            const resources =
+              (parentMeta?.resources as
+                | Array<Record<string, unknown>>
+                | undefined) ?? [];
             if (resIdx < resources.length) {
-              const resMeta = resources[resIdx]?.metadata as Record<string, unknown> | undefined;
-              const resCf = resMeta?.custom_fields as Record<string, unknown> | undefined;
+              const resMeta = resources[resIdx]?.metadata as
+                | Record<string, unknown>
+                | undefined;
+              const resCf = resMeta?.custom_fields as
+                | Record<string, unknown>
+                | undefined;
               const resVal = resCf?.[col.name];
-              if (resVal !== undefined && resVal !== null && resVal !== '') {
+              if (resVal !== undefined && resVal !== null && resVal !== "") {
                 return resVal;
               }
             }
           }
-          const parentMeta = parent?.metadata as Record<string, unknown> | undefined;
-          const parentCf = parentMeta?.custom_fields as Record<string, unknown> | undefined;
-          return parentCf?.[col.name] ?? '';
+          const parentMeta = parent?.metadata as
+            | Record<string, unknown>
+            | undefined;
+          const parentCf = parentMeta?.custom_fields as
+            | Record<string, unknown>
+            | undefined;
+          return parentCf?.[col.name] ?? "";
         }
         // Position row
         const meta = data.metadata as Record<string, unknown> | undefined;
         const cf = meta?.custom_fields as Record<string, unknown> | undefined;
-        return cf?.[col.name] ?? '';
+        return cf?.[col.name] ?? "";
       };
       // valueSetter rebuilds `metadata` and `custom_fields` as fresh
       // objects rather than mutating in place. Mutation worked, but it
@@ -840,8 +973,10 @@ export function getCustomColumnDefs(
       // setter in line keeps the data flow uniform.
       base.valueSetter = (params) => {
         if (!params.data) return false;
-        const meta = (params.data.metadata as Record<string, unknown> | undefined) ?? {};
-        const cf = (meta.custom_fields as Record<string, unknown> | undefined) ?? {};
+        const meta =
+          (params.data.metadata as Record<string, unknown> | undefined) ?? {};
+        const cf =
+          (meta.custom_fields as Record<string, unknown> | undefined) ?? {};
         if (cf[col.name] === params.newValue) return false;
         params.data.metadata = {
           ...meta,
@@ -850,17 +985,17 @@ export function getCustomColumnDefs(
         return true;
       };
 
-      if (colType === 'number') {
-        base.cellEditor = 'agNumberCellEditor';
+      if (colType === "number") {
+        base.cellEditor = "agNumberCellEditor";
         base.valueParser = (params) => {
           const val = parseFloat(params.newValue);
-          return isNaN(val) ? '' : val;
+          return isNaN(val) ? "" : val;
         };
-      } else if (colType === 'select' && col.options?.length) {
-        base.cellEditor = 'agSelectCellEditor';
-        base.cellEditorParams = { values: ['', ...col.options] };
+      } else if (colType === "select" && col.options?.length) {
+        base.cellEditor = "agSelectCellEditor";
+        base.cellEditorParams = { values: ["", ...col.options] };
       } else {
-        base.cellEditor = 'agTextCellEditor';
+        base.cellEditor = "agTextCellEditor";
       }
 
       return base;

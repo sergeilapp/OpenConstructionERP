@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   ListChecks,
   Search,
@@ -19,7 +19,7 @@ import {
   XCircle,
   AlertTriangle,
   Clock,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -30,12 +30,12 @@ import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { SectionIntro } from '@/features/validation';
-import { apiGet } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { SectionIntro } from "@/features/validation";
+import { apiGet } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
 import {
   fetchPunchItems,
   fetchPunchSummary,
@@ -43,7 +43,8 @@ import {
   createPunchItem,
   deletePunchItem,
   transitionPunchStatus,
-} from './api';
+  bulkClose,
+} from "./api";
 import type {
   PunchItem,
   PunchPriority,
@@ -52,7 +53,7 @@ import type {
   PunchSummary,
   TeamMember,
   CreatePunchPayload,
-} from './api';
+} from "./api";
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -62,68 +63,120 @@ interface Project {
   currency: string;
 }
 
-const PRIORITIES: PunchPriority[] = ['low', 'medium', 'high', 'critical'];
-const STATUSES: PunchStatus[] = ['open', 'in_progress', 'resolved', 'verified', 'closed'];
+const PRIORITIES: PunchPriority[] = ["low", "medium", "high", "critical"];
+const STATUSES: PunchStatus[] = [
+  "open",
+  "in_progress",
+  "resolved",
+  "verified",
+  "closed",
+];
 const CATEGORIES: PunchCategory[] = [
-  'structural',
-  'mechanical',
-  'electrical',
-  'architectural',
-  'plumbing',
-  'finishing',
-  'fire_safety',
-  'hvac',
-  'exterior',
-  'landscaping',
-  'general',
+  "structural",
+  "mechanical",
+  "electrical",
+  "architectural",
+  "plumbing",
+  "finishing",
+  "fire_safety",
+  "hvac",
+  "exterior",
+  "landscaping",
+  "general",
 ];
 
-const KANBAN_COLUMNS: PunchStatus[] = ['open', 'in_progress', 'resolved', 'verified', 'closed'];
+const KANBAN_COLUMNS: PunchStatus[] = [
+  "open",
+  "in_progress",
+  "resolved",
+  "verified",
+  "closed",
+];
 
-const PRIORITY_BADGE_VARIANT: Record<PunchPriority, 'neutral' | 'blue' | 'warning' | 'error'> = {
-  low: 'neutral',
-  medium: 'warning',
-  high: 'error',
-  critical: 'error',
+const PRIORITY_BADGE_VARIANT: Record<
+  PunchPriority,
+  "neutral" | "blue" | "warning" | "error"
+> = {
+  low: "neutral",
+  medium: "warning",
+  high: "error",
+  critical: "error",
 };
 
 /** Extra CSS applied to priority badges to differentiate medium (yellow) from high (orange). */
 const PRIORITY_BADGE_CLS: Record<PunchPriority, string> = {
-  low: '',
-  medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-  high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-  critical: '',
+  low: "",
+  medium:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+  high: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
+  critical: "",
 };
 
 /** Left-edge stripe colors for Kanban cards, keyed by priority. */
 const PRIORITY_STRIPE_CLS: Record<PunchPriority, string> = {
-  low: 'border-l-gray-300 dark:border-l-gray-600',
-  medium: 'border-l-yellow-400 dark:border-l-yellow-500',
-  high: 'border-l-orange-500 dark:border-l-orange-400',
-  critical: 'border-l-red-500 dark:border-l-red-400',
+  low: "border-l-gray-300 dark:border-l-gray-600",
+  medium: "border-l-yellow-400 dark:border-l-yellow-500",
+  high: "border-l-orange-500 dark:border-l-orange-400",
+  critical: "border-l-red-500 dark:border-l-red-400",
 };
 
-const STATUS_BADGE_VARIANT: Record<PunchStatus, 'error' | 'warning' | 'blue' | 'success' | 'neutral'> = {
-  open: 'error',
-  in_progress: 'warning',
-  resolved: 'blue',
-  verified: 'success',
-  closed: 'neutral',
+const STATUS_BADGE_VARIANT: Record<
+  PunchStatus,
+  "error" | "warning" | "blue" | "success" | "neutral"
+> = {
+  open: "error",
+  in_progress: "warning",
+  resolved: "blue",
+  verified: "success",
+  closed: "neutral",
 };
 
-const STATUS_TRANSITION: Record<PunchStatus, { next: PunchStatus; labelKey: string; defaultLabel: string; icon: React.ElementType }[]> = {
+const STATUS_TRANSITION: Record<
+  PunchStatus,
+  {
+    next: PunchStatus;
+    labelKey: string;
+    defaultLabel: string;
+    icon: React.ElementType;
+  }[]
+> = {
   open: [
-    { next: 'in_progress', labelKey: 'punch.action_start', defaultLabel: 'Start Work', icon: Play },
+    {
+      next: "in_progress",
+      labelKey: "punch.action_start",
+      defaultLabel: "Start Work",
+      icon: Play,
+    },
   ],
   in_progress: [
-    { next: 'resolved', labelKey: 'punch.action_resolve', defaultLabel: 'Mark Resolved', icon: CheckCircle2 },
+    {
+      next: "resolved",
+      labelKey: "punch.action_resolve",
+      defaultLabel: "Mark Resolved",
+      icon: CheckCircle2,
+    },
   ],
   resolved: [
-    { next: 'verified', labelKey: 'punch.action_verify', defaultLabel: 'Verify', icon: ShieldCheck },
-    { next: 'in_progress', labelKey: 'punch.action_reopen', defaultLabel: 'Reopen', icon: XCircle },
+    {
+      next: "verified",
+      labelKey: "punch.action_verify",
+      defaultLabel: "Verify",
+      icon: ShieldCheck,
+    },
+    {
+      next: "in_progress",
+      labelKey: "punch.action_reopen",
+      defaultLabel: "Reopen",
+      icon: XCircle,
+    },
   ],
   verified: [
-    { next: 'closed', labelKey: 'punch.action_close', defaultLabel: 'Close', icon: CheckCircle2 },
+    {
+      next: "closed",
+      labelKey: "punch.action_close",
+      defaultLabel: "Close",
+      icon: CheckCircle2,
+    },
   ],
   closed: [],
 };
@@ -131,11 +184,11 @@ const STATUS_TRANSITION: Record<PunchStatus, { next: PunchStatus; labelKey: stri
 /* ── Styling helpers ──────────────────────────────────────────────────── */
 
 const inputCls =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 const textareaCls =
-  'w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none';
+  "w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none";
 
-type ViewMode = 'list' | 'kanban';
+type ViewMode = "list" | "kanban";
 
 /* ── Stats Cards ──────────────────────────────────────────────────────── */
 
@@ -149,34 +202,36 @@ function StatsCards({ summary }: { summary: PunchSummary | undefined }) {
 
   const items: { label: string; value: string | number; cls: string }[] = [
     {
-      label: t('punch.stat_total', { defaultValue: 'Total' }),
+      label: t("punch.stat_total", { defaultValue: "Total" }),
       value: total,
-      cls: 'text-content-primary',
+      cls: "text-content-primary",
     },
     {
-      label: t('punch.stat_open', { defaultValue: 'Open' }),
-      value: byStatus['open'] ?? 0,
-      cls: 'text-semantic-error',
+      label: t("punch.stat_open", { defaultValue: "Open" }),
+      value: byStatus["open"] ?? 0,
+      cls: "text-semantic-error",
     },
     {
-      label: t('punch.stat_in_progress', { defaultValue: 'In Progress‌⁠‍' }),
-      value: byStatus['in_progress'] ?? 0,
-      cls: 'text-amber-700 dark:text-amber-400',
+      label: t("punch.stat_in_progress", { defaultValue: "In Progress‌⁠‍" }),
+      value: byStatus["in_progress"] ?? 0,
+      cls: "text-amber-700 dark:text-amber-400",
     },
     {
-      label: t('punch.stat_resolved', { defaultValue: 'Resolved‌⁠‍' }),
-      value: byStatus['resolved'] ?? 0,
-      cls: 'text-oe-blue',
+      label: t("punch.stat_resolved", { defaultValue: "Resolved‌⁠‍" }),
+      value: byStatus["resolved"] ?? 0,
+      cls: "text-oe-blue",
     },
     {
-      label: t('punch.stat_overdue', { defaultValue: 'Overdue‌⁠‍' }),
+      label: t("punch.stat_overdue", { defaultValue: "Overdue‌⁠‍" }),
       value: overdue,
-      cls: overdue > 0 ? 'text-semantic-error' : 'text-content-primary',
+      cls: overdue > 0 ? "text-semantic-error" : "text-content-primary",
     },
     {
-      label: t('punch.stat_avg_close', { defaultValue: 'Avg Days to Close‌⁠‍' }),
-      value: avgDays != null ? `${avgDays}d` : '-',
-      cls: 'text-content-primary',
+      label: t("punch.stat_avg_close", {
+        defaultValue: "Avg Days to Close‌⁠‍",
+      }),
+      value: avgDays != null ? `${avgDays}d` : "-",
+      cls: "text-content-primary",
     },
   ];
 
@@ -184,8 +239,10 @@ function StatsCards({ summary }: { summary: PunchSummary | undefined }) {
     <div className="grid grid-cols-3 lg:grid-cols-6 gap-4">
       {items.map((item) => (
         <Card key={item.label} className="p-4 animate-card-in">
-          <p className="text-2xs text-content-tertiary uppercase tracking-wide">{item.label}</p>
-          <p className={clsx('text-xl font-bold mt-1 tabular-nums', item.cls)}>
+          <p className="text-2xs text-content-tertiary uppercase tracking-wide">
+            {item.label}
+          </p>
+          <p className={clsx("text-xl font-bold mt-1 tabular-nums", item.cls)}>
             {item.value}
           </p>
         </Card>
@@ -208,21 +265,23 @@ interface PunchFormData {
 }
 
 const EMPTY_FORM: PunchFormData = {
-  title: '',
-  description: '',
-  priority: 'medium',
-  category: 'general',
-  assigned_to: '',
-  due_date: '',
-  document_id: '',
-  location: '',
+  title: "",
+  description: "",
+  priority: "medium",
+  category: "general",
+  assigned_to: "",
+  due_date: "",
+  document_id: "",
+  location: "",
 };
 
 const PRIORITY_RADIO_COLORS: Record<PunchPriority, string> = {
-  low: 'bg-gray-100 text-gray-700 border-gray-300 peer-checked:bg-gray-200 peer-checked:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600',
-  medium: 'bg-blue-50 text-blue-700 border-blue-200 peer-checked:bg-blue-100 peer-checked:border-blue-500 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
-  high: 'bg-amber-50 text-amber-700 border-amber-200 peer-checked:bg-amber-100 peer-checked:border-amber-500 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700',
-  critical: 'bg-red-50 text-red-700 border-red-200 peer-checked:bg-red-100 peer-checked:border-red-500 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700',
+  low: "bg-gray-100 text-gray-700 border-gray-300 peer-checked:bg-gray-200 peer-checked:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600",
+  medium:
+    "bg-blue-50 text-blue-700 border-blue-200 peer-checked:bg-blue-100 peer-checked:border-blue-500 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700",
+  high: "bg-amber-50 text-amber-700 border-amber-200 peer-checked:bg-amber-100 peer-checked:border-amber-500 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700",
+  critical:
+    "bg-red-50 text-red-700 border-red-200 peer-checked:bg-red-100 peer-checked:border-red-500 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700",
 };
 
 function AddPunchModal({
@@ -240,8 +299,10 @@ function AddPunchModal({
   const [form, setForm] = useState<PunchFormData>(EMPTY_FORM);
   const [touched, setTouched] = useState(false);
 
-  const set = <K extends keyof PunchFormData>(key: K, value: PunchFormData[K]) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const set = <K extends keyof PunchFormData>(
+    key: K,
+    value: PunchFormData[K],
+  ) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const titleError = touched && form.title.trim().length === 0;
   const canSubmit = form.title.trim().length > 0;
@@ -259,11 +320,11 @@ function AddPunchModal({
       onClose={onClose}
       busy={isPending}
       size="xl"
-      title={t('punch.add_item', { defaultValue: 'Add Punch Item' })}
+      title={t("punch.add_item", { defaultValue: "Add Punch Item" })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending}>
             {isPending ? (
@@ -271,50 +332,63 @@ function AddPunchModal({
             ) : (
               <Plus size={16} className="mr-1.5 shrink-0" />
             )}
-            <span>{t('punch.create_item', { defaultValue: 'Create Item' })}</span>
+            <span>
+              {t("punch.create_item", { defaultValue: "Create Item" })}
+            </span>
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('punch.field_title', { defaultValue: 'Title' })}
+          label={t("punch.field_title", { defaultValue: "Title" })}
           required
-          error={titleError ? t('punch.title_required', { defaultValue: 'Title is required' }) : undefined}
+          error={
+            titleError
+              ? t("punch.title_required", { defaultValue: "Title is required" })
+              : undefined
+          }
           span={2}
           htmlFor="punch-title"
         >
           <input
             id="punch-title"
             value={form.title}
-            onChange={(e) => { set('title', e.target.value); setTouched(true); }}
-            placeholder={t('punch.title_placeholder', {
-              defaultValue: 'e.g. Missing fire seal on Level 3 penetration',
+            onChange={(e) => {
+              set("title", e.target.value);
+              setTouched(true);
+            }}
+            placeholder={t("punch.title_placeholder", {
+              defaultValue: "e.g. Missing fire seal on Level 3 penetration",
             })}
-            className={clsx(inputCls, titleError && 'border-semantic-error focus:ring-red-300 focus:border-semantic-error')}
+            className={clsx(
+              inputCls,
+              titleError &&
+                "border-semantic-error focus:ring-red-300 focus:border-semantic-error",
+            )}
             autoFocus
           />
         </WideModalField>
 
         <WideModalField
-          label={t('punch.field_description', { defaultValue: 'Description' })}
+          label={t("punch.field_description", { defaultValue: "Description" })}
           span={2}
           htmlFor="punch-description"
         >
           <textarea
             id="punch-description"
             value={form.description}
-            onChange={(e) => set('description', e.target.value)}
+            onChange={(e) => set("description", e.target.value)}
             rows={2}
             className={textareaCls}
-            placeholder={t('punch.description_placeholder', {
-              defaultValue: 'Provide details about the issue...',
+            placeholder={t("punch.description_placeholder", {
+              defaultValue: "Provide details about the issue...",
             })}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('punch.field_priority', { defaultValue: 'Priority' })}
+          label={t("punch.field_priority", { defaultValue: "Priority" })}
           span={2}
         >
           <div className="flex items-center gap-2 flex-wrap">
@@ -325,12 +399,12 @@ function AddPunchModal({
                   name="priority"
                   value={p}
                   checked={form.priority === p}
-                  onChange={() => set('priority', p)}
+                  onChange={() => set("priority", p)}
                   className="peer sr-only"
                 />
                 <div
                   className={clsx(
-                    'rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition-all',
+                    "rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition-all",
                     PRIORITY_RADIO_COLORS[p],
                   )}
                 >
@@ -344,22 +418,22 @@ function AddPunchModal({
         </WideModalField>
 
         <WideModalField
-          label={t('punch.field_category', { defaultValue: 'Category' })}
+          label={t("punch.field_category", { defaultValue: "Category" })}
           htmlFor="punch-category"
         >
           <select
             id="punch-category"
             value={form.category}
-            onChange={(e) => set('category', e.target.value as PunchCategory)}
+            onChange={(e) => set("category", e.target.value as PunchCategory)}
             className={inputCls}
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {t(`punch.category_${c}`, {
                   defaultValue: c
-                    .split('_')
+                    .split("_")
                     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(' '),
+                    .join(" "),
                 })}
               </option>
             ))}
@@ -367,17 +441,17 @@ function AddPunchModal({
         </WideModalField>
 
         <WideModalField
-          label={t('punch.field_assigned_to', { defaultValue: 'Assigned To' })}
+          label={t("punch.field_assigned_to", { defaultValue: "Assigned To" })}
           htmlFor="punch-assigned-to"
         >
           <select
             id="punch-assigned-to"
             value={form.assigned_to}
-            onChange={(e) => set('assigned_to', e.target.value)}
+            onChange={(e) => set("assigned_to", e.target.value)}
             className={inputCls}
           >
             <option value="">
-              {t('punch.unassigned', { defaultValue: 'Unassigned' })}
+              {t("punch.unassigned", { defaultValue: "Unassigned" })}
             </option>
             {teamMembers.map((m) => (
               <option key={m.id} value={m.id}>
@@ -388,28 +462,28 @@ function AddPunchModal({
         </WideModalField>
 
         <WideModalField
-          label={t('punch.field_due_date', { defaultValue: 'Due Date' })}
+          label={t("punch.field_due_date", { defaultValue: "Due Date" })}
           htmlFor="punch-due-date"
         >
           <input
             id="punch-due-date"
             type="date"
             value={form.due_date}
-            onChange={(e) => set('due_date', e.target.value)}
+            onChange={(e) => set("due_date", e.target.value)}
             className={inputCls}
           />
         </WideModalField>
 
         <WideModalField
-          label={t('punch.field_location', { defaultValue: 'Location' })}
+          label={t("punch.field_location", { defaultValue: "Location" })}
           htmlFor="punch-location"
         >
           <input
             id="punch-location"
             value={form.location}
-            onChange={(e) => set('location', e.target.value)}
-            placeholder={t('punch.location_placeholder', {
-              defaultValue: 'e.g. Building A, Level 3, Room 305',
+            onChange={(e) => set("location", e.target.value)}
+            placeholder={t("punch.location_placeholder", {
+              defaultValue: "e.g. Building A, Level 3, Room 305",
             })}
             className={inputCls}
           />
@@ -435,23 +509,25 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
 
   const isOverdue =
     item.due_date &&
-    item.status !== 'closed' &&
-    item.status !== 'verified' &&
+    item.status !== "closed" &&
+    item.status !== "verified" &&
     new Date(item.due_date) < new Date();
 
   return (
     <Card
       className={clsx(
-        'p-3 mb-2 hover:shadow-md transition-shadow border-l-4',
+        "p-3 mb-2 hover:shadow-md transition-shadow border-l-4",
         PRIORITY_STRIPE_CLS[item.priority],
-        isOverdue && 'bg-red-50/40 dark:bg-red-950/15',
+        isOverdue && "bg-red-50/40 dark:bg-red-950/15",
       )}
     >
       {/* Title — bold, clamped to 2 lines */}
-      <h4 className={clsx(
-        'text-sm font-semibold line-clamp-2',
-        isOverdue ? 'text-semantic-error' : 'text-content-primary',
-      )}>
+      <h4
+        className={clsx(
+          "text-sm font-semibold line-clamp-2",
+          isOverdue ? "text-semantic-error" : "text-content-primary",
+        )}
+      >
         {item.title}
       </h4>
 
@@ -463,17 +539,17 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
       )}
 
       {/* Source badge */}
-      {item.metadata?.source === 'inspection' && (
+      {item.metadata?.source === "inspection" && (
         <div className="mt-1">
           <Badge variant="blue" size="sm">
-            {t('punch.source_inspection', { defaultValue: 'From Inspection' })}
+            {t("punch.source_inspection", { defaultValue: "From Inspection" })}
           </Badge>
         </div>
       )}
-      {item.metadata?.source === 'ncr' && (
+      {item.metadata?.source === "ncr" && (
         <div className="mt-1">
           <Badge variant="warning" size="sm">
-            {t('punch.source_ncr', { defaultValue: 'From NCR' })}
+            {t("punch.source_ncr", { defaultValue: "From NCR" })}
           </Badge>
         </div>
       )}
@@ -491,7 +567,7 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
             </>
           ) : (
             <span className="text-content-quaternary">
-              {t('punch.unassigned', { defaultValue: 'Unassigned' })}
+              {t("punch.unassigned", { defaultValue: "Unassigned" })}
             </span>
           )}
         </div>
@@ -507,15 +583,15 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
           {item.due_date && (
             <div
               className={clsx(
-                'flex items-center gap-1',
-                isOverdue && 'text-semantic-error font-medium',
+                "flex items-center gap-1",
+                isOverdue && "text-semantic-error font-medium",
               )}
             >
               {isOverdue ? <AlertTriangle size={11} /> : <Calendar size={11} />}
               <span>
                 {new Date(item.due_date).toLocaleDateString(undefined, {
-                  month: 'short',
-                  day: 'numeric',
+                  month: "short",
+                  day: "numeric",
                 })}
               </span>
             </div>
@@ -537,7 +613,9 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
                 className="text-xs shrink-0 whitespace-nowrap"
               >
                 <Icon size={12} className="mr-1 shrink-0" />
-                <span className="whitespace-nowrap">{t(tr.labelKey, { defaultValue: tr.defaultLabel })}</span>
+                <span className="whitespace-nowrap">
+                  {t(tr.labelKey, { defaultValue: tr.defaultLabel })}
+                </span>
               </Button>
             );
           })}
@@ -571,11 +649,14 @@ function KanbanView({
   }, [items]);
 
   const COLUMN_HEADER_CLS: Record<PunchStatus, string> = {
-    open: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-    in_progress: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-    resolved: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    verified: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    closed: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400',
+    open: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+    in_progress:
+      "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+    resolved:
+      "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    verified:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    closed: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400",
   };
 
   return (
@@ -587,16 +668,16 @@ function KanbanView({
             {/* Column header */}
             <div
               className={clsx(
-                'rounded-lg px-3 py-2 mb-3 flex items-center justify-between',
+                "rounded-lg px-3 py-2 mb-3 flex items-center justify-between",
                 COLUMN_HEADER_CLS[status],
               )}
             >
               <span className="text-sm font-semibold">
                 {t(`punch.status_${status}`, {
                   defaultValue: status
-                    .split('_')
+                    .split("_")
                     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(' '),
+                    .join(" "),
                 })}
               </span>
               <span className="text-xs font-bold rounded-full px-2 py-0.5 bg-white/30">
@@ -608,7 +689,7 @@ function KanbanView({
             <div className="flex-1 min-h-[100px]">
               {colItems.length === 0 ? (
                 <div className="flex items-center justify-center py-8 text-xs text-content-quaternary">
-                  {t('punch.kanban_empty', { defaultValue: 'No items' })}
+                  {t("punch.kanban_empty", { defaultValue: "No items" })}
                 </div>
               ) : (
                 colItems.map((item) => (
@@ -639,26 +720,34 @@ export function PunchListPage() {
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
 
   // State
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterPriority, setFilterPriority] = useState<PunchPriority | ''>('');
-  const [filterStatus, setFilterStatus] = useState<PunchStatus | ''>('');
-  const [filterCategory, setFilterCategory] = useState<PunchCategory | ''>('');
-  const [filterAssignee, setFilterAssignee] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterPriority, setFilterPriority] = useState<PunchPriority | "">("");
+  const [filterStatus, setFilterStatus] = useState<PunchStatus | "">("");
+  const [filterCategory, setFilterCategory] = useState<PunchCategory | "">("");
+  const [filterAssignee, setFilterAssignee] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   // Data queries
   const { data: projects = [] } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 
-  const projectId = activeProjectId || projects[0]?.id || '';
+  const projectId = activeProjectId || projects[0]?.id || "";
 
   const { data: punchItems = [], isLoading } = useQuery({
-    queryKey: ['punchlist', projectId, filterPriority, filterStatus, filterCategory, filterAssignee],
+    queryKey: [
+      "punchlist",
+      projectId,
+      filterPriority,
+      filterStatus,
+      filterCategory,
+      filterAssignee,
+    ],
     queryFn: () =>
       fetchPunchItems(projectId, {
         priority: filterPriority || undefined,
@@ -670,13 +759,13 @@ export function PunchListPage() {
   });
 
   const { data: summary } = useQuery({
-    queryKey: ['punchlist-summary', projectId],
+    queryKey: ["punchlist-summary", projectId],
     queryFn: () => fetchPunchSummary(projectId),
     enabled: !!projectId,
   });
 
   const { data: teamMembers = [] } = useQuery({
-    queryKey: ['team-members', projectId],
+    queryKey: ["team-members", projectId],
     queryFn: () => fetchTeamMembers(projectId),
     enabled: !!projectId,
   });
@@ -693,10 +782,15 @@ export function PunchListPage() {
     );
   }, [punchItems, searchQuery]);
 
+  // Clear stale selection whenever the project switches
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [projectId]);
+
   // Invalidation
   const invalidateAll = useCallback(() => {
-    qc.invalidateQueries({ queryKey: ['punchlist'] });
-    qc.invalidateQueries({ queryKey: ['punchlist-summary'] });
+    qc.invalidateQueries({ queryKey: ["punchlist"] });
+    qc.invalidateQueries({ queryKey: ["punchlist-summary"] });
   }, [qc]);
 
   // Mutations
@@ -706,14 +800,14 @@ export function PunchListPage() {
       invalidateAll();
       setShowAddModal(false);
       addToast({
-        type: 'success',
-        title: t('punch.item_created', { defaultValue: 'Punch item created' }),
+        type: "success",
+        title: t("punch.item_created", { defaultValue: "Punch item created" }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: e.message,
       }),
   });
@@ -724,17 +818,17 @@ export function PunchListPage() {
     onSuccess: (_data, vars) => {
       invalidateAll();
       addToast({
-        type: 'success',
-        title: t('punch.status_updated', {
-          defaultValue: 'Status updated to {{status}}',
-          status: vars.status.replace('_', ' '),
+        type: "success",
+        title: t("punch.status_updated", {
+          defaultValue: "Status updated to {{status}}",
+          status: vars.status.replace("_", " "),
         }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: e.message,
       }),
   });
@@ -744,17 +838,75 @@ export function PunchListPage() {
     onSuccess: () => {
       invalidateAll();
       addToast({
-        type: 'success',
-        title: t('punch.item_deleted', { defaultValue: 'Punch item deleted' }),
+        type: "success",
+        title: t("punch.item_deleted", { defaultValue: "Punch item deleted" }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: e.message,
       }),
   });
+
+  const bulkCloseMut = useMutation({
+    mutationFn: (ids: string[]) => bulkClose(ids, projectId),
+    onSuccess: (data) => {
+      invalidateAll();
+      setSelectedIds(new Set());
+      addToast({
+        type: data.errors.length > 0 ? "warning" : "success",
+        title: t("punch.bulk_close_done", {
+          defaultValue: "Closed {{closed}} item(s)",
+          closed: data.closed,
+        }),
+        message:
+          data.skipped || data.errors.length
+            ? t("punch.bulk_close_detail", {
+                defaultValue: "{{skipped}} skipped, {{errors}} error(s)",
+                skipped: data.skipped,
+                errors: data.errors.length,
+              })
+            : undefined,
+      });
+    },
+    onError: (e: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: e.message,
+      }),
+  });
+
+  // Selection helpers
+  const toggleSelect = useCallback((id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+
+  const handleBulkClose = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    const ok = await confirm({
+      title: t("punch.confirm_bulk_close_title", {
+        defaultValue: "Close selected items?",
+      }),
+      message: t("punch.confirm_bulk_close_message", {
+        defaultValue:
+          "Mark {{count}} punch item(s) as closed? Items already closed will be skipped.",
+        count: selectedIds.size,
+      }),
+      confirmLabel: t("punch.action_close", { defaultValue: "Close" }),
+      variant: "warning",
+    });
+    if (ok) bulkCloseMut.mutate(Array.from(selectedIds));
+  }, [selectedIds, bulkCloseMut, confirm, t]);
 
   // Handlers
   const handleCreateSubmit = useCallback(
@@ -783,14 +935,14 @@ export function PunchListPage() {
   const handleDelete = useCallback(
     async (id: string) => {
       const ok = await confirm({
-        title: t('punch.confirm_delete_title', {
-          defaultValue: 'Delete punch list item?',
+        title: t("punch.confirm_delete_title", {
+          defaultValue: "Delete punch list item?",
         }),
-        message: t('punchlist.confirm_delete', {
-          defaultValue: 'Delete this punch list item? This cannot be undone.',
+        message: t("punchlist.confirm_delete", {
+          defaultValue: "Delete this punch list item? This cannot be undone.",
         }),
-        confirmLabel: t('common.delete', { defaultValue: 'Delete' }),
-        variant: 'danger',
+        confirmLabel: t("common.delete", { defaultValue: "Delete" }),
+        variant: "danger",
       });
       if (ok) delMut.mutate(id);
     },
@@ -802,8 +954,8 @@ export function PunchListPage() {
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-          { label: t('punch.title', { defaultValue: 'Punch List' }) },
+          { label: t("nav.dashboard", { defaultValue: "Dashboard" }), to: "/" },
+          { label: t("punch.title", { defaultValue: "Punch List" }) },
         ]}
       />
 
@@ -812,7 +964,7 @@ export function PunchListPage() {
         {/* Left: title */}
         <h1 className="text-lg font-bold text-content-primary flex items-center gap-2 shrink-0">
           <ListChecks size={20} className="text-oe-blue" />
-          {t('punch.title', { defaultValue: 'Punch List' })}
+          {t("punch.title", { defaultValue: "Punch List" })}
         </h1>
 
         {/* Right: controls */}
@@ -824,14 +976,18 @@ export function PunchListPage() {
               onChange={(e) => {
                 const p = projects.find((pr) => pr.id === e.target.value);
                 if (p) {
-                  useProjectContextStore.getState().setActiveProject(p.id, p.name);
+                  useProjectContextStore
+                    .getState()
+                    .setActiveProject(p.id, p.name);
                 }
               }}
-              aria-label={t('punch.select_project', { defaultValue: 'Project...' })}
-              className={inputCls + ' !h-8 !text-xs max-w-[180px]'}
+              aria-label={t("punch.select_project", {
+                defaultValue: "Project...",
+              })}
+              className={inputCls + " !h-8 !text-xs max-w-[180px]"}
             >
               <option value="" disabled>
-                {t('punch.select_project', { defaultValue: 'Project...' })}
+                {t("punch.select_project", { defaultValue: "Project..." })}
               </option>
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -840,8 +996,15 @@ export function PunchListPage() {
               ))}
             </select>
           )}
-          <Button variant="primary" size="sm" onClick={() => setShowAddModal(true)} disabled={!projectId} className="shrink-0 whitespace-nowrap" icon={<Plus size={14} />}>
-            {t('punch.new_item', { defaultValue: 'New Item' })}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setShowAddModal(true)}
+            disabled={!projectId}
+            className="shrink-0 whitespace-nowrap"
+            icon={<Plus size={14} />}
+          >
+            {t("punch.new_item", { defaultValue: "New Item" })}
           </Button>
         </div>
       </div>
@@ -849,23 +1012,25 @@ export function PunchListPage() {
       <div className="mt-4">
         <SectionIntro
           storageKey="punchlist"
-          title={t('punch.intro_title', {
-            defaultValue: 'Track snags & deficiencies to close-out',
+          title={t("punch.intro_title", {
+            defaultValue: "Track snags & deficiencies to close-out",
           })}
           links={[
             {
-              label: t('punch.intro_link_inspections', { defaultValue: 'Inspections' }),
-              onClick: () => navigate('/inspections'),
+              label: t("punch.intro_link_inspections", {
+                defaultValue: "Inspections",
+              }),
+              onClick: () => navigate("/inspections"),
             },
             {
-              label: t('punch.intro_link_ncr', { defaultValue: 'NCRs' }),
-              onClick: () => navigate('/ncr'),
+              label: t("punch.intro_link_ncr", { defaultValue: "NCRs" }),
+              onClick: () => navigate("/ncr"),
             },
           ]}
         >
-          {t('punch.intro_body', {
+          {t("punch.intro_body", {
             defaultValue:
-              'Punch list items capture outstanding work, snags and minor defects. Move each item through Open → In Progress → Resolved → Verified → Closed. Items raised from a failed inspection or an NCR are tagged with their source so you can trace them back. Use the Kanban view to manage flow, the list view for bulk triage.',
+              "Punch list items capture outstanding work, snags and minor defects. Move each item through Open → In Progress → Resolved → Verified → Closed. Items raised from a failed inspection or an NCR are tagged with their source so you can trace them back. Use the Kanban view to manage flow, the list view for bulk triage.",
           })}
         </SectionIntro>
       </div>
@@ -886,11 +1051,13 @@ export function PunchListPage() {
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('punch.search', {
-              defaultValue: 'Search title, description, location...',
+            placeholder={t("punch.search", {
+              defaultValue: "Search title, description, location...",
             })}
-            aria-label={t('punch.search', { defaultValue: 'Search title, description, location...' })}
-            className={inputCls + ' pl-9'}
+            aria-label={t("punch.search", {
+              defaultValue: "Search title, description, location...",
+            })}
+            className={inputCls + " pl-9"}
           />
         </div>
 
@@ -899,44 +1066,51 @@ export function PunchListPage() {
             variant="ghost"
             size="sm"
             onClick={() => setShowFilters(!showFilters)}
-            className={clsx('shrink-0 whitespace-nowrap', showFilters && 'text-oe-blue')}
+            className={clsx(
+              "shrink-0 whitespace-nowrap",
+              showFilters && "text-oe-blue",
+            )}
           >
             <Filter size={14} className="mr-1.5 shrink-0" />
-            <span className="whitespace-nowrap">{t('common.filters', { defaultValue: 'Filters' })}</span>
+            <span className="whitespace-nowrap">
+              {t("common.filters", { defaultValue: "Filters" })}
+            </span>
           </Button>
 
           {/* View toggle */}
           <div className="flex items-center rounded-lg border border-border overflow-hidden">
             <button
-              onClick={() => setViewMode('list')}
-              aria-label={t('punch.view_list', { defaultValue: 'List view' })}
+              onClick={() => setViewMode("list")}
+              aria-label={t("punch.view_list", { defaultValue: "List view" })}
               className={clsx(
-                'flex items-center gap-1 px-3 py-2 text-sm transition-colors',
-                viewMode === 'list'
-                  ? 'bg-oe-blue text-white'
-                  : 'bg-surface-primary text-content-secondary hover:bg-surface-secondary',
+                "flex items-center gap-1 px-3 py-2 text-sm transition-colors",
+                viewMode === "list"
+                  ? "bg-oe-blue text-white"
+                  : "bg-surface-primary text-content-secondary hover:bg-surface-secondary",
               )}
-              title={t('punch.view_list', { defaultValue: 'List view' })}
+              title={t("punch.view_list", { defaultValue: "List view" })}
             >
               <LayoutList size={14} />
               <span className="hidden sm:inline">
-                {t('punch.view_list', { defaultValue: 'List' })}
+                {t("punch.view_list", { defaultValue: "List" })}
               </span>
             </button>
             <button
-              onClick={() => setViewMode('kanban')}
+              onClick={() => setViewMode("kanban")}
               className={clsx(
-                'flex items-center gap-1 px-3 py-2 text-sm transition-colors',
-                viewMode === 'kanban'
-                  ? 'bg-oe-blue text-white'
-                  : 'bg-surface-primary text-content-secondary hover:bg-surface-secondary',
+                "flex items-center gap-1 px-3 py-2 text-sm transition-colors",
+                viewMode === "kanban"
+                  ? "bg-oe-blue text-white"
+                  : "bg-surface-primary text-content-secondary hover:bg-surface-secondary",
               )}
-              aria-label={t('punch.view_kanban', { defaultValue: 'Kanban view' })}
-              title={t('punch.view_kanban', { defaultValue: 'Kanban view' })}
+              aria-label={t("punch.view_kanban", {
+                defaultValue: "Kanban view",
+              })}
+              title={t("punch.view_kanban", { defaultValue: "Kanban view" })}
             >
               <Columns3 size={14} />
               <span className="hidden sm:inline">
-                {t('punch.view_kanban', { defaultValue: 'Kanban' })}
+                {t("punch.view_kanban", { defaultValue: "Kanban" })}
               </span>
             </button>
           </div>
@@ -948,12 +1122,16 @@ export function PunchListPage() {
         <div className="mt-3 flex flex-wrap gap-3 animate-fade-in">
           <select
             value={filterPriority}
-            onChange={(e) => setFilterPriority(e.target.value as PunchPriority | '')}
-            aria-label={t('punch.all_priorities', { defaultValue: 'All Priorities' })}
-            className={inputCls + ' max-w-[160px]'}
+            onChange={(e) =>
+              setFilterPriority(e.target.value as PunchPriority | "")
+            }
+            aria-label={t("punch.all_priorities", {
+              defaultValue: "All Priorities",
+            })}
+            className={inputCls + " max-w-[160px]"}
           >
             <option value="">
-              {t('punch.all_priorities', { defaultValue: 'All Priorities' })}
+              {t("punch.all_priorities", { defaultValue: "All Priorities" })}
             </option>
             {PRIORITIES.map((p) => (
               <option key={p} value={p}>
@@ -966,20 +1144,24 @@ export function PunchListPage() {
 
           <select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value as PunchStatus | '')}
-            aria-label={t('punch.all_statuses', { defaultValue: 'All Statuses' })}
-            className={inputCls + ' max-w-[160px]'}
+            onChange={(e) =>
+              setFilterStatus(e.target.value as PunchStatus | "")
+            }
+            aria-label={t("punch.all_statuses", {
+              defaultValue: "All Statuses",
+            })}
+            className={inputCls + " max-w-[160px]"}
           >
             <option value="">
-              {t('punch.all_statuses', { defaultValue: 'All Statuses' })}
+              {t("punch.all_statuses", { defaultValue: "All Statuses" })}
             </option>
             {STATUSES.map((s) => (
               <option key={s} value={s}>
                 {t(`punch.status_${s}`, {
                   defaultValue: s
-                    .split('_')
+                    .split("_")
                     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(' '),
+                    .join(" "),
                 })}
               </option>
             ))}
@@ -987,20 +1169,24 @@ export function PunchListPage() {
 
           <select
             value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value as PunchCategory | '')}
-            aria-label={t('punch.all_categories', { defaultValue: 'All Categories' })}
-            className={inputCls + ' max-w-[160px]'}
+            onChange={(e) =>
+              setFilterCategory(e.target.value as PunchCategory | "")
+            }
+            aria-label={t("punch.all_categories", {
+              defaultValue: "All Categories",
+            })}
+            className={inputCls + " max-w-[160px]"}
           >
             <option value="">
-              {t('punch.all_categories', { defaultValue: 'All Categories' })}
+              {t("punch.all_categories", { defaultValue: "All Categories" })}
             </option>
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {t(`punch.category_${c}`, {
                   defaultValue: c
-                    .split('_')
+                    .split("_")
                     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(' '),
+                    .join(" "),
                 })}
               </option>
             ))}
@@ -1009,11 +1195,13 @@ export function PunchListPage() {
           <select
             value={filterAssignee}
             onChange={(e) => setFilterAssignee(e.target.value)}
-            aria-label={t('punch.all_assignees', { defaultValue: 'All Assignees' })}
-            className={inputCls + ' max-w-[180px]'}
+            aria-label={t("punch.all_assignees", {
+              defaultValue: "All Assignees",
+            })}
+            className={inputCls + " max-w-[180px]"}
           >
             <option value="">
-              {t('punch.all_assignees', { defaultValue: 'All Assignees' })}
+              {t("punch.all_assignees", { defaultValue: "All Assignees" })}
             </option>
             {teamMembers.map((m) => (
               <option key={m.id} value={m.id}>
@@ -1029,10 +1217,12 @@ export function PunchListPage() {
         {!projectId ? (
           <EmptyState
             icon={<ListChecks size={28} strokeWidth={1.5} />}
-            title={t('punch.no_project_title', { defaultValue: 'No project selected' })}
-            description={t('punch.no_project_desc', {
+            title={t("punch.no_project_title", {
+              defaultValue: "No project selected",
+            })}
+            description={t("punch.no_project_desc", {
               defaultValue:
-                'Select a project from the dropdown above to view and manage punch list items.',
+                "Select a project from the dropdown above to view and manage punch list items.",
             })}
           />
         ) : isLoading ? (
@@ -1043,30 +1233,49 @@ export function PunchListPage() {
           <EmptyState
             icon={<ListChecks size={28} strokeWidth={1.5} />}
             title={
-              searchQuery || filterPriority || filterStatus || filterCategory || filterAssignee
-                ? t('punch.no_results_title', { defaultValue: 'No matching items' })
-                : t('punch.empty_title', { defaultValue: 'No punch list items' })
+              searchQuery ||
+              filterPriority ||
+              filterStatus ||
+              filterCategory ||
+              filterAssignee
+                ? t("punch.no_results_title", {
+                    defaultValue: "No matching items",
+                  })
+                : t("punch.empty_title", {
+                    defaultValue: "No punch list items",
+                  })
             }
             description={
-              searchQuery || filterPriority || filterStatus || filterCategory || filterAssignee
-                ? t('punch.no_results_desc', {
-                    defaultValue: 'Try adjusting your search or filter criteria.',
-                  })
-                : t('punch.empty_desc', {
+              searchQuery ||
+              filterPriority ||
+              filterStatus ||
+              filterCategory ||
+              filterAssignee
+                ? t("punch.no_results_desc", {
                     defaultValue:
-                      'Create punch list items to track deficiencies, snags, and outstanding work.',
+                      "Try adjusting your search or filter criteria.",
+                  })
+                : t("punch.empty_desc", {
+                    defaultValue:
+                      "Create punch list items to track deficiencies, snags, and outstanding work.",
                   })
             }
             action={
-              !(searchQuery || filterPriority || filterStatus || filterCategory || filterAssignee)
+              !(
+                searchQuery ||
+                filterPriority ||
+                filterStatus ||
+                filterCategory ||
+                filterAssignee
+              )
                 ? {
-                    label: t('punch.new_item', { defaultValue: 'New Item' }),
+                    label: t("punch.new_item", { defaultValue: "New Item" }),
                     onClick: () => setShowAddModal(true),
                   }
                 : undefined
             }
           />
-        ) : viewMode === 'kanban' ? (
+        ) : viewMode === "kanban" ? (
           <KanbanView
             items={filteredItems}
             onTransition={handleTransition}
@@ -1074,33 +1283,92 @@ export function PunchListPage() {
           />
         ) : (
           <Card className="overflow-hidden">
+            {/* Bulk-action bar — visible only when items are selected. */}
+            {selectedIds.size > 0 && (
+              <div className="flex items-center justify-between gap-3 px-4 py-2 border-b border-border-light bg-oe-blue/5">
+                <span className="text-sm text-content-secondary">
+                  {t("punch.selection_count", {
+                    defaultValue: "{{count}} selected",
+                    count: selectedIds.size,
+                  })}
+                </span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearSelection}
+                    disabled={bulkCloseMut.isPending}
+                  >
+                    {t("common.cancel", { defaultValue: "Cancel" })}
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleBulkClose}
+                    disabled={bulkCloseMut.isPending}
+                    icon={<CheckCircle2 size={14} />}
+                  >
+                    {bulkCloseMut.isPending
+                      ? t("punch.bulk_closing", { defaultValue: "Closing..." })
+                      : t("punch.bulk_close", {
+                          defaultValue: "Close selected ({{count}})",
+                          count: selectedIds.size,
+                        })}
+                  </Button>
+                </div>
+              </div>
+            )}
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border-light bg-surface-secondary/50">
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('punch.col_title', { defaultValue: 'Title' })}
+                    <th className="px-3 py-3 text-left w-8">
+                      <input
+                        type="checkbox"
+                        aria-label={t("punch.select_all", {
+                          defaultValue: "Select all",
+                        })}
+                        checked={
+                          filteredItems.length > 0 &&
+                          filteredItems.every((it) => selectedIds.has(it.id))
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedIds(
+                              new Set(filteredItems.map((it) => it.id)),
+                            );
+                          } else {
+                            setSelectedIds(new Set());
+                          }
+                        }}
+                        className="h-4 w-4 rounded border-border accent-oe-blue cursor-pointer"
+                      />
                     </th>
                     <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('punch.col_priority', { defaultValue: 'Priority' })}
+                      {t("punch.col_title", { defaultValue: "Title" })}
                     </th>
                     <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('punch.col_status', { defaultValue: 'Status' })}
+                      {t("punch.col_priority", { defaultValue: "Priority" })}
                     </th>
                     <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('punch.col_category', { defaultValue: 'Category' })}
+                      {t("punch.col_status", { defaultValue: "Status" })}
                     </th>
                     <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('punch.col_assigned_to', { defaultValue: 'Assigned To' })}
+                      {t("punch.col_category", { defaultValue: "Category" })}
                     </th>
                     <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('punch.col_due_date', { defaultValue: 'Due Date' })}
+                      {t("punch.col_assigned_to", {
+                        defaultValue: "Assigned To",
+                      })}
                     </th>
                     <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('punch.col_photos', { defaultValue: 'Photos' })}
+                      {t("punch.col_due_date", { defaultValue: "Due Date" })}
+                    </th>
+                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                      {t("punch.col_photos", { defaultValue: "Photos" })}
                     </th>
                     <th className="px-4 py-3 text-right text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('common.actions', { defaultValue: 'Actions' })}
+                      {t("common.actions", { defaultValue: "Actions" })}
                     </th>
                   </tr>
                 </thead>
@@ -1111,6 +1379,8 @@ export function PunchListPage() {
                       item={item}
                       onTransition={handleTransition}
                       onDelete={handleDelete}
+                      selected={selectedIds.has(item.id)}
+                      onToggleSelect={toggleSelect}
                     />
                   ))}
                 </tbody>
@@ -1141,27 +1411,31 @@ const PunchTableRow = React.memo(function PunchTableRow({
   item,
   onTransition,
   onDelete,
+  selected,
+  onToggleSelect,
 }: {
   item: PunchItem;
   onTransition: (id: string, status: PunchStatus) => void;
   onDelete: (id: string) => void;
+  selected: boolean;
+  onToggleSelect: (id: string) => void;
 }) {
   const { t } = useTranslation();
   const transitions = STATUS_TRANSITION[item.status] ?? [];
 
   const isOverdue =
     item.due_date &&
-    item.status !== 'closed' &&
-    item.status !== 'verified' &&
+    item.status !== "closed" &&
+    item.status !== "verified" &&
     new Date(item.due_date) < new Date();
 
   const formattedDueDate = useMemo(() => {
-    if (!item.due_date) return '-';
+    if (!item.due_date) return "-";
     try {
       return new Date(item.due_date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       });
     } catch {
       return item.due_date;
@@ -1169,12 +1443,25 @@ const PunchTableRow = React.memo(function PunchTableRow({
   }, [item.due_date]);
 
   return (
-    <tr className={clsx(
-      'transition-colors',
-      isOverdue
-        ? 'bg-red-50/40 hover:bg-red-50/70 dark:bg-red-950/10 dark:hover:bg-red-950/20'
-        : 'hover:bg-surface-secondary/50',
-    )}>
+    <tr
+      className={clsx(
+        "transition-colors",
+        selected
+          ? "bg-oe-blue/5 hover:bg-oe-blue/10"
+          : isOverdue
+            ? "bg-red-50/40 hover:bg-red-50/70 dark:bg-red-950/10 dark:hover:bg-red-950/20"
+            : "hover:bg-surface-secondary/50",
+      )}
+    >
+      <td className="px-3 py-3 w-8">
+        <input
+          type="checkbox"
+          aria-label={t("punch.select_row", { defaultValue: "Select row" })}
+          checked={selected}
+          onChange={() => onToggleSelect(item.id)}
+          className="h-4 w-4 rounded border-border accent-oe-blue cursor-pointer"
+        />
+      </td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
           {isOverdue && (
@@ -1186,24 +1473,29 @@ const PunchTableRow = React.memo(function PunchTableRow({
         </div>
         {(item.location_x != null || item.location_y != null) && (
           <p className="text-xs text-content-tertiary mt-0.5 truncate max-w-[250px]">
-            {`(${item.location_x ?? '-'}, ${item.location_y ?? '-'})`}
+            {`(${item.location_x ?? "-"}, ${item.location_y ?? "-"})`}
           </p>
         )}
-        {item.metadata?.source === 'inspection' && (
+        {item.metadata?.source === "inspection" && (
           <Badge variant="blue" size="sm" className="mt-0.5">
-            {t('punch.source_inspection', { defaultValue: 'From Inspection' })}
+            {t("punch.source_inspection", { defaultValue: "From Inspection" })}
           </Badge>
         )}
-        {item.metadata?.source === 'ncr' && (
+        {item.metadata?.source === "ncr" && (
           <Badge variant="warning" size="sm" className="mt-0.5">
-            {t('punch.source_ncr', { defaultValue: 'From NCR' })}
+            {t("punch.source_ncr", { defaultValue: "From NCR" })}
           </Badge>
         )}
       </td>
       <td className="px-4 py-3">
-        <Badge variant={PRIORITY_BADGE_VARIANT[item.priority]} size="sm" className={PRIORITY_BADGE_CLS[item.priority]}>
+        <Badge
+          variant={PRIORITY_BADGE_VARIANT[item.priority]}
+          size="sm"
+          className={PRIORITY_BADGE_CLS[item.priority]}
+        >
           {t(`punch.priority_${item.priority}`, {
-            defaultValue: item.priority.charAt(0).toUpperCase() + item.priority.slice(1),
+            defaultValue:
+              item.priority.charAt(0).toUpperCase() + item.priority.slice(1),
           })}
         </Badge>
       </td>
@@ -1211,9 +1503,9 @@ const PunchTableRow = React.memo(function PunchTableRow({
         <Badge variant={STATUS_BADGE_VARIANT[item.status]} size="sm">
           {t(`punch.status_${item.status}`, {
             defaultValue: item.status
-              .split('_')
+              .split("_")
               .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-              .join(' '),
+              .join(" "),
           })}
         </Badge>
       </td>
@@ -1221,11 +1513,11 @@ const PunchTableRow = React.memo(function PunchTableRow({
         {item.category
           ? t(`punch.category_${item.category}`, {
               defaultValue: item.category
-                .split('_')
+                .split("_")
                 .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                .join(' '),
+                .join(" "),
             })
-          : '-'}
+          : "-"}
       </td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
@@ -1240,7 +1532,7 @@ const PunchTableRow = React.memo(function PunchTableRow({
             </>
           ) : (
             <span className="text-sm text-content-quaternary">
-              {t('punch.unassigned', { defaultValue: 'Unassigned' })}
+              {t("punch.unassigned", { defaultValue: "Unassigned" })}
             </span>
           )}
         </div>
@@ -1248,8 +1540,10 @@ const PunchTableRow = React.memo(function PunchTableRow({
       <td className="px-4 py-3">
         <span
           className={clsx(
-            'text-sm tabular-nums',
-            isOverdue ? 'text-semantic-error font-medium' : 'text-content-secondary',
+            "text-sm tabular-nums",
+            isOverdue
+              ? "text-semantic-error font-medium"
+              : "text-content-secondary",
           )}
         >
           {formattedDueDate}
@@ -1257,7 +1551,7 @@ const PunchTableRow = React.memo(function PunchTableRow({
         {isOverdue && (
           <div className="flex items-center gap-1 text-2xs text-semantic-error mt-0.5">
             <Clock size={10} />
-            {t('punch.overdue', { defaultValue: 'Overdue' })}
+            {t("punch.overdue", { defaultValue: "Overdue" })}
           </div>
         )}
       </td>
@@ -1268,7 +1562,7 @@ const PunchTableRow = React.memo(function PunchTableRow({
             {(item.photos || []).length}
           </div>
         ) : (
-          '-'
+          "-"
         )}
       </td>
       <td className="px-4 py-3 text-right">
@@ -1293,8 +1587,8 @@ const PunchTableRow = React.memo(function PunchTableRow({
           <button
             onClick={() => onDelete(item.id)}
             className="inline-flex items-center rounded-md p-1 text-content-quaternary hover:text-semantic-error hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
-            aria-label={t('common.delete', { defaultValue: 'Delete' })}
-            title={t('common.delete', { defaultValue: 'Delete' })}
+            aria-label={t("common.delete", { defaultValue: "Delete" })}
+            title={t("common.delete", { defaultValue: "Delete" })}
           >
             <Trash2 size={13} />
           </button>

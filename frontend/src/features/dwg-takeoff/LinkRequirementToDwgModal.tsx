@@ -8,9 +8,9 @@
  * `metadata.dwg_drawing_id` without a dedicated backend column.
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   X,
   Search,
@@ -20,15 +20,15 @@ import {
   AlertOctagon,
   AlertTriangle,
   CheckCircle2,
-} from 'lucide-react';
-import { apiPatch } from '@/shared/lib/api';
+} from "lucide-react";
+import { apiPatch } from "@/shared/lib/api";
 import {
   fetchRequirementSets,
   fetchRequirementSetDetail,
   type Requirement,
   type RequirementSet,
-} from '@/features/requirements/api';
-import { useToastStore } from '@/stores/useToastStore';
+} from "@/features/requirements/api";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface LinkRequirementToDwgModalProps {
   projectId: string;
@@ -40,10 +40,10 @@ interface LinkRequirementToDwgModalProps {
 }
 
 const PRIORITY_COLOR: Record<string, string> = {
-  must: 'text-rose-700 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60',
+  must: "text-rose-700 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60",
   should:
-    'text-amber-700 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60',
-  may: 'text-slate-700 bg-slate-50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800',
+    "text-amber-700 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60",
+  may: "text-slate-700 bg-slate-50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800",
 };
 
 export default function LinkRequirementToDwgModal({
@@ -58,7 +58,7 @@ export default function LinkRequirementToDwgModal({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const PAGE_SIZE = 50;
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
@@ -67,7 +67,7 @@ export default function LinkRequirementToDwgModal({
   }, [search]);
 
   const setsQuery = useQuery({
-    queryKey: ['requirement-sets-for-dwg-link', projectId],
+    queryKey: ["requirement-sets-for-dwg-link", projectId],
     queryFn: () => fetchRequirementSets(projectId),
     enabled: !!projectId,
   });
@@ -75,9 +75,9 @@ export default function LinkRequirementToDwgModal({
 
   const reqsQuery = useQuery({
     queryKey: [
-      'requirements-for-dwg-link',
+      "requirements-for-dwg-link",
       projectId,
-      sets.map((s) => s.id).join(','),
+      sets.map((s) => s.id).join(","),
     ],
     queryFn: async () => {
       const all: Array<Requirement & { set_name: string }> = [];
@@ -112,7 +112,7 @@ export default function LinkRequirementToDwgModal({
         r.set_name,
       ]
         .filter(Boolean)
-        .join(' ')
+        .join(" ")
         .toLowerCase();
       return haystack.includes(q);
     });
@@ -121,8 +121,8 @@ export default function LinkRequirementToDwgModal({
   const linkMut = useMutation({
     mutationFn: async (req: Requirement & { set_name: string }) => {
       const existing = (req.metadata ?? {}) as Record<string, unknown>;
-      const existingIds = Array.isArray(existing['dwg_entity_ids'])
-        ? (existing['dwg_entity_ids'] as string[])
+      const existingIds = Array.isArray(existing["dwg_entity_ids"])
+        ? (existing["dwg_entity_ids"] as string[])
         : [];
       const mergedIds = Array.from(new Set([...existingIds, ...entityIds]));
       const nextMetadata: Record<string, unknown> = {
@@ -138,23 +138,29 @@ export default function LinkRequirementToDwgModal({
     },
     onSuccess: (count) => {
       addToast({
-        type: 'success',
-        title: t('dwg_takeoff.req_linked_title', { defaultValue: 'Requirement linked‌⁠‍' }),
-        message: t('dwg_takeoff.req_linked_msg', {
-          defaultValue: 'Pinned to {{count}} DWG entity/entities‌⁠‍',
+        type: "success",
+        title: t("dwg_takeoff.req_linked_title", {
+          defaultValue: "Requirement linked‌⁠‍",
+        }),
+        message: t("dwg_takeoff.req_linked_msg", {
+          defaultValue: "Pinned to {{count}} DWG entity/entities‌⁠‍",
           count,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['requirements-for-dwg-link', projectId] });
-      qc.invalidateQueries({ queryKey: ['requirement-sets-for-dwg-link', projectId] });
-      qc.invalidateQueries({ queryKey: ['requirement-set'] });
+      qc.invalidateQueries({
+        queryKey: ["requirements-for-dwg-link", projectId],
+      });
+      qc.invalidateQueries({
+        queryKey: ["requirement-sets-for-dwg-link", projectId],
+      });
+      qc.invalidateQueries({ queryKey: ["requirement-set"] });
       onLinked?.();
       onClose();
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -178,13 +184,17 @@ export default function LinkRequirementToDwgModal({
           <div className="flex items-center gap-2">
             <ClipboardCheck size={16} className="text-violet-600" />
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('dwg_takeoff.link_req_title', { defaultValue: 'Link a requirement‌⁠‍' })}
+              {t("dwg_takeoff.link_req_title", {
+                defaultValue: "Link a requirement‌⁠‍",
+              })}
             </h2>
             <span className="text-[11px] text-content-tertiary">
               {entityIds.length === 1
-                ? '→ ' + (entityLabel || t('dwg_takeoff.entity', { defaultValue: 'Entity‌⁠‍' }))
-                : t('dwg_takeoff.link_req_bulk', {
-                    defaultValue: '→ {{count}} entities‌⁠‍',
+                ? "→ " +
+                  (entityLabel ||
+                    t("dwg_takeoff.entity", { defaultValue: "Entity‌⁠‍" }))
+                : t("dwg_takeoff.link_req_bulk", {
+                    defaultValue: "→ {{count}} entities‌⁠‍",
                     count: entityIds.length,
                   })}
             </span>
@@ -192,7 +202,7 @@ export default function LinkRequirementToDwgModal({
           <button
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -209,8 +219,8 @@ export default function LinkRequirementToDwgModal({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('dwg_takeoff.search_requirements', {
-                defaultValue: 'Search by entity, attribute, constraint, notes…',
+              placeholder={t("dwg_takeoff.search_requirements", {
+                defaultValue: "Search by entity, attribute, constraint, notes…",
               })}
               autoFocus
               className="w-full ps-8 pe-3 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
@@ -223,21 +233,21 @@ export default function LinkRequirementToDwgModal({
           {isLoading ? (
             <div className="flex items-center justify-center py-8 text-content-tertiary">
               <Loader2 size={16} className="animate-spin mr-2" />
-              {t('common.loading', { defaultValue: 'Loading…' })}
+              {t("common.loading", { defaultValue: "Loading…" })}
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-8 text-[11px] text-content-tertiary italic">
               {sets.length === 0
-                ? t('dwg_takeoff.no_req_sets', {
+                ? t("dwg_takeoff.no_req_sets", {
                     defaultValue:
-                      'No requirement sets in this project yet — create one in BIM Rules first',
+                      "No requirement sets in this project yet — create one in BIM Rules first",
                   })
                 : requirements.length === 0
-                  ? t('dwg_takeoff.no_requirements', {
-                      defaultValue: 'No requirements in any set yet',
+                  ? t("dwg_takeoff.no_requirements", {
+                      defaultValue: "No requirements in any set yet",
                     })
-                  : t('dwg_takeoff.no_req_match', {
-                      defaultValue: 'No requirements match your search',
+                  : t("dwg_takeoff.no_req_match", {
+                      defaultValue: "No requirements match your search",
                     })}
             </div>
           ) : (
@@ -268,19 +278,19 @@ export default function LinkRequirementToDwgModal({
                           >
                             {req.priority}
                           </span>
-                          {req.status === 'verified' && (
+                          {req.status === "verified" && (
                             <CheckCircle2
                               size={9}
                               className="text-emerald-500 shrink-0"
                             />
                           )}
-                          {req.status === 'conflict' && (
+                          {req.status === "conflict" && (
                             <AlertOctagon
                               size={9}
                               className="text-rose-500 shrink-0"
                             />
                           )}
-                          {req.status === 'open' && (
+                          {req.status === "open" && (
                             <AlertTriangle
                               size={9}
                               className="text-amber-500 shrink-0"
@@ -290,7 +300,7 @@ export default function LinkRequirementToDwgModal({
                         <div className="flex items-center gap-2 text-[10px] text-content-tertiary tabular-nums">
                           <span className="font-mono">
                             {req.constraint_type} {req.constraint_value}
-                            {req.unit ? ` ${req.unit}` : ''}
+                            {req.unit ? ` ${req.unit}` : ""}
                           </span>
                           {req.set_name && (
                             <span className="truncate">· {req.set_name}</span>
@@ -307,12 +317,14 @@ export default function LinkRequirementToDwgModal({
                   <button
                     type="button"
                     onClick={() =>
-                      setVisibleCount((c) => Math.min(c + PAGE_SIZE, filtered.length))
+                      setVisibleCount((c) =>
+                        Math.min(c + PAGE_SIZE, filtered.length),
+                      )
                     }
                     className="w-full text-center text-[11px] text-oe-blue hover:bg-oe-blue/5 rounded py-1.5 border border-dashed border-oe-blue/30"
                   >
-                    {t('dwg_takeoff.load_more', {
-                      defaultValue: 'Load more ({{remaining}} remaining)',
+                    {t("dwg_takeoff.load_more", {
+                      defaultValue: "Load more ({{remaining}} remaining)",
                       remaining: filtered.length - visibleCount,
                     })}
                   </button>
@@ -329,7 +341,7 @@ export default function LinkRequirementToDwgModal({
             onClick={onClose}
             className="text-xs text-content-tertiary hover:text-content-primary px-2"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
         </div>
       </div>

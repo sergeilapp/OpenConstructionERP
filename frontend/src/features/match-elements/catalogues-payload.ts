@@ -35,7 +35,7 @@ export function unwrapCataloguesPayload(
   payload: CataloguesPayload,
 ): CataloguesPayloadCatalogue[] {
   if (Array.isArray(payload)) return payload;
-  if (payload && typeof payload === 'object' && 'catalogues' in payload) {
+  if (payload && typeof payload === "object" && "catalogues" in payload) {
     const inner = (payload as { catalogues?: unknown }).catalogues;
     if (Array.isArray(inner)) return inner as CataloguesPayloadCatalogue[];
   }

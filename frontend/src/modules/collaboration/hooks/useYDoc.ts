@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import * as Y from 'yjs';
-import { WebrtcProvider } from 'y-webrtc';
-import { WebsocketProvider } from 'y-websocket';
+import { useEffect, useRef, useState } from "react";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+import { WebsocketProvider } from "y-websocket";
 
 export type ProviderType = WebrtcProvider | WebsocketProvider;
 
@@ -10,15 +10,15 @@ export interface UseYDocResult {
   provider: ProviderType | null;
   connected: boolean;
   /** Which provider type is currently active */
-  providerKind: 'webrtc' | 'websocket' | null;
+  providerKind: "webrtc" | "websocket" | null;
 }
 
 /**
  * Default WebSocket URL for the y-websocket fallback.
  * Can be overridden via localStorage for testing/production.
  */
-const WS_URL_KEY = 'oe_collab_ws_url';
-const DEFAULT_WS_URL = 'wss://demos.yjs.dev/ws';
+const WS_URL_KEY = "oe_collab_ws_url";
+const DEFAULT_WS_URL = "wss://demos.yjs.dev/ws";
 
 function getWsUrl(): string {
   try {
@@ -35,7 +35,9 @@ function getWsUrl(): string {
  */
 export function useYDoc(boqId: string | undefined): UseYDocResult {
   const [connected, setConnected] = useState(false);
-  const [providerKind, setProviderKind] = useState<'webrtc' | 'websocket' | null>(null);
+  const [providerKind, setProviderKind] = useState<
+    "webrtc" | "websocket" | null
+  >(null);
   const docRef = useRef<Y.Doc | null>(null);
   const providerRef = useRef<ProviderType | null>(null);
 
@@ -49,37 +51,40 @@ export function useYDoc(boqId: string | undefined): UseYDocResult {
 
     // Start with WebRTC
     const rtcProvider = new WebrtcProvider(roomName, doc, {
-      signaling: ['wss://signaling.yjs.dev', 'wss://y-webrtc-signaling-eu.herokuapp.com'],
+      signaling: [
+        "wss://signaling.yjs.dev",
+        "wss://y-webrtc-signaling-eu.herokuapp.com",
+      ],
     });
 
     const onRtcSynced = () => {
       setConnected(true);
-      setProviderKind('webrtc');
+      setProviderKind("webrtc");
       if (fallbackTimer) clearTimeout(fallbackTimer);
     };
 
-    rtcProvider.on('synced', onRtcSynced);
-    rtcProvider.on('status', (event: { connected: boolean }) => {
+    rtcProvider.on("synced", onRtcSynced);
+    rtcProvider.on("status", (event: { connected: boolean }) => {
       if (event.connected) {
         setConnected(true);
-        setProviderKind('webrtc');
+        setProviderKind("webrtc");
         if (fallbackTimer) clearTimeout(fallbackTimer);
       }
     });
 
     docRef.current = doc;
     providerRef.current = rtcProvider;
-    setProviderKind('webrtc');
+    setProviderKind("webrtc");
 
     // Fallback: if WebRTC doesn't connect within 8s, add WebSocket provider
     fallbackTimer = setTimeout(() => {
       if (connected) return; // Already connected via WebRTC
       try {
         wsProvider = new WebsocketProvider(getWsUrl(), roomName, doc);
-        wsProvider.on('status', (event: { status: string }) => {
-          if (event.status === 'connected') {
+        wsProvider.on("status", (event: { status: string }) => {
+          if (event.status === "connected") {
             setConnected(true);
-            setProviderKind('websocket');
+            setProviderKind("websocket");
             providerRef.current = wsProvider;
           }
         });

@@ -14,20 +14,35 @@
  * and on submit creates a single BOQ position + a link per element.
  */
 
-import { useMemo, useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import { X, Search, Plus, CheckCircle2, Loader2, Link2, Sparkles, AlertTriangle, Sigma } from 'lucide-react';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { boqApi, type BOQ, type BOQWithPositions, type Position } from '@/features/boq/api';
-import { createLink, resolveElementUUID } from './api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import { useToastStore } from '@/stores/useToastStore';
+import { useMemo, useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import {
+  X,
+  Search,
+  Plus,
+  CheckCircle2,
+  Loader2,
+  Link2,
+  Sparkles,
+  AlertTriangle,
+  Sigma,
+} from "lucide-react";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import {
+  boqApi,
+  type BOQ,
+  type BOQWithPositions,
+  type Position,
+} from "@/features/boq/api";
+import { createLink, resolveElementUUID } from "./api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import { useToastStore } from "@/stores/useToastStore";
 import {
   suggestQuantityFromBIM,
   formatSuggestionBadge,
   type QuantitySuggestion,
-} from '@/features/boq/suggestQuantityFromBIM';
+} from "@/features/boq/suggestQuantityFromBIM";
 
 /** Backend response shape for POST /api/v1/costs/suggest-for-element/. */
 interface CostSuggestion {
@@ -55,7 +70,7 @@ interface AddToBOQModalProps {
   onLinked?: () => void;
 }
 
-type Tab = 'existing' | 'new';
+type Tab = "existing" | "new";
 
 /** Pick the most appropriate quantity/unit pair for a set of elements.
  *  Thin wrapper over `suggestQuantityFromBIM` — used for the *initial*
@@ -68,27 +83,29 @@ function pickInitialQuantity(elements: BIMElementData[]): {
 } {
   // Empty unit → suggester falls back to volume → area → length → count
   // and picks an inferredUnit that we use as the form's initial unit.
-  const s = suggestQuantityFromBIM(elements, '');
-  return { quantity: s.value, unit: s.inferredUnit || 'pcs', suggestion: s };
+  const s = suggestQuantityFromBIM(elements, "");
+  return { quantity: s.value, unit: s.inferredUnit || "pcs", suggestion: s };
 }
 
 /** Build a default description from the element set. */
 function buildDefaultDescription(elements: BIMElementData[]): string {
   if (elements.length === 1) {
     const el = elements[0]!;
-    return el.name || el.element_type || 'BIM element';
+    return el.name || el.element_type || "BIM element";
   }
   // Bulk: group by element_type
   const types = new Set<string>();
   for (const el of elements) {
     if (el.element_type) types.add(el.element_type);
   }
-  const typeLabel = Array.from(types).slice(0, 3).join(', ') || 'BIM elements';
+  const typeLabel = Array.from(types).slice(0, 3).join(", ") || "BIM elements";
   return `${typeLabel} (${elements.length.toLocaleString()} elements from BIM model)`;
 }
 
 /** Extract a merged classification from all elements (first non-empty wins). */
-function mergeClassification(elements: BIMElementData[]): Record<string, string> {
+function mergeClassification(
+  elements: BIMElementData[],
+): Record<string, string> {
   const out: Record<string, string> = {};
   for (const el of elements) {
     if (!el.classification) continue;
@@ -110,23 +127,27 @@ export default function AddToBOQModal({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [tab, setTab] = useState<Tab>(elements.length > 1 ? 'new' : 'existing');
-  const [search, setSearch] = useState('');
+  const [tab, setTab] = useState<Tab>(elements.length > 1 ? "new" : "existing");
+  const [search, setSearch] = useState("");
   // User's explicit BOQ pick.  `null` = "use the default" (first BOQ in the
   // list once it loads).  We derive the effective id via useMemo below so
   // the positions query never fires with a stale/dangling id.
-  const [userSelectedBOQId, setUserSelectedBOQId] = useState<string | null>(null);
+  const [userSelectedBOQId, setUserSelectedBOQId] = useState<string | null>(
+    null,
+  );
   // Ref to auto-focus the "Target BOQ" select on modal open — it's the
   // first decision the user has to make before picking link-vs-create.
   const targetBoqRef = useRef<HTMLSelectElement>(null);
 
   // ── New position form state ─────────────────────────────────────────
   const defaultQty = useMemo(() => pickInitialQuantity(elements), [elements]);
-  const [description, setDescription] = useState(() => buildDefaultDescription(elements));
+  const [description, setDescription] = useState(() =>
+    buildDefaultDescription(elements),
+  );
   const [unit, setUnit] = useState(defaultQty.unit);
   const [quantity, setQuantity] = useState(defaultQty.quantity.toFixed(3));
-  const [unitRate, setUnitRate] = useState('0');
-  const [ordinal, setOrdinal] = useState('');
+  const [unitRate, setUnitRate] = useState("0");
+  const [ordinal, setOrdinal] = useState("");
   // Tracks whether the user has manually edited the quantity field; if so
   // we DON'T overwrite it when the unit changes — they typed it for a reason.
   const [userEditedQty, setUserEditedQty] = useState(false);
@@ -161,10 +182,10 @@ export default function AddToBOQModal({
     setDescription(buildDefaultDescription(elements));
     setUnit(d.unit);
     setQuantity(d.quantity.toFixed(3));
-    setTab(elements.length > 1 ? 'new' : 'existing');
-    setSearch('');
-    setOrdinal('');
-    setUnitRate('0');
+    setTab(elements.length > 1 ? "new" : "existing");
+    setSearch("");
+    setOrdinal("");
+    setUnitRate("0");
     setUserSelectedBOQId(null);
     setUserEditedQty(false);
   }, [elements]);
@@ -187,15 +208,15 @@ export default function AddToBOQModal({
   const firstEl = elements[0];
   const suggestionsQuery = useQuery<CostSuggestion[]>({
     queryKey: [
-      'cost-suggestions-for-element',
+      "cost-suggestions-for-element",
       firstEl?.id,
       firstEl?.element_type,
       firstEl?.name,
     ],
-    enabled: !!firstEl && tab === 'new',
+    enabled: !!firstEl && tab === "new",
     staleTime: 5 * 60 * 1000,
     queryFn: () =>
-      apiPost<CostSuggestion[]>('/api/v1/costs/suggest-for-element/', {
+      apiPost<CostSuggestion[]>("/api/v1/costs/suggest-for-element/", {
         element_type: firstEl?.element_type ?? null,
         name: firstEl?.name ?? null,
         discipline: firstEl?.discipline ?? null,
@@ -214,7 +235,7 @@ export default function AddToBOQModal({
     setDescription(s.description);
     setUnit(s.unit);
     const num =
-      typeof s.unit_rate === 'number'
+      typeof s.unit_rate === "number"
         ? s.unit_rate
         : Number.parseFloat(String(s.unit_rate));
     if (Number.isFinite(num)) setUnitRate(String(num));
@@ -222,7 +243,7 @@ export default function AddToBOQModal({
 
   // ── Fetch BOQs for this project ────────────────────────────────────
   const boqsQuery = useQuery({
-    queryKey: ['boqs-for-link', projectId],
+    queryKey: ["boqs-for-link", projectId],
     queryFn: () => boqApi.list(projectId),
   });
   const boqs = boqsQuery.data ?? [];
@@ -244,7 +265,7 @@ export default function AddToBOQModal({
   // Guard is doubled: only fire once the BOQ list has actually loaded AND
   // we have a concrete id, to avoid an enabled=true → queryFn(null) window.
   const positionsQuery = useQuery<BOQWithPositions>({
-    queryKey: ['boq-positions-for-link', selectedBOQId],
+    queryKey: ["boq-positions-for-link", selectedBOQId],
     queryFn: () => boqApi.get(selectedBOQId!),
     enabled: !!selectedBOQId && !boqsQuery.isLoading,
   });
@@ -262,8 +283,8 @@ export default function AddToBOQModal({
       if (p.parent_id) parentIds.add(p.parent_id);
     }
     return positions.filter((p) => {
-      const unit = (p.unit ?? '').trim();
-      if (unit === '' || unit === '—' || unit === '-') return false;
+      const unit = (p.unit ?? "").trim();
+      if (unit === "" || unit === "—" || unit === "-") return false;
       // Position acts as a section header when other rows are nested under it.
       if (parentIds.has(p.id)) return false;
       if (!q) return true;
@@ -284,35 +305,35 @@ export default function AddToBOQModal({
           await createLink({
             boq_position_id: positionId,
             bim_element_id: resolvedId,
-            link_type: 'manual',
-            confidence: 'high',
+            link_type: "manual",
+            confidence: "high",
           });
           createdCount++;
         } catch (e: unknown) {
           // Duplicate links will 409 — swallow so bulk linking is idempotent
           const err = e as { message?: string };
-          if (!err?.message?.includes('already')) throw e;
+          if (!err?.message?.includes("already")) throw e;
         }
       }
       return createdCount;
     },
     onSuccess: (count) => {
       addToast({
-        type: 'success',
-        title: t('bim.link_success_title', { defaultValue: 'Linked‌⁠‍' }),
-        message: t('bim.link_success', {
-          defaultValue: 'Linked {{count}} element(s) to BOQ position‌⁠‍',
+        type: "success",
+        title: t("bim.link_success_title", { defaultValue: "Linked‌⁠‍" }),
+        message: t("bim.link_success", {
+          defaultValue: "Linked {{count}} element(s) to BOQ position‌⁠‍",
           count,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['bim-elements'] });
+      qc.invalidateQueries({ queryKey: ["bim-elements"] });
       onLinked?.();
       onClose();
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -321,7 +342,7 @@ export default function AddToBOQModal({
   // ── Mutation: create a new position + link ──────────────────────────
   const createNewMut = useMutation({
     mutationFn: async () => {
-      if (!selectedBOQId) throw new Error('No BOQ selected');
+      if (!selectedBOQId) throw new Error("No BOQ selected");
       const qty = Number.parseFloat(quantity) || 0;
       const rate = Number.parseFloat(unitRate) || 0;
       // Pick an auto-ordinal: last position ordinal + 1 (simple numeric suffix)
@@ -344,36 +365,41 @@ export default function AddToBOQModal({
           await createLink({
             boq_position_id: newPos.id,
             bim_element_id: resolvedId,
-            link_type: 'manual',
-            confidence: 'high',
+            link_type: "manual",
+            confidence: "high",
           });
           linkCount++;
         } catch (e: unknown) {
           const err = e as { message?: string };
-          if (!err?.message?.includes('already')) throw e;
+          if (!err?.message?.includes("already")) throw e;
         }
       }
       return { position: newPos, linkCount };
     },
     onSuccess: ({ linkCount }) => {
       addToast({
-        type: 'success',
-        title: t('bim.link_created_new_title', { defaultValue: 'Position created‌⁠‍' }),
-        message: t('bim.link_created_new', {
-          defaultValue: 'Created BOQ position and linked {{count}} element(s)‌⁠‍',
+        type: "success",
+        title: t("bim.link_created_new_title", {
+          defaultValue: "Position created‌⁠‍",
+        }),
+        message: t("bim.link_created_new", {
+          defaultValue:
+            "Created BOQ position and linked {{count}} element(s)‌⁠‍",
           count: linkCount,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['bim-elements'] });
-      qc.invalidateQueries({ queryKey: ['boq-positions-for-link', selectedBOQId] });
-      qc.invalidateQueries({ queryKey: ['boq'] });
+      qc.invalidateQueries({ queryKey: ["bim-elements"] });
+      qc.invalidateQueries({
+        queryKey: ["boq-positions-for-link", selectedBOQId],
+      });
+      qc.invalidateQueries({ queryKey: ["boq"] });
       onLinked?.();
       onClose();
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -397,13 +423,13 @@ export default function AddToBOQModal({
           <div className="flex items-center gap-2">
             <Link2 size={16} className="text-oe-blue" />
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('bim.add_to_boq_title', { defaultValue: 'Add to BOQ‌⁠‍' })}
+              {t("bim.add_to_boq_title", { defaultValue: "Add to BOQ‌⁠‍" })}
             </h2>
             <span className="text-[11px] text-content-tertiary">
               {elements.length === 1
                 ? elements[0]!.name || elements[0]!.element_type
-                : t('bim.add_to_boq_bulk', {
-                    defaultValue: '{{count}} elements',
+                : t("bim.add_to_boq_bulk", {
+                    defaultValue: "{{count}} elements",
                     count: elements.length,
                   })}
             </span>
@@ -411,7 +437,7 @@ export default function AddToBOQModal({
           <button
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -426,18 +452,20 @@ export default function AddToBOQModal({
             <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-oe-blue text-[9px] font-bold text-white">
               1
             </span>
-            {t('bim.target_boq', { defaultValue: 'Target BOQ' })}
+            {t("bim.target_boq", { defaultValue: "Target BOQ" })}
           </label>
           <select
             ref={targetBoqRef}
-            value={selectedBOQId ?? ''}
+            value={selectedBOQId ?? ""}
             onChange={(e) => setUserSelectedBOQId(e.target.value || null)}
             disabled={boqs.length === 0}
             className="w-full px-2 py-1.5 text-sm rounded border border-oe-blue/50 bg-surface-primary ring-2 ring-oe-blue/20 focus:outline-none focus:ring-2 focus:ring-oe-blue"
           >
             {boqs.length === 0 ? (
               <option value="">
-                {t('bim.no_boqs', { defaultValue: 'No BOQs in this project yet' })}
+                {t("bim.no_boqs", {
+                  defaultValue: "No BOQs in this project yet",
+                })}
               </option>
             ) : (
               boqs.map((b: BOQ) => (
@@ -449,9 +477,9 @@ export default function AddToBOQModal({
           </select>
           {boqs.length === 0 && !boqsQuery.isLoading && (
             <p className="text-[11px] text-rose-600 mt-1">
-              {t('bim.no_boqs_help', {
+              {t("bim.no_boqs_help", {
                 defaultValue:
-                  'Create a BOQ in this project first, then return here to link elements.',
+                  "Create a BOQ in this project first, then return here to link elements.",
               })}
             </p>
           )}
@@ -460,20 +488,24 @@ export default function AddToBOQModal({
         {/* Step 2 — choose link-vs-create. */}
         <div className="flex px-5 border-b border-border-light shrink-0">
           <TabButton
-            active={tab === 'existing'}
-            onClick={() => setTab('existing')}
-            label={t('bim.tab_link_existing', { defaultValue: 'Link to existing' })}
+            active={tab === "existing"}
+            onClick={() => setTab("existing")}
+            label={t("bim.tab_link_existing", {
+              defaultValue: "Link to existing",
+            })}
           />
           <TabButton
-            active={tab === 'new'}
-            onClick={() => setTab('new')}
-            label={t('bim.tab_create_new', { defaultValue: 'Create new position' })}
+            active={tab === "new"}
+            onClick={() => setTab("new")}
+            label={t("bim.tab_create_new", {
+              defaultValue: "Create new position",
+            })}
           />
         </div>
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto">
-          {tab === 'existing' ? (
+          {tab === "existing" ? (
             <div className="p-5">
               {/* Search */}
               <div className="relative mb-3">
@@ -485,8 +517,8 @@ export default function AddToBOQModal({
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder={t('bim.search_positions', {
-                    defaultValue: 'Search positions by ordinal or description…',
+                  placeholder={t("bim.search_positions", {
+                    defaultValue: "Search positions by ordinal or description…",
                   })}
                   className="w-full ps-8 pe-3 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
                 />
@@ -495,13 +527,17 @@ export default function AddToBOQModal({
               {positionsQuery.isLoading ? (
                 <div className="flex items-center justify-center py-8 text-content-tertiary">
                   <Loader2 size={16} className="animate-spin mr-2" />
-                  {t('common.loading', { defaultValue: 'Loading…' })}
+                  {t("common.loading", { defaultValue: "Loading…" })}
                 </div>
               ) : pickablePositions.length === 0 ? (
                 <div className="text-center py-8 text-[11px] text-content-tertiary italic">
                   {positions.length === 0
-                    ? t('bim.boq_empty', { defaultValue: 'This BOQ has no positions yet' })
-                    : t('bim.no_match', { defaultValue: 'No positions match your search' })}
+                    ? t("bim.boq_empty", {
+                        defaultValue: "This BOQ has no positions yet",
+                      })
+                    : t("bim.no_match", {
+                        defaultValue: "No positions match your search",
+                      })}
                 </div>
               ) : (
                 <ul className="space-y-1 max-h-80 overflow-y-auto">
@@ -536,7 +572,9 @@ export default function AddToBOQModal({
           ) : (
             <div className="p-5 space-y-3">
               <div>
-                <Label>{t('bim.form_description', { defaultValue: 'Description' })}</Label>
+                <Label>
+                  {t("bim.form_description", { defaultValue: "Description" })}
+                </Label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -547,7 +585,9 @@ export default function AddToBOQModal({
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <Label>{t('bim.form_ordinal', { defaultValue: 'Ordinal' })}</Label>
+                  <Label>
+                    {t("bim.form_ordinal", { defaultValue: "Ordinal" })}
+                  </Label>
                   <input
                     type="text"
                     value={ordinal}
@@ -557,7 +597,9 @@ export default function AddToBOQModal({
                   />
                 </div>
                 <div>
-                  <Label>{t('bim.form_quantity', { defaultValue: 'Quantity' })}</Label>
+                  <Label>
+                    {t("bim.form_quantity", { defaultValue: "Quantity" })}
+                  </Label>
                   <input
                     type="text"
                     value={quantity}
@@ -569,7 +611,7 @@ export default function AddToBOQModal({
                   />
                 </div>
                 <div>
-                  <Label>{t('bim.form_unit', { defaultValue: 'Unit' })}</Label>
+                  <Label>{t("bim.form_unit", { defaultValue: "Unit" })}</Label>
                   <input
                     type="text"
                     value={unit}
@@ -596,12 +638,14 @@ export default function AddToBOQModal({
 
               <div>
                 <div className="flex items-center justify-between mb-0.5">
-                  <Label>{t('bim.form_unit_rate', { defaultValue: 'Unit rate' })}</Label>
+                  <Label>
+                    {t("bim.form_unit_rate", { defaultValue: "Unit rate" })}
+                  </Label>
                   {suggestionsQuery.isLoading && (
                     <span className="inline-flex items-center gap-1 text-[10px] text-content-tertiary">
                       <Loader2 size={9} className="animate-spin" />
-                      {t('bim.suggesting_costs', {
-                        defaultValue: 'Suggesting…',
+                      {t("bim.suggesting_costs", {
+                        defaultValue: "Suggesting…",
                       })}
                     </span>
                   )}
@@ -621,15 +665,15 @@ export default function AddToBOQModal({
                     <div className="flex items-center gap-1 mb-1">
                       <Sparkles size={10} className="text-amber-500" />
                       <span className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-                        {t('bim.cost_suggestions', {
-                          defaultValue: 'Suggested rates',
+                        {t("bim.cost_suggestions", {
+                          defaultValue: "Suggested rates",
                         })}
                       </span>
                     </div>
                     <ul className="space-y-1">
                       {suggestions.map((s) => {
                         const rateNum =
-                          typeof s.unit_rate === 'number'
+                          typeof s.unit_rate === "number"
                             ? s.unit_rate
                             : Number.parseFloat(String(s.unit_rate));
                         const rateLabel = Number.isFinite(rateNum)
@@ -641,10 +685,10 @@ export default function AddToBOQModal({
                         const confidencePct = Math.round(s.score * 100);
                         const confColor =
                           s.score >= 0.6
-                            ? 'bg-emerald-500'
+                            ? "bg-emerald-500"
                             : s.score >= 0.35
-                              ? 'bg-amber-500'
-                              : 'bg-slate-400';
+                              ? "bg-amber-500"
+                              : "bg-slate-400";
                         return (
                           <li key={s.cost_item_id}>
                             <button
@@ -652,7 +696,7 @@ export default function AddToBOQModal({
                               onClick={() => applySuggestion(s)}
                               title={
                                 s.match_reasons.length > 0
-                                  ? s.match_reasons.join(' • ')
+                                  ? s.match_reasons.join(" • ")
                                   : undefined
                               }
                               className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded border border-border-light bg-surface-secondary hover:bg-oe-blue/5 hover:border-oe-blue/40 text-start transition-colors"
@@ -693,11 +737,14 @@ export default function AddToBOQModal({
 
               <div className="rounded-md border border-oe-blue/20 bg-oe-blue/5 p-2 text-[11px] text-content-secondary">
                 <div className="flex items-start gap-1.5">
-                  <CheckCircle2 size={11} className="text-oe-blue shrink-0 mt-0.5" />
+                  <CheckCircle2
+                    size={11}
+                    className="text-oe-blue shrink-0 mt-0.5"
+                  />
                   <span>
-                    {t('bim.form_note', {
+                    {t("bim.form_note", {
                       defaultValue:
-                        'Submitting will create a new BOQ position and link {{count}} BIM element(s) to it in one step.',
+                        "Submitting will create a new BOQ position and link {{count}} BIM element(s) to it in one step.",
                       count: elements.length,
                     })}
                   </span>
@@ -714,9 +761,9 @@ export default function AddToBOQModal({
             onClick={onClose}
             className="text-xs text-content-tertiary hover:text-content-primary"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
-          {tab === 'new' && (
+          {tab === "new" && (
             <button
               type="button"
               onClick={() => createNewMut.mutate()}
@@ -728,7 +775,9 @@ export default function AddToBOQModal({
               ) : (
                 <Plus size={12} />
               )}
-              {t('bim.form_create_link', { defaultValue: 'Create position and link' })}
+              {t("bim.form_create_link", {
+                defaultValue: "Create position and link",
+              })}
             </button>
           )}
         </div>
@@ -747,13 +796,13 @@ function buildAutoOrdinal(positions: Position[]): string {
   // list refetches). Scan existing BIM-NNN entries and pick next.
   let maxBim = 0;
   for (const p of positions) {
-    const m = /^BIM-(\d+)$/i.exec((p.ordinal || '').trim());
+    const m = /^BIM-(\d+)$/i.exec((p.ordinal || "").trim());
     if (m) {
       const n = Number.parseInt(m[1]!, 10);
       if (n > maxBim) maxBim = n;
     }
   }
-  return `BIM-${String(maxBim + 1).padStart(3, '0')}`;
+  return `BIM-${String(maxBim + 1).padStart(3, "0")}`;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -779,8 +828,8 @@ function TabButton({
       onClick={onClick}
       className={`px-3 py-2 text-xs font-medium border-b-2 transition-colors ${
         active
-          ? 'text-oe-blue border-oe-blue'
-          : 'text-content-tertiary border-transparent hover:text-content-primary'
+          ? "text-oe-blue border-oe-blue"
+          : "text-content-tertiary border-transparent hover:text-content-primary"
       }`}
     >
       {label}
@@ -811,15 +860,15 @@ function BIMQuantitySuggestionBadge({
   onResetToSuggestion: () => void;
   t: (k: string, opts?: Record<string, unknown>) => string;
 }) {
-  if (suggestion.source === 'no_elements') return null;
+  if (suggestion.source === "no_elements") return null;
 
-  const isLow = suggestion.confidence === 'low';
-  const isMedium = suggestion.confidence === 'medium';
+  const isLow = suggestion.confidence === "low";
+  const isMedium = suggestion.confidence === "medium";
   const tone = isLow
-    ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-300/60 dark:border-amber-700/40 text-amber-800 dark:text-amber-300'
+    ? "bg-amber-50 dark:bg-amber-950/20 border-amber-300/60 dark:border-amber-700/40 text-amber-800 dark:text-amber-300"
     : isMedium
-      ? 'bg-oe-blue/5 border-oe-blue/30 text-oe-blue'
-      : 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-700/40 text-emerald-800 dark:text-emerald-300';
+      ? "bg-oe-blue/5 border-oe-blue/30 text-oe-blue"
+      : "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-700/40 text-emerald-800 dark:text-emerald-300";
 
   const icon = isLow ? (
     <AlertTriangle size={11} className="shrink-0" />
@@ -832,28 +881,29 @@ function BIMQuantitySuggestionBadge({
   // Low-confidence tooltip explains *why* it's low so the estimator
   // knows what to verify before accepting.
   const lowTooltip =
-    suggestion.source === 'computed_mass_from_density'
-      ? t('bim.qty_low_density', {
+    suggestion.source === "computed_mass_from_density"
+      ? t("bim.qty_low_density", {
           defaultValue:
-            'Mass was computed from volume × material density — verify the density value before accepting.',
+            "Mass was computed from volume × material density — verify the density value before accepting.",
         })
-      : suggestion.source === 'unit_unknown'
-      ? t('bim.qty_low_unit', {
-          defaultValue:
-            'Unit not recognised — falling back to element count. Pick a known unit (m³ / m² / m / kg / pcs / lsum) for a better suggestion.',
-        })
-      : suggestion.value === 0
-      ? t('bim.qty_low_missing', {
-          defaultValue:
-            'No matching geometric field found on these elements. Check the BIM model has the expected quantity properties.',
-        })
-      : t('bim.qty_low_generic', {
-          defaultValue: 'Low-confidence suggestion — verify before accepting.',
-        });
+      : suggestion.source === "unit_unknown"
+        ? t("bim.qty_low_unit", {
+            defaultValue:
+              "Unit not recognised — falling back to element count. Pick a known unit (m³ / m² / m / kg / pcs / lsum) for a better suggestion.",
+          })
+        : suggestion.value === 0
+          ? t("bim.qty_low_missing", {
+              defaultValue:
+                "No matching geometric field found on these elements. Check the BIM model has the expected quantity properties.",
+            })
+          : t("bim.qty_low_generic", {
+              defaultValue:
+                "Low-confidence suggestion — verify before accepting.",
+            });
 
   return (
     <div
-      className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border text-[11px] ${tone} ${userEdited ? 'opacity-60' : ''}`}
+      className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border text-[11px] ${tone} ${userEdited ? "opacity-60" : ""}`}
       role="status"
       aria-live="polite"
     >
@@ -866,7 +916,7 @@ function BIMQuantitySuggestionBadge({
         </span>
         {userEdited && (
           <span className="text-[10px] italic text-content-tertiary shrink-0">
-            {t('bim.qty_edited_marker', { defaultValue: '(edited)' })}
+            {t("bim.qty_edited_marker", { defaultValue: "(edited)" })}
           </span>
         )}
       </div>
@@ -876,7 +926,7 @@ function BIMQuantitySuggestionBadge({
           onClick={onResetToSuggestion}
           className="text-[10px] font-medium underline hover:no-underline shrink-0"
         >
-          {t('bim.qty_use_suggestion', { defaultValue: 'Use suggestion' })}
+          {t("bim.qty_use_suggestion", { defaultValue: "Use suggestion" })}
         </button>
       )}
     </div>

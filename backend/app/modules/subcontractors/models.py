@@ -19,7 +19,7 @@ import uuid
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import JSON, Boolean, Date, DateTime, ForeignKey, Numeric, String, Text
+from sqlalchemy import JSON, Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import GUID, Base
@@ -47,19 +47,56 @@ class Subcontractor(Base):
         server_default="[]",
     )
     prequalification_status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="pending", index=True,
+        String(32),
+        nullable=False,
+        default="pending",
+        index=True,
     )
     rating_score: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     country: Mapped[str | None] = mapped_column(String(2), nullable=True)
     address: Mapped[dict | None] = mapped_column(JSON, nullable=True)  # type: ignore[assignment]
     website: Mapped[str | None] = mapped_column(String(500), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    # ── Wave 4 / T12: BuildingConnected-style prequal + insurance tracking ──
+    # All nullable so legacy rows (created before v3093) still load.
+    prequal_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    insurance_expiry_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True,
+        index=True,
+    )
+    insurance_doc_id: Mapped[uuid.UUID | None] = mapped_column(
+        GUID(),
+        nullable=True,
+    )
+    prequal_questionnaire: Mapped[dict | None] = mapped_column(  # type: ignore[assignment]
+        JSON,
+        nullable=True,
+    )
+    prequal_completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    blocked_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    is_blocked: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="0",
+    )
     created_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
-        "metadata", JSON, nullable=False, default=dict, server_default="{}",
+        "metadata",
+        JSON,
+        nullable=False,
+        default=dict,
+        server_default="{}",
     )
 
     def __repr__(self) -> str:
@@ -100,10 +137,16 @@ class PrequalificationApplication(Base):
     )
     submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="draft", index=True,
+        String(32),
+        nullable=False,
+        default="draft",
+        index=True,
     )
     answers: Mapped[dict] = mapped_column(  # type: ignore[assignment]
-        JSON, nullable=False, default=dict, server_default="{}",
+        JSON,
+        nullable=False,
+        default=dict,
+        server_default="{}",
     )
     reviewer_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     decision_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -131,12 +174,19 @@ class Certificate(Base):
     valid_until: Mapped[date | None] = mapped_column(Date, nullable=True, index=True)
     document_url: Mapped[str | None] = mapped_column(String(1000), nullable=True)
     status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="valid", index=True,
+        String(32),
+        nullable=False,
+        default="valid",
+        index=True,
     )
     revoked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
-        "metadata", JSON, nullable=False, default=dict, server_default="{}",
+        "metadata",
+        JSON,
+        nullable=False,
+        default=dict,
+        server_default="{}",
     )
 
     def __repr__(self) -> str:
@@ -162,22 +212,35 @@ class SubcontractAgreement(Base):
     )
     title: Mapped[str] = mapped_column(String(500), nullable=False)
     total_value: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     currency: Mapped[str] = mapped_column(String(3), nullable=False, server_default="")
     start_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     retention_percent: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("5.0"), server_default="5.0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("5.0"),
+        server_default="5.0",
     )
     retention_release_event: Mapped[str | None] = mapped_column(String(120), nullable=True)
     status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="draft", index=True,
+        String(32),
+        nullable=False,
+        default="draft",
+        index=True,
     )
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
-        "metadata", JSON, nullable=False, default=dict, server_default="{}",
+        "metadata",
+        JSON,
+        nullable=False,
+        default=dict,
+        server_default="{}",
     )
 
     def __repr__(self) -> str:
@@ -198,13 +261,22 @@ class WorkPackage(Base):
     name: Mapped[str] = mapped_column(String(500), nullable=False)
     scope: Mapped[str | None] = mapped_column(Text, nullable=True)
     planned_value: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     completion_percent: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="planned", index=True,
+        String(32),
+        nullable=False,
+        default="planned",
+        index=True,
     )
 
     def __repr__(self) -> str:
@@ -226,32 +298,50 @@ class PaymentApplication(Base):
     period_start: Mapped[date | None] = mapped_column(Date, nullable=True)
     period_end: Mapped[date | None] = mapped_column(Date, nullable=True)
     gross_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     retention_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     net_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     currency: Mapped[str] = mapped_column(String(3), nullable=False, server_default="")
     status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="submitted", index=True,
+        String(32),
+        nullable=False,
+        default="submitted",
+        index=True,
     )
     submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     foreman_approved_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True,
+        DateTime(timezone=True),
+        nullable=True,
     )
     foreman_approved_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
     finance_approved_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True,
+        DateTime(timezone=True),
+        nullable=True,
     )
     finance_approved_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
-        "metadata", JSON, nullable=False, default=dict, server_default="{}",
+        "metadata",
+        JSON,
+        nullable=False,
+        default=dict,
+        server_default="{}",
     )
 
     def __repr__(self) -> str:
@@ -276,13 +366,22 @@ class PaymentApplicationLine(Base):
         index=True,
     )
     claimed_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     certified_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     approved_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
 
     def __repr__(self) -> str:
@@ -307,10 +406,16 @@ class RetentionLedger(Base):
         index=True,
     )
     accrued_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     released_amount: Mapped[Decimal] = mapped_column(
-        Numeric(18, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(18, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     released_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     release_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -336,35 +441,51 @@ class SubcontractorRating(Base):
     )
     period: Mapped[str] = mapped_column(String(7), nullable=False)  # "YYYY-MM"
     quality_score: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     hse_score: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     schedule_score: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     cost_score: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     overall_score: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), nullable=False, default=Decimal("0"), server_default="0",
+        Numeric(5, 2),
+        nullable=False,
+        default=Decimal("0"),
+        server_default="0",
     )
     basis: Mapped[dict] = mapped_column(  # type: ignore[assignment]
-        JSON, nullable=False, default=dict, server_default="{}",
+        JSON,
+        nullable=False,
+        default=dict,
+        server_default="{}",
     )
 
     def __repr__(self) -> str:
-        return (
-            f"<SubcontractorRating sub={self.subcontractor_id} "
-            f"period={self.period} overall={self.overall_score}>"
-        )
+        return f"<SubcontractorRating sub={self.subcontractor_id} period={self.period} overall={self.overall_score}>"
 
 
 # OCR auto-extraction hook stub: deferred per Module 4 backend scope.
 # When implemented, parse certificate PDFs and populate Certificate fields.
 async def ocr_extract_certificate_hook(  # pragma: no cover - stub
-    document_url: str, cert_type: str,
+    document_url: str,
+    cert_type: str,
 ) -> dict:
     """Stub for OCR-based certificate field auto-extraction.
 

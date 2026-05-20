@@ -15,9 +15,9 @@
 // Always renders 200; the backend distinguishes states from the JSON
 // payload, not from HTTP status (see costs/router.py:embedder_status).
 
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 import {
   CheckCircle2,
   ChevronDown,
@@ -27,9 +27,9 @@ import {
   ExternalLink,
   Loader2,
   Sparkles,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { fetchEmbedderStatus, type EmbedderStatus } from './api';
+import { fetchEmbedderStatus, type EmbedderStatus } from "./api";
 
 function CopyableCommand({ command }: { command: string }) {
   const { t } = useTranslation();
@@ -48,7 +48,10 @@ function CopyableCommand({ command }: { command: string }) {
     } catch {
       // Fallback: select-and-prompt; clipboard may be blocked under
       // insecure origin or strict permissions policy.
-      window.prompt(t('match_elements.embedder_copy_command', 'Copy command'), command);
+      window.prompt(
+        t("match_elements.embedder_copy_command", "Copy command"),
+        command,
+      );
     }
   };
 
@@ -61,17 +64,17 @@ function CopyableCommand({ command }: { command: string }) {
         type="button"
         onClick={onCopy}
         className="shrink-0 inline-flex items-center gap-1.5 px-3 border-l border-amber-300/80 dark:border-amber-700/80 bg-amber-100/70 hover:bg-amber-200/70 dark:bg-amber-900/40 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-100 text-xs font-semibold transition"
-        aria-label={t('match_elements.embedder_copy_command', 'Copy command')}
+        aria-label={t("match_elements.embedder_copy_command", "Copy command")}
       >
         {copied ? (
           <>
             <CheckCircle2 className="w-3.5 h-3.5" />
-            {t('match_elements.embedder_copied', 'Copied')}
+            {t("match_elements.embedder_copied", "Copied")}
           </>
         ) : (
           <>
             <Copy className="w-3.5 h-3.5" />
-            {t('match_elements.embedder_copy_command', 'Copy command')}
+            {t("match_elements.embedder_copy_command", "Copy command")}
           </>
         )}
       </button>
@@ -87,15 +90,15 @@ function TrustBadges({ status }: { status: EmbedderStatus }) {
         {status.license}
       </span>
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-sky-800 dark:text-sky-200 font-medium">
-        {t('match_elements.embedder_languages_caption', '{{n}}+ languages', {
+        {t("match_elements.embedder_languages_caption", "{{n}}+ languages", {
           n: status.languages_supported,
         })}
       </span>
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-indigo-800 dark:text-indigo-200 font-medium">
-        {t('match_elements.embedder_runs_locally', 'Runs locally')}
+        {t("match_elements.embedder_runs_locally", "Runs locally")}
       </span>
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
-        {t('match_elements.embedder_no_api_key', 'No API key')}
+        {t("match_elements.embedder_no_api_key", "No API key")}
       </span>
     </div>
   );
@@ -105,7 +108,7 @@ function LoadedState({ status }: { status: EmbedderStatus }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const sizeMb = status.int8_mode ? status.size_mb_int8 : status.size_mb_fp32;
-  const precision = status.int8_mode ? 'INT8 ONNX' : 'FP32';
+  const precision = status.int8_mode ? "INT8 ONNX" : "FP32";
 
   return (
     <div className="rounded-xl border border-emerald-300/80 dark:border-emerald-800/80 bg-emerald-50/60 dark:bg-emerald-950/20">
@@ -120,12 +123,12 @@ function LoadedState({ status }: { status: EmbedderStatus }) {
         </span>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold text-emerald-900 dark:text-emerald-100 leading-tight">
-            {t('match_elements.embedder_loaded_title', 'Language model ready')}
+            {t("match_elements.embedder_loaded_title", "Language model ready")}
           </div>
           <div className="text-[11px] text-emerald-800/80 dark:text-emerald-200/80 truncate">
             {t(
-              'match_elements.embedder_loaded_caption',
-              '{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages',
+              "match_elements.embedder_loaded_caption",
+              "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
               {
                 model: status.model_name,
                 precision,
@@ -147,11 +150,11 @@ function LoadedState({ status }: { status: EmbedderStatus }) {
           <TrustBadges status={status} />
           <div className="text-[11px] text-content-tertiary">
             {t(
-              'match_elements.embedder_runtime_caption',
-              'Runtime: {{runtime}} · model_loaded={{loaded}}',
+              "match_elements.embedder_runtime_caption",
+              "Runtime: {{runtime}} · model_loaded={{loaded}}",
               {
                 runtime: status.model_id_runtime,
-                loaded: status.model_loaded ? 'true' : 'false',
+                loaded: status.model_loaded ? "true" : "false",
               },
             )}
           </div>
@@ -162,7 +165,7 @@ function LoadedState({ status }: { status: EmbedderStatus }) {
             className="inline-flex items-center gap-1 text-[11px] text-emerald-800 dark:text-emerald-200 underline hover:opacity-80"
           >
             <ExternalLink className="w-3 h-3" />
-            {t('match_elements.embedder_homepage_link', 'Model homepage')}
+            {t("match_elements.embedder_homepage_link", "Model homepage")}
           </a>
         </div>
       )}
@@ -184,8 +187,8 @@ function MissingState({ status }: { status: EmbedderStatus }) {
           <div className="flex items-center gap-2 flex-wrap">
             <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100 leading-tight">
               {t(
-                'match_elements.embedder_required_title',
-                'Free language model required',
+                "match_elements.embedder_required_title",
+                "Free language model required",
               )}
             </h3>
             <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-300" />
@@ -195,8 +198,8 @@ function MissingState({ status }: { status: EmbedderStatus }) {
           </div>
           <p className="mt-2 text-[12.5px] text-amber-900/90 dark:text-amber-100/90 leading-relaxed">
             {t(
-              'match_elements.embedder_required_body',
-              'OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:',
+              "match_elements.embedder_required_body",
+              "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
             )}
           </p>
         </div>
@@ -206,13 +209,13 @@ function MissingState({ status }: { status: EmbedderStatus }) {
 
       <div className="text-[11px] text-amber-900/80 dark:text-amber-100/80">
         {t(
-          'match_elements.embedder_install_hint_after',
-          'After install, restart the backend.',
-        )}{' '}
+          "match_elements.embedder_install_hint_after",
+          "After install, restart the backend.",
+        )}{" "}
         <span className="text-amber-800/70 dark:text-amber-200/70">
           {t(
-            'match_elements.embedder_size_caption',
-            '~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).',
+            "match_elements.embedder_size_caption",
+            "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
             { int8: sizeInt8, fp32: sizeFp32 },
           )}
         </span>
@@ -226,7 +229,7 @@ function MissingState({ status }: { status: EmbedderStatus }) {
           className="inline-flex items-center gap-1 underline hover:opacity-80"
         >
           <ExternalLink className="w-3 h-3" />
-          {t('match_elements.embedder_homepage_link', 'Model homepage')}
+          {t("match_elements.embedder_homepage_link", "Model homepage")}
         </a>
       </div>
     </div>
@@ -240,7 +243,7 @@ function MissingState({ status }: { status: EmbedderStatus }) {
 export function EmbedderStatusCard() {
   const { t } = useTranslation();
   const q = useQuery({
-    queryKey: ['embedder-status'],
+    queryKey: ["embedder-status"],
     queryFn: fetchEmbedderStatus,
     staleTime: 60_000,
     refetchInterval: 60_000,
@@ -255,7 +258,7 @@ export function EmbedderStatusCard() {
         aria-live="polite"
       >
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
-        {t('match_elements.embedder_loading', 'Checking language model…')}
+        {t("match_elements.embedder_loading", "Checking language model…")}
       </div>
     );
   }

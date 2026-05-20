@@ -23,9 +23,7 @@ _SIGNER_ROLE_RE = r"^(owner|supervisor|inspector|client)$"
 # so it MUST be constrained to the platform image allow-list — otherwise a
 # caller could persist e.g. ``text/html`` and the UI would trust it. Mirrors
 # documents.ALLOWED_IMAGE_TYPES (+ avif, which site cameras now emit).
-_PHOTO_MIME_RE = (
-    r"^image/(jpeg|png|gif|webp|heic|heif|avif|tiff)$"
-)
+_PHOTO_MIME_RE = r"^image/(jpeg|png|gif|webp|heic|heif|avif|tiff)$"
 
 
 # ── DailyDiary ───────────────────────────────────────────────────────────
@@ -240,9 +238,7 @@ class DiaryPhotoCreate(BaseModel):
     location_label: str | None = Field(default=None, max_length=255)
     file_url: str = Field(..., min_length=1, max_length=2000)
     thumbnail_url: str | None = Field(default=None, max_length=2000)
-    mime_type: str = Field(
-        default="image/jpeg", max_length=80, pattern=_PHOTO_MIME_RE
-    )
+    mime_type: str = Field(default="image/jpeg", max_length=80, pattern=_PHOTO_MIME_RE)
     file_size_bytes: int = Field(default=0, ge=0)
     description: str | None = Field(default=None, max_length=20000)
     tags: list[str] = Field(default_factory=list)

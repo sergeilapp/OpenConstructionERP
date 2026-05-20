@@ -11,9 +11,9 @@ import {
   useQuery,
   useQueryClient,
   type UseQueryResult,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import { apiDelete, apiGet, apiPost, apiPut } from '@/shared/lib/api';
+import { apiDelete, apiGet, apiPost, apiPut } from "@/shared/lib/api";
 
 // ── Wire shapes (mirror the pinned contract) ───────────────────────────────
 
@@ -81,14 +81,14 @@ export interface UpdatePipelineBody {
 }
 
 export type RunStatus =
-  | 'queued'
-  | 'running'
-  | 'done'
-  | 'success'
-  | 'error'
-  | 'failed'
-  | 'paused'
-  | 'cancelled'
+  | "queued"
+  | "running"
+  | "done"
+  | "success"
+  | "error"
+  | "failed"
+  | "paused"
+  | "cancelled"
   | string;
 
 export interface RunNodeState {
@@ -145,12 +145,13 @@ export interface NodeTypeDef {
 // ── Query keys ─────────────────────────────────────────────────────────────
 
 export const pipelineKeys = {
-  all: ['pipelines'] as const,
-  list: (projectId?: string | null) => ['pipelines', 'list', projectId ?? null] as const,
-  detail: (id: string) => ['pipelines', 'detail', id] as const,
-  nodeTypes: ['pipelines', 'node-types'] as const,
-  runs: (id: string) => ['pipelines', 'runs', id] as const,
-  run: (runId: string) => ['pipelines', 'run', runId] as const,
+  all: ["pipelines"] as const,
+  list: (projectId?: string | null) =>
+    ["pipelines", "list", projectId ?? null] as const,
+  detail: (id: string) => ["pipelines", "detail", id] as const,
+  nodeTypes: ["pipelines", "node-types"] as const,
+  runs: (id: string) => ["pipelines", "runs", id] as const,
+  run: (runId: string) => ["pipelines", "run", runId] as const,
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -158,11 +159,11 @@ export const pipelineKeys = {
 /** A run is finished once it reaches a terminal status. */
 export function isTerminalRunStatus(status?: RunStatus): boolean {
   return (
-    status === 'done' ||
-    status === 'success' ||
-    status === 'error' ||
-    status === 'failed' ||
-    status === 'cancelled'
+    status === "done" ||
+    status === "success" ||
+    status === "error" ||
+    status === "failed" ||
+    status === "cancelled"
   );
 }
 
@@ -175,7 +176,9 @@ export function usePipelineList(
   return useQuery({
     queryKey: pipelineKeys.list(projectId),
     queryFn: async () => {
-      const qs = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+      const qs = projectId
+        ? `?project_id=${encodeURIComponent(projectId)}`
+        : "";
       const data = await apiGet<PipelineSummary[]>(`/v1/pipelines/${qs}`);
       return Array.isArray(data) ? data : [];
     },
@@ -185,7 +188,7 @@ export function usePipelineList(
 /** Fetch one pipeline (graph + policy + meta). */
 export function usePipeline(id: string | undefined): UseQueryResult<Pipeline> {
   return useQuery({
-    queryKey: pipelineKeys.detail(id ?? ''),
+    queryKey: pipelineKeys.detail(id ?? ""),
     enabled: Boolean(id),
     queryFn: () => apiGet<Pipeline>(`/v1/pipelines/${id}`),
   });
@@ -197,7 +200,7 @@ export function useNodeTypes(): UseQueryResult<NodeTypeDef[]> {
     queryKey: pipelineKeys.nodeTypes,
     staleTime: 5 * 60_000,
     queryFn: async () => {
-      const data = await apiGet<NodeTypeDef[]>('/v1/pipelines/node-types/');
+      const data = await apiGet<NodeTypeDef[]>("/v1/pipelines/node-types/");
       return Array.isArray(data) ? data : [];
     },
   });
@@ -207,7 +210,7 @@ export function useCreatePipeline() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: CreatePipelineBody) =>
-      apiPost<Pipeline, CreatePipelineBody>('/v1/pipelines/', body),
+      apiPost<Pipeline, CreatePipelineBody>("/v1/pipelines/", body),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: pipelineKeys.all });
     },
@@ -256,10 +259,12 @@ export function usePipelineRuns(
   enabled = true,
 ): UseQueryResult<PipelineRunSummary[]> {
   return useQuery({
-    queryKey: pipelineKeys.runs(id ?? ''),
+    queryKey: pipelineKeys.runs(id ?? ""),
     enabled: Boolean(id) && enabled,
     queryFn: async () => {
-      const data = await apiGet<PipelineRunSummary[]>(`/v1/pipelines/${id}/runs/`);
+      const data = await apiGet<PipelineRunSummary[]>(
+        `/v1/pipelines/${id}/runs/`,
+      );
       return Array.isArray(data) ? data : [];
     },
   });
@@ -273,7 +278,7 @@ export function usePipelineRun(
   runId: string | undefined,
 ): UseQueryResult<PipelineRunDetail> {
   return useQuery({
-    queryKey: pipelineKeys.run(runId ?? ''),
+    queryKey: pipelineKeys.run(runId ?? ""),
     enabled: Boolean(runId),
     refetchInterval: (query) => {
       const data = query.state.data as PipelineRunDetail | undefined;

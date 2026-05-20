@@ -7,29 +7,29 @@
  */
 
 export type MeasureTool =
-  | 'select'
-  | 'distance'
-  | 'polyline'
-  | 'area'
-  | 'volume'
-  | 'count'
-  | 'cloud'
-  | 'arrow'
-  | 'text'
-  | 'rectangle'
-  | 'highlight';
+  | "select"
+  | "distance"
+  | "polyline"
+  | "area"
+  | "volume"
+  | "count"
+  | "cloud"
+  | "arrow"
+  | "text"
+  | "rectangle"
+  | "highlight";
 
 export type MeasurementType =
-  | 'distance'
-  | 'polyline'
-  | 'area'
-  | 'volume'
-  | 'count'
-  | 'cloud'
-  | 'arrow'
-  | 'text'
-  | 'rectangle'
-  | 'highlight';
+  | "distance"
+  | "polyline"
+  | "area"
+  | "volume"
+  | "count"
+  | "cloud"
+  | "arrow"
+  | "text"
+  | "rectangle"
+  | "highlight";
 
 export interface Point {
   x: number;
@@ -63,22 +63,22 @@ export interface Measurement {
 
 /** Describes a reversible measurement operation for the undo stack. */
 export type UndoOperation =
-  | { kind: 'add_point'; tool: MeasureTool; point: Point }
+  | { kind: "add_point"; tool: MeasureTool; point: Point }
   | {
-      kind: 'complete_measurement';
+      kind: "complete_measurement";
       measurement: Measurement;
       previousActivePoints: Point[];
     }
   | {
-      kind: 'add_count_point';
+      kind: "add_count_point";
       measurementId: string;
       point: Point;
       wasNew: boolean;
       previousMeasurement: Measurement | null;
     }
-  | { kind: 'delete_measurement'; measurement: Measurement }
+  | { kind: "delete_measurement"; measurement: Measurement }
   | {
-      kind: 'change_annotation';
+      kind: "change_annotation";
       measurementId: string;
       previousAnnotation: string;
     };

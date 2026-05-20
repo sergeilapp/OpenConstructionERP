@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /**
  * Six standard resource types — promoted to a first-class column in
@@ -6,12 +6,12 @@ import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
  * description-text inference.
  */
 export type ResourceType =
-  | 'material'
-  | 'labor'
-  | 'equipment'
-  | 'operator'
-  | 'subcontractor'
-  | 'overhead';
+  | "material"
+  | "labor"
+  | "equipment"
+  | "operator"
+  | "subcontractor"
+  | "overhead";
 
 /**
  * Optional, type-specific metadata fields the editor can attach to a
@@ -174,28 +174,46 @@ export interface AIGeneratedAssembly {
 
 export const assembliesApi = {
   list: (params?: Record<string, string>) =>
-    apiGet<AssemblySearchResponse>(`/v1/assemblies/?${new URLSearchParams(params)}`),
+    apiGet<AssemblySearchResponse>(
+      `/v1/assemblies/?${new URLSearchParams(params)}`,
+    ),
   get: (id: string) => apiGet<AssemblyWithComponents>(`/v1/assemblies/${id}`),
-  create: (data: CreateAssemblyData) => apiPost<Assembly>('/v1/assemblies/', data),
+  create: (data: CreateAssemblyData) =>
+    apiPost<Assembly>("/v1/assemblies/", data),
   update: (id: string, data: Partial<CreateAssemblyData>) =>
     apiPatch<Assembly>(`/v1/assemblies/${id}`, data),
   delete: (id: string) => apiDelete(`/v1/assemblies/${id}`),
   addComponent: (assemblyId: string, data: CreateComponentData) =>
-    apiPost<AssemblyComponent>(`/v1/assemblies/${assemblyId}/components/`, data),
-  updateComponent: (assemblyId: string, componentId: string, data: Partial<CreateComponentData>) =>
-    apiPatch<AssemblyComponent>(`/v1/assemblies/${assemblyId}/components/${componentId}`, data),
+    apiPost<AssemblyComponent>(
+      `/v1/assemblies/${assemblyId}/components/`,
+      data,
+    ),
+  updateComponent: (
+    assemblyId: string,
+    componentId: string,
+    data: Partial<CreateComponentData>,
+  ) =>
+    apiPatch<AssemblyComponent>(
+      `/v1/assemblies/${assemblyId}/components/${componentId}`,
+      data,
+    ),
   deleteComponent: (assemblyId: string, componentId: string) =>
     apiDelete(`/v1/assemblies/${assemblyId}/components/${componentId}`),
   applyToBoq: (assemblyId: string, boqId: string, quantity: number) =>
-    apiPost(`/v1/assemblies/${assemblyId}/apply-to-boq/`, { boq_id: boqId, quantity }),
+    apiPost(`/v1/assemblies/${assemblyId}/apply-to-boq/`, {
+      boq_id: boqId,
+      quantity,
+    }),
   aiGenerate: (data: AIGenerateRequest) =>
-    apiPost<AIGeneratedAssembly>('/v1/assemblies/ai-generate/', data),
+    apiPost<AIGeneratedAssembly>("/v1/assemblies/ai-generate/", data),
   reorderComponents: (assemblyId: string, componentIds: string[]) =>
-    apiPost(`/v1/assemblies/${assemblyId}/reorder-components/`, { component_ids: componentIds }),
+    apiPost(`/v1/assemblies/${assemblyId}/reorder-components/`, {
+      component_ids: componentIds,
+    }),
   exportAssembly: (assemblyId: string) =>
     apiGet<AssemblyExport>(`/v1/assemblies/${assemblyId}/export/`),
   importAssembly: (data: AssemblyExport) =>
-    apiPost<Assembly>('/v1/assemblies/import/', { assembly: data }),
+    apiPost<Assembly>("/v1/assemblies/import/", { assembly: data }),
   updateTags: (assemblyId: string, tags: string[]) =>
     apiPatch<Assembly>(`/v1/assemblies/${assemblyId}/tags/`, { tags }),
   getStats: () => apiGet<AssemblyStats>(`/v1/assemblies/stats/`),

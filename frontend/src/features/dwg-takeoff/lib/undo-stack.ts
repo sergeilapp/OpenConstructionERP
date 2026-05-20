@@ -20,7 +20,7 @@
  * off the tail when we exceed it.
  */
 
-import type { DwgAnnotation } from '../api';
+import type { DwgAnnotation } from "../api";
 
 export const MAX_STACK = 50;
 
@@ -28,7 +28,7 @@ export const MAX_STACK = 50;
  *  fields the create endpoint accepts. */
 export interface AnnotationSnapshot {
   id: string;
-  annotation_type: DwgAnnotation['type'];
+  annotation_type: DwgAnnotation["type"];
   points: { x: number; y: number }[];
   text: string | null;
   color: string;
@@ -42,10 +42,10 @@ export interface AnnotationSnapshot {
 }
 
 export type UndoEntry =
-  | { kind: 'create'; id: string; snapshot: AnnotationSnapshot }
-  | { kind: 'delete'; snapshot: AnnotationSnapshot }
+  | { kind: "create"; id: string; snapshot: AnnotationSnapshot }
+  | { kind: "delete"; snapshot: AnnotationSnapshot }
   | {
-      kind: 'edit';
+      kind: "edit";
       id: string;
       before: Partial<AnnotationSnapshot>;
       after: Partial<AnnotationSnapshot>;
@@ -160,7 +160,7 @@ export function snapshotFrom(
  *  tracked separately; ``snapshotFrom`` here is the crash-path fix). */
 interface BackendAnnotationResponse {
   id: string;
-  annotation_type?: DwgAnnotation['type'];
+  annotation_type?: DwgAnnotation["type"];
   geometry?: { points?: { x: number; y: number }[] };
   text?: string | null;
   color?: string;

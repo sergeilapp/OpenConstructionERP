@@ -84,7 +84,11 @@ export function applyZoom(
 }
 
 /** Apply a pan delta (in screen pixels). */
-export function applyPan(vp: ViewportState, dx: number, dy: number): ViewportState {
+export function applyPan(
+  vp: ViewportState,
+  dx: number,
+  dy: number,
+): ViewportState {
   return {
     ...vp,
     offsetX: vp.offsetX + dx,

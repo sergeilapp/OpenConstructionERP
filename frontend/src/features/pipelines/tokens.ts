@@ -13,7 +13,7 @@
  * (the project uses `darkMode: 'class'`), so consumers never write `dark:`
  * themselves when they use these token classes.
  */
-import type { ComponentType } from 'react';
+import type { ComponentType } from "react";
 import {
   Database,
   Download,
@@ -23,7 +23,7 @@ import {
   Sparkles,
   Workflow,
   type LucideProps,
-} from 'lucide-react';
+} from "lucide-react";
 
 // ── Node categories ────────────────────────────────────────────────────────
 
@@ -34,13 +34,13 @@ import {
  * without touching component code.
  */
 export type NodeCategory =
-  | 'trigger' // Sources / Triggers (green)
-  | 'source' // Get data (blue)
-  | 'transform' // Transform (purple)
-  | 'gate' // Validate (amber)
-  | 'ai' // AI (violet, always carries a confidence badge)
-  | 'action' // Actions / Outputs (slate)
-  | 'flow'; // Flow control (gray)
+  | "trigger" // Sources / Triggers (green)
+  | "source" // Get data (blue)
+  | "transform" // Transform (purple)
+  | "gate" // Validate (amber)
+  | "ai" // AI (violet, always carries a confidence badge)
+  | "action" // Actions / Outputs (slate)
+  | "flow"; // Flow control (gray)
 
 /** Tailwind class set for one category in both light and dark themes. */
 export interface CategoryClassSet {
@@ -70,113 +70,113 @@ export interface CategoryTokenEntry {
 export const NODE_CATEGORIES: Record<NodeCategory, CategoryTokenEntry> = {
   trigger: {
     classes: {
-      bg: 'bg-green-100 dark:bg-green-900/40',
-      bgSelected: 'bg-green-200 dark:bg-green-800/60',
-      border: 'border-green-300 dark:border-green-700',
-      borderSelected: 'border-green-500 dark:border-green-500',
-      text: 'text-green-900 dark:text-green-100',
-      textSubtle: 'text-green-700 dark:text-green-300',
-      icon: 'text-green-700 dark:text-green-300',
+      bg: "bg-green-100 dark:bg-green-900/40",
+      bgSelected: "bg-green-200 dark:bg-green-800/60",
+      border: "border-green-300 dark:border-green-700",
+      borderSelected: "border-green-500 dark:border-green-500",
+      text: "text-green-900 dark:text-green-100",
+      textSubtle: "text-green-700 dark:text-green-300",
+      icon: "text-green-700 dark:text-green-300",
     },
     Icon: PlayCircle,
-    labelKey: 'pipeline.palette.cat_trigger',
-    labelDefault: 'Sources / Triggers',
+    labelKey: "pipeline.palette.cat_trigger",
+    labelDefault: "Sources / Triggers",
   },
   source: {
     classes: {
-      bg: 'bg-blue-100 dark:bg-blue-900/40',
-      bgSelected: 'bg-blue-200 dark:bg-blue-800/60',
-      border: 'border-blue-300 dark:border-blue-700',
-      borderSelected: 'border-blue-500 dark:border-blue-500',
-      text: 'text-blue-900 dark:text-blue-100',
-      textSubtle: 'text-blue-700 dark:text-blue-300',
-      icon: 'text-blue-700 dark:text-blue-300',
+      bg: "bg-blue-100 dark:bg-blue-900/40",
+      bgSelected: "bg-blue-200 dark:bg-blue-800/60",
+      border: "border-blue-300 dark:border-blue-700",
+      borderSelected: "border-blue-500 dark:border-blue-500",
+      text: "text-blue-900 dark:text-blue-100",
+      textSubtle: "text-blue-700 dark:text-blue-300",
+      icon: "text-blue-700 dark:text-blue-300",
     },
     Icon: Database,
-    labelKey: 'pipeline.palette.cat_source',
-    labelDefault: 'Get data',
+    labelKey: "pipeline.palette.cat_source",
+    labelDefault: "Get data",
   },
   transform: {
     classes: {
-      bg: 'bg-purple-100 dark:bg-purple-900/40',
-      bgSelected: 'bg-purple-200 dark:bg-purple-800/60',
-      border: 'border-purple-300 dark:border-purple-700',
-      borderSelected: 'border-purple-500 dark:border-purple-500',
-      text: 'text-purple-900 dark:text-purple-100',
-      textSubtle: 'text-purple-700 dark:text-purple-300',
-      icon: 'text-purple-700 dark:text-purple-300',
+      bg: "bg-purple-100 dark:bg-purple-900/40",
+      bgSelected: "bg-purple-200 dark:bg-purple-800/60",
+      border: "border-purple-300 dark:border-purple-700",
+      borderSelected: "border-purple-500 dark:border-purple-500",
+      text: "text-purple-900 dark:text-purple-100",
+      textSubtle: "text-purple-700 dark:text-purple-300",
+      icon: "text-purple-700 dark:text-purple-300",
     },
     Icon: Filter,
-    labelKey: 'pipeline.palette.cat_transform',
-    labelDefault: 'Transform',
+    labelKey: "pipeline.palette.cat_transform",
+    labelDefault: "Transform",
   },
   gate: {
     classes: {
-      bg: 'bg-amber-100 dark:bg-amber-900/40',
-      bgSelected: 'bg-amber-200 dark:bg-amber-800/60',
-      border: 'border-amber-300 dark:border-amber-700',
-      borderSelected: 'border-amber-500 dark:border-amber-500',
-      text: 'text-amber-900 dark:text-amber-100',
-      textSubtle: 'text-amber-700 dark:text-amber-300',
-      icon: 'text-amber-700 dark:text-amber-300',
+      bg: "bg-amber-100 dark:bg-amber-900/40",
+      bgSelected: "bg-amber-200 dark:bg-amber-800/60",
+      border: "border-amber-300 dark:border-amber-700",
+      borderSelected: "border-amber-500 dark:border-amber-500",
+      text: "text-amber-900 dark:text-amber-100",
+      textSubtle: "text-amber-700 dark:text-amber-300",
+      icon: "text-amber-700 dark:text-amber-300",
     },
     Icon: ShieldCheck,
-    labelKey: 'pipeline.palette.cat_gate',
-    labelDefault: 'Validate',
+    labelKey: "pipeline.palette.cat_gate",
+    labelDefault: "Validate",
   },
   ai: {
     classes: {
-      bg: 'bg-violet-100 dark:bg-violet-900/40',
-      bgSelected: 'bg-violet-200 dark:bg-violet-800/60',
-      border: 'border-violet-300 dark:border-violet-700',
-      borderSelected: 'border-violet-500 dark:border-violet-500',
-      text: 'text-violet-900 dark:text-violet-100',
-      textSubtle: 'text-violet-700 dark:text-violet-300',
-      icon: 'text-violet-700 dark:text-violet-300',
+      bg: "bg-violet-100 dark:bg-violet-900/40",
+      bgSelected: "bg-violet-200 dark:bg-violet-800/60",
+      border: "border-violet-300 dark:border-violet-700",
+      borderSelected: "border-violet-500 dark:border-violet-500",
+      text: "text-violet-900 dark:text-violet-100",
+      textSubtle: "text-violet-700 dark:text-violet-300",
+      icon: "text-violet-700 dark:text-violet-300",
     },
     Icon: Sparkles,
-    labelKey: 'pipeline.palette.cat_ai',
-    labelDefault: 'AI',
+    labelKey: "pipeline.palette.cat_ai",
+    labelDefault: "AI",
   },
   action: {
     classes: {
-      bg: 'bg-slate-100 dark:bg-slate-800',
-      bgSelected: 'bg-slate-200 dark:bg-slate-700',
-      border: 'border-slate-300 dark:border-slate-600',
-      borderSelected: 'border-slate-500 dark:border-slate-400',
-      text: 'text-slate-900 dark:text-slate-100',
-      textSubtle: 'text-slate-600 dark:text-slate-400',
-      icon: 'text-slate-700 dark:text-slate-300',
+      bg: "bg-slate-100 dark:bg-slate-800",
+      bgSelected: "bg-slate-200 dark:bg-slate-700",
+      border: "border-slate-300 dark:border-slate-600",
+      borderSelected: "border-slate-500 dark:border-slate-400",
+      text: "text-slate-900 dark:text-slate-100",
+      textSubtle: "text-slate-600 dark:text-slate-400",
+      icon: "text-slate-700 dark:text-slate-300",
     },
     Icon: Download,
-    labelKey: 'pipeline.palette.cat_action',
-    labelDefault: 'Actions / Outputs',
+    labelKey: "pipeline.palette.cat_action",
+    labelDefault: "Actions / Outputs",
   },
   flow: {
     classes: {
-      bg: 'bg-gray-100 dark:bg-gray-800',
-      bgSelected: 'bg-gray-200 dark:bg-gray-700',
-      border: 'border-gray-300 dark:border-gray-600',
-      borderSelected: 'border-gray-500 dark:border-gray-400',
-      text: 'text-gray-900 dark:text-gray-100',
-      textSubtle: 'text-gray-600 dark:text-gray-400',
-      icon: 'text-gray-700 dark:text-gray-300',
+      bg: "bg-gray-100 dark:bg-gray-800",
+      bgSelected: "bg-gray-200 dark:bg-gray-700",
+      border: "border-gray-300 dark:border-gray-600",
+      borderSelected: "border-gray-500 dark:border-gray-400",
+      text: "text-gray-900 dark:text-gray-100",
+      textSubtle: "text-gray-600 dark:text-gray-400",
+      icon: "text-gray-700 dark:text-gray-300",
     },
     Icon: Workflow,
-    labelKey: 'pipeline.palette.cat_flow',
-    labelDefault: 'Flow control',
+    labelKey: "pipeline.palette.cat_flow",
+    labelDefault: "Flow control",
   },
 };
 
 /** Order categories are rendered in the palette accordion. */
 export const CATEGORY_ORDER: NodeCategory[] = [
-  'trigger',
-  'source',
-  'transform',
-  'gate',
-  'ai',
-  'action',
-  'flow',
+  "trigger",
+  "source",
+  "transform",
+  "gate",
+  "ai",
+  "action",
+  "flow",
 ];
 
 /** Lookup helper — falls back to `flow` for an unknown category. */
@@ -186,13 +186,13 @@ export function getCategoryTokens(category: string): CategoryTokenEntry {
 
 /** Hex color used for the minimap dot of a category (xyflow MiniMap nodeColor). */
 export const CATEGORY_MINIMAP_COLOR: Record<NodeCategory, string> = {
-  trigger: '#16a34a',
-  source: '#2563eb',
-  transform: '#9333ea',
-  gate: '#d97706',
-  ai: '#7c3aed',
-  action: '#475569',
-  flow: '#6b7280',
+  trigger: "#16a34a",
+  source: "#2563eb",
+  transform: "#9333ea",
+  gate: "#d97706",
+  ai: "#7c3aed",
+  action: "#475569",
+  flow: "#6b7280",
 };
 
 // ── Typed-port map (triple-encoded: color + shape + dash) ───────────────────
@@ -203,15 +203,22 @@ export const CATEGORY_MINIMAP_COLOR: Record<NodeCategory, string> = {
  * so the matrix stays exhaustive.
  */
 export type PortDataType =
-  | 'table' // rows
-  | 'file' // document / export artefact
-  | 'bim' // BIM model
-  | 'number' // scalar
-  | 'boolean' // flag
-  | 'any' // passthrough / wildcard
-  | 'error'; // error branch
+  | "table" // rows
+  | "file" // document / export artefact
+  | "bim" // BIM model
+  | "number" // scalar
+  | "boolean" // flag
+  | "any" // passthrough / wildcard
+  | "error"; // error branch
 
-export type PortShape = 'circle' | 'square' | 'diamond' | 'triangle' | 'hexagon' | 'ring' | 'cross';
+export type PortShape =
+  | "circle"
+  | "square"
+  | "diamond"
+  | "triangle"
+  | "hexagon"
+  | "ring"
+  | "cross";
 
 export interface PortTypeEntry {
   /** Stroke color (also the handle border) — static hex, used inline by SVG. */
@@ -230,53 +237,53 @@ export interface PortTypeEntry {
  */
 export const PORT_TYPES: Record<PortDataType, PortTypeEntry> = {
   table: {
-    color: '#2563eb',
-    shape: 'circle',
+    color: "#2563eb",
+    shape: "circle",
     dash: undefined,
-    labelKey: 'pipeline.port.table',
-    labelDefault: 'Table / rows',
+    labelKey: "pipeline.port.table",
+    labelDefault: "Table / rows",
   },
   file: {
-    color: '#475569',
-    shape: 'square',
+    color: "#475569",
+    shape: "square",
     dash: undefined,
-    labelKey: 'pipeline.port.file',
-    labelDefault: 'File / document',
+    labelKey: "pipeline.port.file",
+    labelDefault: "File / document",
   },
   bim: {
-    color: '#9333ea',
-    shape: 'diamond',
+    color: "#9333ea",
+    shape: "diamond",
     dash: undefined,
-    labelKey: 'pipeline.port.bim',
-    labelDefault: 'BIM model',
+    labelKey: "pipeline.port.bim",
+    labelDefault: "BIM model",
   },
   number: {
-    color: '#0891b2',
-    shape: 'triangle',
+    color: "#0891b2",
+    shape: "triangle",
     dash: undefined,
-    labelKey: 'pipeline.port.number',
-    labelDefault: 'Number',
+    labelKey: "pipeline.port.number",
+    labelDefault: "Number",
   },
   boolean: {
-    color: '#0d9488',
-    shape: 'hexagon',
+    color: "#0d9488",
+    shape: "hexagon",
     dash: undefined,
-    labelKey: 'pipeline.port.boolean',
-    labelDefault: 'Boolean / flag',
+    labelKey: "pipeline.port.boolean",
+    labelDefault: "Boolean / flag",
   },
   any: {
-    color: '#94a3b8',
-    shape: 'ring',
-    dash: '4 4',
-    labelKey: 'pipeline.port.any',
-    labelDefault: 'Any / passthrough',
+    color: "#94a3b8",
+    shape: "ring",
+    dash: "4 4",
+    labelKey: "pipeline.port.any",
+    labelDefault: "Any / passthrough",
   },
   error: {
-    color: '#dc2626',
-    shape: 'cross',
-    dash: '2 3',
-    labelKey: 'pipeline.port.error',
-    labelDefault: 'Error branch',
+    color: "#dc2626",
+    shape: "cross",
+    dash: "2 3",
+    labelKey: "pipeline.port.error",
+    labelDefault: "Error branch",
   },
 };
 
@@ -289,22 +296,25 @@ export function getPortTokens(type: string): PortTypeEntry {
  * Which output type may feed which input type. `any` is a wildcard on either
  * side; `error` only connects to `error`/`any` (a dedicated failure branch).
  */
-export const PORT_COMPATIBILITY: Record<PortDataType, ReadonlySet<PortDataType>> = {
-  table: new Set<PortDataType>(['table', 'any']),
-  file: new Set<PortDataType>(['file', 'any']),
-  bim: new Set<PortDataType>(['bim', 'any']),
-  number: new Set<PortDataType>(['number', 'any']),
-  boolean: new Set<PortDataType>(['boolean', 'any']),
+export const PORT_COMPATIBILITY: Record<
+  PortDataType,
+  ReadonlySet<PortDataType>
+> = {
+  table: new Set<PortDataType>(["table", "any"]),
+  file: new Set<PortDataType>(["file", "any"]),
+  bim: new Set<PortDataType>(["bim", "any"]),
+  number: new Set<PortDataType>(["number", "any"]),
+  boolean: new Set<PortDataType>(["boolean", "any"]),
   any: new Set<PortDataType>([
-    'table',
-    'file',
-    'bim',
-    'number',
-    'boolean',
-    'any',
-    'error',
+    "table",
+    "file",
+    "bim",
+    "number",
+    "boolean",
+    "any",
+    "error",
   ]),
-  error: new Set<PortDataType>(['error', 'any']),
+  error: new Set<PortDataType>(["error", "any"]),
 };
 
 /** True when an output of `source` type may be wired into a `target` input. */

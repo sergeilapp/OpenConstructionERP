@@ -9,7 +9,14 @@
  *  - Bottom filmstrip: drawing list + upload (like BIM page)
  */
 
-import { useState, useMemo, useCallback, useRef, useEffect, type ReactNode } from 'react';
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+  type ReactNode,
+} from "react";
 import {
   calculateArea,
   calculateAreaSafe,
@@ -19,12 +26,12 @@ import {
   getSegmentLengths,
   formatMeasurement,
   unitFactorToMetres,
-} from './lib/measurement';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
-import clsx from 'clsx';
+} from "./lib/measurement";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
+import clsx from "clsx";
 import {
   Upload,
   FileUp,
@@ -52,16 +59,21 @@ import {
   ListChecks,
   Ruler,
   FileDown,
-} from 'lucide-react';
-import { Badge, ConfirmDialog, ElementInfoPopover, type DWGElementPayload } from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useDwgUploadStore } from '@/stores/useDwgUploadStore';
-import { apiGet } from '@/shared/lib/api';
-import { boqApi, normalizePositions, type Position } from '@/features/boq/api';
-import { projectsApi } from '@/features/projects/api';
-import { installBIMConverter } from '@/features/bim/api';
+} from "lucide-react";
+import {
+  Badge,
+  ConfirmDialog,
+  ElementInfoPopover,
+  type DWGElementPayload,
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useDwgUploadStore } from "@/stores/useDwgUploadStore";
+import { apiGet } from "@/shared/lib/api";
+import { boqApi, normalizePositions, type Position } from "@/features/boq/api";
+import { projectsApi } from "@/features/projects/api";
+import { installBIMConverter } from "@/features/bim/api";
 import {
   fetchDrawings,
   deleteDrawing,
@@ -74,8 +86,8 @@ import {
   fetchOfflineReadiness,
   updateDrawingScale,
   USER_MARKUP_LAYER,
-} from './api';
-import { Undo2, Redo2, Target } from 'lucide-react';
+} from "./api";
+import { Undo2, Redo2, Target } from "lucide-react";
 import type {
   DxfEntity,
   DxfLayer,
@@ -83,27 +95,30 @@ import type {
   CreateAnnotationPayload,
   DwgOfflineReadiness,
   DwgScaleMode,
-} from './api';
+} from "./api";
 import {
   DxfViewer,
   type EntitySelectEvent,
   type EntityContextMenuEvent,
-} from './components/DxfViewer';
-import { aggregateEntities } from './lib/group-aggregation';
-import { exportCanvasToPdf } from './lib/pdf-export';
-import { ToolPalette, type DwgTool } from './components/ToolPalette';
-import { CalibrationDialog, type CalibrationStep } from './components/CalibrationDialog';
-import { SheetStrip } from './components/SheetStrip';
+} from "./components/DxfViewer";
+import { aggregateEntities } from "./lib/group-aggregation";
+import { exportCanvasToPdf } from "./lib/pdf-export";
+import { ToolPalette, type DwgTool } from "./components/ToolPalette";
+import {
+  CalibrationDialog,
+  type CalibrationStep,
+} from "./components/CalibrationDialog";
+import { SheetStrip } from "./components/SheetStrip";
 import {
   deriveScale as deriveCalibration,
   type CalibrationState,
   type CalibrationUnit,
-} from './lib/calibration';
+} from "./lib/calibration";
 import {
   calibrationKey,
   loadCalibration,
   saveCalibration,
-} from './lib/calibration-store';
+} from "./lib/calibration-store";
 import {
   canRedo as canRedoFn,
   canUndo as canUndoFn,
@@ -114,14 +129,17 @@ import {
   snapshotFrom,
   type UndoEntry,
   type UndoState,
-} from './lib/undo-stack';
-import type { SnapModes } from './lib/snap';
-import { LayerPanel } from './components/LayerPanel';
-import { EntityNameFilter, entityDisplayName } from './components/EntityNameFilter';
-import CreateTaskFromDwgModal from './CreateTaskFromDwgModal';
-import LinkDocumentToDwgModal from './LinkDocumentToDwgModal';
-import LinkActivityToDwgModal from './LinkActivityToDwgModal';
-import LinkRequirementToDwgModal from './LinkRequirementToDwgModal';
+} from "./lib/undo-stack";
+import type { SnapModes } from "./lib/snap";
+import { LayerPanel } from "./components/LayerPanel";
+import {
+  EntityNameFilter,
+  entityDisplayName,
+} from "./components/EntityNameFilter";
+import CreateTaskFromDwgModal from "./CreateTaskFromDwgModal";
+import LinkDocumentToDwgModal from "./LinkDocumentToDwgModal";
+import LinkActivityToDwgModal from "./LinkActivityToDwgModal";
+import LinkRequirementToDwgModal from "./LinkRequirementToDwgModal";
 // boqApi / Position import removed — BOQ picker now handled via ElementInfoPopover callback
 
 /* ── GridBackground ──────────────────────────────────────────────────── */
@@ -139,9 +157,14 @@ import LinkRequirementToDwgModal from './LinkRequirementToDwgModal';
  * faint black lines. Opacities are intentionally low — the grid should
  * whisper, not shout.
  */
-function GridBackground({ className = '' }: { className?: string }) {
+function GridBackground({ className = "" }: { className?: string }) {
   return (
-    <div className={clsx('absolute inset-0 pointer-events-none overflow-hidden', className)}>
+    <div
+      className={clsx(
+        "absolute inset-0 pointer-events-none overflow-hidden",
+        className,
+      )}
+    >
       {/* Grid lines — minor (24px) + major (120px), 1:5 AutoCAD-style ratio */}
       <div
         className="absolute inset-0"
@@ -152,7 +175,7 @@ function GridBackground({ className = '' }: { className?: string }) {
             linear-gradient(to right, var(--oe-dwg-grid-minor) 1px, transparent 1px),
             linear-gradient(to bottom, var(--oe-dwg-grid-minor) 1px, transparent 1px)
           `,
-          backgroundSize: '120px 120px, 120px 120px, 24px 24px, 24px 24px',
+          backgroundSize: "120px 120px, 120px 120px, 24px 24px, 24px 24px",
         }}
       />
       {/* Vignette — darker at corners, transparent in the middle */}
@@ -160,7 +183,7 @@ function GridBackground({ className = '' }: { className?: string }) {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse at center, transparent 0%, transparent 45%, var(--oe-dwg-vignette) 100%)',
+            "radial-gradient(ellipse at center, transparent 0%, transparent 45%, var(--oe-dwg-vignette) 100%)",
         }}
       />
     </div>
@@ -194,7 +217,7 @@ function extractLayers(
   for (const [name, count] of annLayerCounts.entries()) {
     if (!map.has(name)) {
       // Use a neutral accent color that stands out from DXF defaults.
-      map.set(name, { color: '#f59e0b', count });
+      map.set(name, { color: "#f59e0b", count });
     } else {
       map.get(name)!.count += count;
     }
@@ -220,9 +243,15 @@ function toDWGElementPayload(
   entity: DxfEntity,
   effectiveScale: number,
   opts?: {
-    calculatePerimeter?: (verts: { x: number; y: number }[], closed: boolean) => number;
+    calculatePerimeter?: (
+      verts: { x: number; y: number }[],
+      closed: boolean,
+    ) => number;
     calculateArea?: (verts: { x: number; y: number }[]) => number;
-    calculateDistance?: (a: { x: number; y: number }, b: { x: number; y: number }) => number;
+    calculateDistance?: (
+      a: { x: number; y: number },
+      b: { x: number; y: number },
+    ) => number;
   },
 ): DWGElementPayload {
   const measurements: Record<string, { value: number; unit: string }> = {};
@@ -230,63 +259,73 @@ function toDWGElementPayload(
   const s2 = s * s;
 
   // Polyline measurements
-  if (entity.type === 'LWPOLYLINE' && entity.vertices && entity.vertices.length >= 2) {
+  if (
+    entity.type === "LWPOLYLINE" &&
+    entity.vertices &&
+    entity.vertices.length >= 2
+  ) {
     const closed = !!entity.closed;
     if (opts?.calculatePerimeter) {
-      measurements['Perimeter'] = {
+      measurements["Perimeter"] = {
         value: opts.calculatePerimeter(entity.vertices, closed) * s,
-        unit: 'm',
+        unit: "m",
       };
     }
     if (closed && opts?.calculateArea) {
       const area = opts.calculateArea(entity.vertices) * s2;
       if (area > 0) {
-        measurements['Area'] = { value: area, unit: 'm\u00B2' };
+        measurements["Area"] = { value: area, unit: "m\u00B2" };
       }
     }
-    measurements['Segments'] = {
+    measurements["Segments"] = {
       value: closed ? entity.vertices.length : entity.vertices.length - 1,
-      unit: '',
+      unit: "",
     };
   }
 
   // Line length
-  if (entity.type === 'LINE' && entity.start && entity.end && opts?.calculateDistance) {
-    measurements['Length'] = {
+  if (
+    entity.type === "LINE" &&
+    entity.start &&
+    entity.end &&
+    opts?.calculateDistance
+  ) {
+    measurements["Length"] = {
       value: opts.calculateDistance(entity.start, entity.end) * s,
-      unit: 'm',
+      unit: "m",
     };
   }
 
   // Circle measurements
-  if (entity.type === 'CIRCLE' && entity.radius != null) {
+  if (entity.type === "CIRCLE" && entity.radius != null) {
     const r = entity.radius * s;
-    measurements['Radius'] = { value: r, unit: 'm' };
-    measurements['Circumference'] = {
+    measurements["Radius"] = { value: r, unit: "m" };
+    measurements["Circumference"] = {
       value: 2 * Math.PI * r,
-      unit: 'm',
+      unit: "m",
     };
-    measurements['Area'] = {
+    measurements["Area"] = {
       value: Math.PI * r ** 2,
-      unit: 'm\u00B2',
+      unit: "m\u00B2",
     };
   }
 
   // ARC radius
-  if (entity.type === 'ARC' && entity.radius != null) {
-    measurements['Radius'] = { value: entity.radius * s, unit: 'm' };
+  if (entity.type === "ARC" && entity.radius != null) {
+    measurements["Radius"] = { value: entity.radius * s, unit: "m" };
   }
 
   // Extra properties
   const properties: Record<string, unknown> = {};
-  if (entity.text) properties['Text'] = entity.text;
-  if (entity.block_name) properties['Block'] = entity.block_name;
-  if (entity.closed !== undefined) properties['Closed'] = entity.closed ? 'Yes' : 'No';
-  if (entity.height != null) properties['Height'] = entity.height;
-  if (entity.rotation != null) properties['Rotation'] = entity.rotation;
+  if (entity.text) properties["Text"] = entity.text;
+  if (entity.block_name) properties["Block"] = entity.block_name;
+  if (entity.closed !== undefined)
+    properties["Closed"] = entity.closed ? "Yes" : "No";
+  if (entity.height != null) properties["Height"] = entity.height;
+  if (entity.rotation != null) properties["Rotation"] = entity.rotation;
 
   return {
-    source: 'dwg',
+    source: "dwg",
     id: entity.id,
     type: entity.type,
     layer: entity.layer,
@@ -303,7 +342,7 @@ function toDWGElementPayload(
  * DXF files in the wild are messy).
  */
 function computeEntityCentroid(entity: DxfEntity): { x: number; y: number } {
-  if (entity.type === 'LINE' && entity.start && entity.end) {
+  if (entity.type === "LINE" && entity.start && entity.end) {
     return {
       x: (entity.start.x + entity.end.x) / 2,
       y: (entity.start.y + entity.end.y) / 2,
@@ -334,30 +373,46 @@ function computeEntityCentroid(entity: DxfEntity): { x: number; y: number } {
 function extractEntityMeasurement(
   entity: DxfEntity,
   effectiveScale: number,
-): { value: number; unit: string; kind: 'length' | 'area' | 'radius' } | null {
+): { value: number; unit: string; kind: "length" | "area" | "radius" } | null {
   const s = effectiveScale;
   const s2 = s * s;
-  if (entity.type === 'LWPOLYLINE' && entity.vertices && entity.vertices.length >= 2) {
+  if (
+    entity.type === "LWPOLYLINE" &&
+    entity.vertices &&
+    entity.vertices.length >= 2
+  ) {
     const closed = !!entity.closed;
     if (closed) {
       const area = calculateArea(entity.vertices) * s2;
       if (area > 0) {
-        return { value: Math.round(area * 100) / 100, unit: 'm2', kind: 'area' };
+        return {
+          value: Math.round(area * 100) / 100,
+          unit: "m2",
+          kind: "area",
+        };
       }
     }
     const perimeter = calculatePerimeter(entity.vertices, closed) * s;
-    return { value: Math.round(perimeter * 100) / 100, unit: 'm', kind: 'length' };
+    return {
+      value: Math.round(perimeter * 100) / 100,
+      unit: "m",
+      kind: "length",
+    };
   }
-  if (entity.type === 'LINE' && entity.start && entity.end) {
+  if (entity.type === "LINE" && entity.start && entity.end) {
     const len = calculateDistance(entity.start, entity.end) * s;
-    return { value: Math.round(len * 100) / 100, unit: 'm', kind: 'length' };
+    return { value: Math.round(len * 100) / 100, unit: "m", kind: "length" };
   }
-  if (entity.type === 'CIRCLE' && entity.radius != null) {
+  if (entity.type === "CIRCLE" && entity.radius != null) {
     const area = Math.PI * (entity.radius * s) ** 2;
-    return { value: Math.round(area * 100) / 100, unit: 'm2', kind: 'area' };
+    return { value: Math.round(area * 100) / 100, unit: "m2", kind: "area" };
   }
-  if (entity.type === 'ARC' && entity.radius != null) {
-    return { value: Math.round(entity.radius * s * 100) / 100, unit: 'm', kind: 'radius' };
+  if (entity.type === "ARC" && entity.radius != null) {
+    return {
+      value: Math.round(entity.radius * s * 100) / 100,
+      unit: "m",
+      kind: "radius",
+    };
   }
   return null;
 }
@@ -378,11 +433,11 @@ function extractEntityMeasurement(
 function OfflineReadyBadge({
   readiness,
   isLoading,
-  'data-testid': testId,
+  "data-testid": testId,
 }: {
   readiness: DwgOfflineReadiness | undefined;
   isLoading: boolean;
-  'data-testid'?: string;
+  "data-testid"?: string;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -394,58 +449,60 @@ function OfflineReadyBadge({
   // invalidates `dwg-offline-readiness` so the green "Offline Ready" pill
   // appears without a manual refresh.
   const installMutation = useMutation({
-    mutationFn: () => installBIMConverter('dwg'),
+    mutationFn: () => installBIMConverter("dwg"),
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['dwg-offline-readiness'] });
-      queryClient.invalidateQueries({ queryKey: ['bim-converters'] });
+      queryClient.invalidateQueries({ queryKey: ["dwg-offline-readiness"] });
+      queryClient.invalidateQueries({ queryKey: ["bim-converters"] });
       if (result.installed) {
         addToast({
-          type: 'success',
-          title: t('dwg_takeoff.converter_install_success_title', {
-            defaultValue: 'DWG converter installed',
+          type: "success",
+          title: t("dwg_takeoff.converter_install_success_title", {
+            defaultValue: "DWG converter installed",
           }),
           message:
             result.message ||
-            t('dwg_takeoff.converter_install_success_msg', {
-              defaultValue: '.dwg uploads will now run locally.',
+            t("dwg_takeoff.converter_install_success_msg", {
+              defaultValue: ".dwg uploads will now run locally.",
             }),
         });
         setShowHint(false);
-      } else if (result.platform_unsupported && result.platform === 'linux') {
+      } else if (result.platform_unsupported && result.platform === "linux") {
         const instructions = result.instructions
           ? `\n\n${result.instructions}`
           : result.apt_package
             ? `\n\nsudo apt install -y ${result.apt_package}`
-            : '';
+            : "";
         addToast(
           {
-            type: 'info',
-            title: t('dwg_takeoff.converter_install_linux_title', {
-              defaultValue: 'Run apt to finish installing',
+            type: "info",
+            title: t("dwg_takeoff.converter_install_linux_title", {
+              defaultValue: "Run apt to finish installing",
             }),
             message:
-              (result.message || 'Install via apt to enable .dwg uploads') +
+              (result.message || "Install via apt to enable .dwg uploads") +
               instructions,
           },
           { duration: 45_000 },
         );
       } else {
         addToast({
-          type: 'warning',
-          title: t('dwg_takeoff.converter_install_partial_title', {
-            defaultValue: 'Install needs attention',
+          type: "warning",
+          title: t("dwg_takeoff.converter_install_partial_title", {
+            defaultValue: "Install needs attention",
           }),
-          message: result.message || 'Could not finish the install.',
+          message: result.message || "Could not finish the install.",
         });
       }
     },
     onError: (error: unknown) => {
       const message =
-        error instanceof Error ? error.message : String(error ?? 'Unknown error');
+        error instanceof Error
+          ? error.message
+          : String(error ?? "Unknown error");
       addToast({
-        type: 'error',
-        title: t('dwg_takeoff.converter_install_error_title', {
-          defaultValue: 'Install failed',
+        type: "error",
+        title: t("dwg_takeoff.converter_install_error_title", {
+          defaultValue: "Install failed",
         }),
         message,
       });
@@ -459,7 +516,7 @@ function OfflineReadyBadge({
         data-testid={testId}
       >
         <Loader2 size={11} className="animate-spin" />
-        {t('dwg_takeoff.offline_checking', { defaultValue: 'Checking...‌⁠‍' })}
+        {t("dwg_takeoff.offline_checking", { defaultValue: "Checking...‌⁠‍" })}
       </div>
     );
   }
@@ -473,46 +530,52 @@ function OfflineReadyBadge({
         type="button"
         onClick={() => setShowHint((v) => !v)}
         className={clsx(
-          'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-medium transition-colors',
+          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-medium transition-colors",
           ready
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/15'
-            : 'bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/15',
+            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/15"
+            : "bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/15",
         )}
         title={
           ready
-            ? t('dwg_takeoff.offline_ready_tooltip', {
+            ? t("dwg_takeoff.offline_ready_tooltip", {
                 defaultValue:
-                  'This tool works fully offline — conversions run on your machine.‌⁠‍',
+                  "This tool works fully offline — conversions run on your machine.‌⁠‍",
               })
-            : t('dwg_takeoff.offline_install_tooltip', {
+            : t("dwg_takeoff.offline_install_tooltip", {
                 defaultValue:
-                  'Install the local DWG converter to enable offline .dwg conversion. DXF files already work.‌⁠‍',
+                  "Install the local DWG converter to enable offline .dwg conversion. DXF files already work.‌⁠‍",
               })
         }
         aria-label={
           ready
-            ? t('dwg_takeoff.offline_ready', { defaultValue: 'Offline Ready‌⁠‍' })
-            : t('dwg_takeoff.offline_install', { defaultValue: 'Install converter‌⁠‍' })
+            ? t("dwg_takeoff.offline_ready", {
+                defaultValue: "Offline Ready‌⁠‍",
+              })
+            : t("dwg_takeoff.offline_install", {
+                defaultValue: "Install converter‌⁠‍",
+              })
         }
       >
         {ready ? <Wifi size={11} /> : <WifiOff size={11} />}
         <span className="relative flex h-1.5 w-1.5">
           <span
             className={clsx(
-              'absolute inline-flex h-full w-full rounded-full opacity-75',
-              ready ? 'bg-emerald-400 animate-ping' : 'bg-amber-400',
+              "absolute inline-flex h-full w-full rounded-full opacity-75",
+              ready ? "bg-emerald-400 animate-ping" : "bg-amber-400",
             )}
           />
           <span
             className={clsx(
-              'relative inline-flex h-1.5 w-1.5 rounded-full',
-              ready ? 'bg-emerald-400' : 'bg-amber-400',
+              "relative inline-flex h-1.5 w-1.5 rounded-full",
+              ready ? "bg-emerald-400" : "bg-amber-400",
             )}
           />
         </span>
         {ready
-          ? t('dwg_takeoff.offline_ready', { defaultValue: 'Offline Ready' })
-          : t('dwg_takeoff.offline_install', { defaultValue: 'Install converter' })}
+          ? t("dwg_takeoff.offline_ready", { defaultValue: "Offline Ready" })
+          : t("dwg_takeoff.offline_install", {
+              defaultValue: "Install converter",
+            })}
       </button>
 
       {showHint && (
@@ -523,8 +586,12 @@ function OfflineReadyBadge({
           <div className="flex items-start justify-between gap-2 mb-1.5">
             <div className="font-semibold text-content-primary">
               {ready
-                ? t('dwg_takeoff.offline_ready', { defaultValue: 'Offline Ready' })
-                : t('dwg_takeoff.offline_install', { defaultValue: 'Install converter' })}
+                ? t("dwg_takeoff.offline_ready", {
+                    defaultValue: "Offline Ready",
+                  })
+                : t("dwg_takeoff.offline_install", {
+                    defaultValue: "Install converter",
+                  })}
             </div>
             <button
               type="button"
@@ -536,17 +603,17 @@ function OfflineReadyBadge({
           </div>
           <p className="text-content-secondary leading-relaxed">
             {readiness?.message ??
-              t('dwg_takeoff.offline_ready_tooltip', {
+              t("dwg_takeoff.offline_ready_tooltip", {
                 defaultValue:
-                  'This tool works fully offline — conversions run on your machine.',
+                  "This tool works fully offline — conversions run on your machine.",
               })}
           </p>
           {converterMissing && (
             <>
               <div className="mt-2 rounded-md bg-amber-500/10 border border-amber-500/20 px-2 py-1.5 text-[10px] text-amber-300">
-                {t('dwg_takeoff.offline_install_hint', {
+                {t("dwg_takeoff.offline_install_hint", {
                   defaultValue:
-                    'Upload DXF files to continue without the converter, or install it to enable .dwg support.',
+                    "Upload DXF files to continue without the converter, or install it to enable .dwg support.",
                 })}
               </div>
               <button
@@ -559,15 +626,15 @@ function OfflineReadyBadge({
                 {installMutation.isPending ? (
                   <>
                     <Loader2 size={12} className="animate-spin" />
-                    {t('dwg_takeoff.converter_installing', {
-                      defaultValue: 'Installing…',
+                    {t("dwg_takeoff.converter_installing", {
+                      defaultValue: "Installing…",
                     })}
                   </>
                 ) : (
                   <>
                     <Download size={12} />
-                    {t('dwg_takeoff.converter_install_now', {
-                      defaultValue: 'Install latest DWG converter',
+                    {t("dwg_takeoff.converter_install_now", {
+                      defaultValue: "Install latest DWG converter",
                     })}
                   </>
                 )}
@@ -578,8 +645,8 @@ function OfflineReadyBadge({
                 rel="noopener noreferrer"
                 className="mt-1.5 block text-center text-[10px] text-content-tertiary hover:text-content-secondary underline"
               >
-                {t('dwg_takeoff.converter_install_manual', {
-                  defaultValue: 'Manual install instructions',
+                {t("dwg_takeoff.converter_install_manual", {
+                  defaultValue: "Manual install instructions",
                 })}
               </a>
             </>
@@ -608,11 +675,11 @@ export function DwgTakeoffPage() {
   // The drawings themselves are always persisted server-side; only the
   // client-side project context was lost.
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
-    queryKey: ['projects'],
+    queryKey: ["projects"],
     queryFn: projectsApi.list,
     staleTime: 5 * 60_000,
   });
-  const projectId = activeProjectId || projects[0]?.id || '';
+  const projectId = activeProjectId || projects[0]?.id || "";
   const noProjects = !projectsLoading && projects.length === 0;
 
   // Persist the fallback choice so subsequent reloads and sibling
@@ -628,13 +695,15 @@ export function DwgTakeoffPage() {
   // Deep-link support: ?drawingId=xxx opens a specific drawing
   // Also supports ?docName=xxx from the Documents page (matches by filename)
   const [searchParams, setSearchParams] = useSearchParams();
-  const deepLinkDrawingId = searchParams.get('drawingId');
-  const deepLinkDocName = searchParams.get('docName');
+  const deepLinkDrawingId = searchParams.get("drawingId");
+  const deepLinkDocName = searchParams.get("docName");
 
   // State
-  const [selectedDrawingId, setSelectedDrawingId] = useState<string | null>(null);
-  const [activeTool, setActiveTool] = useState<DwgTool>('select');
-  const [activeColor, setActiveColor] = useState('#ef4444');
+  const [selectedDrawingId, setSelectedDrawingId] = useState<string | null>(
+    null,
+  );
+  const [activeTool, setActiveTool] = useState<DwgTool>("select");
+  const [activeColor, setActiveColor] = useState("#ef4444");
 
   /* ── Q1 UX #2: Undo / redo stack ────────────────────────────────────
    * Holds the last 50 annotation mutations (create / delete / edit).
@@ -652,7 +721,7 @@ export function DwgTakeoffPage() {
    * per-drawing setting. */
   const [snapModes, setSnapModes] = useState<SnapModes>(() => {
     try {
-      const raw = localStorage.getItem('dwg:snap_modes');
+      const raw = localStorage.getItem("dwg:snap_modes");
       if (raw) return JSON.parse(raw) as SnapModes;
     } catch {
       /* fall through */
@@ -661,7 +730,7 @@ export function DwgTakeoffPage() {
   });
   useEffect(() => {
     try {
-      localStorage.setItem('dwg:snap_modes', JSON.stringify(snapModes));
+      localStorage.setItem("dwg:snap_modes", JSON.stringify(snapModes));
     } catch {
       /* storage quota / disabled — acceptable fallback is in-memory only */
     }
@@ -675,9 +744,11 @@ export function DwgTakeoffPage() {
    * site plan.
    */
   const [drawingScale, setDrawingScale] = useState<number>(1);
-  const [scaleMode, setScaleMode] = useState<DwgScaleMode>('preset');
+  const [scaleMode, setScaleMode] = useState<DwgScaleMode>("preset");
   const [isCalibrating, setIsCalibrating] = useState(false);
-  const [calibrationPixels, setCalibrationPixels] = useState<number | null>(null);
+  const [calibrationPixels, setCalibrationPixels] = useState<number | null>(
+    null,
+  );
 
   /* ── Two-click calibration (Goal 1) ──────────────────────────────────
    * Independent of the pre-existing scale/calibration UI in the right
@@ -689,8 +760,14 @@ export function DwgTakeoffPage() {
    *   - ``calibration`` is the active (persisted) scale for the current
    *     drawing + layout, loaded from localStorage on select/layout change. */
   const [calibStep, setCalibStep] = useState<CalibrationStep>(0);
-  const [calibPointA, setCalibPointA] = useState<{ x: number; y: number } | null>(null);
-  const [calibPointB, setCalibPointB] = useState<{ x: number; y: number } | null>(null);
+  const [calibPointA, setCalibPointA] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [calibPointB, setCalibPointB] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const [calibration, setCalibration] = useState<CalibrationState | null>(null);
 
   // Persist the scale per drawing ID — switching drawings restores its scale.
@@ -700,7 +777,9 @@ export function DwgTakeoffPage() {
     const parsed = raw ? Number(raw) : NaN;
     setDrawingScale(Number.isFinite(parsed) && parsed > 0 ? parsed : 1);
     setScaleMode(
-      (localStorage.getItem(`dwg:scale_mode:${selectedDrawingId}`) as DwgScaleMode | null) ?? 'preset',
+      (localStorage.getItem(
+        `dwg:scale_mode:${selectedDrawingId}`,
+      ) as DwgScaleMode | null) ?? "preset",
     );
     // Reset transient calibration state when the user switches drawing.
     setIsCalibrating(false);
@@ -709,7 +788,10 @@ export function DwgTakeoffPage() {
 
   useEffect(() => {
     if (!selectedDrawingId) return;
-    localStorage.setItem(`dwg:scale:${selectedDrawingId}`, String(drawingScale));
+    localStorage.setItem(
+      `dwg:scale:${selectedDrawingId}`,
+      String(drawingScale),
+    );
     localStorage.setItem(`dwg:scale_mode:${selectedDrawingId}`, scaleMode);
   }, [selectedDrawingId, drawingScale, scaleMode]);
 
@@ -723,19 +805,33 @@ export function DwgTakeoffPage() {
       if (!projectId) return;
       for (const [id, job] of state.jobs) {
         const prev = prevState.jobs.get(id);
-        if (prev?.status !== 'ready' && job.status === 'ready' && job.projectId === projectId) {
-          queryClient.invalidateQueries({ queryKey: ['dwg-drawings', projectId] });
-          queryClient.invalidateQueries({ queryKey: ['documents'] });
+        if (
+          prev?.status !== "ready" &&
+          job.status === "ready" &&
+          job.projectId === projectId
+        ) {
+          queryClient.invalidateQueries({
+            queryKey: ["dwg-drawings", projectId],
+          });
+          queryClient.invalidateQueries({ queryKey: ["documents"] });
           if (job.drawingId) setSelectedDrawingId(job.drawingId);
           addToast({
-            type: 'success',
-            title: t('dwg_takeoff.upload_success', { defaultValue: 'Drawing uploaded' }),
+            type: "success",
+            title: t("dwg_takeoff.upload_success", {
+              defaultValue: "Drawing uploaded",
+            }),
           });
         }
-        if (prev?.status !== 'error' && job.status === 'error' && job.projectId === projectId) {
+        if (
+          prev?.status !== "error" &&
+          job.status === "error" &&
+          job.projectId === projectId
+        ) {
           addToast({
-            type: 'error',
-            title: t('dwg_takeoff.upload_error', { defaultValue: 'Upload failed' }),
+            type: "error",
+            title: t("dwg_takeoff.upload_error", {
+              defaultValue: "Upload failed",
+            }),
             message: job.errorMessage ?? undefined,
           });
         }
@@ -751,17 +847,25 @@ export function DwgTakeoffPage() {
    * below is the first element of the set and drives the single-entity UI
    * affordances (properties panel, link-to-BOQ popover).
    */
-  const [selectedEntityIds, setSelectedEntityIds] = useState<Set<string>>(new Set());
+  const [selectedEntityIds, setSelectedEntityIds] = useState<Set<string>>(
+    new Set(),
+  );
   /** Per-entity hide state (RFC 11). Filter is applied in DxfViewer. */
-  const [hiddenEntityIds, setHiddenEntityIds] = useState<Set<string>>(new Set());
-  const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
-  /** Right-click context menu state. */
-  const [contextMenu, setContextMenu] = useState<
-    { entityId: string; screenX: number; screenY: number } | null
+  const [hiddenEntityIds, setHiddenEntityIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [selectedAnnotationId, setSelectedAnnotationId] = useState<
+    string | null
   >(null);
+  /** Right-click context menu state. */
+  const [contextMenu, setContextMenu] = useState<{
+    entityId: string;
+    screenX: number;
+    screenY: number;
+  } | null>(null);
   const [rightTab, setRightTab] = useState<
-    'layers' | 'annotations' | 'properties' | 'summary' | 'scale'
-  >('layers');
+    "layers" | "annotations" | "properties" | "summary" | "scale"
+  >("layers");
 
   /** Inline cross-module link modals (mirrors the BIM page pattern).
    *  Each holds the selected DWG entity + drawing context for the
@@ -787,16 +891,20 @@ export function DwgTakeoffPage() {
     entityLabel?: string;
   } | null>(null);
   const [showUpload, setShowUpload] = useState(false);
-  const [uploadName, setUploadName] = useState('');
-  const [uploadDiscipline, setUploadDiscipline] = useState('architectural');
+  const [uploadName, setUploadName] = useState("");
+  const [uploadDiscipline, setUploadDiscipline] = useState("architectural");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
-  const { confirm: confirmAnnotDelete, ...annotDeleteConfirmProps } = useConfirm();
+  const { confirm: confirmAnnotDelete, ...annotDeleteConfirmProps } =
+    useConfirm();
   // filmstripExpanded removed in v1.8.3 — drawings are always visible
   // per UX feedback. No auto-hide, no collapse toggle.
   /** Screen position for floating entity info popup. */
-  const [entityPopup, setEntityPopup] = useState<{ x: number; y: number } | null>(null);
+  const [entityPopup, setEntityPopup] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   /* ── BOQ-link picker state ─────────────────────────────────────────
    * Mirrors the self-contained picker from the PDF takeoff module
@@ -804,20 +912,26 @@ export function DwgTakeoffPage() {
    * can discover project + BOQ on its own and supports creating a new
    * position inline. */
   const [linkingEntityId, setLinkingEntityId] = useState<string | null>(null);
-  const [linkPickerProjectId, setLinkPickerProjectId] = useState('');
-  const [linkPickerBoqId, setLinkPickerBoqId] = useState('');
-  const [linkPickerProjects, setLinkPickerProjects] = useState<{ id: string; name: string }[]>([]);
-  const [linkPickerBoqs, setLinkPickerBoqs] = useState<{ id: string; name: string }[]>([]);
+  const [linkPickerProjectId, setLinkPickerProjectId] = useState("");
+  const [linkPickerBoqId, setLinkPickerBoqId] = useState("");
+  const [linkPickerProjects, setLinkPickerProjects] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [linkPickerBoqs, setLinkPickerBoqs] = useState<
+    { id: string; name: string }[]
+  >([]);
   const [linkBoqPositions, setLinkBoqPositions] = useState<Position[]>([]);
   const [linkBoqsLoading, setLinkBoqsLoading] = useState(false);
   const [linkPositionsLoading, setLinkPositionsLoading] = useState(false);
   const [linkingInProgress, setLinkingInProgress] = useState(false);
-  const [linkPickerSearch, setLinkPickerSearch] = useState('');
-  const [linkPickerMode, setLinkPickerMode] = useState<'pick' | 'create'>('pick');
+  const [linkPickerSearch, setLinkPickerSearch] = useState("");
+  const [linkPickerMode, setLinkPickerMode] = useState<"pick" | "create">(
+    "pick",
+  );
 
   // Queries
   const { data: drawings = [], isLoading: loadingDrawings } = useQuery({
-    queryKey: ['dwg-drawings', projectId],
+    queryKey: ["dwg-drawings", projectId],
     queryFn: () => fetchDrawings(projectId),
     enabled: !!projectId,
   });
@@ -832,13 +946,13 @@ export function DwgTakeoffPage() {
   const effectiveScale = drawingScale * unitFactor;
 
   const { data: entities = [], isLoading: loadingEntities } = useQuery({
-    queryKey: ['dwg-entities', selectedDrawingId],
+    queryKey: ["dwg-entities", selectedDrawingId],
     queryFn: () => fetchEntities(selectedDrawingId!),
     enabled: !!selectedDrawingId,
   });
 
   const { data: annotations = [] } = useQuery({
-    queryKey: ['dwg-annotations', selectedDrawingId],
+    queryKey: ["dwg-annotations", selectedDrawingId],
     queryFn: () => fetchAnnotations(selectedDrawingId!),
     enabled: !!selectedDrawingId,
   });
@@ -849,18 +963,19 @@ export function DwgTakeoffPage() {
    * network error, then fall through to the yellow "install converter"
    * state which is still a correct user signal.
    */
-  const { data: offlineReadiness, isLoading: loadingOfflineReadiness } = useQuery({
-    queryKey: ['dwg-offline-readiness'],
-    queryFn: fetchOfflineReadiness,
-    staleTime: 60_000,
-    retry: 1,
-  });
+  const { data: offlineReadiness, isLoading: loadingOfflineReadiness } =
+    useQuery({
+      queryKey: ["dwg-offline-readiness"],
+      queryFn: fetchOfflineReadiness,
+      staleTime: 60_000,
+      retry: 1,
+    });
 
   // Deep-link: auto-select drawing when ?drawingId= or ?docName= is in URL
   useEffect(() => {
     if (drawings.length === 0) return;
 
-    let target: typeof drawings[number] | undefined;
+    let target: (typeof drawings)[number] | undefined;
 
     // 1. Try matching by exact drawing ID
     if (deepLinkDrawingId) {
@@ -873,7 +988,7 @@ export function DwgTakeoffPage() {
       target = drawings.find(
         (d) =>
           d.name.toLowerCase() === docNameLower ||
-          d.name.toLowerCase() === docNameLower.replace(/\.[^.]+$/, ''),
+          d.name.toLowerCase() === docNameLower.replace(/\.[^.]+$/, ""),
       );
     }
 
@@ -881,12 +996,12 @@ export function DwgTakeoffPage() {
       handleSelectDrawing(target.id);
       // Clean up the URL params
       const next = new URLSearchParams(searchParams);
-      next.delete('drawingId');
-      next.delete('docId');
-      next.delete('docName');
+      next.delete("drawingId");
+      next.delete("docId");
+      next.delete("docName");
       setSearchParams(next, { replace: true });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deepLinkDrawingId, deepLinkDocName, drawings]);
 
   // Layout support
@@ -901,8 +1016,8 @@ export function DwgTakeoffPage() {
     if (set.size === 0) return [];
     // Sort: "Model" / "*Model_Space" first, then alphabetical
     return Array.from(set).sort((a, b) => {
-      const aIsModel = a === 'Model' || a === '*Model_Space';
-      const bIsModel = b === 'Model' || b === '*Model_Space';
+      const aIsModel = a === "Model" || a === "*Model_Space";
+      const bIsModel = b === "Model" || b === "*Model_Space";
       if (aIsModel && !bIsModel) return -1;
       if (!aIsModel && bIsModel) return 1;
       return a.localeCompare(b);
@@ -914,7 +1029,7 @@ export function DwgTakeoffPage() {
     if (layouts.length > 0 && selectedLayout === null) {
       setSelectedLayout(layouts[0] ?? null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layouts]);
 
   // Per-layout entity counts for the SheetStrip. Memoised so a hover on
@@ -922,7 +1037,7 @@ export function DwgTakeoffPage() {
   const entityCountByLayout = useMemo(() => {
     const out: Record<string, number> = {};
     for (const e of entities) {
-      const key = e.layout ?? '__default__';
+      const key = e.layout ?? "__default__";
       out[key] = (out[key] ?? 0) + 1;
     }
     return out;
@@ -952,7 +1067,7 @@ export function DwgTakeoffPage() {
   // away from "calibrate" — prevents a stranded Point A from leaking
   // into a subsequent calibration.
   useEffect(() => {
-    if (activeTool !== 'calibrate' && calibStep > 0 && calibStep < 3) {
+    if (activeTool !== "calibrate" && calibStep > 0 && calibStep < 3) {
       setCalibStep(0);
       setCalibPointA(null);
       setCalibPointB(null);
@@ -961,12 +1076,12 @@ export function DwgTakeoffPage() {
 
   // Open step 1 as soon as the user picks the tool.
   useEffect(() => {
-    if (activeTool === 'calibrate' && calibStep === 0) {
+    if (activeTool === "calibrate" && calibStep === 0) {
       setCalibStep(1);
       setCalibPointA(null);
       setCalibPointB(null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTool]);
 
   /** Step machine driver — receives world-space clicks from DxfViewer. */
@@ -1013,23 +1128,24 @@ export function DwgTakeoffPage() {
         saveCalibration(k, state);
         setCalibration(state);
         addToast({
-          type: 'success',
-          title: t('dwg_takeoff.cal_success', {
-            defaultValue: 'Scale calibrated',
+          type: "success",
+          title: t("dwg_takeoff.cal_success", {
+            defaultValue: "Scale calibrated",
           }) as string,
         });
       } catch {
         addToast({
-          type: 'error',
-          title: t('dwg_takeoff.cal_error_generic', {
-            defaultValue: 'Calibration failed — try clicking two distinct points.',
+          type: "error",
+          title: t("dwg_takeoff.cal_error_generic", {
+            defaultValue:
+              "Calibration failed — try clicking two distinct points.",
           }) as string,
         });
       }
       setCalibStep(0);
       setCalibPointA(null);
       setCalibPointB(null);
-      setActiveTool('select');
+      setActiveTool("select");
     },
     [
       calibPointA,
@@ -1050,7 +1166,7 @@ export function DwgTakeoffPage() {
     setCalibPointB(null);
     // Fall back to the select tool so a stray click doesn't immediately
     // re-open step 1 (which would surprise the user).
-    setActiveTool('select');
+    setActiveTool("select");
   }, []);
 
   /**
@@ -1062,8 +1178,15 @@ export function DwgTakeoffPage() {
   const annotatedEntities = useMemo<DxfEntity[]>(() => {
     if (entities.length === 0) return entities;
     return entities.map((e) => {
-      if (e.type === 'LWPOLYLINE' && e.closed && e.vertices && e.vertices.length >= 3) {
-        return { ...e, _area: calculateArea(e.vertices) } as DxfEntity & { _area: number };
+      if (
+        e.type === "LWPOLYLINE" &&
+        e.closed &&
+        e.vertices &&
+        e.vertices.length >= 3
+      ) {
+        return { ...e, _area: calculateArea(e.vertices) } as DxfEntity & {
+          _area: number;
+        };
       }
       return e;
     });
@@ -1121,10 +1244,13 @@ export function DwgTakeoffPage() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteDrawing(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dwg-drawings', projectId] });
+      queryClient.invalidateQueries({ queryKey: ["dwg-drawings", projectId] });
       if (selectedDrawingId === confirmDeleteId) setSelectedDrawingId(null);
       setConfirmDeleteId(null);
-      addToast({ type: 'success', title: t('dwg_takeoff.deleted', 'Drawing deleted') });
+      addToast({
+        type: "success",
+        title: t("dwg_takeoff.deleted", "Drawing deleted"),
+      });
     },
   });
 
@@ -1137,10 +1263,12 @@ export function DwgTakeoffPage() {
   const createAnnotationMutation = useMutation({
     mutationFn: (data: CreateAnnotationPayload) => createAnnotation(data),
     onSuccess: (created) => {
-      queryClient.invalidateQueries({ queryKey: ['dwg-annotations', selectedDrawingId] });
+      queryClient.invalidateQueries({
+        queryKey: ["dwg-annotations", selectedDrawingId],
+      });
       // Feed the unified Markups hub so the new annotation shows up there
       // without a manual reload (Option B aggregator).
-      queryClient.invalidateQueries({ queryKey: ['unified-markups'] });
+      queryClient.invalidateQueries({ queryKey: ["unified-markups"] });
       // Q1 UX #2: push a "create" entry so Ctrl+Z can delete the just-
       // persisted annotation. ``skipUndoRef`` suppresses this during
       // replay paths to avoid doubling up entries during redo.
@@ -1150,7 +1278,7 @@ export function DwgTakeoffPage() {
       }
       setUndoState((prev) =>
         pushUndo(prev, {
-          kind: 'create',
+          kind: "create",
           id: created.id,
           snapshot: snapshotFrom(created),
         }),
@@ -1161,9 +1289,9 @@ export function DwgTakeoffPage() {
       // Surface the failure — silent 500s previously left users thinking
       // nothing happened.
       addToast({
-        type: 'error',
-        title: t('dwg_takeoff.annotation_failed', {
-          defaultValue: 'Annotation could not be saved',
+        type: "error",
+        title: t("dwg_takeoff.annotation_failed", {
+          defaultValue: "Annotation could not be saved",
         }),
         message: err.message || String(err),
       });
@@ -1175,13 +1303,17 @@ export function DwgTakeoffPage() {
   // the localStorage sync above so an offline user still gets instant UI
   // feedback — the backend call fires when the network comes back.
   const updateScaleMutation = useMutation({
-    mutationFn: (data: { drawingId: string; denom: number; mode: DwgScaleMode }) =>
+    mutationFn: (data: {
+      drawingId: string;
+      denom: number;
+      mode: DwgScaleMode;
+    }) =>
       updateDrawingScale(data.drawingId, {
         scale_denominator: data.denom,
         scale_mode: data.mode,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dwg-drawings'] });
+      queryClient.invalidateQueries({ queryKey: ["dwg-drawings"] });
     },
   });
 
@@ -1207,10 +1339,14 @@ export function DwgTakeoffPage() {
     if (!selectedDrawingId) return;
     const d = drawings.find((x) => x.id === selectedDrawingId);
     if (!d) return;
-    if (typeof d.scale_denominator === 'number' && d.scale_denominator > 0) {
+    if (typeof d.scale_denominator === "number" && d.scale_denominator > 0) {
       setDrawingScale(d.scale_denominator);
     }
-    if (d.scale_mode === 'preset' || d.scale_mode === 'calibrated' || d.scale_mode === 'per_annotation') {
+    if (
+      d.scale_mode === "preset" ||
+      d.scale_mode === "calibrated" ||
+      d.scale_mode === "per_annotation"
+    ) {
       setScaleMode(d.scale_mode);
     }
   }, [selectedDrawingId, drawings]);
@@ -1221,19 +1357,22 @@ export function DwgTakeoffPage() {
     // Switch to the distance tool so the canvas captures two-point clicks
     // using the existing well-tested code path; `handleAnnotationCreated`
     // intercepts the resulting measurement below.
-    setActiveTool('distance');
+    setActiveTool("distance");
     addToast({
-      type: 'info',
-      title: t('dwg_takeoff.scale_calibrate_started_title', { defaultValue: 'Calibration armed' }),
-      message: t('dwg_takeoff.scale_calibrate_started_msg', {
-        defaultValue: 'Click two points on the drawing whose real-world distance you know.',
+      type: "info",
+      title: t("dwg_takeoff.scale_calibrate_started_title", {
+        defaultValue: "Calibration armed",
+      }),
+      message: t("dwg_takeoff.scale_calibrate_started_msg", {
+        defaultValue:
+          "Click two points on the drawing whose real-world distance you know.",
       }),
     });
   }, [addToast, t]);
 
   const handleCancelCalibration = useCallback(() => {
     setIsCalibrating(false);
-    setActiveTool('select');
+    setActiveTool("select");
   }, []);
 
   const deleteAnnotationMutation = useMutation<
@@ -1243,8 +1382,10 @@ export function DwgTakeoffPage() {
   >({
     mutationFn: ({ id }) => deleteAnnotation(id),
     onSuccess: (_res, vars) => {
-      queryClient.invalidateQueries({ queryKey: ['dwg-annotations', selectedDrawingId] });
-      queryClient.invalidateQueries({ queryKey: ['unified-markups'] });
+      queryClient.invalidateQueries({
+        queryKey: ["dwg-annotations", selectedDrawingId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["unified-markups"] });
       setSelectedAnnotationId(null);
       if (skipUndoRef.current) {
         skipUndoRef.current = false;
@@ -1252,7 +1393,7 @@ export function DwgTakeoffPage() {
       }
       if (vars.snapshotForUndo) {
         setUndoState((prev) =>
-          pushUndo(prev, { kind: 'delete', snapshot: vars.snapshotForUndo! }),
+          pushUndo(prev, { kind: "delete", snapshot: vars.snapshotForUndo! }),
         );
       }
     },
@@ -1274,13 +1415,13 @@ export function DwgTakeoffPage() {
       const effectiveProjectId = drawing?.project_id || projectId;
 
       switch (entry.kind) {
-        case 'create': {
+        case "create": {
           // Inverse of create → delete.
           skipUndoRef.current = true;
           deleteAnnotationMutation.mutate({ id: entry.id });
           break;
         }
-        case 'delete': {
+        case "delete": {
           if (!effectiveProjectId) return;
           const s = entry.snapshot;
           skipUndoRef.current = true;
@@ -1301,7 +1442,7 @@ export function DwgTakeoffPage() {
           });
           break;
         }
-        case 'edit': {
+        case "edit": {
           // Edits are not yet wired to the page-level stack; no-op.
           break;
         }
@@ -1323,7 +1464,7 @@ export function DwgTakeoffPage() {
       const effectiveProjectId = drawing?.project_id || projectId;
 
       switch (entry.kind) {
-        case 'create': {
+        case "create": {
           // Redo of a create → re-create from the captured snapshot.
           if (!effectiveProjectId) return;
           const s = entry.snapshot;
@@ -1345,14 +1486,14 @@ export function DwgTakeoffPage() {
           });
           break;
         }
-        case 'delete': {
+        case "delete": {
           // Redo of a delete → delete again (id may no longer exist if
           // the undone create produced a new id; best-effort).
           skipUndoRef.current = true;
           deleteAnnotationMutation.mutate({ id: entry.snapshot.id });
           break;
         }
-        case 'edit': {
+        case "edit": {
           break;
         }
       }
@@ -1432,12 +1573,14 @@ export function DwgTakeoffPage() {
     const nameFilterActive = visibleNames.size < allNames.size;
 
     if (!nameFilterActive) return filteredEntities;
-    return filteredEntities.filter((e) => visibleNames.has(entityDisplayName(e)));
+    return filteredEntities.filter((e) =>
+      visibleNames.has(entityDisplayName(e)),
+    );
   }, [filteredEntities, visibleNames]);
 
   const handleAnnotationCreated = useCallback(
     (ann: {
-      type: DwgAnnotation['type'];
+      type: DwgAnnotation["type"];
       points: { x: number; y: number }[];
       text?: string;
       color?: string;
@@ -1450,13 +1593,13 @@ export function DwgTakeoffPage() {
       // Calibration interception: if the user armed "Pick two points", the
       // first distance measurement they draw feeds the calibration widget
       // instead of becoming a persistent annotation.
-      if (isCalibrating && ann.type === 'distance' && ann.points.length >= 2) {
+      if (isCalibrating && ann.type === "distance" && ann.points.length >= 2) {
         const a = ann.points[0]!;
         const b = ann.points[1]!;
         const pixels = Math.hypot(b.x - a.x, b.y - a.y);
         setCalibrationPixels(pixels);
         setIsCalibrating(false);
-        setActiveTool('select');
+        setActiveTool("select");
         return;
       }
 
@@ -1468,12 +1611,13 @@ export function DwgTakeoffPage() {
       const effectiveProjectId = drawing?.project_id || projectId;
       if (!effectiveProjectId) {
         addToast({
-          type: 'error',
-          title: t('dwg_takeoff.annotation_failed', {
-            defaultValue: 'Annotation could not be saved',
+          type: "error",
+          title: t("dwg_takeoff.annotation_failed", {
+            defaultValue: "Annotation could not be saved",
           }),
-          message: t('dwg_takeoff.no_project_context', {
-            defaultValue: 'No active project — open this drawing from its project first.',
+          message: t("dwg_takeoff.no_project_context", {
+            defaultValue:
+              "No active project — open this drawing from its project first.",
           }),
         });
         return;
@@ -1484,12 +1628,12 @@ export function DwgTakeoffPage() {
       // renderer looks at `thickness` for stroke width; we default to 2 px
       // so existing backend records (line_width=2) render identically.
       const isPrimitive =
-        ann.type === 'line' ||
-        ann.type === 'rectangle' ||
-        ann.type === 'circle' ||
-        ann.type === 'polyline' ||
-        ann.type === 'arrow' ||
-        ann.type === 'text_pin';
+        ann.type === "line" ||
+        ann.type === "rectangle" ||
+        ann.type === "circle" ||
+        ann.type === "polyline" ||
+        ann.type === "arrow" ||
+        ann.type === "text_pin";
       createAnnotationMutation.mutate({
         project_id: effectiveProjectId,
         drawing_id: selectedDrawingId,
@@ -1499,13 +1643,13 @@ export function DwgTakeoffPage() {
         color: ann.color ?? activeColor,
         thickness: 2,
         line_width: 2,
-        layer_name: isPrimitive ? USER_MARKUP_LAYER : 'ANNOTATIONS',
+        layer_name: isPrimitive ? USER_MARKUP_LAYER : "ANNOTATIONS",
         measurement_value: ann.measurement_value,
         measurement_unit: ann.measurement_unit,
         // Per-annotation scale override — carries the detail-view scale on
         // every annotation drawn while the user is in per_annotation mode,
         // so mixed-scale sheets compute quantities correctly at read time.
-        scale_override: scaleMode === 'per_annotation' ? drawingScale : null,
+        scale_override: scaleMode === "per_annotation" ? drawingScale : null,
         metadata: ann.fontSize ? { font_size: ann.fontSize } : undefined,
       });
     },
@@ -1528,50 +1672,56 @@ export function DwgTakeoffPage() {
    * a plain click replaces the selection with a one-item set. Clicking
    * empty space with no modifier clears the selection.
    */
-  const handleSelectEntity = useCallback((id: string | null, event?: EntitySelectEvent) => {
-    if (id == null) {
-      if (!event?.shiftKey) {
-        setSelectedEntityIds(new Set());
+  const handleSelectEntity = useCallback(
+    (id: string | null, event?: EntitySelectEvent) => {
+      if (id == null) {
+        if (!event?.shiftKey) {
+          setSelectedEntityIds(new Set());
+          setEntityPopup(null);
+        }
+        return;
+      }
+
+      setContextMenu(null);
+
+      if (event?.shiftKey) {
+        setSelectedEntityIds((prev) => {
+          const next = new Set(prev);
+          if (next.has(id)) next.delete(id);
+          else next.add(id);
+          return next;
+        });
+        // Don't open the single-entity popup when building a multi-selection —
+        // the group aggregation panel on the right is the right affordance.
         setEntityPopup(null);
+      } else {
+        setSelectedEntityIds(new Set([id]));
+        setRightTab("properties");
+        if (event) {
+          setEntityPopup({ x: event.screenX, y: event.screenY });
+        }
       }
-      return;
-    }
+    },
+    [],
+  );
 
-    setContextMenu(null);
-
-    if (event?.shiftKey) {
+  const handleEntityContextMenu = useCallback(
+    (event: EntityContextMenuEvent) => {
+      // Right-click implicitly selects the target unless it is already part of
+      // the current multi-selection.
       setSelectedEntityIds((prev) => {
-        const next = new Set(prev);
-        if (next.has(id)) next.delete(id);
-        else next.add(id);
-        return next;
+        if (prev.has(event.entityId)) return prev;
+        return new Set([event.entityId]);
       });
-      // Don't open the single-entity popup when building a multi-selection —
-      // the group aggregation panel on the right is the right affordance.
+      setContextMenu({
+        entityId: event.entityId,
+        screenX: event.screenX,
+        screenY: event.screenY,
+      });
       setEntityPopup(null);
-    } else {
-      setSelectedEntityIds(new Set([id]));
-      setRightTab('properties');
-      if (event) {
-        setEntityPopup({ x: event.screenX, y: event.screenY });
-      }
-    }
-  }, []);
-
-  const handleEntityContextMenu = useCallback((event: EntityContextMenuEvent) => {
-    // Right-click implicitly selects the target unless it is already part of
-    // the current multi-selection.
-    setSelectedEntityIds((prev) => {
-      if (prev.has(event.entityId)) return prev;
-      return new Set([event.entityId]);
-    });
-    setContextMenu({
-      entityId: event.entityId,
-      screenX: event.screenX,
-      screenY: event.screenY,
-    });
-    setEntityPopup(null);
-  }, []);
+    },
+    [],
+  );
 
   const handleSelectDrawing = useCallback((id: string) => {
     setSelectedDrawingId(id);
@@ -1585,7 +1735,7 @@ export function DwgTakeoffPage() {
     setContextMenu(null);
     // Drop in-progress draw / calibration so a half-started measurement on
     // the previous drawing doesn't bleed into the new one.
-    setActiveTool('select');
+    setActiveTool("select");
     setCalibStep(0);
     setCalibPointA(null);
     setCalibPointB(null);
@@ -1604,7 +1754,10 @@ export function DwgTakeoffPage() {
 
   /** First entity in the selection set — drives single-entity UI affordances. */
   const primarySelectedEntityId = useMemo(
-    () => (selectedEntityIds.size > 0 ? selectedEntityIds.values().next().value ?? null : null),
+    () =>
+      selectedEntityIds.size > 0
+        ? (selectedEntityIds.values().next().value ?? null)
+        : null,
     [selectedEntityIds],
   );
 
@@ -1643,27 +1796,33 @@ export function DwgTakeoffPage() {
    * Entities with zero measurable geometry still contribute to ``count``.
    */
   const summaryByLayer = useMemo(() => {
-    const buckets = new Map<string, { area: number; length: number; count: number }>();
+    const buckets = new Map<
+      string,
+      { area: number; length: number; count: number }
+    >();
     for (const e of filteredEntities) {
       const entry = buckets.get(e.layer) ?? { area: 0, length: 0, count: 0 };
       entry.count++;
-      if (e.type === 'LWPOLYLINE' && e.vertices && e.vertices.length >= 2) {
+      if (e.type === "LWPOLYLINE" && e.vertices && e.vertices.length >= 2) {
         const closed = !!e.closed;
         if (closed && e.vertices.length >= 3) {
           entry.area += calculateArea(e.vertices);
         } else {
           entry.length += calculatePerimeter(e.vertices, false);
         }
-      } else if (e.type === 'LINE' && e.start && e.end) {
+      } else if (e.type === "LINE" && e.start && e.end) {
         entry.length += calculateDistance(e.start, e.end);
-      } else if (e.type === 'CIRCLE' && e.radius != null) {
+      } else if (e.type === "CIRCLE" && e.radius != null) {
         entry.area += Math.PI * e.radius * e.radius;
       }
       buckets.set(e.layer, entry);
     }
     return Array.from(buckets.entries())
       .map(([layer, v]) => ({ layer, ...v }))
-      .sort((a, b) => (b.area || b.length || b.count) - (a.area || a.length || a.count));
+      .sort(
+        (a, b) =>
+          (b.area || b.length || b.count) - (a.area || a.length || a.count),
+      );
   }, [filteredEntities]);
 
   /** Breakdown by DXF entity type, already computed by ``aggregateEntities``. */
@@ -1677,42 +1836,44 @@ export function DwgTakeoffPage() {
   /** CSV export of the summary (entity-type breakdown + totals). */
   const handleExportSummaryCsv = useCallback(() => {
     const lines: string[] = [
-      '# DWG Summary Measurements',
+      "# DWG Summary Measurements",
       `# Entities: ${filteredEntities.length}`,
       `# Total area (m2): ${summaryAggregate.area.toFixed(3)}`,
       `# Total perimeter (m): ${summaryAggregate.perimeter.toFixed(3)}`,
       `# Total length (m): ${summaryAggregate.length.toFixed(3)}`,
-      '',
-      'scope,key,count,area_m2,length_m',
+      "",
+      "scope,key,count,area_m2,length_m",
     ];
     for (const row of summaryByLayer) {
-      lines.push([
-        'layer',
-        JSON.stringify(row.layer),
-        row.count,
-        row.area.toFixed(3),
-        row.length.toFixed(3),
-      ].join(','));
+      lines.push(
+        [
+          "layer",
+          JSON.stringify(row.layer),
+          row.count,
+          row.area.toFixed(3),
+          row.length.toFixed(3),
+        ].join(","),
+      );
     }
     for (const row of summaryByType) {
-      lines.push([
-        'type',
-        JSON.stringify(row.type),
-        row.count,
-        '',
-        '',
-      ].join(','));
+      lines.push(
+        ["type", JSON.stringify(row.type), row.count, "", ""].join(","),
+      );
     }
-    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob([lines.join("\n")], {
+      type: "text/csv;charset=utf-8",
+    });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `dwg-summary-${selectedDrawingId?.slice(0, 8) ?? 'drawing'}.csv`;
+    link.download = `dwg-summary-${selectedDrawingId?.slice(0, 8) ?? "drawing"}.csv`;
     link.click();
     URL.revokeObjectURL(url);
     addToast({
-      type: 'success',
-      title: t('dwg_takeoff.csv_exported', { defaultValue: 'Measurements exported' }),
+      type: "success",
+      title: t("dwg_takeoff.csv_exported", {
+        defaultValue: "Measurements exported",
+      }),
     });
   }, [
     filteredEntities.length,
@@ -1728,35 +1889,39 @@ export function DwgTakeoffPage() {
    *  Lean first pass — text-only tabular report, no viewport canvas.
    *  Viewport rasterisation is tracked as a v2 polish item. */
   const handleExportSummaryPdf = useCallback(async () => {
-    const { jsPDF } = await import('jspdf');
-    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
     const drawingName =
-      drawings.find((d) => d.id === selectedDrawingId)?.name || 'Drawing';
+      drawings.find((d) => d.id === selectedDrawingId)?.name || "Drawing";
     const margin = 15;
     let y = margin;
 
     doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
-    doc.text('DWG Summary Measurements', margin, y);
+    doc.setFont("helvetica", "bold");
+    doc.text("DWG Summary Measurements", margin, y);
     y += 8;
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.text(`Drawing: ${drawingName}`, margin, y);
     y += 5;
     doc.text(`Entities: ${filteredEntities.length}`, margin, y);
     y += 5;
     doc.text(`Σ area: ${summaryAggregate.area.toFixed(2)} m²`, margin, y);
     y += 5;
-    doc.text(`Σ perimeter: ${summaryAggregate.perimeter.toFixed(2)} m`, margin, y);
+    doc.text(
+      `Σ perimeter: ${summaryAggregate.perimeter.toFixed(2)} m`,
+      margin,
+      y,
+    );
     y += 5;
     doc.text(`Σ length: ${summaryAggregate.length.toFixed(2)} m`, margin, y);
     y += 8;
 
-    doc.setFont('helvetica', 'bold');
-    doc.text('By layer', margin, y);
+    doc.setFont("helvetica", "bold");
+    doc.text("By layer", margin, y);
     y += 5;
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     for (const row of summaryByLayer.slice(0, 40)) {
       if (y > 270) {
@@ -1774,10 +1939,10 @@ export function DwgTakeoffPage() {
 
     y += 4;
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('By type', margin, y);
+    doc.setFont("helvetica", "bold");
+    doc.text("By type", margin, y);
     y += 5;
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     for (const row of summaryByType.slice(0, 40)) {
       if (y > 270) {
@@ -1788,11 +1953,11 @@ export function DwgTakeoffPage() {
       y += 4;
     }
 
-    const file = `dwg-summary-${selectedDrawingId?.slice(0, 8) ?? 'drawing'}.pdf`;
+    const file = `dwg-summary-${selectedDrawingId?.slice(0, 8) ?? "drawing"}.pdf`;
     doc.save(file);
     addToast({
-      type: 'success',
-      title: t('dwg_takeoff.pdf_exported', { defaultValue: 'PDF exported' }),
+      type: "success",
+      title: t("dwg_takeoff.pdf_exported", { defaultValue: "PDF exported" }),
     });
   }, [
     filteredEntities.length,
@@ -1817,8 +1982,10 @@ export function DwgTakeoffPage() {
     const drawing = drawings.find((d) => d.id === selectedDrawingId);
     if (!drawing) {
       addToast({
-        type: 'error',
-        title: t('dwg_takeoff.pdf_no_drawing', { defaultValue: 'No drawing selected' }),
+        type: "error",
+        title: t("dwg_takeoff.pdf_no_drawing", {
+          defaultValue: "No drawing selected",
+        }),
       });
       return;
     }
@@ -1827,12 +1994,14 @@ export function DwgTakeoffPage() {
     // so `document.querySelector` is a safe way to reach it without
     // adding an imperative ref to the viewer component.
     const canvas = document.querySelector<HTMLCanvasElement>(
-      '[data-dwg-viewer-root] canvas, .relative.h-full.w-full.overflow-hidden canvas',
+      "[data-dwg-viewer-root] canvas, .relative.h-full.w-full.overflow-hidden canvas",
     );
     if (!canvas) {
       addToast({
-        type: 'error',
-        title: t('dwg_takeoff.pdf_no_canvas', { defaultValue: 'Canvas not ready yet' }),
+        type: "error",
+        title: t("dwg_takeoff.pdf_no_canvas", {
+          defaultValue: "Canvas not ready yet",
+        }),
       });
       return;
     }
@@ -1843,13 +2012,17 @@ export function DwgTakeoffPage() {
         scale: drawingScale,
       });
       addToast({
-        type: 'success',
-        title: t('dwg_takeoff.pdf_downloaded', { defaultValue: 'PDF downloaded' }),
+        type: "success",
+        title: t("dwg_takeoff.pdf_downloaded", {
+          defaultValue: "PDF downloaded",
+        }),
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('dwg_takeoff.pdf_failed', { defaultValue: 'PDF export failed' }),
+        type: "error",
+        title: t("dwg_takeoff.pdf_failed", {
+          defaultValue: "PDF export failed",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     }
@@ -1858,8 +2031,8 @@ export function DwgTakeoffPage() {
   const closeUploadModal = useCallback(() => {
     setShowUpload(false);
     setUploadFile(null);
-    setUploadName('');
-    setUploadDiscipline('architectural');
+    setUploadName("");
+    setUploadDiscipline("architectural");
   }, []);
 
   /* ── BOQ-link picker handlers ──────────────────────────────────────
@@ -1869,15 +2042,25 @@ export function DwgTakeoffPage() {
 
   /** Canonical unit normalization — maps display glyph → canonical backend unit. */
   const normalizeUnit = useCallback((unit: string) => {
-    const map: Record<string, string> = { m: 'm', 'm\u00B2': 'm2', 'm\u00B3': 'm3', pcs: 'pcs' };
+    const map: Record<string, string> = {
+      m: "m",
+      "m\u00B2": "m2",
+      "m\u00B3": "m3",
+      pcs: "pcs",
+    };
     return map[unit] ?? unit;
   }, []);
 
   const loadPickerBoqs = useCallback(async (pid: string) => {
-    if (!pid) { setLinkPickerBoqs([]); return; }
+    if (!pid) {
+      setLinkPickerBoqs([]);
+      return;
+    }
     setLinkBoqsLoading(true);
     try {
-      const boqs = await apiGet<{ id: string; name: string }[]>(`/v1/boq/boqs/?project_id=${pid}`);
+      const boqs = await apiGet<{ id: string; name: string }[]>(
+        `/v1/boq/boqs/?project_id=${pid}`,
+      );
       setLinkPickerBoqs(boqs);
     } catch {
       setLinkPickerBoqs([]);
@@ -1887,7 +2070,10 @@ export function DwgTakeoffPage() {
   }, []);
 
   const loadPickerPositions = useCallback(async (boqId: string) => {
-    if (!boqId) { setLinkBoqPositions([]); return; }
+    if (!boqId) {
+      setLinkBoqPositions([]);
+      return;
+    }
     setLinkPositionsLoading(true);
     try {
       const boqData = await boqApi.get(boqId);
@@ -1902,215 +2088,296 @@ export function DwgTakeoffPage() {
   const activeBoqIdFromStore = useProjectContextStore((s) => s.activeBOQId);
 
   /** Open the picker for the currently-selected DWG entity. */
-  const handleOpenLinkToBoq = useCallback(async (entityId: string) => {
-    setLinkingEntityId(entityId);
-    setLinkPickerSearch('');
-    setLinkPickerMode('pick');
+  const handleOpenLinkToBoq = useCallback(
+    async (entityId: string) => {
+      setLinkingEntityId(entityId);
+      setLinkPickerSearch("");
+      setLinkPickerMode("pick");
 
-    const seedProject = projectId || '';
-    const seedBoq = activeBoqIdFromStore ?? '';
-    setLinkPickerProjectId(seedProject);
-    setLinkPickerBoqId(seedBoq);
+      const seedProject = projectId || "";
+      const seedBoq = activeBoqIdFromStore ?? "";
+      setLinkPickerProjectId(seedProject);
+      setLinkPickerBoqId(seedBoq);
 
-    try {
-      const projects = await projectsApi.list();
-      setLinkPickerProjects(projects.map((p) => ({ id: p.id, name: p.name })));
-    } catch {
-      setLinkPickerProjects([]);
-    }
+      try {
+        const projects = await projectsApi.list();
+        setLinkPickerProjects(
+          projects.map((p) => ({ id: p.id, name: p.name })),
+        );
+      } catch {
+        setLinkPickerProjects([]);
+      }
 
-    if (seedProject) {
-      await loadPickerBoqs(seedProject);
-    } else {
-      setLinkPickerBoqs([]);
-    }
-    if (seedBoq) {
-      await loadPickerPositions(seedBoq);
-    } else {
+      if (seedProject) {
+        await loadPickerBoqs(seedProject);
+      } else {
+        setLinkPickerBoqs([]);
+      }
+      if (seedBoq) {
+        await loadPickerPositions(seedBoq);
+      } else {
+        setLinkBoqPositions([]);
+      }
+    },
+    [projectId, activeBoqIdFromStore, loadPickerBoqs, loadPickerPositions],
+  );
+
+  const handlePickerProjectChange = useCallback(
+    async (pid: string) => {
+      setLinkPickerProjectId(pid);
+      setLinkPickerBoqId("");
       setLinkBoqPositions([]);
-    }
-  }, [projectId, activeBoqIdFromStore, loadPickerBoqs, loadPickerPositions]);
+      await loadPickerBoqs(pid);
+    },
+    [loadPickerBoqs],
+  );
 
-  const handlePickerProjectChange = useCallback(async (pid: string) => {
-    setLinkPickerProjectId(pid);
-    setLinkPickerBoqId('');
-    setLinkBoqPositions([]);
-    await loadPickerBoqs(pid);
-  }, [loadPickerBoqs]);
-
-  const handlePickerBoqChange = useCallback(async (bid: string) => {
-    setLinkPickerBoqId(bid);
-    await loadPickerPositions(bid);
-  }, [loadPickerPositions]);
+  const handlePickerBoqChange = useCallback(
+    async (bid: string) => {
+      setLinkPickerBoqId(bid);
+      await loadPickerPositions(bid);
+    },
+    [loadPickerPositions],
+  );
 
   /**
    * Ensure we have a `text_pin` annotation backing the link, creating one
    * at the entity centroid if none exists yet.  Returns the annotation id
    * (server-assigned), or null if creation fails.
    */
-  const ensureAnnotationForEntity = useCallback(async (
-    entity: DxfEntity,
-    measurement: { value: number; unit: string } | null,
-  ): Promise<string | null> => {
-    if (!selectedDrawingId) return null;
-    const drawing = drawings.find((d) => d.id === selectedDrawingId);
-    const effectiveProjectId = drawing?.project_id || projectId;
-    if (!effectiveProjectId) return null;
+  const ensureAnnotationForEntity = useCallback(
+    async (
+      entity: DxfEntity,
+      measurement: { value: number; unit: string } | null,
+    ): Promise<string | null> => {
+      if (!selectedDrawingId) return null;
+      const drawing = drawings.find((d) => d.id === selectedDrawingId);
+      const effectiveProjectId = drawing?.project_id || projectId;
+      if (!effectiveProjectId) return null;
 
-    // Reuse an existing text_pin annotation anchored to this entity, if any.
-    const existing = annotations.find(
-      (a) => a.type === 'text_pin'
-        && (a.metadata as Record<string, unknown> | undefined)?.['dwg_entity_id'] === entity.id,
-    );
-    if (existing) return existing.id;
+      // Reuse an existing text_pin annotation anchored to this entity, if any.
+      const existing = annotations.find(
+        (a) =>
+          a.type === "text_pin" &&
+          (a.metadata as Record<string, unknown> | undefined)?.[
+            "dwg_entity_id"
+          ] === entity.id,
+      );
+      if (existing) return existing.id;
 
-    const centroid = computeEntityCentroid(entity);
-    try {
-      const created = await createAnnotation({
-        project_id: effectiveProjectId,
-        drawing_id: selectedDrawingId,
-        annotation_type: 'text_pin',
-        geometry: { points: [centroid] },
-        text: entity.layer,
-        color: activeColor,
-        measurement_value: measurement?.value,
-        measurement_unit: measurement?.unit,
-        metadata: { dwg_entity_id: entity.id, dwg_entity_type: entity.type },
-      });
-      queryClient.invalidateQueries({ queryKey: ['dwg-annotations', selectedDrawingId] });
-      return created.id;
-    } catch {
-      return null;
-    }
-  }, [selectedDrawingId, projectId, drawings, annotations, activeColor, queryClient]);
-
-  const handleLinkToPosition = useCallback(async (entityId: string, position: Position) => {
-    const entity = entities.find((e) => e.id === entityId);
-    if (!entity || !selectedDrawingId) return;
-    setLinkingInProgress(true);
-    try {
-      const measurement = extractEntityMeasurement(entity, effectiveScale);
-      const annotationId = await ensureAnnotationForEntity(entity, measurement);
-
-      if (annotationId) {
-        try { await linkAnnotationToBoq(annotationId, position.id); } catch { /* non-critical */ }
-      }
-
-      const existingMeta = (position.metadata ?? {}) as Record<string, unknown>;
-      const patch: Record<string, unknown> = {
-        metadata: {
-          ...existingMeta,
-          dwg_drawing_id: selectedDrawingId,
-          dwg_entity_id: entity.id,
-          dwg_entity_type: entity.type,
-          linked_annotation_id: annotationId ?? undefined,
-        },
-      };
-      if (measurement) {
-        patch['quantity'] = measurement.value;
-        patch['unit'] = measurement.unit;
-      }
-      await boqApi.updatePosition(position.id, patch);
-
-      queryClient.invalidateQueries({ queryKey: ['dwg-annotations', selectedDrawingId] });
-      queryClient.invalidateQueries({ queryKey: ['boq', position.boq_id] });
-
-      addToast({
-        type: 'success',
-        title: t('dwg_takeoff.linked_to_boq', { defaultValue: 'Linked to BOQ' }),
-        message: measurement
-          ? `${measurement.value} ${measurement.unit} \u2192 ${position.ordinal}`
-          : position.ordinal,
-      });
-      setLinkingEntityId(null);
-      setEntityPopup(null);
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: t('dwg_takeoff.link_failed', { defaultValue: 'Link failed' }),
-        message: err instanceof Error ? err.message : '',
-      });
-    } finally {
-      setLinkingInProgress(false);
-    }
-  }, [entities, selectedDrawingId, effectiveScale, ensureAnnotationForEntity, queryClient, addToast, t]);
-
-  const handleCreateAndLink = useCallback(async (entityId: string) => {
-    const entity = entities.find((e) => e.id === entityId);
-    if (!entity) return;
-    if (!linkPickerBoqId) {
-      addToast({
-        type: 'warning',
-        title: t('dwg_takeoff.link_need_boq', { defaultValue: 'Pick a BOQ first' }),
-      });
-      return;
-    }
-    setLinkingInProgress(true);
-    try {
-      // Derive next DW.NNN ordinal from existing positions.
-      const dwgOrdinals = linkBoqPositions
-        .map((p) => {
-          const match = /^DW\.(\d+)$/.exec(p.ordinal || '');
-          return match ? parseInt(match[1]!, 10) : 0;
-        })
-        .filter((n) => n > 0);
-      const nextNum = (dwgOrdinals.length ? Math.max(...dwgOrdinals) : 0) + 1;
-      const ordinal = `DW.${String(nextNum).padStart(3, '0')}`;
-
-      const measurement = extractEntityMeasurement(entity, effectiveScale);
-      const qty = measurement?.value ?? 0;
-      const unit = measurement?.unit ?? 'pcs';
-      const description = t('dwg_takeoff.position_default_desc', {
-        defaultValue: 'From DWG: {{layer}}',
-        layer: entity.layer,
-      });
-
-      const newPos = await boqApi.addPosition({
-        boq_id: linkPickerBoqId,
-        ordinal,
-        description,
-        unit,
-        quantity: qty,
-        unit_rate: 0,
-      });
-
-      const annotationId = await ensureAnnotationForEntity(entity, measurement);
-      if (annotationId) {
-        try { await linkAnnotationToBoq(annotationId, newPos.id); } catch { /* non-critical */ }
-      }
-
+      const centroid = computeEntityCentroid(entity);
       try {
-        await boqApi.updatePosition(newPos.id, {
+        const created = await createAnnotation({
+          project_id: effectiveProjectId,
+          drawing_id: selectedDrawingId,
+          annotation_type: "text_pin",
+          geometry: { points: [centroid] },
+          text: entity.layer,
+          color: activeColor,
+          measurement_value: measurement?.value,
+          measurement_unit: measurement?.unit,
+          metadata: { dwg_entity_id: entity.id, dwg_entity_type: entity.type },
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["dwg-annotations", selectedDrawingId],
+        });
+        return created.id;
+      } catch {
+        return null;
+      }
+    },
+    [
+      selectedDrawingId,
+      projectId,
+      drawings,
+      annotations,
+      activeColor,
+      queryClient,
+    ],
+  );
+
+  const handleLinkToPosition = useCallback(
+    async (entityId: string, position: Position) => {
+      const entity = entities.find((e) => e.id === entityId);
+      if (!entity || !selectedDrawingId) return;
+      setLinkingInProgress(true);
+      try {
+        const measurement = extractEntityMeasurement(entity, effectiveScale);
+        const annotationId = await ensureAnnotationForEntity(
+          entity,
+          measurement,
+        );
+
+        if (annotationId) {
+          try {
+            await linkAnnotationToBoq(annotationId, position.id);
+          } catch {
+            /* non-critical */
+          }
+        }
+
+        const existingMeta = (position.metadata ?? {}) as Record<
+          string,
+          unknown
+        >;
+        const patch: Record<string, unknown> = {
           metadata: {
-            dwg_drawing_id: selectedDrawingId ?? undefined,
+            ...existingMeta,
+            dwg_drawing_id: selectedDrawingId,
             dwg_entity_id: entity.id,
             dwg_entity_type: entity.type,
             linked_annotation_id: annotationId ?? undefined,
           },
+        };
+        if (measurement) {
+          patch["quantity"] = measurement.value;
+          patch["unit"] = measurement.unit;
+        }
+        await boqApi.updatePosition(position.id, patch);
+
+        queryClient.invalidateQueries({
+          queryKey: ["dwg-annotations", selectedDrawingId],
         });
-      } catch { /* metadata is non-critical */ }
+        queryClient.invalidateQueries({ queryKey: ["boq", position.boq_id] });
 
-      setLinkBoqPositions((prev) => [...prev, newPos]);
-      queryClient.invalidateQueries({ queryKey: ['dwg-annotations', selectedDrawingId] });
-      queryClient.invalidateQueries({ queryKey: ['boq', linkPickerBoqId] });
+        addToast({
+          type: "success",
+          title: t("dwg_takeoff.linked_to_boq", {
+            defaultValue: "Linked to BOQ",
+          }),
+          message: measurement
+            ? `${measurement.value} ${measurement.unit} \u2192 ${position.ordinal}`
+            : position.ordinal,
+        });
+        setLinkingEntityId(null);
+        setEntityPopup(null);
+      } catch (err) {
+        addToast({
+          type: "error",
+          title: t("dwg_takeoff.link_failed", { defaultValue: "Link failed" }),
+          message: err instanceof Error ? err.message : "",
+        });
+      } finally {
+        setLinkingInProgress(false);
+      }
+    },
+    [
+      entities,
+      selectedDrawingId,
+      effectiveScale,
+      ensureAnnotationForEntity,
+      queryClient,
+      addToast,
+      t,
+    ],
+  );
 
-      addToast({
-        type: 'success',
-        title: t('dwg_takeoff.linked_created', { defaultValue: 'Position created & linked' }),
-        message: `${ordinal} \u2014 ${qty} ${unit}`,
-      });
-      setLinkingEntityId(null);
-      setEntityPopup(null);
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: t('dwg_takeoff.create_link_failed', { defaultValue: 'Create & link failed' }),
-        message: err instanceof Error ? err.message : '',
-      });
-    } finally {
-      setLinkingInProgress(false);
-    }
-  }, [entities, linkPickerBoqId, linkBoqPositions, effectiveScale, ensureAnnotationForEntity, selectedDrawingId, queryClient, addToast, t]);
+  const handleCreateAndLink = useCallback(
+    async (entityId: string) => {
+      const entity = entities.find((e) => e.id === entityId);
+      if (!entity) return;
+      if (!linkPickerBoqId) {
+        addToast({
+          type: "warning",
+          title: t("dwg_takeoff.link_need_boq", {
+            defaultValue: "Pick a BOQ first",
+          }),
+        });
+        return;
+      }
+      setLinkingInProgress(true);
+      try {
+        // Derive next DW.NNN ordinal from existing positions.
+        const dwgOrdinals = linkBoqPositions
+          .map((p) => {
+            const match = /^DW\.(\d+)$/.exec(p.ordinal || "");
+            return match ? parseInt(match[1]!, 10) : 0;
+          })
+          .filter((n) => n > 0);
+        const nextNum = (dwgOrdinals.length ? Math.max(...dwgOrdinals) : 0) + 1;
+        const ordinal = `DW.${String(nextNum).padStart(3, "0")}`;
+
+        const measurement = extractEntityMeasurement(entity, effectiveScale);
+        const qty = measurement?.value ?? 0;
+        const unit = measurement?.unit ?? "pcs";
+        const description = t("dwg_takeoff.position_default_desc", {
+          defaultValue: "From DWG: {{layer}}",
+          layer: entity.layer,
+        });
+
+        const newPos = await boqApi.addPosition({
+          boq_id: linkPickerBoqId,
+          ordinal,
+          description,
+          unit,
+          quantity: qty,
+          unit_rate: 0,
+        });
+
+        const annotationId = await ensureAnnotationForEntity(
+          entity,
+          measurement,
+        );
+        if (annotationId) {
+          try {
+            await linkAnnotationToBoq(annotationId, newPos.id);
+          } catch {
+            /* non-critical */
+          }
+        }
+
+        try {
+          await boqApi.updatePosition(newPos.id, {
+            metadata: {
+              dwg_drawing_id: selectedDrawingId ?? undefined,
+              dwg_entity_id: entity.id,
+              dwg_entity_type: entity.type,
+              linked_annotation_id: annotationId ?? undefined,
+            },
+          });
+        } catch {
+          /* metadata is non-critical */
+        }
+
+        setLinkBoqPositions((prev) => [...prev, newPos]);
+        queryClient.invalidateQueries({
+          queryKey: ["dwg-annotations", selectedDrawingId],
+        });
+        queryClient.invalidateQueries({ queryKey: ["boq", linkPickerBoqId] });
+
+        addToast({
+          type: "success",
+          title: t("dwg_takeoff.linked_created", {
+            defaultValue: "Position created & linked",
+          }),
+          message: `${ordinal} \u2014 ${qty} ${unit}`,
+        });
+        setLinkingEntityId(null);
+        setEntityPopup(null);
+      } catch (err) {
+        addToast({
+          type: "error",
+          title: t("dwg_takeoff.create_link_failed", {
+            defaultValue: "Create & link failed",
+          }),
+          message: err instanceof Error ? err.message : "",
+        });
+      } finally {
+        setLinkingInProgress(false);
+      }
+    },
+    [
+      entities,
+      linkPickerBoqId,
+      linkBoqPositions,
+      effectiveScale,
+      ensureAnnotationForEntity,
+      selectedDrawingId,
+      queryClient,
+      addToast,
+      t,
+    ],
+  );
 
   /* ── RFC 11: per-entity hide / isolate / group handlers ───────────── */
 
@@ -2128,16 +2395,19 @@ export function DwgTakeoffPage() {
   }, []);
 
   /** Isolate: hide everything EXCEPT the given ids. */
-  const handleIsolateEntities = useCallback((ids: string[]) => {
-    if (ids.length === 0) return;
-    const keep = new Set(ids);
-    const hide = new Set<string>();
-    for (const e of entities) {
-      if (!keep.has(e.id)) hide.add(e.id);
-    }
-    setHiddenEntityIds(hide);
-    setContextMenu(null);
-  }, [entities]);
+  const handleIsolateEntities = useCallback(
+    (ids: string[]) => {
+      if (ids.length === 0) return;
+      const keep = new Set(ids);
+      const hide = new Set<string>();
+      for (const e of entities) {
+        if (!keep.has(e.id)) hide.add(e.id);
+      }
+      setHiddenEntityIds(hide);
+      setContextMenu(null);
+    },
+    [entities],
+  );
 
   /** Unhide all hidden entities. */
   const handleShowAllEntities = useCallback(() => {
@@ -2152,13 +2422,13 @@ export function DwgTakeoffPage() {
    */
   const handleSaveSelectionAsGroup = useCallback(async () => {
     if (!selectedDrawingId || selectedEntityIds.size === 0) return;
-    const defaultName = t('dwg_takeoff.group_default_name', {
-      defaultValue: 'Group of {{count}}',
+    const defaultName = t("dwg_takeoff.group_default_name", {
+      defaultValue: "Group of {{count}}",
       count: selectedEntityIds.size,
     });
     // eslint-disable-next-line no-alert
     const name = window.prompt(
-      t('dwg_takeoff.group_prompt', { defaultValue: 'Name this group:' }),
+      t("dwg_takeoff.group_prompt", { defaultValue: "Name this group:" }),
       defaultName,
     );
     if (!name || !name.trim()) return;
@@ -2169,16 +2439,18 @@ export function DwgTakeoffPage() {
         name: name.trim(),
       });
       addToast({
-        type: 'success',
-        title: t('dwg_takeoff.group_saved', { defaultValue: 'Group saved' }),
+        type: "success",
+        title: t("dwg_takeoff.group_saved", { defaultValue: "Group saved" }),
         message: `${name.trim()} (${selectedEntityIds.size})`,
       });
       setContextMenu(null);
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('dwg_takeoff.group_save_failed', { defaultValue: 'Could not save group' }),
-        message: err instanceof Error ? err.message : '',
+        type: "error",
+        title: t("dwg_takeoff.group_save_failed", {
+          defaultValue: "Could not save group",
+        }),
+        message: err instanceof Error ? err.message : "",
       });
     }
   }, [selectedDrawingId, selectedEntityIds, addToast, t]);
@@ -2194,72 +2466,84 @@ export function DwgTakeoffPage() {
    * on the first selected entity's shape (closed polys → area; otherwise
    * length).
    */
-  const handleLinkGroupToPosition = useCallback(async (position: Position) => {
-    if (!selectedDrawingId || selectedEntityIds.size === 0) return;
-    setLinkingInProgress(true);
-    try {
-      const ids = Array.from(selectedEntityIds);
-      const groupName = t('dwg_takeoff.group_default_name', {
-        defaultValue: 'Group of {{count}}',
-        count: ids.length,
-      });
-      const group = await createEntityGroup({
-        drawing_id: selectedDrawingId,
-        entity_ids: ids,
-        name: groupName,
-      });
+  const handleLinkGroupToPosition = useCallback(
+    async (position: Position) => {
+      if (!selectedDrawingId || selectedEntityIds.size === 0) return;
+      setLinkingInProgress(true);
+      try {
+        const ids = Array.from(selectedEntityIds);
+        const groupName = t("dwg_takeoff.group_default_name", {
+          defaultValue: "Group of {{count}}",
+          count: ids.length,
+        });
+        const group = await createEntityGroup({
+          drawing_id: selectedDrawingId,
+          entity_ids: ids,
+          name: groupName,
+        });
 
-      const agg = aggregateEntities(selectedEntities);
-      const prefersArea = agg.area > 0 && agg.length === 0;
-      const quantity = prefersArea ? agg.area : agg.length > 0 ? agg.length : agg.perimeter;
-      const unit = prefersArea ? 'm2' : 'm';
+        const agg = aggregateEntities(selectedEntities);
+        const prefersArea = agg.area > 0 && agg.length === 0;
+        const quantity = prefersArea
+          ? agg.area
+          : agg.length > 0
+            ? agg.length
+            : agg.perimeter;
+        const unit = prefersArea ? "m2" : "m";
 
-      const existingMeta = (position.metadata ?? {}) as Record<string, unknown>;
-      const patch: Record<string, unknown> = {
-        metadata: {
-          ...existingMeta,
-          dwg_drawing_id: selectedDrawingId,
-          dwg_group_id: group.id,
-          dwg_entity_ids: ids,
-        },
-      };
-      if (quantity > 0) {
-        patch['quantity'] = Math.round(quantity * 100) / 100;
-        patch['unit'] = unit;
+        const existingMeta = (position.metadata ?? {}) as Record<
+          string,
+          unknown
+        >;
+        const patch: Record<string, unknown> = {
+          metadata: {
+            ...existingMeta,
+            dwg_drawing_id: selectedDrawingId,
+            dwg_group_id: group.id,
+            dwg_entity_ids: ids,
+          },
+        };
+        if (quantity > 0) {
+          patch["quantity"] = Math.round(quantity * 100) / 100;
+          patch["unit"] = unit;
+        }
+        await boqApi.updatePosition(position.id, patch);
+
+        queryClient.invalidateQueries({ queryKey: ["boq", position.boq_id] });
+        addToast({
+          type: "success",
+          title: t("dwg_takeoff.linked_to_boq", {
+            defaultValue: "Linked to BOQ",
+          }),
+          message: `${ids.length} \u2192 ${position.ordinal}`,
+        });
+        setLinkingEntityId(null);
+      } catch (err) {
+        addToast({
+          type: "error",
+          title: t("dwg_takeoff.link_failed", { defaultValue: "Link failed" }),
+          message: err instanceof Error ? err.message : "",
+        });
+      } finally {
+        setLinkingInProgress(false);
       }
-      await boqApi.updatePosition(position.id, patch);
-
-      queryClient.invalidateQueries({ queryKey: ['boq', position.boq_id] });
-      addToast({
-        type: 'success',
-        title: t('dwg_takeoff.linked_to_boq', { defaultValue: 'Linked to BOQ' }),
-        message: `${ids.length} \u2192 ${position.ordinal}`,
-      });
-      setLinkingEntityId(null);
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: t('dwg_takeoff.link_failed', { defaultValue: 'Link failed' }),
-        message: err instanceof Error ? err.message : '',
-      });
-    } finally {
-      setLinkingInProgress(false);
-    }
-  }, [
-    selectedDrawingId,
-    selectedEntityIds,
-    selectedEntities,
-    queryClient,
-    addToast,
-    t,
-  ]);
+    },
+    [
+      selectedDrawingId,
+      selectedEntityIds,
+      selectedEntities,
+      queryClient,
+      addToast,
+      t,
+    ],
+  );
 
   // Global keyboard shortcuts for the page (Q1 UX #1 + #2).
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       // Ignore shortcuts when typing in inputs
       const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       // Skip if a modifier other than Shift / Ctrl is active — we only
       // own single-key tools and Ctrl+{Z,Y}/Ctrl+Shift+Z.
       if (e.altKey || e.metaKey) return;
@@ -2268,12 +2552,12 @@ export function DwgTakeoffPage() {
       // Ctrl is held, to avoid the browser shortcut kicking in.
       const key = e.key.toLowerCase();
       if (e.ctrlKey) {
-        if (key === 'z' && !e.shiftKey) {
+        if (key === "z" && !e.shiftKey) {
           e.preventDefault();
           handleUndo();
           return;
         }
-        if (key === 'y' || (key === 'z' && e.shiftKey)) {
+        if (key === "y" || (key === "z" && e.shiftKey)) {
           e.preventDefault();
           handleRedo();
           return;
@@ -2283,7 +2567,7 @@ export function DwgTakeoffPage() {
       }
 
       switch (e.key) {
-        case 'Escape':
+        case "Escape":
           if (contextMenu) {
             setContextMenu(null);
           } else if (selectedEntityIds.size > 0) {
@@ -2293,46 +2577,65 @@ export function DwgTakeoffPage() {
             setSelectedAnnotationId(null);
           }
           break;
-        case 'v': case 'V':
-          setActiveTool('select');
+        case "v":
+        case "V":
+          setActiveTool("select");
           break;
-        case 'h': case 'H':
-          setActiveTool('pan');
+        case "h":
+        case "H":
+          setActiveTool("pan");
           break;
-        case 'd': case 'D':
-          setActiveTool('distance');
+        case "d":
+        case "D":
+          setActiveTool("distance");
           break;
-        case 'l': case 'L':
-          setActiveTool('line');
+        case "l":
+        case "L":
+          setActiveTool("line");
           break;
-        case 'p': case 'P':
-          setActiveTool('polyline');
+        case "p":
+        case "P":
+          setActiveTool("polyline");
           break;
-        case 'a': case 'A':
-          setActiveTool('area');
+        case "a":
+        case "A":
+          setActiveTool("area");
           break;
-        case 'r': case 'R':
-          setActiveTool('rectangle');
+        case "r":
+        case "R":
+          setActiveTool("rectangle");
           break;
-        case 'c': case 'C':
-          setActiveTool('circle');
+        case "c":
+        case "C":
+          setActiveTool("circle");
           break;
-        case 't': case 'T':
-          setActiveTool('text_pin');
+        case "t":
+        case "T":
+          setActiveTool("text_pin");
           break;
-        case 'k': case 'K':
-          setActiveTool('calibrate');
+        case "k":
+        case "K":
+          setActiveTool("calibrate");
           break;
       }
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [selectedEntityIds, selectedAnnotationId, contextMenu, handleUndo, handleRedo]);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [
+    selectedEntityIds,
+    selectedAnnotationId,
+    contextMenu,
+    handleUndo,
+    handleRedo,
+  ]);
 
   /* ── Render ──────────────────────────────────────────────────────── */
 
   return (
-    <div className="flex flex-col -mx-4 sm:-mx-7 -mt-6 -mb-4 overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
+    <div
+      className="flex flex-col -mx-4 sm:-mx-7 -mt-6 -mb-4 overflow-hidden"
+      style={{ height: "calc(100vh - 56px)" }}
+    >
       {/* Top filter bar removed — ToolPalette now floats inside the viewer
           in the top-left corner so the drawing gets maximum vertical space
           and the tools live where the cursor already is while drawing. */}
@@ -2343,7 +2646,7 @@ export function DwgTakeoffPage() {
           {!selectedDrawingId ? (
             <div
               className="oe-dwg-canvas relative flex flex-1 overflow-hidden overflow-y-auto"
-              style={{ background: '#3f3f3f' }}
+              style={{ background: "#3f3f3f" }}
             >
               {/* AutoCAD-style drafting grid + vignette */}
               <GridBackground className="z-0" />
@@ -2352,7 +2655,7 @@ export function DwgTakeoffPage() {
                 className="absolute inset-0 pointer-events-none z-0"
                 style={{
                   background:
-                    'radial-gradient(ellipse 60% 50% at 50% 40%, rgba(59,130,246,0.06) 0%, transparent 70%)',
+                    "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(59,130,246,0.06) 0%, transparent 70%)",
                 }}
               />
               {/* Crosshair at center (AutoCAD UCS marker) */}
@@ -2368,11 +2671,17 @@ export function DwgTakeoffPage() {
                     <div className="rounded-2xl bg-[#22252b]/90 backdrop-blur-sm border border-[#333842] shadow-2xl shadow-black/30 p-3 flex flex-col h-full">
                       <button
                         type="button"
-                        aria-label={t('dwg_takeoff.upload_aria', { defaultValue: 'Upload DWG or DXF file' })}
+                        aria-label={t("dwg_takeoff.upload_aria", {
+                          defaultValue: "Upload DWG or DXF file",
+                        })}
                         onDrop={(e) => {
                           e.preventDefault();
                           const f = e.dataTransfer.files?.[0];
-                          if (f) { setUploadFile(f); setUploadName(f.name.replace(/\.[^.]+$/, '')); setShowUpload(true); }
+                          if (f) {
+                            setUploadFile(f);
+                            setUploadName(f.name.replace(/\.[^.]+$/, ""));
+                            setShowUpload(true);
+                          }
                         }}
                         onDragOver={(e) => e.preventDefault()}
                         className="group/drop flex flex-col items-center justify-center gap-7 rounded-xl p-20 text-center cursor-pointer transition-all flex-1 border-2 border-dashed border-[#444c5a] bg-[#1a1d23]/60 hover:border-blue-500/50 hover:bg-blue-500/5 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#22252b]"
@@ -2382,12 +2691,24 @@ export function DwgTakeoffPage() {
                           <Upload size={36} className="text-blue-400" />
                         </div>
                         <div>
-                          <p className="text-base font-semibold text-gray-200">{t('dwg_takeoff.drop_here', { defaultValue: 'Drop your drawing here' })}</p>
-                          <p className="text-sm text-gray-500 mt-1.5">{t('dwg_takeoff.drop_hint', { defaultValue: 'or click to browse files' })}</p>
+                          <p className="text-base font-semibold text-gray-200">
+                            {t("dwg_takeoff.drop_here", {
+                              defaultValue: "Drop your drawing here",
+                            })}
+                          </p>
+                          <p className="text-sm text-gray-500 mt-1.5">
+                            {t("dwg_takeoff.drop_hint", {
+                              defaultValue: "or click to browse files",
+                            })}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2.5">
-                          <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-orange-500/10 text-orange-400 border border-orange-500/20 font-semibold">.dwg</span>
-                          <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-orange-500/10 text-orange-400 border border-orange-500/20 font-semibold">.dxf</span>
+                          <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-orange-500/10 text-orange-400 border border-orange-500/20 font-semibold">
+                            .dwg
+                          </span>
+                          <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-orange-500/10 text-orange-400 border border-orange-500/20 font-semibold">
+                            .dxf
+                          </span>
                         </div>
                         <p className="text-[11px] text-gray-600 leading-relaxed mt-1 text-center">
                           AutoCAD 2000–2025 &middot; DXF R12–R2025
@@ -2401,7 +2722,9 @@ export function DwgTakeoffPage() {
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <h1 className="text-2xl font-bold text-gray-100 tracking-tight leading-tight">
-                          {t('dwg_takeoff.hero_title', { defaultValue: 'DWG Takeoff' })}
+                          {t("dwg_takeoff.hero_title", {
+                            defaultValue: "DWG Takeoff",
+                          })}
                         </h1>
                         <OfflineReadyBadge
                           readiness={offlineReadiness}
@@ -2410,7 +2733,10 @@ export function DwgTakeoffPage() {
                         />
                       </div>
                       <p className="text-base text-gray-400 mt-3 leading-relaxed">
-                        {t('dwg_takeoff.hero_subtitle', { defaultValue: 'Open DWG/DXF drawings, measure areas and lengths, annotate directly on the drawing, and link measurements to your BOQ positions.' })}
+                        {t("dwg_takeoff.hero_subtitle", {
+                          defaultValue:
+                            "Open DWG/DXF drawings, measure areas and lengths, annotate directly on the drawing, and link measurements to your BOQ positions.",
+                        })}
                       </p>
                       <p className="text-xs text-gray-600 mt-3 leading-relaxed">
                         AutoCAD DWG 2000–2025 &middot; DXF R12–R2025
@@ -2418,14 +2744,41 @@ export function DwgTakeoffPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-3 mt-2">
                       {[
-                        { icon: Layers, title: t('dwg_takeoff.feat_layers', { defaultValue: 'Layer Control' }), desc: t('dwg_takeoff.feat_layers_desc', { defaultValue: 'Toggle layers on/off, filter by entity type' }) },
-                        { icon: FileUp, title: t('dwg_takeoff.feat_measure', { defaultValue: 'Measurements' }), desc: t('dwg_takeoff.feat_measure_desc', { defaultValue: 'Area, length, perimeter · link to BOQ' }) },
+                        {
+                          icon: Layers,
+                          title: t("dwg_takeoff.feat_layers", {
+                            defaultValue: "Layer Control",
+                          }),
+                          desc: t("dwg_takeoff.feat_layers_desc", {
+                            defaultValue:
+                              "Toggle layers on/off, filter by entity type",
+                          }),
+                        },
+                        {
+                          icon: FileUp,
+                          title: t("dwg_takeoff.feat_measure", {
+                            defaultValue: "Measurements",
+                          }),
+                          desc: t("dwg_takeoff.feat_measure_desc", {
+                            defaultValue:
+                              "Area, length, perimeter · link to BOQ",
+                          }),
+                        },
                       ].map((f, i) => (
-                        <div key={i} className="flex items-start gap-3 rounded-xl p-4 bg-[#22252b]/80 backdrop-blur-sm border border-[#333842] hover:border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.06)] transition-all">
-                          <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0"><f.icon size={15} className="text-orange-400" /></div>
+                        <div
+                          key={i}
+                          className="flex items-start gap-3 rounded-xl p-4 bg-[#22252b]/80 backdrop-blur-sm border border-[#333842] hover:border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.06)] transition-all"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0">
+                            <f.icon size={15} className="text-orange-400" />
+                          </div>
                           <div className="min-w-0">
-                            <h3 className="text-xs font-semibold text-gray-200 leading-tight">{f.title}</h3>
-                            <p className="text-[11px] text-gray-500 leading-snug mt-1">{f.desc}</p>
+                            <h3 className="text-xs font-semibold text-gray-200 leading-tight">
+                              {f.title}
+                            </h3>
+                            <p className="text-[11px] text-gray-500 leading-snug mt-1">
+                              {f.desc}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -2434,18 +2787,28 @@ export function DwgTakeoffPage() {
                     {/* Local processing badge — sits under the feature cards */}
                     <div className="mt-3 flex items-center justify-start">
                       <div className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                        <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
+                        <ShieldCheck
+                          size={14}
+                          className="text-emerald-400 shrink-0"
+                        />
                         <span className="text-xs text-emerald-300/90 font-medium">
-                          {t('common.local_processing', { defaultValue: '100% Local Processing · Your files never leave your computer' })}
+                          {t("common.local_processing", {
+                            defaultValue:
+                              "100% Local Processing · Your files never leave your computer",
+                          })}
                         </span>
-                        <span className="text-[10px] text-emerald-500/30">|</span>
+                        <span className="text-[10px] text-emerald-500/30">
+                          |
+                        </span>
                         <a
                           href="https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN-pipeline-with-conversion-validation-qto"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-[10px] text-emerald-400/70 hover:text-emerald-300 hover:underline whitespace-nowrap"
                         >
-                          {t('common.powered_by_cad2data', { defaultValue: 'Powered by DDC cad2data' })}
+                          {t("common.powered_by_cad2data", {
+                            defaultValue: "Powered by DDC cad2data",
+                          })}
                         </a>
                       </div>
                     </div>
@@ -2456,575 +2819,696 @@ export function DwgTakeoffPage() {
           ) : loadingEntities ? (
             <div className="flex flex-1 items-center justify-center">
               <div className="flex flex-col items-center gap-4 max-w-sm w-full px-6">
-                <Loader2 size={32} className="animate-spin text-muted-foreground" />
+                <Loader2
+                  size={32}
+                  className="animate-spin text-muted-foreground"
+                />
                 <p className="text-xs text-content-tertiary">
-                  {t('dwg_takeoff.loading_drawing', { defaultValue: 'Loading drawing…' })}
+                  {t("dwg_takeoff.loading_drawing", {
+                    defaultValue: "Loading drawing…",
+                  })}
                 </p>
                 <UploadProgressInline />
               </div>
             </div>
           ) : (
             <>
-            <div className="relative flex-1 min-h-0" data-dwg-viewer-root>
-              <DxfViewer
-                key={`${selectedDrawingId}:${selectedLayout ?? 'default'}`}
-                entities={viewerEntities}
-                annotations={visibleAnnotations}
-                visibleLayers={visibleLayers}
-                activeTool={activeTool}
-                activeColor={activeColor}
-                selectedEntityIds={selectedEntityIds}
-                hiddenEntityIds={hiddenEntityIds}
-                selectedAnnotationId={selectedAnnotationId}
-                drawingScale={effectiveScale}
-                snapModes={snapModes}
-                onSelectEntity={handleSelectEntity}
-                onSelectAnnotation={setSelectedAnnotationId}
-                onEntityContextMenu={handleEntityContextMenu}
-                onAnnotationCreated={handleAnnotationCreated}
-                onCalibrationPoint={handleCalibrationPoint}
-                calibration={
-                  calibration
-                    ? { unitsPerPixel: calibration.unitsPerPixel, unit: calibration.unit }
-                    : null
-                }
-                calibrationOverlay={{
-                  pointA:
-                    calibStep === 2 || calibStep === 3
-                      ? calibPointA
-                      : calibStep === 0 && calibration?.pointA
-                        ? { x: calibration.pointA[0], y: calibration.pointA[1] }
-                        : null,
-                  pointB:
-                    calibStep === 3
-                      ? calibPointB
-                      : calibStep === 0 && calibration?.pointB
-                        ? { x: calibration.pointB[0], y: calibration.pointB[1] }
-                        : null,
-                }}
-              />
+              <div className="relative flex-1 min-h-0" data-dwg-viewer-root>
+                <DxfViewer
+                  key={`${selectedDrawingId}:${selectedLayout ?? "default"}`}
+                  entities={viewerEntities}
+                  annotations={visibleAnnotations}
+                  visibleLayers={visibleLayers}
+                  activeTool={activeTool}
+                  activeColor={activeColor}
+                  selectedEntityIds={selectedEntityIds}
+                  hiddenEntityIds={hiddenEntityIds}
+                  selectedAnnotationId={selectedAnnotationId}
+                  drawingScale={effectiveScale}
+                  snapModes={snapModes}
+                  onSelectEntity={handleSelectEntity}
+                  onSelectAnnotation={setSelectedAnnotationId}
+                  onEntityContextMenu={handleEntityContextMenu}
+                  onAnnotationCreated={handleAnnotationCreated}
+                  onCalibrationPoint={handleCalibrationPoint}
+                  calibration={
+                    calibration
+                      ? {
+                          unitsPerPixel: calibration.unitsPerPixel,
+                          unit: calibration.unit,
+                        }
+                      : null
+                  }
+                  calibrationOverlay={{
+                    pointA:
+                      calibStep === 2 || calibStep === 3
+                        ? calibPointA
+                        : calibStep === 0 && calibration?.pointA
+                          ? {
+                              x: calibration.pointA[0],
+                              y: calibration.pointA[1],
+                            }
+                          : null,
+                    pointB:
+                      calibStep === 3
+                        ? calibPointB
+                        : calibStep === 0 && calibration?.pointB
+                          ? {
+                              x: calibration.pointB[0],
+                              y: calibration.pointB[1],
+                            }
+                          : null,
+                  }}
+                />
 
-              {/* Two-click calibration dialog. Step 0 = hidden. Steps 1/2
+                {/* Two-click calibration dialog. Step 0 = hidden. Steps 1/2
                   render a non-blocking banner; step 3 is a centered modal. */}
-              <CalibrationDialog
-                step={calibStep}
-                pointA={calibPointA ? [calibPointA.x, calibPointA.y] : null}
-                pointB={calibPointB ? [calibPointB.x, calibPointB.y] : null}
-                onConfirm={handleCalibrationConfirm}
-                onCancel={handleCalibrationCancel}
-              />
+                <CalibrationDialog
+                  step={calibStep}
+                  pointA={calibPointA ? [calibPointA.x, calibPointA.y] : null}
+                  pointB={calibPointB ? [calibPointB.x, calibPointB.y] : null}
+                  onConfirm={handleCalibrationConfirm}
+                  onCancel={handleCalibrationCancel}
+                />
 
-              {/* Floating ToolPalette — top-left corner, above the canvas.
+                {/* Floating ToolPalette — top-left corner, above the canvas.
                   Lives here (not in a fixed header bar) so the drawing gets
                   the full viewport height and tools stay visually attached
                   to the thing they act on. */}
-              <div className="absolute top-3 left-3 z-10 flex items-start gap-2">
-                <div className="rounded-lg border border-white/60 bg-white/85 dark:bg-white/90 backdrop-blur-md shadow-xl shadow-black/30 ring-1 ring-black/5">
-                  <ToolPalette
-                    activeTool={activeTool}
-                    onToolChange={setActiveTool}
-                    activeColor={activeColor}
-                    onColorChange={setActiveColor}
-                  />
-                </div>
+                <div className="absolute top-3 left-3 z-10 flex items-start gap-2">
+                  <div className="rounded-lg border border-white/60 bg-white/85 dark:bg-white/90 backdrop-blur-md shadow-xl shadow-black/30 ring-1 ring-black/5">
+                    <ToolPalette
+                      activeTool={activeTool}
+                      onToolChange={setActiveTool}
+                      activeColor={activeColor}
+                      onColorChange={setActiveColor}
+                    />
+                  </div>
 
-                {/* Q1 UX #2 + #4: Undo / redo + snap-mode menu. Sit next
+                  {/* Q1 UX #2 + #4: Undo / redo + snap-mode menu. Sit next
                     to the tool palette so tool + history + snap controls
                     are all reachable without leaving the top-left. */}
-                <div
-                  className="flex items-center gap-1 rounded-lg border border-white/60 bg-white/85 dark:bg-white/90 backdrop-blur-md px-1.5 py-1 shadow-xl shadow-black/30 ring-1 ring-black/5"
-                  data-testid="dwg-history-bar"
-                >
-                  <button
-                    type="button"
-                    onClick={handleUndo}
-                    disabled={!canUndoFn(undoState)}
-                    data-testid="dwg-undo"
-                    title={t('dwg_takeoff.undo', { defaultValue: 'Undo (Ctrl+Z)' })}
-                    aria-label="Undo"
-                    className={clsx(
-                      'flex h-7 w-7 items-center justify-center rounded-md transition-colors',
-                      canUndoFn(undoState)
-                        ? 'text-slate-800 hover:bg-slate-100'
-                        : 'text-slate-300 cursor-not-allowed',
-                    )}
+                  <div
+                    className="flex items-center gap-1 rounded-lg border border-white/60 bg-white/85 dark:bg-white/90 backdrop-blur-md px-1.5 py-1 shadow-xl shadow-black/30 ring-1 ring-black/5"
+                    data-testid="dwg-history-bar"
                   >
-                    <Undo2 size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleRedo}
-                    disabled={!canRedoFn(undoState)}
-                    data-testid="dwg-redo"
-                    title={t('dwg_takeoff.redo', {
-                      defaultValue: 'Redo (Ctrl+Y / Ctrl+Shift+Z)',
-                    })}
-                    aria-label="Redo"
-                    className={clsx(
-                      'flex h-7 w-7 items-center justify-center rounded-md transition-colors',
-                      canRedoFn(undoState)
-                        ? 'text-slate-800 hover:bg-slate-100'
-                        : 'text-slate-300 cursor-not-allowed',
-                    )}
-                  >
-                    <Redo2 size={14} />
-                  </button>
-
-                  <div className="mx-1 h-5 w-px bg-slate-300" />
-
-                  <div className="relative">
                     <button
                       type="button"
-                      onClick={() => setSnapMenuOpen((o) => !o)}
-                      data-testid="dwg-snap-menu-toggle"
-                      title={t('dwg_takeoff.snap_menu', {
-                        defaultValue: 'Snap modes',
+                      onClick={handleUndo}
+                      disabled={!canUndoFn(undoState)}
+                      data-testid="dwg-undo"
+                      title={t("dwg_takeoff.undo", {
+                        defaultValue: "Undo (Ctrl+Z)",
                       })}
-                      aria-label="Snap modes"
+                      aria-label="Undo"
                       className={clsx(
-                        'flex h-7 items-center gap-1 rounded-md px-2 text-xs transition-colors',
-                        snapModes.endpoint || snapModes.midpoint || snapModes.intersection
-                          ? 'bg-emerald-500/20 text-emerald-700'
-                          : 'text-slate-700 hover:bg-slate-100',
+                        "flex h-7 w-7 items-center justify-center rounded-md transition-colors",
+                        canUndoFn(undoState)
+                          ? "text-slate-800 hover:bg-slate-100"
+                          : "text-slate-300 cursor-not-allowed",
                       )}
                     >
-                      <Target size={13} />
-                      <span className="font-semibold">
-                        {t('dwg_takeoff.snap_label', { defaultValue: 'Snap' })}
-                      </span>
+                      <Undo2 size={14} />
                     </button>
-                    {snapMenuOpen && (
-                      <div
-                        data-testid="dwg-snap-menu"
-                        className="absolute left-0 top-full mt-1 w-48 rounded-lg border border-slate-200 bg-white p-2 shadow-xl"
-                        onMouseLeave={() => setSnapMenuOpen(false)}
+                    <button
+                      type="button"
+                      onClick={handleRedo}
+                      disabled={!canRedoFn(undoState)}
+                      data-testid="dwg-redo"
+                      title={t("dwg_takeoff.redo", {
+                        defaultValue: "Redo (Ctrl+Y / Ctrl+Shift+Z)",
+                      })}
+                      aria-label="Redo"
+                      className={clsx(
+                        "flex h-7 w-7 items-center justify-center rounded-md transition-colors",
+                        canRedoFn(undoState)
+                          ? "text-slate-800 hover:bg-slate-100"
+                          : "text-slate-300 cursor-not-allowed",
+                      )}
+                    >
+                      <Redo2 size={14} />
+                    </button>
+
+                    <div className="mx-1 h-5 w-px bg-slate-300" />
+
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setSnapMenuOpen((o) => !o)}
+                        data-testid="dwg-snap-menu-toggle"
+                        title={t("dwg_takeoff.snap_menu", {
+                          defaultValue: "Snap modes",
+                        })}
+                        aria-label="Snap modes"
+                        className={clsx(
+                          "flex h-7 items-center gap-1 rounded-md px-2 text-xs transition-colors",
+                          snapModes.endpoint ||
+                            snapModes.midpoint ||
+                            snapModes.intersection
+                            ? "bg-emerald-500/20 text-emerald-700"
+                            : "text-slate-700 hover:bg-slate-100",
+                        )}
                       >
-                        <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100">
-                          <input
-                            type="checkbox"
-                            data-testid="dwg-snap-endpoint"
-                            checked={!!snapModes.endpoint}
-                            onChange={(e) =>
-                              setSnapModes((m) => ({ ...m, endpoint: e.target.checked }))
-                            }
-                          />
-                          {t('dwg_takeoff.snap_endpoint', {
-                            defaultValue: 'Endpoint snap',
+                        <Target size={13} />
+                        <span className="font-semibold">
+                          {t("dwg_takeoff.snap_label", {
+                            defaultValue: "Snap",
                           })}
-                        </label>
-                        <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100">
-                          <input
-                            type="checkbox"
-                            data-testid="dwg-snap-midpoint"
-                            checked={!!snapModes.midpoint}
-                            onChange={(e) =>
-                              setSnapModes((m) => ({ ...m, midpoint: e.target.checked }))
-                            }
-                          />
-                          {t('dwg_takeoff.snap_midpoint', {
-                            defaultValue: 'Midpoint snap',
-                          })}
-                        </label>
-                        <label className="flex cursor-not-allowed items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-400">
-                          <input
-                            type="checkbox"
-                            data-testid="dwg-snap-intersection"
-                            checked={!!snapModes.intersection}
-                            disabled
-                          />
-                          {t('dwg_takeoff.snap_intersection', {
-                            defaultValue: 'Intersection snap (soon)',
-                          })}
-                        </label>
-                      </div>
-                    )}
+                        </span>
+                      </button>
+                      {snapMenuOpen && (
+                        <div
+                          data-testid="dwg-snap-menu"
+                          className="absolute left-0 top-full mt-1 w-48 rounded-lg border border-slate-200 bg-white p-2 shadow-xl"
+                          onMouseLeave={() => setSnapMenuOpen(false)}
+                        >
+                          <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100">
+                            <input
+                              type="checkbox"
+                              data-testid="dwg-snap-endpoint"
+                              checked={!!snapModes.endpoint}
+                              onChange={(e) =>
+                                setSnapModes((m) => ({
+                                  ...m,
+                                  endpoint: e.target.checked,
+                                }))
+                              }
+                            />
+                            {t("dwg_takeoff.snap_endpoint", {
+                              defaultValue: "Endpoint snap",
+                            })}
+                          </label>
+                          <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100">
+                            <input
+                              type="checkbox"
+                              data-testid="dwg-snap-midpoint"
+                              checked={!!snapModes.midpoint}
+                              onChange={(e) =>
+                                setSnapModes((m) => ({
+                                  ...m,
+                                  midpoint: e.target.checked,
+                                }))
+                              }
+                            />
+                            {t("dwg_takeoff.snap_midpoint", {
+                              defaultValue: "Midpoint snap",
+                            })}
+                          </label>
+                          <label className="flex cursor-not-allowed items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-400">
+                            <input
+                              type="checkbox"
+                              data-testid="dwg-snap-intersection"
+                              checked={!!snapModes.intersection}
+                              disabled
+                            />
+                            {t("dwg_takeoff.snap_intersection", {
+                              defaultValue: "Intersection snap (soon)",
+                            })}
+                          </label>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Floating Offline Ready badge + PDF export — top-right corner
+                {/* Floating Offline Ready badge + PDF export — top-right corner
                   of the viewer (opposite the ToolPalette). Download PDF is
                   paired with the badge so estimators discover it while
                   glancing at converter status without stealing real estate
                   from the drawing. */}
-              <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleDownloadCanvasPdf}
-                  disabled={!selectedDrawingId}
-                  className={clsx(
-                    'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold',
-                    'border border-white/60 bg-white/85 dark:bg-white/90 backdrop-blur-md',
-                    'shadow-xl shadow-black/30 ring-1 ring-black/5 transition-colors',
-                    selectedDrawingId
-                      ? 'text-slate-800 hover:bg-white'
-                      : 'text-slate-400 cursor-not-allowed',
-                  )}
-                  title={t('dwg_takeoff.download_pdf', {
-                    defaultValue: 'Download current viewport as PDF',
-                  })}
-                  data-testid="dwg-download-pdf"
-                >
-                  <FileDown size={14} />
-                  <span>{t('dwg_takeoff.download_pdf_short', { defaultValue: 'PDF' })}</span>
-                </button>
-                <OfflineReadyBadge
-                  readiness={offlineReadiness}
-                  isLoading={loadingOfflineReadiness}
-                  data-testid="dwg-offline-badge"
-                />
-              </div>
-              {/* Floating entity info popup (shared ElementInfoPopover) —
+                <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleDownloadCanvasPdf}
+                    disabled={!selectedDrawingId}
+                    className={clsx(
+                      "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold",
+                      "border border-white/60 bg-white/85 dark:bg-white/90 backdrop-blur-md",
+                      "shadow-xl shadow-black/30 ring-1 ring-black/5 transition-colors",
+                      selectedDrawingId
+                        ? "text-slate-800 hover:bg-white"
+                        : "text-slate-400 cursor-not-allowed",
+                    )}
+                    title={t("dwg_takeoff.download_pdf", {
+                      defaultValue: "Download current viewport as PDF",
+                    })}
+                    data-testid="dwg-download-pdf"
+                  >
+                    <FileDown size={14} />
+                    <span>
+                      {t("dwg_takeoff.download_pdf_short", {
+                        defaultValue: "PDF",
+                      })}
+                    </span>
+                  </button>
+                  <OfflineReadyBadge
+                    readiness={offlineReadiness}
+                    isLoading={loadingOfflineReadiness}
+                    data-testid="dwg-offline-badge"
+                  />
+                </div>
+                {/* Floating entity info popup (shared ElementInfoPopover) —
                   only shown for a single-entity click, hidden during
                   multi-select to keep the screen readable. */}
-              {selectedEntity && entityPopup && activeTool === 'select'
-                && selectedEntityIds.size === 1 && (
-                <ElementInfoPopover
-                  element={toDWGElementPayload(selectedEntity, effectiveScale, {
-                    calculatePerimeter,
-                    calculateArea,
-                    calculateDistance,
-                  })}
-                  style={{
-                    position: 'absolute',
-                    left: Math.min(entityPopup.x + 16, (document.documentElement.clientWidth || 800) - 360),
-                    top: Math.min(entityPopup.y + 16, (document.documentElement.clientHeight || 600) - 320),
-                  }}
-                  onClose={() => setEntityPopup(null)}
-                  onLinkToBOQ={(elementId) => {
-                    setEntityPopup(null);
-                    handleOpenLinkToBoq(elementId);
-                  }}
-                />
-              )}
+                {selectedEntity &&
+                  entityPopup &&
+                  activeTool === "select" &&
+                  selectedEntityIds.size === 1 && (
+                    <ElementInfoPopover
+                      element={toDWGElementPayload(
+                        selectedEntity,
+                        effectiveScale,
+                        {
+                          calculatePerimeter,
+                          calculateArea,
+                          calculateDistance,
+                        },
+                      )}
+                      style={{
+                        position: "absolute",
+                        left: Math.min(
+                          entityPopup.x + 16,
+                          (document.documentElement.clientWidth || 800) - 360,
+                        ),
+                        top: Math.min(
+                          entityPopup.y + 16,
+                          (document.documentElement.clientHeight || 600) - 320,
+                        ),
+                      }}
+                      onClose={() => setEntityPopup(null)}
+                      onLinkToBOQ={(elementId) => {
+                        setEntityPopup(null);
+                        handleOpenLinkToBoq(elementId);
+                      }}
+                    />
+                  )}
 
-              {/* Right-click context menu (RFC 11 §4.4) */}
-              {contextMenu && (
-                <DwgContextMenu
-                  screenX={contextMenu.screenX}
-                  screenY={contextMenu.screenY}
-                  selectionSize={selectedEntityIds.size}
-                  onHide={() => handleHideEntities(Array.from(selectedEntityIds))}
-                  onIsolate={() => handleIsolateEntities(Array.from(selectedEntityIds))}
-                  onLink={() => {
-                    setContextMenu(null);
-                    handleOpenLinkToBoq(contextMenu.entityId);
-                  }}
-                  onSaveAsGroup={handleSaveSelectionAsGroup}
-                  onCreateTask={() => {
-                    setContextMenu(null);
-                    if (!selectedDrawingId) return;
-                    const ids = selectedEntityIds.size > 0
-                      ? Array.from(selectedEntityIds)
-                      : [contextMenu.entityId];
-                    const primary = entities.find((e) => e.id === ids[0]);
-                    setCreateTaskFor({
-                      entityIds: ids,
-                      drawingId: selectedDrawingId,
-                      entityLabel: primary
-                        ? `${primary.type} · ${primary.layer}`
-                        : undefined,
-                    });
-                  }}
-                  onLinkSchedule={() => {
-                    setContextMenu(null);
-                    if (!selectedDrawingId) return;
-                    const ids = selectedEntityIds.size > 0
-                      ? Array.from(selectedEntityIds)
-                      : [contextMenu.entityId];
-                    const primary = entities.find((e) => e.id === ids[0]);
-                    setLinkActivityFor({
-                      entityIds: ids,
-                      drawingId: selectedDrawingId,
-                      entityLabel: primary
-                        ? `${primary.type} · ${primary.layer}`
-                        : undefined,
-                    });
-                  }}
-                  onLinkDocument={() => {
-                    setContextMenu(null);
-                    if (!selectedDrawingId) return;
-                    const ids = selectedEntityIds.size > 0
-                      ? Array.from(selectedEntityIds)
-                      : [contextMenu.entityId];
-                    const primary = entities.find((e) => e.id === ids[0]);
-                    setLinkDocumentFor({
-                      entityIds: ids,
-                      drawingId: selectedDrawingId,
-                      entityLabel: primary
-                        ? `${primary.type} · ${primary.layer}`
-                        : undefined,
-                    });
-                  }}
-                  onLinkRequirement={() => {
-                    setContextMenu(null);
-                    if (!selectedDrawingId) return;
-                    const ids = selectedEntityIds.size > 0
-                      ? Array.from(selectedEntityIds)
-                      : [contextMenu.entityId];
-                    const primary = entities.find((e) => e.id === ids[0]);
-                    setLinkRequirementFor({
-                      entityIds: ids,
-                      drawingId: selectedDrawingId,
-                      entityLabel: primary
-                        ? `${primary.type} · ${primary.layer}`
-                        : undefined,
-                    });
-                  }}
-                  onClose={() => setContextMenu(null)}
-                />
-              )}
+                {/* Right-click context menu (RFC 11 §4.4) */}
+                {contextMenu && (
+                  <DwgContextMenu
+                    screenX={contextMenu.screenX}
+                    screenY={contextMenu.screenY}
+                    selectionSize={selectedEntityIds.size}
+                    onHide={() =>
+                      handleHideEntities(Array.from(selectedEntityIds))
+                    }
+                    onIsolate={() =>
+                      handleIsolateEntities(Array.from(selectedEntityIds))
+                    }
+                    onLink={() => {
+                      setContextMenu(null);
+                      handleOpenLinkToBoq(contextMenu.entityId);
+                    }}
+                    onSaveAsGroup={handleSaveSelectionAsGroup}
+                    onCreateTask={() => {
+                      setContextMenu(null);
+                      if (!selectedDrawingId) return;
+                      const ids =
+                        selectedEntityIds.size > 0
+                          ? Array.from(selectedEntityIds)
+                          : [contextMenu.entityId];
+                      const primary = entities.find((e) => e.id === ids[0]);
+                      setCreateTaskFor({
+                        entityIds: ids,
+                        drawingId: selectedDrawingId,
+                        entityLabel: primary
+                          ? `${primary.type} · ${primary.layer}`
+                          : undefined,
+                      });
+                    }}
+                    onLinkSchedule={() => {
+                      setContextMenu(null);
+                      if (!selectedDrawingId) return;
+                      const ids =
+                        selectedEntityIds.size > 0
+                          ? Array.from(selectedEntityIds)
+                          : [contextMenu.entityId];
+                      const primary = entities.find((e) => e.id === ids[0]);
+                      setLinkActivityFor({
+                        entityIds: ids,
+                        drawingId: selectedDrawingId,
+                        entityLabel: primary
+                          ? `${primary.type} · ${primary.layer}`
+                          : undefined,
+                      });
+                    }}
+                    onLinkDocument={() => {
+                      setContextMenu(null);
+                      if (!selectedDrawingId) return;
+                      const ids =
+                        selectedEntityIds.size > 0
+                          ? Array.from(selectedEntityIds)
+                          : [contextMenu.entityId];
+                      const primary = entities.find((e) => e.id === ids[0]);
+                      setLinkDocumentFor({
+                        entityIds: ids,
+                        drawingId: selectedDrawingId,
+                        entityLabel: primary
+                          ? `${primary.type} · ${primary.layer}`
+                          : undefined,
+                      });
+                    }}
+                    onLinkRequirement={() => {
+                      setContextMenu(null);
+                      if (!selectedDrawingId) return;
+                      const ids =
+                        selectedEntityIds.size > 0
+                          ? Array.from(selectedEntityIds)
+                          : [contextMenu.entityId];
+                      const primary = entities.find((e) => e.id === ids[0]);
+                      setLinkRequirementFor({
+                        entityIds: ids,
+                        drawingId: selectedDrawingId,
+                        entityLabel: primary
+                          ? `${primary.type} · ${primary.layer}`
+                          : undefined,
+                      });
+                    }}
+                    onClose={() => setContextMenu(null)}
+                  />
+                )}
 
-              {/* Right-docked BOQ-link picker panel — mirrors the PDF takeoff
+                {/* Right-docked BOQ-link picker panel — mirrors the PDF takeoff
                   picker pattern but slides in from the right edge of the
                   canvas. */}
-              {linkingEntityId && selectedEntity && (() => {
-                const measurement = extractEntityMeasurement(selectedEntity, effectiveScale);
-                const alreadyLinked = annotations.find(
-                  (a) => a.type === 'text_pin'
-                    && (a.metadata as Record<string, unknown> | undefined)?.['dwg_entity_id']
-                      === selectedEntity.id
-                    && a.linked_boq_position_id,
-                );
-                return (
-                  <div className="absolute top-3 right-3 z-20 flex flex-col w-80 max-h-[calc(100%-1.5rem)] rounded-lg border border-[#3a3a3a] bg-[#2f2f2f] text-slate-100 shadow-2xl">
-                    {/* Header */}
-                    <div className="flex items-center justify-between px-3 py-2 border-b border-[#3a3a3a]">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-100">
-                        <Link2 size={13} className="text-blue-400" />
-                        {alreadyLinked
-                          ? t('dwg_takeoff.relink_title', { defaultValue: 'Linked — pick new' })
-                          : t('dwg_takeoff.link_to_boq_title', { defaultValue: 'Link to BOQ position' })}
-                      </div>
-                      <button
-                        onClick={() => setLinkingEntityId(null)}
-                        className="text-slate-400 hover:text-slate-100 transition-colors"
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto p-3 space-y-2">
-                      {/* Already-linked badge */}
-                      {alreadyLinked && (
-                        <div className="flex items-center gap-1.5 rounded-sm bg-emerald-950/40 border border-emerald-800/40 px-2 py-1 text-[11px]">
-                          <Link2 size={11} className="text-emerald-400 shrink-0" />
-                          <span className="text-emerald-300 truncate">
-                            {t('dwg_takeoff.already_linked', { defaultValue: 'Already linked to a BOQ position' })}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Entity summary */}
-                      <div className="rounded-sm bg-[#262626] border border-[#3a3a3a] p-2 text-[11px] space-y-0.5">
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">{t('dwg_takeoff.prop_type', 'Type')}</span>
-                          <span className="font-mono text-slate-100">{selectedEntity.type}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">{t('dwg_takeoff.prop_layer', 'Layer')}</span>
-                          <span className="font-mono text-slate-100 truncate ml-2">{selectedEntity.layer}</span>
-                        </div>
-                        {measurement && (
-                          <div className="flex justify-between">
-                            <span className="text-slate-400">
-                              {measurement.kind === 'area'
-                                ? t('dwg_takeoff.area', 'Area')
-                                : measurement.kind === 'radius'
-                                  ? t('dwg_takeoff.prop_radius', 'Radius')
-                                  : t('dwg_takeoff.length', { defaultValue: 'Length' })}
-                            </span>
-                            <span className="font-mono font-semibold text-blue-300">
-                              {measurement.value} {measurement.unit}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Project + BOQ dropdowns */}
-                      <div className="grid grid-cols-2 gap-1.5">
-                        <select
-                          value={linkPickerProjectId}
-                          onChange={(e) => handlePickerProjectChange(e.target.value)}
-                          className="text-[11px] rounded-sm border border-[#3a3a3a] bg-[#262626] px-1.5 py-1 text-slate-100"
-                        >
-                          <option value="">
-                            {t('dwg_takeoff.pick_project', { defaultValue: '— project —' })}
-                          </option>
-                          {linkPickerProjects.map((p) => (
-                            <option key={p.id} value={p.id}>{p.name}</option>
-                          ))}
-                        </select>
-                        <select
-                          value={linkPickerBoqId}
-                          onChange={(e) => handlePickerBoqChange(e.target.value)}
-                          disabled={!linkPickerProjectId || linkBoqsLoading}
-                          className="text-[11px] rounded-sm border border-[#3a3a3a] bg-[#262626] px-1.5 py-1 text-slate-100 disabled:opacity-60"
-                        >
-                          <option value="">
-                            {linkBoqsLoading
-                              ? t('common.loading', 'Loading...')
-                              : t('dwg_takeoff.pick_boq', { defaultValue: '— BOQ —' })}
-                          </option>
-                          {linkPickerBoqs.map((b) => (
-                            <option key={b.id} value={b.id}>{b.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* Mode switch */}
-                      <div className="flex gap-1 text-[11px]">
-                        <button
-                          type="button"
-                          onClick={() => setLinkPickerMode('pick')}
-                          className={clsx(
-                            'flex-1 px-2 py-1 rounded-sm font-medium transition-colors',
-                            linkPickerMode === 'pick'
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-[#363636] text-slate-300 hover:bg-[#404040]',
-                          )}
-                        >
-                          {t('dwg_takeoff.mode_pick', { defaultValue: 'Pick existing' })}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setLinkPickerMode('create')}
-                          disabled={!linkPickerBoqId}
-                          className={clsx(
-                            'flex-1 px-2 py-1 rounded-sm font-medium transition-colors disabled:opacity-50',
-                            linkPickerMode === 'create'
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-[#363636] text-slate-300 hover:bg-[#404040]',
-                          )}
-                        >
-                          {t('dwg_takeoff.mode_create', { defaultValue: '+ Create new' })}
-                        </button>
-                      </div>
-
-                      {linkPickerMode === 'pick' ? (
-                        !linkPickerBoqId ? (
-                          <p className="text-[11px] text-slate-400 py-2 text-center">
-                            {t('dwg_takeoff.link_need_project_boq', {
-                              defaultValue: 'Pick a project and BOQ above.',
-                            })}
-                          </p>
-                        ) : linkPositionsLoading ? (
-                          <div className="flex items-center justify-center gap-1.5 py-3">
-                            <Loader2 size={12} className="animate-spin text-blue-400" />
-                            <span className="text-[11px] text-slate-400">
-                              {t('common.loading', 'Loading...')}
-                            </span>
-                          </div>
-                        ) : linkBoqPositions.filter((p) => p.unit).length === 0 ? (
-                          <p className="text-[11px] text-slate-400 py-2 text-center">
-                            {t('dwg_takeoff.link_boq_empty', {
-                              defaultValue: 'BOQ is empty — switch to "Create new".',
-                            })}
-                          </p>
-                        ) : (
-                          <>
-                            <input
-                              type="text"
-                              value={linkPickerSearch}
-                              onChange={(e) => setLinkPickerSearch(e.target.value)}
-                              placeholder={t('dwg_takeoff.link_search_placeholder', {
-                                defaultValue: 'Search ordinal or description...',
-                              })}
-                              className="w-full text-[11px] rounded-sm border border-[#3a3a3a] bg-[#262626] px-2 py-1 text-slate-100 placeholder:text-slate-500"
-                            />
-                            <div className="max-h-56 overflow-y-auto space-y-0.5">
-                              {linkBoqPositions
-                                .filter((p) => p.unit)
-                                .filter((p) => {
-                                  if (!linkPickerSearch) return true;
-                                  const q = linkPickerSearch.toLowerCase();
-                                  return (
-                                    (p.ordinal || '').toLowerCase().includes(q) ||
-                                    (p.description || '').toLowerCase().includes(q)
-                                  );
+                {linkingEntityId &&
+                  selectedEntity &&
+                  (() => {
+                    const measurement = extractEntityMeasurement(
+                      selectedEntity,
+                      effectiveScale,
+                    );
+                    const alreadyLinked = annotations.find(
+                      (a) =>
+                        a.type === "text_pin" &&
+                        (a.metadata as Record<string, unknown> | undefined)?.[
+                          "dwg_entity_id"
+                        ] === selectedEntity.id &&
+                        a.linked_boq_position_id,
+                    );
+                    return (
+                      <div className="absolute top-3 right-3 z-20 flex flex-col w-80 max-h-[calc(100%-1.5rem)] rounded-lg border border-[#3a3a3a] bg-[#2f2f2f] text-slate-100 shadow-2xl">
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-3 py-2 border-b border-[#3a3a3a]">
+                          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-100">
+                            <Link2 size={13} className="text-blue-400" />
+                            {alreadyLinked
+                              ? t("dwg_takeoff.relink_title", {
+                                  defaultValue: "Linked — pick new",
                                 })
-                                .slice(0, 100)
-                                .map((pos) => (
-                                  <button
-                                    key={pos.id}
-                                    type="button"
-                                    onClick={() => {
-                                      if (selectedEntityIds.size > 1) {
-                                        handleLinkGroupToPosition(pos);
-                                      } else {
-                                        handleLinkToPosition(selectedEntity.id, pos);
-                                      }
-                                    }}
-                                    disabled={linkingInProgress}
-                                    className="w-full text-left px-2 py-1 rounded-sm text-[11px] hover:bg-blue-900/40 transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                                  >
-                                    <span className="font-mono text-blue-300 shrink-0">
-                                      {pos.ordinal}
-                                    </span>
-                                    <span className="text-slate-100 truncate flex-1">
-                                      {pos.description}
-                                    </span>
-                                    <span className="text-slate-400 shrink-0 text-[10px]">
-                                      {pos.unit}
-                                    </span>
-                                  </button>
-                                ))}
-                            </div>
-                          </>
-                        )
-                      ) : (
-                        /* Create new position */
-                        <div className="rounded-sm bg-[#262626] border border-[#3a3a3a] p-2 space-y-1.5">
-                          <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-[11px]">
-                            <span className="text-slate-400">
-                              {t('dwg_takeoff.description', { defaultValue: 'Description' })}:
-                            </span>
-                            <span className="text-slate-100 truncate">
-                              {t('dwg_takeoff.position_default_desc', {
-                                defaultValue: 'From DWG: {{layer}}',
-                                layer: selectedEntity.layer,
-                              })}
-                            </span>
-                            <span className="text-slate-400">
-                              {t('dwg_takeoff.quantity', { defaultValue: 'Quantity' })}:
-                            </span>
-                            <span className="text-slate-100 font-mono">
-                              {measurement
-                                ? `${measurement.value} ${measurement.unit}`
-                                : `0 ${normalizeUnit('pcs')}`}
-                            </span>
+                              : t("dwg_takeoff.link_to_boq_title", {
+                                  defaultValue: "Link to BOQ position",
+                                })}
                           </div>
                           <button
-                            type="button"
-                            onClick={() => handleCreateAndLink(selectedEntity.id)}
-                            disabled={linkingInProgress || !linkPickerBoqId}
-                            className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-sm text-[11px] font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                            onClick={() => setLinkingEntityId(null)}
+                            className="text-slate-400 hover:text-slate-100 transition-colors"
                           >
-                            {linkingInProgress && <Loader2 size={11} className="animate-spin" />}
-                            {t('dwg_takeoff.create_and_link', {
-                              defaultValue: 'Create position & link',
-                            })}
+                            <X size={14} />
                           </button>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-            {/* ── Sheet thumbnail strip (Goal 2) ──────────────────────
+
+                        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+                          {/* Already-linked badge */}
+                          {alreadyLinked && (
+                            <div className="flex items-center gap-1.5 rounded-sm bg-emerald-950/40 border border-emerald-800/40 px-2 py-1 text-[11px]">
+                              <Link2
+                                size={11}
+                                className="text-emerald-400 shrink-0"
+                              />
+                              <span className="text-emerald-300 truncate">
+                                {t("dwg_takeoff.already_linked", {
+                                  defaultValue:
+                                    "Already linked to a BOQ position",
+                                })}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Entity summary */}
+                          <div className="rounded-sm bg-[#262626] border border-[#3a3a3a] p-2 text-[11px] space-y-0.5">
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">
+                                {t("dwg_takeoff.prop_type", "Type")}
+                              </span>
+                              <span className="font-mono text-slate-100">
+                                {selectedEntity.type}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">
+                                {t("dwg_takeoff.prop_layer", "Layer")}
+                              </span>
+                              <span className="font-mono text-slate-100 truncate ml-2">
+                                {selectedEntity.layer}
+                              </span>
+                            </div>
+                            {measurement && (
+                              <div className="flex justify-between">
+                                <span className="text-slate-400">
+                                  {measurement.kind === "area"
+                                    ? t("dwg_takeoff.area", "Area")
+                                    : measurement.kind === "radius"
+                                      ? t("dwg_takeoff.prop_radius", "Radius")
+                                      : t("dwg_takeoff.length", {
+                                          defaultValue: "Length",
+                                        })}
+                                </span>
+                                <span className="font-mono font-semibold text-blue-300">
+                                  {measurement.value} {measurement.unit}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Project + BOQ dropdowns */}
+                          <div className="grid grid-cols-2 gap-1.5">
+                            <select
+                              value={linkPickerProjectId}
+                              onChange={(e) =>
+                                handlePickerProjectChange(e.target.value)
+                              }
+                              className="text-[11px] rounded-sm border border-[#3a3a3a] bg-[#262626] px-1.5 py-1 text-slate-100"
+                            >
+                              <option value="">
+                                {t("dwg_takeoff.pick_project", {
+                                  defaultValue: "— project —",
+                                })}
+                              </option>
+                              {linkPickerProjects.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                  {p.name}
+                                </option>
+                              ))}
+                            </select>
+                            <select
+                              value={linkPickerBoqId}
+                              onChange={(e) =>
+                                handlePickerBoqChange(e.target.value)
+                              }
+                              disabled={!linkPickerProjectId || linkBoqsLoading}
+                              className="text-[11px] rounded-sm border border-[#3a3a3a] bg-[#262626] px-1.5 py-1 text-slate-100 disabled:opacity-60"
+                            >
+                              <option value="">
+                                {linkBoqsLoading
+                                  ? t("common.loading", "Loading...")
+                                  : t("dwg_takeoff.pick_boq", {
+                                      defaultValue: "— BOQ —",
+                                    })}
+                              </option>
+                              {linkPickerBoqs.map((b) => (
+                                <option key={b.id} value={b.id}>
+                                  {b.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* Mode switch */}
+                          <div className="flex gap-1 text-[11px]">
+                            <button
+                              type="button"
+                              onClick={() => setLinkPickerMode("pick")}
+                              className={clsx(
+                                "flex-1 px-2 py-1 rounded-sm font-medium transition-colors",
+                                linkPickerMode === "pick"
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-[#363636] text-slate-300 hover:bg-[#404040]",
+                              )}
+                            >
+                              {t("dwg_takeoff.mode_pick", {
+                                defaultValue: "Pick existing",
+                              })}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setLinkPickerMode("create")}
+                              disabled={!linkPickerBoqId}
+                              className={clsx(
+                                "flex-1 px-2 py-1 rounded-sm font-medium transition-colors disabled:opacity-50",
+                                linkPickerMode === "create"
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-[#363636] text-slate-300 hover:bg-[#404040]",
+                              )}
+                            >
+                              {t("dwg_takeoff.mode_create", {
+                                defaultValue: "+ Create new",
+                              })}
+                            </button>
+                          </div>
+
+                          {linkPickerMode === "pick" ? (
+                            !linkPickerBoqId ? (
+                              <p className="text-[11px] text-slate-400 py-2 text-center">
+                                {t("dwg_takeoff.link_need_project_boq", {
+                                  defaultValue: "Pick a project and BOQ above.",
+                                })}
+                              </p>
+                            ) : linkPositionsLoading ? (
+                              <div className="flex items-center justify-center gap-1.5 py-3">
+                                <Loader2
+                                  size={12}
+                                  className="animate-spin text-blue-400"
+                                />
+                                <span className="text-[11px] text-slate-400">
+                                  {t("common.loading", "Loading...")}
+                                </span>
+                              </div>
+                            ) : linkBoqPositions.filter((p) => p.unit)
+                                .length === 0 ? (
+                              <p className="text-[11px] text-slate-400 py-2 text-center">
+                                {t("dwg_takeoff.link_boq_empty", {
+                                  defaultValue:
+                                    'BOQ is empty — switch to "Create new".',
+                                })}
+                              </p>
+                            ) : (
+                              <>
+                                <input
+                                  type="text"
+                                  value={linkPickerSearch}
+                                  onChange={(e) =>
+                                    setLinkPickerSearch(e.target.value)
+                                  }
+                                  placeholder={t(
+                                    "dwg_takeoff.link_search_placeholder",
+                                    {
+                                      defaultValue:
+                                        "Search ordinal or description...",
+                                    },
+                                  )}
+                                  className="w-full text-[11px] rounded-sm border border-[#3a3a3a] bg-[#262626] px-2 py-1 text-slate-100 placeholder:text-slate-500"
+                                />
+                                <div className="max-h-56 overflow-y-auto space-y-0.5">
+                                  {linkBoqPositions
+                                    .filter((p) => p.unit)
+                                    .filter((p) => {
+                                      if (!linkPickerSearch) return true;
+                                      const q = linkPickerSearch.toLowerCase();
+                                      return (
+                                        (p.ordinal || "")
+                                          .toLowerCase()
+                                          .includes(q) ||
+                                        (p.description || "")
+                                          .toLowerCase()
+                                          .includes(q)
+                                      );
+                                    })
+                                    .slice(0, 100)
+                                    .map((pos) => (
+                                      <button
+                                        key={pos.id}
+                                        type="button"
+                                        onClick={() => {
+                                          if (selectedEntityIds.size > 1) {
+                                            handleLinkGroupToPosition(pos);
+                                          } else {
+                                            handleLinkToPosition(
+                                              selectedEntity.id,
+                                              pos,
+                                            );
+                                          }
+                                        }}
+                                        disabled={linkingInProgress}
+                                        className="w-full text-left px-2 py-1 rounded-sm text-[11px] hover:bg-blue-900/40 transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                                      >
+                                        <span className="font-mono text-blue-300 shrink-0">
+                                          {pos.ordinal}
+                                        </span>
+                                        <span className="text-slate-100 truncate flex-1">
+                                          {pos.description}
+                                        </span>
+                                        <span className="text-slate-400 shrink-0 text-[10px]">
+                                          {pos.unit}
+                                        </span>
+                                      </button>
+                                    ))}
+                                </div>
+                              </>
+                            )
+                          ) : (
+                            /* Create new position */
+                            <div className="rounded-sm bg-[#262626] border border-[#3a3a3a] p-2 space-y-1.5">
+                              <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-[11px]">
+                                <span className="text-slate-400">
+                                  {t("dwg_takeoff.description", {
+                                    defaultValue: "Description",
+                                  })}
+                                  :
+                                </span>
+                                <span className="text-slate-100 truncate">
+                                  {t("dwg_takeoff.position_default_desc", {
+                                    defaultValue: "From DWG: {{layer}}",
+                                    layer: selectedEntity.layer,
+                                  })}
+                                </span>
+                                <span className="text-slate-400">
+                                  {t("dwg_takeoff.quantity", {
+                                    defaultValue: "Quantity",
+                                  })}
+                                  :
+                                </span>
+                                <span className="text-slate-100 font-mono">
+                                  {measurement
+                                    ? `${measurement.value} ${measurement.unit}`
+                                    : `0 ${normalizeUnit("pcs")}`}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleCreateAndLink(selectedEntity.id)
+                                }
+                                disabled={linkingInProgress || !linkPickerBoqId}
+                                className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-sm text-[11px] font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                              >
+                                {linkingInProgress && (
+                                  <Loader2 size={11} className="animate-spin" />
+                                )}
+                                {t("dwg_takeoff.create_and_link", {
+                                  defaultValue: "Create position & link",
+                                })}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
+              </div>
+              {/* ── Sheet thumbnail strip (Goal 2) ──────────────────────
                  Bottom of the viewer, above the drawings filmstrip.
                  Hidden automatically when the DWG has only one layout.
                  Clicking a thumbnail switches the layout without losing
                  the current tool; calibration is keyed by layout so the
                  scale swaps in/out with the sheet. */}
-            <SheetStrip
-              layouts={layouts}
-              entities={entities}
-              activeLayout={selectedLayout}
-              onLayoutChange={setSelectedLayout}
-              entityCountByLayout={entityCountByLayout}
-            />
+              <SheetStrip
+                layouts={layouts}
+                entities={entities}
+                activeLayout={selectedLayout}
+                onLayoutChange={setSelectedLayout}
+                entityCountByLayout={entityCountByLayout}
+              />
             </>
           )}
 
@@ -3053,16 +3537,23 @@ export function DwgTakeoffPage() {
                   <div className="flex items-center gap-1.5">
                     <Sigma size={13} className="text-amber-400" />
                     <span className="text-[11px] font-semibold text-content-primary">
-                      {t('dwg_takeoff.group_selection', { defaultValue: 'Group selection' })}
+                      {t("dwg_takeoff.group_selection", {
+                        defaultValue: "Group selection",
+                      })}
                     </span>
                     <span className="text-[10px] text-content-tertiary tabular-nums">
                       ({selectedEntityIds.size})
                     </span>
                   </div>
                   <button
-                    onClick={() => { setSelectedEntityIds(new Set()); setEntityPopup(null); }}
+                    onClick={() => {
+                      setSelectedEntityIds(new Set());
+                      setEntityPopup(null);
+                    }}
                     className="text-content-tertiary hover:text-content-primary"
-                    title={t('dwg_takeoff.clear_selection', { defaultValue: 'Clear selection' })}
+                    title={t("dwg_takeoff.clear_selection", {
+                      defaultValue: "Clear selection",
+                    })}
                   >
                     <X size={12} />
                   </button>
@@ -3076,10 +3567,12 @@ export function DwgTakeoffPage() {
                       className="font-semibold text-content-primary tabular-nums"
                       data-testid="dwg-group-area"
                     >
-                      {selectionAggregate.area > 0 ? selectionAggregate.area.toFixed(2) : '—'}
+                      {selectionAggregate.area > 0
+                        ? selectionAggregate.area.toFixed(2)
+                        : "—"}
                     </div>
                     <div className="text-content-tertiary text-[9px] uppercase">
-                      {t('dwg_takeoff.area', 'Area')} m²
+                      {t("dwg_takeoff.area", "Area")} m²
                     </div>
                   </div>
                   <div>
@@ -3088,10 +3581,11 @@ export function DwgTakeoffPage() {
                       data-testid="dwg-group-perimeter"
                     >
                       {selectionAggregate.perimeter > 0
-                        ? selectionAggregate.perimeter.toFixed(2) : '—'}
+                        ? selectionAggregate.perimeter.toFixed(2)
+                        : "—"}
                     </div>
                     <div className="text-content-tertiary text-[9px] uppercase">
-                      {t('dwg_takeoff.perimeter', 'Perimeter')} m
+                      {t("dwg_takeoff.perimeter", "Perimeter")} m
                     </div>
                   </div>
                   <div>
@@ -3100,10 +3594,11 @@ export function DwgTakeoffPage() {
                       data-testid="dwg-group-length"
                     >
                       {selectionAggregate.length > 0
-                        ? selectionAggregate.length.toFixed(2) : '—'}
+                        ? selectionAggregate.length.toFixed(2)
+                        : "—"}
                     </div>
                     <div className="text-content-tertiary text-[9px] uppercase">
-                      {t('dwg_takeoff.length', 'Length')} m
+                      {t("dwg_takeoff.length", "Length")} m
                     </div>
                   </div>
                 </div>
@@ -3117,15 +3612,17 @@ export function DwgTakeoffPage() {
                     data-testid="dwg-group-link-boq"
                   >
                     <Link2 size={11} />
-                    {t('dwg_takeoff.link_n_to_boq', {
-                      defaultValue: 'Link {{count}} to BOQ',
+                    {t("dwg_takeoff.link_n_to_boq", {
+                      defaultValue: "Link {{count}} to BOQ",
                       count: selectedEntityIds.size,
                     })}
                   </button>
                   <button
                     onClick={handleSaveSelectionAsGroup}
                     className="flex items-center justify-center rounded-md border border-border-medium bg-surface-secondary text-content-primary text-[11px] px-2 py-1 hover:bg-surface-tertiary transition-colors"
-                    title={t('dwg_takeoff.save_as_group', { defaultValue: 'Save as group' })}
+                    title={t("dwg_takeoff.save_as_group", {
+                      defaultValue: "Save as group",
+                    })}
                     data-testid="dwg-group-save"
                   >
                     <FolderPlus size={11} />
@@ -3139,8 +3636,8 @@ export function DwgTakeoffPage() {
               <div className="flex items-center justify-between border-b border-border-light bg-surface-secondary/60 px-3 py-1.5">
                 <span className="text-[10px] text-content-tertiary flex items-center gap-1">
                   <EyeOff size={11} />
-                  {t('dwg_takeoff.hidden_count', {
-                    defaultValue: '{{count}} hidden',
+                  {t("dwg_takeoff.hidden_count", {
+                    defaultValue: "{{count}} hidden",
                     count: hiddenEntityIds.size,
                   })}
                 </span>
@@ -3149,114 +3646,197 @@ export function DwgTakeoffPage() {
                   className="text-[10px] font-medium text-oe-blue hover:text-oe-blue/80 flex items-center gap-0.5"
                 >
                   <Eye size={11} />
-                  {t('dwg_takeoff.show_all', { defaultValue: 'Show all' })}
+                  {t("dwg_takeoff.show_all", { defaultValue: "Show all" })}
                 </button>
               </div>
             )}
 
             {/* Summary bar — totals across current drawing */}
-            {(entities.length > 0 || annotations.length > 0) && (() => {
-              const areaSum = annotations
-                .filter((a) => a.type === 'area' && a.measurement_value != null)
-                .reduce((s, a) => s + (a.measurement_value ?? 0), 0);
-              const distSum = annotations
-                .filter((a) => a.type === 'distance' && a.measurement_value != null)
-                .reduce((s, a) => s + (a.measurement_value ?? 0), 0);
-              const handleExportCsv = () => {
-                const rows = [
-                  ['type', 'text', 'value', 'unit', 'linked_boq_position_id'].join(','),
-                  ...annotations.map((a) =>
+            {(entities.length > 0 || annotations.length > 0) &&
+              (() => {
+                const areaSum = annotations
+                  .filter(
+                    (a) => a.type === "area" && a.measurement_value != null,
+                  )
+                  .reduce((s, a) => s + (a.measurement_value ?? 0), 0);
+                const distSum = annotations
+                  .filter(
+                    (a) => a.type === "distance" && a.measurement_value != null,
+                  )
+                  .reduce((s, a) => s + (a.measurement_value ?? 0), 0);
+                const handleExportCsv = () => {
+                  const rows = [
                     [
-                      a.type,
-                      JSON.stringify(a.text ?? ''),
-                      a.measurement_value ?? '',
-                      a.measurement_unit ?? '',
-                      a.linked_boq_position_id ?? '',
-                    ].join(','),
-                  ),
-                ];
-                const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `annotations-${selectedDrawingId?.slice(0, 8) ?? 'dwg'}.csv`;
-                link.click();
-                URL.revokeObjectURL(url);
-                addToast({ type: 'success', title: t('dwg_takeoff.csv_exported', 'Measurements exported') });
-              };
-              return (
-                <div className="border-b border-border-light px-3 py-2 bg-surface-secondary/40">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-                      {t('dwg_takeoff.summary', 'Summary')}
-                    </span>
-                    <button
-                      onClick={handleExportCsv}
-                      disabled={annotations.length === 0}
-                      className="text-[10px] font-medium text-oe-blue hover:text-oe-blue/80 disabled:text-content-quaternary disabled:cursor-not-allowed"
-                      title={t('dwg_takeoff.export_csv', 'Export measurements as CSV')}
-                    >
-                      {t('dwg_takeoff.export_csv_short', 'Export CSV')}
-                    </button>
+                      "type",
+                      "text",
+                      "value",
+                      "unit",
+                      "linked_boq_position_id",
+                    ].join(","),
+                    ...annotations.map((a) =>
+                      [
+                        a.type,
+                        JSON.stringify(a.text ?? ""),
+                        a.measurement_value ?? "",
+                        a.measurement_unit ?? "",
+                        a.linked_boq_position_id ?? "",
+                      ].join(","),
+                    ),
+                  ];
+                  const blob = new Blob([rows.join("\n")], {
+                    type: "text/csv;charset=utf-8",
+                  });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = `annotations-${selectedDrawingId?.slice(0, 8) ?? "dwg"}.csv`;
+                  link.click();
+                  URL.revokeObjectURL(url);
+                  addToast({
+                    type: "success",
+                    title: t(
+                      "dwg_takeoff.csv_exported",
+                      "Measurements exported",
+                    ),
+                  });
+                };
+                return (
+                  <div className="border-b border-border-light px-3 py-2 bg-surface-secondary/40">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
+                        {t("dwg_takeoff.summary", "Summary")}
+                      </span>
+                      <button
+                        onClick={handleExportCsv}
+                        disabled={annotations.length === 0}
+                        className="text-[10px] font-medium text-oe-blue hover:text-oe-blue/80 disabled:text-content-quaternary disabled:cursor-not-allowed"
+                        title={t(
+                          "dwg_takeoff.export_csv",
+                          "Export measurements as CSV",
+                        )}
+                      >
+                        {t("dwg_takeoff.export_csv_short", "Export CSV")}
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5 text-[11px]">
+                      <div>
+                        <div className="font-semibold text-content-primary tabular-nums">
+                          {entities.length}
+                        </div>
+                        <div className="text-content-tertiary text-[9px] uppercase">
+                          {t("dwg_takeoff.entities", "Entities")}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-content-primary tabular-nums">
+                          {areaSum > 0 ? areaSum.toFixed(1) : "—"}
+                        </div>
+                        <div className="text-content-tertiary text-[9px] uppercase">
+                          m²
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-content-primary tabular-nums">
+                          {distSum > 0 ? distSum.toFixed(1) : "—"}
+                        </div>
+                        <div className="text-content-tertiary text-[9px] uppercase">
+                          m
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5 text-[11px]">
-                    <div>
-                      <div className="font-semibold text-content-primary tabular-nums">{entities.length}</div>
-                      <div className="text-content-tertiary text-[9px] uppercase">{t('dwg_takeoff.entities', 'Entities')}</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-content-primary tabular-nums">{areaSum > 0 ? areaSum.toFixed(1) : '—'}</div>
-                      <div className="text-content-tertiary text-[9px] uppercase">m²</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-content-primary tabular-nums">{distSum > 0 ? distSum.toFixed(1) : '—'}</div>
-                      <div className="text-content-tertiary text-[9px] uppercase">m</div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
+                );
+              })()}
 
             {/* Tab bar — stacked icon + label so five tabs fit cleanly in
                 a narrow side panel without the text overlapping the icon.
                 Short labels + tooltips keep it readable at ~320-360 px. */}
             <div className="flex border-b border-border">
-              {(
-                [
-                  { id: 'layers' as const, icon: Layers, labelKey: 'dwg_takeoff.tab_layers_short', fallback: 'Layers', titleKey: 'dwg_takeoff.layers', titleFallback: 'Layers', count: visibleLayers.size > 0 ? visibleLayers.size : layers.length },
-                  { id: 'annotations' as const, icon: MessageSquare, labelKey: 'dwg_takeoff.tab_annotations_short', fallback: 'Notes', titleKey: 'dwg_takeoff.annotations', titleFallback: 'Annotations', count: annotations.length },
-                  { id: 'properties' as const, icon: Info, labelKey: 'dwg_takeoff.tab_properties_short', fallback: 'Props', titleKey: 'dwg_takeoff.properties', titleFallback: 'Properties', count: 0 },
-                  { id: 'scale' as const, icon: Ruler, labelKey: 'dwg_takeoff.tab_scale_short', fallback: 'Scale', titleKey: 'dwg_takeoff.tab_scale', titleFallback: 'Drawing scale', count: 0 },
-                  { id: 'summary' as const, icon: BarChart3, labelKey: 'dwg_takeoff.tab_summary_short', fallback: 'Sum', titleKey: 'dwg_takeoff.summary', titleFallback: 'Summary', count: 0 },
-                ]
-              ).map(({ id, icon: Icon, labelKey, fallback, titleKey, titleFallback, count }) => (
-                <button
-                  key={id}
-                  onClick={() => setRightTab(id)}
-                  title={t(titleKey, titleFallback)}
-                  className={clsx(
-                    'flex flex-1 min-w-0 flex-col items-center justify-center gap-0.5 py-1.5 px-1 text-[10px] font-medium leading-none transition-colors',
-                    rightTab === id
-                      ? 'border-b-2 border-oe-blue text-oe-blue'
-                      : 'text-muted-foreground hover:text-foreground',
-                  )}
-                  data-testid={`dwg-right-tab-${id}`}
-                >
-                  <Icon size={14} />
-                  <span className="flex items-center gap-0.5 truncate">
-                    <span className="truncate">{t(labelKey, fallback)}</span>
-                    {count > 0 && (
-                      <span className="text-[9px] tabular-nums opacity-60">
-                        ({count})
-                      </span>
+              {[
+                {
+                  id: "layers" as const,
+                  icon: Layers,
+                  labelKey: "dwg_takeoff.tab_layers_short",
+                  fallback: "Layers",
+                  titleKey: "dwg_takeoff.layers",
+                  titleFallback: "Layers",
+                  count:
+                    visibleLayers.size > 0 ? visibleLayers.size : layers.length,
+                },
+                {
+                  id: "annotations" as const,
+                  icon: MessageSquare,
+                  labelKey: "dwg_takeoff.tab_annotations_short",
+                  fallback: "Notes",
+                  titleKey: "dwg_takeoff.annotations",
+                  titleFallback: "Annotations",
+                  count: annotations.length,
+                },
+                {
+                  id: "properties" as const,
+                  icon: Info,
+                  labelKey: "dwg_takeoff.tab_properties_short",
+                  fallback: "Props",
+                  titleKey: "dwg_takeoff.properties",
+                  titleFallback: "Properties",
+                  count: 0,
+                },
+                {
+                  id: "scale" as const,
+                  icon: Ruler,
+                  labelKey: "dwg_takeoff.tab_scale_short",
+                  fallback: "Scale",
+                  titleKey: "dwg_takeoff.tab_scale",
+                  titleFallback: "Drawing scale",
+                  count: 0,
+                },
+                {
+                  id: "summary" as const,
+                  icon: BarChart3,
+                  labelKey: "dwg_takeoff.tab_summary_short",
+                  fallback: "Sum",
+                  titleKey: "dwg_takeoff.summary",
+                  titleFallback: "Summary",
+                  count: 0,
+                },
+              ].map(
+                ({
+                  id,
+                  icon: Icon,
+                  labelKey,
+                  fallback,
+                  titleKey,
+                  titleFallback,
+                  count,
+                }) => (
+                  <button
+                    key={id}
+                    onClick={() => setRightTab(id)}
+                    title={t(titleKey, titleFallback)}
+                    className={clsx(
+                      "flex flex-1 min-w-0 flex-col items-center justify-center gap-0.5 py-1.5 px-1 text-[10px] font-medium leading-none transition-colors",
+                      rightTab === id
+                        ? "border-b-2 border-oe-blue text-oe-blue"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
-                  </span>
-                </button>
-              ))}
+                    data-testid={`dwg-right-tab-${id}`}
+                  >
+                    <Icon size={14} />
+                    <span className="flex items-center gap-0.5 truncate">
+                      <span className="truncate">{t(labelKey, fallback)}</span>
+                      {count > 0 && (
+                        <span className="text-[9px] tabular-nums opacity-60">
+                          ({count})
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                ),
+              )}
             </div>
 
             <div className="flex-1 overflow-y-auto p-3">
-              {rightTab === 'layers' && (
+              {rightTab === "layers" && (
                 <>
                   <LayerPanel
                     layers={layers}
@@ -3275,10 +3855,10 @@ export function DwgTakeoffPage() {
                 </>
               )}
 
-              {rightTab === 'annotations' && (
+              {rightTab === "annotations" && (
                 <div className="flex flex-col gap-2">
                   <h3 className="text-sm font-semibold text-foreground">
-                    {t('dwg_takeoff.annotations', 'Annotations')}
+                    {t("dwg_takeoff.annotations", "Annotations")}
                     {annotations.length > 0 && (
                       <Badge variant="neutral" className="ml-2">
                         {annotations.length}
@@ -3287,7 +3867,10 @@ export function DwgTakeoffPage() {
                   </h3>
                   {annotations.length === 0 ? (
                     <p className="text-xs text-muted-foreground py-4 text-center">
-                      {t('dwg_takeoff.no_annotations', 'No annotations yet. Use the toolbar to add measurements.')}
+                      {t(
+                        "dwg_takeoff.no_annotations",
+                        "No annotations yet. Use the toolbar to add measurements.",
+                      )}
                     </p>
                   ) : (
                     annotations.map((ann) => (
@@ -3295,10 +3878,10 @@ export function DwgTakeoffPage() {
                         key={ann.id}
                         onClick={() => setSelectedAnnotationId(ann.id)}
                         className={clsx(
-                          'flex items-center gap-2 rounded px-2 py-1.5 text-xs text-left transition-colors',
+                          "flex items-center gap-2 rounded px-2 py-1.5 text-xs text-left transition-colors",
                           selectedAnnotationId === ann.id
-                            ? 'bg-oe-blue/10 text-oe-blue'
-                            : 'text-foreground hover:bg-surface-secondary',
+                            ? "bg-oe-blue/10 text-oe-blue"
+                            : "text-foreground hover:bg-surface-secondary",
                         )}
                       >
                         <span
@@ -3306,11 +3889,18 @@ export function DwgTakeoffPage() {
                           style={{ backgroundColor: ann.color }}
                         />
                         <div className="flex-1 truncate">
-                          <span className="font-medium capitalize">{ann.type.replace('_', ' ')}</span>
-                          {ann.text && <span className="ml-1 text-muted-foreground">- {ann.text}</span>}
+                          <span className="font-medium capitalize">
+                            {ann.type.replace("_", " ")}
+                          </span>
+                          {ann.text && (
+                            <span className="ml-1 text-muted-foreground">
+                              - {ann.text}
+                            </span>
+                          )}
                           {ann.measurement_value != null && (
                             <span className="ml-1 text-muted-foreground">
-                              ({ann.measurement_value.toFixed(2)} {ann.measurement_unit ?? 'm'})
+                              ({ann.measurement_value.toFixed(2)}{" "}
+                              {ann.measurement_unit ?? "m"})
                             </span>
                           )}
                         </div>
@@ -3318,10 +3908,16 @@ export function DwgTakeoffPage() {
                           onClick={async (e) => {
                             e.stopPropagation();
                             const ok = await confirmAnnotDelete({
-                              title: t('dwg_takeoff.confirm_delete_annotation', 'Delete annotation?'),
-                              message: t('dwg_takeoff.confirm_delete_annotation_desc', 'This annotation will be permanently removed.'),
-                              confirmLabel: t('common.delete', 'Delete'),
-                              variant: 'danger',
+                              title: t(
+                                "dwg_takeoff.confirm_delete_annotation",
+                                "Delete annotation?",
+                              ),
+                              message: t(
+                                "dwg_takeoff.confirm_delete_annotation_desc",
+                                "This annotation will be permanently removed.",
+                              ),
+                              confirmLabel: t("common.delete", "Delete"),
+                              variant: "danger",
                             });
                             if (ok) {
                               deleteAnnotationMutation.mutate({
@@ -3340,31 +3936,52 @@ export function DwgTakeoffPage() {
                 </div>
               )}
 
-              {rightTab === 'properties' && (
+              {rightTab === "properties" && (
                 <div className="flex flex-col gap-2">
                   <h3 className="text-sm font-semibold text-foreground">
-                    {t('dwg_takeoff.properties', 'Properties')}
+                    {t("dwg_takeoff.properties", "Properties")}
                   </h3>
                   {selectedEntity ? (
                     <div className="space-y-2 text-xs">
-                      <PropertyRow label={t('dwg_takeoff.prop_type', 'Type')} value={selectedEntity.type} />
-                      <PropertyRow label={t('dwg_takeoff.prop_layer', 'Layer')} value={selectedEntity.layer} />
-                      <PropertyRow label={t('dwg_takeoff.prop_color', 'Color')} value={String(selectedEntity.color)} />
-                      <PropertyRow label={t('dwg_takeoff.prop_id', 'ID')} value={selectedEntity.id} />
+                      <PropertyRow
+                        label={t("dwg_takeoff.prop_type", "Type")}
+                        value={selectedEntity.type}
+                      />
+                      <PropertyRow
+                        label={t("dwg_takeoff.prop_layer", "Layer")}
+                        value={selectedEntity.layer}
+                      />
+                      <PropertyRow
+                        label={t("dwg_takeoff.prop_color", "Color")}
+                        value={String(selectedEntity.color)}
+                      />
+                      <PropertyRow
+                        label={t("dwg_takeoff.prop_id", "ID")}
+                        value={selectedEntity.id}
+                      />
                       {selectedEntity.start && (
                         <PropertyRow
-                          label={t('dwg_takeoff.prop_position', 'Position')}
+                          label={t("dwg_takeoff.prop_position", "Position")}
                           value={`(${selectedEntity.start.x.toFixed(2)}, ${selectedEntity.start.y.toFixed(2)})`}
                         />
                       )}
                       {selectedEntity.radius != null && (
-                        <PropertyRow label={t('dwg_takeoff.prop_radius', 'Radius')} value={selectedEntity.radius.toFixed(3)} />
+                        <PropertyRow
+                          label={t("dwg_takeoff.prop_radius", "Radius")}
+                          value={selectedEntity.radius.toFixed(3)}
+                        />
                       )}
                       {selectedEntity.text && (
-                        <PropertyRow label={t('dwg_takeoff.prop_text', 'Text')} value={selectedEntity.text} />
+                        <PropertyRow
+                          label={t("dwg_takeoff.prop_text", "Text")}
+                          value={selectedEntity.text}
+                        />
                       )}
                       {selectedEntity.block_name && (
-                        <PropertyRow label={t('dwg_takeoff.prop_block', 'Block')} value={selectedEntity.block_name} />
+                        <PropertyRow
+                          label={t("dwg_takeoff.prop_block", "Block")}
+                          value={selectedEntity.block_name}
+                        />
                       )}
 
                       {/* ── Attach-to: cross-module link actions ────
@@ -3376,17 +3993,26 @@ export function DwgTakeoffPage() {
                       {selectedDrawingId && (
                         <div className="mt-3 space-y-1.5">
                           <div className="font-semibold text-xs text-foreground border-b border-border pb-1">
-                            {t('dwg_takeoff.attach_to', { defaultValue: 'Attach to' })}
+                            {t("dwg_takeoff.attach_to", {
+                              defaultValue: "Attach to",
+                            })}
                           </div>
                           <button
                             type="button"
-                            onClick={() => handleOpenLinkToBoq(selectedEntity.id)}
+                            onClick={() =>
+                              handleOpenLinkToBoq(selectedEntity.id)
+                            }
                             className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-boq"
                           >
-                            <Link2 size={12} className="text-oe-blue shrink-0" />
+                            <Link2
+                              size={12}
+                              className="text-oe-blue shrink-0"
+                            />
                             <span className="flex-1">
-                              {t('dwg_takeoff.attach_boq', { defaultValue: 'Link to BOQ' })}
+                              {t("dwg_takeoff.attach_boq", {
+                                defaultValue: "Link to BOQ",
+                              })}
                             </span>
                           </button>
                           <button
@@ -3401,9 +4027,14 @@ export function DwgTakeoffPage() {
                             className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-task"
                           >
-                            <ListChecks size={12} className="text-amber-500 shrink-0" />
+                            <ListChecks
+                              size={12}
+                              className="text-amber-500 shrink-0"
+                            />
                             <span className="flex-1">
-                              {t('dwg_takeoff.attach_task', { defaultValue: '+ New task' })}
+                              {t("dwg_takeoff.attach_task", {
+                                defaultValue: "+ New task",
+                              })}
                             </span>
                           </button>
                           <button
@@ -3418,9 +4049,14 @@ export function DwgTakeoffPage() {
                             className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-document"
                           >
-                            <FileText size={12} className="text-violet-500 shrink-0" />
+                            <FileText
+                              size={12}
+                              className="text-violet-500 shrink-0"
+                            />
                             <span className="flex-1">
-                              {t('dwg_takeoff.attach_document', { defaultValue: '+ Link document' })}
+                              {t("dwg_takeoff.attach_document", {
+                                defaultValue: "+ Link document",
+                              })}
                             </span>
                           </button>
                           <button
@@ -3435,9 +4071,14 @@ export function DwgTakeoffPage() {
                             className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-activity"
                           >
-                            <CalendarDays size={12} className="text-emerald-500 shrink-0" />
+                            <CalendarDays
+                              size={12}
+                              className="text-emerald-500 shrink-0"
+                            />
                             <span className="flex-1">
-                              {t('dwg_takeoff.attach_activity', { defaultValue: '+ Link activity' })}
+                              {t("dwg_takeoff.attach_activity", {
+                                defaultValue: "+ Link activity",
+                              })}
                             </span>
                           </button>
                           <button
@@ -3452,112 +4093,133 @@ export function DwgTakeoffPage() {
                             className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-requirement"
                           >
-                            <ClipboardCheck size={12} className="text-violet-500 shrink-0" />
+                            <ClipboardCheck
+                              size={12}
+                              className="text-violet-500 shrink-0"
+                            />
                             <span className="flex-1">
-                              {t('dwg_takeoff.attach_requirement', { defaultValue: '+ Link requirement' })}
+                              {t("dwg_takeoff.attach_requirement", {
+                                defaultValue: "+ Link requirement",
+                              })}
                             </span>
                           </button>
                         </div>
                       )}
 
                       {/* ── Polyline measurements ──────────────── */}
-                      {selectedEntity.type === 'LWPOLYLINE' && selectedEntity.vertices && selectedEntity.vertices.length >= 2 && (() => {
-                        const verts = selectedEntity.vertices!;
-                        const closed = !!selectedEntity.closed;
-                        const segLengths = getSegmentLengths(verts, closed);
-                        // Apply current drawing scale on display so the right-panel
-                        // numbers stay in sync with the canvas labels when the user
-                        // picks a different ratio via the Scale tab.
-                        const perimeter = calculatePerimeter(verts, closed) * effectiveScale;
-                        // calculateAreaSafe flags a self-intersecting
-                        // ("bowtie") trace whose shoelace area cancels to
-                        // a wrong/zero figure, so the estimator can fix
-                        // the polyline instead of booking it (D-TKC-015).
-                        const areaResult: { area: number; degenerate: AreaDegeneracy } =
-                          closed
+                      {selectedEntity.type === "LWPOLYLINE" &&
+                        selectedEntity.vertices &&
+                        selectedEntity.vertices.length >= 2 &&
+                        (() => {
+                          const verts = selectedEntity.vertices!;
+                          const closed = !!selectedEntity.closed;
+                          const segLengths = getSegmentLengths(verts, closed);
+                          // Apply current drawing scale on display so the right-panel
+                          // numbers stay in sync with the canvas labels when the user
+                          // picks a different ratio via the Scale tab.
+                          const perimeter =
+                            calculatePerimeter(verts, closed) * effectiveScale;
+                          // calculateAreaSafe flags a self-intersecting
+                          // ("bowtie") trace whose shoelace area cancels to
+                          // a wrong/zero figure, so the estimator can fix
+                          // the polyline instead of booking it (D-TKC-015).
+                          const areaResult: {
+                            area: number;
+                            degenerate: AreaDegeneracy;
+                          } = closed
                             ? calculateAreaSafe(verts)
                             : { area: 0, degenerate: null };
-                        const area = areaResult.area * effectiveScale * effectiveScale;
-                        const areaDegenerate = areaResult.degenerate;
-                        return (
-                          <div className="mt-3 space-y-2">
-                            <div className="font-semibold text-xs text-foreground border-b border-border pb-1">
-                              {t('dwg_takeoff.measurements', 'Measurements')}
-                            </div>
-                            <div className="flex items-center justify-between rounded-md bg-emerald-950/30 px-2.5 py-1.5 border border-emerald-800/40">
-                              <span className="text-emerald-400 font-medium">
-                                {t('dwg_takeoff.perimeter', 'Perimeter')}
-                              </span>
-                              <span className="font-mono font-bold text-emerald-300">
-                                {formatMeasurement(perimeter, 'm')}
-                              </span>
-                            </div>
-                            {closed && area > 0 && !areaDegenerate && (
-                              <div className="flex items-center justify-between rounded-md bg-blue-950/30 px-2.5 py-1.5 border border-blue-800/40">
-                                <span className="text-blue-400 font-medium">
-                                  {t('dwg_takeoff.area', 'Area')}
+                          const area =
+                            areaResult.area * effectiveScale * effectiveScale;
+                          const areaDegenerate = areaResult.degenerate;
+                          return (
+                            <div className="mt-3 space-y-2">
+                              <div className="font-semibold text-xs text-foreground border-b border-border pb-1">
+                                {t("dwg_takeoff.measurements", "Measurements")}
+                              </div>
+                              <div className="flex items-center justify-between rounded-md bg-emerald-950/30 px-2.5 py-1.5 border border-emerald-800/40">
+                                <span className="text-emerald-400 font-medium">
+                                  {t("dwg_takeoff.perimeter", "Perimeter")}
                                 </span>
-                                <span className="font-mono font-bold text-blue-300">
-                                  {formatMeasurement(area, 'm\u00B2')}
+                                <span className="font-mono font-bold text-emerald-300">
+                                  {formatMeasurement(perimeter, "m")}
                                 </span>
                               </div>
-                            )}
-                            {closed && areaDegenerate && (
-                              <div className="rounded-md bg-amber-950/30 px-2.5 py-1.5 border border-amber-800/40 text-amber-300 text-2xs">
-                                {areaDegenerate === 'self_intersecting'
-                                  ? t('dwg_takeoff.area_self_intersecting', {
-                                      defaultValue:
-                                        'This outline crosses itself \u2014 the area is unreliable. Re-trace it as a simple (non-crossing) polygon before using it as a quantity.',
-                                    })
-                                  : t('dwg_takeoff.area_degenerate', {
-                                      defaultValue:
-                                        'This outline encloses no measurable area. Check the vertices before using it as a quantity.',
-                                    })}
-                              </div>
-                            )}
-                            <PropertyRow
-                              label={t('dwg_takeoff.vertices', 'Vertices')}
-                              value={String(verts.length)}
-                            />
-                            <PropertyRow
-                              label={t('dwg_takeoff.closed', 'Closed')}
-                              value={closed
-                                ? t('common.yes', 'Yes')
-                                : t('common.no', 'No')}
-                            />
-                            <div className="mt-2">
-                              <div className="font-medium text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                                {t('dwg_takeoff.segments', 'Segments')} ({segLengths.length})
-                              </div>
-                              <div className="space-y-0.5 max-h-48 overflow-y-auto">
-                                {segLengths.map((len, i) => (
-                                  <div
-                                    key={i}
-                                    className="flex items-center justify-between rounded px-2 py-1 bg-surface-secondary hover:bg-surface-tertiary transition-colors"
-                                  >
-                                    <span className="text-muted-foreground font-mono text-[10px]">
-                                      #{i + 1}
-                                    </span>
-                                    <span className="font-mono font-medium text-[11px]">
-                                      {formatMeasurement(len * effectiveScale, 'm')}
-                                    </span>
-                                  </div>
-                                ))}
+                              {closed && area > 0 && !areaDegenerate && (
+                                <div className="flex items-center justify-between rounded-md bg-blue-950/30 px-2.5 py-1.5 border border-blue-800/40">
+                                  <span className="text-blue-400 font-medium">
+                                    {t("dwg_takeoff.area", "Area")}
+                                  </span>
+                                  <span className="font-mono font-bold text-blue-300">
+                                    {formatMeasurement(area, "m\u00B2")}
+                                  </span>
+                                </div>
+                              )}
+                              {closed && areaDegenerate && (
+                                <div className="rounded-md bg-amber-950/30 px-2.5 py-1.5 border border-amber-800/40 text-amber-300 text-2xs">
+                                  {areaDegenerate === "self_intersecting"
+                                    ? t("dwg_takeoff.area_self_intersecting", {
+                                        defaultValue:
+                                          "This outline crosses itself \u2014 the area is unreliable. Re-trace it as a simple (non-crossing) polygon before using it as a quantity.",
+                                      })
+                                    : t("dwg_takeoff.area_degenerate", {
+                                        defaultValue:
+                                          "This outline encloses no measurable area. Check the vertices before using it as a quantity.",
+                                      })}
+                                </div>
+                              )}
+                              <PropertyRow
+                                label={t("dwg_takeoff.vertices", "Vertices")}
+                                value={String(verts.length)}
+                              />
+                              <PropertyRow
+                                label={t("dwg_takeoff.closed", "Closed")}
+                                value={
+                                  closed
+                                    ? t("common.yes", "Yes")
+                                    : t("common.no", "No")
+                                }
+                              />
+                              <div className="mt-2">
+                                <div className="font-medium text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                                  {t("dwg_takeoff.segments", "Segments")} (
+                                  {segLengths.length})
+                                </div>
+                                <div className="space-y-0.5 max-h-48 overflow-y-auto">
+                                  {segLengths.map((len, i) => (
+                                    <div
+                                      key={i}
+                                      className="flex items-center justify-between rounded px-2 py-1 bg-surface-secondary hover:bg-surface-tertiary transition-colors"
+                                    >
+                                      <span className="text-muted-foreground font-mono text-[10px]">
+                                        #{i + 1}
+                                      </span>
+                                      <span className="font-mono font-medium text-[11px]">
+                                        {formatMeasurement(
+                                          len * effectiveScale,
+                                          "m",
+                                        )}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })()}
+                          );
+                        })()}
                     </div>
                   ) : (
                     <p className="text-xs text-muted-foreground py-4 text-center">
-                      {t('dwg_takeoff.select_entity', 'Click an entity in the viewer to see its properties.')}
+                      {t(
+                        "dwg_takeoff.select_entity",
+                        "Click an entity in the viewer to see its properties.",
+                      )}
                     </p>
                   )}
                 </div>
               )}
 
-              {rightTab === 'scale' && (
+              {rightTab === "scale" && (
                 <ScaleTab
                   drawingScale={drawingScale}
                   onDrawingScaleChange={setDrawingScale}
@@ -3567,12 +4229,15 @@ export function DwgTakeoffPage() {
                   calibrationPixels={calibrationPixels}
                   onStartCalibration={handleStartCalibration}
                   onCancelCalibration={handleCancelCalibration}
-                  dxfUnits={drawings.find((d) => d.id === selectedDrawingId)?.units ?? null}
+                  dxfUnits={
+                    drawings.find((d) => d.id === selectedDrawingId)?.units ??
+                    null
+                  }
                   effectiveScale={effectiveScale}
                 />
               )}
 
-              {rightTab === 'summary' && (
+              {rightTab === "summary" && (
                 <SummaryTab
                   entityCount={filteredEntities.length}
                   aggregate={summaryAggregate}
@@ -3592,10 +4257,12 @@ export function DwgTakeoffPage() {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
           onClick={closeUploadModal}
-          onKeyDown={(e) => { if (e.key === 'Escape') closeUploadModal(); }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") closeUploadModal();
+          }}
           role="dialog"
           aria-modal="true"
-          aria-label={t('dwg_takeoff.upload_drawing', 'Upload drawing')}
+          aria-label={t("dwg_takeoff.upload_drawing", "Upload drawing")}
         >
           <div
             className="w-[420px] rounded-2xl border border-border-light bg-surface-primary shadow-2xl p-6 space-y-5"
@@ -3609,10 +4276,10 @@ export function DwgTakeoffPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-content-primary">
-                    {t('dwg_takeoff.upload_drawing', 'Upload drawing')}
+                    {t("dwg_takeoff.upload_drawing", "Upload drawing")}
                   </h3>
                   <p className="text-[11px] text-content-tertiary">
-                    {t('dwg_takeoff.upload_hint', 'DWG or DXF files')}
+                    {t("dwg_takeoff.upload_hint", "DWG or DXF files")}
                   </p>
                 </div>
               </div>
@@ -3620,7 +4287,10 @@ export function DwgTakeoffPage() {
                 onClick={closeUploadModal}
                 className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-secondary transition-colors"
               >
-                <X size={16} className="text-content-tertiary hover:text-content-primary transition-colors" />
+                <X
+                  size={16}
+                  className="text-content-tertiary hover:text-content-primary transition-colors"
+                />
               </button>
             </div>
 
@@ -3630,43 +4300,58 @@ export function DwgTakeoffPage() {
               id="dwg-takeoff-file-input"
               type="file"
               accept=".dwg,.dxf"
-              aria-label={t('dwg_takeoff.upload_aria', { defaultValue: 'Upload DWG or DXF file' })}
+              aria-label={t("dwg_takeoff.upload_aria", {
+                defaultValue: "Upload DWG or DXF file",
+              })}
               className="hidden"
               onChange={(e) => {
                 const f = e.target.files?.[0];
                 if (f) {
                   setUploadFile(f);
-                  if (!uploadName) setUploadName(f.name.replace(/\.[^.]+$/, ''));
+                  if (!uploadName)
+                    setUploadName(f.name.replace(/\.[^.]+$/, ""));
                 }
               }}
             />
             <button
               type="button"
-              aria-label={t('dwg_takeoff.upload_aria', { defaultValue: 'Upload DWG or DXF file' })}
+              aria-label={t("dwg_takeoff.upload_aria", {
+                defaultValue: "Upload DWG or DXF file",
+              })}
               onClick={() => fileInputRef.current?.click()}
-              onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               onDrop={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 const f = e.dataTransfer.files?.[0];
                 if (f) {
-                  const ext = f.name.split('.').pop()?.toLowerCase();
-                  if (ext !== 'dwg' && ext !== 'dxf') {
+                  const ext = f.name.split(".").pop()?.toLowerCase();
+                  if (ext !== "dwg" && ext !== "dxf") {
                     addToast({
-                      type: 'error',
-                      title: t('dwg_takeoff.invalid_format', 'Invalid file format'),
-                      message: t('dwg_takeoff.accepted_formats', 'Only .dwg and .dxf files are accepted'),
+                      type: "error",
+                      title: t(
+                        "dwg_takeoff.invalid_format",
+                        "Invalid file format",
+                      ),
+                      message: t(
+                        "dwg_takeoff.accepted_formats",
+                        "Only .dwg and .dxf files are accepted",
+                      ),
                     });
                     return;
                   }
                   setUploadFile(f);
-                  if (!uploadName) setUploadName(f.name.replace(/\.[^.]+$/, ''));
+                  if (!uploadName)
+                    setUploadName(f.name.replace(/\.[^.]+$/, ""));
                 }
               }}
               className={`w-full flex flex-col items-center gap-2 border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
                 uploadFile
-                  ? 'border-oe-blue bg-oe-blue/5'
-                  : 'border-border-medium hover:border-oe-blue hover:bg-blue-50/50 dark:hover:bg-blue-950/20'
+                  ? "border-oe-blue bg-oe-blue/5"
+                  : "border-border-medium hover:border-oe-blue hover:bg-blue-50/50 dark:hover:bg-blue-950/20"
               }`}
             >
               {uploadFile ? (
@@ -3674,7 +4359,9 @@ export function DwgTakeoffPage() {
                   <div className="w-10 h-10 rounded-lg bg-oe-blue/10 flex items-center justify-center">
                     <FileText size={18} className="text-oe-blue" />
                   </div>
-                  <p className="text-sm font-semibold text-content-primary">{uploadFile.name}</p>
+                  <p className="text-sm font-semibold text-content-primary">
+                    {uploadFile.name}
+                  </p>
                   <p className="text-[11px] text-content-quaternary">
                     {(uploadFile.size / 1024 / 1024).toFixed(1)} MB
                   </p>
@@ -3685,38 +4372,45 @@ export function DwgTakeoffPage() {
                     <Upload size={18} className="text-content-tertiary" />
                   </div>
                   <p className="text-sm font-medium text-content-primary">
-                    {t('dwg_takeoff.click_or_drop', 'Click or drag a file here')}
+                    {t(
+                      "dwg_takeoff.click_or_drop",
+                      "Click or drag a file here",
+                    )}
                   </p>
-                  <p className="text-[11px] text-content-quaternary">.dwg, .dxf</p>
+                  <p className="text-[11px] text-content-quaternary">
+                    .dwg, .dxf
+                  </p>
                 </>
               )}
             </button>
 
             {/* Install-hint banner — shown when user picks a .dwg but the
                 local converter isn't installed. DXF uploads bypass it. */}
-            {uploadFile
-              && uploadFile.name.toLowerCase().endsWith('.dwg')
-              && offlineReadiness
-              && !offlineReadiness.converter_available && (
-              <div
-                className="flex items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 text-[11px] text-amber-700 dark:text-amber-300"
-                data-testid="dwg-upload-install-hint"
-              >
-                <WifiOff size={14} className="shrink-0 mt-0.5" />
-                <div className="space-y-1">
-                  <p className="font-semibold">
-                    {t('dwg_takeoff.offline_install', { defaultValue: 'Install converter' })}
-                  </p>
-                  <p className="leading-relaxed">
-                    {offlineReadiness.message
-                      || t('dwg_takeoff.offline_install_hint', {
-                        defaultValue:
-                          'Upload DXF files to continue without the converter, or install it to enable .dwg support.',
+            {uploadFile &&
+              uploadFile.name.toLowerCase().endsWith(".dwg") &&
+              offlineReadiness &&
+              !offlineReadiness.converter_available && (
+                <div
+                  className="flex items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 text-[11px] text-amber-700 dark:text-amber-300"
+                  data-testid="dwg-upload-install-hint"
+                >
+                  <WifiOff size={14} className="shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-semibold">
+                      {t("dwg_takeoff.offline_install", {
+                        defaultValue: "Install converter",
                       })}
-                  </p>
+                    </p>
+                    <p className="leading-relaxed">
+                      {offlineReadiness.message ||
+                        t("dwg_takeoff.offline_install_hint", {
+                          defaultValue:
+                            "Upload DXF files to continue without the converter, or install it to enable .dwg support.",
+                        })}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Project picker — fixes issue #110.
                 On a fresh install with zero projects, the modal previously
@@ -3731,31 +4425,35 @@ export function DwgTakeoffPage() {
                 of leaving them stuck. */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-content-secondary">
-                {t('dwg_takeoff.project_label', { defaultValue: 'Project' })}
+                {t("dwg_takeoff.project_label", { defaultValue: "Project" })}
               </label>
               {noProjects ? (
                 <div className="flex items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 text-[12px] text-amber-700 dark:text-amber-300">
                   <Info size={14} className="shrink-0 mt-0.5" />
                   <div className="flex-1 space-y-1.5">
                     <p className="font-semibold">
-                      {t('dwg_takeoff.no_project_title', { defaultValue: 'Create a project first' })}
+                      {t("dwg_takeoff.no_project_title", {
+                        defaultValue: "Create a project first",
+                      })}
                     </p>
                     <p className="leading-relaxed text-amber-700/85 dark:text-amber-200/85">
-                      {t('dwg_takeoff.no_project_body', {
+                      {t("dwg_takeoff.no_project_body", {
                         defaultValue:
-                          'Drawings have to live inside a project. Create one and you can come back to upload your DWG.',
+                          "Drawings have to live inside a project. Create one and you can come back to upload your DWG.",
                       })}
                     </p>
                     <button
                       type="button"
                       onClick={() => {
                         closeUploadModal();
-                        navigate('/projects/new');
+                        navigate("/projects/new");
                       }}
                       className="inline-flex items-center gap-1.5 rounded-md bg-amber-500/90 hover:bg-amber-600 text-white px-2.5 py-1 text-[11px] font-semibold transition-colors"
                     >
                       <Plus size={12} />
-                      {t('dwg_takeoff.create_project_cta', { defaultValue: 'Create project' })}
+                      {t("dwg_takeoff.create_project_cta", {
+                        defaultValue: "Create project",
+                      })}
                     </button>
                   </div>
                 </div>
@@ -3763,14 +4461,18 @@ export function DwgTakeoffPage() {
                 <select
                   value={projectId}
                   onChange={(e) => {
-                    const picked = projects.find((p) => p.id === e.target.value);
+                    const picked = projects.find(
+                      (p) => p.id === e.target.value,
+                    );
                     if (picked) setActiveProject(picked.id, picked.name);
                   }}
                   disabled={projectsLoading || projects.length === 0}
                   className="w-full rounded-xl border border-border-light bg-surface-secondary px-3.5 py-2.5 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all disabled:opacity-60"
                 >
                   {projectsLoading && (
-                    <option value="">{t('common.loading', { defaultValue: 'Loading…' })}</option>
+                    <option value="">
+                      {t("common.loading", { defaultValue: "Loading…" })}
+                    </option>
                   )}
                   {projects.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -3784,13 +4486,16 @@ export function DwgTakeoffPage() {
             {/* Drawing name */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-content-secondary">
-                {t('dwg_takeoff.drawing_name', 'Drawing name')}
+                {t("dwg_takeoff.drawing_name", "Drawing name")}
               </label>
               <input
                 type="text"
                 value={uploadName}
                 onChange={(e) => setUploadName(e.target.value)}
-                placeholder={t('dwg_takeoff.drawing_name_placeholder', 'e.g. Floor Plan Level 1')}
+                placeholder={t(
+                  "dwg_takeoff.drawing_name_placeholder",
+                  "e.g. Floor Plan Level 1",
+                )}
                 className="w-full rounded-xl border border-border-light bg-surface-secondary px-3.5 py-2.5 text-sm text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all"
               />
             </div>
@@ -3798,18 +4503,28 @@ export function DwgTakeoffPage() {
             {/* Discipline */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-content-secondary">
-                {t('dwg_takeoff.discipline_label', 'Discipline')}
+                {t("dwg_takeoff.discipline_label", "Discipline")}
               </label>
               <select
                 value={uploadDiscipline}
                 onChange={(e) => setUploadDiscipline(e.target.value)}
                 className="w-full rounded-xl border border-border-light bg-surface-secondary px-3.5 py-2.5 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all"
               >
-                <option value="architectural">{t('dwg_takeoff.discipline_arch', 'Architectural')}</option>
-                <option value="structural">{t('dwg_takeoff.discipline_struct', 'Structural')}</option>
-                <option value="mep">{t('dwg_takeoff.discipline_mep', 'MEP')}</option>
-                <option value="civil">{t('dwg_takeoff.discipline_civil', 'Civil')}</option>
-                <option value="other">{t('dwg_takeoff.discipline_other', 'Other')}</option>
+                <option value="architectural">
+                  {t("dwg_takeoff.discipline_arch", "Architectural")}
+                </option>
+                <option value="structural">
+                  {t("dwg_takeoff.discipline_struct", "Structural")}
+                </option>
+                <option value="mep">
+                  {t("dwg_takeoff.discipline_mep", "MEP")}
+                </option>
+                <option value="civil">
+                  {t("dwg_takeoff.discipline_civil", "Civil")}
+                </option>
+                <option value="other">
+                  {t("dwg_takeoff.discipline_other", "Other")}
+                </option>
               </select>
             </div>
 
@@ -3823,12 +4538,20 @@ export function DwgTakeoffPage() {
                 staring at a perma-disabled button (issue #110). */}
             {(() => {
               const blocker = !uploadFile
-                ? t('dwg_takeoff.blocker_file', { defaultValue: 'Choose a .dwg or .dxf file to enable upload.' })
+                ? t("dwg_takeoff.blocker_file", {
+                    defaultValue:
+                      "Choose a .dwg or .dxf file to enable upload.",
+                  })
                 : noProjects
-                  ? t('dwg_takeoff.blocker_no_project', { defaultValue: 'Create a project before uploading drawings.' })
+                  ? t("dwg_takeoff.blocker_no_project", {
+                      defaultValue:
+                        "Create a project before uploading drawings.",
+                    })
                   : !projectId
-                    ? t('dwg_takeoff.blocker_pick_project', { defaultValue: 'Pick a project from the list above.' })
-                    : '';
+                    ? t("dwg_takeoff.blocker_pick_project", {
+                        defaultValue: "Pick a project from the list above.",
+                      })
+                    : "";
               const isDisabled = !uploadFile || !projectId || projectsLoading;
               return (
                 <div className="space-y-1.5">
@@ -3845,13 +4568,13 @@ export function DwgTakeoffPage() {
                         discipline: uploadDiscipline,
                       });
                       addToast({
-                        type: 'info',
-                        title: t('dwg_takeoff.upload_started', {
-                          defaultValue: 'Upload started',
+                        type: "info",
+                        title: t("dwg_takeoff.upload_started", {
+                          defaultValue: "Upload started",
                         }),
-                        message: t('dwg_takeoff.upload_started_hint', {
+                        message: t("dwg_takeoff.upload_started_hint", {
                           defaultValue:
-                            'Progress continues in the dock — you can navigate away.',
+                            "Progress continues in the dock — you can navigate away.",
                         }),
                       });
                       closeUploadModal();
@@ -3859,7 +4582,7 @@ export function DwgTakeoffPage() {
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-oe-blue text-white hover:bg-oe-blue-dark active:scale-[0.98] shadow-md hover:shadow-lg"
                   >
                     <Upload size={16} />
-                    {t('dwg_takeoff.upload_and_process', 'Upload & Process')}
+                    {t("dwg_takeoff.upload_and_process", "Upload & Process")}
                   </button>
                   {blocker && (
                     <p className="text-[11px] text-content-tertiary text-center">
@@ -3877,12 +4600,12 @@ export function DwgTakeoffPage() {
       {confirmDeleteId && (
         <ConfirmDialog
           open
-          title={t('dwg_takeoff.confirm_delete', 'Delete drawing?')}
+          title={t("dwg_takeoff.confirm_delete", "Delete drawing?")}
           message={t(
-            'dwg_takeoff.confirm_delete_desc',
-            'This will permanently delete the drawing and all its annotations.',
+            "dwg_takeoff.confirm_delete_desc",
+            "This will permanently delete the drawing and all its annotations.",
           )}
-          confirmLabel={t('common.delete', 'Delete')}
+          confirmLabel={t("common.delete", "Delete")}
           variant="danger"
           loading={deleteMutation.isPending}
           onConfirm={() => deleteMutation.mutate(confirmDeleteId)}
@@ -3989,9 +4712,11 @@ function DrawingFilmstrip({
       <div className="flex items-center w-full px-3 py-1">
         <Layers size={12} className="text-slate-300 mr-1.5 shrink-0" />
         <span className="text-[11px] font-semibold text-slate-100">
-          {t('dwg_takeoff.drawings', 'Drawings')}
+          {t("dwg_takeoff.drawings", "Drawings")}
         </span>
-        <span className="text-[10px] text-slate-400 ml-1">({drawings.length})</span>
+        <span className="text-[10px] text-slate-400 ml-1">
+          ({drawings.length})
+        </span>
       </div>
 
       {/* Drawing cards — always visible, horizontally scrolling if needed. */}
@@ -4003,18 +4728,18 @@ function DrawingFilmstrip({
             // Prefer date-fns' formatDistanceToNow for the upload label;
             // fall back to empty if it's missing or malformed (older rows
             // in dev DBs without a timestamp).
-            let uploadedLabel = '';
+            let uploadedLabel = "";
             if (d.created_at) {
               try {
                 const dt = new Date(d.created_at);
                 if (!Number.isNaN(dt.getTime())) {
-                  uploadedLabel = t('dwg_takeoff.uploaded_relative', {
-                    defaultValue: 'Uploaded {{when}}',
+                  uploadedLabel = t("dwg_takeoff.uploaded_relative", {
+                    defaultValue: "Uploaded {{when}}",
                     when: formatDistanceToNow(dt, { addSuffix: true }),
                   });
                 }
               } catch {
-                uploadedLabel = '';
+                uploadedLabel = "";
               }
             }
 
@@ -4028,17 +4753,17 @@ function DrawingFilmstrip({
                 tabIndex={0}
                 onClick={() => onSelectDrawing(d.id)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     onSelectDrawing(d.id);
                   }
                 }}
                 className={clsx(
-                  'group relative shrink-0 w-36 h-[72px] text-start rounded-md border overflow-hidden flex flex-col cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-                  'transition-all duration-150',
+                  "group relative shrink-0 w-36 h-[72px] text-start rounded-md border overflow-hidden flex flex-col cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                  "transition-all duration-150",
                   activeDrawingId === d.id
-                    ? 'border-blue-500/80 bg-blue-500/10 shadow shadow-blue-500/20'
-                    : 'border-[#3a3a3a] bg-[#363636] hover:bg-[#3d3d3d] hover:border-[#4a4a4a]',
+                    ? "border-blue-500/80 bg-blue-500/10 shadow shadow-blue-500/20"
+                    : "border-[#3a3a3a] bg-[#363636] hover:bg-[#3d3d3d] hover:border-[#4a4a4a]",
                 )}
                 data-testid="dwg-filmstrip-card"
               >
@@ -4047,14 +4772,18 @@ function DrawingFilmstrip({
                     <FileText
                       size={10}
                       className={clsx(
-                        'shrink-0',
-                        activeDrawingId === d.id ? 'text-blue-400' : 'text-slate-400',
+                        "shrink-0",
+                        activeDrawingId === d.id
+                          ? "text-blue-400"
+                          : "text-slate-400",
                       )}
                     />
                     <span
                       className={clsx(
-                        'text-[10px] font-semibold truncate',
-                        activeDrawingId === d.id ? 'text-blue-300' : 'text-slate-100',
+                        "text-[10px] font-semibold truncate",
+                        activeDrawingId === d.id
+                          ? "text-blue-300"
+                          : "text-slate-100",
                       )}
                     >
                       {d.name}
@@ -4066,7 +4795,7 @@ function DrawingFilmstrip({
                     <span className="tabular-nums">
                       {activeDrawingId === d.id && entities.length > 0
                         ? entities.length
-                        : d.entity_count || '--'}
+                        : d.entity_count || "--"}
                     </span>
                   </div>
                   {uploadedLabel && (
@@ -4096,7 +4825,7 @@ function DrawingFilmstrip({
           })
         ) : (
           <span className="text-[10px] text-slate-400">
-            {t('dwg_takeoff.no_drawings', 'No drawings uploaded yet')}
+            {t("dwg_takeoff.no_drawings", "No drawings uploaded yet")}
           </span>
         )}
         {/* Upload button — compact to match the new card dimensions. */}
@@ -4104,9 +4833,12 @@ function DrawingFilmstrip({
           onClick={onUpload}
           className="flex items-center justify-center shrink-0 w-9 h-9 rounded-md border-2 border-dashed
                      border-[#4a4a4a] hover:border-blue-400/60 hover:bg-blue-500/10 transition-all group"
-          title={t('dwg_takeoff.upload_drawing', 'Upload drawing')}
+          title={t("dwg_takeoff.upload_drawing", "Upload drawing")}
         >
-          <Plus size={14} className="text-slate-400 group-hover:text-blue-300 transition-colors" />
+          <Plus
+            size={14}
+            className="text-slate-400 group-hover:text-blue-300 transition-colors"
+          />
         </button>
       </div>
     </div>
@@ -4130,21 +4862,21 @@ interface SummaryKpiCardProps {
   label: string;
   value: string;
   unit?: string;
-  accent: 'blue' | 'emerald' | 'amber' | 'violet';
+  accent: "blue" | "emerald" | "amber" | "violet";
 }
 
 /** One KPI tile in the Summary tab — count, area, perimeter, length. */
 function SummaryKpiCard({ label, value, unit, accent }: SummaryKpiCardProps) {
-  const accentMap: Record<SummaryKpiCardProps['accent'], string> = {
-    blue: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-    emerald: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
-    amber: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
-    violet: 'text-violet-400 bg-violet-500/10 border-violet-500/20',
+  const accentMap: Record<SummaryKpiCardProps["accent"], string> = {
+    blue: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+    emerald: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+    amber: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+    violet: "text-violet-400 bg-violet-500/10 border-violet-500/20",
   };
   return (
     <div
       className={clsx(
-        'rounded-lg border px-2.5 py-2 flex flex-col gap-0.5 min-w-0',
+        "rounded-lg border px-2.5 py-2 flex flex-col gap-0.5 min-w-0",
         accentMap[accent],
       )}
       data-testid="dwg-summary-kpi"
@@ -4155,7 +4887,9 @@ function SummaryKpiCard({ label, value, unit, accent }: SummaryKpiCardProps) {
       <div className="text-lg font-bold tabular-nums leading-tight truncate">
         {value}
         {unit && (
-          <span className="text-[10px] font-medium ml-1 opacity-70">{unit}</span>
+          <span className="text-[10px] font-medium ml-1 opacity-70">
+            {unit}
+          </span>
         )}
       </div>
     </div>
@@ -4170,11 +4904,11 @@ function SummaryKpiCard({ label, value, unit, accent }: SummaryKpiCardProps) {
  * cover the common architectural ratios; a "Custom" slot lets the user
  * type any positive integer. */
 const SCALE_PRESETS: { value: number; label: string }[] = [
-  { value: 1, label: '1:1' },
-  { value: 50, label: '1:50' },
-  { value: 100, label: '1:100' },
-  { value: 200, label: '1:200' },
-  { value: 500, label: '1:500' },
+  { value: 1, label: "1:1" },
+  { value: 50, label: "1:50" },
+  { value: 100, label: "1:100" },
+  { value: 200, label: "1:200" },
+  { value: 500, label: "1:500" },
 ];
 
 interface ScaleTabProps {
@@ -4212,16 +4946,16 @@ function ScaleTab({
   const isPreset = SCALE_PRESETS.some((p) => p.value === drawingScale);
   const [customMode, setCustomMode] = useState(!isPreset);
   const [customInput, setCustomInput] = useState<string>(
-    isPreset ? '' : String(drawingScale),
+    isPreset ? "" : String(drawingScale),
   );
   // Real-world distance the user types in during two-point calibration.
-  const [realDistance, setRealDistance] = useState<string>('');
-  const [realUnit, setRealUnit] = useState<'m' | 'cm' | 'mm'>('m');
+  const [realDistance, setRealDistance] = useState<string>("");
+  const [realUnit, setRealUnit] = useState<"m" | "cm" | "mm">("m");
 
   useEffect(() => {
     if (SCALE_PRESETS.some((p) => p.value === drawingScale)) {
       setCustomMode(false);
-      setCustomInput('');
+      setCustomInput("");
     } else {
       setCustomMode(true);
       setCustomInput(String(drawingScale));
@@ -4249,7 +4983,11 @@ function ScaleTab({
     const distRaw = Number(realDistance);
     if (!Number.isFinite(distRaw) || distRaw <= 0) return;
     const distInMetres =
-      realUnit === 'mm' ? distRaw / 1000 : realUnit === 'cm' ? distRaw / 100 : distRaw;
+      realUnit === "mm"
+        ? distRaw / 1000
+        : realUnit === "cm"
+          ? distRaw / 100
+          : distRaw;
     // `drawingScale` is the denominator — raw/real. Ignoring the click
     // order, two points in raw DXF units measure `calibrationPixels`; the
     // user says those correspond to `distInMetres` of real-world length.
@@ -4274,31 +5012,45 @@ function ScaleTab({
         type="button"
         onClick={() => onModeChange(id)}
         className={clsx(
-          'flex-1 flex flex-col items-start gap-0.5 rounded-md border px-2.5 py-1.5 text-left text-[11px] transition-colors',
+          "flex-1 flex flex-col items-start gap-0.5 rounded-md border px-2.5 py-1.5 text-left text-[11px] transition-colors",
           active
-            ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-            : 'border-border bg-surface-secondary text-content-primary hover:bg-surface-tertiary',
+            ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+            : "border-border bg-surface-secondary text-content-primary hover:bg-surface-tertiary",
         )}
         data-testid={`dwg-scale-mode-${id}`}
         aria-pressed={active}
       >
         <span className="font-semibold">{label}</span>
-        <span className={clsx('text-[10px] leading-tight', active ? 'text-oe-blue/80' : 'text-content-tertiary')}>
+        <span
+          className={clsx(
+            "text-[10px] leading-tight",
+            active ? "text-oe-blue/80" : "text-content-tertiary",
+          )}
+        >
           {hint}
         </span>
       </button>
     );
   };
 
-  const unitLabel = (dxfUnits ?? '').toLowerCase();
-  const unitKnown = ['mm', 'cm', 'm', 'km', 'inches', 'in', 'feet', 'ft'].includes(unitLabel);
+  const unitLabel = (dxfUnits ?? "").toLowerCase();
+  const unitKnown = [
+    "mm",
+    "cm",
+    "m",
+    "km",
+    "inches",
+    "in",
+    "feet",
+    "ft",
+  ].includes(unitLabel);
 
   return (
     <div className="flex flex-col gap-4" data-testid="dwg-scale-tab">
       <div className="flex items-center gap-1.5">
         <Ruler size={14} className="text-oe-blue" />
         <h3 className="text-sm font-semibold text-foreground">
-          {t('dwg_takeoff.scale_title', { defaultValue: 'Drawing scale' })}
+          {t("dwg_takeoff.scale_title", { defaultValue: "Drawing scale" })}
         </h3>
       </div>
 
@@ -4307,53 +5059,63 @@ function ScaleTab({
           to be in metres (historical default). */}
       <div
         className={clsx(
-          'flex items-center justify-between rounded-md border px-2.5 py-1.5 text-[11px]',
+          "flex items-center justify-between rounded-md border px-2.5 py-1.5 text-[11px]",
           unitKnown
-            ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300'
-            : 'border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300',
+            ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300"
+            : "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",
         )}
         data-testid="dwg-scale-unit-info"
       >
         <span className="font-medium">
-          {t('dwg_takeoff.dxf_units', { defaultValue: 'DXF units' })}:{' '}
-          <span className="font-mono">{unitLabel || 'unitless'}</span>
+          {t("dwg_takeoff.dxf_units", { defaultValue: "DXF units" })}:{" "}
+          <span className="font-mono">{unitLabel || "unitless"}</span>
         </span>
-        <span className="font-mono">
-          × {effectiveScale.toPrecision(4)}
-        </span>
+        <span className="font-mono">× {effectiveScale.toPrecision(4)}</span>
       </div>
 
       {/* Mode picker — 3 strategies */}
       <div className="flex flex-col gap-1.5">
         <span className="text-[9px] font-semibold uppercase tracking-wider text-content-tertiary">
-          {t('dwg_takeoff.scale_mode_label', { defaultValue: 'Scale mode' })}
+          {t("dwg_takeoff.scale_mode_label", { defaultValue: "Scale mode" })}
         </span>
         <div className="flex gap-1.5">
           <ModeButton
             id="preset"
-            label={t('dwg_takeoff.scale_mode_preset', { defaultValue: 'Preset ratio' })}
-            hint={t('dwg_takeoff.scale_mode_preset_hint', { defaultValue: '1:50, 1:100 or custom' })}
+            label={t("dwg_takeoff.scale_mode_preset", {
+              defaultValue: "Preset ratio",
+            })}
+            hint={t("dwg_takeoff.scale_mode_preset_hint", {
+              defaultValue: "1:50, 1:100 or custom",
+            })}
           />
           <ModeButton
             id="calibrated"
-            label={t('dwg_takeoff.scale_mode_calibrated', { defaultValue: 'Calibrate' })}
-            hint={t('dwg_takeoff.scale_mode_calibrated_hint', { defaultValue: 'Two points + known distance' })}
+            label={t("dwg_takeoff.scale_mode_calibrated", {
+              defaultValue: "Calibrate",
+            })}
+            hint={t("dwg_takeoff.scale_mode_calibrated_hint", {
+              defaultValue: "Two points + known distance",
+            })}
           />
           <ModeButton
             id="per_annotation"
-            label={t('dwg_takeoff.scale_mode_per_annotation', { defaultValue: 'Per-annotation' })}
-            hint={t('dwg_takeoff.scale_mode_per_annotation_hint', { defaultValue: 'Detail views on same sheet' })}
+            label={t("dwg_takeoff.scale_mode_per_annotation", {
+              defaultValue: "Per-annotation",
+            })}
+            hint={t("dwg_takeoff.scale_mode_per_annotation_hint", {
+              defaultValue: "Detail views on same sheet",
+            })}
           />
         </div>
       </div>
 
       {/* ── Mode: Preset ──────────────────────────────────────────────── */}
-      {mode === 'preset' && (
+      {mode === "preset" && (
         <>
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            {t('dwg_takeoff.scale_explainer', {
+            {t("dwg_takeoff.scale_explainer", {
               defaultValue:
-                'Raw DXF units are treated as metres. A scale of 1:50 divides displayed measurements so a 50-metre raw span reads as 1 metre.',
+                "Raw DXF units are treated as metres. A scale of 1:50 divides displayed measurements so a 50-metre raw span reads as 1 metre.",
             })}
           </p>
 
@@ -4364,10 +5126,10 @@ function ScaleTab({
                 <label
                   key={p.value}
                   className={clsx(
-                    'flex items-center gap-2 rounded-md border px-2.5 py-1.5 cursor-pointer text-xs transition-colors',
+                    "flex items-center gap-2 rounded-md border px-2.5 py-1.5 cursor-pointer text-xs transition-colors",
                     checked
-                      ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                      : 'border-border bg-surface-secondary text-content-primary hover:bg-surface-tertiary',
+                      ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                      : "border-border bg-surface-secondary text-content-primary hover:bg-surface-tertiary",
                   )}
                 >
                   <input
@@ -4386,10 +5148,10 @@ function ScaleTab({
 
             <label
               className={clsx(
-                'flex items-center gap-2 rounded-md border px-2.5 py-1.5 cursor-pointer text-xs transition-colors',
+                "flex items-center gap-2 rounded-md border px-2.5 py-1.5 cursor-pointer text-xs transition-colors",
                 customMode
-                  ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                  : 'border-border bg-surface-secondary text-content-primary hover:bg-surface-tertiary',
+                  ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                  : "border-border bg-surface-secondary text-content-primary hover:bg-surface-tertiary",
               )}
             >
               <input
@@ -4401,7 +5163,7 @@ function ScaleTab({
                 data-testid="dwg-scale-preset-custom"
               />
               <span className="font-mono font-semibold shrink-0">
-                {t('dwg_takeoff.scale_custom', { defaultValue: 'Custom 1:' })}
+                {t("dwg_takeoff.scale_custom", { defaultValue: "Custom 1:" })}
               </span>
               {customMode && (
                 <input
@@ -4412,8 +5174,8 @@ function ScaleTab({
                   onChange={(e) => handleCustomChange(e.target.value)}
                   className="w-20 ml-auto px-1.5 py-0.5 text-xs font-mono rounded border border-border bg-surface-primary text-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
                   data-testid="dwg-scale-custom-input"
-                  aria-label={t('dwg_takeoff.scale_input_aria', {
-                    defaultValue: 'Drawing scale denominator',
+                  aria-label={t("dwg_takeoff.scale_input_aria", {
+                    defaultValue: "Drawing scale denominator",
                   })}
                 />
               )}
@@ -4421,33 +5183,37 @@ function ScaleTab({
           </div>
 
           <div className="rounded-md border border-border bg-surface-secondary px-2.5 py-2 text-[11px] text-muted-foreground leading-relaxed">
-            {t('dwg_takeoff.scale_example', {
+            {t("dwg_takeoff.scale_example", {
               defaultValue:
-                'Example: if the drawing shows a 10 m wall at 1:100, set scale to 1:100 and the wall will report as 10 m on the canvas.',
+                "Example: if the drawing shows a 10 m wall at 1:100, set scale to 1:100 and the wall will report as 10 m on the canvas.",
             })}
           </div>
         </>
       )}
 
       {/* ── Mode: Calibrate ───────────────────────────────────────────── */}
-      {mode === 'calibrated' && (
+      {mode === "calibrated" && (
         <div className="flex flex-col gap-3">
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            {t('dwg_takeoff.scale_calibrate_explainer', {
+            {t("dwg_takeoff.scale_calibrate_explainer", {
               defaultValue:
-                'Click a Distance measurement on the drawing between two points whose real length you know. Type the real length below, then press Apply — the scale is computed automatically.',
+                "Click a Distance measurement on the drawing between two points whose real length you know. Type the real length below, then press Apply — the scale is computed automatically.",
             })}
           </p>
 
           <div className="rounded-md border border-border bg-surface-secondary px-3 py-2.5 text-[11px] flex flex-col gap-2">
             <div className="flex items-center justify-between gap-2">
               <span className="text-content-tertiary uppercase tracking-wider text-[9px] font-semibold">
-                {t('dwg_takeoff.scale_calibrate_measured', { defaultValue: 'Measured (raw)' })}
+                {t("dwg_takeoff.scale_calibrate_measured", {
+                  defaultValue: "Measured (raw)",
+                })}
               </span>
               <span className="font-mono font-semibold text-content-primary tabular-nums">
                 {calibrationPixels !== null
                   ? calibrationPixels.toFixed(3)
-                  : t('dwg_takeoff.scale_calibrate_none', { defaultValue: '—' })}
+                  : t("dwg_takeoff.scale_calibrate_none", {
+                      defaultValue: "—",
+                    })}
               </span>
             </div>
             {!isCalibrating ? (
@@ -4458,8 +5224,12 @@ function ScaleTab({
               >
                 <Ruler size={11} />
                 {calibrationPixels !== null
-                  ? t('dwg_takeoff.scale_calibrate_repick', { defaultValue: 'Pick two points again' })
-                  : t('dwg_takeoff.scale_calibrate_pick', { defaultValue: 'Pick two points on drawing' })}
+                  ? t("dwg_takeoff.scale_calibrate_repick", {
+                      defaultValue: "Pick two points again",
+                    })
+                  : t("dwg_takeoff.scale_calibrate_pick", {
+                      defaultValue: "Pick two points on drawing",
+                    })}
               </button>
             ) : (
               <button
@@ -4467,14 +5237,18 @@ function ScaleTab({
                 onClick={onCancelCalibration}
                 className="inline-flex items-center justify-center gap-1.5 h-7 rounded-md text-[11px] font-semibold text-content-primary bg-surface-tertiary hover:bg-surface-primary transition-colors"
               >
-                {t('dwg_takeoff.scale_calibrate_cancel', { defaultValue: 'Cancel — click two points on the drawing' })}
+                {t("dwg_takeoff.scale_calibrate_cancel", {
+                  defaultValue: "Cancel — click two points on the drawing",
+                })}
               </button>
             )}
           </div>
 
           <div className="flex flex-col gap-1.5">
             <span className="text-[9px] font-semibold uppercase tracking-wider text-content-tertiary">
-              {t('dwg_takeoff.scale_calibrate_real_label', { defaultValue: 'Real-world distance' })}
+              {t("dwg_takeoff.scale_calibrate_real_label", {
+                defaultValue: "Real-world distance",
+              })}
             </span>
             <div className="flex items-center gap-2">
               <input
@@ -4505,25 +5279,29 @@ function ScaleTab({
               className="mt-1 inline-flex items-center justify-center gap-1.5 h-8 rounded-md text-[11px] font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               data-testid="dwg-scale-calibrate-apply"
             >
-              {t('dwg_takeoff.scale_calibrate_apply', { defaultValue: 'Apply calibration' })}
+              {t("dwg_takeoff.scale_calibrate_apply", {
+                defaultValue: "Apply calibration",
+              })}
             </button>
           </div>
         </div>
       )}
 
       {/* ── Mode: Per-annotation ──────────────────────────────────────── */}
-      {mode === 'per_annotation' && (
+      {mode === "per_annotation" && (
         <div className="flex flex-col gap-3">
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            {t('dwg_takeoff.scale_per_annotation_explainer', {
+            {t("dwg_takeoff.scale_per_annotation_explainer", {
               defaultValue:
-                'Use when one sheet mixes scales (e.g. a 1:100 plan with a 1:20 detail window). Every new annotation you draw carries the scale below until you change it — older annotations keep their own stored scale.',
+                "Use when one sheet mixes scales (e.g. a 1:100 plan with a 1:20 detail window). Every new annotation you draw carries the scale below until you change it — older annotations keep their own stored scale.",
             })}
           </p>
 
           <label className="flex items-center gap-2 rounded-md border border-oe-blue/40 bg-oe-blue/5 px-3 py-2 text-[11px]">
             <span className="font-mono font-semibold shrink-0 text-oe-blue">
-              {t('dwg_takeoff.scale_active_override', { defaultValue: 'New annotation scale 1:' })}
+              {t("dwg_takeoff.scale_active_override", {
+                defaultValue: "New annotation scale 1:",
+              })}
             </span>
             <input
               type="number"
@@ -4537,17 +5315,17 @@ function ScaleTab({
           </label>
 
           <div className="rounded-md border border-border bg-surface-secondary px-2.5 py-2 text-[11px] text-muted-foreground leading-relaxed">
-            {t('dwg_takeoff.scale_per_annotation_note', {
+            {t("dwg_takeoff.scale_per_annotation_note", {
               defaultValue:
-                'Tip: switch back to Preset mode once the detail takeoff is done so the default scale applies to the rest of the sheet again.',
+                "Tip: switch back to Preset mode once the detail takeoff is done so the default scale applies to the rest of the sheet again.",
             })}
           </div>
         </div>
       )}
 
       <div className="text-[10px] text-content-tertiary tabular-nums">
-        {t('dwg_takeoff.scale_current', {
-          defaultValue: 'Current: 1:{{n}}',
+        {t("dwg_takeoff.scale_current", {
+          defaultValue: "Current: 1:{{n}}",
           n: drawingScale,
         })}
       </div>
@@ -4594,8 +5372,9 @@ function SummaryTab({
   if (entityCount === 0) {
     return (
       <p className="text-xs text-muted-foreground py-4 text-center">
-        {t('dwg_takeoff.summary_empty', {
-          defaultValue: 'No entities to summarize. Upload a drawing to see totals.',
+        {t("dwg_takeoff.summary_empty", {
+          defaultValue:
+            "No entities to summarize. Upload a drawing to see totals.",
         })}
       </p>
     );
@@ -4608,7 +5387,9 @@ function SummaryTab({
         <div className="flex items-center gap-1.5">
           <BarChart3 size={14} className="text-oe-blue" />
           <h3 className="text-sm font-semibold text-foreground">
-            {t('dwg_takeoff.summary_title', { defaultValue: 'Measurements Summary' })}
+            {t("dwg_takeoff.summary_title", {
+              defaultValue: "Measurements Summary",
+            })}
           </h3>
         </div>
         <button
@@ -4616,53 +5397,56 @@ function SummaryTab({
           onClick={onExportCsv}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-surface-secondary px-2 py-1 text-[10px] font-medium text-content-secondary hover:text-content-primary hover:bg-surface-tertiary transition-colors"
           data-testid="dwg-summary-export"
-          title={t('dwg_takeoff.export_csv', {
-            defaultValue: 'Export measurements as CSV',
+          title={t("dwg_takeoff.export_csv", {
+            defaultValue: "Export measurements as CSV",
           })}
         >
           <Download size={11} />
-          {t('dwg_takeoff.export_csv_short', { defaultValue: 'Export CSV' })}
+          {t("dwg_takeoff.export_csv_short", { defaultValue: "Export CSV" })}
         </button>
         <button
           type="button"
           onClick={onExportPdf}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-surface-secondary px-2 py-1 text-[10px] font-medium text-content-secondary hover:text-content-primary hover:bg-surface-tertiary transition-colors"
           data-testid="dwg-summary-export-pdf"
-          title={t('dwg_takeoff.export_pdf', {
-            defaultValue: 'Export current viewport as PDF',
+          title={t("dwg_takeoff.export_pdf", {
+            defaultValue: "Export current viewport as PDF",
           })}
         >
           <Download size={11} />
-          {t('dwg_takeoff.export_pdf_short', { defaultValue: 'Export PDF' })}
+          {t("dwg_takeoff.export_pdf_short", { defaultValue: "Export PDF" })}
         </button>
       </div>
 
       {/* KPI cards */}
-      <div
-        className="grid grid-cols-2 gap-2"
-        data-testid="dwg-summary-kpis"
-      >
+      <div className="grid grid-cols-2 gap-2" data-testid="dwg-summary-kpis">
         <SummaryKpiCard
-          label={t('dwg_takeoff.kpi_total_entities', { defaultValue: 'Total entities' })}
+          label={t("dwg_takeoff.kpi_total_entities", {
+            defaultValue: "Total entities",
+          })}
           value={entityCount.toLocaleString()}
           accent="blue"
         />
         <SummaryKpiCard
-          label={t('dwg_takeoff.kpi_total_area', { defaultValue: 'Σ Area' })}
-          value={aggregate.area > 0 ? aggregate.area.toFixed(2) : '—'}
-          unit={aggregate.area > 0 ? 'm²' : undefined}
+          label={t("dwg_takeoff.kpi_total_area", { defaultValue: "Σ Area" })}
+          value={aggregate.area > 0 ? aggregate.area.toFixed(2) : "—"}
+          unit={aggregate.area > 0 ? "m²" : undefined}
           accent="emerald"
         />
         <SummaryKpiCard
-          label={t('dwg_takeoff.kpi_total_perimeter', { defaultValue: 'Σ Perimeter' })}
-          value={aggregate.perimeter > 0 ? aggregate.perimeter.toFixed(2) : '—'}
-          unit={aggregate.perimeter > 0 ? 'm' : undefined}
+          label={t("dwg_takeoff.kpi_total_perimeter", {
+            defaultValue: "Σ Perimeter",
+          })}
+          value={aggregate.perimeter > 0 ? aggregate.perimeter.toFixed(2) : "—"}
+          unit={aggregate.perimeter > 0 ? "m" : undefined}
           accent="amber"
         />
         <SummaryKpiCard
-          label={t('dwg_takeoff.kpi_total_length', { defaultValue: 'Σ Length' })}
-          value={aggregate.length > 0 ? aggregate.length.toFixed(2) : '—'}
-          unit={aggregate.length > 0 ? 'm' : undefined}
+          label={t("dwg_takeoff.kpi_total_length", {
+            defaultValue: "Σ Length",
+          })}
+          value={aggregate.length > 0 ? aggregate.length.toFixed(2) : "—"}
+          unit={aggregate.length > 0 ? "m" : undefined}
           accent="violet"
         />
       </div>
@@ -4672,7 +5456,7 @@ function SummaryTab({
         <div className="flex items-center gap-1.5 mb-1.5">
           <Layers size={11} className="text-content-tertiary" />
           <h4 className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-            {t('dwg_takeoff.summary_by_layer', { defaultValue: 'By layer' })}
+            {t("dwg_takeoff.summary_by_layer", { defaultValue: "By layer" })}
           </h4>
           <span className="text-[10px] text-content-quaternary tabular-nums">
             ({byLayer.length})
@@ -4681,7 +5465,8 @@ function SummaryTab({
         <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
           {byLayer.slice(0, 20).map((row) => {
             const metric = row.area > 0 ? row.area : row.length;
-            const share = maxLayerMetric > 0 ? (metric / maxLayerMetric) * 100 : 0;
+            const share =
+              maxLayerMetric > 0 ? (metric / maxLayerMetric) * 100 : 0;
             return (
               <div
                 key={row.layer}
@@ -4714,8 +5499,8 @@ function SummaryTab({
                   )}
                   {row.area === 0 && row.length === 0 && (
                     <span className="text-content-quaternary">
-                      {t('dwg_takeoff.summary_no_measure', {
-                        defaultValue: 'no measurable geometry',
+                      {t("dwg_takeoff.summary_no_measure", {
+                        defaultValue: "no measurable geometry",
                       })}
                     </span>
                   )}
@@ -4725,8 +5510,8 @@ function SummaryTab({
           })}
           {byLayer.length > 20 && (
             <p className="text-[10px] text-content-tertiary text-center py-1">
-              {t('dwg_takeoff.summary_layers_more', {
-                defaultValue: '+{{count}} more',
+              {t("dwg_takeoff.summary_layers_more", {
+                defaultValue: "+{{count}} more",
                 count: byLayer.length - 20,
               })}
             </p>
@@ -4739,7 +5524,9 @@ function SummaryTab({
         <div className="flex items-center gap-1.5 mb-1.5">
           <Sigma size={11} className="text-content-tertiary" />
           <h4 className="text-[10px] font-semibold uppercase tracking-wider text-content-tertiary">
-            {t('dwg_takeoff.summary_by_type', { defaultValue: 'By entity type' })}
+            {t("dwg_takeoff.summary_by_type", {
+              defaultValue: "By entity type",
+            })}
           </h4>
           <span className="text-[10px] text-content-quaternary tabular-nums">
             ({byType.length})
@@ -4796,11 +5583,11 @@ function DwgContextMenu({
   const { t } = useTranslation();
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      const menu = document.getElementById('dwg-context-menu');
+      const menu = document.getElementById("dwg-context-menu");
       if (menu && !menu.contains(e.target as Node)) onClose();
     };
-    window.addEventListener('mousedown', handler);
-    return () => window.removeEventListener('mousedown', handler);
+    window.addEventListener("mousedown", handler);
+    return () => window.removeEventListener("mousedown", handler);
   }, [onClose]);
 
   return (
@@ -4811,41 +5598,72 @@ function DwgContextMenu({
       style={{ left: screenX, top: screenY }}
       onMouseDown={(e) => e.stopPropagation()}
     >
-      <MenuItem onClick={onHide} icon={<EyeOff size={12} />} label={
-        selectionSize > 1
-          ? t('dwg_takeoff.hide_n', { defaultValue: 'Hide {{count}}', count: selectionSize })
-          : t('dwg_takeoff.hide', { defaultValue: 'Hide' })
-      } />
-      <MenuItem onClick={onIsolate} icon={<Eye size={12} />} label={
-        t('dwg_takeoff.isolate', { defaultValue: 'Isolate' })
-      } />
+      <MenuItem
+        onClick={onHide}
+        icon={<EyeOff size={12} />}
+        label={
+          selectionSize > 1
+            ? t("dwg_takeoff.hide_n", {
+                defaultValue: "Hide {{count}}",
+                count: selectionSize,
+              })
+            : t("dwg_takeoff.hide", { defaultValue: "Hide" })
+        }
+      />
+      <MenuItem
+        onClick={onIsolate}
+        icon={<Eye size={12} />}
+        label={t("dwg_takeoff.isolate", { defaultValue: "Isolate" })}
+      />
       <div className="my-1 border-t border-white/10" />
-      <MenuItem onClick={onLink} icon={<Link2 size={12} />} label={
-        selectionSize > 1
-          ? t('dwg_takeoff.link_n_to_boq', {
-              defaultValue: 'Link {{count}} to BOQ',
-              count: selectionSize,
-            })
-          : t('dwg_takeoff.link_to_boq', { defaultValue: 'Link to BOQ' })
-      } />
+      <MenuItem
+        onClick={onLink}
+        icon={<Link2 size={12} />}
+        label={
+          selectionSize > 1
+            ? t("dwg_takeoff.link_n_to_boq", {
+                defaultValue: "Link {{count}} to BOQ",
+                count: selectionSize,
+              })
+            : t("dwg_takeoff.link_to_boq", { defaultValue: "Link to BOQ" })
+        }
+      />
       {selectionSize > 1 && (
-        <MenuItem onClick={onSaveAsGroup} icon={<FolderPlus size={12} />} label={
-          t('dwg_takeoff.save_as_group', { defaultValue: 'Save as group' })
-        } />
+        <MenuItem
+          onClick={onSaveAsGroup}
+          icon={<FolderPlus size={12} />}
+          label={t("dwg_takeoff.save_as_group", {
+            defaultValue: "Save as group",
+          })}
+        />
       )}
       <div className="my-1 border-t border-white/10" />
-      <MenuItem onClick={onCreateTask} icon={<CheckSquare size={12} />} label={
-        t('dwg_takeoff.create_task', { defaultValue: 'Create task' })
-      } />
-      <MenuItem onClick={onLinkSchedule} icon={<CalendarDays size={12} />} label={
-        t('dwg_takeoff.link_schedule', { defaultValue: 'Link to schedule' })
-      } />
-      <MenuItem onClick={onLinkDocument} icon={<FileText size={12} />} label={
-        t('dwg_takeoff.link_document', { defaultValue: 'Link to document' })
-      } />
-      <MenuItem onClick={onLinkRequirement} icon={<ClipboardCheck size={12} />} label={
-        t('dwg_takeoff.link_requirement', { defaultValue: 'Link to requirement' })
-      } />
+      <MenuItem
+        onClick={onCreateTask}
+        icon={<CheckSquare size={12} />}
+        label={t("dwg_takeoff.create_task", { defaultValue: "Create task" })}
+      />
+      <MenuItem
+        onClick={onLinkSchedule}
+        icon={<CalendarDays size={12} />}
+        label={t("dwg_takeoff.link_schedule", {
+          defaultValue: "Link to schedule",
+        })}
+      />
+      <MenuItem
+        onClick={onLinkDocument}
+        icon={<FileText size={12} />}
+        label={t("dwg_takeoff.link_document", {
+          defaultValue: "Link to document",
+        })}
+      />
+      <MenuItem
+        onClick={onLinkRequirement}
+        icon={<ClipboardCheck size={12} />}
+        label={t("dwg_takeoff.link_requirement", {
+          defaultValue: "Link to requirement",
+        })}
+      />
     </div>
   );
 }
@@ -4881,7 +5699,7 @@ function UploadProgressInline() {
   const jobs = useDwgUploadStore((s) => s.jobs);
   const active = useMemo(() => {
     for (const job of jobs.values()) {
-      if (job.status === 'uploading' || job.status === 'converting') return job;
+      if (job.status === "uploading" || job.status === "converting") return job;
     }
     return null;
   }, [jobs]);
@@ -4911,7 +5729,7 @@ function UploadProgressInline() {
         />
       </div>
       <p className="text-[10px] text-content-tertiary">
-        {t(active.stage, { defaultValue: 'Processing upload…' })}
+        {t(active.stage, { defaultValue: "Processing upload…" })}
       </p>
     </div>
   );

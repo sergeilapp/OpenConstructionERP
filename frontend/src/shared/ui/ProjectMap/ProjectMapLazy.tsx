@@ -12,11 +12,11 @@
  * project list / detail pages is fixed-height anyway, so layout doesn't
  * shift when the chunk arrives.
  */
-import { Suspense, lazy } from 'react';
-import type { LatLng } from './ProjectMap';
+import { Suspense, lazy } from "react";
+import type { LatLng } from "./ProjectMap";
 
 const ProjectMapImpl = lazy(() =>
-  import('./ProjectMap').then((m) => ({ default: m.ProjectMap })),
+  import("./ProjectMap").then((m) => ({ default: m.ProjectMap })),
 );
 
 interface ProjectMapProps {
@@ -25,7 +25,7 @@ interface ProjectMapProps {
   address?: string | null;
   city?: string | null;
   country?: string | null;
-  variant?: 'card' | 'detail';
+  variant?: "card" | "detail";
   className?: string;
   label?: string;
   onResolved?: (coords: LatLng) => void;
@@ -37,8 +37,8 @@ export function ProjectMap(props: ProjectMapProps) {
       fallback={
         <div
           className={
-            'w-full h-full bg-surface-2 dark:bg-surface-1 animate-pulse rounded ' +
-            (props.className ?? '')
+            "w-full h-full bg-surface-2 dark:bg-surface-1 animate-pulse rounded " +
+            (props.className ?? "")
           }
         />
       }

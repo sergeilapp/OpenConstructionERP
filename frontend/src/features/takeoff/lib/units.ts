@@ -19,68 +19,68 @@
 /** Case-folded, dot-stripped, whitespace-collapsed alias → canonical. */
 const UNIT_ALIASES: Readonly<Record<string, string>> = {
   // Length
-  m: 'm',
-  rmt: 'm',
-  rm: 'm',
-  runningmetre: 'm',
-  runningmeter: 'm',
-  lm: 'm',
-  lfm: 'm', // German "laufende Meter"
-  ml: 'm',
-  rft: 'm',
+  m: "m",
+  rmt: "m",
+  rm: "m",
+  runningmetre: "m",
+  runningmeter: "m",
+  lm: "m",
+  lfm: "m", // German "laufende Meter"
+  ml: "m",
+  rft: "m",
   // (mm / cm kept distinct — they are real, different units)
-  mm: 'mm',
-  cm: 'cm',
+  mm: "mm",
+  cm: "cm",
   // Area
-  m2: 'm2',
-  'm²': 'm2',
-  sqm: 'm2',
-  'sq m': 'm2',
-  squaremetre: 'm2',
-  squaremeter: 'm2',
-  qm: 'm2', // German "Quadratmeter"
-  sft: 'sft',
-  sqft: 'sft',
-  'sq ft': 'sft',
-  squarefeet: 'sft',
-  squarefoot: 'sft',
+  m2: "m2",
+  "m²": "m2",
+  sqm: "m2",
+  "sq m": "m2",
+  squaremetre: "m2",
+  squaremeter: "m2",
+  qm: "m2", // German "Quadratmeter"
+  sft: "sft",
+  sqft: "sft",
+  "sq ft": "sft",
+  squarefeet: "sft",
+  squarefoot: "sft",
   // Volume
-  m3: 'm3',
-  'm³': 'm3',
-  cum: 'm3',
-  'cu m': 'm3',
-  cubicmetre: 'm3',
-  cubicmeter: 'm3',
-  cbm: 'm3', // German "Kubikmeter"
-  cft: 'cft',
-  cuft: 'cft',
-  'cu ft': 'cft',
-  cubicfeet: 'cft',
+  m3: "m3",
+  "m³": "m3",
+  cum: "m3",
+  "cu m": "m3",
+  cubicmetre: "m3",
+  cubicmeter: "m3",
+  cbm: "m3", // German "Kubikmeter"
+  cft: "cft",
+  cuft: "cft",
+  "cu ft": "cft",
+  cubicfeet: "cft",
   // Weight
-  kg: 'kg',
-  g: 'g',
-  t: 't',
-  mt: 't',
-  to: 't', // German "Tonne"
-  tonne: 't',
-  ton: 't',
+  kg: "kg",
+  g: "g",
+  t: "t",
+  mt: "t",
+  to: "t", // German "Tonne"
+  tonne: "t",
+  ton: "t",
   // Count
-  pcs: 'pcs',
-  pc: 'pcs',
-  nos: 'pcs',
-  no: 'pcs',
-  number: 'pcs',
-  qty: 'pcs',
-  ea: 'pcs',
-  stück: 'pcs',
-  stk: 'pcs', // German "Stück"
+  pcs: "pcs",
+  pc: "pcs",
+  nos: "pcs",
+  no: "pcs",
+  number: "pcs",
+  qty: "pcs",
+  ea: "pcs",
+  stück: "pcs",
+  stk: "pcs", // German "Stück"
   // Lump sum
-  lsum: 'lsum',
-  ls: 'lsum',
-  lumpsum: 'lsum',
-  psch: 'lsum', // German "pauschal"
-  pausch: 'lsum',
-  pauschal: 'lsum',
+  lsum: "lsum",
+  ls: "lsum",
+  lumpsum: "lsum",
+  psch: "lsum", // German "pauschal"
+  pausch: "lsum",
+  pauschal: "lsum",
 };
 
 /**
@@ -92,16 +92,12 @@ const UNIT_ALIASES: Readonly<Record<string, string>> = {
  * have not catalogued yet is better surfaced and editable than dropped.
  */
 export function canonicalizeUnit(raw: string | null | undefined): string {
-  if (raw == null) return 'pcs';
+  if (raw == null) return "pcs";
   const text = String(raw).trim();
-  if (!text) return 'pcs';
-  const key = text
-    .toLowerCase()
-    .replace(/\./g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+  if (!text) return "pcs";
+  const key = text.toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
   if (key in UNIT_ALIASES) return UNIT_ALIASES[key]!;
-  const nospace = key.replace(/ /g, '');
+  const nospace = key.replace(/ /g, "");
   if (nospace in UNIT_ALIASES) return UNIT_ALIASES[nospace]!;
   return key;
 }

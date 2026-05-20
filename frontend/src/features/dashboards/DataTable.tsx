@@ -7,14 +7,14 @@
  * driven externally via the ``filters`` prop so this component stays
  * Cascade-Filter-Panel-agnostic.
  */
-import { useCallback, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react';
+import { useCallback, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
 
-import { Button, Card, Skeleton } from '@/shared/ui';
+import { Button, Card, Skeleton } from "@/shared/ui";
 
-import { getSnapshotRows, type SnapshotRowsResponse } from './api';
+import { getSnapshotRows, type SnapshotRowsResponse } from "./api";
 
 export interface DataTableProps {
   snapshotId: string;
@@ -27,7 +27,7 @@ export interface DataTableProps {
 
 interface SortSpec {
   column: string;
-  direction: 'asc' | 'desc';
+  direction: "asc" | "desc";
 }
 
 export function DataTable({
@@ -42,7 +42,7 @@ export function DataTable({
 
   const queryKey = useMemo(
     () => [
-      'dashboards-rows',
+      "dashboards-rows",
       snapshotId,
       columns ?? null,
       filters ?? null,
@@ -73,10 +73,10 @@ export function DataTable({
       if (prev?.column === column) {
         return {
           column,
-          direction: prev.direction === 'asc' ? 'desc' : 'asc',
+          direction: prev.direction === "asc" ? "desc" : "asc",
         };
       }
-      return { column, direction: 'asc' };
+      return { column, direction: "asc" };
     });
     // Re-sorting always resets to page 1 — otherwise rows shuffle under
     // the user's cursor and "page 5" stops being meaningful.
@@ -92,8 +92,8 @@ export function DataTable({
     <Card data-testid="data-table" className="overflow-hidden">
       <div className="flex items-center justify-between border-b border-border-light px-3 py-2 text-xs">
         <div className="text-content-tertiary">
-          {t('dashboards.data_table_summary', {
-            defaultValue: '{{shown}} of {{total}} rows‌⁠‍',
+          {t("dashboards.data_table_summary", {
+            defaultValue: "{{shown}} of {{total}} rows‌⁠‍",
             shown: rows.length,
             total,
           })}
@@ -106,7 +106,7 @@ export function DataTable({
             disabled={page === 0 || rowsQuery.isFetching}
             data-testid="data-table-prev"
           >
-            {t('common.prev', { defaultValue: 'Prev' })}
+            {t("common.prev", { defaultValue: "Prev" })}
           </Button>
           <span data-testid="data-table-page" className="px-2 tabular-nums">
             {page + 1} / {totalPages}
@@ -114,13 +114,11 @@ export function DataTable({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() =>
-              setPage((p) => (p + 1 < totalPages ? p + 1 : p))
-            }
+            onClick={() => setPage((p) => (p + 1 < totalPages ? p + 1 : p))}
             disabled={page + 1 >= totalPages || rowsQuery.isFetching}
             data-testid="data-table-next"
           >
-            {t('common.next', { defaultValue: 'Next' })}
+            {t("common.next", { defaultValue: "Next" })}
           </Button>
         </div>
       </div>
@@ -163,8 +161,8 @@ export function DataTable({
                   className="p-6 text-center text-content-tertiary"
                   data-testid="data-table-empty"
                 >
-                  {t('dashboards.data_table_empty', {
-                    defaultValue: 'No rows match the current filters.‌⁠‍',
+                  {t("dashboards.data_table_empty", {
+                    defaultValue: "No rows match the current filters.‌⁠‍",
                   })}
                 </td>
               </tr>
@@ -197,12 +195,12 @@ function SortIcon({
   direction,
 }: {
   active: boolean;
-  direction?: 'asc' | 'desc';
+  direction?: "asc" | "desc";
 }) {
   if (!active) {
     return <ChevronsUpDown className="h-3 w-3 text-content-tertiary" />;
   }
-  return direction === 'asc' ? (
+  return direction === "asc" ? (
     <ArrowUp className="h-3 w-3 text-oe-blue" />
   ) : (
     <ArrowDown className="h-3 w-3 text-oe-blue" />
@@ -210,9 +208,9 @@ function SortIcon({
 }
 
 function formatCell(value: unknown): string {
-  if (value === null || value === undefined) return '';
-  if (typeof value === 'string') return value;
-  if (typeof value === 'number' || typeof value === 'boolean')
+  if (value === null || value === undefined) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean")
     return String(value);
   try {
     return JSON.stringify(value);

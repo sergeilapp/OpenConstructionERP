@@ -7,21 +7,21 @@
  * The collected log can be exported as a JSON file for bug reports.
  */
 
-import { APP_VERSION } from './version';
+import { APP_VERSION } from "./version";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-export type ErrorLevel = 'error' | 'warning' | 'info';
+export type ErrorLevel = "error" | "warning" | "info";
 
 export type ErrorCategory =
-  | 'js_error'
-  | 'api_error'
-  | 'react_error'
-  | 'network'
-  | 'validation'
-  | 'user_report';
+  | "js_error"
+  | "api_error"
+  | "react_error"
+  | "network"
+  | "validation"
+  | "user_report";
 
 export interface ErrorLogEntry {
   id: string;
@@ -54,7 +54,7 @@ export interface ErrorReport {
 
 const MAX_MEMORY_ENTRIES = 128;
 const MAX_STORAGE_ENTRIES = 64;
-const STORAGE_KEY = 'oe_error_log';
+const STORAGE_KEY = "oe_error_log";
 
 // ---------------------------------------------------------------------------
 // Internal state
@@ -81,29 +81,32 @@ export function anonymize(text: string): string {
   return (
     text
       // Email addresses
-      .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]')
+      .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[EMAIL]")
       // UUIDs
       .replace(
         /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,
-        '[UUID]',
+        "[UUID]",
       )
       // OpenAI / Anthropic / Groq-style API keys
       .replace(
         /(sk-[a-zA-Z0-9-]{20,}|sk-ant-[a-zA-Z0-9-]+|gsk_[a-zA-Z0-9]+)/g,
-        '[API_KEY]',
+        "[API_KEY]",
       )
       // Bearer tokens
-      .replace(/Bearer\s+[a-zA-Z0-9._-]+/g, 'Bearer [TOKEN]')
+      .replace(/Bearer\s+[a-zA-Z0-9._-]+/g, "Bearer [TOKEN]")
       // JSON "password" fields
-      .replace(/("password"\s*:\s*")[^"]+/g, '$1[REDACTED]')
+      .replace(/("password"\s*:\s*")[^"]+/g, "$1[REDACTED]")
       // JSON "api_key" fields
-      .replace(/("api_key"\s*:\s*")[^"]+/g, '$1[REDACTED]')
+      .replace(/("api_key"\s*:\s*")[^"]+/g, "$1[REDACTED]")
       // Authorization header values in text
-      .replace(/(Authorization:\s*)[^\s\r\n]+/gi, '$1[REDACTED]')
+      .replace(/(Authorization:\s*)[^\s\r\n]+/gi, "$1[REDACTED]")
       // Long numeric IDs (> 6 digits) — standalone only
-      .replace(/\b\d{7,}\b/g, '[ID]')
+      .replace(/\b\d{7,}\b/g, "[ID]")
       // User-like name patterns in common JSON fields
-      .replace(/("(?:user_?name|full_?name|display_?name|first_?name|last_?name)"\s*:\s*")[^"]+/gi, '$1[USER]')
+      .replace(
+        /("(?:user_?name|full_?name|display_?name|first_?name|last_?name)"\s*:\s*")[^"]+/gi,
+        "$1[USER]",
+      )
   );
 }
 
@@ -113,45 +116,45 @@ export function anonymize(text: string): string {
 
 function generateId(): string {
   errorCounter += 1;
-  return `err_${String(errorCounter).padStart(3, '0')}`;
+  return `err_${String(errorCounter).padStart(3, "0")}`;
 }
 
 /** Return the current page URL without query string or hash (to avoid leaking data). */
 function cleanUrl(): string {
-  if (typeof window === 'undefined') return '';
+  if (typeof window === "undefined") return "";
   return window.location.pathname;
 }
 
 function getLocale(): string {
-  if (typeof navigator === 'undefined') return 'en';
-  return navigator.language || 'en';
+  if (typeof navigator === "undefined") return "en";
+  return navigator.language || "en";
 }
 
 function getPlatform(): string {
-  if (typeof navigator === 'undefined') return 'unknown';
+  if (typeof navigator === "undefined") return "unknown";
   const ua = navigator.userAgent;
 
-  let os = 'Unknown OS';
-  if (ua.includes('Windows NT 10')) os = 'Windows 10/11';
-  else if (ua.includes('Windows')) os = 'Windows';
-  else if (ua.includes('Mac OS X')) os = 'macOS';
-  else if (ua.includes('Linux')) os = 'Linux';
-  else if (ua.includes('Android')) os = 'Android';
-  else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+  let os = "Unknown OS";
+  if (ua.includes("Windows NT 10")) os = "Windows 10/11";
+  else if (ua.includes("Windows")) os = "Windows";
+  else if (ua.includes("Mac OS X")) os = "macOS";
+  else if (ua.includes("Linux")) os = "Linux";
+  else if (ua.includes("Android")) os = "Android";
+  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";
 
-  let browser = 'Unknown Browser';
-  if (ua.includes('Firefox/')) {
+  let browser = "Unknown Browser";
+  if (ua.includes("Firefox/")) {
     const m = ua.match(/Firefox\/(\d+)/);
-    browser = `Firefox ${m?.[1] ?? ''}`;
-  } else if (ua.includes('Edg/')) {
+    browser = `Firefox ${m?.[1] ?? ""}`;
+  } else if (ua.includes("Edg/")) {
     const m = ua.match(/Edg\/(\d+)/);
-    browser = `Edge ${m?.[1] ?? ''}`;
-  } else if (ua.includes('Chrome/')) {
+    browser = `Edge ${m?.[1] ?? ""}`;
+  } else if (ua.includes("Chrome/")) {
     const m = ua.match(/Chrome\/(\d+)/);
-    browser = `Chrome ${m?.[1] ?? ''}`;
-  } else if (ua.includes('Safari/') && !ua.includes('Chrome')) {
+    browser = `Chrome ${m?.[1] ?? ""}`;
+  } else if (ua.includes("Safari/") && !ua.includes("Chrome")) {
     const m = ua.match(/Version\/(\d+)/);
-    browser = `Safari ${m?.[1] ?? ''}`;
+    browser = `Safari ${m?.[1] ?? ""}`;
   }
 
   return `${os} / ${browser}`;
@@ -223,12 +226,12 @@ export function logError(
   const entry: ErrorLogEntry = {
     id: generateId(),
     timestamp: new Date().toISOString(),
-    level: 'error',
-    category: category ?? 'js_error',
+    level: "error",
+    category: category ?? "js_error",
     message: anonymize(message),
     stack: stack ? anonymize(stack) : undefined,
     url: cleanUrl(),
-    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+    userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
     appVersion: APP_VERSION,
     locale: getLocale(),
     context: anonymizedContext,
@@ -254,11 +257,11 @@ export function logApiError(
   const entry: ErrorLogEntry = {
     id: generateId(),
     timestamp: new Date().toISOString(),
-    level: status >= 500 ? 'error' : 'warning',
-    category: 'api_error',
+    level: status >= 500 ? "error" : "warning",
+    category: "api_error",
     message: `${anonymizedUrl} returned ${status}`,
     url: cleanUrl(),
-    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+    userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
     appVersion: APP_VERSION,
     locale: getLocale(),
     context: {
@@ -312,15 +315,16 @@ export function getLastError(): {
   let pick: ErrorLogEntry | undefined;
   for (let i = window.length - 1; i >= 0; i--) {
     const e = window[i];
-    if (e && e.level === 'error') {
+    if (e && e.level === "error") {
       pick = e;
       break;
     }
   }
   if (!pick) pick = memoryBuffer[memoryBuffer.length - 1];
   if (!pick) return null;
-  const stack = pick.stack ?? '';
-  const cappedStack = stack.length > 2048 ? stack.slice(0, 2048) + '\n... [truncated]' : stack;
+  const stack = pick.stack ?? "";
+  const cappedStack =
+    stack.length > 2048 ? stack.slice(0, 2048) + "\n... [truncated]" : stack;
   return {
     message: pick.message,
     stack: cappedStack,
@@ -344,7 +348,7 @@ export function exportErrorReport(): Blob {
   };
 
   return new Blob([JSON.stringify(report, null, 2)], {
-    type: 'application/json',
+    type: "application/json",
   });
 }
 
@@ -391,44 +395,49 @@ export function initErrorLogger(): void {
   ) => {
     const msg =
       error?.message ??
-      (typeof messageOrEvent === 'string' ? messageOrEvent : 'Unknown error');
+      (typeof messageOrEvent === "string" ? messageOrEvent : "Unknown error");
 
-    logError(error ?? msg, 'js_error', {
-      source: source ?? '',
-      line: String(lineno ?? ''),
-      col: String(colno ?? ''),
+    logError(error ?? msg, "js_error", {
+      source: source ?? "",
+      line: String(lineno ?? ""),
+      col: String(colno ?? ""),
     });
 
     // Call previous handler if any
-    if (typeof prevOnError === 'function') {
-      (prevOnError as (
-        message: string | Event,
-        source?: string,
-        lineno?: number,
-        colno?: number,
-        error?: Error,
-      ) => void)(messageOrEvent, source, lineno, colno, error);
+    if (typeof prevOnError === "function") {
+      (
+        prevOnError as (
+          message: string | Event,
+          source?: string,
+          lineno?: number,
+          colno?: number,
+          error?: Error,
+        ) => void
+      )(messageOrEvent, source, lineno, colno, error);
     }
   };
 
   // --- Unhandled promise rejection handler ---
-  window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
-    const reason = event.reason;
-    const msg =
-      reason instanceof Error
-        ? reason.message
-        : typeof reason === 'string'
-          ? reason
-          : 'Unhandled promise rejection';
+  window.addEventListener(
+    "unhandledrejection",
+    (event: PromiseRejectionEvent) => {
+      const reason = event.reason;
+      const msg =
+        reason instanceof Error
+          ? reason.message
+          : typeof reason === "string"
+            ? reason
+            : "Unhandled promise rejection";
 
-    logError(reason instanceof Error ? reason : msg, 'js_error', {
-      type: 'unhandled_rejection',
-    });
-  });
+      logError(reason instanceof Error ? reason : msg, "js_error", {
+        type: "unhandled_rejection",
+      });
+    },
+  );
 
   // --- Track page navigations (for pages_visited in report) ---
   // Listen to popstate for SPA navigation tracking
-  window.addEventListener('popstate', () => {
+  window.addEventListener("popstate", () => {
     pagesVisited.add(cleanUrl());
   });
 

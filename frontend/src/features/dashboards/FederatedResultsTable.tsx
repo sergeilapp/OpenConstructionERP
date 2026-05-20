@@ -7,13 +7,10 @@
  * source snapshot without losing the rollup context. Group-by columns
  * follow, then the numeric measure column on the right.
  */
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
-import type {
-  FederatedAggregateRow,
-  FederationAggregateResponse,
-} from './api';
+import type { FederatedAggregateRow, FederationAggregateResponse } from "./api";
 
 export interface FederatedResultsTableProps {
   data: FederationAggregateResponse | null;
@@ -27,8 +24,8 @@ export interface FederatedResultsTableProps {
   emptyMessage?: string;
 }
 
-const PROJECT_COL = '__project_id';
-const SNAPSHOT_COL = '__snapshot_id';
+const PROJECT_COL = "__project_id";
+const SNAPSHOT_COL = "__snapshot_id";
 
 export function FederatedResultsTable({
   data,
@@ -52,8 +49,8 @@ export function FederatedResultsTable({
         out.push(c);
       }
     }
-    if (!seen.has('measure_value')) {
-      out.push('measure_value');
+    if (!seen.has("measure_value")) {
+      out.push("measure_value");
     }
     return out;
   }, [data]);
@@ -65,8 +62,8 @@ export function FederatedResultsTable({
         data-testid="federation-results-empty"
       >
         {emptyMessage ??
-          t('dashboards.federation.results_empty', {
-            defaultValue: 'No federated rows to show yet.‌⁠‍',
+          t("dashboards.federation.results_empty", {
+            defaultValue: "No federated rows to show yet.‌⁠‍",
           })}
       </div>
     );
@@ -94,7 +91,7 @@ export function FederatedResultsTable({
         <tbody>
           {data.rows.map((row, idx) => (
             <tr
-              key={`${row[SNAPSHOT_COL] ?? 'unknown'}-${idx}`}
+              key={`${row[SNAPSHOT_COL] ?? "unknown"}-${idx}`}
               className="border-t border-border-light hover:bg-surface-secondary/50"
               data-testid={`federation-results-row-${idx}`}
             >
@@ -111,15 +108,22 @@ export function FederatedResultsTable({
   );
 }
 
-function formatHeader(col: string, t: ReturnType<typeof useTranslation>['t']): string {
+function formatHeader(
+  col: string,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
   if (col === PROJECT_COL) {
-    return t('dashboards.federation.col_project', { defaultValue: 'Project‌⁠‍' });
+    return t("dashboards.federation.col_project", {
+      defaultValue: "Project‌⁠‍",
+    });
   }
   if (col === SNAPSHOT_COL) {
-    return t('dashboards.federation.col_snapshot', { defaultValue: 'Snapshot‌⁠‍' });
+    return t("dashboards.federation.col_snapshot", {
+      defaultValue: "Snapshot‌⁠‍",
+    });
   }
-  if (col === 'measure_value') {
-    return t('dashboards.federation.col_measure', { defaultValue: 'Value' });
+  if (col === "measure_value") {
+    return t("dashboards.federation.col_measure", { defaultValue: "Value" });
   }
   return col;
 }
@@ -133,7 +137,7 @@ function renderCell(
   },
 ): JSX.Element {
   const value = row[col];
-  if (col === PROJECT_COL && typeof value === 'string') {
+  if (col === PROJECT_COL && typeof value === "string") {
     return (
       <span
         className="inline-flex items-center rounded bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] text-emerald-300"
@@ -144,7 +148,7 @@ function renderCell(
       </span>
     );
   }
-  if (col === SNAPSHOT_COL && typeof value === 'string') {
+  if (col === SNAPSHOT_COL && typeof value === "string") {
     return (
       <span
         className="inline-flex items-center rounded bg-sky-500/10 px-2 py-0.5 font-mono text-[11px] text-sky-300"
@@ -155,7 +159,7 @@ function renderCell(
       </span>
     );
   }
-  if (col === 'measure_value') {
+  if (col === "measure_value") {
     return (
       <span className="tabular-nums text-content-primary">
         {formatNumber(value)}
@@ -174,8 +178,8 @@ function shortId(uuid: string): string {
 }
 
 function formatNumber(value: unknown): string {
-  if (value === null || value === undefined) return '—';
-  if (typeof value === 'number' && Number.isFinite(value)) {
+  if (value === null || value === undefined) return "—";
+  if (typeof value === "number" && Number.isFinite(value)) {
     return Math.abs(value) >= 1000
       ? value.toLocaleString(undefined, { maximumFractionDigits: 1 })
       : value.toLocaleString(undefined, { maximumFractionDigits: 4 });

@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ShieldCheck,
   Play,
@@ -15,13 +15,20 @@ import {
   Wand2,
   Filter,
   ExternalLink,
-} from 'lucide-react';
-import { Button, Card, Badge, EmptyState, Skeleton, Breadcrumb } from '@/shared/ui';
-import { SectionIntro } from './SectionIntro';
-import { apiGet, apiPost, triggerDownload } from '@/shared/lib/api';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useToastStore } from '@/stores/useToastStore';
-import { useAuthStore } from '@/stores/useAuthStore';
+} from "lucide-react";
+import {
+  Button,
+  Card,
+  Badge,
+  EmptyState,
+  Skeleton,
+  Breadcrumb,
+} from "@/shared/ui";
+import { SectionIntro } from "./SectionIntro";
+import { apiGet, apiPost, triggerDownload } from "@/shared/lib/api";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useToastStore } from "@/stores/useToastStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -43,7 +50,7 @@ interface BOQ {
 interface ValidationResultItem {
   rule_id: string;
   rule_name: string;
-  severity: 'error' | 'warning' | 'info';
+  severity: "error" | "warning" | "info";
   passed: boolean;
   message: string;
   element_ref: string | null;
@@ -52,7 +59,7 @@ interface ValidationResultItem {
 
 interface ValidationReportData {
   id: string;
-  status: 'passed' | 'warnings' | 'errors' | 'skipped';
+  status: "passed" | "warnings" | "errors" | "skipped";
   score: number;
   counts: {
     total: number;
@@ -66,20 +73,55 @@ interface ValidationReportData {
   results: ValidationResultItem[];
 }
 
-type FilterMode = 'all' | 'errors' | 'warnings' | 'info' | 'passed';
+type FilterMode = "all" | "errors" | "warnings" | "info" | "passed";
 
 /* ── Rule descriptions for tooltips ───────────────────────────────────── */
 
-function getRuleDescriptions(t: (key: string, opts?: Record<string, unknown>) => string): Record<string, string> {
+function getRuleDescriptions(
+  t: (key: string, opts?: Record<string, unknown>) => string,
+): Record<string, string> {
   return {
-    'boq_quality.position_has_quantity': t('validation.rule_position_has_quantity', { defaultValue: 'Checks that every BOQ position has a quantity greater than zero.‌⁠‍' }),
-    'boq_quality.position_has_unit_rate': t('validation.rule_position_has_unit_rate', { defaultValue: 'Checks that every position has a unit rate assigned.‌⁠‍' }),
-    'boq_quality.position_has_description': t('validation.rule_position_has_description', { defaultValue: 'Checks that every position has a meaningful description.‌⁠‍' }),
-    'boq_quality.no_duplicate_ordinals': t('validation.rule_no_duplicate_ordinals', { defaultValue: 'Ensures all ordinal numbers within the BOQ are unique.‌⁠‍' }),
-    'boq_quality.unit_rate_in_range': t('validation.rule_unit_rate_in_range', { defaultValue: 'Flags unit rates that deviate more than 5x from median.‌⁠‍' }),
-    'din276.cost_group_required': t('validation.rule_cost_group_required', { defaultValue: 'Ensures every position has a DIN 276 Kostengruppe assigned.' }),
-    'din276.valid_cost_group': t('validation.rule_valid_cost_group', { defaultValue: 'Validates that DIN 276 codes are proper 3-digit codes.' }),
-    'gaeb.ordinal_format': t('validation.rule_ordinal_format', { defaultValue: 'Checks ordinal numbers follow GAEB LV format XX.XX.XXXX.' }),
+    "boq_quality.position_has_quantity": t(
+      "validation.rule_position_has_quantity",
+      {
+        defaultValue:
+          "Checks that every BOQ position has a quantity greater than zero.‌⁠‍",
+      },
+    ),
+    "boq_quality.position_has_unit_rate": t(
+      "validation.rule_position_has_unit_rate",
+      {
+        defaultValue: "Checks that every position has a unit rate assigned.‌⁠‍",
+      },
+    ),
+    "boq_quality.position_has_description": t(
+      "validation.rule_position_has_description",
+      {
+        defaultValue:
+          "Checks that every position has a meaningful description.‌⁠‍",
+      },
+    ),
+    "boq_quality.no_duplicate_ordinals": t(
+      "validation.rule_no_duplicate_ordinals",
+      {
+        defaultValue:
+          "Ensures all ordinal numbers within the BOQ are unique.‌⁠‍",
+      },
+    ),
+    "boq_quality.unit_rate_in_range": t("validation.rule_unit_rate_in_range", {
+      defaultValue:
+        "Flags unit rates that deviate more than 5x from median.‌⁠‍",
+    }),
+    "din276.cost_group_required": t("validation.rule_cost_group_required", {
+      defaultValue:
+        "Ensures every position has a DIN 276 Kostengruppe assigned.",
+    }),
+    "din276.valid_cost_group": t("validation.rule_valid_cost_group", {
+      defaultValue: "Validates that DIN 276 codes are proper 3-digit codes.",
+    }),
+    "gaeb.ordinal_format": t("validation.rule_ordinal_format", {
+      defaultValue: "Checks ordinal numbers follow GAEB LV format XX.XX.XXXX.",
+    }),
   };
 }
 
@@ -90,55 +132,65 @@ function getRuleSetDescription(
   t: (key: string, opts?: Record<string, unknown>) => string,
 ): string {
   const map: Record<string, string> = {
-    boq_quality: t('validation.rs_boq_quality', {
-      defaultValue: 'Universal BOQ hygiene: missing quantities/rates, duplicate ordinals, outlier rates.',
+    boq_quality: t("validation.rs_boq_quality", {
+      defaultValue:
+        "Universal BOQ hygiene: missing quantities/rates, duplicate ordinals, outlier rates.",
     }),
-    din276: t('validation.rs_din276', {
-      defaultValue: 'DIN 276 (DACH) cost-group structure & Kostengruppe completeness.',
+    din276: t("validation.rs_din276", {
+      defaultValue:
+        "DIN 276 (DACH) cost-group structure & Kostengruppe completeness.",
     }),
-    gaeb: t('validation.rs_gaeb', {
-      defaultValue: 'GAEB tender format: LV structure & ordinal format checks.',
+    gaeb: t("validation.rs_gaeb", {
+      defaultValue: "GAEB tender format: LV structure & ordinal format checks.",
     }),
-    nrm: t('validation.rs_nrm', {
-      defaultValue: 'NRM 1/2 (UK) element compliance & measurement rules.',
+    nrm: t("validation.rs_nrm", {
+      defaultValue: "NRM 1/2 (UK) element compliance & measurement rules.",
     }),
-    masterformat: t('validation.rs_masterformat', {
-      defaultValue: 'MasterFormat (US) division structure & code format.',
+    masterformat: t("validation.rs_masterformat", {
+      defaultValue: "MasterFormat (US) division structure & code format.",
     }),
-    bim_compliance: t('validation.rs_bim', {
-      defaultValue: 'CAD/BIM data: required properties, geometry validity, classification mapped.',
+    bim_compliance: t("validation.rs_bim", {
+      defaultValue:
+        "CAD/BIM data: required properties, geometry validity, classification mapped.",
     }),
-    project_completeness: t('validation.rs_completeness', {
-      defaultValue: 'All trades covered, cost benchmarks, missing-scope detection.',
+    project_completeness: t("validation.rs_completeness", {
+      defaultValue:
+        "All trades covered, cost benchmarks, missing-scope detection.",
     }),
   };
-  return map[ruleSet] ?? t('validation.rs_generic', {
-    defaultValue: '{{name}} validation rules',
-    name: ruleSet,
-  });
+  return (
+    map[ruleSet] ??
+    t("validation.rs_generic", {
+      defaultValue: "{{name}} validation rules",
+      name: ruleSet,
+    })
+  );
 }
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
-function getScoreLabel(pct: number, t: (key: string, fallback: string) => string): string {
-  if (pct >= 95) return t('validation.score_excellent', 'Excellent');
-  if (pct >= 80) return t('validation.score_good', 'Good');
-  if (pct >= 60) return t('validation.score_needs_review', 'Needs Review');
-  return t('validation.score_poor', 'Poor');
+function getScoreLabel(
+  pct: number,
+  t: (key: string, fallback: string) => string,
+): string {
+  if (pct >= 95) return t("validation.score_excellent", "Excellent");
+  if (pct >= 80) return t("validation.score_good", "Good");
+  if (pct >= 60) return t("validation.score_needs_review", "Needs Review");
+  return t("validation.score_poor", "Poor");
 }
 
 function getScoreColor(pct: number): string {
-  if (pct >= 95) return 'text-semantic-success';
-  if (pct >= 80) return 'text-oe-blue';
-  if (pct >= 60) return 'text-semantic-warning';
-  return 'text-semantic-error';
+  if (pct >= 95) return "text-semantic-success";
+  if (pct >= 80) return "text-oe-blue";
+  if (pct >= 60) return "text-semantic-warning";
+  return "text-semantic-error";
 }
 
 function getScoreRingColor(pct: number): string {
-  if (pct >= 95) return 'stroke-semantic-success';
-  if (pct >= 80) return 'stroke-oe-blue';
-  if (pct >= 60) return 'stroke-semantic-warning';
-  return 'stroke-semantic-error';
+  if (pct >= 95) return "stroke-semantic-success";
+  if (pct >= 80) return "stroke-oe-blue";
+  if (pct >= 60) return "stroke-semantic-warning";
+  return "stroke-semantic-error";
 }
 
 /* ── Sub-components ────────────────────────────────────────────────────── */
@@ -153,7 +205,12 @@ function ScoreCircle({ score }: { score: number }) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="relative h-36 w-36">
-        <svg className="h-36 w-36 -rotate-90" viewBox="0 0 120 120" role="img" aria-label={`${t('validation.quality_score', { defaultValue: 'Quality score' })}: ${pct}%`}>
+        <svg
+          className="h-36 w-36 -rotate-90"
+          viewBox="0 0 120 120"
+          role="img"
+          aria-label={`${t("validation.quality_score", { defaultValue: "Quality score" })}: ${pct}%`}
+        >
           <circle
             cx="60"
             cy="60"
@@ -178,7 +235,9 @@ function ScoreCircle({ score }: { score: number }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={`text-3xl font-bold tabular-nums ${getScoreColor(pct)}`}>
+          <span
+            className={`text-3xl font-bold tabular-nums ${getScoreColor(pct)}`}
+          >
             {pct}
           </span>
           <span className={`text-sm font-medium ${getScoreColor(pct)}`}>%</span>
@@ -198,12 +257,12 @@ function SummaryCard({ report }: { report: ValidationReportData }) {
     <Card>
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('validation.summary', 'Summary')}
+          {t("validation.summary", "Summary")}
         </h3>
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-content-secondary">
-              {t('validation.rules_checked', 'Rules checked')}
+              {t("validation.rules_checked", "Rules checked")}
             </span>
             <span className="font-medium text-content-primary tabular-nums">
               {report.counts.total}
@@ -212,7 +271,7 @@ function SummaryCard({ report }: { report: ValidationReportData }) {
           <div className="flex items-center justify-between text-sm">
             <span className="flex items-center gap-2 text-content-secondary">
               <CheckCircle2 size={14} className="text-semantic-success" />
-              {t('validation.passed', 'Passed')}
+              {t("validation.passed", "Passed")}
             </span>
             <span className="font-medium text-semantic-success tabular-nums">
               {report.counts.passed}
@@ -221,7 +280,7 @@ function SummaryCard({ report }: { report: ValidationReportData }) {
           <div className="flex items-center justify-between text-sm">
             <span className="flex items-center gap-2 text-content-secondary">
               <AlertTriangle size={14} className="text-semantic-warning" />
-              {t('validation.warnings', 'Warnings')}
+              {t("validation.warnings", "Warnings")}
             </span>
             <span className="font-medium text-semantic-warning tabular-nums">
               {report.counts.warnings}
@@ -230,7 +289,7 @@ function SummaryCard({ report }: { report: ValidationReportData }) {
           <div className="flex items-center justify-between text-sm">
             <span className="flex items-center gap-2 text-content-secondary">
               <XCircle size={14} className="text-semantic-error" />
-              {t('validation.errors', 'Errors')}
+              {t("validation.errors", "Errors")}
             </span>
             <span className="font-medium text-semantic-error tabular-nums">
               {report.counts.errors}
@@ -240,11 +299,15 @@ function SummaryCard({ report }: { report: ValidationReportData }) {
         <div className="border-t border-border-light pt-3">
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-xs text-content-tertiary">
-              {t('validation.rule_sets', 'Rule sets')}:
+              {t("validation.rule_sets", "Rule sets")}:
             </span>
             {report.rule_sets.length > 0 ? (
               report.rule_sets.map((rs) => (
-                <span key={rs} title={getRuleSetDescription(rs, t)} className="inline-flex">
+                <span
+                  key={rs}
+                  title={getRuleSetDescription(rs, t)}
+                  className="inline-flex"
+                >
                   <Badge variant="neutral" size="sm">
                     {rs}
                   </Badge>
@@ -252,20 +315,21 @@ function SummaryCard({ report }: { report: ValidationReportData }) {
               ))
             ) : (
               <span className="text-xs text-content-tertiary italic">
-                {t('validation.no_rule_sets', {
-                  defaultValue: 'none configured for this project',
+                {t("validation.no_rule_sets", {
+                  defaultValue: "none configured for this project",
                 })}
               </span>
             )}
           </div>
           <p className="mt-1.5 text-xs text-content-tertiary">
-            {t('validation.rule_sets_auto_hint', {
+            {t("validation.rule_sets_auto_hint", {
               defaultValue:
-                'Rule sets are chosen automatically from the project’s region & classification standard.',
+                "Rule sets are chosen automatically from the project’s region & classification standard.",
             })}
           </p>
           <p className="mt-1 text-xs text-content-tertiary tabular-nums">
-            {t('validation.duration', 'Duration')}: {report.duration_ms.toFixed(1)}ms
+            {t("validation.duration", "Duration")}:{" "}
+            {report.duration_ms.toFixed(1)}ms
           </p>
         </div>
       </div>
@@ -290,32 +354,32 @@ function ResultRow({
 
   const statusIcon = result.passed ? (
     <CheckCircle2 size={16} className="shrink-0 text-semantic-success" />
-  ) : result.severity === 'error' ? (
+  ) : result.severity === "error" ? (
     <XCircle size={16} className="shrink-0 text-semantic-error" />
   ) : (
     <AlertTriangle size={16} className="shrink-0 text-semantic-warning" />
   );
 
   const statusBadgeVariant = result.passed
-    ? 'success'
-    : result.severity === 'error'
-      ? 'error'
-      : 'warning';
+    ? "success"
+    : result.severity === "error"
+      ? "error"
+      : "warning";
 
   const statusLabel = result.passed
-    ? t('validation.status_passed', 'Passed')
-    : result.severity === 'error'
-      ? t('validation.status_error', 'Error')
-      : t('validation.status_warning', 'Warning');
+    ? t("validation.status_passed", "Passed")
+    : result.severity === "error"
+      ? t("validation.status_error", "Error")
+      : t("validation.status_warning", "Warning");
 
-  const tooltip = getRuleDescriptions(t)[result.rule_id] || '';
+  const tooltip = getRuleDescriptions(t)[result.rule_id] || "";
 
   return (
     <div
       className={`rounded-xl border transition-all duration-fast ${
         expanded
-          ? 'border-border bg-surface-primary shadow-xs'
-          : 'border-border-light bg-surface-primary hover:bg-surface-secondary/50'
+          ? "border-border bg-surface-primary shadow-xs"
+          : "border-border-light bg-surface-primary hover:bg-surface-secondary/50"
       }`}
     >
       <button
@@ -336,7 +400,10 @@ function ResultRow({
             {result.element_ref.substring(0, 8)}
           </span>
         )}
-        <Badge variant={statusBadgeVariant as 'success' | 'error' | 'warning'} size="sm">
+        <Badge
+          variant={statusBadgeVariant as "success" | "error" | "warning"}
+          size="sm"
+        >
           {statusLabel}
         </Badge>
         <span className="shrink-0 text-content-tertiary">
@@ -351,18 +418,23 @@ function ResultRow({
             <div className="mt-2 flex items-start gap-2 rounded-lg bg-oe-blue-subtle px-3 py-2">
               <Wand2 size={14} className="mt-0.5 shrink-0 text-oe-blue" />
               <p className="text-xs text-oe-blue">
-                {t('validation.suggestion', 'Suggestion')}: {result.suggestion}
+                {t("validation.suggestion", "Suggestion")}: {result.suggestion}
               </p>
             </div>
           )}
           {result.element_ref && (
             <p className="mt-2 flex items-center gap-1.5 text-xs text-content-tertiary">
               <Info size={12} />
-              {t('validation.element_ref', 'Element')}:{' '}
+              {t("validation.element_ref", "Element")}:{" "}
               {boqId && onNavigateToPosition ? (
                 <button
-                  onClick={(e) => { e.stopPropagation(); onNavigateToPosition(boqId, result.element_ref!); }}
-                  aria-label={t('validation.go_to_element', { defaultValue: 'Go to element' })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onNavigateToPosition(boqId, result.element_ref!);
+                  }}
+                  aria-label={t("validation.go_to_element", {
+                    defaultValue: "Go to element",
+                  })}
                   className="inline-flex items-center gap-1 text-oe-blue hover:underline font-mono"
                 >
                   {result.element_ref.substring(0, 8)}...
@@ -374,7 +446,9 @@ function ResultRow({
             </p>
           )}
           {tooltip && (
-            <p className="mt-1 text-xs text-content-tertiary italic">{tooltip}</p>
+            <p className="mt-1 text-xs text-content-tertiary italic">
+              {tooltip}
+            </p>
           )}
         </div>
       )}
@@ -389,16 +463,42 @@ function FilterBar({
 }: {
   filter: FilterMode;
   onFilterChange: (f: FilterMode) => void;
-  counts: { all: number; errors: number; warnings: number; infos: number; passed: number };
+  counts: {
+    all: number;
+    errors: number;
+    warnings: number;
+    infos: number;
+    passed: number;
+  };
 }) {
   const { t } = useTranslation();
 
   const options: { value: FilterMode; label: string; count: number }[] = [
-    { value: 'all', label: t('validation.filter_all', 'All'), count: counts.all },
-    { value: 'errors', label: t('validation.filter_errors', 'Errors'), count: counts.errors },
-    { value: 'warnings', label: t('validation.filter_warnings', 'Warnings'), count: counts.warnings },
-    { value: 'info', label: t('validation.filter_info', 'Info'), count: counts.infos },
-    { value: 'passed', label: t('validation.filter_passed', 'Passed'), count: counts.passed },
+    {
+      value: "all",
+      label: t("validation.filter_all", "All"),
+      count: counts.all,
+    },
+    {
+      value: "errors",
+      label: t("validation.filter_errors", "Errors"),
+      count: counts.errors,
+    },
+    {
+      value: "warnings",
+      label: t("validation.filter_warnings", "Warnings"),
+      count: counts.warnings,
+    },
+    {
+      value: "info",
+      label: t("validation.filter_info", "Info"),
+      count: counts.infos,
+    },
+    {
+      value: "passed",
+      label: t("validation.filter_passed", "Passed"),
+      count: counts.passed,
+    },
   ];
 
   return (
@@ -411,14 +511,16 @@ function FilterBar({
           aria-pressed={filter === opt.value}
           className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-fast ${
             filter === opt.value
-              ? 'bg-oe-blue text-content-inverse shadow-xs'
-              : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary'
+              ? "bg-oe-blue text-content-inverse shadow-xs"
+              : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
           }`}
         >
           {opt.label}
           <span
             className={`tabular-nums ${
-              filter === opt.value ? 'text-content-inverse/70' : 'text-content-tertiary'
+              filter === opt.value
+                ? "text-content-inverse/70"
+                : "text-content-tertiary"
             }`}
           >
             {opt.count}
@@ -446,13 +548,15 @@ function SelectDropdown({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-content-primary">{label}</label>
+      <label htmlFor={id} className="text-sm font-medium text-content-primary">
+        {label}
+      </label>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm transition-all duration-normal ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue hover:border-content-tertiary ${
-          !value ? 'text-content-tertiary' : 'text-content-primary'
+          !value ? "text-content-tertiary" : "text-content-primary"
         }`}
       >
         <option value="">{placeholder}</option>
@@ -475,22 +579,25 @@ export function ValidationPage() {
   const { activeProjectId, setActiveProject } = useProjectContextStore();
   const addToast = useToastStore((s) => s.addToast);
 
-  const selectedProjectId = activeProjectId ?? '';
-  const [selectedBoqId, setSelectedBoqId] = useState('');
-  const [filter, setFilter] = useState<FilterMode>('all');
-  const [expandedResults, setExpandedResults] = useState<Set<number>>(new Set());
+  const selectedProjectId = activeProjectId ?? "";
+  const [selectedBoqId, setSelectedBoqId] = useState("");
+  const [filter, setFilter] = useState<FilterMode>("all");
+  const [expandedResults, setExpandedResults] = useState<Set<number>>(
+    new Set(),
+  );
 
   // Fetch projects
   const { data: projects, isLoading: projectsLoading } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 
   // Fetch BOQs for selected project
   const { data: boqs, isLoading: boqsLoading } = useQuery({
-    queryKey: ['boqs', selectedProjectId],
-    queryFn: () => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${selectedProjectId}`),
+    queryKey: ["boqs", selectedProjectId],
+    queryFn: () =>
+      apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${selectedProjectId}`),
     enabled: !!selectedProjectId,
   });
 
@@ -503,25 +610,33 @@ export function ValidationPage() {
       apiPost<ValidationReportData>(`/v1/boq/boqs/${selectedBoqId}/validate/`),
     onSuccess: (data) => {
       setReport(data);
-      setFilter('all');
+      setFilter("all");
       setExpandedResults(new Set());
-      queryClient.invalidateQueries({ queryKey: ['validation', selectedBoqId] });
+      queryClient.invalidateQueries({
+        queryKey: ["validation", selectedBoqId],
+      });
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('validation.run_failed', { defaultValue: 'Validation failed' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("validation.run_failed", {
+          defaultValue: "Validation failed",
+        }),
+        message: err.message,
+      });
     },
   });
 
   // Reset BOQ selection when project changes
   const handleProjectChange = useCallback(
     (projectId: string) => {
-      const name = projects?.find((p) => p.id === projectId)?.name ?? '';
+      const name = projects?.find((p) => p.id === projectId)?.name ?? "";
       if (projectId) {
         setActiveProject(projectId, name);
       } else {
         useProjectContextStore.getState().clearProject();
       }
-      setSelectedBoqId('');
+      setSelectedBoqId("");
       setReport(null);
     },
     [projects, setActiveProject],
@@ -537,26 +652,38 @@ export function ValidationPage() {
     if (!report) return [];
     let results: ValidationResultItem[];
     switch (filter) {
-      case 'errors':
-        results = report.results.filter((r) => !r.passed && r.severity === 'error');
+      case "errors":
+        results = report.results.filter(
+          (r) => !r.passed && r.severity === "error",
+        );
         break;
-      case 'warnings':
-        results = report.results.filter((r) => !r.passed && r.severity === 'warning');
+      case "warnings":
+        results = report.results.filter(
+          (r) => !r.passed && r.severity === "warning",
+        );
         break;
-      case 'info':
-        results = report.results.filter((r) => !r.passed && r.severity === 'info');
+      case "info":
+        results = report.results.filter(
+          (r) => !r.passed && r.severity === "info",
+        );
         break;
-      case 'passed':
+      case "passed":
         results = report.results.filter((r) => r.passed);
         break;
       default:
         results = [...report.results];
     }
     // Sort: errors first, then warnings, then info, then passed
-    const severityOrder: Record<string, number> = { error: 0, warning: 1, info: 2 };
+    const severityOrder: Record<string, number> = {
+      error: 0,
+      warning: 1,
+      info: 2,
+    };
     return results.sort((a, b) => {
       if (a.passed !== b.passed) return a.passed ? 1 : -1;
-      return (severityOrder[a.severity] ?? 3) - (severityOrder[b.severity] ?? 3);
+      return (
+        (severityOrder[a.severity] ?? 3) - (severityOrder[b.severity] ?? 3)
+      );
     });
   }, [report, filter]);
 
@@ -564,9 +691,13 @@ export function ValidationPage() {
     if (!report) return { all: 0, errors: 0, warnings: 0, infos: 0, passed: 0 };
     return {
       all: report.results.length,
-      errors: report.results.filter((r) => !r.passed && r.severity === 'error').length,
-      warnings: report.results.filter((r) => !r.passed && r.severity === 'warning').length,
-      infos: report.results.filter((r) => !r.passed && r.severity === 'info').length,
+      errors: report.results.filter((r) => !r.passed && r.severity === "error")
+        .length,
+      warnings: report.results.filter(
+        (r) => !r.passed && r.severity === "warning",
+      ).length,
+      infos: report.results.filter((r) => !r.passed && r.severity === "info")
+        .length,
       passed: report.results.filter((r) => r.passed).length,
     };
   }, [report]);
@@ -587,16 +718,19 @@ export function ValidationPage() {
     if (!selectedBoqId) return;
     try {
       const token = useAuthStore.getState().accessToken;
-      const response = await fetch(`/api/v1/boq/boqs/${selectedBoqId}/export/pdf/`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
+      const response = await fetch(
+        `/api/v1/boq/boqs/${selectedBoqId}/export/pdf/`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        },
+      );
       if (!response.ok) throw new Error(`Export failed: ${response.status}`);
       const blob = await response.blob();
       triggerDownload(blob, `boq_${selectedBoqId.slice(0, 8)}.pdf`);
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('validation.export_failed', { defaultValue: 'Export failed' }),
+        type: "error",
+        title: t("validation.export_failed", { defaultValue: "Export failed" }),
         message: err instanceof Error ? err.message : undefined,
       });
     }
@@ -607,27 +741,40 @@ export function ValidationPage() {
   // A faithful CSV is generated client-side from exactly what the user sees.
   const handleExportCsv = useCallback(() => {
     if (!report) return;
-    const esc = (v: string) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-    const header = ['rule_id', 'rule_name', 'severity', 'status', 'message', 'element_ref', 'suggestion'];
+    const esc = (v: string) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const header = [
+      "rule_id",
+      "rule_name",
+      "severity",
+      "status",
+      "message",
+      "element_ref",
+      "suggestion",
+    ];
     const lines = report.results.map((r) =>
       [
         r.rule_id,
         r.rule_name,
         r.severity,
-        r.passed ? 'passed' : r.severity === 'error' ? 'error' : 'warning',
+        r.passed ? "passed" : r.severity === "error" ? "error" : "warning",
         r.message,
-        r.element_ref ?? '',
-        r.suggestion ?? '',
+        r.element_ref ?? "",
+        r.suggestion ?? "",
       ]
         .map((c) => esc(String(c)))
-        .join(','),
+        .join(","),
     );
-    const csv = [header.join(','), ...lines].join('\r\n');
-    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-    triggerDownload(blob, `validation_findings_${selectedBoqId.slice(0, 8)}.csv`);
+    const csv = [header.join(","), ...lines].join("\r\n");
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+    triggerDownload(
+      blob,
+      `validation_findings_${selectedBoqId.slice(0, 8)}.csv`,
+    );
     addToast({
-      type: 'success',
-      title: t('validation.csv_exported', { defaultValue: 'Findings exported' }),
+      type: "success",
+      title: t("validation.csv_exported", {
+        defaultValue: "Findings exported",
+      }),
     });
   }, [report, selectedBoqId, addToast, t]);
 
@@ -643,43 +790,50 @@ export function ValidationPage() {
 
   return (
     <div className="w-full animate-fade-in">
-      <Breadcrumb items={[
-        { label: t('nav.dashboard', 'Dashboard'), to: '/' },
-        { label: t('validation.title', 'Validation Dashboard') },
-      ]} className="mb-4" />
+      <Breadcrumb
+        items={[
+          { label: t("nav.dashboard", "Dashboard"), to: "/" },
+          { label: t("validation.title", "Validation Dashboard") },
+        ]}
+        className="mb-4"
+      />
 
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-content-primary">
-          {t('validation.title', 'Validation Dashboard')}
+          {t("validation.title", "Validation Dashboard")}
         </h1>
         <p className="mt-1 text-sm text-content-secondary">
           {t(
-            'validation.subtitle',
-            'Select a project and BOQ to validate against configured rule sets',
+            "validation.subtitle",
+            "Select a project and BOQ to validate against configured rule sets",
           )}
         </p>
       </div>
 
       <SectionIntro
         storageKey="validation"
-        title={t('validation.intro_title', {
-          defaultValue: 'How validation fits the workflow',
+        title={t("validation.intro_title", {
+          defaultValue: "How validation fits the workflow",
         })}
         links={[
           {
-            label: t('validation.intro_link_boq', { defaultValue: 'Open BOQ editor' }),
-            onClick: () => navigate('/boq'),
+            label: t("validation.intro_link_boq", {
+              defaultValue: "Open BOQ editor",
+            }),
+            onClick: () => navigate("/boq"),
           },
           {
-            label: t('validation.intro_link_bim', { defaultValue: 'BIM / canonical model' }),
-            onClick: () => navigate('/bim'),
+            label: t("validation.intro_link_bim", {
+              defaultValue: "BIM / canonical model",
+            }),
+            onClick: () => navigate("/bim"),
           },
         ]}
       >
-        {t('validation.intro_body', {
+        {t("validation.intro_body", {
           defaultValue:
-            'Validation is a first-class step in the Import → Validate → Enrich → Estimate pipeline. It checks a Bill of Quantities (and its linked canonical/BIM elements) against the rule sets configured for the project — these are derived automatically from the project’s region and classification standard (DIN 276, GAEB, NRM, MasterFormat, boq_quality, …). Each finding links back to the exact BOQ position so you can fix it at the source.',
+            "Validation is a first-class step in the Import → Validate → Enrich → Estimate pipeline. It checks a Bill of Quantities (and its linked canonical/BIM elements) against the rule sets configured for the project — these are derived automatically from the project’s region and classification standard (DIN 276, GAEB, NRM, MasterFormat, boq_quality, …). Each finding links back to the exact BOQ position so you can fix it at the source.",
         })}
       </SectionIntro>
 
@@ -692,11 +846,14 @@ export function ValidationPage() {
             ) : (
               <SelectDropdown
                 id="validation-project-select"
-                label={t('validation.select_project', 'Project')}
+                label={t("validation.select_project", "Project")}
                 value={selectedProjectId}
                 onChange={handleProjectChange}
                 options={projectOptions}
-                placeholder={t('validation.select_project_placeholder', 'Choose a project...')}
+                placeholder={t(
+                  "validation.select_project_placeholder",
+                  "Choose a project...",
+                )}
               />
             )}
           </div>
@@ -706,20 +863,31 @@ export function ValidationPage() {
             ) : (
               <SelectDropdown
                 id="validation-boq-select"
-                label={t('validation.select_boq', 'Bill of Quantities')}
+                label={t("validation.select_boq", "Bill of Quantities")}
                 value={selectedBoqId}
                 onChange={handleBoqChange}
                 options={boqOptions}
                 placeholder={
                   selectedProjectId
-                    ? t('validation.select_boq_placeholder', 'Choose a BOQ...')
-                    : t('validation.select_project_first', 'Select a project first')
+                    ? t("validation.select_boq_placeholder", "Choose a BOQ...")
+                    : t(
+                        "validation.select_project_first",
+                        "Select a project first",
+                      )
                 }
               />
             )}
           </div>
           <div className="shrink-0">
-            <span title={!selectedBoqId ? t('validation.select_boq_first', { defaultValue: 'Select a project and BOQ first' }) : undefined}>
+            <span
+              title={
+                !selectedBoqId
+                  ? t("validation.select_boq_first", {
+                      defaultValue: "Select a project and BOQ first",
+                    })
+                  : undefined
+              }
+            >
               <Button
                 variant="primary"
                 size="md"
@@ -728,7 +896,7 @@ export function ValidationPage() {
                 disabled={!selectedBoqId}
                 onClick={() => runValidation.mutate()}
               >
-                {t('validation.run', 'Run Validation')}
+                {t("validation.run", "Run Validation")}
               </Button>
             </span>
           </div>
@@ -739,9 +907,9 @@ export function ValidationPage() {
       {!report && !runValidation.isPending && (
         <EmptyState
           icon={<ShieldCheck size={28} strokeWidth={1.5} />}
-          title={t('validation.empty_title', 'No validation report yet')}
+          title={t("validation.empty_title", "No validation report yet")}
           description={t(
-            'validation.empty_description',
+            "validation.empty_description",
             'Select a project and BOQ, then click "Run Validation" to check data quality.',
           )}
         />
@@ -768,14 +936,14 @@ export function ValidationPage() {
             <XCircle size={20} className="text-semantic-error" />
             <div>
               <p className="text-sm font-medium text-semantic-error">
-                {t('validation.error_title', 'Validation failed')}
+                {t("validation.error_title", "Validation failed")}
               </p>
               <p className="mt-0.5 text-xs text-content-secondary">
                 {runValidation.error instanceof Error
                   ? runValidation.error.message
                   : t(
-                      'validation.error_description',
-                      'Could not run validation. Check that the BOQ has positions and try again.',
+                      "validation.error_description",
+                      "Could not run validation. Check that the BOQ has positions and try again.",
                     )}
               </p>
             </div>
@@ -801,24 +969,34 @@ export function ValidationPage() {
           <div>
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-lg font-semibold text-content-primary">
-                {t('validation.results_title', 'Results')}
+                {t("validation.results_title", "Results")}
               </h2>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5">
                   <button
-                    onClick={() => setExpandedResults(new Set(filteredResults.map((_, i) => i)))}
-                    aria-label={t('validation.expand_all', { defaultValue: 'Expand All' })}
+                    onClick={() =>
+                      setExpandedResults(
+                        new Set(filteredResults.map((_, i) => i)),
+                      )
+                    }
+                    aria-label={t("validation.expand_all", {
+                      defaultValue: "Expand All",
+                    })}
                     className="text-xs font-medium text-content-secondary hover:text-content-primary transition-colors"
                   >
-                    {t('validation.expand_all', { defaultValue: 'Expand All' })}
+                    {t("validation.expand_all", { defaultValue: "Expand All" })}
                   </button>
                   <span className="text-content-quaternary">|</span>
                   <button
                     onClick={() => setExpandedResults(new Set())}
-                    aria-label={t('validation.collapse_all', { defaultValue: 'Collapse All' })}
+                    aria-label={t("validation.collapse_all", {
+                      defaultValue: "Collapse All",
+                    })}
                     className="text-xs font-medium text-content-secondary hover:text-content-primary transition-colors"
                   >
-                    {t('validation.collapse_all', { defaultValue: 'Collapse All' })}
+                    {t("validation.collapse_all", {
+                      defaultValue: "Collapse All",
+                    })}
                   </button>
                 </div>
                 <FilterBar
@@ -832,11 +1010,14 @@ export function ValidationPage() {
             {/* All passed banner */}
             {report.counts.errors === 0 && report.counts.warnings === 0 && (
               <div className="mb-4 flex items-center gap-3 rounded-xl bg-semantic-success-bg px-5 py-4">
-                <CheckCircle2 size={20} className="shrink-0 text-semantic-success" />
+                <CheckCircle2
+                  size={20}
+                  className="shrink-0 text-semantic-success"
+                />
                 <p className="text-sm font-medium text-semantic-success">
                   {t(
-                    'validation.all_passed',
-                    'All validation rules passed successfully!',
+                    "validation.all_passed",
+                    "All validation rules passed successfully!",
                   )}
                 </p>
               </div>
@@ -846,7 +1027,10 @@ export function ValidationPage() {
             <div className="space-y-2">
               {filteredResults.length === 0 && (
                 <p className="py-8 text-center text-sm text-content-tertiary">
-                  {t('validation.no_results_for_filter', 'No results match this filter.')}
+                  {t(
+                    "validation.no_results_for_filter",
+                    "No results match this filter.",
+                  )}
                 </p>
               )}
               {filteredResults.map((result, idx) => (
@@ -856,7 +1040,9 @@ export function ValidationPage() {
                   expanded={expandedResults.has(idx)}
                   onToggle={() => toggleResult(idx)}
                   boqId={selectedBoqId || undefined}
-                  onNavigateToPosition={(bId, posId) => navigate(`/boq/${bId}?highlight=${posId}`)}
+                  onNavigateToPosition={(bId, posId) =>
+                    navigate(`/boq/${bId}?highlight=${posId}`)
+                  }
                 />
               ))}
             </div>
@@ -870,7 +1056,9 @@ export function ValidationPage() {
               icon={<Download size={16} />}
               onClick={handleExportCsv}
             >
-              {t('validation.export_csv', { defaultValue: 'Export Findings (CSV)' })}
+              {t("validation.export_csv", {
+                defaultValue: "Export Findings (CSV)",
+              })}
             </Button>
             <Button
               variant="ghost"
@@ -878,16 +1066,18 @@ export function ValidationPage() {
               icon={<Download size={16} />}
               onClick={handleExportPdf}
             >
-              {t('validation.export_boq_pdf', { defaultValue: 'Export BOQ PDF' })}
+              {t("validation.export_boq_pdf", {
+                defaultValue: "Export BOQ PDF",
+              })}
             </Button>
             {(report.counts.warnings > 0 || report.counts.errors > 0) && (
               <Button
                 variant="ghost"
                 size="md"
                 icon={<Wand2 size={16} />}
-                onClick={() => setFilter('errors')}
+                onClick={() => setFilter("errors")}
               >
-                {t('validation.show_issues', 'Show All Issues')}
+                {t("validation.show_issues", "Show All Issues")}
               </Button>
             )}
           </div>

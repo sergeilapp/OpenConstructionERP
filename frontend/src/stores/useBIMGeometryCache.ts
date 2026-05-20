@@ -16,12 +16,12 @@
  * either ceiling is exceeded the oldest entry by `cachedAt` is evicted
  * until both invariants hold again.
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
 const MAX_ENTRIES = 4;
 const MAX_TOTAL_BYTES = 200 * 1024 * 1024; // ~200 MB
 
-export type GeometryFormat = 'glb' | 'dae';
+export type GeometryFormat = "glb" | "dae";
 
 export interface GeometryCacheEntry {
   buffer: ArrayBuffer;
@@ -62,37 +62,39 @@ function evict(entries: Map<string, GeometryCacheEntry>): void {
   }
 }
 
-export const useBIMGeometryCache = create<BIMGeometryCacheState>((set, get) => ({
-  entries: new Map(),
+export const useBIMGeometryCache = create<BIMGeometryCacheState>(
+  (set, get) => ({
+    entries: new Map(),
 
-  get: (modelId, url) => {
-    const e = get().entries.get(modelId);
-    if (!e) return null;
-    // URL changed under us — drop the stale entry so the caller refetches.
-    if (e.url !== url) {
+    get: (modelId, url) => {
+      const e = get().entries.get(modelId);
+      if (!e) return null;
+      // URL changed under us — drop the stale entry so the caller refetches.
+      if (e.url !== url) {
+        const next = new Map(get().entries);
+        next.delete(modelId);
+        set({ entries: next });
+        return null;
+      }
+      return e;
+    },
+
+    put: (modelId, entry) => {
       const next = new Map(get().entries);
-      next.delete(modelId);
+      next.set(modelId, entry);
+      evict(next);
       set({ entries: next });
-      return null;
-    }
-    return e;
-  },
+    },
 
-  put: (modelId, entry) => {
-    const next = new Map(get().entries);
-    next.set(modelId, entry);
-    evict(next);
-    set({ entries: next });
-  },
+    clear: () => set({ entries: new Map() }),
 
-  clear: () => set({ entries: new Map() }),
-
-  totalBytes: () => {
-    let total = 0;
-    for (const e of get().entries.values()) total += e.buffer.byteLength;
-    return total;
-  },
-}));
+    totalBytes: () => {
+      let total = 0;
+      for (const e of get().entries.values()) total += e.buffer.byteLength;
+      return total;
+    },
+  }),
+);
 
 export const __test__ = {
   MAX_ENTRIES,

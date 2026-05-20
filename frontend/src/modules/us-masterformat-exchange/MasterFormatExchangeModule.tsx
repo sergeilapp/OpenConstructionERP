@@ -1,7 +1,7 @@
-import { useState, useCallback, useRef, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useCallback, useRef, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   DollarSign,
   Upload,
@@ -15,16 +15,19 @@ import {
   Info,
   X,
   Printer,
-} from 'lucide-react';
-import { Button, Badge } from '@/shared/ui';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { parseExcelFile } from '../_shared/excelImport';
-import { exportToCSV, downloadBlob } from '../_shared/excelExport';
-import { printBOQReport } from '../_shared/pdfBOQExport';
-import type { ExchangePosition, ImportParseResult } from '../_shared/templateTypes';
-import { MF_TEMPLATE, MF_DIVISIONS } from './mfTemplate';
-import { SampleTemplateButton } from '../_shared/SampleTemplateButton';
+} from "lucide-react";
+import { Button, Badge } from "@/shared/ui";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { parseExcelFile } from "../_shared/excelImport";
+import { exportToCSV, downloadBlob } from "../_shared/excelExport";
+import { printBOQReport } from "../_shared/pdfBOQExport";
+import type {
+  ExchangePosition,
+  ImportParseResult,
+} from "../_shared/templateTypes";
+import { MF_TEMPLATE, MF_DIVISIONS } from "./mfTemplate";
+import { SampleTemplateButton } from "../_shared/SampleTemplateButton";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,7 +56,7 @@ interface BOQPosition {
   classification?: Record<string, string>;
 }
 
-type ExportFormatChoice = 'masterformat-detailed' | 'uniformat-summary';
+type ExportFormatChoice = "masterformat-detailed" | "uniformat-summary";
 
 // ---------------------------------------------------------------------------
 // Import Preview Table
@@ -73,8 +76,8 @@ function ImportPreview({
     <div className="border border-border-light rounded-lg overflow-hidden">
       <div className="px-3 py-2 bg-surface-tertiary/50 flex items-center justify-between">
         <span className="text-xs font-medium text-content-secondary">
-          {t('mf.preview', { defaultValue: 'Preview‌⁠‍' })}: {positions.length}{' '}
-          {t('mf.positions', { defaultValue: 'positions‌⁠‍' })}
+          {t("mf.preview", { defaultValue: "Preview‌⁠‍" })}: {positions.length}{" "}
+          {t("mf.positions", { defaultValue: "positions‌⁠‍" })}
         </span>
         {positions.length > 20 && (
           <button
@@ -82,8 +85,10 @@ function ImportPreview({
             className="text-2xs text-oe-blue hover:underline"
           >
             {showAll
-              ? t('mf.show_less', { defaultValue: 'Show less‌⁠‍' })
-              : t('mf.show_all', { defaultValue: `Show all ${positions.length}` })}
+              ? t("mf.show_less", { defaultValue: "Show less‌⁠‍" })
+              : t("mf.show_all", {
+                  defaultValue: `Show all ${positions.length}`,
+                })}
           </button>
         )}
       </div>
@@ -92,22 +97,22 @@ function ImportPreview({
           <thead>
             <tr className="bg-surface-secondary/50 sticky top-0">
               <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-24">
-                {t('boq.ordinal', { defaultValue: 'Ordinal‌⁠‍' })}
+                {t("boq.ordinal", { defaultValue: "Ordinal‌⁠‍" })}
               </th>
               <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
-                {t('boq.description', { defaultValue: 'Description‌⁠‍' })}
+                {t("boq.description", { defaultValue: "Description‌⁠‍" })}
               </th>
               <th className="px-3 py-1.5 text-center font-medium text-content-secondary w-16">
-                {t('boq.unit', { defaultValue: 'Unit' })}
+                {t("boq.unit", { defaultValue: "Unit" })}
               </th>
               <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">
-                {t('boq.quantity', { defaultValue: 'Qty' })}
+                {t("boq.quantity", { defaultValue: "Qty" })}
               </th>
               <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">
-                {t('boq.unit_rate', { defaultValue: 'Rate' })}
+                {t("boq.unit_rate", { defaultValue: "Rate" })}
               </th>
               <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-32">
-                {t('mf.classification', { defaultValue: 'Division' })}
+                {t("mf.classification", { defaultValue: "Division" })}
               </th>
             </tr>
           </thead>
@@ -123,29 +128,33 @@ function ImportPreview({
               return (
                 <tr
                   key={pos.ordinal || `pos-${idx}`}
-                  className={`hover:bg-surface-secondary/30 ${idx % 2 === 0 ? 'bg-surface-primary/50' : ''}`}
+                  className={`hover:bg-surface-secondary/30 ${idx % 2 === 0 ? "bg-surface-primary/50" : ""}`}
                 >
-                  <td className="px-3 py-1.5 font-mono text-content-tertiary">{pos.ordinal}</td>
+                  <td className="px-3 py-1.5 font-mono text-content-tertiary">
+                    {pos.ordinal}
+                  </td>
                   <td
                     className="px-3 py-1.5 text-content-primary max-w-[300px] truncate"
                     title={pos.description}
                   >
-                    {pos.description || '-'}
+                    {pos.description || "-"}
                   </td>
                   <td className="px-3 py-1.5 text-center text-content-secondary">
-                    {pos.unit || '-'}
+                    {pos.unit || "-"}
                   </td>
                   <td className="px-3 py-1.5 text-right tabular-nums">
-                    {pos.quantity > 0 ? pos.quantity.toFixed(3) : '-'}
+                    {pos.quantity > 0 ? pos.quantity.toFixed(3) : "-"}
                   </td>
                   <td className="px-3 py-1.5 text-right tabular-nums">
-                    {pos.unitRate > 0 ? pos.unitRate.toFixed(2) : '-'}
+                    {pos.unitRate > 0 ? pos.unitRate.toFixed(2) : "-"}
                   </td>
                   <td
                     className="px-3 py-1.5 text-content-tertiary text-2xs truncate"
-                    title={divInfo ? `${divInfo.code} — ${divInfo.label}` : divCode}
+                    title={
+                      divInfo ? `${divInfo.code} — ${divInfo.label}` : divCode
+                    }
                   >
-                    {divCode || '-'}
+                    {divCode || "-"}
                   </td>
                 </tr>
               );
@@ -169,9 +178,11 @@ export default function MasterFormatExchangeModule() {
   // --- Import state ---
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importFile, setImportFile] = useState<File | null>(null);
-  const [parsedResult, setParsedResult] = useState<ImportParseResult | null>(null);
+  const [parsedResult, setParsedResult] = useState<ImportParseResult | null>(
+    null,
+  );
   const [parseError, setParseError] = useState<string | null>(null);
-  const [importTargetBoqId, setImportTargetBoqId] = useState('');
+  const [importTargetBoqId, setImportTargetBoqId] = useState("");
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<{
     imported: number;
@@ -179,41 +190,45 @@ export default function MasterFormatExchangeModule() {
   } | null>(null);
 
   // --- Export state ---
-  const [exportProjectId, setExportProjectId] = useState('');
-  const [exportBoqId, setExportBoqId] = useState('');
-  const [exportFormat, setExportFormat] = useState<ExportFormatChoice>('masterformat-detailed');
+  const [exportProjectId, setExportProjectId] = useState("");
+  const [exportBoqId, setExportBoqId] = useState("");
+  const [exportFormat, setExportFormat] = useState<ExportFormatChoice>(
+    "masterformat-detailed",
+  );
   const [isExporting, setIsExporting] = useState(false);
   const [showExportPreview, setShowExportPreview] = useState(false);
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<'import' | 'export'>('import');
+  const [activeTab, setActiveTab] = useState<"import" | "export">("import");
 
   // --- Shared queries ---
   const { data: projects = [] } = useQuery<Project[]>({
-    queryKey: ['projects-list'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects-list"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
   });
 
   // Import: project selection for target BOQ
-  const [importProjectId, setImportProjectId] = useState('');
+  const [importProjectId, setImportProjectId] = useState("");
   const { data: importBoqs = [] } = useQuery<BOQ[]>({
-    queryKey: ['boqs-for-import', importProjectId],
+    queryKey: ["boqs-for-import", importProjectId],
     queryFn: () => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${importProjectId}`),
     enabled: !!importProjectId,
   });
 
   // Export: BOQs for selected project
   const { data: exportBoqs = [] } = useQuery<BOQ[]>({
-    queryKey: ['boqs-for-export', exportProjectId],
+    queryKey: ["boqs-for-export", exportProjectId],
     queryFn: () => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${exportProjectId}`),
     enabled: !!exportProjectId,
   });
 
   // Export: positions for selected BOQ
   const { data: exportPositions = [] } = useQuery<BOQPosition[]>({
-    queryKey: ['boq-positions-export', exportBoqId],
+    queryKey: ["boq-positions-export", exportBoqId],
     queryFn: async () => {
-      const boq = await apiGet<{ positions?: BOQPosition[] }>(`/v1/boq/boqs/${exportBoqId}`);
+      const boq = await apiGet<{ positions?: BOQPosition[] }>(
+        `/v1/boq/boqs/${exportBoqId}`,
+      );
       return boq.positions ?? [];
     },
     enabled: !!exportBoqId,
@@ -234,26 +249,28 @@ export default function MasterFormatExchangeModule() {
         const result = await parseExcelFile(file, MF_TEMPLATE.defaultColumns);
 
         if (result.errors.length > 0) {
-          setParseError(result.errors.join('; '));
+          setParseError(result.errors.join("; "));
         } else if (result.positions.length === 0) {
           setParseError(
-            t('mf.parse_error', {
+            t("mf.parse_error", {
               defaultValue:
-                'No positions found in the file. Ensure the file contains a valid MasterFormat / UniFormat BOQ with at least description and quantity columns.',
+                "No positions found in the file. Ensure the file contains a valid MasterFormat / UniFormat BOQ with at least description and quantity columns.",
             }),
           );
         } else {
           setParsedResult(result);
           addToast({
-            type: 'success',
-            title: t('mf.parsed_ok', { defaultValue: 'File parsed successfully' }),
+            type: "success",
+            title: t("mf.parsed_ok", {
+              defaultValue: "File parsed successfully",
+            }),
             message: `${result.positions.length} positions found`,
           });
         }
       } catch {
         setParseError(
-          t('mf.parse_error_generic', {
-            defaultValue: 'Failed to parse the file. Please check the format.',
+          t("mf.parse_error_generic", {
+            defaultValue: "Failed to parse the file. Please check the format.",
           }),
         );
       }
@@ -265,7 +282,7 @@ export default function MasterFormatExchangeModule() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) handleFileSelect(file);
-      e.target.value = '';
+      e.target.value = "";
     },
     [handleFileSelect],
   );
@@ -292,26 +309,30 @@ export default function MasterFormatExchangeModule() {
         total: pos.total,
         section: pos.section,
         classification: pos.classification,
-        source: 'masterformat_import',
+        source: "masterformat_import",
       }));
 
       const result = await apiPost<{ imported: number; errors: string[] }>(
         `/v1/boq/boqs/${importTargetBoqId}/import`,
-        { positions: payload, source: 'masterformat_csv' },
+        { positions: payload, source: "masterformat_csv" },
       );
 
       setImportResult(result);
-      queryClient.invalidateQueries({ queryKey: ['boq-positions'] });
+      queryClient.invalidateQueries({ queryKey: ["boq-positions"] });
       addToast({
-        type: result.imported > 0 ? 'success' : 'warning',
-        title: t('mf.import_complete', { defaultValue: 'MasterFormat BOQ import complete' }),
-        message: `${result.imported} positions imported${result.errors.length > 0 ? `, ${result.errors.length} errors` : ''}`,
+        type: result.imported > 0 ? "success" : "warning",
+        title: t("mf.import_complete", {
+          defaultValue: "MasterFormat BOQ import complete",
+        }),
+        message: `${result.imported} positions imported${result.errors.length > 0 ? `, ${result.errors.length} errors` : ""}`,
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('mf.import_failed', { defaultValue: 'MasterFormat import failed' }),
-        message: err instanceof Error ? err.message : 'Unknown error',
+        type: "error",
+        title: t("mf.import_failed", {
+          defaultValue: "MasterFormat import failed",
+        }),
+        message: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
       setIsImporting(false);
@@ -349,21 +370,21 @@ export default function MasterFormatExchangeModule() {
   const selectedExportBoq = exportBoqs.find((b) => b.id === exportBoqId);
   const selectedExportProject = projects.find((p) => p.id === exportProjectId);
 
-  const includePrices = exportFormat === 'masterformat-detailed';
+  const includePrices = exportFormat === "masterformat-detailed";
 
   const handleExport = useCallback(() => {
     if (exportablePositions.length === 0) {
       addToast({
-        type: 'warning',
-        title: t('mf.no_positions', { defaultValue: 'No positions to export' }),
+        type: "warning",
+        title: t("mf.no_positions", { defaultValue: "No positions to export" }),
       });
       return;
     }
     setIsExporting(true);
     try {
-      const projectName = selectedExportProject?.name ?? 'Project';
-      const boqName = selectedExportBoq?.name ?? 'BOQ';
-      const filename = `${projectName.replace(/\s+/g, '_')}_${boqName.replace(/\s+/g, '_')}_MasterFormat`;
+      const projectName = selectedExportProject?.name ?? "Project";
+      const boqName = selectedExportBoq?.name ?? "BOQ";
+      const filename = `${projectName.replace(/\s+/g, "_")}_${boqName.replace(/\s+/g, "_")}_MasterFormat`;
 
       const result = exportToCSV(exportablePositions, MF_TEMPLATE, filename, {
         includePrices,
@@ -372,15 +393,19 @@ export default function MasterFormatExchangeModule() {
       downloadBlob(result.blob, result.filename);
 
       addToast({
-        type: 'success',
-        title: t('mf.export_complete', { defaultValue: 'MasterFormat BOQ export complete' }),
+        type: "success",
+        title: t("mf.export_complete", {
+          defaultValue: "MasterFormat BOQ export complete",
+        }),
         message: `${result.positionCount} positions exported to ${result.filename}`,
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('mf.export_failed', { defaultValue: 'MasterFormat export failed' }),
-        message: err instanceof Error ? err.message : 'Unknown error',
+        type: "error",
+        title: t("mf.export_failed", {
+          defaultValue: "MasterFormat export failed",
+        }),
+        message: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
       setIsExporting(false);
@@ -401,7 +426,12 @@ export default function MasterFormatExchangeModule() {
       boqName: selectedExportBoq?.name,
       includePrices,
     });
-  }, [exportablePositions, selectedExportProject, selectedExportBoq, includePrices]);
+  }, [
+    exportablePositions,
+    selectedExportProject,
+    selectedExportBoq,
+    includePrices,
+  ]);
 
   // ---------------------------------------------------------------------------
   // Computed stats
@@ -429,12 +459,14 @@ export default function MasterFormatExchangeModule() {
         </div>
         <div>
           <h1 className="text-xl font-bold text-content-primary">
-            {t('mf.title', { defaultValue: 'US MasterFormat BOQ Import / Export' })}
+            {t("mf.title", {
+              defaultValue: "US MasterFormat BOQ Import / Export",
+            })}
           </h1>
           <p className="text-sm text-content-tertiary">
-            {t('mf.subtitle', {
+            {t("mf.subtitle", {
               defaultValue:
-                'Exchange BOQ data in CSI MasterFormat / UniFormat (Excel / CSV)',
+                "Exchange BOQ data in CSI MasterFormat / UniFormat (Excel / CSV)",
             })}
           </p>
         </div>
@@ -443,31 +475,31 @@ export default function MasterFormatExchangeModule() {
       {/* Tabs */}
       <div className="flex gap-1 border-b border-border">
         <button
-          onClick={() => setActiveTab('import')}
+          onClick={() => setActiveTab("import")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'import'
-              ? 'border-oe-blue text-oe-blue'
-              : 'border-transparent text-content-tertiary hover:text-content-secondary'
+            activeTab === "import"
+              ? "border-oe-blue text-oe-blue"
+              : "border-transparent text-content-tertiary hover:text-content-secondary"
           }`}
         >
           <Upload size={15} />
-          {t('mf.tab_import', { defaultValue: 'Import' })}
+          {t("mf.tab_import", { defaultValue: "Import" })}
         </button>
         <button
-          onClick={() => setActiveTab('export')}
+          onClick={() => setActiveTab("export")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'export'
-              ? 'border-oe-blue text-oe-blue'
-              : 'border-transparent text-content-tertiary hover:text-content-secondary'
+            activeTab === "export"
+              ? "border-oe-blue text-oe-blue"
+              : "border-transparent text-content-tertiary hover:text-content-secondary"
           }`}
         >
           <Download size={15} />
-          {t('mf.tab_export', { defaultValue: 'Export' })}
+          {t("mf.tab_export", { defaultValue: "Export" })}
         </button>
       </div>
 
       {/* -- Import Tab --------------------------------------------------- */}
-      {activeTab === 'import' && (
+      {activeTab === "import" && (
         <div className="space-y-5">
           {/* File upload area */}
           <div
@@ -475,8 +507,8 @@ export default function MasterFormatExchangeModule() {
             onDragOver={(e) => e.preventDefault()}
             className={`rounded-xl border-2 border-dashed p-8 text-center transition-colors ${
               importFile
-                ? 'border-oe-blue/50 bg-oe-blue/5'
-                : 'border-border hover:border-oe-blue/30 hover:bg-surface-secondary/30'
+                ? "border-oe-blue/50 bg-oe-blue/5"
+                : "border-border hover:border-oe-blue/30 hover:bg-surface-secondary/30"
             }`}
           >
             {importFile ? (
@@ -497,16 +529,18 @@ export default function MasterFormatExchangeModule() {
                 {parsedPositions && (
                   <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-600">
                     <CheckCircle2 size={14} />
-                    {parsedPositions.length}{' '}
-                    {t('mf.positions_found', { defaultValue: 'positions found' })}
+                    {parsedPositions.length}{" "}
+                    {t("mf.positions_found", {
+                      defaultValue: "positions found",
+                    })}
                     {parsedPositions.some((p) => p.unitRate > 0) && (
                       <Badge variant="blue" className="ml-2">
-                        {t('mf.with_prices', { defaultValue: 'With Prices' })}
+                        {t("mf.with_prices", { defaultValue: "With Prices" })}
                       </Badge>
                     )}
                     {parsedPositions.every((p) => p.unitRate === 0) && (
                       <Badge variant="neutral" className="ml-2">
-                        {t('mf.qty_only', { defaultValue: 'Qty Only' })}
+                        {t("mf.qty_only", { defaultValue: "Qty Only" })}
                       </Badge>
                     )}
                   </div>
@@ -522,8 +556,9 @@ export default function MasterFormatExchangeModule() {
               <div className="space-y-2">
                 <FileUp size={32} className="mx-auto text-content-quaternary" />
                 <p className="text-sm text-content-secondary">
-                  {t('mf.drop_file', {
-                    defaultValue: 'Drop a MasterFormat BOQ file here (Excel or CSV), or',
+                  {t("mf.drop_file", {
+                    defaultValue:
+                      "Drop a MasterFormat BOQ file here (Excel or CSV), or",
                   })}
                 </p>
                 <Button
@@ -531,11 +566,12 @@ export default function MasterFormatExchangeModule() {
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  {t('mf.browse', { defaultValue: 'Browse files' })}
+                  {t("mf.browse", { defaultValue: "Browse files" })}
                 </Button>
                 <p className="text-2xs text-content-quaternary">
-                  {t('mf.formats_hint', {
-                    defaultValue: 'Supported: .csv, .tsv, .xlsx (MasterFormat/UniFormat BOQ)',
+                  {t("mf.formats_hint", {
+                    defaultValue:
+                      "Supported: .csv, .tsv, .xlsx (MasterFormat/UniFormat BOQ)",
                   })}
                 </p>
               </div>
@@ -563,23 +599,27 @@ export default function MasterFormatExchangeModule() {
           {parsedPositions && parsedPositions.length > 0 && (
             <div className="rounded-xl border border-border bg-surface-primary p-5">
               <h3 className="text-sm font-semibold text-content-primary mb-3">
-                {t('mf.target_boq', { defaultValue: 'Import Target' })}
+                {t("mf.target_boq", { defaultValue: "Import Target" })}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1">
-                    {t('common.project', { defaultValue: 'Project' })}
+                    {t("common.project", { defaultValue: "Project" })}
                   </label>
                   <select
                     value={importProjectId}
                     onChange={(e) => {
                       setImportProjectId(e.target.value);
-                      setImportTargetBoqId('');
+                      setImportTargetBoqId("");
                     }}
                     className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm"
                   >
                     <option value="">
-                      — {t('risk.select_project', { defaultValue: 'Select project' })} —
+                      —{" "}
+                      {t("risk.select_project", {
+                        defaultValue: "Select project",
+                      })}{" "}
+                      —
                     </option>
                     {projects.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -590,7 +630,7 @@ export default function MasterFormatExchangeModule() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1">
-                    {t('boq.title', { defaultValue: 'BOQ' })}
+                    {t("boq.title", { defaultValue: "BOQ" })}
                   </label>
                   <select
                     value={importTargetBoqId}
@@ -599,7 +639,7 @@ export default function MasterFormatExchangeModule() {
                     className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm disabled:opacity-50"
                   >
                     <option value="">
-                      — {t('mf.select_boq', { defaultValue: 'Select BOQ' })} —
+                      — {t("mf.select_boq", { defaultValue: "Select BOQ" })} —
                     </option>
                     {importBoqs.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -623,8 +663,8 @@ export default function MasterFormatExchangeModule() {
                     disabled={!importTargetBoqId || isImporting}
                   >
                     {isImporting
-                      ? t('mf.importing', { defaultValue: 'Importing...' })
-                      : t('mf.import_btn', {
+                      ? t("mf.importing", { defaultValue: "Importing..." })
+                      : t("mf.import_btn", {
                           defaultValue: `Import ${parsedPositions.length} positions`,
                         })}
                   </Button>
@@ -638,8 +678,8 @@ export default function MasterFormatExchangeModule() {
             <div
               className={`rounded-xl border p-4 ${
                 importResult.errors.length > 0
-                  ? 'border-amber-300 bg-amber-50/50 dark:bg-amber-950/20'
-                  : 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20'
+                  ? "border-amber-300 bg-amber-50/50 dark:bg-amber-950/20"
+                  : "border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20"
               }`}
             >
               <div className="flex items-center gap-2 text-sm font-medium">
@@ -649,8 +689,10 @@ export default function MasterFormatExchangeModule() {
                   <CheckCircle2 size={16} className="text-emerald-600" />
                 )}
                 <span className="text-content-primary">
-                  {importResult.imported}{' '}
-                  {t('mf.positions_imported', { defaultValue: 'positions imported' })}
+                  {importResult.imported}{" "}
+                  {t("mf.positions_imported", {
+                    defaultValue: "positions imported",
+                  })}
                 </span>
               </div>
               {importResult.errors.length > 0 && (
@@ -663,10 +705,15 @@ export default function MasterFormatExchangeModule() {
               {importResult.errors.length === 0 && (
                 <Link
                   data-testid="regional-open-boq"
-                  to={importTargetBoqId ? `/boq?boq=${importTargetBoqId}` : '/boq'}
+                  to={
+                    importTargetBoqId ? `/boq?boq=${importTargetBoqId}` : "/boq"
+                  }
                   className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-oe-blue hover:underline"
                 >
-                  {t('mf.open_boq', { defaultValue: 'Open in BOQ editor to review & validate \u2192' })}
+                  {t("mf.open_boq", {
+                    defaultValue:
+                      "Open in BOQ editor to review & validate \u2192",
+                  })}
                 </Link>
               )}
             </div>
@@ -675,28 +722,32 @@ export default function MasterFormatExchangeModule() {
       )}
 
       {/* -- Export Tab --------------------------------------------------- */}
-      {activeTab === 'export' && (
+      {activeTab === "export" && (
         <div className="space-y-5">
           {/* BOQ selection */}
           <div className="rounded-xl border border-border bg-surface-primary p-5">
             <h3 className="text-sm font-semibold text-content-primary mb-3">
-              {t('mf.source_boq', { defaultValue: '1. Select BOQ to Export' })}
+              {t("mf.source_boq", { defaultValue: "1. Select BOQ to Export" })}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1">
-                  {t('common.project', { defaultValue: 'Project' })}
+                  {t("common.project", { defaultValue: "Project" })}
                 </label>
                 <select
                   value={exportProjectId}
                   onChange={(e) => {
                     setExportProjectId(e.target.value);
-                    setExportBoqId('');
+                    setExportBoqId("");
                   }}
                   className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm"
                 >
                   <option value="">
-                    — {t('risk.select_project', { defaultValue: 'Select project' })} —
+                    —{" "}
+                    {t("risk.select_project", {
+                      defaultValue: "Select project",
+                    })}{" "}
+                    —
                   </option>
                   {projects.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -707,7 +758,7 @@ export default function MasterFormatExchangeModule() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1">
-                  {t('boq.title', { defaultValue: 'BOQ' })}
+                  {t("boq.title", { defaultValue: "BOQ" })}
                 </label>
                 <select
                   value={exportBoqId}
@@ -716,7 +767,7 @@ export default function MasterFormatExchangeModule() {
                   className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm disabled:opacity-50"
                 >
                   <option value="">
-                    — {t('mf.select_boq', { defaultValue: 'Select BOQ' })} —
+                    — {t("mf.select_boq", { defaultValue: "Select BOQ" })} —
                   </option>
                   {exportBoqs.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -727,20 +778,26 @@ export default function MasterFormatExchangeModule() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1">
-                  {t('mf.export_format', { defaultValue: 'Format' })}
+                  {t("mf.export_format", { defaultValue: "Format" })}
                 </label>
                 <select
                   value={exportFormat}
-                  onChange={(e) => setExportFormat(e.target.value as ExportFormatChoice)}
+                  onChange={(e) =>
+                    setExportFormat(e.target.value as ExportFormatChoice)
+                  }
                   className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm"
                 >
                   <option value="masterformat-detailed">
-                    {t('mf.masterformat', { defaultValue: 'MasterFormat' })} —{' '}
-                    {t('mf.detailed_desc', { defaultValue: 'Detailed (with prices)' })}
+                    {t("mf.masterformat", { defaultValue: "MasterFormat" })} —{" "}
+                    {t("mf.detailed_desc", {
+                      defaultValue: "Detailed (with prices)",
+                    })}
                   </option>
                   <option value="uniformat-summary">
-                    {t('mf.uniformat', { defaultValue: 'UniFormat' })} —{' '}
-                    {t('mf.summary_desc', { defaultValue: 'Summary (quantities only)' })}
+                    {t("mf.uniformat", { defaultValue: "UniFormat" })} —{" "}
+                    {t("mf.summary_desc", {
+                      defaultValue: "Summary (quantities only)",
+                    })}
                   </option>
                 </select>
               </div>
@@ -752,7 +809,9 @@ export default function MasterFormatExchangeModule() {
             <div className="rounded-xl border border-border bg-surface-primary p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-content-primary">
-                  {t('mf.export_summary', { defaultValue: '2. Export Summary' })}
+                  {t("mf.export_summary", {
+                    defaultValue: "2. Export Summary",
+                  })}
                 </h3>
                 <button
                   onClick={() => setShowExportPreview((v) => !v)}
@@ -760,21 +819,23 @@ export default function MasterFormatExchangeModule() {
                 >
                   <Eye size={13} />
                   {showExportPreview
-                    ? t('mf.hide_preview', { defaultValue: 'Hide preview' })
-                    : t('mf.show_preview', { defaultValue: 'Show preview' })}
+                    ? t("mf.hide_preview", { defaultValue: "Hide preview" })
+                    : t("mf.show_preview", { defaultValue: "Show preview" })}
                 </button>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('mf.positions', { defaultValue: 'Positions' })}
+                    {t("mf.positions", { defaultValue: "Positions" })}
                   </div>
-                  <div className="text-lg font-bold text-content-primary">{exportStats.items}</div>
+                  <div className="text-lg font-bold text-content-primary">
+                    {exportStats.items}
+                  </div>
                 </div>
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('mf.sections_label', { defaultValue: 'Sections' })}
+                    {t("mf.sections_label", { defaultValue: "Sections" })}
                   </div>
                   <div className="text-lg font-bold text-content-primary">
                     {exportStats.sections}
@@ -782,20 +843,20 @@ export default function MasterFormatExchangeModule() {
                 </div>
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('mf.format_label', { defaultValue: 'Format' })}
+                    {t("mf.format_label", { defaultValue: "Format" })}
                   </div>
                   <div className="text-lg font-bold text-content-primary">
-                    {exportFormat === 'masterformat-detailed' ? 'MF' : 'UF'}
+                    {exportFormat === "masterformat-detailed" ? "MF" : "UF"}
                   </div>
                 </div>
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('mf.prices_label', { defaultValue: 'Prices' })}
+                    {t("mf.prices_label", { defaultValue: "Prices" })}
                   </div>
                   <div className="text-lg font-bold text-content-primary">
                     {includePrices
-                      ? t('common.yes', { defaultValue: 'Yes' })
-                      : t('common.no', { defaultValue: 'No' })}
+                      ? t("common.yes", { defaultValue: "Yes" })
+                      : t("common.no", { defaultValue: "No" })}
                   </div>
                 </div>
               </div>
@@ -806,24 +867,26 @@ export default function MasterFormatExchangeModule() {
                     <thead>
                       <tr className="bg-surface-tertiary/50 sticky top-0">
                         <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
-                          {t('boq.ordinal', { defaultValue: 'Ordinal' })}
+                          {t("boq.ordinal", { defaultValue: "Ordinal" })}
                         </th>
                         <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
-                          {t('boq.description', { defaultValue: 'Description' })}
+                          {t("boq.description", {
+                            defaultValue: "Description",
+                          })}
                         </th>
                         <th className="px-3 py-1.5 text-center font-medium text-content-secondary">
-                          {t('boq.unit', { defaultValue: 'Unit' })}
+                          {t("boq.unit", { defaultValue: "Unit" })}
                         </th>
                         <th className="px-3 py-1.5 text-right font-medium text-content-secondary">
-                          {t('boq.quantity', { defaultValue: 'Qty' })}
+                          {t("boq.quantity", { defaultValue: "Qty" })}
                         </th>
                         {includePrices && (
                           <>
                             <th className="px-3 py-1.5 text-right font-medium text-content-secondary">
-                              {t('boq.unit_rate', { defaultValue: 'Rate ($)' })}
+                              {t("boq.unit_rate", { defaultValue: "Rate ($)" })}
                             </th>
                             <th className="px-3 py-1.5 text-right font-medium text-content-secondary">
-                              {t('boq.total', { defaultValue: 'Total ($)' })}
+                              {t("boq.total", { defaultValue: "Total ($)" })}
                             </th>
                           </>
                         )}
@@ -834,7 +897,10 @@ export default function MasterFormatExchangeModule() {
                         .filter((p) => !p.isSection)
                         .slice(0, 30)
                         .map((pos, idx) => (
-                          <tr key={pos.ordinal || `export-${idx}`} className="hover:bg-surface-secondary/30">
+                          <tr
+                            key={pos.ordinal || `export-${idx}`}
+                            className="hover:bg-surface-secondary/30"
+                          >
                             <td className="px-3 py-1.5 font-mono text-content-tertiary">
                               {pos.ordinal}
                             </td>
@@ -877,10 +943,14 @@ export default function MasterFormatExchangeModule() {
                   onClick={handleExport}
                   disabled={isExporting}
                 >
-                  {t('mf.export_btn', { defaultValue: 'Export as CSV' })}
+                  {t("mf.export_btn", { defaultValue: "Export as CSV" })}
                 </Button>
-                <Button variant="secondary" icon={<Printer size={15} />} onClick={handlePrint}>
-                  {t('mf.print_btn', { defaultValue: 'Print / PDF' })}
+                <Button
+                  variant="secondary"
+                  icon={<Printer size={15} />}
+                  onClick={handlePrint}
+                >
+                  {t("mf.print_btn", { defaultValue: "Print / PDF" })}
                 </Button>
               </div>
             </div>
@@ -888,9 +958,14 @@ export default function MasterFormatExchangeModule() {
 
           {exportBoqId && exportablePositions.length === 0 && (
             <div className="rounded-xl border border-border bg-surface-primary p-8 text-center">
-              <DollarSign size={32} className="mx-auto text-content-quaternary mb-2" />
+              <DollarSign
+                size={32}
+                className="mx-auto text-content-quaternary mb-2"
+              />
               <p className="text-sm text-content-tertiary">
-                {t('mf.no_positions', { defaultValue: 'This BOQ has no positions to export.' })}
+                {t("mf.no_positions", {
+                  defaultValue: "This BOQ has no positions to export.",
+                })}
               </p>
             </div>
           )}
@@ -901,9 +976,9 @@ export default function MasterFormatExchangeModule() {
       <div className="flex items-start gap-2 text-xs text-content-quaternary">
         <Info className="h-4 w-4 mt-0.5 shrink-0" />
         <p>
-          {t('mf.info', {
+          {t("mf.info", {
             defaultValue:
-              'MasterFormat is the CSI/CSC standard for organizing construction specifications in North America. It uses a 6-digit numbering system organized into 50 divisions (00-49). Compatible with RSMeans, AIA documents, and major US estimating software.',
+              "MasterFormat is the CSI/CSC standard for organizing construction specifications in North America. It uses a 6-digit numbering system organized into 50 divisions (00-49). Compatible with RSMeans, AIA documents, and major US estimating software.",
           })}
         </p>
       </div>

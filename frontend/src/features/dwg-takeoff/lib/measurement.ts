@@ -21,22 +21,22 @@ export function calculateDistance(
  *  the historical "DXF units are metres" assumption intact for files
  *  that genuinely have no header. */
 export function unitFactorToMetres(units?: string | null): number {
-  switch ((units ?? '').toLowerCase()) {
-    case 'mm':
+  switch ((units ?? "").toLowerCase()) {
+    case "mm":
       return 0.001;
-    case 'cm':
+    case "cm":
       return 0.01;
-    case 'm':
+    case "m":
       return 1;
-    case 'km':
+    case "km":
       return 1000;
-    case 'inches':
-    case 'in':
+    case "inches":
+    case "in":
       return 0.0254;
-    case 'feet':
-    case 'ft':
+    case "feet":
+    case "ft":
       return 0.3048;
-    case 'miles':
+    case "miles":
       return 1609.344;
     default:
       return 1;
@@ -123,7 +123,11 @@ export function isSelfIntersecting(points: Pt2[]): boolean {
 }
 
 /** Reason a polygon area could not be trusted, or `null` when fine. */
-export type AreaDegeneracy = 'too_few_points' | 'self_intersecting' | 'zero' | null;
+export type AreaDegeneracy =
+  | "too_few_points"
+  | "self_intersecting"
+  | "zero"
+  | null;
 
 /**
  * Area of a polygon plus a degeneracy verdict.
@@ -139,12 +143,12 @@ export function calculateAreaSafe(points: Pt2[]): {
   area: number;
   degenerate: AreaDegeneracy;
 } {
-  if (points.length < 3) return { area: 0, degenerate: 'too_few_points' };
+  if (points.length < 3) return { area: 0, degenerate: "too_few_points" };
   if (isSelfIntersecting(points)) {
-    return { area: calculateArea(points), degenerate: 'self_intersecting' };
+    return { area: calculateArea(points), degenerate: "self_intersecting" };
   }
   const area = calculateArea(points);
-  if (area <= 1e-9) return { area, degenerate: 'zero' };
+  if (area <= 1e-9) return { area, degenerate: "zero" };
   return { area, degenerate: null };
 }
 
@@ -153,7 +157,7 @@ export function calculateAreaSafe(points: Pt2[]): {
  *  1 km² = 1e6 m², not 1e3 — so `1500 m²` must NOT render `1.50 km²`
  *  (off by 1e6). Detect and never prefix-scale them (D-TKC-006). */
 function isCompositeUnit(unit: string): boolean {
-  return unit.includes('²') || unit.includes('³'); // ² or ³
+  return unit.includes("²") || unit.includes("³"); // ² or ³
 }
 
 /** Format a measurement value with a unit label.
@@ -194,7 +198,9 @@ export function getSegmentLengths(vertices: Pt[], closed = false): number[] {
     lengths.push(calculateDistance(vertices[i]!, vertices[i + 1]!));
   }
   if (closed && vertices.length >= 3) {
-    lengths.push(calculateDistance(vertices[vertices.length - 1]!, vertices[0]!));
+    lengths.push(
+      calculateDistance(vertices[vertices.length - 1]!, vertices[0]!),
+    );
   }
   return lengths;
 }
@@ -223,8 +229,12 @@ export function pointToSegmentDistance(p: Pt, a: Pt, b: Pt): number {
 
 /** Centroid of a polygon (for area label placement). */
 export function polygonCentroid(vertices: Pt[]): Pt {
-  let cx = 0, cy = 0;
-  for (const v of vertices) { cx += v.x; cy += v.y; }
+  let cx = 0,
+    cy = 0;
+  for (const v of vertices) {
+    cx += v.x;
+    cy += v.y;
+  }
   return { x: cx / vertices.length, y: cy / vertices.length };
 }
 
@@ -236,7 +246,7 @@ export function pointInPolygon(p: Pt, vertices: Pt[]): boolean {
     const vi = vertices[i]!;
     const vj = vertices[j]!;
     if (
-      (vi.y > p.y) !== (vj.y > p.y) &&
+      vi.y > p.y !== vj.y > p.y &&
       p.x < ((vj.x - vi.x) * (p.y - vi.y)) / (vj.y - vi.y) + vi.x
     ) {
       inside = !inside;

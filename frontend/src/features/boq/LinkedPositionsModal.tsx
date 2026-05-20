@@ -8,14 +8,14 @@
  * grid; this modal is purely for visibility + unlink.
  */
 
-import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { Loader2, Link2, Link2Off, Crown } from 'lucide-react';
-import { WideModal } from '@/shared/ui';
-import { Button } from '@/shared/ui';
-import { boqApi } from './api';
-import { fmtWithCurrency } from './boqHelpers';
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2, Link2, Link2Off, Crown } from "lucide-react";
+import { WideModal } from "@/shared/ui";
+import { Button } from "@/shared/ui";
+import { boqApi } from "./api";
+import { fmtWithCurrency } from "./boqHelpers";
 
 export interface LinkedPositionsModalProps {
   /** The position whose link group is being inspected. */
@@ -43,7 +43,7 @@ export function LinkedPositionsModal({
   const { t } = useTranslation();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['boq-position-links', positionId],
+    queryKey: ["boq-position-links", positionId],
     queryFn: () => boqApi.getPositionLinks(positionId),
     retry: false,
   });
@@ -54,15 +54,15 @@ export function LinkedPositionsModal({
 
   const isLinked = !!data?.linked && (data?.total_count ?? 0) > 1;
 
-  const modalTitle = t('boq.linked_positions_title', {
-    defaultValue: 'Linked positions‌⁠‍',
+  const modalTitle = t("boq.linked_positions_title", {
+    defaultValue: "Linked positions‌⁠‍",
   });
   const subtitleOpts: Record<string, unknown> = {
-    defaultValue: 'Code {{code}} — viewing from position {{ordinal}}‌⁠‍',
+    defaultValue: "Code {{code}} — viewing from position {{ordinal}}‌⁠‍",
     code: data?.reference_code ?? positionOrdinal,
     ordinal: positionOrdinal,
   };
-  const modalSubtitle = t('boq.linked_positions_subtitle', subtitleOpts);
+  const modalSubtitle = t("boq.linked_positions_subtitle", subtitleOpts);
 
   return (
     <WideModal
@@ -74,7 +74,7 @@ export function LinkedPositionsModal({
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            {t('common.close', { defaultValue: 'Close‌⁠‍' })}
+            {t("common.close", { defaultValue: "Close‌⁠‍" })}
           </Button>
           {isLinked && (
             <Button
@@ -89,8 +89,8 @@ export function LinkedPositionsModal({
                 )
               }
             >
-              {t('boq.unlink_this', {
-                defaultValue: 'Unlink this position‌⁠‍',
+              {t("boq.unlink_this", {
+                defaultValue: "Unlink this position‌⁠‍",
               })}
             </Button>
           )}
@@ -101,15 +101,15 @@ export function LinkedPositionsModal({
         <div className="flex items-center justify-center gap-2 py-12 text-content-tertiary">
           <Loader2 size={18} className="animate-spin" />
           <span className="text-sm">
-            {t('common.loading', { defaultValue: 'Loading…‌⁠‍' })}
+            {t("common.loading", { defaultValue: "Loading…‌⁠‍" })}
           </span>
         </div>
       )}
 
       {isError && (
         <div className="py-12 text-center text-sm text-content-tertiary">
-          {t('boq.linked_positions_error', {
-            defaultValue: 'Could not load linked positions.‌⁠‍',
+          {t("boq.linked_positions_error", {
+            defaultValue: "Could not load linked positions.‌⁠‍",
           })}
         </div>
       )}
@@ -123,18 +123,18 @@ export function LinkedPositionsModal({
                 className="mx-auto mb-3 text-content-tertiary/50"
               />
               <p className="text-sm text-content-secondary">
-                {t('boq.linked_positions_none', {
+                {t("boq.linked_positions_none", {
                   defaultValue:
-                    'This position is standalone — no other position shares its code.‌⁠‍',
+                    "This position is standalone — no other position shares its code.‌⁠‍",
                 })}
               </p>
             </div>
           ) : (
             <>
               <p className="mb-3 text-xs text-content-tertiary">
-                {t('boq.linked_positions_count', {
+                {t("boq.linked_positions_count", {
                   defaultValue:
-                    '{{total}} positions share this code ({{instances}} linked instance(s)). The master is the definition of record; editing it propagates to every instance in this project.‌⁠‍',
+                    "{{total}} positions share this code ({{instances}} linked instance(s)). The master is the definition of record; editing it propagates to every instance in this project.‌⁠‍",
                   total: data.total_count,
                   instances: data.instance_count,
                 })}
@@ -145,45 +145,41 @@ export function LinkedPositionsModal({
                     key={m.id}
                     className={`flex items-center gap-3 px-3 py-2.5 text-sm ${
                       m.id === positionId
-                        ? 'bg-oe-blue/5'
-                        : 'bg-surface-elevated'
+                        ? "bg-oe-blue/5"
+                        : "bg-surface-elevated"
                     }`}
                   >
                     <span
                       className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded ${
                         m.is_master
-                          ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
-                          : 'bg-oe-blue/10 text-oe-blue'
+                          ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                          : "bg-oe-blue/10 text-oe-blue"
                       }`}
                       title={
                         m.is_master
-                          ? t('boq.link_role_master', {
-                              defaultValue: 'Master (definition of record)‌⁠‍',
+                          ? t("boq.link_role_master", {
+                              defaultValue: "Master (definition of record)‌⁠‍",
                             })
-                          : t('boq.link_role_instance', {
-                              defaultValue: 'Linked instance‌⁠‍',
+                          : t("boq.link_role_instance", {
+                              defaultValue: "Linked instance‌⁠‍",
                             })
                       }
                     >
-                      {m.is_master ? (
-                        <Crown size={13} />
-                      ) : (
-                        <Link2 size={13} />
-                      )}
+                      {m.is_master ? <Crown size={13} /> : <Link2 size={13} />}
                     </span>
                     <span className="w-20 shrink-0 font-mono text-xs text-content-secondary">
                       {m.ordinal}
                     </span>
                     <span className="min-w-0 flex-1 truncate text-content-primary">
                       {m.description ||
-                        t('boq.no_description', {
-                          defaultValue: '(no description)‌⁠‍',
+                        t("boq.no_description", {
+                          defaultValue: "(no description)‌⁠‍",
                         })}
                     </span>
                     {m.is_master && (
                       <span className="shrink-0 rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-600 dark:text-amber-400">
-                        {t('boq.link_master_badge', {
-                          defaultValue: 'Master‌⁠‍',
+                        {t("boq.link_master_badge", {
+                          defaultValue: "Master‌⁠‍",
                         })}
                       </span>
                     )}

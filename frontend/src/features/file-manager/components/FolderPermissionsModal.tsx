@@ -9,9 +9,9 @@
  * least one grant exists.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   Loader2,
@@ -20,37 +20,41 @@ import {
   Trash2,
   Users,
   X,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { useToastStore } from '@/stores/useToastStore';
-import { apiGet } from '@/shared/lib/api';
+} from "lucide-react";
+import clsx from "clsx";
+import { useToastStore } from "@/stores/useToastStore";
+import { apiGet } from "@/shared/lib/api";
 import {
   grantFolderPermission,
   listFolderPermissions,
   revokeFolderPermission,
-} from '../api';
+} from "../api";
 import type {
   FileKind,
   FolderPermissionCreatePayload,
   FolderPermissionRow,
   FolderRole,
-} from '../types';
+} from "../types";
 
-const ROLES: ReadonlyArray<{ value: FolderRole; labelKey: string; defaultLabel: string }> = [
+const ROLES: ReadonlyArray<{
+  value: FolderRole;
+  labelKey: string;
+  defaultLabel: string;
+}> = [
   {
-    value: 'viewer',
-    labelKey: 'files.permissions.role.viewer',
-    defaultLabel: 'Viewer — read only',
+    value: "viewer",
+    labelKey: "files.permissions.role.viewer",
+    defaultLabel: "Viewer — read only",
   },
   {
-    value: 'editor',
-    labelKey: 'files.permissions.role.editor',
-    defaultLabel: 'Editor — upload + delete own',
+    value: "editor",
+    labelKey: "files.permissions.role.editor",
+    defaultLabel: "Editor — upload + delete own",
   },
   {
-    value: 'owner',
-    labelKey: 'files.permissions.role.owner',
-    defaultLabel: 'Owner — full control',
+    value: "owner",
+    labelKey: "files.permissions.role.owner",
+    defaultLabel: "Owner — full control",
   },
 ];
 
@@ -83,8 +87,8 @@ export function FolderPermissionsModal({
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [selectedUserId, setSelectedUserId] = useState<string>('');
-  const [selectedRole, setSelectedRole] = useState<FolderRole>('viewer');
+  const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedRole, setSelectedRole] = useState<FolderRole>("viewer");
   const [granting, setGranting] = useState(false);
   const [grantError, setGrantError] = useState<string | null>(null);
   const [revokingId, setRevokingId] = useState<string | null>(null);
@@ -94,13 +98,14 @@ export function FolderPermissionsModal({
     FolderPermissionRow[]
   >({
     queryKey: [
-      'folder-permissions',
+      "folder-permissions",
       projectId ?? null,
       scopeKind ?? null,
       scopePath ?? null,
     ],
     queryFn: () => {
-      if (!projectId || !scopeKind) return Promise.resolve([] as FolderPermissionRow[]);
+      if (!projectId || !scopeKind)
+        return Promise.resolve([] as FolderPermissionRow[]);
       return listFolderPermissions(projectId, {
         scope_kind: scopeKind,
         scope_path: scopePath ?? undefined,
@@ -112,16 +117,17 @@ export function FolderPermissionsModal({
 
   // Project members — used for the "grant access" picker.
   const { data: members = [] } = useQuery<ProjectMember[]>({
-    queryKey: ['project-members', projectId],
-    queryFn: () => apiGet<ProjectMember[]>(`/v1/projects/${projectId}/members/`),
+    queryKey: ["project-members", projectId],
+    queryFn: () =>
+      apiGet<ProjectMember[]>(`/v1/projects/${projectId}/members/`),
     enabled: open && !!projectId,
     staleTime: 30_000,
   });
 
   useEffect(() => {
     if (!open) {
-      setSelectedUserId('');
-      setSelectedRole('viewer');
+      setSelectedUserId("");
+      setSelectedRole("viewer");
       setGranting(false);
       setGrantError(null);
       setRevokingId(null);
@@ -131,19 +137,19 @@ export function FolderPermissionsModal({
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
   const invalidate = useCallback(() => {
     if (!projectId) return;
     queryClient.invalidateQueries({
-      queryKey: ['folder-permissions', projectId],
+      queryKey: ["folder-permissions", projectId],
     });
     queryClient.invalidateQueries({
-      queryKey: ['folder-permission-counts', projectId],
+      queryKey: ["folder-permission-counts", projectId],
     });
   }, [queryClient, projectId]);
 
@@ -170,23 +176,25 @@ export function FolderPermissionsModal({
         role: selectedRole,
       };
       await grantFolderPermission(projectId, payload);
-      setSelectedUserId('');
-      setSelectedRole('viewer');
+      setSelectedUserId("");
+      setSelectedRole("viewer");
       invalidate();
       addToast({
-        type: 'success',
-        title: t('files.permissions.grant', { defaultValue: 'Grant access‌⁠‍' }),
+        type: "success",
+        title: t("files.permissions.grant", {
+          defaultValue: "Grant access‌⁠‍",
+        }),
       });
     } catch (e) {
       const msg = (e as Error).message;
       // Common errors: 409 duplicate, 400 bad role, 403 not owner.
       const isDuplicate = /409|already/i.test(msg);
       const friendly = isDuplicate
-        ? t('files.permissions.error_duplicate', {
-            defaultValue: 'This member already has access at this level.‌⁠‍',
+        ? t("files.permissions.error_duplicate", {
+            defaultValue: "This member already has access at this level.‌⁠‍",
           })
-        : t('files.permissions.error_grant', {
-            defaultValue: 'Could not grant access.‌⁠‍',
+        : t("files.permissions.error_grant", {
+            defaultValue: "Could not grant access.‌⁠‍",
           });
       setGrantError(friendly);
     } finally {
@@ -198,8 +206,8 @@ export function FolderPermissionsModal({
     if (!projectId) return;
     const name = row.user_full_name || row.user_email || row.user_id;
     const confirm = window.confirm(
-      t('files.permissions.revoke_confirm', {
-        defaultValue: 'Revoke access for {{name}}?‌⁠‍',
+      t("files.permissions.revoke_confirm", {
+        defaultValue: "Revoke access for {{name}}?‌⁠‍",
         name,
       }),
     );
@@ -210,9 +218,9 @@ export function FolderPermissionsModal({
       invalidate();
     } catch (e) {
       addToast({
-        type: 'error',
-        title: t('files.permissions.error_revoke', {
-          defaultValue: 'Could not revoke access.‌⁠‍',
+        type: "error",
+        title: t("files.permissions.error_revoke", {
+          defaultValue: "Could not revoke access.‌⁠‍",
         }),
       });
     } finally {
@@ -222,7 +230,7 @@ export function FolderPermissionsModal({
 
   if (!open) return null;
 
-  const displayLabel = folderLabel || scopeKind || '';
+  const displayLabel = folderLabel || scopeKind || "";
 
   return (
     <div
@@ -246,11 +254,14 @@ export function FolderPermissionsModal({
                 id="folder-permissions-title"
                 className="text-base font-semibold text-content-primary"
               >
-                {t('files.permissions.title', { defaultValue: 'Folder access' })}
+                {t("files.permissions.title", {
+                  defaultValue: "Folder access",
+                })}
               </h2>
               <p className="mt-0.5 text-xs text-content-tertiary">
-                {t('files.permissions.subtitle', {
-                  defaultValue: 'Restrict who can see and edit files in {{folder}}.',
+                {t("files.permissions.subtitle", {
+                  defaultValue:
+                    "Restrict who can see and edit files in {{folder}}.",
                   folder: displayLabel,
                 })}
               </p>
@@ -271,21 +282,23 @@ export function FolderPermissionsModal({
           <section data-testid="folder-permissions-list">
             <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-content-tertiary">
               <Users size={12} />
-              {t('files.permissions.list_title', { defaultValue: 'Current access' })}
+              {t("files.permissions.list_title", {
+                defaultValue: "Current access",
+              })}
             </h3>
 
             {grantsLoading ? (
               <div className="flex items-center gap-2 text-xs text-content-tertiary py-3">
                 <Loader2 size={12} className="animate-spin" />
-                {t('files.share.creating', { defaultValue: 'Loading…' })}
+                {t("files.share.creating", { defaultValue: "Loading…" })}
               </div>
             ) : grants.length === 0 ? (
               <p
                 data-testid="folder-permissions-empty"
                 className="rounded-lg border border-dashed border-border-light bg-surface-secondary/40 px-3 py-4 text-center text-xs text-content-secondary"
               >
-                {t('files.permissions.empty', {
-                  defaultValue: 'All project members can access this folder.',
+                {t("files.permissions.empty", {
+                  defaultValue: "All project members can access this folder.",
                 })}
               </p>
             ) : (
@@ -306,10 +319,13 @@ export function FolderPermissionsModal({
                     </div>
                     <span
                       className={clsx(
-                        'inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider',
-                        row.role === 'viewer' && 'bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-300',
-                        row.role === 'editor' && 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300',
-                        row.role === 'owner' && 'bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300',
+                        "inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider",
+                        row.role === "viewer" &&
+                          "bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-300",
+                        row.role === "editor" &&
+                          "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300",
+                        row.role === "owner" &&
+                          "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300",
                       )}
                     >
                       <ShieldCheck size={10} />
@@ -327,7 +343,9 @@ export function FolderPermissionsModal({
                       ) : (
                         <Trash2 size={10} />
                       )}
-                      {t('files.permissions.revoke', { defaultValue: 'Revoke' })}
+                      {t("files.permissions.revoke", {
+                        defaultValue: "Revoke",
+                      })}
                     </button>
                   </li>
                 ))}
@@ -338,12 +356,14 @@ export function FolderPermissionsModal({
           {/* Grant access sub-form */}
           <section data-testid="folder-permissions-grant">
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-              {t('files.permissions.grant_title', { defaultValue: 'Grant access' })}
+              {t("files.permissions.grant_title", {
+                defaultValue: "Grant access",
+              })}
             </h3>
 
             <div className="space-y-2.5">
               <label className="block text-[11px] font-medium text-content-secondary">
-                {t('files.permissions.user_label', { defaultValue: 'Member' })}
+                {t("files.permissions.user_label", { defaultValue: "Member" })}
                 <select
                   value={selectedUserId}
                   onChange={(e) => setSelectedUserId(e.target.value)}
@@ -351,8 +371,8 @@ export function FolderPermissionsModal({
                   className="mt-1 w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-xs text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
                 >
                   <option value="">
-                    {t('files.permissions.user_placeholder', {
-                      defaultValue: 'Choose a project member',
+                    {t("files.permissions.user_placeholder", {
+                      defaultValue: "Choose a project member",
                     })}
                   </option>
                   {grantableMembers.map((m) => (
@@ -364,10 +384,12 @@ export function FolderPermissionsModal({
               </label>
 
               <label className="block text-[11px] font-medium text-content-secondary">
-                {t('files.permissions.role_label', { defaultValue: 'Role' })}
+                {t("files.permissions.role_label", { defaultValue: "Role" })}
                 <select
                   value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value as FolderRole)}
+                  onChange={(e) =>
+                    setSelectedRole(e.target.value as FolderRole)
+                  }
                   data-testid="folder-permissions-role-picker"
                   className="mt-1 w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-xs text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
                 >
@@ -396,10 +418,12 @@ export function FolderPermissionsModal({
                 {granting ? (
                   <>
                     <Loader2 size={12} className="animate-spin" />
-                    {t('files.permissions.granting', { defaultValue: 'Granting…' })}
+                    {t("files.permissions.granting", {
+                      defaultValue: "Granting…",
+                    })}
                   </>
                 ) : (
-                  t('files.permissions.grant', { defaultValue: 'Grant access' })
+                  t("files.permissions.grant", { defaultValue: "Grant access" })
                 )}
               </button>
             </div>

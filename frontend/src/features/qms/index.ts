@@ -1,1 +1,1 @@
-export { QMSPage } from './QMSPage';
+export { QMSPage } from "./QMSPage";

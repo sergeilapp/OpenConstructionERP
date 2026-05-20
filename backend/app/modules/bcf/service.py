@@ -69,9 +69,7 @@ class BCFService:
         """List all topics for a project, newest first."""
         return await self.repo.list_topics(project_id)
 
-    async def get_topic(
-        self, project_id: uuid.UUID, topic_id: uuid.UUID
-    ) -> BCFTopic:
+    async def get_topic(self, project_id: uuid.UUID, topic_id: uuid.UUID) -> BCFTopic:
         """Load one topic, asserting it belongs to ``project_id``."""
         topic = await self.repo.get_topic(topic_id)
         if topic is None or topic.project_id != project_id:
@@ -133,9 +131,7 @@ class BCFService:
         await self.session.flush()
         return topic
 
-    async def delete_topic(
-        self, project_id: uuid.UUID, topic_id: uuid.UUID
-    ) -> None:
+    async def delete_topic(self, project_id: uuid.UUID, topic_id: uuid.UUID) -> None:
         """Delete a topic plus its comments, viewpoints and snapshots."""
         topic = await self.get_topic(project_id, topic_id)
         await self._delete_snapshots_for_topic(topic)
@@ -155,13 +151,9 @@ class BCFService:
         """Append a comment to a topic."""
         topic = await self.get_topic(project_id, topic_id)
         if data.viewpoint_guid:
-            vp = await self.repo.get_viewpoint_by_guid(
-                topic.id, data.viewpoint_guid
-            )
+            vp = await self.repo.get_viewpoint_by_guid(topic.id, data.viewpoint_guid)
             if vp is None:
-                raise BCFServiceError(
-                    f"Viewpoint {data.viewpoint_guid} not found on this topic"
-                )
+                raise BCFServiceError(f"Viewpoint {data.viewpoint_guid} not found on this topic")
         now = _now()
         comment = BCFComment(
             guid=str(uuid.uuid4()),
@@ -233,15 +225,11 @@ class BCFService:
         v2w: float | None = None
         if data.perspective_camera is not None:
             camera_type = "perspective"
-            camera = data.perspective_camera.model_dump(
-                exclude={"field_of_view"}
-            )
+            camera = data.perspective_camera.model_dump(exclude={"field_of_view"})
             fov = data.perspective_camera.field_of_view
         elif data.orthogonal_camera is not None:
             camera_type = "orthogonal"
-            camera = data.orthogonal_camera.model_dump(
-                exclude={"view_to_world_scale"}
-            )
+            camera = data.orthogonal_camera.model_dump(exclude={"view_to_world_scale"})
             v2w = data.orthogonal_camera.view_to_world_scale
 
         snapshot_key: str | None = None
@@ -300,10 +288,7 @@ class BCFService:
         Returns ``(archive_bytes, topic_count)``.
         """
         if version not in bcf_xml.SUPPORTED_VERSIONS:
-            raise BCFServiceError(
-                f"Unsupported BCF version {version!r}; "
-                f"expected one of {bcf_xml.SUPPORTED_VERSIONS}"
-            )
+            raise BCFServiceError(f"Unsupported BCF version {version!r}; expected one of {bcf_xml.SUPPORTED_VERSIONS}")
         topics = await self.repo.list_topics(project_id)
         storage = get_storage_backend()
         dto_topics: list[bcf_xml.ParsedTopic] = []
@@ -355,8 +340,7 @@ class BCFService:
                         pv.snapshot_filename = "snapshot.png"
                     except FileNotFoundError:
                         logger.warning(
-                            "Snapshot blob missing for viewpoint %s (key=%s) "
-                            "— exporting viewpoint without image",
+                            "Snapshot blob missing for viewpoint %s (key=%s) — exporting viewpoint without image",
                             v.guid,
                             v.snapshot_key,
                         )
@@ -475,9 +459,7 @@ class BCFService:
                 report.topics_updated += 1
 
             await self._upsert_comments(topic, pt, user_id, report)
-            await self._upsert_viewpoints(
-                project_id, topic, pt, user_id, storage, report
-            )
+            await self._upsert_viewpoints(project_id, topic, pt, user_id, storage, report)
 
         if any(i.severity == "error" for i in report.issues):
             report.status = "errors"
@@ -537,9 +519,7 @@ class BCFService:
             snapshot_type: str | None = None
             if pv.snapshot_bytes:
                 snapshot_key = _snapshot_key(project_id, topic.guid, guid)
-                await get_storage_backend().put(
-                    snapshot_key, pv.snapshot_bytes
-                )
+                await get_storage_backend().put(snapshot_key, pv.snapshot_bytes)
                 snapshot_type = "png"
 
             existing = await self.repo.get_viewpoint_by_guid(topic.id, guid)
@@ -584,9 +564,7 @@ class BCFService:
                 try:
                     await storage.delete(vp.snapshot_key)
                 except Exception:  # noqa: BLE001 — storage cleanup is best-effort
-                    logger.warning(
-                        "Failed to delete snapshot blob %s", vp.snapshot_key
-                    )
+                    logger.warning("Failed to delete snapshot blob %s", vp.snapshot_key)
 
     @staticmethod
     def _decode_png(b64: str) -> bytes:

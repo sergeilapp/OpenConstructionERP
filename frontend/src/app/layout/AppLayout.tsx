@@ -1,24 +1,24 @@
-import { useState, useCallback, useEffect } from 'react';
-import type { ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
-import clsx from 'clsx';
-import { Sidebar, FloatingRecentButton } from './Sidebar';
-import { Header } from './Header';
-import { FeedbackDialog } from '@/shared/ui';
-import { FloatingQueuePanel } from './FloatingQueuePanel';
-import { GlobalProgress } from '@/shared/ui/GlobalProgress';
-import { GlobalUploadIndicator } from '@/shared/ui/GlobalUploadIndicator';
-import { DwgUploadIndicator } from '@/shared/ui/DwgUploadIndicator';
-import { GlobalCatalogueInstallIndicator } from '@/shared/ui/GlobalCatalogueInstallIndicator';
-import { DemoBanner } from '@/shared/ui/DemoBanner';
+import { useState, useCallback, useEffect } from "react";
+import type { ReactNode } from "react";
+import { useLocation } from "react-router-dom";
+import clsx from "clsx";
+import { Sidebar, FloatingRecentButton } from "./Sidebar";
+import { Header } from "./Header";
+import { FeedbackDialog } from "@/shared/ui";
+import { FloatingQueuePanel } from "./FloatingQueuePanel";
+import { GlobalProgress } from "@/shared/ui/GlobalProgress";
+import { GlobalUploadIndicator } from "@/shared/ui/GlobalUploadIndicator";
+import { DwgUploadIndicator } from "@/shared/ui/DwgUploadIndicator";
+import { GlobalCatalogueInstallIndicator } from "@/shared/ui/GlobalCatalogueInstallIndicator";
+import { DemoBanner } from "@/shared/ui/DemoBanner";
 import {
   DashboardBackdrop,
   backdropVariantForPath,
-} from '@/features/dashboard/components/DashboardBackdrop';
+} from "@/features/dashboard/components/DashboardBackdrop";
 
-import { useSwipeGesture, useEdgeSwipe } from '@/shared/hooks/useSwipeGesture';
-import { useIsRTL } from '@/shared/hooks/useIsRTL';
-import { useOfflineSync } from '@/shared/hooks/useOnlineStatus';
+import { useSwipeGesture, useEdgeSwipe } from "@/shared/hooks/useSwipeGesture";
+import { useIsRTL } from "@/shared/hooks/useIsRTL";
+import { useOfflineSync } from "@/shared/hooks/useOnlineStatus";
 
 interface AppLayoutProps {
   title?: string;
@@ -36,17 +36,21 @@ export function AppLayout({ title, children }: AppLayoutProps) {
   const openSidebar = useCallback(() => setSidebarOpen(true), []);
 
   useEffect(() => {
-    document.title = title ? `${title} | OpenConstructionERP` : 'OpenConstructionERP';
+    document.title = title
+      ? `${title} | OpenConstructionERP`
+      : "OpenConstructionERP";
   }, [title]);
 
   // Lock body scroll when mobile sidebar is open
   useEffect(() => {
     if (sidebarOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [sidebarOpen]);
 
   // Auto-replay offline mutations when coming back online
@@ -95,11 +99,11 @@ export function AppLayout({ title, children }: AppLayoutProps) {
       <div
         ref={sidebarRef}
         className={clsx(
-          'oe-sidebar fixed inset-y-0 z-50 transition-transform duration-normal ease-oe',
+          "oe-sidebar fixed inset-y-0 z-50 transition-transform duration-normal ease-oe",
           // LTR: attach to left edge; RTL: CSS overrides to right edge
-          'left-0',
-          'lg:translate-x-0',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          "left-0",
+          "lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <Sidebar onClose={closeSidebar} />
@@ -110,16 +114,14 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           Full-bleed pages (BIM viewer, DWG takeoff, AI chat) negate it
           via `-mx-4 sm:-mx-7` on their root div. */}
       <div className="lg:pl-sidebar">
-        <Header
-          title={title}
-          onMenuClick={openSidebar}
-        />
-        <main className="px-4 pt-6 pb-4 sm:px-7">
-          {children}
-        </main>
+        <Header title={title} onMenuClick={openSidebar} />
+        <main className="px-4 pt-6 pb-4 sm:px-7">{children}</main>
       </div>
 
-      <FeedbackDialog open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+      <FeedbackDialog
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
 
       {/* Floating queue panel — shows background task progress */}
       <FloatingQueuePanel />

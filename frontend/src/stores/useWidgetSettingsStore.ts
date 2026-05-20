@@ -7,8 +7,8 @@
  * weather forecast, etc.  No server round-trip; persisted to localStorage
  * so the user's choice sticks across reloads.
  */
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface WidgetSettingsState {
   /** Show an OSM map thumbnail in project cards + full map on detail page. */
@@ -35,6 +35,6 @@ export const useWidgetSettingsStore = create<WidgetSettingsState>()(
       setProjectMap: (v) => set({ projectMapEnabled: v }),
       setProjectWeather: (v) => set({ projectWeatherEnabled: v }),
     }),
-    { name: 'oe.widget-settings' },
+    { name: "oe.widget-settings" },
   ),
 );

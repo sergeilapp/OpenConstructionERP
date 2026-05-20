@@ -38,6 +38,8 @@ from app.modules.bi_dashboards.schemas import (
     AlertRuleCreate,
     AlertRuleRead,
     DashboardCreate,
+    DashboardEvaluateRequest,
+    DashboardEvaluateResponse,
     DashboardRead,
     DashboardRenderResponse,
     DashboardUpdate,
@@ -251,7 +253,9 @@ async def kpi_history(
     if project_id is not None:
         await verify_project_access(project_id, user_id, session)
     points = await service.kpi_history(
-        code, project_id=project_id, limit=limit,
+        code,
+        project_id=project_id,
+        limit=limit,
     )
     return KPIHistoryResponse(kpi_code=code, history=points)
 
@@ -291,6 +295,34 @@ async def drill_down(
 # ── Dashboards ─────────────────────────────────────────────────────────
 
 
+# v3.12.1 Wave 1 — fresh-install dashboards bootstrap. The page used
+# to render an empty grid on every new tenant because the seed_all()
+# helper that materialises the 5 role-based starter dashboards was only
+# called from tests. Exposing it as an idempotent POST lets the FE
+# offer a one-click "Install starter pack" CTA from the empty state
+# instead of asking the user to wire dashboards by hand before they
+# see anything render.
+@router.post(
+    "/install-starter-pack",
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(RequirePermission("bi.dashboard.write"))],
+)
+async def install_starter_pack(
+    session: SessionDep,
+) -> dict[str, int]:
+    """Seed system KPIs, 5 role-based dashboards, 3 reports, 2 schedules
+    and 4 alert rules. Idempotent — re-running is safe and only inserts
+    rows that don't already exist. Returns per-step row counts so the
+    UI can toast a meaningful result.
+    """
+    from app.modules.bi_dashboards.seed import seed_all
+
+    counts = await seed_all(session)
+    await session.commit()
+    logger.info("BI starter pack installed: %s", counts)
+    return counts
+
+
 @router.get(
     "/dashboards",
     response_model=list[DashboardRead],
@@ -316,7 +348,8 @@ async def create_dashboard(
     service: BIDashboardsService = Depends(_service),
 ) -> DashboardRead:
     row = await service.create_dashboard(
-        payload, owner_user_id=_user_uuid(user_id),
+        payload,
+        owner_user_id=_user_uuid(user_id),
     )
     return DashboardRead.model_validate(row)
 
@@ -370,6 +403,46 @@ async def render_dashboard(
 ) -> DashboardRenderResponse:
     await _ensure_dashboard_owner(dashboard_id, user_id, session)
     result = await service.render_dashboard(dashboard_id)
+    if result is None:
+        raise _not_found("Dashboard not found")
+    return result
+
+
+@router.post(
+    "/dashboards/{dashboard_id}/evaluate",
+    response_model=DashboardEvaluateResponse,
+    dependencies=[Depends(RequirePermission("bi.dashboard.read"))],
+)
+async def evaluate_dashboard(
+    dashboard_id: uuid.UUID,
+    payload: DashboardEvaluateRequest,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    service: BIDashboardsService = Depends(_service),
+) -> DashboardEvaluateResponse:
+    """Cross-filter evaluate (Wave 4 / T11).
+
+    Re-evaluates every widget on the dashboard against the supplied
+    filter dict, returning per-widget values + drill_path. When the
+    dashboard's ``cross_filter_enabled`` flag is False the filter dict
+    is ignored and widgets return their static aggregate.
+
+    If ``filters['project_id']`` is supplied we also verify the caller
+    can access that project — same IDOR pattern as the KPI endpoints.
+    """
+    await _ensure_dashboard_owner(dashboard_id, user_id, session)
+    filters = payload.filters or {}
+    project_filter = filters.get("project_id")
+    if project_filter:
+        try:
+            project_uuid = project_filter if isinstance(project_filter, uuid.UUID) else uuid.UUID(str(project_filter))
+        except Exception as exc:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="filters.project_id must be a UUID",
+            ) from exc
+        await verify_project_access(project_uuid, user_id, session)
+    result = await service.evaluate_dashboard(dashboard_id, filters=filters)
     if result is None:
         raise _not_found("Dashboard not found")
     return result
@@ -461,7 +534,8 @@ async def create_report(
     service: BIDashboardsService = Depends(_service),
 ) -> ReportDefinitionRead:
     row = await service.create_report(
-        payload, owner_user_id=_user_uuid(user_id),
+        payload,
+        owner_user_id=_user_uuid(user_id),
     )
     return ReportDefinitionRead.model_validate(row)
 
@@ -626,7 +700,8 @@ async def list_filters(
     module: str | None = Query(default=None),
 ) -> list[SavedFilterRead]:
     rows = await service.list_filters(
-        owner_user_id=_user_uuid(user_id), module=module,
+        owner_user_id=_user_uuid(user_id),
+        module=module,
     )
     return [SavedFilterRead.model_validate(r) for r in rows]
 
@@ -643,7 +718,8 @@ async def create_filter(
     service: BIDashboardsService = Depends(_service),
 ) -> SavedFilterRead:
     row = await service.create_filter(
-        payload, owner_user_id=_user_uuid(user_id),
+        payload,
+        owner_user_id=_user_uuid(user_id),
     )
     return SavedFilterRead.model_validate(row)
 
@@ -708,6 +784,7 @@ async def download_report_file(
     from pathlib import Path as _Path
 
     from app.modules.bi_dashboards.report_builder import _reports_dir
+
     resolved = _Path(run.file_path).resolve()
     base = _Path(_reports_dir()).resolve()
     try:
@@ -719,9 +796,7 @@ async def download_report_file(
 
     media_type = {
         "pdf": "application/pdf",
-        "xlsx": (
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ),
+        "xlsx": ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
         "csv": "text/csv",
     }.get(run.output_format, "application/octet-stream")
     return FileResponse(

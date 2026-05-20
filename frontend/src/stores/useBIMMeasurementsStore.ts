@@ -14,11 +14,11 @@
  * to surface across sessions or across model swaps.  Reset on model
  * change is the caller's job.
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
 /** Mirrors `MeasureKind` from the MeasureManager. Kept inline so the store
  *  has no import cycle with the Three.js layer. */
-export type StoredMeasureKind = 'distance' | 'area' | 'angle';
+export type StoredMeasureKind = "distance" | "area" | "angle";
 
 export interface StoredMeasurement {
   /** Stable id mirrored from the underlying MeasureManager.Measurement.id. */
@@ -63,7 +63,7 @@ interface BIMMeasurementsState {
 export const useBIMMeasurementsStore = create<BIMMeasurementsState>((set) => ({
   measurements: [],
 
-  add: ({ id, kind = 'distance', distance, value, perimeter }) =>
+  add: ({ id, kind = "distance", distance, value, perimeter }) =>
     set((state) => {
       // Defensive: skip duplicates (shouldn't happen, but the random-id
       // generator could collide on a long session).
@@ -71,7 +71,7 @@ export const useBIMMeasurementsStore = create<BIMMeasurementsState>((set) => ({
       const ordinal =
         state.measurements.filter((m) => m.kind === kind).length + 1;
       const prefix =
-        kind === 'area' ? 'Area' : kind === 'angle' ? 'Angle' : 'Distance';
+        kind === "area" ? "Area" : kind === "angle" ? "Angle" : "Distance";
       return {
         measurements: [
           ...state.measurements,

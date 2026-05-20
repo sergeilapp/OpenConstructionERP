@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import clsx from "clsx";
 import {
   Calendar,
   BookOpen,
@@ -20,7 +20,7 @@ import {
   Trash2,
   ArrowRight,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -31,12 +31,12 @@ import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { getErrorMessage } from '@/shared/lib/api';
-import { projectsApi } from '@/features/projects/api';
+} from "@/shared/ui";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { getErrorMessage } from "@/shared/lib/api";
+import { projectsApi } from "@/features/projects/api";
 import {
   listDiaries,
   getDiary,
@@ -60,19 +60,22 @@ import {
   type DiaryStatus,
   type SignerRole,
   type EntryType,
-} from './api';
+} from "./api";
 
-type Tab = 'diaries' | 'today' | 'archive';
+type Tab = "diaries" | "today" | "archive";
 
-const STATUS_VARIANT: Record<DiaryStatus, 'neutral' | 'blue' | 'success' | 'warning'> = {
-  open: 'blue',
-  closed: 'warning',
-  signed: 'success',
-  archived: 'neutral',
+const STATUS_VARIANT: Record<
+  DiaryStatus,
+  "neutral" | "blue" | "success" | "warning"
+> = {
+  open: "blue",
+  closed: "warning",
+  signed: "success",
+  archived: "neutral",
 };
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
@@ -85,16 +88,19 @@ function todayIso(): string {
   // getMonth()/date values.
   const now = new Date();
   const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, '0');
-  const d = String(now.getDate()).padStart(2, '0');
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
 }
 
 function isoDate(year: number, month: number, day: number): string {
-  return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
-function monthBounds(year: number, month: number): { from: string; to: string } {
+function monthBounds(
+  year: number,
+  month: number,
+): { from: string; to: string } {
   // Built from the local calendar fields the grid itself uses, NOT a UTC
   // toISOString() slice — the latter shifts the first/last day by ±1 for
   // any viewer behind/ahead of UTC, so the range query would miss the
@@ -109,16 +115,17 @@ function daysInMonth(year: number, month: number): number {
 
 function fmtMonth(year: number, month: number, locale: string): string {
   try {
-    return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' }).format(
-      new Date(year, month, 1),
-    );
+    return new Intl.DateTimeFormat(locale, {
+      year: "numeric",
+      month: "long",
+    }).format(new Date(year, month, 1));
   } catch {
-    return `${year}-${String(month + 1).padStart(2, '0')}`;
+    return `${year}-${String(month + 1).padStart(2, "0")}`;
   }
 }
 
 function formatSha(sha: string): string {
-  if (!sha) return '';
+  if (!sha) return "";
   return `${sha.slice(0, 8)}…${sha.slice(-6)}`;
 }
 
@@ -134,62 +141,63 @@ function WorkflowIntro() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(
-    () => sessionStorage.getItem('oe.dd.introDismissed') === '1',
+    () => sessionStorage.getItem("oe.dd.introDismissed") === "1",
   );
   if (dismissed) return null;
   const dismiss = () => {
-    sessionStorage.setItem('oe.dd.introDismissed', '1');
+    sessionStorage.setItem("oe.dd.introDismissed", "1");
     setDismissed(true);
   };
   return (
-    <Card
-      padding="md"
-      className="border-oe-blue/20 bg-oe-blue-subtle/10"
-    >
+    <Card padding="md" className="border-oe-blue/20 bg-oe-blue-subtle/10">
       <div className="flex items-start gap-3">
         <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue">
           <BookOpen size={16} />
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-content-primary">
-            {t('daily_diary.intro_title', {
-              defaultValue: 'One signed record per site day‌⁠‍',
+            {t("daily_diary.intro_title", {
+              defaultValue: "One signed record per site day‌⁠‍",
             })}
           </p>
           <p className="mt-1 text-xs leading-relaxed text-content-secondary">
-            {t('daily_diary.intro_body', {
+            {t("daily_diary.intro_body", {
               defaultValue:
-                'Each day, open the diary and log weather, headcount, deliveries and events, attach site photos, then close and sign it. A signed diary is sealed with a sha256 fingerprint — it becomes tamper-evident evidence for delay claims, progress verification and dispute resolution.‌⁠‍',
+                "Each day, open the diary and log weather, headcount, deliveries and events, attach site photos, then close and sign it. A signed diary is sealed with a sha256 fingerprint — it becomes tamper-evident evidence for delay claims, progress verification and dispute resolution.‌⁠‍",
             })}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <span className="text-2xs font-medium uppercase tracking-wide text-content-tertiary">
-              {t('daily_diary.intro_connects', { defaultValue: 'Feeds into‌⁠‍' })}
+              {t("daily_diary.intro_connects", {
+                defaultValue: "Feeds into‌⁠‍",
+              })}
             </span>
             <button
               type="button"
-              onClick={() => navigate('/schedule')}
+              onClick={() => navigate("/schedule")}
               className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
             >
-              {t('daily_diary.intro_link_schedule', {
-                defaultValue: 'Schedule progress‌⁠‍',
+              {t("daily_diary.intro_link_schedule", {
+                defaultValue: "Schedule progress‌⁠‍",
               })}
               <ArrowRight size={11} />
             </button>
             <button
               type="button"
-              onClick={() => navigate('/tasks')}
+              onClick={() => navigate("/tasks")}
               className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
             >
-              {t('daily_diary.intro_link_tasks', { defaultValue: 'Tasks' })}
+              {t("daily_diary.intro_link_tasks", { defaultValue: "Tasks" })}
               <ArrowRight size={11} />
             </button>
             <button
               type="button"
-              onClick={() => navigate('/files')}
+              onClick={() => navigate("/files")}
               className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
             >
-              {t('daily_diary.intro_link_files', { defaultValue: 'Site photos‌⁠‍' })}
+              {t("daily_diary.intro_link_files", {
+                defaultValue: "Site photos‌⁠‍",
+              })}
               <ArrowRight size={11} />
             </button>
           </div>
@@ -198,7 +206,7 @@ function WorkflowIntro() {
           type="button"
           onClick={dismiss}
           className="shrink-0 rounded-md p-1 text-content-tertiary transition-colors hover:bg-surface-secondary hover:text-content-primary"
-          aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+          aria-label={t("common.dismiss", { defaultValue: "Dismiss" })}
         >
           <X size={14} />
         </button>
@@ -211,18 +219,18 @@ function WorkflowIntro() {
 
 export function DailyDiaryPage() {
   const { t, i18n } = useTranslation();
-  const [tab, setTab] = useState<Tab>('diaries');
+  const [tab, setTab] = useState<Tab>("diaries");
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
-  const [projectId, setProjectId] = useState<string>('');
+  const [projectId, setProjectId] = useState<string>("");
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
-  const [activeDiaryId, setActiveDiaryId] = useState<string>('');
+  const [activeDiaryId, setActiveDiaryId] = useState<string>("");
   const [createOpen, setCreateOpen] = useState(false);
   const [signOpen, setSignOpen] = useState(false);
 
   const projectsQ = useQuery({
-    queryKey: ['projects-list-for-diary'],
+    queryKey: ["projects-list-for-diary"],
     queryFn: () => projectsApi.list(),
   });
 
@@ -235,7 +243,7 @@ export function DailyDiaryPage() {
   const bounds = useMemo(() => monthBounds(year, month), [year, month]);
 
   const diariesQ = useQuery({
-    queryKey: ['daily-diary', 'list', projectId, bounds.from, bounds.to],
+    queryKey: ["daily-diary", "list", projectId, bounds.from, bounds.to],
     queryFn: () =>
       listDiaries({
         project_id: projectId,
@@ -243,7 +251,7 @@ export function DailyDiaryPage() {
         date_to: bounds.to,
         limit: 200,
       }),
-    enabled: !!projectId && tab === 'diaries',
+    enabled: !!projectId && tab === "diaries",
   });
 
   // The "Today" tab shows the explicitly-selected diary when one is set
@@ -253,13 +261,13 @@ export function DailyDiaryPage() {
   // in the calendar silently showed today (or an empty state) instead of
   // the clicked diary — the calendar's primary navigation was dead.
   const selectedDiaryQ = useQuery({
-    queryKey: ['daily-diary', 'by-id', activeDiaryId],
+    queryKey: ["daily-diary", "by-id", activeDiaryId],
     queryFn: () => getDiary(activeDiaryId),
-    enabled: !!activeDiaryId && tab === 'today',
+    enabled: !!activeDiaryId && tab === "today",
   });
 
   const todayDiariesQ = useQuery({
-    queryKey: ['daily-diary', 'today', projectId],
+    queryKey: ["daily-diary", "today", projectId],
     queryFn: () =>
       listDiaries({
         project_id: projectId,
@@ -267,7 +275,7 @@ export function DailyDiaryPage() {
         date_to: todayIso(),
         limit: 1,
       }),
-    enabled: !!projectId && tab === 'today' && !activeDiaryId,
+    enabled: !!projectId && tab === "today" && !activeDiaryId,
   });
 
   const activeDiary: DailyDiary | undefined = activeDiaryId
@@ -281,14 +289,14 @@ export function DailyDiaryPage() {
     : todayDiariesQ.isError;
 
   const archiveQ = useQuery({
-    queryKey: ['daily-diary', 'archive', projectId],
+    queryKey: ["daily-diary", "archive", projectId],
     queryFn: () =>
       listDiaries({
         project_id: projectId,
-        status: 'signed',
+        status: "signed",
         limit: 500,
       }),
-    enabled: !!projectId && tab === 'archive',
+    enabled: !!projectId && tab === "archive",
   });
 
   return (
@@ -296,7 +304,7 @@ export function DailyDiaryPage() {
       <Breadcrumb
         items={[
           {
-            label: t('daily_diary.title', { defaultValue: 'Daily Site Diary' }),
+            label: t("daily_diary.title", { defaultValue: "Daily Site Diary" }),
           },
         ]}
       />
@@ -304,12 +312,12 @@ export function DailyDiaryPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('daily_diary.title', { defaultValue: 'Daily Site Diary' })}
+            {t("daily_diary.title", { defaultValue: "Daily Site Diary" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('daily_diary.subtitle', {
+            {t("daily_diary.subtitle", {
               defaultValue:
-                'Weather, photos, drone surveys and signed daily records.',
+                "Weather, photos, drone surveys and signed daily records.",
             })}
           </p>
         </div>
@@ -319,9 +327,9 @@ export function DailyDiaryPage() {
               value={projectId}
               onChange={(e) => {
                 setProjectId(e.target.value);
-                setActiveDiaryId('');
+                setActiveDiaryId("");
               }}
-              className={clsx(inputCls, 'max-w-xs')}
+              className={clsx(inputCls, "max-w-xs")}
             >
               {projectsQ.data.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -337,7 +345,7 @@ export function DailyDiaryPage() {
             onClick={() => setCreateOpen(true)}
             disabled={!projectId}
           >
-            {t('daily_diary.new_diary', { defaultValue: 'New Diary' })}
+            {t("daily_diary.new_diary", { defaultValue: "New Diary" })}
           </Button>
         </div>
       </div>
@@ -348,9 +356,25 @@ export function DailyDiaryPage() {
         <nav className="flex gap-1 -mb-px">
           {(
             [
-              { id: 'diaries', label: t('daily_diary.tab_diaries', { defaultValue: 'Diaries' }), icon: Calendar },
-              { id: 'today', label: t('daily_diary.tab_today', { defaultValue: 'Today' }), icon: BookOpen },
-              { id: 'archive', label: t('daily_diary.tab_archive', { defaultValue: 'Archive' }), icon: Archive },
+              {
+                id: "diaries",
+                label: t("daily_diary.tab_diaries", {
+                  defaultValue: "Diaries",
+                }),
+                icon: Calendar,
+              },
+              {
+                id: "today",
+                label: t("daily_diary.tab_today", { defaultValue: "Today" }),
+                icon: BookOpen,
+              },
+              {
+                id: "archive",
+                label: t("daily_diary.tab_archive", {
+                  defaultValue: "Archive",
+                }),
+                icon: Archive,
+              },
             ] as { id: Tab; label: string; icon: React.ElementType }[]
           ).map((it) => {
             const Icon = it.icon;
@@ -361,14 +385,14 @@ export function DailyDiaryPage() {
                 onClick={() => {
                   // Clicking the "Today" tab itself always means *today's*
                   // diary — drop any diary selected from the calendar.
-                  if (it.id === 'today') setActiveDiaryId('');
+                  if (it.id === "today") setActiveDiaryId("");
                   setTab(it.id);
                 }}
                 className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap',
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap",
                   tab === it.id
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-secondary hover:text-content-primary',
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -383,12 +407,12 @@ export function DailyDiaryPage() {
         <Card className="py-12">
           <EmptyState
             icon={<AlertTriangle size={22} />}
-            title={t('common.error', { defaultValue: 'Error' })}
-            description={t('daily_diary.projects_load_error', {
-              defaultValue: 'Failed to load projects. Please try again.',
+            title={t("common.error", { defaultValue: "Error" })}
+            description={t("daily_diary.projects_load_error", {
+              defaultValue: "Failed to load projects. Please try again.",
             })}
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: () => void projectsQ.refetch(),
             }}
           />
@@ -400,24 +424,27 @@ export function DailyDiaryPage() {
           ) : (
             <EmptyState
               icon={<Calendar size={22} />}
-              title={t('daily_diary.no_project', { defaultValue: 'No project selected' })}
-              description={t('daily_diary.no_project_desc', {
-                defaultValue: 'Create a project first to start logging site diaries.',
+              title={t("daily_diary.no_project", {
+                defaultValue: "No project selected",
+              })}
+              description={t("daily_diary.no_project_desc", {
+                defaultValue:
+                  "Create a project first to start logging site diaries.",
               })}
             />
           )}
         </Card>
-      ) : tab === 'diaries' ? (
+      ) : tab === "diaries" ? (
         diariesQ.isError ? (
           <Card className="py-12">
             <EmptyState
               icon={<AlertTriangle size={22} />}
-              title={t('common.error', { defaultValue: 'Error' })}
-              description={t('daily_diary.diaries_load_error', {
-                defaultValue: 'Failed to load diaries. Please try again.',
+              title={t("common.error", { defaultValue: "Error" })}
+              description={t("daily_diary.diaries_load_error", {
+                defaultValue: "Failed to load diaries. Please try again.",
               })}
               action={{
-                label: t('common.retry', { defaultValue: 'Retry' }),
+                label: t("common.retry", { defaultValue: "Retry" }),
                 onClick: () => void diariesQ.refetch(),
               }}
             />
@@ -428,26 +455,26 @@ export function DailyDiaryPage() {
             loading={diariesQ.isLoading}
             year={year}
             month={month}
-            locale={i18n.language || 'en'}
+            locale={i18n.language || "en"}
             onYearChange={setYear}
             onMonthChange={setMonth}
             onDayClick={(diary) => {
               setActiveDiaryId(diary.id);
-              setTab('today');
+              setTab("today");
             }}
           />
         )
-      ) : tab === 'today' ? (
+      ) : tab === "today" ? (
         activeError ? (
           <Card className="py-12">
             <EmptyState
               icon={<AlertTriangle size={22} />}
-              title={t('common.error', { defaultValue: 'Error' })}
-              description={t('daily_diary.today_load_error', {
-                defaultValue: 'Failed to load the diary. Please try again.',
+              title={t("common.error", { defaultValue: "Error" })}
+              description={t("daily_diary.today_load_error", {
+                defaultValue: "Failed to load the diary. Please try again.",
               })}
               action={{
-                label: t('common.retry', { defaultValue: 'Retry' }),
+                label: t("common.retry", { defaultValue: "Retry" }),
                 onClick: () =>
                   void (activeDiaryId
                     ? selectedDiaryQ.refetch()
@@ -468,12 +495,12 @@ export function DailyDiaryPage() {
         <Card className="py-12">
           <EmptyState
             icon={<AlertTriangle size={22} />}
-            title={t('common.error', { defaultValue: 'Error' })}
-            description={t('daily_diary.archive_load_error', {
-              defaultValue: 'Failed to load the archive. Please try again.',
+            title={t("common.error", { defaultValue: "Error" })}
+            description={t("daily_diary.archive_load_error", {
+              defaultValue: "Failed to load the archive. Please try again.",
             })}
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: () => void archiveQ.refetch(),
             }}
           />
@@ -553,7 +580,7 @@ function DiariesCalendar({
     }
   };
 
-  const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
     <Card padding="md">
@@ -562,16 +589,22 @@ function DiariesCalendar({
           type="button"
           onClick={prevMonth}
           className="rounded-md p-1.5 hover:bg-surface-secondary"
-          aria-label={t('daily_diary.prev_month', { defaultValue: 'Previous month' })}
+          aria-label={t("daily_diary.prev_month", {
+            defaultValue: "Previous month",
+          })}
         >
           <ChevronLeft size={16} />
         </button>
-        <h3 className="text-base font-semibold">{fmtMonth(year, month, locale)}</h3>
+        <h3 className="text-base font-semibold">
+          {fmtMonth(year, month, locale)}
+        </h3>
         <button
           type="button"
           onClick={nextMonth}
           className="rounded-md p-1.5 hover:bg-surface-secondary"
-          aria-label={t('daily_diary.next_month', { defaultValue: 'Next month' })}
+          aria-label={t("daily_diary.next_month", {
+            defaultValue: "Next month",
+          })}
         >
           <ChevronRight size={16} />
         </button>
@@ -587,7 +620,9 @@ function DiariesCalendar({
                 key={w}
                 className="px-1 py-1 text-center text-2xs font-medium uppercase tracking-wide text-content-tertiary"
               >
-                {t(`daily_diary.weekday_${w.toLowerCase()}`, { defaultValue: w })}
+                {t(`daily_diary.weekday_${w.toLowerCase()}`, {
+                  defaultValue: w,
+                })}
               </div>
             ))}
           </div>
@@ -607,21 +642,28 @@ function DiariesCalendar({
                   onClick={() => diary && onDayClick(diary)}
                   disabled={!diary}
                   className={clsx(
-                    'h-20 rounded-md border p-1.5 text-left transition-colors flex flex-col',
+                    "h-20 rounded-md border p-1.5 text-left transition-colors flex flex-col",
                     diary
-                      ? 'border-border-light bg-surface-elevated hover:border-oe-blue hover:shadow-sm cursor-pointer'
-                      : 'border-dashed border-border-light/60 bg-transparent text-content-tertiary cursor-default',
-                    isToday && 'ring-2 ring-oe-blue/30',
+                      ? "border-border-light bg-surface-elevated hover:border-oe-blue hover:shadow-sm cursor-pointer"
+                      : "border-dashed border-border-light/60 bg-transparent text-content-tertiary cursor-default",
+                    isToday && "ring-2 ring-oe-blue/30",
                   )}
                 >
                   <span className="text-xs font-semibold">{day}</span>
                   {diary && (
                     <>
-                      <Badge variant={STATUS_VARIANT[diary.status]} size="sm" dot>
+                      <Badge
+                        variant={STATUS_VARIANT[diary.status]}
+                        size="sm"
+                        dot
+                      >
                         {diary.status}
                       </Badge>
-                      {diary.status === 'signed' && (
-                        <Lock size={10} className="mt-auto text-semantic-success" />
+                      {diary.status === "signed" && (
+                        <Lock
+                          size={10}
+                          className="mt-auto text-semantic-success"
+                        />
                       )}
                     </>
                   )}
@@ -662,13 +704,13 @@ function TodayTab({
   const diaryId = diary?.id;
 
   const weatherQ = useQuery({
-    queryKey: ['daily-diary', 'weather', projectId, diaryDate],
+    queryKey: ["daily-diary", "weather", projectId, diaryDate],
     queryFn: () => weatherToday(projectId, diaryDate),
     enabled: !!projectId && !!diaryDate,
   });
 
   const photosQ = useQuery({
-    queryKey: ['daily-diary', 'photos', projectId, diaryDate],
+    queryKey: ["daily-diary", "photos", projectId, diaryDate],
     queryFn: () =>
       listPhotos({
         project_id: projectId,
@@ -680,33 +722,36 @@ function TodayTab({
   });
 
   const droneQ = useQuery({
-    queryKey: ['daily-diary', 'drone', projectId],
+    queryKey: ["daily-diary", "drone", projectId],
     queryFn: () => listDroneSurveys(projectId),
     enabled: !!projectId,
   });
 
   const realityQ = useQuery({
-    queryKey: ['daily-diary', 'reality', projectId],
+    queryKey: ["daily-diary", "reality", projectId],
     queryFn: () => listRealityCaptures(projectId),
     enabled: !!projectId,
   });
 
   const signaturesQ = useQuery({
-    queryKey: ['daily-diary', 'signatures', diaryId],
+    queryKey: ["daily-diary", "signatures", diaryId],
     queryFn: () => listArchiveSignatures(diaryId as string),
-    enabled: !!diaryId && diary?.status === 'signed',
+    enabled: !!diaryId && diary?.status === "signed",
   });
 
   const closeMut = useMutation({
     mutationFn: (id: string) => closeDiary(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['daily-diary'] });
-      addToast({ type: 'success', title: t('daily_diary.closed', { defaultValue: 'Diary closed' }) });
+      qc.invalidateQueries({ queryKey: ["daily-diary"] });
+      addToast({
+        type: "success",
+        title: t("daily_diary.closed", { defaultValue: "Diary closed" }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
-  const sealed = diary?.status === 'signed' || diary?.status === 'archived';
+  const sealed = diary?.status === "signed" || diary?.status === "archived";
 
   if (loading) {
     return (
@@ -721,12 +766,15 @@ function TodayTab({
       <Card>
         <EmptyState
           icon={<BookOpen size={22} />}
-          title={t('daily_diary.no_diary_today', { defaultValue: 'No diary for today yet' })}
-          description={t('daily_diary.no_diary_today_desc', {
-            defaultValue: 'Start today’s diary to log weather, entries, and photos.',
+          title={t("daily_diary.no_diary_today", {
+            defaultValue: "No diary for today yet",
+          })}
+          description={t("daily_diary.no_diary_today_desc", {
+            defaultValue:
+              "Start today’s diary to log weather, entries, and photos.",
           })}
           action={{
-            label: t('daily_diary.new_diary', { defaultValue: 'New Diary' }),
+            label: t("daily_diary.new_diary", { defaultValue: "New Diary" }),
             onClick: onCreate,
           }}
         />
@@ -754,41 +802,44 @@ function TodayTab({
           {sealed && (
             <span className="inline-flex items-center gap-1.5 rounded-md bg-semantic-success-bg px-2 py-1 text-xs font-medium text-semantic-success">
               <Lock size={12} />
-              {t('daily_diary.sealed', { defaultValue: 'Sealed' })}
+              {t("daily_diary.sealed", { defaultValue: "Sealed" })}
             </span>
           )}
         </div>
         <div className="flex gap-2">
-          {diary.status === 'open' && (
+          {diary.status === "open" && (
             <Button
               variant="secondary"
               size="sm"
               onClick={() => closeMut.mutate(diary.id)}
               loading={closeMut.isPending}
             >
-              {t('daily_diary.close_diary', { defaultValue: 'Close Diary' })}
+              {t("daily_diary.close_diary", { defaultValue: "Close Diary" })}
             </Button>
           )}
-          {(diary.status === 'open' || diary.status === 'closed') && (
+          {(diary.status === "open" || diary.status === "closed") && (
             <Button
               variant="primary"
               size="sm"
               icon={<FileSignature size={14} />}
               onClick={onSign}
             >
-              {t('daily_diary.sign_diary', { defaultValue: 'Sign Diary' })}
+              {t("daily_diary.sign_diary", { defaultValue: "Sign Diary" })}
             </Button>
           )}
         </div>
       </div>
 
       {sealed && latestSignature && (
-        <Card padding="md" className="border-semantic-success/30 bg-semantic-success-bg/30">
+        <Card
+          padding="md"
+          className="border-semantic-success/30 bg-semantic-success-bg/30"
+        >
           <div className="flex items-start gap-3">
             <Lock size={18} className="text-semantic-success mt-0.5" />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold">
-                {t('daily_diary.signed_at', { defaultValue: 'Signed' })}{' '}
+                {t("daily_diary.signed_at", { defaultValue: "Signed" })}{" "}
                 <DateDisplay value={latestSignature.signed_at} />
               </p>
               <p className="mt-1 font-mono text-xs text-content-secondary break-all">
@@ -804,25 +855,27 @@ function TodayTab({
         <Card padding="md" className="xl:col-span-2">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
-              {t('daily_diary.diary_meta', { defaultValue: 'Diary' })}
+              {t("daily_diary.diary_meta", { defaultValue: "Diary" })}
             </h3>
           </div>
           <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
             <div>
               <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.labour', { defaultValue: 'Labour' })}
+                {t("daily_diary.labour", { defaultValue: "Labour" })}
               </dt>
               <dd className="text-base font-semibold">{diary.labour_count}</dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.equipment', { defaultValue: 'Equipment' })}
+                {t("daily_diary.equipment", { defaultValue: "Equipment" })}
               </dt>
-              <dd className="text-base font-semibold">{diary.equipment_count}</dd>
+              <dd className="text-base font-semibold">
+                {diary.equipment_count}
+              </dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.date', { defaultValue: 'Date' })}
+                {t("daily_diary.date", { defaultValue: "Date" })}
               </dt>
               <dd className="text-sm">
                 <DateDisplay value={diary.diary_date} />
@@ -843,7 +896,10 @@ function TodayTab({
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <DroneSection surveys={droneQ.data ?? []} loading={droneQ.isLoading} />
-        <RealitySection captures={realityQ.data ?? []} loading={realityQ.isLoading} />
+        <RealitySection
+          captures={realityQ.data ?? []}
+          loading={realityQ.isLoading}
+        />
       </div>
     </div>
   );
@@ -862,53 +918,59 @@ function WeatherCard({
       <div className="flex items-center gap-2 mb-3">
         <Cloud size={16} className="text-oe-blue" />
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
-          {t('daily_diary.weather', { defaultValue: 'Weather' })}
+          {t("daily_diary.weather", { defaultValue: "Weather" })}
         </h3>
       </div>
       {loading ? (
         <SkeletonTable rows={3} columns={2} />
       ) : !weather ? (
         <p className="text-sm text-content-tertiary py-4">
-          {t('daily_diary.no_weather', { defaultValue: 'No reading yet.' })}
+          {t("daily_diary.no_weather", { defaultValue: "No reading yet." })}
         </p>
       ) : (
         <dl className="grid grid-cols-2 gap-3 text-sm">
           <div>
             <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-              {t('daily_diary.temp', { defaultValue: 'Temperature' })}
+              {t("daily_diary.temp", { defaultValue: "Temperature" })}
             </dt>
             <dd className="text-base font-semibold">
-              {weather.temperature_c != null ? `${weather.temperature_c}°C` : '—'}
+              {weather.temperature_c != null
+                ? `${weather.temperature_c}°C`
+                : "—"}
             </dd>
           </div>
           <div>
             <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-              {t('daily_diary.humidity', { defaultValue: 'Humidity' })}
+              {t("daily_diary.humidity", { defaultValue: "Humidity" })}
             </dt>
             <dd className="text-base font-semibold">
-              {weather.humidity_pct != null ? `${weather.humidity_pct}%` : '—'}
+              {weather.humidity_pct != null ? `${weather.humidity_pct}%` : "—"}
             </dd>
           </div>
           <div>
             <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-              {t('daily_diary.wind', { defaultValue: 'Wind' })}
+              {t("daily_diary.wind", { defaultValue: "Wind" })}
             </dt>
             <dd className="text-base font-semibold">
-              {weather.wind_speed_kmh != null ? `${weather.wind_speed_kmh} km/h` : '—'}
+              {weather.wind_speed_kmh != null
+                ? `${weather.wind_speed_kmh} km/h`
+                : "—"}
             </dd>
           </div>
           <div>
             <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-              {t('daily_diary.precip', { defaultValue: 'Precipitation' })}
+              {t("daily_diary.precip", { defaultValue: "Precipitation" })}
             </dt>
             <dd className="text-base font-semibold">
-              {weather.precipitation_mm != null ? `${weather.precipitation_mm} mm` : '—'}
+              {weather.precipitation_mm != null
+                ? `${weather.precipitation_mm} mm`
+                : "—"}
             </dd>
           </div>
           {weather.conditions_text && (
             <div className="col-span-2">
               <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.conditions', { defaultValue: 'Conditions' })}
+                {t("daily_diary.conditions", { defaultValue: "Conditions" })}
               </dt>
               <dd className="text-sm">{weather.conditions_text}</dd>
             </div>
@@ -929,22 +991,22 @@ function EntriesTimeline({
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [entryType, setEntryType] = useState<EntryType>('general');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [entryType, setEntryType] = useState<EntryType>("general");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [busy, setBusy] = useState(false);
 
   // Previously this component only rendered an add-form: created entries
   // were invisible (no list endpoint, no list query). It now reads back
   // the diary's entries so the timeline actually shows them.
   const entriesQ = useQuery({
-    queryKey: ['daily-diary', 'entries', diaryId],
+    queryKey: ["daily-diary", "entries", diaryId],
     queryFn: () => listEntries(diaryId),
     enabled: !!diaryId,
   });
 
   const invalidateEntries = () =>
-    qc.invalidateQueries({ queryKey: ['daily-diary', 'entries', diaryId] });
+    qc.invalidateQueries({ queryKey: ["daily-diary", "entries", diaryId] });
 
   const submit = async () => {
     if (!title.trim()) return;
@@ -957,12 +1019,15 @@ function EntriesTimeline({
         title: title.trim(),
         description: description.trim() || undefined,
       });
-      setTitle('');
-      setDescription('');
+      setTitle("");
+      setDescription("");
       void invalidateEntries();
-      addToast({ type: 'success', title: t('daily_diary.entry_created', { defaultValue: 'Entry added' }) });
+      addToast({
+        type: "success",
+        title: t("daily_diary.entry_created", { defaultValue: "Entry added" }),
+      });
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -972,9 +1037,14 @@ function EntriesTimeline({
     mutationFn: (id: string) => deleteEntry(id),
     onSuccess: () => {
       void invalidateEntries();
-      addToast({ type: 'success', title: t('daily_diary.entry_deleted', { defaultValue: 'Entry removed' }) });
+      addToast({
+        type: "success",
+        title: t("daily_diary.entry_deleted", {
+          defaultValue: "Entry removed",
+        }),
+      });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const entries = entriesQ.data ?? [];
@@ -983,7 +1053,7 @@ function EntriesTimeline({
     <Card padding="md">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
-          {t('daily_diary.entries', { defaultValue: 'Entries' })}
+          {t("daily_diary.entries", { defaultValue: "Entries" })}
         </h3>
         <span className="text-xs text-content-tertiary">{entries.length}</span>
       </div>
@@ -998,14 +1068,14 @@ function EntriesTimeline({
             >
               {(
                 [
-                  'general',
-                  'visitor',
-                  'event',
-                  'delivery',
-                  'completion',
-                  'incident_summary',
-                  'inspection_summary',
-                  'photo_note',
+                  "general",
+                  "visitor",
+                  "event",
+                  "delivery",
+                  "completion",
+                  "incident_summary",
+                  "inspection_summary",
+                  "photo_note",
                 ] as EntryType[]
               ).map((tp) => (
                 <option key={tp} value={tp}>
@@ -1015,10 +1085,12 @@ function EntriesTimeline({
             </select>
             <input
               type="text"
-              placeholder={t('daily_diary.entry_title', { defaultValue: 'Title' })}
+              placeholder={t("daily_diary.entry_title", {
+                defaultValue: "Title",
+              })}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className={clsx(inputCls, 'sm:col-span-2')}
+              className={clsx(inputCls, "sm:col-span-2")}
             />
             <Button
               variant="primary"
@@ -1028,22 +1100,26 @@ function EntriesTimeline({
               disabled={!title.trim()}
               icon={<Plus size={14} />}
             >
-              {t('daily_diary.add_entry', { defaultValue: 'Add' })}
+              {t("daily_diary.add_entry", { defaultValue: "Add" })}
             </Button>
           </div>
           <textarea
-            placeholder={t('daily_diary.entry_description', { defaultValue: 'Description (optional)' })}
+            placeholder={t("daily_diary.entry_description", {
+              defaultValue: "Description (optional)",
+            })}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
-            className={clsx(inputCls, 'h-auto py-2')}
+            className={clsx(inputCls, "h-auto py-2")}
           />
         </div>
       )}
 
       {sealed && (
         <p className="text-xs text-content-tertiary mb-3">
-          {t('daily_diary.entries_sealed', { defaultValue: 'Diary is sealed — entries are read-only.' })}
+          {t("daily_diary.entries_sealed", {
+            defaultValue: "Diary is sealed — entries are read-only.",
+          })}
         </p>
       )}
 
@@ -1051,7 +1127,9 @@ function EntriesTimeline({
         <SkeletonTable rows={3} columns={3} />
       ) : entries.length === 0 ? (
         <p className="text-sm text-content-tertiary py-4 text-center">
-          {t('daily_diary.no_entries', { defaultValue: 'No entries logged yet.' })}
+          {t("daily_diary.no_entries", {
+            defaultValue: "No entries logged yet.",
+          })}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -1066,7 +1144,9 @@ function EntriesTimeline({
                     <Badge variant="neutral" size="sm">
                       {e.entry_type}
                     </Badge>
-                    <span className="font-medium truncate">{e.title || '—'}</span>
+                    <span className="font-medium truncate">
+                      {e.title || "—"}
+                    </span>
                   </div>
                   {e.description && (
                     <p className="mt-1 text-xs text-content-secondary whitespace-pre-wrap">
@@ -1083,7 +1163,7 @@ function EntriesTimeline({
                     onClick={() => deleteMut.mutate(e.id)}
                     disabled={deleteMut.isPending}
                     className="shrink-0 rounded-md p-1 text-content-tertiary hover:bg-surface-secondary hover:text-semantic-danger disabled:opacity-50"
-                    aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                    aria-label={t("common.delete", { defaultValue: "Delete" })}
                   >
                     <Trash2 size={14} />
                   </button>
@@ -1110,15 +1190,19 @@ function PhotoGrid({
       <div className="flex items-center gap-2 mb-3">
         <Camera size={16} className="text-oe-blue" />
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
-          {t('daily_diary.photos', { defaultValue: 'Photos' })}
+          {t("daily_diary.photos", { defaultValue: "Photos" })}
         </h3>
-        <span className="ml-auto text-xs text-content-tertiary">{photos.length}</span>
+        <span className="ml-auto text-xs text-content-tertiary">
+          {photos.length}
+        </span>
       </div>
       {loading ? (
         <SkeletonTable rows={2} columns={6} />
       ) : photos.length === 0 ? (
         <p className="text-sm text-content-tertiary py-4 text-center">
-          {t('daily_diary.no_photos', { defaultValue: 'No photos captured yet.' })}
+          {t("daily_diary.no_photos", {
+            defaultValue: "No photos captured yet.",
+          })}
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
@@ -1130,7 +1214,7 @@ function PhotoGrid({
               {(p.thumbnail_url || p.file_url) && (
                 <img
                   src={p.thumbnail_url || p.file_url}
-                  alt={p.description || ''}
+                  alt={p.description || ""}
                   loading="lazy"
                   className="h-full w-full object-cover"
                 />
@@ -1156,15 +1240,17 @@ function DroneSection({
       <div className="flex items-center gap-2 mb-3">
         <Plane size={16} className="text-oe-blue" />
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
-          {t('daily_diary.drone', { defaultValue: 'Drone surveys' })}
+          {t("daily_diary.drone", { defaultValue: "Drone surveys" })}
         </h3>
-        <span className="ml-auto text-xs text-content-tertiary">{surveys.length}</span>
+        <span className="ml-auto text-xs text-content-tertiary">
+          {surveys.length}
+        </span>
       </div>
       {loading ? (
         <SkeletonTable rows={3} columns={3} />
       ) : surveys.length === 0 ? (
         <p className="text-sm text-content-tertiary py-4 text-center">
-          {t('daily_diary.no_drone', { defaultValue: 'No drone surveys yet.' })}
+          {t("daily_diary.no_drone", { defaultValue: "No drone surveys yet." })}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -1175,7 +1261,8 @@ function DroneSection({
             >
               <div className="flex items-center justify-between">
                 <span className="font-medium truncate">
-                  {s.drone_model || t('daily_diary.unknown_drone', { defaultValue: 'Drone' })}
+                  {s.drone_model ||
+                    t("daily_diary.unknown_drone", { defaultValue: "Drone" })}
                 </span>
                 <span className="text-xs text-content-tertiary">
                   <DateDisplay value={s.flown_at} />
@@ -1207,15 +1294,21 @@ function RealitySection({
       <div className="flex items-center gap-2 mb-3">
         <Scan size={16} className="text-oe-blue" />
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
-          {t('daily_diary.reality_capture', { defaultValue: 'Reality captures' })}
+          {t("daily_diary.reality_capture", {
+            defaultValue: "Reality captures",
+          })}
         </h3>
-        <span className="ml-auto text-xs text-content-tertiary">{captures.length}</span>
+        <span className="ml-auto text-xs text-content-tertiary">
+          {captures.length}
+        </span>
       </div>
       {loading ? (
         <SkeletonTable rows={3} columns={3} />
       ) : captures.length === 0 ? (
         <p className="text-sm text-content-tertiary py-4 text-center">
-          {t('daily_diary.no_reality', { defaultValue: 'No reality captures yet.' })}
+          {t("daily_diary.no_reality", {
+            defaultValue: "No reality captures yet.",
+          })}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -1265,9 +1358,12 @@ function ArchiveTab({
       <Card>
         <EmptyState
           icon={<Archive size={22} />}
-          title={t('daily_diary.no_archive', { defaultValue: 'No signed diaries yet' })}
-          description={t('daily_diary.no_archive_desc', {
-            defaultValue: 'Signed diaries appear here once sealed with sha256 fingerprint.',
+          title={t("daily_diary.no_archive", {
+            defaultValue: "No signed diaries yet",
+          })}
+          description={t("daily_diary.no_archive_desc", {
+            defaultValue:
+              "Signed diaries appear here once sealed with sha256 fingerprint.",
           })}
         />
       </Card>
@@ -1279,15 +1375,28 @@ function ArchiveTab({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('daily_diary.date', { defaultValue: 'Date' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('daily_diary.signed_at', { defaultValue: 'Signed' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('daily_diary.signature_ref', { defaultValue: 'Fingerprint' })}</th>
+              <th className="px-4 py-2.5 text-left">
+                {t("daily_diary.date", { defaultValue: "Date" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("common.status", { defaultValue: "Status" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("daily_diary.signed_at", { defaultValue: "Signed" })}
+              </th>
+              <th className="px-4 py-2.5 text-left">
+                {t("daily_diary.signature_ref", {
+                  defaultValue: "Fingerprint",
+                })}
+              </th>
             </tr>
           </thead>
           <tbody>
             {diaries.map((d) => (
-              <tr key={d.id} className="border-t border-border-light hover:bg-surface-secondary">
+              <tr
+                key={d.id}
+                className="border-t border-border-light hover:bg-surface-secondary"
+              >
                 <td className="px-4 py-2 font-medium">
                   <DateDisplay value={d.diary_date} />
                 </td>
@@ -1297,13 +1406,17 @@ function ArchiveTab({
                   </Badge>
                 </td>
                 <td className="px-4 py-2 text-xs text-content-secondary">
-                  {d.closed_at ? <DateDisplay value={d.closed_at} /> : '—'}
+                  {d.closed_at ? <DateDisplay value={d.closed_at} /> : "—"}
                 </td>
                 <td className="px-4 py-2">
                   <span className="font-mono text-xs text-content-secondary">
                     {d.owner_signature_ref || d.supervisor_signature_ref
-                      ? formatSha(d.owner_signature_ref || d.supervisor_signature_ref || '')
-                      : '—'}
+                      ? formatSha(
+                          d.owner_signature_ref ||
+                            d.supervisor_signature_ref ||
+                            "",
+                        )
+                      : "—"}
                   </span>
                 </td>
               </tr>
@@ -1330,24 +1443,24 @@ function CreateDiaryModal({
   const [diaryDate, setDiaryDate] = useState(todayIso());
   const [labour, setLabour] = useState(0);
   const [equipment, setEquipment] = useState(0);
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
 
   const submit = async () => {
     if (!diaryDate) {
       addToast({
-        type: 'error',
-        title: t('daily_diary.date_required', {
-          defaultValue: 'Pick a date for the diary.',
+        type: "error",
+        title: t("daily_diary.date_required", {
+          defaultValue: "Pick a date for the diary.",
         }),
       });
       return;
     }
     if (diaryDate > todayIso()) {
       addToast({
-        type: 'error',
-        title: t('daily_diary.date_future', {
-          defaultValue: 'A site diary cannot be dated in the future.',
+        type: "error",
+        title: t("daily_diary.date_future", {
+          defaultValue: "A site diary cannot be dated in the future.",
         }),
       });
       return;
@@ -1361,11 +1474,14 @@ function CreateDiaryModal({
         equipment_count: equipment,
         notes,
       });
-      qc.invalidateQueries({ queryKey: ['daily-diary'] });
-      addToast({ type: 'success', title: t('daily_diary.created', { defaultValue: 'Diary created' }) });
+      qc.invalidateQueries({ queryKey: ["daily-diary"] });
+      addToast({
+        type: "success",
+        title: t("daily_diary.created", { defaultValue: "Diary created" }),
+      });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1377,26 +1493,26 @@ function CreateDiaryModal({
       onClose={onClose}
       busy={busy}
       size="lg"
-      title={t('daily_diary.new_diary', { defaultValue: 'New Diary' })}
+      title={t("daily_diary.new_diary", { defaultValue: "New Diary" })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button variant="primary" onClick={submit} loading={busy}>
-            {t('common.create', { defaultValue: 'Create' })}
+            {t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('daily_diary.date', { defaultValue: 'Date' })}
+          label={t("daily_diary.date", { defaultValue: "Date" })}
           required
           span={2}
-          hint={t('daily_diary.date_hint', {
+          hint={t("daily_diary.date_hint", {
             defaultValue:
-              'Today or a past day you are back-filling. Future-dated site diaries are not allowed.',
+              "Today or a past day you are back-filling. Future-dated site diaries are not allowed.",
           })}
         >
           <input
@@ -1407,7 +1523,9 @@ function CreateDiaryModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('daily_diary.labour', { defaultValue: 'Labour' })}>
+        <WideModalField
+          label={t("daily_diary.labour", { defaultValue: "Labour" })}
+        >
           <input
             type="number"
             min={0}
@@ -1416,7 +1534,9 @@ function CreateDiaryModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('daily_diary.equipment', { defaultValue: 'Equipment' })}>
+        <WideModalField
+          label={t("daily_diary.equipment", { defaultValue: "Equipment" })}
+        >
           <input
             type="number"
             min={0}
@@ -1425,12 +1545,15 @@ function CreateDiaryModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('common.notes', { defaultValue: 'Notes' })} span={2}>
+        <WideModalField
+          label={t("common.notes", { defaultValue: "Notes" })}
+          span={2}
+        >
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className={clsx(inputCls, 'h-auto py-2')}
+            className={clsx(inputCls, "h-auto py-2")}
           />
         </WideModalField>
       </WideModalSection>
@@ -1448,19 +1571,22 @@ function SignDiaryModal({
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [role, setRole] = useState<SignerRole>('supervisor');
-  const [name, setName] = useState('');
+  const [role, setRole] = useState<SignerRole>("supervisor");
+  const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
   const submit = async () => {
     setBusy(true);
     try {
       await signDiary(diaryId, { signer_role: role, signer_name: name });
-      qc.invalidateQueries({ queryKey: ['daily-diary'] });
-      addToast({ type: 'success', title: t('daily_diary.sign_ok', { defaultValue: 'Diary signed' }) });
+      qc.invalidateQueries({ queryKey: ["daily-diary"] });
+      addToast({
+        type: "success",
+        title: t("daily_diary.sign_ok", { defaultValue: "Diary signed" }),
+      });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1472,15 +1598,15 @@ function SignDiaryModal({
       onClose={onClose}
       busy={busy}
       size="md"
-      title={t('daily_diary.sign_diary', { defaultValue: 'Sign Diary' })}
-      subtitle={t('daily_diary.sign_intro', {
+      title={t("daily_diary.sign_diary", { defaultValue: "Sign Diary" })}
+      subtitle={t("daily_diary.sign_intro", {
         defaultValue:
-          'Signing seals the diary with a sha256 fingerprint. All fields become read-only.',
+          "Signing seals the diary with a sha256 fingerprint. All fields become read-only.",
       })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -1488,14 +1614,14 @@ function SignDiaryModal({
             loading={busy}
             icon={<FileSignature size={14} />}
           >
-            {t('daily_diary.sign', { defaultValue: 'Sign' })}
+            {t("daily_diary.sign", { defaultValue: "Sign" })}
           </Button>
         </>
       }
     >
       <WideModalSection columns={1}>
         <WideModalField
-          label={t('daily_diary.signer_role', { defaultValue: 'Signer role' })}
+          label={t("daily_diary.signer_role", { defaultValue: "Signer role" })}
           required
         >
           <select
@@ -1503,7 +1629,9 @@ function SignDiaryModal({
             onChange={(e) => setRole(e.target.value as SignerRole)}
             className={inputCls}
           >
-            {(['owner', 'supervisor', 'inspector', 'client'] as SignerRole[]).map((r) => (
+            {(
+              ["owner", "supervisor", "inspector", "client"] as SignerRole[]
+            ).map((r) => (
               <option key={r} value={r}>
                 {r}
               </option>
@@ -1511,7 +1639,7 @@ function SignDiaryModal({
           </select>
         </WideModalField>
         <WideModalField
-          label={t('daily_diary.signer_name', { defaultValue: 'Signer name' })}
+          label={t("daily_diary.signer_name", { defaultValue: "Signer name" })}
         >
           <input
             value={name}

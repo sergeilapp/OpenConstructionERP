@@ -14,14 +14,19 @@
  * and value editing are handled by the containing canvas / inspector
  * (EAC-3.2 — out of scope for this ticket).
  */
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import clsx from 'clsx';
-import { GripVertical } from 'lucide-react';
-import type { CSSProperties, KeyboardEvent, MouseEvent, ReactNode } from 'react';
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import clsx from "clsx";
+import { GripVertical } from "lucide-react";
+import type {
+  CSSProperties,
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+} from "react";
 
-import { getBlockTokens } from '../../tokens';
-import type { BlockColor } from '../../types';
+import { getBlockTokens } from "../../tokens";
+import type { BlockColor } from "../../types";
 
 export interface BlockShellProps {
   /** The color identity for this block. Drives all visual styling. */
@@ -67,7 +72,7 @@ export interface BlockShellProps {
  * pass a `sortableId`. We still register the shell with `useSortable` so the
  * Hooks rules are obeyed, but we make the missing id loud in dev.
  */
-const FALLBACK_SORTABLE_ID = '__eac_block_shell_unset__';
+const FALLBACK_SORTABLE_ID = "__eac_block_shell_unset__";
 
 export function BlockShell({
   color,
@@ -111,7 +116,7 @@ export function BlockShell({
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (!onSelect) return;
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       onSelect();
     }
@@ -127,18 +132,18 @@ export function BlockShell({
       aria-grabbed={draggable ? sortable.isDragging : undefined}
       data-testid={testId ?? `eac-block-${color}`}
       data-block-color={color}
-      data-block-selected={selected ? 'true' : 'false'}
+      data-block-selected={selected ? "true" : "false"}
       tabIndex={onSelect ? 0 : -1}
       onClick={onSelect ? handleClick : undefined}
       onKeyDown={onSelect ? handleKeyDown : undefined}
       className={clsx(
-        'flex w-full flex-col gap-1 rounded-md border-2 px-3 py-2 text-sm',
-        'transition-all duration-fast ease-oe transform-gpu',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
+        "flex w-full flex-col gap-1 rounded-md border-2 px-3 py-2 text-sm",
+        "transition-all duration-fast ease-oe transform-gpu",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
         selected ? tokens.classes.bgSelected : tokens.classes.bg,
         selected ? tokens.classes.borderSelected : tokens.classes.border,
         tokens.classes.text,
-        onSelect && 'cursor-pointer hover:shadow-sm',
+        onSelect && "cursor-pointer hover:shadow-sm",
         className,
       )}
     >
@@ -149,8 +154,8 @@ export function BlockShell({
             aria-label={`Drag ${visibleLabel} block`}
             data-testid="eac-block-drag-handle"
             className={clsx(
-              'flex h-5 w-5 shrink-0 cursor-grab items-center justify-center rounded',
-              'hover:bg-black/5 dark:hover:bg-white/10 active:cursor-grabbing',
+              "flex h-5 w-5 shrink-0 cursor-grab items-center justify-center rounded",
+              "hover:bg-black/5 dark:hover:bg-white/10 active:cursor-grabbing",
               tokens.classes.icon,
             )}
             {...sortable.attributes}
@@ -159,13 +164,20 @@ export function BlockShell({
             <GripVertical size={14} aria-hidden="true" />
           </button>
         )}
-        <span className={clsx('flex h-5 w-5 shrink-0 items-center justify-center', tokens.classes.icon)}>
+        <span
+          className={clsx(
+            "flex h-5 w-5 shrink-0 items-center justify-center",
+            tokens.classes.icon,
+          )}
+        >
           {icon ?? <Icon size={16} aria-hidden="true" />}
         </span>
         <span className="truncate font-medium">{visibleLabel}</span>
       </div>
       {children !== undefined && children !== null && (
-        <div className={clsx('pl-7 text-xs', tokens.classes.textSubtle)}>{children}</div>
+        <div className={clsx("pl-7 text-xs", tokens.classes.textSubtle)}>
+          {children}
+        </div>
       )}
     </div>
   );

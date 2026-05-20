@@ -103,9 +103,7 @@ class ComplianceDocService:
         except ImportError:  # pragma: no cover — documents always present
             return
 
-        stmt = select(Document.project_id).where(
-            Document.id == attachment_document_id
-        )
+        stmt = select(Document.project_id).where(Document.id == attachment_document_id)
         row = (await self.session.execute(stmt)).first()
         if row is None:
             raise HTTPException(
@@ -115,9 +113,7 @@ class ComplianceDocService:
         if str(row[0]) != str(project_id):
             raise HTTPException(
                 status_code=http_status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "Attachment document belongs to a different project."
-                ),
+                detail=("Attachment document belongs to a different project."),
             )
 
     # ── CRUD ────────────────────────────────────────────────────────
@@ -131,13 +127,12 @@ class ComplianceDocService:
         if data.expires_at < data.effective_date:
             raise HTTPException(
                 status_code=http_status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "expires_at must be on or after effective_date."
-                ),
+                detail=("expires_at must be on or after effective_date."),
             )
 
         await self._check_attachment(
-            data.project_id, data.attachment_document_id,
+            data.project_id,
+            data.attachment_document_id,
         )
 
         derived_status = data.status or recompute_status(
@@ -166,7 +161,9 @@ class ComplianceDocService:
         doc = await self.repo.create(doc)
         logger.info(
             "Compliance doc created: %s (%s) for project %s",
-            doc.id, doc.doc_type, doc.project_id,
+            doc.id,
+            doc.doc_type,
+            doc.project_id,
         )
         return doc
 
@@ -187,7 +184,9 @@ class ComplianceDocService:
         doc_type: str | None = None,
     ) -> list[ComplianceDoc]:
         return await self.repo.list_for_project(
-            project_id, status=status, doc_type=doc_type,
+            project_id,
+            status=status,
+            doc_type=doc_type,
         )
 
     async def list_expiring_soon(
@@ -212,7 +211,8 @@ class ComplianceDocService:
         # Same-project guard if attachment is being changed.
         if "attachment_document_id" in fields:
             await self._check_attachment(
-                doc.project_id, fields["attachment_document_id"],
+                doc.project_id,
+                fields["attachment_document_id"],
             )
 
         # Validate date ordering if either side moved.
@@ -221,9 +221,7 @@ class ComplianceDocService:
         if new_expires < new_effective:
             raise HTTPException(
                 status_code=http_status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "expires_at must be on or after effective_date."
-                ),
+                detail=("expires_at must be on or after effective_date."),
             )
 
         # If status not explicitly set in the patch, recompute it from
@@ -234,7 +232,8 @@ class ComplianceDocService:
                 today=self._today(),
                 expires_at=new_expires,
                 notify_days_before=fields.get(
-                    "notify_days_before", doc.notify_days_before,
+                    "notify_days_before",
+                    doc.notify_days_before,
                 ),
                 current_status=doc.status,
             )

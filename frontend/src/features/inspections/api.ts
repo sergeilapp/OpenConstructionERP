@@ -4,26 +4,30 @@
  * All endpoints are prefixed with /v1/inspections/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* -- Types ----------------------------------------------------------------- */
 
 export type InspectionType =
-  | 'structural'
-  | 'electrical'
-  | 'plumbing'
-  | 'fire_safety'
-  | 'concrete'
-  | 'concrete_pour'
-  | 'waterproofing'
-  | 'mep'
-  | 'fire_stopping'
-  | 'handover'
-  | 'general';
+  | "structural"
+  | "electrical"
+  | "plumbing"
+  | "fire_safety"
+  | "concrete"
+  | "concrete_pour"
+  | "waterproofing"
+  | "mep"
+  | "fire_stopping"
+  | "handover"
+  | "general";
 
-export type InspectionResult = 'pass' | 'fail' | 'partial';
+export type InspectionResult = "pass" | "fail" | "partial";
 
-export type InspectionStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+export type InspectionStatus =
+  | "scheduled"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
 
 export interface ChecklistItem {
   id: string;
@@ -53,8 +57,8 @@ export interface Inspection {
 
 export interface InspectionFilters {
   project_id?: string;
-  status?: InspectionStatus | '';
-  result?: InspectionResult | '';
+  status?: InspectionStatus | "";
+  result?: InspectionResult | "";
 }
 
 export interface CreateInspectionPayload {
@@ -88,7 +92,7 @@ type ChecklistEntryWire = {
   notes?: string | null;
 };
 
-type InspectionWire = Omit<Inspection, 'inspector' | 'date' | 'checklist'> & {
+type InspectionWire = Omit<Inspection, "inspector" | "date" | "checklist"> & {
   inspector?: string;
   inspector_id?: string | null;
   date?: string;
@@ -97,17 +101,20 @@ type InspectionWire = Omit<Inspection, 'inspector' | 'date' | 'checklist'> & {
   checklist_data?: ChecklistEntryWire[];
 };
 
-function normaliseChecklistItem(e: ChecklistEntryWire, i: number): ChecklistItem {
+function normaliseChecklistItem(
+  e: ChecklistEntryWire,
+  i: number,
+): ChecklistItem {
   const passed =
-    typeof e.passed === 'boolean'
+    typeof e.passed === "boolean"
       ? e.passed
-      : e.response === 'pass' || e.response === 'yes' || e.response === 'true';
+      : e.response === "pass" || e.response === "yes" || e.response === "true";
   return {
     id: e.id ?? `item-${i}`,
-    description: e.description ?? e.question ?? '',
+    description: e.description ?? e.question ?? "",
     passed,
     critical: Boolean(e.critical),
-    notes: e.notes ?? '',
+    notes: e.notes ?? "",
   };
 }
 
@@ -115,27 +122,33 @@ function normaliseInspection(raw: InspectionWire): Inspection {
   const checklistSrc = raw.checklist ?? raw.checklist_data ?? [];
   return {
     ...raw,
-    inspector: raw.inspector ?? raw.inspector_id ?? '',
-    date: raw.date ?? raw.inspection_date ?? '',
+    inspector: raw.inspector ?? raw.inspector_id ?? "",
+    date: raw.date ?? raw.inspection_date ?? "",
     checklist: checklistSrc.map(normaliseChecklistItem),
-    notes: raw.notes ?? '',
+    notes: raw.notes ?? "",
   } as Inspection;
 }
 
 /* -- API Functions --------------------------------------------------------- */
 
-export async function fetchInspections(filters?: InspectionFilters): Promise<Inspection[]> {
+export async function fetchInspections(
+  filters?: InspectionFilters,
+): Promise<Inspection[]> {
   const params = new URLSearchParams();
-  if (filters?.project_id) params.set('project_id', filters.project_id);
-  if (filters?.status) params.set('status', filters.status);
-  if (filters?.result) params.set('result', filters.result);
+  if (filters?.project_id) params.set("project_id", filters.project_id);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.result) params.set("result", filters.result);
   const qs = params.toString();
-  const rows = await apiGet<InspectionWire[]>(`/v1/inspections/${qs ? `?${qs}` : ''}`);
+  const rows = await apiGet<InspectionWire[]>(
+    `/v1/inspections/${qs ? `?${qs}` : ""}`,
+  );
   return rows.map(normaliseInspection);
 }
 
-export async function createInspection(data: CreateInspectionPayload): Promise<Inspection> {
-  const row = await apiPost<InspectionWire>('/v1/inspections/', data);
+export async function createInspection(
+  data: CreateInspectionPayload,
+): Promise<Inspection> {
+  const row = await apiPost<InspectionWire>("/v1/inspections/", data);
   return normaliseInspection(row);
 }
 

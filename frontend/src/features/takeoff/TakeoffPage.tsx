@@ -1,8 +1,16 @@
-import { useState, useCallback, useRef, useMemo, useEffect, lazy, Suspense } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import clsx from 'clsx';
+import {
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useEffect,
+  lazy,
+  Suspense,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   FileSearch,
   Upload,
@@ -23,17 +31,19 @@ import {
   Link2,
   ArrowRight,
   Layers,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Button, Card, Badge, Input, Skeleton } from '@/shared/ui';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { takeoffApi, type TakeoffDocumentResponse } from './api';
-import { canonicalizeUnit } from './lib/units';
+import { Button, Card, Badge, Input, Skeleton } from "@/shared/ui";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { takeoffApi, type TakeoffDocumentResponse } from "./api";
+import { canonicalizeUnit } from "./lib/units";
 
-const TakeoffViewerModule = lazy(() => import('@/modules/pdf-takeoff/TakeoffViewerModule'));
+const TakeoffViewerModule = lazy(
+  () => import("@/modules/pdf-takeoff/TakeoffViewerModule"),
+);
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -66,7 +76,10 @@ interface AnalysisResult {
   elements: ExtractedElement[];
   summary: {
     total_elements: number;
-    categories: Record<string, { count: number; total_quantity: number; unit: string }>;
+    categories: Record<
+      string,
+      { count: number; total_quantity: number; unit: string }
+    >;
   };
 }
 
@@ -89,11 +102,20 @@ interface QuickMeasurement {
   unit: string;
 }
 
-type UnitOption = 'm' | 'm2' | 'm3' | 'kg' | 'pcs' | 'lsum' | 't' | 'l';
+type UnitOption = "m" | "m2" | "m3" | "kg" | "pcs" | "lsum" | "t" | "l";
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
-const UNIT_OPTIONS: UnitOption[] = ['m', 'm2', 'm3', 'kg', 'pcs', 'lsum', 't', 'l'];
+const UNIT_OPTIONS: UnitOption[] = [
+  "m",
+  "m2",
+  "m3",
+  "kg",
+  "pcs",
+  "lsum",
+  "t",
+  "l",
+];
 
 // No upload size cap — kept Number.POSITIVE_INFINITY as a sentinel so
 // the existing filter expressions still type-check while allowing any
@@ -108,25 +130,39 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function formatTimeAgo(isoDate: string, t: (key: string, fallback: string) => string): string {
+function formatTimeAgo(
+  isoDate: string,
+  t: (key: string, fallback: string) => string,
+): string {
   const diff = Date.now() - new Date(isoDate).getTime();
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return t('takeoff.just_now', 'Just now');
+  if (minutes < 1) return t("takeoff.just_now", "Just now");
   if (minutes < 60) {
-    return t('takeoff.minutes_ago', '{{count}} min ago').replace('{{count}}', String(minutes));
+    return t("takeoff.minutes_ago", "{{count}} min ago").replace(
+      "{{count}}",
+      String(minutes),
+    );
   }
   const hours = Math.floor(minutes / 60);
   if (hours < 24) {
-    return t('takeoff.hours_ago', '{{count}}h ago').replace('{{count}}', String(hours));
+    return t("takeoff.hours_ago", "{{count}}h ago").replace(
+      "{{count}}",
+      String(hours),
+    );
   }
   const days = Math.floor(hours / 24);
-  return t('takeoff.days_ago', '{{count}}d ago').replace('{{count}}', String(days));
+  return t("takeoff.days_ago", "{{count}}d ago").replace(
+    "{{count}}",
+    String(days),
+  );
 }
 
-function getConfidenceVariant(confidence: number): 'success' | 'warning' | 'error' {
-  if (confidence >= 0.8) return 'success';
-  if (confidence >= 0.5) return 'warning';
-  return 'error';
+function getConfidenceVariant(
+  confidence: number,
+): "success" | "warning" | "error" {
+  if (confidence >= 0.8) return "success";
+  if (confidence >= 0.5) return "warning";
+  return "error";
 }
 
 /* ── Sub-components ────────────────────────────────────────────────────── */
@@ -146,16 +182,18 @@ function SelectDropdown({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-content-primary">{label}</label>
+      <label className="text-sm font-medium text-content-primary">
+        {label}
+      </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={clsx(
-          'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm',
-          'transition-all duration-normal ease-oe',
-          'focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue',
-          'hover:border-content-tertiary',
-          !value ? 'text-content-tertiary' : 'text-content-primary',
+          "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm",
+          "transition-all duration-normal ease-oe",
+          "focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue",
+          "hover:border-content-tertiary",
+          !value ? "text-content-tertiary" : "text-content-primary",
         )}
       >
         <option value="">{placeholder}</option>
@@ -200,7 +238,9 @@ function DropZone({
       if (disabled) return;
 
       const files = Array.from(e.dataTransfer.files).filter(
-        (f) => (f.type === 'application/pdf' || f.type.startsWith('image/')) && f.size <= MAX_FILE_SIZE_BYTES,
+        (f) =>
+          (f.type === "application/pdf" || f.type.startsWith("image/")) &&
+          f.size <= MAX_FILE_SIZE_BYTES,
       );
       if (files.length > 0) {
         onFilesSelected(files);
@@ -218,14 +258,16 @@ function DropZone({
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []).filter(
-        (f) => (f.type === 'application/pdf' || f.type.startsWith('image/')) && f.size <= MAX_FILE_SIZE_BYTES,
+        (f) =>
+          (f.type === "application/pdf" || f.type.startsWith("image/")) &&
+          f.size <= MAX_FILE_SIZE_BYTES,
       );
       if (files.length > 0) {
         onFilesSelected(files);
       }
       // Reset so the same file can be selected again
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     },
     [onFilesSelected],
@@ -236,45 +278,55 @@ function DropZone({
       <div
         role="button"
         tabIndex={0}
-        aria-label={t('takeoff.upload_aria', { defaultValue: 'Upload PDF or image takeoff file' })}
+        aria-label={t("takeoff.upload_aria", {
+          defaultValue: "Upload PDF or image takeoff file",
+        })}
         onClick={handleClick}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') handleClick();
+          if (e.key === "Enter" || e.key === " ") handleClick();
         }}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={clsx(
-          'relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-10',
-          'transition-all duration-normal ease-oe cursor-pointer min-h-[200px]',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-2',
-          disabled && 'opacity-40 pointer-events-none',
+          "relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-10",
+          "transition-all duration-normal ease-oe cursor-pointer min-h-[200px]",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-2",
+          disabled && "opacity-40 pointer-events-none",
           isDragOver
-            ? 'border-oe-blue bg-oe-blue/5 scale-[1.01]'
-            : 'border-border-medium hover:border-oe-blue hover:bg-blue-50/50 dark:hover:bg-blue-950/20',
+            ? "border-oe-blue bg-oe-blue/5 scale-[1.01]"
+            : "border-border-medium hover:border-oe-blue hover:bg-blue-50/50 dark:hover:bg-blue-950/20",
         )}
       >
         <div
           className={clsx(
-            'flex h-14 w-14 items-center justify-center rounded-xl border transition-colors duration-fast',
+            "flex h-14 w-14 items-center justify-center rounded-xl border transition-colors duration-fast",
             isDragOver
-              ? 'bg-oe-blue/10 border-oe-blue/30 text-oe-blue'
-              : 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20 border-blue-200/50 dark:border-blue-800/30 text-oe-blue',
+              ? "bg-oe-blue/10 border-oe-blue/30 text-oe-blue"
+              : "bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20 border-blue-200/50 dark:border-blue-800/30 text-oe-blue",
           )}
         >
           <FileUp size={26} strokeWidth={1.5} />
         </div>
         <p className="text-sm font-semibold text-content-primary">
-          {t('takeoff.drop_file_here', 'Drop your PDF or image here')}
+          {t("takeoff.drop_file_here", "Drop your PDF or image here")}
         </p>
         <p className="text-[11px] text-content-quaternary">
-          {t('takeoff.file_limit', 'PDF, JPG, PNG')}
+          {t("takeoff.file_limit", "PDF, JPG, PNG")}
         </p>
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/30">.pdf</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/30">.jpg</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-secondary text-content-quaternary border border-border-light">.png</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-secondary text-content-quaternary border border-border-light">.tiff</span>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/30">
+            .pdf
+          </span>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/30">
+            .jpg
+          </span>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-secondary text-content-quaternary border border-border-light">
+            .png
+          </span>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-secondary text-content-quaternary border border-border-light">
+            .tiff
+          </span>
         </div>
         <input
           ref={fileInputRef}
@@ -283,12 +335,13 @@ function DropZone({
           multiple
           onChange={handleFileChange}
           className="hidden"
-          aria-label={t('takeoff.upload_pdf', 'Upload PDF')}
+          aria-label={t("takeoff.upload_pdf", "Upload PDF")}
         />
       </div>
       <p className="text-[11px] text-content-tertiary mt-3">
-        {t('takeoff.formats_detailed', {
-          defaultValue: 'PDF construction drawings \u00B7 JPG / PNG photos \u00B7 TIFF scans. AI will extract walls, slabs, doors, and other elements with quantities.‌⁠‍',
+        {t("takeoff.formats_detailed", {
+          defaultValue:
+            "PDF construction drawings \u00B7 JPG / PNG photos \u00B7 TIFF scans. AI will extract walls, slabs, doors, and other elements with quantities.‌⁠‍",
         })}
       </p>
     </div>
@@ -311,7 +364,9 @@ function ElementRow({
         className="h-4 w-4 rounded border-border text-oe-blue focus:ring-oe-blue/30 cursor-pointer"
       />
       <div className="min-w-0 flex-1">
-        <span className="text-sm text-content-primary">{element.description}</span>
+        <span className="text-sm text-content-primary">
+          {element.description}
+        </span>
       </div>
       <span className="text-sm font-medium tabular-nums text-content-primary">
         {element.quantity}
@@ -359,19 +414,26 @@ function DocumentCard({
   const isUploading = !!doc.uploading;
 
   return (
-    <Card className={clsx('overflow-hidden', hasError && 'border-semantic-error/40')}>
+    <Card
+      className={clsx(
+        "overflow-hidden",
+        hasError && "border-semantic-error/40",
+      )}
+    >
       {/* Document header */}
       <div className="flex items-start gap-3">
-        <div className={clsx(
-          'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
-          hasError
-            ? 'bg-semantic-error-bg text-semantic-error'
-            : isUploading
-              ? 'bg-oe-blue-subtle text-oe-blue'
-              : doc.analysis
-                ? 'bg-semantic-success-bg text-semantic-success'
-                : 'bg-surface-secondary text-content-tertiary',
-        )}>
+        <div
+          className={clsx(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
+            hasError
+              ? "bg-semantic-error-bg text-semantic-error"
+              : isUploading
+                ? "bg-oe-blue-subtle text-oe-blue"
+                : doc.analysis
+                  ? "bg-semantic-success-bg text-semantic-success"
+                  : "bg-surface-secondary text-content-tertiary",
+          )}
+        >
           {isUploading ? (
             <Loader2 size={20} strokeWidth={1.5} className="animate-spin" />
           ) : (
@@ -385,26 +447,28 @@ function DocumentCard({
             </h3>
             {hasError && (
               <Badge variant="error" size="sm">
-                {t('takeoff.upload_failed', 'Upload failed')}
+                {t("takeoff.upload_failed", "Upload failed")}
               </Badge>
             )}
             {isUploading && (
               <Badge variant="blue" size="sm">
-                {t('takeoff.uploading', 'Uploading...')}
+                {t("takeoff.uploading", "Uploading...")}
               </Badge>
             )}
             <button
               onClick={() => onRemove(doc.id)}
               className="shrink-0 rounded-md p-1 text-content-tertiary hover:text-semantic-error hover:bg-semantic-error-bg transition-colors duration-fast"
-              title={t('common.delete', 'Delete')}
+              title={t("common.delete", "Delete")}
             >
               <X size={14} />
             </button>
           </div>
           <p className="mt-0.5 text-xs text-content-tertiary">
-            {doc.pages > 0 ? `${doc.pages} ${t('takeoff.pages', 'pages')} \u2022 ` : ''}
-            {formatFileSize(doc.size_bytes)}{' '}
-            &bull; {t('takeoff.uploaded', 'Uploaded')}{' '}
+            {doc.pages > 0
+              ? `${doc.pages} ${t("takeoff.pages", "pages")} \u2022 `
+              : ""}
+            {formatFileSize(doc.size_bytes)} &bull;{" "}
+            {t("takeoff.uploaded", "Uploaded")}{" "}
             {formatTimeAgo(doc.uploaded_at, t)}
           </p>
           {hasError && (
@@ -427,12 +491,14 @@ function DocumentCard({
               <Sparkles size={14} />
             )
           }
-          disabled={doc.analyzing || doc.extractingTables || isUploading || hasError}
+          disabled={
+            doc.analyzing || doc.extractingTables || isUploading || hasError
+          }
           onClick={() => onAnalyze(doc.id)}
         >
           {doc.analyzing
-            ? t('takeoff.analyzing', 'Analyzing...')
-            : t('takeoff.analyze_with_ai', 'Analyze with AI')}
+            ? t("takeoff.analyzing", "Analyzing...")
+            : t("takeoff.analyze_with_ai", "Analyze with AI")}
         </Button>
         <Button
           variant="secondary"
@@ -444,21 +510,28 @@ function DocumentCard({
               <Table2 size={14} />
             )
           }
-          disabled={doc.analyzing || doc.extractingTables || isUploading || hasError}
+          disabled={
+            doc.analyzing || doc.extractingTables || isUploading || hasError
+          }
           onClick={() => onExtractTables(doc.id)}
         >
           {doc.extractingTables
-            ? t('takeoff.extracting', 'Extracting...')
-            : t('takeoff.extract_tables', 'Extract Tables')}
+            ? t("takeoff.extracting", "Extracting...")
+            : t("takeoff.extract_tables", "Extract Tables")}
         </Button>
         <Button
           variant="ghost"
           size="sm"
           icon={<Eye size={14} />}
           disabled={isUploading || hasError}
-          onClick={() => window.open(`/api/v1/takeoff/documents/${doc.id}/download`, '_blank')}
+          onClick={() =>
+            window.open(
+              `/api/v1/takeoff/documents/${doc.id}/download`,
+              "_blank",
+            )
+          }
         >
-          {t('takeoff.view', 'View')}
+          {t("takeoff.view", "View")}
         </Button>
       </div>
 
@@ -470,15 +543,19 @@ function DocumentCard({
             className="flex w-full items-center gap-2 text-left"
           >
             <span className="text-content-tertiary">
-              {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+              {expanded ? (
+                <ChevronDown size={14} />
+              ) : (
+                <ChevronRight size={14} />
+              )}
             </span>
             <CheckCircle2 size={16} className="text-semantic-success" />
             <span className="text-sm font-medium text-content-primary">
-              {t('takeoff.ai_analysis_results', 'AI Analysis Results')}
+              {t("takeoff.ai_analysis_results", "AI Analysis Results")}
             </span>
             <Badge variant="blue" size="sm">
-              {t('takeoff.found_elements', '{{count}} elements found').replace(
-                '{{count}}',
+              {t("takeoff.found_elements", "{{count}} elements found").replace(
+                "{{count}}",
                 String(doc.analysis.summary.total_elements),
               )}
             </Badge>
@@ -489,40 +566,44 @@ function DocumentCard({
               {/* Category summary */}
               <div className="rounded-lg bg-surface-secondary/50 px-4 py-3 space-y-1.5">
                 <p className="text-xs font-medium text-content-secondary uppercase tracking-wider">
-                  {t('takeoff.summary', 'Summary')}
+                  {t("takeoff.summary", "Summary")}
                 </p>
-                {Object.entries(doc.analysis.summary.categories).map(([cat, info]) => (
-                  <div key={cat} className="flex items-center gap-2 text-sm">
-                    <span className="text-content-tertiary">&bull;</span>
-                    <span className="text-content-secondary">
-                      {info.count} {cat}
-                    </span>
-                    <span className="text-content-tertiary">
-                      ({t('takeoff.total_quantity', 'total')}: {info.total_quantity} {info.unit})
-                    </span>
-                  </div>
-                ))}
+                {Object.entries(doc.analysis.summary.categories).map(
+                  ([cat, info]) => (
+                    <div key={cat} className="flex items-center gap-2 text-sm">
+                      <span className="text-content-tertiary">&bull;</span>
+                      <span className="text-content-secondary">
+                        {info.count} {cat}
+                      </span>
+                      <span className="text-content-tertiary">
+                        ({t("takeoff.total_quantity", "total")}:{" "}
+                        {info.total_quantity} {info.unit})
+                      </span>
+                    </div>
+                  ),
+                )}
               </div>
 
               {/* Element list */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between px-3 py-1">
                   <span className="text-xs text-content-tertiary">
-                    {selectedCount}/{totalCount} {t('takeoff.selected', 'selected')}
+                    {selectedCount}/{totalCount}{" "}
+                    {t("takeoff.selected", "selected")}
                   </span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => onSelectAll(doc.id)}
                       className="text-xs text-oe-blue hover:underline"
                     >
-                      {t('takeoff.select_all', 'Select all')}
+                      {t("takeoff.select_all", "Select all")}
                     </button>
                     <span className="text-content-tertiary">|</span>
                     <button
                       onClick={() => onDeselectAll(doc.id)}
                       className="text-xs text-content-tertiary hover:text-content-secondary hover:underline"
                     >
-                      {t('takeoff.deselect_all', 'Deselect all')}
+                      {t("takeoff.deselect_all", "Deselect all")}
                     </button>
                   </div>
                 </div>
@@ -545,17 +626,23 @@ function DocumentCard({
                     disabled={selectedCount === 0}
                     onClick={() => onAddToBOQ(doc.id)}
                   >
-                    {t('takeoff.add_selected_to_boq', 'Add {{count}} to BOQ').replace(
-                      '{{count}}',
-                      String(selectedCount),
-                    )}
+                    {t(
+                      "takeoff.add_selected_to_boq",
+                      "Add {{count}} to BOQ",
+                    ).replace("{{count}}", String(selectedCount))}
                   </Button>
                 </div>
                 {!boqSelected && (
                   <div className="flex items-center gap-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 px-3 py-2">
-                    <AlertTriangle size={14} className="text-amber-600 shrink-0" />
+                    <AlertTriangle
+                      size={14}
+                      className="text-amber-600 shrink-0"
+                    />
                     <span className="text-xs text-amber-700 dark:text-amber-400 font-medium">
-                      {t('takeoff.select_boq_warning', 'Select a project & BOQ above to add items')}
+                      {t(
+                        "takeoff.select_boq_warning",
+                        "Select a project & BOQ above to add items",
+                      )}
                     </span>
                   </div>
                 )}
@@ -564,7 +651,7 @@ function DocumentCard({
               {/* Next steps */}
               <div className="pt-3 border-t border-border-light mt-2">
                 <p className="text-2xs font-semibold text-content-tertiary uppercase tracking-wider mb-2">
-                  {t('takeoff.next_steps', 'Next Steps')}
+                  {t("takeoff.next_steps", "Next Steps")}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <a
@@ -572,7 +659,7 @@ function DocumentCard({
                     className="flex items-center gap-1.5 rounded-lg border border-border-light px-3 py-1.5 text-xs text-content-secondary transition-colors hover:bg-oe-blue-subtle hover:text-oe-blue hover:border-oe-blue/30"
                   >
                     <Box size={13} />
-                    {t('takeoff.open_in_bim', 'Open in BIM Viewer')}
+                    {t("takeoff.open_in_bim", "Open in BIM Viewer")}
                     <ArrowRight size={11} className="text-content-quaternary" />
                   </a>
                   <a
@@ -580,7 +667,7 @@ function DocumentCard({
                     className="flex items-center gap-1.5 rounded-lg border border-border-light px-3 py-1.5 text-xs text-content-secondary transition-colors hover:bg-oe-blue-subtle hover:text-oe-blue hover:border-oe-blue/30"
                   >
                     <Link2 size={13} />
-                    {t('takeoff.link_to_boq', 'Link to BOQ')}
+                    {t("takeoff.link_to_boq", "Link to BOQ")}
                     <ArrowRight size={11} className="text-content-quaternary" />
                   </a>
                 </div>
@@ -596,7 +683,7 @@ function DocumentCard({
           <div className="flex items-center gap-2">
             <Loader2 size={16} className="animate-spin text-oe-blue" />
             <span className="text-sm text-content-secondary">
-              {t('takeoff.analyzing_document', 'Analyzing document with AI...')}
+              {t("takeoff.analyzing_document", "Analyzing document with AI...")}
             </span>
           </div>
           <div className="space-y-2">
@@ -618,20 +705,20 @@ function QuickMeasurementForm({
   disabled: boolean;
 }) {
   const { t } = useTranslation();
-  const [description, setDescription] = useState('');
-  const [value, setValue] = useState('');
-  const [unit, setUnit] = useState<string>('m2');
+  const [description, setDescription] = useState("");
+  const [value, setValue] = useState("");
+  const [unit, setUnit] = useState<string>("m2");
 
   const handleSubmit = useCallback(() => {
     if (!description.trim() || !value.trim()) return;
     onAdd({ description: description.trim(), value: value.trim(), unit });
-    setDescription('');
-    setValue('');
+    setDescription("");
+    setValue("");
   }, [description, value, unit, onAdd]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         e.preventDefault();
         handleSubmit();
       }
@@ -643,17 +730,20 @@ function QuickMeasurementForm({
     <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
       <div className="flex-1">
         <Input
-          label={t('takeoff.description', 'Description')}
+          label={t("takeoff.description", "Description")}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={t('takeoff.description_placeholder', 'e.g., External wall area')}
+          placeholder={t(
+            "takeoff.description_placeholder",
+            "e.g., External wall area",
+          )}
           disabled={disabled}
         />
       </div>
       <div className="w-32">
         <Input
-          label={t('takeoff.value', 'Value')}
+          label={t("takeoff.value", "Value")}
           type="number"
           step="any"
           value={value}
@@ -666,18 +756,18 @@ function QuickMeasurementForm({
       <div className="w-28">
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-content-primary">
-            {t('takeoff.unit', 'Unit')}
+            {t("takeoff.unit", "Unit")}
           </label>
           <select
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
             disabled={disabled}
             className={clsx(
-              'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm',
-              'transition-all duration-normal ease-oe text-content-primary',
-              'focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue',
-              'hover:border-content-tertiary',
-              disabled && 'opacity-40 cursor-not-allowed',
+              "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm",
+              "transition-all duration-normal ease-oe text-content-primary",
+              "focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue",
+              "hover:border-content-tertiary",
+              disabled && "opacity-40 cursor-not-allowed",
             )}
           >
             {UNIT_OPTIONS.map((u) => (
@@ -696,7 +786,7 @@ function QuickMeasurementForm({
           disabled={disabled || !description.trim() || !value.trim()}
           onClick={handleSubmit}
         >
-          {t('takeoff.add_to_boq', 'Add to BOQ')}
+          {t("takeoff.add_to_boq", "Add to BOQ")}
         </Button>
       </div>
     </div>
@@ -734,7 +824,7 @@ function TakeoffDocFilmstrip({
       >
         <Layers size={14} className="text-content-tertiary mr-2 shrink-0" />
         <span className="text-xs font-semibold text-content-primary">
-          {t('takeoff.documents_panel', { defaultValue: 'Documents‌⁠‍' })}
+          {t("takeoff.documents_panel", { defaultValue: "Documents‌⁠‍" })}
         </span>
         <span className="text-[11px] text-content-quaternary ml-1.5">
           ({documents.length})
@@ -742,8 +832,8 @@ function TakeoffDocFilmstrip({
         <ChevronDown
           size={14}
           className={clsx(
-            'ml-auto text-content-tertiary transition-transform duration-200',
-            expanded ? '' : '-rotate-90',
+            "ml-auto text-content-tertiary transition-transform duration-200",
+            expanded ? "" : "-rotate-90",
           )}
         />
       </button>
@@ -751,7 +841,10 @@ function TakeoffDocFilmstrip({
       {/* Collapsible document cards */}
       <div
         className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: expanded ? '120px' : '0px', opacity: expanded ? 1 : 0 }}
+        style={{
+          maxHeight: expanded ? "120px" : "0px",
+          opacity: expanded ? 1 : 0,
+        }}
       >
         <div className="flex items-center gap-2 px-4 pb-2.5 overflow-x-auto">
           {isLoading && documents.length === 0 ? (
@@ -768,32 +861,35 @@ function TakeoffDocFilmstrip({
                   onClick={() => onSelectDoc(doc.id)}
                   disabled={isUploading || hasError}
                   className={clsx(
-                    'group relative shrink-0 w-44 text-start rounded-lg border transition-all duration-200 overflow-hidden',
+                    "group relative shrink-0 w-44 text-start rounded-lg border transition-all duration-200 overflow-hidden",
                     hasError
-                      ? 'border-semantic-error/40 bg-semantic-error-bg/40'
+                      ? "border-semantic-error/40 bg-semantic-error-bg/40"
                       : isActive
-                        ? 'border-oe-blue bg-oe-blue-subtle/40 shadow-sm'
-                        : 'border-border-light bg-surface-secondary/40 hover:bg-surface-secondary hover:border-oe-blue/30',
-                    (isUploading || hasError) && 'cursor-not-allowed',
+                        ? "border-oe-blue bg-oe-blue-subtle/40 shadow-sm"
+                        : "border-border-light bg-surface-secondary/40 hover:bg-surface-secondary hover:border-oe-blue/30",
+                    (isUploading || hasError) && "cursor-not-allowed",
                   )}
                 >
                   <div className="px-2.5 py-2">
                     <div className="flex items-center gap-1.5 mb-1">
                       {isUploading ? (
-                        <Loader2 size={12} className="shrink-0 text-oe-blue animate-spin" />
+                        <Loader2
+                          size={12}
+                          className="shrink-0 text-oe-blue animate-spin"
+                        />
                       ) : (
                         <FileText
                           size={12}
                           className={clsx(
-                            'shrink-0',
-                            isActive ? 'text-oe-blue' : 'text-content-tertiary',
+                            "shrink-0",
+                            isActive ? "text-oe-blue" : "text-content-tertiary",
                           )}
                         />
                       )}
                       <span
                         className={clsx(
-                          'text-[11px] font-semibold truncate',
-                          isActive ? 'text-oe-blue' : 'text-content-primary',
+                          "text-[11px] font-semibold truncate",
+                          isActive ? "text-oe-blue" : "text-content-primary",
                         )}
                       >
                         {doc.filename}
@@ -803,7 +899,8 @@ function TakeoffDocFilmstrip({
                       {doc.pages > 0 && (
                         <>
                           <span>
-                            {doc.pages} {t('takeoff.pages_short', { defaultValue: 'p' })}
+                            {doc.pages}{" "}
+                            {t("takeoff.pages_short", { defaultValue: "p" })}
                           </span>
                           <span>&middot;</span>
                         </>
@@ -826,13 +923,13 @@ function TakeoffDocFilmstrip({
                       onDeleteDoc(doc.id);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                      if (e.key === "Enter") {
                         e.stopPropagation();
                         onDeleteDoc(doc.id);
                       }
                     }}
                     className="absolute top-1 right-1 p-1 rounded text-content-quaternary hover:text-semantic-error hover:bg-semantic-error-bg opacity-0 group-hover:opacity-100 transition-all"
-                    title={t('common.delete', 'Delete')}
+                    title={t("common.delete", "Delete")}
                   >
                     <X size={11} />
                   </span>
@@ -841,8 +938,8 @@ function TakeoffDocFilmstrip({
             })
           ) : (
             <span className="text-[11px] text-content-quaternary">
-              {t('takeoff.no_documents_filmstrip', {
-                defaultValue: 'No documents uploaded yet‌⁠‍',
+              {t("takeoff.no_documents_filmstrip", {
+                defaultValue: "No documents uploaded yet‌⁠‍",
               })}
             </span>
           )}
@@ -851,7 +948,7 @@ function TakeoffDocFilmstrip({
             type="button"
             onClick={onUploadNew}
             className="flex items-center justify-center shrink-0 w-14 h-14 rounded-lg border-2 border-dashed border-border-medium hover:border-oe-blue/50 hover:bg-oe-blue/5 transition-all group"
-            title={t('takeoff.upload_pdf', 'Upload PDF')}
+            title={t("takeoff.upload_pdf", "Upload PDF")}
           >
             <Plus
               size={18}
@@ -866,7 +963,7 @@ function TakeoffDocFilmstrip({
 
 /* ── Main Page ─────────────────────────────────────────────────────────── */
 
-type TakeoffTab = 'documents' | 'measurements';
+type TakeoffTab = "documents" | "measurements";
 
 export function TakeoffPage() {
   const { t } = useTranslation();
@@ -874,14 +971,16 @@ export function TakeoffPage() {
   /* ── Tab state (synced with ?tab= query parameter from sidebar) ──── */
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const tabFromUrl = searchParams.get('tab');
+  const tabFromUrl = searchParams.get("tab");
   const initialTab: TakeoffTab =
-    tabFromUrl === 'measurements' || tabFromUrl === 'documents' ? tabFromUrl : 'documents';
+    tabFromUrl === "measurements" || tabFromUrl === "documents"
+      ? tabFromUrl
+      : "documents";
   const [activeTab, setActiveTab] = useState<TakeoffTab>(initialTab);
 
   // Keep tab in sync when navigating via sidebar links
   useEffect(() => {
-    if (tabFromUrl === 'measurements' || tabFromUrl === 'documents') {
+    if (tabFromUrl === "measurements" || tabFromUrl === "documents") {
       setActiveTab(tabFromUrl);
     }
   }, [tabFromUrl]);
@@ -889,8 +988,8 @@ export function TakeoffPage() {
   /* ── State ──────────────────────────────────────────────────────────── */
 
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
-  const selectedProjectId = activeProjectId ?? '';
-  const [selectedBoqId, setSelectedBoqId] = useState('');
+  const selectedProjectId = activeProjectId ?? "";
+  const [selectedBoqId, setSelectedBoqId] = useState("");
   const [documents, setDocuments] = useState<UploadedDocument[]>([]);
   const [activeDocId, setActiveDocId] = useState<string | null>(null);
   const [addToBOQSuccess, setAddToBOQSuccess] = useState<string | null>(null);
@@ -898,14 +997,17 @@ export function TakeoffPage() {
   const filmstripUploadRef = useRef<HTMLInputElement>(null);
 
   /** Currently opened document in the Measurements viewer. */
-  const [viewerDoc, setViewerDoc] = useState<{ url: string; name: string } | null>(null);
+  const [viewerDoc, setViewerDoc] = useState<{
+    url: string;
+    name: string;
+  } | null>(null);
 
   /* ── Handle ?doc= / ?name= deep link from Documents / BOQ link icon ─ */
 
   useEffect(() => {
-    const docId = searchParams.get('doc');
-    const docName = searchParams.get('name');
-    const tab = searchParams.get('tab');
+    const docId = searchParams.get("doc");
+    const docName = searchParams.get("name");
+    const tab = searchParams.get("tab");
     if (!docId) return;
     // Track the doc as active regardless of which tab the user landed on.
     setActiveDocId(docId);
@@ -913,14 +1015,14 @@ export function TakeoffPage() {
     // server) — inserting a placeholder here would duplicate the entry until
     // refetch and confuses the filmstrip. On Documents tab we need a
     // placeholder so the user sees a card immediately.
-    if (tab !== 'measurements') {
+    if (tab !== "measurements") {
       setDocuments((prev) => {
         if (prev.some((d) => d.id === docId)) return prev;
         return [
           ...prev,
           {
             id: docId,
-            filename: docName ? decodeURIComponent(docName) : 'Document',
+            filename: docName ? decodeURIComponent(docName) : "Document",
             pages: 0,
             size_bytes: 0,
             uploaded_at: new Date().toISOString(),
@@ -930,7 +1032,7 @@ export function TakeoffPage() {
           },
         ];
       });
-      setActiveTab('documents');
+      setActiveTab("documents");
     }
   }, [searchParams]);
 
@@ -939,14 +1041,15 @@ export function TakeoffPage() {
   /* ── Queries ────────────────────────────────────────────────────────── */
 
   const { data: projects, isLoading: projectsLoading } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 
   const { data: boqs, isLoading: boqsLoading } = useQuery({
-    queryKey: ['boqs', selectedProjectId],
-    queryFn: () => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${selectedProjectId}`),
+    queryKey: ["boqs", selectedProjectId],
+    queryFn: () =>
+      apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${selectedProjectId}`),
     enabled: !!selectedProjectId,
   });
 
@@ -956,22 +1059,22 @@ export function TakeoffPage() {
     isLoading: serverDocumentsLoading,
     refetch: refetchServerDocuments,
   } = useQuery({
-    queryKey: ['takeoff-documents', selectedProjectId],
+    queryKey: ["takeoff-documents", selectedProjectId],
     queryFn: () => takeoffApi.listDocuments(selectedProjectId || undefined),
     staleTime: 30_000,
   });
 
   /* ── Open linked PDF by filename (from BOQ link icon) ─────────────── */
   useEffect(() => {
-    const docName = searchParams.get('name');
-    const tab = searchParams.get('tab');
-    if (!docName || tab !== 'measurements' || searchParams.get('doc')) return;
+    const docName = searchParams.get("name");
+    const tab = searchParams.get("tab");
+    if (!docName || tab !== "measurements" || searchParams.get("doc")) return;
     if (!serverDocuments || serverDocuments.length === 0) return;
     const target = decodeURIComponent(docName).toLowerCase();
     const match = serverDocuments.find(
       (d) =>
         d.filename.toLowerCase() === target ||
-        d.filename.toLowerCase() === target.replace(/\.[^.]+$/, ''),
+        d.filename.toLowerCase() === target.replace(/\.[^.]+$/, ""),
     );
     if (!match) return;
     setActiveDocId(match.id);
@@ -979,19 +1082,19 @@ export function TakeoffPage() {
       url: `/api/v1/takeoff/documents/${match.id}/download/`,
       name: match.filename,
     });
-    setActiveTab('measurements');
+    setActiveTab("measurements");
     const next = new URLSearchParams(searchParams);
-    next.delete('name');
-    next.delete('page');
+    next.delete("name");
+    next.delete("page");
     setSearchParams(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, serverDocuments]);
 
   /* ── Restore viewer on reload when ?doc=X&tab=measurements ────────── */
   useEffect(() => {
-    const docId = searchParams.get('doc');
-    const tab = searchParams.get('tab');
-    if (!docId || tab !== 'measurements') return;
+    const docId = searchParams.get("doc");
+    const tab = searchParams.get("tab");
+    if (!docId || tab !== "measurements") return;
     if (viewerDoc) return; // already open
     if (!serverDocuments || serverDocuments.length === 0) return;
     const match = serverDocuments.find((d) => d.id === docId);
@@ -1000,7 +1103,7 @@ export function TakeoffPage() {
       url: `/api/v1/takeoff/documents/${docId}/download/`,
       name: match.filename,
     });
-    setActiveTab('measurements');
+    setActiveTab("measurements");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serverDocuments, searchParams]);
 
@@ -1012,24 +1115,27 @@ export function TakeoffPage() {
    * fallback display name is read from the optional `?name=` param so
    * the viewer header isn't empty during the metadata fetch.            */
   useEffect(() => {
-    const docId = searchParams.get('doc');
-    const source = searchParams.get('source');
-    if (!docId || source !== 'document') return;
+    const docId = searchParams.get("doc");
+    const source = searchParams.get("source");
+    if (!docId || source !== "document") return;
     if (viewerDoc) return;
     let cancelled = false;
     (async () => {
       try {
-        const meta = await apiGet<{ id: string; name: string; filename?: string }>(
-          `/v1/documents/${encodeURIComponent(docId)}`,
-        );
+        const meta = await apiGet<{
+          id: string;
+          name: string;
+          filename?: string;
+        }>(`/v1/documents/${encodeURIComponent(docId)}`);
         if (cancelled) return;
-        const displayName = meta.filename || meta.name || searchParams.get('name') || 'Document';
+        const displayName =
+          meta.filename || meta.name || searchParams.get("name") || "Document";
         setActiveDocId(docId);
         setViewerDoc({
           url: `/api/v1/documents/${encodeURIComponent(docId)}/download/`,
           name: displayName,
         });
-        setActiveTab('measurements');
+        setActiveTab("measurements");
       } catch {
         // Documents-module fetch failed; leave viewer untouched so the
         // user sees the empty state instead of a broken pdf.js attempt.
@@ -1046,16 +1152,16 @@ export function TakeoffPage() {
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
       const token = useAuthStore.getState().accessToken;
       const headers: HeadersInit = {};
       if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
+        headers["Authorization"] = `Bearer ${token}`;
       }
 
       const response = await fetch(`/api/v1/takeoff/documents/upload/`, {
-        method: 'POST',
+        method: "POST",
         headers,
         body: formData,
       });
@@ -1106,11 +1212,15 @@ export function TakeoffPage() {
 
   const extractTablesMutation = useMutation({
     mutationFn: async (docId: string) => {
-      return apiPost<AnalysisResult>(`/v1/takeoff/documents/${docId}/extract-tables/`);
+      return apiPost<AnalysisResult>(
+        `/v1/takeoff/documents/${docId}/extract-tables/`,
+      );
     },
     onMutate: (docId) => {
       setDocuments((prev) =>
-        prev.map((d) => (d.id === docId ? { ...d, extractingTables: true } : d)),
+        prev.map((d) =>
+          d.id === docId ? { ...d, extractingTables: true } : d,
+        ),
       );
     },
     onSuccess: (data, docId) => {
@@ -1129,7 +1239,9 @@ export function TakeoffPage() {
     },
     onError: (_err, docId) => {
       setDocuments((prev) =>
-        prev.map((d) => (d.id === docId ? { ...d, extractingTables: false } : d)),
+        prev.map((d) =>
+          d.id === docId ? { ...d, extractingTables: false } : d,
+        ),
       );
     },
   });
@@ -1145,23 +1257,41 @@ export function TakeoffPage() {
       }[],
     ) => {
       if (!selectedBoqId) {
-        throw new Error(t('takeoff.no_boq_selected', 'Please select a project and BOQ first'));
+        throw new Error(
+          t("takeoff.no_boq_selected", "Please select a project and BOQ first"),
+        );
       }
-      return apiPost(`/v1/boq/boqs/${selectedBoqId}/positions/bulk/`, { items });
+      return apiPost(`/v1/boq/boqs/${selectedBoqId}/positions/bulk/`, {
+        items,
+      });
     },
     onSuccess: (_data, variables) => {
-      const msg = t('takeoff.added_to_boq_success_count', '{{count}} items added to BOQ successfully').replace(
-        '{{count}}',
-        String(variables.length),
-      );
+      const msg = t(
+        "takeoff.added_to_boq_success_count",
+        "{{count}} items added to BOQ successfully",
+      ).replace("{{count}}", String(variables.length));
       setAddToBOQSuccess(msg);
-      useToastStore.getState().addToast({ type: 'success', title: t('takeoff.added_title', 'Added to BOQ'), message: msg });
+      useToastStore
+        .getState()
+        .addToast({
+          type: "success",
+          title: t("takeoff.added_title", "Added to BOQ"),
+          message: msg,
+        });
       setTimeout(() => setAddToBOQSuccess(null), 5000);
     },
     onError: (err: Error) => {
-      const msg = err.message || t('takeoff.add_to_boq_failed', 'Failed to add items to BOQ');
+      const msg =
+        err.message ||
+        t("takeoff.add_to_boq_failed", "Failed to add items to BOQ");
       setUploadErrorToast(msg);
-      useToastStore.getState().addToast({ type: 'error', title: t('takeoff.error_title', 'Error'), message: msg });
+      useToastStore
+        .getState()
+        .addToast({
+          type: "error",
+          title: t("takeoff.error_title", "Error"),
+          message: msg,
+        });
       setTimeout(() => setUploadErrorToast(null), 5000);
     },
   });
@@ -1170,13 +1300,13 @@ export function TakeoffPage() {
 
   const handleProjectChange = useCallback(
     (projectId: string) => {
-      const name = (projects || []).find((p) => p.id === projectId)?.name ?? '';
+      const name = (projects || []).find((p) => p.id === projectId)?.name ?? "";
       if (projectId) {
         useProjectContextStore.getState().setActiveProject(projectId, name);
       } else {
         useProjectContextStore.getState().clearProject();
       }
-      setSelectedBoqId('');
+      setSelectedBoqId("");
     },
     [projects],
   );
@@ -1237,7 +1367,7 @@ export function TakeoffPage() {
             setSearchParams(
               (prev) => {
                 const next = new URLSearchParams(prev);
-                next.set('doc', data.id);
+                next.set("doc", data.id);
                 return next;
               },
               { replace: true },
@@ -1249,10 +1379,12 @@ export function TakeoffPage() {
           },
           onError: (err) => {
             // Keep the entry visible with error state instead of removing it
-            const msg = err instanceof Error ? err.message : 'Upload failed';
+            const msg = err instanceof Error ? err.message : "Upload failed";
             setDocuments((prev) =>
               prev.map((d) =>
-                d.id === tempId ? { ...d, uploading: false, uploadError: msg } : d,
+                d.id === tempId
+                  ? { ...d, uploading: false, uploadError: msg }
+                  : d,
               ),
             );
             setUploadErrorToast(msg);
@@ -1267,14 +1399,16 @@ export function TakeoffPage() {
     (docId: string) => {
       setDocuments((prev) => prev.filter((d) => d.id !== docId));
       setActiveDocId((prev) => (prev === docId ? null : prev));
-      setViewerDoc((prev) => (prev && prev.url.includes(`/${docId}/`) ? null : prev));
+      setViewerDoc((prev) =>
+        prev && prev.url.includes(`/${docId}/`) ? null : prev,
+      );
       // Drop the doc param if it matched, so a reload doesn't revive the
       // deleted entry as a placeholder via the initial-read effect.
       setSearchParams(
         (prev) => {
-          if (prev.get('doc') !== docId) return prev;
+          if (prev.get("doc") !== docId) return prev;
           const next = new URLSearchParams(prev);
-          next.delete('doc');
+          next.delete("doc");
           return next;
         },
         { replace: true },
@@ -1304,22 +1438,25 @@ export function TakeoffPage() {
     [extractTablesMutation],
   );
 
-  const handleToggleElement = useCallback((docId: string, elementId: string) => {
-    setDocuments((prev) =>
-      prev.map((d) => {
-        if (d.id !== docId || !d.analysis) return d;
-        return {
-          ...d,
-          analysis: {
-            ...d.analysis,
-            elements: d.analysis.elements.map((el) =>
-              el.id === elementId ? { ...el, selected: !el.selected } : el,
-            ),
-          },
-        };
-      }),
-    );
-  }, []);
+  const handleToggleElement = useCallback(
+    (docId: string, elementId: string) => {
+      setDocuments((prev) =>
+        prev.map((d) => {
+          if (d.id !== docId || !d.analysis) return d;
+          return {
+            ...d,
+            analysis: {
+              ...d.analysis,
+              elements: d.analysis.elements.map((el) =>
+                el.id === elementId ? { ...el, selected: !el.selected } : el,
+              ),
+            },
+          };
+        }),
+      );
+    },
+    [],
+  );
 
   const handleSelectAll = useCallback((docId: string) => {
     setDocuments((prev) =>
@@ -1329,7 +1466,10 @@ export function TakeoffPage() {
           ...d,
           analysis: {
             ...d.analysis,
-            elements: d.analysis.elements.map((el) => ({ ...el, selected: true })),
+            elements: d.analysis.elements.map((el) => ({
+              ...el,
+              selected: true,
+            })),
           },
         };
       }),
@@ -1344,7 +1484,10 @@ export function TakeoffPage() {
           ...d,
           analysis: {
             ...d.analysis,
-            elements: d.analysis.elements.map((el) => ({ ...el, selected: false })),
+            elements: d.analysis.elements.map((el) => ({
+              ...el,
+              selected: false,
+            })),
           },
         };
       }),
@@ -1354,7 +1497,9 @@ export function TakeoffPage() {
   const handleAddToBOQ = useCallback(
     (docId: string) => {
       if (!selectedBoqId) {
-        setUploadErrorToast(t('takeoff.no_boq_selected', 'Please select a project and BOQ first'));
+        setUploadErrorToast(
+          t("takeoff.no_boq_selected", "Please select a project and BOQ first"),
+        );
         setTimeout(() => setUploadErrorToast(null), 5000);
         return;
       }
@@ -1371,7 +1516,7 @@ export function TakeoffPage() {
           // Canonicalize the (often German / raw-OCR) extracted unit so
           // BOQ validation + cost matching can see the row (D-TKC-021).
           unit: canonicalizeUnit(el.unit),
-          source: 'takeoff',
+          source: "takeoff",
           metadata: { takeoff_raw_unit: el.unit },
         }));
 
@@ -1385,7 +1530,9 @@ export function TakeoffPage() {
   const handleQuickMeasurement = useCallback(
     (measurement: QuickMeasurement) => {
       if (!selectedBoqId) {
-        setUploadErrorToast(t('takeoff.no_boq_selected', 'Please select a project and BOQ first'));
+        setUploadErrorToast(
+          t("takeoff.no_boq_selected", "Please select a project and BOQ first"),
+        );
         setTimeout(() => setUploadErrorToast(null), 5000);
         return;
       }
@@ -1394,7 +1541,7 @@ export function TakeoffPage() {
           description: measurement.description,
           quantity: parseFloat(measurement.value) || 0,
           unit: canonicalizeUnit(measurement.unit),
-          source: 'takeoff',
+          source: "takeoff",
           metadata: { takeoff_raw_unit: measurement.unit },
         },
       ]);
@@ -1445,12 +1592,11 @@ export function TakeoffPage() {
       const doc = filmstripDocuments.find((d) => d.id === docId);
       if (!doc) return;
       // Local-only (not yet uploaded or failed) docs can't be opened via URL
-      if (doc.uploading || doc.uploadError || docId.startsWith('temp-')) {
+      if (doc.uploading || doc.uploadError || docId.startsWith("temp-")) {
         setUploadErrorToast(
-          t(
-            'takeoff.doc_not_ready',
-            { defaultValue: 'Document is not ready to open yet.‌⁠‍' },
-          ),
+          t("takeoff.doc_not_ready", {
+            defaultValue: "Document is not ready to open yet.‌⁠‍",
+          }),
         );
         setTimeout(() => setUploadErrorToast(null), 4000);
         return;
@@ -1460,13 +1606,13 @@ export function TakeoffPage() {
         url: `/api/v1/takeoff/documents/${docId}/download/`,
         name: doc.filename,
       });
-      setActiveTab('measurements');
+      setActiveTab("measurements");
       // Pin the current doc to the URL so reload restores the viewer.
       setSearchParams(
         (prev) => {
           const next = new URLSearchParams(prev);
-          next.set('doc', docId);
-          next.set('tab', 'measurements');
+          next.set("doc", docId);
+          next.set("tab", "measurements");
           return next;
         },
         { replace: true },
@@ -1501,49 +1647,182 @@ export function TakeoffPage() {
             <rect width="1600" height="1000" fill="url(#tkoPageFade)" />
           </mask>
         </defs>
-        <g mask="url(#tkoPageMask)" opacity="0.06" fill="none" stroke="currentColor" strokeWidth="1.1">
+        <g
+          mask="url(#tkoPageMask)"
+          opacity="0.06"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.1"
+        >
           <rect x="110" y="90" width="280" height="170" strokeDasharray="8 6" />
           <circle cx="110" cy="90" r="4" fill="currentColor" />
           <circle cx="390" cy="90" r="4" fill="currentColor" />
           <circle cx="390" cy="260" r="4" fill="currentColor" />
           <circle cx="110" cy="260" r="4" fill="currentColor" />
-          <text x="250" y="180" textAnchor="middle" fill="currentColor" stroke="none" fontSize="14" fontFamily="ui-monospace,monospace" opacity="0.55">47.6 m²</text>
+          <text
+            x="250"
+            y="180"
+            textAnchor="middle"
+            fill="currentColor"
+            stroke="none"
+            fontSize="14"
+            fontFamily="ui-monospace,monospace"
+            opacity="0.55"
+          >
+            47.6 m²
+          </text>
 
-          <polygon points="820,120 1080,140 1180,260 1140,390 940,430 820,340 760,230" strokeDasharray="6 4" />
-          {([[820, 120], [1080, 140], [1180, 260], [1140, 390], [940, 430], [820, 340], [760, 230]] as [number, number][]).map(([x, y], i) => (
+          <polygon
+            points="820,120 1080,140 1180,260 1140,390 940,430 820,340 760,230"
+            strokeDasharray="6 4"
+          />
+          {(
+            [
+              [820, 120],
+              [1080, 140],
+              [1180, 260],
+              [1140, 390],
+              [940, 430],
+              [820, 340],
+              [760, 230],
+            ] as [number, number][]
+          ).map(([x, y], i) => (
             <circle key={`pA${i}`} cx={x} cy={y} r="3.5" fill="currentColor" />
           ))}
-          <text x="960" y="290" textAnchor="middle" fill="currentColor" stroke="none" fontSize="13" fontFamily="ui-monospace,monospace" opacity="0.5">83.2 m²</text>
+          <text
+            x="960"
+            y="290"
+            textAnchor="middle"
+            fill="currentColor"
+            stroke="none"
+            fontSize="13"
+            fontFamily="ui-monospace,monospace"
+            opacity="0.5"
+          >
+            83.2 m²
+          </text>
 
           <g strokeDasharray="3 3">
             <line x1="1280" y1="130" x2="1540" y2="200" />
-            <line x1="1275" y1="120" x2="1285" y2="140" strokeDasharray="0" strokeWidth="2" />
-            <line x1="1535" y1="190" x2="1545" y2="210" strokeDasharray="0" strokeWidth="2" />
+            <line
+              x1="1275"
+              y1="120"
+              x2="1285"
+              y2="140"
+              strokeDasharray="0"
+              strokeWidth="2"
+            />
+            <line
+              x1="1535"
+              y1="190"
+              x2="1545"
+              y2="210"
+              strokeDasharray="0"
+              strokeWidth="2"
+            />
           </g>
-          <text x="1410" y="155" textAnchor="middle" fill="currentColor" stroke="none" fontSize="12" fontFamily="ui-monospace,monospace" opacity="0.5">12.43 m</text>
+          <text
+            x="1410"
+            y="155"
+            textAnchor="middle"
+            fill="currentColor"
+            stroke="none"
+            fontSize="12"
+            fontFamily="ui-monospace,monospace"
+            opacity="0.5"
+          >
+            12.43 m
+          </text>
 
           <polyline points="140,620 260,560 380,620 520,560 640,640" />
-          {([[140, 620], [260, 560], [380, 620], [520, 560], [640, 640]] as [number, number][]).map(([x, y], i) => (
-            <rect key={`pB${i}`} x={x - 3} y={y - 3} width="6" height="6" fill="currentColor" />
+          {(
+            [
+              [140, 620],
+              [260, 560],
+              [380, 620],
+              [520, 560],
+              [640, 640],
+            ] as [number, number][]
+          ).map(([x, y], i) => (
+            <rect
+              key={`pB${i}`}
+              x={x - 3}
+              y={y - 3}
+              width="6"
+              height="6"
+              fill="currentColor"
+            />
           ))}
 
-          <rect x="1080" y="620" width="360" height="220" strokeDasharray="8 6" />
-          {([[1080, 620], [1440, 620], [1440, 840], [1080, 840]] as [number, number][]).map(([x, y], i) => (
+          <rect
+            x="1080"
+            y="620"
+            width="360"
+            height="220"
+            strokeDasharray="8 6"
+          />
+          {(
+            [
+              [1080, 620],
+              [1440, 620],
+              [1440, 840],
+              [1080, 840],
+            ] as [number, number][]
+          ).map(([x, y], i) => (
             <circle key={`pC${i}`} cx={x} cy={y} r="4" fill="currentColor" />
           ))}
-          <text x="1260" y="740" textAnchor="middle" fill="currentColor" stroke="none" fontSize="14" fontFamily="ui-monospace,monospace" opacity="0.5">79.2 m²</text>
+          <text
+            x="1260"
+            y="740"
+            textAnchor="middle"
+            fill="currentColor"
+            stroke="none"
+            fontSize="14"
+            fontFamily="ui-monospace,monospace"
+            opacity="0.5"
+          >
+            79.2 m²
+          </text>
 
-          <polygon points="60,440 270,460 320,640 90,630" strokeDasharray="4 4" />
-          {([[60, 440], [270, 460], [320, 640], [90, 630]] as [number, number][]).map(([x, y], i) => (
+          <polygon
+            points="60,440 270,460 320,640 90,630"
+            strokeDasharray="4 4"
+          />
+          {(
+            [
+              [60, 440],
+              [270, 460],
+              [320, 640],
+              [90, 630],
+            ] as [number, number][]
+          ).map(([x, y], i) => (
             <circle key={`pD${i}`} cx={x} cy={y} r="3" fill="currentColor" />
           ))}
 
           <g>
             <line x1="660" y1="920" x2="940" y2="920" strokeWidth="1" />
             {Array.from({ length: 11 }).map((_, i) => (
-              <line key={`tick${i}`} x1={660 + i * 28} y1="916" x2={660 + i * 28} y2="924" strokeWidth="1" />
+              <line
+                key={`tick${i}`}
+                x1={660 + i * 28}
+                y1="916"
+                x2={660 + i * 28}
+                y2="924"
+                strokeWidth="1"
+              />
             ))}
-            <text x="800" y="950" textAnchor="middle" fill="currentColor" stroke="none" fontSize="10" fontFamily="ui-monospace,monospace" opacity="0.5">0   1   2   3   4   5 m</text>
+            <text
+              x="800"
+              y="950"
+              textAnchor="middle"
+              fill="currentColor"
+              stroke="none"
+              fontSize="10"
+              fontFamily="ui-monospace,monospace"
+              opacity="0.5"
+            >
+              0 1 2 3 4 5 m
+            </text>
           </g>
         </g>
       </svg>
@@ -1555,30 +1834,33 @@ export function TakeoffPage() {
           for a sharper, more "tool-like" feel; no ring-halo. */}
       <div className="mb-3 flex gap-1 rounded-md border border-border-light/80 bg-surface-secondary/40 p-1">
         <button
-          onClick={() => setActiveTab('measurements')}
+          onClick={() => setActiveTab("measurements")}
           className={clsx(
-            'flex flex-1 items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-semibold transition-colors',
-            activeTab === 'measurements'
-              ? 'bg-surface-primary text-oe-blue shadow-sm'
-              : 'text-content-tertiary hover:text-content-primary hover:bg-surface-primary/60',
+            "flex flex-1 items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-semibold transition-colors",
+            activeTab === "measurements"
+              ? "bg-surface-primary text-oe-blue shadow-sm"
+              : "text-content-tertiary hover:text-content-primary hover:bg-surface-primary/60",
           )}
         >
           <Ruler size={15} strokeWidth={2.1} />
-          {t('takeoff.tab_measurements', 'Measurements')}
+          {t("takeoff.tab_measurements", "Measurements")}
         </button>
         <button
-          onClick={() => setActiveTab('documents')}
+          onClick={() => setActiveTab("documents")}
           className={clsx(
-            'flex flex-1 items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-semibold transition-colors',
-            activeTab === 'documents'
-              ? 'bg-surface-primary text-oe-blue shadow-sm'
-              : 'text-content-tertiary hover:text-content-primary hover:bg-surface-primary/60',
+            "flex flex-1 items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-semibold transition-colors",
+            activeTab === "documents"
+              ? "bg-surface-primary text-oe-blue shadow-sm"
+              : "text-content-tertiary hover:text-content-primary hover:bg-surface-primary/60",
           )}
         >
           <Sparkles size={15} strokeWidth={2.1} />
-          {t('takeoff.tab_documents', 'Documents & AI')}
+          {t("takeoff.tab_documents", "Documents & AI")}
           {documents.length > 0 && (
-            <Badge variant={activeTab === 'documents' ? 'blue' : 'neutral'} size="sm">
+            <Badge
+              variant={activeTab === "documents" ? "blue" : "neutral"}
+              size="sm"
+            >
               {documents.length}
             </Badge>
           )}
@@ -1586,26 +1868,55 @@ export function TakeoffPage() {
       </div>
 
       {/* Tab content */}
-      {activeTab === 'documents' ? (
+      {activeTab === "documents" ? (
         <>
           {/* Workflow steps */}
           <div className="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-3">
             {[
-              { num: '1', label: t('takeoff.step_upload', 'Upload PDF'), icon: Upload, done: documents.length > 0 },
-              { num: '2', label: t('takeoff.step_analyze', 'AI Analysis'), icon: Sparkles, done: documents.some(d => d.analysis) },
-              { num: '3', label: t('takeoff.step_review', 'Review & Select'), icon: CheckCircle2, done: documents.some(d => d.analysis?.elements.some(e => e.selected)) },
-              { num: '4', label: t('takeoff.step_add', 'Add to BOQ'), icon: Plus, done: !!addToBOQSuccess },
+              {
+                num: "1",
+                label: t("takeoff.step_upload", "Upload PDF"),
+                icon: Upload,
+                done: documents.length > 0,
+              },
+              {
+                num: "2",
+                label: t("takeoff.step_analyze", "AI Analysis"),
+                icon: Sparkles,
+                done: documents.some((d) => d.analysis),
+              },
+              {
+                num: "3",
+                label: t("takeoff.step_review", "Review & Select"),
+                icon: CheckCircle2,
+                done: documents.some((d) =>
+                  d.analysis?.elements.some((e) => e.selected),
+                ),
+              },
+              {
+                num: "4",
+                label: t("takeoff.step_add", "Add to BOQ"),
+                icon: Plus,
+                done: !!addToBOQSuccess,
+              },
             ].map((step) => (
-              <div key={step.num} className={clsx(
-                'flex items-center gap-2.5 rounded-xl px-4 py-2.5 border transition-colors',
-                step.done
-                  ? 'border-semantic-success/30 bg-semantic-success-bg/50 text-semantic-success'
-                  : 'border-border-light bg-surface-secondary/30 text-content-tertiary',
-              )}>
-                <div className={clsx(
-                  'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-                  step.done ? 'bg-semantic-success text-white' : 'bg-content-tertiary/20 text-content-tertiary',
-                )}>
+              <div
+                key={step.num}
+                className={clsx(
+                  "flex items-center gap-2.5 rounded-xl px-4 py-2.5 border transition-colors",
+                  step.done
+                    ? "border-semantic-success/30 bg-semantic-success-bg/50 text-semantic-success"
+                    : "border-border-light bg-surface-secondary/30 text-content-tertiary",
+                )}
+              >
+                <div
+                  className={clsx(
+                    "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                    step.done
+                      ? "bg-semantic-success text-white"
+                      : "bg-content-tertiary/20 text-content-tertiary",
+                  )}
+                >
                   {step.done ? <CheckCircle2 size={14} /> : step.num}
                 </div>
                 <span className="text-xs font-medium">{step.label}</span>
@@ -1621,11 +1932,14 @@ export function TakeoffPage() {
                   <Skeleton height={36} className="w-full" rounded="md" />
                 ) : (
                   <SelectDropdown
-                    label={t('takeoff.select_project', 'Project')}
+                    label={t("takeoff.select_project", "Project")}
                     value={selectedProjectId}
                     onChange={handleProjectChange}
                     options={projectOptions}
-                    placeholder={t('takeoff.select_project_placeholder', 'Choose a project...')}
+                    placeholder={t(
+                      "takeoff.select_project_placeholder",
+                      "Choose a project...",
+                    )}
                   />
                 )}
               </div>
@@ -1634,21 +1948,24 @@ export function TakeoffPage() {
                   <Skeleton height={36} className="w-full" rounded="md" />
                 ) : (
                   <SelectDropdown
-                    label={t('takeoff.select_boq', 'Bill of Quantities')}
+                    label={t("takeoff.select_boq", "Bill of Quantities")}
                     value={selectedBoqId}
                     onChange={handleBoqChange}
                     options={boqOptions}
                     placeholder={
                       selectedProjectId
-                        ? t('takeoff.select_boq_placeholder', 'Choose a BOQ...')
-                        : t('takeoff.select_project_first', 'Select a project first')
+                        ? t("takeoff.select_boq_placeholder", "Choose a BOQ...")
+                        : t(
+                            "takeoff.select_project_first",
+                            "Select a project first",
+                          )
                     }
                   />
                 )}
               </div>
               {!hasBoqSelected && (
                 <p className="text-2xs text-content-quaternary sm:pb-1.5">
-                  {t('takeoff.boq_hint', 'Select to add items to BOQ')}
+                  {t("takeoff.boq_hint", "Select to add items to BOQ")}
                 </p>
               )}
             </div>
@@ -1657,16 +1974,26 @@ export function TakeoffPage() {
           {/* Success toast */}
           {addToBOQSuccess && (
             <div className="mb-4 flex items-center gap-3 rounded-xl bg-semantic-success-bg px-5 py-3 animate-fade-in">
-              <CheckCircle2 size={18} className="shrink-0 text-semantic-success" />
-              <p className="text-sm font-medium text-semantic-success">{addToBOQSuccess}</p>
+              <CheckCircle2
+                size={18}
+                className="shrink-0 text-semantic-success"
+              />
+              <p className="text-sm font-medium text-semantic-success">
+                {addToBOQSuccess}
+              </p>
             </div>
           )}
 
           {/* Upload error toast */}
           {uploadErrorToast && (
             <div className="mb-4 flex items-center gap-3 rounded-xl bg-semantic-error-bg px-5 py-3 animate-fade-in">
-              <AlertTriangle size={18} className="shrink-0 text-semantic-error" />
-              <p className="text-sm font-medium text-semantic-error flex-1">{uploadErrorToast}</p>
+              <AlertTriangle
+                size={18}
+                className="shrink-0 text-semantic-error"
+              />
+              <p className="text-sm font-medium text-semantic-error flex-1">
+                {uploadErrorToast}
+              </p>
               <button
                 onClick={() => setUploadErrorToast(null)}
                 className="shrink-0 rounded-md p-1 text-semantic-error/60 hover:text-semantic-error transition-colors"
@@ -1686,7 +2013,7 @@ export function TakeoffPage() {
           {filmstripDocuments.length > 0 && (
             <div className="mb-8">
               <h2 className="mb-4 text-lg font-semibold text-content-primary">
-                {t('takeoff.uploaded_documents', 'Uploaded Documents')}
+                {t("takeoff.uploaded_documents", "Uploaded Documents")}
               </h2>
               <div className="space-y-4">
                 {filmstripDocuments.map((doc) => (
@@ -1711,13 +2038,20 @@ export function TakeoffPage() {
           {filmstripDocuments.length === 0 && !serverDocumentsLoading && (
             <div className="mb-8 rounded-xl border border-border-light/60 bg-surface-secondary/20 px-6 py-8 text-center">
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-oe-blue-subtle">
-                <FileSearch size={24} strokeWidth={1.5} className="text-oe-blue" />
+                <FileSearch
+                  size={24}
+                  strokeWidth={1.5}
+                  className="text-oe-blue"
+                />
               </div>
               <h3 className="text-sm font-semibold text-content-primary mb-1">
-                {t('takeoff.no_documents', 'No documents uploaded')}
+                {t("takeoff.no_documents", "No documents uploaded")}
               </h3>
               <p className="text-xs text-content-tertiary max-w-md mx-auto">
-                {t('takeoff.no_documents_description', 'Upload PDF construction drawings above. AI will extract walls, slabs, doors, and other elements with quantities.')}
+                {t(
+                  "takeoff.no_documents_description",
+                  "Upload PDF construction drawings above. AI will extract walls, slabs, doors, and other elements with quantities.",
+                )}
               </p>
             </div>
           )}
@@ -1730,25 +2064,30 @@ export function TakeoffPage() {
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-content-primary">
-                  {t('takeoff.quick_measurements', 'Quick Measurements')}
+                  {t("takeoff.quick_measurements", "Quick Measurements")}
                 </h2>
                 <p className="text-2xs text-content-tertiary">
-                  {t('takeoff.quick_measurements_desc', 'Add quantities manually without PDF')}
+                  {t(
+                    "takeoff.quick_measurements_desc",
+                    "Add quantities manually without PDF",
+                  )}
                 </p>
               </div>
             </div>
-            <QuickMeasurementForm onAdd={handleQuickMeasurement} disabled={!hasBoqSelected} />
+            <QuickMeasurementForm
+              onAdd={handleQuickMeasurement}
+              disabled={!hasBoqSelected}
+            />
             {!hasBoqSelected && (
               <p className="mt-3 flex items-center gap-1.5 text-xs text-content-tertiary">
                 <AlertTriangle size={12} />
                 {t(
-                  'takeoff.select_boq_to_add',
-                  'Select a project and BOQ above to add measurements.',
+                  "takeoff.select_boq_to_add",
+                  "Select a project and BOQ above to add measurements.",
                 )}
               </p>
             )}
           </Card>
-
         </>
       ) : (
         // Viewport-bounded column so the bottom file panel is always
@@ -1799,11 +2138,13 @@ export function TakeoffPage() {
             onChange={(e) => {
               const files = Array.from(e.target.files || []).filter(
                 (f) =>
-                  (f.type === 'application/pdf' || f.type.startsWith('image/')) &&
+                  (f.type === "application/pdf" ||
+                    f.type.startsWith("image/")) &&
                   f.size <= MAX_FILE_SIZE_BYTES,
               );
               if (files.length > 0) handleFilesSelected(files);
-              if (filmstripUploadRef.current) filmstripUploadRef.current.value = '';
+              if (filmstripUploadRef.current)
+                filmstripUploadRef.current.value = "";
             }}
           />
         </div>

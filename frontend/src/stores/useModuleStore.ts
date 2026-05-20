@@ -8,21 +8,25 @@
  * Persists to localStorage and syncs with the server when available.
  */
 
-import { create } from 'zustand';
-import { getModuleDefaults, getModuleDependents, getModuleDependencies } from '@/modules/_registry';
-import { apiGet, apiPatch } from '@/shared/lib/api';
+import { create } from "zustand";
+import {
+  getModuleDefaults,
+  getModuleDependents,
+  getModuleDependencies,
+} from "@/modules/_registry";
+import { apiGet, apiPatch } from "@/shared/lib/api";
 
-const STORE_KEY = 'oe_enabled_modules';
+const STORE_KEY = "oe_enabled_modules";
 
 /** Modules that are ALWAYS shown in sidebar — cannot be disabled. */
 const CORE_MODULES = new Set([
-  'dashboard',
-  'ai-estimate',
-  'projects',
-  'boq',
-  'costs',
-  'settings',
-  'modules',
+  "dashboard",
+  "ai-estimate",
+  "projects",
+  "boq",
+  "costs",
+  "settings",
+  "modules",
 ]);
 
 /** Optional modules with their default enabled state. */
@@ -38,22 +42,24 @@ const OPTIONAL_DEFAULTS: Record<string, boolean> = {
  */
 function migrateInstalledPlugins(): void {
   try {
-    const raw = localStorage.getItem('oe_installed_plugins');
+    const raw = localStorage.getItem("oe_installed_plugins");
     if (!raw) return;
     const plugins: string[] = JSON.parse(raw);
     if (!Array.isArray(plugins) || plugins.length === 0) {
-      localStorage.removeItem('oe_installed_plugins');
+      localStorage.removeItem("oe_installed_plugins");
       return;
     }
     const enabledRaw = localStorage.getItem(STORE_KEY);
-    const enabled: Record<string, boolean> = enabledRaw ? JSON.parse(enabledRaw) : {};
+    const enabled: Record<string, boolean> = enabledRaw
+      ? JSON.parse(enabledRaw)
+      : {};
     for (const pluginId of plugins) {
       enabled[pluginId] = true;
     }
     localStorage.setItem(STORE_KEY, JSON.stringify(enabled));
-    localStorage.removeItem('oe_installed_plugins');
+    localStorage.removeItem("oe_installed_plugins");
     // Clean up legacy custom modules key
-    localStorage.removeItem('oe_custom_modules');
+    localStorage.removeItem("oe_custom_modules");
   } catch {
     // ignore
   }
@@ -147,7 +153,7 @@ export const useModuleStore = create<ModuleStore>((set, get) => ({
     set({ isSyncing: true });
     try {
       const resp = await apiGet<{ modules: Record<string, boolean> }>(
-        '/v1/users/me/module-preferences/',
+        "/v1/users/me/module-preferences/",
       );
       const serverPrefs = resp.modules ?? resp;
       set((state) => {
@@ -169,9 +175,11 @@ export const useModuleStore = create<ModuleStore>((set, get) => ({
     if (saveTimer) clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
       const prefs = get().enabledModules;
-      apiPatch('/v1/users/me/module-preferences/', { modules: prefs }).catch(() => {
-        // Server may not support this endpoint yet — ignore
-      });
+      apiPatch("/v1/users/me/module-preferences/", { modules: prefs }).catch(
+        () => {
+          // Server may not support this endpoint yet — ignore
+        },
+      );
     }, 1000);
   },
 }));

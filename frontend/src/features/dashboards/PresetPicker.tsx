@@ -10,21 +10,21 @@
  * Wired into :class:`QuickInsightPanel` via the ``onPinChart`` prop —
  * the previous "no T05 yet" toast becomes a real save.
  */
-import { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Bookmark, Check, Plus, Users } from 'lucide-react';
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Bookmark, Check, Plus, Users } from "lucide-react";
 
-import { Button, Card, EmptyState, Input } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+import { Button, Card, EmptyState, Input } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 
 import {
   createDashboardPreset,
   listDashboardPresets,
   type CreateDashboardPresetInput,
   type DashboardPreset,
-} from './api';
-import { PresetSyncBadge } from './PresetSyncBadge';
+} from "./api";
+import { PresetSyncBadge } from "./PresetSyncBadge";
 
 export interface PresetPickerProps {
   projectId?: string | null;
@@ -38,13 +38,17 @@ export interface PresetPickerProps {
   onSelect?: (preset: DashboardPreset) => void;
 }
 
-export function PresetPicker({ projectId, snapshot, onSelect }: PresetPickerProps) {
+export function PresetPicker({
+  projectId,
+  snapshot,
+  onSelect,
+}: PresetPickerProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   const presetsQuery = useQuery({
-    queryKey: ['dashboard-presets', projectId ?? null],
+    queryKey: ["dashboard-presets", projectId ?? null],
     queryFn: () =>
       listDashboardPresets({
         projectId: projectId ?? undefined,
@@ -54,14 +58,12 @@ export function PresetPicker({ projectId, snapshot, onSelect }: PresetPickerProp
   });
 
   const myPresets = useMemo(() => {
-    return (presetsQuery.data?.items ?? []).filter(
-      (p) => p.kind === 'preset',
-    );
+    return (presetsQuery.data?.items ?? []).filter((p) => p.kind === "preset");
   }, [presetsQuery.data]);
 
   const collections = useMemo(() => {
     return (presetsQuery.data?.items ?? []).filter(
-      (p) => p.kind === 'collection',
+      (p) => p.kind === "collection",
     );
   }, [presetsQuery.data]);
 
@@ -82,7 +84,7 @@ export function PresetPicker({ projectId, snapshot, onSelect }: PresetPickerProp
         data-testid="preset-picker-trigger"
       >
         <Bookmark className="mr-1 h-3 w-3" />
-        {t('dashboards.presets_button', { defaultValue: 'Presets‌⁠‍' })}
+        {t("dashboards.presets_button", { defaultValue: "Presets‌⁠‍" })}
       </Button>
 
       {open && (
@@ -93,32 +95,32 @@ export function PresetPicker({ projectId, snapshot, onSelect }: PresetPickerProp
         >
           {presetsQuery.isLoading && (
             <div className="p-3 text-xs text-content-tertiary">
-              {t('common.loading', { defaultValue: 'Loading…‌⁠‍' })}
+              {t("common.loading", { defaultValue: "Loading…‌⁠‍" })}
             </div>
           )}
 
           {!presetsQuery.isLoading && (
             <>
               <PresetGroup
-                title={t('dashboards.my_presets', {
-                  defaultValue: 'My presets‌⁠‍',
+                title={t("dashboards.my_presets", {
+                  defaultValue: "My presets‌⁠‍",
                 })}
                 presets={myPresets}
                 onSelect={handleSelect}
-                emptyHint={t('dashboards.no_presets', {
-                  defaultValue: 'No saved presets yet.‌⁠‍',
+                emptyHint={t("dashboards.no_presets", {
+                  defaultValue: "No saved presets yet.‌⁠‍",
                 })}
                 testIdPrefix="my-preset"
               />
               <PresetGroup
-                title={t('dashboards.shared_collections', {
-                  defaultValue: 'Shared collections‌⁠‍',
+                title={t("dashboards.shared_collections", {
+                  defaultValue: "Shared collections‌⁠‍",
                 })}
                 presets={collections}
                 onSelect={handleSelect}
                 icon={<Users className="h-3 w-3" />}
-                emptyHint={t('dashboards.no_collections', {
-                  defaultValue: 'No shared collections on this project yet.',
+                emptyHint={t("dashboards.no_collections", {
+                  defaultValue: "No shared collections on this project yet.",
                 })}
                 testIdPrefix="shared-collection"
               />
@@ -136,8 +138,8 @@ export function PresetPicker({ projectId, snapshot, onSelect }: PresetPickerProp
               data-testid="preset-picker-save-current"
             >
               <Plus className="h-3 w-3" />
-              {t('dashboards.save_current_as_preset', {
-                defaultValue: 'Save current as preset…',
+              {t("dashboards.save_current_as_preset", {
+                defaultValue: "Save current as preset…",
               })}
             </button>
           </div>
@@ -185,7 +187,11 @@ function PresetGroup({
       ) : (
         <ul role="none" data-testid={`${testIdPrefix}-list`}>
           {presets.map((p) => (
-            <li key={p.id} role="none" className="flex items-center gap-1.5 px-1">
+            <li
+              key={p.id}
+              role="none"
+              className="flex items-center gap-1.5 px-1"
+            >
               <button
                 type="button"
                 role="menuitem"
@@ -205,7 +211,7 @@ function PresetGroup({
                   )}
                 </span>
               </button>
-              {p.sync_status && p.sync_status !== 'synced' && (
+              {p.sync_status && p.sync_status !== "synced" && (
                 <span onClick={(e) => e.stopPropagation()}>
                   <PresetSyncBadge
                     presetId={p.id}
@@ -238,9 +244,9 @@ export function PresetSaveModal({
   const queryClient = useQueryClient();
   const toast = useToastStore((s) => s.addToast);
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [kind, setKind] = useState<'preset' | 'collection'>('preset');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [kind, setKind] = useState<"preset" | "collection">("preset");
   const [shared, setShared] = useState(false);
 
   const mutation = useMutation({
@@ -248,24 +254,24 @@ export function PresetSaveModal({
       createDashboardPreset(input),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['dashboard-presets', projectId ?? null],
+        queryKey: ["dashboard-presets", projectId ?? null],
       });
       toast({
-        type: 'success',
-        title: t('dashboards.preset_saved_title', {
-          defaultValue: 'Preset saved',
+        type: "success",
+        title: t("dashboards.preset_saved_title", {
+          defaultValue: "Preset saved",
         }),
-        message: t('dashboards.preset_saved_msg', {
-          defaultValue: 'Available from the Presets dropdown.',
+        message: t("dashboards.preset_saved_msg", {
+          defaultValue: "Available from the Presets dropdown.",
         }),
       });
       onClose();
     },
     onError: (err: Error) => {
       toast({
-        type: 'error',
-        title: t('dashboards.preset_save_failed', {
-          defaultValue: 'Could not save preset',
+        type: "error",
+        title: t("dashboards.preset_save_failed", {
+          defaultValue: "Could not save preset",
         }),
         message: err.message,
       });
@@ -281,7 +287,7 @@ export function PresetSaveModal({
       mutation.mutate({
         name: name.trim(),
         description: description.trim() || null,
-        kind: shared ? 'collection' : kind,
+        kind: shared ? "collection" : kind,
         project_id: projectId ?? null,
         config_json: snapshot(),
         shared_with_project: shared,
@@ -301,8 +307,8 @@ export function PresetSaveModal({
         <form onSubmit={handleSubmit}>
           <div className="border-b border-border-light px-4 py-3">
             <h3 className="text-sm font-semibold text-content-primary">
-              {t('dashboards.save_preset_title', {
-                defaultValue: 'Save current dashboard',
+              {t("dashboards.save_preset_title", {
+                defaultValue: "Save current dashboard",
               })}
             </h3>
           </div>
@@ -312,7 +318,7 @@ export function PresetSaveModal({
                 htmlFor="preset-name"
                 className="block text-xs font-medium text-content-secondary"
               >
-                {t('dashboards.preset_name', { defaultValue: 'Name' })}
+                {t("dashboards.preset_name", { defaultValue: "Name" })}
               </label>
               <Input
                 id="preset-name"
@@ -328,8 +334,8 @@ export function PresetSaveModal({
                 htmlFor="preset-description"
                 className="block text-xs font-medium text-content-secondary"
               >
-                {t('dashboards.preset_description', {
-                  defaultValue: 'Description',
+                {t("dashboards.preset_description", {
+                  defaultValue: "Description",
                 })}
               </label>
               <Input
@@ -342,8 +348,8 @@ export function PresetSaveModal({
             </div>
             <fieldset>
               <legend className="text-xs font-medium text-content-secondary">
-                {t('dashboards.preset_visibility', {
-                  defaultValue: 'Visibility',
+                {t("dashboards.preset_visibility", {
+                  defaultValue: "Visibility",
                 })}
               </legend>
               <div className="mt-1 flex items-center gap-3 text-xs">
@@ -354,12 +360,12 @@ export function PresetSaveModal({
                     checked={!shared}
                     onChange={() => {
                       setShared(false);
-                      setKind('preset');
+                      setKind("preset");
                     }}
                     data-testid="preset-save-kind-private"
                   />
-                  {t('dashboards.preset_private', {
-                    defaultValue: 'Private preset',
+                  {t("dashboards.preset_private", {
+                    defaultValue: "Private preset",
                   })}
                 </label>
                 <label className="flex items-center gap-1">
@@ -369,12 +375,12 @@ export function PresetSaveModal({
                     checked={shared}
                     onChange={() => {
                       setShared(true);
-                      setKind('collection');
+                      setKind("collection");
                     }}
                     data-testid="preset-save-kind-shared"
                   />
-                  {t('dashboards.preset_shared', {
-                    defaultValue: 'Shared collection (project-wide)',
+                  {t("dashboards.preset_shared", {
+                    defaultValue: "Shared collection (project-wide)",
                   })}
                 </label>
               </div>
@@ -388,7 +394,7 @@ export function PresetSaveModal({
               onClick={onClose}
               data-testid="preset-save-cancel"
             >
-              {t('common.cancel', { defaultValue: 'Cancel' })}
+              {t("common.cancel", { defaultValue: "Cancel" })}
             </Button>
             <Button
               type="submit"
@@ -397,8 +403,8 @@ export function PresetSaveModal({
               data-testid="preset-save-submit"
             >
               {mutation.isPending
-                ? t('common.saving', { defaultValue: 'Saving…' })
-                : t('common.save', { defaultValue: 'Save' })}
+                ? t("common.saving", { defaultValue: "Saving…" })
+                : t("common.save", { defaultValue: "Save" })}
             </Button>
           </div>
         </form>
@@ -417,12 +423,12 @@ export function PresetPickerEmptyState() {
   return (
     <EmptyState
       icon={<Bookmark className="h-8 w-8 text-neutral-500" />}
-      title={t('dashboards.no_presets_title', {
-        defaultValue: 'No saved presets',
+      title={t("dashboards.no_presets_title", {
+        defaultValue: "No saved presets",
       })}
-      description={t('dashboards.no_presets_desc', {
+      description={t("dashboards.no_presets_desc", {
         defaultValue:
-          'Pin a chart from Quick Insights to start a preset, or save the current view.',
+          "Pin a chart from Quick Insights to start a preset, or save the current view.",
       })}
     />
   );

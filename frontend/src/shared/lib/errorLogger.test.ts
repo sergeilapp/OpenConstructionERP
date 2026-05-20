@@ -11,39 +11,39 @@
 // `getLastError()` now prefers the most recent level=error entry over
 // warning-level noise. These tests lock that contract in.
 
-import { describe, it, expect, beforeEach } from 'vitest';
-import { getLastError, logApiError, clearErrorLog } from './errorLogger';
+import { describe, it, expect, beforeEach } from "vitest";
+import { getLastError, logApiError, clearErrorLog } from "./errorLogger";
 
-describe('errorLogger.getLastError — bug-report payload selection', () => {
+describe("errorLogger.getLastError — bug-report payload selection", () => {
   beforeEach(() => {
     clearErrorLog();
   });
 
-  it('returns null when nothing has been logged', () => {
+  it("returns null when nothing has been logged", () => {
     expect(getLastError()).toBeNull();
   });
 
-  it('returns the most recent entry when only warnings exist', () => {
-    logApiError('/v1/foo/', 404, 'not found');
-    logApiError('/v1/bar/', 404, 'not found');
+  it("returns the most recent entry when only warnings exist", () => {
+    logApiError("/v1/foo/", 404, "not found");
+    logApiError("/v1/bar/", 404, "not found");
     const last = getLastError();
     expect(last).not.toBeNull();
-    expect(last!.message).toContain('/v1/bar/');
+    expect(last!.message).toContain("/v1/bar/");
   });
 
-  it('prefers a level=error entry over a more recent warning', () => {
+  it("prefers a level=error entry over a more recent warning", () => {
     // 500 → level=error
-    logApiError('/v1/important/', 500, 'oops');
+    logApiError("/v1/important/", 500, "oops");
     // 404 → level=warning, but the 500 was the real problem
-    logApiError('/v1/bim_hub/abc-123/', 404, 'not found');
+    logApiError("/v1/bim_hub/abc-123/", 404, "not found");
     const last = getLastError();
-    expect(last!.message).toContain('/v1/important/');
-    expect(last!.message).not.toContain('/v1/bim_hub/');
+    expect(last!.message).toContain("/v1/important/");
+    expect(last!.message).not.toContain("/v1/bim_hub/");
   });
 
-  it('falls back to most recent warning when no error exists in the window', () => {
-    logApiError('/v1/some/', 404, 'not found');
+  it("falls back to most recent warning when no error exists in the window", () => {
+    logApiError("/v1/some/", 404, "not found");
     const last = getLastError();
-    expect(last!.message).toContain('/v1/some/');
+    expect(last!.message).toContain("/v1/some/");
   });
 });

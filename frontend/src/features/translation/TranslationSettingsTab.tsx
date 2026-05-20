@@ -21,14 +21,8 @@
  * project convention (``CLAUDE.md`` → "i18n EVERYWHERE").
  */
 
-import {
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-  type FormEvent,
-} from 'react';
-import { useTranslation } from 'react-i18next';
+import { memo, useCallback, useMemo, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import {
   AlertCircle,
   Database,
@@ -39,13 +33,13 @@ import {
   Languages,
   Loader2,
   Sparkles,
-} from 'lucide-react';
-import { Badge, Button, Card, CardHeader, Input } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
-import { getErrorMessage } from '@/shared/lib/api';
-import { IATE_ALLOWED_PREFIXES, isIateUrlAllowed } from './api';
-import { useTranslationStatus, useTriggerDownload } from './queries';
-import type { DictionaryEntry, InFlightTask, LookupKind } from './types';
+} from "lucide-react";
+import { Badge, Button, Card, CardHeader, Input } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
+import { getErrorMessage } from "@/shared/lib/api";
+import { IATE_ALLOWED_PREFIXES, isIateUrlAllowed } from "./api";
+import { useTranslationStatus, useTriggerDownload } from "./queries";
+import type { DictionaryEntry, InFlightTask, LookupKind } from "./types";
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -54,29 +48,29 @@ import type { DictionaryEntry, InFlightTask, LookupKind } from './types';
  *  "Other" option lets users type any code — MUSE 404s on missing pairs,
  *  surfaced as a backend error toast. */
 const PRESET_MUSE_PAIRS: ReadonlyArray<{ src: string; tgt: string }> = [
-  { src: 'en', tgt: 'de' },
-  { src: 'de', tgt: 'en' },
-  { src: 'en', tgt: 'fr' },
-  { src: 'fr', tgt: 'en' },
-  { src: 'en', tgt: 'es' },
-  { src: 'es', tgt: 'en' },
-  { src: 'en', tgt: 'it' },
-  { src: 'it', tgt: 'en' },
-  { src: 'en', tgt: 'ru' },
-  { src: 'ru', tgt: 'en' },
-  { src: 'en', tgt: 'pl' },
-  { src: 'pl', tgt: 'en' },
-  { src: 'en', tgt: 'tr' },
-  { src: 'tr', tgt: 'en' },
-  { src: 'en', tgt: 'nl' },
-  { src: 'nl', tgt: 'en' },
-  { src: 'de', tgt: 'fr' },
-  { src: 'fr', tgt: 'de' },
-  { src: 'de', tgt: 'es' },
-  { src: 'es', tgt: 'de' },
+  { src: "en", tgt: "de" },
+  { src: "de", tgt: "en" },
+  { src: "en", tgt: "fr" },
+  { src: "fr", tgt: "en" },
+  { src: "en", tgt: "es" },
+  { src: "es", tgt: "en" },
+  { src: "en", tgt: "it" },
+  { src: "it", tgt: "en" },
+  { src: "en", tgt: "ru" },
+  { src: "ru", tgt: "en" },
+  { src: "en", tgt: "pl" },
+  { src: "pl", tgt: "en" },
+  { src: "en", tgt: "tr" },
+  { src: "tr", tgt: "en" },
+  { src: "en", tgt: "nl" },
+  { src: "nl", tgt: "en" },
+  { src: "de", tgt: "fr" },
+  { src: "fr", tgt: "de" },
+  { src: "de", tgt: "es" },
+  { src: "es", tgt: "de" },
 ];
 
-const CUSTOM_PAIR_VALUE = '__custom__';
+const CUSTOM_PAIR_VALUE = "__custom__";
 
 const LANG_CODE_RE = /^[a-z]{2,3}$/i;
 
@@ -84,8 +78,8 @@ const LANG_CODE_RE = /^[a-z]{2,3}$/i;
 
 /** Format bytes as KB/MB/GB with one decimal place. */
 function formatBytes(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
-  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
+  const units = ["B", "KB", "MB", "GB", "TB"];
   const idx = Math.min(
     units.length - 1,
     Math.floor(Math.log(bytes) / Math.log(1024)),
@@ -96,40 +90,44 @@ function formatBytes(bytes: number): string {
 
 /** Render a Unix epoch (seconds) as a relative time string ("3 minutes ago").
  *  We avoid date-fns here to keep the bundle slim. */
-function formatRelative(epochSeconds: number, t: (k: string, o?: Record<string, unknown>) => string): string {
-  if (!Number.isFinite(epochSeconds) || epochSeconds <= 0) return '—';
+function formatRelative(
+  epochSeconds: number,
+  t: (k: string, o?: Record<string, unknown>) => string,
+): string {
+  if (!Number.isFinite(epochSeconds) || epochSeconds <= 0) return "—";
   const diffMs = Date.now() - epochSeconds * 1000;
-  if (diffMs < 0) return t('common.just_now', { defaultValue: 'just now‌⁠‍' });
+  if (diffMs < 0) return t("common.just_now", { defaultValue: "just now‌⁠‍" });
   const seconds = Math.round(diffMs / 1000);
-  if (seconds < 60) return t('common.just_now', { defaultValue: 'just now‌⁠‍' });
+  if (seconds < 60)
+    return t("common.just_now", { defaultValue: "just now‌⁠‍" });
   const minutes = Math.round(seconds / 60);
   if (minutes < 60) {
-    return t('common.minutes_ago', {
-      defaultValue: '{{count}} minute ago‌⁠‍',
-      defaultValue_plural: '{{count}} minutes ago',
+    return t("common.minutes_ago", {
+      defaultValue: "{{count}} minute ago‌⁠‍",
+      defaultValue_plural: "{{count}} minutes ago",
       count: minutes,
     });
   }
   const hours = Math.round(minutes / 60);
   if (hours < 24) {
-    return t('common.hours_ago', {
-      defaultValue: '{{count}} hour ago‌⁠‍',
-      defaultValue_plural: '{{count}} hours ago',
+    return t("common.hours_ago", {
+      defaultValue: "{{count}} hour ago‌⁠‍",
+      defaultValue_plural: "{{count}} hours ago",
       count: hours,
     });
   }
   const days = Math.round(hours / 24);
   if (days < 30) {
-    return t('common.days_ago', {
-      defaultValue: '{{count}} day ago‌⁠‍',
-      defaultValue_plural: '{{count}} days ago',
+    return t("common.days_ago", {
+      defaultValue: "{{count}} day ago‌⁠‍",
+      defaultValue_plural: "{{count}} days ago",
       count: days,
     });
   }
   const months = Math.round(days / 30);
-  return t('common.months_ago', {
-    defaultValue: '{{count}} month ago',
-    defaultValue_plural: '{{count}} months ago',
+  return t("common.months_ago", {
+    defaultValue: "{{count}} month ago",
+    defaultValue_plural: "{{count}} months ago",
     count: months,
   });
 }
@@ -147,7 +145,7 @@ export interface TranslationSettingsTabProps {
 }
 
 export function TranslationSettingsTab({
-  anchorId = 'translation',
+  anchorId = "translation",
 }: TranslationSettingsTabProps) {
   const { t } = useTranslation();
   const statusQuery = useTranslationStatus();
@@ -158,30 +156,32 @@ export function TranslationSettingsTab({
 
   const museEntries: ReadonlyArray<DictionaryEntry> = dictionaries.muse ?? [];
   const iateEntries: ReadonlyArray<DictionaryEntry> = dictionaries.iate ?? [];
-  const allEntries: ReadonlyArray<{ kind: LookupKind; entry: DictionaryEntry }> =
-    useMemo(
-      () => [
-        ...museEntries.map((e) => ({ kind: 'muse' as const, entry: e })),
-        ...iateEntries.map((e) => ({ kind: 'iate' as const, entry: e })),
-      ],
-      [museEntries, iateEntries],
-    );
+  const allEntries: ReadonlyArray<{
+    kind: LookupKind;
+    entry: DictionaryEntry;
+  }> = useMemo(
+    () => [
+      ...museEntries.map((e) => ({ kind: "muse" as const, entry: e })),
+      ...iateEntries.map((e) => ({ kind: "iate" as const, entry: e })),
+    ],
+    [museEntries, iateEntries],
+  );
 
   return (
     <Card padding="lg" id={anchorId}>
       <CardHeader
-        title={t('translation.title', { defaultValue: 'Translation' })}
-        subtitle={t('translation.subtitle', {
+        title={t("translation.title", { defaultValue: "Translation" })}
+        subtitle={t("translation.subtitle", {
           defaultValue:
-            'Bilingual dictionaries used by the cross-language matcher. Downloads run in the background; nothing fetches automatically.',
+            "Bilingual dictionaries used by the cross-language matcher. Downloads run in the background; nothing fetches automatically.",
         })}
         action={
-          <Badge variant={statusQuery.isLoading ? 'neutral' : 'blue'} size="sm">
+          <Badge variant={statusQuery.isLoading ? "neutral" : "blue"} size="sm">
             {statusQuery.isLoading
-              ? t('common.loading', { defaultValue: 'Loading…' })
-              : t('translation.dict_count', {
-                  defaultValue: '{{count}} dictionary',
-                  defaultValue_plural: '{{count}} dictionaries',
+              ? t("common.loading", { defaultValue: "Loading…" })
+              : t("translation.dict_count", {
+                  defaultValue: "{{count}} dictionary",
+                  defaultValue_plural: "{{count}} dictionaries",
                   count: allEntries.length,
                 })}
           </Badge>
@@ -196,8 +196,8 @@ export function TranslationSettingsTab({
         >
           <AlertCircle size={14} className="mt-0.5 shrink-0" aria-hidden />
           <span>
-            {t('translation.status_error', {
-              defaultValue: 'Could not load dictionary status: {{error}}',
+            {t("translation.status_error", {
+              defaultValue: "Could not load dictionary status: {{error}}",
               error: getErrorMessage(statusQuery.error),
             })}
           </span>
@@ -245,17 +245,17 @@ const CacheStatsSection = memo(function CacheStatsSection({
         className="text-sm font-semibold text-content-primary flex items-center gap-2"
       >
         <Database size={14} className="text-oe-blue" aria-hidden />
-        {t('translation.cache.title', { defaultValue: 'Translation cache' })}
+        {t("translation.cache.title", { defaultValue: "Translation cache" })}
       </h4>
       <p
         className="mt-1.5 text-sm text-content-secondary"
         data-testid="translation-cache-stats"
       >
         {loading
-          ? t('common.loading', { defaultValue: 'Loading…' })
-          : t('translation.cache.summary', {
+          ? t("common.loading", { defaultValue: "Loading…" })
+          : t("translation.cache.summary", {
               defaultValue:
-                '{{rows}} cached translations · {{hits}} hits since last reset',
+                "{{rows}} cached translations · {{hits}} hits since last reset",
               rows,
               hits,
             })}
@@ -280,12 +280,12 @@ const DictionariesTable = memo(function DictionariesTable({
       <section className="mt-6" data-testid="translation-dict-loading">
         <h4 className="text-sm font-semibold text-content-primary flex items-center gap-2">
           <HardDrive size={14} className="text-oe-blue" aria-hidden />
-          {t('translation.dict.title', {
-            defaultValue: 'Downloaded dictionaries',
+          {t("translation.dict.title", {
+            defaultValue: "Downloaded dictionaries",
           })}
         </h4>
         <p className="mt-2 text-sm text-content-tertiary">
-          {t('common.loading', { defaultValue: 'Loading…' })}
+          {t("common.loading", { defaultValue: "Loading…" })}
         </p>
       </section>
     );
@@ -296,8 +296,8 @@ const DictionariesTable = memo(function DictionariesTable({
       <section className="mt-6">
         <h4 className="text-sm font-semibold text-content-primary flex items-center gap-2">
           <HardDrive size={14} className="text-oe-blue" aria-hidden />
-          {t('translation.dict.title', {
-            defaultValue: 'Downloaded dictionaries',
+          {t("translation.dict.title", {
+            defaultValue: "Downloaded dictionaries",
           })}
         </h4>
         <div
@@ -305,9 +305,9 @@ const DictionariesTable = memo(function DictionariesTable({
           data-testid="translation-dict-empty"
         >
           <p className="text-sm text-content-tertiary">
-            {t('translation.dict.empty', {
+            {t("translation.dict.empty", {
               defaultValue:
-                'No dictionaries downloaded yet. Download a MUSE language pair below to enable cross-lingual lookup before the LLM tier.',
+                "No dictionaries downloaded yet. Download a MUSE language pair below to enable cross-lingual lookup before the LLM tier.",
             })}
           </p>
         </div>
@@ -319,8 +319,8 @@ const DictionariesTable = memo(function DictionariesTable({
     <section className="mt-6">
       <h4 className="text-sm font-semibold text-content-primary flex items-center gap-2">
         <HardDrive size={14} className="text-oe-blue" aria-hidden />
-        {t('translation.dict.title', {
-          defaultValue: 'Downloaded dictionaries',
+        {t("translation.dict.title", {
+          defaultValue: "Downloaded dictionaries",
         })}
       </h4>
       <div className="mt-3 overflow-hidden rounded-lg border border-border-light">
@@ -331,17 +331,17 @@ const DictionariesTable = memo(function DictionariesTable({
           <thead className="bg-surface-secondary/40">
             <tr className="text-left text-xs uppercase tracking-wide text-content-tertiary">
               <th className="px-4 py-2 font-medium">
-                {t('translation.dict.col_kind', { defaultValue: 'Source' })}
+                {t("translation.dict.col_kind", { defaultValue: "Source" })}
               </th>
               <th className="px-4 py-2 font-medium">
-                {t('translation.dict.col_pair', { defaultValue: 'Pair' })}
+                {t("translation.dict.col_pair", { defaultValue: "Pair" })}
               </th>
               <th className="px-4 py-2 font-medium text-right">
-                {t('translation.dict.col_size', { defaultValue: 'Size' })}
+                {t("translation.dict.col_size", { defaultValue: "Size" })}
               </th>
               <th className="px-4 py-2 font-medium text-right">
-                {t('translation.dict.col_modified', {
-                  defaultValue: 'Modified',
+                {t("translation.dict.col_modified", {
+                  defaultValue: "Modified",
                 })}
               </th>
             </tr>
@@ -355,7 +355,7 @@ const DictionariesTable = memo(function DictionariesTable({
               >
                 <td className="px-4 py-2.5">
                   <Badge
-                    variant={kind === 'muse' ? 'blue' : 'success'}
+                    variant={kind === "muse" ? "blue" : "success"}
                     size="sm"
                   >
                     {kind.toUpperCase()}
@@ -391,8 +391,8 @@ function MuseDownloadForm({
   const trigger = useTriggerDownload();
 
   const [presetValue, setPresetValue] = useState<string>(`en|de`);
-  const [customSrc, setCustomSrc] = useState<string>('');
-  const [customTgt, setCustomTgt] = useState<string>('');
+  const [customSrc, setCustomSrc] = useState<string>("");
+  const [customTgt, setCustomTgt] = useState<string>("");
 
   // Resolve the effective (src, tgt) pair from current form state.
   const isCustom = presetValue === CUSTOM_PAIR_VALUE;
@@ -404,7 +404,7 @@ function MuseDownloadForm({
       if (s === target) return null;
       return { src: s, tgt: target };
     }
-    const [s, target] = presetValue.split('|');
+    const [s, target] = presetValue.split("|");
     if (!s || !target) return null;
     return { src: s, tgt: target };
   }, [isCustom, presetValue, customSrc, customTgt]);
@@ -414,8 +414,8 @@ function MuseDownloadForm({
     if (!effective) return undefined;
     return inFlight.find(
       (task) =>
-        task.kind === 'muse' &&
-        (task.status === 'queued' || task.status === 'running'),
+        task.kind === "muse" &&
+        (task.status === "queued" || task.status === "running"),
     );
   }, [effective, inFlight]);
 
@@ -426,16 +426,21 @@ function MuseDownloadForm({
       e.preventDefault();
       if (!effective || !canSubmit) return;
       trigger.mutate(
-        { kind: 'muse', source_lang: effective.src, target_lang: effective.tgt },
+        {
+          kind: "muse",
+          source_lang: effective.src,
+          target_lang: effective.tgt,
+        },
         {
           onSuccess: () => {
             addToast({
-              type: 'success',
-              title: t('translation.muse.queued_title', {
-                defaultValue: 'Dictionary download queued',
+              type: "success",
+              title: t("translation.muse.queued_title", {
+                defaultValue: "Dictionary download queued",
               }),
-              message: t('translation.muse.queued_message', {
-                defaultValue: 'MUSE {{src}}-{{tgt}} is downloading in the background.',
+              message: t("translation.muse.queued_message", {
+                defaultValue:
+                  "MUSE {{src}}-{{tgt}} is downloading in the background.",
                 src: effective.src,
                 tgt: effective.tgt,
               }),
@@ -443,9 +448,9 @@ function MuseDownloadForm({
           },
           onError: (err) => {
             addToast({
-              type: 'error',
-              title: t('translation.muse.failed_title', {
-                defaultValue: 'Download failed',
+              type: "error",
+              title: t("translation.muse.failed_title", {
+                defaultValue: "Download failed",
               }),
               message: getErrorMessage(err),
             });
@@ -466,14 +471,14 @@ function MuseDownloadForm({
         className="text-sm font-semibold text-content-primary flex items-center gap-2"
       >
         <Languages size={14} className="text-oe-blue" aria-hidden />
-        {t('translation.muse.title', {
-          defaultValue: 'Download MUSE language pair',
+        {t("translation.muse.title", {
+          defaultValue: "Download MUSE language pair",
         })}
       </h4>
       <p className="text-xs text-content-tertiary max-w-2xl">
-        {t('translation.muse.description', {
+        {t("translation.muse.description", {
           defaultValue:
-            'MUSE is a free bilingual dictionary set (Facebook AI Research, CC-BY-NC). Each pair adds ~5 MB and is consulted before the LLM tier of the translation cascade.',
+            "MUSE is a free bilingual dictionary set (Facebook AI Research, CC-BY-NC). Each pair adds ~5 MB and is consulted before the LLM tier of the translation cascade.",
         })}
       </p>
 
@@ -487,7 +492,7 @@ function MuseDownloadForm({
             htmlFor="muse-pair"
             className="text-sm font-medium text-content-primary"
           >
-            {t('translation.muse.pair_label', { defaultValue: 'Pair' })}
+            {t("translation.muse.pair_label", { defaultValue: "Pair" })}
           </label>
           <select
             id="muse-pair"
@@ -502,8 +507,8 @@ function MuseDownloadForm({
               </option>
             ))}
             <option value={CUSTOM_PAIR_VALUE}>
-              {t('translation.muse.other_pair', {
-                defaultValue: 'Other (xx-yy)',
+              {t("translation.muse.other_pair", {
+                defaultValue: "Other (xx-yy)",
               })}
             </option>
           </select>
@@ -513,7 +518,9 @@ function MuseDownloadForm({
           <>
             <div className="w-24">
               <Input
-                label={t('translation.muse.src_label', { defaultValue: 'Source' })}
+                label={t("translation.muse.src_label", {
+                  defaultValue: "Source",
+                })}
                 value={customSrc}
                 onChange={(e) =>
                   setCustomSrc(e.target.value.toLowerCase().slice(0, 3))
@@ -525,7 +532,9 @@ function MuseDownloadForm({
             </div>
             <div className="w-24">
               <Input
-                label={t('translation.muse.tgt_label', { defaultValue: 'Target' })}
+                label={t("translation.muse.tgt_label", {
+                  defaultValue: "Target",
+                })}
                 value={customTgt}
                 onChange={(e) =>
                   setCustomTgt(e.target.value.toLowerCase().slice(0, 3))
@@ -547,7 +556,7 @@ function MuseDownloadForm({
           disabled={!canSubmit}
           data-testid="translation-muse-submit"
         >
-          {t('translation.muse.download', { defaultValue: 'Download' })}
+          {t("translation.muse.download", { defaultValue: "Download" })}
         </Button>
 
         {pairInFlight && (
@@ -556,8 +565,8 @@ function MuseDownloadForm({
             data-testid="translation-muse-inflight"
           >
             <Loader2 size={12} className="animate-spin" aria-hidden />
-            {t('translation.muse.in_flight', {
-              defaultValue: 'A MUSE download is already running ({{pct}}%)',
+            {t("translation.muse.in_flight", {
+              defaultValue: "A MUSE download is already running ({{pct}}%)",
               pct: Math.round((pairInFlight.progress ?? 0) * 100),
             })}
           </span>
@@ -578,15 +587,15 @@ function IateDownloadForm({
   const addToast = useToastStore((s) => s.addToast);
   const trigger = useTriggerDownload();
 
-  const [url, setUrl] = useState<string>('');
-  const [localPath, setLocalPath] = useState<string>('');
+  const [url, setUrl] = useState<string>("");
+  const [localPath, setLocalPath] = useState<string>("");
 
-  const urlIsAllowed = url.trim() === '' || isIateUrlAllowed(url.trim());
+  const urlIsAllowed = url.trim() === "" || isIateUrlAllowed(url.trim());
   const urlError =
-    url.trim() !== '' && !urlIsAllowed
-      ? t('translation.iate.url_not_allowlisted', {
+    url.trim() !== "" && !urlIsAllowed
+      ? t("translation.iate.url_not_allowlisted", {
           defaultValue:
-            'URL must start with one of the allowed prefixes (see hint below).',
+            "URL must start with one of the allowed prefixes (see hint below).",
         })
       : undefined;
 
@@ -594,8 +603,8 @@ function IateDownloadForm({
     () =>
       inFlight.find(
         (task) =>
-          task.kind === 'iate' &&
-          (task.status === 'queued' || task.status === 'running'),
+          task.kind === "iate" &&
+          (task.status === "queued" || task.status === "running"),
       ),
     [inFlight],
   );
@@ -606,24 +615,24 @@ function IateDownloadForm({
       const trimmed = url.trim();
       if (!trimmed || !isIateUrlAllowed(trimmed)) return;
       trigger.mutate(
-        { kind: 'iate', url: trimmed },
+        { kind: "iate", url: trimmed },
         {
           onSuccess: () => {
             addToast({
-              type: 'success',
-              title: t('translation.iate.queued_title', {
-                defaultValue: 'IATE download queued',
+              type: "success",
+              title: t("translation.iate.queued_title", {
+                defaultValue: "IATE download queued",
               }),
-              message: t('translation.iate.queued_url_message', {
-                defaultValue: 'Fetching the TBX dump from the mirror.',
+              message: t("translation.iate.queued_url_message", {
+                defaultValue: "Fetching the TBX dump from the mirror.",
               }),
             });
           },
           onError: (err) => {
             addToast({
-              type: 'error',
-              title: t('translation.iate.failed_title', {
-                defaultValue: 'IATE download failed',
+              type: "error",
+              title: t("translation.iate.failed_title", {
+                defaultValue: "IATE download failed",
               }),
               message: getErrorMessage(err),
             });
@@ -640,25 +649,25 @@ function IateDownloadForm({
       const trimmed = localPath.trim();
       if (!trimmed) return;
       trigger.mutate(
-        { kind: 'iate', local_tbx_path: trimmed },
+        { kind: "iate", local_tbx_path: trimmed },
         {
           onSuccess: () => {
             addToast({
-              type: 'success',
-              title: t('translation.iate.queued_title', {
-                defaultValue: 'IATE processing queued',
+              type: "success",
+              title: t("translation.iate.queued_title", {
+                defaultValue: "IATE processing queued",
               }),
-              message: t('translation.iate.queued_local_message', {
-                defaultValue: 'Parsing {{path}} into per-language TSV files.',
+              message: t("translation.iate.queued_local_message", {
+                defaultValue: "Parsing {{path}} into per-language TSV files.",
                 path: trimmed,
               }),
             });
           },
           onError: (err) => {
             addToast({
-              type: 'error',
-              title: t('translation.iate.failed_title', {
-                defaultValue: 'IATE processing failed',
+              type: "error",
+              title: t("translation.iate.failed_title", {
+                defaultValue: "IATE processing failed",
               }),
               message: getErrorMessage(err),
             });
@@ -670,21 +679,24 @@ function IateDownloadForm({
   );
 
   return (
-    <section className="mt-8 space-y-4" aria-labelledby="translation-iate-heading">
+    <section
+      className="mt-8 space-y-4"
+      aria-labelledby="translation-iate-heading"
+    >
       <h4
         id="translation-iate-heading"
         className="text-sm font-semibold text-content-primary flex items-center gap-2"
       >
         <Globe size={14} className="text-oe-blue" aria-hidden />
-        {t('translation.iate.title', {
-          defaultValue: 'IATE EU termbase',
+        {t("translation.iate.title", {
+          defaultValue: "IATE EU termbase",
         })}
       </h4>
 
       <p className="text-xs text-content-tertiary max-w-2xl">
-        {t('translation.iate.description', {
+        {t("translation.iate.description", {
           defaultValue:
-            'The IATE export is ~600 MB unzipped. Processing extracts term pairs into per-language TSV files. Most users download it manually from iate.europa.eu and point at the local file.',
+            "The IATE export is ~600 MB unzipped. Processing extracts term pairs into per-language TSV files. Most users download it manually from iate.europa.eu and point at the local file.",
         })}
       </p>
 
@@ -696,20 +708,20 @@ function IateDownloadForm({
       >
         <h5 className="text-sm font-medium text-content-primary flex items-center gap-2">
           <FileText size={13} className="text-content-tertiary" aria-hidden />
-          {t('translation.iate.local_title', {
-            defaultValue: 'Process a local TBX file (recommended)',
+          {t("translation.iate.local_title", {
+            defaultValue: "Process a local TBX file (recommended)",
           })}
         </h5>
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex-1 min-w-[20rem]">
             <Input
-              label={t('translation.iate.local_label', {
-                defaultValue: 'Absolute path to .tbx or .tbx.zip',
+              label={t("translation.iate.local_label", {
+                defaultValue: "Absolute path to .tbx or .tbx.zip",
               })}
               value={localPath}
               onChange={(e) => setLocalPath(e.target.value)}
-              placeholder={t('translation.iate.local_placeholder', {
-                defaultValue: '/home/me/Downloads/IATE_export.tbx',
+              placeholder={t("translation.iate.local_placeholder", {
+                defaultValue: "/home/me/Downloads/IATE_export.tbx",
               })}
               data-testid="translation-iate-local-input"
             />
@@ -723,7 +735,7 @@ function IateDownloadForm({
             disabled={!localPath.trim() || trigger.isPending}
             data-testid="translation-iate-local-submit"
           >
-            {t('translation.iate.process', { defaultValue: 'Process file' })}
+            {t("translation.iate.process", { defaultValue: "Process file" })}
           </Button>
         </div>
       </form>
@@ -736,15 +748,15 @@ function IateDownloadForm({
       >
         <h5 className="text-sm font-medium text-content-primary flex items-center gap-2">
           <Globe size={13} className="text-content-tertiary" aria-hidden />
-          {t('translation.iate.url_title', {
-            defaultValue: 'Trigger download from a mirror URL',
+          {t("translation.iate.url_title", {
+            defaultValue: "Trigger download from a mirror URL",
           })}
         </h5>
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex-1 min-w-[20rem]">
             <Input
-              label={t('translation.iate.url_label', {
-                defaultValue: 'TBX mirror URL',
+              label={t("translation.iate.url_label", {
+                defaultValue: "TBX mirror URL",
               })}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -762,16 +774,16 @@ function IateDownloadForm({
             disabled={!url.trim() || !urlIsAllowed || trigger.isPending}
             data-testid="translation-iate-url-submit"
           >
-            {t('translation.iate.trigger', {
-              defaultValue: 'Trigger download',
+            {t("translation.iate.trigger", {
+              defaultValue: "Trigger download",
             })}
           </Button>
         </div>
         <p className="text-xs text-content-tertiary">
-          {t('translation.iate.allowlist_hint', {
+          {t("translation.iate.allowlist_hint", {
             defaultValue:
-              'Allowed prefixes (mirrors backend SSRF guard): {{prefixes}}',
-            prefixes: IATE_ALLOWED_PREFIXES.join(', '),
+              "Allowed prefixes (mirrors backend SSRF guard): {{prefixes}}",
+            prefixes: IATE_ALLOWED_PREFIXES.join(", "),
           })}
         </p>
       </form>
@@ -782,9 +794,9 @@ function IateDownloadForm({
           data-testid="translation-iate-inflight"
         >
           <Loader2 size={12} className="animate-spin" aria-hidden />
-          {t('translation.iate.in_flight', {
+          {t("translation.iate.in_flight", {
             defaultValue:
-              'IATE processing in progress ({{pct}}%) — large files may take several minutes.',
+              "IATE processing in progress ({{pct}}%) — large files may take several minutes.",
             pct: Math.round((iateInFlight.progress ?? 0) * 100),
           })}
         </p>
@@ -802,7 +814,7 @@ const InFlightTasksSection = memo(function InFlightTasksSection({
 }) {
   const { t } = useTranslation();
   const active = tasks.filter(
-    (task) => task.status === 'queued' || task.status === 'running',
+    (task) => task.status === "queued" || task.status === "running",
   );
   if (active.length === 0) return null;
 
@@ -817,13 +829,16 @@ const InFlightTasksSection = memo(function InFlightTasksSection({
         className="text-sm font-semibold text-content-primary flex items-center gap-2"
       >
         <Loader2 size={14} className="text-oe-blue animate-spin" aria-hidden />
-        {t('translation.tasks.title', {
-          defaultValue: 'In-flight downloads',
+        {t("translation.tasks.title", {
+          defaultValue: "In-flight downloads",
         })}
       </h4>
       <ul className="space-y-2">
         {active.map((task) => {
-          const pct = Math.max(0, Math.min(100, Math.round(task.progress * 100)));
+          const pct = Math.max(
+            0,
+            Math.min(100, Math.round(task.progress * 100)),
+          );
           return (
             <li
               key={task.task_id}
@@ -832,7 +847,7 @@ const InFlightTasksSection = memo(function InFlightTasksSection({
             >
               <div className="flex items-center gap-2">
                 <Badge
-                  variant={task.kind === 'muse' ? 'blue' : 'success'}
+                  variant={task.kind === "muse" ? "blue" : "success"}
                   size="sm"
                 >
                   {task.kind.toUpperCase()}
@@ -852,8 +867,8 @@ const InFlightTasksSection = memo(function InFlightTasksSection({
                 aria-valuenow={pct}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                aria-label={t('translation.tasks.progress_aria', {
-                  defaultValue: 'Download progress',
+                aria-label={t("translation.tasks.progress_aria", {
+                  defaultValue: "Download progress",
                 })}
               >
                 <div

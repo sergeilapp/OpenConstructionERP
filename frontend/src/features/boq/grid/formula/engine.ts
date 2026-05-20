@@ -24,12 +24,12 @@
  * never write a negative quantity.
  */
 
-import type { Position } from '../../api';
+import type { Position } from "../../api";
 
 /* ── Public types ───────────────────────────────────────────────────── */
 
 export interface FormulaVariable {
-  type: 'number' | 'text' | 'date';
+  type: "number" | "text" | "date";
   value: string | number | null;
 }
 
@@ -54,14 +54,14 @@ export interface FormulaContext {
 
 /** Sentinel returned by `pos()` / `section()` — supports member access via `.`. */
 export interface PositionRecord {
-  __kind: 'position';
+  __kind: "position";
   qty: number;
   rate: number;
   total: number;
 }
 
 export interface SectionRecord {
-  __kind: 'section';
+  __kind: "section";
   total: number;
 }
 
@@ -78,14 +78,17 @@ type Value = number | string | RecordValue | boolean;
  * legacy mode (no cross-position refs, no variables, no comparisons —
  * just math). This keeps every existing callsite green.
  */
-export function evaluateFormula(input: string, ctx?: FormulaContext): number | null {
+export function evaluateFormula(
+  input: string,
+  ctx?: FormulaContext,
+): number | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
-  const body = trimmed.startsWith('=') ? trimmed.slice(1) : trimmed;
+  const body = trimmed.startsWith("=") ? trimmed.slice(1) : trimmed;
   const normalised = normaliseFormula(body);
   try {
     const result = parseFormulaExpr(normalised, ctx);
-    if (typeof result !== 'number') return null;
+    if (typeof result !== "number") return null;
     if (!isFinite(result)) return null;
     if (result < 0) return null;
     return Math.round(result * 10000) / 10000;
@@ -105,15 +108,16 @@ export function evaluateFormulaRaw(
 ): number | string | boolean | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
-  const body = trimmed.startsWith('=') ? trimmed.slice(1) : trimmed;
+  const body = trimmed.startsWith("=") ? trimmed.slice(1) : trimmed;
   const normalised = normaliseFormula(body);
   try {
     const result = parseFormulaExpr(normalised, ctx);
-    if (typeof result === 'number') {
+    if (typeof result === "number") {
       if (!isFinite(result)) return null;
       return Math.round(result * 10000) / 10000;
     }
-    if (typeof result === 'string' || typeof result === 'boolean') return result;
+    if (typeof result === "string" || typeof result === "boolean")
+      return result;
     return null;
   } catch {
     return null;
@@ -135,14 +139,14 @@ export function evaluateFormulaStrict(
 ): number | string | boolean | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
-  const body = trimmed.startsWith('=') ? trimmed.slice(1) : trimmed;
+  const body = trimmed.startsWith("=") ? trimmed.slice(1) : trimmed;
   const normalised = normaliseFormula(body);
   const result = parseFormulaExpr(normalised, ctx);
-  if (typeof result === 'number') {
+  if (typeof result === "number") {
     if (!isFinite(result)) return null;
     return Math.round(result * 10000) / 10000;
   }
-  if (typeof result === 'string' || typeof result === 'boolean') return result;
+  if (typeof result === "string" || typeof result === "boolean") return result;
   return null;
 }
 
@@ -154,10 +158,13 @@ export function evaluateFormulaStrict(
  *     function-arg separators or string contents).
  */
 export function normaliseFormula(s: string): string {
-  let out = s.replace(/×/g, '*');
-  out = out.replace(/([0-9)])\s*[xX]\s*(?=[0-9(a-zA-Z_$])/g, (_m, lhs) => `${lhs}*`);
-  if (!out.includes('(') && !out.includes('"') && !out.includes("'")) {
-    out = out.replace(/,/g, '.');
+  let out = s.replace(/×/g, "*");
+  out = out.replace(
+    /([0-9)])\s*[xX]\s*(?=[0-9(a-zA-Z_$])/g,
+    (_m, lhs) => `${lhs}*`,
+  );
+  if (!out.includes("(") && !out.includes('"') && !out.includes("'")) {
+    out = out.replace(/,/g, ".");
   }
   return out;
 }
@@ -171,10 +178,14 @@ export function normaliseFormula(s: string): string {
 export function isFormula(input: string): boolean {
   const t = input.trim();
   if (!t) return false;
-  if (t.startsWith('=')) return true;
+  if (t.startsWith("=")) return true;
   if (/[+\-*/^×()<>!]/.test(t)) return true;
   if (/\$[A-Z][A-Z0-9_]*/.test(t)) return true;
-  if (/\b(pi|e|sqrt|abs|round|round_up|round_down|floor|ceil|pow|min|max|sin|cos|tan|log|exp|pos|section|col|if|m_to_ft|ft_to_m|m2_to_ft2|ft2_to_m2|m3_to_yd3|yd3_to_m3|kg_to_lb|lb_to_kg)\b/i.test(t))
+  if (
+    /\b(pi|e|sqrt|abs|round|round_up|round_down|floor|ceil|pow|min|max|sin|cos|tan|log|exp|pos|section|col|if|m_to_ft|ft_to_m|m2_to_ft2|ft2_to_m2|m3_to_yd3|yd3_to_m3|kg_to_lb|lb_to_kg)\b/i.test(
+      t,
+    )
+  )
     return true;
   return false;
 }
@@ -182,13 +193,30 @@ export function isFormula(input: string): boolean {
 /* ── Tokeniser ──────────────────────────────────────────────────────── */
 
 type Token =
-  | { kind: 'num'; value: number }
-  | { kind: 'str'; value: string }
-  | { kind: 'ident'; value: string }
-  | { kind: 'var'; value: string }
-  | { kind: 'op'; value: string };
+  | { kind: "num"; value: number }
+  | { kind: "str"; value: string }
+  | { kind: "ident"; value: string }
+  | { kind: "var"; value: string }
+  | { kind: "op"; value: string };
 
-const PUNCT_OPS = ['<=', '>=', '==', '!=', '**', '+', '-', '*', '/', '^', '(', ')', ',', '<', '>', '.'];
+const PUNCT_OPS = [
+  "<=",
+  ">=",
+  "==",
+  "!=",
+  "**",
+  "+",
+  "-",
+  "*",
+  "/",
+  "^",
+  "(",
+  ")",
+  ",",
+  "<",
+  ">",
+  ".",
+];
 const IDENT_START = /[a-zA-Z_]/;
 const IDENT_CONT = /[a-zA-Z0-9_]/;
 
@@ -197,17 +225,17 @@ function tokenize(expr: string): Token[] {
   let i = 0;
   while (i < expr.length) {
     const ch = expr[i]!;
-    if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') {
+    if (ch === " " || ch === "\t" || ch === "\n" || ch === "\r") {
       i++;
       continue;
     }
     // String literal
     if (ch === '"' || ch === "'") {
       const quote = ch;
-      let str = '';
+      let str = "";
       i++;
       while (i < expr.length && expr[i] !== quote) {
-        if (expr[i] === '\\' && i + 1 < expr.length) {
+        if (expr[i] === "\\" && i + 1 < expr.length) {
           str += expr[i + 1];
           i += 2;
           continue;
@@ -215,60 +243,66 @@ function tokenize(expr: string): Token[] {
         str += expr[i];
         i++;
       }
-      if (i >= expr.length) throw new Error('Unterminated string literal');
+      if (i >= expr.length) throw new Error("Unterminated string literal");
       i++; // skip closing quote
-      tokens.push({ kind: 'str', value: str });
+      tokens.push({ kind: "str", value: str });
       continue;
     }
     // $VAR
-    if (ch === '$') {
+    if (ch === "$") {
       i++;
       if (i >= expr.length || !IDENT_START.test(expr[i]!)) {
-        throw new Error('Expected variable name after $');
+        throw new Error("Expected variable name after $");
       }
-      let name = '';
+      let name = "";
       while (i < expr.length && IDENT_CONT.test(expr[i]!)) {
         name += expr[i]!;
         i++;
       }
-      tokens.push({ kind: 'var', value: name.toUpperCase() });
+      tokens.push({ kind: "var", value: name.toUpperCase() });
       continue;
     }
     // Number — ".5" / "0.5" / "12"
-    if ((ch >= '0' && ch <= '9') || (ch === '.' && i + 1 < expr.length && expr[i + 1]! >= '0' && expr[i + 1]! <= '9')) {
-      let num = '';
+    if (
+      (ch >= "0" && ch <= "9") ||
+      (ch === "." &&
+        i + 1 < expr.length &&
+        expr[i + 1]! >= "0" &&
+        expr[i + 1]! <= "9")
+    ) {
+      let num = "";
       while (i < expr.length) {
         const c = expr[i]!;
-        if (!((c >= '0' && c <= '9') || c === '.')) break;
+        if (!((c >= "0" && c <= "9") || c === ".")) break;
         num += c;
         i++;
       }
       const n = parseFloat(num);
       if (isNaN(n)) throw new Error(`Bad number: ${num}`);
-      tokens.push({ kind: 'num', value: n });
+      tokens.push({ kind: "num", value: n });
       continue;
     }
     // Identifier
     if (IDENT_START.test(ch)) {
-      let ident = '';
+      let ident = "";
       while (i < expr.length && IDENT_CONT.test(expr[i]!)) {
         ident += expr[i]!;
         i++;
       }
-      tokens.push({ kind: 'ident', value: ident.toLowerCase() });
+      tokens.push({ kind: "ident", value: ident.toLowerCase() });
       continue;
     }
     // Two-char ops first
     const two = expr.slice(i, i + 2);
     if (PUNCT_OPS.includes(two)) {
       // Special case: `**` → `^`
-      if (two === '**') tokens.push({ kind: 'op', value: '^' });
-      else tokens.push({ kind: 'op', value: two });
+      if (two === "**") tokens.push({ kind: "op", value: "^" });
+      else tokens.push({ kind: "op", value: two });
       i += 2;
       continue;
     }
     if (PUNCT_OPS.includes(ch)) {
-      tokens.push({ kind: 'op', value: ch });
+      tokens.push({ kind: "op", value: ch });
       i++;
       continue;
     }
@@ -298,45 +332,45 @@ const UNIT_CONVERSIONS: Record<string, number> = {
 function callMathFn(name: string, args: Value[]): Value {
   const nums = args.map((a) => coerceNumber(a, name));
   switch (name) {
-    case 'sqrt':
+    case "sqrt":
       return Math.sqrt(nums[0]!);
-    case 'abs':
+    case "abs":
       return Math.abs(nums[0]!);
-    case 'round':
+    case "round":
       // Two-arg variant: round(x, n) → round to n decimals.
       if (nums.length === 2) {
         const f = Math.pow(10, nums[1]!);
         return Math.round(nums[0]! * f) / f;
       }
       return Math.round(nums[0]!);
-    case 'floor':
+    case "floor":
       return Math.floor(nums[0]!);
-    case 'ceil':
+    case "ceil":
       return Math.ceil(nums[0]!);
-    case 'sin':
+    case "sin":
       return Math.sin(nums[0]!);
-    case 'cos':
+    case "cos":
       return Math.cos(nums[0]!);
-    case 'tan':
+    case "tan":
       return Math.tan(nums[0]!);
-    case 'log':
+    case "log":
       return Math.log(nums[0]!);
-    case 'exp':
+    case "exp":
       return Math.exp(nums[0]!);
-    case 'pow':
+    case "pow":
       return Math.pow(nums[0]!, nums[1]!);
-    case 'min':
-      if (nums.length === 0) throw new Error('min(): need ≥1 arg');
+    case "min":
+      if (nums.length === 0) throw new Error("min(): need ≥1 arg");
       return Math.min(...nums);
-    case 'max':
-      if (nums.length === 0) throw new Error('max(): need ≥1 arg');
+    case "max":
+      if (nums.length === 0) throw new Error("max(): need ≥1 arg");
       return Math.max(...nums);
-    case 'round_up': {
+    case "round_up": {
       const n = nums.length >= 2 ? nums[1]! : 0;
       const f = Math.pow(10, n);
       return Math.ceil(nums[0]! * f) / f;
     }
-    case 'round_down': {
+    case "round_down": {
       const n = nums.length >= 2 ? nums[1]! : 0;
       const f = Math.pow(10, n);
       return Math.floor(nums[0]! * f) / f;
@@ -351,15 +385,17 @@ function callMathFn(name: string, args: Value[]): Value {
 }
 
 function coerceNumber(v: Value, ctx: string): number {
-  if (typeof v === 'number') return v;
-  if (typeof v === 'boolean') return v ? 1 : 0;
-  if (typeof v === 'string') {
+  if (typeof v === "number") return v;
+  if (typeof v === "boolean") return v ? 1 : 0;
+  if (typeof v === "string") {
     const n = parseFloat(v);
     if (!isNaN(n)) return n;
     throw new Error(`${ctx}: cannot use string "${v}" as number`);
   }
-  if (v && typeof v === 'object' && '__kind' in v) {
-    throw new Error(`${ctx}: cannot use ${v.__kind} record as number — did you mean .qty / .total?`);
+  if (v && typeof v === "object" && "__kind" in v) {
+    throw new Error(
+      `${ctx}: cannot use ${v.__kind} record as number — did you mean .qty / .total?`,
+    );
   }
   throw new Error(`${ctx}: not a number`);
 }
@@ -379,18 +415,18 @@ function coerceNumber(v: Value, ctx: string): number {
  */
 function parseFormulaExpr(input: string, ctx?: FormulaContext): Value {
   const tokens = tokenize(input);
-  if (tokens.length === 0) throw new Error('Empty');
+  if (tokens.length === 0) throw new Error("Empty");
   let pos = 0;
 
   const peek = (): Token | undefined => tokens[pos];
   const eat = (): Token => {
     const t = tokens[pos];
-    if (!t) throw new Error('Unexpected end of input');
+    if (!t) throw new Error("Unexpected end of input");
     pos++;
     return t;
   };
   const isOp = (t: Token | undefined, ...ops: string[]): boolean =>
-    !!t && t.kind === 'op' && ops.includes(t.value);
+    !!t && t.kind === "op" && ops.includes(t.value);
 
   function parseExpr(): Value {
     return parseCompare();
@@ -399,23 +435,27 @@ function parseFormulaExpr(input: string, ctx?: FormulaContext): Value {
   function parseCompare(): Value {
     const left = parseAddSub();
     const t = peek();
-    if (t && t.kind === 'op' && ['==', '!=', '<', '<=', '>', '>='].includes(t.value)) {
+    if (
+      t &&
+      t.kind === "op" &&
+      ["==", "!=", "<", "<=", ">", ">="].includes(t.value)
+    ) {
       eat();
       const right = parseAddSub();
-      const a = coerceNumber(left, 'compare');
-      const b = coerceNumber(right, 'compare');
+      const a = coerceNumber(left, "compare");
+      const b = coerceNumber(right, "compare");
       switch (t.value) {
-        case '==':
+        case "==":
           return a === b;
-        case '!=':
+        case "!=":
           return a !== b;
-        case '<':
+        case "<":
           return a < b;
-        case '<=':
+        case "<=":
           return a <= b;
-        case '>':
+        case ">":
           return a > b;
-        case '>=':
+        case ">=":
           return a >= b;
       }
     }
@@ -424,66 +464,67 @@ function parseFormulaExpr(input: string, ctx?: FormulaContext): Value {
 
   function parseAddSub(): Value {
     let left = parseMulDiv();
-    while (isOp(peek(), '+', '-')) {
+    while (isOp(peek(), "+", "-")) {
       const op = eat().value;
       const right = parseMulDiv();
-      const a = coerceNumber(left, 'addsub');
-      const b = coerceNumber(right, 'addsub');
-      left = op === '+' ? a + b : a - b;
+      const a = coerceNumber(left, "addsub");
+      const b = coerceNumber(right, "addsub");
+      left = op === "+" ? a + b : a - b;
     }
     return left;
   }
 
   function parseMulDiv(): Value {
     let left = parsePower();
-    while (isOp(peek(), '*', '/')) {
+    while (isOp(peek(), "*", "/")) {
       const op = eat().value;
       const right = parsePower();
-      const a = coerceNumber(left, 'muldiv');
-      const b = coerceNumber(right, 'muldiv');
-      left = op === '*' ? a * b : a / b;
+      const a = coerceNumber(left, "muldiv");
+      const b = coerceNumber(right, "muldiv");
+      left = op === "*" ? a * b : a / b;
     }
     return left;
   }
 
   function parsePower(): Value {
     const base = parseUnary();
-    if (isOp(peek(), '^')) {
+    if (isOp(peek(), "^")) {
       eat();
       const exp = parsePower();
-      return Math.pow(coerceNumber(base, 'pow'), coerceNumber(exp, 'pow'));
+      return Math.pow(coerceNumber(base, "pow"), coerceNumber(exp, "pow"));
     }
     return base;
   }
 
   function parseUnary(): Value {
     const t = peek();
-    if (isOp(t, '-')) {
+    if (isOp(t, "-")) {
       eat();
-      return -coerceNumber(parseUnary(), 'neg');
+      return -coerceNumber(parseUnary(), "neg");
     }
-    if (isOp(t, '+')) {
+    if (isOp(t, "+")) {
       eat();
-      return coerceNumber(parseUnary(), 'pos');
+      return coerceNumber(parseUnary(), "pos");
     }
     return parseMember();
   }
 
   function parseMember(): Value {
     let v: Value = parsePrimary();
-    while (isOp(peek(), '.')) {
+    while (isOp(peek(), ".")) {
       eat();
       const ident = eat();
-      if (ident.kind !== 'ident') throw new Error('Expected member name after .');
+      if (ident.kind !== "ident")
+        throw new Error("Expected member name after .");
       const member = ident.value;
-      if (typeof v === 'object' && v !== null && '__kind' in v) {
-        if (v.__kind === 'position') {
-          if (member === 'qty' || member === 'quantity') v = v.qty;
-          else if (member === 'rate' || member === 'unit_rate') v = v.rate;
-          else if (member === 'total') v = v.total;
+      if (typeof v === "object" && v !== null && "__kind" in v) {
+        if (v.__kind === "position") {
+          if (member === "qty" || member === "quantity") v = v.qty;
+          else if (member === "rate" || member === "unit_rate") v = v.rate;
+          else if (member === "total") v = v.total;
           else throw new Error(`pos record has no member .${member}`);
-        } else if (v.__kind === 'section') {
-          if (member === 'total') v = v.total;
+        } else if (v.__kind === "section") {
+          if (member === "total") v = v.total;
           else throw new Error(`section record has no member .${member}`);
         } else {
           throw new Error(`Unknown record kind`);
@@ -497,77 +538,84 @@ function parseFormulaExpr(input: string, ctx?: FormulaContext): Value {
 
   function parsePrimary(): Value {
     const t = peek();
-    if (!t) throw new Error('Unexpected end of expression');
-    if (t.kind === 'op' && t.value === '(') {
+    if (!t) throw new Error("Unexpected end of expression");
+    if (t.kind === "op" && t.value === "(") {
       eat();
       const v = parseExpr();
-      if (!isOp(peek(), ')')) throw new Error('Missing )');
+      if (!isOp(peek(), ")")) throw new Error("Missing )");
       eat();
       return v;
     }
-    if (t.kind === 'num') {
+    if (t.kind === "num") {
       eat();
       return t.value;
     }
-    if (t.kind === 'str') {
+    if (t.kind === "str") {
       eat();
       return t.value;
     }
-    if (t.kind === 'var') {
+    if (t.kind === "var") {
       eat();
-      if (!ctx) throw new Error('No context: $variable not available');
+      if (!ctx) throw new Error("No context: $variable not available");
       const v = ctx.variables.get(t.value);
       if (!v) throw new Error(`Unknown variable: $${t.value}`);
-      if (v.value === null) throw new Error(`Variable $${t.value} has no value`);
-      if (v.type === 'number') return typeof v.value === 'number' ? v.value : parseFloat(String(v.value));
+      if (v.value === null)
+        throw new Error(`Variable $${t.value} has no value`);
+      if (v.type === "number")
+        return typeof v.value === "number"
+          ? v.value
+          : parseFloat(String(v.value));
       return v.value;
     }
-    if (t.kind === 'ident') {
+    if (t.kind === "ident") {
       const name = t.value;
       eat();
       // Function call?
-      if (isOp(peek(), '(')) {
+      if (isOp(peek(), "(")) {
         eat();
         const args: Value[] = [];
-        if (!isOp(peek(), ')')) {
+        if (!isOp(peek(), ")")) {
           // Special: short-circuit `if(cond, a, b)` — evaluate only the
           // taken branch so type-checked branches don't blow up the whole
           // formula when they would never be taken.
-          if (name === 'if') {
+          if (name === "if") {
             const cond = parseExpr();
-            if (!isOp(peek(), ',')) throw new Error('if(): expected comma after condition');
+            if (!isOp(peek(), ","))
+              throw new Error("if(): expected comma after condition");
             eat();
             const condTrue = !!coerceNumberLoose(cond);
             if (condTrue) {
               const a = parseExpr();
-              if (!isOp(peek(), ',')) throw new Error('if(): expected comma after a');
+              if (!isOp(peek(), ","))
+                throw new Error("if(): expected comma after a");
               eat();
               skipExpr();
-              if (!isOp(peek(), ')')) throw new Error('if(): missing )');
+              if (!isOp(peek(), ")")) throw new Error("if(): missing )");
               eat();
               return a;
             } else {
               skipExpr();
-              if (!isOp(peek(), ',')) throw new Error('if(): expected comma after a');
+              if (!isOp(peek(), ","))
+                throw new Error("if(): expected comma after a");
               eat();
               const b = parseExpr();
-              if (!isOp(peek(), ')')) throw new Error('if(): missing )');
+              if (!isOp(peek(), ")")) throw new Error("if(): missing )");
               eat();
               return b;
             }
           }
           args.push(parseExpr());
-          while (isOp(peek(), ',')) {
+          while (isOp(peek(), ",")) {
             eat();
             args.push(parseExpr());
           }
         }
-        if (!isOp(peek(), ')')) throw new Error('Missing )');
+        if (!isOp(peek(), ")")) throw new Error("Missing )");
         eat();
         // Built-in dispatch
-        if (name === 'pos') return callPos(args, ctx);
-        if (name === 'section') return callSection(args, ctx);
-        if (name === 'col') return callCol(args, ctx);
+        if (name === "pos") return callPos(args, ctx);
+        if (name === "section") return callSection(args, ctx);
+        if (name === "col") return callCol(args, ctx);
         // pi() / e() short-form
         if (args.length === 0 && name in CONSTANTS) return CONSTANTS[name]!;
         return callMathFn(name, args);
@@ -588,26 +636,29 @@ function parseFormulaExpr(input: string, ctx?: FormulaContext): Value {
     let depth = 0;
     while (pos < tokens.length) {
       const t = tokens[pos]!;
-      if (t.kind === 'op') {
-        if (t.value === '(') depth++;
-        else if (t.value === ')') {
+      if (t.kind === "op") {
+        if (t.value === "(") depth++;
+        else if (t.value === ")") {
           if (depth === 0) return;
           depth--;
-        } else if (t.value === ',' && depth === 0) return;
+        } else if (t.value === "," && depth === 0) return;
       }
       pos++;
     }
   }
 
   const result = parseExpr();
-  if (pos < tokens.length) throw new Error(`Unexpected token after end: ${JSON.stringify(tokens[pos])}`);
+  if (pos < tokens.length)
+    throw new Error(
+      `Unexpected token after end: ${JSON.stringify(tokens[pos])}`,
+    );
   return result;
 }
 
 function coerceNumberLoose(v: Value): number {
-  if (typeof v === 'number') return v;
-  if (typeof v === 'boolean') return v ? 1 : 0;
-  if (typeof v === 'string') {
+  if (typeof v === "number") return v;
+  if (typeof v === "boolean") return v ? 1 : 0;
+  if (typeof v === "string") {
     const n = parseFloat(v);
     return isNaN(n) ? 0 : n;
   }
@@ -617,19 +668,19 @@ function coerceNumberLoose(v: Value): number {
 /* ── Built-in record constructors ───────────────────────────────────── */
 
 function callPos(args: Value[], ctx?: FormulaContext): PositionRecord {
-  if (!ctx) throw new Error('pos(): no formula context');
-  if (args.length !== 1) throw new Error('pos(): expects 1 arg');
+  if (!ctx) throw new Error("pos(): no formula context");
+  if (args.length !== 1) throw new Error("pos(): expects 1 arg");
   const ord = String(args[0]);
   const p = ctx.positionsByOrdinal.get(ord);
   if (!p) throw new Error(`pos(): no position with ordinal "${ord}"`);
   const qty = Number(p.quantity) || 0;
   const rate = Number(p.unit_rate) || 0;
-  return { __kind: 'position', qty, rate, total: qty * rate };
+  return { __kind: "position", qty, rate, total: qty * rate };
 }
 
 function callSection(args: Value[], ctx?: FormulaContext): SectionRecord {
-  if (!ctx) throw new Error('section(): no formula context');
-  if (args.length !== 1) throw new Error('section(): expects 1 arg');
+  if (!ctx) throw new Error("section(): no formula context");
+  if (args.length !== 1) throw new Error("section(): expects 1 arg");
   const name = String(args[0]);
   const sec = ctx.sectionsByName.get(name);
   if (!sec) throw new Error(`section(): no section named "${name}"`);
@@ -639,17 +690,19 @@ function callSection(args: Value[], ctx?: FormulaContext): SectionRecord {
     const r = Number(p.unit_rate) || 0;
     total += q * r;
   }
-  return { __kind: 'section', total };
+  return { __kind: "section", total };
 }
 
 function callCol(args: Value[], ctx?: FormulaContext): Value {
-  if (!ctx) throw new Error('col(): no formula context');
-  if (!ctx.currentRow) throw new Error('col(): not in a calculated-column row context');
-  if (args.length !== 1) throw new Error('col(): expects 1 arg');
+  if (!ctx) throw new Error("col(): no formula context");
+  if (!ctx.currentRow)
+    throw new Error("col(): not in a calculated-column row context");
+  if (args.length !== 1) throw new Error("col(): expects 1 arg");
   const name = String(args[0]);
   const v = ctx.currentRow[name];
   if (v === undefined || v === null) return 0;
-  if (typeof v === 'number' || typeof v === 'string' || typeof v === 'boolean') return v;
+  if (typeof v === "number" || typeof v === "string" || typeof v === "boolean")
+    return v;
   return 0;
 }
 

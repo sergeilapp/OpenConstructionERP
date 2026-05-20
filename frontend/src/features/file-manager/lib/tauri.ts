@@ -8,7 +8,9 @@
  * at build time.
  */
 
-export const isTauri = typeof window !== 'undefined' && Boolean((window as { __TAURI__?: unknown }).__TAURI__);
+export const isTauri =
+  typeof window !== "undefined" &&
+  Boolean((window as { __TAURI__?: unknown }).__TAURI__);
 
 export async function openInOSFinder(path: string): Promise<boolean> {
   if (!path) return false;
@@ -18,7 +20,7 @@ export async function openInOSFinder(path: string): Promise<boolean> {
       // through a variable so tsc doesn't try to type-check the missing
       // module, and cast the result because the web bundle has no
       // @tauri-apps/plugin-shell dep.
-      const tauriPluginShell = '@tauri-apps/plugin-shell';
+      const tauriPluginShell = "@tauri-apps/plugin-shell";
       const mod = (await import(/* @vite-ignore */ tauriPluginShell)) as {
         open: (target: string) => Promise<void>;
       };
@@ -26,12 +28,12 @@ export async function openInOSFinder(path: string): Promise<boolean> {
       // Cross-platform "reveal" needs the parent directory, so we strip the
       // trailing segment if it looks like a file.
       const isFile = /\.[a-z0-9]{1,8}$/i.test(path);
-      const target = isFile ? path.replace(/[\\/][^\\/]+$/, '') : path;
+      const target = isFile ? path.replace(/[\\/][^\\/]+$/, "") : path;
       await mod.open(target);
       return true;
     } catch (err) {
       // Plugin might not be enabled in this build — fall through.
-      console.warn('Tauri shell open failed:', err);
+      console.warn("Tauri shell open failed:", err);
     }
   }
   return false;
@@ -50,14 +52,14 @@ export async function copyToClipboard(text: string): Promise<boolean> {
   // Last-ditch fallback: textarea + execCommand. Works on every browser
   // released this decade and is fine for a small file path.
   try {
-    const ta = document.createElement('textarea');
+    const ta = document.createElement("textarea");
     ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.position = 'absolute';
-    ta.style.left = '-9999px';
+    ta.setAttribute("readonly", "");
+    ta.style.position = "absolute";
+    ta.style.left = "-9999px";
     document.body.appendChild(ta);
     ta.select();
-    const ok = document.execCommand('copy');
+    const ok = document.execCommand("copy");
     document.body.removeChild(ta);
     return ok;
   } catch {

@@ -7,37 +7,37 @@
  * pipeline metrics and win/loss analytics.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Enums ────────────────────────────────────────────────────────────── */
 
-export type AccountSize = 'sme' | 'mid' | 'enterprise';
-export type AccountStatus = 'active' | 'dormant' | 'lost';
+export type AccountSize = "sme" | "mid" | "enterprise";
+export type AccountStatus = "active" | "dormant" | "lost";
 
 export type LeadSource =
-  | 'web'
-  | 'referral'
-  | 'event'
-  | 'cold_outreach'
-  | 'inbound';
+  | "web"
+  | "referral"
+  | "event"
+  | "cold_outreach"
+  | "inbound";
 
 export type LeadStatus =
-  | 'new'
-  | 'qualifying'
-  | 'qualified'
-  | 'disqualified'
-  | 'converted';
+  | "new"
+  | "qualifying"
+  | "qualified"
+  | "disqualified"
+  | "converted";
 
-export type OpportunityStatus = 'open' | 'won' | 'lost' | 'abandoned';
+export type OpportunityStatus = "open" | "won" | "lost" | "abandoned";
 
-export type ActivityKind = 'call' | 'meeting' | 'email' | 'task' | 'note';
+export type ActivityKind = "call" | "meeting" | "email" | "task" | "note";
 
 export type ActivityOutcome =
-  | 'no_answer'
-  | 'voicemail'
-  | 'positive'
-  | 'negative'
-  | 'neutral';
+  | "no_answer"
+  | "voicemail"
+  | "positive"
+  | "negative"
+  | "neutral";
 
 /* ── Domain types ─────────────────────────────────────────────────────── */
 
@@ -261,7 +261,7 @@ async function safeGetList<T>(path: string): Promise<T[]> {
     const res = await apiGet<T[] | { items: T[] }>(path);
     return normaliseList(res);
   } catch (err: unknown) {
-    if (err && typeof err === 'object' && 'status' in err) {
+    if (err && typeof err === "object" && "status" in err) {
       const s = (err as { status: number }).status;
       if (s === 404 || s === 501) return [];
     }
@@ -269,10 +269,13 @@ async function safeGetList<T>(path: string): Promise<T[]> {
   }
 }
 
-function withQs(path: string, params: Record<string, string | number | undefined>): string {
+function withQs(
+  path: string,
+  params: Record<string, string | number | undefined>,
+): string {
   const qs = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== '') qs.set(k, String(v));
+    if (v !== undefined && v !== "") qs.set(k, String(v));
   }
   const s = qs.toString();
   return s ? `${path}?${s}` : path;
@@ -287,7 +290,7 @@ export function listAccounts(params?: {
   offset?: number;
   limit?: number;
 }): Promise<Account[]> {
-  return safeGetList<Account>(withQs('/v1/crm/accounts/', params ?? {}));
+  return safeGetList<Account>(withQs("/v1/crm/accounts/", params ?? {}));
 }
 
 export function getAccount(id: string): Promise<Account> {
@@ -295,7 +298,7 @@ export function getAccount(id: string): Promise<Account> {
 }
 
 export function createAccount(data: AccountCreatePayload): Promise<Account> {
-  return apiPost<Account>('/v1/crm/accounts/', data);
+  return apiPost<Account>("/v1/crm/accounts/", data);
 }
 
 export function updateAccount(
@@ -318,7 +321,7 @@ export function listLeads(params?: {
   offset?: number;
   limit?: number;
 }): Promise<Lead[]> {
-  return safeGetList<Lead>(withQs('/v1/crm/leads/', params ?? {}));
+  return safeGetList<Lead>(withQs("/v1/crm/leads/", params ?? {}));
 }
 
 export function getLead(id: string): Promise<Lead> {
@@ -326,10 +329,13 @@ export function getLead(id: string): Promise<Lead> {
 }
 
 export function createLead(data: LeadCreatePayload): Promise<Lead> {
-  return apiPost<Lead>('/v1/crm/leads/', data);
+  return apiPost<Lead>("/v1/crm/leads/", data);
 }
 
-export function updateLead(id: string, data: Partial<LeadCreatePayload>): Promise<Lead> {
+export function updateLead(
+  id: string,
+  data: Partial<LeadCreatePayload>,
+): Promise<Lead> {
   return apiPatch<Lead>(`/v1/crm/leads/${id}`, data);
 }
 
@@ -337,7 +343,10 @@ export function deleteLead(id: string): Promise<void> {
   return apiDelete(`/v1/crm/leads/${id}`);
 }
 
-export function qualifyLead(id: string, data: LeadQualifyPayload): Promise<Lead> {
+export function qualifyLead(
+  id: string,
+  data: LeadQualifyPayload,
+): Promise<Lead> {
   return apiPost<Lead>(`/v1/crm/leads/${id}/qualify`, data);
 }
 
@@ -362,7 +371,9 @@ export function listOpportunities(params?: {
   offset?: number;
   limit?: number;
 }): Promise<Opportunity[]> {
-  return safeGetList<Opportunity>(withQs('/v1/crm/opportunities/', params ?? {}));
+  return safeGetList<Opportunity>(
+    withQs("/v1/crm/opportunities/", params ?? {}),
+  );
 }
 
 export function getOpportunity(id: string): Promise<Opportunity> {
@@ -372,7 +383,7 @@ export function getOpportunity(id: string): Promise<Opportunity> {
 export function createOpportunity(
   data: OpportunityCreatePayload,
 ): Promise<Opportunity> {
-  return apiPost<Opportunity>('/v1/crm/opportunities/', data);
+  return apiPost<Opportunity>("/v1/crm/opportunities/", data);
 }
 
 export function updateOpportunity(
@@ -414,7 +425,7 @@ export function getOpportunityHistory(id: string): Promise<StageHistory[]> {
 /* ── Pipeline stages ──────────────────────────────────────────────────── */
 
 export function listPipelineStages(): Promise<PipelineStage[]> {
-  return safeGetList<PipelineStage>('/v1/crm/pipeline-stages/');
+  return safeGetList<PipelineStage>("/v1/crm/pipeline-stages/");
 }
 
 /* ── Activities ───────────────────────────────────────────────────────── */
@@ -429,7 +440,7 @@ export function listActivities(params?: {
   offset?: number;
   limit?: number;
 }): Promise<Activity[]> {
-  return safeGetList<Activity>(withQs('/v1/crm/activities/', params ?? {}));
+  return safeGetList<Activity>(withQs("/v1/crm/activities/", params ?? {}));
 }
 
 export function getActivity(id: string): Promise<Activity> {
@@ -437,7 +448,7 @@ export function getActivity(id: string): Promise<Activity> {
 }
 
 export function createActivity(data: ActivityCreatePayload): Promise<Activity> {
-  return apiPost<Activity>('/v1/crm/activities/', data);
+  return apiPost<Activity>("/v1/crm/activities/", data);
 }
 
 export function updateActivity(
@@ -453,10 +464,12 @@ export function deleteActivity(id: string): Promise<void> {
 
 /* ── Dashboards ───────────────────────────────────────────────────────── */
 
-export function getCrmDashboard(params?: { owner_user_id?: string }): Promise<CrmDashboard> {
-  return apiGet<CrmDashboard>(withQs('/v1/crm/dashboard', params ?? {}));
+export function getCrmDashboard(params?: {
+  owner_user_id?: string;
+}): Promise<CrmDashboard> {
+  return apiGet<CrmDashboard>(withQs("/v1/crm/dashboard", params ?? {}));
 }
 
 export function getPipelineMetrics(): Promise<PipelineMetrics> {
-  return apiGet<PipelineMetrics>('/v1/crm/pipeline/metrics');
+  return apiGet<PipelineMetrics>("/v1/crm/pipeline/metrics");
 }

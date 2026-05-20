@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { ChevronRight, Home } from 'lucide-react';
-import clsx from 'clsx';
+import { Link } from "react-router-dom";
+import { ChevronRight, Home } from "lucide-react";
+import clsx from "clsx";
 
 export interface BreadcrumbItem {
   label: string;
@@ -16,7 +16,10 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className={clsx('flex items-center gap-1 text-xs', className)}>
+    <nav
+      aria-label="Breadcrumb"
+      className={clsx("flex items-center gap-1 text-xs", className)}
+    >
       <Link
         to="/"
         className="flex items-center text-content-tertiary hover:text-content-secondary transition-colors"

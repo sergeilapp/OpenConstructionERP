@@ -8,36 +8,36 @@
  *   W → Cloud           X → Arrow        Esc → cancel
  */
 
-import type { MeasureTool } from './takeoff-types';
+import type { MeasureTool } from "./takeoff-types";
 
 /** Single-key → tool map (lowercased keys). */
 export const TOOL_SHORTCUT_MAP: Readonly<Record<string, MeasureTool>> = {
-  v: 'select',
-  d: 'distance',
-  p: 'polyline',
-  a: 'area',
-  o: 'volume',
-  c: 'count',
-  r: 'rectangle',
-  t: 'text',
-  h: 'highlight',
-  w: 'cloud',
-  x: 'arrow',
+  v: "select",
+  d: "distance",
+  p: "polyline",
+  a: "area",
+  o: "volume",
+  c: "count",
+  r: "rectangle",
+  t: "text",
+  h: "highlight",
+  w: "cloud",
+  x: "arrow",
 };
 
 /** Reverse map — tool → uppercase shortcut letter, for tooltip suffixes. */
 export const SHORTCUT_LETTER: Readonly<Record<MeasureTool, string>> = {
-  select: 'V',
-  distance: 'D',
-  polyline: 'P',
-  area: 'A',
-  volume: 'O',
-  count: 'C',
-  rectangle: 'R',
-  text: 'T',
-  highlight: 'H',
-  cloud: 'W',
-  arrow: 'X',
+  select: "V",
+  distance: "D",
+  polyline: "P",
+  area: "A",
+  volume: "O",
+  count: "C",
+  rectangle: "R",
+  text: "T",
+  highlight: "H",
+  cloud: "W",
+  arrow: "X",
 };
 
 /**
@@ -65,7 +65,7 @@ export function labelWithShortcut(label: string, tool: MeasureTool): string {
 export function shouldHandleShortcut(target: EventTarget | null): boolean {
   if (!target || !(target instanceof HTMLElement)) return true;
   const tag = target.tagName;
-  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return false;
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return false;
   if (target.isContentEditable) return false;
   return true;
 }

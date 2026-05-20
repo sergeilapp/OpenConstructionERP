@@ -102,7 +102,8 @@ async def _on_hse_incident_root_cause(event: Event) -> None:
                 "other": "minor",
             }
             severity = severity_map.get(
-                capa.root_cause_category or "other", "minor",
+                capa.root_cause_category or "other",
+                "minor",
             )
             mirror = QMSNCR(
                 project_id=capa.project_id,
@@ -116,10 +117,11 @@ async def _on_hse_incident_root_cause(event: Event) -> None:
                 severity=severity,
                 root_cause=(
                     "; ".join(
-                        f"{i+1}. {step.get('why', '')} → {step.get('answer', '')}"
+                        f"{i + 1}. {step.get('why', '')} → {step.get('answer', '')}"
                         for i, step in enumerate(capa.five_whys or [])
                     )[:5000]
-                    if capa.five_whys else None
+                    if capa.five_whys
+                    else None
                 ),
                 status="open",
                 cost_impact_currency="",
@@ -129,7 +131,8 @@ async def _on_hse_incident_root_cause(event: Event) -> None:
             await session.commit()
             logger.info(
                 "QMS NCR auto-created from HSE incident CAPA %s → %s",
-                capa.id, mirror.id,
+                capa.id,
+                mirror.id,
             )
             event_bus.publish_detached(
                 "qms.ncr.mirrored_from_hse",
@@ -201,7 +204,8 @@ def register_subscribers() -> None:
         return
     event_bus.subscribe("hse.capa.completed", _on_hse_capa_completed)
     event_bus.subscribe(
-        "hse.capa.root_cause_recorded", _on_hse_incident_root_cause,
+        "hse.capa.root_cause_recorded",
+        _on_hse_incident_root_cause,
     )
     event_bus.subscribe("qms.ncr.raised", _on_ncr_raised_fanout)
     setattr(event_bus, _SUBSCRIBED_FLAG, True)

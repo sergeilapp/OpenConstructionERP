@@ -1,22 +1,22 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Compliance documents page — renders inside the Project Detail "Compliance" tab.
 
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2, ShieldCheck } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Plus, Trash2, ShieldCheck } from "lucide-react";
 
-import { Button, Card, EmptyState, Skeleton } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+import { Button, Card, EmptyState, Skeleton } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 
-import { deleteComplianceDoc, listComplianceDocs } from './api';
-import { CreateComplianceDocModal } from './CreateComplianceDocModal';
-import { ComplianceStatusBadge } from './ComplianceStatusBadge';
+import { deleteComplianceDoc, listComplianceDocs } from "./api";
+import { CreateComplianceDocModal } from "./CreateComplianceDocModal";
+import { ComplianceStatusBadge } from "./ComplianceStatusBadge";
 import {
   COMPLIANCE_DOC_TYPES,
   COMPLIANCE_STATUSES,
   type ComplianceDoc,
-} from './types';
+} from "./types";
 
 export interface CompliancePageProps {
   projectId: string | null;
@@ -27,13 +27,13 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
   const queryClient = useQueryClient();
   const toast = useToastStore((s) => s.addToast);
 
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [typeFilter, setTypeFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [typeFilter, setTypeFilter] = useState<string>("");
   const [showCreate, setShowCreate] = useState(false);
 
   const query = useQuery({
     queryKey: [
-      'compliance-docs',
+      "compliance-docs",
       projectId,
       statusFilter || null,
       typeFilter || null,
@@ -51,23 +51,25 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
   const removeMutation = useMutation({
     mutationFn: (id: string) => deleteComplianceDoc(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['compliance-docs', projectId] });
       queryClient.invalidateQueries({
-        queryKey: ['compliance-docs-expiring', projectId],
+        queryKey: ["compliance-docs", projectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["compliance-docs-expiring", projectId],
       });
       toast({
-        title: t('compliance.toast.deleted', {
-          defaultValue: 'Compliance document deleted.‌⁠‍',
+        title: t("compliance.toast.deleted", {
+          defaultValue: "Compliance document deleted.‌⁠‍",
         }),
-        type: 'success',
+        type: "success",
       });
     },
     onError: () => {
       toast({
-        title: t('compliance.toast.delete_failed', {
-          defaultValue: 'Failed to delete compliance document.‌⁠‍',
+        title: t("compliance.toast.delete_failed", {
+          defaultValue: "Failed to delete compliance document.‌⁠‍",
         }),
-        type: 'error',
+        type: "error",
       });
     },
   });
@@ -76,21 +78,19 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
     const rows = query.data ?? [];
     // Already sorted by expires_at asc server-side — reaffirm here for
     // robustness so a future cache/optimistic update can't undo it.
-    return [...rows].sort((a, b) =>
-      a.expires_at.localeCompare(b.expires_at),
-    );
+    return [...rows].sort((a, b) => a.expires_at.localeCompare(b.expires_at));
   }, [query.data]);
 
   if (!projectId) {
     return (
       <EmptyState
         icon={<ShieldCheck size={48} strokeWidth={1.5} />}
-        title={t('compliance.empty.no_project_title', {
-          defaultValue: 'Open a project‌⁠‍',
+        title={t("compliance.empty.no_project_title", {
+          defaultValue: "Open a project‌⁠‍",
         })}
-        description={t('compliance.empty.no_project_description', {
+        description={t("compliance.empty.no_project_description", {
           defaultValue:
-            'Compliance documents are scoped to a project — open one first.‌⁠‍',
+            "Compliance documents are scoped to a project — open one first.‌⁠‍",
         })}
       />
     );
@@ -101,14 +101,14 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold text-content-primary">
-            {t('compliance.page.title', {
-              defaultValue: 'Compliance documents‌⁠‍',
+            {t("compliance.page.title", {
+              defaultValue: "Compliance documents‌⁠‍",
             })}
           </h2>
           <p className="text-xs text-content-tertiary">
-            {t('compliance.page.subtitle', {
+            {t("compliance.page.subtitle", {
               defaultValue:
-                'Track insurance, permits, bonds and certifications with expiry reminders.',
+                "Track insurance, permits, bonds and certifications with expiry reminders.",
             })}
           </p>
         </div>
@@ -118,12 +118,12 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
             onChange={(e) => setTypeFilter(e.target.value)}
             className="rounded-md border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary"
             data-testid="compliance-filter-type"
-            aria-label={t('compliance.filter.type', {
-              defaultValue: 'Filter by type',
+            aria-label={t("compliance.filter.type", {
+              defaultValue: "Filter by type",
             })}
           >
             <option value="">
-              {t('compliance.filter.all_types', { defaultValue: 'All types' })}
+              {t("compliance.filter.all_types", { defaultValue: "All types" })}
             </option>
             {COMPLIANCE_DOC_TYPES.map((dt) => (
               <option key={dt} value={dt}>
@@ -136,13 +136,13 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="rounded-md border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-primary"
             data-testid="compliance-filter-status"
-            aria-label={t('compliance.filter.status', {
-              defaultValue: 'Filter by status',
+            aria-label={t("compliance.filter.status", {
+              defaultValue: "Filter by status",
             })}
           >
             <option value="">
-              {t('compliance.filter.all_statuses', {
-                defaultValue: 'All statuses',
+              {t("compliance.filter.all_statuses", {
+                defaultValue: "All statuses",
               })}
             </option>
             {COMPLIANCE_STATUSES.map((s) => (
@@ -156,7 +156,7 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
             onClick={() => setShowCreate(true)}
             data-testid="compliance-new"
           >
-            {t('compliance.page.new', { defaultValue: 'New document' })}
+            {t("compliance.page.new", { defaultValue: "New document" })}
           </Button>
         </div>
       </div>
@@ -170,12 +170,12 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
       ) : sortedRows.length === 0 ? (
         <EmptyState
           icon={<ShieldCheck size={48} strokeWidth={1.5} />}
-          title={t('compliance.empty.title', {
-            defaultValue: 'No compliance documents yet',
+          title={t("compliance.empty.title", {
+            defaultValue: "No compliance documents yet",
           })}
-          description={t('compliance.empty.description', {
+          description={t("compliance.empty.description", {
             defaultValue:
-              'Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.',
+              "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
           })}
           action={
             <Button
@@ -183,34 +183,31 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
               onClick={() => setShowCreate(true)}
               data-testid="compliance-empty-cta"
             >
-              {t('compliance.page.new', { defaultValue: 'New document' })}
+              {t("compliance.page.new", { defaultValue: "New document" })}
             </Button>
           }
         />
       ) : (
         <Card padding="none">
-          <table
-            className="w-full text-sm"
-            data-testid="compliance-table"
-          >
+          <table className="w-full text-sm" data-testid="compliance-table">
             <thead className="bg-surface-secondary text-xs text-content-tertiary">
               <tr>
                 <th className="px-3 py-2 text-left font-medium">
-                  {t('compliance.col.name', { defaultValue: 'Name' })}
+                  {t("compliance.col.name", { defaultValue: "Name" })}
                 </th>
                 <th className="px-3 py-2 text-left font-medium">
-                  {t('compliance.col.type', { defaultValue: 'Type' })}
+                  {t("compliance.col.type", { defaultValue: "Type" })}
                 </th>
                 <th className="px-3 py-2 text-left font-medium">
-                  {t('compliance.col.expires_at', { defaultValue: 'Expires' })}
+                  {t("compliance.col.expires_at", { defaultValue: "Expires" })}
                 </th>
                 <th className="px-3 py-2 text-left font-medium">
-                  {t('compliance.col.days_left', {
-                    defaultValue: 'Days left',
+                  {t("compliance.col.days_left", {
+                    defaultValue: "Days left",
                   })}
                 </th>
                 <th className="px-3 py-2 text-left font-medium">
-                  {t('compliance.col.status', { defaultValue: 'Status' })}
+                  {t("compliance.col.status", { defaultValue: "Status" })}
                 </th>
                 <th className="px-3 py-2" />
               </tr>
@@ -250,9 +247,8 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
                       onClick={() => {
                         if (
                           window.confirm(
-                            t('compliance.confirm.delete', {
-                              defaultValue:
-                                'Delete this compliance document?',
+                            t("compliance.confirm.delete", {
+                              defaultValue: "Delete this compliance document?",
                             }),
                           )
                         ) {
@@ -260,8 +256,8 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
                         }
                       }}
                       className="rounded-md p-1 text-content-tertiary hover:bg-surface-secondary hover:text-semantic-error"
-                      aria-label={t('common.delete', {
-                        defaultValue: 'Delete',
+                      aria-label={t("common.delete", {
+                        defaultValue: "Delete",
                       })}
                       data-testid={`compliance-delete-${row.id}`}
                     >

@@ -1,22 +1,22 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Create-compliance-doc modal.
 
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { X } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { X } from "lucide-react";
 
-import { Button, Input } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
-import { useFileList } from '@/features/file-manager/hooks';
-import { ApiError } from '@/shared/lib/api';
+import { Button, Input } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
+import { useFileList } from "@/features/file-manager/hooks";
+import { ApiError } from "@/shared/lib/api";
 
-import { createComplianceDoc } from './api';
+import { createComplianceDoc } from "./api";
 import {
   COMPLIANCE_DOC_TYPES,
   type ComplianceDocCreate,
   type ComplianceDocType,
-} from './types';
+} from "./types";
 
 export interface CreateComplianceDocModalProps {
   projectId: string;
@@ -41,20 +41,20 @@ export function CreateComplianceDocModal({
   const toast = useToastStore((s) => s.addToast);
 
   const [docType, setDocType] = useState<ComplianceDocType>(
-    'insurance_general_liability',
+    "insurance_general_liability",
   );
-  const [name, setName] = useState('');
-  const [issuer, setIssuer] = useState('');
-  const [policyNumber, setPolicyNumber] = useState('');
-  const [coverageAmount, setCoverageAmount] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [name, setName] = useState("");
+  const [issuer, setIssuer] = useState("");
+  const [policyNumber, setPolicyNumber] = useState("");
+  const [coverageAmount, setCoverageAmount] = useState("");
+  const [currency, setCurrency] = useState("");
   const [effectiveDate, setEffectiveDate] = useState(TODAY_ISO());
   const [expiresAt, setExpiresAt] = useState(ISO_PLUS_DAYS(365));
   const [notifyDaysBefore, setNotifyDaysBefore] = useState(30);
-  const [attachmentDocId, setAttachmentDocId] = useState<string>('');
-  const [notes, setNotes] = useState('');
+  const [attachmentDocId, setAttachmentDocId] = useState<string>("");
+  const [notes, setNotes] = useState("");
 
-  const { data: files } = useFileList(projectId, { category: 'document' });
+  const { data: files } = useFileList(projectId, { category: "document" });
   const attachmentOptions = useMemo(
     () => (files?.items ?? []).map((f) => ({ id: f.id, name: f.name })),
     [files],
@@ -79,15 +79,17 @@ export function CreateComplianceDocModal({
       return createComplianceDoc(body);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['compliance-docs', projectId] });
       queryClient.invalidateQueries({
-        queryKey: ['compliance-docs-expiring', projectId],
+        queryKey: ["compliance-docs", projectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["compliance-docs-expiring", projectId],
       });
       toast({
-        title: t('compliance.toast.created', {
-          defaultValue: 'Compliance document created.‌⁠‍',
+        title: t("compliance.toast.created", {
+          defaultValue: "Compliance document created.‌⁠‍",
         }),
-        type: 'success',
+        type: "success",
       });
       onCreated?.();
       onClose();
@@ -96,10 +98,10 @@ export function CreateComplianceDocModal({
       const msg =
         err instanceof ApiError && err.message
           ? err.message
-          : t('compliance.toast.create_failed', {
-              defaultValue: 'Failed to create compliance document.‌⁠‍',
+          : t("compliance.toast.create_failed", {
+              defaultValue: "Failed to create compliance document.‌⁠‍",
             });
-      toast({ title: msg, type: 'error' });
+      toast({ title: msg, type: "error" });
     },
   });
 
@@ -124,15 +126,15 @@ export function CreateComplianceDocModal({
             id="create-compliance-title"
             className="text-base font-semibold text-content-primary"
           >
-            {t('compliance.modal.create_title', {
-              defaultValue: 'New compliance document‌⁠‍',
+            {t("compliance.modal.create_title", {
+              defaultValue: "New compliance document‌⁠‍",
             })}
           </div>
           <button
             type="button"
             onClick={onClose}
             className="rounded-md p-1 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={18} />
           </button>
@@ -141,7 +143,9 @@ export function CreateComplianceDocModal({
         <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2">
           <label className="col-span-1 sm:col-span-2 flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.doc_type', { defaultValue: 'Document type‌⁠‍' })}
+              {t("compliance.field.doc_type", {
+                defaultValue: "Document type‌⁠‍",
+              })}
             </span>
             <select
               value={docType}
@@ -159,7 +163,7 @@ export function CreateComplianceDocModal({
 
           <label className="col-span-1 sm:col-span-2 flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.name', { defaultValue: 'Name' })}
+              {t("compliance.field.name", { defaultValue: "Name" })}
             </span>
             <Input
               value={name}
@@ -170,7 +174,7 @@ export function CreateComplianceDocModal({
 
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.issuer', { defaultValue: 'Issuer‌⁠‍' })}
+              {t("compliance.field.issuer", { defaultValue: "Issuer‌⁠‍" })}
             </span>
             <Input
               value={issuer}
@@ -181,8 +185,8 @@ export function CreateComplianceDocModal({
 
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.policy_number', {
-                defaultValue: 'Policy / permit number',
+              {t("compliance.field.policy_number", {
+                defaultValue: "Policy / permit number",
               })}
             </span>
             <Input
@@ -194,8 +198,8 @@ export function CreateComplianceDocModal({
 
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.coverage_amount', {
-                defaultValue: 'Coverage amount',
+              {t("compliance.field.coverage_amount", {
+                defaultValue: "Coverage amount",
               })}
             </span>
             <Input
@@ -208,7 +212,7 @@ export function CreateComplianceDocModal({
 
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.currency', { defaultValue: 'Currency' })}
+              {t("compliance.field.currency", { defaultValue: "Currency" })}
             </span>
             <Input
               value={currency}
@@ -220,8 +224,8 @@ export function CreateComplianceDocModal({
 
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.effective_date', {
-                defaultValue: 'Effective date',
+              {t("compliance.field.effective_date", {
+                defaultValue: "Effective date",
               })}
             </span>
             <Input
@@ -234,7 +238,7 @@ export function CreateComplianceDocModal({
 
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.expires_at', { defaultValue: 'Expires on' })}
+              {t("compliance.field.expires_at", { defaultValue: "Expires on" })}
             </span>
             <Input
               type="date"
@@ -246,8 +250,8 @@ export function CreateComplianceDocModal({
 
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.notify_days', {
-                defaultValue: 'Notify days before',
+              {t("compliance.field.notify_days", {
+                defaultValue: "Notify days before",
               })}
             </span>
             <Input
@@ -264,8 +268,8 @@ export function CreateComplianceDocModal({
 
           <label className="col-span-1 sm:col-span-2 flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.attachment', {
-                defaultValue: 'Attachment document (optional)',
+              {t("compliance.field.attachment", {
+                defaultValue: "Attachment document (optional)",
               })}
             </span>
             <select
@@ -275,8 +279,8 @@ export function CreateComplianceDocModal({
               data-testid="compliance-field-attachment"
             >
               <option value="">
-                {t('compliance.field.attachment_none', {
-                  defaultValue: 'No attachment',
+                {t("compliance.field.attachment_none", {
+                  defaultValue: "No attachment",
                 })}
               </option>
               {attachmentOptions.map((a) => (
@@ -289,7 +293,7 @@ export function CreateComplianceDocModal({
 
           <label className="col-span-1 sm:col-span-2 flex flex-col gap-1 text-xs">
             <span className="text-content-secondary">
-              {t('compliance.field.notes', { defaultValue: 'Notes' })}
+              {t("compliance.field.notes", { defaultValue: "Notes" })}
             </span>
             <textarea
               value={notes}
@@ -303,7 +307,7 @@ export function CreateComplianceDocModal({
 
         <div className="flex items-center justify-end gap-2 border-t border-border-light px-4 py-3">
           <Button variant="ghost" onClick={onClose}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             onClick={() => mutation.mutate()}
@@ -311,9 +315,9 @@ export function CreateComplianceDocModal({
             data-testid="compliance-submit"
           >
             {mutation.isPending
-              ? t('common.saving', { defaultValue: 'Saving…' })
-              : t('compliance.modal.create_submit', {
-                  defaultValue: 'Create document',
+              ? t("common.saving", { defaultValue: "Saving…" })
+              : t("compliance.modal.create_submit", {
+                  defaultValue: "Create document",
                 })}
           </Button>
         </div>

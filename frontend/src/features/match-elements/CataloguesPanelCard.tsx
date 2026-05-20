@@ -14,10 +14,10 @@
  *   POST /api/v1/costs/catalogues-v3/{region}/install — download + restore
  */
 
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCatalogueInstallStore } from '@/stores/useCatalogueInstallStore';
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCatalogueInstallStore } from "@/stores/useCatalogueInstallStore";
 import {
   Database,
   ChevronDown,
@@ -27,17 +27,17 @@ import {
   Loader2,
   Clock,
   AlertCircle,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { useToastStore } from '@/stores/useToastStore';
-import { useAuthStore } from '@/stores/useAuthStore';
+} from "lucide-react";
+import clsx from "clsx";
+import { useToastStore } from "@/stores/useToastStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 // ── Types ────────────────────────────────────────────────────────────────
 //
 // Mirrors the catalogue dict produced by `list_v3_catalogues` in the
 // backend (router.py:1660). Keep this in sync when adding fields.
 
-type InstallStatus = 'loaded' | 'available' | 'installing' | 'coming_soon';
+type InstallStatus = "loaded" | "available" | "installing" | "coming_soon";
 
 interface Catalogue {
   region: string;
@@ -66,14 +66,16 @@ interface CataloguesResponse {
 
 // ── API helpers ──────────────────────────────────────────────────────────
 
-async function fetchCatalogues(): Promise<CataloguesResponse> {
+export async function fetchCatalogues(): Promise<CataloguesResponse> {
   const token = useAuthStore.getState().accessToken;
-  const res = await fetch('/api/v1/costs/catalogues-v3/', {
+  const res = await fetch("/api/v1/costs/catalogues-v3/", {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
   if (!res.ok) throw new Error(`catalogues-v3 ${res.status}`);
   return res.json();
 }
+
+export type { Catalogue, CataloguesResponse, InstallStatus };
 
 // ── Sub-components ───────────────────────────────────────────────────────
 
@@ -85,36 +87,36 @@ function StatusBadge({ status }: { status: InstallStatus }) {
   > = {
     loaded: {
       icon: CheckCircle2,
-      cls: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 border-emerald-200 dark:border-emerald-700',
-      label: t('catalogues.status_loaded', 'Loaded'),
+      cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 border-emerald-200 dark:border-emerald-700",
+      label: t("catalogues.status_loaded", "Loaded"),
     },
     installing: {
       icon: Loader2,
-      cls: 'bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200 border-sky-200 dark:border-sky-700',
-      label: t('catalogues.status_installing', 'Installing…'),
+      cls: "bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200 border-sky-200 dark:border-sky-700",
+      label: t("catalogues.status_installing", "Installing…"),
     },
     available: {
       icon: Download,
-      cls: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200 border-amber-200 dark:border-amber-700',
-      label: t('catalogues.status_available', 'Available'),
+      cls: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200 border-amber-200 dark:border-amber-700",
+      label: t("catalogues.status_available", "Available"),
     },
     coming_soon: {
       icon: Clock,
-      cls: 'bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300 border-slate-200 dark:border-slate-700',
-      label: t('catalogues.status_coming_soon', 'Coming soon'),
+      cls: "bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300 border-slate-200 dark:border-slate-700",
+      label: t("catalogues.status_coming_soon", "Coming soon"),
     },
   };
   const { icon: Icon, cls, label } = config[status];
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium',
+        "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium",
         cls,
       )}
     >
       <Icon
         size={10}
-        className={status === 'installing' ? 'animate-spin' : ''}
+        className={status === "installing" ? "animate-spin" : ""}
       />
       {label}
     </span>
@@ -133,17 +135,17 @@ function InstallButton({
   onInstall: () => void;
 }) {
   const { t } = useTranslation();
-  if (status === 'loaded') {
+  if (status === "loaded") {
     return (
       <span className="text-[11px] text-content-tertiary">
-        {t('catalogues.installed_hint', 'Ready to use')}
+        {t("catalogues.installed_hint", "Ready to use")}
       </span>
     );
   }
-  if (status === 'coming_soon') {
+  if (status === "coming_soon") {
     return (
       <span className="text-[11px] text-content-quaternary italic">
-        {t('catalogues.coming_soon_hint', 'Not yet published by DDC')}
+        {t("catalogues.coming_soon_hint", "Not yet published by DDC")}
       </span>
     );
   }
@@ -153,11 +155,11 @@ function InstallButton({
       onClick={onInstall}
       disabled={isPending}
       className={clsx(
-        'inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium',
-        'bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60',
-        'transition-colors',
+        "inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium",
+        "bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60",
+        "transition-colors",
       )}
-      aria-label={t('catalogues.install_aria', 'Install catalogue {{region}}', {
+      aria-label={t("catalogues.install_aria", "Install catalogue {{region}}", {
         region,
       })}
     >
@@ -167,8 +169,8 @@ function InstallButton({
         <Download size={11} />
       )}
       {isPending
-        ? t('catalogues.installing_button', 'Installing…')
-        : t('catalogues.install_button', 'Install')}
+        ? t("catalogues.installing_button", "Installing…")
+        : t("catalogues.install_button", "Install")}
     </button>
   );
 }
@@ -189,7 +191,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
   const [open, setOpen] = useState(false);
 
   const cataloguesQ = useQuery({
-    queryKey: ['catalogues-v3'],
+    queryKey: ["catalogues-v3"],
     queryFn: fetchCatalogues,
     staleTime: 30_000,
     refetchInterval: 60_000,
@@ -215,28 +217,31 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
         {
           onSuccess: async (region) => {
             addToast({
-              type: 'success',
-              title: t('catalogues.install_success_title', 'Catalogue installed'),
+              type: "success",
+              title: t(
+                "catalogues.install_success_title",
+                "Catalogue installed",
+              ),
               message: t(
-                'catalogues.install_success_body',
-                'Region {{region}} is now ready. Re-bind the project to use it.',
+                "catalogues.install_success_body",
+                "Region {{region}} is now ready. Re-bind the project to use it.",
                 { region },
               ),
             });
             await Promise.all([
-              queryClient.invalidateQueries({ queryKey: ['catalogues-v3'] }),
+              queryClient.invalidateQueries({ queryKey: ["catalogues-v3"] }),
               queryClient.invalidateQueries({
-                queryKey: ['match-vector-readiness'],
+                queryKey: ["match-vector-readiness"],
               }),
             ]);
           },
           onError: (region, error) => {
             addToast({
-              type: 'error',
-              title: t('catalogues.install_failed_title', 'Install failed'),
+              type: "error",
+              title: t("catalogues.install_failed_title", "Install failed"),
               message: t(
-                'catalogues.install_failed_body',
-                'Could not install {{region}}: {{error}}',
+                "catalogues.install_failed_body",
+                "Could not install {{region}}: {{error}}",
                 { region, error },
               ),
             });
@@ -255,7 +260,11 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
   const catalogues: Catalogue[] = useMemo(() => {
     const raw = cataloguesQ.data as unknown;
     if (Array.isArray(raw)) return raw as Catalogue[];
-    if (raw && typeof raw === 'object' && Array.isArray((raw as { catalogues?: unknown }).catalogues)) {
+    if (
+      raw &&
+      typeof raw === "object" &&
+      Array.isArray((raw as { catalogues?: unknown }).catalogues)
+    ) {
       return (raw as { catalogues: Catalogue[] }).catalogues;
     }
     return [];
@@ -275,9 +284,11 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
 
   const stats = useMemo(() => {
     return {
-      loaded: catalogues.filter((c) => c.install_status === 'loaded').length,
-      available: catalogues.filter((c) => c.install_status === 'available').length,
-      coming: catalogues.filter((c) => c.install_status === 'coming_soon').length,
+      loaded: catalogues.filter((c) => c.install_status === "loaded").length,
+      available: catalogues.filter((c) => c.install_status === "available")
+        .length,
+      coming: catalogues.filter((c) => c.install_status === "coming_soon")
+        .length,
       total: catalogues.length,
     };
   }, [catalogues]);
@@ -295,7 +306,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
     if (!preferredRegion) return;
     if (catalogues.length === 0) return;
     const target = catalogues.find((c) => c.region === preferredRegion);
-    if (target && target.install_status === 'available') {
+    if (target && target.install_status === "available") {
       setOpen(true);
       autoOpenedRef.current = true;
     }
@@ -310,7 +321,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
   return (
     <section
       className="rounded-xl border border-border bg-surface-primary shadow-sm"
-      aria-label={t('catalogues.section_label', 'Cost catalogues')}
+      aria-label={t("catalogues.section_label", "Cost catalogues")}
     >
       <button
         type="button"
@@ -324,23 +335,22 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
           </div>
           <div className="min-w-0">
             <div className="text-xs font-semibold text-content-primary">
-              {t('catalogues.title', 'Cost catalogues')}
+              {t("catalogues.title", "Cost catalogues")}
             </div>
             <div className="text-[11px] text-content-tertiary truncate">
               {cataloguesQ.isLoading ? (
-                t('catalogues.loading', 'Checking server…')
+                t("catalogues.loading", "Checking server…")
               ) : (
                 <>
                   <span className="text-emerald-700 dark:text-emerald-300 font-medium">
                     {stats.loaded}
-                  </span>{' '}
-                  {t('catalogues.stat_loaded', 'loaded')} ·{' '}
+                  </span>{" "}
+                  {t("catalogues.stat_loaded", "loaded")} ·{" "}
                   <span className="text-amber-700 dark:text-amber-300 font-medium">
                     {stats.available}
-                  </span>{' '}
-                  {t('catalogues.stat_available', 'available')} ·{' '}
-                  {stats.total}{' '}
-                  {t('catalogues.stat_total', 'total regions')}
+                  </span>{" "}
+                  {t("catalogues.stat_available", "available")} · {stats.total}{" "}
+                  {t("catalogues.stat_total", "total regions")}
                 </>
               )}
             </div>
@@ -361,17 +371,17 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
               tiny spinner inside the row's button. */}
           {(cataloguesQ.isFetching ||
             Array.from(installJobs.values()).some(
-              (j) => j.status === 'downloading',
+              (j) => j.status === "downloading",
             )) && (
             <div
               role="progressbar"
               aria-busy="true"
               aria-label={
                 Array.from(installJobs.values()).some(
-                  (j) => j.status === 'downloading',
+                  (j) => j.status === "downloading",
                 )
-                  ? t('catalogues.install_progress', 'Installing catalogue…')
-                  : t('catalogues.refresh_progress', 'Refreshing catalogues…')
+                  ? t("catalogues.install_progress", "Installing catalogue…")
+                  : t("catalogues.refresh_progress", "Refreshing catalogues…")
               }
               className="pointer-events-none absolute top-0 left-0 right-0 h-0.5 overflow-hidden bg-indigo-500/15"
             >
@@ -385,14 +395,14 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
               <div>
                 <div className="font-semibold">
                   {t(
-                    'catalogues.server_unreachable_title',
-                    'Qdrant server unreachable',
+                    "catalogues.server_unreachable_title",
+                    "Qdrant server unreachable",
                   )}
                 </div>
                 <div className="mt-0.5">
                   {t(
-                    'catalogues.server_unreachable_hint',
-                    'Set CWICR_QDRANT_URL or QDRANT_URL and run docker compose up -d qdrant.',
+                    "catalogues.server_unreachable_hint",
+                    "Set CWICR_QDRANT_URL or QDRANT_URL and run docker compose up -d qdrant.",
                   )}
                 </div>
               </div>
@@ -401,13 +411,13 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
 
           <p className="text-[11px] text-content-tertiary mb-2">
             {t(
-              'catalogues.help',
-              'Install the catalogue for the project region. The matcher will switch automatically once installed.',
-            )}{' '}
+              "catalogues.help",
+              "Install the catalogue for the project region. The matcher will switch automatically once installed.",
+            )}{" "}
             <span className="text-content-quaternary">
               {t(
-                'catalogues.install_time_hint',
-                'Install takes 30–120 s depending on connection (~50–500 MB download).',
+                "catalogues.install_time_hint",
+                "Install takes 30–120 s depending on connection (~50–500 MB download).",
               )}
             </span>
           </p>
@@ -417,37 +427,36 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
               <thead>
                 <tr className="text-left text-content-tertiary uppercase tracking-wider text-[10px] border-b border-border">
                   <th className="py-1.5 pr-2">
-                    {t('catalogues.col_region', 'Region')}
+                    {t("catalogues.col_region", "Region")}
                   </th>
                   <th className="py-1.5 pr-2 hidden sm:table-cell">
-                    {t('catalogues.col_language', 'Lang')}
+                    {t("catalogues.col_language", "Lang")}
                   </th>
                   <th className="py-1.5 pr-2 hidden sm:table-cell">
-                    {t('catalogues.col_currency', 'Curr')}
+                    {t("catalogues.col_currency", "Curr")}
                   </th>
                   <th className="py-1.5 pr-2 hidden md:table-cell">
-                    {t('catalogues.col_size', 'Size')}
+                    {t("catalogues.col_size", "Size")}
                   </th>
                   <th className="py-1.5 pr-2">
-                    {t('catalogues.col_status', 'Status')}
+                    {t("catalogues.col_status", "Status")}
                   </th>
                   <th className="py-1.5">
-                    {t('catalogues.col_action', 'Action')}
+                    {t("catalogues.col_action", "Action")}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {sorted.map((c) => {
                   const installJob = installJobs.get(c.region);
-                  const isPending = installJob?.status === 'downloading';
+                  const isPending = installJob?.status === "downloading";
                   const isPreferred = preferredRegion === c.region;
                   return (
                     <tr
                       key={c.region}
                       className={clsx(
-                        'border-b border-border/50 last:border-b-0',
-                        isPreferred &&
-                          'bg-indigo-50/60 dark:bg-indigo-900/15',
+                        "border-b border-border/50 last:border-b-0",
+                        isPreferred && "bg-indigo-50/60 dark:bg-indigo-900/15",
                       )}
                     >
                       <td className="py-1.5 pr-2">
@@ -461,7 +470,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                           </span>
                           {isPreferred && (
                             <span className="ml-1 text-[9px] uppercase tracking-wider text-indigo-700 dark:text-indigo-300 font-bold">
-                              {t('catalogues.preferred_tag', 'Project')}
+                              {t("catalogues.preferred_tag", "Project")}
                             </span>
                           )}
                         </div>
@@ -473,17 +482,17 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                         {c.currency}
                       </td>
                       <td className="py-1.5 pr-2 hidden md:table-cell text-content-tertiary">
-                        {c.size_mb ? `${c.size_mb} MB` : '—'}
+                        {c.size_mb ? `${c.size_mb} MB` : "—"}
                       </td>
                       <td className="py-1.5 pr-2">
                         <StatusBadge
-                          status={isPending ? 'installing' : c.install_status}
+                          status={isPending ? "installing" : c.install_status}
                         />
                       </td>
                       <td className="py-1.5">
                         <InstallButton
                           region={c.region}
-                          status={isPending ? 'installing' : c.install_status}
+                          status={isPending ? "installing" : c.install_status}
                           isPending={isPending}
                           onInstall={() => handleInstall(c)}
                         />
@@ -495,7 +504,8 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                     pops in empty for ~200–800 ms which the user reads as a
                     broken state. We render 6 placeholder rows that match
                     the real row layout so the height doesn't jump on swap. */}
-                {sorted.length === 0 && cataloguesQ.isFetching && (
+                {sorted.length === 0 &&
+                  cataloguesQ.isFetching &&
                   Array.from({ length: 6 }).map((_, i) => (
                     <tr
                       key={`sk-${i}`}
@@ -520,8 +530,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                         <div className="h-5 w-16 rounded bg-content-tertiary/15 animate-pulse" />
                       </td>
                     </tr>
-                  ))
-                )}
+                  ))}
                 {/* Empty-state — only when the query has actually settled
                     (no in-flight fetch) AND returned zero rows. The previous
                     `!isLoading` check fired during invalidation refetches
@@ -537,8 +546,8 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                         className="py-4 text-center text-content-tertiary"
                       >
                         {t(
-                          'catalogues.empty',
-                          'No catalogues registered. Check backend/app/modules/costs/cwicr_v3_catalogue.py.',
+                          "catalogues.empty",
+                          "No catalogues registered. Check backend/app/modules/costs/cwicr_v3_catalogue.py.",
                         )}
                       </td>
                     </tr>

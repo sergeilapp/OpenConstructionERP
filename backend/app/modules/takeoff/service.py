@@ -441,6 +441,7 @@ def recompute_measurement_value(
     # Unknown type — preserve client value rather than nulling it out.
     return client_value
 
+
 # Directory where uploaded PDF files are stored on disk
 _TAKEOFF_DOCUMENTS_DIR = Path.home() / ".openestimator" / "takeoff_documents"
 
@@ -600,10 +601,7 @@ class TakeoffService:
         if not content or size_bytes == 0:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "Uploaded file is empty. Please re-export the PDF "
-                    "and try again."
-                ),
+                detail=("Uploaded file is empty. Please re-export the PDF and try again."),
             )
 
         # Gate 2: optional operator-configured size cap.
@@ -650,6 +648,7 @@ class TakeoffService:
         if is_scanned:
             try:
                 import paddleocr  # noqa: F401
+
                 paddle_available = True
             except Exception:
                 paddle_available = False
@@ -658,7 +657,8 @@ class TakeoffService:
                     "takeoff.upload_document: scanned PDF with no text layer; "
                     "install [cv] extra (paddleocr) to enable OCR fallback "
                     "(filename=%r, pages=%d)",
-                    filename, page_count,
+                    filename,
+                    page_count,
                 )
 
         if page_count == 0 and not page_data:
@@ -807,13 +807,12 @@ class TakeoffService:
                     # The leading apostrophe is rendered invisibly by
                     # spreadsheet apps but blocks formula evaluation.
                     from app.core.csv_safety import neutralise_formula  # noqa: PLC0415
+
                     elements.append(
                         {
                             "id": f"ext_{idx}",
                             "category": "general",
-                            "description": neutralise_formula(
-                                clean_desc or f"Item {idx}"
-                            ),
+                            "description": neutralise_formula(clean_desc or f"Item {idx}"),
                             "quantity": qty,
                             "unit": neutralise_formula(clean_unit),
                             "confidence": confidence,
@@ -975,13 +974,9 @@ class TakeoffService:
             effective_type = fields.get("type") if "type" in fields else item.type
             effective_points = fields.get("points") if "points" in fields else (item.points or [])
             effective_scale = (
-                fields.get("scale_pixels_per_unit")
-                if "scale_pixels_per_unit" in fields
-                else item.scale_pixels_per_unit
+                fields.get("scale_pixels_per_unit") if "scale_pixels_per_unit" in fields else item.scale_pixels_per_unit
             )
-            effective_count = (
-                fields.get("count_value") if "count_value" in fields else item.count_value
-            )
+            effective_count = fields.get("count_value") if "count_value" in fields else item.count_value
             client_value = fields.get("measurement_value", item.measurement_value)
             recomputed = recompute_measurement_value(
                 measurement_type=effective_type,

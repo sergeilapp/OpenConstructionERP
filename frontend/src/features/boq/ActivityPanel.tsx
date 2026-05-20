@@ -7,7 +7,7 @@
  * Extracted from BOQEditorPage.tsx for modularity.
  */
 
-import React from 'react';
+import React from "react";
 import {
   Plus,
   Trash2,
@@ -20,73 +20,76 @@ import {
   ChevronDown,
   ChevronUp,
   Circle,
-} from 'lucide-react';
-import type { ActivityEntry, ActivityAction } from './api';
-import { formatRelativeTime } from './boqHelpers';
+} from "lucide-react";
+import type { ActivityEntry, ActivityAction } from "./api";
+import { formatRelativeTime } from "./boqHelpers";
 
 /* ── Activity icon map ───────────────────────────────────────────────── */
 
 /** Map action types to icon + color for visual distinction. */
-const ACTIVITY_ICON_MAP: Record<ActivityAction, { icon: React.ReactNode; color: string }> = {
+const ACTIVITY_ICON_MAP: Record<
+  ActivityAction,
+  { icon: React.ReactNode; color: string }
+> = {
   position_added: {
     icon: <Circle size={12} strokeWidth={3} />,
-    color: 'text-semantic-success',
+    color: "text-semantic-success",
   },
   position_updated: {
     icon: <Pencil size={12} strokeWidth={2} />,
-    color: 'text-oe-blue',
+    color: "text-oe-blue",
   },
   position_deleted: {
     icon: <Trash2 size={12} strokeWidth={2} />,
-    color: 'text-semantic-error',
+    color: "text-semantic-error",
   },
   quantity_updated: {
     icon: <Pencil size={12} strokeWidth={2} />,
-    color: 'text-oe-blue',
+    color: "text-oe-blue",
   },
   rate_updated: {
     icon: <Pencil size={12} strokeWidth={2} />,
-    color: 'text-oe-blue',
+    color: "text-oe-blue",
   },
   section_added: {
     icon: <Plus size={12} strokeWidth={2.5} />,
-    color: 'text-semantic-success',
+    color: "text-semantic-success",
   },
   section_deleted: {
     icon: <Trash2 size={12} strokeWidth={2} />,
-    color: 'text-semantic-error',
+    color: "text-semantic-error",
   },
   validation_run: {
     icon: <BarChart3 size={12} strokeWidth={2} />,
-    color: 'text-violet-500',
+    color: "text-violet-500",
   },
   excel_imported: {
     icon: <FileDown size={12} strokeWidth={2} />,
-    color: 'text-semantic-success',
+    color: "text-semantic-success",
   },
   csv_imported: {
     icon: <FileDown size={12} strokeWidth={2} />,
-    color: 'text-semantic-success',
+    color: "text-semantic-success",
   },
   boq_created: {
     icon: <Plus size={12} strokeWidth={2.5} />,
-    color: 'text-oe-blue',
+    color: "text-oe-blue",
   },
   template_applied: {
     icon: <LayoutTemplate size={12} strokeWidth={2} />,
-    color: 'text-violet-500',
+    color: "text-violet-500",
   },
   markup_added: {
     icon: <Plus size={12} strokeWidth={2.5} />,
-    color: 'text-semantic-success',
+    color: "text-semantic-success",
   },
   markup_updated: {
     icon: <Pencil size={12} strokeWidth={2} />,
-    color: 'text-oe-blue',
+    color: "text-oe-blue",
   },
   status_changed: {
     icon: <Activity size={12} strokeWidth={2} />,
-    color: 'text-amber-500',
+    color: "text-amber-500",
   },
 };
 
@@ -113,9 +116,13 @@ export function ActivityPanel({
         className="flex w-full items-center justify-between px-5 py-3.5 hover:bg-surface-secondary/50 transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <Activity size={16} className="text-content-tertiary" strokeWidth={1.75} />
+          <Activity
+            size={16}
+            className="text-content-tertiary"
+            strokeWidth={1.75}
+          />
           <span className="text-sm font-semibold text-content-primary">
-            {t('boq.recent_activity', { defaultValue: 'Recent Activity‌⁠‍' })}
+            {t("boq.recent_activity", { defaultValue: "Recent Activity‌⁠‍" })}
           </span>
           {activities.length > 0 && (
             <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-surface-secondary px-1.5 text-2xs font-medium text-content-secondary tabular-nums">
@@ -136,7 +143,9 @@ export function ActivityPanel({
               <Inbox size={18} className="text-content-tertiary" />
             </div>
             <p className="text-xs text-content-tertiary">
-              {t('boq.no_activity', { defaultValue: 'No activity yet. Changes will appear here.‌⁠‍' })}
+              {t("boq.no_activity", {
+                defaultValue: "No activity yet. Changes will appear here.‌⁠‍",
+              })}
             </p>
           </div>
         </div>
@@ -146,7 +155,7 @@ export function ActivityPanel({
             {visibleActivities.map((entry) => {
               const mapping = ACTIVITY_ICON_MAP[entry.action] ?? {
                 icon: <Activity size={12} strokeWidth={2} />,
-                color: 'text-content-tertiary',
+                color: "text-content-tertiary",
               };
 
               return (
@@ -189,7 +198,9 @@ export function ActivityPanel({
                 onClick={onToggle}
                 className="text-xs font-medium text-oe-blue hover:text-oe-blue-hover transition-colors"
               >
-                {t('boq.show_all_activity', { defaultValue: 'Show all activity...‌⁠‍' })}
+                {t("boq.show_all_activity", {
+                  defaultValue: "Show all activity...‌⁠‍",
+                })}
               </button>
             </div>
           )}

@@ -11,9 +11,9 @@
  * the dashboards-collection endpoint (T05) does not exist yet, so the
  * default no-op shows a toast explaining that the wiring lands later.
  */
-import { useCallback, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
+import { useCallback, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   Bar,
   BarChart,
@@ -30,29 +30,36 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
-import { RefreshCw, Pin, BarChart3, LineChart as LineIcon, ScatterChart as ScatterIcon, PieChart as PieIcon } from 'lucide-react';
+} from "recharts";
+import {
+  RefreshCw,
+  Pin,
+  BarChart3,
+  LineChart as LineIcon,
+  ScatterChart as ScatterIcon,
+  PieChart as PieIcon,
+} from "lucide-react";
 
-import { Button, Card, EmptyState, Skeleton } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+import { Button, Card, EmptyState, Skeleton } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 
 import {
   createDashboardPreset,
   getQuickInsights,
   type QuickInsightChart,
-} from './api';
-import { PresetPicker } from './PresetPicker';
+} from "./api";
+import { PresetPicker } from "./PresetPicker";
 
 const CHART_HEIGHT = 200;
 const PIE_PALETTE = [
-  '#3b82f6', // blue
-  '#10b981', // emerald
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#14b8a6', // teal
-  '#a3e635', // lime
+  "#3b82f6", // blue
+  "#10b981", // emerald
+  "#f59e0b", // amber
+  "#ef4444", // red
+  "#8b5cf6", // violet
+  "#ec4899", // pink
+  "#14b8a6", // teal
+  "#a3e635", // lime
 ];
 
 export interface QuickInsightPanelProps {
@@ -79,7 +86,7 @@ export function QuickInsightPanel({
   const toast = useToastStore((s) => s.addToast);
 
   const insightsQuery = useQuery({
-    queryKey: ['dashboards-quick-insights', snapshotId, limit],
+    queryKey: ["dashboards-quick-insights", snapshotId, limit],
     queryFn: () => getQuickInsights(snapshotId, { limit }),
     enabled: !!snapshotId,
     // Don't refetch when the user just clicks around — auto-charts
@@ -101,10 +108,10 @@ export function QuickInsightPanel({
       try {
         await createDashboardPreset({
           name: chart.title.slice(0, 200),
-          description: t('dashboards.pin_default_description', {
-            defaultValue: 'Pinned from Quick Insights‌⁠‍',
+          description: t("dashboards.pin_default_description", {
+            defaultValue: "Pinned from Quick Insights‌⁠‍",
           }),
-          kind: 'preset',
+          kind: "preset",
           project_id: projectId ?? null,
           config_json: {
             snapshot_id: snapshotId,
@@ -114,19 +121,19 @@ export function QuickInsightPanel({
           shared_with_project: false,
         });
         toast({
-          type: 'success',
-          title: t('dashboards.pin_saved_title', {
-            defaultValue: 'Pinned to dashboard‌⁠‍',
+          type: "success",
+          title: t("dashboards.pin_saved_title", {
+            defaultValue: "Pinned to dashboard‌⁠‍",
           }),
-          message: t('dashboards.pin_saved_msg', {
-            defaultValue: 'Open the Presets dropdown to load it back.‌⁠‍',
+          message: t("dashboards.pin_saved_msg", {
+            defaultValue: "Open the Presets dropdown to load it back.‌⁠‍",
           }),
         });
       } catch (err) {
         toast({
-          type: 'error',
-          title: t('dashboards.pin_failed_title', {
-            defaultValue: 'Could not pin chart‌⁠‍',
+          type: "error",
+          title: t("dashboards.pin_failed_title", {
+            defaultValue: "Could not pin chart‌⁠‍",
           }),
           message: err instanceof Error ? err.message : String(err),
         });
@@ -153,13 +160,14 @@ export function QuickInsightPanel({
       <div className="flex items-center justify-between border-b border-border-light px-4 py-2">
         <div>
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('dashboards.quick_insights_title', {
-              defaultValue: 'Quick insights‌⁠‍',
+            {t("dashboards.quick_insights_title", {
+              defaultValue: "Quick insights‌⁠‍",
             })}
           </h3>
           <p className="text-xs text-content-tertiary">
-            {t('dashboards.quick_insights_subtitle', {
-              defaultValue: 'Auto-generated charts surfacing patterns in this snapshot.',
+            {t("dashboards.quick_insights_subtitle", {
+              defaultValue:
+                "Auto-generated charts surfacing patterns in this snapshot.",
             })}
           </p>
         </div>
@@ -173,9 +181,9 @@ export function QuickInsightPanel({
             data-testid="quick-insights-refresh"
           >
             <RefreshCw
-              className={`mr-1 h-3 w-3 ${insightsQuery.isFetching ? 'animate-spin' : ''}`}
+              className={`mr-1 h-3 w-3 ${insightsQuery.isFetching ? "animate-spin" : ""}`}
             />
-            {t('common.refresh', { defaultValue: 'Refresh' })}
+            {t("common.refresh", { defaultValue: "Refresh" })}
           </Button>
         </div>
       </div>
@@ -191,24 +199,26 @@ export function QuickInsightPanel({
 
         {insightsQuery.isError && (
           <div className="rounded border border-rose-400/30 bg-rose-500/10 p-3 text-xs text-rose-300">
-            {t('dashboards.quick_insights_error', {
-              defaultValue: 'Could not load auto-charts for this snapshot.',
+            {t("dashboards.quick_insights_error", {
+              defaultValue: "Could not load auto-charts for this snapshot.",
             })}
           </div>
         )}
 
-        {!insightsQuery.isLoading && !insightsQuery.isError && charts.length === 0 && (
-          <EmptyState
-            icon={<BarChart3 className="h-8 w-8 text-neutral-500" />}
-            title={t('dashboards.no_insights_title', {
-              defaultValue: 'No automatic insights available',
-            })}
-            description={t('dashboards.no_insights_desc', {
-              defaultValue:
-                'The snapshot has no columns with enough variance to chart automatically.',
-            })}
-          />
-        )}
+        {!insightsQuery.isLoading &&
+          !insightsQuery.isError &&
+          charts.length === 0 && (
+            <EmptyState
+              icon={<BarChart3 className="h-8 w-8 text-neutral-500" />}
+              title={t("dashboards.no_insights_title", {
+                defaultValue: "No automatic insights available",
+              })}
+              description={t("dashboards.no_insights_desc", {
+                defaultValue:
+                  "The snapshot has no columns with enough variance to chart automatically.",
+              })}
+            />
+          )}
 
         {charts.length > 0 && (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -252,8 +262,12 @@ function ChartCard({ chart, onPin }: ChartCardProps) {
           type="button"
           onClick={onPin}
           className="rounded p-1 text-content-tertiary hover:bg-surface-primary hover:text-oe-blue"
-          aria-label={t('dashboards.pin_chart', { defaultValue: 'Pin to dashboard' })}
-          title={t('dashboards.pin_chart', { defaultValue: 'Pin to dashboard' })}
+          aria-label={t("dashboards.pin_chart", {
+            defaultValue: "Pin to dashboard",
+          })}
+          title={t("dashboards.pin_chart", {
+            defaultValue: "Pin to dashboard",
+          })}
           data-testid={`quick-insight-pin-${chart.chart_type}`}
         >
           <Pin className="h-3 w-3" />
@@ -266,16 +280,16 @@ function ChartCard({ chart, onPin }: ChartCardProps) {
   );
 }
 
-function ChartTypeIcon({ type }: { type: QuickInsightChart['chart_type'] }) {
+function ChartTypeIcon({ type }: { type: QuickInsightChart["chart_type"] }) {
   switch (type) {
-    case 'histogram':
-    case 'bar':
+    case "histogram":
+    case "bar":
       return <BarChart3 className="h-3 w-3" />;
-    case 'line':
+    case "line":
       return <LineIcon className="h-3 w-3" />;
-    case 'scatter':
+    case "scatter":
       return <ScatterIcon className="h-3 w-3" />;
-    case 'donut':
+    case "donut":
       return <PieIcon className="h-3 w-3" />;
     default:
       return null;
@@ -292,11 +306,18 @@ function ChartBody({ chart }: { chart: QuickInsightChart }) {
   }
 
   switch (chart.chart_type) {
-    case 'histogram':
+    case "histogram":
       return (
         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-          <BarChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#3a3a3a" vertical={false} />
+          <BarChart
+            data={data}
+            margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#3a3a3a"
+              vertical={false}
+            />
             <XAxis dataKey={chart.x_field} fontSize={10} tickLine={false} />
             <YAxis fontSize={10} tickLine={false} />
             <Tooltip />
@@ -304,11 +325,18 @@ function ChartBody({ chart }: { chart: QuickInsightChart }) {
           </BarChart>
         </ResponsiveContainer>
       );
-    case 'bar':
+    case "bar":
       return (
         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-          <BarChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#3a3a3a" vertical={false} />
+          <BarChart
+            data={data}
+            margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#3a3a3a"
+              vertical={false}
+            />
             <XAxis dataKey={chart.x_field} fontSize={10} tickLine={false} />
             <YAxis fontSize={10} tickLine={false} />
             <Tooltip />
@@ -316,31 +344,43 @@ function ChartBody({ chart }: { chart: QuickInsightChart }) {
           </BarChart>
         </ResponsiveContainer>
       );
-    case 'line':
+    case "line":
       return (
         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-          <LineChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#3a3a3a" vertical={false} />
+          <LineChart
+            data={data}
+            margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#3a3a3a"
+              vertical={false}
+            />
             <XAxis dataKey={chart.x_field} fontSize={10} tickLine={false} />
             <YAxis fontSize={10} tickLine={false} />
             <Tooltip />
-            <Line type="monotone" dataKey={chart.y_field} stroke="#3b82f6" dot={false} />
+            <Line
+              type="monotone"
+              dataKey={chart.y_field}
+              stroke="#3b82f6"
+              dot={false}
+            />
           </LineChart>
         </ResponsiveContainer>
       );
-    case 'scatter':
+    case "scatter":
       return (
         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
           <ScatterChart margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#3a3a3a" />
             <XAxis dataKey={chart.x_field} fontSize={10} type="number" />
             <YAxis dataKey={chart.y_field} fontSize={10} type="number" />
-            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+            <Tooltip cursor={{ strokeDasharray: "3 3" }} />
             <Scatter data={data} fill="#8b5cf6" />
           </ScatterChart>
         </ResponsiveContainer>
       );
-    case 'donut':
+    case "donut":
       return (
         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
           <PieChart>

@@ -19,9 +19,9 @@
  * it only drives the sidebar's visual emphasis.
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { projectsApi, type ProjectProfileResult } from './api';
+import { useQuery } from "@tanstack/react-query";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { projectsApi, type ProjectProfileResult } from "./api";
 
 /** One numbered execution phase shown as a stepper rail in the sidebar. */
 export interface PhaseGroup {
@@ -47,64 +47,58 @@ export interface PhaseGroup {
  */
 export const PHASE_GROUPS: PhaseGroup[] = [
   {
-    id: 'phase_estimation',
-    labelKey: 'nav.phase_estimation',
-    labelEn: 'Estimation',
+    id: "phase_estimation",
+    labelKey: "nav.phase_estimation",
+    labelEn: "Estimation",
     routes: [
-      '/boq',
-      '/costs',
-      '/match-elements',
-      '/assemblies',
-      '/catalog',
-      '/takeoff?tab=measurements',
-      '/dwg-takeoff',
-      '/data-explorer',
-      '/bim',
-      '/ai-estimate',
+      "/boq",
+      "/costs",
+      "/match-elements",
+      "/assemblies",
+      "/catalog",
+      "/takeoff?tab=measurements",
+      "/dwg-takeoff",
+      "/data-explorer",
+      "/bim",
+      "/ai-estimate",
     ],
   },
   {
-    id: 'phase_planning',
-    labelKey: 'nav.phase_planning',
-    labelEn: 'Planning',
+    id: "phase_planning",
+    labelKey: "nav.phase_planning",
+    labelEn: "Planning",
+    routes: ["/schedule", "/schedule-advanced", "/tasks", "/5d", "/risks"],
+  },
+  {
+    id: "phase_execution",
+    labelKey: "nav.phase_execution",
+    labelEn: "Execution",
     routes: [
-      '/schedule',
-      '/schedule-advanced',
-      '/tasks',
-      '/5d',
-      '/risks',
+      "/daily-diary",
+      "/field-reports",
+      "/finance",
+      "/procurement",
+      "/changeorders",
+      "/subcontractors",
+      "/equipment",
+      "/resources",
+      "/service",
     ],
   },
   {
-    id: 'phase_execution',
-    labelKey: 'nav.phase_execution',
-    labelEn: 'Execution',
+    id: "phase_closure",
+    labelKey: "nav.phase_closure",
+    labelEn: "Quality & Closure",
     routes: [
-      '/daily-diary',
-      '/field-reports',
-      '/finance',
-      '/procurement',
-      '/changeorders',
-      '/subcontractors',
-      '/equipment',
-      '/resources',
-      '/service',
-    ],
-  },
-  {
-    id: 'phase_closure',
-    labelKey: 'nav.phase_closure',
-    labelEn: 'Quality & Closure',
-    routes: [
-      '/validation',
-      '/inspections',
-      '/ncr',
-      '/safety',
-      '/punchlist',
-      '/qms',
-      '/hse-advanced',
-      '/reports',
-      '/cde',
+      "/validation",
+      "/inspections",
+      "/ncr",
+      "/safety",
+      "/punchlist",
+      "/qms",
+      "/hse-advanced",
+      "/reports",
+      "/cde",
     ],
   },
 ];
@@ -117,39 +111,39 @@ export const PHASE_GROUPS: PhaseGroup[] = [
  * greyed) so global/infrastructure nav is never suppressed.
  */
 export const ROUTE_TO_MODULE: Record<string, string> = {
-  '/boq': 'boq',
-  '/costs': 'costs',
-  '/match-elements': 'match_elements',
-  '/assemblies': 'assemblies',
-  '/catalog': 'catalog',
-  '/takeoff?tab=measurements': 'takeoff',
-  '/dwg-takeoff': 'dwg_takeoff',
-  '/data-explorer': 'bim_hub',
-  '/bim': 'bim_hub',
-  '/ai-estimate': 'ai',
-  '/schedule': 'schedule',
-  '/schedule-advanced': 'schedule_advanced',
-  '/tasks': 'tasks',
-  '/5d': 'costmodel',
-  '/risks': 'risk',
-  '/daily-diary': 'daily_diary',
-  '/field-reports': 'fieldreports',
-  '/finance': 'finance',
-  '/procurement': 'procurement',
-  '/changeorders': 'changeorders',
-  '/subcontractors': 'subcontractors',
-  '/equipment': 'equipment',
-  '/resources': 'resources',
-  '/service': 'service',
-  '/validation': 'validation',
-  '/inspections': 'inspections',
-  '/ncr': 'ncr',
-  '/safety': 'safety',
-  '/punchlist': 'punchlist',
-  '/qms': 'qms',
-  '/hse-advanced': 'hse_advanced',
-  '/reports': 'reporting',
-  '/cde': 'cde',
+  "/boq": "boq",
+  "/costs": "costs",
+  "/match-elements": "match_elements",
+  "/assemblies": "assemblies",
+  "/catalog": "catalog",
+  "/takeoff?tab=measurements": "takeoff",
+  "/dwg-takeoff": "dwg_takeoff",
+  "/data-explorer": "bim_hub",
+  "/bim": "bim_hub",
+  "/ai-estimate": "ai",
+  "/schedule": "schedule",
+  "/schedule-advanced": "schedule_advanced",
+  "/tasks": "tasks",
+  "/5d": "costmodel",
+  "/risks": "risk",
+  "/daily-diary": "daily_diary",
+  "/field-reports": "fieldreports",
+  "/finance": "finance",
+  "/procurement": "procurement",
+  "/changeorders": "changeorders",
+  "/subcontractors": "subcontractors",
+  "/equipment": "equipment",
+  "/resources": "resources",
+  "/service": "service",
+  "/validation": "validation",
+  "/inspections": "inspections",
+  "/ncr": "ncr",
+  "/safety": "safety",
+  "/punchlist": "punchlist",
+  "/qms": "qms",
+  "/hse-advanced": "hse_advanced",
+  "/reports": "reporting",
+  "/cde": "cde",
 };
 
 /**
@@ -158,14 +152,14 @@ export const ROUTE_TO_MODULE: Record<string, string> = {
  * to collide with a profile `module_name` (e.g. `projects`, `users`).
  */
 export const NEVER_GATE_ROUTES: ReadonlySet<string> = new Set([
-  '/',
-  '/projects',
-  '/files',
-  '/users',
-  '/modules',
-  '/settings',
-  '/about',
-  '/project-intelligence', // PI is always-on core — never suppress.
+  "/",
+  "/projects",
+  "/files",
+  "/users",
+  "/modules",
+  "/settings",
+  "/about",
+  "/project-intelligence", // PI is always-on core — never suppress.
 ]);
 
 /** Fast lookup: every route that lives in some phase group. */
@@ -188,7 +182,7 @@ export function useActiveProjectProfile(): {
   const projectId = useProjectContextStore((s) => s.activeProjectId);
 
   const { data, isLoading } = useQuery<ProjectProfileResult | null>({
-    queryKey: ['project-profile', projectId],
+    queryKey: ["project-profile", projectId],
     queryFn: async () => {
       if (!projectId) return null;
       try {
@@ -224,9 +218,7 @@ export interface ModuleGate {
   ordinal: number | null;
 }
 
-export function buildModuleGate(
-  profile: ProjectProfileResult | undefined,
-): {
+export function buildModuleGate(profile: ProjectProfileResult | undefined): {
   active: boolean;
   byRoute: (route: string) => ModuleGate | null;
 } {
@@ -241,7 +233,7 @@ export function buildModuleGate(
     byRoute: (route: string) => {
       // App-shell routes are never project-scoped.
       if (NEVER_GATE_ROUTES.has(route)) return null;
-      const base = route.split('?')[0] ?? route;
+      const base = route.split("?")[0] ?? route;
       // Resolve the backing module: explicit overrides first (for the
       // routes whose slug ≠ module folder, e.g. /5d → costmodel), then
       // fall back to the route slug with hyphens normalised to the
@@ -251,7 +243,7 @@ export function buildModuleGate(
       const moduleName =
         ROUTE_TO_MODULE[route] ??
         ROUTE_TO_MODULE[base] ??
-        base.replace(/^\//, '').replace(/-/g, '_');
+        base.replace(/^\//, "").replace(/-/g, "_");
       if (!moduleName) return null;
       const row = byName.get(moduleName);
       if (!row) return null; // route not a profile module → neutral

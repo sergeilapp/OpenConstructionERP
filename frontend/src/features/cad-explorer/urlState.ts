@@ -27,14 +27,25 @@ import type {
   PivotConfigSnapshot,
   PivotVizMode,
   SlicerFilter,
-} from '@/stores/useAnalysisStateStore';
-import { AGG_FUNCTIONS } from './aggregation';
+} from "@/stores/useAnalysisStateStore";
+import { AGG_FUNCTIONS } from "./aggregation";
 
-export type TabId = 'table' | 'pivot' | 'charts' | 'describe';
+export type TabId = "table" | "pivot" | "charts" | "describe";
 
-const VALID_TABS: readonly TabId[] = ['table', 'pivot', 'charts', 'describe'];
-const VALID_CHART_KINDS: readonly ChartKind[] = ['bar', 'line', 'pie', 'scatter'];
-const VALID_PIVOT_VIZ: readonly PivotVizMode[] = ['table', 'heatmap', 'bar', 'treemap', 'matrix'];
+const VALID_TABS: readonly TabId[] = ["table", "pivot", "charts", "describe"];
+const VALID_CHART_KINDS: readonly ChartKind[] = [
+  "bar",
+  "line",
+  "pie",
+  "scatter",
+];
+const VALID_PIVOT_VIZ: readonly PivotVizMode[] = [
+  "table",
+  "heatmap",
+  "bar",
+  "treemap",
+  "matrix",
+];
 
 /** URL-safe list of aggregation functions accepted by `?piv_agg=` /
  *  `?chart_agg=`. */
@@ -48,7 +59,7 @@ function encodeSlicerValue(v: string): string {
   // encodeURIComponent already covers `%`, `:` and most symbols. `|` and
   // `,` are technically safe in query strings but we use them as
   // separators, so encode them explicitly.
-  return encodeURIComponent(v).replace(/\|/g, '%7C').replace(/,/g, '%2C');
+  return encodeURIComponent(v).replace(/\|/g, "%7C").replace(/,/g, "%2C");
 }
 
 function decodeSlicerValue(v: string): string {
@@ -61,14 +72,14 @@ function decodeSlicerValue(v: string): string {
 
 /** `[{column:'category', values:['Wall','Floor']}, ...] → "category:Wall|Floor,..."` */
 export function serialiseSlicers(slicers: SlicerFilter[]): string {
-  if (!slicers.length) return '';
+  if (!slicers.length) return "";
   return slicers
     .filter((s) => s.column && s.values.length > 0)
     .map(
       (s) =>
-        `${encodeSlicerValue(s.column)}:${s.values.map(encodeSlicerValue).join('|')}`,
+        `${encodeSlicerValue(s.column)}:${s.values.map(encodeSlicerValue).join("|")}`,
     )
-    .join(',');
+    .join(",");
 }
 
 /** Inverse of serialiseSlicers. Tolerant of malformed input — returns
@@ -76,14 +87,14 @@ export function serialiseSlicers(slicers: SlicerFilter[]): string {
 export function parseSlicers(raw: string | null | undefined): SlicerFilter[] {
   if (!raw) return [];
   const out: SlicerFilter[] = [];
-  for (const chunk of raw.split(',')) {
+  for (const chunk of raw.split(",")) {
     if (!chunk) continue;
-    const idx = chunk.indexOf(':');
+    const idx = chunk.indexOf(":");
     if (idx <= 0) continue;
     const column = decodeSlicerValue(chunk.slice(0, idx));
     const valuesRaw = chunk.slice(idx + 1);
     const values = valuesRaw
-      .split('|')
+      .split("|")
       .map(decodeSlicerValue)
       .filter((v) => v.length > 0);
     if (column && values.length > 0) {
@@ -104,27 +115,36 @@ export interface PivotUrlSerialised {
 }
 
 /** Serialise topN + direction into a single signed-number string. */
-function encodeTopN(topN: number | null, direction: 'top' | 'bottom'): string | null {
+function encodeTopN(
+  topN: number | null,
+  direction: "top" | "bottom",
+): string | null {
   if (topN == null || topN <= 0) return null;
-  return direction === 'bottom' ? `-${topN}` : String(topN);
+  return direction === "bottom" ? `-${topN}` : String(topN);
 }
 
-function decodeTopN(raw: string | null): { topN: number | null; direction: 'top' | 'bottom' } {
-  if (!raw) return { topN: null, direction: 'top' };
+function decodeTopN(raw: string | null): {
+  topN: number | null;
+  direction: "top" | "bottom";
+} {
+  if (!raw) return { topN: null, direction: "top" };
   const n = parseInt(raw, 10);
-  if (!Number.isFinite(n) || n === 0) return { topN: null, direction: 'top' };
-  if (n < 0) return { topN: Math.abs(n), direction: 'bottom' };
-  return { topN: n, direction: 'top' };
+  if (!Number.isFinite(n) || n === 0) return { topN: null, direction: "top" };
+  if (n < 0) return { topN: Math.abs(n), direction: "bottom" };
+  return { topN: n, direction: "top" };
 }
 
-export function serialisePivot(snapshot: PivotConfigSnapshot | null): PivotUrlSerialised {
-  if (!snapshot) return { group: null, sum: null, agg: null, top: null, viz: null };
+export function serialisePivot(
+  snapshot: PivotConfigSnapshot | null,
+): PivotUrlSerialised {
+  if (!snapshot)
+    return { group: null, sum: null, agg: null, top: null, viz: null };
   // Default viz is `table`; don't bloat the URL when the user hasn't
   // changed it. Only serialise when the mode differs from the default.
-  const vizOut = snapshot.viz && snapshot.viz !== 'table' ? snapshot.viz : null;
+  const vizOut = snapshot.viz && snapshot.viz !== "table" ? snapshot.viz : null;
   return {
-    group: snapshot.groupBy.length > 0 ? snapshot.groupBy.join(',') : null,
-    sum: snapshot.aggCols.length > 0 ? snapshot.aggCols.join(',') : null,
+    group: snapshot.groupBy.length > 0 ? snapshot.groupBy.join(",") : null,
+    sum: snapshot.aggCols.length > 0 ? snapshot.aggCols.join(",") : null,
     agg: snapshot.aggFn || null,
     top: encodeTopN(snapshot.topN, snapshot.topNDirection),
     viz: vizOut,
@@ -138,19 +158,27 @@ export function parsePivot(src: {
   top?: string | null;
   viz?: string | null;
 }): PivotConfigSnapshot | null {
-  const groupBy = (src.group || '').split(',').map((s) => s.trim()).filter(Boolean);
-  const aggCols = (src.sum || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const groupBy = (src.group || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const aggCols = (src.sum || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   if (groupBy.length === 0 && aggCols.length === 0) return null;
   const { topN, direction } = decodeTopN(src.top ?? null);
   // Validate agg against the known vocabulary. Unknown values fall back to
   // `sum` so a typo in a shared link doesn't produce an empty pivot
   // (the `<select>` only has options for known agg fns).
-  const rawAgg = (src.agg || '').toLowerCase();
-  const aggFn = VALID_AGG_FUNCTIONS.includes(rawAgg) ? rawAgg : 'sum';
-  const rawViz = (src.viz || '').toLowerCase();
-  const viz: PivotVizMode = (VALID_PIVOT_VIZ as readonly string[]).includes(rawViz)
+  const rawAgg = (src.agg || "").toLowerCase();
+  const aggFn = VALID_AGG_FUNCTIONS.includes(rawAgg) ? rawAgg : "sum";
+  const rawViz = (src.viz || "").toLowerCase();
+  const viz: PivotVizMode = (VALID_PIVOT_VIZ as readonly string[]).includes(
+    rawViz,
+  )
     ? (rawViz as PivotVizMode)
-    : 'table';
+    : "table";
   return {
     groupBy,
     aggCols,
@@ -173,9 +201,9 @@ export interface ChartUrlSerialised {
 
 export function serialiseChart(chart: ChartConfig): ChartUrlSerialised {
   // Default aggFn for charts is `sum` — only serialise when it differs.
-  const aggOut = chart.aggFn && chart.aggFn !== 'sum' ? chart.aggFn : null;
+  const aggOut = chart.aggFn && chart.aggFn !== "sum" ? chart.aggFn : null;
   return {
-    kind: chart.kind !== 'bar' ? chart.kind : null,
+    kind: chart.kind !== "bar" ? chart.kind : null,
     cat: chart.category || null,
     val: chart.value || null,
     agg: aggOut,
@@ -210,8 +238,12 @@ export function parseChart(src: {
 
 /* ── Tab ──────────────────────────────────────────────────────────────── */
 
-export function parseTab(raw: string | null | undefined, fallback: TabId = 'table'): TabId {
-  if (raw && (VALID_TABS as readonly string[]).includes(raw)) return raw as TabId;
+export function parseTab(
+  raw: string | null | undefined,
+  fallback: TabId = "table",
+): TabId {
+  if (raw && (VALID_TABS as readonly string[]).includes(raw))
+    return raw as TabId;
   return fallback;
 }
 

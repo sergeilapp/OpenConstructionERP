@@ -5,47 +5,47 @@
  * backend/app/modules/schedule_advanced/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type MasterStatus = 'active' | 'archived';
-export type PhaseStatus = 'in_planning' | 'pulled' | 'active' | 'completed';
-export type LookAheadStatus = 'draft' | 'reviewed' | 'published';
+export type MasterStatus = "active" | "archived";
+export type PhaseStatus = "in_planning" | "pulled" | "active" | "completed";
+export type LookAheadStatus = "draft" | "reviewed" | "published";
 export type ConstraintType =
-  | 'info'
-  | 'material'
-  | 'labor'
-  | 'equipment'
-  | 'permit'
-  | 'predecessor'
-  | 'weather'
-  | 'other';
+  | "info"
+  | "material"
+  | "labor"
+  | "equipment"
+  | "permit"
+  | "predecessor"
+  | "weather"
+  | "other";
 export type ConstraintStatus =
-  | 'open'
-  | 'in_progress'
-  | 'cleared'
-  | 'escalated'
-  | 'cannot_clear';
+  | "open"
+  | "in_progress"
+  | "cleared"
+  | "escalated"
+  | "cannot_clear";
 export type CommitmentStatus =
-  | 'planned'
-  | 'committed'
-  | 'in_progress'
-  | 'completed'
-  | 'at_risk'
-  | 'missed';
-export type WeeklyStatus = 'draft' | 'committed' | 'in_progress' | 'closed';
-export type BaselineStatus = 'active' | 'superseded' | 'archived';
+  | "planned"
+  | "committed"
+  | "in_progress"
+  | "completed"
+  | "at_risk"
+  | "missed";
+export type WeeklyStatus = "draft" | "committed" | "in_progress" | "closed";
+export type BaselineStatus = "active" | "superseded" | "archived";
 export type RNCCategory =
-  | 'manpower'
-  | 'material'
-  | 'equipment'
-  | 'info'
-  | 'weather'
-  | 'predecessor'
-  | 'changes'
-  | 'quality'
-  | 'other';
+  | "manpower"
+  | "material"
+  | "equipment"
+  | "info"
+  | "weather"
+  | "predecessor"
+  | "changes"
+  | "quality"
+  | "other";
 
 export interface MasterSchedule {
   id: string;
@@ -217,9 +217,9 @@ export function listMasterSchedules(params: {
   limit?: number;
 }): Promise<MasterSchedule[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<MasterSchedule[]>(
     `/v1/schedule-advanced/master-schedules/?${qs.toString()}`,
   );
@@ -233,7 +233,7 @@ export function createMasterSchedule(data: {
   notes?: string;
 }): Promise<MasterSchedule> {
   return apiPost<MasterSchedule>(
-    '/v1/schedule-advanced/master-schedules/',
+    "/v1/schedule-advanced/master-schedules/",
     data,
   );
 }
@@ -283,7 +283,7 @@ export function createPhasePlan(data: {
   notes?: string;
   pulled_status?: PhaseStatus;
 }): Promise<PhasePlan> {
-  return apiPost<PhasePlan>('/v1/schedule-advanced/phase-plans/', data);
+  return apiPost<PhasePlan>("/v1/schedule-advanced/phase-plans/", data);
 }
 
 export function updatePhasePlan(
@@ -310,37 +310,37 @@ export function deletePhasePlan(phaseId: string): Promise<void> {
  * defaults — users edit each phase after seeding.
  */
 export const PHASE_TEMPLATES: Record<
-  'residential' | 'commercial' | 'infrastructure',
+  "residential" | "commercial" | "infrastructure",
   { name: string; days: number }[]
 > = {
   residential: [
-    { name: 'Site preparation', days: 14 },
-    { name: 'Foundation', days: 28 },
-    { name: 'Structure', days: 56 },
-    { name: 'Roofing', days: 14 },
-    { name: 'MEP rough-in', days: 35 },
-    { name: 'Drywall and finishes', days: 42 },
-    { name: 'Handover', days: 7 },
+    { name: "Site preparation", days: 14 },
+    { name: "Foundation", days: 28 },
+    { name: "Structure", days: 56 },
+    { name: "Roofing", days: 14 },
+    { name: "MEP rough-in", days: 35 },
+    { name: "Drywall and finishes", days: 42 },
+    { name: "Handover", days: 7 },
   ],
   commercial: [
-    { name: 'Demolition', days: 14 },
-    { name: 'Site preparation', days: 21 },
-    { name: 'Foundation', days: 42 },
-    { name: 'Structure', days: 90 },
-    { name: 'Building envelope', days: 35 },
-    { name: 'MEP rough-in', days: 56 },
-    { name: 'Interior fit-out', days: 70 },
-    { name: 'Commissioning', days: 21 },
-    { name: 'Handover', days: 7 },
+    { name: "Demolition", days: 14 },
+    { name: "Site preparation", days: 21 },
+    { name: "Foundation", days: 42 },
+    { name: "Structure", days: 90 },
+    { name: "Building envelope", days: 35 },
+    { name: "MEP rough-in", days: 56 },
+    { name: "Interior fit-out", days: 70 },
+    { name: "Commissioning", days: 21 },
+    { name: "Handover", days: 7 },
   ],
   infrastructure: [
-    { name: 'Site survey and clearing', days: 21 },
-    { name: 'Earthworks', days: 56 },
-    { name: 'Subgrade and drainage', days: 42 },
-    { name: 'Base layers', days: 28 },
-    { name: 'Surfacing', days: 21 },
-    { name: 'Signage and markings', days: 14 },
-    { name: 'Final inspection', days: 7 },
+    { name: "Site survey and clearing", days: 21 },
+    { name: "Earthworks", days: 56 },
+    { name: "Subgrade and drainage", days: 42 },
+    { name: "Base layers", days: 28 },
+    { name: "Surfacing", days: 21 },
+    { name: "Signage and markings", days: 14 },
+    { name: "Final inspection", days: 7 },
   ],
 };
 
@@ -412,7 +412,7 @@ export function createLookAhead(data: {
   period_end: string;
   window_weeks?: number;
 }): Promise<LookAheadPlan> {
-  return apiPost<LookAheadPlan>('/v1/schedule-advanced/look-aheads/', data);
+  return apiPost<LookAheadPlan>("/v1/schedule-advanced/look-aheads/", data);
 }
 
 export function publishLookAhead(lookAheadId: string): Promise<LookAheadPlan> {
@@ -439,7 +439,7 @@ export function createConstraint(data: {
   description?: string;
   target_clear_date?: string;
 }): Promise<Constraint> {
-  return apiPost<Constraint>('/v1/schedule-advanced/constraints/', data);
+  return apiPost<Constraint>("/v1/schedule-advanced/constraints/", data);
 }
 
 export function clearConstraint(id: string): Promise<Constraint> {
@@ -479,7 +479,7 @@ export function createWeeklyPlan(data: {
   week_end_date: string;
 }): Promise<WeeklyWorkPlan> {
   return apiPost<WeeklyWorkPlan>(
-    '/v1/schedule-advanced/weekly-work-plans/',
+    "/v1/schedule-advanced/weekly-work-plans/",
     data,
   );
 }
@@ -513,7 +513,7 @@ export function createCommitment(data: {
   promised_qty?: string;
   unit?: string;
 }): Promise<Commitment> {
-  return apiPost<Commitment>('/v1/schedule-advanced/commitments/', data);
+  return apiPost<Commitment>("/v1/schedule-advanced/commitments/", data);
 }
 
 export function commitCommitment(id: string): Promise<Commitment> {
@@ -529,7 +529,7 @@ export function completeCommitment(
 ): Promise<Commitment> {
   return apiPost<Commitment>(
     `/v1/schedule-advanced/commitments/${id}/complete`,
-    actualQty != null && actualQty !== '' ? { actual_qty: actualQty } : {},
+    actualQty != null && actualQty !== "" ? { actual_qty: actualQty } : {},
   );
 }
 
@@ -539,12 +539,16 @@ export function completeCommitment(
  */
 export function missCommitment(
   id: string,
-  rnc: { category: RNCCategory; description?: string; root_cause_notes?: string },
+  rnc: {
+    category: RNCCategory;
+    description?: string;
+    root_cause_notes?: string;
+  },
 ): Promise<Commitment> {
-  return apiPost<Commitment>(
-    `/v1/schedule-advanced/commitments/${id}/miss`,
-    { commitment_id: id, ...rnc },
-  );
+  return apiPost<Commitment>(`/v1/schedule-advanced/commitments/${id}/miss`, {
+    commitment_id: id,
+    ...rnc,
+  });
 }
 
 /* ── Baselines ────────────────────────────────────────────────────────── */
@@ -562,7 +566,7 @@ export function captureBaseline(data: {
   name: string;
   notes?: string;
 }): Promise<Baseline> {
-  return apiPost<Baseline>('/v1/schedule-advanced/baselines/capture', {
+  return apiPost<Baseline>("/v1/schedule-advanced/baselines/capture", {
     ...data,
     snapshot: {},
   });

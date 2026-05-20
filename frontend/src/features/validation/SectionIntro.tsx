@@ -1,6 +1,6 @@
-import { useState, useCallback, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Info, X, ArrowRight } from 'lucide-react';
+import { useState, useCallback, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { Info, X, ArrowRight } from "lucide-react";
 
 /**
  * Contextual intro / help banner for the Quality & Safety section.
@@ -35,7 +35,7 @@ export function SectionIntro({
 
   const [dismissed, setDismissed] = useState<boolean>(() => {
     try {
-      return localStorage.getItem(lsKey) === '1';
+      return localStorage.getItem(lsKey) === "1";
     } catch {
       return false;
     }
@@ -44,7 +44,7 @@ export function SectionIntro({
   const dismiss = useCallback(() => {
     setDismissed(true);
     try {
-      localStorage.setItem(lsKey, '1');
+      localStorage.setItem(lsKey, "1");
     } catch {
       /* private mode / quota — non-fatal, banner just reappears next load */
     }
@@ -58,7 +58,9 @@ export function SectionIntro({
         <Info size={16} className="mt-0.5 shrink-0 text-oe-blue" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-content-primary">{title}</p>
-          <p className="mt-1 text-sm leading-relaxed text-content-secondary">{children}</p>
+          <p className="mt-1 text-sm leading-relaxed text-content-secondary">
+            {children}
+          </p>
           {links && links.length > 0 && (
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {links.map((l) => (
@@ -78,8 +80,8 @@ export function SectionIntro({
         <button
           type="button"
           onClick={dismiss}
-          aria-label={t('common.dismiss', { defaultValue: 'Dismiss‌⁠‍' })}
-          title={t('common.dismiss', { defaultValue: 'Dismiss‌⁠‍' })}
+          aria-label={t("common.dismiss", { defaultValue: "Dismiss‌⁠‍" })}
+          title={t("common.dismiss", { defaultValue: "Dismiss‌⁠‍" })}
           className="shrink-0 rounded-md p-1 text-content-tertiary transition-colors hover:bg-surface-secondary hover:text-content-primary"
         >
           <X size={14} />

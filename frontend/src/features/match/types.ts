@@ -13,16 +13,16 @@
  * accidentally mutate response data shared across React Query consumers.
  */
 
-export type MatchSource = 'bim' | 'pdf' | 'dwg' | 'photo';
-export type ConfidenceBand = 'high' | 'medium' | 'low';
+export type MatchSource = "bim" | "pdf" | "dwg" | "photo";
+export type ConfidenceBand = "high" | "medium" | "low";
 
 /** Tier names produced by the translation cascade (`backend/app/core/translation`). */
 export type TranslationTier =
-  | 'lookup_muse'
-  | 'lookup_iate'
-  | 'cache'
-  | 'llm'
-  | 'fallback';
+  | "lookup_muse"
+  | "lookup_iate"
+  | "cache"
+  | "llm"
+  | "fallback";
 
 export interface TranslationResult {
   readonly translated: string;
@@ -84,10 +84,10 @@ export interface MatchRequestEcho {
 
 /** Catalogue-binding status — drives explicit empty states in the panel. */
 export type MatchStatus =
-  | 'ok'
-  | 'no_catalog_selected'
-  | 'catalog_not_vectorized'
-  | 'no_catalogs_loaded';
+  | "ok"
+  | "no_catalog_selected"
+  | "catalog_not_vectorized"
+  | "no_catalogs_loaded";
 
 export interface MatchResponse {
   readonly request: MatchRequestEcho;

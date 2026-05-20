@@ -24,16 +24,16 @@ export interface CollabUser {
 
 /** Predefined user colors for collaboration */
 export const COLLAB_COLORS = [
-  '#3b82f6', // blue
-  '#10b981', // emerald
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#06b6d4', // cyan
-  '#f97316', // orange
+  "#3b82f6", // blue
+  "#10b981", // emerald
+  "#f59e0b", // amber
+  "#ef4444", // red
+  "#8b5cf6", // violet
+  "#ec4899", // pink
+  "#06b6d4", // cyan
+  "#f97316", // orange
 ] as const;
 
 export function pickColor(index: number): string {
-  return COLLAB_COLORS[index % COLLAB_COLORS.length] ?? '#818cf8';
+  return COLLAB_COLORS[index % COLLAB_COLORS.length] ?? "#818cf8";
 }

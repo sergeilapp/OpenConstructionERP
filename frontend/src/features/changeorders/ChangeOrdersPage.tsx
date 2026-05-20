@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { normalizeListResponse } from '@/shared/lib/apiHelpers';
+import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { normalizeListResponse } from "@/shared/lib/apiHelpers";
 import {
   FileEdit,
   Plus,
@@ -15,19 +15,34 @@ import {
   AlertTriangle,
   Trash2,
   Download,
-} from 'lucide-react';
-import { Button, Card, Badge, EmptyState, Breadcrumb, InfoHint, ConfirmDialog } from '@/shared/ui';
+} from "lucide-react";
+import {
+  Button,
+  Card,
+  Badge,
+  EmptyState,
+  Breadcrumb,
+  InfoHint,
+  ConfirmDialog,
+} from "@/shared/ui";
 import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from '@/shared/ui/WideModal';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useAuthStore } from '@/stores/useAuthStore';
+} from "@/shared/ui/WideModal";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { apiGet, apiPost, apiDelete } from "@/shared/lib/api";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { ApprovalTimeline } from "./ApprovalTimeline";
+import {
+  advanceApproval,
+  getApprovals,
+  startApprovalChain,
+  type ApprovalRow,
+} from "./api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -73,6 +88,31 @@ interface ChangeOrder {
   item_count: number;
   created_at: string;
   updated_at: string;
+  // T3: Procore-style approval chain + commitment / RFI links.
+  linked_po_ids?: string[];
+  linked_rfi_ids?: string[];
+  current_approval_step?: number | null;
+}
+
+/**
+ * ‌⁠‍Decode the ``sub`` (subject / user id) claim from a JWT access token.
+ *
+ * Backend ``CurrentUserId`` reads the same claim, so matching against it
+ * client-side is the cleanest way to tell whether the logged-in user is
+ * the active approver. Returns ``null`` on any decoding error.
+ */
+function decodeUserIdFromToken(token: string | null): string | null {
+  if (!token) return null;
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const payload = parts[1]!.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = payload + "=".repeat((4 - (payload.length % 4)) % 4);
+    const json = JSON.parse(atob(padded)) as { sub?: string };
+    return typeof json.sub === "string" ? json.sub : null;
+  } catch {
+    return null;
+  }
 }
 
 interface ChangeOrderWithItems extends ChangeOrder {
@@ -92,31 +132,53 @@ interface Summary {
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
-const STATUS_COLORS: Record<string, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  draft: 'neutral',
-  submitted: 'blue',
-  under_review: 'warning',
-  approved: 'success',
-  rejected: 'error',
+const STATUS_COLORS: Record<
+  string,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  draft: "neutral",
+  submitted: "blue",
+  under_review: "warning",
+  approved: "success",
+  rejected: "error",
 };
 
-function getReasonLabels(t: (key: string, opts?: Record<string, unknown>) => string): Record<string, string> {
+function getReasonLabels(
+  t: (key: string, opts?: Record<string, unknown>) => string,
+): Record<string, string> {
   return {
-    client_request: t('changeorders.reason_client_request', { defaultValue: 'Client Request‌⁠‍' }),
-    design_change: t('changeorders.reason_design_change', { defaultValue: 'Design Change‌⁠‍' }),
-    unforeseen: t('changeorders.reason_unforeseen', { defaultValue: 'Unforeseen Conditions‌⁠‍' }),
-    regulatory: t('changeorders.reason_regulatory', { defaultValue: 'Regulatory‌⁠‍' }),
-    error: t('changeorders.reason_error', { defaultValue: 'Error/Omission‌⁠‍' }),
+    client_request: t("changeorders.reason_client_request", {
+      defaultValue: "Client Request‌⁠‍",
+    }),
+    design_change: t("changeorders.reason_design_change", {
+      defaultValue: "Design Change‌⁠‍",
+    }),
+    unforeseen: t("changeorders.reason_unforeseen", {
+      defaultValue: "Unforeseen Conditions‌⁠‍",
+    }),
+    regulatory: t("changeorders.reason_regulatory", {
+      defaultValue: "Regulatory‌⁠‍",
+    }),
+    error: t("changeorders.reason_error", {
+      defaultValue: "Error/Omission‌⁠‍",
+    }),
   };
 }
 
-function translateStatus(status: string, t: (key: string, opts?: Record<string, unknown>) => string): string {
+function translateStatus(
+  status: string,
+  t: (key: string, opts?: Record<string, unknown>) => string,
+): string {
   const map: Record<string, string> = {
-    draft: t('changeorders.status_draft', { defaultValue: 'Draft' }),
-    submitted: t('changeorders.status_submitted', { defaultValue: 'Submitted' }),
-    under_review: t('changeorders.status_under_review', { defaultValue: 'Under Review' }),
-    approved: t('changeorders.status_approved', { defaultValue: 'Approved' }),
-    rejected: t('changeorders.status_rejected', { defaultValue: 'Rejected' }),
+    draft: t("changeorders.status_draft", { defaultValue: "Draft" }),
+    submitted: t("changeorders.status_submitted", {
+      defaultValue: "Submitted",
+    }),
+    under_review: t("changeorders.status_under_review", {
+      defaultValue: "Under Review",
+    }),
+    approved: t("changeorders.status_approved", { defaultValue: "Approved" }),
+    rejected: t("changeorders.status_rejected", { defaultValue: "Rejected" }),
   };
   return map[status] || status;
 }
@@ -125,7 +187,7 @@ function formatCurrency(amount: number, currency?: string): string {
   // NEVER hard-fallback to 'EUR' (task #217): a project priced in BRL/USD
   // must not render its change-order amounts with a Euro sign. When the
   // currency is unknown, show a plain decimal number with no symbol.
-  const code = (currency || '').trim().toUpperCase();
+  const code = (currency || "").trim().toUpperCase();
   if (!/^[A-Z]{3}$/.test(code)) {
     return new Intl.NumberFormat(getIntlLocale(), {
       minimumFractionDigits: 0,
@@ -134,7 +196,7 @@ function formatCurrency(amount: number, currency?: string): string {
   }
   try {
     return new Intl.NumberFormat(getIntlLocale(), {
-      style: 'currency',
+      style: "currency",
       currency: code,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
@@ -145,12 +207,12 @@ function formatCurrency(amount: number, currency?: string): string {
 }
 
 function formatDate(iso: string | null): string {
-  if (!iso) return '-';
+  if (!iso) return "-";
   try {
     return new Date(iso).toLocaleDateString(getIntlLocale(), {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   } catch {
     return iso;
@@ -171,15 +233,15 @@ function CreateDialog({
   onCreated: () => void;
 }) {
   const { t } = useTranslation();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [reason, setReason] = useState('client_request');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [reason, setReason] = useState("client_request");
   const [scheduleDays, setScheduleDays] = useState(0);
   const addToast = useToastStore((s) => s.addToast);
 
   const mutation = useMutation({
     mutationFn: () =>
-      apiPost<ChangeOrder>('/v1/changeorders/', {
+      apiPost<ChangeOrder>("/v1/changeorders/", {
         project_id: projectId,
         title,
         description,
@@ -191,29 +253,39 @@ function CreateDialog({
       onCreated();
       onClose();
       addToast({
-        type: 'success',
-        title: t('changeorders.created', { defaultValue: 'Change order created' }),
+        type: "success",
+        title: t("changeorders.created", {
+          defaultValue: "Change order created",
+        }),
       });
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      });
     },
   });
 
   const fieldCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+    "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
   return (
     <WideModal
       open
       onClose={onClose}
-      title={t('changeorders.new', { defaultValue: 'New Change Order' })}
+      title={t("changeorders.new", { defaultValue: "New Change Order" })}
       size="lg"
       busy={mutation.isPending}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={mutation.isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+          <Button
+            variant="ghost"
+            onClick={onClose}
+            disabled={mutation.isPending}
+          >
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -221,15 +293,15 @@ function CreateDialog({
             onClick={() => mutation.mutate()}
           >
             {mutation.isPending
-              ? t('common.creating', { defaultValue: 'Creating...' })
-              : t('common.create', { defaultValue: 'Create' })}
+              ? t("common.creating", { defaultValue: "Creating..." })
+              : t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('common.title', { defaultValue: 'Title' })}
+          label={t("common.title", { defaultValue: "Title" })}
           required
           span={2}
           htmlFor="co-title"
@@ -238,12 +310,14 @@ function CreateDialog({
             id="co-title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder={t('changeorders.title_placeholder', { defaultValue: 'e.g. Additional foundation work' })}
+            placeholder={t("changeorders.title_placeholder", {
+              defaultValue: "e.g. Additional foundation work",
+            })}
             className={fieldCls}
           />
         </WideModalField>
         <WideModalField
-          label={t('common.description', { defaultValue: 'Description' })}
+          label={t("common.description", { defaultValue: "Description" })}
           span={2}
           htmlFor="co-description"
         >
@@ -256,7 +330,7 @@ function CreateDialog({
           />
         </WideModalField>
         <WideModalField
-          label={t('changeorders.reason', { defaultValue: 'Reason' })}
+          label={t("changeorders.reason", { defaultValue: "Reason" })}
           htmlFor="co-reason"
         >
           <select
@@ -273,7 +347,9 @@ function CreateDialog({
           </select>
         </WideModalField>
         <WideModalField
-          label={t('changeorders.schedule_days', { defaultValue: 'Schedule Impact (days)' })}
+          label={t("changeorders.schedule_days", {
+            defaultValue: "Schedule Impact (days)",
+          })}
           htmlFor="co-schedule-days"
         >
           <input
@@ -304,13 +380,13 @@ function AddItemDialog({
   onCreated: () => void;
 }) {
   const { t } = useTranslation();
-  const [desc, setDesc] = useState('');
-  const [changeType, setChangeType] = useState('modified');
+  const [desc, setDesc] = useState("");
+  const [changeType, setChangeType] = useState("modified");
   const [origQty, setOrigQty] = useState(0);
   const [newQty, setNewQty] = useState(0);
   const [origRate, setOrigRate] = useState(0);
   const [newRate, setNewRate] = useState(0);
-  const [unit, setUnit] = useState('');
+  const [unit, setUnit] = useState("");
   const addToast = useToastStore((s) => s.addToast);
 
   const mutation = useMutation({
@@ -328,31 +404,39 @@ function AddItemDialog({
       onCreated();
       onClose();
       addToast({
-        type: 'success',
-        title: t('changeorders.item_added', { defaultValue: 'Item added' }),
+        type: "success",
+        title: t("changeorders.item_added", { defaultValue: "Item added" }),
       });
     },
     onError: (err: Error) => {
-      addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message });
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      });
     },
   });
 
-  const costDelta = (newQty * newRate) - (origQty * origRate);
+  const costDelta = newQty * newRate - origQty * origRate;
 
   const fieldCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+    "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
   return (
     <WideModal
       open
       onClose={onClose}
-      title={t('changeorders.add_item', { defaultValue: 'Add Item' })}
+      title={t("changeorders.add_item", { defaultValue: "Add Item" })}
       size="xl"
       busy={mutation.isPending}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={mutation.isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+          <Button
+            variant="ghost"
+            onClick={onClose}
+            disabled={mutation.isPending}
+          >
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -360,18 +444,20 @@ function AddItemDialog({
             onClick={() => mutation.mutate()}
           >
             {mutation.isPending
-              ? t('common.adding', { defaultValue: 'Adding...' })
-              : t('changeorders.add_item', { defaultValue: 'Add Item' })}
+              ? t("common.adding", { defaultValue: "Adding..." })
+              : t("changeorders.add_item", { defaultValue: "Add Item" })}
           </Button>
         </>
       }
     >
       <WideModalSection
-        title={t('changeorders.section_basic', { defaultValue: 'Item details' })}
+        title={t("changeorders.section_basic", {
+          defaultValue: "Item details",
+        })}
         columns={2}
       >
         <WideModalField
-          label={t('common.description', { defaultValue: 'Description' })}
+          label={t("common.description", { defaultValue: "Description" })}
           required
           span={2}
           htmlFor="item-description"
@@ -384,7 +470,7 @@ function AddItemDialog({
           />
         </WideModalField>
         <WideModalField
-          label={t('changeorders.change_type', { defaultValue: 'Change Type' })}
+          label={t("changeorders.change_type", { defaultValue: "Change Type" })}
           htmlFor="item-change-type"
         >
           <select
@@ -393,31 +479,41 @@ function AddItemDialog({
             onChange={(e) => setChangeType(e.target.value)}
             className={fieldCls}
           >
-            <option value="added">{t('changeorders.type_added', { defaultValue: 'Added' })}</option>
-            <option value="removed">{t('changeorders.type_removed', { defaultValue: 'Removed' })}</option>
-            <option value="modified">{t('changeorders.type_modified', { defaultValue: 'Modified' })}</option>
+            <option value="added">
+              {t("changeorders.type_added", { defaultValue: "Added" })}
+            </option>
+            <option value="removed">
+              {t("changeorders.type_removed", { defaultValue: "Removed" })}
+            </option>
+            <option value="modified">
+              {t("changeorders.type_modified", { defaultValue: "Modified" })}
+            </option>
           </select>
         </WideModalField>
         <WideModalField
-          label={t('common.unit', { defaultValue: 'Unit' })}
+          label={t("common.unit", { defaultValue: "Unit" })}
           htmlFor="item-unit"
         >
           <input
             id="item-unit"
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
-            placeholder={t('changeorders.unit_placeholder', { defaultValue: 'm2, m3, pcs...' })}
+            placeholder={t("changeorders.unit_placeholder", {
+              defaultValue: "m2, m3, pcs...",
+            })}
             className={fieldCls}
           />
         </WideModalField>
       </WideModalSection>
 
       <WideModalSection
-        title={t('changeorders.section_quantities', { defaultValue: 'Quantities & rates' })}
+        title={t("changeorders.section_quantities", {
+          defaultValue: "Quantities & rates",
+        })}
         columns={2}
       >
         <WideModalField
-          label={t('changeorders.orig_qty', { defaultValue: 'Original Qty' })}
+          label={t("changeorders.orig_qty", { defaultValue: "Original Qty" })}
           htmlFor="item-orig-qty"
         >
           <input
@@ -431,7 +527,7 @@ function AddItemDialog({
           />
         </WideModalField>
         <WideModalField
-          label={t('changeorders.new_qty', { defaultValue: 'New Qty' })}
+          label={t("changeorders.new_qty", { defaultValue: "New Qty" })}
           htmlFor="item-new-qty"
         >
           <input
@@ -445,7 +541,7 @@ function AddItemDialog({
           />
         </WideModalField>
         <WideModalField
-          label={t('changeorders.orig_rate', { defaultValue: 'Original Rate' })}
+          label={t("changeorders.orig_rate", { defaultValue: "Original Rate" })}
           htmlFor="item-orig-rate"
         >
           <input
@@ -459,7 +555,7 @@ function AddItemDialog({
           />
         </WideModalField>
         <WideModalField
-          label={t('changeorders.new_rate', { defaultValue: 'New Rate' })}
+          label={t("changeorders.new_rate", { defaultValue: "New Rate" })}
           htmlFor="item-new-rate"
         >
           <input
@@ -473,9 +569,18 @@ function AddItemDialog({
           />
         </WideModalField>
         <div className="sm:col-span-2 rounded-lg bg-surface-secondary p-3 text-sm">
-          <span className="text-content-secondary">{t('changeorders.cost_delta', { defaultValue: 'Cost Delta' })}:</span>{' '}
-          <span className={costDelta >= 0 ? 'font-semibold text-semantic-error' : 'font-semibold text-semantic-success'}>
-            {costDelta >= 0 ? '+' : ''}{formatCurrency(costDelta, currency)}
+          <span className="text-content-secondary">
+            {t("changeorders.cost_delta", { defaultValue: "Cost Delta" })}:
+          </span>{" "}
+          <span
+            className={
+              costDelta >= 0
+                ? "font-semibold text-semantic-error"
+                : "font-semibold text-semantic-success"
+            }
+          >
+            {costDelta >= 0 ? "+" : ""}
+            {formatCurrency(costDelta, currency)}
           </span>
         </div>
       </WideModalSection>
@@ -483,22 +588,138 @@ function AddItemDialog({
   );
 }
 
+/* ── Approval Chain Builder ────────────────────────────────────────────── */
+
+/**
+ * ‌⁠‍Minimal approver-id picker — accepts one UUID per line so an admin can
+ * paste a list of user ids without needing the full users-directory
+ * search-and-select widget. The full picker can replace this textarea
+ * later without changing the API surface.
+ */
+function ApprovalChainBuilderDialog({
+  onClose,
+  onConfirm,
+  busy,
+}: {
+  onClose: () => void;
+  onConfirm: (approverUserIds: string[]) => void;
+  busy: boolean;
+}) {
+  const { t } = useTranslation();
+  const [raw, setRaw] = useState("");
+  const ids = useMemo(
+    () =>
+      raw
+        .split(/[\s,;]+/)
+        .map((x) => x.trim())
+        .filter((x) => x.length > 0),
+    [raw],
+  );
+  // Permissive UUID check — back-end Pydantic will reject malformed
+  // ones anyway; we just want to catch typos early.
+  const looksValid =
+    ids.length > 0 &&
+    ids.length <= 20 &&
+    ids.every((id) => /^[0-9a-f-]{32,36}$/i.test(id));
+
+  return (
+    <WideModal
+      open
+      onClose={onClose}
+      title={t("changeorders.approval_chain_builder_title", {
+        defaultValue: "Start approval chain",
+      })}
+      size="md"
+      busy={busy}
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={busy}>
+            {t("common.cancel", { defaultValue: "Cancel" })}
+          </Button>
+          <Button
+            variant="primary"
+            disabled={!looksValid || busy}
+            onClick={() => onConfirm(ids)}
+          >
+            {busy
+              ? t("common.saving", { defaultValue: "Saving…" })
+              : t("changeorders.approval_chain_start_action", {
+                  defaultValue: "Start chain",
+                })}
+          </Button>
+        </>
+      }
+    >
+      <WideModalSection columns={1}>
+        <WideModalField
+          label={t("changeorders.approver_user_ids_label", {
+            defaultValue: "Approver user ids (one per line, in step order)",
+          })}
+          htmlFor="approver-user-ids"
+          span={1}
+        >
+          <textarea
+            id="approver-user-ids"
+            value={raw}
+            onChange={(e) => setRaw(e.target.value)}
+            rows={5}
+            disabled={busy}
+            placeholder={"b1f7e8e2-…\n5c0a9d1f-…\n8e4f1a32-…"}
+            className="w-full rounded-lg border border-border bg-surface-primary p-2 font-mono text-xs focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+          />
+        </WideModalField>
+        <p className="text-xs text-content-tertiary">
+          {t("changeorders.approver_user_ids_hint", {
+            defaultValue:
+              "Steps run sequentially: step 1 acts first, then step 2, etc. Each approver only sees the change order when their step becomes active.",
+          })}
+        </p>
+      </WideModalSection>
+    </WideModal>
+  );
+}
+
 /* ── Workflow Stepper ─────────────────────────────────────────────────── */
 
-function WorkflowStepper({ status, t }: { status: string; t: (key: string, opts?: Record<string, unknown>) => string }) {
+function WorkflowStepper({
+  status,
+  t,
+}: {
+  status: string;
+  t: (key: string, opts?: Record<string, unknown>) => string;
+}) {
   const steps = [
-    { key: 'draft', label: t('changeorders.status_draft', { defaultValue: 'Draft' }) },
-    { key: 'submitted', label: t('changeorders.status_submitted', { defaultValue: 'Submitted' }) },
-    { key: 'approved', label: t('changeorders.status_approved', { defaultValue: 'Approved' }) },
+    {
+      key: "draft",
+      label: t("changeorders.status_draft", { defaultValue: "Draft" }),
+    },
+    {
+      key: "submitted",
+      label: t("changeorders.status_submitted", { defaultValue: "Submitted" }),
+    },
+    {
+      key: "approved",
+      label: t("changeorders.status_approved", { defaultValue: "Approved" }),
+    },
   ];
 
   // Map status to step index
-  const statusIndex: Record<string, number> = { draft: 0, submitted: 1, under_review: 1, approved: 2, rejected: 2 };
+  const statusIndex: Record<string, number> = {
+    draft: 0,
+    submitted: 1,
+    under_review: 1,
+    approved: 2,
+    rejected: 2,
+  };
   const currentIdx = statusIndex[status] ?? 0;
-  const isRejected = status === 'rejected';
+  const isRejected = status === "rejected";
 
   return (
-    <div className="flex items-center gap-0 mb-6" role="list" aria-label={t('changeorders.workflow', { defaultValue: 'Workflow' })}>
+    <div
+      className="flex items-center gap-0 mb-6"
+      role="list"
+      aria-label={t("changeorders.workflow", { defaultValue: "Workflow" })}
+    >
       {steps.map((step, i) => {
         const isActive = i === currentIdx;
         const isCompleted = i < currentIdx;
@@ -508,27 +729,43 @@ function WorkflowStepper({ status, t }: { status: string; t: (key: string, opts?
         return (
           <div key={step.key} className="flex items-center" role="listitem">
             <div className="flex flex-col items-center">
-              <div className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors ${
-                showRejected
-                  ? 'border-semantic-error bg-semantic-error-bg text-semantic-error'
-                  : isCompleted
-                    ? 'border-semantic-success bg-semantic-success-bg text-semantic-success'
-                    : isActive
-                      ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue'
-                      : 'border-border-light bg-surface-secondary text-content-tertiary'
-              }`}>
-                {showRejected ? '\u2715' : isCompleted ? '\u2713' : i + 1}
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors ${
+                  showRejected
+                    ? "border-semantic-error bg-semantic-error-bg text-semantic-error"
+                    : isCompleted
+                      ? "border-semantic-success bg-semantic-success-bg text-semantic-success"
+                      : isActive
+                        ? "border-oe-blue bg-oe-blue-subtle text-oe-blue"
+                        : "border-border-light bg-surface-secondary text-content-tertiary"
+                }`}
+              >
+                {showRejected ? "\u2715" : isCompleted ? "\u2713" : i + 1}
               </div>
-              <span className={`mt-1.5 text-2xs font-medium ${
-                showRejected ? 'text-semantic-error' : isActive ? 'text-oe-blue' : isCompleted ? 'text-semantic-success' : 'text-content-tertiary'
-              }`}>
-                {showRejected ? t('changeorders.status_rejected', { defaultValue: 'Rejected' }) : step.label}
+              <span
+                className={`mt-1.5 text-2xs font-medium ${
+                  showRejected
+                    ? "text-semantic-error"
+                    : isActive
+                      ? "text-oe-blue"
+                      : isCompleted
+                        ? "text-semantic-success"
+                        : "text-content-tertiary"
+                }`}
+              >
+                {showRejected
+                  ? t("changeorders.status_rejected", {
+                      defaultValue: "Rejected",
+                    })
+                  : step.label}
               </span>
             </div>
             {!isLast && (
-              <div className={`h-0.5 w-12 mx-2 rounded ${
-                isCompleted ? 'bg-semantic-success' : 'bg-border-light'
-              }`} />
+              <div
+                className={`h-0.5 w-12 mx-2 rounded ${
+                  isCompleted ? "bg-semantic-success" : "bg-border-light"
+                }`}
+              />
             )}
           </div>
         );
@@ -550,57 +787,176 @@ function DetailView({
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const userRole = useAuthStore((s) => s.userRole);
+  const accessToken = useAuthStore((s) => s.accessToken);
   const { confirm, ...confirmProps } = useConfirm();
   const [showAddItem, setShowAddItem] = useState(false);
+  const [showChainBuilder, setShowChainBuilder] = useState(false);
 
   // Only admins and managers can approve/reject change orders. Backend
   // permission `changeorders.approve` enforces this server-side; we hide
   // the buttons in the UI to give a better experience than 403 errors.
-  const canApprove = userRole === 'admin' || userRole === 'manager';
+  const canApprove = userRole === "admin" || userRole === "manager";
+  const currentUserId = useMemo(
+    () => decodeUserIdFromToken(accessToken),
+    [accessToken],
+  );
 
-  const { data: order, isLoading, isError } = useQuery({
-    queryKey: ['changeorder', orderId],
+  const {
+    data: order,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["changeorder", orderId],
     queryFn: () => apiGet<ChangeOrderWithItems>(`/v1/changeorders/${orderId}`),
   });
 
   const submitMut = useMutation({
-    mutationFn: () => apiPost<ChangeOrder>(`/v1/changeorders/${orderId}/submit/`),
+    mutationFn: () =>
+      apiPost<ChangeOrder>(`/v1/changeorders/${orderId}/submit/`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['changeorder', orderId] });
-      queryClient.invalidateQueries({ queryKey: ['changeorders'] });
-      addToast({ type: 'success', title: t('changeorders.submitted', { defaultValue: 'Change order submitted' }) });
+      queryClient.invalidateQueries({ queryKey: ["changeorder", orderId] });
+      queryClient.invalidateQueries({ queryKey: ["changeorders"] });
+      addToast({
+        type: "success",
+        title: t("changeorders.submitted", {
+          defaultValue: "Change order submitted",
+        }),
+      });
     },
-    onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
+    onError: (err: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      }),
   });
 
   const approveMut = useMutation({
-    mutationFn: () => apiPost<ChangeOrder>(`/v1/changeorders/${orderId}/approve/`),
+    mutationFn: () =>
+      apiPost<ChangeOrder>(`/v1/changeorders/${orderId}/approve/`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['changeorder', orderId] });
-      queryClient.invalidateQueries({ queryKey: ['changeorders'] });
-      addToast({ type: 'success', title: t('changeorders.approved', { defaultValue: 'Change order approved' }) });
+      queryClient.invalidateQueries({ queryKey: ["changeorder", orderId] });
+      queryClient.invalidateQueries({ queryKey: ["changeorders"] });
+      addToast({
+        type: "success",
+        title: t("changeorders.approved", {
+          defaultValue: "Change order approved",
+        }),
+      });
     },
-    onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
+    onError: (err: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      }),
   });
 
   const rejectMut = useMutation({
-    mutationFn: () => apiPost<ChangeOrder>(`/v1/changeorders/${orderId}/reject/`),
+    mutationFn: () =>
+      apiPost<ChangeOrder>(`/v1/changeorders/${orderId}/reject/`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['changeorder', orderId] });
-      queryClient.invalidateQueries({ queryKey: ['changeorders'] });
-      addToast({ type: 'success', title: t('changeorders.rejected', { defaultValue: 'Change order rejected' }) });
+      queryClient.invalidateQueries({ queryKey: ["changeorder", orderId] });
+      queryClient.invalidateQueries({ queryKey: ["changeorders"] });
+      addToast({
+        type: "success",
+        title: t("changeorders.rejected", {
+          defaultValue: "Change order rejected",
+        }),
+      });
     },
-    onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
+    onError: (err: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      }),
   });
 
   const deleteItemMut = useMutation({
-    mutationFn: (itemId: string) => apiDelete(`/v1/changeorders/${orderId}/items/${itemId}`),
+    mutationFn: (itemId: string) =>
+      apiDelete(`/v1/changeorders/${orderId}/items/${itemId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['changeorder', orderId] });
-      queryClient.invalidateQueries({ queryKey: ['changeorders'] });
-      addToast({ type: 'success', title: t('changeorders.item_deleted', { defaultValue: 'Item deleted' }) });
+      queryClient.invalidateQueries({ queryKey: ["changeorder", orderId] });
+      queryClient.invalidateQueries({ queryKey: ["changeorders"] });
+      addToast({
+        type: "success",
+        title: t("changeorders.item_deleted", { defaultValue: "Item deleted" }),
+      });
     },
-    onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
+    onError: (err: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      }),
+  });
+
+  // ── T3: Procore-style approval chain ───────────────────────────────────
+  // Fetched alongside the order detail so the timeline is always in sync
+  // with the cursor. Cheap query — typically 1-5 rows.
+  const { data: approvals = [] } = useQuery<ApprovalRow[]>({
+    queryKey: ["changeorder-approvals", orderId],
+    queryFn: () => getApprovals(orderId),
+  });
+
+  const startChainMut = useMutation({
+    mutationFn: (approverUserIds: string[]) =>
+      startApprovalChain(orderId, approverUserIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["changeorder", orderId] });
+      queryClient.invalidateQueries({
+        queryKey: ["changeorder-approvals", orderId],
+      });
+      setShowChainBuilder(false);
+      addToast({
+        type: "success",
+        title: t("changeorders.approval_chain_started", {
+          defaultValue: "Approval chain started",
+        }),
+      });
+    },
+    onError: (err: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      }),
+  });
+
+  const advanceMut = useMutation({
+    mutationFn: (input: {
+      decision: "approved" | "rejected";
+      comments: string;
+    }) =>
+      advanceApproval(orderId, {
+        decision: input.decision,
+        comments: input.comments || undefined,
+      }),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["changeorder", orderId] });
+      queryClient.invalidateQueries({
+        queryKey: ["changeorder-approvals", orderId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["changeorders"] });
+      addToast({
+        type: "success",
+        title:
+          variables.decision === "approved"
+            ? t("changeorders.approval_step_approved", {
+                defaultValue: "Step approved",
+              })
+            : t("changeorders.approval_step_rejected", {
+                defaultValue: "Change order rejected",
+              }),
+      });
+    },
+    onError: (err: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      }),
   });
 
   if (isLoading || (!order && !isError)) {
@@ -616,36 +972,45 @@ function DetailView({
       <div>
         <button
           onClick={onBack}
-          aria-label={t('changeorders.back_to_list', { defaultValue: 'Back to change orders list' })}
+          aria-label={t("changeorders.back_to_list", {
+            defaultValue: "Back to change orders list",
+          })}
           className="inline-flex items-center gap-1.5 text-sm text-content-secondary hover:text-content-primary mb-3"
         >
           <ArrowLeft size={14} />
-          {t('common.back', { defaultValue: 'Back' })}
+          {t("common.back", { defaultValue: "Back" })}
         </button>
         <Card className="py-12">
           <EmptyState
             icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-            title={t('common.error', { defaultValue: 'Error' })}
-            description={t('changeorders.load_error', { defaultValue: 'Failed to load change order. Please try again.' })}
+            title={t("common.error", { defaultValue: "Error" })}
+            description={t("changeorders.load_error", {
+              defaultValue: "Failed to load change order. Please try again.",
+            })}
           />
         </Card>
       </div>
     );
   }
 
-  const canEdit = order.status === 'draft' || order.status === 'submitted';
+  const canEdit = order.status === "draft" || order.status === "submitted";
 
   return (
     <div>
       {/* Header */}
       <div className="mb-6">
-        <nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
+        <nav
+          className="flex items-center gap-1.5 text-sm mb-4"
+          aria-label="Breadcrumb"
+        >
           <button
             onClick={onBack}
-            aria-label={t('changeorders.back_to_list', { defaultValue: 'Back to change orders list' })}
+            aria-label={t("changeorders.back_to_list", {
+              defaultValue: "Back to change orders list",
+            })}
             className="text-content-secondary hover:text-oe-blue transition-colors"
           >
-            {t('nav.change_orders', { defaultValue: 'Change Orders' })}
+            {t("nav.change_orders", { defaultValue: "Change Orders" })}
           </button>
           <ChevronRight size={12} className="text-content-tertiary" />
           <span className="text-content-primary font-medium">{order.code}</span>
@@ -656,72 +1021,113 @@ function DetailView({
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-semibold text-content-primary">{order.code}</h2>
-              <Badge variant={STATUS_COLORS[order.status] || 'neutral'}>{translateStatus(order.status, t)}</Badge>
+              <h2 className="text-xl font-semibold text-content-primary">
+                {order.code}
+              </h2>
+              <Badge variant={STATUS_COLORS[order.status] || "neutral"}>
+                {translateStatus(order.status, t)}
+              </Badge>
             </div>
-            <h3 className="mt-1 text-lg text-content-secondary">{order.title}</h3>
+            <h3 className="mt-1 text-lg text-content-secondary">
+              {order.title}
+            </h3>
             {order.description && (
-              <p className="mt-2 text-sm text-content-tertiary max-w-2xl">{order.description}</p>
+              <p className="mt-2 text-sm text-content-tertiary max-w-2xl">
+                {order.description}
+              </p>
             )}
           </div>
 
           <div className="flex gap-2 items-center">
-            {order.status === 'draft' && (
-              <Button variant="primary" size="sm" onClick={async () => {
-                const ok = await confirm({
-                  title: t('changeorders.submit_confirm_title', { defaultValue: 'Submit change order?' }),
-                  message: t('changeorders.submit_confirm', { defaultValue: 'Submit this change order for review? This cannot be undone.' }),
-                  variant: 'warning',
-                });
-                if (ok) submitMut.mutate();
-              }} disabled={submitMut.isPending}>
+            {order.status === "draft" && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: t("changeorders.submit_confirm_title", {
+                      defaultValue: "Submit change order?",
+                    }),
+                    message: t("changeorders.submit_confirm", {
+                      defaultValue:
+                        "Submit this change order for review? This cannot be undone.",
+                    }),
+                    variant: "warning",
+                  });
+                  if (ok) submitMut.mutate();
+                }}
+                disabled={submitMut.isPending}
+              >
                 <Send size={14} className="mr-1.5" />
-                {t('changeorders.submit', { defaultValue: 'Submit' })}
+                {t("changeorders.submit", { defaultValue: "Submit" })}
               </Button>
             )}
-            {order.status === 'submitted' && (
-              canApprove ? (
+            {order.status === "submitted" &&
+              (canApprove ? (
                 <>
-                  <Button variant="primary" size="sm" onClick={async () => {
-                    const ok = await confirm({
-                      title: t('changeorders.approve_confirm_title', { defaultValue: 'Approve change order?' }),
-                      message: t('changeorders.approve_confirm', { defaultValue: 'Approve this change order? Cost impact will be applied to the project budget.' }),
-                      variant: 'warning',
-                    });
-                    if (ok) approveMut.mutate();
-                  }} disabled={approveMut.isPending}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={async () => {
+                      const ok = await confirm({
+                        title: t("changeorders.approve_confirm_title", {
+                          defaultValue: "Approve change order?",
+                        }),
+                        message: t("changeorders.approve_confirm", {
+                          defaultValue:
+                            "Approve this change order? Cost impact will be applied to the project budget.",
+                        }),
+                        variant: "warning",
+                      });
+                      if (ok) approveMut.mutate();
+                    }}
+                    disabled={approveMut.isPending}
+                  >
                     <CheckCircle2 size={14} className="mr-1.5" />
-                    {t('changeorders.approve', { defaultValue: 'Approve' })}
+                    {t("changeorders.approve", { defaultValue: "Approve" })}
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={async () => {
-                    const ok = await confirm({
-                      title: t('changeorders.reject_confirm_title', { defaultValue: 'Reject change order?' }),
-                      message: t('changeorders.reject_confirm', { defaultValue: 'Reject this change order?' }),
-                    });
-                    if (ok) rejectMut.mutate();
-                  }} disabled={rejectMut.isPending}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={async () => {
+                      const ok = await confirm({
+                        title: t("changeorders.reject_confirm_title", {
+                          defaultValue: "Reject change order?",
+                        }),
+                        message: t("changeorders.reject_confirm", {
+                          defaultValue: "Reject this change order?",
+                        }),
+                      });
+                      if (ok) rejectMut.mutate();
+                    }}
+                    disabled={rejectMut.isPending}
+                  >
                     <XCircle size={14} className="mr-1.5" />
-                    {t('changeorders.reject', { defaultValue: 'Reject' })}
+                    {t("changeorders.reject", { defaultValue: "Reject" })}
                   </Button>
                 </>
               ) : (
                 // Non-admin/manager: show clear "awaiting approval" state instead
                 // of an Approve button that would just return 403.
                 <div className="flex items-center gap-2 rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800 px-3 py-1.5">
-                  <CheckCircle2 size={14} className="text-amber-600 dark:text-amber-400" />
+                  <CheckCircle2
+                    size={14}
+                    className="text-amber-600 dark:text-amber-400"
+                  />
                   <div className="text-xs">
                     <p className="font-medium text-amber-900 dark:text-amber-200">
-                      {t('changeorders.pending_approval', { defaultValue: 'Awaiting approval' })}
+                      {t("changeorders.pending_approval", {
+                        defaultValue: "Awaiting approval",
+                      })}
                     </p>
                     <p className="text-amber-800 dark:text-amber-300">
-                      {t('changeorders.pending_approval_hint', {
-                        defaultValue: 'Only managers and admins can approve.',
+                      {t("changeorders.pending_approval_hint", {
+                        defaultValue: "Only managers and admins can approve.",
                       })}
                     </p>
                   </div>
                 </div>
-              )
-            )}
+              ))}
           </div>
         </div>
       </div>
@@ -730,44 +1136,55 @@ function DetailView({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         <Card className="p-4">
           <p className="text-xs text-content-tertiary uppercase tracking-wide">
-            {t('changeorders.reason', { defaultValue: 'Reason' })}
+            {t("changeorders.reason", { defaultValue: "Reason" })}
           </p>
           <p className="mt-1 text-sm font-medium text-content-primary">
             {t(`changeorders.reason_${order.reason_category}`, {
-              defaultValue: getReasonLabels(t)[order.reason_category] || order.reason_category,
+              defaultValue:
+                getReasonLabels(t)[order.reason_category] ||
+                order.reason_category,
             })}
           </p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-content-tertiary uppercase tracking-wide">
-            {t('changeorders.cost_impact', { defaultValue: 'Cost Impact' })}
+            {t("changeorders.cost_impact", { defaultValue: "Cost Impact" })}
           </p>
-          <p className={`mt-1 text-sm font-semibold ${order.cost_impact >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
-            {order.cost_impact >= 0 ? '+' : ''}{formatCurrency(order.cost_impact, order.currency)}
+          <p
+            className={`mt-1 text-sm font-semibold ${order.cost_impact >= 0 ? "text-semantic-error" : "text-semantic-success"}`}
+          >
+            {order.cost_impact >= 0 ? "+" : ""}
+            {formatCurrency(order.cost_impact, order.currency)}
           </p>
           <p className="mt-1 text-2xs text-content-tertiary leading-snug">
-            {order.status === 'approved'
-              ? t('changeorders.cost_impact_applied', {
-                  defaultValue: 'Applied to the project budget (revised budget).',
+            {order.status === "approved"
+              ? t("changeorders.cost_impact_applied", {
+                  defaultValue:
+                    "Applied to the project budget (revised budget).",
                 })
-              : t('changeorders.cost_impact_pending', {
-                  defaultValue: 'Applied to the project budget once approved.',
+              : t("changeorders.cost_impact_pending", {
+                  defaultValue: "Applied to the project budget once approved.",
                 })}
           </p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-content-tertiary uppercase tracking-wide">
-            {t('changeorders.schedule_impact', { defaultValue: 'Schedule Impact' })}
+            {t("changeorders.schedule_impact", {
+              defaultValue: "Schedule Impact",
+            })}
           </p>
           <p className="mt-1 text-sm font-medium text-content-primary">
-            {order.schedule_impact_days} {t('common.days', { defaultValue: 'days' })}
+            {order.schedule_impact_days}{" "}
+            {t("common.days", { defaultValue: "days" })}
           </p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-content-tertiary uppercase tracking-wide">
-            {t('common.created', { defaultValue: 'Created' })}
+            {t("common.created", { defaultValue: "Created" })}
           </p>
-          <p className="mt-1 text-sm font-medium text-content-primary">{formatDate(order.created_at)}</p>
+          <p className="mt-1 text-sm font-medium text-content-primary">
+            {formatDate(order.created_at)}
+          </p>
         </Card>
       </div>
 
@@ -777,39 +1194,100 @@ function DetailView({
           {order.submitted_at && (
             <Card className="p-4">
               <p className="text-xs text-content-tertiary uppercase tracking-wide">
-                {t('changeorders.submitted_at', { defaultValue: 'Submitted' })}
+                {t("changeorders.submitted_at", { defaultValue: "Submitted" })}
               </p>
-              <p className="mt-1 text-sm font-medium text-content-primary">{formatDate(order.submitted_at)}</p>
+              <p className="mt-1 text-sm font-medium text-content-primary">
+                {formatDate(order.submitted_at)}
+              </p>
               {order.submitted_by && (
-                <p className="mt-0.5 text-xs text-content-tertiary">{order.submitted_by}</p>
+                <p className="mt-0.5 text-xs text-content-tertiary">
+                  {order.submitted_by}
+                </p>
               )}
             </Card>
           )}
           {order.approved_at && (
             <Card className="p-4">
               <p className="text-xs text-content-tertiary uppercase tracking-wide">
-                {order.status === 'rejected'
-                  ? t('changeorders.rejected_at', { defaultValue: 'Rejected' })
-                  : t('changeorders.approved_at', { defaultValue: 'Approved' })}
+                {order.status === "rejected"
+                  ? t("changeorders.rejected_at", { defaultValue: "Rejected" })
+                  : t("changeorders.approved_at", { defaultValue: "Approved" })}
               </p>
-              <p className="mt-1 text-sm font-medium text-content-primary">{formatDate(order.approved_at)}</p>
+              <p className="mt-1 text-sm font-medium text-content-primary">
+                {formatDate(order.approved_at)}
+              </p>
               {order.approved_by && (
-                <p className="mt-0.5 text-xs text-content-tertiary">{order.approved_by}</p>
+                <p className="mt-0.5 text-xs text-content-tertiary">
+                  {order.approved_by}
+                </p>
               )}
             </Card>
           )}
         </div>
       )}
 
+      {/* T3: Procore-style approval chain. Shown when the CO has either
+          a chain already or is in 'submitted' state (so an admin/manager
+          can start one). Hidden on plain draft/approved/rejected COs with
+          no chain to avoid cluttering simple workflows. */}
+      {(approvals.length > 0 ||
+        (order.status === "submitted" && canApprove)) && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-base font-semibold text-content-primary">
+              {t("changeorders.approvals_section", {
+                defaultValue: "Approvals",
+              })}
+            </h3>
+            {approvals.length === 0 &&
+              order.status === "submitted" &&
+              canApprove && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowChainBuilder(true)}
+                  disabled={startChainMut.isPending}
+                >
+                  {t("changeorders.start_approval_chain", {
+                    defaultValue: "Start approval chain",
+                  })}
+                </Button>
+              )}
+          </div>
+          <ApprovalTimeline
+            rows={approvals}
+            currentApprovalStep={order.current_approval_step ?? null}
+            currentUserId={currentUserId}
+            busy={advanceMut.isPending}
+            onDecide={(decision, comments) =>
+              advanceMut.mutate({ decision, comments })
+            }
+          />
+        </div>
+      )}
+
+      {showChainBuilder && (
+        <ApprovalChainBuilderDialog
+          onClose={() => setShowChainBuilder(false)}
+          onConfirm={(ids) => startChainMut.mutate(ids)}
+          busy={startChainMut.isPending}
+        />
+      )}
+
       {/* Items */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-base font-semibold text-content-primary">
-          {t('changeorders.items', { defaultValue: 'Line Items' })} ({order.items.length})
+          {t("changeorders.items", { defaultValue: "Line Items" })} (
+          {order.items.length})
         </h3>
         {canEdit && (
-          <Button variant="secondary" size="sm" onClick={() => setShowAddItem(true)}>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setShowAddItem(true)}
+          >
             <Plus size={14} className="mr-1.5" />
-            {t('changeorders.add_item', { defaultValue: 'Add Item' })}
+            {t("changeorders.add_item", { defaultValue: "Add Item" })}
           </Button>
         )}
       </div>
@@ -818,11 +1296,18 @@ function DetailView({
         <Card className="py-12">
           <EmptyState
             icon={<FileEdit size={28} strokeWidth={1.5} />}
-            title={t('changeorders.no_items', { defaultValue: 'No items yet' })}
-            description={t('changeorders.no_items_desc', { defaultValue: 'Add line items to define the scope change' })}
+            title={t("changeorders.no_items", { defaultValue: "No items yet" })}
+            description={t("changeorders.no_items_desc", {
+              defaultValue: "Add line items to define the scope change",
+            })}
             action={
               canEdit
-                ? { label: t('changeorders.add_item', { defaultValue: 'Add Item' }), onClick: () => setShowAddItem(true) }
+                ? {
+                    label: t("changeorders.add_item", {
+                      defaultValue: "Add Item",
+                    }),
+                    onClick: () => setShowAddItem(true),
+                  }
                 : undefined
             }
           />
@@ -830,36 +1315,56 @@ function DetailView({
       ) : (
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm" aria-label={t('changeorders.items_table_aria', { defaultValue: 'Change order line items' })}>
+            <table
+              className="w-full text-sm"
+              aria-label={t("changeorders.items_table_aria", {
+                defaultValue: "Change order line items",
+              })}
+            >
               <thead>
                 <tr className="border-b border-border bg-surface-secondary/50">
                   <th className="px-4 py-3 text-left font-medium text-content-secondary">
-                    {t('common.description', { defaultValue: 'Description' })}
+                    {t("common.description", { defaultValue: "Description" })}
                   </th>
                   <th className="px-4 py-3 text-left font-medium text-content-secondary">
-                    {t('changeorders.type', { defaultValue: 'Type' })}
+                    {t("changeorders.type", { defaultValue: "Type" })}
                   </th>
                   <th className="px-4 py-3 text-right font-medium text-content-secondary">
-                    {t('changeorders.orig_qty', { defaultValue: 'Orig Qty' })}
+                    {t("changeorders.orig_qty", { defaultValue: "Orig Qty" })}
                   </th>
                   <th className="px-4 py-3 text-right font-medium text-content-secondary">
-                    {t('changeorders.new_qty', { defaultValue: 'New Qty' })}
+                    {t("changeorders.new_qty", { defaultValue: "New Qty" })}
                   </th>
                   <th className="px-4 py-3 text-right font-medium text-content-secondary">
-                    {t('changeorders.cost_delta', { defaultValue: 'Cost Delta' })}
+                    {t("changeorders.cost_delta", {
+                      defaultValue: "Cost Delta",
+                    })}
                   </th>
-                  {canEdit && (
-                    <th className="px-4 py-3 w-12" />
-                  )}
+                  {canEdit && <th className="px-4 py-3 w-12" />}
                 </tr>
               </thead>
               <tbody>
                 {order.items.map((item) => (
-                  <tr key={item.id} className="border-b border-border last:border-0 hover:bg-surface-secondary/30">
-                    <td className="px-4 py-3 text-content-primary">{item.description}</td>
+                  <tr
+                    key={item.id}
+                    className="border-b border-border last:border-0 hover:bg-surface-secondary/30"
+                  >
+                    <td className="px-4 py-3 text-content-primary">
+                      {item.description}
+                    </td>
                     <td className="px-4 py-3">
-                      <Badge variant={item.change_type === 'added' ? 'success' : item.change_type === 'removed' ? 'error' : 'neutral'}>
-                        {t(`changeorders.type_${item.change_type}`, { defaultValue: item.change_type })}
+                      <Badge
+                        variant={
+                          item.change_type === "added"
+                            ? "success"
+                            : item.change_type === "removed"
+                              ? "error"
+                              : "neutral"
+                        }
+                      >
+                        {t(`changeorders.type_${item.change_type}`, {
+                          defaultValue: item.change_type,
+                        })}
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-right text-content-secondary tabular-nums">
@@ -868,23 +1373,31 @@ function DetailView({
                     <td className="px-4 py-3 text-right text-content-secondary tabular-nums">
                       {item.new_quantity} {item.unit}
                     </td>
-                    <td className={`px-4 py-3 text-right font-medium tabular-nums ${item.cost_delta >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
-                      {item.cost_delta >= 0 ? '+' : ''}{formatCurrency(item.cost_delta, order.currency)}
+                    <td
+                      className={`px-4 py-3 text-right font-medium tabular-nums ${item.cost_delta >= 0 ? "text-semantic-error" : "text-semantic-success"}`}
+                    >
+                      {item.cost_delta >= 0 ? "+" : ""}
+                      {formatCurrency(item.cost_delta, order.currency)}
                     </td>
                     {canEdit && (
                       <td className="px-4 py-3 text-center">
                         <button
                           onClick={async () => {
                             const ok = await confirm({
-                              title: t('changeorders.delete_item_confirm_title', { defaultValue: 'Delete item?' }),
-                              message: t('changeorders.delete_item_confirm', { defaultValue: 'Delete this item?' }),
+                              title: t(
+                                "changeorders.delete_item_confirm_title",
+                                { defaultValue: "Delete item?" },
+                              ),
+                              message: t("changeorders.delete_item_confirm", {
+                                defaultValue: "Delete this item?",
+                              }),
                             });
                             if (ok) deleteItemMut.mutate(item.id);
                           }}
                           className="text-content-tertiary hover:text-semantic-error transition-colors"
-                          title={t('common.delete', { defaultValue: 'Delete' })}
-                          aria-label={t('changeorders.delete_item_aria', {
-                            defaultValue: 'Delete item: {{desc}}',
+                          title={t("common.delete", { defaultValue: "Delete" })}
+                          aria-label={t("changeorders.delete_item_aria", {
+                            defaultValue: "Delete item: {{desc}}",
                             desc: item.description,
                           })}
                         >
@@ -906,8 +1419,10 @@ function DetailView({
           currency={order.currency}
           onClose={() => setShowAddItem(false)}
           onCreated={() => {
-            queryClient.invalidateQueries({ queryKey: ['changeorder', orderId] });
-            queryClient.invalidateQueries({ queryKey: ['changeorders'] });
+            queryClient.invalidateQueries({
+              queryKey: ["changeorder", orderId],
+            });
+            queryClient.invalidateQueries({ queryKey: ["changeorders"] });
           }}
         />
       )}
@@ -927,22 +1442,30 @@ export function ChangeOrdersPage() {
 
   const [showCreate, setShowCreate] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>("");
 
   // Fetch projects
   const { data: projects = [] } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 
-  const projectId = activeProjectId || projects[0]?.id || '';
-  const project = useMemo(() => projects.find((p) => p.id === projectId), [projects, projectId]);
+  const projectId = activeProjectId || projects[0]?.id || "";
+  const project = useMemo(
+    () => projects.find((p) => p.id === projectId),
+    [projects, projectId],
+  );
 
   // Fetch change orders
-  const { data: orders = [], isLoading, isError } = useQuery({
-    queryKey: ['changeorders', projectId],
-    queryFn: () => apiGet<ChangeOrder[]>(`/v1/changeorders/?project_id=${projectId}`),
+  const {
+    data: orders = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["changeorders", projectId],
+    queryFn: () =>
+      apiGet<ChangeOrder[]>(`/v1/changeorders/?project_id=${projectId}`),
     select: (d): ChangeOrder[] => normalizeListResponse(d),
     enabled: !!projectId,
   });
@@ -954,45 +1477,67 @@ export function ChangeOrdersPage() {
 
   // Fetch summary
   const { data: summary } = useQuery({
-    queryKey: ['changeorders-summary', projectId],
-    queryFn: () => apiGet<Summary>(`/v1/changeorders/summary/?project_id=${projectId}`),
+    queryKey: ["changeorders-summary", projectId],
+    queryFn: () =>
+      apiGet<Summary>(`/v1/changeorders/summary/?project_id=${projectId}`),
     enabled: !!projectId,
   });
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => apiDelete(`/v1/changeorders/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['changeorders'] });
-      queryClient.invalidateQueries({ queryKey: ['changeorders-summary'] });
-      addToast({ type: 'success', title: t('changeorders.deleted', { defaultValue: 'Change order deleted' }) });
+      queryClient.invalidateQueries({ queryKey: ["changeorders"] });
+      queryClient.invalidateQueries({ queryKey: ["changeorders-summary"] });
+      addToast({
+        type: "success",
+        title: t("changeorders.deleted", {
+          defaultValue: "Change order deleted",
+        }),
+      });
     },
-    onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
+    onError: (err: Error) =>
+      addToast({
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: err.message,
+      }),
   });
 
   const handleRefresh = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ['changeorders'] });
-    queryClient.invalidateQueries({ queryKey: ['changeorders-summary'] });
+    queryClient.invalidateQueries({ queryKey: ["changeorders"] });
+    queryClient.invalidateQueries({ queryKey: ["changeorders-summary"] });
   }, [queryClient]);
 
   const handleExportCSV = useCallback(() => {
     if (!filteredOrders.length) return;
-    const headers = ['Code', 'Title', 'Status', 'Reason', 'Cost Impact', 'Schedule Days', 'Items', 'Created'];
-    const rows = filteredOrders.map(o => [
-      o.code,
-      `"${o.title.replace(/"/g, '""')}"`,
-      o.status,
-      getReasonLabels(t)[o.reason_category] || o.reason_category,
-      o.cost_impact.toFixed(2),
-      String(o.schedule_impact_days),
-      String(o.item_count),
-      o.created_at?.slice(0, 10) || '',
-    ].join(','));
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const headers = [
+      "Code",
+      "Title",
+      "Status",
+      "Reason",
+      "Cost Impact",
+      "Schedule Days",
+      "Items",
+      "Created",
+    ];
+    const rows = filteredOrders.map((o) =>
+      [
+        o.code,
+        `"${o.title.replace(/"/g, '""')}"`,
+        o.status,
+        getReasonLabels(t)[o.reason_category] || o.reason_category,
+        o.cost_impact.toFixed(2),
+        String(o.schedule_impact_days),
+        String(o.item_count),
+        o.created_at?.slice(0, 10) || "",
+      ].join(","),
+    );
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `change_orders_${project?.name || 'export'}.csv`;
+    a.download = `change_orders_${project?.name || "export"}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }, [filteredOrders, project, t]);
@@ -1001,7 +1546,10 @@ export function ChangeOrdersPage() {
   if (selectedOrderId) {
     return (
       <div className="w-full">
-        <DetailView orderId={selectedOrderId} onBack={() => setSelectedOrderId(null)} />
+        <DetailView
+          orderId={selectedOrderId}
+          onBack={() => setSelectedOrderId(null)}
+        />
       </div>
     );
   }
@@ -1009,36 +1557,43 @@ export function ChangeOrdersPage() {
   // Empty when the project carries no currency — the backend resolves the
   // project's currency on create, and formatCurrency renders a symbol-less
   // number rather than mis-labelling amounts as EUR (task #217).
-  const currency = project?.currency || summary?.currency || '';
+  const currency = project?.currency || summary?.currency || "";
 
   return (
     <div className="w-full animate-fade-in">
-      <Breadcrumb items={[
-        { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-        { label: t('nav.change_orders', { defaultValue: 'Change Orders' }) },
-      ]} />
+      <Breadcrumb
+        items={[
+          { label: t("nav.dashboard", { defaultValue: "Dashboard" }), to: "/" },
+          { label: t("nav.change_orders", { defaultValue: "Change Orders" }) },
+        ]}
+      />
 
       {/* Header */}
       <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-content-primary">
-            {t('nav.change_orders', { defaultValue: 'Change Orders' })}
+            {t("nav.change_orders", { defaultValue: "Change Orders" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('changeorders.subtitle', { defaultValue: 'Track scope changes with cost and schedule impact' })}
+            {t("changeorders.subtitle", {
+              defaultValue: "Track scope changes with cost and schedule impact",
+            })}
           </p>
         </div>
         <div className="flex items-end gap-3">
           <div>
-            <label htmlFor="co-project-select" className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.project', { defaultValue: 'Project' })}
+            <label
+              htmlFor="co-project-select"
+              className="block text-sm font-medium text-content-primary mb-1.5"
+            >
+              {t("common.project", { defaultValue: "Project" })}
             </label>
             <select
               id="co-project-select"
               value={projectId}
               onChange={(e) => {
                 const id = e.target.value;
-                const name = projects.find((p) => p.id === id)?.name ?? '';
+                const name = projects.find((p) => p.id === id)?.name ?? "";
                 if (id) {
                   useProjectContextStore.getState().setActiveProject(id, name);
                 }
@@ -1046,29 +1601,56 @@ export function ChangeOrdersPage() {
               className="h-10 w-full min-w-[200px] rounded-lg border border-border bg-surface-primary px-3 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
             >
               {projects.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
               ))}
             </select>
           </div>
-          <Button variant="secondary" size="sm" icon={<Download size={14} />} onClick={handleExportCSV} disabled={!filteredOrders || filteredOrders.length === 0}>
-            {t('changeorders.export_csv', { defaultValue: 'Export CSV' })}
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<Download size={14} />}
+            onClick={handleExportCSV}
+            disabled={!filteredOrders || filteredOrders.length === 0}
+          >
+            {t("changeorders.export_csv", { defaultValue: "Export CSV" })}
           </Button>
-          <Button variant="primary" onClick={() => setShowCreate(true)} disabled={!projectId}>
+          <Button
+            variant="primary"
+            onClick={() => setShowCreate(true)}
+            disabled={!projectId}
+          >
             <Plus size={16} className="mr-1.5" />
-            {t('changeorders.new', { defaultValue: 'New Change Order' })}
+            {t("changeorders.new", { defaultValue: "New Change Order" })}
           </Button>
         </div>
       </div>
 
-      <InfoHint className="mt-4 mb-2" text={t('changeorders.workflow_desc', { defaultValue: 'Change Order workflow: Draft (prepare scope change) \u2192 Submitted (send for review) \u2192 Approved or Rejected. Each order tracks cost impact and schedule impact in days. Add line items to detail what changed \u2014 original vs new quantities and rates. The cost delta is computed automatically.' })} />
+      <InfoHint
+        className="mt-4 mb-2"
+        text={t("changeorders.workflow_desc", {
+          defaultValue:
+            "Change Order workflow: Draft (prepare scope change) \u2192 Submitted (send for review) \u2192 Approved or Rejected. Each order tracks cost impact and schedule impact in days. Add line items to detail what changed \u2014 original vs new quantities and rates. The cost delta is computed automatically.",
+        })}
+      />
 
       {/* No-project warning */}
       {!projectId && (
         <div className="mb-4 mt-4 flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800 px-4 py-3">
           <AlertTriangle size={18} className="text-amber-600 shrink-0" />
           <div>
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">{t('common.no_project_selected', { defaultValue: 'No project selected' })}</p>
-            <p className="text-xs text-amber-600 dark:text-amber-400">{t('common.select_project_hint', { defaultValue: 'Select a project from the header to view and manage items.' })}</p>
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+              {t("common.no_project_selected", {
+                defaultValue: "No project selected",
+              })}
+            </p>
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              {t("common.select_project_hint", {
+                defaultValue:
+                  "Select a project from the header to view and manage items.",
+              })}
+            </p>
           </div>
         </div>
       )}
@@ -1083,9 +1665,11 @@ export function ChangeOrdersPage() {
               </div>
               <div>
                 <p className="text-2xs text-content-tertiary uppercase tracking-wide">
-                  {t('changeorders.total', { defaultValue: 'Total Orders' })}
+                  {t("changeorders.total", { defaultValue: "Total Orders" })}
                 </p>
-                <p className="text-lg font-semibold text-content-primary">{summary.total_orders}</p>
+                <p className="text-lg font-semibold text-content-primary">
+                  {summary.total_orders}
+                </p>
               </div>
             </div>
           </Card>
@@ -1096,10 +1680,15 @@ export function ChangeOrdersPage() {
               </div>
               <div>
                 <p className="text-2xs text-content-tertiary uppercase tracking-wide">
-                  {t('changeorders.approved_impact', { defaultValue: 'Approved Impact' })}
+                  {t("changeorders.approved_impact", {
+                    defaultValue: "Approved Impact",
+                  })}
                 </p>
-                <p className={`text-lg font-semibold ${summary.total_cost_impact >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
-                  {summary.total_cost_impact >= 0 ? '+' : ''}{formatCurrency(summary.total_cost_impact, currency)}
+                <p
+                  className={`text-lg font-semibold ${summary.total_cost_impact >= 0 ? "text-semantic-error" : "text-semantic-success"}`}
+                >
+                  {summary.total_cost_impact >= 0 ? "+" : ""}
+                  {formatCurrency(summary.total_cost_impact, currency)}
                 </p>
               </div>
             </div>
@@ -1111,10 +1700,13 @@ export function ChangeOrdersPage() {
               </div>
               <div>
                 <p className="text-2xs text-content-tertiary uppercase tracking-wide">
-                  {t('changeorders.schedule_total', { defaultValue: 'Schedule Days' })}
+                  {t("changeorders.schedule_total", {
+                    defaultValue: "Schedule Days",
+                  })}
                 </p>
                 <p className="text-lg font-semibold text-content-primary">
-                  {summary.total_schedule_impact_days} {t('common.days', { defaultValue: 'days' })}
+                  {summary.total_schedule_impact_days}{" "}
+                  {t("common.days", { defaultValue: "days" })}
                 </p>
               </div>
             </div>
@@ -1126,7 +1718,7 @@ export function ChangeOrdersPage() {
               </div>
               <div>
                 <p className="text-2xs text-content-tertiary uppercase tracking-wide">
-                  {t('changeorders.pending', { defaultValue: 'Pending' })}
+                  {t("changeorders.pending", { defaultValue: "Pending" })}
                 </p>
                 <p className="text-lg font-semibold text-content-primary">
                   {summary.submitted_count + summary.draft_count}
@@ -1143,16 +1735,21 @@ export function ChangeOrdersPage() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="h-9 rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
-          aria-label={t('changeorders.filter_status', { defaultValue: 'Filter by status' })}
+          aria-label={t("changeorders.filter_status", {
+            defaultValue: "Filter by status",
+          })}
         >
-          <option value="">{t('changeorders.all_statuses', { defaultValue: 'All Statuses' })}</option>
-          <option value="draft">{translateStatus('draft', t)}</option>
-          <option value="submitted">{translateStatus('submitted', t)}</option>
-          <option value="approved">{translateStatus('approved', t)}</option>
-          <option value="rejected">{translateStatus('rejected', t)}</option>
+          <option value="">
+            {t("changeorders.all_statuses", { defaultValue: "All Statuses" })}
+          </option>
+          <option value="draft">{translateStatus("draft", t)}</option>
+          <option value="submitted">{translateStatus("submitted", t)}</option>
+          <option value="approved">{translateStatus("approved", t)}</option>
+          <option value="rejected">{translateStatus("rejected", t)}</option>
         </select>
         <span className="text-xs text-content-tertiary">
-          {filteredOrders.length} {t('changeorders.of_total', { defaultValue: 'of' })} {orders.length}
+          {filteredOrders.length}{" "}
+          {t("changeorders.of_total", { defaultValue: "of" })} {orders.length}
         </span>
       </div>
 
@@ -1161,8 +1758,13 @@ export function ChangeOrdersPage() {
         {!projectId ? (
           <EmptyState
             icon={<FileEdit size={28} strokeWidth={1.5} />}
-            title={t('changeorders.no_project', { defaultValue: 'No project selected' })}
-            description={t('changeorders.no_project_desc', { defaultValue: 'Open a project first to view and manage change orders.' })}
+            title={t("changeorders.no_project", {
+              defaultValue: "No project selected",
+            })}
+            description={t("changeorders.no_project_desc", {
+              defaultValue:
+                "Open a project first to view and manage change orders.",
+            })}
           />
         ) : isLoading ? (
           <div className="flex items-center justify-center py-20">
@@ -1172,20 +1774,27 @@ export function ChangeOrdersPage() {
           <Card className="py-12">
             <EmptyState
               icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-              title={t('common.error', { defaultValue: 'Error' })}
-              description={t('changeorders.load_error', { defaultValue: 'Failed to load change orders. Please try again.' })}
+              title={t("common.error", { defaultValue: "Error" })}
+              description={t("changeorders.load_error", {
+                defaultValue: "Failed to load change orders. Please try again.",
+              })}
             />
           </Card>
         ) : orders.length === 0 ? (
           <Card>
             <EmptyState
               icon={<FileEdit size={28} strokeWidth={1.5} />}
-              title={t('changeorders.empty', { defaultValue: 'No change orders' })}
-              description={t('changeorders.empty_desc', {
-                defaultValue: 'Create a change order to track scope changes with cost and schedule impact',
+              title={t("changeorders.empty", {
+                defaultValue: "No change orders",
+              })}
+              description={t("changeorders.empty_desc", {
+                defaultValue:
+                  "Create a change order to track scope changes with cost and schedule impact",
               })}
               action={{
-                label: t('changeorders.new', { defaultValue: 'New Change Order' }),
+                label: t("changeorders.new", {
+                  defaultValue: "New Change Order",
+                }),
                 onClick: () => setShowCreate(true),
               }}
             />
@@ -1193,29 +1802,36 @@ export function ChangeOrdersPage() {
         ) : (
           <Card className="overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm" aria-label={t('changeorders.table_aria', { defaultValue: 'Change orders list' })}>
+              <table
+                className="w-full text-sm"
+                aria-label={t("changeorders.table_aria", {
+                  defaultValue: "Change orders list",
+                })}
+              >
                 <thead>
                   <tr className="border-b border-border bg-surface-secondary/50">
                     <th className="px-4 py-3 text-left font-medium text-content-secondary">
-                      {t('changeorders.code', { defaultValue: 'Code' })}
+                      {t("changeorders.code", { defaultValue: "Code" })}
                     </th>
                     <th className="px-4 py-3 text-left font-medium text-content-secondary">
-                      {t('common.title', { defaultValue: 'Title' })}
+                      {t("common.title", { defaultValue: "Title" })}
                     </th>
                     <th className="px-4 py-3 text-left font-medium text-content-secondary">
-                      {t('common.status', { defaultValue: 'Status' })}
+                      {t("common.status", { defaultValue: "Status" })}
                     </th>
                     <th className="px-4 py-3 text-left font-medium text-content-secondary">
-                      {t('changeorders.reason', { defaultValue: 'Reason' })}
+                      {t("changeorders.reason", { defaultValue: "Reason" })}
                     </th>
                     <th className="px-4 py-3 text-right font-medium text-content-secondary">
-                      {t('changeorders.cost_impact', { defaultValue: 'Cost Impact' })}
+                      {t("changeorders.cost_impact", {
+                        defaultValue: "Cost Impact",
+                      })}
                     </th>
                     <th className="px-4 py-3 text-right font-medium text-content-secondary">
-                      {t('changeorders.schedule', { defaultValue: 'Schedule' })}
+                      {t("changeorders.schedule", { defaultValue: "Schedule" })}
                     </th>
                     <th className="px-4 py-3 text-left font-medium text-content-secondary">
-                      {t('common.date', { defaultValue: 'Date' })}
+                      {t("common.date", { defaultValue: "Date" })}
                     </th>
                     <th className="px-4 py-3 w-16" />
                   </tr>
@@ -1227,55 +1843,77 @@ export function ChangeOrdersPage() {
                       className="border-b border-border last:border-0 hover:bg-surface-secondary/30 cursor-pointer"
                       onClick={() => setSelectedOrderId(order.id)}
                     >
-                      <td className="px-4 py-3 font-mono text-xs text-content-secondary whitespace-nowrap">{order.code}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-content-secondary whitespace-nowrap">
+                        {order.code}
+                      </td>
                       <td className="px-4 py-3 text-content-primary font-medium max-w-[200px] truncate">
                         {order.title}
                       </td>
                       <td className="px-4 py-3">
-                        <Badge variant={STATUS_COLORS[order.status] || 'neutral'}>{translateStatus(order.status, t)}</Badge>
+                        <Badge
+                          variant={STATUS_COLORS[order.status] || "neutral"}
+                        >
+                          {translateStatus(order.status, t)}
+                        </Badge>
                       </td>
                       <td className="px-4 py-3 text-content-secondary text-xs">
                         {t(`changeorders.reason_${order.reason_category}`, {
-                          defaultValue: getReasonLabels(t)[order.reason_category] || order.reason_category,
+                          defaultValue:
+                            getReasonLabels(t)[order.reason_category] ||
+                            order.reason_category,
                         })}
                       </td>
-                      <td className={`px-4 py-3 text-right font-medium tabular-nums ${order.cost_impact >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
-                        {order.cost_impact >= 0 ? '+' : ''}{formatCurrency(order.cost_impact, order.currency)}
+                      <td
+                        className={`px-4 py-3 text-right font-medium tabular-nums ${order.cost_impact >= 0 ? "text-semantic-error" : "text-semantic-success"}`}
+                      >
+                        {order.cost_impact >= 0 ? "+" : ""}
+                        {formatCurrency(order.cost_impact, order.currency)}
                       </td>
                       <td className="px-4 py-3 text-right text-content-secondary tabular-nums">
                         {order.schedule_impact_days > 0
                           ? `+${order.schedule_impact_days}d`
                           : order.schedule_impact_days === 0
-                            ? '-'
+                            ? "-"
                             : `${order.schedule_impact_days}d`}
                       </td>
-                      <td className="px-4 py-3 text-content-tertiary text-xs">{formatDate(order.created_at)}</td>
+                      <td className="px-4 py-3 text-content-tertiary text-xs">
+                        {formatDate(order.created_at)}
+                      </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
-                          {order.status === 'draft' && (
+                          {order.status === "draft" && (
                             <button
                               onClick={async (e) => {
                                 e.stopPropagation();
                                 const ok = await confirmList({
-                                  title: t('changeorders.delete_confirm_title', { defaultValue: 'Delete change order?' }),
-                                  message: t('changeorders.delete_confirm', {
-                                    defaultValue: 'Delete change order {{code}}? This cannot be undone.',
+                                  title: t(
+                                    "changeorders.delete_confirm_title",
+                                    { defaultValue: "Delete change order?" },
+                                  ),
+                                  message: t("changeorders.delete_confirm", {
+                                    defaultValue:
+                                      "Delete change order {{code}}? This cannot be undone.",
                                     code: order.code,
                                   }),
                                 });
                                 if (ok) deleteMut.mutate(order.id);
                               }}
                               className="text-content-tertiary hover:text-semantic-error transition-colors p-1"
-                              title={t('common.delete', { defaultValue: 'Delete' })}
-                              aria-label={t('changeorders.delete_order_aria', {
-                                defaultValue: 'Delete change order {{code}}',
+                              title={t("common.delete", {
+                                defaultValue: "Delete",
+                              })}
+                              aria-label={t("changeorders.delete_order_aria", {
+                                defaultValue: "Delete change order {{code}}",
                                 code: order.code,
                               })}
                             >
                               <Trash2 size={14} />
                             </button>
                           )}
-                          <ChevronRight size={14} className="text-content-tertiary" />
+                          <ChevronRight
+                            size={14}
+                            className="text-content-tertiary"
+                          />
                         </div>
                       </td>
                     </tr>

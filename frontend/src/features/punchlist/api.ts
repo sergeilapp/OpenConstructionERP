@@ -4,24 +4,29 @@
  * All endpoints are prefixed with /v1/punchlist/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type PunchPriority = 'low' | 'medium' | 'high' | 'critical';
-export type PunchStatus = 'open' | 'in_progress' | 'resolved' | 'verified' | 'closed';
+export type PunchPriority = "low" | "medium" | "high" | "critical";
+export type PunchStatus =
+  | "open"
+  | "in_progress"
+  | "resolved"
+  | "verified"
+  | "closed";
 export type PunchCategory =
-  | 'structural'
-  | 'mechanical'
-  | 'electrical'
-  | 'architectural'
-  | 'plumbing'
-  | 'finishing'
-  | 'fire_safety'
-  | 'hvac'
-  | 'exterior'
-  | 'landscaping'
-  | 'general';
+  | "structural"
+  | "mechanical"
+  | "electrical"
+  | "architectural"
+  | "plumbing"
+  | "finishing"
+  | "fire_safety"
+  | "hvac"
+  | "exterior"
+  | "landscaping"
+  | "general";
 
 export interface PunchItem {
   id: string;
@@ -47,6 +52,20 @@ export interface PunchItem {
   updated_at: string;
   resolved_at: string | null;
   verified_at: string | null;
+  reopen_history?: ReopenHistoryEntry[];
+}
+
+export interface ReopenHistoryEntry {
+  reopened_at: string;
+  reopened_by: string | null;
+  previous_status: string;
+  reason?: string;
+}
+
+export interface BulkCloseResponse {
+  closed: number;
+  skipped: number;
+  errors: { id: string; error: string }[];
 }
 
 export interface PunchSummary {
@@ -59,9 +78,9 @@ export interface PunchSummary {
 
 export interface PunchFilters {
   search?: string;
-  priority?: PunchPriority | '';
-  status?: PunchStatus | '';
-  category?: PunchCategory | '';
+  priority?: PunchPriority | "";
+  status?: PunchStatus | "";
+  category?: PunchCategory | "";
   assigned_to?: string;
 }
 
@@ -108,22 +127,27 @@ export async function fetchPunchItems(
 ): Promise<PunchItem[]> {
   if (!projectId) return [];
   const params = new URLSearchParams({ project_id: projectId });
-  if (filters?.search) params.set('search', filters.search);
-  if (filters?.priority) params.set('priority', filters.priority);
-  if (filters?.status) params.set('status', filters.status);
-  if (filters?.category) params.set('category', filters.category);
-  if (filters?.assigned_to) params.set('assigned_to', filters.assigned_to);
+  if (filters?.search) params.set("search", filters.search);
+  if (filters?.priority) params.set("priority", filters.priority);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.category) params.set("category", filters.category);
+  if (filters?.assigned_to) params.set("assigned_to", filters.assigned_to);
   const res = await apiGet<PunchItem[] | { items: PunchItem[] }>(
     `/v1/punchlist/items/?${params.toString()}`,
   );
-  return Array.isArray(res) ? res : res.items ?? [];
+  return Array.isArray(res) ? res : (res.items ?? []);
 }
 
-export async function createPunchItem(data: CreatePunchPayload): Promise<PunchItem> {
-  return apiPost<PunchItem>('/v1/punchlist/items/', data);
+export async function createPunchItem(
+  data: CreatePunchPayload,
+): Promise<PunchItem> {
+  return apiPost<PunchItem>("/v1/punchlist/items/", data);
 }
 
-export async function updatePunchItem(id: string, data: UpdatePunchPayload): Promise<PunchItem> {
+export async function updatePunchItem(
+  id: string,
+  data: UpdatePunchPayload,
+): Promise<PunchItem> {
   return apiPatch<PunchItem>(`/v1/punchlist/items/${id}`, data);
 }
 
@@ -135,18 +159,35 @@ export async function transitionPunchStatus(
   id: string,
   newStatus: PunchStatus,
 ): Promise<PunchItem> {
-  return apiPost<PunchItem>(`/v1/punchlist/items/${id}/transition/`, { new_status: newStatus });
+  return apiPost<PunchItem>(`/v1/punchlist/items/${id}/transition/`, {
+    new_status: newStatus,
+  });
 }
 
-export async function uploadPunchPhoto(id: string, file: File): Promise<PunchItem> {
+export async function bulkClose(
+  ids: string[],
+  projectId: string,
+  comment?: string,
+): Promise<BulkCloseResponse> {
+  return apiPost<BulkCloseResponse>("/v1/punchlist/bulk-close/", {
+    ids,
+    project_id: projectId,
+    comment,
+  });
+}
+
+export async function uploadPunchPhoto(
+  id: string,
+  file: File,
+): Promise<PunchItem> {
   const formData = new FormData();
-  formData.append('file', file);
-  const token = localStorage.getItem('oe_access_token');
+  formData.append("file", file);
+  const token = localStorage.getItem("oe_access_token");
   const res = await fetch(`/api/v1/punchlist/items/${id}/photos/`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      Authorization: token ? `Bearer ${token}` : '',
-      'X-DDC-Client': 'OE/1.0',
+      Authorization: token ? `Bearer ${token}` : "",
+      "X-DDC-Client": "OE/1.0",
     },
     body: formData,
   });
@@ -154,8 +195,17 @@ export async function uploadPunchPhoto(id: string, file: File): Promise<PunchIte
   return res.json();
 }
 
-export async function fetchPunchSummary(projectId: string): Promise<PunchSummary> {
-  if (!projectId) return { total: 0, by_status: {}, by_priority: {}, overdue: 0, avg_days_to_close: null };
+export async function fetchPunchSummary(
+  projectId: string,
+): Promise<PunchSummary> {
+  if (!projectId)
+    return {
+      total: 0,
+      by_status: {},
+      by_priority: {},
+      overdue: 0,
+      avg_days_to_close: null,
+    };
   return apiGet<PunchSummary>(`/v1/punchlist/summary/?project_id=${projectId}`);
 }
 
@@ -166,12 +216,16 @@ interface UserListEntry {
   is_active?: boolean;
 }
 
-export async function fetchTeamMembers(projectId: string): Promise<TeamMember[]> {
+export async function fetchTeamMembers(
+  projectId: string,
+): Promise<TeamMember[]> {
   if (!projectId) return [];
   // No project-scoped /members endpoint exists (frontend was 404'ing on it);
   // fall back to the tenant-wide user list and map onto the assignment shape.
-  const users = await apiGet<UserListEntry[] | { items: UserListEntry[] }>('/v1/users/?limit=100');
-  const list = Array.isArray(users) ? users : users.items ?? [];
+  const users = await apiGet<UserListEntry[] | { items: UserListEntry[] }>(
+    "/v1/users/?limit=100",
+  );
+  const list = Array.isArray(users) ? users : (users.items ?? []);
   return list
     .filter((u) => u.is_active !== false)
     .map((u) => ({

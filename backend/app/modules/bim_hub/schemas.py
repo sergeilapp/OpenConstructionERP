@@ -42,9 +42,7 @@ def _validate_multiplier(raw: str | None) -> str | None:
     try:
         value = Decimal(text)
     except (InvalidOperation, ValueError) as exc:
-        raise ValueError(
-            f"multiplier must be a finite positive number, got {raw!r}"
-        ) from exc
+        raise ValueError(f"multiplier must be a finite positive number, got {raw!r}") from exc
     if not value.is_finite():
         raise ValueError(f"multiplier must be finite, got {raw!r}")
     if value <= 0:
@@ -57,9 +55,7 @@ def _validate_multiplier(raw: str | None) -> str | None:
     # keeping well under float-overflow territory means the apply-time
     # float() can never yield inf even after the waste multiplier.
     if value > Decimal("1e15"):
-        raise ValueError(
-            f"multiplier {raw!r} is implausibly large (max 1e15)"
-        )
+        raise ValueError(f"multiplier {raw!r} is implausibly large (max 1e15)")
     return text
 
 
@@ -82,16 +78,13 @@ def _validate_waste_pct(raw: str | None) -> str | None:
     try:
         value = Decimal(text)
     except (InvalidOperation, ValueError) as exc:
-        raise ValueError(
-            f"waste_factor_pct must be a number 0-100, got {raw!r}"
-        ) from exc
+        raise ValueError(f"waste_factor_pct must be a number 0-100, got {raw!r}") from exc
     if not value.is_finite():
         raise ValueError(f"waste_factor_pct must be finite, got {raw!r}")
     if value < 0 or value > 100:
-        raise ValueError(
-            f"waste_factor_pct must be between 0 and 100, got {raw!r}"
-        )
+        raise ValueError(f"waste_factor_pct must be between 0 and 100, got {raw!r}")
     return text
+
 
 # ── BIMModel schemas ─────────────────────────────────────────────────────────
 

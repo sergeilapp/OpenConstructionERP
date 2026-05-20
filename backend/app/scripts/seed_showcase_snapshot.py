@@ -88,8 +88,7 @@ def seed_showcase_from_snapshot(
         raw = gzip.decompress(snapshot_path.read_bytes()).decode("utf-8")
         art = json.loads(raw)
         if art.get("schema") != 1:
-            return {"status": "skipped",
-                    "reason": f"schema:{art.get('schema')}"}
+            return {"status": "skipped", "reason": f"schema:{art.get('schema')}"}
 
         con = sqlite3.connect(str(dbp), timeout=120)
         con.row_factory = sqlite3.Row
@@ -98,8 +97,7 @@ def seed_showcase_from_snapshot(
         # sqlite sanity — a non-sqlite file would already have failed to
         # connect, but be explicit about the project table existing.
         have_proj = cur.execute(
-            "SELECT count(*) FROM sqlite_master WHERE type='table' "
-            "AND name='oe_projects_project'"
+            "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='oe_projects_project'"
         ).fetchone()[0]
         if not have_proj:
             con.close()
@@ -139,14 +137,10 @@ def seed_showcase_from_snapshot(
             rows = tbl["rows"]
             if not rows:
                 continue
-            live_cols = [
-                r[1] for r in cur.execute(f"PRAGMA table_info({name})")
-            ]
+            live_cols = [r[1] for r in cur.execute(f"PRAGMA table_info({name})")]
             if not live_cols:
                 # table no longer exists in this schema version — skip
-                logger.warning(
-                    "showcase snapshot: table %s absent, skipping", name
-                )
+                logger.warning("showcase snapshot: table %s absent, skipping", name)
                 continue
             live_set = set(live_cols)
             use = [(i, c) for i, c in enumerate(snap_cols) if c in live_set]
@@ -156,10 +150,7 @@ def seed_showcase_from_snapshot(
             idx = [i for i, _ in use]
             placeholders = ",".join("?" * len(cols))
             collist = ",".join(f'"{c}"' for c in cols)
-            sql = (
-                f"INSERT OR REPLACE INTO {name} ({collist}) "
-                f"VALUES ({placeholders})"
-            )
+            sql = f"INSERT OR REPLACE INTO {name} ({collist}) VALUES ({placeholders})"
             batch = [[fix(r[i]) for i in idx] for r in rows]
             cur.executemany(sql, batch)
             loaded_tables += 1
@@ -191,12 +182,8 @@ def main() -> int:
         return 2
     db = sys.argv[1]
     owner = sys.argv[2]
-    est = sys.argv[3] if len(sys.argv) > 3 and not sys.argv[3].startswith(
-        "--"
-    ) else ""
-    mgr = sys.argv[4] if len(sys.argv) > 4 and not sys.argv[4].startswith(
-        "--"
-    ) else ""
+    est = sys.argv[3] if len(sys.argv) > 3 and not sys.argv[3].startswith("--") else ""
+    mgr = sys.argv[4] if len(sys.argv) > 4 and not sys.argv[4].startswith("--") else ""
     force = "--force" in sys.argv
     res = seed_showcase_from_snapshot(db, owner, est, mgr, force=force)
     print(json.dumps(res, ensure_ascii=False, indent=2))

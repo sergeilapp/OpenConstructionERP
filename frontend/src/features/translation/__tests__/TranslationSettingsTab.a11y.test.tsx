@@ -15,13 +15,13 @@
  * matches the resolved tabindex closely enough for this smoke check.
  */
 
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render } from '@testing-library/react';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { describe, expect, it, vi, beforeEach } from "vitest";
+import { render } from "@testing-library/react";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-vi.mock('../api', async () => {
-  const actual = await vi.importActual<typeof import('../api')>('../api');
+vi.mock("../api", async () => {
+  const actual = await vi.importActual<typeof import("../api")>("../api");
   return {
     ...actual,
     getTranslationStatus: vi.fn(),
@@ -34,18 +34,18 @@ vi.mock('../api', async () => {
 // ``useToastStore((s) => s.addToast)``, so the mock must behave like a
 // Zustand hook (callable as a selector + ``getState``).  Hoisted so it's
 // resolvable from inside the hoisted ``vi.mock`` factory.
-vi.mock('@/stores/useToastStore', () => {
+vi.mock("@/stores/useToastStore", () => {
   const toastState = { addToast: vi.fn() };
   const useToastStore = Object.assign(
     (selector?: (s: typeof toastState) => unknown) =>
-      typeof selector === 'function' ? selector(toastState) : toastState,
+      typeof selector === "function" ? selector(toastState) : toastState,
     { getState: () => toastState },
   );
   return { useToastStore };
 });
 
-import { getTranslationStatus } from '../api';
-import { TranslationSettingsTab } from '../TranslationSettingsTab';
+import { getTranslationStatus } from "../api";
+import { TranslationSettingsTab } from "../TranslationSettingsTab";
 
 expect.extend(toHaveNoViolations);
 
@@ -63,12 +63,12 @@ function renderTab() {
   );
 }
 
-describe('TranslationSettingsTab — a11y', () => {
+describe("TranslationSettingsTab — a11y", () => {
   beforeEach(() => {
     vi.mocked(getTranslationStatus).mockReset();
   });
 
-  it('has no axe violations in the empty state', async () => {
+  it("has no axe violations in the empty state", async () => {
     vi.mocked(getTranslationStatus).mockResolvedValue({
       dictionaries: { muse: [], iate: [] },
       cache: { rows: 0, hits: 0 },
@@ -76,19 +76,19 @@ describe('TranslationSettingsTab — a11y', () => {
     });
 
     const { container, findByTestId } = renderTab();
-    await findByTestId('translation-dict-empty');
+    await findByTestId("translation-dict-empty");
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('has no axe violations in the populated state', async () => {
+  it("has no axe violations in the populated state", async () => {
     vi.mocked(getTranslationStatus).mockResolvedValue({
       dictionaries: {
         muse: [
           {
-            pair: 'en-de',
-            path: '/x/muse/en-de.tsv',
+            pair: "en-de",
+            path: "/x/muse/en-de.tsv",
             size_bytes: 4_500_000,
             modified_at: Math.floor(Date.now() / 1000) - 3600,
           },
@@ -98,22 +98,22 @@ describe('TranslationSettingsTab — a11y', () => {
       cache: { rows: 12, hits: 5 },
       in_flight: [
         {
-          task_id: 'abc',
-          kind: 'muse',
-          status: 'running',
+          task_id: "abc",
+          kind: "muse",
+          status: "running",
           progress: 0.6,
         },
       ],
     });
 
     const { container, findByTestId } = renderTab();
-    await findByTestId('translation-task-abc');
+    await findByTestId("translation-task-abc");
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
-  it('keeps every interactive form field reachable via Tab (DOM order)', async () => {
+  it("keeps every interactive form field reachable via Tab (DOM order)", async () => {
     vi.mocked(getTranslationStatus).mockResolvedValue({
       dictionaries: { muse: [], iate: [] },
       cache: { rows: 0, hits: 0 },
@@ -121,7 +121,7 @@ describe('TranslationSettingsTab — a11y', () => {
     });
 
     const { findByTestId, container } = renderTab();
-    await findByTestId('translation-muse-form');
+    await findByTestId("translation-muse-form");
 
     // Collect every focusable element in DOM order.  All of them should
     // have a sane (non-negative or unset) tabindex so a real Tab keypress
@@ -132,7 +132,7 @@ describe('TranslationSettingsTab — a11y', () => {
 
     expect(focusables.length).toBeGreaterThan(0);
     for (const el of Array.from(focusables)) {
-      const tabIndex = el.getAttribute('tabindex');
+      const tabIndex = el.getAttribute("tabindex");
       if (tabIndex !== null) {
         expect(Number(tabIndex)).toBeGreaterThanOrEqual(0);
       }

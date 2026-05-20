@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
-import type { ImgHTMLAttributes, ReactNode } from 'react';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useEffect, useState } from "react";
+import type { ImgHTMLAttributes, ReactNode } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
 
-export interface AuthImageProps
-  extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
+export interface AuthImageProps extends Omit<
+  ImgHTMLAttributes<HTMLImageElement>,
+  "src"
+> {
   /** API URL of the JWT-protected image (photo thumb / original / etc). */
   src: string;
   /** Rendered while the blob is being fetched. */
@@ -36,8 +38,8 @@ export function AuthImage({
     setFailed(false);
 
     const token = useAuthStore.getState().accessToken;
-    const headers: HeadersInit = { Accept: 'image/*' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const headers: HeadersInit = { Accept: "image/*" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
 
     fetch(src, { headers })
       .then((r) => {

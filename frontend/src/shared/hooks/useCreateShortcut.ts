@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 /** Tags where we should never intercept keyboard input. */
-const INTERACTIVE_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
+const INTERACTIVE_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
 
 /**
  * Listens for the "n" key press (when no input is focused) and calls the
@@ -18,20 +18,24 @@ export function useCreateShortcut(onTrigger: () => void, enabled = true): void {
     const handler = (e: KeyboardEvent) => {
       // Don't intercept when the user is typing in a form field.
       const el = document.activeElement;
-      if (el && (INTERACTIVE_TAGS.has(el.tagName) || (el as HTMLElement).isContentEditable)) {
+      if (
+        el &&
+        (INTERACTIVE_TAGS.has(el.tagName) ||
+          (el as HTMLElement).isContentEditable)
+      ) {
         return;
       }
 
       // Ignore events with modifier keys — those belong to the browser or OS.
       if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
 
-      if (e.key === 'n') {
+      if (e.key === "n") {
         e.preventDefault();
         onTrigger();
       }
     };
 
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [onTrigger, enabled]);
 }

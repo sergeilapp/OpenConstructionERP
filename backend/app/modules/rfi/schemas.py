@@ -35,6 +35,7 @@ class RFICreate(BaseModel):
     @classmethod
     def _sanitise(cls, v: str) -> str:
         return _sanitise_rfi_text(v) or ""
+
     raised_by: UUID | None = None  # Auto-filled from authenticated user if not provided
     assigned_to: str | None = Field(default=None, max_length=36)
     status: str = Field(

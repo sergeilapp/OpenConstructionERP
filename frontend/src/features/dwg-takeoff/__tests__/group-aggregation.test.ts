@@ -6,18 +6,23 @@
  * group aggregation UI and by ``handleLinkGroupToPosition``.
  */
 
-import { describe, it, expect } from 'vitest';
-import { aggregateEntities } from '../lib/group-aggregation';
-import type { DxfEntity } from '../api';
+import { describe, it, expect } from "vitest";
+import { aggregateEntities } from "../lib/group-aggregation";
+import type { DxfEntity } from "../api";
 
 /* ── Entity factories ────────────────────────────────────────────────── */
 
-function rect(id: string, width: number, height: number, closed = true): DxfEntity {
+function rect(
+  id: string,
+  width: number,
+  height: number,
+  closed = true,
+): DxfEntity {
   return {
     id,
-    type: 'LWPOLYLINE',
-    layer: '0',
-    color: '#ffffff',
+    type: "LWPOLYLINE",
+    layer: "0",
+    color: "#ffffff",
     vertices: [
       { x: 0, y: 0 },
       { x: width, y: 0 },
@@ -31,9 +36,9 @@ function rect(id: string, width: number, height: number, closed = true): DxfEnti
 function line(id: string, length: number): DxfEntity {
   return {
     id,
-    type: 'LINE',
-    layer: '0',
-    color: '#ffffff',
+    type: "LINE",
+    layer: "0",
+    color: "#ffffff",
     start: { x: 0, y: 0 },
     end: { x: length, y: 0 },
   };
@@ -42,9 +47,9 @@ function line(id: string, length: number): DxfEntity {
 function circle(id: string, radius: number): DxfEntity {
   return {
     id,
-    type: 'CIRCLE',
-    layer: '0',
-    color: '#ffffff',
+    type: "CIRCLE",
+    layer: "0",
+    color: "#ffffff",
     start: { x: 0, y: 0 },
     radius,
   };
@@ -53,18 +58,18 @@ function circle(id: string, radius: number): DxfEntity {
 function text(id: string): DxfEntity {
   return {
     id,
-    type: 'TEXT',
-    layer: '0',
-    color: '#ffffff',
+    type: "TEXT",
+    layer: "0",
+    color: "#ffffff",
     start: { x: 0, y: 0 },
-    text: 'hello',
+    text: "hello",
   };
 }
 
 /* ── Tests ───────────────────────────────────────────────────────────── */
 
-describe('aggregateEntities — RFC 11 §4.5', () => {
-  it('returns the empty aggregate for an empty selection', () => {
+describe("aggregateEntities — RFC 11 §4.5", () => {
+  it("returns the empty aggregate for an empty selection", () => {
     const agg = aggregateEntities([]);
     expect(agg.area).toBe(0);
     expect(agg.perimeter).toBe(0);
@@ -73,8 +78,8 @@ describe('aggregateEntities — RFC 11 §4.5', () => {
     expect(agg.byType).toEqual({});
   });
 
-  it('sums area + perimeter for closed polylines', () => {
-    const agg = aggregateEntities([rect('r1', 10, 5), rect('r2', 4, 4)]);
+  it("sums area + perimeter for closed polylines", () => {
+    const agg = aggregateEntities([rect("r1", 10, 5), rect("r2", 4, 4)]);
     // Areas: 10·5 + 4·4 = 50 + 16 = 66
     expect(agg.area).toBeCloseTo(66, 3);
     // Perimeters: 2·(10+5) + 2·(4+4) = 30 + 16 = 46
@@ -84,8 +89,8 @@ describe('aggregateEntities — RFC 11 §4.5', () => {
     expect(agg.byType).toEqual({ LWPOLYLINE: 2 });
   });
 
-  it('counts open polylines into length, not area/perimeter', () => {
-    const agg = aggregateEntities([rect('r1', 10, 5, /*closed=*/ false)]);
+  it("counts open polylines into length, not area/perimeter", () => {
+    const agg = aggregateEntities([rect("r1", 10, 5, /*closed=*/ false)]);
     // Open polyline perimeter (segment sum of 3 edges, no closing): 10+5+10 = 25
     expect(agg.length).toBeCloseTo(25, 3);
     expect(agg.area).toBe(0);
@@ -93,28 +98,28 @@ describe('aggregateEntities — RFC 11 §4.5', () => {
     expect(agg.count).toBe(1);
   });
 
-  it('sums LINE lengths', () => {
-    const agg = aggregateEntities([line('l1', 3), line('l2', 7)]);
+  it("sums LINE lengths", () => {
+    const agg = aggregateEntities([line("l1", 3), line("l2", 7)]);
     expect(agg.length).toBeCloseTo(10, 3);
     expect(agg.area).toBe(0);
     expect(agg.count).toBe(2);
     expect(agg.byType).toEqual({ LINE: 2 });
   });
 
-  it('sums CIRCLE areas as π·r²', () => {
-    const agg = aggregateEntities([circle('c1', 2)]);
+  it("sums CIRCLE areas as π·r²", () => {
+    const agg = aggregateEntities([circle("c1", 2)]);
     expect(agg.area).toBeCloseTo(Math.PI * 4, 3);
     expect(agg.perimeter).toBe(0);
     expect(agg.length).toBe(0);
     expect(agg.count).toBe(1);
   });
 
-  it('handles a heterogeneous selection correctly', () => {
+  it("handles a heterogeneous selection correctly", () => {
     const agg = aggregateEntities([
-      rect('r1', 10, 5),          // area 50, perimeter 30
-      line('l1', 4),              // length 4
-      circle('c1', 1),            // area π
-      text('t1'),                 // counted in byType only
+      rect("r1", 10, 5), // area 50, perimeter 30
+      line("l1", 4), // length 4
+      circle("c1", 1), // area π
+      text("t1"), // counted in byType only
     ]);
     expect(agg.area).toBeCloseTo(50 + Math.PI, 3);
     expect(agg.perimeter).toBeCloseTo(30, 3);
@@ -128,8 +133,8 @@ describe('aggregateEntities — RFC 11 §4.5', () => {
     });
   });
 
-  it('rounds to millimetre precision so UI does not flicker', () => {
-    const agg = aggregateEntities([rect('r1', 10 / 3, 10 / 3)]);
+  it("rounds to millimetre precision so UI does not flicker", () => {
+    const agg = aggregateEntities([rect("r1", 10 / 3, 10 / 3)]);
     // 10/3 × 10/3 ≈ 11.111111…  should round to 11.111
     expect(agg.area).toBeCloseTo(11.111, 3);
     // No more than three decimal places survive.

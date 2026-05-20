@@ -61,14 +61,11 @@ def _get_leaf_positions(context: ValidationContext) -> list[dict[str, Any]]:
     metadata field.
     """
     positions = _get_positions(context)
-    parent_ids: set[str] = {
-        str(p["parent_id"]) for p in positions
-        if p.get("parent_id")
-    }
+    parent_ids: set[str] = {str(p["parent_id"]) for p in positions if p.get("parent_id")}
     return [
-        pos for pos in positions
-        if (pos.get("type") or "position") != "section"
-        and str(pos.get("id") or "") not in parent_ids
+        pos
+        for pos in positions
+        if (pos.get("type") or "position") != "section" and str(pos.get("id") or "") not in parent_ids
     ]
 
 
@@ -253,9 +250,7 @@ class PositionHasQuantity(ValidationRule):
             qty = pos.get("quantity", 0)
             qty_num = _to_number(qty)
             passed = (
-                qty_num is not None
-                and qty_num is not _NOT_A_NUMBER
-                and qty_num > 0  # type: ignore[operator]
+                qty_num is not None and qty_num is not _NOT_A_NUMBER and qty_num > 0  # type: ignore[operator]
             )
             if passed:
                 message = _ok(locale)
@@ -300,9 +295,7 @@ class PositionHasUnitRate(ValidationRule):
             rate = pos.get("unit_rate", 0)
             rate_num = _to_number(rate)
             passed = (
-                rate_num is not None
-                and rate_num is not _NOT_A_NUMBER
-                and rate_num > 0  # type: ignore[operator]
+                rate_num is not None and rate_num is not _NOT_A_NUMBER and rate_num > 0  # type: ignore[operator]
             )
             if passed:
                 message = _ok(locale)
@@ -646,9 +639,7 @@ class GAEBLVStructure(ValidationRule):
         if not positions:
             return []
 
-        parent_ids: set[str] = {
-            str(p.get("parent_id")) for p in positions if p.get("parent_id") is not None
-        }
+        parent_ids: set[str] = {str(p.get("parent_id")) for p in positions if p.get("parent_id") is not None}
 
         results: list[RuleResult] = []
         for pos in positions:
@@ -845,9 +836,7 @@ class GAEBQuantityDecimals(ValidationRule):
     standard = "gaeb"
     severity = Severity.WARNING
     category = RuleCategory.COMPLIANCE
-    description = (
-        "Quantities should be rounded to at most 3 decimal places for GAEB X83 exports."
-    )
+    description = "Quantities should be rounded to at most 3 decimal places for GAEB X83 exports."
 
     MAX_DECIMALS = 3
 
@@ -1007,13 +996,9 @@ class UnrealisticRate(ValidationRule):
             else:
                 parts: list[str] = []
                 if not rate_ok:
-                    parts.append(
-                        f"unit_rate {_fmt_decimal(rate)} > {self.RATE_THRESHOLD:,}"
-                    )
+                    parts.append(f"unit_rate {_fmt_decimal(rate)} > {self.RATE_THRESHOLD:,}")
                 if not total_ok:
-                    parts.append(
-                        f"total {_fmt_decimal(total)} > {self.TOTAL_THRESHOLD:,}"
-                    )
+                    parts.append(f"total {_fmt_decimal(total)} > {self.TOTAL_THRESHOLD:,}")
                 message = translate(
                     "boq_quality.unrealistic_rate.fail",
                     locale=locale,
@@ -2129,11 +2114,7 @@ class DPGFPricingComplete(ValidationRule):
         positions = _get_positions(context)
         if not positions:
             return []
-        priced = sum(
-            1
-            for p in positions
-            if p.get("unit_rate") and (_num(p["unit_rate"], default=0.0) or 0.0) > 0
-        )
+        priced = sum(1 for p in positions if p.get("unit_rate") and (_num(p["unit_rate"], default=0.0) or 0.0) > 0)
         total = len(positions)
         ratio = priced / total if total > 0 else 0
         passed = ratio >= 0.80
@@ -2811,9 +2792,7 @@ class PipelineSideEffectGated(ValidationRule):
 
         from app.core.pipeline.registry import node_registry
 
-        node_type: dict[str, str] = {
-            str(n.get("id")): str(n.get("type") or "") for n in nodes
-        }
+        node_type: dict[str, str] = {str(n.get("id")): str(n.get("type") or "") for n in nodes}
         in_edges: dict[str, list[str]] = {nid: [] for nid in node_type}
         for e in edges:
             src = str(e.get("source") or "")

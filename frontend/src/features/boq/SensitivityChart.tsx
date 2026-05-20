@@ -1,8 +1,14 @@
-import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { ChevronDown, ChevronRight, BarChart3, Loader2, Inbox } from 'lucide-react';
-import { boqApi, type SensitivityItem } from './api';
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ChevronDown,
+  ChevronRight,
+  BarChart3,
+  Loader2,
+  Inbox,
+} from "lucide-react";
+import { boqApi, type SensitivityItem } from "./api";
 
 /* ── Helpers ─────────────────────────────────────────────────────────── */
 
@@ -16,23 +22,29 @@ function createSCFormatter(locale: string) {
 function fmtCompact(n: number, fmt: Intl.NumberFormat): string {
   const abs = Math.abs(n);
   if (abs >= 1_000_000) {
-    return `${n < 0 ? '-' : ''}${fmt.format(abs / 1_000_000)}M`;
+    return `${n < 0 ? "-" : ""}${fmt.format(abs / 1_000_000)}M`;
   }
   if (abs >= 10_000) {
-    return `${n < 0 ? '-' : ''}${fmt.format(abs / 1_000)}K`;
+    return `${n < 0 ? "-" : ""}${fmt.format(abs / 1_000)}K`;
   }
   return fmt.format(n);
 }
 
 /* ── Component ───────────────────────────────────────────────────────── */
 
-export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; locale?: string }) {
+export function SensitivityChart({
+  boqId,
+  locale = "de-DE",
+}: {
+  boqId: string;
+  locale?: string;
+}) {
   const { t } = useTranslation();
   const fmt = useMemo(() => createSCFormatter(locale), [locale]);
   const [collapsed, setCollapsed] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['boq-sensitivity', boqId],
+    queryKey: ["boq-sensitivity", boqId],
     queryFn: () => boqApi.getSensitivity(boqId),
     enabled: !!boqId,
   });
@@ -53,13 +65,21 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
       <button
         onClick={() => setCollapsed((prev) => !prev)}
         aria-expanded={!collapsed}
-        aria-label={t('boq.sensitivity_title', { defaultValue: 'Sensitivity Analysis‌⁠‍' })}
+        aria-label={t("boq.sensitivity_title", {
+          defaultValue: "Sensitivity Analysis‌⁠‍",
+        })}
         className="flex w-full items-center justify-between px-5 py-3.5 hover:bg-surface-secondary/50 transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <BarChart3 size={16} className="text-content-tertiary" strokeWidth={1.75} />
+          <BarChart3
+            size={16}
+            className="text-content-tertiary"
+            strokeWidth={1.75}
+          />
           <span className="text-sm font-semibold text-content-primary">
-            {t('boq.sensitivity_title', { defaultValue: 'Sensitivity Analysis‌⁠‍' })}
+            {t("boq.sensitivity_title", {
+              defaultValue: "Sensitivity Analysis‌⁠‍",
+            })}
           </span>
           {items.length > 0 && (
             <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-surface-secondary px-1.5 text-2xs font-medium text-content-secondary tabular-nums">
@@ -77,8 +97,13 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
         <div className="border-t border-border-light">
           {isLoading ? (
             <div className="px-5 py-8 text-center">
-              <Loader2 size={20} className="mx-auto mb-2 animate-spin text-oe-blue" />
-              <p className="text-xs text-content-tertiary">{t('common.loading')}</p>
+              <Loader2
+                size={20}
+                className="mx-auto mb-2 animate-spin text-oe-blue"
+              />
+              <p className="text-xs text-content-tertiary">
+                {t("common.loading")}
+              </p>
             </div>
           ) : isError ? (
             <div className="px-5 py-8 text-center">
@@ -86,7 +111,10 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                 <Inbox size={18} className="text-semantic-error" />
               </div>
               <p className="text-xs text-content-secondary">
-                {t('boq.sensitivity_error', { defaultValue: 'Failed to load sensitivity analysis. Please try again.‌⁠‍' })}
+                {t("boq.sensitivity_error", {
+                  defaultValue:
+                    "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+                })}
               </p>
             </div>
           ) : items.length === 0 ? (
@@ -96,8 +124,9 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                   <Inbox size={18} className="text-content-tertiary" />
                 </div>
                 <p className="text-xs text-content-tertiary">
-                  {t('boq.sensitivity_empty', {
-                    defaultValue: 'Add positions with costs to see the sensitivity analysis.‌⁠‍',
+                  {t("boq.sensitivity_empty", {
+                    defaultValue:
+                      "Add positions with costs to see the sensitivity analysis.‌⁠‍",
                   })}
                 </p>
               </div>
@@ -107,14 +136,20 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
               {/* Header info */}
               <div className="px-5 py-3 flex items-center gap-4 text-xs text-content-secondary bg-surface-secondary/30 border-b border-border-light">
                 <span>
-                  {t('boq.sensitivity_base_total', { defaultValue: 'Base Total‌⁠‍' })}:{' '}
+                  {t("boq.sensitivity_base_total", {
+                    defaultValue: "Base Total‌⁠‍",
+                  })}
+                  :{" "}
                   <span className="font-semibold text-content-primary tabular-nums">
                     {fmtCompact(baseTotal, fmt)}
                   </span>
                 </span>
                 <span className="text-content-quaternary">|</span>
                 <span>
-                  {t('boq.sensitivity_variation', { defaultValue: 'Variation' })}:{' '}
+                  {t("boq.sensitivity_variation", {
+                    defaultValue: "Variation",
+                  })}
+                  :{" "}
                   <span className="font-semibold text-content-primary">
                     +/- {variationPct}%
                   </span>
@@ -126,7 +161,9 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                 <div className="space-y-1.5">
                   {items.map((item, idx) => {
                     const barWidthPct =
-                      maxImpact > 0 ? (Math.abs(item.impact_high) / maxImpact) * 100 : 0;
+                      maxImpact > 0
+                        ? (Math.abs(item.impact_high) / maxImpact) * 100
+                        : 0;
 
                     return (
                       <div key={`${item.ordinal}-${idx}`} className="group">
@@ -135,12 +172,12 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                           <div className="w-[220px] shrink-0 text-right pr-2">
                             <span className="text-2xs font-mono text-content-tertiary">
                               {item.ordinal}
-                            </span>{' '}
+                            </span>{" "}
                             <span
                               className="text-xs text-content-secondary truncate inline-block max-w-[160px] align-bottom"
                               title={item.description}
                             >
-                              {item.description || '-'}
+                              {item.description || "-"}
                             </span>
                           </div>
 
@@ -150,7 +187,10 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                             <div className="flex-1 flex justify-end">
                               <div
                                 className="h-5 rounded-l-sm bg-emerald-500/70 group-hover:bg-emerald-500 transition-colors relative"
-                                style={{ width: `${barWidthPct}%`, minWidth: barWidthPct > 0 ? '2px' : '0' }}
+                                style={{
+                                  width: `${barWidthPct}%`,
+                                  minWidth: barWidthPct > 0 ? "2px" : "0",
+                                }}
                               >
                                 {barWidthPct > 15 && (
                                   <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium text-white tabular-nums">
@@ -167,7 +207,10 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                             <div className="flex-1 flex justify-start">
                               <div
                                 className="h-5 rounded-r-sm bg-rose-500/70 group-hover:bg-rose-500 transition-colors relative"
-                                style={{ width: `${barWidthPct}%`, minWidth: barWidthPct > 0 ? '2px' : '0' }}
+                                style={{
+                                  width: `${barWidthPct}%`,
+                                  minWidth: barWidthPct > 0 ? "2px" : "0",
+                                }}
                               >
                                 {barWidthPct > 15 && (
                                   <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium text-white tabular-nums">
@@ -195,13 +238,17 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                   <div className="flex items-center gap-1.5">
                     <div className="h-2.5 w-5 rounded-sm bg-emerald-500/70" />
                     <span className="text-2xs text-content-tertiary">
-                      {t('boq.sensitivity_savings', { defaultValue: 'Cost decrease' })}
+                      {t("boq.sensitivity_savings", {
+                        defaultValue: "Cost decrease",
+                      })}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="h-2.5 w-5 rounded-sm bg-rose-500/70" />
                     <span className="text-2xs text-content-tertiary">
-                      {t('boq.sensitivity_overrun', { defaultValue: 'Cost increase' })}
+                      {t("boq.sensitivity_overrun", {
+                        defaultValue: "Cost increase",
+                      })}
                     </span>
                   </div>
                 </div>
@@ -213,22 +260,26 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                   <thead>
                     <tr className="bg-surface-tertiary/50">
                       <th className="px-4 py-2 text-left font-medium text-content-secondary">
-                        {t('boq.ordinal')}
+                        {t("boq.ordinal")}
                       </th>
                       <th className="px-4 py-2 text-left font-medium text-content-secondary">
-                        {t('boq.description')}
+                        {t("boq.description")}
                       </th>
                       <th className="px-4 py-2 text-right font-medium text-content-secondary">
-                        {t('boq.total')}
+                        {t("boq.total")}
                       </th>
                       <th className="px-4 py-2 text-right font-medium text-content-secondary">
-                        {t('boq.sensitivity_share', { defaultValue: 'Share' })}
+                        {t("boq.sensitivity_share", { defaultValue: "Share" })}
                       </th>
                       <th className="px-4 py-2 text-right font-medium text-content-secondary">
-                        {t('boq.sensitivity_impact_low', { defaultValue: 'Impact (-)' })}
+                        {t("boq.sensitivity_impact_low", {
+                          defaultValue: "Impact (-)",
+                        })}
                       </th>
                       <th className="px-4 py-2 text-right font-medium text-content-secondary">
-                        {t('boq.sensitivity_impact_high', { defaultValue: 'Impact (+)' })}
+                        {t("boq.sensitivity_impact_high", {
+                          defaultValue: "Impact (+)",
+                        })}
                       </th>
                     </tr>
                   </thead>
@@ -237,14 +288,17 @@ export function SensitivityChart({ boqId, locale = 'de-DE' }: { boqId: string; l
                       <tr
                         key={`${item.ordinal}-${idx}`}
                         className={`hover:bg-surface-secondary/30 transition-colors ${
-                          idx % 2 === 0 ? 'bg-surface-primary/50' : ''
+                          idx % 2 === 0 ? "bg-surface-primary/50" : ""
                         }`}
                       >
                         <td className="px-4 py-2 font-mono text-content-tertiary">
                           {item.ordinal}
                         </td>
-                        <td className="px-4 py-2 text-content-primary max-w-[240px] truncate" title={item.description}>
-                          {item.description || '-'}
+                        <td
+                          className="px-4 py-2 text-content-primary max-w-[240px] truncate"
+                          title={item.description}
+                        >
+                          {item.description || "-"}
                         </td>
                         <td className="px-4 py-2 text-right tabular-nums text-content-primary font-medium">
                           {fmtCompact(item.total, fmt)}

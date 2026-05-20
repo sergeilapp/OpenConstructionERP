@@ -16,11 +16,11 @@
  * tracked separately; see the task brief note.
  */
 
-export type CalibrationUnit = 'm' | 'mm' | 'ft' | 'in';
+export type CalibrationUnit = "m" | "mm" | "ft" | "in";
 
 /** Ordered list surfaced by the unit dropdown — metric first, imperial
  *  after, matching the rest of the app's default UI. */
-export const CALIBRATION_UNITS: CalibrationUnit[] = ['m', 'mm', 'ft', 'in'];
+export const CALIBRATION_UNITS: CalibrationUnit[] = ["m", "mm", "ft", "in"];
 
 /** Snapshot persisted per drawing+layout. ``pointA``/``pointB`` are kept
  *  so the UI can redraw the calibration reference line as a reminder
@@ -38,8 +38,8 @@ export interface CalibrationState {
  *  message in the modal. */
 export class ZeroPixelDistanceError extends Error {
   constructor() {
-    super('Pixel distance between calibration points is zero');
-    this.name = 'ZeroPixelDistanceError';
+    super("Pixel distance between calibration points is zero");
+    this.name = "ZeroPixelDistanceError";
   }
 }
 
@@ -147,7 +147,7 @@ export function formatAreaWithUnit(
 /** Shared numeric formatter so distances / areas line up. Matches the
  *  page-level ``formatMeasurement`` precision policy. */
 function formatNumeric(value: number): string {
-  if (value >= 1000) return (value / 1000).toFixed(2) + 'k';
+  if (value >= 1000) return (value / 1000).toFixed(2) + "k";
   if (value < 0.01) return value.toFixed(4);
   if (value < 1) return value.toFixed(3);
   return value.toFixed(2);

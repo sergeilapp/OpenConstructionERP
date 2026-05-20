@@ -2,8 +2,8 @@
  * GlobalProgress — thin animated bar at top of viewport for long operations.
  * Usage: useProgressStore.getState().start() / .done()
  */
-import { useEffect, useRef } from 'react';
-import { create } from 'zustand';
+import { useEffect, useRef } from "react";
+import { create } from "zustand";
 
 interface ProgressStore {
   isActive: boolean;
@@ -115,25 +115,28 @@ export function GlobalProgress() {
   return (
     <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,
-        height: '3px',
+        height: "3px",
         zIndex: 9999,
-        pointerEvents: 'none',
+        pointerEvents: "none",
       }}
     >
       <div
         ref={barRef}
         style={{
-          height: '100%',
-          width: '0%',
-          backgroundColor: 'var(--color-oe-blue, #2563eb)',
-          transition: progress === 100 ? 'width 200ms ease-out, opacity 200ms ease-out' : 'width 100ms linear',
+          height: "100%",
+          width: "0%",
+          backgroundColor: "var(--color-oe-blue, #2563eb)",
+          transition:
+            progress === 100
+              ? "width 200ms ease-out, opacity 200ms ease-out"
+              : "width 100ms linear",
           opacity: progress === 100 ? 0 : 1,
-          borderRadius: '0 2px 2px 0',
-          boxShadow: '0 0 8px var(--color-oe-blue, #2563eb)',
+          borderRadius: "0 2px 2px 0",
+          boxShadow: "0 0 8px var(--color-oe-blue, #2563eb)",
         }}
       />
     </div>

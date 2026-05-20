@@ -18,12 +18,17 @@
  *      localStorage under `oe.geocode.<query>` so repeat renders don't
  *      hit the API.
  */
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { MapPin, Loader2 } from 'lucide-react';
-import Map, { Marker, Popup, NavigationControl, AttributionControl } from 'react-map-gl/maplibre';
-import 'maplibre-gl/dist/maplibre-gl.css';
-import clsx from 'clsx';
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { MapPin, Loader2 } from "lucide-react";
+import Map, {
+  Marker,
+  Popup,
+  NavigationControl,
+  AttributionControl,
+} from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
+import clsx from "clsx";
 
 // OpenFreeMap — free, no API key, OSM-community-funded vector tiles.
 // "Positron" = minimal light style. Switched from "liberty" because the
@@ -31,7 +36,7 @@ import clsx from 'clsx';
 // tiles and trip MapLibre's expression evaluator with a console warning
 // "Expected value to be of type number, but found null instead." per
 // rendered card. Positron's expressions are simpler and stay quiet.
-const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
+const MAP_STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
 
 export interface LatLng {
   lat: number;
@@ -47,7 +52,7 @@ interface ProjectMapProps {
   city?: string | null;
   country?: string | null;
   /** Display variant.  `card` = static thumbnail, `detail` = interactive. */
-  variant?: 'card' | 'detail';
+  variant?: "card" | "detail";
   /** Optional extra classes (height / border overrides). */
   className?: string;
   /** Human-readable label shown in the marker popup and overlay chip. */
@@ -63,7 +68,7 @@ interface GeocodeCacheEntry {
   at: number;
 }
 
-const CACHE_PREFIX = 'oe.geocode.';
+const CACHE_PREFIX = "oe.geocode.";
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days — addresses rarely move
 
 function cacheKey(q: string) {
@@ -71,7 +76,7 @@ function cacheKey(q: string) {
 }
 
 function isFiniteNumber(v: unknown): v is number {
-  return typeof v === 'number' && Number.isFinite(v);
+  return typeof v === "number" && Number.isFinite(v);
 }
 
 function readCache(q: string): LatLng | null {
@@ -99,17 +104,20 @@ function writeCache(q: string, coords: LatLng) {
   }
 }
 
-async function geocode(query: string, signal?: AbortSignal): Promise<LatLng | null> {
+async function geocode(
+  query: string,
+  signal?: AbortSignal,
+): Promise<LatLng | null> {
   const cached = readCache(query);
   if (cached) return cached;
 
   const url =
-    'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' +
+    "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
     encodeURIComponent(query);
   try {
     const res = await fetch(url, {
       signal,
-      headers: { 'Accept': 'application/json' },
+      headers: { Accept: "application/json" },
     });
     if (!res.ok) return null;
     const rows = (await res.json()) as Array<{ lat: string; lon: string }>;
@@ -129,8 +137,8 @@ async function geocode(query: string, signal?: AbortSignal): Promise<LatLng | nu
 // ``buildGeocodeQuery`` lives in ``./geocode`` so consumers that only
 // need to build an address string don't pull in the full maplibre +
 // react-map-gl chunk (and its 220 KB CSS) via this module.
-export { buildGeocodeQuery } from './geocode';
-import { buildGeocodeQuery } from './geocode';
+export { buildGeocodeQuery } from "./geocode";
+import { buildGeocodeQuery } from "./geocode";
 
 export function ProjectMap({
   lat,
@@ -138,7 +146,7 @@ export function ProjectMap({
   address,
   city,
   country,
-  variant = 'detail',
+  variant = "detail",
   className,
   label,
   onResolved,
@@ -154,7 +162,8 @@ export function ProjectMap({
   const [popupOpen, setPopupOpen] = useState(false);
 
   const query = useMemo(
-    () => (hasExplicitCoords ? null : buildGeocodeQuery(address, city, country)),
+    () =>
+      hasExplicitCoords ? null : buildGeocodeQuery(address, city, country),
     [hasExplicitCoords, address, city, country],
   );
 
@@ -189,17 +198,17 @@ export function ProjectMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasExplicitCoords, lat, lng, query]);
 
-  const isCard = variant === 'card';
+  const isCard = variant === "card";
   // detail variant defaults to ``h-full`` so the parent grid (e.g. the
   // project-detail Map+Weather panel) can stretch the map to match the
   // height of its sibling. A custom ``className`` override still wins
   // because tailwind's JIT utilities cascade after the default class.
-  const heightClass = isCard ? 'h-28' : 'h-full';
+  const heightClass = isCard ? "h-28" : "h-full";
 
   const shell = (content: React.ReactNode) => (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-xl border border-border-light bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/60 dark:to-slate-800',
+        "relative overflow-hidden rounded-xl border border-border-light bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/60 dark:to-slate-800",
         heightClass,
         className,
       )}
@@ -221,7 +230,7 @@ export function ProjectMap({
       <div className="absolute inset-0 flex items-center justify-center gap-2 text-content-tertiary">
         <Loader2 size={14} className="animate-spin" />
         <span className="text-[11px] font-medium">
-          {t('projects.map_locating', { defaultValue: 'Locating…‌⁠‍' })}
+          {t("projects.map_locating", { defaultValue: "Locating…‌⁠‍" })}
         </span>
       </div>,
     );
@@ -232,7 +241,10 @@ export function ProjectMap({
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-content-quaternary">
         <MapPin size={isCard ? 18 : 24} strokeWidth={1.5} />
         <span className="text-[10px] font-medium">
-          {query || t('projects.map_no_location', { defaultValue: 'No location set‌⁠‍' })}
+          {query ||
+            t("projects.map_no_location", {
+              defaultValue: "No location set‌⁠‍",
+            })}
         </span>
       </div>,
     );
@@ -243,7 +255,7 @@ export function ProjectMap({
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-xl border border-border-light',
+        "relative overflow-hidden rounded-xl border border-border-light",
         heightClass,
         className,
       )}
@@ -255,7 +267,7 @@ export function ProjectMap({
           zoom,
         }}
         mapStyle={MAP_STYLE_URL}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: "100%", height: "100%" }}
         interactive={!isCard}
         dragPan={!isCard}
         dragRotate={false}
@@ -265,7 +277,9 @@ export function ProjectMap({
         keyboard={!isCard}
         attributionControl={false}
       >
-        {!isCard && <NavigationControl position="top-right" showCompass={false} />}
+        {!isCard && (
+          <NavigationControl position="top-right" showCompass={false} />
+        )}
         {!isCard && (
           <AttributionControl
             compact
@@ -284,7 +298,7 @@ export function ProjectMap({
         >
           <div
             className="relative flex h-8 w-8 items-center justify-center"
-            aria-label={label || 'Project location'}
+            aria-label={label || "Project location"}
           >
             <span className="absolute inset-0 rounded-full bg-oe-blue/25 animate-ping" />
             <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-oe-blue text-white shadow-lg shadow-oe-blue/40 ring-2 ring-white">
@@ -303,7 +317,9 @@ export function ProjectMap({
             closeOnClick={false}
             offset={28}
           >
-            <div className="text-xs font-medium text-content-primary">{label}</div>
+            <div className="text-xs font-medium text-content-primary">
+              {label}
+            </div>
           </Popup>
         )}
       </Map>

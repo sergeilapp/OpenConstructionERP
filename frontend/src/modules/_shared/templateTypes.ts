@@ -18,7 +18,7 @@ export interface ExchangePosition {
 
 /** Column mapping for Excel import — maps spreadsheet columns to ExchangePosition fields. */
 export interface ColumnMapping {
-  ordinal?: string;   // column letter or header name
+  ordinal?: string; // column letter or header name
   description?: string;
   unit?: string;
   quantity?: string;

@@ -12,14 +12,14 @@
  * a 200ms operation; we don't want to make the user wait on a fat
  * widget every time.
  */
-import { useCallback, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { Check, ChevronDown, Clock, Loader2 } from 'lucide-react';
+import { useCallback, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { Check, ChevronDown, Clock, Loader2 } from "lucide-react";
 
-import { Button } from '@/shared/ui';
+import { Button } from "@/shared/ui";
 
-import { getSnapshotTimeline } from './api';
+import { getSnapshotTimeline } from "./api";
 
 export interface SnapshotPickerInlineProps {
   projectId: string;
@@ -42,7 +42,7 @@ export function SnapshotPickerInline({
   const [open, setOpen] = useState(false);
 
   const timelineQuery = useQuery({
-    queryKey: ['dashboards-snapshot-picker-inline', projectId, pageSize],
+    queryKey: ["dashboards-snapshot-picker-inline", projectId, pageSize],
     queryFn: () => getSnapshotTimeline({ projectId, limit: pageSize }),
     enabled: !!projectId,
     staleTime: 60 * 1000,
@@ -71,12 +71,15 @@ export function SnapshotPickerInline({
         className="flex items-center gap-1.5"
       >
         <Clock className="h-3 w-3 text-content-tertiary" />
-        <span className="max-w-[200px] truncate" data-testid="snapshot-picker-inline-current">
+        <span
+          className="max-w-[200px] truncate"
+          data-testid="snapshot-picker-inline-current"
+        >
           {active?.label ??
             (timelineQuery.isLoading
-              ? t('common.loading', { defaultValue: 'Loading…‌⁠‍' })
-              : t('dashboards.picker_no_active', {
-                  defaultValue: 'No snapshot selected‌⁠‍',
+              ? t("common.loading", { defaultValue: "Loading…‌⁠‍" })
+              : t("dashboards.picker_no_active", {
+                  defaultValue: "No snapshot selected‌⁠‍",
                 }))}
         </span>
         <ChevronDown className="h-3 w-3 text-content-tertiary" />
@@ -85,8 +88,8 @@ export function SnapshotPickerInline({
       {open && (
         <div
           role="listbox"
-          aria-label={t('dashboards.picker_listbox_aria', {
-            defaultValue: 'Choose snapshot‌⁠‍',
+          aria-label={t("dashboards.picker_listbox_aria", {
+            defaultValue: "Choose snapshot‌⁠‍",
           })}
           data-testid="snapshot-picker-inline-listbox"
           className="absolute z-30 mt-1 max-h-72 w-72 overflow-y-auto rounded border border-border-light bg-surface-primary py-1 shadow-lg"
@@ -97,7 +100,7 @@ export function SnapshotPickerInline({
               data-testid="snapshot-picker-inline-loading"
             >
               <Loader2 className="h-3 w-3 animate-spin" />
-              {t('common.loading', { defaultValue: 'Loading…‌⁠‍' })}
+              {t("common.loading", { defaultValue: "Loading…‌⁠‍" })}
             </div>
           )}
 
@@ -106,8 +109,8 @@ export function SnapshotPickerInline({
               className="px-3 py-2 text-xs text-content-tertiary"
               data-testid="snapshot-picker-inline-empty"
             >
-              {t('dashboards.picker_empty', {
-                defaultValue: 'No snapshots in this project yet.‌⁠‍',
+              {t("dashboards.picker_empty", {
+                defaultValue: "No snapshots in this project yet.‌⁠‍",
               })}
             </div>
           )}
@@ -123,7 +126,9 @@ export function SnapshotPickerInline({
                 onClick={() => handlePick(item.id)}
                 data-testid={`snapshot-picker-inline-option-${item.id}`}
                 className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-surface-secondary ${
-                  isActive ? 'bg-emerald-500/5 text-emerald-200' : 'text-content-primary'
+                  isActive
+                    ? "bg-emerald-500/5 text-emerald-200"
+                    : "text-content-primary"
                 }`}
               >
                 <span className="flex h-3 w-3 flex-shrink-0 items-center justify-center">

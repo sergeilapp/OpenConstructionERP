@@ -1,6 +1,10 @@
-import clsx from 'clsx';
-import { usePreferencesStore } from '../../stores/usePreferencesStore';
-import { convertUnit, getDisplayUnit, isMetricUnit } from '../lib/unitConversion';
+import clsx from "clsx";
+import { usePreferencesStore } from "../../stores/usePreferencesStore";
+import {
+  convertUnit,
+  getDisplayUnit,
+  isMetricUnit,
+} from "../lib/unitConversion";
 
 export interface QuantityDisplayProps {
   value: number | string | null | undefined;
@@ -25,21 +29,25 @@ export function QuantityDisplay({
   const { measurementSystem, numberLocale } = usePreferencesStore();
 
   if (value == null) {
-    return <span className={clsx('text-content-tertiary', className)}>&mdash;</span>;
+    return (
+      <span className={clsx("text-content-tertiary", className)}>&mdash;</span>
+    );
   }
 
-  const numericValue = typeof value === 'string' ? parseFloat(value) : value;
+  const numericValue = typeof value === "string" ? parseFloat(value) : value;
 
   if (Number.isNaN(numericValue)) {
-    return <span className={clsx('text-content-tertiary', className)}>&mdash;</span>;
+    return (
+      <span className={clsx("text-content-tertiary", className)}>&mdash;</span>
+    );
   }
 
   // Determine whether conversion is needed
   const sourceIsMetric = isMetricUnit(unit);
   const needsConversion =
     sourceIsMetric !== null &&
-    ((sourceIsMetric && measurementSystem === 'imperial') ||
-      (!sourceIsMetric && measurementSystem === 'metric'));
+    ((sourceIsMetric && measurementSystem === "imperial") ||
+      (!sourceIsMetric && measurementSystem === "metric"));
 
   let displayValue = numericValue;
   let displayUnit = getDisplayUnit(unit);
@@ -65,7 +73,7 @@ export function QuantityDisplay({
       {formatted}
       {displayUnit && (
         <>
-          {' '}
+          {" "}
           <span className="text-content-tertiary">{displayUnit}</span>
         </>
       )}

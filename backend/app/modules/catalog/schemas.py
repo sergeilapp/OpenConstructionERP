@@ -59,10 +59,7 @@ class CatalogResourceCreate(BaseModel):
         has_band = self.min_price > 0 and self.max_price > 0
         if has_band:
             if self.min_price > self.max_price:
-                raise ValueError(
-                    f"min_price ({self.min_price}) must not exceed "
-                    f"max_price ({self.max_price})"
-                )
+                raise ValueError(f"min_price ({self.min_price}) must not exceed max_price ({self.max_price})")
             if not (self.min_price <= self.base_price <= self.max_price):
                 raise ValueError(
                     f"base_price ({self.base_price}) must lie within "

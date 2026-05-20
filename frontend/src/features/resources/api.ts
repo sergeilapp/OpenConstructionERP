@@ -4,22 +4,22 @@
  * Backed by /api/v1/resources/ — see backend/app/modules/resources/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type ResourceType = 'person' | 'crew' | 'equipment' | 'subcontractor';
-export type ResourceStatus = 'active' | 'inactive' | 'on_leave';
+export type ResourceType = "person" | "crew" | "equipment" | "subcontractor";
+export type ResourceStatus = "active" | "inactive" | "on_leave";
 export type AssignmentStatus =
-  | 'proposed'
-  | 'confirmed'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled';
-export type RequestStatus = 'open' | 'fulfilled' | 'cancelled';
-export type RequestPriority = 'low' | 'med' | 'high' | 'critical';
-export type WindowType = 'available' | 'unavailable' | 'holiday' | 'sick';
-export type SkillCategory = 'trade' | 'certification' | 'language' | 'other';
+  | "proposed"
+  | "confirmed"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
+export type RequestStatus = "open" | "fulfilled" | "cancelled";
+export type RequestPriority = "low" | "med" | "high" | "critical";
+export type WindowType = "available" | "unavailable" | "holiday" | "sick";
+export type SkillCategory = "trade" | "certification" | "language" | "other";
 
 export interface Resource {
   id: string;
@@ -53,7 +53,7 @@ export interface ResourceSkill {
   id: string;
   resource_id: string;
   skill_id: string;
-  level: 'basic' | 'competent' | 'expert';
+  level: "basic" | "competent" | "expert";
   acquired_at?: string | null;
   expires_at?: string | null;
   notes: string;
@@ -70,7 +70,7 @@ export interface Certification {
   issue_date?: string | null;
   valid_until?: string | null;
   document_url?: string | null;
-  status: 'valid' | 'expired' | 'revoked';
+  status: "valid" | "expired" | "revoked";
   notes: string;
   metadata: Record<string, unknown>;
   created_at: string;
@@ -198,18 +198,18 @@ export interface CreateRequestPayload {
 /* ── Resources ──────────────────────────────────────────────────────────── */
 
 export function listResources(params?: {
-  type?: ResourceType | '';
-  status?: ResourceStatus | '';
+  type?: ResourceType | "";
+  status?: ResourceStatus | "";
   offset?: number;
   limit?: number;
 }): Promise<Resource[]> {
   const qs = new URLSearchParams();
-  if (params?.type) qs.set('type', params.type);
-  if (params?.status) qs.set('status', params.status);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.type) qs.set("type", params.type);
+  if (params?.status) qs.set("status", params.status);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
-  return apiGet<Resource[]>(`/v1/resources/resources/${q ? `?${q}` : ''}`);
+  return apiGet<Resource[]>(`/v1/resources/resources/${q ? `?${q}` : ""}`);
 }
 
 export function getResource(id: string): Promise<Resource> {
@@ -217,7 +217,7 @@ export function getResource(id: string): Promise<Resource> {
 }
 
 export function createResource(data: CreateResourcePayload): Promise<Resource> {
-  return apiPost<Resource>('/v1/resources/resources/', data);
+  return apiPost<Resource>("/v1/resources/resources/", data);
 }
 
 export function updateResource(
@@ -237,39 +237,42 @@ export function getResourceDashboard(id: string): Promise<ResourceDashboard> {
 
 /* ── Skills ─────────────────────────────────────────────────────────────── */
 
-export function listSkills(params?: { category?: string; limit?: number }): Promise<Skill[]> {
+export function listSkills(params?: {
+  category?: string;
+  limit?: number;
+}): Promise<Skill[]> {
   const qs = new URLSearchParams();
-  if (params?.category) qs.set('category', params.category);
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.category) qs.set("category", params.category);
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
-  return apiGet<Skill[]>(`/v1/resources/skills/${q ? `?${q}` : ''}`);
+  return apiGet<Skill[]>(`/v1/resources/skills/${q ? `?${q}` : ""}`);
 }
 
 /* ── Assignments ────────────────────────────────────────────────────────── */
 
 export function listAssignmentsForResource(
   resourceId: string,
-  params?: { status?: AssignmentStatus | ''; limit?: number },
+  params?: { status?: AssignmentStatus | ""; limit?: number },
 ): Promise<Assignment[]> {
   const qs = new URLSearchParams();
-  qs.set('resource_id', resourceId);
-  if (params?.status) qs.set('status', params.status);
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("resource_id", resourceId);
+  if (params?.status) qs.set("status", params.status);
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<Assignment[]>(`/v1/resources/assignments/?${qs.toString()}`);
 }
 
 export function proposeAssignment(
   data: ProposeAssignmentPayload,
 ): Promise<Assignment> {
-  return apiPost<Assignment>('/v1/resources/assignments/propose', data);
+  return apiPost<Assignment>("/v1/resources/assignments/propose", data);
 }
 
 export function confirmAssignment(id: string): Promise<Assignment> {
   return apiPost<Assignment>(`/v1/resources/assignments/${id}/confirm`, {});
 }
 
-export function cancelAssignment(id: string, reason = ''): Promise<Assignment> {
-  const qs = reason ? `?reason=${encodeURIComponent(reason)}` : '';
+export function cancelAssignment(id: string, reason = ""): Promise<Assignment> {
+  const qs = reason ? `?reason=${encodeURIComponent(reason)}` : "";
   return apiPost<Assignment>(`/v1/resources/assignments/${id}/cancel${qs}`, {});
 }
 
@@ -305,18 +308,20 @@ export function deleteAssignment(id: string): Promise<void> {
 
 export function listRequests(params: {
   project_id: string;
-  status?: RequestStatus | '';
+  status?: RequestStatus | "";
   limit?: number;
 }): Promise<ResourceRequest[]> {
   const qs = new URLSearchParams();
-  qs.set('project_id', params.project_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("project_id", params.project_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<ResourceRequest[]>(`/v1/resources/requests/?${qs.toString()}`);
 }
 
-export function createRequest(data: CreateRequestPayload): Promise<ResourceRequest> {
-  return apiPost<ResourceRequest>('/v1/resources/requests/', data);
+export function createRequest(
+  data: CreateRequestPayload,
+): Promise<ResourceRequest> {
+  return apiPost<ResourceRequest>("/v1/resources/requests/", data);
 }
 
 export interface UpdateRequestPayload {
@@ -361,10 +366,12 @@ export function listWindows(
   params?: { start_at?: string; end_at?: string },
 ): Promise<AvailabilityWindow[]> {
   const qs = new URLSearchParams();
-  qs.set('resource_id', resourceId);
-  if (params?.start_at) qs.set('start_at', params.start_at);
-  if (params?.end_at) qs.set('end_at', params.end_at);
-  return apiGet<AvailabilityWindow[]>(`/v1/resources/availability/?${qs.toString()}`);
+  qs.set("resource_id", resourceId);
+  if (params?.start_at) qs.set("start_at", params.start_at);
+  if (params?.end_at) qs.set("end_at", params.end_at);
+  return apiGet<AvailabilityWindow[]>(
+    `/v1/resources/availability/?${qs.toString()}`,
+  );
 }
 
 /* ── Board / conflicts ──────────────────────────────────────────────────── */
@@ -374,7 +381,9 @@ export function listBoardConflicts(params: {
   end: string;
 }): Promise<BoardConflict[]> {
   const qs = new URLSearchParams();
-  qs.set('start', params.start);
-  qs.set('end', params.end);
-  return apiGet<BoardConflict[]>(`/v1/resources/board/conflicts?${qs.toString()}`);
+  qs.set("start", params.start);
+  qs.set("end", params.end);
+  return apiGet<BoardConflict[]>(
+    `/v1/resources/board/conflicts?${qs.toString()}`,
+  );
 }

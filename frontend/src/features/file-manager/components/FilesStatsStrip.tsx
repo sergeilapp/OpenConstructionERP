@@ -5,29 +5,29 @@
 // that splits total storage across the 8 file kinds. Hidden when the
 // project has no files yet (lets the FolderCardGrid empty state breathe).
 
-import type { ReactNode } from 'react';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Database, FileText, HardDrive, Layers } from 'lucide-react';
-import type { FileKind, FileTreeNode, StorageLocations } from '../types';
+import type { ReactNode } from "react";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Database, FileText, HardDrive, Layers } from "lucide-react";
+import type { FileKind, FileTreeNode, StorageLocations } from "../types";
 
 const KIND_COLORS: Record<FileKind, string> = {
-  document: 'bg-oe-blue',
-  photo: 'bg-emerald-500',
-  sheet: 'bg-indigo-500',
-  bim_model: 'bg-purple-500',
-  dwg_drawing: 'bg-amber-500',
-  takeoff: 'bg-cyan-500',
-  report: 'bg-rose-500',
-  markup: 'bg-fuchsia-500',
+  document: "bg-oe-blue",
+  photo: "bg-emerald-500",
+  sheet: "bg-indigo-500",
+  bim_model: "bg-purple-500",
+  dwg_drawing: "bg-amber-500",
+  takeoff: "bg-cyan-500",
+  report: "bg-rose-500",
+  markup: "bg-fuchsia-500",
 };
 
 function fmtBytes(bytes: number): string {
-  if (bytes === 0 || !Number.isFinite(bytes)) return '0 B';
-  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0 || !Number.isFinite(bytes)) return "0 B";
+  const units = ["B", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   const v = bytes / Math.pow(1024, i);
-  return `${v.toFixed(v >= 100 || i === 0 ? 0 : 1)} ${units[i] ?? 'TB'}`;
+  return `${v.toFixed(v >= 100 || i === 0 ? 0 : 1)} ${units[i] ?? "TB"}`;
 }
 
 interface FilesStatsStripProps {
@@ -57,12 +57,13 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
 
   if (!stats || stats.totalFiles === 0) return null;
 
-  const backendRaw = locations?.storage_backend ?? '';
-  const backendLabel = backendRaw === 's3'
-    ? t('files.stats_backend_s3', { defaultValue: 'S3-compatible‌⁠‍' })
-    : backendRaw === 'local'
-      ? t('files.stats_backend_local', { defaultValue: 'Local disk‌⁠‍' })
-      : '—';
+  const backendRaw = locations?.storage_backend ?? "";
+  const backendLabel =
+    backendRaw === "s3"
+      ? t("files.stats_backend_s3", { defaultValue: "S3-compatible‌⁠‍" })
+      : backendRaw === "local"
+        ? t("files.stats_backend_local", { defaultValue: "Local disk‌⁠‍" })
+        : "—";
 
   return (
     <div className="border-b border-border-light bg-surface-elevated/60">
@@ -70,22 +71,22 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-4 py-3">
         <Metric
           icon={<FileText size={14} />}
-          label={t('files.stats_total', { defaultValue: 'Total files‌⁠‍' })}
+          label={t("files.stats_total", { defaultValue: "Total files‌⁠‍" })}
           value={stats.totalFiles.toLocaleString()}
         />
         <Metric
           icon={<HardDrive size={14} />}
-          label={t('files.stats_size', { defaultValue: 'Total size‌⁠‍' })}
+          label={t("files.stats_size", { defaultValue: "Total size‌⁠‍" })}
           value={fmtBytes(stats.totalBytes)}
         />
         <Metric
           icon={<Layers size={14} />}
-          label={t('files.stats_categories', { defaultValue: 'Categories‌⁠‍' })}
+          label={t("files.stats_categories", { defaultValue: "Categories‌⁠‍" })}
           value={`${stats.populated} / ${tree?.length ?? 8}`}
         />
         <Metric
           icon={<Database size={14} />}
-          label={t('files.stats_backend', { defaultValue: 'Storage' })}
+          label={t("files.stats_backend", { defaultValue: "Storage" })}
           value={backendLabel}
         />
       </div>
@@ -95,7 +96,9 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
         <div className="px-4 pb-3">
           <div className="flex items-center justify-between gap-2 mb-1.5">
             <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
-              {t('files.stats_breakdown', { defaultValue: 'Storage by category' })}
+              {t("files.stats_breakdown", {
+                defaultValue: "Storage by category",
+              })}
             </div>
             <div className="text-2xs text-content-quaternary tabular-nums">
               {fmtBytes(stats.totalBytes)}
@@ -104,12 +107,14 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
           <div
             className="flex h-2 rounded-full overflow-hidden bg-surface-tertiary"
             role="img"
-            aria-label={t('files.stats_breakdown', { defaultValue: 'Storage by category' })}
+            aria-label={t("files.stats_breakdown", {
+              defaultValue: "Storage by category",
+            })}
           >
             {stats.segments.map((seg) => (
               <div
                 key={seg.kind}
-                className={`${KIND_COLORS[seg.kind] ?? 'bg-content-tertiary'} transition-[width] duration-500`}
+                className={`${KIND_COLORS[seg.kind] ?? "bg-content-tertiary"} transition-[width] duration-500`}
                 style={{ width: `${seg.pct}%` }}
                 title={`${seg.label}: ${fmtBytes(seg.bytes)} (${seg.pct.toFixed(1)}%)`}
               />
@@ -122,10 +127,12 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
                 className="inline-flex items-center gap-1.5 text-content-tertiary"
               >
                 <span
-                  className={`h-2 w-2 rounded-full ${KIND_COLORS[seg.kind] ?? 'bg-content-tertiary'}`}
+                  className={`h-2 w-2 rounded-full ${KIND_COLORS[seg.kind] ?? "bg-content-tertiary"}`}
                 />
                 <span>{seg.label}</span>
-                <span className="text-content-quaternary tabular-nums">{seg.pct.toFixed(0)}%</span>
+                <span className="text-content-quaternary tabular-nums">
+                  {seg.pct.toFixed(0)}%
+                </span>
               </span>
             ))}
           </div>

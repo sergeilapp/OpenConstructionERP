@@ -4,35 +4,40 @@
  * Backed by /api/v1/property-dev/ — see backend/app/modules/property_dev/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type DevelopmentSalesPhase = 'planning' | 'launch' | 'sales' | 'handover' | 'closed';
-export type DevelopmentStatus = 'active' | 'paused' | 'completed';
+export type DevelopmentSalesPhase =
+  | "planning"
+  | "launch"
+  | "sales"
+  | "handover"
+  | "closed";
+export type DevelopmentStatus = "active" | "paused" | "completed";
 export type PlotStatus =
-  | 'planned'
-  | 'reserved'
-  | 'under_construction'
-  | 'ready'
-  | 'sold'
-  | 'handed_over';
+  | "planned"
+  | "reserved"
+  | "under_construction"
+  | "ready"
+  | "sold"
+  | "handed_over";
 export type BuyerStatus =
-  | 'lead'
-  | 'reserved'
-  | 'contracted'
-  | 'completed'
-  | 'cancelled';
-export type SelectionStatus = 'draft' | 'submitted' | 'locked' | 'cancelled';
-export type SnagSeverity = 'cosmetic' | 'minor' | 'major' | 'safety';
-export type SnagStatus = 'open' | 'in_progress' | 'fixed' | 'wont_fix';
+  | "lead"
+  | "reserved"
+  | "contracted"
+  | "completed"
+  | "cancelled";
+export type SelectionStatus = "draft" | "submitted" | "locked" | "cancelled";
+export type SnagSeverity = "cosmetic" | "minor" | "major" | "safety";
+export type SnagStatus = "open" | "in_progress" | "fixed" | "wont_fix";
 export type WarrantyStatus =
-  | 'raised'
-  | 'under_review'
-  | 'accepted'
-  | 'rejected'
-  | 'closed';
-export type WarrantyCategory = 'defect' | 'snag' | 'service';
+  | "raised"
+  | "under_review"
+  | "accepted"
+  | "rejected"
+  | "closed";
+export type WarrantyCategory = "defect" | "snag" | "service";
 
 export interface Development {
   id: string;
@@ -46,7 +51,7 @@ export interface Development {
   completion_date: string | null;
   marketing_brief: string | null;
   status: DevelopmentStatus;
-  units: 'metric' | 'imperial';
+  units: "metric" | "imperial";
   metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
@@ -247,7 +252,7 @@ export interface CreateBuyerPayload {
   status?: BuyerStatus;
 }
 
-const BASE = '/v1/property-dev';
+const BASE = "/v1/property-dev";
 
 /* ── Developments ─────────────────────────────────────────────────────── */
 
@@ -256,10 +261,10 @@ export function listDevelopments(params?: {
   limit?: number;
 }): Promise<Development[]> {
   const qs = new URLSearchParams();
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
-  return apiGet<Development[]>(`${BASE}/developments/${q ? `?${q}` : ''}`);
+  return apiGet<Development[]>(`${BASE}/developments/${q ? `?${q}` : ""}`);
 }
 
 export function createDevelopment(
@@ -279,7 +284,9 @@ export function deleteDevelopment(id: string): Promise<void> {
   return apiDelete(`${BASE}/developments/${id}`);
 }
 
-export function getDevelopmentDashboard(id: string): Promise<DevelopmentDashboard> {
+export function getDevelopmentDashboard(
+  id: string,
+): Promise<DevelopmentDashboard> {
   return apiGet<DevelopmentDashboard>(`${BASE}/developments/${id}/dashboard`);
 }
 
@@ -292,10 +299,10 @@ export function listPlots(params: {
   limit?: number;
 }): Promise<Plot[]> {
   const qs = new URLSearchParams();
-  qs.set('development_id', params.development_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("development_id", params.development_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<Plot[]>(`${BASE}/plots/?${qs.toString()}`);
 }
 
@@ -303,7 +310,10 @@ export function createPlot(data: CreatePlotPayload): Promise<Plot> {
   return apiPost<Plot>(`${BASE}/plots/`, data);
 }
 
-export function updatePlot(id: string, data: Partial<CreatePlotPayload>): Promise<Plot> {
+export function updatePlot(
+  id: string,
+  data: Partial<CreatePlotPayload>,
+): Promise<Plot> {
   return apiPatch<Plot>(`${BASE}/plots/${id}`, data);
 }
 
@@ -327,13 +337,19 @@ export function listHouseTypes(development_id: string): Promise<HouseType[]> {
   return apiGet<HouseType[]>(`${BASE}/house-types/?${qs.toString()}`);
 }
 
-export function createHouseType(data: CreateHouseTypePayload): Promise<HouseType> {
+export function createHouseType(
+  data: CreateHouseTypePayload,
+): Promise<HouseType> {
   return apiPost<HouseType>(`${BASE}/house-types/`, data);
 }
 
-export function listVariants(house_type_id: string): Promise<HouseTypeVariant[]> {
+export function listVariants(
+  house_type_id: string,
+): Promise<HouseTypeVariant[]> {
   const qs = new URLSearchParams({ house_type_id });
-  return apiGet<HouseTypeVariant[]>(`${BASE}/house-type-variants/?${qs.toString()}`);
+  return apiGet<HouseTypeVariant[]>(
+    `${BASE}/house-type-variants/?${qs.toString()}`,
+  );
 }
 
 /* ── Buyers ───────────────────────────────────────────────────────────── */
@@ -345,10 +361,10 @@ export function listBuyers(params: {
   limit?: number;
 }): Promise<Buyer[]> {
   const qs = new URLSearchParams();
-  qs.set('development_id', params.development_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("development_id", params.development_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<Buyer[]>(`${BASE}/buyers/?${qs.toString()}`);
 }
 
@@ -404,7 +420,7 @@ export function listSnags(params: {
   status?: string;
 }): Promise<Snag[]> {
   const qs = new URLSearchParams({ handover_id: params.handover_id });
-  if (params.status) qs.set('status', params.status);
+  if (params.status) qs.set("status", params.status);
   return apiGet<Snag[]>(`${BASE}/snags/?${qs.toString()}`);
 }
 
@@ -416,9 +432,9 @@ export function listWarrantyClaims(params: {
   status?: string;
 }): Promise<WarrantyClaim[]> {
   const qs = new URLSearchParams();
-  if (params.buyer_id) qs.set('buyer_id', params.buyer_id);
-  if (params.plot_id) qs.set('plot_id', params.plot_id);
-  if (params.status) qs.set('status', params.status);
+  if (params.buyer_id) qs.set("buyer_id", params.buyer_id);
+  if (params.plot_id) qs.set("plot_id", params.plot_id);
+  if (params.status) qs.set("status", params.status);
   return apiGet<WarrantyClaim[]>(`${BASE}/warranty-claims/?${qs.toString()}`);
 }
 

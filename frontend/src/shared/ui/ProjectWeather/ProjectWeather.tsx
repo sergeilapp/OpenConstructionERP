@@ -12,7 +12,7 @@
  * TTL is intentional: daily aggregates don't shift significantly within
  * an hour and the average user session is shorter.
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   CloudSun,
   Cloud,
@@ -24,9 +24,9 @@ import {
   Thermometer,
   CloudFog,
   CloudLightning,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
+} from "lucide-react";
+import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 interface ProjectWeatherProps {
   lat: number | null | undefined;
@@ -38,7 +38,7 @@ interface ProjectWeatherProps {
    *  `full` — wide card with 15-day grid (detail page).
    *  `summary` — one-line two-stat chip with week + month averages
    *              (fits in a project list card). */
-  variant?: 'full' | 'summary';
+  variant?: "full" | "summary";
 }
 
 interface DailyForecast {
@@ -54,7 +54,7 @@ interface ForecastCache {
   days: DailyForecast[];
 }
 
-const CACHE_PREFIX = 'oe.weather.';
+const CACHE_PREFIX = "oe.weather.";
 const CACHE_TTL_MS = 1000 * 60 * 60; // 1h
 
 function cacheKey(lat: number, lng: number): string {
@@ -99,14 +99,18 @@ async function fetchForecast(
   const params = new URLSearchParams({
     latitude: lat.toString(),
     longitude: lng.toString(),
-    daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum',
-    timezone: 'auto',
-    forecast_days: '15',
+    daily:
+      "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum",
+    timezone: "auto",
+    forecast_days: "15",
   });
   try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`, {
-      signal,
-    });
+    const res = await fetch(
+      `https://api.open-meteo.com/v1/forecast?${params}`,
+      {
+        signal,
+      },
+    );
     if (!res.ok) return null;
     const body = (await res.json()) as {
       daily?: {
@@ -152,40 +156,57 @@ function iconFor(code: number): typeof Sun {
   return Cloud;
 }
 
-function labelFor(code: number, t: ReturnType<typeof useTranslation>['t']): string {
-  if (code === 0) return t('weather.clear', { defaultValue: 'Clear' });
-  if (code >= 1 && code <= 2) return t('weather.partly_cloudy', { defaultValue: 'Partly cloudy‌⁠‍' });
-  if (code === 3) return t('weather.overcast', { defaultValue: 'Overcast‌⁠‍' });
-  if (code >= 45 && code <= 48) return t('weather.fog', { defaultValue: 'Fog' });
-  if (code >= 51 && code <= 67) return t('weather.rain', { defaultValue: 'Rain' });
-  if (code >= 71 && code <= 77) return t('weather.snow', { defaultValue: 'Snow' });
-  if (code >= 80 && code <= 82) return t('weather.showers', { defaultValue: 'Showers‌⁠‍' });
-  if (code >= 85 && code <= 86) return t('weather.snow_showers', { defaultValue: 'Snow showers‌⁠‍' });
-  if (code >= 95 && code <= 99) return t('weather.thunderstorm', { defaultValue: 'Thunderstorm‌⁠‍' });
-  return t('weather.cloudy', { defaultValue: 'Cloudy' });
+function labelFor(
+  code: number,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
+  if (code === 0) return t("weather.clear", { defaultValue: "Clear" });
+  if (code >= 1 && code <= 2)
+    return t("weather.partly_cloudy", { defaultValue: "Partly cloudy‌⁠‍" });
+  if (code === 3) return t("weather.overcast", { defaultValue: "Overcast‌⁠‍" });
+  if (code >= 45 && code <= 48)
+    return t("weather.fog", { defaultValue: "Fog" });
+  if (code >= 51 && code <= 67)
+    return t("weather.rain", { defaultValue: "Rain" });
+  if (code >= 71 && code <= 77)
+    return t("weather.snow", { defaultValue: "Snow" });
+  if (code >= 80 && code <= 82)
+    return t("weather.showers", { defaultValue: "Showers‌⁠‍" });
+  if (code >= 85 && code <= 86)
+    return t("weather.snow_showers", { defaultValue: "Snow showers‌⁠‍" });
+  if (code >= 95 && code <= 99)
+    return t("weather.thunderstorm", { defaultValue: "Thunderstorm‌⁠‍" });
+  return t("weather.cloudy", { defaultValue: "Cloudy" });
 }
 
-type WeatherSeverity = 'good' | 'rain' | 'severe';
+type WeatherSeverity = "good" | "rain" | "severe";
 
-function classifySeverity(day: { weatherCode: number; precipMm: number }): WeatherSeverity {
+function classifySeverity(day: {
+  weatherCode: number;
+  precipMm: number;
+}): WeatherSeverity {
   const { weatherCode: code, precipMm } = day;
-  if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return 'severe';
-  if (code >= 95 && code <= 99) return 'severe';
-  if (precipMm > 5) return 'severe';
-  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'rain';
-  if (precipMm > 1) return 'rain';
-  return 'good';
+  if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return "severe";
+  if (code >= 95 && code <= 99) return "severe";
+  if (precipMm > 5) return "severe";
+  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "rain";
+  if (precipMm > 1) return "rain";
+  return "good";
 }
 
 export function ProjectWeather({
-  lat, lng, locale, className, variant = 'full',
+  lat,
+  lng,
+  locale,
+  className,
+  variant = "full",
 }: ProjectWeatherProps) {
   const { t, i18n } = useTranslation();
   const [days, setDays] = useState<DailyForecast[] | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (typeof lat !== 'number' || typeof lng !== 'number') {
+    if (typeof lat !== "number" || typeof lng !== "number") {
       setDays(null);
       return;
     }
@@ -201,23 +222,31 @@ export function ProjectWeather({
     return () => controller.abort();
   }, [lat, lng]);
 
-  if (typeof lat !== 'number' || typeof lng !== 'number') return null;
+  if (typeof lat !== "number" || typeof lng !== "number") return null;
 
-  const resolvedLocale = locale || i18n.language || 'en';
-  const dayFmt = new Intl.DateTimeFormat(resolvedLocale, { weekday: 'short' });
-  const dateFmt = new Intl.DateTimeFormat(resolvedLocale, { day: 'numeric', month: 'short' });
+  const resolvedLocale = locale || i18n.language || "en";
+  const dayFmt = new Intl.DateTimeFormat(resolvedLocale, { weekday: "short" });
+  const dateFmt = new Intl.DateTimeFormat(resolvedLocale, {
+    day: "numeric",
+    month: "short",
+  });
 
   /* ── Summary variant — one-line chip for project cards ─────────── */
-  if (variant === 'summary') {
+  if (variant === "summary") {
     if (!days) {
       return loading ? (
-        <div className={clsx('flex items-center gap-1.5 text-[10px] text-content-quaternary', className)}>
+        <div
+          className={clsx(
+            "flex items-center gap-1.5 text-[10px] text-content-quaternary",
+            className,
+          )}
+        >
           <Loader2 size={10} className="animate-spin" />
         </div>
       ) : null;
     }
     const week = days.slice(0, 7);
-    const month = days;   // 15 days — practical horizon from Open-Meteo free tier
+    const month = days; // 15 days — practical horizon from Open-Meteo free tier
     const avg = (arr: DailyForecast[], pick: (d: DailyForecast) => number) =>
       arr.length > 0 ? arr.reduce((s, d) => s + pick(d), 0) / arr.length : 0;
     const weekMax = avg(week, (d) => d.tMax);
@@ -230,12 +259,12 @@ export function ProjectWeather({
     return (
       <div
         className={clsx(
-          'flex items-center gap-2 text-[10px] text-content-tertiary',
+          "flex items-center gap-2 text-[10px] text-content-tertiary",
           className,
         )}
-        title={t('weather.card_summary_hint', {
+        title={t("weather.card_summary_hint", {
           defaultValue:
-            'Rough forecast for this location — next 7 days and ~15 days avg',
+            "Rough forecast for this location — next 7 days and ~15 days avg",
         })}
       >
         <WeekIcon size={12} className="text-oe-blue shrink-0" />
@@ -263,12 +292,17 @@ export function ProjectWeather({
   }
 
   return (
-    <div className={clsx('rounded-xl border border-border-light bg-surface-elevated p-4', className)}>
+    <div
+      className={clsx(
+        "rounded-xl border border-border-light bg-surface-elevated p-4",
+        className,
+      )}
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <CloudSun size={16} className="text-oe-blue" />
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('weather.title_18d', { defaultValue: '15-day forecast' })}
+            {t("weather.title_18d", { defaultValue: "15-day forecast" })}
           </h3>
         </div>
         {days?.[0] && (
@@ -288,7 +322,9 @@ export function ProjectWeather({
       {loading && !days && (
         <div className="flex items-center justify-center py-6 text-content-tertiary">
           <Loader2 size={14} className="animate-spin" />
-          <span className="ml-2 text-xs">{t('common.loading', { defaultValue: 'Loading…' })}</span>
+          <span className="ml-2 text-xs">
+            {t("common.loading", { defaultValue: "Loading…" })}
+          </span>
         </div>
       )}
 
@@ -309,13 +345,14 @@ export function ProjectWeather({
               <div
                 key={d.date}
                 className={clsx(
-                  'flex flex-col items-center gap-1 rounded-lg px-1.5 py-2 border transition-colors',
-                  i === 0 && 'ring-2 ring-oe-blue/30 ring-offset-1 ring-offset-surface-primary',
-                  severity === 'severe'
-                    ? 'border-rose-300/70 bg-rose-50/70 hover:border-rose-400 dark:border-rose-700/60 dark:bg-rose-900/20'
-                    : severity === 'rain'
-                      ? 'border-amber-300/70 bg-amber-50/70 hover:border-amber-400 dark:border-amber-700/60 dark:bg-amber-900/20'
-                      : 'border-border-light/50 hover:border-border-light',
+                  "flex flex-col items-center gap-1 rounded-lg px-1.5 py-2 border transition-colors",
+                  i === 0 &&
+                    "ring-2 ring-oe-blue/30 ring-offset-1 ring-offset-surface-primary",
+                  severity === "severe"
+                    ? "border-rose-300/70 bg-rose-50/70 hover:border-rose-400 dark:border-rose-700/60 dark:bg-rose-900/20"
+                    : severity === "rain"
+                      ? "border-amber-300/70 bg-amber-50/70 hover:border-amber-400 dark:border-amber-700/60 dark:bg-amber-900/20"
+                      : "border-border-light/50 hover:border-border-light",
                 )}
                 title={`${labelFor(d.weatherCode, t)} · ${dateFmt.format(date)}`}
               >
@@ -326,14 +363,14 @@ export function ProjectWeather({
                   size={18}
                   className={clsx(
                     d.weatherCode === 0
-                      ? 'text-amber-500'
+                      ? "text-amber-500"
                       : d.weatherCode >= 51 && d.weatherCode <= 67
-                        ? 'text-blue-500'
+                        ? "text-blue-500"
                         : d.weatherCode >= 71 && d.weatherCode <= 77
-                          ? 'text-sky-400'
+                          ? "text-sky-400"
                           : d.weatherCode >= 95
-                            ? 'text-violet-500'
-                            : 'text-slate-500',
+                            ? "text-violet-500"
+                            : "text-slate-500",
                   )}
                 />
                 <div className="flex flex-col items-center leading-tight">
@@ -357,7 +394,9 @@ export function ProjectWeather({
       )}
 
       <p className="mt-3 text-[10px] text-content-quaternary">
-        {t('weather.attribution', { defaultValue: 'Weather data by Open-Meteo · refreshed hourly' })}
+        {t("weather.attribution", {
+          defaultValue: "Weather data by Open-Meteo · refreshed hourly",
+        })}
       </p>
     </div>
   );

@@ -35,9 +35,9 @@
  * distinct list — no surprises when the user moves between the two.
  */
 
-import type { BIMElementData } from './ElementManager';
+import type { BIMElementData } from "./ElementManager";
 
-export type AggMode = 'sum' | 'avg' | 'distinct';
+export type AggMode = "sum" | "avg" | "distinct";
 
 export interface AggResult {
   /** Original parquet/db key — used for stable React keys. */
@@ -61,71 +61,65 @@ export interface AggResult {
   unit: string;
 }
 
-const SUM_KEYWORDS = [
-  'area',
-  'volume',
-  'perimeter',
-  'weight',
-  'count',
-];
-const SUM_EXACT = new Set(['length', 'qty', 'quantity']);
-const SUM_SUFFIXES = ['_m2', '_m3', '_kg', '_length', '_m'];
+const SUM_KEYWORDS = ["area", "volume", "perimeter", "weight", "count"];
+const SUM_EXACT = new Set(["length", "qty", "quantity"]);
+const SUM_SUFFIXES = ["_m2", "_m3", "_kg", "_length", "_m"];
 
 const AVG_KEYWORDS = [
-  'thickness',
-  'width',
-  'height',
-  'depth',
-  'diameter',
-  'radius',
-  'span',
-  'slope',
-  'angle',
-  'elevation',
-  'offset',
+  "thickness",
+  "width",
+  "height",
+  "depth",
+  "diameter",
+  "radius",
+  "span",
+  "slope",
+  "angle",
+  "elevation",
+  "offset",
 ];
 
 /** Classify a quantity key into an aggregation mode using its name. */
 export function classifyAggKey(key: string): AggMode {
   const k = key.toLowerCase();
-  if (SUM_EXACT.has(k)) return 'sum';
-  if (SUM_SUFFIXES.some((s) => k.endsWith(s))) return 'sum';
-  if (SUM_KEYWORDS.some((s) => k.includes(s))) return 'sum';
-  if (AVG_KEYWORDS.some((s) => k.includes(s))) return 'avg';
-  return 'distinct';
+  if (SUM_EXACT.has(k)) return "sum";
+  if (SUM_SUFFIXES.some((s) => k.endsWith(s))) return "sum";
+  if (SUM_KEYWORDS.some((s) => k.includes(s))) return "sum";
+  if (AVG_KEYWORDS.some((s) => k.includes(s))) return "avg";
+  return "distinct";
 }
 
 /** Best-effort unit inference from the key suffix / keyword. */
 export function inferAggUnit(key: string): string {
   const k = key.toLowerCase();
-  if (k.includes('area') || k.endsWith('_m2')) return 'm\u00B2';
-  if (k.includes('volume') || k.endsWith('_m3')) return 'm\u00B3';
-  if (k.includes('thickness')) return 'mm';
-  if (k.includes('weight') || k.endsWith('_kg')) return 'kg';
-  if (k.includes('count') || k === 'qty' || k === 'quantity') return 'pcs';
-  if (k.includes('angle') || k.includes('slope')) return '\u00B0';
+  if (k.includes("area") || k.endsWith("_m2")) return "m\u00B2";
+  if (k.includes("volume") || k.endsWith("_m3")) return "m\u00B3";
+  if (k.includes("thickness")) return "mm";
+  if (k.includes("weight") || k.endsWith("_kg")) return "kg";
+  if (k.includes("count") || k === "qty" || k === "quantity") return "pcs";
+  if (k.includes("angle") || k.includes("slope")) return "\u00B0";
   if (
-    k.includes('length') ||
-    k.endsWith('_m') ||
-    k.includes('height') ||
-    k.includes('width') ||
-    k.includes('depth') ||
-    k.includes('diameter') ||
-    k.includes('radius') ||
-    k.includes('perimeter') ||
-    k.includes('span') ||
-    k.includes('elevation') ||
-    k.includes('offset')
+    k.includes("length") ||
+    k.endsWith("_m") ||
+    k.includes("height") ||
+    k.includes("width") ||
+    k.includes("depth") ||
+    k.includes("diameter") ||
+    k.includes("radius") ||
+    k.includes("perimeter") ||
+    k.includes("span") ||
+    k.includes("elevation") ||
+    k.includes("offset")
   ) {
-    return 'm';
+    return "m";
   }
-  return '';
+  return "";
 }
 
 function makeLabel(key: string): string {
   return key
-    .replace(/_m2$|_m3$|_m$|_kg$/i, '')
-    .replace(/_/g, ' ')
+    .replace(/_m2$|_m3$|_m$|_kg$/i, "")
+    .replace(/_/g, " ")
     .trim()
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
@@ -168,7 +162,7 @@ export function aggregateBIMQuantities(
     const seen = new Set<string>();
     if (el.quantities) {
       for (const [k, v] of Object.entries(el.quantities)) {
-        const num = typeof v === 'number' ? v : parseFloat(String(v));
+        const num = typeof v === "number" ? v : parseFloat(String(v));
         push(k, num);
         seen.add(k);
       }
@@ -176,9 +170,9 @@ export function aggregateBIMQuantities(
     const parquet = parquetByElementId?.[el.id];
     if (parquet) {
       for (const [k, v] of Object.entries(parquet)) {
-        if (k === 'id') continue;
+        if (k === "id") continue;
         if (seen.has(k)) continue;
-        const num = typeof v === 'number' ? v : parseFloat(String(v));
+        const num = typeof v === "number" ? v : parseFloat(String(v));
         push(k, num);
       }
     }
@@ -215,8 +209,8 @@ export function aggregateBIMQuantities(
   return out.sort((a, b) => {
     const order = { sum: 0, avg: 1, distinct: 2 } as const;
     if (a.mode !== b.mode) return order[a.mode] - order[b.mode];
-    if (a.mode === 'sum') return b.sum - a.sum;
-    if (a.mode === 'avg') return b.count - a.count;
+    if (a.mode === "sum") return b.sum - a.sum;
+    if (a.mode === "avg") return b.count - a.count;
     return b.uniqueValues.length - a.uniqueValues.length;
   });
 }

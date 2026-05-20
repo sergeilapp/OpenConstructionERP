@@ -1,28 +1,28 @@
-import { apiGet, apiPost, apiPatch } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { apiGet, apiPost, apiPatch } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 export type AIProvider =
-  | 'anthropic'
-  | 'openai'
-  | 'gemini'
-  | 'openrouter'
-  | 'mistral'
-  | 'groq'
-  | 'deepseek'
-  | 'together'
-  | 'fireworks'
-  | 'perplexity'
-  | 'cohere'
-  | 'ai21'
-  | 'xai'
-  | 'zhipu'
-  | 'baidu'
-  | 'yandex'
-  | 'gigachat';
+  | "anthropic"
+  | "openai"
+  | "gemini"
+  | "openrouter"
+  | "mistral"
+  | "groq"
+  | "deepseek"
+  | "together"
+  | "fireworks"
+  | "perplexity"
+  | "cohere"
+  | "ai21"
+  | "xai"
+  | "zhipu"
+  | "baidu"
+  | "yandex"
+  | "gigachat";
 
-export type AIConnectionStatus = 'connected' | 'not_configured' | 'error';
+export type AIConnectionStatus = "connected" | "not_configured" | "error";
 
 export interface AISettings {
   id: string;
@@ -161,18 +161,24 @@ function getAuthHeaders(): Record<string, string> {
 }
 
 export const aiApi = {
-  getSettings: () => apiGet<AISettings>('/v1/ai/settings/'),
+  getSettings: () => apiGet<AISettings>("/v1/ai/settings/"),
 
   updateSettings: (data: AISettingsUpdate) =>
-    apiPatch<AISettings, AISettingsUpdate>('/v1/ai/settings/', data),
+    apiPatch<AISettings, AISettingsUpdate>("/v1/ai/settings/", data),
 
   testConnection: (provider: AIProvider) =>
-    apiPost<AITestResult, { provider: AIProvider }>('/v1/ai/settings/test/', { provider }),
+    apiPost<AITestResult, { provider: AIProvider }>("/v1/ai/settings/test/", {
+      provider,
+    }),
 
-  getModels: () => apiGet<Array<{ id: string; name: string }>>('/v1/ai/models/'),
+  getModels: () =>
+    apiGet<Array<{ id: string; name: string }>>("/v1/ai/models/"),
 
   quickEstimate: (data: QuickEstimateRequest) =>
-    apiPost<EstimateJobResponse, QuickEstimateRequest>('/v1/ai/quick-estimate/', data),
+    apiPost<EstimateJobResponse, QuickEstimateRequest>(
+      "/v1/ai/quick-estimate/",
+      data,
+    ),
 
   /** Upload a photo and get an AI estimate via Vision model. */
   photoEstimate: async (params: {
@@ -182,19 +188,19 @@ export const aiApi = {
     standard?: string;
   }): Promise<EstimateJobResponse> => {
     const form = new FormData();
-    form.append('file', params.file);
-    if (params.location) form.append('location', params.location);
-    if (params.currency) form.append('currency', params.currency);
-    if (params.standard) form.append('standard', params.standard);
+    form.append("file", params.file);
+    if (params.location) form.append("location", params.location);
+    if (params.currency) form.append("currency", params.currency);
+    if (params.standard) form.append("standard", params.standard);
 
-    const res = await fetch('/api/v1/ai/photo-estimate/', {
-      method: 'POST',
-      headers: { ...getAuthHeaders(), Accept: 'application/json' },
+    const res = await fetch("/api/v1/ai/photo-estimate/", {
+      method: "POST",
+      headers: { ...getAuthHeaders(), Accept: "application/json" },
       body: form,
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(body.detail || 'Photo estimate failed');
+      throw new Error(body.detail || "Photo estimate failed");
     }
     return res.json();
   },
@@ -207,19 +213,19 @@ export const aiApi = {
     standard?: string;
   }): Promise<EstimateJobResponse> => {
     const form = new FormData();
-    form.append('file', params.file);
-    if (params.location) form.append('location', params.location);
-    if (params.currency) form.append('currency', params.currency);
-    if (params.standard) form.append('standard', params.standard);
+    form.append("file", params.file);
+    if (params.location) form.append("location", params.location);
+    if (params.currency) form.append("currency", params.currency);
+    if (params.standard) form.append("standard", params.standard);
 
-    const res = await fetch('/api/v1/ai/file-estimate/', {
-      method: 'POST',
-      headers: { ...getAuthHeaders(), Accept: 'application/json' },
+    const res = await fetch("/api/v1/ai/file-estimate/", {
+      method: "POST",
+      headers: { ...getAuthHeaders(), Accept: "application/json" },
       body: form,
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(body.detail || 'File estimate failed');
+      throw new Error(body.detail || "File estimate failed");
     }
     return res.json();
   },
@@ -231,21 +237,24 @@ export const aiApi = {
     ),
 
   enrichEstimate: (jobId: string, region: string, currency: string) =>
-    apiPost<EnrichResult>(`/v1/ai/estimate/${jobId}/enrich/`, { region, currency }),
+    apiPost<EnrichResult>(`/v1/ai/estimate/${jobId}/enrich/`, {
+      region,
+      currency,
+    }),
 
   /** Extract grouped quantity tables from a CAD/BIM file (no AI needed). */
   cadExtract: async (file: File): Promise<CadExtractResponse> => {
     const form = new FormData();
-    form.append('file', file);
+    form.append("file", file);
 
-    const res = await fetch('/api/v1/takeoff/cad-extract/', {
-      method: 'POST',
-      headers: { ...getAuthHeaders(), Accept: 'application/json' },
+    const res = await fetch("/api/v1/takeoff/cad-extract/", {
+      method: "POST",
+      headers: { ...getAuthHeaders(), Accept: "application/json" },
       body: form,
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(body.detail || 'CAD extraction failed');
+      throw new Error(body.detail || "CAD extraction failed");
     }
     return res.json();
   },
@@ -253,32 +262,35 @@ export const aiApi = {
   /** Upload a CAD file and get available columns for interactive grouping. */
   cadColumns: async (file: File): Promise<CadColumnsResponse> => {
     const form = new FormData();
-    form.append('file', file);
+    form.append("file", file);
 
-    const res = await fetch('/api/v1/takeoff/cad-columns/', {
-      method: 'POST',
-      headers: { ...getAuthHeaders(), Accept: 'application/json' },
+    const res = await fetch("/api/v1/takeoff/cad-columns/", {
+      method: "POST",
+      headers: { ...getAuthHeaders(), Accept: "application/json" },
       body: form,
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(body.detail || 'CAD column extraction failed');
+      throw new Error(body.detail || "CAD column extraction failed");
     }
     return res.json();
   },
 
   /** Group CAD elements by selected columns and sum quantities. */
   cadGroup: (data: CadGroupRequest) =>
-    apiPost<CadGroupResponse, CadGroupRequest>('/v1/takeoff/cad-group/', data),
+    apiPost<CadGroupResponse, CadGroupRequest>("/v1/takeoff/cad-group/", data),
 
   /** Get individual elements for a specific group. */
   cadGroupElements: (data: CadGroupElementsRequest) =>
-    apiPost<CadGroupElementsResponse, CadGroupElementsRequest>('/v1/takeoff/cad-group/elements/', data),
+    apiPost<CadGroupElementsResponse, CadGroupElementsRequest>(
+      "/v1/takeoff/cad-group/elements/",
+      data,
+    ),
 
   /** Create a BOQ directly from grouped CAD QTO data. */
   createBOQFromCadQTO: (data: CreateBOQFromCadQTORequest) =>
     apiPost<CreateBOQFromCadQTOResponse, CreateBOQFromCadQTORequest>(
-      '/v1/takeoff/cad-group/create-boq/',
+      "/v1/takeoff/cad-group/create-boq/",
       data,
     ),
 
@@ -290,23 +302,26 @@ export const aiApi = {
   }): Promise<void> => {
     const query = new URLSearchParams({
       session_id: params.session_id,
-      group_by: params.group_by.join(','),
-      sum_columns: params.sum_columns.join(','),
-      format: 'xlsx',
+      group_by: params.group_by.join(","),
+      sum_columns: params.sum_columns.join(","),
+      format: "xlsx",
     });
-    const res = await fetch(`/api/v1/takeoff/cad-group/export/?${query.toString()}`, {
-      method: 'GET',
-      headers: { ...getAuthHeaders() },
-    });
+    const res = await fetch(
+      `/api/v1/takeoff/cad-group/export/?${query.toString()}`,
+      {
+        method: "GET",
+        headers: { ...getAuthHeaders() },
+      },
+    );
     if (!res.ok) {
       const body = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(body.detail || 'Export failed');
+      throw new Error(body.detail || "Export failed");
     }
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    const disposition = res.headers.get('Content-Disposition') || '';
+    const disposition = res.headers.get("Content-Disposition") || "";
     const filenameMatch = disposition.match(/filename="?([^"]+)"?/);
     a.download = filenameMatch?.[1] || `cad-qto-export.xlsx`;
     a.click();
@@ -380,12 +395,15 @@ export interface CadColumnsResponse {
   preview: Record<string, any>[];
   session_id: string;
   duration_ms: number;
-  presets: Record<string, {
-    label: string;
-    description: string;
-    group_by: string[];
-    sum_columns: string[];
-  }>;
+  presets: Record<
+    string,
+    {
+      label: string;
+      description: string;
+      group_by: string[];
+      sum_columns: string[];
+    }
+  >;
   unit_labels: Record<string, string>;
   confidence: Record<string, number>;
 }
@@ -429,10 +447,15 @@ export interface CadGroupElementsResponse {
 export interface SmartImportResult {
   imported: number;
   skipped?: number;
-  errors: { row?: number; item?: string; error: string; data?: Record<string, string> }[];
+  errors: {
+    row?: number;
+    item?: string;
+    error: string;
+    data?: Record<string, string>;
+  }[];
   total_rows?: number;
   total_items?: number;
-  method?: 'direct' | 'ai' | 'cad_ai';
+  method?: "direct" | "ai" | "cad_ai";
   model_used?: string | null;
   cad_format?: string;
   cad_elements?: number;

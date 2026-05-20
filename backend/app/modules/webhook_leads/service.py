@@ -95,9 +95,7 @@ def verify_api_key(presented_key: str | None, stored_hash: str) -> bool:
     return hmac.compare_digest(hash_secret(presented_key), stored_hash)
 
 
-def verify_hmac_signature(
-    raw_body: bytes, presented_sig: str | None, secret: str
-) -> bool:
+def verify_hmac_signature(raw_body: bytes, presented_sig: str | None, secret: str) -> bool:
     """Verify an HMAC-SHA256 signature over the RAW request body bytes.
 
     ``presented_sig`` may be a bare hex digest or prefixed (``sha256=``,
@@ -111,9 +109,7 @@ def verify_hmac_signature(
         algo, _, sig = sig.partition("=")
         if algo.lower() not in ("sha256", "hmac-sha256"):
             return False
-    expected = hmac.new(
-        secret.encode("utf-8"), raw_body, hashlib.sha256
-    ).hexdigest()
+    expected = hmac.new(secret.encode("utf-8"), raw_body, hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected, sig.lower())
 
 
@@ -233,9 +229,7 @@ def map_payload_to_lead(
             continue
         raw = extract_path(payload, m.source_path)
         value = apply_transform(raw, m.transform)
-        is_empty = value is None or (
-            isinstance(value, str) and value.strip() == ""
-        )
+        is_empty = value is None or (isinstance(value, str) and value.strip() == "")
         if is_empty:
             if m.required:
                 missing_required.append(m.target_field)
@@ -264,9 +258,7 @@ def _direct_map_payload(
     lead_fields: dict[str, Any] = {}
     for key, value in payload.items():
         if key in ALLOWED_TARGET_FIELDS:
-            is_empty = value is None or (
-                isinstance(value, str) and value.strip() == ""
-            )
+            is_empty = value is None or (isinstance(value, str) and value.strip() == "")
             if not is_empty:
                 lead_fields[key] = value
 
@@ -307,9 +299,7 @@ class _SourceRateLimiter:
     def check(self, source_key: str, limit_per_min: int) -> bool:
         now = time.time()
         with self._lock:
-            window = [
-                t for t in self._hits.get(source_key, []) if t > now - 60
-            ]
+            window = [t for t in self._hits.get(source_key, []) if t > now - 60]
             if len(window) >= limit_per_min:
                 self._hits[source_key] = window
                 return False
@@ -343,9 +333,7 @@ class WebhookLeadsService:
 
     # ── Source CRUD ──────────────────────────────────────────────────────
 
-    async def create_source(
-        self, data: WebhookSourceCreate, user_id: str | None = None
-    ) -> tuple[WebhookSource, str]:
+    async def create_source(self, data: WebhookSourceCreate, user_id: str | None = None) -> tuple[WebhookSource, str]:
         """Create a source, returning the model + the one-time plaintext secret."""
         existing = await self.source_repo.get_by_slug(data.slug)
         if existing is not None:
@@ -379,9 +367,7 @@ class WebhookLeadsService:
             )
         return source
 
-    async def update_source(
-        self, source_id: uuid.UUID, data: WebhookSourceUpdate
-    ) -> WebhookSource:
+    async def update_source(self, source_id: uuid.UUID, data: WebhookSourceUpdate) -> WebhookSource:
         source = await self.get_source(source_id)
         fields = data.model_dump(exclude_unset=True)
         if fields:
@@ -392,9 +378,7 @@ class WebhookLeadsService:
     async def rotate_secret(self, source_id: uuid.UUID) -> tuple[WebhookSource, str]:
         source = await self.get_source(source_id)
         secret = generate_secret()
-        await self.source_repo.update_fields(
-            source_id, secret_hash=hash_secret(secret)
-        )
+        await self.source_repo.update_fields(source_id, secret_hash=hash_secret(secret))
         await self.session.refresh(source)
         logger.info("Webhook source secret rotated: %s", source_id)
         return source, secret
@@ -405,17 +389,12 @@ class WebhookLeadsService:
 
     # ── Mapping CRUD ─────────────────────────────────────────────────────
 
-    async def create_mapping(
-        self, source_id: uuid.UUID, data: PayloadMappingCreate
-    ) -> PayloadMapping:
+    async def create_mapping(self, source_id: uuid.UUID, data: PayloadMappingCreate) -> PayloadMapping:
         await self.get_source(source_id)  # 404 if missing
         if data.target_field not in ALLOWED_TARGET_FIELDS:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=(
-                    f"target_field '{data.target_field}' is not a mappable "
-                    f"CRM lead field"
-                ),
+                detail=(f"target_field '{data.target_field}' is not a mappable CRM lead field"),
             )
         if data.transform is not None and data.transform not in ALLOWED_TRANSFORMS:
             raise HTTPException(
@@ -432,15 +411,11 @@ class WebhookLeadsService:
         await self.mapping_repo.create(mapping)
         return mapping
 
-    async def list_mappings(
-        self, source_id: uuid.UUID
-    ) -> list[PayloadMapping]:
+    async def list_mappings(self, source_id: uuid.UUID) -> list[PayloadMapping]:
         await self.get_source(source_id)
         return await self.mapping_repo.list_for_source(source_id)
 
-    async def update_mapping(
-        self, mapping_id: uuid.UUID, data: PayloadMappingUpdate
-    ) -> PayloadMapping:
+    async def update_mapping(self, mapping_id: uuid.UUID, data: PayloadMappingUpdate) -> PayloadMapping:
         mapping = await self.mapping_repo.get_by_id(mapping_id)
         if mapping is None:
             raise HTTPException(
@@ -448,18 +423,12 @@ class WebhookLeadsService:
                 detail="Mapping not found",
             )
         fields = data.model_dump(exclude_unset=True)
-        if (
-            "target_field" in fields
-            and fields["target_field"] not in ALLOWED_TARGET_FIELDS
-        ):
+        if "target_field" in fields and fields["target_field"] not in ALLOWED_TARGET_FIELDS:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="target_field is not a mappable CRM lead field",
             )
-        if (
-            fields.get("transform") is not None
-            and fields["transform"] not in ALLOWED_TRANSFORMS
-        ):
+        if fields.get("transform") is not None and fields["transform"] not in ALLOWED_TRANSFORMS:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="transform is not supported",
@@ -526,9 +495,7 @@ class WebhookLeadsService:
         the stored hash semantics described below.
         """
         if not source.is_active:
-            raise WebhookAuthError(
-                status.HTTP_403_FORBIDDEN, "Webhook source is disabled"
-            )
+            raise WebhookAuthError(status.HTTP_403_FORBIDDEN, "Webhook source is disabled")
 
         if not ip_allowed(remote_ip, source.ip_allowlist):
             raise WebhookAuthError(
@@ -540,13 +507,9 @@ class WebhookLeadsService:
         if method == "api_key":
             presented = headers.get("x-api-key") or headers.get("x-webhook-key")
             if not verify_api_key(presented, source.secret_hash):
-                raise WebhookAuthError(
-                    status.HTTP_401_UNAUTHORIZED, "Invalid or missing API key"
-                )
+                raise WebhookAuthError(status.HTTP_401_UNAUTHORIZED, "Invalid or missing API key")
         elif method == "hmac":
-            presented_sig = headers.get("x-webhook-signature") or headers.get(
-                "x-hub-signature-256"
-            )
+            presented_sig = headers.get("x-webhook-signature") or headers.get("x-hub-signature-256")
             secret = presented_secret_for_test
             if secret is None:
                 # HMAC/JWT need the plaintext secret, which we deliberately
@@ -555,27 +518,17 @@ class WebhookLeadsService:
                 # zero plaintext at rest) OR supplies the verifying secret
                 # via the per-source env override below.
                 secret = _resolve_runtime_secret(source)
-            if secret is None or not verify_hmac_signature(
-                raw_body, presented_sig, secret
-            ):
+            if secret is None or not verify_hmac_signature(raw_body, presented_sig, secret):
                 raise WebhookAuthError(
                     status.HTTP_401_UNAUTHORIZED,
                     "Invalid or missing HMAC signature",
                 )
         elif method == "jwt":
             authz = headers.get("authorization", "")
-            token = (
-                authz.split(" ", 1)[1]
-                if authz.lower().startswith("bearer ")
-                else None
-            )
-            secret = presented_secret_for_test or _resolve_runtime_secret(
-                source
-            )
+            token = authz.split(" ", 1)[1] if authz.lower().startswith("bearer ") else None
+            secret = presented_secret_for_test or _resolve_runtime_secret(source)
             if secret is None or not verify_jwt(token, secret):
-                raise WebhookAuthError(
-                    status.HTTP_401_UNAUTHORIZED, "Invalid or missing JWT"
-                )
+                raise WebhookAuthError(status.HTTP_401_UNAUTHORIZED, "Invalid or missing JWT")
         else:  # pragma: no cover - schema-validated on write
             raise WebhookAuthError(
                 status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -584,9 +537,7 @@ class WebhookLeadsService:
 
     def check_rate_limit(self, source: WebhookSource) -> None:
         """Raise :class:`WebhookAuthError` 429 when the source is over budget."""
-        allowed = source_rate_limiter.check(
-            str(source.id), source.rate_limit_per_min
-        )
+        allowed = source_rate_limiter.check(str(source.id), source.rate_limit_per_min)
         if not allowed:
             raise WebhookAuthError(
                 status.HTTP_429_TOO_MANY_REQUESTS,
@@ -650,9 +601,7 @@ class WebhookLeadsService:
                 payload=parsed_payload,
                 error_message=exc.message,
             )
-            raise HTTPException(
-                status_code=exc.http_status, detail=exc.message
-            ) from exc
+            raise HTTPException(status_code=exc.http_status, detail=exc.message) from exc
 
         # Payload mapping.
         mappings = await self.mapping_repo.list_for_source(source.id)
@@ -684,9 +633,7 @@ class WebhookLeadsService:
                 payload=parsed_payload,
                 error_message=msg,
             )
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=msg
-            )
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=msg)
 
         # Create the CRM lead via the CRM service (no table duplication).
         try:
@@ -718,9 +665,7 @@ class WebhookLeadsService:
             payload=parsed_payload,
             created_lead_id=lead_id,
         )
-        logger.info(
-            "Webhook lead created via source %s → lead %s", source_slug, lead_id
-        )
+        logger.info("Webhook lead created via source %s → lead %s", source_slug, lead_id)
         return log, lead_id
 
     async def _create_crm_lead(self, lead_fields: dict[str, Any]) -> uuid.UUID:
@@ -771,7 +716,5 @@ def _resolve_runtime_secret(source: WebhookSource) -> str | None:
     import os
     import re
 
-    key = "WEBHOOK_LEADS_SECRET__" + re.sub(
-        r"[^A-Z0-9]", "_", source.slug.upper()
-    )
+    key = "WEBHOOK_LEADS_SECRET__" + re.sub(r"[^A-Z0-9]", "_", source.slug.upper())
     return os.environ.get(key)

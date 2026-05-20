@@ -12,14 +12,14 @@
  * handled by the shared ``apiGet`` / ``apiPost`` helpers.
  */
 
-import { apiGet, apiPost } from '@/shared/lib/api';
+import { apiGet, apiPost } from "@/shared/lib/api";
 import type {
   DownloadRequestBody,
   DownloadResponse,
   StatusResponse,
   TranslateRequestBody,
   TranslateResponse,
-} from './types';
+} from "./types";
 
 /* ── SSRF allowlist (mirrors the backend) ─────────────────────────────── */
 
@@ -37,16 +37,16 @@ import type {
  * server 422/400 if the deployment hasn't allowlisted them.
  */
 export const IATE_ALLOWED_PREFIXES: readonly string[] = [
-  'https://iate.europa.eu/',
-  'https://datadrivenconstruction.io/',
-  'https://openconstructionerp.com/',
-  'https://github.com/datadrivenconstruction/',
-  'https://raw.githubusercontent.com/datadrivenconstruction/',
+  "https://iate.europa.eu/",
+  "https://datadrivenconstruction.io/",
+  "https://openconstructionerp.com/",
+  "https://github.com/datadrivenconstruction/",
+  "https://raw.githubusercontent.com/datadrivenconstruction/",
 ];
 
 /** Returns ``true`` if ``url`` starts with one of the allowed prefixes. */
 export function isIateUrlAllowed(url: string): boolean {
-  if (typeof url !== 'string') return false;
+  if (typeof url !== "string") return false;
   const trimmed = url.trim();
   if (!trimmed) return false;
   return IATE_ALLOWED_PREFIXES.some((p) => trimmed.startsWith(p));
@@ -59,7 +59,7 @@ export function isIateUrlAllowed(url: string): boolean {
  * in-flight download tasks.
  */
 export async function getTranslationStatus(): Promise<StatusResponse> {
-  return apiGet<StatusResponse>('/v1/translation/lookup-tables/status');
+  return apiGet<StatusResponse>("/v1/translation/lookup-tables/status");
 }
 
 /**
@@ -70,7 +70,7 @@ export async function triggerLookupDownload(
   body: DownloadRequestBody,
 ): Promise<DownloadResponse> {
   return apiPost<DownloadResponse, DownloadRequestBody>(
-    '/v1/translation/lookup-tables/download',
+    "/v1/translation/lookup-tables/download",
     body,
   );
 }
@@ -83,7 +83,7 @@ export async function translateOne(
   body: TranslateRequestBody,
 ): Promise<TranslateResponse> {
   return apiPost<TranslateResponse, TranslateRequestBody>(
-    '/v1/translation/translate',
+    "/v1/translation/translate",
     body,
   );
 }

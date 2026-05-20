@@ -1,7 +1,7 @@
-import { useState, useCallback, useRef, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useCallback, useRef, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Landmark,
   Upload,
@@ -15,16 +15,19 @@ import {
   X,
   Info,
   Printer,
-} from 'lucide-react';
-import { Button, Badge } from '@/shared/ui';
-import { apiGet } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { parseExcelFile } from '../_shared/excelImport';
-import { exportToCSV, downloadBlob } from '../_shared/excelExport';
-import { printBOQReport } from '../_shared/pdfBOQExport';
-import type { ExchangePosition, ImportParseResult } from '../_shared/templateTypes';
-import { RU_TEMPLATE, RU_TRADE_SECTIONS } from './ruTemplate';
-import { SampleTemplateButton } from '../_shared/SampleTemplateButton';
+} from "lucide-react";
+import { Button, Badge } from "@/shared/ui";
+import { apiGet } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { parseExcelFile } from "../_shared/excelImport";
+import { exportToCSV, downloadBlob } from "../_shared/excelExport";
+import { printBOQReport } from "../_shared/pdfBOQExport";
+import type {
+  ExchangePosition,
+  ImportParseResult,
+} from "../_shared/templateTypes";
+import { RU_TEMPLATE, RU_TRADE_SECTIONS } from "./ruTemplate";
+import { SampleTemplateButton } from "../_shared/SampleTemplateButton";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,7 +56,7 @@ interface BOQPosition {
   classification?: Record<string, string>;
 }
 
-type RUExportFormat = 'gesn-detailed' | 'gesn-summary';
+type RUExportFormat = "gesn-detailed" | "gesn-summary";
 
 // ---------------------------------------------------------------------------
 // Import Preview Table
@@ -73,8 +76,9 @@ function ImportPreview({
     <div className="border border-border-light rounded-lg overflow-hidden">
       <div className="px-3 py-2 bg-surface-tertiary/50 flex items-center justify-between">
         <span className="text-xs font-medium text-content-secondary">
-          {t('ru_gesn.preview', { defaultValue: 'Preview‌⁠‍' })}: {positions.length}{' '}
-          {t('ru_gesn.positions', { defaultValue: 'positions‌⁠‍' })}
+          {t("ru_gesn.preview", { defaultValue: "Preview‌⁠‍" })}:{" "}
+          {positions.length}{" "}
+          {t("ru_gesn.positions", { defaultValue: "positions‌⁠‍" })}
         </span>
         {positions.length > 20 && (
           <button
@@ -82,8 +86,10 @@ function ImportPreview({
             className="text-2xs text-oe-blue hover:underline"
           >
             {showAll
-              ? t('ru_gesn.show_less', { defaultValue: 'Show less‌⁠‍' })
-              : t('ru_gesn.show_all', { defaultValue: `Show all ${positions.length}` })}
+              ? t("ru_gesn.show_less", { defaultValue: "Show less‌⁠‍" })
+              : t("ru_gesn.show_all", {
+                  defaultValue: `Show all ${positions.length}`,
+                })}
           </button>
         )}
       </div>
@@ -92,22 +98,22 @@ function ImportPreview({
           <thead>
             <tr className="bg-surface-secondary/50 sticky top-0">
               <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-24">
-                {t('boq.ordinal', { defaultValue: 'Ordinal‌⁠‍' })}
+                {t("boq.ordinal", { defaultValue: "Ordinal‌⁠‍" })}
               </th>
               <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
-                {t('boq.description', { defaultValue: 'Description‌⁠‍' })}
+                {t("boq.description", { defaultValue: "Description‌⁠‍" })}
               </th>
               <th className="px-3 py-1.5 text-center font-medium text-content-secondary w-16">
-                {t('boq.unit', { defaultValue: 'Unit' })}
+                {t("boq.unit", { defaultValue: "Unit" })}
               </th>
               <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">
-                {t('boq.quantity', { defaultValue: 'Qty' })}
+                {t("boq.quantity", { defaultValue: "Qty" })}
               </th>
               <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">
-                {t('boq.unit_rate', { defaultValue: 'Rate' })}
+                {t("boq.unit_rate", { defaultValue: "Rate" })}
               </th>
               <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-32">
-                {t('ru_gesn.classification', { defaultValue: 'GESN Section' })}
+                {t("ru_gesn.classification", { defaultValue: "GESN Section" })}
               </th>
             </tr>
           </thead>
@@ -115,29 +121,37 @@ function ImportPreview({
             {displayed.map((pos, idx) => (
               <tr
                 key={pos.ordinal || `pos-${idx}`}
-                className={`hover:bg-surface-secondary/30 ${idx % 2 === 0 ? 'bg-surface-primary/50' : ''}`}
+                className={`hover:bg-surface-secondary/30 ${idx % 2 === 0 ? "bg-surface-primary/50" : ""}`}
               >
-                <td className="px-3 py-1.5 font-mono text-content-tertiary">{pos.ordinal}</td>
+                <td className="px-3 py-1.5 font-mono text-content-tertiary">
+                  {pos.ordinal}
+                </td>
                 <td
                   className="px-3 py-1.5 text-content-primary max-w-[300px] truncate"
                   title={pos.description}
                 >
-                  {pos.description || '-'}
+                  {pos.description || "-"}
                 </td>
                 <td className="px-3 py-1.5 text-center text-content-secondary">
-                  {pos.unit || '-'}
+                  {pos.unit || "-"}
                 </td>
                 <td className="px-3 py-1.5 text-right tabular-nums">
-                  {pos.quantity > 0 ? pos.quantity.toFixed(3) : '-'}
+                  {pos.quantity > 0 ? pos.quantity.toFixed(3) : "-"}
                 </td>
                 <td className="px-3 py-1.5 text-right tabular-nums">
-                  {pos.unitRate > 0 ? pos.unitRate.toFixed(2) : '-'}
+                  {pos.unitRate > 0 ? pos.unitRate.toFixed(2) : "-"}
                 </td>
                 <td
                   className="px-3 py-1.5 text-content-tertiary text-2xs truncate"
-                  title={pos.classification ? Object.values(pos.classification)[0] : ''}
+                  title={
+                    pos.classification
+                      ? Object.values(pos.classification)[0]
+                      : ""
+                  }
                 >
-                  {pos.classification ? Object.values(pos.classification)[0] : '-'}
+                  {pos.classification
+                    ? Object.values(pos.classification)[0]
+                    : "-"}
                 </td>
               </tr>
             ))}
@@ -160,9 +174,11 @@ export default function RUExchangeModule() {
   // --- Import state ---
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importFile, setImportFile] = useState<File | null>(null);
-  const [parsedResult, setParsedResult] = useState<ImportParseResult | null>(null);
+  const [parsedResult, setParsedResult] = useState<ImportParseResult | null>(
+    null,
+  );
   const [parseError, setParseError] = useState<string | null>(null);
-  const [importTargetBoqId, setImportTargetBoqId] = useState('');
+  const [importTargetBoqId, setImportTargetBoqId] = useState("");
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<{
     imported: number;
@@ -170,41 +186,44 @@ export default function RUExchangeModule() {
   } | null>(null);
 
   // --- Export state ---
-  const [exportProjectId, setExportProjectId] = useState('');
-  const [exportBoqId, setExportBoqId] = useState('');
-  const [exportFormat, setExportFormat] = useState<RUExportFormat>('gesn-detailed');
+  const [exportProjectId, setExportProjectId] = useState("");
+  const [exportBoqId, setExportBoqId] = useState("");
+  const [exportFormat, setExportFormat] =
+    useState<RUExportFormat>("gesn-detailed");
   const [isExporting, setIsExporting] = useState(false);
   const [showExportPreview, setShowExportPreview] = useState(false);
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<'import' | 'export'>('import');
+  const [activeTab, setActiveTab] = useState<"import" | "export">("import");
 
   // --- Shared queries ---
   const { data: projects = [] } = useQuery<Project[]>({
-    queryKey: ['projects-list'],
-    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    queryKey: ["projects-list"],
+    queryFn: () => apiGet<Project[]>("/v1/projects/"),
   });
 
   // Import: project selection for target BOQ
-  const [importProjectId, setImportProjectId] = useState('');
+  const [importProjectId, setImportProjectId] = useState("");
   const { data: importBoqs = [] } = useQuery<BOQ[]>({
-    queryKey: ['boqs-for-import', importProjectId],
+    queryKey: ["boqs-for-import", importProjectId],
     queryFn: () => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${importProjectId}`),
     enabled: !!importProjectId,
   });
 
   // Export: BOQs for selected project
   const { data: exportBoqs = [] } = useQuery<BOQ[]>({
-    queryKey: ['boqs-for-export', exportProjectId],
+    queryKey: ["boqs-for-export", exportProjectId],
     queryFn: () => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${exportProjectId}`),
     enabled: !!exportProjectId,
   });
 
   // Export: positions for selected BOQ (via BOQ detail endpoint)
   const { data: exportPositions = [] } = useQuery<BOQPosition[]>({
-    queryKey: ['boq-positions-export', exportBoqId],
+    queryKey: ["boq-positions-export", exportBoqId],
     queryFn: async () => {
-      const boq = await apiGet<{ positions?: BOQPosition[] }>(`/v1/boq/boqs/${exportBoqId}`);
+      const boq = await apiGet<{ positions?: BOQPosition[] }>(
+        `/v1/boq/boqs/${exportBoqId}`,
+      );
       return boq.positions ?? [];
     },
     enabled: !!exportBoqId,
@@ -225,26 +244,28 @@ export default function RUExchangeModule() {
         const result = await parseExcelFile(file, RU_TEMPLATE.defaultColumns);
 
         if (result.errors.length > 0) {
-          setParseError(result.errors.join('; '));
+          setParseError(result.errors.join("; "));
         } else if (result.positions.length === 0) {
           setParseError(
-            t('ru_gesn.parse_error', {
+            t("ru_gesn.parse_error", {
               defaultValue:
-                'No positions found in the file. Ensure the file is a valid GESN/FER/TER-formatted BOQ (CSV, TSV, or XLSX).',
+                "No positions found in the file. Ensure the file is a valid GESN/FER/TER-formatted BOQ (CSV, TSV, or XLSX).",
             }),
           );
         } else {
           setParsedResult(result);
           addToast({
-            type: 'success',
-            title: t('ru_gesn.parsed_ok', { defaultValue: 'File parsed successfully' }),
+            type: "success",
+            title: t("ru_gesn.parsed_ok", {
+              defaultValue: "File parsed successfully",
+            }),
             message: `${result.positions.length} positions found`,
           });
         }
       } catch {
         setParseError(
-          t('ru_gesn.parse_error_generic', {
-            defaultValue: 'Failed to parse the GESN/FER/TER file.',
+          t("ru_gesn.parse_error_generic", {
+            defaultValue: "Failed to parse the GESN/FER/TER file.",
           }),
         );
       }
@@ -256,7 +277,7 @@ export default function RUExchangeModule() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) handleFileSelect(file);
-      e.target.value = '';
+      e.target.value = "";
     },
     [handleFileSelect],
   );
@@ -286,22 +307,29 @@ export default function RUExchangeModule() {
 
       await apiGet<{ imported: number }>(
         `/v1/boq/boqs/${importTargetBoqId}/import`,
-        { method: 'POST', body: JSON.stringify({ positions, source: 'ru_gesn_import' }) } as never,
+        {
+          method: "POST",
+          body: JSON.stringify({ positions, source: "ru_gesn_import" }),
+        } as never,
       );
 
       const result = { imported: positions.length, errors: [] as string[] };
       setImportResult(result);
-      queryClient.invalidateQueries({ queryKey: ['boq-positions'] });
+      queryClient.invalidateQueries({ queryKey: ["boq-positions"] });
       addToast({
-        type: result.imported > 0 ? 'success' : 'warning',
-        title: t('ru_gesn.import_complete', { defaultValue: 'Russian GESN import complete' }),
+        type: result.imported > 0 ? "success" : "warning",
+        title: t("ru_gesn.import_complete", {
+          defaultValue: "Russian GESN import complete",
+        }),
         message: `${result.imported} positions imported`,
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('ru_gesn.import_failed', { defaultValue: 'GESN import failed' }),
-        message: err instanceof Error ? err.message : 'Unknown error',
+        type: "error",
+        title: t("ru_gesn.import_failed", {
+          defaultValue: "GESN import failed",
+        }),
+        message: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
       setIsImporting(false);
@@ -338,21 +366,23 @@ export default function RUExchangeModule() {
 
   const selectedExportBoq = exportBoqs.find((b) => b.id === exportBoqId);
   const selectedExportProject = projects.find((p) => p.id === exportProjectId);
-  const includePrices = exportFormat === 'gesn-detailed';
+  const includePrices = exportFormat === "gesn-detailed";
 
   const handleExport = useCallback(() => {
     if (exportablePositions.length === 0) {
       addToast({
-        type: 'warning',
-        title: t('ru_gesn.no_positions', { defaultValue: 'No positions to export' }),
+        type: "warning",
+        title: t("ru_gesn.no_positions", {
+          defaultValue: "No positions to export",
+        }),
       });
       return;
     }
     setIsExporting(true);
     try {
-      const projectName = selectedExportProject?.name ?? 'Project';
-      const boqName = selectedExportBoq?.name ?? 'BOQ';
-      const filename = `${projectName}_${boqName}_RU_${exportFormat === 'gesn-detailed' ? 'GESN_Detailed' : 'GESN_Summary'}.csv`;
+      const projectName = selectedExportProject?.name ?? "Project";
+      const boqName = selectedExportBoq?.name ?? "BOQ";
+      const filename = `${projectName}_${boqName}_RU_${exportFormat === "gesn-detailed" ? "GESN_Detailed" : "GESN_Summary"}.csv`;
 
       const result = exportToCSV(exportablePositions, RU_TEMPLATE, filename, {
         includePrices,
@@ -360,15 +390,19 @@ export default function RUExchangeModule() {
 
       downloadBlob(result.blob, result.filename);
       addToast({
-        type: 'success',
-        title: t('ru_gesn.export_complete', { defaultValue: 'Russian GESN export complete' }),
+        type: "success",
+        title: t("ru_gesn.export_complete", {
+          defaultValue: "Russian GESN export complete",
+        }),
         message: `${result.positionCount} positions exported to ${result.filename}`,
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('ru_gesn.export_failed', { defaultValue: 'GESN export failed' }),
-        message: err instanceof Error ? err.message : 'Unknown error',
+        type: "error",
+        title: t("ru_gesn.export_failed", {
+          defaultValue: "GESN export failed",
+        }),
+        message: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
       setIsExporting(false);
@@ -390,7 +424,12 @@ export default function RUExchangeModule() {
       boqName: selectedExportBoq?.name,
       includePrices,
     });
-  }, [exportablePositions, selectedExportProject, selectedExportBoq, includePrices]);
+  }, [
+    exportablePositions,
+    selectedExportProject,
+    selectedExportBoq,
+    includePrices,
+  ]);
 
   // ---------------------------------------------------------------------------
   // Render
@@ -407,12 +446,14 @@ export default function RUExchangeModule() {
         </div>
         <div>
           <h1 className="text-xl font-bold text-content-primary">
-            {t('ru_gesn.title', { defaultValue: 'Russia GESN / FER / TER Import / Export' })}
+            {t("ru_gesn.title", {
+              defaultValue: "Russia GESN / FER / TER Import / Export",
+            })}
           </h1>
           <p className="text-sm text-content-tertiary">
-            {t('ru_gesn.subtitle', {
+            {t("ru_gesn.subtitle", {
               defaultValue:
-                'Exchange Bills of Quantities in GESN / FER / TER format (Excel / CSV)',
+                "Exchange Bills of Quantities in GESN / FER / TER format (Excel / CSV)",
             })}
           </p>
         </div>
@@ -421,31 +462,31 @@ export default function RUExchangeModule() {
       {/* Tabs */}
       <div className="flex gap-1 border-b border-border">
         <button
-          onClick={() => setActiveTab('import')}
+          onClick={() => setActiveTab("import")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'import'
-              ? 'border-oe-blue text-oe-blue'
-              : 'border-transparent text-content-tertiary hover:text-content-secondary'
+            activeTab === "import"
+              ? "border-oe-blue text-oe-blue"
+              : "border-transparent text-content-tertiary hover:text-content-secondary"
           }`}
         >
           <Upload size={15} />
-          {t('ru_gesn.tab_import', { defaultValue: 'Import' })}
+          {t("ru_gesn.tab_import", { defaultValue: "Import" })}
         </button>
         <button
-          onClick={() => setActiveTab('export')}
+          onClick={() => setActiveTab("export")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'export'
-              ? 'border-oe-blue text-oe-blue'
-              : 'border-transparent text-content-tertiary hover:text-content-secondary'
+            activeTab === "export"
+              ? "border-oe-blue text-oe-blue"
+              : "border-transparent text-content-tertiary hover:text-content-secondary"
           }`}
         >
           <Download size={15} />
-          {t('ru_gesn.tab_export', { defaultValue: 'Export' })}
+          {t("ru_gesn.tab_export", { defaultValue: "Export" })}
         </button>
       </div>
 
       {/* -- Import Tab ---------------------------------------------------- */}
-      {activeTab === 'import' && (
+      {activeTab === "import" && (
         <div className="space-y-5">
           {/* File upload area */}
           <div
@@ -453,8 +494,8 @@ export default function RUExchangeModule() {
             onDragOver={(e) => e.preventDefault()}
             className={`rounded-xl border-2 border-dashed p-8 text-center transition-colors ${
               importFile
-                ? 'border-oe-blue/50 bg-oe-blue/5'
-                : 'border-border hover:border-oe-blue/30 hover:bg-surface-secondary/30'
+                ? "border-oe-blue/50 bg-oe-blue/5"
+                : "border-border hover:border-oe-blue/30 hover:bg-surface-secondary/30"
             }`}
           >
             {importFile ? (
@@ -475,16 +516,22 @@ export default function RUExchangeModule() {
                 {parsedPositions && (
                   <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-600">
                     <CheckCircle2 size={14} />
-                    {parsedPositions.length}{' '}
-                    {t('ru_gesn.positions_found', { defaultValue: 'positions found' })}
+                    {parsedPositions.length}{" "}
+                    {t("ru_gesn.positions_found", {
+                      defaultValue: "positions found",
+                    })}
                     {parsedPositions.some((p) => p.unitRate > 0) && (
                       <Badge variant="blue" className="ml-2">
-                        {t('ru_gesn.gesn_detailed', { defaultValue: 'GESN Detailed' })}
+                        {t("ru_gesn.gesn_detailed", {
+                          defaultValue: "GESN Detailed",
+                        })}
                       </Badge>
                     )}
                     {parsedPositions.every((p) => p.unitRate === 0) && (
                       <Badge variant="neutral" className="ml-2">
-                        {t('ru_gesn.gesn_summary', { defaultValue: 'GESN Summary' })}
+                        {t("ru_gesn.gesn_summary", {
+                          defaultValue: "GESN Summary",
+                        })}
                       </Badge>
                     )}
                   </div>
@@ -500,8 +547,9 @@ export default function RUExchangeModule() {
               <div className="space-y-2">
                 <FileUp size={32} className="mx-auto text-content-quaternary" />
                 <p className="text-sm text-content-secondary">
-                  {t('ru_gesn.drop_file', {
-                    defaultValue: 'Drop a GESN/FER/TER BOQ file here (Excel or CSV), or',
+                  {t("ru_gesn.drop_file", {
+                    defaultValue:
+                      "Drop a GESN/FER/TER BOQ file here (Excel or CSV), or",
                   })}
                 </p>
                 <Button
@@ -509,11 +557,12 @@ export default function RUExchangeModule() {
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  {t('ru_gesn.browse', { defaultValue: 'Browse files' })}
+                  {t("ru_gesn.browse", { defaultValue: "Browse files" })}
                 </Button>
                 <p className="text-2xs text-content-quaternary">
-                  {t('ru_gesn.formats_hint', {
-                    defaultValue: 'Supported: .csv, .tsv, .xlsx (GESN/FER/TER-formatted BOQ)',
+                  {t("ru_gesn.formats_hint", {
+                    defaultValue:
+                      "Supported: .csv, .tsv, .xlsx (GESN/FER/TER-formatted BOQ)",
                   })}
                 </p>
               </div>
@@ -537,7 +586,9 @@ export default function RUExchangeModule() {
             <div className="rounded-lg border border-border-light bg-surface-secondary/30 p-3">
               <div className="flex items-center gap-1.5 text-xs font-medium text-content-secondary mb-2">
                 <Info size={13} />
-                {t('ru_gesn.trades_ref', { defaultValue: 'GESN Collections Reference' })}
+                {t("ru_gesn.trades_ref", {
+                  defaultValue: "GESN Collections Reference",
+                })}
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {RU_TRADE_SECTIONS.map((sec) => (
@@ -562,23 +613,27 @@ export default function RUExchangeModule() {
           {parsedPositions && parsedPositions.length > 0 && (
             <div className="rounded-xl border border-border bg-surface-primary p-5">
               <h3 className="text-sm font-semibold text-content-primary mb-3">
-                {t('ru_gesn.target_boq', { defaultValue: 'Import Target' })}
+                {t("ru_gesn.target_boq", { defaultValue: "Import Target" })}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1">
-                    {t('common.project', { defaultValue: 'Project' })}
+                    {t("common.project", { defaultValue: "Project" })}
                   </label>
                   <select
                     value={importProjectId}
                     onChange={(e) => {
                       setImportProjectId(e.target.value);
-                      setImportTargetBoqId('');
+                      setImportTargetBoqId("");
                     }}
                     className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm"
                   >
                     <option value="">
-                      — {t('risk.select_project', { defaultValue: 'Select project' })} —
+                      —{" "}
+                      {t("risk.select_project", {
+                        defaultValue: "Select project",
+                      })}{" "}
+                      —
                     </option>
                     {projects.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -589,7 +644,7 @@ export default function RUExchangeModule() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1">
-                    {t('boq.title', { defaultValue: 'BOQ' })}
+                    {t("boq.title", { defaultValue: "BOQ" })}
                   </label>
                   <select
                     value={importTargetBoqId}
@@ -598,7 +653,9 @@ export default function RUExchangeModule() {
                     className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm disabled:opacity-50"
                   >
                     <option value="">
-                      — {t('ru_gesn.select_boq', { defaultValue: 'Select BOQ' })} —
+                      —{" "}
+                      {t("ru_gesn.select_boq", { defaultValue: "Select BOQ" })}{" "}
+                      —
                     </option>
                     {importBoqs.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -622,8 +679,8 @@ export default function RUExchangeModule() {
                     disabled={!importTargetBoqId || isImporting}
                   >
                     {isImporting
-                      ? t('ru_gesn.importing', { defaultValue: 'Importing...' })
-                      : t('ru_gesn.import_btn', {
+                      ? t("ru_gesn.importing", { defaultValue: "Importing..." })
+                      : t("ru_gesn.import_btn", {
                           defaultValue: `Import ${parsedPositions.length} positions`,
                         })}
                   </Button>
@@ -637,8 +694,8 @@ export default function RUExchangeModule() {
             <div
               className={`rounded-xl border p-4 ${
                 importResult.errors.length > 0
-                  ? 'border-amber-300 bg-amber-50/50 dark:bg-amber-950/20'
-                  : 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20'
+                  ? "border-amber-300 bg-amber-50/50 dark:bg-amber-950/20"
+                  : "border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20"
               }`}
             >
               <div className="flex items-center gap-2 text-sm font-medium">
@@ -648,8 +705,10 @@ export default function RUExchangeModule() {
                   <CheckCircle2 size={16} className="text-emerald-600" />
                 )}
                 <span className="text-content-primary">
-                  {importResult.imported}{' '}
-                  {t('ru_gesn.positions_imported', { defaultValue: 'positions imported' })}
+                  {importResult.imported}{" "}
+                  {t("ru_gesn.positions_imported", {
+                    defaultValue: "positions imported",
+                  })}
                 </span>
               </div>
               {importResult.errors.length > 0 && (
@@ -662,10 +721,15 @@ export default function RUExchangeModule() {
               {importResult.errors.length === 0 && (
                 <Link
                   data-testid="regional-open-boq"
-                  to={importTargetBoqId ? `/boq?boq=${importTargetBoqId}` : '/boq'}
+                  to={
+                    importTargetBoqId ? `/boq?boq=${importTargetBoqId}` : "/boq"
+                  }
                   className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-oe-blue hover:underline"
                 >
-                  {t('ru.open_boq', { defaultValue: 'Open in BOQ editor to review & validate \u2192' })}
+                  {t("ru.open_boq", {
+                    defaultValue:
+                      "Open in BOQ editor to review & validate \u2192",
+                  })}
                 </Link>
               )}
             </div>
@@ -674,28 +738,34 @@ export default function RUExchangeModule() {
       )}
 
       {/* -- Export Tab ---------------------------------------------------- */}
-      {activeTab === 'export' && (
+      {activeTab === "export" && (
         <div className="space-y-5">
           {/* BOQ selection */}
           <div className="rounded-xl border border-border bg-surface-primary p-5">
             <h3 className="text-sm font-semibold text-content-primary mb-3">
-              {t('ru_gesn.source_boq', { defaultValue: '1. Select BOQ to Export' })}
+              {t("ru_gesn.source_boq", {
+                defaultValue: "1. Select BOQ to Export",
+              })}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1">
-                  {t('common.project', { defaultValue: 'Project' })}
+                  {t("common.project", { defaultValue: "Project" })}
                 </label>
                 <select
                   value={exportProjectId}
                   onChange={(e) => {
                     setExportProjectId(e.target.value);
-                    setExportBoqId('');
+                    setExportBoqId("");
                   }}
                   className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm"
                 >
                   <option value="">
-                    — {t('risk.select_project', { defaultValue: 'Select project' })} —
+                    —{" "}
+                    {t("risk.select_project", {
+                      defaultValue: "Select project",
+                    })}{" "}
+                    —
                   </option>
                   {projects.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -706,7 +776,7 @@ export default function RUExchangeModule() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1">
-                  {t('boq.title', { defaultValue: 'BOQ' })}
+                  {t("boq.title", { defaultValue: "BOQ" })}
                 </label>
                 <select
                   value={exportBoqId}
@@ -715,7 +785,8 @@ export default function RUExchangeModule() {
                   className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm disabled:opacity-50"
                 >
                   <option value="">
-                    — {t('ru_gesn.select_boq', { defaultValue: 'Select BOQ' })} —
+                    — {t("ru_gesn.select_boq", { defaultValue: "Select BOQ" })}{" "}
+                    —
                   </option>
                   {exportBoqs.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -726,20 +797,30 @@ export default function RUExchangeModule() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-content-tertiary mb-1">
-                  {t('ru_gesn.export_format', { defaultValue: 'Format' })}
+                  {t("ru_gesn.export_format", { defaultValue: "Format" })}
                 </label>
                 <select
                   value={exportFormat}
-                  onChange={(e) => setExportFormat(e.target.value as RUExportFormat)}
+                  onChange={(e) =>
+                    setExportFormat(e.target.value as RUExportFormat)
+                  }
                   className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm"
                 >
                   <option value="gesn-detailed">
-                    {t('ru_gesn.gesn_detailed', { defaultValue: 'GESN Detailed' })} —{' '}
-                    {t('ru_gesn.with_prices', { defaultValue: 'with prices' })}
+                    {t("ru_gesn.gesn_detailed", {
+                      defaultValue: "GESN Detailed",
+                    })}{" "}
+                    —{" "}
+                    {t("ru_gesn.with_prices", { defaultValue: "with prices" })}
                   </option>
                   <option value="gesn-summary">
-                    {t('ru_gesn.gesn_summary', { defaultValue: 'GESN Summary' })} —{' '}
-                    {t('ru_gesn.no_prices', { defaultValue: 'quantities only' })}
+                    {t("ru_gesn.gesn_summary", {
+                      defaultValue: "GESN Summary",
+                    })}{" "}
+                    —{" "}
+                    {t("ru_gesn.no_prices", {
+                      defaultValue: "quantities only",
+                    })}
                   </option>
                 </select>
               </div>
@@ -751,7 +832,9 @@ export default function RUExchangeModule() {
             <div className="rounded-xl border border-border bg-surface-primary p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-content-primary">
-                  {t('ru_gesn.export_summary', { defaultValue: '2. Export Summary' })}
+                  {t("ru_gesn.export_summary", {
+                    defaultValue: "2. Export Summary",
+                  })}
                 </h3>
                 <button
                   onClick={() => setShowExportPreview((v) => !v)}
@@ -759,15 +842,19 @@ export default function RUExchangeModule() {
                 >
                   <Eye size={13} />
                   {showExportPreview
-                    ? t('ru_gesn.hide_preview', { defaultValue: 'Hide preview' })
-                    : t('ru_gesn.show_preview', { defaultValue: 'Show preview' })}
+                    ? t("ru_gesn.hide_preview", {
+                        defaultValue: "Hide preview",
+                      })
+                    : t("ru_gesn.show_preview", {
+                        defaultValue: "Show preview",
+                      })}
                 </button>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('ru_gesn.positions', { defaultValue: 'Positions' })}
+                    {t("ru_gesn.positions", { defaultValue: "Positions" })}
                   </div>
                   <div className="text-lg font-bold text-content-primary">
                     {exportablePositions.filter((p) => !p.isSection).length}
@@ -775,7 +862,7 @@ export default function RUExchangeModule() {
                 </div>
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('ru_gesn.sections', { defaultValue: 'Sections' })}
+                    {t("ru_gesn.sections", { defaultValue: "Sections" })}
                   </div>
                   <div className="text-lg font-bold text-content-primary">
                     {exportablePositions.filter((p) => p.isSection).length}
@@ -783,20 +870,20 @@ export default function RUExchangeModule() {
                 </div>
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('ru_gesn.format_label', { defaultValue: 'Format' })}
+                    {t("ru_gesn.format_label", { defaultValue: "Format" })}
                   </div>
                   <div className="text-lg font-bold text-content-primary">
-                    {exportFormat === 'gesn-detailed' ? 'Detailed' : 'Summary'}
+                    {exportFormat === "gesn-detailed" ? "Detailed" : "Summary"}
                   </div>
                 </div>
                 <div className="rounded-lg bg-surface-secondary/50 p-3 text-center">
                   <div className="text-2xs text-content-tertiary uppercase">
-                    {t('ru_gesn.prices_label', { defaultValue: 'Prices' })}
+                    {t("ru_gesn.prices_label", { defaultValue: "Prices" })}
                   </div>
                   <div className="text-lg font-bold text-content-primary">
                     {includePrices
-                      ? t('common.yes', { defaultValue: 'Yes' })
-                      : t('common.no', { defaultValue: 'No' })}
+                      ? t("common.yes", { defaultValue: "Yes" })
+                      : t("common.no", { defaultValue: "No" })}
                   </div>
                 </div>
               </div>
@@ -807,20 +894,22 @@ export default function RUExchangeModule() {
                     <thead>
                       <tr className="bg-surface-tertiary/50 sticky top-0">
                         <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
-                          {t('boq.ordinal', { defaultValue: 'Ordinal' })}
+                          {t("boq.ordinal", { defaultValue: "Ordinal" })}
                         </th>
                         <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
-                          {t('boq.description', { defaultValue: 'Description' })}
+                          {t("boq.description", {
+                            defaultValue: "Description",
+                          })}
                         </th>
                         <th className="px-3 py-1.5 text-center font-medium text-content-secondary">
-                          {t('boq.unit', { defaultValue: 'Unit' })}
+                          {t("boq.unit", { defaultValue: "Unit" })}
                         </th>
                         <th className="px-3 py-1.5 text-right font-medium text-content-secondary">
-                          {t('boq.quantity', { defaultValue: 'Qty' })}
+                          {t("boq.quantity", { defaultValue: "Qty" })}
                         </th>
                         {includePrices && (
                           <th className="px-3 py-1.5 text-right font-medium text-content-secondary">
-                            {t('boq.unit_rate', { defaultValue: 'Rate' })}
+                            {t("boq.unit_rate", { defaultValue: "Rate" })}
                           </th>
                         )}
                       </tr>
@@ -830,7 +919,10 @@ export default function RUExchangeModule() {
                         .filter((p) => !p.isSection)
                         .slice(0, 30)
                         .map((pos, idx) => (
-                          <tr key={pos.ordinal || `export-${idx}`} className="hover:bg-surface-secondary/30">
+                          <tr
+                            key={pos.ordinal || `export-${idx}`}
+                            className="hover:bg-surface-secondary/30"
+                          >
                             <td className="px-3 py-1.5 font-mono text-content-tertiary">
                               {pos.ordinal}
                             </td>
@@ -868,12 +960,16 @@ export default function RUExchangeModule() {
                   onClick={handleExport}
                   disabled={isExporting}
                 >
-                  {t('ru_gesn.export_btn', {
-                    defaultValue: `Export as ${exportFormat === 'gesn-detailed' ? 'GESN Detailed' : 'GESN Summary'} CSV`,
+                  {t("ru_gesn.export_btn", {
+                    defaultValue: `Export as ${exportFormat === "gesn-detailed" ? "GESN Detailed" : "GESN Summary"} CSV`,
                   })}
                 </Button>
-                <Button variant="secondary" icon={<Printer size={15} />} onClick={handlePrint}>
-                  {t('ru_gesn.print_btn', { defaultValue: 'Print / PDF' })}
+                <Button
+                  variant="secondary"
+                  icon={<Printer size={15} />}
+                  onClick={handlePrint}
+                >
+                  {t("ru_gesn.print_btn", { defaultValue: "Print / PDF" })}
                 </Button>
               </div>
             </div>
@@ -881,10 +977,13 @@ export default function RUExchangeModule() {
 
           {exportBoqId && exportablePositions.length === 0 && (
             <div className="rounded-xl border border-border bg-surface-primary p-8 text-center">
-              <Landmark size={32} className="mx-auto text-content-quaternary mb-2" />
+              <Landmark
+                size={32}
+                className="mx-auto text-content-quaternary mb-2"
+              />
               <p className="text-sm text-content-tertiary">
-                {t('ru_gesn.no_positions', {
-                  defaultValue: 'This BOQ has no positions to export.',
+                {t("ru_gesn.no_positions", {
+                  defaultValue: "This BOQ has no positions to export.",
                 })}
               </p>
             </div>
@@ -896,9 +995,9 @@ export default function RUExchangeModule() {
       <div className="flex items-start gap-2 text-xs text-content-quaternary">
         <Info className="h-4 w-4 mt-0.5 shrink-0" />
         <p>
-          {t('ru_gesn.info', {
+          {t("ru_gesn.info", {
             defaultValue:
-              'GESN (State Elemental Estimate Norms) is the official Russian cost normative base. FER (Federal Unit Rates) and TER (Territorial Unit Rates) provide region-specific pricing. Compatible with Grand-Smeta, Smeta.ru, and Russian public procurement (44-FZ / 223-FZ) requirements. Supports index-based price recalculation.',
+              "GESN (State Elemental Estimate Norms) is the official Russian cost normative base. FER (Federal Unit Rates) and TER (Territorial Unit Rates) provide region-specific pricing. Compatible with Grand-Smeta, Smeta.ru, and Russian public procurement (44-FZ / 223-FZ) requirements. Supports index-based price recalculation.",
           })}
         </p>
       </div>

@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import {
   Box,
   FileText,
@@ -6,7 +6,7 @@ import {
   Layers,
   PenTool,
   type LucideIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
 /**
  * FileTypeChips — compact row of "what's uploaded" chips for a project.
@@ -30,7 +30,7 @@ export interface FileTypeChipsProps {
   fileTypes?: string[];
   /** Chip scale. ``md`` fits prominent card slots, ``sm`` fits side rows,
    *  ``xs`` fits inline lists. */
-  size?: 'xs' | 'sm' | 'md';
+  size?: "xs" | "sm" | "md";
   /** Extra CSS on the wrapper row. */
   className?: string;
 }
@@ -43,7 +43,11 @@ interface Bucket {
   color: string;
 }
 
-export function FileTypeChips({ fileTypes, size = 'md', className }: FileTypeChipsProps) {
+export function FileTypeChips({
+  fileTypes,
+  size = "md",
+  className,
+}: FileTypeChipsProps) {
   const { t } = useTranslation();
   if (!fileTypes || fileTypes.length === 0) return null;
 
@@ -51,44 +55,44 @@ export function FileTypeChips({ fileTypes, size = 'md', className }: FileTypeChi
 
   const buckets: Bucket[] = [
     {
-      key: 'bim',
-      exts: ['rvt', 'ifc', 'dgn', 'nwd', 'nwc', 'dae'],
-      label: t('projects.chip_bim', { defaultValue: 'BIM' }),
+      key: "bim",
+      exts: ["rvt", "ifc", "dgn", "nwd", "nwc", "dae"],
+      label: t("projects.chip_bim", { defaultValue: "BIM" }),
       icon: Box,
       color:
-        'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-950/40 dark:text-violet-300 dark:border-violet-800',
+        "bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-950/40 dark:text-violet-300 dark:border-violet-800",
     },
     {
-      key: 'dwg',
-      exts: ['dwg', 'dxf'],
-      label: t('projects.chip_dwg', { defaultValue: 'DWG' }),
+      key: "dwg",
+      exts: ["dwg", "dxf"],
+      label: t("projects.chip_dwg", { defaultValue: "DWG" }),
       icon: PenTool,
       color:
-        'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
+        "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800",
     },
     {
-      key: 'pdf',
-      exts: ['pdf'],
-      label: t('projects.chip_pdf', { defaultValue: 'PDF' }),
+      key: "pdf",
+      exts: ["pdf"],
+      label: t("projects.chip_pdf", { defaultValue: "PDF" }),
       icon: FileText,
       color:
-        'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800',
+        "bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800",
     },
     {
-      key: 'xls',
-      exts: ['xlsx', 'xls', 'csv'],
-      label: t('projects.chip_excel', { defaultValue: 'Excel' }),
+      key: "xls",
+      exts: ["xlsx", "xls", "csv"],
+      label: t("projects.chip_excel", { defaultValue: "Excel" }),
       icon: Layers,
       color:
-        'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800',
+        "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800",
     },
     {
-      key: 'photo',
-      exts: ['jpg', 'jpeg', 'png', 'heic', 'tiff', 'webp'],
-      label: t('projects.chip_photo', { defaultValue: 'Photo' }),
+      key: "photo",
+      exts: ["jpg", "jpeg", "png", "heic", "tiff", "webp"],
+      label: t("projects.chip_photo", { defaultValue: "Photo" }),
       icon: ImageIcon,
       color:
-        'bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800',
+        "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800",
     },
   ];
 
@@ -102,23 +106,23 @@ export function FileTypeChips({ fileTypes, size = 'md', className }: FileTypeChi
   if (chips.length === 0) return null;
 
   const sizing =
-    size === 'xs'
-      ? 'px-1 py-[1px] text-[9px] gap-0.5'
-      : size === 'sm'
-        ? 'px-1.5 py-0.5 text-[10px] gap-1'
-        : 'px-2 py-0.5 text-[11px] gap-1';
-  const iconSize = size === 'xs' ? 8 : size === 'sm' ? 10 : 12;
-  const gap = size === 'md' ? 'gap-1.5' : 'gap-1';
+    size === "xs"
+      ? "px-1 py-[1px] text-[9px] gap-0.5"
+      : size === "sm"
+        ? "px-1.5 py-0.5 text-[10px] gap-1"
+        : "px-2 py-0.5 text-[11px] gap-1";
+  const iconSize = size === "xs" ? 8 : size === "sm" ? 10 : 12;
+  const gap = size === "md" ? "gap-1.5" : "gap-1";
 
   return (
-    <div className={`flex flex-wrap items-center ${gap} ${className ?? ''}`}>
+    <div className={`flex flex-wrap items-center ${gap} ${className ?? ""}`}>
       {chips.map((c) => {
         const Icon = c.icon;
         return (
           <span
             key={c.key}
             className={`inline-flex items-center rounded-full border font-semibold uppercase tracking-wider ${sizing} ${c.color}`}
-            title={c.hits.map((x) => x.toUpperCase()).join(' · ')}
+            title={c.hits.map((x) => x.toUpperCase()).join(" · ")}
           >
             <Icon size={iconSize} className="shrink-0" />
             {c.label}

@@ -12,7 +12,7 @@
  * the consumer would have seen anyway.
  */
 
-import { apiGet } from './api';
+import { apiGet } from "./api";
 
 interface BackendModule {
   name: string;
@@ -23,13 +23,13 @@ let cached: Promise<Record<string, boolean>> | null = null;
 
 function fetchLoadedMap(): Promise<Record<string, boolean>> {
   if (cached !== null) return cached;
-  cached = apiGet<BackendModule[]>('/v1/modules/')
+  cached = apiGet<BackendModule[]>("/v1/modules/")
     .then((mods) => {
       const map: Record<string, boolean> = {};
       for (const m of mods) map[m.name] = Boolean(m.loaded);
       return map;
     })
-    .catch(() => ({} as Record<string, boolean>));
+    .catch(() => ({}) as Record<string, boolean>);
   return cached;
 }
 

@@ -23,9 +23,9 @@ import {
   useCallback,
   useEffect,
   type MouseEvent as ReactMouseEvent,
-} from 'react';
-import { useTranslation } from 'react-i18next';
-import { getIntlLocale } from '@/shared/lib/formatters';
+} from "react";
+import { useTranslation } from "react-i18next";
+import { getIntlLocale } from "@/shared/lib/formatters";
 import {
   type GanttActivity,
   type ViewMode,
@@ -40,7 +40,7 @@ import {
   calculateArrowPath,
   getDateRange,
   getTimelineWidth,
-} from './ganttUtils';
+} from "./ganttUtils";
 
 export type { GanttActivity };
 
@@ -53,7 +53,11 @@ export interface GanttProps {
   endDate?: string;
   onActivityClick?: (id: string) => void;
   onActivityDrag?: (id: string, newStart: string, newEnd: string) => void;
-  onActivityResize?: (id: string, newStart: string, newEnd: string) => void | Promise<void>;
+  onActivityResize?: (
+    id: string,
+    newStart: string,
+    newEnd: string,
+  ) => void | Promise<void>;
   className?: string;
   showBaseline?: boolean;
   showDependencies?: boolean;
@@ -73,7 +77,10 @@ const RESIZE_HANDLE_WIDTH = 7;
 /* ── Date formatting helpers ────────────────────────────────────── */
 
 function fmtShort(date: Date, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(date);
+  return new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "short",
+  }).format(date);
 }
 
 function toISO(date: Date): string {
@@ -92,13 +99,13 @@ function buildRowIndex(activities: GanttActivity[]): Map<string, number> {
 
 export function GanttChart({
   activities,
-  viewMode = 'week',
+  viewMode = "week",
   startDate: startDateProp,
   endDate: endDateProp,
   onActivityClick,
   onActivityDrag,
   onActivityResize,
-  className = '',
+  className = "",
   showBaseline = false,
   showDependencies = true,
   showCriticalPath = true,
@@ -124,7 +131,7 @@ export function GanttChart({
   // can coexist defensively, though only one is ever active at a time.
   const [resizeState, setResizeState] = useState<{
     activityId: string;
-    edge: 'left' | 'right';
+    edge: "left" | "right";
     startMouseX: number;
     origStart: Date;
     origEnd: Date;
@@ -277,30 +284,35 @@ export function GanttChart({
         timelineStart,
       );
       const offsetDays = daysBetween(dragState.origStart, newDate);
-      setDragState((prev) => (prev ? { ...prev, currentOffsetDays: offsetDays } : null));
+      setDragState((prev) =>
+        prev ? { ...prev, currentOffsetDays: offsetDays } : null,
+      );
     };
 
     const handleMouseUp = () => {
       if (dragState.currentOffsetDays !== 0 && onActivityDrag) {
-        const newStart = addDays(dragState.origStart, dragState.currentOffsetDays);
+        const newStart = addDays(
+          dragState.origStart,
+          dragState.currentOffsetDays,
+        );
         const newEnd = addDays(dragState.origEnd, dragState.currentOffsetDays);
         onActivityDrag(dragState.activityId, toISO(newStart), toISO(newEnd));
       }
       setDragState(null);
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [dragState, onActivityDrag, viewMode, timelineStart]);
 
   /* ── Resize handlers ────────────────────────────────────────── */
 
   const handleResizeMouseDown = useCallback(
-    (e: ReactMouseEvent, activityId: string, edge: 'left' | 'right') => {
+    (e: ReactMouseEvent, activityId: string, edge: "left" | "right") => {
       if (!onActivityResize) return;
       e.preventDefault();
       e.stopPropagation();
@@ -325,7 +337,10 @@ export function GanttChart({
 
     const handleMouseMove = (e: globalThis.MouseEvent) => {
       const dx = e.clientX - resizeState.startMouseX;
-      const anchor = resizeState.edge === 'left' ? resizeState.origStart : resizeState.origEnd;
+      const anchor =
+        resizeState.edge === "left"
+          ? resizeState.origStart
+          : resizeState.origEnd;
       const newDate = pxToDate(
         dateToPx(anchor, viewMode, timelineStart) + dx,
         viewMode,
@@ -334,59 +349,69 @@ export function GanttChart({
       let deltaDays = daysBetween(anchor, newDate);
 
       // Clamp so the bar stays at least 1 day wide.
-      if (resizeState.edge === 'left') {
-        const maxDelta = daysBetween(resizeState.origStart, resizeState.origEnd) - 1;
+      if (resizeState.edge === "left") {
+        const maxDelta =
+          daysBetween(resizeState.origStart, resizeState.origEnd) - 1;
         if (deltaDays > maxDelta) deltaDays = maxDelta;
       } else {
-        const minDelta = -(daysBetween(resizeState.origStart, resizeState.origEnd) - 1);
+        const minDelta = -(
+          daysBetween(resizeState.origStart, resizeState.origEnd) - 1
+        );
         if (deltaDays < minDelta) deltaDays = minDelta;
       }
 
-      setResizeState((prev) => (prev ? { ...prev, currentDeltaDays: deltaDays } : null));
+      setResizeState((prev) =>
+        prev ? { ...prev, currentDeltaDays: deltaDays } : null,
+      );
     };
 
     const handleMouseUp = () => {
       if (resizeState.currentDeltaDays !== 0 && onActivityResize) {
         const newStart =
-          resizeState.edge === 'left'
+          resizeState.edge === "left"
             ? addDays(resizeState.origStart, resizeState.currentDeltaDays)
             : resizeState.origStart;
         const newEnd =
-          resizeState.edge === 'right'
+          resizeState.edge === "right"
             ? addDays(resizeState.origEnd, resizeState.currentDeltaDays)
             : resizeState.origEnd;
-        onActivityResize(resizeState.activityId, toISO(newStart), toISO(newEnd));
+        onActivityResize(
+          resizeState.activityId,
+          toISO(newStart),
+          toISO(newEnd),
+        );
       }
       setResizeState(null);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setResizeState(null);
+      if (e.key === "Escape") setResizeState(null);
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [resizeState, onActivityResize, viewMode, timelineStart]);
 
   /* ── Render helpers ─────────────────────────────────────────── */
 
   const renderBar = useCallback(
-    (
-      bar: (typeof bars)[0],
-      rowIdx: number,
-    ) => {
+    (bar: (typeof bars)[0], rowIdx: number) => {
       const { activity: a, x, width, baselineX, baselineWidth } = bar;
       const y = rowIdx * ROW_HEIGHT;
       const isCritical = showCriticalPath && a.isCritical;
       const isDragging = dragState?.activityId === a.id;
       const dragOffset = isDragging
-        ? dateToPx(addDays(dragState.origStart, dragState.currentOffsetDays), viewMode, timelineStart) - x
+        ? dateToPx(
+            addDays(dragState.origStart, dragState.currentOffsetDays),
+            viewMode,
+            timelineStart,
+          ) - x
         : 0;
 
       // Resize preview: shift left edge or right edge while dragging that handle.
@@ -395,14 +420,17 @@ export function GanttChart({
       let resizeWidthDelta = 0;
       if (isResizing && resizeState) {
         const previewDate =
-          resizeState.edge === 'left'
+          resizeState.edge === "left"
             ? addDays(resizeState.origStart, resizeState.currentDeltaDays)
             : addDays(resizeState.origEnd, resizeState.currentDeltaDays);
-        const anchor = resizeState.edge === 'left' ? resizeState.origStart : resizeState.origEnd;
+        const anchor =
+          resizeState.edge === "left"
+            ? resizeState.origStart
+            : resizeState.origEnd;
         const shift =
           dateToPx(previewDate, viewMode, timelineStart) -
           dateToPx(anchor, viewMode, timelineStart);
-        if (resizeState.edge === 'left') {
+        if (resizeState.edge === "left") {
           resizeLeftShift = shift;
           resizeWidthDelta = -shift;
         } else {
@@ -413,25 +441,29 @@ export function GanttChart({
       const effectiveX = x + dragOffset + resizeLeftShift;
       const effectiveWidth = Math.max(width + resizeWidthDelta, MIN_BAR_WIDTH);
 
-      const fillColor = a.color || (isCritical ? '#ef4444' : '#3b82f6');
+      const fillColor = a.color || (isCritical ? "#ef4444" : "#3b82f6");
       const bgColor = a.color
         ? `${a.color}33`
         : isCritical
-          ? '#ef444433'
-          : '#3b82f633';
+          ? "#ef444433"
+          : "#3b82f633";
       const progressWidth = (a.progress / 100) * width;
 
       if (a.isMilestone) {
         const cx = effectiveX;
         const cy = y + ROW_HEIGHT / 2;
         return (
-          <g key={a.id} role="img" aria-label={`${t('gantt.milestone', 'Milestone')}: ${a.name}`}>
+          <g
+            key={a.id}
+            role="img"
+            aria-label={`${t("gantt.milestone", "Milestone")}: ${a.name}`}
+          >
             <polygon
               points={`${cx},${cy - MILESTONE_SIZE} ${cx + MILESTONE_SIZE},${cy} ${cx},${cy + MILESTONE_SIZE} ${cx - MILESTONE_SIZE},${cy}`}
-              fill={isCritical ? '#ef4444' : fillColor}
-              stroke={isCritical ? '#b91c1c' : '#1e40af'}
+              fill={isCritical ? "#ef4444" : fillColor}
+              stroke={isCritical ? "#b91c1c" : "#1e40af"}
               strokeWidth={1.5}
-              className={onActivityClick ? 'cursor-pointer' : ''}
+              className={onActivityClick ? "cursor-pointer" : ""}
               onClick={() => onActivityClick?.(a.id)}
             />
           </g>
@@ -443,7 +475,11 @@ export function GanttChart({
         const barY = y + ROW_HEIGHT / 2 - 4;
         const barH = 8;
         return (
-          <g key={a.id} role="img" aria-label={`${t('gantt.group', 'Group')}: ${a.name}`}>
+          <g
+            key={a.id}
+            role="img"
+            aria-label={`${t("gantt.group", "Group")}: ${a.name}`}
+          >
             {/* Baseline */}
             {baselineX != null && baselineWidth != null && (
               <rect
@@ -464,7 +500,7 @@ export function GanttChart({
               height={barH}
               rx={2}
               fill="#6b7280"
-              className={onActivityClick ? 'cursor-pointer' : ''}
+              className={onActivityClick ? "cursor-pointer" : ""}
               onClick={() => onActivityClick?.(a.id)}
             />
             {/* Left bracket */}
@@ -500,7 +536,7 @@ export function GanttChart({
         <g
           key={a.id}
           role="img"
-          aria-label={`${a.name}: ${fmtShort(new Date(a.start), locale)} - ${fmtShort(new Date(a.end), locale)}, ${a.progress}% ${t('gantt.complete', 'complete')}`}
+          aria-label={`${a.name}: ${fmtShort(new Date(a.start), locale)} - ${fmtShort(new Date(a.end), locale)}, ${a.progress}% ${t("gantt.complete", "complete")}`}
         >
           {/* Baseline overlay */}
           {baselineX != null && baselineWidth != null && (
@@ -523,9 +559,9 @@ export function GanttChart({
             height={BAR_HEIGHT}
             rx={4}
             fill={bgColor}
-            stroke={isCritical ? '#ef4444' : 'none'}
+            stroke={isCritical ? "#ef4444" : "none"}
             strokeWidth={isCritical ? 2 : 0}
-            className={`${onActivityDrag ? 'cursor-grab' : onActivityClick ? 'cursor-pointer' : ''} ${isDragging || isResizing ? 'opacity-70' : ''}`}
+            className={`${onActivityDrag ? "cursor-grab" : onActivityClick ? "cursor-pointer" : ""} ${isDragging || isResizing ? "opacity-70" : ""}`}
             onMouseDown={(e) => handleBarMouseDown(e, a.id)}
             onClick={() => {
               if (!isDragging && !isResizing) onActivityClick?.(a.id);
@@ -547,17 +583,19 @@ export function GanttChart({
           )}
 
           {/* Right edge clip for progress (keep rounded corners) */}
-          {a.progress > 0 && a.progress < 100 && progressDrawWidth < effectiveWidth - 4 && (
-            <rect
-              x={effectiveX + progressDrawWidth - 1}
-              y={barY}
-              width={2}
-              height={BAR_HEIGHT}
-              fill={fillColor}
-              opacity={0.85}
-              className="pointer-events-none"
-            />
-          )}
+          {a.progress > 0 &&
+            a.progress < 100 &&
+            progressDrawWidth < effectiveWidth - 4 && (
+              <rect
+                x={effectiveX + progressDrawWidth - 1}
+                y={barY}
+                width={2}
+                height={BAR_HEIGHT}
+                fill={fillColor}
+                opacity={0.85}
+                className="pointer-events-none"
+              />
+            )}
 
           {/* Bar label if wide enough */}
           {effectiveWidth > 50 && (
@@ -566,10 +604,10 @@ export function GanttChart({
               y={barY + BAR_HEIGHT / 2}
               dominantBaseline="central"
               className="pointer-events-none select-none fill-current text-[11px] font-medium"
-              fill={a.progress > 40 ? '#ffffff' : '#1f2937'}
+              fill={a.progress > 40 ? "#ffffff" : "#1f2937"}
             >
               {a.name.length > Math.floor(effectiveWidth / 7)
-                ? a.name.slice(0, Math.floor(effectiveWidth / 7)) + '...'
+                ? a.name.slice(0, Math.floor(effectiveWidth / 7)) + "..."
                 : a.name}
             </text>
           )}
@@ -608,8 +646,8 @@ export function GanttChart({
                 width={RESIZE_HANDLE_WIDTH}
                 height={BAR_HEIGHT}
                 fill="transparent"
-                style={{ cursor: 'ew-resize' }}
-                onMouseDown={(e) => handleResizeMouseDown(e, a.id, 'left')}
+                style={{ cursor: "ew-resize" }}
+                onMouseDown={(e) => handleResizeMouseDown(e, a.id, "left")}
               />
               <rect
                 x={effectiveX + effectiveWidth - RESIZE_HANDLE_WIDTH / 2}
@@ -617,8 +655,8 @@ export function GanttChart({
                 width={RESIZE_HANDLE_WIDTH}
                 height={BAR_HEIGHT}
                 fill="transparent"
-                style={{ cursor: 'ew-resize' }}
-                onMouseDown={(e) => handleResizeMouseDown(e, a.id, 'right')}
+                style={{ cursor: "ew-resize" }}
+                onMouseDown={(e) => handleResizeMouseDown(e, a.id, "right")}
               />
             </>
           )}
@@ -650,7 +688,10 @@ export function GanttChart({
       style={{ height: Math.min(bodyHeight + HEADER_HEIGHT + 2, 800) }}
     >
       {/* ── Left panel: activity table ──────────────────────────── */}
-      <div className="flex flex-col" style={{ width: TABLE_WIDTH, minWidth: TABLE_WIDTH }}>
+      <div
+        className="flex flex-col"
+        style={{ width: TABLE_WIDTH, minWidth: TABLE_WIDTH }}
+      >
         {/* Table header */}
         <div
           className="flex shrink-0 border-b border-r border-border-light bg-surface-secondary/60"
@@ -658,17 +699,17 @@ export function GanttChart({
         >
           <div className="flex flex-1 items-end px-3 pb-1.5">
             <span className="text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-              {t('gantt.activity_name', 'Activity')}
+              {t("gantt.activity_name", "Activity")}
             </span>
           </div>
           <div className="flex w-[70px] items-end justify-end px-2 pb-1.5">
             <span className="text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-              {t('gantt.start', 'Start')}
+              {t("gantt.start", "Start")}
             </span>
           </div>
           <div className="flex w-[70px] items-end justify-end px-2 pb-1.5">
             <span className="text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-              {t('gantt.end', 'End')}
+              {t("gantt.end", "End")}
             </span>
           </div>
           <div className="flex w-[36px] items-end justify-end px-1 pb-1.5">
@@ -683,7 +724,7 @@ export function GanttChart({
           ref={tableBodyRef}
           className="flex-1 overflow-y-auto overflow-x-hidden border-r border-border-light"
           onScroll={handleTableScroll}
-          style={{ scrollbarWidth: 'none' }}
+          style={{ scrollbarWidth: "none" }}
         >
           {activities.map((a, idx) => {
             const startD = new Date(a.start);
@@ -694,19 +735,26 @@ export function GanttChart({
               <div
                 key={a.id}
                 className={`flex items-center border-b border-border-light/60 transition-colors hover:bg-surface-secondary/40 ${
-                  idx % 2 === 0 ? 'bg-surface-primary' : 'bg-surface-secondary/20'
-                } ${isCritical ? 'bg-red-50 dark:bg-red-950/20' : ''} ${
-                  onActivityClick ? 'cursor-pointer' : ''
+                  idx % 2 === 0
+                    ? "bg-surface-primary"
+                    : "bg-surface-secondary/20"
+                } ${isCritical ? "bg-red-50 dark:bg-red-950/20" : ""} ${
+                  onActivityClick ? "cursor-pointer" : ""
                 }`}
                 style={{ height: ROW_HEIGHT }}
                 onClick={() => onActivityClick?.(a.id)}
               >
                 <div className="flex min-w-0 flex-1 items-center gap-1.5 px-3">
                   {a.isMilestone && (
-                    <svg width="10" height="10" viewBox="0 0 10 10" className="shrink-0">
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 10 10"
+                      className="shrink-0"
+                    >
                       <polygon
                         points="5,0 10,5 5,10 0,5"
-                        fill={isCritical ? '#ef4444' : '#3b82f6'}
+                        fill={isCritical ? "#ef4444" : "#3b82f6"}
                       />
                     </svg>
                   )}
@@ -717,7 +765,7 @@ export function GanttChart({
                   )}
                   <span
                     className={`truncate text-xs ${
-                      a.isGroup ? 'font-bold' : 'font-medium'
+                      a.isGroup ? "font-bold" : "font-medium"
                     } text-content-primary`}
                     title={a.name}
                   >
@@ -743,10 +791,10 @@ export function GanttChart({
                   <span
                     className={`text-2xs font-medium tabular-nums ${
                       a.progress >= 100
-                        ? 'text-green-600'
+                        ? "text-green-600"
                         : a.progress > 0
-                          ? 'text-blue-600'
-                          : 'text-content-tertiary'
+                          ? "text-blue-600"
+                          : "text-content-tertiary"
                     }`}
                   >
                     {a.progress}
@@ -769,9 +817,13 @@ export function GanttChart({
           height={bodyHeight + HEADER_HEIGHT}
           className="select-none"
           role="img"
-          aria-label={t('gantt.chart_label', 'Gantt chart with {{count}} activities', {
-            count: activities.length,
-          })}
+          aria-label={t(
+            "gantt.chart_label",
+            "Gantt chart with {{count}} activities",
+            {
+              count: activities.length,
+            },
+          )}
         >
           <defs>
             {/* Arrowhead marker */}
@@ -791,8 +843,22 @@ export function GanttChart({
           {/* ── Header area ─────────────────────────────────────── */}
           <g className="gantt-header">
             {/* Header background */}
-            <rect x={0} y={0} width={timelineWidth} height={HEADER_HEIGHT} fill="var(--color-surface-secondary, #f8fafc)" opacity={0.6} />
-            <line x1={0} y1={HEADER_HEIGHT} x2={timelineWidth} y2={HEADER_HEIGHT} stroke="var(--color-border-light, #e2e8f0)" strokeWidth={1} />
+            <rect
+              x={0}
+              y={0}
+              width={timelineWidth}
+              height={HEADER_HEIGHT}
+              fill="var(--color-surface-secondary, #f8fafc)"
+              opacity={0.6}
+            />
+            <line
+              x1={0}
+              y1={HEADER_HEIGHT}
+              x2={timelineWidth}
+              y2={HEADER_HEIGHT}
+              stroke="var(--color-border-light, #e2e8f0)"
+              strokeWidth={1}
+            />
 
             {/* Top row */}
             {headers.topRow.map((cell, i) => (
@@ -864,7 +930,11 @@ export function GanttChart({
                 y={idx * ROW_HEIGHT}
                 width={timelineWidth}
                 height={ROW_HEIGHT}
-                fill={idx % 2 === 0 ? 'transparent' : 'var(--color-surface-secondary, #f8fafc)'}
+                fill={
+                  idx % 2 === 0
+                    ? "transparent"
+                    : "var(--color-surface-secondary, #f8fafc)"
+                }
                 opacity={0.3}
               />
             ))}
@@ -926,7 +996,7 @@ export function GanttChart({
                   className="text-[9px] font-bold"
                   fill="white"
                 >
-                  {t('gantt.today', 'Today')}
+                  {t("gantt.today", "Today")}
                 </text>
               </g>
             )}

@@ -10,10 +10,10 @@
  * "View all" leads to /notifications for a paginated history with filters.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Bell,
   CheckCircle2,
@@ -27,20 +27,20 @@ import {
   Trash2,
   X,
   ArrowRight,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { apiGet, apiPost, apiDelete, ApiError } from '@/shared/lib/api';
+} from "lucide-react";
+import clsx from "clsx";
+import { apiGet, apiPost, apiDelete, ApiError } from "@/shared/lib/api";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 type IconCategory =
-  | 'success'
-  | 'error'
-  | 'warning'
-  | 'info'
-  | 'import'
-  | 'validation'
-  | 'system';
+  | "success"
+  | "error"
+  | "warning"
+  | "info"
+  | "import"
+  | "validation"
+  | "system";
 
 interface Notification {
   id: string;
@@ -74,38 +74,38 @@ const NOTIFICATION_ICON_MAP: Record<
 > = {
   success: {
     icon: CheckCircle2,
-    colorClass: 'text-semantic-success',
-    bgClass: 'bg-emerald-50 dark:bg-emerald-900/30',
+    colorClass: "text-semantic-success",
+    bgClass: "bg-emerald-50 dark:bg-emerald-900/30",
   },
   error: {
     icon: XCircle,
-    colorClass: 'text-semantic-error',
-    bgClass: 'bg-rose-50 dark:bg-rose-900/30',
+    colorClass: "text-semantic-error",
+    bgClass: "bg-rose-50 dark:bg-rose-900/30",
   },
   warning: {
     icon: AlertTriangle,
-    colorClass: 'text-amber-500',
-    bgClass: 'bg-amber-50 dark:bg-amber-900/30',
+    colorClass: "text-amber-500",
+    bgClass: "bg-amber-50 dark:bg-amber-900/30",
   },
   info: {
     icon: Info,
-    colorClass: 'text-oe-blue',
-    bgClass: 'bg-oe-blue-subtle',
+    colorClass: "text-oe-blue",
+    bgClass: "bg-oe-blue-subtle",
   },
   import: {
     icon: Upload,
-    colorClass: 'text-indigo-500',
-    bgClass: 'bg-indigo-50 dark:bg-indigo-900/30',
+    colorClass: "text-indigo-500",
+    bgClass: "bg-indigo-50 dark:bg-indigo-900/30",
   },
   validation: {
     icon: Shield,
-    colorClass: 'text-purple-500',
-    bgClass: 'bg-purple-50 dark:bg-purple-900/30',
+    colorClass: "text-purple-500",
+    bgClass: "bg-purple-50 dark:bg-purple-900/30",
   },
   system: {
     icon: Settings,
-    colorClass: 'text-content-tertiary',
-    bgClass: 'bg-surface-secondary',
+    colorClass: "text-content-tertiary",
+    bgClass: "bg-surface-secondary",
   },
 };
 
@@ -119,7 +119,7 @@ function getIconConfig(category: IconCategory) {
 // (which would render the catch-all NotFoundPage and *look* blank to the
 // user during the lazy-chunk load).
 const ACTION_URL_REWRITES: Array<[RegExp, (m: RegExpMatchArray) => string]> = [
-  [/^\/risk(\?.*)?$/, (m) => `/risks${m[1] ?? ''}`],
+  [/^\/risk(\?.*)?$/, (m) => `/risks${m[1] ?? ""}`],
   [/^\/boq\?id=([0-9a-fA-F-]{8,})$/, (m) => `/boq/${m[1]}`],
 ];
 
@@ -135,34 +135,46 @@ function normalizeActionUrl(url: string): string {
 
 function formatTimeAgo(
   dateStr: string,
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
 ): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) return t('notifications.just_now', { defaultValue: 'Just now‌⁠‍' });
+  if (seconds < 60)
+    return t("notifications.just_now", { defaultValue: "Just now‌⁠‍" });
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60)
-    return t('time.minutes_ago', { defaultValue: '{{count}}m ago‌⁠‍', count: minutes });
+    return t("time.minutes_ago", {
+      defaultValue: "{{count}}m ago‌⁠‍",
+      count: minutes,
+    });
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return t('time.hours_ago', { defaultValue: '{{count}}h ago‌⁠‍', count: hours });
+  if (hours < 24)
+    return t("time.hours_ago", {
+      defaultValue: "{{count}}h ago‌⁠‍",
+      count: hours,
+    });
   const days = Math.floor(hours / 24);
-  return t('time.days_ago', { defaultValue: '{{count}}d ago‌⁠‍', count: days });
+  return t("time.days_ago", { defaultValue: "{{count}}d ago‌⁠‍", count: days });
 }
 
 /** Bucket a notification by date. Used to group the list visually in the
     dropdown so the user can scan "what's new today" without reading every
     row's timestamp. */
-type DateBucket = 'today' | 'yesterday' | 'earlier';
+type DateBucket = "today" | "yesterday" | "earlier";
 
 function bucketFor(dateStr: string): DateBucket {
   const created = new Date(dateStr);
   const now = new Date();
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
   const startOfYesterday = startOfToday - 24 * 60 * 60 * 1000;
   const t = created.getTime();
-  if (t >= startOfToday) return 'today';
-  if (t >= startOfYesterday) return 'yesterday';
-  return 'earlier';
+  if (t >= startOfToday) return "today";
+  if (t >= startOfYesterday) return "yesterday";
+  return "earlier";
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -178,8 +190,9 @@ export function NotificationBell() {
      bell never lags more than one tab-switch behind. retry:false because
      an unread-count failure shouldn't spam the network on every render. */
   const { data: unreadData } = useQuery({
-    queryKey: ['notifications-unread-count'],
-    queryFn: () => apiGet<UnreadCountResponse>('/v1/notifications/unread-count/'),
+    queryKey: ["notifications-unread-count"],
+    queryFn: () =>
+      apiGet<UnreadCountResponse>("/v1/notifications/unread-count/"),
     refetchInterval: 30_000,
     refetchOnWindowFocus: true,
     staleTime: 15_000,
@@ -198,9 +211,9 @@ export function NotificationBell() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['notifications-list'],
+    queryKey: ["notifications-list"],
     queryFn: () =>
-      apiGet<NotificationListResponse>('/v1/notifications?limit=10'),
+      apiGet<NotificationListResponse>("/v1/notifications?limit=10"),
     enabled: open,
     staleTime: 10_000,
     refetchOnWindowFocus: true,
@@ -210,22 +223,26 @@ export function NotificationBell() {
   const markReadMutation = useMutation({
     mutationFn: (id: string) => apiPost<void>(`/v1/notifications/${id}/read/`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications-unread-count'] });
-      queryClient.invalidateQueries({ queryKey: ['notifications-list'] });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications-unread-count"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["notifications-list"] });
     },
     onError: (err: Error) => {
-      console.warn('Failed to mark notification as read:', err.message);
+      console.warn("Failed to mark notification as read:", err.message);
     },
   });
 
   const markAllReadMutation = useMutation({
-    mutationFn: () => apiPost<void>('/v1/notifications/read-all/'),
+    mutationFn: () => apiPost<void>("/v1/notifications/read-all/"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications-unread-count'] });
-      queryClient.invalidateQueries({ queryKey: ['notifications-list'] });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications-unread-count"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["notifications-list"] });
     },
     onError: (err: Error) => {
-      console.warn('Failed to mark all notifications as read:', err.message);
+      console.warn("Failed to mark all notifications as read:", err.message);
     },
   });
 
@@ -234,31 +251,34 @@ export function NotificationBell() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => apiDelete(`/v1/notifications/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications-unread-count'] });
-      queryClient.invalidateQueries({ queryKey: ['notifications-list'] });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications-unread-count"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["notifications-list"] });
     },
     onError: (err: Error) => {
-      console.warn('Failed to delete notification:', err.message);
+      console.warn("Failed to delete notification:", err.message);
     },
   });
 
   // Close on click outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === "Escape") setOpen(false);
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open]);
 
   const handleToggle = useCallback(() => {
@@ -299,7 +319,7 @@ export function NotificationBell() {
 
   const handleViewAll = useCallback(() => {
     setOpen(false);
-    navigate('/notifications');
+    navigate("/notifications");
   }, [navigate]);
 
   /* Tolerate the bare-array legacy shape so an older backend doesn't
@@ -325,7 +345,9 @@ export function NotificationBell() {
   }, [displayItems]);
 
   const totalCount =
-    notifications && !Array.isArray(notifications) ? notifications.total : displayItems.length;
+    notifications && !Array.isArray(notifications)
+      ? notifications.total
+      : displayItems.length;
 
   return (
     <div className="relative" ref={ref}>
@@ -337,27 +359,27 @@ export function NotificationBell() {
           /* h-9 w-9 gives us a 36×36 hit area — still compact in the header
              but closer to the 44px mobile-tap-target guideline than the
              previous 32×32. */
-          'flex h-9 w-9 items-center justify-center rounded-lg',
-          'text-content-secondary transition-all duration-fast ease-oe',
-          'hover:bg-surface-secondary hover:text-content-primary',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
-          open && 'bg-surface-secondary text-content-primary',
+          "flex h-9 w-9 items-center justify-center rounded-lg",
+          "text-content-secondary transition-all duration-fast ease-oe",
+          "hover:bg-surface-secondary hover:text-content-primary",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
+          open && "bg-surface-secondary text-content-primary",
         )}
-        title={t('notifications.title', { defaultValue: 'Notifications‌⁠‍' })}
-        aria-label={t('notifications.title', { defaultValue: 'Notifications' })}
+        title={t("notifications.title", { defaultValue: "Notifications‌⁠‍" })}
+        aria-label={t("notifications.title", { defaultValue: "Notifications" })}
       >
         <Bell size={16} strokeWidth={1.75} />
         {unreadCount > 0 && (
           <span
             className={clsx(
-              'absolute -top-0.5 -right-0.5 flex h-4 min-w-[16px] items-center justify-center',
-              'rounded-full bg-semantic-error px-1 text-[10px] font-bold text-white',
+              "absolute -top-0.5 -right-0.5 flex h-4 min-w-[16px] items-center justify-center",
+              "rounded-full bg-semantic-error px-1 text-[10px] font-bold text-white",
               /* Tiny pulse pulls the eye when a fresh notification lands —
                  stops after one cycle so it doesn't keep flashing. */
-              'animate-pulse-once',
+              "animate-pulse-once",
             )}
           >
-            {unreadCount > 99 ? '99+' : unreadCount}
+            {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
@@ -370,17 +392,17 @@ export function NotificationBell() {
              stack omitted z-index so it was sometimes covered by overlays.
              Max width on small screens prevents off-screen clipping. */
           className={clsx(
-            'absolute right-0 top-full mt-1.5 z-50',
-            'w-[min(360px,calc(100vw-1rem))]',
-            'rounded-xl border border-border-light bg-surface-elevated shadow-xl',
-            'animate-scale-in overflow-hidden',
+            "absolute right-0 top-full mt-1.5 z-50",
+            "w-[min(360px,calc(100vw-1rem))]",
+            "rounded-xl border border-border-light bg-surface-elevated shadow-xl",
+            "animate-scale-in overflow-hidden",
           )}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-light">
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-content-primary">
-                {t('notifications.title', { defaultValue: 'Notifications' })}
+                {t("notifications.title", { defaultValue: "Notifications" })}
               </span>
               {totalCount > 0 && (
                 <span className="text-2xs text-content-quaternary tabular-nums">
@@ -394,8 +416,12 @@ export function NotificationBell() {
                 disabled={markAllReadMutation.isPending}
                 className="text-2xs font-medium text-oe-blue hover:underline disabled:opacity-50 inline-flex items-center gap-1"
               >
-                {markAllReadMutation.isPending && <Loader2 size={10} className="animate-spin" />}
-                {t('notifications.mark_all_read_short', { defaultValue: 'Mark all read' })}
+                {markAllReadMutation.isPending && (
+                  <Loader2 size={10} className="animate-spin" />
+                )}
+                {t("notifications.mark_all_read_short", {
+                  defaultValue: "Mark all read",
+                })}
               </button>
             )}
           </div>
@@ -417,12 +443,15 @@ export function NotificationBell() {
             <div className="px-4 py-6 text-center">
               <XCircle size={20} className="mx-auto mb-2 text-semantic-error" />
               <p className="text-xs text-content-secondary mb-2">
-                {t('notifications.load_error', { defaultValue: "Couldn't load notifications" })}
+                {t("notifications.load_error", {
+                  defaultValue: "Couldn't load notifications",
+                })}
               </p>
               {error instanceof ApiError && error.status === 401 ? (
                 <p className="text-2xs text-content-tertiary">
-                  {t('notifications.load_error_auth', {
-                    defaultValue: 'Please sign in again to view your notifications.',
+                  {t("notifications.load_error_auth", {
+                    defaultValue:
+                      "Please sign in again to view your notifications.",
                   })}
                 </p>
               ) : (
@@ -430,34 +459,40 @@ export function NotificationBell() {
                   onClick={() => refetch()}
                   className="text-2xs font-medium text-oe-blue hover:underline"
                 >
-                  {t('common.retry', { defaultValue: 'Try again' })}
+                  {t("common.retry", { defaultValue: "Try again" })}
                 </button>
               )}
             </div>
           ) : displayItems.length === 0 ? (
             <div className="px-4 py-8 text-center">
-              <Bell size={24} className="mx-auto mb-2 text-content-quaternary" />
+              <Bell
+                size={24}
+                className="mx-auto mb-2 text-content-quaternary"
+              />
               <p className="text-xs text-content-secondary font-medium">
-                {t('notifications.all_caught_up', { defaultValue: "You're all caught up" })}
+                {t("notifications.all_caught_up", {
+                  defaultValue: "You're all caught up",
+                })}
               </p>
               <p className="text-2xs text-content-tertiary mt-0.5">
-                {t('notifications.no_notifications_hint', {
-                  defaultValue: "We'll let you know when something needs your attention.",
+                {t("notifications.no_notifications_hint", {
+                  defaultValue:
+                    "We'll let you know when something needs your attention.",
                 })}
               </p>
             </div>
           ) : (
             <div className="max-h-[420px] overflow-y-auto">
-              {(['today', 'yesterday', 'earlier'] as const).map((bucket) => {
+              {(["today", "yesterday", "earlier"] as const).map((bucket) => {
                 const rows = grouped[bucket];
                 if (rows.length === 0) return null;
                 const bucketLabel = t(`notifications.bucket.${bucket}`, {
                   defaultValue:
-                    bucket === 'today'
-                      ? 'Today'
-                      : bucket === 'yesterday'
-                      ? 'Yesterday'
-                      : 'Earlier',
+                    bucket === "today"
+                      ? "Today"
+                      : bucket === "yesterday"
+                        ? "Yesterday"
+                        : "Earlier",
                 });
                 return (
                   <div key={bucket}>
@@ -479,19 +514,22 @@ export function NotificationBell() {
                          default text, and tolerate a null `body_context`
                          (object spread of null is fine, but be explicit). */
                       const titleKey =
-                        typeof notification.title_key === 'string' &&
+                        typeof notification.title_key === "string" &&
                         notification.title_key
                           ? notification.title_key
-                          : '';
+                          : "";
                       const bodyKey =
-                        typeof notification.body_key === 'string' &&
+                        typeof notification.body_key === "string" &&
                         notification.body_key
                           ? notification.body_key
-                          : '';
+                          : "";
                       const ctx =
                         notification.body_context &&
-                        typeof notification.body_context === 'object'
-                          ? (notification.body_context as Record<string, unknown>)
+                        typeof notification.body_context === "object"
+                          ? (notification.body_context as Record<
+                              string,
+                              unknown
+                            >)
                           : {};
                       const title = titleKey
                         ? t(titleKey, {
@@ -499,7 +537,7 @@ export function NotificationBell() {
                               notification.title_default || titleKey,
                             ...ctx,
                           })
-                        : notification.title_default || '';
+                        : notification.title_default || "";
                       const body = bodyKey
                         ? t(bodyKey, {
                             defaultValue: notification.body_default,
@@ -513,11 +551,11 @@ export function NotificationBell() {
                         <div
                           key={notification.id}
                           className={clsx(
-                            'group relative flex items-start gap-2.5 px-4 py-2.5 text-left',
-                            'hover:bg-surface-secondary transition-colors',
-                            'border-b border-border-light/60 last:border-b-0',
-                            !notification.is_read && 'bg-oe-blue-subtle/30',
-                            deleting && 'opacity-50 pointer-events-none',
+                            "group relative flex items-start gap-2.5 px-4 py-2.5 text-left",
+                            "hover:bg-surface-secondary transition-colors",
+                            "border-b border-border-light/60 last:border-b-0",
+                            !notification.is_read && "bg-oe-blue-subtle/30",
+                            deleting && "opacity-50 pointer-events-none",
                           )}
                         >
                           {/* The whole row is the click-target; nested
@@ -525,24 +563,29 @@ export function NotificationBell() {
                               <button> as the outer for a11y. */}
                           <button
                             type="button"
-                            onClick={() => handleNotificationClick(notification)}
+                            onClick={() =>
+                              handleNotificationClick(notification)
+                            }
                             className="flex items-start gap-2.5 flex-1 min-w-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-md -m-1 p-1"
                           >
                             <span
                               className={clsx(
-                                'shrink-0 h-7 w-7 rounded-md flex items-center justify-center',
+                                "shrink-0 h-7 w-7 rounded-md flex items-center justify-center",
                                 config.bgClass,
                               )}
                             >
-                              <TypeIcon size={14} className={config.colorClass} />
+                              <TypeIcon
+                                size={14}
+                                className={config.colorClass}
+                              />
                             </span>
                             <div className="min-w-0 flex-1">
                               <p
                                 className={clsx(
-                                  'text-xs leading-snug line-clamp-1',
+                                  "text-xs leading-snug line-clamp-1",
                                   notification.is_read
-                                    ? 'font-medium text-content-primary'
-                                    : 'font-semibold text-content-primary',
+                                    ? "font-medium text-content-primary"
+                                    : "font-semibold text-content-primary",
                                 )}
                               >
                                 {title}
@@ -559,23 +602,33 @@ export function NotificationBell() {
                             {!notification.is_read && (
                               <span
                                 className="shrink-0 mt-1 h-2 w-2 rounded-full bg-oe-blue"
-                                aria-label={t('notifications.unread', { defaultValue: 'unread' })}
-                                title={t('notifications.unread', { defaultValue: 'unread' })}
+                                aria-label={t("notifications.unread", {
+                                  defaultValue: "unread",
+                                })}
+                                title={t("notifications.unread", {
+                                  defaultValue: "unread",
+                                })}
                               />
                             )}
                           </button>
                           <button
                             type="button"
-                            onClick={(e) => handleDeleteNotification(e, notification.id)}
+                            onClick={(e) =>
+                              handleDeleteNotification(e, notification.id)
+                            }
                             className={clsx(
-                              'shrink-0 flex h-6 w-6 items-center justify-center rounded-md',
-                              'text-content-quaternary',
-                              'opacity-0 group-hover:opacity-100 focus:opacity-100',
-                              'hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-rose-900/30',
-                              'transition-all',
+                              "shrink-0 flex h-6 w-6 items-center justify-center rounded-md",
+                              "text-content-quaternary",
+                              "opacity-0 group-hover:opacity-100 focus:opacity-100",
+                              "hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-rose-900/30",
+                              "transition-all",
                             )}
-                            title={t('common.delete', { defaultValue: 'Delete' })}
-                            aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                            title={t("common.delete", {
+                              defaultValue: "Delete",
+                            })}
+                            aria-label={t("common.delete", {
+                              defaultValue: "Delete",
+                            })}
                           >
                             {deleting ? (
                               <Loader2 size={12} className="animate-spin" />
@@ -599,7 +652,9 @@ export function NotificationBell() {
               onClick={handleViewAll}
               className="flex w-full items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium text-content-secondary hover:text-oe-blue hover:bg-surface-elevated transition-colors"
             >
-              {t('notifications.view_all', { defaultValue: 'View all notifications' })}
+              {t("notifications.view_all", {
+                defaultValue: "View all notifications",
+              })}
               <ArrowRight size={12} />
             </button>
           </div>

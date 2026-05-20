@@ -8,18 +8,18 @@
  * formatting) so the UI stays a thin, well-tested view.
  */
 
-import type { ComparePositionRow, CompareChangeType } from './api';
+import type { ComparePositionRow, CompareChangeType } from "./api";
 
-export type BadgeVariant = 'neutral' | 'blue' | 'success' | 'warning' | 'error';
+export type BadgeVariant = "neutral" | "blue" | "success" | "warning" | "error";
 
 /** Stable change-type → Badge variant map (single source of truth). */
 export const CHANGE_VARIANT: Record<CompareChangeType, BadgeVariant> = {
-  added: 'success',
-  removed: 'error',
-  qty_changed: 'warning',
-  rate_changed: 'warning',
-  changed: 'warning',
-  unchanged: 'neutral',
+  added: "success",
+  removed: "error",
+  qty_changed: "warning",
+  rate_changed: "warning",
+  changed: "warning",
+  unchanged: "neutral",
 };
 
 /**
@@ -32,7 +32,7 @@ export function filterCompareRows(
   hideUnchanged: boolean,
 ): ComparePositionRow[] {
   if (!hideUnchanged) return rows;
-  return rows.filter((r) => r.change_type !== 'unchanged');
+  return rows.filter((r) => r.change_type !== "unchanged");
 }
 
 /**
@@ -42,7 +42,7 @@ export function filterCompareRows(
  * needs a number for locale formatting + sign.
  */
 export function toFiniteOrNull(v: string | null | undefined): number | null {
-  if (v == null || v === '') return null;
+  if (v == null || v === "") return null;
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
 }
@@ -61,10 +61,10 @@ export function deltaSign(v: string | null | undefined): -1 | 0 | 1 {
  */
 export function showsPair(
   changeType: CompareChangeType,
-  column: 'qty' | 'rate',
+  column: "qty" | "rate",
 ): boolean {
-  if (column === 'qty') {
-    return changeType === 'qty_changed' || changeType === 'changed';
+  if (column === "qty") {
+    return changeType === "qty_changed" || changeType === "changed";
   }
-  return changeType === 'rate_changed' || changeType === 'changed';
+  return changeType === "rate_changed" || changeType === "changed";
 }

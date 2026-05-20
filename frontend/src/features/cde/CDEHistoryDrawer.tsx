@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { X, History, ArrowRight } from 'lucide-react';
-import { Badge, DateDisplay } from '@/shared/ui';
-import { fetchContainerHistory, type StateTransitionEntry } from './api';
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { X, History, ArrowRight } from "lucide-react";
+import { Badge, DateDisplay } from "@/shared/ui";
+import { fetchContainerHistory, type StateTransitionEntry } from "./api";
 
 /**
  * Right-side drawer that shows the state-transition audit log for a CDE
@@ -20,7 +20,7 @@ export function CDEHistoryDrawer({
   const { t } = useTranslation();
 
   const { data: history = [], isLoading } = useQuery({
-    queryKey: ['cde-history', containerId],
+    queryKey: ["cde-history", containerId],
     queryFn: () => fetchContainerHistory(containerId),
   });
 
@@ -29,7 +29,9 @@ export function CDEHistoryDrawer({
       className="fixed inset-0 z-50 flex justify-end bg-black/40 animate-fade-in"
       onClick={onClose}
       role="dialog"
-      aria-label={t('cde.history_title', { defaultValue: 'State transition history‌⁠‍' })}
+      aria-label={t("cde.history_title", {
+        defaultValue: "State transition history‌⁠‍",
+      })}
     >
       <div
         className="w-full max-w-md bg-surface-primary border-l border-border shadow-xl flex flex-col animate-slide-in-right"
@@ -41,7 +43,9 @@ export function CDEHistoryDrawer({
             <History size={18} className="text-oe-blue" />
             <div>
               <h3 className="text-base font-semibold">
-                {t('cde.history_title', { defaultValue: 'State transition history‌⁠‍' })}
+                {t("cde.history_title", {
+                  defaultValue: "State transition history‌⁠‍",
+                })}
               </h3>
               <p className="text-xs text-content-tertiary mt-0.5 font-mono">
                 {containerCode}
@@ -51,7 +55,7 @@ export function CDEHistoryDrawer({
           <button
             onClick={onClose}
             className="p-1 rounded hover:bg-surface-secondary text-content-tertiary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -72,8 +76,9 @@ export function CDEHistoryDrawer({
             <div className="text-center py-10 text-content-tertiary text-sm">
               <History size={24} className="mx-auto mb-2 opacity-30" />
               <p>
-                {t('cde.history_empty', {
-                  defaultValue: 'No state transitions yet — promote the container to start the audit trail.‌⁠‍',
+                {t("cde.history_empty", {
+                  defaultValue:
+                    "No state transitions yet — promote the container to start the audit trail.‌⁠‍",
                 })}
               </p>
             </div>
@@ -104,7 +109,10 @@ function HistoryRow({ row }: { row: StateTransitionEntry }) {
         </Badge>
         {row.gate_code && (
           <Badge variant="neutral" size="sm" className="ml-auto font-mono">
-            {t('cde.gate_label', { defaultValue: 'Gate {{code}}‌⁠‍', code: row.gate_code })}
+            {t("cde.gate_label", {
+              defaultValue: "Gate {{code}}‌⁠‍",
+              code: row.gate_code,
+            })}
           </Badge>
         )}
       </div>
@@ -114,8 +122,8 @@ function HistoryRow({ row }: { row: StateTransitionEntry }) {
       />
       {row.user_role && (
         <p className="text-xs text-content-tertiary mt-1">
-          {t('cde.history_by_role', {
-            defaultValue: 'By: {{role}}‌⁠‍',
+          {t("cde.history_by_role", {
+            defaultValue: "By: {{role}}‌⁠‍",
             role: row.user_role,
           })}
         </p>
@@ -127,8 +135,8 @@ function HistoryRow({ row }: { row: StateTransitionEntry }) {
       )}
       {row.signature && (
         <p className="text-xs text-content-tertiary mt-1">
-          {t('cde.history_signature', {
-            defaultValue: 'Signed: {{signer}}',
+          {t("cde.history_signature", {
+            defaultValue: "Signed: {{signer}}",
             signer: row.signature,
           })}
         </p>

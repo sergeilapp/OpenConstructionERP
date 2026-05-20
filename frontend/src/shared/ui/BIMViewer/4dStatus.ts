@@ -21,10 +21,10 @@
  */
 
 export type FourDStatus =
-  | 'not_started'
-  | 'in_progress'
-  | 'completed'
-  | 'unlinked';
+  | "not_started"
+  | "in_progress"
+  | "completed"
+  | "unlinked";
 
 /** Minimal shape the resolver needs — a trimmed-down projection of the
  *  schedule Activity type so callers can pass whatever they have without
@@ -60,13 +60,13 @@ export function parseDate(s: string | null | undefined): number | null {
 export function resolveActivityStatus(
   activity: FourDActivity,
   t: number,
-): Exclude<FourDStatus, 'unlinked'> {
+): Exclude<FourDStatus, "unlinked"> {
   const start = parseDate(activity.start_date);
   const end = parseDate(activity.end_date);
-  if (start != null && t < start) return 'not_started';
-  if (end != null && t > end) return 'completed';
+  if (start != null && t < start) return "not_started";
+  if (end != null && t > end) return "completed";
   // Any in-window / start-only / end-only activity counts as active at t.
-  return 'in_progress';
+  return "in_progress";
 }
 
 /**
@@ -96,7 +96,7 @@ export function resolveElementStatus(
   activitiesById: ReadonlyMap<string, FourDActivity>,
 ): FourDStatus {
   const linkedIds = activityLinks.get(elementId);
-  if (!linkedIds || linkedIds.length === 0) return 'unlinked';
+  if (!linkedIds || linkedIds.length === 0) return "unlinked";
 
   let anyInProgress = false;
   let anyNotStarted = false;
@@ -106,22 +106,22 @@ export function resolveElementStatus(
     const act = activitiesById.get(actId);
     if (!act) continue;
     const s = resolveActivityStatus(act, t);
-    if (s === 'in_progress') anyInProgress = true;
-    else if (s === 'not_started') anyNotStarted = true;
-    else if (s === 'completed') anyCompleted = true;
+    if (s === "in_progress") anyInProgress = true;
+    else if (s === "not_started") anyNotStarted = true;
+    else if (s === "completed") anyCompleted = true;
   }
 
-  if (anyInProgress) return 'in_progress';
-  if (anyCompleted && !anyNotStarted) return 'completed';
-  if (anyNotStarted && !anyCompleted) return 'not_started';
+  if (anyInProgress) return "in_progress";
+  if (anyCompleted && !anyNotStarted) return "completed";
+  if (anyNotStarted && !anyCompleted) return "not_started";
   // Mixed completed + not_started (no overlap either side of `t`) —
   // intuitively we're between phases: treat as 'completed' so the user
   // sees progress, not a regression.
-  if (anyCompleted && anyNotStarted) return 'completed';
+  if (anyCompleted && anyNotStarted) return "completed";
   // No valid linked activity (every id missing or malformed dates) →
   // the element has links on paper but nothing actionable → treat as
   // unlinked so it renders normally.
-  return 'unlinked';
+  return "unlinked";
 }
 
 /** Return the name of the activity that best represents "what's active
@@ -146,19 +146,19 @@ export function pickActiveActivityName(
     const start = parseDate(act.start_date);
     const end = parseDate(act.end_date);
     const s = resolveActivityStatus(act, t);
-    if (s === 'in_progress') {
+    if (s === "in_progress") {
       if (start != null && start < bestInProgressStart) {
         bestInProgressStart = start;
         bestInProgress = act;
       } else if (bestInProgress == null) {
         bestInProgress = act;
       }
-    } else if (s === 'not_started') {
+    } else if (s === "not_started") {
       if (start != null && start < nextUpcomingStart) {
         nextUpcomingStart = start;
         nextUpcoming = act;
       }
-    } else if (s === 'completed') {
+    } else if (s === "completed") {
       if (end != null && end > lastCompletedEnd) {
         lastCompletedEnd = end;
         lastCompleted = act;
@@ -175,9 +175,10 @@ export function pickActiveActivityName(
 /** Compute the schedule [startDate, endDate] bounds from a list of
  *  activities.  Returns `null` for either bound if no activity has a
  *  valid date on that side. */
-export function computeScheduleBounds(
-  activities: readonly FourDActivity[],
-): { startMs: number | null; endMs: number | null } {
+export function computeScheduleBounds(activities: readonly FourDActivity[]): {
+  startMs: number | null;
+  endMs: number | null;
+} {
   let minStart: number | null = null;
   let maxEnd: number | null = null;
   for (const act of activities) {

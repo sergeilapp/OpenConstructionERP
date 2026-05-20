@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface ToastAction {
   label: string;
@@ -7,7 +7,7 @@ export interface ToastAction {
 
 export interface Toast {
   id: string;
-  type: 'success' | 'error' | 'warning' | 'info';
+  type: "success" | "error" | "warning" | "info";
   title: string;
   message?: string;
   action?: ToastAction;
@@ -15,7 +15,7 @@ export interface Toast {
 
 export interface HistoryEntry {
   id: string;
-  type: Toast['type'];
+  type: Toast["type"];
   title: string;
   message?: string;
   timestamp: number;
@@ -27,7 +27,10 @@ const MAX_HISTORY = 23;
 interface ToastStore {
   toasts: Toast[];
   history: HistoryEntry[];
-  addToast: (toast: Omit<Toast, 'id'>, options?: { duration?: number }) => string;
+  addToast: (
+    toast: Omit<Toast, "id">,
+    options?: { duration?: number },
+  ) => string;
   removeToast: (id: string) => void;
   clearHistory: () => void;
   markAllRead: () => void;

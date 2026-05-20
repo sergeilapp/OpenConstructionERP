@@ -1,20 +1,20 @@
-import clsx from 'clsx';
-import type { HTMLAttributes, ReactNode } from 'react';
+import clsx from "clsx";
+import type { HTMLAttributes, ReactNode } from "react";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  padding?: "none" | "sm" | "md" | "lg";
   hoverable?: boolean;
 }
 
 const paddingStyles = {
-  none: '',
-  sm: 'p-4',
-  md: 'p-6',
-  lg: 'p-8',
+  none: "",
+  sm: "p-4",
+  md: "p-6",
+  lg: "p-8",
 };
 
 export function Card({
-  padding = 'md',
+  padding = "md",
   hoverable = false,
   className,
   children,
@@ -23,14 +23,14 @@ export function Card({
   return (
     <div
       className={clsx(
-        'rounded-xl border border-border-light bg-surface-elevated',
-        'shadow-xs',
-        'transition-all duration-normal ease-oe transform-gpu',
+        "rounded-xl border border-border-light bg-surface-elevated",
+        "shadow-xs",
+        "transition-all duration-normal ease-oe transform-gpu",
         hoverable && [
-          'hover:shadow-md hover:border-border',
-          'hover:-translate-y-0.5',
-          'active:translate-y-0 active:shadow-xs',
-          'focus-within:ring-2 focus-within:ring-oe-blue/20 focus-within:border-oe-blue/40',
+          "hover:shadow-md hover:border-border",
+          "hover:-translate-y-0.5",
+          "active:translate-y-0 active:shadow-xs",
+          "focus-within:ring-2 focus-within:ring-oe-blue/20 focus-within:border-oe-blue/40",
         ],
         paddingStyles[padding],
         className,
@@ -51,11 +51,18 @@ interface CardHeaderProps {
   className?: string;
 }
 
-export function CardHeader({ title, subtitle, action, className }: CardHeaderProps) {
+export function CardHeader({
+  title,
+  subtitle,
+  action,
+  className,
+}: CardHeaderProps) {
   return (
-    <div className={clsx('flex items-start justify-between gap-4', className)}>
+    <div className={clsx("flex items-start justify-between gap-4", className)}>
       <div className="min-w-0">
-        <h3 className="text-lg font-semibold text-content-primary truncate">{title}</h3>
+        <h3 className="text-lg font-semibold text-content-primary truncate">
+          {title}
+        </h3>
         {subtitle && (
           <p className="mt-0.5 text-sm text-content-secondary">{subtitle}</p>
         )}
@@ -65,15 +72,27 @@ export function CardHeader({ title, subtitle, action, className }: CardHeaderPro
   );
 }
 
-export function CardContent({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={clsx('mt-4', className)}>{children}</div>;
+export function CardContent({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
+  return <div className={clsx("mt-4", className)}>{children}</div>;
 }
 
-export function CardFooter({ className, children }: { className?: string; children: ReactNode }) {
+export function CardFooter({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <div
       className={clsx(
-        'mt-4 flex items-center justify-end gap-3 border-t border-border-light pt-4',
+        "mt-4 flex items-center justify-end gap-3 border-t border-border-light pt-4",
         className,
       )}
     >

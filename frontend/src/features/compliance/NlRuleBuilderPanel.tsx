@@ -17,41 +17,41 @@
 // configured the backend silently falls through to the deterministic
 // pattern matcher — never crashes.
 
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Sparkles, Save, Wand2, AlertTriangle } from 'lucide-react';
-import { Button, Card, Badge } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Sparkles, Save, Wand2, AlertTriangle } from "lucide-react";
+import { Button, Card, Badge } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
 import {
   parseNlToDsl,
   listNlPatterns,
   saveDslRule,
   type NlBuildResult,
-} from './api';
-import { DslPreview } from './DslPreview';
-import { NlPatternHints } from './NlPatternHints';
+} from "./api";
+import { DslPreview } from "./DslPreview";
+import { NlPatternHints } from "./NlPatternHints";
 
-type SupportedLang = 'en' | 'de' | 'ru';
+type SupportedLang = "en" | "de" | "ru";
 
 const LANG_OPTIONS: { value: SupportedLang; label: string }[] = [
-  { value: 'en', label: 'EN' },
-  { value: 'de', label: 'DE' },
-  { value: 'ru', label: 'RU' },
+  { value: "en", label: "EN" },
+  { value: "de", label: "DE" },
+  { value: "ru", label: "RU" },
 ];
 
 export function NlRuleBuilderPanel() {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [text, setText] = useState('');
-  const [lang, setLang] = useState<SupportedLang>('en');
+  const [text, setText] = useState("");
+  const [lang, setLang] = useState<SupportedLang>("en");
   const [useAi, setUseAi] = useState(false);
   const [result, setResult] = useState<NlBuildResult | null>(null);
 
   // Pattern catalogue is loaded once.
   const { data: patterns = [] } = useQuery({
-    queryKey: ['compliance', 'nl-patterns'],
+    queryKey: ["compliance", "nl-patterns"],
     queryFn: listNlPatterns,
     staleTime: 60 * 60_000,
   });
@@ -62,18 +62,18 @@ export function NlRuleBuilderPanel() {
       setResult(data);
       if (!data.dsl_yaml) {
         addToast({
-          type: 'info',
-          title: t('compliance.nl.no_match', {
-            defaultValue: 'No pattern matched the input.‌⁠‍',
+          type: "info",
+          title: t("compliance.nl.no_match", {
+            defaultValue: "No pattern matched the input.‌⁠‍",
           }),
         });
       }
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('compliance.nl.save_failed', {
-          defaultValue: 'Generation failed‌⁠‍',
+        type: "error",
+        title: t("compliance.nl.save_failed", {
+          defaultValue: "Generation failed‌⁠‍",
         }),
         message: err.message,
       });
@@ -83,24 +83,24 @@ export function NlRuleBuilderPanel() {
   const save = useMutation({
     mutationFn: () => {
       if (!result?.dsl_yaml) {
-        return Promise.reject(new Error('No DSL to save.'));
+        return Promise.reject(new Error("No DSL to save."));
       }
       return saveDslRule(result.dsl_yaml, true);
     },
     onSuccess: (row) => {
       addToast({
-        type: 'success',
-        title: t('compliance.nl.saved', {
-          defaultValue: 'Rule saved successfully.‌⁠‍',
+        type: "success",
+        title: t("compliance.nl.saved", {
+          defaultValue: "Rule saved successfully.‌⁠‍",
         }),
         message: row.rule_id,
       });
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('compliance.nl.save_failed', {
-          defaultValue: 'Could not save rule‌⁠‍',
+        type: "error",
+        title: t("compliance.nl.save_failed", {
+          defaultValue: "Could not save rule‌⁠‍",
         }),
         message: err.message,
       });
@@ -110,7 +110,7 @@ export function NlRuleBuilderPanel() {
   // Ctrl/⌘+Enter inside the textarea triggers Generate.
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
         e.preventDefault();
         if (text.trim() && !generate.isPending) generate.mutate();
       }
@@ -135,8 +135,8 @@ export function NlRuleBuilderPanel() {
     try {
       await navigator.clipboard.writeText(result.dsl_yaml);
       addToast({
-        type: 'success',
-        title: t('common.copied', { defaultValue: 'Copied‌⁠‍' }),
+        type: "success",
+        title: t("common.copied", { defaultValue: "Copied‌⁠‍" }),
       });
     } catch {
       // Clipboard may be blocked in some browsers — silent ignore.
@@ -144,34 +144,36 @@ export function NlRuleBuilderPanel() {
   }, [result, addToast, t]);
 
   const confidencePct =
-    result && result.confidence > 0 ? Math.round(result.confidence * 100) : null;
+    result && result.confidence > 0
+      ? Math.round(result.confidence * 100)
+      : null;
 
   const methodLabel =
-    result?.used_method === 'pattern'
-      ? t('compliance.nl.method_pattern', { defaultValue: 'Pattern matched' })
-      : result?.used_method === 'ai'
-        ? t('compliance.nl.method_ai', { defaultValue: 'AI fallback' })
-        : t('compliance.nl.method_fallback', { defaultValue: 'No match' });
+    result?.used_method === "pattern"
+      ? t("compliance.nl.method_pattern", { defaultValue: "Pattern matched" })
+      : result?.used_method === "ai"
+        ? t("compliance.nl.method_ai", { defaultValue: "AI fallback" })
+        : t("compliance.nl.method_fallback", { defaultValue: "No match" });
 
-  const methodVariant: 'success' | 'warning' | 'error' =
-    result?.used_method === 'pattern'
-      ? 'success'
-      : result?.used_method === 'ai'
-        ? 'warning'
-        : 'error';
+  const methodVariant: "success" | "warning" | "error" =
+    result?.used_method === "pattern"
+      ? "success"
+      : result?.used_method === "ai"
+        ? "warning"
+        : "error";
 
   return (
     <div className="w-full animate-fade-in" data-testid="nl-rule-builder-panel">
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-content-primary">
-          {t('compliance.nl.title', {
-            defaultValue: 'Natural Language Rule Builder',
+          {t("compliance.nl.title", {
+            defaultValue: "Natural Language Rule Builder",
           })}
         </h1>
         <p className="mt-1 text-sm text-content-secondary">
-          {t('compliance.nl.subtitle', {
+          {t("compliance.nl.subtitle", {
             defaultValue:
-              'Describe your rule in plain English, German, or Russian — the builder generates valid DSL.',
+              "Describe your rule in plain English, German, or Russian — the builder generates valid DSL.",
           })}
         </p>
       </header>
@@ -185,8 +187,8 @@ export function NlRuleBuilderPanel() {
                 htmlFor="nl-input"
                 className="text-sm font-semibold text-content-primary"
               >
-                {t('compliance.nl.title', {
-                  defaultValue: 'Natural Language',
+                {t("compliance.nl.title", {
+                  defaultValue: "Natural Language",
                 })}
               </label>
               <div className="flex items-center gap-1.5">
@@ -199,8 +201,8 @@ export function NlRuleBuilderPanel() {
                     data-testid={`nl-lang-${opt.value}`}
                     className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
                       lang === opt.value
-                        ? 'bg-oe-blue text-content-inverse'
-                        : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary'
+                        ? "bg-oe-blue text-content-inverse"
+                        : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
                     }`}
                   >
                     {opt.label}
@@ -215,9 +217,8 @@ export function NlRuleBuilderPanel() {
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={8}
-              placeholder={t('compliance.nl.input_placeholder', {
-                defaultValue:
-                  'e.g. all walls must have a fire-rating property',
+              placeholder={t("compliance.nl.input_placeholder", {
+                defaultValue: "e.g. all walls must have a fire-rating property",
               })}
               className="w-full resize-none rounded-lg border border-border bg-surface-primary p-3 text-sm text-content-primary focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
             />
@@ -228,10 +229,10 @@ export function NlRuleBuilderPanel() {
                 checked={useAi}
                 onChange={(e) => setUseAi(e.target.checked)}
               />
-              {t('compliance.nl.use_ai', { defaultValue: 'Use AI fallback' })}
+              {t("compliance.nl.use_ai", { defaultValue: "Use AI fallback" })}
               <span className="text-content-tertiary">
-                {t('compliance.nl.ai_unavailable', {
-                  defaultValue: '(skipped if no API key)',
+                {t("compliance.nl.ai_unavailable", {
+                  defaultValue: "(skipped if no API key)",
                 })}
               </span>
             </label>
@@ -245,7 +246,7 @@ export function NlRuleBuilderPanel() {
                 onClick={() => generate.mutate()}
                 data-testid="nl-generate"
               >
-                {t('compliance.nl.generate', { defaultValue: 'Generate' })}
+                {t("compliance.nl.generate", { defaultValue: "Generate" })}
               </Button>
               <Button
                 variant="secondary"
@@ -256,8 +257,8 @@ export function NlRuleBuilderPanel() {
                 onClick={() => save.mutate()}
                 data-testid="nl-save"
               >
-                {t('compliance.nl.save_as_rule', {
-                  defaultValue: 'Save as Compliance Rule',
+                {t("compliance.nl.save_as_rule", {
+                  defaultValue: "Save as Compliance Rule",
                 })}
               </Button>
             </div>
@@ -282,9 +283,9 @@ export function NlRuleBuilderPanel() {
               <div className="flex items-start gap-2 rounded-lg bg-semantic-warning-bg px-3 py-2 text-xs text-semantic-warning">
                 <AlertTriangle size={14} className="mt-0.5 shrink-0" />
                 <p>
-                  {t('compliance.nl.low_confidence', {
+                  {t("compliance.nl.low_confidence", {
                     defaultValue:
-                      'Low confidence — review the generated DSL carefully before saving.',
+                      "Low confidence — review the generated DSL carefully before saving.",
                   })}
                 </p>
               </div>
@@ -303,9 +304,8 @@ export function NlRuleBuilderPanel() {
               <div className="rounded-lg bg-oe-blue-subtle px-3 py-2 text-xs text-oe-blue">
                 <div className="mb-1 flex items-center gap-1.5 font-medium">
                   <Wand2 size={12} />
-                  {t('compliance.nl.no_match', {
-                    defaultValue:
-                      'No pattern matched. Try one of these forms:',
+                  {t("compliance.nl.no_match", {
+                    defaultValue: "No pattern matched. Try one of these forms:",
                   })}
                 </div>
                 <ul className="ml-4 list-disc space-y-0.5">

@@ -15,5 +15,5 @@ export function buildGeocodeQuery(
     (p): p is string => !!p && p.trim().length > 0,
   );
   if (parts.length === 0) return null;
-  return parts.join(', ');
+  return parts.join(", ");
 }

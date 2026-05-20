@@ -10,13 +10,12 @@ from __future__ import annotations
 
 import uuid
 from datetime import UTC, datetime
-from decimal import Decimal
 from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
-from app.modules.procurement.schemas import GRCreate, GRItemCreate, POCreate, POItemCreate, POUpdate
+from app.modules.procurement.schemas import GRCreate, POCreate, POItemCreate, POUpdate
 from app.modules.procurement.service import (
     ProcurementService,
     _compute_po_total,

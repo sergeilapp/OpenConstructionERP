@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
-import clsx from 'clsx';
-import { FileText, Search, Check, AlertTriangle } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import clsx from "clsx";
+import { FileText, Search, Check, AlertTriangle } from "lucide-react";
 import {
   Badge,
   Breadcrumb,
@@ -11,9 +11,9 @@ import {
   DateDisplay,
   EmptyState,
   SkeletonTable,
-} from '@/shared/ui';
-import { apiGet } from '@/shared/lib/api';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
+} from "@/shared/ui";
+import { apiGet } from "@/shared/lib/api";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
 
 /* ── API types — mirror SheetResponse from backend ───────────────────── */
 
@@ -44,19 +44,21 @@ interface ProjectLite {
 
 /* ── Helpers ─────────────────────────────────────────────────────────── */
 
-function disciplineVariant(d: string | null): 'neutral' | 'blue' | 'success' | 'warning' | 'error' {
-  if (!d) return 'neutral';
+function disciplineVariant(
+  d: string | null,
+): "neutral" | "blue" | "success" | "warning" | "error" {
+  if (!d) return "neutral";
   // Stable pseudo-hash → keeps the same colour across renders.
   let h = 0;
   for (let i = 0; i < d.length; i += 1) {
     h = (h * 31 + d.charCodeAt(i)) >>> 0;
   }
-  const pool = ['blue', 'success', 'warning', 'neutral'] as const;
-  return pool[h % pool.length] ?? 'neutral';
+  const pool = ["blue", "success", "warning", "neutral"] as const;
+  return pool[h % pool.length] ?? "neutral";
 }
 
 const inputCls =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 /* ── Main page ───────────────────────────────────────────────────────── */
 
@@ -65,21 +67,21 @@ export function SheetsIndexPage() {
   const { projectId: routeProjectId } = useParams<{ projectId: string }>();
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [disciplineFilter, setDisciplineFilter] = useState<string | null>(null);
 
   // Pick a working project id (route → store → first available).
   const { data: projects = [] } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => apiGet<ProjectLite[]>('/v1/projects/'),
+    queryKey: ["projects"],
+    queryFn: () => apiGet<ProjectLite[]>("/v1/projects/"),
     staleTime: 5 * 60_000,
   });
 
-  const projectId = routeProjectId || activeProjectId || projects[0]?.id || '';
-  const projectName = projects.find((p) => p.id === projectId)?.name || '';
+  const projectId = routeProjectId || activeProjectId || projects[0]?.id || "";
+  const projectName = projects.find((p) => p.id === projectId)?.name || "";
 
   const { data: sheets = [], isLoading } = useQuery({
-    queryKey: ['sheets', projectId],
+    queryKey: ["sheets", projectId],
     queryFn: () =>
       apiGet<SheetRow[]>(
         `/v1/documents/sheets/?project_id=${encodeURIComponent(projectId)}&limit=500`,
@@ -88,7 +90,7 @@ export function SheetsIndexPage() {
   });
 
   const { data: disciplines = [] } = useQuery({
-    queryKey: ['sheet-disciplines', projectId],
+    queryKey: ["sheet-disciplines", projectId],
     queryFn: () =>
       apiGet<string[]>(
         `/v1/documents/sheets/disciplines/?project_id=${encodeURIComponent(projectId)}`,
@@ -112,7 +114,7 @@ export function SheetsIndexPage() {
         s.scale,
       ]
         .filter((x): x is string => Boolean(x))
-        .join(' ')
+        .join(" ")
         .toLowerCase();
       return hay.includes(q);
     });
@@ -123,10 +125,13 @@ export function SheetsIndexPage() {
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard‌⁠‍' }), to: '/' },
-          { label: t('files.title', { defaultValue: 'Files' }), to: '/files' },
+          {
+            label: t("nav.dashboard", { defaultValue: "Dashboard‌⁠‍" }),
+            to: "/",
+          },
+          { label: t("files.title", { defaultValue: "Files" }), to: "/files" },
           ...(projectName ? [{ label: projectName }] : []),
-          { label: t('sheets.title', { defaultValue: 'Sheets‌⁠‍' }) },
+          { label: t("sheets.title", { defaultValue: "Sheets‌⁠‍" }) },
         ]}
         className="mb-4"
       />
@@ -135,12 +140,12 @@ export function SheetsIndexPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-content-primary">
-            {t('sheets.page_title', { defaultValue: 'Drawing Sheets‌⁠‍' })}
+            {t("sheets.page_title", { defaultValue: "Drawing Sheets‌⁠‍" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('sheets.subtitle', {
+            {t("sheets.subtitle", {
               defaultValue:
-                'Indexed drawing sheets across project documents — filter by discipline or search by number, title, revision.‌⁠‍',
+                "Indexed drawing sheets across project documents — filter by discipline or search by number, title, revision.‌⁠‍",
             })}
           </p>
         </div>
@@ -152,11 +157,14 @@ export function SheetsIndexPage() {
           <AlertTriangle size={18} className="text-amber-600 shrink-0" />
           <div>
             <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
-              {t('common.no_project_selected', { defaultValue: 'No project selected‌⁠‍' })}
+              {t("common.no_project_selected", {
+                defaultValue: "No project selected‌⁠‍",
+              })}
             </p>
             <p className="text-xs text-amber-600 dark:text-amber-400">
-              {t('common.select_project_hint', {
-                defaultValue: 'Select a project from the header to view and manage items.',
+              {t("common.select_project_hint", {
+                defaultValue:
+                  "Select a project from the header to view and manage items.",
               })}
             </p>
           </div>
@@ -172,14 +180,18 @@ export function SheetsIndexPage() {
                 type="button"
                 onClick={() => setDisciplineFilter(null)}
                 className={clsx(
-                  'inline-flex items-center h-7 px-3 rounded-full text-xs font-medium transition-colors',
+                  "inline-flex items-center h-7 px-3 rounded-full text-xs font-medium transition-colors",
                   disciplineFilter === null
-                    ? 'bg-oe-blue text-white'
-                    : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary',
+                    ? "bg-oe-blue text-white"
+                    : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary",
                 )}
               >
-                {t('sheets.filter_all_disciplines', { defaultValue: 'All disciplines' })}
-                <span className="ms-1.5 tabular-nums opacity-70">{sheets.length}</span>
+                {t("sheets.filter_all_disciplines", {
+                  defaultValue: "All disciplines",
+                })}
+                <span className="ms-1.5 tabular-nums opacity-70">
+                  {sheets.length}
+                </span>
               </button>
               {disciplines.map((d) => {
                 const count = sheets.filter((s) => s.discipline === d).length;
@@ -190,14 +202,16 @@ export function SheetsIndexPage() {
                     type="button"
                     onClick={() => setDisciplineFilter(d)}
                     className={clsx(
-                      'inline-flex items-center h-7 px-3 rounded-full text-xs font-medium transition-colors',
+                      "inline-flex items-center h-7 px-3 rounded-full text-xs font-medium transition-colors",
                       active
-                        ? 'bg-oe-blue text-white'
-                        : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary',
+                        ? "bg-oe-blue text-white"
+                        : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary",
                     )}
                   >
                     {d}
-                    <span className="ms-1.5 tabular-nums opacity-70">{count}</span>
+                    <span className="ms-1.5 tabular-nums opacity-70">
+                      {count}
+                    </span>
                   </button>
                 );
               })}
@@ -214,13 +228,13 @@ export function SheetsIndexPage() {
               <input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('sheets.search_placeholder', {
-                  defaultValue: 'Search by sheet #, title, revision…',
+                placeholder={t("sheets.search_placeholder", {
+                  defaultValue: "Search by sheet #, title, revision…",
                 })}
-                aria-label={t('sheets.search_placeholder', {
-                  defaultValue: 'Search by sheet #, title, revision…',
+                aria-label={t("sheets.search_placeholder", {
+                  defaultValue: "Search by sheet #, title, revision…",
                 })}
-                className={inputCls + ' pl-9'}
+                className={inputCls + " pl-9"}
               />
             </div>
           </div>
@@ -233,26 +247,30 @@ export function SheetsIndexPage() {
               icon={<FileText size={28} strokeWidth={1.5} />}
               title={
                 searchQuery || disciplineFilter
-                  ? t('sheets.no_results', { defaultValue: 'No matching sheets' })
-                  : t('sheets.no_sheets', { defaultValue: 'No sheets indexed yet' })
+                  ? t("sheets.no_results", {
+                      defaultValue: "No matching sheets",
+                    })
+                  : t("sheets.no_sheets", {
+                      defaultValue: "No sheets indexed yet",
+                    })
               }
               description={
                 searchQuery || disciplineFilter
-                  ? t('sheets.no_results_hint', {
+                  ? t("sheets.no_results_hint", {
                       defaultValue:
-                        'Try adjusting the search box or pick a different discipline.',
+                        "Try adjusting the search box or pick a different discipline.",
                     })
-                  : t('sheets.no_sheets_hint', {
+                  : t("sheets.no_sheets_hint", {
                       defaultValue:
-                        'Upload a multi-page PDF drawing set to the Files module — each page becomes a sheet here automatically.',
+                        "Upload a multi-page PDF drawing set to the Files module — each page becomes a sheet here automatically.",
                     })
               }
             />
           ) : (
             <>
               <p className="mb-3 text-sm text-content-tertiary">
-                {t('sheets.showing_count', {
-                  defaultValue: '{{count}} sheets',
+                {t("sheets.showing_count", {
+                  defaultValue: "{{count}} sheets",
                   count: filtered.length,
                 })}
               </p>
@@ -262,25 +280,29 @@ export function SheetsIndexPage() {
                   <thead className="sticky top-0 z-10 bg-surface-secondary/95 backdrop-blur-sm">
                     <tr className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
                       <th className="text-start px-4 py-2.5 border-b border-border-light font-medium">
-                        {t('sheets.col_number', { defaultValue: 'Sheet #' })}
+                        {t("sheets.col_number", { defaultValue: "Sheet #" })}
                       </th>
                       <th className="text-start px-4 py-2.5 border-b border-border-light font-medium">
-                        {t('sheets.col_title', { defaultValue: 'Title' })}
+                        {t("sheets.col_title", { defaultValue: "Title" })}
                       </th>
                       <th className="text-start px-4 py-2.5 border-b border-border-light font-medium">
-                        {t('sheets.col_discipline', { defaultValue: 'Discipline' })}
+                        {t("sheets.col_discipline", {
+                          defaultValue: "Discipline",
+                        })}
                       </th>
                       <th className="text-start px-4 py-2.5 border-b border-border-light font-medium">
-                        {t('sheets.col_revision', { defaultValue: 'Rev' })}
+                        {t("sheets.col_revision", { defaultValue: "Rev" })}
                       </th>
                       <th className="text-start px-4 py-2.5 border-b border-border-light font-medium">
-                        {t('sheets.col_issue_date', { defaultValue: 'Issue Date' })}
+                        {t("sheets.col_issue_date", {
+                          defaultValue: "Issue Date",
+                        })}
                       </th>
                       <th className="text-start px-4 py-2.5 border-b border-border-light font-medium">
-                        {t('sheets.col_scale', { defaultValue: 'Scale' })}
+                        {t("sheets.col_scale", { defaultValue: "Scale" })}
                       </th>
                       <th className="text-center px-4 py-2.5 border-b border-border-light font-medium">
-                        {t('sheets.col_current', { defaultValue: 'Current?' })}
+                        {t("sheets.col_current", { defaultValue: "Current?" })}
                       </th>
                     </tr>
                   </thead>
@@ -295,16 +317,23 @@ export function SheetsIndexPage() {
                         </td>
                         <td className="px-4 py-3 text-content-primary">
                           {s.sheet_title ?? (
-                            <span className="text-content-quaternary">&mdash;</span>
+                            <span className="text-content-quaternary">
+                              &mdash;
+                            </span>
                           )}
                         </td>
                         <td className="px-4 py-3">
                           {s.discipline ? (
-                            <Badge variant={disciplineVariant(s.discipline)} size="sm">
+                            <Badge
+                              variant={disciplineVariant(s.discipline)}
+                              size="sm"
+                            >
                               {s.discipline}
                             </Badge>
                           ) : (
-                            <span className="text-content-quaternary">&mdash;</span>
+                            <span className="text-content-quaternary">
+                              &mdash;
+                            </span>
                           )}
                         </td>
                         <td className="px-4 py-3">
@@ -313,7 +342,9 @@ export function SheetsIndexPage() {
                               {s.revision}
                             </Badge>
                           ) : (
-                            <span className="text-content-quaternary">&mdash;</span>
+                            <span className="text-content-quaternary">
+                              &mdash;
+                            </span>
                           )}
                         </td>
                         <td className="px-4 py-3 text-content-secondary">
@@ -321,29 +352,38 @@ export function SheetsIndexPage() {
                             <span
                               title={new Date(s.revision_date).toLocaleString()}
                             >
-                              <DateDisplay value={s.revision_date} format="relative" />
+                              <DateDisplay
+                                value={s.revision_date}
+                                format="relative"
+                              />
                             </span>
                           ) : (
-                            <span className="text-content-quaternary">&mdash;</span>
+                            <span className="text-content-quaternary">
+                              &mdash;
+                            </span>
                           )}
                         </td>
                         <td className="px-4 py-3 text-content-secondary tabular-nums">
-                          {s.scale ?? <span className="text-content-quaternary">&mdash;</span>}
+                          {s.scale ?? (
+                            <span className="text-content-quaternary">
+                              &mdash;
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-center">
                           {s.is_current ? (
                             <Check
                               size={16}
                               className="inline-block text-semantic-success"
-                              aria-label={t('sheets.is_current_yes', {
-                                defaultValue: 'Current revision',
+                              aria-label={t("sheets.is_current_yes", {
+                                defaultValue: "Current revision",
                               })}
                             />
                           ) : (
                             <span
                               className="text-content-quaternary"
-                              aria-label={t('sheets.is_current_no', {
-                                defaultValue: 'Superseded',
+                              aria-label={t("sheets.is_current_no", {
+                                defaultValue: "Superseded",
                               })}
                             >
                               &mdash;

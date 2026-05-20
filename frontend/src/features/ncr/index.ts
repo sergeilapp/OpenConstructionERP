@@ -1,1 +1,1 @@
-export { NCRPage } from './NCRPage';
+export { NCRPage } from "./NCRPage";

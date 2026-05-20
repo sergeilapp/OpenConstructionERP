@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   BarChart3,
   Briefcase,
@@ -16,15 +16,15 @@ import {
   FileText,
   ClipboardList,
   Activity,
-} from 'lucide-react';
-import { Breadcrumb, Card, CardContent, Skeleton } from '@/shared/ui';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { projectsApi, type Project } from '@/features/projects/api';
+} from "lucide-react";
+import { Breadcrumb, Card, CardContent, Skeleton } from "@/shared/ui";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import { projectsApi, type Project } from "@/features/projects/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
 
-type DashboardTab = 'executive' | 'pm' | 'estimator' | 'site' | 'finance';
+type DashboardTab = "executive" | "pm" | "estimator" | "site" | "finance";
 
 interface KPISnapshot {
   id: string;
@@ -94,29 +94,34 @@ interface ProcurementStats {
 
 /* ── KPI helpers ───��───────────────────────────────────────────────────────── */
 
-type TrafficLight = 'green' | 'yellow' | 'red' | 'gray';
+type TrafficLight = "green" | "yellow" | "red" | "gray";
 
-function kpiColor(value: number | null | undefined, thresholds: [number, number]): TrafficLight {
-  if (value === null || value === undefined) return 'gray';
-  if (value >= thresholds[1]) return 'green';
-  if (value >= thresholds[0]) return 'yellow';
-  return 'red';
+function kpiColor(
+  value: number | null | undefined,
+  thresholds: [number, number],
+): TrafficLight {
+  if (value === null || value === undefined) return "gray";
+  if (value >= thresholds[1]) return "green";
+  if (value >= thresholds[0]) return "yellow";
+  return "red";
 }
 
 const trafficClasses: Record<TrafficLight, string> = {
-  green: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  yellow: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  red: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  gray: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  green:
+    "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+  yellow:
+    "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+  red: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+  gray: "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
 };
 
-function fmt(v: string | number | null | undefined, suffix = ''): string {
-  if (v === null || v === undefined || v === '') return 'N/A';
+function fmt(v: string | number | null | undefined, suffix = ""): string {
+  if (v === null || v === undefined || v === "") return "N/A";
   return `${v}${suffix}`;
 }
 
 function fmtNum(v: number | null | undefined, decimals = 0): string {
-  if (v === null || v === undefined) return 'N/A';
+  if (v === null || v === undefined) return "N/A";
   return v.toLocaleString(undefined, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
@@ -128,7 +133,7 @@ function fmtNum(v: number | null | undefined, decimals = 0): string {
 function KPICard({
   label,
   value,
-  color = 'gray',
+  color = "gray",
   icon: Icon,
 }: {
   label: string;
@@ -139,12 +144,16 @@ function KPICard({
   return (
     <div className="flex items-center gap-3 rounded-xl border border-border-light bg-surface-primary p-4 shadow-xs">
       {Icon && (
-        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${trafficClasses[color]}`}>
+        <div
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${trafficClasses[color]}`}
+        >
           <Icon size={18} />
         </div>
       )}
       <div className="min-w-0">
-        <p className="truncate text-xs font-medium text-content-secondary">{label}</p>
+        <p className="truncate text-xs font-medium text-content-secondary">
+          {label}
+        </p>
         <p className="text-lg font-semibold text-content-primary">{value}</p>
       </div>
     </div>
@@ -155,23 +164,62 @@ function KPICard({
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { color: string; label: string }> = {
-    active: { color: 'bg-emerald-100 text-emerald-700', label: 'Active' },
-    on_hold: { color: 'bg-amber-100 text-amber-700', label: 'On Hold' },
-    completed: { color: 'bg-blue-100 text-blue-700', label: 'Completed' },
-    archived: { color: 'bg-gray-100 text-gray-500', label: 'Archived' },
+    active: { color: "bg-emerald-100 text-emerald-700", label: "Active" },
+    on_hold: { color: "bg-amber-100 text-amber-700", label: "On Hold" },
+    completed: { color: "bg-blue-100 text-blue-700", label: "Completed" },
+    archived: { color: "bg-gray-100 text-gray-500", label: "Archived" },
   };
-  const s = map[status] ?? { color: 'bg-gray-100 text-gray-500', label: status };
-  return <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${s.color}`}>{s.label}</span>;
+  const s = map[status] ?? {
+    color: "bg-gray-100 text-gray-500",
+    label: status,
+  };
+  return (
+    <span
+      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${s.color}`}
+    >
+      {s.label}
+    </span>
+  );
 }
 
 /* ── Tab buttons ─────��─────────────────────────────────────────────────────── */
 
-const TABS: { key: DashboardTab; labelKey: string; defaultLabel: string; icon: React.ElementType }[] = [
-  { key: 'executive', labelKey: 'reporting.tab_executive', defaultLabel: 'Executive', icon: Briefcase },
-  { key: 'pm', labelKey: 'reporting.tab_pm', defaultLabel: 'Project Manager', icon: ClipboardList },
-  { key: 'estimator', labelKey: 'reporting.tab_estimator', defaultLabel: 'Estimator', icon: Calculator },
-  { key: 'site', labelKey: 'reporting.tab_site', defaultLabel: 'Site Engineer', icon: HardHat },
-  { key: 'finance', labelKey: 'reporting.tab_finance', defaultLabel: 'Finance', icon: Wallet },
+const TABS: {
+  key: DashboardTab;
+  labelKey: string;
+  defaultLabel: string;
+  icon: React.ElementType;
+}[] = [
+  {
+    key: "executive",
+    labelKey: "reporting.tab_executive",
+    defaultLabel: "Executive",
+    icon: Briefcase,
+  },
+  {
+    key: "pm",
+    labelKey: "reporting.tab_pm",
+    defaultLabel: "Project Manager",
+    icon: ClipboardList,
+  },
+  {
+    key: "estimator",
+    labelKey: "reporting.tab_estimator",
+    defaultLabel: "Estimator",
+    icon: Calculator,
+  },
+  {
+    key: "site",
+    labelKey: "reporting.tab_site",
+    defaultLabel: "Site Engineer",
+    icon: HardHat,
+  },
+  {
+    key: "finance",
+    labelKey: "reporting.tab_finance",
+    defaultLabel: "Finance",
+    icon: Wallet,
+  },
 ];
 
 /* ── Main component ────────────────────────────────────────────────────────── */
@@ -180,7 +228,7 @@ export function ReportingPage() {
   const { t } = useTranslation();
   const { activeProjectId, activeProjectName } = useProjectContextStore();
 
-  const [tab, setTab] = useState<DashboardTab>('executive');
+  const [tab, setTab] = useState<DashboardTab>("executive");
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [recalculating, setRecalculating] = useState(false);
@@ -193,10 +241,13 @@ export function ReportingPage() {
   const [safetyStats, setSafetyStats] = useState<SafetyStats | null>(null);
   const [taskStats, setTaskStats] = useState<TaskStats | null>(null);
   const [rfiStats, setRfiStats] = useState<RFIStats | null>(null);
-  const [scheduleStats, setScheduleStats] = useState<ScheduleStats | null>(null);
-  const [procurementStats, setProcurementStats] = useState<ProcurementStats | null>(null);
+  const [scheduleStats, setScheduleStats] = useState<ScheduleStats | null>(
+    null,
+  );
+  const [procurementStats, setProcurementStats] =
+    useState<ProcurementStats | null>(null);
 
-  const selectedProjectId = activeProjectId ?? '';
+  const selectedProjectId = activeProjectId ?? "";
 
   // Generation counter — bumped at the start of every loadProjectStats
   // call so in-flight responses for an older pid get discarded if the
@@ -206,27 +257,41 @@ export function ReportingPage() {
 
   const loadProjectStats = useCallback(async (pid: string) => {
     const gen = ++statsGenRef.current;
-    const guard = <T,>(setter: (v: T | null) => void) => (v: T) => {
-      if (statsGenRef.current === gen) setter(v);
-    };
+    const guard =
+      <T,>(setter: (v: T | null) => void) =>
+      (v: T) => {
+        if (statsGenRef.current === gen) setter(v);
+      };
     const results = await Promise.allSettled([
-      apiGet<FinanceDashboard>(`/v1/finance/dashboard/?project_id=${pid}`).then(guard(setFinanceDash)),
-      apiGet<SafetyStats>(`/v1/safety/stats/?project_id=${pid}`).then(guard(setSafetyStats)),
-      apiGet<TaskStats>(`/v1/tasks/stats/?project_id=${pid}`).then(guard(setTaskStats)),
-      apiGet<RFIStats>(`/v1/rfi/stats/?project_id=${pid}`).then(guard(setRfiStats)),
-      apiGet<ScheduleStats>(`/v1/schedule/stats/?project_id=${pid}`).then(guard(setScheduleStats)),
-      apiGet<ProcurementStats>(`/v1/procurement/stats/?project_id=${pid}`).then(guard(setProcurementStats)),
+      apiGet<FinanceDashboard>(`/v1/finance/dashboard/?project_id=${pid}`).then(
+        guard(setFinanceDash),
+      ),
+      apiGet<SafetyStats>(`/v1/safety/stats/?project_id=${pid}`).then(
+        guard(setSafetyStats),
+      ),
+      apiGet<TaskStats>(`/v1/tasks/stats/?project_id=${pid}`).then(
+        guard(setTaskStats),
+      ),
+      apiGet<RFIStats>(`/v1/rfi/stats/?project_id=${pid}`).then(
+        guard(setRfiStats),
+      ),
+      apiGet<ScheduleStats>(`/v1/schedule/stats/?project_id=${pid}`).then(
+        guard(setScheduleStats),
+      ),
+      apiGet<ProcurementStats>(`/v1/procurement/stats/?project_id=${pid}`).then(
+        guard(setProcurementStats),
+      ),
     ]);
 
     // Clear data for rejected promises to avoid stale state — but only
     // if this fetch is still the current generation.
     if (statsGenRef.current !== gen) return;
-    if (results[0].status === 'rejected') setFinanceDash(null);
-    if (results[1].status === 'rejected') setSafetyStats(null);
-    if (results[2].status === 'rejected') setTaskStats(null);
-    if (results[3].status === 'rejected') setRfiStats(null);
-    if (results[4].status === 'rejected') setScheduleStats(null);
-    if (results[5].status === 'rejected') setProcurementStats(null);
+    if (results[0].status === "rejected") setFinanceDash(null);
+    if (results[1].status === "rejected") setSafetyStats(null);
+    if (results[2].status === "rejected") setTaskStats(null);
+    if (results[3].status === "rejected") setRfiStats(null);
+    if (results[4].status === "rejected") setScheduleStats(null);
+    if (results[5].status === "rejected") setProcurementStats(null);
   }, []);
 
   // Load everything
@@ -287,7 +352,7 @@ export function ReportingPage() {
     setRecalculating(true);
     setRecalcError(false);
     try {
-      await apiPost('/v1/reporting/kpi/recalculate-all/', {});
+      await apiPost("/v1/reporting/kpi/recalculate-all/", {});
       await loadData();
     } catch {
       // No error boundary wraps this page — a swallowed failure left
@@ -299,10 +364,12 @@ export function ReportingPage() {
   };
 
   // Active / total counts
-  const activeProjects = projects.filter((p) => p.status === 'active');
+  const activeProjects = projects.filter((p) => p.status === "active");
   const totalPortfolioValue = projects.reduce((sum, p) => {
     const meta = p.metadata as Record<string, unknown> | undefined;
-    const budget = meta?.budget_estimate ?? (p as unknown as Record<string, unknown>).budget_estimate;
+    const budget =
+      meta?.budget_estimate ??
+      (p as unknown as Record<string, unknown>).budget_estimate;
     return sum + (budget ? Number(budget) || 0 : 0);
   }, 0);
 
@@ -315,11 +382,18 @@ export function ReportingPage() {
     <div className="w-full space-y-6 animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard‌⁠‍' }), to: '/' },
+          {
+            label: t("nav.dashboard", { defaultValue: "Dashboard‌⁠‍" }),
+            to: "/",
+          },
           ...(activeProjectName
             ? [{ label: activeProjectName, to: `/projects/${activeProjectId}` }]
             : []),
-          { label: t('reporting.title', { defaultValue: 'Reporting Dashboards‌⁠‍' }) },
+          {
+            label: t("reporting.title", {
+              defaultValue: "Reporting Dashboards‌⁠‍",
+            }),
+          },
         ]}
         className="mb-4"
       />
@@ -328,11 +402,12 @@ export function ReportingPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('reporting.title', { defaultValue: 'Reporting Dashboards‌⁠‍' })}
+            {t("reporting.title", { defaultValue: "Reporting Dashboards‌⁠‍" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('reporting.subtitle', {
-              defaultValue: 'Role-based KPI dashboards with real-time project data‌⁠‍',
+            {t("reporting.subtitle", {
+              defaultValue:
+                "Role-based KPI dashboards with real-time project data‌⁠‍",
             })}
           </p>
         </div>
@@ -341,8 +416,12 @@ export function ReportingPage() {
           disabled={recalculating}
           className="inline-flex items-center gap-2 rounded-lg bg-oe-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-oe-blue-hover disabled:opacity-50"
         >
-          {recalculating ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
-          {t('reporting.recalculate', { defaultValue: 'Recalculate KPIs‌⁠‍' })}
+          {recalculating ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <RefreshCw size={16} />
+          )}
+          {t("reporting.recalculate", { defaultValue: "Recalculate KPIs‌⁠‍" })}
         </button>
       </div>
 
@@ -353,8 +432,8 @@ export function ReportingPage() {
         >
           <AlertTriangle size={16} className="shrink-0" />
           <span>
-            {t('reporting.recalculate_failed', {
-              defaultValue: 'KPI recalculation failed. Please try again.',
+            {t("reporting.recalculate_failed", {
+              defaultValue: "KPI recalculation failed. Please try again.",
             })}
           </span>
         </div>
@@ -368,8 +447,8 @@ export function ReportingPage() {
             onClick={() => setTab(key)}
             className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               tab === key
-                ? 'bg-surface-primary text-content-primary shadow-sm'
-                : 'text-content-secondary hover:text-content-primary hover:bg-surface-primary/50'
+                ? "bg-surface-primary text-content-primary shadow-sm"
+                : "text-content-secondary hover:text-content-primary hover:bg-surface-primary/50"
             }`}
           >
             <TabIcon size={16} />
@@ -379,16 +458,16 @@ export function ReportingPage() {
       </div>
 
       {/* Project selector for PM / Estimator / Site / Finance tabs */}
-      {tab !== 'executive' && (
+      {tab !== "executive" && (
         <div className="flex items-center gap-3">
           <label className="text-xs font-medium text-content-secondary">
-            {t('reporting.select_project', { defaultValue: 'Project' })}
+            {t("reporting.select_project", { defaultValue: "Project" })}
           </label>
           <select
             value={selectedProjectId}
             onChange={(e) => {
               const id = e.target.value;
-              const name = projects.find((p) => p.id === id)?.name ?? '';
+              const name = projects.find((p) => p.id === id)?.name ?? "";
               if (id) {
                 useProjectContextStore.getState().setActiveProject(id, name);
               }
@@ -423,8 +502,9 @@ export function ReportingPage() {
             >
               <AlertTriangle size={40} className="text-red-500" />
               <p className="text-sm text-content-secondary">
-                {t('reporting.load_error', {
-                  defaultValue: 'Could not load reporting data. Check your connection and try again.',
+                {t("reporting.load_error", {
+                  defaultValue:
+                    "Could not load reporting data. Check your connection and try again.",
                 })}
               </p>
               <button
@@ -432,7 +512,7 @@ export function ReportingPage() {
                 className="inline-flex items-center gap-2 rounded-lg border border-border-light bg-surface-primary px-4 py-2 text-sm font-medium text-content-primary transition-colors hover:bg-surface-secondary"
               >
                 <RefreshCw size={16} />
-                {t('common.retry', { defaultValue: 'Retry' })}
+                {t("common.retry", { defaultValue: "Retry" })}
               </button>
             </div>
           </CardContent>
@@ -440,7 +520,7 @@ export function ReportingPage() {
       )}
 
       {/* Tab content */}
-      {!loading && !loadError && tab === 'executive' && (
+      {!loading && !loadError && tab === "executive" && (
         <ExecutiveDashboard
           projects={projects}
           activeProjects={activeProjects}
@@ -448,7 +528,7 @@ export function ReportingPage() {
           kpiMap={kpiMap}
         />
       )}
-      {!loading && !loadError && tab === 'pm' && (
+      {!loading && !loadError && tab === "pm" && (
         <PMDashboard
           project={selectedProject}
           kpi={selectedKpi}
@@ -457,20 +537,17 @@ export function ReportingPage() {
           scheduleStats={scheduleStats}
         />
       )}
-      {!loading && !loadError && tab === 'estimator' && (
-        <EstimatorDashboard
-          project={selectedProject}
-          kpi={selectedKpi}
-        />
+      {!loading && !loadError && tab === "estimator" && (
+        <EstimatorDashboard project={selectedProject} kpi={selectedKpi} />
       )}
-      {!loading && !loadError && tab === 'site' && (
+      {!loading && !loadError && tab === "site" && (
         <SiteDashboard
           project={selectedProject}
           safetyStats={safetyStats}
           scheduleStats={scheduleStats}
         />
       )}
-      {!loading && !loadError && tab === 'finance' && (
+      {!loading && !loadError && tab === "finance" && (
         <FinanceDashboardView
           project={selectedProject}
           financeDash={financeDash}
@@ -501,27 +578,37 @@ function ExecutiveDashboard({
       {/* Portfolio KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KPICard
-          label={t('reporting.total_projects', { defaultValue: 'Total Projects' })}
+          label={t("reporting.total_projects", {
+            defaultValue: "Total Projects",
+          })}
           value={String(projects.length)}
           color="gray"
           icon={FileText}
         />
         <KPICard
-          label={t('reporting.active_projects', { defaultValue: 'Active Projects' })}
+          label={t("reporting.active_projects", {
+            defaultValue: "Active Projects",
+          })}
           value={String(activeProjects.length)}
           color="green"
           icon={Activity}
         />
         <KPICard
-          label={t('reporting.portfolio_value', { defaultValue: 'Portfolio Value' })}
-          value={totalValue > 0 ? fmtNum(totalValue) : 'N/A'}
+          label={t("reporting.portfolio_value", {
+            defaultValue: "Portfolio Value",
+          })}
+          value={totalValue > 0 ? fmtNum(totalValue) : "N/A"}
           color="gray"
           icon={BarChart3}
         />
         <KPICard
-          label={t('reporting.projects_with_kpi', { defaultValue: 'Projects with KPI' })}
+          label={t("reporting.projects_with_kpi", {
+            defaultValue: "Projects with KPI",
+          })}
           value={`${Object.keys(kpiMap).length} / ${projects.length}`}
-          color={Object.keys(kpiMap).length >= projects.length ? 'green' : 'yellow'}
+          color={
+            Object.keys(kpiMap).length >= projects.length ? "green" : "yellow"
+          }
           icon={TrendingUp}
         />
       </div>
@@ -533,14 +620,34 @@ function ExecutiveDashboard({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border-light bg-surface-secondary text-left text-xs font-medium text-content-secondary">
-                  <th className="px-4 py-3">{t('reporting.col_project', { defaultValue: 'Project' })}</th>
-                  <th className="px-4 py-3">{t('reporting.col_status', { defaultValue: 'Status' })}</th>
-                  <th className="px-4 py-3">{t('reporting.col_cpi', { defaultValue: 'CPI' })}</th>
-                  <th className="px-4 py-3">{t('reporting.col_spi', { defaultValue: 'SPI' })}</th>
-                  <th className="px-4 py-3">{t('reporting.col_budget', { defaultValue: 'Budget %' })}</th>
-                  <th className="px-4 py-3">{t('reporting.col_schedule', { defaultValue: 'Schedule %' })}</th>
-                  <th className="px-4 py-3">{t('reporting.col_risk', { defaultValue: 'Risk Score' })}</th>
-                  <th className="px-4 py-3">{t('reporting.col_open_items', { defaultValue: 'Open Items' })}</th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_project", { defaultValue: "Project" })}
+                  </th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_status", { defaultValue: "Status" })}
+                  </th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_cpi", { defaultValue: "CPI" })}
+                  </th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_spi", { defaultValue: "SPI" })}
+                  </th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_budget", { defaultValue: "Budget %" })}
+                  </th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_schedule", {
+                      defaultValue: "Schedule %",
+                    })}
+                  </th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_risk", { defaultValue: "Risk Score" })}
+                  </th>
+                  <th className="px-4 py-3">
+                    {t("reporting.col_open_items", {
+                      defaultValue: "Open Items",
+                    })}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -548,38 +655,85 @@ function ExecutiveDashboard({
                   const kpi = kpiMap[p.id];
                   const cpiVal = kpi?.cpi ? parseFloat(kpi.cpi) : null;
                   const spiVal = kpi?.spi ? parseFloat(kpi.spi) : null;
-                  const budgetVal = kpi?.budget_consumed_pct ? parseFloat(kpi.budget_consumed_pct) : null;
-                  const schedVal = kpi?.schedule_progress_pct ? parseFloat(kpi.schedule_progress_pct) : null;
-                  const riskVal = kpi?.risk_score_avg ? parseFloat(kpi.risk_score_avg) : null;
-                  const openItems = (kpi?.open_rfis ?? 0) + (kpi?.open_submittals ?? 0) + (kpi?.open_defects ?? 0) + (kpi?.open_observations ?? 0);
+                  const budgetVal = kpi?.budget_consumed_pct
+                    ? parseFloat(kpi.budget_consumed_pct)
+                    : null;
+                  const schedVal = kpi?.schedule_progress_pct
+                    ? parseFloat(kpi.schedule_progress_pct)
+                    : null;
+                  const riskVal = kpi?.risk_score_avg
+                    ? parseFloat(kpi.risk_score_avg)
+                    : null;
+                  const openItems =
+                    (kpi?.open_rfis ?? 0) +
+                    (kpi?.open_submittals ?? 0) +
+                    (kpi?.open_defects ?? 0) +
+                    (kpi?.open_observations ?? 0);
 
                   return (
-                    <tr key={p.id} className="border-b border-border-light last:border-0 hover:bg-surface-secondary/50">
-                      <td className="px-4 py-3 font-medium text-content-primary">{p.name}</td>
-                      <td className="px-4 py-3"><StatusBadge status={p.status} /></td>
-                      <td className="px-4 py-3">
-                        <TrafficDot color={kpiColor(cpiVal, [0.9, 1.0])} label={fmt(kpi?.cpi)} />
+                    <tr
+                      key={p.id}
+                      className="border-b border-border-light last:border-0 hover:bg-surface-secondary/50"
+                    >
+                      <td className="px-4 py-3 font-medium text-content-primary">
+                        {p.name}
                       </td>
                       <td className="px-4 py-3">
-                        <TrafficDot color={kpiColor(spiVal, [0.9, 1.0])} label={fmt(kpi?.spi)} />
+                        <StatusBadge status={p.status} />
                       </td>
                       <td className="px-4 py-3">
-                        <TrafficDot color={budgetVal !== null ? kpiColor(100 - budgetVal, [5, 20]) : 'gray'} label={fmt(kpi?.budget_consumed_pct, '%')} />
+                        <TrafficDot
+                          color={kpiColor(cpiVal, [0.9, 1.0])}
+                          label={fmt(kpi?.cpi)}
+                        />
                       </td>
                       <td className="px-4 py-3">
-                        <TrafficDot color={kpiColor(schedVal, [50, 80])} label={fmt(kpi?.schedule_progress_pct, '%')} />
+                        <TrafficDot
+                          color={kpiColor(spiVal, [0.9, 1.0])}
+                          label={fmt(kpi?.spi)}
+                        />
                       </td>
                       <td className="px-4 py-3">
-                        <TrafficDot color={riskVal !== null ? kpiColor(10 - riskVal, [3, 7]) : 'gray'} label={fmt(kpi?.risk_score_avg)} />
+                        <TrafficDot
+                          color={
+                            budgetVal !== null
+                              ? kpiColor(100 - budgetVal, [5, 20])
+                              : "gray"
+                          }
+                          label={fmt(kpi?.budget_consumed_pct, "%")}
+                        />
                       </td>
-                      <td className="px-4 py-3 text-content-secondary">{kpi ? openItems : 'N/A'}</td>
+                      <td className="px-4 py-3">
+                        <TrafficDot
+                          color={kpiColor(schedVal, [50, 80])}
+                          label={fmt(kpi?.schedule_progress_pct, "%")}
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <TrafficDot
+                          color={
+                            riskVal !== null
+                              ? kpiColor(10 - riskVal, [3, 7])
+                              : "gray"
+                          }
+                          label={fmt(kpi?.risk_score_avg)}
+                        />
+                      </td>
+                      <td className="px-4 py-3 text-content-secondary">
+                        {kpi ? openItems : "N/A"}
+                      </td>
                     </tr>
                   );
                 })}
                 {projects.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-content-secondary">
-                      {t('reporting.no_projects', { defaultValue: 'No projects found' })}
+                    <td
+                      colSpan={8}
+                      className="px-4 py-8 text-center text-content-secondary"
+                    >
+                      {t("reporting.no_projects", {
+                        defaultValue: "No projects found",
+                      })}
                     </td>
                   </tr>
                 )}
@@ -596,14 +750,16 @@ function ExecutiveDashboard({
 
 function TrafficDot({ color, label }: { color: TrafficLight; label: string }) {
   const dotColors: Record<TrafficLight, string> = {
-    green: 'bg-emerald-500',
-    yellow: 'bg-amber-500',
-    red: 'bg-red-500',
-    gray: 'bg-gray-300 dark:bg-gray-600',
+    green: "bg-emerald-500",
+    yellow: "bg-amber-500",
+    red: "bg-red-500",
+    gray: "bg-gray-300 dark:bg-gray-600",
   };
   return (
     <span className="inline-flex items-center gap-1.5">
-      <span className={`inline-block h-2.5 w-2.5 rounded-full ${dotColors[color]}`} />
+      <span
+        className={`inline-block h-2.5 w-2.5 rounded-full ${dotColors[color]}`}
+      />
       <span className="text-sm text-content-primary">{label}</span>
     </span>
   );
@@ -626,10 +782,18 @@ function PMDashboard({
 }) {
   const { t } = useTranslation();
   if (!project) {
-    return <EmptyState message={t('reporting.select_project_prompt', { defaultValue: 'Select a project to view PM dashboard' })} />;
+    return (
+      <EmptyState
+        message={t("reporting.select_project_prompt", {
+          defaultValue: "Select a project to view PM dashboard",
+        })}
+      />
+    );
   }
 
-  const budgetPct = kpi?.budget_consumed_pct ? parseFloat(kpi.budget_consumed_pct) : null;
+  const budgetPct = kpi?.budget_consumed_pct
+    ? parseFloat(kpi.budget_consumed_pct)
+    : null;
   const spiVal = kpi?.spi ? parseFloat(kpi.spi) : null;
   const cpiVal = kpi?.cpi ? parseFloat(kpi.cpi) : null;
 
@@ -638,28 +802,36 @@ function PMDashboard({
       {/* Project KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KPICard
-          label={t('reporting.budget_consumed', { defaultValue: 'Budget Consumed' })}
-          value={fmt(kpi?.budget_consumed_pct, '%')}
-          color={budgetPct !== null ? kpiColor(100 - budgetPct, [5, 20]) : 'gray'}
+          label={t("reporting.budget_consumed", {
+            defaultValue: "Budget Consumed",
+          })}
+          value={fmt(kpi?.budget_consumed_pct, "%")}
+          color={
+            budgetPct !== null ? kpiColor(100 - budgetPct, [5, 20]) : "gray"
+          }
           icon={Wallet}
         />
         <KPICard
-          label={t('reporting.spi', { defaultValue: 'Schedule SPI' })}
+          label={t("reporting.spi", { defaultValue: "Schedule SPI" })}
           value={fmt(kpi?.spi)}
           color={kpiColor(spiVal, [0.9, 1.0])}
           icon={spiVal !== null && spiVal >= 1 ? TrendingUp : TrendingDown}
         />
         <KPICard
-          label={t('reporting.cpi', { defaultValue: 'Cost CPI' })}
+          label={t("reporting.cpi", { defaultValue: "Cost CPI" })}
           value={fmt(kpi?.cpi)}
           color={kpiColor(cpiVal, [0.9, 1.0])}
           icon={cpiVal !== null && cpiVal >= 1 ? TrendingUp : TrendingDown}
         />
         <KPICard
-          label={t('reporting.schedule_progress', { defaultValue: 'Schedule Progress' })}
-          value={fmt(kpi?.schedule_progress_pct, '%')}
+          label={t("reporting.schedule_progress", {
+            defaultValue: "Schedule Progress",
+          })}
+          value={fmt(kpi?.schedule_progress_pct, "%")}
           color={kpiColor(
-            kpi?.schedule_progress_pct ? parseFloat(kpi.schedule_progress_pct) : null,
+            kpi?.schedule_progress_pct
+              ? parseFloat(kpi.schedule_progress_pct)
+              : null,
             [50, 80],
           )}
           icon={BarChart3}
@@ -669,26 +841,43 @@ function PMDashboard({
       {/* Open items row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KPICard
-          label={t('reporting.open_rfis', { defaultValue: 'Open RFIs' })}
+          label={t("reporting.open_rfis", { defaultValue: "Open RFIs" })}
           value={rfiStats ? String(rfiStats.open) : fmt(kpi?.open_rfis)}
-          color={kpiColor(rfiStats?.open !== undefined ? (rfiStats.open === 0 ? 10 : 10 - rfiStats.open) : null, [0, 5])}
+          color={kpiColor(
+            rfiStats?.open !== undefined
+              ? rfiStats.open === 0
+                ? 10
+                : 10 - rfiStats.open
+              : null,
+            [0, 5],
+          )}
           icon={FileText}
         />
         <KPICard
-          label={t('reporting.open_submittals', { defaultValue: 'Open Submittals' })}
-          value={String(kpi?.open_submittals ?? 'N/A')}
+          label={t("reporting.open_submittals", {
+            defaultValue: "Open Submittals",
+          })}
+          value={String(kpi?.open_submittals ?? "N/A")}
           color="gray"
           icon={ClipboardList}
         />
         <KPICard
-          label={t('reporting.overdue_tasks', { defaultValue: 'Overdue Tasks' })}
-          value={taskStats ? String(taskStats.overdue) : 'N/A'}
-          color={taskStats?.overdue ? (taskStats.overdue > 5 ? 'red' : 'yellow') : 'gray'}
+          label={t("reporting.overdue_tasks", {
+            defaultValue: "Overdue Tasks",
+          })}
+          value={taskStats ? String(taskStats.overdue) : "N/A"}
+          color={
+            taskStats?.overdue
+              ? taskStats.overdue > 5
+                ? "red"
+                : "yellow"
+              : "gray"
+          }
           icon={AlertTriangle}
         />
         <KPICard
-          label={t('reporting.total_tasks', { defaultValue: 'Total Tasks' })}
-          value={taskStats ? String(taskStats.total) : 'N/A'}
+          label={t("reporting.total_tasks", { defaultValue: "Total Tasks" })}
+          value={taskStats ? String(taskStats.total) : "N/A"}
           color="gray"
           icon={CheckCircle2}
         />
@@ -699,14 +888,39 @@ function PMDashboard({
         <Card>
           <CardContent>
             <h3 className="mb-3 text-sm font-semibold text-content-primary">
-              {t('reporting.schedule_summary', { defaultValue: 'Schedule Summary' })}
+              {t("reporting.schedule_summary", {
+                defaultValue: "Schedule Summary",
+              })}
             </h3>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-              <StatBlock label={t('reporting.total_activities', { defaultValue: 'Total' })} value={scheduleStats.total_activities} />
-              <StatBlock label={t('reporting.completed', { defaultValue: 'Completed' })} value={scheduleStats.completed} color="emerald" />
-              <StatBlock label={t('reporting.in_progress', { defaultValue: 'In Progress' })} value={scheduleStats.in_progress} color="blue" />
-              <StatBlock label={t('reporting.delayed', { defaultValue: 'Delayed' })} value={scheduleStats.delayed} color="red" />
-              <StatBlock label={t('reporting.on_track', { defaultValue: 'On Track' })} value={scheduleStats.on_track} color="emerald" />
+              <StatBlock
+                label={t("reporting.total_activities", {
+                  defaultValue: "Total",
+                })}
+                value={scheduleStats.total_activities}
+              />
+              <StatBlock
+                label={t("reporting.completed", { defaultValue: "Completed" })}
+                value={scheduleStats.completed}
+                color="emerald"
+              />
+              <StatBlock
+                label={t("reporting.in_progress", {
+                  defaultValue: "In Progress",
+                })}
+                value={scheduleStats.in_progress}
+                color="blue"
+              />
+              <StatBlock
+                label={t("reporting.delayed", { defaultValue: "Delayed" })}
+                value={scheduleStats.delayed}
+                color="red"
+              />
+              <StatBlock
+                label={t("reporting.on_track", { defaultValue: "On Track" })}
+                value={scheduleStats.on_track}
+                color="emerald"
+              />
             </div>
           </CardContent>
         </Card>
@@ -717,15 +931,28 @@ function PMDashboard({
         <Card>
           <CardContent>
             <h3 className="mb-3 text-sm font-semibold text-content-primary">
-              {t('reporting.rfi_summary', { defaultValue: 'RFI Summary' })}
+              {t("reporting.rfi_summary", { defaultValue: "RFI Summary" })}
             </h3>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <StatBlock label={t('reporting.total', { defaultValue: 'Total' })} value={rfiStats.total} />
-              <StatBlock label={t('reporting.open', { defaultValue: 'Open' })} value={rfiStats.open} color="amber" />
-              <StatBlock label={t('reporting.overdue', { defaultValue: 'Overdue' })} value={rfiStats.overdue} color="red" />
               <StatBlock
-                label={t('reporting.avg_response', { defaultValue: 'Avg Response (days)' })}
-                value={rfiStats.avg_response_days?.toFixed(1) ?? 'N/A'}
+                label={t("reporting.total", { defaultValue: "Total" })}
+                value={rfiStats.total}
+              />
+              <StatBlock
+                label={t("reporting.open", { defaultValue: "Open" })}
+                value={rfiStats.open}
+                color="amber"
+              />
+              <StatBlock
+                label={t("reporting.overdue", { defaultValue: "Overdue" })}
+                value={rfiStats.overdue}
+                color="red"
+              />
+              <StatBlock
+                label={t("reporting.avg_response", {
+                  defaultValue: "Avg Response (days)",
+                })}
+                value={rfiStats.avg_response_days?.toFixed(1) ?? "N/A"}
               />
             </div>
           </CardContent>
@@ -745,7 +972,16 @@ function EstimatorDashboard({
   kpi?: KPISnapshot;
 }) {
   const { t } = useTranslation();
-  const [boqs, setBoqs] = useState<Array<{ id: string; name: string; status: string; grand_total: number; currency: string; position_count: number }>>([]);
+  const [boqs, setBoqs] = useState<
+    Array<{
+      id: string;
+      name: string;
+      status: string;
+      grand_total: number;
+      currency: string;
+      position_count: number;
+    }>
+  >([]);
   const [loadingBoqs, setLoadingBoqs] = useState(false);
   const projectId = project?.id;
 
@@ -755,9 +991,16 @@ function EstimatorDashboard({
     setLoadingBoqs(true);
     (async () => {
       try {
-        const data = await apiGet<Array<{ id: string; name: string; status: string; grand_total: number; currency: string; position_count: number }>>(
-          `/v1/boq/boqs/?project_id=${projectId}`,
-        );
+        const data = await apiGet<
+          Array<{
+            id: string;
+            name: string;
+            status: string;
+            grand_total: number;
+            currency: string;
+            position_count: number;
+          }>
+        >(`/v1/boq/boqs/?project_id=${projectId}`);
         if (!cancelled) setBoqs(data);
       } catch {
         if (!cancelled) setBoqs([]);
@@ -765,11 +1008,19 @@ function EstimatorDashboard({
         if (!cancelled) setLoadingBoqs(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [projectId]);
 
   if (!project) {
-    return <EmptyState message={t('reporting.select_project_prompt_estimator', { defaultValue: 'Select a project to view Estimator dashboard' })} />;
+    return (
+      <EmptyState
+        message={t("reporting.select_project_prompt_estimator", {
+          defaultValue: "Select a project to view Estimator dashboard",
+        })}
+      />
+    );
   }
 
   return (
@@ -777,19 +1028,21 @@ function EstimatorDashboard({
       {/* KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <KPICard
-          label={t('reporting.cpi', { defaultValue: 'CPI' })}
+          label={t("reporting.cpi", { defaultValue: "CPI" })}
           value={fmt(kpi?.cpi)}
           color={kpiColor(kpi?.cpi ? parseFloat(kpi.cpi) : null, [0.9, 1.0])}
           icon={TrendingUp}
         />
         <KPICard
-          label={t('reporting.budget_consumed', { defaultValue: 'Budget Consumed' })}
-          value={fmt(kpi?.budget_consumed_pct, '%')}
+          label={t("reporting.budget_consumed", {
+            defaultValue: "Budget Consumed",
+          })}
+          value={fmt(kpi?.budget_consumed_pct, "%")}
           color="gray"
           icon={Wallet}
         />
         <KPICard
-          label={t('reporting.boq_count', { defaultValue: 'BOQs' })}
+          label={t("reporting.boq_count", { defaultValue: "BOQs" })}
           value={String(boqs.length)}
           color="gray"
           icon={Calculator}
@@ -808,18 +1061,37 @@ function EstimatorDashboard({
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border-light bg-surface-secondary text-left text-xs font-medium text-content-secondary">
-                    <th className="px-4 py-3">{t('reporting.boq_name', { defaultValue: 'BOQ Name' })}</th>
-                    <th className="px-4 py-3">{t('reporting.col_status', { defaultValue: 'Status' })}</th>
-                    <th className="px-4 py-3 text-right">{t('reporting.positions', { defaultValue: 'Positions' })}</th>
-                    <th className="px-4 py-3 text-right">{t('reporting.grand_total', { defaultValue: 'Grand Total' })}</th>
+                    <th className="px-4 py-3">
+                      {t("reporting.boq_name", { defaultValue: "BOQ Name" })}
+                    </th>
+                    <th className="px-4 py-3">
+                      {t("reporting.col_status", { defaultValue: "Status" })}
+                    </th>
+                    <th className="px-4 py-3 text-right">
+                      {t("reporting.positions", { defaultValue: "Positions" })}
+                    </th>
+                    <th className="px-4 py-3 text-right">
+                      {t("reporting.grand_total", {
+                        defaultValue: "Grand Total",
+                      })}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {boqs.map((b) => (
-                    <tr key={b.id} className="border-b border-border-light last:border-0 hover:bg-surface-secondary/50">
-                      <td className="px-4 py-3 font-medium text-content-primary">{b.name}</td>
-                      <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
-                      <td className="px-4 py-3 text-right text-content-secondary">{b.position_count ?? 0}</td>
+                    <tr
+                      key={b.id}
+                      className="border-b border-border-light last:border-0 hover:bg-surface-secondary/50"
+                    >
+                      <td className="px-4 py-3 font-medium text-content-primary">
+                        {b.name}
+                      </td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={b.status} />
+                      </td>
+                      <td className="px-4 py-3 text-right text-content-secondary">
+                        {b.position_count ?? 0}
+                      </td>
                       <td className="px-4 py-3 text-right font-medium text-content-primary">
                         {fmtNum(b.grand_total, 2)} {b.currency}
                       </td>
@@ -827,8 +1099,13 @@ function EstimatorDashboard({
                   ))}
                   {boqs.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="px-4 py-8 text-center text-content-secondary">
-                        {t('reporting.no_boqs', { defaultValue: 'No BOQs in this project' })}
+                      <td
+                        colSpan={4}
+                        className="px-4 py-8 text-center text-content-secondary"
+                      >
+                        {t("reporting.no_boqs", {
+                          defaultValue: "No BOQs in this project",
+                        })}
                       </td>
                     </tr>
                   )}
@@ -856,7 +1133,13 @@ function SiteDashboard({
   const { t } = useTranslation();
 
   if (!project) {
-    return <EmptyState message={t('reporting.select_project_prompt_site', { defaultValue: 'Select a project to view Site Engineer dashboard' })} />;
+    return (
+      <EmptyState
+        message={t("reporting.select_project_prompt_site", {
+          defaultValue: "Select a project to view Site Engineer dashboard",
+        })}
+      />
+    );
   }
 
   return (
@@ -864,26 +1147,38 @@ function SiteDashboard({
       {/* Schedule KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KPICard
-          label={t('reporting.today_activities', { defaultValue: 'Total Activities' })}
-          value={scheduleStats ? String(scheduleStats.total_activities) : 'N/A'}
+          label={t("reporting.today_activities", {
+            defaultValue: "Total Activities",
+          })}
+          value={scheduleStats ? String(scheduleStats.total_activities) : "N/A"}
           color="gray"
           icon={ClipboardList}
         />
         <KPICard
-          label={t('reporting.in_progress', { defaultValue: 'In Progress' })}
-          value={scheduleStats ? String(scheduleStats.in_progress) : 'N/A'}
+          label={t("reporting.in_progress", { defaultValue: "In Progress" })}
+          value={scheduleStats ? String(scheduleStats.in_progress) : "N/A"}
           color="green"
           icon={Activity}
         />
         <KPICard
-          label={t('reporting.delayed_activities', { defaultValue: 'Delayed' })}
-          value={scheduleStats ? String(scheduleStats.delayed) : 'N/A'}
-          color={scheduleStats?.delayed ? (scheduleStats.delayed > 3 ? 'red' : 'yellow') : 'gray'}
+          label={t("reporting.delayed_activities", { defaultValue: "Delayed" })}
+          value={scheduleStats ? String(scheduleStats.delayed) : "N/A"}
+          color={
+            scheduleStats?.delayed
+              ? scheduleStats.delayed > 3
+                ? "red"
+                : "yellow"
+              : "gray"
+          }
           icon={AlertTriangle}
         />
         <KPICard
-          label={t('reporting.progress', { defaultValue: 'Progress' })}
-          value={scheduleStats ? `${scheduleStats.progress_pct?.toFixed(0) ?? 0}%` : 'N/A'}
+          label={t("reporting.progress", { defaultValue: "Progress" })}
+          value={
+            scheduleStats
+              ? `${scheduleStats.progress_pct?.toFixed(0) ?? 0}%`
+              : "N/A"
+          }
           color={kpiColor(scheduleStats?.progress_pct ?? null, [50, 80])}
           icon={BarChart3}
         />
@@ -894,25 +1189,35 @@ function SiteDashboard({
         <Card>
           <CardContent>
             <h3 className="mb-3 text-sm font-semibold text-content-primary">
-              {t('reporting.safety_overview', { defaultValue: 'Safety Overview' })}
+              {t("reporting.safety_overview", {
+                defaultValue: "Safety Overview",
+              })}
             </h3>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <StatBlock
-                label={t('reporting.incidents', { defaultValue: 'Incidents' })}
+                label={t("reporting.incidents", { defaultValue: "Incidents" })}
                 value={safetyStats.total_incidents}
-                color={safetyStats.total_incidents > 0 ? 'red' : 'emerald'}
+                color={safetyStats.total_incidents > 0 ? "red" : "emerald"}
               />
               <StatBlock
-                label={t('reporting.observations', { defaultValue: 'Observations' })}
+                label={t("reporting.observations", {
+                  defaultValue: "Observations",
+                })}
                 value={safetyStats.total_observations}
               />
               <StatBlock
-                label={t('reporting.open_actions', { defaultValue: 'Open Actions' })}
+                label={t("reporting.open_actions", {
+                  defaultValue: "Open Actions",
+                })}
                 value={safetyStats.open_corrective_actions}
-                color={safetyStats.open_corrective_actions > 0 ? 'amber' : 'emerald'}
+                color={
+                  safetyStats.open_corrective_actions > 0 ? "amber" : "emerald"
+                }
               />
               <StatBlock
-                label={t('reporting.days_safe', { defaultValue: 'Days Since Incident' })}
+                label={t("reporting.days_safe", {
+                  defaultValue: "Days Since Incident",
+                })}
                 value={safetyStats.days_since_last_incident}
                 color="emerald"
               />
@@ -923,7 +1228,9 @@ function SiteDashboard({
         <Card>
           <CardContent>
             <p className="text-sm text-content-secondary">
-              {t('reporting.no_safety_data', { defaultValue: 'No safety data available for this project.' })}
+              {t("reporting.no_safety_data", {
+                defaultValue: "No safety data available for this project.",
+              })}
             </p>
           </CardContent>
         </Card>
@@ -946,7 +1253,13 @@ function FinanceDashboardView({
   const { t } = useTranslation();
 
   if (!project) {
-    return <EmptyState message={t('reporting.select_project_prompt_finance', { defaultValue: 'Select a project to view Finance dashboard' })} />;
+    return (
+      <EmptyState
+        message={t("reporting.select_project_prompt_finance", {
+          defaultValue: "Select a project to view Finance dashboard",
+        })}
+      />
+    );
   }
 
   return (
@@ -956,27 +1269,33 @@ function FinanceDashboardView({
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <KPICard
-              label={t('reporting.payable', { defaultValue: 'Total Payable' })}
+              label={t("reporting.payable", { defaultValue: "Total Payable" })}
               value={`${fmtNum(financeDash.total_payable, 2)} ${financeDash.currency}`}
               color="gray"
               icon={Wallet}
             />
             <KPICard
-              label={t('reporting.receivable', { defaultValue: 'Total Receivable' })}
+              label={t("reporting.receivable", {
+                defaultValue: "Total Receivable",
+              })}
               value={`${fmtNum(financeDash.total_receivable, 2)} ${financeDash.currency}`}
               color="gray"
               icon={TrendingUp}
             />
             <KPICard
-              label={t('reporting.overdue_payable', { defaultValue: 'Overdue Payable' })}
+              label={t("reporting.overdue_payable", {
+                defaultValue: "Overdue Payable",
+              })}
               value={`${fmtNum(financeDash.overdue_payable, 2)} ${financeDash.currency}`}
-              color={financeDash.overdue_payable > 0 ? 'red' : 'green'}
+              color={financeDash.overdue_payable > 0 ? "red" : "green"}
               icon={AlertTriangle}
             />
             <KPICard
-              label={t('reporting.cash_flow_net', { defaultValue: 'Net Cash Flow' })}
+              label={t("reporting.cash_flow_net", {
+                defaultValue: "Net Cash Flow",
+              })}
               value={`${fmtNum(financeDash.cash_flow_net, 2)} ${financeDash.currency}`}
-              color={financeDash.cash_flow_net >= 0 ? 'green' : 'red'}
+              color={financeDash.cash_flow_net >= 0 ? "green" : "red"}
               icon={financeDash.cash_flow_net >= 0 ? TrendingUp : TrendingDown}
             />
           </div>
@@ -984,32 +1303,42 @@ function FinanceDashboardView({
           {/* Invoices and budget */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <KPICard
-              label={t('reporting.invoices_week', { defaultValue: 'Invoices Due (Week)' })}
+              label={t("reporting.invoices_week", {
+                defaultValue: "Invoices Due (Week)",
+              })}
               value={String(financeDash.invoices_due_this_week)}
-              color={financeDash.invoices_due_this_week > 0 ? 'yellow' : 'green'}
+              color={
+                financeDash.invoices_due_this_week > 0 ? "yellow" : "green"
+              }
               icon={Clock}
             />
             <KPICard
-              label={t('reporting.invoices_month', { defaultValue: 'Invoices Due (Month)' })}
+              label={t("reporting.invoices_month", {
+                defaultValue: "Invoices Due (Month)",
+              })}
               value={String(financeDash.invoices_due_this_month)}
               color="gray"
               icon={Clock}
             />
             <KPICard
-              label={t('reporting.budget_total', { defaultValue: 'Total Budget' })}
+              label={t("reporting.budget_total", {
+                defaultValue: "Total Budget",
+              })}
               value={`${fmtNum(financeDash.total_budget, 2)} ${financeDash.currency}`}
               color="gray"
               icon={Wallet}
             />
             <KPICard
-              label={t('reporting.budget_consumed', { defaultValue: 'Budget Consumed' })}
-              value={`${financeDash.budget_consumed_pct?.toFixed(1) ?? 'N/A'}%`}
+              label={t("reporting.budget_consumed", {
+                defaultValue: "Budget Consumed",
+              })}
+              value={`${financeDash.budget_consumed_pct?.toFixed(1) ?? "N/A"}%`}
               color={
-                financeDash.budget_warning === 'critical'
-                  ? 'red'
-                  : financeDash.budget_warning === 'caution'
-                    ? 'yellow'
-                    : 'green'
+                financeDash.budget_warning === "critical"
+                  ? "red"
+                  : financeDash.budget_warning === "caution"
+                    ? "yellow"
+                    : "green"
               }
               icon={BarChart3}
             />
@@ -1019,7 +1348,10 @@ function FinanceDashboardView({
         <Card>
           <CardContent>
             <p className="text-sm text-content-secondary">
-              {t('reporting.no_finance_data', { defaultValue: 'No finance data available for this project. Create invoices and budgets first.' })}
+              {t("reporting.no_finance_data", {
+                defaultValue:
+                  "No finance data available for this project. Create invoices and budgets first.",
+              })}
             </p>
           </CardContent>
         </Card>
@@ -1030,21 +1362,32 @@ function FinanceDashboardView({
         <Card>
           <CardContent>
             <h3 className="mb-3 text-sm font-semibold text-content-primary">
-              {t('reporting.procurement_summary', { defaultValue: 'Procurement Summary' })}
+              {t("reporting.procurement_summary", {
+                defaultValue: "Procurement Summary",
+              })}
             </h3>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <StatBlock label={t('reporting.total_pos', { defaultValue: 'Total POs' })} value={procurementStats.total_pos} />
               <StatBlock
-                label={t('reporting.committed', { defaultValue: 'Committed' })}
+                label={t("reporting.total_pos", { defaultValue: "Total POs" })}
+                value={procurementStats.total_pos}
+              />
+              <StatBlock
+                label={t("reporting.committed", { defaultValue: "Committed" })}
                 value={fmtNum(procurementStats.total_committed, 2)}
               />
               <StatBlock
-                label={t('reporting.pending_delivery', { defaultValue: 'Pending Delivery' })}
+                label={t("reporting.pending_delivery", {
+                  defaultValue: "Pending Delivery",
+                })}
                 value={procurementStats.pending_delivery}
-                color={procurementStats.pending_delivery > 0 ? 'amber' : 'emerald'}
+                color={
+                  procurementStats.pending_delivery > 0 ? "amber" : "emerald"
+                }
               />
               <StatBlock
-                label={t('reporting.approved_pos', { defaultValue: 'Approved' })}
+                label={t("reporting.approved_pos", {
+                  defaultValue: "Approved",
+                })}
                 value={procurementStats.by_status?.approved ?? 0}
                 color="emerald"
               />
@@ -1067,7 +1410,9 @@ function StatBlock({
   value: string | number;
   color?: string;
 }) {
-  const textColor = color ? `text-${color}-600 dark:text-${color}-400` : 'text-content-primary';
+  const textColor = color
+    ? `text-${color}-600 dark:text-${color}-400`
+    : "text-content-primary";
   return (
     <div>
       <p className="text-xs font-medium text-content-secondary">{label}</p>

@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, Link } from 'react-router-dom';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate, Link } from "react-router-dom";
+import clsx from "clsx";
 import {
   Search,
   Database,
@@ -30,13 +30,21 @@ import {
   Layers,
   Server,
   type LucideIcon,
-} from 'lucide-react';
-import { Card, Badge, Button, Input, InfoHint, Breadcrumb, ConfirmDialog } from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
-import { useModuleStore } from '@/stores/useModuleStore';
-import { getModulesByCategory } from '@/modules/_registry';
+} from "lucide-react";
+import {
+  Card,
+  Badge,
+  Button,
+  Input,
+  InfoHint,
+  Breadcrumb,
+  ConfirmDialog,
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { apiGet, apiPost, apiDelete } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
+import { useModuleStore } from "@/stores/useModuleStore";
+import { getModulesByCategory } from "@/modules/_registry";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -82,26 +90,46 @@ interface CompanyPresetAPI {
 
 /* ── Tab definitions ───────────────────────────────────────────────────── */
 
-type TabKey = 'profiles' | 'data-packages' | 'system';
+type TabKey = "profiles" | "data-packages" | "system";
 
-const TABS: { key: TabKey; labelKey: string; defaultLabel: string; icon: LucideIcon }[] = [
-  { key: 'profiles', labelKey: 'modules.tab_profiles', defaultLabel: 'Company Profiles', icon: Users },
-  { key: 'data-packages', labelKey: 'modules.tab_data_packages', defaultLabel: 'Data Packages', icon: Layers },
-  { key: 'system', labelKey: 'modules.tab_system', defaultLabel: 'System Modules', icon: Server },
+const TABS: {
+  key: TabKey;
+  labelKey: string;
+  defaultLabel: string;
+  icon: LucideIcon;
+}[] = [
+  {
+    key: "profiles",
+    labelKey: "modules.tab_profiles",
+    defaultLabel: "Company Profiles",
+    icon: Users,
+  },
+  {
+    key: "data-packages",
+    labelKey: "modules.tab_data_packages",
+    defaultLabel: "Data Packages",
+    icon: Layers,
+  },
+  {
+    key: "system",
+    labelKey: "modules.tab_system",
+    defaultLabel: "System Modules",
+    icon: Server,
+  },
 ];
 
 /* ── Marketplace category config ───────────────────────────────────────── */
 
 type CategoryKey =
-  | 'all'
-  | 'demo_project'
-  | 'resource_catalog'
-  | 'cost_database'
-  | 'vector_index'
-  | 'language'
-  | 'converter'
-  | 'analytics'
-  | 'integration';
+  | "all"
+  | "demo_project"
+  | "resource_catalog"
+  | "cost_database"
+  | "vector_index"
+  | "language"
+  | "converter"
+  | "analytics"
+  | "integration";
 
 interface CategoryMeta {
   labelKey: string;
@@ -110,15 +138,51 @@ interface CategoryMeta {
 }
 
 const CATEGORIES: Record<CategoryKey, CategoryMeta> = {
-  all: { labelKey: 'marketplace.category_all', defaultLabel: 'All', icon: Package },
-  demo_project: { labelKey: 'marketplace.category_demo', defaultLabel: 'Demo Projects', icon: Building2 },
-  resource_catalog: { labelKey: 'marketplace.category_resource_catalog', defaultLabel: 'Resource Catalogs', icon: Boxes },
-  cost_database: { labelKey: 'marketplace.category_cost_database', defaultLabel: 'Cost Databases', icon: Database },
-  vector_index: { labelKey: 'marketplace.category_vector_index', defaultLabel: 'Vector Indices', icon: Sparkles },
-  language: { labelKey: 'marketplace.category_language', defaultLabel: 'Languages', icon: Globe },
-  converter: { labelKey: 'marketplace.category_converter', defaultLabel: 'Converters', icon: FileInput },
-  analytics: { labelKey: 'marketplace.category_analytics', defaultLabel: 'Analytics', icon: BarChart3 },
-  integration: { labelKey: 'marketplace.category_integration', defaultLabel: 'Integrations', icon: Plug },
+  all: {
+    labelKey: "marketplace.category_all",
+    defaultLabel: "All",
+    icon: Package,
+  },
+  demo_project: {
+    labelKey: "marketplace.category_demo",
+    defaultLabel: "Demo Projects",
+    icon: Building2,
+  },
+  resource_catalog: {
+    labelKey: "marketplace.category_resource_catalog",
+    defaultLabel: "Resource Catalogs",
+    icon: Boxes,
+  },
+  cost_database: {
+    labelKey: "marketplace.category_cost_database",
+    defaultLabel: "Cost Databases",
+    icon: Database,
+  },
+  vector_index: {
+    labelKey: "marketplace.category_vector_index",
+    defaultLabel: "Vector Indices",
+    icon: Sparkles,
+  },
+  language: {
+    labelKey: "marketplace.category_language",
+    defaultLabel: "Languages",
+    icon: Globe,
+  },
+  converter: {
+    labelKey: "marketplace.category_converter",
+    defaultLabel: "Converters",
+    icon: FileInput,
+  },
+  analytics: {
+    labelKey: "marketplace.category_analytics",
+    defaultLabel: "Analytics",
+    icon: BarChart3,
+  },
+  integration: {
+    labelKey: "marketplace.category_integration",
+    defaultLabel: "Integrations",
+    icon: Plug,
+  },
 };
 
 const CATEGORY_KEYS = Object.keys(CATEGORIES) as CategoryKey[];
@@ -126,8 +190,17 @@ const CATEGORY_KEYS = Object.keys(CATEGORIES) as CategoryKey[];
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
 const ICON_MAP: Record<string, LucideIcon> = {
-  Database, Sparkles, Globe, FileInput, BarChart3, Plug, Building2, Boxes,
-  Calculator, ClipboardList, Pencil,
+  Database,
+  Sparkles,
+  Globe,
+  FileInput,
+  BarChart3,
+  Plug,
+  Building2,
+  Boxes,
+  Calculator,
+  ClipboardList,
+  Pencil,
 };
 
 function getModuleIcon(iconName: string): LucideIcon {
@@ -135,7 +208,10 @@ function getModuleIcon(iconName: string): LucideIcon {
 }
 
 function formatModuleId(id: string): string {
-  return id.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  return id
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }
 
 function formatSize(sizeMb: number): string {
@@ -147,53 +223,81 @@ function formatSize(sizeMb: number): string {
 /* ── Module category display config ────────────────────────────────────── */
 
 const MODULE_CATEGORY_ORDER = [
-  'core',
-  'estimation',
-  'planning',
-  'procurement',
-  'finance',
-  'commercial',
-  'contracts',
-  'bim',
-  'ai',
-  'analytics',
-  'quality',
-  'safety',
-  'field',
-  'communication',
-  'documentation',
-  'integration',
-  'converter',
-  'tools',
-  'regional',
+  "core",
+  "estimation",
+  "planning",
+  "procurement",
+  "finance",
+  "commercial",
+  "contracts",
+  "bim",
+  "ai",
+  "analytics",
+  "quality",
+  "safety",
+  "field",
+  "communication",
+  "documentation",
+  "integration",
+  "converter",
+  "tools",
+  "regional",
 ] as const;
 
-const MODULE_CATEGORY_META: Record<string, { labelKey: string; defaultLabel: string }> = {
-  core: { labelKey: 'modules.cat_core', defaultLabel: 'Core' },
-  estimation: { labelKey: 'nav.group_estimation', defaultLabel: 'Estimation' },
-  planning: { labelKey: 'nav.group_planning', defaultLabel: 'Planning' },
-  procurement: { labelKey: 'nav.group_procurement', defaultLabel: 'Procurement' },
-  finance: { labelKey: 'modules.cat_finance', defaultLabel: 'Finance' },
-  commercial: { labelKey: 'modules.cat_commercial', defaultLabel: 'Commercial' },
-  contracts: { labelKey: 'modules.cat_contracts', defaultLabel: 'Contracts' },
-  bim: { labelKey: 'modules.cat_bim', defaultLabel: 'BIM' },
-  ai: { labelKey: 'modules.cat_ai', defaultLabel: 'AI' },
-  analytics: { labelKey: 'modules.cat_analytics', defaultLabel: 'Analytics' },
-  quality: { labelKey: 'modules.cat_quality', defaultLabel: 'Quality' },
-  safety: { labelKey: 'modules.cat_safety', defaultLabel: 'Safety' },
-  field: { labelKey: 'modules.cat_field', defaultLabel: 'Field Operations' },
-  communication: { labelKey: 'modules.cat_communication', defaultLabel: 'Communication' },
-  documentation: { labelKey: 'modules.cat_documentation', defaultLabel: 'Documentation' },
-  integration: { labelKey: 'modules.cat_integration', defaultLabel: 'Integration' },
-  converter: { labelKey: 'modules.cat_converter', defaultLabel: 'CAD / BIM Converters' },
-  tools: { labelKey: 'nav.group_tools', defaultLabel: 'Tools' },
-  regional: { labelKey: 'modules.cat_regional', defaultLabel: 'Regional Standards' },
+const MODULE_CATEGORY_META: Record<
+  string,
+  { labelKey: string; defaultLabel: string }
+> = {
+  core: { labelKey: "modules.cat_core", defaultLabel: "Core" },
+  estimation: { labelKey: "nav.group_estimation", defaultLabel: "Estimation" },
+  planning: { labelKey: "nav.group_planning", defaultLabel: "Planning" },
+  procurement: {
+    labelKey: "nav.group_procurement",
+    defaultLabel: "Procurement",
+  },
+  finance: { labelKey: "modules.cat_finance", defaultLabel: "Finance" },
+  commercial: {
+    labelKey: "modules.cat_commercial",
+    defaultLabel: "Commercial",
+  },
+  contracts: { labelKey: "modules.cat_contracts", defaultLabel: "Contracts" },
+  bim: { labelKey: "modules.cat_bim", defaultLabel: "BIM" },
+  ai: { labelKey: "modules.cat_ai", defaultLabel: "AI" },
+  analytics: { labelKey: "modules.cat_analytics", defaultLabel: "Analytics" },
+  quality: { labelKey: "modules.cat_quality", defaultLabel: "Quality" },
+  safety: { labelKey: "modules.cat_safety", defaultLabel: "Safety" },
+  field: { labelKey: "modules.cat_field", defaultLabel: "Field Operations" },
+  communication: {
+    labelKey: "modules.cat_communication",
+    defaultLabel: "Communication",
+  },
+  documentation: {
+    labelKey: "modules.cat_documentation",
+    defaultLabel: "Documentation",
+  },
+  integration: {
+    labelKey: "modules.cat_integration",
+    defaultLabel: "Integration",
+  },
+  converter: {
+    labelKey: "modules.cat_converter",
+    defaultLabel: "CAD / BIM Converters",
+  },
+  tools: { labelKey: "nav.group_tools", defaultLabel: "Tools" },
+  regional: {
+    labelKey: "modules.cat_regional",
+    defaultLabel: "Regional Standards",
+  },
 };
 
 /* ── Preset icon mapping ───────────────────────────────────────────────── */
 
 const PRESET_ICON_MAP: Record<string, LucideIcon> = {
-  Building2, Calculator, ClipboardList, Pencil, Boxes,
+  Building2,
+  Calculator,
+  ClipboardList,
+  Pencil,
+  Boxes,
 };
 
 function getPresetIcon(iconName: string): LucideIcon {
@@ -206,14 +310,14 @@ function getPresetIcon(iconName: string): LucideIcon {
 
 export function ModulesPage() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<TabKey>('profiles');
+  const [activeTab, setActiveTab] = useState<TabKey>("profiles");
 
   return (
     <div className="w-full animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
-          { label: t('nav.modules', 'Modules') },
+          { label: t("nav.dashboard", "Dashboard"), to: "/" },
+          { label: t("nav.modules", "Modules") },
         ]}
         className="mb-4"
       />
@@ -222,28 +326,38 @@ export function ModulesPage() {
       <div className="mb-6 animate-card-in flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold text-content-primary">
-            {t('modules.page_title', { defaultValue: 'Modules & Marketplace‌⁠‍' })}
+            {t("modules.page_title", {
+              defaultValue: "Modules & Marketplace‌⁠‍",
+            })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('modules.page_subtitle', {
-              defaultValue: 'Manage your company profile, data packages, and system modules.‌⁠‍',
+            {t("modules.page_subtitle", {
+              defaultValue:
+                "Manage your company profile, data packages, and system modules.‌⁠‍",
             })}
           </p>
         </div>
         <Link
           to="/modules/developer-guide"
           className="inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-oe-blue/30 bg-oe-blue/5 text-xs font-medium text-oe-blue hover:bg-oe-blue/10 hover:border-oe-blue/50 transition-colors shrink-0"
-          title={t('modules.dev_guide_hint', {
-            defaultValue: 'Learn how to build your own module‌⁠‍',
+          title={t("modules.dev_guide_hint", {
+            defaultValue: "Learn how to build your own module‌⁠‍",
           })}
         >
           <Info size={14} />
-          {t('modules.dev_guide', { defaultValue: 'Build a module — developer guide‌⁠‍' })}
+          {t("modules.dev_guide", {
+            defaultValue: "Build a module — developer guide‌⁠‍",
+          })}
         </Link>
       </div>
 
       {/* Tab bar */}
-      <div className="mb-6 flex gap-1 rounded-lg bg-surface-secondary p-1 animate-card-in" role="tablist" aria-label={t('modules.tabs', { defaultValue: 'Module sections‌⁠‍' })} style={{ animationDelay: '30ms' }}>
+      <div
+        className="mb-6 flex gap-1 rounded-lg bg-surface-secondary p-1 animate-card-in"
+        role="tablist"
+        aria-label={t("modules.tabs", { defaultValue: "Module sections‌⁠‍" })}
+        style={{ animationDelay: "30ms" }}
+      >
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -254,10 +368,10 @@ export function ModulesPage() {
               role="tab"
               aria-selected={isActive}
               className={clsx(
-                'flex-1 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-fast',
+                "flex-1 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-fast",
                 isActive
-                  ? 'bg-surface-elevated text-content-primary shadow-xs'
-                  : 'text-content-secondary hover:text-content-primary',
+                  ? "bg-surface-elevated text-content-primary shadow-xs"
+                  : "text-content-secondary hover:text-content-primary",
               )}
             >
               <Icon size={16} />
@@ -268,9 +382,9 @@ export function ModulesPage() {
       </div>
 
       {/* Tab content */}
-      {activeTab === 'profiles' && <CompanyProfilesTab />}
-      {activeTab === 'data-packages' && <DataPackagesTab />}
-      {activeTab === 'system' && <SystemModulesTab />}
+      {activeTab === "profiles" && <CompanyProfilesTab />}
+      {activeTab === "data-packages" && <DataPackagesTab />}
+      {activeTab === "system" && <SystemModulesTab />}
     </div>
   );
 }
@@ -282,20 +396,27 @@ export function ModulesPage() {
 function CompanyProfilesTab() {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
-  const { isModuleEnabled, setModuleEnabled, canDisable, getEnabledDependents, syncFromServer } =
-    useModuleStore();
+  const {
+    isModuleEnabled,
+    setModuleEnabled,
+    canDisable,
+    getEnabledDependents,
+    syncFromServer,
+  } = useModuleStore();
 
   const [switchingTo, setSwitchingTo] = useState<CompanyPresetAPI | null>(null);
   const [isSwitching, setIsSwitching] = useState(false);
 
   // Determine active profile from localStorage
-  const [activeProfileKey, setActiveProfileKey] = useState<string | null>(() => {
-    try {
-      return localStorage.getItem('oe_company_type') ?? null;
-    } catch {
-      return null;
-    }
-  });
+  const [activeProfileKey, setActiveProfileKey] = useState<string | null>(
+    () => {
+      try {
+        return localStorage.getItem("oe_company_type") ?? null;
+      } catch {
+        return null;
+      }
+    },
+  );
 
   useEffect(() => {
     void syncFromServer();
@@ -307,8 +428,8 @@ function CompanyProfilesTab() {
     isError: presetsError,
     refetch: refetchPresets,
   } = useQuery({
-    queryKey: ['onboarding-presets'],
-    queryFn: () => apiGet<CompanyPresetAPI[]>('/v1/users/onboarding-presets/'),
+    queryKey: ["onboarding-presets"],
+    queryFn: () => apiGet<CompanyPresetAPI[]>("/v1/users/onboarding-presets/"),
   });
 
   const handleProfileClick = useCallback(
@@ -326,7 +447,7 @@ function CompanyProfilesTab() {
       // Apply module toggles
       const enabledSet = new Set(switchingTo.enabled_modules);
       // For full_enterprise, enable everything
-      const isFullEnterprise = switchingTo.key === 'full_enterprise';
+      const isFullEnterprise = switchingTo.key === "full_enterprise";
 
       // Get all toggleable modules from the grouped registry
       const grouped = getModulesByCategory();
@@ -338,28 +459,30 @@ function CompanyProfilesTab() {
       }
 
       // Persist to server
-      await apiPost('/v1/users/me/onboarding/', {
+      await apiPost("/v1/users/me/onboarding/", {
         company_type: switchingTo.key,
         enabled_modules: switchingTo.enabled_modules,
-        interface_mode: 'advanced',
+        interface_mode: "advanced",
         completed: true,
       });
 
       // Store profile key locally
-      localStorage.setItem('oe_company_type', switchingTo.key);
+      localStorage.setItem("oe_company_type", switchingTo.key);
       setActiveProfileKey(switchingTo.key);
 
       addToast({
-        type: 'success',
-        title: t('modules.profile_switched', {
-          defaultValue: 'Profile switched to {{name}}',
+        type: "success",
+        title: t("modules.profile_switched", {
+          defaultValue: "Profile switched to {{name}}",
           name: switchingTo.label,
         }),
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('modules.profile_switch_failed', { defaultValue: 'Failed to switch profile' }),
+        type: "error",
+        title: t("modules.profile_switch_failed", {
+          defaultValue: "Failed to switch profile",
+        }),
         message: err instanceof Error ? err.message : String(err),
       });
     } finally {
@@ -372,22 +495,30 @@ function CompanyProfilesTab() {
   const activeModuleCount = activePreset?.module_count ?? 0;
 
   return (
-    <div className="animate-card-in" style={{ animationDelay: '60ms' }}>
+    <div className="animate-card-in" style={{ animationDelay: "60ms" }}>
       {/* Current profile banner */}
       {activePreset && (
         <div className="mb-6 rounded-xl border border-oe-blue/20 bg-oe-blue-subtle px-5 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
-                {(() => { const Icon = getPresetIcon(activePreset.icon); return <Icon size={20} />; })()}
+                {(() => {
+                  const Icon = getPresetIcon(activePreset.icon);
+                  return <Icon size={20} />;
+                })()}
               </div>
               <div>
                 <p className="text-sm font-semibold text-content-primary">
-                  {t('modules.current_profile', { defaultValue: 'Current Profile' })}:{' '}
-                  {activePreset.label}
+                  {t("modules.current_profile", {
+                    defaultValue: "Current Profile",
+                  })}
+                  : {activePreset.label}
                 </p>
                 <p className="text-xs text-content-secondary">
-                  {activeModuleCount} {t('modules.modules_active_label', { defaultValue: 'modules active' })}
+                  {activeModuleCount}{" "}
+                  {t("modules.modules_active_label", {
+                    defaultValue: "modules active",
+                  })}
                 </p>
               </div>
             </div>
@@ -397,7 +528,7 @@ function CompanyProfilesTab() {
 
       {/* Profile cards grid */}
       <h2 className="text-sm font-semibold text-content-secondary uppercase tracking-wider mb-3">
-        {t('modules.choose_profile', { defaultValue: 'Company Profiles' })}
+        {t("modules.choose_profile", { defaultValue: "Company Profiles" })}
       </h2>
 
       {presetsLoading ? (
@@ -416,9 +547,15 @@ function CompanyProfilesTab() {
         </div>
       ) : presetsError ? (
         <div className="py-12 text-center">
-          <AlertTriangle size={36} className="mx-auto mb-3 text-semantic-warning" strokeWidth={1.5} />
+          <AlertTriangle
+            size={36}
+            className="mx-auto mb-3 text-semantic-warning"
+            strokeWidth={1.5}
+          />
           <p className="text-sm font-medium text-content-secondary">
-            {t('modules.profiles_load_failed', { defaultValue: 'Failed to load profiles' })}
+            {t("modules.profiles_load_failed", {
+              defaultValue: "Failed to load profiles",
+            })}
           </p>
           <Button
             variant="secondary"
@@ -427,17 +564,22 @@ function CompanyProfilesTab() {
             onClick={() => void refetchPresets()}
             className="mt-3"
           >
-            {t('common.retry', { defaultValue: 'Retry' })}
+            {t("common.retry", { defaultValue: "Retry" })}
           </Button>
         </div>
       ) : !presets || presets.length === 0 ? (
         <div className="py-12 text-center">
           <Users size={36} className="mx-auto mb-3 text-content-tertiary" />
           <p className="text-sm font-medium text-content-secondary">
-            {t('modules.no_profiles', { defaultValue: 'No company profiles available' })}
+            {t("modules.no_profiles", {
+              defaultValue: "No company profiles available",
+            })}
           </p>
           <p className="mt-1 text-xs text-content-tertiary">
-            {t('modules.no_profiles_hint', { defaultValue: 'Profiles help pre-configure which modules are active for your company type.' })}
+            {t("modules.no_profiles_hint", {
+              defaultValue:
+                "Profiles help pre-configure which modules are active for your company type.",
+            })}
           </p>
         </div>
       ) : (
@@ -449,31 +591,35 @@ function CompanyProfilesTab() {
               <button
                 key={preset.key}
                 onClick={() => handleProfileClick(preset)}
-                aria-label={`${preset.label} — ${preset.module_count} ${t('modules.modules_label', { defaultValue: 'modules' })}`}
+                aria-label={`${preset.label} — ${preset.module_count} ${t("modules.modules_label", { defaultValue: "modules" })}`}
                 aria-pressed={isActive}
                 className={clsx(
-                  'text-left rounded-xl border p-4 transition-all',
+                  "text-left rounded-xl border p-4 transition-all",
                   isActive
-                    ? 'border-oe-blue bg-oe-blue-subtle ring-1 ring-oe-blue/30'
-                    : 'border-border-light bg-surface-elevated hover:border-border hover:shadow-xs',
+                    ? "border-oe-blue bg-oe-blue-subtle ring-1 ring-oe-blue/30"
+                    : "border-border-light bg-surface-elevated hover:border-border hover:shadow-xs",
                 )}
               >
                 <div className="flex items-start gap-3">
                   <div
                     className={clsx(
-                      'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
-                      isActive ? 'bg-oe-blue/10 text-oe-blue' : 'bg-surface-secondary text-content-secondary',
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
+                      isActive
+                        ? "bg-oe-blue/10 text-oe-blue"
+                        : "bg-surface-secondary text-content-secondary",
                     )}
                   >
                     <Icon size={20} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-content-primary">{preset.label}</span>
+                      <span className="text-sm font-semibold text-content-primary">
+                        {preset.label}
+                      </span>
                       {isActive && (
                         <Badge variant="success" size="sm">
                           <Check size={10} className="mr-0.5" />
-                          {t('modules.active', { defaultValue: 'Active' })}
+                          {t("modules.active", { defaultValue: "Active" })}
                         </Badge>
                       )}
                     </div>
@@ -481,7 +627,8 @@ function CompanyProfilesTab() {
                       {preset.description}
                     </p>
                     <p className="mt-1.5 text-2xs text-content-tertiary font-medium">
-                      {preset.module_count} {t('modules.modules_label', { defaultValue: 'modules' })}
+                      {preset.module_count}{" "}
+                      {t("modules.modules_label", { defaultValue: "modules" })}
                     </p>
                   </div>
                 </div>
@@ -506,14 +653,17 @@ function CompanyProfilesTab() {
         open={switchingTo !== null}
         onConfirm={() => void confirmSwitch()}
         onCancel={() => setSwitchingTo(null)}
-        title={t('modules.switch_profile_title', {
-          defaultValue: 'Switch Profile',
+        title={t("modules.switch_profile_title", {
+          defaultValue: "Switch Profile",
         })}
-        message={t('modules.switch_profile_message', {
-          defaultValue: 'Switch to {{name}}? This will change your active modules to match this profile.',
-          name: switchingTo?.label ?? '',
+        message={t("modules.switch_profile_message", {
+          defaultValue:
+            "Switch to {{name}}? This will change your active modules to match this profile.",
+          name: switchingTo?.label ?? "",
         })}
-        confirmLabel={t('modules.switch_confirm', { defaultValue: 'Switch Profile' })}
+        confirmLabel={t("modules.switch_confirm", {
+          defaultValue: "Switch Profile",
+        })}
         variant="warning"
         loading={isSwitching}
       />
@@ -547,12 +697,14 @@ function ModuleTogglesSection({
       const { allowed, blockedBy } = canDisable(key);
       if (!allowed) {
         addToast({
-          type: 'warning',
-          title: t('modules.cannot_disable', { defaultValue: 'Cannot disable' }),
-          message: t('modules.required_by', {
-            defaultValue: '{{name}} is required by: {{deps}}',
+          type: "warning",
+          title: t("modules.cannot_disable", {
+            defaultValue: "Cannot disable",
+          }),
+          message: t("modules.required_by", {
+            defaultValue: "{{name}} is required by: {{deps}}",
             name,
-            deps: blockedBy.join(', '),
+            deps: blockedBy.join(", "),
           }),
         });
         return;
@@ -560,19 +712,19 @@ function ModuleTogglesSection({
     }
     setModuleEnabled(key, !currentlyEnabled);
     addToast({
-      type: 'success',
+      type: "success",
       title: !currentlyEnabled
-        ? t('modules.enabled', { defaultValue: '{{name}} enabled', name })
-        : t('modules.disabled', { defaultValue: '{{name}} disabled', name }),
+        ? t("modules.enabled", { defaultValue: "{{name}} enabled", name })
+        : t("modules.disabled", { defaultValue: "{{name}} disabled", name }),
     });
   }
 
   const isI18nKey = (s: string) =>
-    s.startsWith('modules.') ||
-    s.startsWith('nav.') ||
-    s.startsWith('validation.') ||
-    s.startsWith('schedule.') ||
-    s.startsWith('tendering.');
+    s.startsWith("modules.") ||
+    s.startsWith("nav.") ||
+    s.startsWith("validation.") ||
+    s.startsWith("schedule.") ||
+    s.startsWith("tendering.");
 
   const totalActive = MODULE_CATEGORY_ORDER.reduce((sum, cat) => {
     const mods = grouped[cat];
@@ -588,11 +740,13 @@ function ModuleTogglesSection({
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-sm font-semibold text-content-secondary uppercase tracking-wider mb-0.5">
-            {t('modules.active_modules', { defaultValue: 'Active Modules' })} ({totalActive})
+            {t("modules.active_modules", { defaultValue: "Active Modules" })} (
+            {totalActive})
           </h2>
           <p className="text-xs text-content-tertiary">
-            {t('modules.section_desc', {
-              defaultValue: 'Toggle optional features on or off. Disabled modules are hidden from the sidebar.',
+            {t("modules.section_desc", {
+              defaultValue:
+                "Toggle optional features on or off. Disabled modules are hidden from the sidebar.",
             })}
           </p>
         </div>
@@ -605,7 +759,10 @@ function ModuleTogglesSection({
         {MODULE_CATEGORY_ORDER.map((cat) => {
           const mods = grouped[cat];
           if (!mods || mods.length === 0) return null;
-          const catMeta = MODULE_CATEGORY_META[cat] ?? { labelKey: cat, defaultLabel: cat };
+          const catMeta = MODULE_CATEGORY_META[cat] ?? {
+            labelKey: cat,
+            defaultLabel: cat,
+          };
 
           return (
             <div key={cat}>
@@ -615,8 +772,9 @@ function ModuleTogglesSection({
                 </h3>
                 <div className="flex-1 h-px bg-border-light" />
                 <span className="text-2xs text-content-quaternary">
-                  {mods.filter((m) => isModuleEnabled(m.id)).length}/{mods.length}{' '}
-                  {t('modules.active_count', { defaultValue: 'active' })}
+                  {mods.filter((m) => isModuleEnabled(m.id)).length}/
+                  {mods.length}{" "}
+                  {t("modules.active_count", { defaultValue: "active" })}
                 </span>
               </div>
 
@@ -630,7 +788,7 @@ function ModuleTogglesSection({
                     ? t(mod.name, { defaultValue: formatModuleId(mod.id) })
                     : mod.name;
                   const displayDesc = isI18nKey(mod.description)
-                    ? t(mod.description, { defaultValue: '' })
+                    ? t(mod.description, { defaultValue: "" })
                     : mod.description;
 
                   return (
@@ -641,7 +799,9 @@ function ModuleTogglesSection({
                       description={displayDesc}
                       version={mod.version}
                       enabled={enabled}
-                      onToggle={() => handleToggle(mod.id, displayName, enabled)}
+                      onToggle={() =>
+                        handleToggle(mod.id, displayName, enabled)
+                      }
                       deps={deps}
                       dependents={dependents}
                     />
@@ -666,28 +826,34 @@ function DataPackagesTab() {
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const { confirm, ...confirmProps } = useConfirm();
-  const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<CategoryKey>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [marketplaceLimit, setMarketplaceLimit] = useState(12);
   const [installingId, setInstallingId] = useState<string | null>(null);
 
-  const { data: modules, isLoading, isError: marketplaceError, refetch: refetchMarketplace } = useQuery({
-    queryKey: ['marketplace'],
-    queryFn: () => apiGet<MarketplaceModule[]>('/marketplace'),
+  const {
+    data: modules,
+    isLoading,
+    isError: marketplaceError,
+    refetch: refetchMarketplace,
+  } = useQuery({
+    queryKey: ["marketplace"],
+    queryFn: () => apiGet<MarketplaceModule[]>("/marketplace"),
     staleTime: 5 * 60 * 1000,
     gcTime: 15 * 60 * 1000,
   });
 
   const { data: demoStatus } = useQuery({
-    queryKey: ['demo-status'],
-    queryFn: () => apiGet<Record<string, boolean>>('/demo/status'),
+    queryKey: ["demo-status"],
+    queryFn: () => apiGet<Record<string, boolean>>("/demo/status"),
   });
 
   const filtered = useMemo(() => {
     if (!modules) return [];
     const query = searchQuery.toLowerCase().trim();
     return modules.filter((mod) => {
-      const matchesCategory = activeCategory === 'all' || mod.category === activeCategory;
+      const matchesCategory =
+        activeCategory === "all" || mod.category === activeCategory;
       const matchesSearch =
         !query ||
         mod.name.toLowerCase().includes(query) ||
@@ -708,59 +874,103 @@ function DataPackagesTab() {
   }, [modules]);
 
   const CATALOG_ID_TO_REGION: Record<string, string> = {
-    'catalog-ar-dubai': 'AR_DUBAI',
-    'catalog-de-berlin': 'DE_BERLIN',
-    'catalog-en-toronto': 'ENG_TORONTO',
-    'catalog-sp-barcelona': 'SP_BARCELONA',
-    'catalog-fr-paris': 'FR_PARIS',
-    'catalog-hi-mumbai': 'HI_MUMBAI',
-    'catalog-pt-saopaulo': 'PT_SAOPAULO',
-    'catalog-ru-stpetersburg': 'RU_STPETERSBURG',
-    'catalog-uk-gbp': 'UK_GBP',
-    'catalog-usa-usd': 'USA_USD',
-    'catalog-zh-shanghai': 'ZH_SHANGHAI',
+    "catalog-ar-dubai": "AR_DUBAI",
+    "catalog-de-berlin": "DE_BERLIN",
+    "catalog-en-toronto": "ENG_TORONTO",
+    "catalog-sp-barcelona": "SP_BARCELONA",
+    "catalog-fr-paris": "FR_PARIS",
+    "catalog-hi-mumbai": "HI_MUMBAI",
+    "catalog-pt-saopaulo": "PT_SAOPAULO",
+    "catalog-ru-stpetersburg": "RU_STPETERSBURG",
+    "catalog-uk-gbp": "UK_GBP",
+    "catalog-usa-usd": "USA_USD",
+    "catalog-zh-shanghai": "ZH_SHANGHAI",
   };
 
   async function handleInstallClick(mod: MarketplaceModule): Promise<void> {
     switch (mod.category) {
-      case 'resource_catalog': {
+      case "resource_catalog": {
         const region = CATALOG_ID_TO_REGION[mod.id];
         if (!region) {
-          addToast({ type: 'error', title: t('marketplace.unknown_region', { defaultValue: 'Unknown region' }), message: t('marketplace.no_region_mapping', { defaultValue: 'No region mapping for {{id}}', id: mod.id }) });
+          addToast({
+            type: "error",
+            title: t("marketplace.unknown_region", {
+              defaultValue: "Unknown region",
+            }),
+            message: t("marketplace.no_region_mapping", {
+              defaultValue: "No region mapping for {{id}}",
+              id: mod.id,
+            }),
+          });
           break;
         }
         setInstallingId(mod.id);
         try {
-          const result = await apiPost<{ imported: number; skipped: number; region: string }>(`/v1/catalog/import/${region}`);
+          const result = await apiPost<{
+            imported: number;
+            skipped: number;
+            region: string;
+          }>(`/v1/catalog/import/${region}`);
           addToast({
-            type: 'success',
-            title: t('marketplace.catalog_imported', { defaultValue: 'Catalog imported' }),
-            message: t('marketplace.catalog_imported_message', { defaultValue: '{{imported}} resources imported, {{skipped}} skipped for {{region}}.', imported: result.imported, skipped: result.skipped, region: result.region }),
+            type: "success",
+            title: t("marketplace.catalog_imported", {
+              defaultValue: "Catalog imported",
+            }),
+            message: t("marketplace.catalog_imported_message", {
+              defaultValue:
+                "{{imported}} resources imported, {{skipped}} skipped for {{region}}.",
+              imported: result.imported,
+              skipped: result.skipped,
+              region: result.region,
+            }),
           });
-          queryClient.invalidateQueries({ queryKey: ['marketplace'] });
-          queryClient.invalidateQueries({ queryKey: ['catalog'] });
+          queryClient.invalidateQueries({ queryKey: ["marketplace"] });
+          queryClient.invalidateQueries({ queryKey: ["catalog"] });
         } catch (err) {
-          addToast({ type: 'error', title: t('marketplace.import_failed', { defaultValue: 'Import failed' }), message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error' }) });
+          addToast({
+            type: "error",
+            title: t("marketplace.import_failed", {
+              defaultValue: "Import failed",
+            }),
+            message:
+              err instanceof Error
+                ? err.message
+                : t("common.unknown_error", { defaultValue: "Unknown error" }),
+          });
         } finally {
           setInstallingId(null);
         }
         break;
       }
-      case 'cost_database':
-        navigate('/costs/import');
+      case "cost_database":
+        navigate("/costs/import");
         break;
-      case 'vector_index': {
+      case "vector_index": {
         const VECTOR_ID_TO_DB: Record<string, string> = {
-          'vector-usa-usd': 'USA_USD', 'vector-uk-gbp': 'UK_GBP',
-          'vector-de-berlin': 'DE_BERLIN', 'vector-eng-toronto': 'ENG_TORONTO',
-          'vector-fr-paris': 'FR_PARIS', 'vector-sp-barcelona': 'SP_BARCELONA',
-          'vector-pt-saopaulo': 'PT_SAOPAULO', 'vector-ru-stpetersburg': 'RU_STPETERSBURG',
-          'vector-ar-dubai': 'AR_DUBAI', 'vector-zh-shanghai': 'ZH_SHANGHAI',
-          'vector-hi-mumbai': 'HI_MUMBAI',
+          "vector-usa-usd": "USA_USD",
+          "vector-uk-gbp": "UK_GBP",
+          "vector-de-berlin": "DE_BERLIN",
+          "vector-eng-toronto": "ENG_TORONTO",
+          "vector-fr-paris": "FR_PARIS",
+          "vector-sp-barcelona": "SP_BARCELONA",
+          "vector-pt-saopaulo": "PT_SAOPAULO",
+          "vector-ru-stpetersburg": "RU_STPETERSBURG",
+          "vector-ar-dubai": "AR_DUBAI",
+          "vector-zh-shanghai": "ZH_SHANGHAI",
+          "vector-hi-mumbai": "HI_MUMBAI",
         };
         const dbId = VECTOR_ID_TO_DB[mod.id];
         if (!dbId) {
-          addToast({ type: 'error', title: t('marketplace.unknown_region', { defaultValue: 'Unknown region' }), message: t('marketplace.no_region_mapping', { defaultValue: 'No region mapping for {{id}}', id: mod.id }) });
+          addToast({
+            type: "error",
+            title: t("marketplace.unknown_region", {
+              defaultValue: "Unknown region",
+            }),
+            message: t("marketplace.no_region_mapping", {
+              defaultValue: "No region mapping for {{id}}",
+              id: mod.id,
+            }),
+          });
           break;
         }
         setInstallingId(mod.id);
@@ -777,20 +987,22 @@ function DataPackagesTab() {
           const pollStart = Date.now();
           while (downloadPollAlive && Date.now() - pollStart < 60_000) {
             try {
-              const ds = await apiGet<{ model: string; status: string; dimension: number }>(
-                '/v1/costs/vector/download-status/',
-              );
-              if (ds.status === 'ready') break;
+              const ds = await apiGet<{
+                model: string;
+                status: string;
+                dimension: number;
+              }>("/v1/costs/vector/download-status/");
+              if (ds.status === "ready") break;
               if (!downloadHintShown) {
                 downloadHintShown = true;
                 addToast({
-                  type: 'info',
-                  title: t('marketplace.embedder_downloading', {
-                    defaultValue: 'Downloading model from HuggingFace…',
+                  type: "info",
+                  title: t("marketplace.embedder_downloading", {
+                    defaultValue: "Downloading model from HuggingFace…",
                   }),
-                  message: t('marketplace.embedder_downloading_hint', {
+                  message: t("marketplace.embedder_downloading_hint", {
                     defaultValue:
-                      'First install pulls the embedding model ({{model}}). This can take a minute on slow connections.',
+                      "First install pulls the embedding model ({{model}}). This can take a minute on slow connections.",
                     model: ds.model,
                   }),
                 });
@@ -803,90 +1015,162 @@ function DataPackagesTab() {
         })();
 
         try {
-          const status = await apiGet<{ backend: string; connected: boolean; can_restore_snapshots: boolean; can_generate_locally: boolean }>('/v1/costs/vector/status/');
+          const status = await apiGet<{
+            backend: string;
+            connected: boolean;
+            can_restore_snapshots: boolean;
+            can_generate_locally: boolean;
+          }>("/v1/costs/vector/status/");
           if (status.can_restore_snapshots) {
-            await apiPost<{ restored?: boolean; indexed?: number; database?: string; duration_seconds?: number }>(`/v1/costs/vector/restore-snapshot/${dbId}`);
+            await apiPost<{
+              restored?: boolean;
+              indexed?: number;
+              database?: string;
+              duration_seconds?: number;
+            }>(`/v1/costs/vector/restore-snapshot/${dbId}`);
           } else if (status.connected) {
-            await apiPost<{ restored?: boolean; indexed?: number; database?: string; duration_seconds?: number }>(`/v1/costs/vector/load-github/${dbId}`);
+            await apiPost<{
+              restored?: boolean;
+              indexed?: number;
+              database?: string;
+              duration_seconds?: number;
+            }>(`/v1/costs/vector/load-github/${dbId}`);
           } else {
-            throw new Error(t('marketplace.no_vector_backend', { defaultValue: 'No vector database available. Install LanceDB (pip install lancedb) or start Qdrant (docker run -p 6333:6333 qdrant/qdrant)' }));
+            throw new Error(
+              t("marketplace.no_vector_backend", {
+                defaultValue:
+                  "No vector database available. Install LanceDB (pip install lancedb) or start Qdrant (docker run -p 6333:6333 qdrant/qdrant)",
+              }),
+            );
           }
           addToast({
-            type: 'success',
-            title: t('marketplace.vector_imported', { defaultValue: 'Vector index loaded' }),
-            message: t('marketplace.vector_ready_message', {
-              defaultValue: 'Vector index ready for {{region}}',
+            type: "success",
+            title: t("marketplace.vector_imported", {
+              defaultValue: "Vector index loaded",
+            }),
+            message: t("marketplace.vector_ready_message", {
+              defaultValue: "Vector index ready for {{region}}",
               region: dbId,
             }),
           });
-          queryClient.invalidateQueries({ queryKey: ['marketplace'] });
-          queryClient.invalidateQueries({ queryKey: ['vector-status'] });
+          queryClient.invalidateQueries({ queryKey: ["marketplace"] });
+          queryClient.invalidateQueries({ queryKey: ["vector-status"] });
         } catch (err) {
-          addToast({ type: 'error', title: t('marketplace.import_failed', { defaultValue: 'Import failed' }), message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error' }) });
+          addToast({
+            type: "error",
+            title: t("marketplace.import_failed", {
+              defaultValue: "Import failed",
+            }),
+            message:
+              err instanceof Error
+                ? err.message
+                : t("common.unknown_error", { defaultValue: "Unknown error" }),
+          });
         } finally {
           downloadPollAlive = false;
           setInstallingId(null);
         }
         break;
       }
-      case 'demo_project': {
-        const demoId = mod.id.replace('demo-', '');
+      case "demo_project": {
+        const demoId = mod.id.replace("demo-", "");
         setInstallingId(mod.id);
         try {
-          const result = await apiPost<{ project_id: string; project_name: string; already_installed?: boolean }>(`/demo/install/${demoId}`);
+          const result = await apiPost<{
+            project_id: string;
+            project_name: string;
+            already_installed?: boolean;
+          }>(`/demo/install/${demoId}`);
           if (result.already_installed) {
             addToast({
-              type: 'info',
-              title: t('marketplace.demo_already_installed', { defaultValue: 'Already installed' }),
-              message: t('marketplace.demo_already_installed_message', {
-                defaultValue: '{{name}} is already installed. Opening existing project.',
+              type: "info",
+              title: t("marketplace.demo_already_installed", {
+                defaultValue: "Already installed",
+              }),
+              message: t("marketplace.demo_already_installed_message", {
+                defaultValue:
+                  "{{name}} is already installed. Opening existing project.",
                 name: result.project_name,
               }),
             });
           } else {
-            addToast({ type: 'success', title: t('marketplace.demo_installed', { defaultValue: 'Demo installed' }), message: t('marketplace.demo_installed_message', { defaultValue: '{{name}} created with full BOQ, schedule, budget, and tendering.', name: result.project_name }) });
+            addToast({
+              type: "success",
+              title: t("marketplace.demo_installed", {
+                defaultValue: "Demo installed",
+              }),
+              message: t("marketplace.demo_installed_message", {
+                defaultValue:
+                  "{{name}} created with full BOQ, schedule, budget, and tendering.",
+                name: result.project_name,
+              }),
+            });
           }
-          queryClient.invalidateQueries({ queryKey: ['demo-status'] });
-          queryClient.invalidateQueries({ queryKey: ['marketplace'] });
-          queryClient.invalidateQueries({ queryKey: ['projects'] });
+          queryClient.invalidateQueries({ queryKey: ["demo-status"] });
+          queryClient.invalidateQueries({ queryKey: ["marketplace"] });
+          queryClient.invalidateQueries({ queryKey: ["projects"] });
           navigate(`/projects/${result.project_id}`);
         } catch (err) {
-          addToast({ type: 'error', title: t('marketplace.install_failed', { defaultValue: 'Install failed' }), message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error' }) });
+          addToast({
+            type: "error",
+            title: t("marketplace.install_failed", {
+              defaultValue: "Install failed",
+            }),
+            message:
+              err instanceof Error
+                ? err.message
+                : t("common.unknown_error", { defaultValue: "Unknown error" }),
+          });
         } finally {
           setInstallingId(null);
         }
         break;
       }
-      case 'integration':
-        navigate('/settings');
+      case "integration":
+        navigate("/settings");
         break;
     }
   }
 
   async function handleUninstallDemo(demoId: string): Promise<void> {
     const confirmed = await confirm({
-      title: t('marketplace.uninstall_demo_confirm_title', { defaultValue: 'Uninstall demo?' }),
-      message: t('marketplace.uninstall_demo_confirm', {
-        defaultValue: 'Are you sure you want to uninstall this demo project? All associated data will be deleted.',
+      title: t("marketplace.uninstall_demo_confirm_title", {
+        defaultValue: "Uninstall demo?",
+      }),
+      message: t("marketplace.uninstall_demo_confirm", {
+        defaultValue:
+          "Are you sure you want to uninstall this demo project? All associated data will be deleted.",
       }),
     });
     if (!confirmed) return;
     setInstallingId(`demo-${demoId}`);
     try {
-      const result = await apiDelete<{ deleted_projects: number }>(`/demo/uninstall/${demoId}`);
+      const result = await apiDelete<{ deleted_projects: number }>(
+        `/demo/uninstall/${demoId}`,
+      );
       addToast({
-        type: 'success',
-        title: t('marketplace.demo_uninstalled', { defaultValue: 'Demo uninstalled' }),
-        message: t('marketplace.demo_uninstalled_message', { defaultValue: '{{count}} project(s) removed.', count: result.deleted_projects }),
+        type: "success",
+        title: t("marketplace.demo_uninstalled", {
+          defaultValue: "Demo uninstalled",
+        }),
+        message: t("marketplace.demo_uninstalled_message", {
+          defaultValue: "{{count}} project(s) removed.",
+          count: result.deleted_projects,
+        }),
       });
-      queryClient.invalidateQueries({ queryKey: ['demo-status'] });
-      queryClient.invalidateQueries({ queryKey: ['marketplace'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ["demo-status"] });
+      queryClient.invalidateQueries({ queryKey: ["marketplace"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('marketplace.uninstall_failed', { defaultValue: 'Uninstall failed' }),
-        message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error' }),
+        type: "error",
+        title: t("marketplace.uninstall_failed", {
+          defaultValue: "Uninstall failed",
+        }),
+        message:
+          err instanceof Error
+            ? err.message
+            : t("common.unknown_error", { defaultValue: "Unknown error" }),
       });
     } finally {
       setInstallingId(null);
@@ -895,32 +1179,45 @@ function DataPackagesTab() {
 
   async function handleReinstallDemo(demoId: string): Promise<void> {
     const confirmed = await confirm({
-      title: t('marketplace.reinstall_demo_confirm_title', { defaultValue: 'Reinstall demo?' }),
-      message: t('marketplace.reinstall_demo_confirm', {
-        defaultValue: 'This will delete the existing demo project and create a fresh copy. All changes you made to the demo will be lost.',
+      title: t("marketplace.reinstall_demo_confirm_title", {
+        defaultValue: "Reinstall demo?",
+      }),
+      message: t("marketplace.reinstall_demo_confirm", {
+        defaultValue:
+          "This will delete the existing demo project and create a fresh copy. All changes you made to the demo will be lost.",
       }),
     });
     if (!confirmed) return;
     setInstallingId(`demo-${demoId}`);
     try {
-      const result = await apiPost<{ project_id: string; project_name: string }>(`/demo/install/${demoId}?force=true`);
+      const result = await apiPost<{
+        project_id: string;
+        project_name: string;
+      }>(`/demo/install/${demoId}?force=true`);
       addToast({
-        type: 'success',
-        title: t('marketplace.demo_reinstalled', { defaultValue: 'Demo reinstalled' }),
-        message: t('marketplace.demo_reinstalled_message', {
-          defaultValue: '{{name}} has been recreated with fresh data.',
+        type: "success",
+        title: t("marketplace.demo_reinstalled", {
+          defaultValue: "Demo reinstalled",
+        }),
+        message: t("marketplace.demo_reinstalled_message", {
+          defaultValue: "{{name}} has been recreated with fresh data.",
           name: result.project_name,
         }),
       });
-      queryClient.invalidateQueries({ queryKey: ['demo-status'] });
-      queryClient.invalidateQueries({ queryKey: ['marketplace'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ["demo-status"] });
+      queryClient.invalidateQueries({ queryKey: ["marketplace"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       navigate(`/projects/${result.project_id}`);
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('marketplace.reinstall_failed', { defaultValue: 'Reinstall failed' }),
-        message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error' }),
+        type: "error",
+        title: t("marketplace.reinstall_failed", {
+          defaultValue: "Reinstall failed",
+        }),
+        message:
+          err instanceof Error
+            ? err.message
+            : t("common.unknown_error", { defaultValue: "Unknown error" }),
       });
     } finally {
       setInstallingId(null);
@@ -929,86 +1226,127 @@ function DataPackagesTab() {
 
   async function handleClearAllDemos(): Promise<void> {
     const confirmed = await confirm({
-      title: t('marketplace.clear_all_demos_confirm_title', { defaultValue: 'Clear all demos?' }),
-      message: t('marketplace.clear_all_demos_confirm', {
-        defaultValue: 'Are you sure you want to remove ALL demo projects and their data? This cannot be undone.',
+      title: t("marketplace.clear_all_demos_confirm_title", {
+        defaultValue: "Clear all demos?",
+      }),
+      message: t("marketplace.clear_all_demos_confirm", {
+        defaultValue:
+          "Are you sure you want to remove ALL demo projects and their data? This cannot be undone.",
       }),
     });
     if (!confirmed) return;
     try {
-      const result = await apiDelete<{ deleted_projects: number }>('/demo/clear-all');
+      const result = await apiDelete<{ deleted_projects: number }>(
+        "/demo/clear-all",
+      );
       addToast({
-        type: 'success',
-        title: t('marketplace.demos_cleared', { defaultValue: 'Demo data cleared' }),
-        message: t('marketplace.demos_cleared_message', { defaultValue: '{{count}} demo project(s) removed.', count: result.deleted_projects }),
+        type: "success",
+        title: t("marketplace.demos_cleared", {
+          defaultValue: "Demo data cleared",
+        }),
+        message: t("marketplace.demos_cleared_message", {
+          defaultValue: "{{count}} demo project(s) removed.",
+          count: result.deleted_projects,
+        }),
       });
-      queryClient.invalidateQueries({ queryKey: ['demo-status'] });
-      queryClient.invalidateQueries({ queryKey: ['marketplace'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ["demo-status"] });
+      queryClient.invalidateQueries({ queryKey: ["marketplace"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('marketplace.clear_failed', { defaultValue: 'Clear failed' }),
-        message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error' }),
+        type: "error",
+        title: t("marketplace.clear_failed", { defaultValue: "Clear failed" }),
+        message:
+          err instanceof Error
+            ? err.message
+            : t("common.unknown_error", { defaultValue: "Unknown error" }),
       });
     }
   }
 
   return (
-    <div className="animate-card-in" style={{ animationDelay: '60ms' }}>
+    <div className="animate-card-in" style={{ animationDelay: "60ms" }}>
       {/* Installed packages summary */}
       {modules && modules.filter((m) => m.installed).length > 0 && (
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xs font-semibold text-content-tertiary uppercase tracking-wider">
-              {t('marketplace.my_modules', { defaultValue: 'Installed Packages' })}
+              {t("marketplace.my_modules", {
+                defaultValue: "Installed Packages",
+              })}
             </h3>
             {demoStatus && Object.values(demoStatus).some(Boolean) && (
-              <Button variant="ghost" size="sm" icon={<Trash2 size={14} />} onClick={() => void handleClearAllDemos()}>
-                {t('marketplace.clear_demo_data', { defaultValue: 'Clear All Demo Data' })}
+              <Button
+                variant="ghost"
+                size="sm"
+                icon={<Trash2 size={14} />}
+                onClick={() => void handleClearAllDemos()}
+              >
+                {t("marketplace.clear_demo_data", {
+                  defaultValue: "Clear All Demo Data",
+                })}
               </Button>
             )}
           </div>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {modules.filter((m) => m.installed).map((mod) => {
-              const Icon = getModuleIcon(mod.icon);
-              const statusBadge = getInstalledModuleBadge(mod, t);
-              return (
-                <div
-                  key={mod.id}
-                  className="flex items-center gap-3 rounded-lg border border-border-light bg-surface-elevated px-3 py-2.5 transition-all hover:border-border"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-success-bg text-semantic-success dark:text-emerald-400">
-                    <Icon size={15} />
+            {modules
+              .filter((m) => m.installed)
+              .map((mod) => {
+                const Icon = getModuleIcon(mod.icon);
+                const statusBadge = getInstalledModuleBadge(mod, t);
+                return (
+                  <div
+                    key={mod.id}
+                    className="flex items-center gap-3 rounded-lg border border-border-light bg-surface-elevated px-3 py-2.5 transition-all hover:border-border"
+                  >
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-semantic-success-bg text-semantic-success dark:text-emerald-400">
+                      <Icon size={15} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-xs font-medium text-content-primary truncate block">
+                        {mod.name}
+                      </span>
+                      <span className="text-2xs text-content-tertiary">
+                        {statusBadge.subtitle}
+                      </span>
+                    </div>
+                    {statusBadge.type === "badge" ? (
+                      <Badge variant="success" size="sm">
+                        <Check size={10} className="mr-0.5" />
+                        {statusBadge.label}
+                      </Badge>
+                    ) : statusBadge.type === "manage" ? (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => navigate("/costs/import")}
+                      >
+                        {t("marketplace.manage", "Manage")}
+                      </Button>
+                    ) : null}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="text-xs font-medium text-content-primary truncate block">{mod.name}</span>
-                    <span className="text-2xs text-content-tertiary">{statusBadge.subtitle}</span>
-                  </div>
-                  {statusBadge.type === 'badge' ? (
-                    <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{statusBadge.label}</Badge>
-                  ) : statusBadge.type === 'manage' ? (
-                    <Button variant="secondary" size="sm" onClick={() => navigate('/costs/import')}>
-                      {t('marketplace.manage', 'Manage')}
-                    </Button>
-                  ) : null}
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       )}
 
       {/* Available packages header */}
       <h2 className="text-sm font-semibold text-content-secondary uppercase tracking-wider mb-3 mt-4">
-        {t('marketplace.available', { defaultValue: 'Data Packages & Add-ons' })}
+        {t("marketplace.available", {
+          defaultValue: "Data Packages & Add-ons",
+        })}
       </h2>
 
       {/* Search */}
       <div className="mb-6 max-w-md">
         <Input
-          aria-label={t('marketplace.search_packages', { defaultValue: 'Search packages' })}
-          placeholder={t('marketplace.search_placeholder', { defaultValue: 'Search packages...' })}
+          aria-label={t("marketplace.search_packages", {
+            defaultValue: "Search packages",
+          })}
+          placeholder={t("marketplace.search_placeholder", {
+            defaultValue: "Search packages...",
+          })}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           icon={<Search size={16} />}
@@ -1027,19 +1365,23 @@ function DataPackagesTab() {
               key={key}
               onClick={() => setActiveCategory(key)}
               className={clsx(
-                'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-fast ease-oe',
+                "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-fast ease-oe",
                 isActive
-                  ? 'bg-oe-blue text-content-inverse shadow-xs'
-                  : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary hover:text-content-primary',
+                  ? "bg-oe-blue text-content-inverse shadow-xs"
+                  : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary hover:text-content-primary",
               )}
             >
               <Icon size={14} strokeWidth={1.75} />
-              <span>{t(meta.labelKey, { defaultValue: meta.defaultLabel })}</span>
+              <span>
+                {t(meta.labelKey, { defaultValue: meta.defaultLabel })}
+              </span>
               {count > 0 && (
                 <span
                   className={clsx(
-                    'ml-0.5 text-2xs font-semibold rounded-full px-1.5',
-                    isActive ? 'bg-white/20 text-content-inverse' : 'bg-surface-primary text-content-tertiary',
+                    "ml-0.5 text-2xs font-semibold rounded-full px-1.5",
+                    isActive
+                      ? "bg-white/20 text-content-inverse"
+                      : "bg-surface-primary text-content-tertiary",
                   )}
                 >
                   {count}
@@ -1068,13 +1410,19 @@ function DataPackagesTab() {
         </div>
       ) : marketplaceError ? (
         <div className="py-16 text-center">
-          <AlertTriangle size={40} className="mx-auto mb-3 text-semantic-warning" strokeWidth={1.5} />
+          <AlertTriangle
+            size={40}
+            className="mx-auto mb-3 text-semantic-warning"
+            strokeWidth={1.5}
+          />
           <p className="text-sm font-medium text-content-secondary">
-            {t('marketplace.load_failed', { defaultValue: 'Failed to load marketplace' })}
+            {t("marketplace.load_failed", {
+              defaultValue: "Failed to load marketplace",
+            })}
           </p>
           <p className="mt-1 text-xs text-content-tertiary">
-            {t('marketplace.load_failed_hint', {
-              defaultValue: 'Check your connection and try again.',
+            {t("marketplace.load_failed_hint", {
+              defaultValue: "Check your connection and try again.",
             })}
           </p>
           <Button
@@ -1084,24 +1432,28 @@ function DataPackagesTab() {
             onClick={() => void refetchMarketplace()}
             className="mt-4"
           >
-            {t('common.retry', { defaultValue: 'Retry' })}
+            {t("common.retry", { defaultValue: "Retry" })}
           </Button>
         </div>
       ) : filtered.length === 0 ? (
         <div className="py-16 text-center">
           <Package size={40} className="mx-auto mb-3 text-content-tertiary" />
           <p className="text-sm font-medium text-content-secondary">
-            {t('marketplace.no_results', { defaultValue: 'No modules found' })}
+            {t("marketplace.no_results", { defaultValue: "No modules found" })}
           </p>
           <p className="mt-1 text-xs text-content-tertiary">
-            {t('marketplace.no_results_hint', { defaultValue: 'Try adjusting your search or category filter.' })}
+            {t("marketplace.no_results_hint", {
+              defaultValue: "Try adjusting your search or category filter.",
+            })}
           </p>
         </div>
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.slice(0, marketplaceLimit).map((mod, i) => {
-              const isDemoInstalled = mod.category === 'demo_project' && demoStatus?.[mod.id.replace('demo-', '')] === true;
+              const isDemoInstalled =
+                mod.category === "demo_project" &&
+                demoStatus?.[mod.id.replace("demo-", "")] === true;
               return (
                 <MarketplaceCard
                   key={mod.id}
@@ -1111,13 +1463,15 @@ function DataPackagesTab() {
                   onInstall={() => void handleInstallClick(mod)}
                   isDemoInstalled={isDemoInstalled}
                   onUninstallDemo={
-                    mod.category === 'demo_project'
-                      ? () => void handleUninstallDemo(mod.id.replace('demo-', ''))
+                    mod.category === "demo_project"
+                      ? () =>
+                          void handleUninstallDemo(mod.id.replace("demo-", ""))
                       : undefined
                   }
                   onReinstallDemo={
-                    mod.category === 'demo_project'
-                      ? () => void handleReinstallDemo(mod.id.replace('demo-', ''))
+                    mod.category === "demo_project"
+                      ? () =>
+                          void handleReinstallDemo(mod.id.replace("demo-", ""))
                       : undefined
                   }
                 />
@@ -1126,9 +1480,12 @@ function DataPackagesTab() {
           </div>
           {filtered.length > marketplaceLimit && (
             <div className="mt-6 text-center">
-              <Button variant="secondary" onClick={() => setMarketplaceLimit((prev) => prev + 12)}>
-                {t('marketplace.show_more', {
-                  defaultValue: 'Show more ({{remaining}} remaining)',
+              <Button
+                variant="secondary"
+                onClick={() => setMarketplaceLimit((prev) => prev + 12)}
+              >
+                {t("marketplace.show_more", {
+                  defaultValue: "Show more ({{remaining}} remaining)",
                   remaining: filtered.length - marketplaceLimit,
                 })}
               </Button>
@@ -1146,11 +1503,16 @@ function DataPackagesTab() {
               <div className="flex items-center gap-2 mb-3">
                 <Plug size={20} className="text-purple-500" />
                 <h2 className="text-lg font-semibold text-content-primary">
-                  {t('modules.community_title', { defaultValue: 'Build Your Own Module' })}
+                  {t("modules.community_title", {
+                    defaultValue: "Build Your Own Module",
+                  })}
                 </h2>
               </div>
               <p className="text-sm text-content-secondary leading-relaxed mb-4">
-                {t('modules.community_desc', { defaultValue: 'OpenConstructionERP has a modular plugin architecture. Anyone can create custom modules — cost databases, regional standards, CAD converters, analytics dashboards, integrations with external systems, or any other functionality.' })}
+                {t("modules.community_desc", {
+                  defaultValue:
+                    "OpenConstructionERP has a modular plugin architecture. Anyone can create custom modules — cost databases, regional standards, CAD converters, analytics dashboards, integrations with external systems, or any other functionality.",
+                })}
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
@@ -1158,7 +1520,9 @@ function DataPackagesTab() {
                   className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-colors"
                 >
                   <Package size={16} />
-                  {t('modules.community_submit_email', { defaultValue: 'Submit Module via Email' })}
+                  {t("modules.community_submit_email", {
+                    defaultValue: "Submit Module via Email",
+                  })}
                 </a>
                 <a
                   href="https://github.com/datadrivenconstruction/OpenConstructionERP/issues/new?title=Module%20Proposal:%20&labels=module-proposal"
@@ -1167,7 +1531,9 @@ function DataPackagesTab() {
                   className="inline-flex items-center gap-2 rounded-lg border border-border-light bg-surface-secondary px-4 py-2 text-sm font-medium text-content-primary hover:bg-surface-secondary/80 transition-colors"
                 >
                   <Info size={16} />
-                  {t('modules.community_submit_github', { defaultValue: 'Propose on GitHub' })}
+                  {t("modules.community_submit_github", {
+                    defaultValue: "Propose on GitHub",
+                  })}
                 </a>
                 <a
                   href="https://t.me/datadrivenconstruction"
@@ -1176,7 +1542,9 @@ function DataPackagesTab() {
                   className="inline-flex items-center gap-2 rounded-lg border border-border-light bg-surface-secondary px-4 py-2 text-sm font-medium text-content-primary hover:bg-surface-secondary/80 transition-colors"
                 >
                   <Globe size={16} />
-                  {t('modules.community_telegram', { defaultValue: 'Discuss in Telegram' })}
+                  {t("modules.community_telegram", {
+                    defaultValue: "Discuss in Telegram",
+                  })}
                 </a>
               </div>
             </div>
@@ -1197,9 +1565,13 @@ function SystemModulesTab() {
   const addToast = useToastStore((s) => s.addToast);
   const [togglingModule, setTogglingModule] = useState<string | null>(null);
 
-  const { data: systemModules, refetch, isError: systemError } = useQuery({
-    queryKey: ['system-modules'],
-    queryFn: () => apiGet<SystemModule[]>('/v1/modules/'),
+  const {
+    data: systemModules,
+    refetch,
+    isError: systemError,
+  } = useQuery({
+    queryKey: ["system-modules"],
+    queryFn: () => apiGet<SystemModule[]>("/v1/modules/"),
     staleTime: 30 * 1000,
     gcTime: 5 * 60 * 1000,
   });
@@ -1209,31 +1581,43 @@ function SystemModulesTab() {
   async function handleBackendToggle(mod: SystemModule): Promise<void> {
     if (mod.is_core) {
       addToast({
-        type: 'warning',
-        title: t('modules.cannot_disable', { defaultValue: 'Cannot disable' }),
-        message: t('modules.core_module_locked', {
-          defaultValue: '{{name}} is a core module and cannot be disabled.',
+        type: "warning",
+        title: t("modules.cannot_disable", { defaultValue: "Cannot disable" }),
+        message: t("modules.core_module_locked", {
+          defaultValue: "{{name}} is a core module and cannot be disabled.",
           name: mod.display_name,
         }),
       });
       return;
     }
     setTogglingModule(mod.name);
-    const action = mod.enabled ? 'disable' : 'enable';
+    const action = mod.enabled ? "disable" : "enable";
     try {
-      await apiPost<{ name: string; status: string }>(`/v1/modules/${mod.name}/${action}`);
+      await apiPost<{ name: string; status: string }>(
+        `/v1/modules/${mod.name}/${action}`,
+      );
       addToast({
-        type: 'success',
-        title: action === 'enable'
-          ? t('modules.enabled', { defaultValue: '{{name}} enabled', name: mod.display_name })
-          : t('modules.disabled', { defaultValue: '{{name}} disabled', name: mod.display_name }),
+        type: "success",
+        title:
+          action === "enable"
+            ? t("modules.enabled", {
+                defaultValue: "{{name}} enabled",
+                name: mod.display_name,
+              })
+            : t("modules.disabled", {
+                defaultValue: "{{name}} disabled",
+                name: mod.display_name,
+              }),
       });
       void refetch();
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('modules.toggle_failed', { defaultValue: 'Toggle failed' }),
-        message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error' }),
+        type: "error",
+        title: t("modules.toggle_failed", { defaultValue: "Toggle failed" }),
+        message:
+          err instanceof Error
+            ? err.message
+            : t("common.unknown_error", { defaultValue: "Unknown error" }),
       });
     } finally {
       setTogglingModule(null);
@@ -1243,9 +1627,15 @@ function SystemModulesTab() {
   if (systemError) {
     return (
       <div className="py-16 text-center animate-card-in">
-        <AlertTriangle size={40} className="mx-auto mb-3 text-semantic-warning" strokeWidth={1.5} />
+        <AlertTriangle
+          size={40}
+          className="mx-auto mb-3 text-semantic-warning"
+          strokeWidth={1.5}
+        />
         <p className="text-sm font-medium text-content-secondary">
-          {t('modules.system_load_failed', { defaultValue: 'Failed to load system modules' })}
+          {t("modules.system_load_failed", {
+            defaultValue: "Failed to load system modules",
+          })}
         </p>
         <Button
           variant="secondary"
@@ -1254,7 +1644,7 @@ function SystemModulesTab() {
           onClick={() => void refetch()}
           className="mt-4"
         >
-          {t('common.retry', { defaultValue: 'Retry' })}
+          {t("common.retry", { defaultValue: "Retry" })}
         </Button>
       </div>
     );
@@ -1265,24 +1655,29 @@ function SystemModulesTab() {
       <div className="py-16 text-center animate-card-in">
         <Server size={40} className="mx-auto mb-3 text-content-tertiary" />
         <p className="text-sm font-medium text-content-secondary">
-          {t('modules.no_system_modules', { defaultValue: 'No system modules loaded' })}
+          {t("modules.no_system_modules", {
+            defaultValue: "No system modules loaded",
+          })}
         </p>
       </div>
     );
   }
 
   return (
-    <div className="animate-card-in" style={{ animationDelay: '60ms' }}>
+    <div className="animate-card-in" style={{ animationDelay: "60ms" }}>
       <div className="mb-4">
         <p className="text-sm text-content-secondary">
-          {enabledCount}/{systemModules.length}{' '}
-          {t('marketplace.modules_enabled', { defaultValue: 'modules enabled' })}
+          {enabledCount}/{systemModules.length}{" "}
+          {t("marketplace.modules_enabled", {
+            defaultValue: "modules enabled",
+          })}
         </p>
         <InfoHint
           inline
           className="mt-1"
-          text={t('modules.system_hint', {
-            defaultValue: 'System modules are backend plugins loaded from the server. Toggle non-core modules to enable or disable them.',
+          text={t("modules.system_hint", {
+            defaultValue:
+              "System modules are backend plugins loaded from the server. Toggle non-core modules to enable or disable them.",
           })}
         />
       </div>
@@ -1298,13 +1693,17 @@ function SystemModulesTab() {
             <div className="flex items-center gap-2.5">
               <div
                 className={clsx(
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors',
+                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors",
                   mod.enabled
-                    ? 'bg-semantic-success-bg text-semantic-success dark:text-emerald-400'
-                    : 'bg-surface-tertiary text-content-quaternary',
+                    ? "bg-semantic-success-bg text-semantic-success dark:text-emerald-400"
+                    : "bg-surface-tertiary text-content-quaternary",
                 )}
               >
-                {mod.is_core ? <ShieldCheck size={15} /> : <Package size={15} />}
+                {mod.is_core ? (
+                  <ShieldCheck size={15} />
+                ) : (
+                  <Package size={15} />
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
@@ -1312,16 +1711,24 @@ function SystemModulesTab() {
                     {mod.display_name}
                   </span>
                   {mod.is_core ? (
-                    <Badge variant="blue" size="sm">{t('modules.core', { defaultValue: 'Core' })}</Badge>
+                    <Badge variant="blue" size="sm">
+                      {t("modules.core", { defaultValue: "Core" })}
+                    </Badge>
                   ) : mod.enabled ? (
-                    <Badge variant="success" size="sm" dot>{t('marketplace.active', { defaultValue: 'Active' })}</Badge>
+                    <Badge variant="success" size="sm" dot>
+                      {t("marketplace.active", { defaultValue: "Active" })}
+                    </Badge>
                   ) : (
-                    <Badge variant="neutral" size="sm">{t('modules.disabled_label', { defaultValue: 'Disabled' })}</Badge>
+                    <Badge variant="neutral" size="sm">
+                      {t("modules.disabled_label", {
+                        defaultValue: "Disabled",
+                      })}
+                    </Badge>
                   )}
                 </div>
                 <div className="flex items-center gap-1.5 text-2xs text-content-tertiary">
                   <span className="font-mono">v{mod.version}</span>
-                  {mod.category && mod.category !== 'core' && (
+                  {mod.category && mod.category !== "core" && (
                     <>
                       <span className="text-border">|</span>
                       <span>{mod.category}</span>
@@ -1329,11 +1736,16 @@ function SystemModulesTab() {
                   )}
                 </div>
                 {mod.description && (
-                  <p className="text-2xs text-content-quaternary mt-0.5 line-clamp-1">{mod.description}</p>
+                  <p className="text-2xs text-content-quaternary mt-0.5 line-clamp-1">
+                    {mod.description}
+                  </p>
                 )}
                 {mod.depends && mod.depends.length > 0 && (
                   <span className="text-2xs text-content-quaternary">
-                    {t('modules.depends_on', { defaultValue: 'Requires: {{deps}}', deps: mod.depends.join(', ') })}
+                    {t("modules.depends_on", {
+                      defaultValue: "Requires: {{deps}}",
+                      deps: mod.depends.join(", "),
+                    })}
                   </span>
                 )}
               </div>
@@ -1344,26 +1756,33 @@ function SystemModulesTab() {
                   disabled={togglingModule === mod.name}
                   role="switch"
                   aria-checked={mod.enabled}
-                  aria-label={t('modules.toggle_module', {
-                    defaultValue: '{{action}} {{name}}',
-                    action: mod.enabled ? t('common.disable', { defaultValue: 'Disable' }) : t('common.enable', { defaultValue: 'Enable' }),
+                  aria-label={t("modules.toggle_module", {
+                    defaultValue: "{{action}} {{name}}",
+                    action: mod.enabled
+                      ? t("common.disable", { defaultValue: "Disable" })
+                      : t("common.enable", { defaultValue: "Enable" }),
                     name: mod.display_name,
                   })}
                   className="shrink-0"
                 >
                   {togglingModule === mod.name ? (
-                    <Loader2 size={16} className="animate-spin text-content-tertiary" />
+                    <Loader2
+                      size={16}
+                      className="animate-spin text-content-tertiary"
+                    />
                   ) : (
                     <div
                       className={clsx(
-                        'relative h-5 w-9 rounded-full transition-colors duration-200',
-                        mod.enabled ? 'bg-oe-blue' : 'bg-content-quaternary/40',
+                        "relative h-5 w-9 rounded-full transition-colors duration-200",
+                        mod.enabled ? "bg-oe-blue" : "bg-content-quaternary/40",
                       )}
                     >
                       <div
                         className={clsx(
-                          'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200',
-                          mod.enabled ? 'translate-x-[18px]' : 'translate-x-0.5',
+                          "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200",
+                          mod.enabled
+                            ? "translate-x-[18px]"
+                            : "translate-x-0.5",
                         )}
                       />
                     </div>
@@ -1411,40 +1830,47 @@ function ModuleToggleCard({
   return (
     <div
       className={clsx(
-        'flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all',
+        "flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all",
         enabled
-          ? 'border-border-light bg-surface-elevated hover:border-border'
-          : 'border-border-light/50 bg-surface-secondary/50 opacity-60 hover:opacity-80',
+          ? "border-border-light bg-surface-elevated hover:border-border"
+          : "border-border-light/50 bg-surface-secondary/50 opacity-60 hover:opacity-80",
       )}
     >
       <div
         className={clsx(
-          'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors',
-          enabled ? 'bg-oe-blue-subtle text-oe-blue' : 'bg-surface-tertiary text-content-quaternary',
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors",
+          enabled
+            ? "bg-oe-blue-subtle text-oe-blue"
+            : "bg-surface-tertiary text-content-quaternary",
         )}
       >
         <Icon size={15} />
       </div>
       <div className="min-w-0 flex-1">
-        <span className="text-xs font-medium text-content-primary truncate block">{name}</span>
+        <span className="text-xs font-medium text-content-primary truncate block">
+          {name}
+        </span>
         <span className="text-2xs text-content-tertiary line-clamp-1">
           {description}
-          {version ? ` · v${version}` : ''}
+          {version ? ` · v${version}` : ""}
         </span>
         {hasBlockers && enabled && (
           <div className="flex items-center gap-1 mt-0.5">
             <AlertTriangle size={9} className="text-amber-500 shrink-0" />
             <span className="text-2xs text-amber-600 dark:text-amber-400 truncate">
-              {t('modules.required_by_short', {
-                defaultValue: 'Required by {{deps}}',
-                deps: (dependents ?? []).join(', '),
+              {t("modules.required_by_short", {
+                defaultValue: "Required by {{deps}}",
+                deps: (dependents ?? []).join(", "),
               })}
             </span>
           </div>
         )}
         {deps && deps.length > 0 && (
           <span className="text-2xs text-content-quaternary">
-            {t('modules.depends_on', { defaultValue: 'Requires: {{deps}}', deps: deps.join(', ') })}
+            {t("modules.depends_on", {
+              defaultValue: "Requires: {{deps}}",
+              deps: deps.join(", "),
+            })}
           </span>
         )}
       </div>
@@ -1453,23 +1879,25 @@ function ModuleToggleCard({
         onClick={onToggle}
         role="switch"
         aria-checked={enabled}
-        aria-label={t('modules.toggle_module', {
-          defaultValue: '{{action}} {{name}}',
-          action: enabled ? t('common.disable', { defaultValue: 'Disable' }) : t('common.enable', { defaultValue: 'Enable' }),
+        aria-label={t("modules.toggle_module", {
+          defaultValue: "{{action}} {{name}}",
+          action: enabled
+            ? t("common.disable", { defaultValue: "Disable" })
+            : t("common.enable", { defaultValue: "Enable" }),
           name,
         })}
         className="shrink-0"
       >
         <div
           className={clsx(
-            'relative h-5 w-9 rounded-full transition-colors duration-200',
-            enabled ? 'bg-oe-blue' : 'bg-content-quaternary/40',
+            "relative h-5 w-9 rounded-full transition-colors duration-200",
+            enabled ? "bg-oe-blue" : "bg-content-quaternary/40",
           )}
         >
           <div
             className={clsx(
-              'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200',
-              enabled ? 'translate-x-[18px]' : 'translate-x-0.5',
+              "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200",
+              enabled ? "translate-x-[18px]" : "translate-x-0.5",
             )}
           />
         </div>
@@ -1490,39 +1918,54 @@ interface MarketplaceCardProps {
   onReinstallDemo?: () => void;
 }
 
-function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoInstalled, onUninstallDemo, onReinstallDemo }: MarketplaceCardProps) {
+function MarketplaceCard({
+  module: mod,
+  index,
+  isInstalling,
+  onInstall,
+  isDemoInstalled,
+  onUninstallDemo,
+  onReinstallDemo,
+}: MarketplaceCardProps) {
   const { t } = useTranslation();
   const Icon = getModuleIcon(mod.icon);
-  const isLanguage = mod.category === 'language';
-  const isBuiltIn = mod.category === 'converter' || mod.category === 'analytics';
-  const isIntegration = mod.category === 'integration';
+  const isLanguage = mod.category === "language";
+  const isBuiltIn =
+    mod.category === "converter" || mod.category === "analytics";
+  const isIntegration = mod.category === "integration";
 
   return (
-    <Card hoverable className="animate-card-in group" style={{ animationDelay: `${80 + index * 30}ms` }}>
+    <Card
+      hoverable
+      className="animate-card-in group"
+      style={{ animationDelay: `${80 + index * 30}ms` }}
+    >
       <div className="flex items-start gap-3">
         <div
           className={clsx(
-            'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors duration-fast ease-oe',
-            mod.category === 'resource_catalog'
-              ? 'bg-semantic-warning-bg text-semantic-warning'
-              : mod.category === 'cost_database'
-                ? 'bg-oe-blue-subtle text-oe-blue'
-                : mod.category === 'vector_index'
-                  ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'
-                  : mod.category === 'language'
-                    ? 'bg-semantic-success-bg text-semantic-success dark:text-emerald-400'
-                    : mod.category === 'converter'
-                      ? 'bg-semantic-warning-bg text-semantic-warning'
-                      : mod.category === 'analytics'
-                        ? 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400'
-                        : 'bg-surface-secondary text-content-secondary',
+            "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors duration-fast ease-oe",
+            mod.category === "resource_catalog"
+              ? "bg-semantic-warning-bg text-semantic-warning"
+              : mod.category === "cost_database"
+                ? "bg-oe-blue-subtle text-oe-blue"
+                : mod.category === "vector_index"
+                  ? "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
+                  : mod.category === "language"
+                    ? "bg-semantic-success-bg text-semantic-success dark:text-emerald-400"
+                    : mod.category === "converter"
+                      ? "bg-semantic-warning-bg text-semantic-warning"
+                      : mod.category === "analytics"
+                        ? "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400"
+                        : "bg-surface-secondary text-content-secondary",
           )}
         >
           <Icon size={20} strokeWidth={1.75} />
         </div>
 
         <div className="min-w-0 flex-1">
-          <span className="text-sm font-semibold text-content-primary truncate block">{mod.name}</span>
+          <span className="text-sm font-semibold text-content-primary truncate block">
+            {mod.name}
+          </span>
           <div className="mt-0.5 flex items-center gap-1.5 text-2xs text-content-tertiary">
             <span>{mod.author}</span>
             <span className="text-border">|</span>
@@ -1530,17 +1973,38 @@ function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoIn
             <span className="text-border">|</span>
             <span>{formatSize(mod.size_mb)}</span>
           </div>
-          <p className="mt-2 text-xs text-content-secondary line-clamp-2 leading-relaxed">{mod.description}</p>
+          <p className="mt-2 text-xs text-content-secondary line-clamp-2 leading-relaxed">
+            {mod.description}
+          </p>
 
           {/* Vector index hint */}
-          {mod.category === 'vector_index' && !mod.installed && (
+          {mod.category === "vector_index" && !mod.installed && (
             <div className="mt-2 flex items-start gap-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200/50 dark:border-purple-800/30 px-2.5 py-1.5">
               <Info size={12} className="text-purple-500 shrink-0 mt-0.5" />
               <div className="text-2xs text-purple-700 dark:text-purple-300 leading-relaxed">
-                <strong>{t('marketplace.vector_option_a', { defaultValue: 'Option A' })}:</strong> Qdrant + Snapshot (3072d):<br />
-                <code className="font-mono bg-purple-100 dark:bg-purple-800/40 px-1 rounded text-[10px]">docker run -p 6333:6333 qdrant/qdrant</code><br />
-                <strong>{t('marketplace.vector_option_b', { defaultValue: 'Option B' })}:</strong> LanceDB (384d):<br />
-                <code className="font-mono bg-purple-100 dark:bg-purple-800/40 px-1 rounded text-[10px]">pip install lancedb sentence-transformers</code>
+                <strong>
+                  {t("marketplace.vector_option_a", {
+                    defaultValue: "Option A",
+                  })}
+                  :
+                </strong>{" "}
+                Qdrant + Snapshot (3072d):
+                <br />
+                <code className="font-mono bg-purple-100 dark:bg-purple-800/40 px-1 rounded text-[10px]">
+                  docker run -p 6333:6333 qdrant/qdrant
+                </code>
+                <br />
+                <strong>
+                  {t("marketplace.vector_option_b", {
+                    defaultValue: "Option B",
+                  })}
+                  :
+                </strong>{" "}
+                LanceDB (384d):
+                <br />
+                <code className="font-mono bg-purple-100 dark:bg-purple-800/40 px-1 rounded text-[10px]">
+                  pip install lancedb sentence-transformers
+                </code>
               </div>
             </div>
           )}
@@ -1548,60 +2012,112 @@ function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoIn
           {/* Tags */}
           <div className="mt-3 flex items-center gap-1.5 flex-wrap">
             {mod.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="neutral" size="sm">{tag}</Badge>
+              <Badge key={tag} variant="neutral" size="sm">
+                {tag}
+              </Badge>
             ))}
-            {mod.tags.length > 3 && <Badge variant="neutral" size="sm">+{mod.tags.length - 3}</Badge>}
+            {mod.tags.length > 3 && (
+              <Badge variant="neutral" size="sm">
+                +{mod.tags.length - 3}
+              </Badge>
+            )}
             <div className="flex-1" />
-            {!isLanguage && <Badge variant="success" size="sm">{t('marketplace.free', { defaultValue: 'Free' })}</Badge>}
+            {!isLanguage && (
+              <Badge variant="success" size="sm">
+                {t("marketplace.free", { defaultValue: "Free" })}
+              </Badge>
+            )}
           </div>
 
           {/* Action button */}
           <div className="mt-3">
             {isLanguage ? (
-              <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{t('marketplace.included', { defaultValue: 'Included' })}</Badge>
+              <Badge variant="success" size="sm">
+                <Check size={10} className="mr-0.5" />
+                {t("marketplace.included", { defaultValue: "Included" })}
+              </Badge>
             ) : isBuiltIn ? (
-              <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{t('marketplace.builtin', { defaultValue: 'Built-in' })}</Badge>
+              <Badge variant="success" size="sm">
+                <Check size={10} className="mr-0.5" />
+                {t("marketplace.builtin", { defaultValue: "Built-in" })}
+              </Badge>
             ) : isIntegration ? (
-              <Button variant="secondary" size="sm" icon={<Settings size={14} />} onClick={onInstall}>
-                {t('marketplace.requires_setup', { defaultValue: 'Configure' })}
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Settings size={14} />}
+                onClick={onInstall}
+              >
+                {t("marketplace.requires_setup", { defaultValue: "Configure" })}
               </Button>
-            ) : mod.installed && mod.category === 'cost_database' ? (
-              <Button variant="secondary" size="sm" icon={<Check size={14} />} onClick={onInstall}>
-                {t('marketplace.manage', { defaultValue: 'Manage' })}
+            ) : mod.installed && mod.category === "cost_database" ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Check size={14} />}
+                onClick={onInstall}
+              >
+                {t("marketplace.manage", { defaultValue: "Manage" })}
               </Button>
-            ) : mod.installed && mod.category === 'resource_catalog' ? (
-              <Button variant="secondary" size="sm" disabled icon={<Check size={14} />}>
-                {t('marketplace.imported', { defaultValue: 'Imported' })}
+            ) : mod.installed && mod.category === "resource_catalog" ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled
+                icon={<Check size={14} />}
+              >
+                {t("marketplace.imported", { defaultValue: "Imported" })}
               </Button>
-            ) : mod.installed && mod.category === 'vector_index' ? (
-              <Button variant="secondary" size="sm" disabled icon={<Check size={14} />}>
-                {t('marketplace.indexed', { defaultValue: 'Indexed' })}
+            ) : mod.installed && mod.category === "vector_index" ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled
+                icon={<Check size={14} />}
+              >
+                {t("marketplace.indexed", { defaultValue: "Indexed" })}
               </Button>
-            ) : (mod.installed || isDemoInstalled) && mod.category === 'demo_project' ? (
+            ) : (mod.installed || isDemoInstalled) &&
+              mod.category === "demo_project" ? (
               <div className="flex items-center gap-2 flex-wrap">
-                <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{t('marketplace.installed', { defaultValue: 'Installed' })}</Badge>
+                <Badge variant="success" size="sm">
+                  <Check size={10} className="mr-0.5" />
+                  {t("marketplace.installed", { defaultValue: "Installed" })}
+                </Badge>
                 {onReinstallDemo && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    icon={isInstalling ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                    icon={
+                      isInstalling ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <RefreshCw size={14} />
+                      )
+                    }
                     onClick={onReinstallDemo}
                     disabled={isInstalling}
                     className="text-content-secondary hover:text-content-primary hover:bg-surface-secondary"
                   >
-                    {t('marketplace.reinstall', { defaultValue: 'Reinstall' })}
+                    {t("marketplace.reinstall", { defaultValue: "Reinstall" })}
                   </Button>
                 )}
                 {onUninstallDemo && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    icon={isInstalling ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                    icon={
+                      isInstalling ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <Trash2 size={14} />
+                      )
+                    }
                     onClick={onUninstallDemo}
                     disabled={isInstalling}
                     className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
                   >
-                    {t('marketplace.uninstall', { defaultValue: 'Uninstall' })}
+                    {t("marketplace.uninstall", { defaultValue: "Uninstall" })}
                   </Button>
                 )}
               </div>
@@ -1609,13 +2125,21 @@ function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoIn
               <Button
                 variant="primary"
                 size="sm"
-                icon={isInstalling ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+                icon={
+                  isInstalling ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Download size={14} />
+                  )
+                }
                 onClick={onInstall}
                 disabled={isInstalling}
               >
                 {isInstalling
-                  ? t('marketplace.installing', { defaultValue: 'Installing...' })
-                  : t('marketplace.install', { defaultValue: 'Install' })}
+                  ? t("marketplace.installing", {
+                      defaultValue: "Installing...",
+                    })
+                  : t("marketplace.install", { defaultValue: "Install" })}
               </Button>
             )}
           </div>
@@ -1628,7 +2152,7 @@ function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoIn
 /* ── Installed module badge helper ──────────────────────────────────────── */
 
 interface InstalledBadgeInfo {
-  type: 'badge' | 'manage';
+  type: "badge" | "manage";
   label: string;
   subtitle: string;
 }
@@ -1638,22 +2162,56 @@ function getInstalledModuleBadge(
   t: (key: string, opts?: Record<string, unknown>) => string,
 ): InstalledBadgeInfo {
   switch (mod.category) {
-    case 'language':
-      return { type: 'badge', label: t('marketplace.included', { defaultValue: 'Included' }), subtitle: t('marketplace.included', { defaultValue: 'Included' }) };
-    case 'analytics':
-    case 'converter':
-      return { type: 'badge', label: t('marketplace.builtin', { defaultValue: 'Built-in' }), subtitle: t('marketplace.builtin', { defaultValue: 'Built-in' }) };
-    case 'integration':
-      return { type: 'manage', label: t('marketplace.configure', { defaultValue: 'Configure' }), subtitle: t('marketplace.requires_setup', { defaultValue: 'Requires Setup' }) };
-    case 'resource_catalog':
-      return { type: 'badge', label: t('marketplace.imported', { defaultValue: 'Imported' }), subtitle: t('marketplace.imported', { defaultValue: 'Imported' }) };
-    case 'vector_index':
-      return { type: 'badge', label: t('marketplace.indexed', { defaultValue: 'Indexed' }), subtitle: t('marketplace.indexed', { defaultValue: 'Indexed' }) };
-    case 'demo_project':
-      return { type: 'badge', label: t('marketplace.installed', { defaultValue: 'Installed' }), subtitle: t('marketplace.installed', { defaultValue: 'Installed' }) };
-    case 'cost_database':
-      return { type: 'manage', label: t('marketplace.manage', { defaultValue: 'Manage' }), subtitle: `v${mod.version}` };
+    case "language":
+      return {
+        type: "badge",
+        label: t("marketplace.included", { defaultValue: "Included" }),
+        subtitle: t("marketplace.included", { defaultValue: "Included" }),
+      };
+    case "analytics":
+    case "converter":
+      return {
+        type: "badge",
+        label: t("marketplace.builtin", { defaultValue: "Built-in" }),
+        subtitle: t("marketplace.builtin", { defaultValue: "Built-in" }),
+      };
+    case "integration":
+      return {
+        type: "manage",
+        label: t("marketplace.configure", { defaultValue: "Configure" }),
+        subtitle: t("marketplace.requires_setup", {
+          defaultValue: "Requires Setup",
+        }),
+      };
+    case "resource_catalog":
+      return {
+        type: "badge",
+        label: t("marketplace.imported", { defaultValue: "Imported" }),
+        subtitle: t("marketplace.imported", { defaultValue: "Imported" }),
+      };
+    case "vector_index":
+      return {
+        type: "badge",
+        label: t("marketplace.indexed", { defaultValue: "Indexed" }),
+        subtitle: t("marketplace.indexed", { defaultValue: "Indexed" }),
+      };
+    case "demo_project":
+      return {
+        type: "badge",
+        label: t("marketplace.installed", { defaultValue: "Installed" }),
+        subtitle: t("marketplace.installed", { defaultValue: "Installed" }),
+      };
+    case "cost_database":
+      return {
+        type: "manage",
+        label: t("marketplace.manage", { defaultValue: "Manage" }),
+        subtitle: `v${mod.version}`,
+      };
     default:
-      return { type: 'badge', label: t('marketplace.installed', { defaultValue: 'Installed' }), subtitle: `v${mod.version}` };
+      return {
+        type: "badge",
+        label: t("marketplace.installed", { defaultValue: "Installed" }),
+        subtitle: `v${mod.version}`,
+      };
   }
 }

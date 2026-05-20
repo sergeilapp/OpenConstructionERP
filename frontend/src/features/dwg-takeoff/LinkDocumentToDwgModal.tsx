@@ -10,12 +10,12 @@
  * the metadata-merge pattern keeps the footprint small.
  */
 
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import { X, Search, FileText, Link2, Loader2 } from 'lucide-react';
-import { apiGet, apiPatch } from '@/shared/lib/api';
-import { useToastStore } from '@/stores/useToastStore';
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { X, Search, FileText, Link2, Loader2 } from "lucide-react";
+import { apiGet, apiPatch } from "@/shared/lib/api";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface DocumentItem {
   id: string;
@@ -52,10 +52,10 @@ export default function LinkDocumentToDwgModal({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   const docsQuery = useQuery({
-    queryKey: ['documents-for-dwg-link', projectId],
+    queryKey: ["documents-for-dwg-link", projectId],
     queryFn: () =>
       apiGet<DocumentItem[]>(
         `/v1/documents/?project_id=${encodeURIComponent(projectId)}`,
@@ -69,13 +69,13 @@ export default function LinkDocumentToDwgModal({
     if (!q) return docs;
     return docs.filter((d) => {
       const hay =
-        (d.name || d.filename || '') +
-        ' ' +
-        (d.category || '') +
-        ' ' +
-        (d.drawing_number || '') +
-        ' ' +
-        (d.discipline || '');
+        (d.name || d.filename || "") +
+        " " +
+        (d.category || "") +
+        " " +
+        (d.drawing_number || "") +
+        " " +
+        (d.discipline || "");
       return hay.toLowerCase().includes(q);
     });
   }, [docs, search]);
@@ -85,8 +85,8 @@ export default function LinkDocumentToDwgModal({
       // Merge the DWG link into the doc's existing metadata so other
       // consumers (captions, tags, etc.) aren't clobbered.
       const existing = (doc.metadata ?? {}) as Record<string, unknown>;
-      const existingIds = Array.isArray(existing['dwg_entity_ids'])
-        ? (existing['dwg_entity_ids'] as string[])
+      const existingIds = Array.isArray(existing["dwg_entity_ids"])
+        ? (existing["dwg_entity_ids"] as string[])
         : [];
       const mergedIds = Array.from(new Set([...existingIds, ...entityIds]));
       const nextMetadata: Record<string, unknown> = {
@@ -102,22 +102,24 @@ export default function LinkDocumentToDwgModal({
     },
     onSuccess: (count) => {
       addToast({
-        type: 'success',
-        title: t('dwg_takeoff.doc_linked_title', { defaultValue: 'Document linked‌⁠‍' }),
-        message: t('dwg_takeoff.doc_linked_msg', {
-          defaultValue: 'Linked to {{count}} DWG entity/entities‌⁠‍',
+        type: "success",
+        title: t("dwg_takeoff.doc_linked_title", {
+          defaultValue: "Document linked‌⁠‍",
+        }),
+        message: t("dwg_takeoff.doc_linked_msg", {
+          defaultValue: "Linked to {{count}} DWG entity/entities‌⁠‍",
           count,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['documents'] });
-      qc.invalidateQueries({ queryKey: ['documents-for-dwg-link', projectId] });
+      qc.invalidateQueries({ queryKey: ["documents"] });
+      qc.invalidateQueries({ queryKey: ["documents-for-dwg-link", projectId] });
       onLinked?.();
       onClose();
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -139,13 +141,17 @@ export default function LinkDocumentToDwgModal({
           <div className="flex items-center gap-2">
             <FileText size={16} className="text-violet-600" />
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('dwg_takeoff.link_doc_title', { defaultValue: 'Link a document‌⁠‍' })}
+              {t("dwg_takeoff.link_doc_title", {
+                defaultValue: "Link a document‌⁠‍",
+              })}
             </h2>
             <span className="text-[11px] text-content-tertiary">
               {entityIds.length === 1
-                ? '→ ' + (entityLabel || t('dwg_takeoff.entity', { defaultValue: 'Entity‌⁠‍' }))
-                : t('dwg_takeoff.link_doc_bulk', {
-                    defaultValue: '→ {{count}} entities‌⁠‍',
+                ? "→ " +
+                  (entityLabel ||
+                    t("dwg_takeoff.entity", { defaultValue: "Entity‌⁠‍" }))
+                : t("dwg_takeoff.link_doc_bulk", {
+                    defaultValue: "→ {{count}} entities‌⁠‍",
                     count: entityIds.length,
                   })}
             </span>
@@ -153,7 +159,7 @@ export default function LinkDocumentToDwgModal({
           <button
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -170,8 +176,8 @@ export default function LinkDocumentToDwgModal({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('dwg_takeoff.search_documents', {
-                defaultValue: 'Search by name, category, drawing number…',
+              placeholder={t("dwg_takeoff.search_documents", {
+                defaultValue: "Search by name, category, drawing number…",
               })}
               autoFocus
               className="w-full ps-8 pe-3 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
@@ -184,16 +190,17 @@ export default function LinkDocumentToDwgModal({
           {docsQuery.isLoading ? (
             <div className="flex items-center justify-center py-8 text-content-tertiary">
               <Loader2 size={16} className="animate-spin mr-2" />
-              {t('common.loading', { defaultValue: 'Loading…' })}
+              {t("common.loading", { defaultValue: "Loading…" })}
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-8 text-[11px] text-content-tertiary italic">
               {docs.length === 0
-                ? t('dwg_takeoff.no_docs', {
-                    defaultValue: 'No documents in this project yet — upload one first',
+                ? t("dwg_takeoff.no_docs", {
+                    defaultValue:
+                      "No documents in this project yet — upload one first",
                   })
-                : t('dwg_takeoff.no_doc_match', {
-                    defaultValue: 'No documents match your search',
+                : t("dwg_takeoff.no_doc_match", {
+                    defaultValue: "No documents match your search",
                   })}
             </div>
           ) : (
@@ -219,7 +226,9 @@ export default function LinkDocumentToDwgModal({
                       </div>
                       <div className="flex items-center gap-2 text-[10px] text-content-tertiary">
                         {d.category && (
-                          <span className="uppercase tracking-wider">{d.category}</span>
+                          <span className="uppercase tracking-wider">
+                            {d.category}
+                          </span>
                         )}
                         {d.discipline && <span>{d.discipline}</span>}
                       </div>
@@ -239,7 +248,7 @@ export default function LinkDocumentToDwgModal({
             onClick={onClose}
             className="text-xs text-content-tertiary hover:text-content-primary px-2"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
         </div>
       </div>

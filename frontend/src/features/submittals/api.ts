@@ -4,27 +4,27 @@
  * All endpoints are prefixed with /v1/submittals/.
  */
 
-import { apiGet, apiPost, apiPatch } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 export type SubmittalStatus =
-  | 'draft'
-  | 'submitted'
-  | 'under_review'
-  | 'approved'
-  | 'approved_as_noted'
-  | 'revise_and_resubmit'
-  | 'rejected';
+  | "draft"
+  | "submitted"
+  | "under_review"
+  | "approved"
+  | "approved_as_noted"
+  | "revise_and_resubmit"
+  | "rejected";
 
 export type SubmittalType =
-  | 'shop_drawing'
-  | 'product_data'
-  | 'sample'
-  | 'mock_up'
-  | 'test_report'
-  | 'certificate'
-  | 'warranty';
+  | "shop_drawing"
+  | "product_data"
+  | "sample"
+  | "mock_up"
+  | "test_report"
+  | "certificate"
+  | "warranty";
 
 export interface Submittal {
   id: string;
@@ -47,7 +47,7 @@ export interface Submittal {
 
 export interface SubmittalFilters {
   project_id?: string;
-  status?: SubmittalStatus | '';
+  status?: SubmittalStatus | "";
 }
 
 export interface CreateSubmittalPayload {
@@ -70,13 +70,13 @@ export interface ReviewSubmittalPayload {
 }
 
 export interface ApproveSubmittalPayload {
-  status: 'approved' | 'approved_as_noted' | 'revise_and_resubmit' | 'rejected';
+  status: "approved" | "approved_as_noted" | "revise_and_resubmit" | "rejected";
   comments?: string;
 }
 
 /* ── Wire <-> UI normaliser ────────────────────────────────────────────── */
 
-type SubmittalWire = Omit<Submittal, 'type' | 'revision'> & {
+type SubmittalWire = Omit<Submittal, "type" | "revision"> & {
   type?: SubmittalType;
   submittal_type?: SubmittalType;
   revision?: number;
@@ -86,7 +86,7 @@ type SubmittalWire = Omit<Submittal, 'type' | 'revision'> & {
 };
 
 function normaliseSubmittal(s: SubmittalWire): Submittal {
-  const type = (s.type ?? s.submittal_type ?? 'shop_drawing') as SubmittalType;
+  const type = (s.type ?? s.submittal_type ?? "shop_drawing") as SubmittalType;
   const revision = (s.revision ?? s.current_revision ?? 1) as number;
   return {
     ...s,
@@ -99,22 +99,34 @@ function normaliseSubmittal(s: SubmittalWire): Submittal {
 
 /* ── API Functions ─────────────────────────────────────────────────────── */
 
-export async function fetchSubmittals(filters?: SubmittalFilters): Promise<Submittal[]> {
+export async function fetchSubmittals(
+  filters?: SubmittalFilters,
+): Promise<Submittal[]> {
   const params = new URLSearchParams();
-  if (filters?.project_id) params.set('project_id', filters.project_id);
-  if (filters?.status) params.set('status', filters.status);
+  if (filters?.project_id) params.set("project_id", filters.project_id);
+  if (filters?.status) params.set("status", filters.status);
   const qs = params.toString();
-  const rows = await apiGet<SubmittalWire[]>(`/v1/submittals/${qs ? `?${qs}` : ''}`);
+  const rows = await apiGet<SubmittalWire[]>(
+    `/v1/submittals/${qs ? `?${qs}` : ""}`,
+  );
   return rows.map(normaliseSubmittal);
 }
 
-export async function createSubmittal(data: CreateSubmittalPayload): Promise<Submittal> {
-  const row = await apiPost<SubmittalWire>('/v1/submittals/', data);
+export async function createSubmittal(
+  data: CreateSubmittalPayload,
+): Promise<Submittal> {
+  const row = await apiPost<SubmittalWire>("/v1/submittals/", data);
   return normaliseSubmittal(row);
 }
 
-export async function updateSubmittal(id: string, data: UpdateSubmittalPayload): Promise<Submittal> {
-  const row = await apiPatch<SubmittalWire, UpdateSubmittalPayload>(`/v1/submittals/${id}`, data);
+export async function updateSubmittal(
+  id: string,
+  data: UpdateSubmittalPayload,
+): Promise<Submittal> {
+  const row = await apiPatch<SubmittalWire, UpdateSubmittalPayload>(
+    `/v1/submittals/${id}`,
+    data,
+  );
   return normaliseSubmittal(row);
 }
 
@@ -123,12 +135,24 @@ export async function submitSubmittal(id: string): Promise<Submittal> {
   return normaliseSubmittal(row);
 }
 
-export async function reviewSubmittal(id: string, data: ReviewSubmittalPayload): Promise<Submittal> {
-  const row = await apiPost<SubmittalWire>(`/v1/submittals/${id}/review/`, data);
+export async function reviewSubmittal(
+  id: string,
+  data: ReviewSubmittalPayload,
+): Promise<Submittal> {
+  const row = await apiPost<SubmittalWire>(
+    `/v1/submittals/${id}/review/`,
+    data,
+  );
   return normaliseSubmittal(row);
 }
 
-export async function approveSubmittal(id: string, data: ApproveSubmittalPayload): Promise<Submittal> {
-  const row = await apiPost<SubmittalWire>(`/v1/submittals/${id}/approve/`, data);
+export async function approveSubmittal(
+  id: string,
+  data: ApproveSubmittalPayload,
+): Promise<Submittal> {
+  const row = await apiPost<SubmittalWire>(
+    `/v1/submittals/${id}/approve/`,
+    data,
+  );
   return normaliseSubmittal(row);
 }

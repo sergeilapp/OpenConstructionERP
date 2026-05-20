@@ -170,9 +170,7 @@ async def list_plots(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.read")),
 ) -> list[PlotResponse]:
-    rows, _ = await service.plots.list_for_development(
-        development_id, offset=offset, limit=limit, status=status
-    )
+    rows, _ = await service.plots.list_for_development(development_id, offset=offset, limit=limit, status=status)
     return [PlotResponse.model_validate(r) for r in rows]
 
 
@@ -237,49 +235,33 @@ async def plot_configurator(
     _perm: None = Depends(RequirePermission("property_dev.read")),
 ) -> BuyerConfiguratorResponse:
     plot = await service.get_plot(plot_id)
-    house_type = (
-        await service.house_types.get_by_id(plot.house_type_id)
-        if plot.house_type_id
-        else None
-    )
-    variant = (
-        await service.variants.get_by_id(plot.house_type_variant_id)
-        if plot.house_type_variant_id
-        else None
-    )
+    house_type = await service.house_types.get_by_id(plot.house_type_id) if plot.house_type_id else None
+    variant = await service.variants.get_by_id(plot.house_type_variant_id) if plot.house_type_variant_id else None
 
     groups = await service.option_groups.list_for_development(plot.development_id)
     options_by_group: dict[str, list[BuyerOptionResponse]] = {}
     for g in groups:
         opts = await service.options.list_active_options_for_group(g.id)
-        options_by_group[str(g.id)] = [
-            BuyerOptionResponse.model_validate(o) for o in opts
-        ]
+        options_by_group[str(g.id)] = [BuyerOptionResponse.model_validate(o) for o in opts]
 
     buyer = await service.buyers.get_for_plot(plot_id)
     current_selection: Any = None
     current_items: list[Any] = []
     if buyer is not None:
-        current_selection = await service.selections.current_selection_for_buyer(
-            buyer.id
-        )
+        current_selection = await service.selections.current_selection_for_buyer(buyer.id)
         if current_selection is not None:
-            current_items = await service.selection_items.list_for_selection(
-                current_selection.id
-            )
+            current_items = await service.selection_items.list_for_selection(current_selection.id)
 
     pricing_total = compute_plot_final_price(plot, variant, current_items)
     pricing = PlotPricingResponse(
         plot_id=plot.id,
         base_price=Decimal(str(plot.price_base)),
         variant_modifier_value=(
-            (Decimal(str(plot.price_base)) * Decimal(str(variant.modifier_pct))
-             / Decimal("100"))
-            if variant else Decimal("0")
+            (Decimal(str(plot.price_base)) * Decimal(str(variant.modifier_pct)) / Decimal("100"))
+            if variant
+            else Decimal("0")
         ),
-        selections_total=sum(
-            (Decimal(str(i.total_price)) for i in current_items), Decimal("0")
-        ),
+        selections_total=sum((Decimal(str(i.total_price)) for i in current_items), Decimal("0")),
         final_price=pricing_total,
         currency=plot.currency or "",
     )
@@ -290,13 +272,8 @@ async def plot_configurator(
         variant=HouseTypeVariantResponse.model_validate(variant) if variant else None,
         option_groups=[BuyerOptionGroupResponse.model_validate(g) for g in groups],
         options_by_group=options_by_group,
-        current_selection=(
-            BuyerSelectionResponse.model_validate(current_selection)
-            if current_selection else None
-        ),
-        current_items=[
-            BuyerSelectionItemResponse.model_validate(i) for i in current_items
-        ],
+        current_selection=(BuyerSelectionResponse.model_validate(current_selection) if current_selection else None),
+        current_items=[BuyerSelectionItemResponse.model_validate(i) for i in current_items],
         pricing=pricing,
     )
 
@@ -315,7 +292,9 @@ async def list_house_types(
 
 
 @router.post(
-    "/house-types/", response_model=HouseTypeResponse, status_code=201,
+    "/house-types/",
+    response_model=HouseTypeResponse,
+    status_code=201,
 )
 async def create_house_type(
     data: HouseTypeCreate,
@@ -356,7 +335,8 @@ async def delete_house_type(
 
 
 @router.get(
-    "/house-type-variants/", response_model=list[HouseTypeVariantResponse],
+    "/house-type-variants/",
+    response_model=list[HouseTypeVariantResponse],
 )
 async def list_variants(
     house_type_id: uuid.UUID = Query(...),
@@ -377,13 +357,12 @@ async def create_variant(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.create")),
 ) -> HouseTypeVariantResponse:
-    return HouseTypeVariantResponse.model_validate(
-        await service.create_variant(data)
-    )
+    return HouseTypeVariantResponse.model_validate(await service.create_variant(data))
 
 
 @router.get(
-    "/house-type-variants/{v_id}", response_model=HouseTypeVariantResponse,
+    "/house-type-variants/{v_id}",
+    response_model=HouseTypeVariantResponse,
 )
 async def get_variant(
     v_id: uuid.UUID,
@@ -394,7 +373,8 @@ async def get_variant(
 
 
 @router.patch(
-    "/house-type-variants/{v_id}", response_model=HouseTypeVariantResponse,
+    "/house-type-variants/{v_id}",
+    response_model=HouseTypeVariantResponse,
 )
 async def update_variant(
     v_id: uuid.UUID,
@@ -402,9 +382,7 @@ async def update_variant(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.update")),
 ) -> HouseTypeVariantResponse:
-    return HouseTypeVariantResponse.model_validate(
-        await service.update_variant(v_id, data)
-    )
+    return HouseTypeVariantResponse.model_validate(await service.update_variant(v_id, data))
 
 
 @router.delete("/house-type-variants/{v_id}", status_code=204)
@@ -430,16 +408,16 @@ async def list_option_groups(
 
 
 @router.post(
-    "/option-groups/", response_model=BuyerOptionGroupResponse, status_code=201,
+    "/option-groups/",
+    response_model=BuyerOptionGroupResponse,
+    status_code=201,
 )
 async def create_option_group(
     data: BuyerOptionGroupCreate,
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.create")),
 ) -> BuyerOptionGroupResponse:
-    return BuyerOptionGroupResponse.model_validate(
-        await service.create_option_group(data)
-    )
+    return BuyerOptionGroupResponse.model_validate(await service.create_option_group(data))
 
 
 @router.get("/option-groups/{g_id}", response_model=BuyerOptionGroupResponse)
@@ -448,9 +426,7 @@ async def get_option_group(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.read")),
 ) -> BuyerOptionGroupResponse:
-    return BuyerOptionGroupResponse.model_validate(
-        await service.get_option_group(g_id)
-    )
+    return BuyerOptionGroupResponse.model_validate(await service.get_option_group(g_id))
 
 
 @router.patch("/option-groups/{g_id}", response_model=BuyerOptionGroupResponse)
@@ -460,9 +436,7 @@ async def update_option_group(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.update")),
 ) -> BuyerOptionGroupResponse:
-    return BuyerOptionGroupResponse.model_validate(
-        await service.update_option_group(g_id, data)
-    )
+    return BuyerOptionGroupResponse.model_validate(await service.update_option_group(g_id, data))
 
 
 @router.delete("/option-groups/{g_id}", status_code=204)
@@ -513,9 +487,7 @@ async def update_option(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.update")),
 ) -> BuyerOptionResponse:
-    return BuyerOptionResponse.model_validate(
-        await service.update_option(o_id, data)
-    )
+    return BuyerOptionResponse.model_validate(await service.update_option(o_id, data))
 
 
 @router.delete("/options/{o_id}", status_code=204)
@@ -539,9 +511,7 @@ async def list_buyers(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.read")),
 ) -> list[BuyerResponse]:
-    rows, _ = await service.buyers.list_for_development(
-        development_id, offset=offset, limit=limit, status=status
-    )
+    rows, _ = await service.buyers.list_for_development(development_id, offset=offset, limit=limit, status=status)
     return [BuyerResponse.model_validate(r) for r in rows]
 
 
@@ -589,9 +559,7 @@ async def contract_buyer(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.contract_buyer")),
 ) -> BuyerResponse:
-    return BuyerResponse.model_validate(
-        await service.convert_buyer_to_contracted(b_id, data)
-    )
+    return BuyerResponse.model_validate(await service.convert_buyer_to_contracted(b_id, data))
 
 
 # ── Selections ──────────────────────────────────────────────────────────
@@ -608,16 +576,16 @@ async def list_selections(
 
 
 @router.post(
-    "/selections/", response_model=BuyerSelectionResponse, status_code=201,
+    "/selections/",
+    response_model=BuyerSelectionResponse,
+    status_code=201,
 )
 async def create_selection(
     data: BuyerSelectionCreate,
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.create")),
 ) -> BuyerSelectionResponse:
-    return BuyerSelectionResponse.model_validate(
-        await service.create_selection(data)
-    )
+    return BuyerSelectionResponse.model_validate(await service.create_selection(data))
 
 
 @router.get("/selections/{s_id}", response_model=BuyerSelectionResponse)
@@ -636,9 +604,7 @@ async def update_selection(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.update")),
 ) -> BuyerSelectionResponse:
-    return BuyerSelectionResponse.model_validate(
-        await service.update_selection(s_id, data)
-    )
+    return BuyerSelectionResponse.model_validate(await service.update_selection(s_id, data))
 
 
 @router.delete("/selections/{s_id}", status_code=204)
@@ -651,29 +617,27 @@ async def delete_selection(
 
 
 @router.post(
-    "/selections/{s_id}/submit", response_model=BuyerSelectionResponse,
+    "/selections/{s_id}/submit",
+    response_model=BuyerSelectionResponse,
 )
 async def submit_selection(
     s_id: uuid.UUID,
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.update")),
 ) -> BuyerSelectionResponse:
-    return BuyerSelectionResponse.model_validate(
-        await service.submit_selection(s_id)
-    )
+    return BuyerSelectionResponse.model_validate(await service.submit_selection(s_id))
 
 
 @router.post(
-    "/selections/{s_id}/lock", response_model=BuyerSelectionResponse,
+    "/selections/{s_id}/lock",
+    response_model=BuyerSelectionResponse,
 )
 async def lock_selection(
     s_id: uuid.UUID,
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.lock_selection")),
 ) -> BuyerSelectionResponse:
-    return BuyerSelectionResponse.model_validate(
-        await service.lock_selection(s_id)
-    )
+    return BuyerSelectionResponse.model_validate(await service.lock_selection(s_id))
 
 
 @router.post(
@@ -687,13 +651,12 @@ async def add_selection_item(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.update")),
 ) -> BuyerSelectionItemResponse:
-    return BuyerSelectionItemResponse.model_validate(
-        await service.add_selection_item(s_id, data)
-    )
+    return BuyerSelectionItemResponse.model_validate(await service.add_selection_item(s_id, data))
 
 
 @router.delete(
-    "/selections/{s_id}/items/{item_id}", status_code=204,
+    "/selections/{s_id}/items/{item_id}",
+    status_code=204,
 )
 async def remove_selection_item(
     s_id: uuid.UUID,
@@ -758,9 +721,7 @@ async def update_handover(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.handover")),
 ) -> HandoverResponse:
-    return HandoverResponse.model_validate(
-        await service.update_handover(h_id, data)
-    )
+    return HandoverResponse.model_validate(await service.update_handover(h_id, data))
 
 
 @router.delete("/handovers/{h_id}", status_code=204)
@@ -779,9 +740,7 @@ async def complete_handover(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.handover")),
 ) -> HandoverResponse:
-    return HandoverResponse.model_validate(
-        await service.complete_handover(h_id, data)
-    )
+    return HandoverResponse.model_validate(await service.complete_handover(h_id, data))
 
 
 # ── Snags ───────────────────────────────────────────────────────────────
@@ -843,9 +802,7 @@ async def fix_snag(
     _perm: None = Depends(RequirePermission("property_dev.fix_snag")),
 ) -> SnagResponse:
     fix_notes = (payload or {}).get("fix_notes")
-    return SnagResponse.model_validate(
-        await service.mark_snag_fixed(s_id, fix_notes=fix_notes)
-    )
+    return SnagResponse.model_validate(await service.mark_snag_fixed(s_id, fix_notes=fix_notes))
 
 
 @router.post("/snags/{s_id}/wont-fix", response_model=SnagResponse)
@@ -856,9 +813,7 @@ async def wont_fix_snag(
     _perm: None = Depends(RequirePermission("property_dev.fix_snag")),
 ) -> SnagResponse:
     fix_notes = (payload or {}).get("fix_notes")
-    return SnagResponse.model_validate(
-        await service.mark_snag_wont_fix(s_id, fix_notes=fix_notes)
-    )
+    return SnagResponse.model_validate(await service.mark_snag_wont_fix(s_id, fix_notes=fix_notes))
 
 
 # ── Warranty Claims ─────────────────────────────────────────────────────
@@ -882,20 +837,21 @@ async def list_warranty_claims(
 
 
 @router.post(
-    "/warranty-claims/", response_model=WarrantyClaimResponse, status_code=201,
+    "/warranty-claims/",
+    response_model=WarrantyClaimResponse,
+    status_code=201,
 )
 async def create_warranty_claim(
     data: WarrantyClaimCreate,
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.process_warranty")),
 ) -> WarrantyClaimResponse:
-    return WarrantyClaimResponse.model_validate(
-        await service.raise_warranty_claim(data.plot_id, data.buyer_id, data)
-    )
+    return WarrantyClaimResponse.model_validate(await service.raise_warranty_claim(data.plot_id, data.buyer_id, data))
 
 
 @router.get(
-    "/warranty-claims/{w_id}", response_model=WarrantyClaimResponse,
+    "/warranty-claims/{w_id}",
+    response_model=WarrantyClaimResponse,
 )
 async def get_warranty_claim(
     w_id: uuid.UUID,
@@ -906,7 +862,8 @@ async def get_warranty_claim(
 
 
 @router.patch(
-    "/warranty-claims/{w_id}", response_model=WarrantyClaimResponse,
+    "/warranty-claims/{w_id}",
+    response_model=WarrantyClaimResponse,
 )
 async def update_warranty_claim(
     w_id: uuid.UUID,
@@ -914,9 +871,7 @@ async def update_warranty_claim(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.process_warranty")),
 ) -> WarrantyClaimResponse:
-    return WarrantyClaimResponse.model_validate(
-        await service.update_warranty(w_id, data)
-    )
+    return WarrantyClaimResponse.model_validate(await service.update_warranty(w_id, data))
 
 
 @router.delete("/warranty-claims/{w_id}", status_code=204)
@@ -929,7 +884,8 @@ async def delete_warranty_claim(
 
 
 @router.post(
-    "/warranty/{w_id}/accept", response_model=WarrantyClaimResponse,
+    "/warranty/{w_id}/accept",
+    response_model=WarrantyClaimResponse,
 )
 async def accept_warranty_claim(
     w_id: uuid.UUID,
@@ -940,7 +896,8 @@ async def accept_warranty_claim(
 
 
 @router.post(
-    "/warranty/{w_id}/reject", response_model=WarrantyClaimResponse,
+    "/warranty/{w_id}/reject",
+    response_model=WarrantyClaimResponse,
 )
 async def reject_warranty_claim(
     w_id: uuid.UUID,
@@ -951,7 +908,8 @@ async def reject_warranty_claim(
 
 
 @router.post(
-    "/warranty/{w_id}/close", response_model=WarrantyClaimResponse,
+    "/warranty/{w_id}/close",
+    response_model=WarrantyClaimResponse,
 )
 async def close_warranty_claim(
     w_id: uuid.UUID,
@@ -996,7 +954,8 @@ async def list_jurisdictions(
 
 
 @router.get(
-    "/handovers/{h_id}/docs", response_model=HandoverBundleResponse,
+    "/handovers/{h_id}/docs",
+    response_model=HandoverBundleResponse,
 )
 async def get_handover_bundle(
     h_id: uuid.UUID,
@@ -1025,13 +984,12 @@ async def create_handover_doc(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.handover")),
 ) -> HandoverDocResponse:
-    return HandoverDocResponse.model_validate(
-        await service.create_handover_doc(data)
-    )
+    return HandoverDocResponse.model_validate(await service.create_handover_doc(data))
 
 
 @router.patch(
-    "/handover-docs/{doc_id}", response_model=HandoverDocResponse,
+    "/handover-docs/{doc_id}",
+    response_model=HandoverDocResponse,
 )
 async def update_handover_doc(
     doc_id: uuid.UUID,
@@ -1039,9 +997,7 @@ async def update_handover_doc(
     service: PropertyDevService = Depends(_svc),
     _perm: None = Depends(RequirePermission("property_dev.handover")),
 ) -> HandoverDocResponse:
-    return HandoverDocResponse.model_validate(
-        await service.update_handover_doc(doc_id, data)
-    )
+    return HandoverDocResponse.model_validate(await service.update_handover_doc(doc_id, data))
 
 
 @router.delete("/handover-docs/{doc_id}", status_code=204)
@@ -1083,7 +1039,9 @@ async def reservation_calendar(
 ) -> ReservationCalendarResponse:
     """Reservation + freeze + contract deadlines in the supplied window."""
     payload = await service.reservation_calendar(
-        dev_id, period_start, period_end,
+        dev_id,
+        period_start,
+        period_end,
     )
     return ReservationCalendarResponse(**payload)
 

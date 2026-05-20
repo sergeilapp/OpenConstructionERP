@@ -1,12 +1,18 @@
-import { useState, useMemo, memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Ruler } from 'lucide-react';
-import { Card, CardHeader, CardContent } from '@/shared/ui';
-import { getIntlLocale } from '@/shared/lib/formatters';
+import { useState, useMemo, memo } from "react";
+import { useTranslation } from "react-i18next";
+import { Ruler } from "lucide-react";
+import { Card, CardHeader, CardContent } from "@/shared/ui";
+import { getIntlLocale } from "@/shared/lib/formatters";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-type ProjectType = 'residential' | 'office' | 'hospital' | 'industrial' | 'retail' | 'education';
+type ProjectType =
+  | "residential"
+  | "office"
+  | "hospital"
+  | "industrial"
+  | "retail"
+  | "education";
 
 interface BenchmarkRange {
   min: number;
@@ -37,21 +43,45 @@ const PROJECT_TYPE_OPTIONS: ReadonlyArray<{
   labelKey: string;
   defaultLabel: string;
 }> = [
-  { value: 'residential', labelKey: 'costmodel.benchmark_type_residential', defaultLabel: 'Residential' },
-  { value: 'office', labelKey: 'costmodel.benchmark_type_office', defaultLabel: 'Office' },
-  { value: 'hospital', labelKey: 'costmodel.benchmark_type_hospital', defaultLabel: 'Hospital' },
-  { value: 'industrial', labelKey: 'costmodel.benchmark_type_industrial', defaultLabel: 'Industrial' },
-  { value: 'retail', labelKey: 'costmodel.benchmark_type_retail', defaultLabel: 'Retail' },
-  { value: 'education', labelKey: 'costmodel.benchmark_type_education', defaultLabel: 'Education' },
+  {
+    value: "residential",
+    labelKey: "costmodel.benchmark_type_residential",
+    defaultLabel: "Residential",
+  },
+  {
+    value: "office",
+    labelKey: "costmodel.benchmark_type_office",
+    defaultLabel: "Office",
+  },
+  {
+    value: "hospital",
+    labelKey: "costmodel.benchmark_type_hospital",
+    defaultLabel: "Hospital",
+  },
+  {
+    value: "industrial",
+    labelKey: "costmodel.benchmark_type_industrial",
+    defaultLabel: "Industrial",
+  },
+  {
+    value: "retail",
+    labelKey: "costmodel.benchmark_type_retail",
+    defaultLabel: "Retail",
+  },
+  {
+    value: "education",
+    labelKey: "costmodel.benchmark_type_education",
+    defaultLabel: "Education",
+  },
 ];
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
 function formatCurrencyValue(amount: number, currency: string): string {
-  const safe = /^[A-Z]{3}$/.test(currency) ? currency : 'EUR';
+  const safe = /^[A-Z]{3}$/.test(currency) ? currency : "EUR";
   try {
     return new Intl.NumberFormat(getIntlLocale(), {
-      style: 'currency',
+      style: "currency",
       currency: safe,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
@@ -61,21 +91,24 @@ function formatCurrencyValue(amount: number, currency: string): string {
   }
 }
 
-type BenchmarkStatus = 'within' | 'near_edge' | 'outside';
+type BenchmarkStatus = "within" | "near_edge" | "outside";
 
 function getBenchmarkStatus(
   costPerM2: number,
   range: BenchmarkRange,
 ): BenchmarkStatus {
   if (costPerM2 >= range.min && costPerM2 <= range.max) {
-    return 'within';
+    return "within";
   }
   // "Near edge" = within 10% of the range boundary
   const tolerance = (range.max - range.min) * 0.1;
-  if (costPerM2 >= range.min - tolerance && costPerM2 <= range.max + tolerance) {
-    return 'near_edge';
+  if (
+    costPerM2 >= range.min - tolerance &&
+    costPerM2 <= range.max + tolerance
+  ) {
+    return "near_edge";
   }
-  return 'outside';
+  return "outside";
 }
 
 function getStatusColor(status: BenchmarkStatus): {
@@ -85,26 +118,26 @@ function getStatusColor(status: BenchmarkStatus): {
   bar: string;
 } {
   switch (status) {
-    case 'within':
+    case "within":
       return {
-        text: 'text-semantic-success',
-        bg: 'bg-semantic-success-bg',
-        indicator: 'bg-green-500',
-        bar: 'bg-green-500',
+        text: "text-semantic-success",
+        bg: "bg-semantic-success-bg",
+        indicator: "bg-green-500",
+        bar: "bg-green-500",
       };
-    case 'near_edge':
+    case "near_edge":
       return {
-        text: 'text-amber-600',
-        bg: 'bg-amber-50',
-        indicator: 'bg-amber-500',
-        bar: 'bg-amber-500',
+        text: "text-amber-600",
+        bg: "bg-amber-50",
+        indicator: "bg-amber-500",
+        bar: "bg-amber-500",
       };
-    case 'outside':
+    case "outside":
       return {
-        text: 'text-semantic-error',
-        bg: 'bg-semantic-error-bg',
-        indicator: 'bg-red-500',
-        bar: 'bg-red-500',
+        text: "text-semantic-error",
+        bg: "bg-semantic-error-bg",
+        indicator: "bg-red-500",
+        bar: "bg-red-500",
       };
   }
 }
@@ -145,13 +178,13 @@ const RangeIndicator = memo(function RangeIndicator({
           className="absolute -translate-x-1/2"
           style={{ left: `${rangeStartPct}%` }}
         >
-          {formatCurrencyValue(range.min, 'EUR')}
+          {formatCurrencyValue(range.min, "EUR")}
         </span>
         <span
           className="absolute -translate-x-1/2"
           style={{ left: `${rangeEndPct}%` }}
         >
-          {formatCurrencyValue(range.max, 'EUR')}
+          {formatCurrencyValue(range.max, "EUR")}
         </span>
       </div>
 
@@ -178,17 +211,17 @@ const RangeIndicator = memo(function RangeIndicator({
         <div
           className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-5 w-5 rounded-full border-2 border-white shadow-sm ${colors.indicator}`}
           style={{ left: `${indicatorPct}%` }}
-          title={t('costmodel.benchmark_current_cost', {
-            defaultValue: 'Current: {{value}}/m\u00B2‌⁠‍',
-            value: formatCurrencyValue(costPerM2, 'EUR'),
+          title={t("costmodel.benchmark_current_cost", {
+            defaultValue: "Current: {{value}}/m\u00B2‌⁠‍",
+            value: formatCurrencyValue(costPerM2, "EUR"),
           })}
         />
       </div>
 
       {/* Legend below bar */}
       <div className="flex items-center justify-between text-2xs text-content-tertiary">
-        <span>{formatCurrencyValue(displayMin, 'EUR')}</span>
-        <span>{formatCurrencyValue(displayMax, 'EUR')}</span>
+        <span>{formatCurrencyValue(displayMin, "EUR")}</span>
+        <span>{formatCurrencyValue(displayMax, "EUR")}</span>
       </div>
     </div>
   );
@@ -196,10 +229,16 @@ const RangeIndicator = memo(function RangeIndicator({
 
 /* ── Main Component ───────────────────────────────────────────────────── */
 
-export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency, initialArea }: CostBenchmarkProps) {
+export const CostBenchmark = memo(function CostBenchmark({
+  totalBudget,
+  currency,
+  initialArea,
+}: CostBenchmarkProps) {
   const { t } = useTranslation();
-  const [area, setArea] = useState<string>(initialArea ? String(initialArea) : '');
-  const [projectType, setProjectType] = useState<ProjectType>('residential');
+  const [area, setArea] = useState<string>(
+    initialArea ? String(initialArea) : "",
+  );
+  const [projectType, setProjectType] = useState<ProjectType>("residential");
 
   // projectTypeOptions defined at module level as PROJECT_TYPE_OPTIONS — avoids re-allocation on every render
 
@@ -217,21 +256,29 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
   }, [totalBudget, areaNum, hasValidArea, projectType]);
 
   const statusLabel = useMemo(() => {
-    if (!benchmark) return '';
+    if (!benchmark) return "";
     switch (benchmark.status) {
-      case 'within':
-        return t('costmodel.benchmark_status_within', { defaultValue: 'Within range‌⁠‍' });
-      case 'near_edge':
-        return t('costmodel.benchmark_status_near_edge', { defaultValue: 'Near boundary‌⁠‍' });
-      case 'outside':
-        return t('costmodel.benchmark_status_outside', { defaultValue: 'Outside range‌⁠‍' });
+      case "within":
+        return t("costmodel.benchmark_status_within", {
+          defaultValue: "Within range‌⁠‍",
+        });
+      case "near_edge":
+        return t("costmodel.benchmark_status_near_edge", {
+          defaultValue: "Near boundary‌⁠‍",
+        });
+      case "outside":
+        return t("costmodel.benchmark_status_outside", {
+          defaultValue: "Outside range‌⁠‍",
+        });
     }
   }, [benchmark, t]);
 
   return (
     <Card>
       <CardHeader
-        title={t('costmodel.benchmark_title', { defaultValue: 'Cost per m\u00B2 Benchmark‌⁠‍' })}
+        title={t("costmodel.benchmark_title", {
+          defaultValue: "Cost per m\u00B2 Benchmark‌⁠‍",
+        })}
       />
       <CardContent>
         <div className="space-y-5">
@@ -243,7 +290,9 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 htmlFor="benchmark-area"
                 className="block text-xs font-medium text-content-secondary mb-1.5"
               >
-                {t('costmodel.benchmark_project_area', { defaultValue: 'Project Area (m\u00B2)' })}
+                {t("costmodel.benchmark_project_area", {
+                  defaultValue: "Project Area (m\u00B2)",
+                })}
               </label>
               <input
                 id="benchmark-area"
@@ -252,8 +301,8 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 step="any"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
-                placeholder={t('costmodel.benchmark_area_placeholder', {
-                  defaultValue: 'e.g. 1200',
+                placeholder={t("costmodel.benchmark_area_placeholder", {
+                  defaultValue: "e.g. 1200",
                 })}
                 className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue tabular-nums"
               />
@@ -265,7 +314,9 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 htmlFor="benchmark-type"
                 className="block text-xs font-medium text-content-secondary mb-1.5"
               >
-                {t('costmodel.benchmark_project_type', { defaultValue: 'Project Type' })}
+                {t("costmodel.benchmark_project_type", {
+                  defaultValue: "Project Type",
+                })}
               </label>
               <select
                 id="benchmark-type"
@@ -292,7 +343,9 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                   className={`rounded-xl p-4 ${getStatusColor(benchmark.status).bg}`}
                 >
                   <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1">
-                    {t('costmodel.benchmark_cost_per_m2', { defaultValue: 'Cost / m\u00B2' })}
+                    {t("costmodel.benchmark_cost_per_m2", {
+                      defaultValue: "Cost / m\u00B2",
+                    })}
                   </div>
                   <div
                     className={`text-xl font-bold tabular-nums ${getStatusColor(benchmark.status).text}`}
@@ -312,28 +365,34 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 {/* Benchmark range */}
                 <div className="rounded-xl bg-surface-secondary p-4">
                   <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1">
-                    {t('costmodel.benchmark_range_label', { defaultValue: 'Benchmark Range' })}
+                    {t("costmodel.benchmark_range_label", {
+                      defaultValue: "Benchmark Range",
+                    })}
                   </div>
                   <div className="text-sm font-semibold tabular-nums text-content-primary">
-                    {formatCurrencyValue(benchmark.range.min, currency)} &ndash;{' '}
+                    {formatCurrencyValue(benchmark.range.min, currency)} &ndash;{" "}
                     {formatCurrencyValue(benchmark.range.max, currency)}
                   </div>
                   <div className="mt-1 text-2xs text-content-tertiary">
-                    {t('costmodel.benchmark_per_m2', { defaultValue: 'per m\u00B2' })}
+                    {t("costmodel.benchmark_per_m2", {
+                      defaultValue: "per m\u00B2",
+                    })}
                   </div>
                 </div>
 
                 {/* Total budget / area summary */}
                 <div className="rounded-xl bg-surface-secondary p-4">
                   <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1">
-                    {t('costmodel.benchmark_total_budget', { defaultValue: 'Total Budget' })}
+                    {t("costmodel.benchmark_total_budget", {
+                      defaultValue: "Total Budget",
+                    })}
                   </div>
                   <div className="text-sm font-semibold tabular-nums text-content-primary">
                     {formatCurrencyValue(totalBudget, currency)}
                   </div>
                   <div className="mt-1 text-2xs text-content-tertiary">
-                    {t('costmodel.benchmark_area_value', {
-                      defaultValue: '{{area}} m\u00B2',
+                    {t("costmodel.benchmark_area_value", {
+                      defaultValue: "{{area}} m\u00B2",
                       area: areaNum.toLocaleString(),
                     })}
                   </div>
@@ -354,9 +413,9 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 <Ruler size={20} />
               </div>
               <p className="text-sm text-content-secondary">
-                {t('costmodel.benchmark_enter_area', {
+                {t("costmodel.benchmark_enter_area", {
                   defaultValue:
-                    'Enter the project area to see the cost per m\u00B2 benchmark comparison',
+                    "Enter the project area to see the cost per m\u00B2 benchmark comparison",
                 })}
               </p>
             </div>

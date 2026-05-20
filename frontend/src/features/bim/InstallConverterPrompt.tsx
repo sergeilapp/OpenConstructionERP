@@ -13,17 +13,17 @@
  * matches what the status banner and the /quantities page show.
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertCircle, Download, Loader2, X } from 'lucide-react';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertCircle, Download, Loader2, X } from "lucide-react";
 
 import {
   fetchBIMConverters,
   installBIMConverter,
   type BIMConvertersResponse,
-} from './api';
-import { useToastStore } from '@/stores/useToastStore';
+} from "./api";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface InstallConverterPromptProps {
   open: boolean;
@@ -40,7 +40,8 @@ interface InstallConverterPromptProps {
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }
 
@@ -60,7 +61,7 @@ export function InstallConverterPrompt({
   // Re-uses the cached converter list so the displayed size + name
   // match the banner and the /quantities UI.
   const { data } = useQuery<BIMConvertersResponse>({
-    queryKey: ['bim-converters'],
+    queryKey: ["bim-converters"],
     queryFn: () => fetchBIMConverters(),
     staleTime: 30_000,
     enabled: open,
@@ -77,17 +78,17 @@ export function InstallConverterPrompt({
       // not auto-retry the upload in either case.
       if (result.installed) {
         addToast({
-          type: 'success',
-          title: t('bim.install_prompt_success_title', {
-            defaultValue: 'Converter installed‌⁠‍',
+          type: "success",
+          title: t("bim.install_prompt_success_title", {
+            defaultValue: "Converter installed‌⁠‍",
           }),
-          message: t('bim.install_prompt_success_msg', {
-            defaultValue: 'Retrying upload of {{name}}…‌⁠‍',
+          message: t("bim.install_prompt_success_msg", {
+            defaultValue: "Retrying upload of {{name}}…‌⁠‍",
             name: fileName,
           }),
         });
-        queryClient.invalidateQueries({ queryKey: ['bim-converters'] });
-        queryClient.invalidateQueries({ queryKey: ['takeoff', 'converters'] });
+        queryClient.invalidateQueries({ queryKey: ["bim-converters"] });
+        queryClient.invalidateQueries({ queryKey: ["takeoff", "converters"] });
         onInstalledAndRetry();
         onClose();
         return;
@@ -96,18 +97,18 @@ export function InstallConverterPrompt({
       // (apt instructions on Linux, smoke-test diagnostics on Windows).
       setLocalError(
         result.message ||
-          t('bim.install_prompt_error_generic', {
-            defaultValue: 'Install failed. Please try again.‌⁠‍',
+          t("bim.install_prompt_error_generic", {
+            defaultValue: "Install failed. Please try again.‌⁠‍",
           }),
       );
-      queryClient.invalidateQueries({ queryKey: ['bim-converters'] });
+      queryClient.invalidateQueries({ queryKey: ["bim-converters"] });
     },
     onError: (err) => {
       setLocalError(
         err instanceof Error
           ? err.message
-          : t('bim.install_prompt_error_generic', {
-              defaultValue: 'Install failed. Please try again.‌⁠‍',
+          : t("bim.install_prompt_error_generic", {
+              defaultValue: "Install failed. Please try again.‌⁠‍",
             }),
       );
     },
@@ -118,8 +119,8 @@ export function InstallConverterPrompt({
   const formatLabel = converterId.toUpperCase();
   const converterName =
     converter?.name ??
-    t('bim.install_prompt_default_converter_name', {
-      defaultValue: 'DDC {{format}} Converter‌⁠‍',
+    t("bim.install_prompt_default_converter_name", {
+      defaultValue: "DDC {{format}} Converter‌⁠‍",
       format: formatLabel,
     });
   const converterSizeMb = converter?.size_mb ?? 0;
@@ -153,14 +154,14 @@ export function InstallConverterPrompt({
                 id="install-converter-prompt-title"
                 className="text-sm font-bold text-content-primary"
               >
-                {t('bim.install_prompt_title', {
-                  defaultValue: 'Install {{format}} converter',
+                {t("bim.install_prompt_title", {
+                  defaultValue: "Install {{format}} converter",
                   format: formatLabel,
                 })}
               </h2>
               <p className="text-[10px] text-content-quaternary mt-0.5">
-                {t('bim.install_prompt_subtitle', {
-                  defaultValue: 'One-time download from GitHub releases',
+                {t("bim.install_prompt_subtitle", {
+                  defaultValue: "One-time download from GitHub releases",
                 })}
               </p>
             </div>
@@ -170,8 +171,8 @@ export function InstallConverterPrompt({
             onClick={onClose}
             disabled={installing}
             className="p-1.5 rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            aria-label={t('bim.install_prompt_close', {
-              defaultValue: 'Close',
+            aria-label={t("bim.install_prompt_close", {
+              defaultValue: "Close",
             })}
           >
             <X size={16} />
@@ -181,9 +182,9 @@ export function InstallConverterPrompt({
         {/* Body */}
         <div className="px-5 py-4 space-y-3">
           <p className="text-sm text-content-secondary leading-relaxed">
-            {t('bim.install_prompt_body', {
+            {t("bim.install_prompt_body", {
               defaultValue:
-                'To process “{{fileName}}” ({{fileSize}}), OpenConstructionERP needs the {{converterName}} ({{converterSize}} MB one-time download).',
+                "To process “{{fileName}}” ({{fileSize}}), OpenConstructionERP needs the {{converterName}} ({{converterSize}} MB one-time download).",
               fileName,
               fileSize: sizeFormatted,
               converterName,
@@ -191,18 +192,15 @@ export function InstallConverterPrompt({
             })}
           </p>
           <p className="text-[11px] text-content-quaternary">
-            {t('bim.install_prompt_duration_hint', {
+            {t("bim.install_prompt_duration_hint", {
               defaultValue:
-                'The install typically takes 1–2 minutes. Your file will be retried automatically once the converter is ready.',
+                "The install typically takes 1–2 minutes. Your file will be retried automatically once the converter is ready.",
             })}
           </p>
 
           {localError && (
             <div className="flex items-start gap-2 p-2.5 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
-              <AlertCircle
-                size={14}
-                className="text-red-500 mt-0.5 shrink-0"
-              />
+              <AlertCircle size={14} className="text-red-500 mt-0.5 shrink-0" />
               <p className="text-[11px] text-red-700 dark:text-red-300">
                 {localError}
               </p>
@@ -218,7 +216,7 @@ export function InstallConverterPrompt({
             disabled={installing}
             className="px-3 py-1.5 rounded-lg text-xs font-medium text-content-secondary hover:bg-surface-tertiary transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {t('bim.install_prompt_cancel', { defaultValue: 'Cancel' })}
+            {t("bim.install_prompt_cancel", { defaultValue: "Cancel" })}
           </button>
           <button
             type="button"
@@ -232,15 +230,15 @@ export function InstallConverterPrompt({
             {installing ? (
               <>
                 <Loader2 size={13} className="animate-spin" />
-                {t('bim.install_prompt_installing', {
-                  defaultValue: 'Installing… (1–2 minutes)',
+                {t("bim.install_prompt_installing", {
+                  defaultValue: "Installing… (1–2 minutes)",
                 })}
               </>
             ) : (
               <>
                 <Download size={13} />
-                {t('bim.install_prompt_confirm', {
-                  defaultValue: 'Install converter & retry upload',
+                {t("bim.install_prompt_confirm", {
+                  defaultValue: "Install converter & retry upload",
                 })}
               </>
             )}

@@ -1,6 +1,6 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import i18next from 'i18next';
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 import {
   Sparkles,
   Database,
@@ -12,12 +12,12 @@ import {
   Calculator,
   MessageSquarePlus,
   Info,
-} from 'lucide-react';
-import { Breadcrumb, AIDisclaimerBanner } from '@/shared/ui';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { Link } from 'react-router-dom';
-import { useToastStore } from '@/stores/useToastStore';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
+} from "lucide-react";
+import { Breadcrumb, AIDisclaimerBanner } from "@/shared/ui";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import { Link } from "react-router-dom";
+import { useToastStore } from "@/stores/useToastStore";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
 
 /* ── Types ──────────────────────────────────────────────────────── */
 
@@ -36,7 +36,7 @@ interface AdvisorResponse {
 }
 
 interface ChatMessage {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   sources?: CostSource[];
   options?: string[];
@@ -47,7 +47,7 @@ interface ChatMessage {
 
 /** Extract numbered options from AI text and return clean text + options array */
 function parseOptions(text: string): { cleanText: string; options: string[] } {
-  const lines = text.split('\n');
+  const lines = text.split("\n");
   const options: string[] = [];
   const textLines: string[] = [];
   let inOptions = false;
@@ -59,8 +59,8 @@ function parseOptions(text: string): { cleanText: string; options: string[] } {
     if (numMatch) {
       inOptions = true;
       // Strip markdown bold
-      options.push(numMatch[2]!.replace(/\*\*/g, '').trim());
-    } else if (inOptions && trimmed === '') {
+      options.push(numMatch[2]!.replace(/\*\*/g, "").trim());
+    } else if (inOptions && trimmed === "") {
       // Blank line after options = end of options block
       inOptions = false;
     } else {
@@ -70,8 +70,8 @@ function parseOptions(text: string): { cleanText: string; options: string[] } {
 
   return {
     cleanText: textLines
-      .join('\n')
-      .replace(/\n{3,}/g, '\n\n')
+      .join("\n")
+      .replace(/\n{3,}/g, "\n\n")
       .trim(),
     options,
   };
@@ -79,14 +79,17 @@ function parseOptions(text: string): { cleanText: string; options: string[] } {
 
 /** Format time as HH:MM */
 function formatTime(ts: number): string {
-  return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return new Date(ts).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 /** Simple markdown-to-JSX: bold, italic, line breaks */
 function renderMarkdown(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
+    if (part.startsWith("**") && part.endsWith("**")) {
       return (
         <strong key={i} className="font-semibold">
           {part.slice(2, -2)}
@@ -94,7 +97,7 @@ function renderMarkdown(text: string) {
       );
     }
     // Split by newlines for line breaks
-    return part.split('\n').map((line, j, arr) => (
+    return part.split("\n").map((line, j, arr) => (
       <span key={`${i}-${j}`}>
         {line}
         {j < arr.length - 1 && <br />}
@@ -113,7 +116,7 @@ function TypingDots() {
           key={i}
           className="inline-block h-[7px] w-[7px] rounded-full bg-content-tertiary/60"
           style={{
-            animation: 'oeTypingDot 1.4s ease-in-out infinite',
+            animation: "oeTypingDot 1.4s ease-in-out infinite",
             animationDelay: `${i * 0.2}s`,
           }}
         />
@@ -134,19 +137,19 @@ function ChatBubble({
   isLast: boolean;
 }) {
   const { t } = useTranslation();
-  const isUser = msg.role === 'user';
+  const isUser = msg.role === "user";
 
   return (
     <div
-      className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} animate-msg-in`}
-      style={{ animationDelay: isLast ? '0ms' : '0ms' }}
+      className={`flex flex-col ${isUser ? "items-end" : "items-start"} animate-msg-in`}
+      style={{ animationDelay: isLast ? "0ms" : "0ms" }}
     >
       {/* Bubble */}
       <div
         className={`relative max-w-[85%] sm:max-w-[75%] px-[14px] py-[9px] text-[15px] leading-[1.38] ${
           isUser
-            ? 'bg-oe-blue text-white rounded-[20px] rounded-br-[6px]'
-            : 'bg-surface-secondary text-content-primary rounded-[20px] rounded-bl-[6px]'
+            ? "bg-oe-blue text-white rounded-[20px] rounded-br-[6px]"
+            : "bg-surface-secondary text-content-primary rounded-[20px] rounded-bl-[6px]"
         }`}
       >
         <div className="whitespace-pre-wrap break-words">
@@ -157,26 +160,26 @@ function ChatBubble({
         {msg.sources && msg.sources.length > 0 && (
           <div
             className={`mt-2 pt-2 border-t ${
-              isUser ? 'border-white/20' : 'border-border-light'
+              isUser ? "border-white/20" : "border-border-light"
             }`}
           >
             <p
               className={`flex items-center gap-1 text-[11px] font-medium mb-1 ${
-                isUser ? 'text-white/70' : 'text-content-tertiary'
+                isUser ? "text-white/70" : "text-content-tertiary"
               }`}
             >
               <Database size={10} />
-              {t('ai.advisor_sources', { defaultValue: 'Sources:‌⁠‍' })}
+              {t("ai.advisor_sources", { defaultValue: "Sources:‌⁠‍" })}
             </p>
             {msg.sources.map((s, j) => (
               <p
                 key={j}
                 className={`text-[11px] leading-tight ${
-                  isUser ? 'text-white/60' : 'text-content-quaternary'
+                  isUser ? "text-white/60" : "text-content-quaternary"
                 }`}
               >
                 {s.code}: {s.description.slice(0, 50)}
-                {s.description.length > 50 ? '…' : ''}{' '}
+                {s.description.length > 50 ? "…" : ""}{" "}
                 <span className="font-medium">
                   {s.rate} /{s.unit}
                 </span>
@@ -211,7 +214,9 @@ function ChatBubble({
       {/* Timestamp */}
       <p
         className={`mt-[3px] text-[11px] ${
-          isUser ? 'text-content-quaternary/50 mr-1' : 'text-content-quaternary/50 ml-1'
+          isUser
+            ? "text-content-quaternary/50 mr-1"
+            : "text-content-quaternary/50 ml-1"
         }`}
       >
         {formatTime(msg.timestamp)}
@@ -225,11 +230,11 @@ function ChatBubble({
 export function AdvisorPage() {
   const { t } = useTranslation();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [aiConfigured, setAiConfigured] = useState<boolean | null>(null); // null = loading
-  const [aiProvider, setAiProvider] = useState<string>('');
-  const [region, setRegion] = useState('');
+  const [aiProvider, setAiProvider] = useState<string>("");
+  const [region, setRegion] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
@@ -238,7 +243,7 @@ export function AdvisorPage() {
 
   // Check if AI is configured on mount
   useEffect(() => {
-    apiGet<Record<string, unknown>>('/v1/ai/settings/')
+    apiGet<Record<string, unknown>>("/v1/ai/settings/")
       .then((s) => {
         const hasKey =
           !!s.anthropic_api_key_set ||
@@ -249,14 +254,14 @@ export function AdvisorPage() {
           !!s.groq_api_key_set ||
           !!s.deepseek_api_key_set;
         setAiConfigured(hasKey);
-        setAiProvider((s.provider as string) || '');
+        setAiProvider((s.provider as string) || "");
       })
       .catch(() => setAiConfigured(false));
   }, []);
 
   const scrollToBottom = useCallback(() => {
     setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 50);
   }, []);
 
@@ -268,7 +273,7 @@ export function AdvisorPage() {
   useEffect(() => {
     const el = inputRef.current;
     if (!el) return;
-    el.style.height = 'auto';
+    el.style.height = "auto";
     el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
   }, [input]);
 
@@ -277,8 +282,11 @@ export function AdvisorPage() {
       const msg = (text || input).trim();
       if (!msg || loading) return;
 
-      setInput('');
-      setMessages((prev) => [...prev, { role: 'user', content: msg, timestamp: Date.now() }]);
+      setInput("");
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", content: msg, timestamp: Date.now() },
+      ]);
       setLoading(true);
 
       try {
@@ -288,7 +296,7 @@ export function AdvisorPage() {
           content: m.content,
         }));
 
-        const data = await apiPost<AdvisorResponse>('/v1/ai/advisor/chat/', {
+        const data = await apiPost<AdvisorResponse>("/v1/ai/advisor/chat/", {
           message: msg,
           project_id: activeProjectId || undefined,
           region: region || undefined,
@@ -302,7 +310,7 @@ export function AdvisorPage() {
         setMessages((prev) => [
           ...prev,
           {
-            role: 'assistant',
+            role: "assistant",
             content: cleanText,
             sources: data.sources,
             options: options.length > 0 ? options : undefined,
@@ -311,16 +319,17 @@ export function AdvisorPage() {
         ]);
       } catch (err) {
         addToast({
-          type: 'error',
-          title: t('ai.advisor_error', { defaultValue: 'AI Advisor Error‌⁠‍' }),
-          message: err instanceof Error ? err.message : '',
+          type: "error",
+          title: t("ai.advisor_error", { defaultValue: "AI Advisor Error‌⁠‍" }),
+          message: err instanceof Error ? err.message : "",
         });
         setMessages((prev) => [
           ...prev,
           {
-            role: 'assistant',
-            content: t('ai.advisor_unavailable', {
-              defaultValue: 'Unable to get a response. Please check AI settings.‌⁠‍',
+            role: "assistant",
+            content: t("ai.advisor_unavailable", {
+              defaultValue:
+                "Unable to get a response. Please check AI settings.‌⁠‍",
             }),
             timestamp: Date.now(),
           },
@@ -338,16 +347,24 @@ export function AdvisorPage() {
 
   const clearConversation = useCallback(() => {
     setMessages([]);
-    setInput('');
+    setInput("");
     inputRef.current?.focus();
   }, []);
 
   const suggestions = useMemo(
     () => [
-      t('ai.advisor_q1', { defaultValue: 'What is the average cost per m² of plaster?‌⁠‍' }),
-      t('ai.advisor_q2', { defaultValue: 'Compare concrete prices by region‌⁠‍' }),
-      t('ai.advisor_q3', { defaultValue: 'Suggest cheaper alternatives for steel' }),
-      t('ai.advisor_q4', { defaultValue: 'What are typical labor rates for electricians?' }),
+      t("ai.advisor_q1", {
+        defaultValue: "What is the average cost per m² of plaster?‌⁠‍",
+      }),
+      t("ai.advisor_q2", {
+        defaultValue: "Compare concrete prices by region‌⁠‍",
+      }),
+      t("ai.advisor_q3", {
+        defaultValue: "Suggest cheaper alternatives for steel",
+      }),
+      t("ai.advisor_q4", {
+        defaultValue: "What are typical labor rates for electricians?",
+      }),
     ],
     [t],
   );
@@ -355,11 +372,14 @@ export function AdvisorPage() {
   const canSend = input.trim().length > 0 && !loading;
 
   return (
-    <div className="w-full animate-fade-in flex flex-col" style={{ height: 'calc(100vh - 80px)' }}>
+    <div
+      className="w-full animate-fade-in flex flex-col"
+      style={{ height: "calc(100vh - 80px)" }}
+    >
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
-          { label: t('nav.ai_advisor', 'AI Cost Advisor') },
+          { label: t("nav.dashboard", "Dashboard"), to: "/" },
+          { label: t("nav.ai_advisor", "AI Cost Advisor") },
         ]}
         className="mb-3 shrink-0"
       />
@@ -369,13 +389,21 @@ export function AdvisorPage() {
       {/* AI not configured warning */}
       {aiConfigured === false && (
         <div className="mb-3 shrink-0 flex items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800 px-4 py-3">
-          <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400 shrink-0" />
+          <AlertTriangle
+            size={18}
+            className="text-amber-600 dark:text-amber-400 shrink-0"
+          />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
-              {t('ai.not_configured_title', { defaultValue: 'AI is not configured' })}
+              {t("ai.not_configured_title", {
+                defaultValue: "AI is not configured",
+              })}
             </p>
             <p className="text-xs text-amber-700 dark:text-amber-400/80">
-              {t('ai.not_configured_desc', { defaultValue: 'Add your API key (Anthropic, OpenAI, or other) to use the AI Cost Advisor.' })}
+              {t("ai.not_configured_desc", {
+                defaultValue:
+                  "Add your API key (Anthropic, OpenAI, or other) to use the AI Cost Advisor.",
+              })}
             </p>
           </div>
           <Link
@@ -383,7 +411,7 @@ export function AdvisorPage() {
             className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-amber-700 transition-colors shrink-0"
           >
             <Settings size={13} />
-            {t('ai.go_to_settings', { defaultValue: 'Configure AI' })}
+            {t("ai.go_to_settings", { defaultValue: "Configure AI" })}
           </Link>
         </div>
       )}
@@ -397,16 +425,18 @@ export function AdvisorPage() {
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="text-[15px] font-semibold text-content-primary leading-tight">
-              {t('ai.advisor_title', { defaultValue: 'AI Cost Advisor' })}
+              {t("ai.advisor_title", { defaultValue: "AI Cost Advisor" })}
             </h1>
             <p className="text-[11px] text-content-tertiary leading-tight truncate">
               {activeProjectId && activeProjectName
-                ? t('ai.advisor_scoped', {
-                    defaultValue: 'Using {{project}} region & currency as default context',
+                ? t("ai.advisor_scoped", {
+                    defaultValue:
+                      "Using {{project}} region & currency as default context",
                     project: activeProjectName,
                   })
-                : t('ai.advisor_desc_short', {
-                    defaultValue: 'Ask about costs, materials, and pricing from CWICR database + AI',
+                : t("ai.advisor_desc_short", {
+                    defaultValue:
+                      "Ask about costs, materials, and pricing from CWICR database + AI",
                   })}
             </p>
           </div>
@@ -419,7 +449,9 @@ export function AdvisorPage() {
               onChange={(e) => setRegion(e.target.value)}
               className="h-7 rounded-lg border border-border bg-surface-primary px-2 text-2xs text-content-secondary focus:outline-none focus:ring-1 focus:ring-oe-blue/30"
             >
-              <option value="">{t('ai.all_regions', { defaultValue: 'All regions' })}</option>
+              <option value="">
+                {t("ai.all_regions", { defaultValue: "All regions" })}
+              </option>
               <option value="DE_BERLIN">Germany (Berlin)</option>
               <option value="UK_LONDON">UK (London)</option>
               <option value="USA_USD">USA (USD)</option>
@@ -435,17 +467,19 @@ export function AdvisorPage() {
             <button
               onClick={clearConversation}
               className="flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-2.5 py-1.5 text-2xs font-medium text-content-secondary hover:text-content-primary hover:border-border transition-colors shrink-0"
-              title={t('ai.advisor_new_chat', { defaultValue: 'Start a new conversation' })}
+              title={t("ai.advisor_new_chat", {
+                defaultValue: "Start a new conversation",
+              })}
             >
               <MessageSquarePlus size={13} />
-              {t('ai.advisor_new_chat', { defaultValue: 'New chat' })}
+              {t("ai.advisor_new_chat", { defaultValue: "New chat" })}
             </button>
           )}
 
           {aiConfigured && (
             <span className="flex items-center gap-1.5 text-2xs text-semantic-success font-medium shrink-0">
               <span className="h-1.5 w-1.5 rounded-full bg-semantic-success animate-pulse" />
-              {aiProvider || 'AI'}
+              {aiProvider || "AI"}
             </span>
           )}
         </div>
@@ -459,21 +493,41 @@ export function AdvisorPage() {
                 <Sparkles size={28} className="text-oe-blue/60" />
               </div>
               <p className="text-base font-medium text-content-primary mb-1">
-                {t('ai.advisor_empty', { defaultValue: 'Ask me anything about construction costs' })}
+                {t("ai.advisor_empty", {
+                  defaultValue: "Ask me anything about construction costs",
+                })}
               </p>
               <p className="text-xs text-content-tertiary max-w-md mb-4 leading-relaxed">
-                {t('ai.advisor_purpose', {
+                {t("ai.advisor_purpose", {
                   defaultValue:
-                    'Use this as a research companion while estimating: ask about typical rates, material alternatives, regional price differences or methods. Answers draw on the CWICR cost database plus AI knowledge — they inform decisions, they do not replace a priced BOQ.',
+                    "Use this as a research companion while estimating: ask about typical rates, material alternatives, regional price differences or methods. Answers draw on the CWICR cost database plus AI knowledge — they inform decisions, they do not replace a priced BOQ.",
                 })}
               </p>
               <div className="flex flex-wrap justify-center gap-2 mb-4 max-w-md">
                 {[
-                  { icon: Database, label: t('ai.advisor_cap_db', { defaultValue: '55K+ cost items (CWICR)' }) },
-                  { icon: Globe, label: t('ai.advisor_cap_regions', { defaultValue: '11 regional databases' }) },
-                  { icon: Sparkles, label: t('ai.advisor_cap_ai', { defaultValue: 'AI-powered answers' }) },
+                  {
+                    icon: Database,
+                    label: t("ai.advisor_cap_db", {
+                      defaultValue: "55K+ cost items (CWICR)",
+                    }),
+                  },
+                  {
+                    icon: Globe,
+                    label: t("ai.advisor_cap_regions", {
+                      defaultValue: "48 regional databases",
+                    }),
+                  },
+                  {
+                    icon: Sparkles,
+                    label: t("ai.advisor_cap_ai", {
+                      defaultValue: "AI-powered answers",
+                    }),
+                  },
                 ].map((cap, i) => (
-                  <span key={i} className="inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-3 py-1 text-2xs text-content-tertiary">
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-3 py-1 text-2xs text-content-tertiary"
+                  >
                     <cap.icon size={11} />
                     {cap.label}
                   </span>
@@ -500,7 +554,9 @@ export function AdvisorPage() {
               <div className="w-full max-w-lg rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3 text-left">
                 <p className="flex items-center gap-1.5 text-2xs font-semibold text-content-tertiary uppercase tracking-wide mb-2">
                   <Info size={11} />
-                  {t('ai.advisor_next_steps', { defaultValue: 'Turn answers into an estimate' })}
+                  {t("ai.advisor_next_steps", {
+                    defaultValue: "Turn answers into an estimate",
+                  })}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <Link
@@ -509,8 +565,8 @@ export function AdvisorPage() {
                   >
                     <Search size={14} className="shrink-0 text-oe-blue/70" />
                     <span>
-                      {t('ai.advisor_link_costs', {
-                        defaultValue: 'Browse the full CWICR cost database',
+                      {t("ai.advisor_link_costs", {
+                        defaultValue: "Browse the full CWICR cost database",
                       })}
                     </span>
                   </Link>
@@ -518,10 +574,13 @@ export function AdvisorPage() {
                     to="/ai-estimate"
                     className="flex items-center gap-2 rounded-lg bg-surface-primary border border-border-light px-3 py-2 text-xs text-content-secondary hover:border-oe-blue/40 hover:text-oe-blue transition-colors"
                   >
-                    <Calculator size={14} className="shrink-0 text-oe-blue/70" />
+                    <Calculator
+                      size={14}
+                      className="shrink-0 text-oe-blue/70"
+                    />
                     <span>
-                      {t('ai.advisor_link_estimate', {
-                        defaultValue: 'Generate a full BOQ with AI Estimate',
+                      {t("ai.advisor_link_estimate", {
+                        defaultValue: "Generate a full BOQ with AI Estimate",
                       })}
                     </span>
                   </Link>
@@ -561,13 +620,13 @@ export function AdvisorPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
+                  if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
                   }
                 }}
-                placeholder={t('ai.advisor_placeholder', {
-                  defaultValue: 'Ask about costs, materials, pricing...',
+                placeholder={t("ai.advisor_placeholder", {
+                  defaultValue: "Ask about costs, materials, pricing...",
                 })}
                 rows={1}
                 className="w-full resize-none rounded-[22px] border border-border bg-surface-primary
@@ -576,7 +635,7 @@ export function AdvisorPage() {
                   focus:outline-none focus:ring-2 focus:ring-oe-blue/20 focus:border-oe-blue/40
                   transition-all duration-150"
                 disabled={loading}
-                style={{ maxHeight: '120px' }}
+                style={{ maxHeight: "120px" }}
               />
             </div>
 
@@ -588,10 +647,10 @@ export function AdvisorPage() {
                 transition-all duration-200 ease-out mb-[1px]
                 ${
                   canSend
-                    ? 'bg-oe-blue text-white shadow-sm hover:bg-oe-blue-hover active:scale-[0.93]'
-                    : 'bg-content-quaternary/20 text-content-quaternary cursor-not-allowed'
+                    ? "bg-oe-blue text-white shadow-sm hover:bg-oe-blue-hover active:scale-[0.93]"
+                    : "bg-content-quaternary/20 text-content-quaternary cursor-not-allowed"
                 }`}
-              aria-label={t('common.send', { defaultValue: 'Send' })}
+              aria-label={t("common.send", { defaultValue: "Send" })}
             >
               <ArrowUp size={18} strokeWidth={2.5} />
             </button>

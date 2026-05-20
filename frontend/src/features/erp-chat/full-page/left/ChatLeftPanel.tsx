@@ -1,6 +1,6 @@
-import type { ChatMessage } from '../../types';
-import MessageThread from './MessageThread';
-import InputBar from './InputBar';
+import type { ChatMessage } from "../../types";
+import MessageThread from "./MessageThread";
+import InputBar from "./InputBar";
 
 interface ChatLeftPanelProps {
   messages: ChatMessage[];
@@ -11,18 +11,29 @@ interface ChatLeftPanelProps {
   aiConfigured: boolean | null;
 }
 
-export default function ChatLeftPanel({ messages, isStreaming, suggestions, onSend, onClear, aiConfigured }: ChatLeftPanelProps) {
+export default function ChatLeftPanel({
+  messages,
+  isStreaming,
+  suggestions,
+  onSend,
+  onClear,
+  aiConfigured,
+}: ChatLeftPanelProps) {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        background: 'var(--chat-bg)',
-        fontFamily: 'var(--chat-font-body)',
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        background: "var(--chat-bg)",
+        fontFamily: "var(--chat-font-body)",
       }}
     >
-      <MessageThread messages={messages} isStreaming={isStreaming} aiConfigured={aiConfigured} />
+      <MessageThread
+        messages={messages}
+        isStreaming={isStreaming}
+        aiConfigured={aiConfigured}
+      />
       <InputBar
         onSend={onSend}
         onClear={onClear}

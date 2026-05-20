@@ -3,9 +3,9 @@
 //
 // Compliance feature barrel — Natural Language Rule Builder (T13).
 
-export { NlRuleBuilderPanel } from './NlRuleBuilderPanel';
-export { DslPreview } from './DslPreview';
-export { NlPatternHints } from './NlPatternHints';
+export { NlRuleBuilderPanel } from "./NlRuleBuilderPanel";
+export { DslPreview } from "./DslPreview";
+export { NlPatternHints } from "./NlPatternHints";
 export {
   parseNlToDsl,
   listNlPatterns,
@@ -14,4 +14,4 @@ export {
   type NlBuildResult,
   type NlPattern,
   type DSLCompileResult,
-} from './api';
+} from "./api";

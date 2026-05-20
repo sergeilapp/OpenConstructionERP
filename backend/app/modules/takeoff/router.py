@@ -173,9 +173,7 @@ async def list_converters(verify: bool = False) -> dict[str, Any]:
         smoke_indices: list[int] = []
         for idx, (meta, path) in enumerate(zip(_CONVERTER_META, paths, strict=True)):
             if path is not None:
-                smoke_tasks.append(
-                    asyncio.to_thread(smoke_test_converter, meta["id"])
-                )
+                smoke_tasks.append(asyncio.to_thread(smoke_test_converter, meta["id"]))
                 smoke_indices.append(idx)
         if smoke_tasks:
             results = await asyncio.gather(*smoke_tasks, return_exceptions=True)
@@ -258,9 +256,7 @@ async def verify_converter(converter_id: str) -> dict[str, Any]:
             "suggested_actions": ["install_converter"],
         }
 
-    health = await asyncio.to_thread(
-        smoke_test_converter, converter_id, True
-    )
+    health = await asyncio.to_thread(smoke_test_converter, converter_id, True)
     return {
         "converter_id": converter_id,
         "installed": True,
@@ -338,6 +334,7 @@ def _get_install_progress(converter_id: str) -> dict[str, Any] | None:
         slot = _INSTALL_PROGRESS.get(converter_id)
         return dict(slot) if slot else None
 
+
 # ── Audit A2 / A11: converter download hardening ─────────────────────────────
 
 # Allowed hosts for converter file downloads. We hard-code this against
@@ -349,11 +346,13 @@ def _get_install_progress(converter_id: str) -> dict[str, Any] | None:
 # URLs, so this matters only if GitHub itself is compromised OR if
 # an upstream MITM rewrites the JSON in transit (which TLS already
 # prevents, but defence in depth).
-_ALLOWED_DOWNLOAD_HOSTS = frozenset({
-    "raw.githubusercontent.com",
-    "github.com",
-    "objects.githubusercontent.com",  # GitHub's blob CDN, used for >5 MB
-})
+_ALLOWED_DOWNLOAD_HOSTS = frozenset(
+    {
+        "raw.githubusercontent.com",
+        "github.com",
+        "objects.githubusercontent.com",  # GitHub's blob CDN, used for >5 MB
+    }
+)
 
 # Hard size cap per file. The largest single file in the DDC converter
 # repo today is the ~140 MB IfcExporter.exe; we add ~3x headroom for
@@ -381,9 +380,7 @@ def _check_download_url_allowed(url: str) -> None:
 
     parsed = urlparse(url)
     if parsed.scheme not in {"https", "http"}:
-        raise RuntimeError(
-            f"Refused to download {url!r} — non-HTTP(S) scheme"
-        )
+        raise RuntimeError(f"Refused to download {url!r} — non-HTTP(S) scheme")
     host = (parsed.hostname or "").lower()
     if host not in _ALLOWED_DOWNLOAD_HOSTS:
         raise RuntimeError(
@@ -409,10 +406,7 @@ def _github_list_directory(repo_path: str) -> list[dict[str, Any]]:
     import urllib.error
     import urllib.request
 
-    api_url = (
-        f"https://api.github.com/repos/{_DDC_REPO}/contents/{repo_path}"
-        f"?ref={_DDC_BRANCH}"
-    )
+    api_url = f"https://api.github.com/repos/{_DDC_REPO}/contents/{repo_path}?ref={_DDC_BRANCH}"
     req = urllib.request.Request(
         api_url,
         headers={
@@ -424,19 +418,12 @@ def _github_list_directory(repo_path: str) -> list[dict[str, Any]]:
         with urllib.request.urlopen(req, timeout=30) as resp:
             payload = json.loads(resp.read())
     except urllib.error.HTTPError as exc:
-        raise RuntimeError(
-            f"GitHub Contents API returned {exc.code} for {repo_path}: {exc.reason}"
-        ) from exc
+        raise RuntimeError(f"GitHub Contents API returned {exc.code} for {repo_path}: {exc.reason}") from exc
     except (urllib.error.URLError, TimeoutError) as exc:
-        raise RuntimeError(
-            f"Could not reach GitHub Contents API: {exc}"
-        ) from exc
+        raise RuntimeError(f"Could not reach GitHub Contents API: {exc}") from exc
 
     if not isinstance(payload, list):
-        raise RuntimeError(
-            f"GitHub Contents API returned a non-list for {repo_path} — "
-            f"is the path correct?"
-        )
+        raise RuntimeError(f"GitHub Contents API returned a non-list for {repo_path} — is the path correct?")
 
     files: list[dict[str, Any]] = []
     for item in payload:
@@ -467,21 +454,18 @@ def _resolve_target_path(
     directory.
     """
     if repo_path.startswith(src_prefix):
-        rel = repo_path[len(src_prefix):]
+        rel = repo_path[len(src_prefix) :]
     else:
         rel = Path(repo_path).name
     if Path(rel).is_absolute() or ".." in Path(rel).parts:
         raise RuntimeError(
-            f"Refused to write to suspicious path {rel!r} from "
-            f"GitHub Contents response (path-traversal attempt)"
+            f"Refused to write to suspicious path {rel!r} from GitHub Contents response (path-traversal attempt)"
         )
     target = (dest_root / rel).resolve()
     try:
         target.relative_to(install_dir_resolved)
     except ValueError as exc:
-        raise RuntimeError(
-            f"Refused to write {target} — escapes install directory"
-        ) from exc
+        raise RuntimeError(f"Refused to write {target} — escapes install directory") from exc
     return target
 
 
@@ -543,9 +527,7 @@ def _download_one_file(download_url: str, target: Path) -> int:
     except OSError as exc:
         # ELOOP on Linux when O_NOFOLLOW hits a symlink — surface as
         # a clear refusal rather than a generic OSError.
-        raise RuntimeError(
-            f"Refused to open {target} for writing: {exc}"
-        ) from exc
+        raise RuntimeError(f"Refused to open {target} for writing: {exc}") from exc
 
     try:
         with urllib.request.urlopen(req, timeout=60) as resp:
@@ -601,16 +583,10 @@ def _verify_pe_executable(path: Path) -> str | None:
             # of the PE header.
             pe_off = int.from_bytes(head[0x3C:0x40], "little")
             if pe_off <= 0 or pe_off > path.stat().st_size - 4:
-                return (
-                    f"e_lfanew points outside the file ({pe_off}); "
-                    "binary is truncated or text-mode-corrupted"
-                )
+                return f"e_lfanew points outside the file ({pe_off}); binary is truncated or text-mode-corrupted"
             fh.seek(pe_off)
             if fh.read(4) != b"PE\x00\x00":
-                return (
-                    "PE signature not found where the DOS header points "
-                    "(CRLF-mangled or otherwise corrupt download)"
-                )
+                return "PE signature not found where the DOS header points (CRLF-mangled or otherwise corrupt download)"
     except OSError as exc:
         return f"could not read the binary: {exc}"
     return None
@@ -653,8 +629,7 @@ def _download_converter_files_windows(converter_id: str) -> Path:
     if not files:
         _clear_install_progress(converter_id)
         raise RuntimeError(
-            f"GitHub directory {src_dir!r} contains no files — "
-            f"the DDC converter repo layout may have changed."
+            f"GitHub directory {src_dir!r} contains no files — the DDC converter repo layout may have changed."
         )
 
     # Per-format install root keeps Qt DLLs and Teigha readers from
@@ -673,15 +648,16 @@ def _download_converter_files_windows(converter_id: str) -> Path:
         if not download_url:
             continue  # submodules / symlinks — skip
         target = _resolve_target_path(
-            entry["path"], src_prefix, dest_root, install_dir_resolved,
+            entry["path"],
+            src_prefix,
+            dest_root,
+            install_dir_resolved,
         )
         download_jobs.append((download_url, target))
 
     if not download_jobs:
         _clear_install_progress(converter_id)
-        raise RuntimeError(
-            f"GitHub listing for {src_dir} contained no downloadable files."
-        )
+        raise RuntimeError(f"GitHub listing for {src_dir} contained no downloadable files.")
 
     total_bytes = 0
     file_count = 0
@@ -704,10 +680,7 @@ def _download_converter_files_windows(converter_id: str) -> Path:
     # We abort the install when the running total exceeds
     # ``_MAX_INSTALL_BYTES`` and clean up the partial download.
     with ThreadPoolExecutor(max_workers=8) as pool:
-        future_to_path = {
-            pool.submit(_download_one_file, url, target): (url, target)
-            for url, target in download_jobs
-        }
+        future_to_path = {pool.submit(_download_one_file, url, target): (url, target) for url, target in download_jobs}
         for fut in as_completed(future_to_path):
             url, target = future_to_path[fut]
             try:
@@ -725,8 +698,7 @@ def _download_converter_files_windows(converter_id: str) -> Path:
             )
             if total_bytes > _MAX_INSTALL_BYTES:
                 failures.append(
-                    f"cumulative install size {total_bytes} bytes exceeded "
-                    f"cap of {_MAX_INSTALL_BYTES} bytes — aborting"
+                    f"cumulative install size {total_bytes} bytes exceeded cap of {_MAX_INSTALL_BYTES} bytes — aborting"
                 )
                 # Cancel anything still in flight; the partial directory
                 # gets cleaned up by the failure-handler below.
@@ -736,7 +708,9 @@ def _download_converter_files_windows(converter_id: str) -> Path:
             if file_count % 25 == 0:
                 logger.info(
                     "Converter %s: downloaded %d/%d files (%.1f MB)",
-                    converter_id, file_count, len(download_jobs),
+                    converter_id,
+                    file_count,
+                    len(download_jobs),
                     total_bytes / 1024 / 1024,
                 )
 
@@ -745,12 +719,10 @@ def _download_converter_files_windows(converter_id: str) -> Path:
         # installed converter that find_converter() will then
         # discover and try to use.
         import shutil as _shutil
+
         _shutil.rmtree(dest_root, ignore_errors=True)
         _clear_install_progress(converter_id)
-        raise RuntimeError(
-            f"{len(failures)} of {len(download_jobs)} downloads failed; "
-            f"first error: {failures[0]}"
-        )
+        raise RuntimeError(f"{len(failures)} of {len(download_jobs)} downloads failed; first error: {failures[0]}")
 
     exe_name: str = _META_BY_ID[converter_id]["exe"]
     exe_path = dest_root / exe_name
@@ -777,6 +749,7 @@ def _download_converter_files_windows(converter_id: str) -> Path:
     pe_problem = _verify_pe_executable(exe_path)
     if pe_problem is not None:
         import shutil as _shutil
+
         _shutil.rmtree(dest_root, ignore_errors=True)
         _clear_install_progress(converter_id)
         raise RuntimeError(
@@ -788,7 +761,10 @@ def _download_converter_files_windows(converter_id: str) -> Path:
 
     logger.info(
         "Installed %s converter: %d files, %.1f MB -> %s",
-        converter_id, file_count, total_bytes / 1024 / 1024, exe_path,
+        converter_id,
+        file_count,
+        total_bytes / 1024 / 1024,
+        exe_path,
     )
     return exe_path
 
@@ -883,10 +859,7 @@ async def install_converter(
     if not meta:
         raise HTTPException(
             status_code=404,
-            detail=(
-                f"Unknown converter: '{converter_id}'. "
-                f"Available: {list(_META_BY_ID.keys())}"
-            ),
+            detail=(f"Unknown converter: '{converter_id}'. Available: {list(_META_BY_ID.keys())}"),
         )
 
     try:
@@ -912,12 +885,14 @@ async def install_converter(
             # responsive.
             try:
                 exe_path = await asyncio.to_thread(
-                    _download_converter_files_windows, converter_id,
+                    _download_converter_files_windows,
+                    converter_id,
                 )
             except RuntimeError as exc:
                 logger.warning(
                     "Windows converter install failed for %s: %s",
-                    converter_id, exc,
+                    converter_id,
+                    exc,
                 )
                 raise HTTPException(
                     status_code=502,
@@ -977,8 +952,7 @@ async def install_converter(
                 # contradiction next to the "smoke_test_passed: true"
                 # response — see BUG-RVT02.
                 logger.info(
-                    "Smoke test for %s converter timed out — binary loaded "
-                    "but waiting for stdin; treating as healthy.",
+                    "Smoke test for %s converter timed out — binary loaded but waiting for stdin; treating as healthy.",
                     converter_id,
                 )
             except Exception as exc:  # noqa: BLE001 — smoke test is best-effort
@@ -987,12 +961,9 @@ async def install_converter(
                 # claim ``smoke_test_passed: true`` in the response.
                 smoke_ok = False
                 smoke_message = (
-                    f"Installed but the smoke test failed: {exc}. "
-                    f"Try the Re-check button on the BIM page or reinstall."
+                    f"Installed but the smoke test failed: {exc}. Try the Re-check button on the BIM page or reinstall."
                 )
-                logger.warning(
-                    "Smoke test for %s converter failed: %s", converter_id, exc
-                )
+                logger.warning("Smoke test for %s converter failed: %s", converter_id, exc)
 
             size_bytes = exe_path.stat().st_size if exe_path.exists() else 0
 
@@ -1001,6 +972,7 @@ async def install_converter(
             # against the freshly installed binary instead of replaying
             # a cached pre-install ``not_installed`` result.
             from app.modules.boq.cad_import import invalidate_converter_health
+
             invalidate_converter_health(converter_id)
 
             # Bust the 6-hour version-check cache so the "Update available"
@@ -1021,9 +993,7 @@ async def install_converter(
                 "size_bytes": size_bytes,
                 "platform": "windows",
                 "smoke_test_passed": smoke_ok,
-                "message": smoke_message or (
-                    f"{meta['name']} installed successfully at {exe_path}"
-                ),
+                "message": smoke_message or (f"{meta['name']} installed successfully at {exe_path}"),
             }
 
         if platform.startswith("linux"):
@@ -1117,7 +1087,8 @@ async def install_converter(
         _clear_install_progress(converter_id)
         logger.exception(
             "Unhandled exception in install_converter for %s: %s",
-            converter_id, exc,
+            converter_id,
+            exc,
         )
         raise HTTPException(
             status_code=502,
@@ -1172,14 +1143,18 @@ async def install_from_manifest(
         # us host allow-listing, symlink guards, and the streaming
         # size cap for free.
         bytes_written = await asyncio.to_thread(
-            _download_one_file, resolved.url, target,
+            _download_one_file,
+            resolved.url,
+            target,
         )
 
         # SHA verification — this is the new A1 check. Mismatch deletes
         # the partial file so a retry can't pick up a poisoned blob.
         await asyncio.to_thread(
             verify_downloaded_file,
-            target, resolved.sha256, resolved.size_bytes,
+            target,
+            resolved.sha256,
+            resolved.size_bytes,
         )
 
         return {
@@ -1208,8 +1183,7 @@ async def install_from_manifest(
         raise HTTPException(
             status_code=502,
             detail=(
-                f"Component {component_name!r} is not available for this "
-                f"platform. Please file an issue. Details: {exc}"
+                f"Component {component_name!r} is not available for this platform. Please file an issue. Details: {exc}"
             ),
         ) from exc
     except InstallSHAMismatch as exc:
@@ -1257,9 +1231,7 @@ async def uninstall_converter(
     # instructions and let the user run them.
     platform = sys.platform.lower()
     if platform.startswith("linux"):
-        apt_pkg = _LINUX_APT_PACKAGES.get(
-            converter_id, f"ddc-{converter_id}converter"
-        )
+        apt_pkg = _LINUX_APT_PACKAGES.get(converter_id, f"ddc-{converter_id}converter")
         return {
             "converter_id": converter_id,
             "removed": False,
@@ -1298,6 +1270,7 @@ async def uninstall_converter(
     # point in keeping orphaned Qt DLLs around once the user opted out.
     if per_format_root.exists() and per_format_root.is_dir():
         import shutil as _shutil
+
         try:
             _shutil.rmtree(per_format_root)
             logger.info("Removed per-format converter folder: %s", per_format_root)
@@ -1308,6 +1281,7 @@ async def uninstall_converter(
     # re-runs the smoke test against the empty install dir (and reports
     # ``not_installed`` instead of a stale ``ok``).
     from app.modules.boq.cad_import import invalidate_converter_health
+
     invalidate_converter_health(converter_id)
 
     return {
@@ -2055,16 +2029,8 @@ async def create_boq_from_cad_qto(
             for sub_idx, (col_name, quantity) in enumerate(measurable):
                 # Stable, collision-free ordinal even when one group
                 # produces several positions ("003" / "003.2" / …).
-                ordinal = (
-                    f"{idx + 1:03d}"
-                    if sub_idx == 0
-                    else f"{idx + 1:03d}.{sub_idx + 1}"
-                )
-                desc = (
-                    description
-                    if len(measurable) == 1
-                    else f"{description} ({col_name})"
-                )
+                ordinal = f"{idx + 1:03d}" if sub_idx == 0 else f"{idx + 1:03d}.{sub_idx + 1}"
+                desc = description if len(measurable) == 1 else f"{description} ({col_name})"
                 position = Position(
                     boq_id=boq.id,
                     ordinal=ordinal,
@@ -2478,9 +2444,7 @@ async def cad_data_missingness(
     ),
     element_type_filter: str | None = Query(
         default=None,
-        description=(
-            "Value to match against the element-type column (tries 'type name', 'type', 'family')."
-        ),
+        description=("Value to match against the element-type column (tries 'type name', 'type', 'family')."),
     ),
     sort: str = Query(
         default="fill_desc",
@@ -2672,9 +2636,7 @@ async def cad_data_value_counts(
             "count": cnt,
             "percentage": round(cnt / total * 100, 1) if total else 0,
             "percentage_of_non_null": (
-                0
-                if val == "(null)" or not non_null_total
-                else round(cnt / non_null_total * 100, 1)
+                0 if val == "(null)" or not non_null_total else round(cnt / non_null_total * 100, 1)
             ),
         }
         for val, cnt in sorted_values[: body.limit]
@@ -2905,11 +2867,7 @@ async def cad_data_aggregate(
     for col, func in body.aggregations.items():
         totals[col] = _aggregate(elements, col, func)
         fl = func.lower()
-        totals_semantics[col] = (
-            "additive"
-            if fl in ("sum", "count")
-            else "global_statistic"
-        )
+        totals_semantics[col] = "additive" if fl in ("sum", "count") else "global_statistic"
 
     return {
         "groups": result_groups,
@@ -3070,7 +3028,9 @@ async def cad_data_from_bim_model(
 
     # Tenant gate — the caller must have access to the model's project.
     await verify_project_access(
-        model.project_id, str(user_id) if user_id else "", db_session,
+        model.project_id,
+        str(user_id) if user_id else "",
+        db_session,
     )
 
     project_id = str(model.project_id)
@@ -3078,16 +3038,20 @@ async def cad_data_from_bim_model(
     # Reuse an existing session already bound to this model so repeated
     # clicks don't pile up duplicate sessions.
     existing = (
-        await db_session.execute(
-            select(CadExtractionSession)
-            .where(
-                CadExtractionSession.project_id == project_id,
-                CadExtractionSession.filename == f"bim:{model.id}",
-                CadExtractionSession.expires_at > datetime.now(UTC),
+        (
+            await db_session.execute(
+                select(CadExtractionSession)
+                .where(
+                    CadExtractionSession.project_id == project_id,
+                    CadExtractionSession.filename == f"bim:{model.id}",
+                    CadExtractionSession.expires_at > datetime.now(UTC),
+                )
+                .order_by(CadExtractionSession.created_at.desc()),
             )
-            .order_by(CadExtractionSession.created_at.desc()),
         )
-    ).scalars().first()
+        .scalars()
+        .first()
+    )
     if existing is not None:
         return {
             "session_id": existing.session_id,
@@ -3097,10 +3061,14 @@ async def cad_data_from_bim_model(
         }
 
     elements_rows = (
-        await db_session.execute(
-            select(BIMElement).where(BIMElement.model_id == model_uuid),
+        (
+            await db_session.execute(
+                select(BIMElement).where(BIMElement.model_id == model_uuid),
+            )
         )
-    ).scalars().all()
+        .scalars()
+        .all()
+    )
     elements = [_flatten_bim_element_for_cad(e) for e in elements_rows]
     if not elements:
         raise HTTPException(
@@ -3616,9 +3584,7 @@ async def _verify_takeoff_doc_access(
     # TakeoffDocument uses ``owner_id`` (a UUID column) while the
     # CadExtractionSession sibling uses ``user_id`` (string). Try
     # both names so a legacy row layout doesn't bypass the gate.
-    owner = str(
-        getattr(doc, "owner_id", None) or getattr(doc, "user_id", "") or ""
-    )
+    owner = str(getattr(doc, "owner_id", None) or getattr(doc, "user_id", "") or "")
     if owner and owner != str(user_id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -3837,7 +3803,6 @@ async def analyze_document(
     settings = await settings_repo.get_by_user_id(_uuid.UUID(user_id))
 
     try:
-
         provider, api_key, model_override = resolve_provider_key_model(settings)
     except ValueError as exc:
         raise HTTPException(
@@ -3862,7 +3827,6 @@ async def analyze_document(
             api_key=api_key,
             system=SYSTEM_PROMPT,
             prompt=prompt,
-
             model=model_override,
         )
     except ValueError as exc:

@@ -197,7 +197,10 @@ async def list_master_schedules(
 ) -> list[MasterScheduleResponse]:
     await verify_project_access(project_id, user_id, session)
     items, _ = await service.master_repo.list_for_project(
-        project_id, offset=offset, limit=limit, status=status,
+        project_id,
+        offset=offset,
+        limit=limit,
+        status=status,
     )
     return [MasterScheduleResponse.model_validate(i) for i in items]
 
@@ -1162,7 +1165,10 @@ async def run_tia(
     acts = [a.model_dump() for a in data.activities]
     deps = [d.model_dump() for d in data.dependencies] if data.dependencies else None
     result = time_impact_analysis(
-        acts, deps, data.impacted_activity_id, data.delay_days,
+        acts,
+        deps,
+        data.impacted_activity_id,
+        data.delay_days,
     )
     return TIAResponse(**result)
 
@@ -1218,6 +1224,8 @@ async def project_rnc_pareto_sorted(
     """Sorted-desc RNC Pareto with cumulative percentage column."""
     await verify_project_access(project_id, user_id, session)
     payload = await service.rnc_pareto_sorted_for_project(
-        project_id, period_start, period_end,
+        project_id,
+        period_start,
+        period_end,
     )
     return RNCParetoSortedResponse(**payload)

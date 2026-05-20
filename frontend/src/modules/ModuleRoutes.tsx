@@ -5,11 +5,11 @@
  * loaded via React.lazy — so it only downloads when the user navigates there.
  */
 
-import { Suspense } from 'react';
-import { Route } from 'react-router-dom';
-import { MODULE_REGISTRY } from './_registry';
-import { useModuleStore } from '@/stores/useModuleStore';
-import { Loader2 } from 'lucide-react';
+import { Suspense } from "react";
+import { Route } from "react-router-dom";
+import { MODULE_REGISTRY } from "./_registry";
+import { useModuleStore } from "@/stores/useModuleStore";
+import { Loader2 } from "lucide-react";
 
 /* ── Fallback spinner shown while a module chunk loads ─────────────── */
 
@@ -35,8 +35,7 @@ interface ModuleRoutesProps {
 export function useModuleRouteElements({ Wrapper }: ModuleRoutesProps) {
   const { isModuleEnabled } = useModuleStore();
 
-  return MODULE_REGISTRY
-    .filter((m) => isModuleEnabled(m.id))
+  return MODULE_REGISTRY.filter((m) => isModuleEnabled(m.id))
     .flatMap((m) => m.routes)
     .map((route) => (
       <Route

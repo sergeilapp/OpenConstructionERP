@@ -12,8 +12,8 @@
  *  - Stats: total keys, translated (customised) count, missing count
  */
 
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Search,
   Download,
@@ -24,14 +24,14 @@ import {
   X,
   Pencil,
   Check,
-} from 'lucide-react';
-import { Card, CardHeader, CardContent, Button, Badge } from '@/shared/ui';
-import { triggerDownload } from '@/shared/lib/api';
-import i18n from '@/app/i18n';
+} from "lucide-react";
+import { Card, CardHeader, CardContent, Button, Badge } from "@/shared/ui";
+import { triggerDownload } from "@/shared/lib/api";
+import i18n from "@/app/i18n";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const LS_KEY_PREFIX = 'oe_custom_translations_';
+const LS_KEY_PREFIX = "oe_custom_translations_";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ export function saveCustomTranslations(
 ): void {
   localStorage.setItem(`${LS_KEY_PREFIX}${lang}`, JSON.stringify(overrides));
   // Merge into i18next so changes take effect immediately (deep=true, overwrite=true)
-  i18n.addResourceBundle(lang, 'translation', overrides, true, true);
+  i18n.addResourceBundle(lang, "translation", overrides, true, true);
 }
 
 /**
@@ -63,12 +63,17 @@ export function saveCustomTranslations(
  */
 function getAllKeysForLanguage(lang: string): Record<string, string> {
   // Start from English baseline (always complete)
-  const enBundle = (i18n.getResourceBundle('en', 'translation') as Record<string, string>) ?? {};
+  const enBundle =
+    (i18n.getResourceBundle("en", "translation") as Record<string, string>) ??
+    {};
   // Get the target language bundle (may be partial)
   const langBundle =
-    lang === 'en'
+    lang === "en"
       ? {}
-      : ((i18n.getResourceBundle(lang, 'translation') as Record<string, string>) ?? {});
+      : ((i18n.getResourceBundle(lang, "translation") as Record<
+          string,
+          string
+        >) ?? {});
 
   return { ...enBundle, ...langBundle };
 }
@@ -101,8 +106,8 @@ function EditCell({ value, onSave, onCancel, placeholder }: EditCellProps) {
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') onSave(localValue);
-    if (e.key === 'Escape') onCancel();
+    if (e.key === "Enter") onSave(localValue);
+    if (e.key === "Escape") onCancel();
   };
 
   return (
@@ -137,12 +142,12 @@ function EditCell({ value, onSave, onCancel, placeholder }: EditCellProps) {
 
 export function TranslationManager() {
   const { t, i18n: i18next } = useTranslation();
-  const currentLang = i18next.language ?? 'en';
+  const currentLang = i18next.language ?? "en";
 
   // Custom overrides stored separately so we can detect which keys are modified
-  const [customOverrides, setCustomOverrides] = useState<Record<string, string>>(
-    () => loadCustomTranslations(currentLang),
-  );
+  const [customOverrides, setCustomOverrides] = useState<
+    Record<string, string>
+  >(() => loadCustomTranslations(currentLang));
 
   // Reload overrides when language switches
   useEffect(() => {
@@ -150,7 +155,7 @@ export function TranslationManager() {
   }, [currentLang]);
 
   // Search query
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
 
   // Editing state: key currently being edited
   const [editingKey, setEditingKey] = useState<string | null>(null);
@@ -161,19 +166,26 @@ export function TranslationManager() {
   // Build full row list from all English keys + current lang overrides
   const allRows = useMemo<TranslationRow[]>(() => {
     const enBundle =
-      (i18n.getResourceBundle('en', 'translation') as Record<string, string>) ?? {};
+      (i18n.getResourceBundle("en", "translation") as Record<string, string>) ??
+      {};
     const langBundle =
-      currentLang === 'en'
+      currentLang === "en"
         ? {}
-        : ((i18n.getResourceBundle(currentLang, 'translation') as Record<string, string>) ?? {});
+        : ((i18n.getResourceBundle(currentLang, "translation") as Record<
+            string,
+            string
+          >) ?? {});
 
     return Object.keys(enBundle)
       .sort()
       .map((key) => {
-        const english = enBundle[key] ?? '';
-        const fromLangBundle = langBundle[key] ?? '';
-        const fromOverride = customOverrides[key] ?? '';
-        const current = fromOverride || fromLangBundle || (currentLang === 'en' ? english : '');
+        const english = enBundle[key] ?? "";
+        const fromLangBundle = langBundle[key] ?? "";
+        const fromOverride = customOverrides[key] ?? "";
+        const current =
+          fromOverride ||
+          fromLangBundle ||
+          (currentLang === "en" ? english : "");
         const isCustom = key in customOverrides;
         return { key, english, current, isCustom };
       });
@@ -182,12 +194,17 @@ export function TranslationManager() {
   // Stats
   const totalKeys = allRows.length;
   const translatedCount = useMemo(
-    () => allRows.filter((r) => r.current !== '' && r.current !== r.english).length,
+    () =>
+      allRows.filter((r) => r.current !== "" && r.current !== r.english).length,
     [allRows],
   );
-  const customCount = useMemo(() => allRows.filter((r) => r.isCustom).length, [allRows]);
+  const customCount = useMemo(
+    () => allRows.filter((r) => r.isCustom).length,
+    [allRows],
+  );
   const missingCount = useMemo(
-    () => (currentLang === 'en' ? 0 : allRows.filter((r) => r.current === '').length),
+    () =>
+      currentLang === "en" ? 0 : allRows.filter((r) => r.current === "").length,
     [allRows, currentLang],
   );
 
@@ -206,18 +223,23 @@ export function TranslationManager() {
   // Pagination — render max 50 rows at a time for performance
   const PAGE_SIZE = 50;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const visibleRows = useMemo(() => filteredRows.slice(0, visibleCount), [filteredRows, visibleCount]);
+  const visibleRows = useMemo(
+    () => filteredRows.slice(0, visibleCount),
+    [filteredRows, visibleCount],
+  );
   const hasMore = visibleCount < filteredRows.length;
 
   // Reset visible count when query changes
-  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [query]);
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [query]);
 
   // ── Handlers ──
 
   const handleSave = useCallback(
     (key: string, value: string) => {
       const next = { ...customOverrides };
-      if (value.trim() === '') {
+      if (value.trim() === "") {
         delete next[key];
       } else {
         next[key] = value;
@@ -244,7 +266,7 @@ export function TranslationManager() {
     // Merge in any custom overrides on top
     const merged = { ...allTranslations, ...customOverrides };
     const json = JSON.stringify(merged, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
+    const blob = new Blob([json], { type: "application/json" });
     triggerDownload(blob, `translations_${currentLang}.json`);
   }, [currentLang, customOverrides]);
 
@@ -259,11 +281,14 @@ export function TranslationManager() {
       const reader = new FileReader();
       reader.onload = (ev) => {
         try {
-          const parsed = JSON.parse(ev.target?.result as string) as Record<string, string>;
+          const parsed = JSON.parse(ev.target?.result as string) as Record<
+            string,
+            string
+          >;
           // Only keep string values
           const clean: Record<string, string> = {};
           for (const [k, v] of Object.entries(parsed)) {
-            if (typeof v === 'string') clean[k] = v;
+            if (typeof v === "string") clean[k] = v;
           }
           setCustomOverrides(clean);
           saveCustomTranslations(currentLang, clean);
@@ -273,7 +298,7 @@ export function TranslationManager() {
       };
       reader.readAsText(file);
       // Reset input so re-importing the same file works
-      e.target.value = '';
+      e.target.value = "";
     },
     [currentLang],
   );
@@ -283,43 +308,50 @@ export function TranslationManager() {
   return (
     <Card data-testid="translation-manager">
       <CardHeader
-        title={t('settings.translation_manager_title', {
-          defaultValue: 'Translation Manager‌⁠‍',
+        title={t("settings.translation_manager_title", {
+          defaultValue: "Translation Manager‌⁠‍",
         })}
-        subtitle={t('settings.translation_manager_subtitle', {
-          defaultValue: 'View and customise translation keys for the current language.‌⁠‍',
+        subtitle={t("settings.translation_manager_subtitle", {
+          defaultValue:
+            "View and customise translation keys for the current language.‌⁠‍",
         })}
       />
 
       <CardContent>
         {/* Stats bar */}
-        <div
-          className="mb-4 flex flex-wrap gap-3"
-          data-testid="tm-stats"
-        >
+        <div className="mb-4 flex flex-wrap gap-3" data-testid="tm-stats">
           <div className="flex items-center gap-1.5 rounded-lg bg-surface-secondary px-3 py-1.5">
             <span className="text-xs text-content-tertiary">
-              {t('settings.tm_total_keys', { defaultValue: 'Total keys‌⁠‍' })}
+              {t("settings.tm_total_keys", { defaultValue: "Total keys‌⁠‍" })}
             </span>
-            <span className="text-sm font-semibold text-content-primary" data-testid="tm-stat-total">
+            <span
+              className="text-sm font-semibold text-content-primary"
+              data-testid="tm-stat-total"
+            >
               {totalKeys}
             </span>
           </div>
           <div className="flex items-center gap-1.5 rounded-lg bg-surface-secondary px-3 py-1.5">
             <CheckCircle2 size={13} className="text-semantic-success" />
             <span className="text-xs text-content-tertiary">
-              {t('settings.tm_translated', { defaultValue: 'Translated‌⁠‍' })}
+              {t("settings.tm_translated", { defaultValue: "Translated‌⁠‍" })}
             </span>
-            <span className="text-sm font-semibold text-semantic-success" data-testid="tm-stat-translated">
+            <span
+              className="text-sm font-semibold text-semantic-success"
+              data-testid="tm-stat-translated"
+            >
               {translatedCount}
             </span>
           </div>
           <div className="flex items-center gap-1.5 rounded-lg bg-surface-secondary px-3 py-1.5">
             <Pencil size={13} className="text-oe-blue" />
             <span className="text-xs text-content-tertiary">
-              {t('settings.tm_custom', { defaultValue: 'Custom overrides‌⁠‍' })}
+              {t("settings.tm_custom", { defaultValue: "Custom overrides‌⁠‍" })}
             </span>
-            <span className="text-sm font-semibold text-oe-blue" data-testid="tm-stat-custom">
+            <span
+              className="text-sm font-semibold text-oe-blue"
+              data-testid="tm-stat-custom"
+            >
               {customCount}
             </span>
           </div>
@@ -327,9 +359,12 @@ export function TranslationManager() {
             <div className="flex items-center gap-1.5 rounded-lg bg-surface-secondary px-3 py-1.5">
               <AlertCircle size={13} className="text-semantic-warning" />
               <span className="text-xs text-content-tertiary">
-                {t('settings.tm_missing', { defaultValue: 'Missing' })}
+                {t("settings.tm_missing", { defaultValue: "Missing" })}
               </span>
-              <span className="text-sm font-semibold text-semantic-warning" data-testid="tm-stat-missing">
+              <span
+                className="text-sm font-semibold text-semantic-warning"
+                data-testid="tm-stat-missing"
+              >
                 {missingCount}
               </span>
             </div>
@@ -348,8 +383,8 @@ export function TranslationManager() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={t('settings.tm_search_placeholder', {
-                defaultValue: 'Search keys or values...',
+              placeholder={t("settings.tm_search_placeholder", {
+                defaultValue: "Search keys or values...",
               })}
               className="h-9 w-full rounded-lg border border-border bg-surface-primary pl-8 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all duration-normal"
               data-testid="tm-search"
@@ -365,7 +400,7 @@ export function TranslationManager() {
               onClick={handleImportClick}
               data-testid="tm-import-btn"
             >
-              {t('settings.tm_import', { defaultValue: 'Import' })}
+              {t("settings.tm_import", { defaultValue: "Import" })}
             </Button>
             <Button
               variant="secondary"
@@ -374,7 +409,7 @@ export function TranslationManager() {
               onClick={handleExport}
               data-testid="tm-export-btn"
             >
-              {t('settings.tm_export', { defaultValue: 'Export' })}
+              {t("settings.tm_export", { defaultValue: "Export" })}
             </Button>
           </div>
         </div>
@@ -394,42 +429,54 @@ export function TranslationManager() {
           {/* Table header */}
           <div className="grid grid-cols-[2fr_2fr_2fr_auto] gap-0 bg-surface-secondary border-b border-border-light">
             <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary">
-              {t('settings.tm_col_key', { defaultValue: 'Key' })}
+              {t("settings.tm_col_key", { defaultValue: "Key" })}
             </div>
             <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-l border-border-light">
-              {t('settings.tm_col_english', { defaultValue: 'English' })}
+              {t("settings.tm_col_english", { defaultValue: "English" })}
             </div>
             <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-l border-border-light">
-              {t('settings.tm_col_current', { defaultValue: 'Current Language' })}
+              {t("settings.tm_col_current", {
+                defaultValue: "Current Language",
+              })}
             </div>
             <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-l border-border-light w-20">
-              {t('settings.tm_col_actions', { defaultValue: '' })}
+              {t("settings.tm_col_actions", { defaultValue: "" })}
             </div>
           </div>
 
           {/* Rows */}
-          <div className="max-h-[480px] overflow-y-auto" data-testid="tm-table-body">
+          <div
+            className="max-h-[480px] overflow-y-auto"
+            data-testid="tm-table-body"
+          >
             {filteredRows.length === 0 ? (
               <div className="px-4 py-8 text-center text-sm text-content-tertiary">
-                {t('settings.tm_no_results', { defaultValue: 'No keys match your search.' })}
+                {t("settings.tm_no_results", {
+                  defaultValue: "No keys match your search.",
+                })}
               </div>
             ) : (
               visibleRows.map((row) => (
                 <div
                   key={row.key}
                   className={`grid grid-cols-[2fr_2fr_2fr_auto] gap-0 border-b border-border-light last:border-b-0 hover:bg-surface-secondary/50 transition-colors ${
-                    row.isCustom ? 'bg-oe-blue-subtle/30' : ''
+                    row.isCustom ? "bg-oe-blue-subtle/30" : ""
                   }`}
                   data-testid={`tm-row-${row.key}`}
                 >
                   {/* Key */}
                   <div className="flex items-center gap-1.5 px-3 py-2 min-w-0">
-                    <code className="truncate text-xs text-content-secondary font-mono" title={row.key}>
+                    <code
+                      className="truncate text-xs text-content-secondary font-mono"
+                      title={row.key}
+                    >
                       {row.key}
                     </code>
                     {row.isCustom && (
                       <Badge variant="blue" size="sm" className="flex-shrink-0">
-                        {t('settings.tm_custom_badge', { defaultValue: 'custom' })}
+                        {t("settings.tm_custom_badge", {
+                          defaultValue: "custom",
+                        })}
                       </Badge>
                     )}
                   </div>
@@ -442,7 +489,7 @@ export function TranslationManager() {
                     >
                       {row.english || (
                         <span className="italic text-content-tertiary">
-                          {t('settings.tm_empty', { defaultValue: '(empty)' })}
+                          {t("settings.tm_empty", { defaultValue: "(empty)" })}
                         </span>
                       )}
                     </span>
@@ -461,21 +508,25 @@ export function TranslationManager() {
                       <button
                         className="group flex w-full items-center gap-1 text-left"
                         onClick={() => setEditingKey(row.key)}
-                        title={t('settings.tm_click_to_edit', { defaultValue: 'Click to edit' })}
+                        title={t("settings.tm_click_to_edit", {
+                          defaultValue: "Click to edit",
+                        })}
                         data-testid={`tm-edit-cell-${row.key}`}
                       >
                         <span
                           className={`flex-1 truncate text-sm ${
                             row.current
-                              ? 'text-content-primary'
-                              : 'italic text-semantic-warning'
+                              ? "text-content-primary"
+                              : "italic text-semantic-warning"
                           }`}
                           title={row.current || row.english}
                         >
                           {row.current ||
-                            (currentLang !== 'en' ? (
+                            (currentLang !== "en" ? (
                               <span className="italic text-semantic-warning text-xs">
-                                {t('settings.tm_missing_label', { defaultValue: '(missing)' })}
+                                {t("settings.tm_missing_label", {
+                                  defaultValue: "(missing)",
+                                })}
                               </span>
                             ) : (
                               row.english
@@ -494,7 +545,9 @@ export function TranslationManager() {
                     {row.isCustom && (
                       <button
                         onClick={() => handleReset(row.key)}
-                        title={t('settings.tm_reset_tooltip', { defaultValue: 'Reset to default' })}
+                        title={t("settings.tm_reset_tooltip", {
+                          defaultValue: "Reset to default",
+                        })}
                         className="flex h-6 w-6 items-center justify-center rounded-md text-content-tertiary hover:text-semantic-warning hover:bg-semantic-warning/10 transition-colors"
                         data-testid={`tm-reset-${row.key}`}
                       >
@@ -514,14 +567,17 @@ export function TranslationManager() {
             onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
             className="mt-2 w-full rounded-lg border border-border-light py-2 text-xs font-medium text-oe-blue hover:bg-oe-blue-subtle transition-colors"
           >
-            {t('settings.tm_show_more', { defaultValue: 'Show more ({{remaining}} remaining)', remaining: filteredRows.length - visibleCount })}
+            {t("settings.tm_show_more", {
+              defaultValue: "Show more ({{remaining}} remaining)",
+              remaining: filteredRows.length - visibleCount,
+            })}
           </button>
         )}
 
         {/* Footer count */}
         <p className="mt-2 text-xs text-content-tertiary">
-          {t('settings.tm_showing', {
-            defaultValue: 'Showing {{count}} of {{total}} keys',
+          {t("settings.tm_showing", {
+            defaultValue: "Showing {{count}} of {{total}} keys",
             count: visibleRows.length,
             total: filteredRows.length,
           })}

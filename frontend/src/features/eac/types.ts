@@ -19,13 +19,13 @@
 // ── Output mode ──────────────────────────────────────────────────────────────
 
 /** One engine, four output modes (RFC 35 L11). */
-export type OutputMode = 'aggregate' | 'boolean' | 'clash' | 'issue';
+export type OutputMode = "aggregate" | "boolean" | "clash" | "issue";
 
 // ── Entity selectors (FR-1.4) ────────────────────────────────────────────────
 
 /** Match elements by IFC class. */
 export interface IfcClassSelector {
-  type: 'ifc_class';
+  type: "ifc_class";
   ifc_class: string;
   /** Include subclasses, e.g. ifcWall + ifcWallStandardCase. */
   include_subtypes?: boolean;
@@ -33,13 +33,13 @@ export interface IfcClassSelector {
 
 /** Match elements by Revit category. */
 export interface CategorySelector {
-  type: 'category';
+  type: "category";
   category: string;
 }
 
 /** Match elements by classification code mapped via classifier composition. */
 export interface ClassificationSelector {
-  type: 'classification';
+  type: "classification";
   classifier_id: string;
   /** Single code, e.g. "Uniformat:B2010". */
   code?: string;
@@ -49,29 +49,29 @@ export interface ClassificationSelector {
 
 /** Match elements by spatial container (level, zone, room). */
 export interface SpatialSelector {
-  type: 'spatial';
+  type: "spatial";
   /** "level" | "zone" | "room" | etc. */
-  scope: 'level' | 'zone' | 'room' | 'building' | 'site';
+  scope: "level" | "zone" | "room" | "building" | "site";
   ref_id: string;
 }
 
 /** Match elements by attribute predicate alone. */
 export interface AttributeSelector {
-  type: 'attribute';
+  type: "attribute";
   predicate: Predicate;
 }
 
 /** Compose selectors with set logic. */
 export interface AndSelector {
-  type: 'and';
+  type: "and";
   children: EntitySelector[];
 }
 export interface OrSelector {
-  type: 'or';
+  type: "or";
   children: EntitySelector[];
 }
 export interface NotSelector {
-  type: 'not';
+  type: "not";
   child: EntitySelector;
 }
 
@@ -90,17 +90,17 @@ export type EntitySelector =
 
 /** Exact property reference: `pset.name`. */
 export interface ExactAttributeRef {
-  kind: 'exact';
+  kind: "exact";
   /** Pset name. Null/empty = instance attribute (e.g. Name, GlobalId). */
   pset_name?: string | null;
   property_name: string;
   /** "instance" | "type" | "auto" — matches spec source_filter enum. */
-  source_filter?: 'instance' | 'type' | 'auto';
+  source_filter?: "instance" | "type" | "auto";
 }
 
 /** Reference an alias (canonical name resolved through synonyms). */
 export interface AliasAttributeRef {
-  kind: 'alias';
+  kind: "alias";
   alias_id: string;
   /** Alias canonical name; informational, not used for resolution. */
   canonical_name?: string;
@@ -108,55 +108,58 @@ export interface AliasAttributeRef {
 
 /** Reference all properties matching a regex pattern. */
 export interface RegexAttributeRef {
-  kind: 'regex';
+  kind: "regex";
   /** Regex pattern, ReDoS-safe (compiled with timeout server-side). */
   pattern: string;
   /** Apply to property name, pset name, or both. */
-  scope: 'property_name' | 'pset_name' | 'both';
+  scope: "property_name" | "pset_name" | "both";
   case_sensitive?: boolean;
 }
 
 /** Discriminated union of attribute reference kinds. */
-export type AttributeRef = ExactAttributeRef | AliasAttributeRef | RegexAttributeRef;
+export type AttributeRef =
+  | ExactAttributeRef
+  | AliasAttributeRef
+  | RegexAttributeRef;
 
 // ── Constraints (FR-1.6) — 25 operators ──────────────────────────────────────
 
 /** All 25 constraint operators per spec §1.6. */
 export type ConstraintOperator =
   // Equality
-  | 'eq'
-  | 'ne'
+  | "eq"
+  | "ne"
   // Comparison
-  | 'gt'
-  | 'gte'
-  | 'lt'
-  | 'lte'
+  | "gt"
+  | "gte"
+  | "lt"
+  | "lte"
   // Range
-  | 'between'
-  | 'not_between'
+  | "between"
+  | "not_between"
   // Set membership
-  | 'in'
-  | 'not_in'
+  | "in"
+  | "not_in"
   // String
-  | 'starts_with'
-  | 'ends_with'
-  | 'contains'
-  | 'not_contains'
-  | 'matches' // regex
-  | 'not_matches'
+  | "starts_with"
+  | "ends_with"
+  | "contains"
+  | "not_contains"
+  | "matches" // regex
+  | "not_matches"
   // Existence / null
-  | 'exists'
-  | 'not_exists'
-  | 'is_null'
-  | 'is_not_null'
+  | "exists"
+  | "not_exists"
+  | "is_null"
+  | "is_not_null"
   // Type
-  | 'is_numeric'
-  | 'is_string'
-  | 'is_boolean'
+  | "is_numeric"
+  | "is_string"
+  | "is_boolean"
   // Unit-aware
-  | 'eq_unit_aware'
-  | 'gte_unit_aware'
-  | 'lte_unit_aware';
+  | "eq_unit_aware"
+  | "gte_unit_aware"
+  | "lte_unit_aware";
 
 /** A constraint applied to an attribute. */
 export interface Constraint {
@@ -170,7 +173,7 @@ export interface Constraint {
   /** Unit hint, e.g. "mm", "m". Resolved server-side via alias. */
   unit?: string;
   /** When the attribute is missing on an element: "fail" | "pass" | "skip". */
-  treat_missing_as?: 'fail' | 'pass' | 'skip';
+  treat_missing_as?: "fail" | "pass" | "skip";
   case_sensitive?: boolean;
 }
 
@@ -178,44 +181,48 @@ export interface Constraint {
 
 /** A triplet = AttributeRef + Constraint applied to one element. */
 export interface TripletPredicate {
-  type: 'triplet';
+  type: "triplet";
   attribute: AttributeRef;
   constraint: Constraint;
 }
 
 /** Logical AND of N children. */
 export interface AndPredicate {
-  type: 'and';
+  type: "and";
   children: Predicate[];
 }
 
 /** Logical OR of N children. */
 export interface OrPredicate {
-  type: 'or';
+  type: "or";
   children: Predicate[];
 }
 
 /** Logical NOT of 1 child. */
 export interface NotPredicate {
-  type: 'not';
+  type: "not";
   child: Predicate;
 }
 
 /** Discriminated union of predicate kinds. */
-export type Predicate = TripletPredicate | AndPredicate | OrPredicate | NotPredicate;
+export type Predicate =
+  | TripletPredicate
+  | AndPredicate
+  | OrPredicate
+  | NotPredicate;
 
 // ── Local variables (FR-1.7) ─────────────────────────────────────────────────
 
 /** Aggregate function used inside a local variable definition. */
 export type AggregateFunction =
-  | 'sum'
-  | 'avg'
-  | 'min'
-  | 'max'
-  | 'count'
-  | 'count_distinct'
-  | 'first'
-  | 'last';
+  | "sum"
+  | "avg"
+  | "min"
+  | "max"
+  | "count"
+  | "count_distinct"
+  | "first"
+  | "last";
 
 /** A local variable defined within the scope of a single rule. */
 export interface LocalVariableDefinition {
@@ -236,9 +243,9 @@ export interface LocalVariableDefinition {
 /** Clash detection configuration (output_mode = "clash"). */
 export interface ClashConfig {
   /** Geometric algorithm. */
-  algorithm: 'exact' | 'obb' | 'sphere';
+  algorithm: "exact" | "obb" | "sphere";
   /** What to detect. */
-  metric: 'min_distance' | 'intersection_volume' | 'enclosed';
+  metric: "min_distance" | "intersection_volume" | "enclosed";
   /** Threshold, semantics depend on metric (e.g. mm for min_distance). */
   threshold: number;
   /** Set A — elements to clash. */
@@ -257,7 +264,7 @@ export interface IssueTemplate {
   description?: string;
   /** BCF topic_type. */
   topic_type?: string;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
+  priority?: "low" | "medium" | "high" | "critical";
   /** Project stage tag. */
   stage?: string;
   labels?: string[];
@@ -273,7 +280,7 @@ export interface IssueTemplate {
  */
 export interface EacRuleDefinition {
   /** Schema version, currently "2.0". */
-  schema_version: '2.0';
+  schema_version: "2.0";
   /** Display name. */
   name: string;
   description?: string;
@@ -306,23 +313,28 @@ export interface EacRuleDefinition {
  * The five block colors per spec §3.2. Used by `tokens.ts` and every block
  * component to drive consistent styling.
  */
-export type BlockColor = 'selector' | 'logic' | 'attribute' | 'constraint' | 'variable';
+export type BlockColor =
+  | "selector"
+  | "logic"
+  | "attribute"
+  | "constraint"
+  | "variable";
 
 /**
  * Logical predicate kind shown by `<LogicBlock>`. Subset of `Predicate.type`
  * minus `triplet` (which has its own dedicated block component).
  */
-export type LogicKind = 'and' | 'or' | 'not';
+export type LogicKind = "and" | "or" | "not";
 
 /**
  * Palette item categories per spec FR-3.1. Drives the grouped section headers
  * inside `<EacBlockPalette>`.
  */
 export type PaletteCategory =
-  | 'selectors'
-  | 'logic'
-  | 'triplet'
-  | 'attributes'
-  | 'constraints'
-  | 'variables'
-  | 'templates';
+  | "selectors"
+  | "logic"
+  | "triplet"
+  | "attributes"
+  | "constraints"
+  | "variables"
+  | "templates";

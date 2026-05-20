@@ -81,7 +81,9 @@ async def qa_reset(
         )
     except GateError as exc:
         logger.warning(
-            "qa-reset rejected: code=%s host=%s", exc.code, hostname,
+            "qa-reset rejected: code=%s host=%s",
+            exc.code,
+            hostname,
         )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -94,7 +96,9 @@ async def qa_reset(
         # Sanity-cap gate fires inside the service after the cheaper checks
         # so the error path is the same shape.
         logger.warning(
-            "qa-reset aborted by service gate: code=%s host=%s", exc.code, hostname,
+            "qa-reset aborted by service gate: code=%s host=%s",
+            exc.code,
+            hostname,
         )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -124,9 +128,7 @@ class CostVectorReindexRequest(BaseModel):
         * Hostname must look dev/staging — never production
     """
 
-    confirm_token: str = Field(
-        min_length=1, description="Shared secret matching QA_RESET_TOKEN env."
-    )
+    confirm_token: str = Field(min_length=1, description="Shared secret matching QA_RESET_TOKEN env.")
     force: bool = Field(
         default=False,
         description=(
@@ -162,9 +164,7 @@ class CostVectorReindexResponse(BaseModel):
     live_rows: int
 
 
-async def _run_cost_reindex(
-    *, batch_size: int, force: bool, task_id: str | None
-) -> dict[str, object]:
+async def _run_cost_reindex(*, batch_size: int, force: bool, task_id: str | None) -> dict[str, object]:
     """Execute the reindex pass.
 
     Runs in either inline (when called from the request handler) or
@@ -190,9 +190,7 @@ async def _run_cost_reindex(
             async with async_session_factory() as session:
                 live_total = (
                     await session.execute(
-                        select(func.count())
-                        .select_from(CostItem)
-                        .where(CostItem.is_active.is_(True))
+                        select(func.count()).select_from(CostItem).where(CostItem.is_active.is_(True))
                     )
                 ).scalar_one() or 0
             if indexed_count >= live_total > 0:
@@ -282,7 +280,9 @@ async def cost_vector_reindex(
         )
     except GateError as exc:
         logger.warning(
-            "cost-vector reindex rejected: code=%s host=%s", exc.code, hostname,
+            "cost-vector reindex rejected: code=%s host=%s",
+            exc.code,
+            hostname,
         )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -300,8 +300,7 @@ async def cost_vector_reindex(
                 detail={
                     "code": "vector_extra_missing",
                     "message": (
-                        "lancedb not installed; install the [vector] extra "
-                        "(pip install openconstructionerp[vector])."
+                        "lancedb not installed; install the [vector] extra (pip install openconstructionerp[vector])."
                     ),
                 },
             )
@@ -314,11 +313,7 @@ async def cost_vector_reindex(
     from app.modules.costs.models import CostItem
 
     live_rows = (
-        await session.execute(
-            select(func.count())
-            .select_from(CostItem)
-            .where(CostItem.is_active.is_(True))
-        )
+        await session.execute(select(func.count()).select_from(CostItem).where(CostItem.is_active.is_(True)))
     ).scalar_one() or 0
     live_rows = int(live_rows)
 

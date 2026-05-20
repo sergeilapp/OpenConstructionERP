@@ -11,11 +11,11 @@
  *   4. Actions        Respond (status=open), Close (status=answered)
  */
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -30,7 +30,7 @@ import {
   Paperclip,
   User,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Badge,
   Breadcrumb,
@@ -38,17 +38,12 @@ import {
   Card,
   ConfirmDialog,
   EmptyState,
-} from '@/shared/ui';
-import { useConfirm } from '@/shared/hooks/useConfirm';
-import { useToastStore } from '@/stores/useToastStore';
-import { apiGet } from '@/shared/lib/api';
-import {
-  closeRFI,
-  getRFI,
-  respondToRFI,
-  type RespondRFIPayload,
-} from './api';
-import { STATUS_CONFIG, PRIORITY_DOT } from './RFIPage';
+} from "@/shared/ui";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { useToastStore } from "@/stores/useToastStore";
+import { apiGet } from "@/shared/lib/api";
+import { closeRFI, getRFI, respondToRFI, type RespondRFIPayload } from "./api";
+import { STATUS_CONFIG, PRIORITY_DOT } from "./RFIPage";
 
 interface UserResult {
   id: string;
@@ -78,14 +73,20 @@ interface AttachmentApiRow {
 function normaliseAttachment(raw: AttachmentApiRow): AttachmentDoc {
   return {
     id: raw.id,
-    filename: raw.filename ?? raw.name ?? '',
-    category: raw.category ?? 'other',
+    filename: raw.filename ?? raw.name ?? "",
+    category: raw.category ?? "other",
   };
 }
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col gap-0.5">
       <dt className="text-[10px] uppercase tracking-wider text-content-quaternary">
@@ -97,30 +98,30 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 }
 
 function formatDate(value: string | null | undefined): string {
-  if (!value) return '—';
+  if (!value) return "—";
   try {
     return new Date(value).toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   } catch {
-    return '—';
+    return "—";
   }
 }
 
 function formatDateTime(value: string | null | undefined): string {
-  if (!value) return '—';
+  if (!value) return "—";
   try {
     return new Date(value).toLocaleString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   } catch {
-    return '—';
+    return "—";
   }
 }
 
@@ -136,7 +137,7 @@ function InlineRespondForm({
   onCancel: () => void;
 }) {
   const { t } = useTranslation();
-  const [response, setResponse] = useState('');
+  const [response, setResponse] = useState("");
 
   const handleSubmit = () => {
     if (response.trim()) onSubmit({ official_response: response.trim() });
@@ -148,16 +149,21 @@ function InlineRespondForm({
         value={response}
         onChange={(e) => setResponse(e.target.value)}
         rows={5}
-        placeholder={t('rfi.response_placeholder', {
-          defaultValue: 'Enter your response...‌⁠‍',
+        placeholder={t("rfi.response_placeholder", {
+          defaultValue: "Enter your response...‌⁠‍",
         })}
-        aria-label={t('rfi.field_response', { defaultValue: 'Response‌⁠‍' })}
+        aria-label={t("rfi.field_response", { defaultValue: "Response‌⁠‍" })}
         className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none"
         autoFocus
       />
       <div className="flex items-center gap-2 justify-end">
-        <Button variant="ghost" size="sm" onClick={onCancel} disabled={isPending}>
-          {t('common.cancel', { defaultValue: 'Cancel‌⁠‍' })}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onCancel}
+          disabled={isPending}
+        >
+          {t("common.cancel", { defaultValue: "Cancel‌⁠‍" })}
         </Button>
         <Button
           variant="primary"
@@ -170,7 +176,7 @@ function InlineRespondForm({
           ) : (
             <MessageSquare size={14} className="mr-1.5" />
           )}
-          {t('rfi.submit_response', { defaultValue: 'Submit Response‌⁠‍' })}
+          {t("rfi.submit_response", { defaultValue: "Submit Response‌⁠‍" })}
         </Button>
       </div>
     </div>
@@ -193,7 +199,7 @@ export function RFIDetailPage() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['rfi', rfiId],
+    queryKey: ["rfi", rfiId],
     queryFn: () => getRFI(rfiId as string),
     enabled: !!rfiId,
   });
@@ -201,8 +207,8 @@ export function RFIDetailPage() {
   // Lookup users so we can resolve raised_by / assigned_to / ball_in_court
   // to display names where possible. Falls back to the raw id when unknown.
   const { data: users = [] } = useQuery({
-    queryKey: ['users-search'],
-    queryFn: () => apiGet<UserResult[]>('/v1/users/?limit=100&is_active=true'),
+    queryKey: ["users-search"],
+    queryFn: () => apiGet<UserResult[]>("/v1/users/?limit=100&is_active=true"),
     staleTime: 60_000,
   });
 
@@ -212,11 +218,14 @@ export function RFIDetailPage() {
   // when the same id appears across multiple RFIs.
   const linkedIds = rfi?.linked_drawing_ids ?? [];
   const attachmentsQuery = useQuery({
-    queryKey: ['rfi-attachments', rfi?.project_id ?? null, linkedIds.join(',')],
+    queryKey: ["rfi-attachments", rfi?.project_id ?? null, linkedIds.join(",")],
     queryFn: async (): Promise<AttachmentDoc[]> => {
       const projectId = rfi?.project_id;
       if (!projectId || linkedIds.length === 0) return [];
-      const params = new URLSearchParams({ project_id: projectId, limit: '200' });
+      const params = new URLSearchParams({
+        project_id: projectId,
+        limit: "200",
+      });
       // We pull the full project document list (capped at 200) and then
       // filter to the linked ids. Cheaper than one-GET-per-id when the
       // user attached more than a couple of drawings.
@@ -224,9 +233,7 @@ export function RFIDetailPage() {
         `/v1/documents/?${params.toString()}`,
       );
       const wanted = new Set(linkedIds);
-      return rows
-        .filter((r) => wanted.has(r.id))
-        .map(normaliseAttachment);
+      return rows.filter((r) => wanted.has(r.id)).map(normaliseAttachment);
     },
     enabled: !!rfi && linkedIds.length > 0,
     staleTime: 60_000,
@@ -240,7 +247,7 @@ export function RFIDetailPage() {
     if (linkedIds.length === 0) return [];
     const byId = new Map(attachments.map((a) => [a.id, a]));
     return linkedIds.map(
-      (id: string) => byId.get(id) ?? { id, filename: id, category: 'other' },
+      (id: string) => byId.get(id) ?? { id, filename: id, category: "other" },
     );
   }, [linkedIds, attachments]);
 
@@ -254,16 +261,16 @@ export function RFIDetailPage() {
 
   const displayUser = useCallback(
     (id: string | null | undefined): string => {
-      if (!id) return '—';
+      if (!id) return "—";
       return userById.get(id) ?? id;
     },
     [userById],
   );
 
   const invalidate = useCallback(() => {
-    qc.invalidateQueries({ queryKey: ['rfi', rfiId] });
-    qc.invalidateQueries({ queryKey: ['rfis'] });
-    qc.invalidateQueries({ queryKey: ['rfi-stats'] });
+    qc.invalidateQueries({ queryKey: ["rfi", rfiId] });
+    qc.invalidateQueries({ queryKey: ["rfis"] });
+    qc.invalidateQueries({ queryKey: ["rfi-stats"] });
   }, [qc, rfiId]);
 
   const respondMut = useMutation({
@@ -273,17 +280,17 @@ export function RFIDetailPage() {
       invalidate();
       setResponding(false);
       addToast({
-        type: 'success',
-        title: t('rfi.responded', {
-          defaultValue: 'Response submitted successfully‌⁠‍',
+        type: "success",
+        title: t("rfi.responded", {
+          defaultValue: "Response submitted successfully‌⁠‍",
         }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('rfi.respond_failed', {
-          defaultValue: 'Failed to submit response',
+        type: "error",
+        title: t("rfi.respond_failed", {
+          defaultValue: "Failed to submit response",
         }),
         message: e.message,
       }),
@@ -294,15 +301,15 @@ export function RFIDetailPage() {
     onSuccess: () => {
       invalidate();
       addToast({
-        type: 'success',
-        title: t('rfi.closed', { defaultValue: 'RFI closed successfully' }),
+        type: "success",
+        title: t("rfi.closed", { defaultValue: "RFI closed successfully" }),
       });
     },
     onError: (e: Error) =>
       addToast({
-        type: 'error',
-        title: t('rfi.close_failed', {
-          defaultValue: 'Failed to close RFI',
+        type: "error",
+        title: t("rfi.close_failed", {
+          defaultValue: "Failed to close RFI",
         }),
         message: e.message,
       }),
@@ -312,13 +319,13 @@ export function RFIDetailPage() {
 
   const handleClose = useCallback(async () => {
     const ok = await confirm({
-      title: t('rfi.confirm_close_title', { defaultValue: 'Close RFI?' }),
-      message: t('rfi.confirm_close_msg', {
+      title: t("rfi.confirm_close_title", { defaultValue: "Close RFI?" }),
+      message: t("rfi.confirm_close_msg", {
         defaultValue:
-          'This RFI will be closed and no further responses can be added.',
+          "This RFI will be closed and no further responses can be added.",
       }),
-      confirmLabel: t('rfi.action_close', { defaultValue: 'Close RFI' }),
-      variant: 'warning',
+      confirmLabel: t("rfi.action_close", { defaultValue: "Close RFI" }),
+      variant: "warning",
     });
     if (ok) closeMut.mutate();
   }, [closeMut, confirm, t]);
@@ -327,10 +334,10 @@ export function RFIDetailPage() {
   useEffect(() => {
     if (!responding) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setResponding(false);
+      if (e.key === "Escape") setResponding(false);
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [responding]);
 
   /* ── Render states ─────────────────────────────────────────────────── */
@@ -348,25 +355,25 @@ export function RFIDetailPage() {
       <div className="w-full animate-fade-in">
         <Breadcrumb
           items={[
-            { label: t('rfi.title', { defaultValue: 'RFIs' }), to: '/rfi' },
-            { label: t('common.not_found', { defaultValue: 'Not found' }) },
+            { label: t("rfi.title", { defaultValue: "RFIs" }), to: "/rfi" },
+            { label: t("common.not_found", { defaultValue: "Not found" }) },
           ]}
           className="mb-4"
         />
         <EmptyState
           icon={<AlertTriangle size={28} strokeWidth={1.5} />}
-          title={t('rfi.not_found', { defaultValue: 'RFI not found' })}
+          title={t("rfi.not_found", { defaultValue: "RFI not found" })}
           description={
             error instanceof Error
               ? error.message
-              : t('rfi.not_found_hint', {
+              : t("rfi.not_found_hint", {
                   defaultValue:
-                    'The RFI you are looking for does not exist or you do not have access to it.',
+                    "The RFI you are looking for does not exist or you do not have access to it.",
                 })
           }
           action={{
-            label: t('rfi.back_to_list', { defaultValue: 'Back to RFIs' }),
-            onClick: () => navigate('/rfi'),
+            label: t("rfi.back_to_list", { defaultValue: "Back to RFIs" }),
+            onClick: () => navigate("/rfi"),
           }}
         />
       </div>
@@ -378,7 +385,7 @@ export function RFIDetailPage() {
     rfi.is_overdue ??
     !!(
       rfi.response_due_date &&
-      rfi.status === 'open' &&
+      rfi.status === "open" &&
       new Date(rfi.response_due_date) < new Date()
     );
 
@@ -387,8 +394,8 @@ export function RFIDetailPage() {
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-          { label: t('rfi.title', { defaultValue: 'RFIs' }), to: '/rfi' },
+          { label: t("nav.dashboard", { defaultValue: "Dashboard" }), to: "/" },
+          { label: t("rfi.title", { defaultValue: "RFIs" }), to: "/rfi" },
           { label: `#${rfi.rfi_number}` },
         ]}
         className="mb-4"
@@ -414,7 +421,7 @@ export function RFIDetailPage() {
             {isOverdue && (
               <Badge variant="error" size="md">
                 <AlertTriangle size={12} className="mr-1 inline" />
-                {t('rfi.overdue', { defaultValue: 'Overdue' })}
+                {t("rfi.overdue", { defaultValue: "Overdue" })}
               </Badge>
             )}
           </div>
@@ -424,21 +431,21 @@ export function RFIDetailPage() {
           <div className="mt-2 flex items-center gap-4 text-xs text-content-tertiary flex-wrap">
             <span className="inline-flex items-center gap-1">
               <Clock size={12} />
-              {t('rfi.days_open_count', {
-                defaultValue: '{{count}} days open',
+              {t("rfi.days_open_count", {
+                defaultValue: "{{count}} days open",
                 count: rfi.days_open,
               })}
             </span>
             {rfi.response_due_date && (
               <span
                 className={clsx(
-                  'inline-flex items-center gap-1',
-                  isOverdue && 'text-semantic-error font-semibold',
+                  "inline-flex items-center gap-1",
+                  isOverdue && "text-semantic-error font-semibold",
                 )}
               >
                 <CalendarClock size={12} />
-                {t('rfi.due_on', {
-                  defaultValue: 'Due {{date}}',
+                {t("rfi.due_on", {
+                  defaultValue: "Due {{date}}",
                   date: formatDate(rfi.response_due_date),
                 })}
               </span>
@@ -450,22 +457,22 @@ export function RFIDetailPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/rfi')}
+            onClick={() => navigate("/rfi")}
             icon={<ArrowLeft size={14} />}
           >
-            {t('rfi.back_to_list', { defaultValue: 'Back to RFIs' })}
+            {t("rfi.back_to_list", { defaultValue: "Back to RFIs" })}
           </Button>
-          {rfi.status === 'open' && (
+          {rfi.status === "open" && (
             <Button
               variant="primary"
               size="sm"
               onClick={() => setResponding(true)}
               icon={<MessageSquare size={14} />}
             >
-              {t('rfi.action_respond', { defaultValue: 'Respond' })}
+              {t("rfi.action_respond", { defaultValue: "Respond" })}
             </Button>
           )}
-          {rfi.status === 'answered' && (
+          {rfi.status === "answered" && (
             <Button
               variant="secondary"
               size="sm"
@@ -479,7 +486,7 @@ export function RFIDetailPage() {
                 )
               }
             >
-              {t('rfi.action_close', { defaultValue: 'Close RFI' })}
+              {t("rfi.action_close", { defaultValue: "Close RFI" })}
             </Button>
           )}
         </div>
@@ -494,7 +501,7 @@ export function RFIDetailPage() {
             <div className="flex items-center gap-2 mb-2">
               <MessageSquare size={14} className="text-content-tertiary" />
               <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                {t('rfi.label_question', { defaultValue: 'Question' })}
+                {t("rfi.label_question", { defaultValue: "Question" })}
               </span>
             </div>
             <p className="text-sm text-content-primary whitespace-pre-wrap leading-relaxed">
@@ -505,9 +512,9 @@ export function RFIDetailPage() {
           {/* Official Response */}
           <Card
             className={clsx(
-              'p-4',
+              "p-4",
               rfi.official_response &&
-                'border-green-200 bg-green-50/40 dark:bg-green-950/10 dark:border-green-900',
+                "border-green-200 bg-green-50/40 dark:bg-green-950/10 dark:border-green-900",
             )}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
@@ -516,12 +523,14 @@ export function RFIDetailPage() {
                   size={14}
                   className={
                     rfi.official_response
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-content-tertiary'
+                      ? "text-green-600 dark:text-green-400"
+                      : "text-content-tertiary"
                   }
                 />
                 <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                  {t('rfi.label_response', { defaultValue: 'Official response' })}
+                  {t("rfi.label_response", {
+                    defaultValue: "Official response",
+                  })}
                 </span>
               </div>
               {rfi.responded_at && (
@@ -537,8 +546,8 @@ export function RFIDetailPage() {
                 </p>
                 {rfi.responded_by && (
                   <p className="mt-3 text-xs text-content-tertiary">
-                    {t('rfi.responded_by', {
-                      defaultValue: 'Responded by {{name}}',
+                    {t("rfi.responded_by", {
+                      defaultValue: "Responded by {{name}}",
                       name: displayUser(rfi.responded_by),
                     })}
                   </p>
@@ -553,18 +562,18 @@ export function RFIDetailPage() {
             ) : (
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm text-content-tertiary italic">
-                  {t('rfi.no_response_yet', {
-                    defaultValue: 'No response yet.',
+                  {t("rfi.no_response_yet", {
+                    defaultValue: "No response yet.",
                   })}
                 </p>
-                {rfi.status === 'open' && (
+                {rfi.status === "open" && (
                   <Button
                     variant="primary"
                     size="sm"
                     onClick={() => setResponding(true)}
                     icon={<MessageSquare size={14} />}
                   >
-                    {t('rfi.action_respond', { defaultValue: 'Respond' })}
+                    {t("rfi.action_respond", { defaultValue: "Respond" })}
                   </Button>
                 )}
               </div>
@@ -577,7 +586,9 @@ export function RFIDetailPage() {
               <div className="flex items-center gap-2 mb-3">
                 <Paperclip size={14} className="text-content-tertiary" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                  {t('rfi.section_attachments', { defaultValue: 'Attachments' })}
+                  {t("rfi.section_attachments", {
+                    defaultValue: "Attachments",
+                  })}
                 </span>
                 <span className="text-2xs text-content-quaternary">
                   ({linkedIds.length})
@@ -595,10 +606,13 @@ export function RFIDetailPage() {
                         to={`/projects/${rfi.project_id}/files?file=${encodeURIComponent(doc.id)}`}
                         className="flex items-center gap-3 py-2 hover:bg-surface-secondary/60 transition-colors rounded-md px-2 -mx-2 group"
                       >
-                        <FileText size={14} className="text-content-tertiary shrink-0" />
+                        <FileText
+                          size={14}
+                          className="text-content-tertiary shrink-0"
+                        />
                         <div className="min-w-0 flex-1">
                           <p className="text-sm text-content-primary truncate">
-                            {doc.filename || '—'}
+                            {doc.filename || "—"}
                           </p>
                           <p className="text-xs text-content-tertiary truncate">
                             {doc.category}
@@ -617,7 +631,7 @@ export function RFIDetailPage() {
           )}
 
           {/* Bottom actions when answered, in case user scrolled */}
-          {rfi.status === 'answered' && (
+          {rfi.status === "answered" && (
             <div className="flex items-center gap-2">
               <Button
                 variant="secondary"
@@ -632,7 +646,7 @@ export function RFIDetailPage() {
                   )
                 }
               >
-                {t('rfi.action_close', { defaultValue: 'Close RFI' })}
+                {t("rfi.action_close", { defaultValue: "Close RFI" })}
               </Button>
             </div>
           )}
@@ -644,23 +658,25 @@ export function RFIDetailPage() {
             <div className="flex items-center gap-2 mb-3">
               <User size={14} className="text-content-tertiary" />
               <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                {t('rfi.meta_people', { defaultValue: 'People' })}
+                {t("rfi.meta_people", { defaultValue: "People" })}
               </span>
             </div>
             <dl className="space-y-3">
-              <Row label={t('rfi.field_raised_by', { defaultValue: 'Raised by' })}>
+              <Row
+                label={t("rfi.field_raised_by", { defaultValue: "Raised by" })}
+              >
                 {displayUser(rfi.raised_by)}
               </Row>
               <Row
-                label={t('rfi.field_assigned_to', {
-                  defaultValue: 'Assigned to',
+                label={t("rfi.field_assigned_to", {
+                  defaultValue: "Assigned to",
                 })}
               >
                 {displayUser(rfi.assigned_to)}
               </Row>
               <Row
-                label={t('rfi.field_ball_in_court', {
-                  defaultValue: 'Ball in court',
+                label={t("rfi.field_ball_in_court", {
+                  defaultValue: "Ball in court",
                 })}
               >
                 {displayUser(rfi.ball_in_court)}
@@ -672,39 +688,46 @@ export function RFIDetailPage() {
           <Card className="p-4">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                {t('rfi.meta_classification', {
-                  defaultValue: 'Classification',
+                {t("rfi.meta_classification", {
+                  defaultValue: "Classification",
                 })}
               </span>
             </div>
             <dl className="space-y-3">
-              <Row label={t('rfi.field_priority', { defaultValue: 'Priority' })}>
+              <Row
+                label={t("rfi.field_priority", { defaultValue: "Priority" })}
+              >
                 {rfi.priority ? (
                   <span className="inline-flex items-center gap-2">
                     <span
                       className={clsx(
-                        'inline-block h-2 w-2 rounded-full',
+                        "inline-block h-2 w-2 rounded-full",
                         PRIORITY_DOT[rfi.priority],
                       )}
                       aria-hidden="true"
                     />
                     {t(`rfi.priority_${rfi.priority}`, {
                       defaultValue:
-                        rfi.priority.charAt(0).toUpperCase() + rfi.priority.slice(1),
+                        rfi.priority.charAt(0).toUpperCase() +
+                        rfi.priority.slice(1),
                     })}
                   </span>
                 ) : (
-                  '—'
+                  "—"
                 )}
               </Row>
-              <Row label={t('rfi.field_discipline', { defaultValue: 'Discipline' })}>
+              <Row
+                label={t("rfi.field_discipline", {
+                  defaultValue: "Discipline",
+                })}
+              >
                 {rfi.discipline
                   ? t(`rfi.discipline_${rfi.discipline}`, {
                       defaultValue:
                         rfi.discipline.charAt(0).toUpperCase() +
                         rfi.discipline.slice(1),
                     })
-                  : '—'}
+                  : "—"}
               </Row>
             </dl>
           </Card>
@@ -713,34 +736,34 @@ export function RFIDetailPage() {
             <div className="flex items-center gap-2 mb-3">
               <CalendarClock size={14} className="text-content-tertiary" />
               <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                {t('rfi.meta_schedule', { defaultValue: 'Schedule' })}
+                {t("rfi.meta_schedule", { defaultValue: "Schedule" })}
               </span>
             </div>
             <dl className="space-y-3">
               <Row
-                label={t('rfi.field_due_date', {
-                  defaultValue: 'Response due date',
+                label={t("rfi.field_due_date", {
+                  defaultValue: "Response due date",
                 })}
               >
                 <span
                   className={
-                    isOverdue ? 'text-semantic-error font-semibold' : undefined
+                    isOverdue ? "text-semantic-error font-semibold" : undefined
                   }
                 >
                   {formatDate(rfi.response_due_date)}
                 </span>
               </Row>
               <Row
-                label={t('rfi.field_date_required', {
-                  defaultValue: 'Date required',
+                label={t("rfi.field_date_required", {
+                  defaultValue: "Date required",
                 })}
               >
                 {formatDate(rfi.date_required)}
               </Row>
-              <Row label={t('common.created_at', { defaultValue: 'Created' })}>
+              <Row label={t("common.created_at", { defaultValue: "Created" })}>
                 {formatDateTime(rfi.created_at)}
               </Row>
-              <Row label={t('common.updated_at', { defaultValue: 'Updated' })}>
+              <Row label={t("common.updated_at", { defaultValue: "Updated" })}>
                 {formatDateTime(rfi.updated_at)}
               </Row>
             </dl>
@@ -751,31 +774,31 @@ export function RFIDetailPage() {
               <div className="flex items-center gap-2 mb-3">
                 <AlertTriangle size={14} className="text-content-tertiary" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                  {t('rfi.meta_impact', { defaultValue: 'Impact' })}
+                  {t("rfi.meta_impact", { defaultValue: "Impact" })}
                 </span>
               </div>
               <dl className="space-y-3">
                 {rfi.cost_impact && (
                   <Row
-                    label={t('rfi.field_cost_impact_value', {
-                      defaultValue: 'Cost exposure',
+                    label={t("rfi.field_cost_impact_value", {
+                      defaultValue: "Cost exposure",
                     })}
                   >
                     <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium">
                       <DollarSign size={12} />
-                      {rfi.cost_impact_value ?? '—'}
+                      {rfi.cost_impact_value ?? "—"}
                     </span>
                   </Row>
                 )}
                 {rfi.schedule_impact && (
                   <Row
-                    label={t('rfi.field_schedule_impact_days', {
-                      defaultValue: 'Schedule slip (days)',
+                    label={t("rfi.field_schedule_impact_days", {
+                      defaultValue: "Schedule slip (days)",
                     })}
                   >
                     <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400 font-medium">
                       <Clock size={12} />
-                      {rfi.schedule_impact_days ?? '—'}
+                      {rfi.schedule_impact_days ?? "—"}
                     </span>
                   </Row>
                 )}
@@ -787,15 +810,15 @@ export function RFIDetailPage() {
             <Card className="p-4">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-                  {t('rfi.meta_linked', { defaultValue: 'Linked' })}
+                  {t("rfi.meta_linked", { defaultValue: "Linked" })}
                 </span>
               </div>
               <Link
                 to="/changeorders"
                 className="text-sm text-oe-blue hover:underline"
               >
-                {t('rfi.linked_change_order', {
-                  defaultValue: 'View linked change order',
+                {t("rfi.linked_change_order", {
+                  defaultValue: "View linked change order",
                 })}
               </Link>
             </Card>
@@ -807,7 +830,7 @@ export function RFIDetailPage() {
       {responding && (
         <button
           type="button"
-          aria-label={t('common.close', { defaultValue: 'Close' })}
+          aria-label={t("common.close", { defaultValue: "Close" })}
           onClick={() => setResponding(false)}
           className="sr-only"
         >

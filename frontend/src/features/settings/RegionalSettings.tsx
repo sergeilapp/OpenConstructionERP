@@ -6,64 +6,78 @@
  * in the local preferences store for immediate UI effect.
  */
 
-import { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Globe, Ruler, FileText, Calendar, Hash, DollarSign, Search, Check } from 'lucide-react';
-import clsx from 'clsx';
-import { Card, CardHeader, CardContent } from '@/shared/ui';
-import { apiGet, apiPatch } from '@/shared/lib/api';
-import { usePreferencesStore, type MeasurementSystem, type DateFormat, type NumberLocale } from '@/stores/usePreferencesStore';
-import { useToastStore } from '@/stores/useToastStore';
+import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Globe,
+  Ruler,
+  FileText,
+  Calendar,
+  Hash,
+  DollarSign,
+  Search,
+  Check,
+} from "lucide-react";
+import clsx from "clsx";
+import { Card, CardHeader, CardContent } from "@/shared/ui";
+import { apiGet, apiPatch } from "@/shared/lib/api";
+import {
+  usePreferencesStore,
+  type MeasurementSystem,
+  type DateFormat,
+  type NumberLocale,
+} from "@/stores/usePreferencesStore";
+import { useToastStore } from "@/stores/useToastStore";
 
 // ── Static data ──────────────────────────────────────────────────────────────
 
 const TIMEZONES = [
-  'UTC',
-  'Europe/London',
-  'Europe/Berlin',
-  'Europe/Paris',
-  'Europe/Madrid',
-  'Europe/Rome',
-  'Europe/Amsterdam',
-  'Europe/Brussels',
-  'Europe/Vienna',
-  'Europe/Zurich',
-  'Europe/Warsaw',
-  'Europe/Prague',
-  'Europe/Stockholm',
-  'Europe/Oslo',
-  'Europe/Helsinki',
-  'Europe/Moscow',
-  'Europe/Istanbul',
-  'Asia/Dubai',
-  'Asia/Kolkata',
-  'Asia/Bangkok',
-  'Asia/Singapore',
-  'Asia/Shanghai',
-  'Asia/Tokyo',
-  'Asia/Seoul',
-  'Australia/Sydney',
-  'Pacific/Auckland',
-  'America/New_York',
-  'America/Chicago',
-  'America/Denver',
-  'America/Los_Angeles',
-  'America/Toronto',
-  'America/Sao_Paulo',
+  "UTC",
+  "Europe/London",
+  "Europe/Berlin",
+  "Europe/Paris",
+  "Europe/Madrid",
+  "Europe/Rome",
+  "Europe/Amsterdam",
+  "Europe/Brussels",
+  "Europe/Vienna",
+  "Europe/Zurich",
+  "Europe/Warsaw",
+  "Europe/Prague",
+  "Europe/Stockholm",
+  "Europe/Oslo",
+  "Europe/Helsinki",
+  "Europe/Moscow",
+  "Europe/Istanbul",
+  "Asia/Dubai",
+  "Asia/Kolkata",
+  "Asia/Bangkok",
+  "Asia/Singapore",
+  "Asia/Shanghai",
+  "Asia/Tokyo",
+  "Asia/Seoul",
+  "Australia/Sydney",
+  "Pacific/Auckland",
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "America/Toronto",
+  "America/Sao_Paulo",
 ] as const;
 
 const PAPER_SIZES = [
-  { value: 'A4', label: 'A4 (210 x 297 mm)' },
-  { value: 'A3', label: 'A3 (297 x 420 mm)' },
-  { value: 'Letter', label: 'Letter (8.5 x 11 in)' },
-  { value: 'Legal', label: 'Legal (8.5 x 14 in)' },
+  { value: "A4", label: "A4 (210 x 297 mm)" },
+  { value: "A3", label: "A3 (297 x 420 mm)" },
+  { value: "Letter", label: "Letter (8.5 x 11 in)" },
+  { value: "Legal", label: "Legal (8.5 x 14 in)" },
 ] as const;
 
 const DATE_FORMATS: { value: DateFormat; example: string }[] = [
-  { value: 'DD.MM.YYYY', example: '07.04.2026' },
-  { value: 'MM/DD/YYYY', example: '04/07/2026' },
-  { value: 'YYYY-MM-DD', example: '2026-04-07' },
+  { value: "DD.MM.YYYY", example: "07.04.2026" },
+  { value: "MM/DD/YYYY", example: "04/07/2026" },
+  { value: "YYYY-MM-DD", example: "2026-04-07" },
 ];
 
 interface NumberFormatOption {
@@ -73,59 +87,59 @@ interface NumberFormatOption {
 }
 
 const NUMBER_FORMATS: NumberFormatOption[] = [
-  { locale: 'de-DE', label: '1.234,56', example: '1.234,56' },
-  { locale: 'en-US', label: '1,234.56', example: '1,234.56' },
-  { locale: 'fr-FR', label: '1 234,56', example: '1 234,56' },
-  { locale: 'en-GB', label: '1,234.56', example: '1,234.56' },
-  { locale: 'ru-RU', label: '1 234,56', example: '1 234,56' },
+  { locale: "de-DE", label: "1.234,56", example: "1.234,56" },
+  { locale: "en-US", label: "1,234.56", example: "1,234.56" },
+  { locale: "fr-FR", label: "1 234,56", example: "1 234,56" },
+  { locale: "en-GB", label: "1,234.56", example: "1,234.56" },
+  { locale: "ru-RU", label: "1 234,56", example: "1 234,56" },
 ];
 
 const CURRENCIES = [
-  { code: 'EUR', symbol: '\u20AC', name: 'Euro' },
-  { code: 'USD', symbol: '$', name: 'US Dollar' },
-  { code: 'GBP', symbol: '\u00A3', name: 'British Pound' },
-  { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc' },
-  { code: 'SEK', symbol: 'kr', name: 'Swedish Krona' },
-  { code: 'NOK', symbol: 'kr', name: 'Norwegian Krone' },
-  { code: 'DKK', symbol: 'kr', name: 'Danish Krone' },
-  { code: 'PLN', symbol: 'z\u0142', name: 'Polish Zloty' },
-  { code: 'CZK', symbol: 'K\u010D', name: 'Czech Koruna' },
-  { code: 'HUF', symbol: 'Ft', name: 'Hungarian Forint' },
-  { code: 'RUB', symbol: '\u20BD', name: 'Russian Ruble' },
-  { code: 'TRY', symbol: '\u20BA', name: 'Turkish Lira' },
-  { code: 'AED', symbol: 'AED', name: 'UAE Dirham' },
-  { code: 'SAR', symbol: 'SAR', name: 'Saudi Riyal' },
-  { code: 'INR', symbol: '\u20B9', name: 'Indian Rupee' },
-  { code: 'CNY', symbol: '\u00A5', name: 'Chinese Yuan' },
-  { code: 'JPY', symbol: '\u00A5', name: 'Japanese Yen' },
-  { code: 'KRW', symbol: '\u20A9', name: 'South Korean Won' },
-  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
-  { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
-  { code: 'BRL', symbol: 'R$', name: 'Brazilian Real' },
-  { code: 'MXN', symbol: 'MX$', name: 'Mexican Peso' },
-  { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar' },
-  { code: 'NZD', symbol: 'NZ$', name: 'New Zealand Dollar' },
+  { code: "EUR", symbol: "\u20AC", name: "Euro" },
+  { code: "USD", symbol: "$", name: "US Dollar" },
+  { code: "GBP", symbol: "\u00A3", name: "British Pound" },
+  { code: "CHF", symbol: "CHF", name: "Swiss Franc" },
+  { code: "SEK", symbol: "kr", name: "Swedish Krona" },
+  { code: "NOK", symbol: "kr", name: "Norwegian Krone" },
+  { code: "DKK", symbol: "kr", name: "Danish Krone" },
+  { code: "PLN", symbol: "z\u0142", name: "Polish Zloty" },
+  { code: "CZK", symbol: "K\u010D", name: "Czech Koruna" },
+  { code: "HUF", symbol: "Ft", name: "Hungarian Forint" },
+  { code: "RUB", symbol: "\u20BD", name: "Russian Ruble" },
+  { code: "TRY", symbol: "\u20BA", name: "Turkish Lira" },
+  { code: "AED", symbol: "AED", name: "UAE Dirham" },
+  { code: "SAR", symbol: "SAR", name: "Saudi Riyal" },
+  { code: "INR", symbol: "\u20B9", name: "Indian Rupee" },
+  { code: "CNY", symbol: "\u00A5", name: "Chinese Yuan" },
+  { code: "JPY", symbol: "\u00A5", name: "Japanese Yen" },
+  { code: "KRW", symbol: "\u20A9", name: "South Korean Won" },
+  { code: "AUD", symbol: "A$", name: "Australian Dollar" },
+  { code: "CAD", symbol: "C$", name: "Canadian Dollar" },
+  { code: "BRL", symbol: "R$", name: "Brazilian Real" },
+  { code: "MXN", symbol: "MX$", name: "Mexican Peso" },
+  { code: "SGD", symbol: "S$", name: "Singapore Dollar" },
+  { code: "NZD", symbol: "NZ$", name: "New Zealand Dollar" },
   // Africa
-  { code: 'ZAR', symbol: 'R', name: 'South African Rand' },
-  { code: 'NGN', symbol: '₦', name: 'Nigerian Naira' },
-  { code: 'EGP', symbol: 'E£', name: 'Egyptian Pound' },
-  { code: 'KES', symbol: 'KSh', name: 'Kenyan Shilling' },
-  { code: 'GHS', symbol: '₵', name: 'Ghanaian Cedi' },
-  { code: 'MAD', symbol: 'DH', name: 'Moroccan Dirham' },
-  { code: 'TND', symbol: 'TND', name: 'Tunisian Dinar' },
-  { code: 'DZD', symbol: 'DA', name: 'Algerian Dinar' },
-  { code: 'ETB', symbol: 'Br', name: 'Ethiopian Birr' },
-  { code: 'UGX', symbol: 'USh', name: 'Ugandan Shilling' },
-  { code: 'TZS', symbol: 'TSh', name: 'Tanzanian Shilling' },
-  { code: 'RWF', symbol: 'FRw', name: 'Rwandan Franc' },
-  { code: 'XOF', symbol: 'CFA', name: 'West African CFA Franc' },
-  { code: 'XAF', symbol: 'FCFA', name: 'Central African CFA Franc' },
-  { code: 'AOA', symbol: 'Kz', name: 'Angolan Kwanza' },
-  { code: 'MZN', symbol: 'MT', name: 'Mozambique Metical' },
-  { code: 'BWP', symbol: 'P', name: 'Botswana Pula' },
-  { code: 'ZMW', symbol: 'ZK', name: 'Zambian Kwacha' },
-  { code: 'NAD', symbol: 'N$', name: 'Namibia Dollar' },
-  { code: 'MGA', symbol: 'Ar', name: 'Malagasy Ariary' },
+  { code: "ZAR", symbol: "R", name: "South African Rand" },
+  { code: "NGN", symbol: "₦", name: "Nigerian Naira" },
+  { code: "EGP", symbol: "E£", name: "Egyptian Pound" },
+  { code: "KES", symbol: "KSh", name: "Kenyan Shilling" },
+  { code: "GHS", symbol: "₵", name: "Ghanaian Cedi" },
+  { code: "MAD", symbol: "DH", name: "Moroccan Dirham" },
+  { code: "TND", symbol: "TND", name: "Tunisian Dinar" },
+  { code: "DZD", symbol: "DA", name: "Algerian Dinar" },
+  { code: "ETB", symbol: "Br", name: "Ethiopian Birr" },
+  { code: "UGX", symbol: "USh", name: "Ugandan Shilling" },
+  { code: "TZS", symbol: "TSh", name: "Tanzanian Shilling" },
+  { code: "RWF", symbol: "FRw", name: "Rwandan Franc" },
+  { code: "XOF", symbol: "CFA", name: "West African CFA Franc" },
+  { code: "XAF", symbol: "FCFA", name: "Central African CFA Franc" },
+  { code: "AOA", symbol: "Kz", name: "Angolan Kwanza" },
+  { code: "MZN", symbol: "MT", name: "Mozambique Metical" },
+  { code: "BWP", symbol: "P", name: "Botswana Pula" },
+  { code: "ZMW", symbol: "ZK", name: "Zambian Kwacha" },
+  { code: "NAD", symbol: "N$", name: "Namibia Dollar" },
+  { code: "MGA", symbol: "Ar", name: "Malagasy Ariary" },
 ] as const;
 
 // ── Backend preferences shape ────────────────────────────────────────────────
@@ -155,12 +169,16 @@ function SearchableSelect<T extends string>({
   placeholder: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   // Normalize options
   const normalized = useMemo(() => {
     return (options as (T | { value: T; label: string })[]).map((opt) => {
-      if (typeof opt === 'string') return { value: opt as T, label: renderOption ? renderOption(opt as T) : (opt as string) };
+      if (typeof opt === "string")
+        return {
+          value: opt as T,
+          label: renderOption ? renderOption(opt as T) : (opt as string),
+        };
       return opt as { value: T; label: string };
     });
   }, [options, renderOption]);
@@ -169,29 +187,37 @@ function SearchableSelect<T extends string>({
     if (!search) return normalized;
     const q = search.toLowerCase();
     return normalized.filter(
-      (o) => o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q),
+      (o) =>
+        o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q),
     );
   }, [normalized, search]);
 
-  const selectedLabel = normalized.find((o) => o.value === value)?.label ?? value;
+  const selectedLabel =
+    normalized.find((o) => o.value === value)?.label ?? value;
 
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={() => { setOpen(!open); setSearch(''); }}
+        onClick={() => {
+          setOpen(!open);
+          setSearch("");
+        }}
         className={clsx(
-          'flex h-9 w-full items-center justify-between rounded-lg border px-3',
-          'text-sm text-content-primary bg-surface-primary',
-          'transition-all duration-fast ease-oe',
+          "flex h-9 w-full items-center justify-between rounded-lg border px-3",
+          "text-sm text-content-primary bg-surface-primary",
+          "transition-all duration-fast ease-oe",
           open
-            ? 'border-oe-blue ring-2 ring-oe-blue/20'
-            : 'border-border hover:border-content-tertiary',
+            ? "border-oe-blue ring-2 ring-oe-blue/20"
+            : "border-border hover:border-content-tertiary",
         )}
       >
         <span className="truncate">{selectedLabel}</span>
         <svg
-          className={clsx('h-4 w-4 text-content-tertiary transition-transform', open && 'rotate-180')}
+          className={clsx(
+            "h-4 w-4 text-content-tertiary transition-transform",
+            open && "rotate-180",
+          )}
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -235,16 +261,23 @@ function SearchableSelect<T extends string>({
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => { onChange(opt.value); setOpen(false); }}
+                    onClick={() => {
+                      onChange(opt.value);
+                      setOpen(false);
+                    }}
                     className={clsx(
-                      'flex w-full items-center gap-2 px-3 py-1.5 text-sm transition-colors',
+                      "flex w-full items-center gap-2 px-3 py-1.5 text-sm transition-colors",
                       opt.value === value
-                        ? 'bg-oe-blue-subtle text-oe-blue font-medium'
-                        : 'text-content-primary hover:bg-surface-secondary',
+                        ? "bg-oe-blue-subtle text-oe-blue font-medium"
+                        : "text-content-primary hover:bg-surface-secondary",
                     )}
                   >
-                    <span className="truncate flex-1 text-left">{opt.label}</span>
-                    {opt.value === value && <Check size={14} className="shrink-0" />}
+                    <span className="truncate flex-1 text-left">
+                      {opt.label}
+                    </span>
+                    {opt.value === value && (
+                      <Check size={14} className="shrink-0" />
+                    )}
                   </button>
                 ))
               )}
@@ -278,10 +311,10 @@ function ToggleGroup<T extends string>({
             onClick={() => onChange(opt.value)}
             aria-pressed={active}
             className={clsx(
-              'flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-fast',
+              "flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-fast",
               active
-                ? 'bg-oe-blue-subtle border-2 border-oe-blue text-oe-blue'
-                : 'border-2 border-border-light text-content-secondary hover:bg-surface-secondary hover:text-content-primary',
+                ? "bg-oe-blue-subtle border-2 border-oe-blue text-oe-blue"
+                : "border-2 border-border-light text-content-secondary hover:bg-surface-secondary hover:text-content-primary",
             )}
           >
             {opt.label}
@@ -294,7 +327,11 @@ function ToggleGroup<T extends string>({
 
 // ── RegionalSettings Component ───────────────────────────────────────────────
 
-export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: string }) {
+export function RegionalSettings({
+  animationDelay = "0ms",
+}: {
+  animationDelay?: string;
+}) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
@@ -306,35 +343,41 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
 
   // Fetch current preferences from backend
   const { data: prefs } = useQuery({
-    queryKey: ['user-preferences'],
-    queryFn: () => apiGet<UserPreferencesResponse>('/v1/users/me/preferences/'),
+    queryKey: ["user-preferences"],
+    queryFn: () => apiGet<UserPreferencesResponse>("/v1/users/me/preferences/"),
     retry: false,
     staleTime: 60_000,
   });
 
   // Local state — seeded from backend, falls back to store
-  const timezone = prefs?.timezone ?? 'UTC';
-  const measurementSystem = (prefs?.measurement_system as MeasurementSystem) ?? storeMeasurement;
-  const paperSize = prefs?.paper_size ?? 'A4';
+  const timezone = prefs?.timezone ?? "UTC";
+  const measurementSystem =
+    (prefs?.measurement_system as MeasurementSystem) ?? storeMeasurement;
+  const paperSize = prefs?.paper_size ?? "A4";
   const dateFormat = (prefs?.date_format as DateFormat) ?? storeDateFormat;
-  const numberFormat = (prefs?.number_format as NumberLocale) ?? storeNumberLocale;
+  const numberFormat =
+    (prefs?.number_format as NumberLocale) ?? storeNumberLocale;
   const currency = prefs?.currency ?? storeCurrency;
 
   // Patch mutation
   const patchMutation = useMutation({
     mutationFn: (update: Partial<UserPreferencesResponse>) =>
-      apiPatch<UserPreferencesResponse>('/v1/users/me/preferences/', update),
+      apiPatch<UserPreferencesResponse>("/v1/users/me/preferences/", update),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user-preferences'] });
+      queryClient.invalidateQueries({ queryKey: ["user-preferences"] });
       addToast({
-        type: 'success',
-        title: t('settings.preferences_saved', { defaultValue: 'Preferences saved‌⁠‍' }),
+        type: "success",
+        title: t("settings.preferences_saved", {
+          defaultValue: "Preferences saved‌⁠‍",
+        }),
       });
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('settings.preferences_error', { defaultValue: 'Failed to save preferences‌⁠‍' }),
+        type: "error",
+        title: t("settings.preferences_error", {
+          defaultValue: "Failed to save preferences‌⁠‍",
+        }),
         message: err.message,
       });
     },
@@ -347,18 +390,18 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
 
       // Update local store for immediate UI effect
       switch (field) {
-        case 'currency':
-          setPreference('currency', value);
-          setPreference('defaultCurrency', value);
+        case "currency":
+          setPreference("currency", value);
+          setPreference("defaultCurrency", value);
           break;
-        case 'measurement_system':
-          setPreference('measurementSystem', value as MeasurementSystem);
+        case "measurement_system":
+          setPreference("measurementSystem", value as MeasurementSystem);
           break;
-        case 'date_format':
-          setPreference('dateFormat', value as DateFormat);
+        case "date_format":
+          setPreference("dateFormat", value as DateFormat);
           break;
-        case 'number_format':
-          setPreference('numberLocale', value as NumberLocale);
+        case "number_format":
+          setPreference("numberLocale", value as NumberLocale);
           break;
       }
     },
@@ -378,9 +421,11 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
   return (
     <Card className="animate-card-in" style={{ animationDelay }}>
       <CardHeader
-        title={t('settings.regional_title', { defaultValue: 'Regional Settings‌⁠‍' })}
-        subtitle={t('settings.regional_subtitle', {
-          defaultValue: 'Configure timezone, units, formats, and currency‌⁠‍',
+        title={t("settings.regional_title", {
+          defaultValue: "Regional Settings‌⁠‍",
+        })}
+        subtitle={t("settings.regional_subtitle", {
+          defaultValue: "Configure timezone, units, formats, and currency‌⁠‍",
         })}
       />
       <CardContent>
@@ -389,14 +434,14 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-content-primary mb-1.5">
               <Globe size={14} className="text-content-tertiary" />
-              {t('settings.timezone', { defaultValue: 'Timezone‌⁠‍' })}
+              {t("settings.timezone", { defaultValue: "Timezone‌⁠‍" })}
             </label>
             <SearchableSelect
               value={timezone}
               options={TIMEZONES as unknown as readonly string[]}
-              onChange={(val) => handleChange('timezone', val)}
-              renderOption={(tz) => tz.replace(/_/g, ' ')}
-              placeholder={t('common.search', { defaultValue: 'Search...' })}
+              onChange={(val) => handleChange("timezone", val)}
+              renderOption={(tz) => tz.replace(/_/g, " ")}
+              placeholder={t("common.search", { defaultValue: "Search..." })}
             />
           </div>
 
@@ -404,21 +449,27 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-content-primary mb-1.5">
               <Ruler size={14} className="text-content-tertiary" />
-              {t('settings.measurement_system', { defaultValue: 'Measurement System' })}
+              {t("settings.measurement_system", {
+                defaultValue: "Measurement System",
+              })}
             </label>
             <ToggleGroup
               value={measurementSystem}
               options={[
                 {
-                  value: 'metric' as MeasurementSystem,
-                  label: t('settings.metric', { defaultValue: 'Metric (m, kg)' }),
+                  value: "metric" as MeasurementSystem,
+                  label: t("settings.metric", {
+                    defaultValue: "Metric (m, kg)",
+                  }),
                 },
                 {
-                  value: 'imperial' as MeasurementSystem,
-                  label: t('settings.imperial', { defaultValue: 'Imperial (ft, lb)' }),
+                  value: "imperial" as MeasurementSystem,
+                  label: t("settings.imperial", {
+                    defaultValue: "Imperial (ft, lb)",
+                  }),
                 },
               ]}
-              onChange={(val) => handleChange('measurement_system', val)}
+              onChange={(val) => handleChange("measurement_system", val)}
             />
           </div>
 
@@ -426,12 +477,15 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-content-primary mb-1.5">
               <FileText size={14} className="text-content-tertiary" />
-              {t('settings.paper_size', { defaultValue: 'Paper Size' })}
+              {t("settings.paper_size", { defaultValue: "Paper Size" })}
             </label>
             <ToggleGroup
               value={paperSize}
-              options={PAPER_SIZES.map((p) => ({ value: p.value, label: p.label }))}
-              onChange={(val) => handleChange('paper_size', val)}
+              options={PAPER_SIZES.map((p) => ({
+                value: p.value,
+                label: p.label,
+              }))}
+              onChange={(val) => handleChange("paper_size", val)}
             />
           </div>
 
@@ -439,7 +493,7 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-content-primary mb-1.5">
               <Calendar size={14} className="text-content-tertiary" />
-              {t('settings.date_format', { defaultValue: 'Date Format' })}
+              {t("settings.date_format", { defaultValue: "Date Format" })}
             </label>
             <ToggleGroup
               value={dateFormat}
@@ -447,7 +501,7 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
                 value: f.value,
                 label: f.example,
               }))}
-              onChange={(val) => handleChange('date_format', val)}
+              onChange={(val) => handleChange("date_format", val)}
             />
           </div>
 
@@ -455,7 +509,7 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-content-primary mb-1.5">
               <Hash size={14} className="text-content-tertiary" />
-              {t('settings.number_format', { defaultValue: 'Number Format' })}
+              {t("settings.number_format", { defaultValue: "Number Format" })}
             </label>
             <ToggleGroup
               value={numberFormat}
@@ -463,7 +517,7 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
                 value: f.locale,
                 label: f.example,
               }))}
-              onChange={(val) => handleChange('number_format', val)}
+              onChange={(val) => handleChange("number_format", val)}
             />
           </div>
 
@@ -471,13 +525,13 @@ export function RegionalSettings({ animationDelay = '0ms' }: { animationDelay?: 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-content-primary mb-1.5">
               <DollarSign size={14} className="text-content-tertiary" />
-              {t('settings.currency', { defaultValue: 'Currency' })}
+              {t("settings.currency", { defaultValue: "Currency" })}
             </label>
             <SearchableSelect
               value={currency}
               options={currencyOptions}
-              onChange={(val) => handleChange('currency', val)}
-              placeholder={t('common.search', { defaultValue: 'Search...' })}
+              onChange={(val) => handleChange("currency", val)}
+              placeholder={t("common.search", { defaultValue: "Search..." })}
             />
           </div>
         </div>

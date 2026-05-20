@@ -10,12 +10,12 @@
 // stage runner fills so the user does not break the contract by
 // renaming one.
 
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { GitFork, Loader2, RotateCcw, Save, Sparkles } from 'lucide-react';
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { GitFork, Loader2, RotateCcw, Save, Sparkles } from "lucide-react";
 
-import { matchElementsApi, type PromptTemplate } from './api';
+import { matchElementsApi, type PromptTemplate } from "./api";
 
 interface Props {
   /** Stage hook key, e.g. ``match.cost_agent``. */
@@ -43,7 +43,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
   const qc = useQueryClient();
 
   const listQ = useQuery({
-    queryKey: ['match-prompt-templates', promptKey],
+    queryKey: ["match-prompt-templates", promptKey],
     queryFn: () => matchElementsApi.listPromptTemplates(promptKey),
   });
 
@@ -56,8 +56,8 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
     return templates.find((x) => x.is_system) ?? templates[0];
   }, [templates, selectedId]);
 
-  const [sys, setSys] = useState('');
-  const [usr, setUsr] = useState('');
+  const [sys, setSys] = useState("");
+  const [usr, setUsr] = useState("");
   const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
@@ -83,14 +83,14 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
     mutationFn: () =>
       matchElementsApi.createPromptTemplate({
         key: promptKey,
-        name: `${active?.name ?? 'Prompt'} (my copy)`,
+        name: `${active?.name ?? "Prompt"} (my copy)`,
         description: active?.description ?? null,
         system_prompt: sys,
         user_template: usr,
         forked_from_id: active?.id ?? null,
       }),
     onSuccess: (created) => {
-      qc.invalidateQueries({ queryKey: ['match-prompt-templates', promptKey] });
+      qc.invalidateQueries({ queryKey: ["match-prompt-templates", promptKey] });
       onSelect(created.id);
       setDirty(false);
     },
@@ -102,8 +102,8 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
         return Promise.reject(
           new Error(
             t(
-              'match_elements.pipeline.no_prompt_selected',
-              'No editable prompt selected.',
+              "match_elements.pipeline.no_prompt_selected",
+              "No editable prompt selected.",
             ),
           ),
         );
@@ -114,7 +114,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
       });
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['match-prompt-templates', promptKey] });
+      qc.invalidateQueries({ queryKey: ["match-prompt-templates", promptKey] });
       setDirty(false);
     },
   });
@@ -123,7 +123,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
     return (
       <div className="flex items-center gap-2 text-xs text-content-tertiary py-3">
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
-        {t('match_elements.pipeline.loading_prompts', 'Loading prompts…')}
+        {t("match_elements.pipeline.loading_prompts", "Loading prompts…")}
       </div>
     );
   }
@@ -134,8 +134,8 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
         <span className="break-words">
           {(listQ.error as Error)?.message ??
             t(
-              'match_elements.pipeline.prompts_load_failed',
-              'Could not load prompt templates.',
+              "match_elements.pipeline.prompts_load_failed",
+              "Could not load prompt templates.",
             )}
         </span>
         <button
@@ -143,7 +143,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
           onClick={() => listQ.refetch()}
           className="shrink-0 underline hover:no-underline"
         >
-          {t('common.retry', 'Retry')}
+          {t("common.retry", "Retry")}
         </button>
       </div>
     );
@@ -153,8 +153,8 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
     return (
       <div className="text-xs text-content-tertiary bg-surface-secondary border border-border rounded-lg px-3 py-2">
         {t(
-          'match_elements.pipeline.no_prompts',
-          'No prompt templates for this stage yet.',
+          "match_elements.pipeline.no_prompts",
+          "No prompt templates for this stage yet.",
         )}
       </div>
     );
@@ -171,20 +171,20 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
       {/* Template selector */}
       <div className="flex items-center gap-2 flex-wrap">
         <label className="text-[11px] uppercase tracking-wider text-content-tertiary font-semibold">
-          {t('match_elements.pipeline.prompt', 'Prompt')}
+          {t("match_elements.pipeline.prompt", "Prompt")}
         </label>
         <select
-          value={active?.id ?? ''}
+          value={active?.id ?? ""}
           onChange={(e) => onSelect(e.target.value)}
           className="flex-1 min-w-[160px] text-xs px-2 py-1.5 rounded-lg border border-border bg-surface-primary text-content-primary"
         >
           {templates.map((tpl) => (
             <option key={tpl.id} value={tpl.id}>
-              {tpl.is_system ? '★ ' : ''}
+              {tpl.is_system ? "★ " : ""}
               {tpl.name} · v{tpl.version}
               {tpl.is_system
-                ? ` · ${t('match_elements.pipeline.system', 'system')}`
-                : ''}
+                ? ` · ${t("match_elements.pipeline.system", "system")}`
+                : ""}
             </option>
           ))}
         </select>
@@ -194,8 +194,8 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
         <div className="flex items-center gap-1.5 text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-lg px-2 py-1.5">
           <Sparkles className="w-3 h-3 shrink-0" />
           {t(
-            'match_elements.pipeline.system_readonly',
-            'System prompt — read-only. Fork it to edit and tune for your company.',
+            "match_elements.pipeline.system_readonly",
+            "System prompt — read-only. Fork it to edit and tune for your company.",
           )}
         </div>
       )}
@@ -203,7 +203,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
       {/* System prompt */}
       <div>
         <div className="text-[11px] uppercase tracking-wider text-content-tertiary font-semibold mb-1">
-          {t('match_elements.pipeline.system_prompt', 'System prompt')}
+          {t("match_elements.pipeline.system_prompt", "System prompt")}
         </div>
         <textarea
           value={sys}
@@ -215,10 +215,10 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
           }}
           rows={3}
           className={
-            'w-full text-xs font-mono px-2.5 py-2 rounded-lg border border-border text-content-primary resize-y ' +
+            "w-full text-xs font-mono px-2.5 py-2 rounded-lg border border-border text-content-primary resize-y " +
             (isSystem
-              ? 'bg-surface-secondary/60 opacity-70 cursor-not-allowed'
-              : 'bg-surface-secondary')
+              ? "bg-surface-secondary/60 opacity-70 cursor-not-allowed"
+              : "bg-surface-secondary")
           }
         />
       </div>
@@ -226,7 +226,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
       {/* User template */}
       <div>
         <div className="text-[11px] uppercase tracking-wider text-content-tertiary font-semibold mb-1">
-          {t('match_elements.pipeline.user_template', 'User template')}
+          {t("match_elements.pipeline.user_template", "User template")}
         </div>
         <textarea
           value={usr}
@@ -238,10 +238,10 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
           }}
           rows={8}
           className={
-            'w-full text-xs font-mono px-2.5 py-2 rounded-lg border border-border text-content-primary resize-y ' +
+            "w-full text-xs font-mono px-2.5 py-2 rounded-lg border border-border text-content-primary resize-y " +
             (isSystem
-              ? 'bg-surface-secondary/60 opacity-70 cursor-not-allowed'
-              : 'bg-surface-secondary')
+              ? "bg-surface-secondary/60 opacity-70 cursor-not-allowed"
+              : "bg-surface-secondary")
           }
         />
       </div>
@@ -250,7 +250,10 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
       {vars.length > 0 && (
         <div className="flex items-start gap-1.5 flex-wrap text-[11px] text-content-tertiary">
           <span className="font-semibold">
-            {t('match_elements.pipeline.variables', 'Variables the stage fills:')}
+            {t(
+              "match_elements.pipeline.variables",
+              "Variables the stage fills:",
+            )}
           </span>
           {vars.map((v) => (
             <code
@@ -276,7 +279,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
             ) : (
               <GitFork className="w-3 h-3" />
             )}
-            {t('match_elements.pipeline.fork', 'Fork to edit')}
+            {t("match_elements.pipeline.fork", "Fork to edit")}
           </button>
         ) : (
           <>
@@ -290,7 +293,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
               ) : (
                 <Save className="w-3 h-3" />
               )}
-              {t('match_elements.pipeline.save_prompt', 'Save prompt')}
+              {t("match_elements.pipeline.save_prompt", "Save prompt")}
             </button>
             {dirty && (
               <button
@@ -304,7 +307,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-border text-content-secondary hover:bg-surface-secondary"
               >
                 <RotateCcw className="w-3 h-3" />
-                {t('match_elements.pipeline.revert', 'Revert')}
+                {t("match_elements.pipeline.revert", "Revert")}
               </button>
             )}
             <button
@@ -313,7 +316,7 @@ export function PromptEditor({ promptKey, selectedId, onSelect }: Props) {
               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-border text-content-secondary hover:bg-surface-secondary disabled:opacity-50"
             >
               <GitFork className="w-3 h-3" />
-              {t('match_elements.pipeline.duplicate', 'Duplicate')}
+              {t("match_elements.pipeline.duplicate", "Duplicate")}
             </button>
           </>
         )}

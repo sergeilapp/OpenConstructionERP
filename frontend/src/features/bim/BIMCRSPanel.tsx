@@ -19,9 +19,9 @@
  * EPSG codes covered.
  */
 
-import { useState } from 'react';
-import { Globe2, ChevronDown, Check } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useState } from "react";
+import { Globe2, ChevronDown, Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface CRSAlternate {
   epsg: number | null;
@@ -48,16 +48,16 @@ interface CRSPanelProps {
 // alternatives were sent by the backend. Mirrors the region table in
 // crs_detector.py — keep these in sync.
 const COMMON_CRS: { epsg: number; label: string }[] = [
-  { epsg: 4326, label: 'WGS 84 (geographic, lat-lon)' },
-  { epsg: 25832, label: 'ETRS89 / UTM zone 32N (Germany W)' },
-  { epsg: 25833, label: 'ETRS89 / UTM zone 33N (Germany E)' },
-  { epsg: 27700, label: 'OSGB36 / British National Grid (UK)' },
-  { epsg: 2154, label: 'RGF93 / Lambert-93 (France)' },
-  { epsg: 32643, label: 'UTM zone 43N (India W)' },
-  { epsg: 32644, label: 'UTM zone 44N (India E)' },
-  { epsg: 32640, label: 'UTM zone 40N (UAE)' },
-  { epsg: 32618, label: 'UTM zone 18N (US East / NYC)' },
-  { epsg: 31983, label: 'SIRGAS 2000 / UTM zone 23S (Brazil)' },
+  { epsg: 4326, label: "WGS 84 (geographic, lat-lon)" },
+  { epsg: 25832, label: "ETRS89 / UTM zone 32N (Germany W)" },
+  { epsg: 25833, label: "ETRS89 / UTM zone 33N (Germany E)" },
+  { epsg: 27700, label: "OSGB36 / British National Grid (UK)" },
+  { epsg: 2154, label: "RGF93 / Lambert-93 (France)" },
+  { epsg: 32643, label: "UTM zone 43N (India W)" },
+  { epsg: 32644, label: "UTM zone 44N (India E)" },
+  { epsg: 32640, label: "UTM zone 40N (UAE)" },
+  { epsg: 32618, label: "UTM zone 18N (US East / NYC)" },
+  { epsg: 31983, label: "SIRGAS 2000 / UTM zone 23S (Brazil)" },
 ];
 
 export function BIMCRSPanel({
@@ -70,7 +70,7 @@ export function BIMCRSPanel({
 }: CRSPanelProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [manualValue, setManualValue] = useState('');
+  const [manualValue, setManualValue] = useState("");
 
   const hasCRS = epsg != null && Number.isFinite(epsg);
   const confidencePct =
@@ -81,12 +81,12 @@ export function BIMCRSPanel({
   // Confidence colour bands match the dashboard traffic-light: green ≥80%,
   // amber 50-79%, red <50%.
   const confidenceClass = !hasCRS
-    ? 'border-amber-300 bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-300'
+    ? "border-amber-300 bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-300"
     : confidencePct == null || confidencePct >= 80
-      ? 'border-emerald-300 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300'
+      ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300"
       : confidencePct >= 50
-        ? 'border-amber-300 bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-300'
-        : 'border-red-300 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300';
+        ? "border-amber-300 bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-300"
+        : "border-red-300 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300";
 
   const handlePick = (next: number) => {
     if (onSetCRS) onSetCRS(next);
@@ -97,7 +97,7 @@ export function BIMCRSPanel({
     const parsed = parseInt(manualValue.trim(), 10);
     if (Number.isInteger(parsed) && parsed > 0 && parsed < 1_000_000) {
       handlePick(parsed);
-      setManualValue('');
+      setManualValue("");
     }
   };
 
@@ -117,13 +117,16 @@ export function BIMCRSPanel({
       <div className="flex items-center gap-1.5 mb-1">
         <Globe2 size={12} className="shrink-0" />
         <span className="text-[10px] font-semibold uppercase tracking-wide">
-          {t('bim.crs.label', { defaultValue: 'Detected CRS‌⁠‍' })}
+          {t("bim.crs.label", { defaultValue: "Detected CRS‌⁠‍" })}
         </span>
       </div>
 
       {hasCRS ? (
         <>
-          <div className="text-[11px] font-semibold leading-tight truncate" title={name ?? ''}>
+          <div
+            className="text-[11px] font-semibold leading-tight truncate"
+            title={name ?? ""}
+          >
             {name || `EPSG:${epsg}`}
           </div>
           <div className="text-[10px] opacity-80 mt-0.5 tabular-nums">
@@ -131,22 +134,25 @@ export function BIMCRSPanel({
             {confidencePct != null && (
               <>
                 <span className="mx-1">·</span>
-                {t('bim.crs.confidence', { defaultValue: 'confidence‌⁠‍' })} {confidencePct}%
+                {t("bim.crs.confidence", {
+                  defaultValue: "confidence‌⁠‍",
+                })}{" "}
+                {confidencePct}%
               </>
             )}
             {method && (
               <>
                 <span className="mx-1">·</span>
-                <span className="opacity-70">{method.replace(/_/g, ' ')}</span>
+                <span className="opacity-70">{method.replace(/_/g, " ")}</span>
               </>
             )}
           </div>
         </>
       ) : (
         <div className="text-[11px] leading-snug">
-          {t('bim.crs.unknown', {
+          {t("bim.crs.unknown", {
             defaultValue:
-              'CRS could not be auto-detected — model uses local coordinates.‌⁠‍',
+              "CRS could not be auto-detected — model uses local coordinates.‌⁠‍",
           })}
         </div>
       )}
@@ -160,7 +166,7 @@ export function BIMCRSPanel({
                      transition-colors"
           data-testid="bim-crs-set-button"
         >
-          {t('bim.crs.set', { defaultValue: 'Set CRS‌⁠‍' })}
+          {t("bim.crs.set", { defaultValue: "Set CRS‌⁠‍" })}
           <ChevronDown size={10} />
         </button>
       )}
@@ -171,9 +177,13 @@ export function BIMCRSPanel({
                      rounded-lg border border-border-light bg-surface-primary
                      shadow-lg overflow-hidden text-content-primary"
         >
-          <div className="px-3 py-2 text-[10px] uppercase tracking-wide
-                          text-content-tertiary border-b border-border-light">
-            {t('bim.crs.pick_or_paste', { defaultValue: 'Pick a CRS or paste EPSG‌⁠‍' })}
+          <div
+            className="px-3 py-2 text-[10px] uppercase tracking-wide
+                          text-content-tertiary border-b border-border-light"
+          >
+            {t("bim.crs.pick_or_paste", {
+              defaultValue: "Pick a CRS or paste EPSG‌⁠‍",
+            })}
           </div>
           <div className="max-h-56 overflow-y-auto">
             {optionsToShow.map((opt) => (
@@ -184,7 +194,9 @@ export function BIMCRSPanel({
                 className="w-full text-left px-3 py-1.5 hover:bg-surface-secondary
                            text-[11px] flex items-center gap-2"
               >
-                {opt.epsg === epsg && <Check size={10} className="text-emerald-500" />}
+                {opt.epsg === epsg && (
+                  <Check size={10} className="text-emerald-500" />
+                )}
                 <span className="truncate flex-1">{opt.label}</span>
                 <span className="text-[9px] text-content-tertiary tabular-nums">
                   EPSG:{opt.epsg}
@@ -197,13 +209,15 @@ export function BIMCRSPanel({
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
-              placeholder={t('bim.crs.paste_placeholder', {
-                defaultValue: 'e.g. 32643',
+              placeholder={t("bim.crs.paste_placeholder", {
+                defaultValue: "e.g. 32643",
               })}
               value={manualValue}
-              onChange={(e) => setManualValue(e.target.value.replace(/\D/g, ''))}
+              onChange={(e) =>
+                setManualValue(e.target.value.replace(/\D/g, ""))
+              }
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   e.preventDefault();
                   handleManual();
                 }
@@ -217,7 +231,7 @@ export function BIMCRSPanel({
               className="text-[11px] px-2 py-1 rounded bg-oe-blue text-white
                          hover:bg-oe-blue/90"
             >
-              {t('bim.crs.apply', { defaultValue: 'Apply' })}
+              {t("bim.crs.apply", { defaultValue: "Apply" })}
             </button>
           </div>
         </div>

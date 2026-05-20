@@ -5,14 +5,14 @@
  * Extracted from BOQEditorPage.tsx for modularity.
  */
 
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   useInfiniteQuery,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 import {
   Plus,
   X,
@@ -23,28 +23,28 @@ import {
   Database,
   ChevronDown,
   AlertCircle,
-} from 'lucide-react';
-import { Button, Badge, CountryFlag } from '@/shared/ui';
-import { apiGet, apiPost } from '@/shared/lib/api';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import { useToastStore } from '@/stores/useToastStore';
-import { REGION_MAP } from '@/stores/useCostDatabaseStore';
-import { VariantPicker } from '@/features/costs/VariantPicker';
+} from "lucide-react";
+import { Button, Badge, CountryFlag } from "@/shared/ui";
+import { apiGet, apiPost } from "@/shared/lib/api";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import { useToastStore } from "@/stores/useToastStore";
+import { REGION_MAP } from "@/stores/useCostDatabaseStore";
+import { VariantPicker } from "@/features/costs/VariantPicker";
 import {
   MultiVariantPicker,
   collectVariantSlots,
   type VariantSlot,
   type MultiVariantPickerResult,
   type SlotPick,
-} from '@/features/costs/MultiVariantPicker';
-import type { CostVariant } from '@/features/costs/api';
+} from "@/features/costs/MultiVariantPicker";
+import type { CostVariant } from "@/features/costs/api";
 import {
   fetchCategoryTree,
   fetchCostSearch,
   type CostSearchItem as ApiCostSearchItem,
   type CostSearchPage,
-} from './api';
-import { CostCategoryTree } from './CostCategoryTree';
+} from "./api";
+import { CostCategoryTree } from "./CostCategoryTree";
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -57,10 +57,10 @@ import { CostCategoryTree } from './CostCategoryTree';
  * the API surface stays generic.  We re-narrow here without using ``any`` or
  * ``as unknown as`` — TS happily accepts the broader source.
  */
-type CostSearchItem = Omit<ApiCostSearchItem, 'metadata_'> & {
+type CostSearchItem = Omit<ApiCostSearchItem, "metadata_"> & {
   metadata_?: {
     variants?: CostVariant[];
-    variant_stats?: import('@/features/costs/api').VariantStats;
+    variant_stats?: import("@/features/costs/api").VariantStats;
     [key: string]: unknown;
   };
 };
@@ -74,8 +74,8 @@ type CostSearchItem = Omit<ApiCostSearchItem, 'metadata_'> & {
  *    `null` — cancelled.
  */
 type VariantResolution =
-  | { kind: 'variant'; variant: CostVariant }
-  | { kind: 'default'; strategy: 'mean' | 'median' };
+  | { kind: "variant"; variant: CostVariant }
+  | { kind: "default"; strategy: "mean" | "median" };
 
 interface PendingVariantPick {
   item: CostSearchItem;
@@ -131,64 +131,96 @@ export function AssemblyPickerModal({
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [applying, setApplying] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<Record<string, number>>({});
   const addToast = useToastStore((s) => s.addToast);
 
   const { data: assemblies, isLoading } = useQuery({
-    queryKey: ['assemblies', search],
-    queryFn: () => apiGet<{ items: Array<{
-      id: string;
-      code: string;
-      name: string;
-      unit: string;
-      category: string;
-      total_rate: number;
-      currency: string;
-      components: Array<{ description: string; unit: string; unit_cost: number; quantity: number }>;
-    }>; total: number }>(`/v1/assemblies/?q=${encodeURIComponent(search)}&limit=20`).then((r) => r.items),
+    queryKey: ["assemblies", search],
+    queryFn: () =>
+      apiGet<{
+        items: Array<{
+          id: string;
+          code: string;
+          name: string;
+          unit: string;
+          category: string;
+          total_rate: number;
+          currency: string;
+          components: Array<{
+            description: string;
+            unit: string;
+            unit_cost: number;
+            quantity: number;
+          }>;
+        }>;
+        total: number;
+      }>(`/v1/assemblies/?q=${encodeURIComponent(search)}&limit=20`).then(
+        (r) => r.items,
+      ),
     retry: false,
   });
 
-  const handleApply = useCallback(async (assemblyId: string) => {
-    const qty = quantity[assemblyId] || 1;
-    setApplying(assemblyId);
-    try {
-      await apiPost(`/v1/assemblies/${assemblyId}/apply-to-boq/`, {
-        boq_id: boqId,
-        quantity: qty,
-      });
-      onApplied();
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: t('assemblies.apply_failed', { defaultValue: 'Failed to apply assembly‌⁠‍' }),
-        message: err instanceof Error ? err.message : t('common.unknown_error', { defaultValue: 'Unknown error‌⁠‍' }),
-      });
-    } finally {
-      setApplying(null);
-    }
-  }, [boqId, quantity, onApplied, addToast]);
+  const handleApply = useCallback(
+    async (assemblyId: string) => {
+      const qty = quantity[assemblyId] || 1;
+      setApplying(assemblyId);
+      try {
+        await apiPost(`/v1/assemblies/${assemblyId}/apply-to-boq/`, {
+          boq_id: boqId,
+          quantity: qty,
+        });
+        onApplied();
+      } catch (err) {
+        addToast({
+          type: "error",
+          title: t("assemblies.apply_failed", {
+            defaultValue: "Failed to apply assembly‌⁠‍",
+          }),
+          message:
+            err instanceof Error
+              ? err.message
+              : t("common.unknown_error", { defaultValue: "Unknown error‌⁠‍" }),
+        });
+      } finally {
+        setApplying(null);
+      }
+    },
+    [boqId, quantity, onApplied, addToast],
+  );
 
   // Close on Escape
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') { e.preventDefault(); onClose(); }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
     }
-    document.addEventListener('keydown', handleKeyDown, { capture: true });
-    return () => document.removeEventListener('keydown', handleKeyDown, { capture: true });
+    document.addEventListener("keydown", handleKeyDown, { capture: true });
+    return () =>
+      document.removeEventListener("keydown", handleKeyDown, { capture: true });
   }, [onClose]);
 
   const fmt = (n: number) =>
-    new Intl.NumberFormat(getIntlLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+    new Intl.NumberFormat(getIntlLocale(), {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-fade-in" onClick={onClose} aria-hidden="true">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-fade-in"
+      onClick={onClose}
+      aria-hidden="true"
+    >
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t('assemblies.apply_assembly_to_boq', { defaultValue: 'Apply Assembly to BOQ‌⁠‍' })}
+        aria-label={t("assemblies.apply_assembly_to_boq", {
+          defaultValue: "Apply Assembly to BOQ‌⁠‍",
+        })}
         className="bg-surface-elevated rounded-2xl border border-border shadow-2xl w-full max-w-2xl mx-4 max-h-[80vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -199,11 +231,24 @@ export function AssemblyPickerModal({
               <Layers size={18} />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-content-primary">{t('assemblies.apply_assembly_to_boq', { defaultValue: 'Apply Assembly to BOQ‌⁠‍' })}</h2>
-              <p className="text-xs text-content-tertiary">{t('assemblies.select_recipe_desc', { defaultValue: 'Select a pre-built recipe to add as a position‌⁠‍' })}</p>
+              <h2 className="text-base font-semibold text-content-primary">
+                {t("assemblies.apply_assembly_to_boq", {
+                  defaultValue: "Apply Assembly to BOQ‌⁠‍",
+                })}
+              </h2>
+              <p className="text-xs text-content-tertiary">
+                {t("assemblies.select_recipe_desc", {
+                  defaultValue:
+                    "Select a pre-built recipe to add as a position‌⁠‍",
+                })}
+              </p>
             </div>
           </div>
-          <button onClick={onClose} aria-label={t('common.close', { defaultValue: 'Close' })} className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors">
+          <button
+            onClick={onClose}
+            aria-label={t("common.close", { defaultValue: "Close" })}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
+          >
             <X size={16} />
           </button>
         </div>
@@ -211,13 +256,20 @@ export function AssemblyPickerModal({
         {/* Search */}
         <div className="px-6 py-3 border-b border-border-light shrink-0">
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-quaternary" />
+            <Search
+              size={14}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-content-quaternary"
+            />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('assemblies.search_placeholder', { defaultValue: 'Search assemblies...' })}
-              aria-label={t('assemblies.search_placeholder', { defaultValue: 'Search assemblies...' })}
+              placeholder={t("assemblies.search_placeholder", {
+                defaultValue: "Search assemblies...",
+              })}
+              aria-label={t("assemblies.search_placeholder", {
+                defaultValue: "Search assemblies...",
+              })}
               className="w-full h-9 pl-9 pr-3 rounded-lg border border-border-light bg-surface-primary text-sm text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-400"
               autoFocus
             />
@@ -228,20 +280,45 @@ export function AssemblyPickerModal({
         <div className="flex-1 overflow-y-auto px-6 py-3">
           {isLoading ? (
             <div className="flex items-center justify-center py-12 text-xs text-content-tertiary">
-              <Loader2 size={16} className="animate-spin mr-2" /> {t('assemblies.loading', { defaultValue: 'Loading assemblies...' })}
+              <Loader2 size={16} className="animate-spin mr-2" />{" "}
+              {t("assemblies.loading", {
+                defaultValue: "Loading assemblies...",
+              })}
             </div>
           ) : !assemblies || assemblies.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Layers size={32} className="text-content-quaternary mb-3" />
               <p className="text-sm font-medium text-content-secondary mb-1">
-                {search ? t('assemblies.no_search_match', { defaultValue: 'No assemblies match your search' }) : t('assemblies.no_assemblies', { defaultValue: 'No assemblies yet' })}
+                {search
+                  ? t("assemblies.no_search_match", {
+                      defaultValue: "No assemblies match your search",
+                    })
+                  : t("assemblies.no_assemblies", {
+                      defaultValue: "No assemblies yet",
+                    })}
               </p>
               <p className="text-xs text-content-tertiary mb-3">
-                {search ? t('assemblies.try_different_term', { defaultValue: 'Try a different search term' }) : t('assemblies.create_from_catalog', { defaultValue: 'Create assemblies from the Resource Catalog' })}
+                {search
+                  ? t("assemblies.try_different_term", {
+                      defaultValue: "Try a different search term",
+                    })
+                  : t("assemblies.create_from_catalog", {
+                      defaultValue:
+                        "Create assemblies from the Resource Catalog",
+                    })}
               </p>
               {!search && (
-                <Button variant="secondary" size="sm" onClick={() => { onClose(); navigate('/catalog'); }}>
-                  {t('catalog.go_to_catalog', { defaultValue: 'Go to Catalog' })}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    onClose();
+                    navigate("/catalog");
+                  }}
+                >
+                  {t("catalog.go_to_catalog", {
+                    defaultValue: "Go to Catalog",
+                  })}
                 </Button>
               )}
             </div>
@@ -257,29 +334,50 @@ export function AssemblyPickerModal({
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-sm font-semibold text-content-primary truncate">{asm.name}</span>
-                          <span className="text-2xs font-mono text-content-quaternary">{asm.code}</span>
+                          <span className="text-sm font-semibold text-content-primary truncate">
+                            {asm.name}
+                          </span>
+                          <span className="text-2xs font-mono text-content-quaternary">
+                            {asm.code}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-content-tertiary">
                           <span className="inline-flex items-center gap-1 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 px-1.5 py-0.5 text-2xs font-medium">
-                            {asm.category || t('assemblies.category_general', { defaultValue: 'General' })}
+                            {asm.category ||
+                              t("assemblies.category_general", {
+                                defaultValue: "General",
+                              })}
                           </span>
                           <span>{asm.unit}</span>
-                          <span className="font-semibold text-content-primary tabular-nums">{fmt(asm.total_rate)} {asm.currency}</span>
+                          <span className="font-semibold text-content-primary tabular-nums">
+                            {fmt(asm.total_rate)} {asm.currency}
+                          </span>
                           {asm.components && (
-                            <span className="text-content-quaternary">{t('assemblies.n_components', { defaultValue: '{{count}} components', count: asm.components.length })}</span>
+                            <span className="text-content-quaternary">
+                              {t("assemblies.n_components", {
+                                defaultValue: "{{count}} components",
+                                count: asm.components.length,
+                              })}
+                            </span>
                           )}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <div className="flex items-center gap-1">
-                          <label className="text-2xs text-content-quaternary">{t('boq.quantity_abbr', { defaultValue: 'Qty:' })}</label>
+                          <label className="text-2xs text-content-quaternary">
+                            {t("boq.quantity_abbr", { defaultValue: "Qty:" })}
+                          </label>
                           <input
                             type="number"
                             min="0.01"
                             step="0.01"
                             value={quantity[asm.id] ?? 1}
-                            onChange={(e) => setQuantity((prev) => ({ ...prev, [asm.id]: parseFloat(e.target.value) || 1 }))}
+                            onChange={(e) =>
+                              setQuantity((prev) => ({
+                                ...prev,
+                                [asm.id]: parseFloat(e.target.value) || 1,
+                              }))
+                            }
                             className="w-16 h-7 rounded border border-border-light bg-surface-elevated px-1.5 text-xs text-content-primary text-right tabular-nums focus:outline-none focus:ring-1 focus:ring-purple-400"
                           />
                         </div>
@@ -290,7 +388,7 @@ export function AssemblyPickerModal({
                           loading={isApplying}
                           disabled={applying !== null}
                         >
-                          {t('common.apply', { defaultValue: 'Apply' })}
+                          {t("common.apply", { defaultValue: "Apply" })}
                         </Button>
                       </div>
                     </div>
@@ -304,12 +402,23 @@ export function AssemblyPickerModal({
         {/* Footer */}
         <div className="px-6 py-3 border-t border-border-light bg-surface-secondary/30 shrink-0">
           <div className="flex items-center justify-between text-2xs text-content-quaternary">
-            <span>{t('assemblies.footer_hint', { defaultValue: 'Assemblies are reusable recipes built from cost items and resources' })}</span>
+            <span>
+              {t("assemblies.footer_hint", {
+                defaultValue:
+                  "Assemblies are reusable recipes built from cost items and resources",
+              })}
+            </span>
             <button
-              onClick={() => { onClose(); navigate('/assemblies'); }}
+              onClick={() => {
+                onClose();
+                navigate("/assemblies");
+              }}
               className="text-purple-600 hover:text-purple-700 font-medium"
             >
-              {t('assemblies.manage_assemblies', { defaultValue: 'Manage Assemblies' })} &rarr;
+              {t("assemblies.manage_assemblies", {
+                defaultValue: "Manage Assemblies",
+              })}{" "}
+              &rarr;
             </button>
           </div>
         </div>
@@ -333,12 +442,15 @@ export function CostDatabaseSearchModal({
    *  are passed back instead of added as positions. The optional second arg
    *  carries the user's variant choice when the item had 2+ variants; resource
    *  rate / variant marker are persisted by the caller on the resource entry. */
-  onSelectForResources?: (item: CostSearchItem, picked?: VariantResolution) => void;
+  onSelectForResources?: (
+    item: CostSearchItem,
+    picked?: VariantResolution,
+  ) => void;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   // Region: empty means no filter (legacy "All databases" behaviour).
   // On mount we auto-pick the first country DB once regions load, so the
   // initial result set is fast (single-region scan, ~1 s) instead of the
@@ -352,15 +464,15 @@ export function CostDatabaseSearchModal({
   // auto-default useEffect runs. Cold cache (no prefetch yet) falls
   // through to the empty initial value and the auto-default still works.
   const [region, setRegion] = useState<string>(() => {
-    const cached = queryClient.getQueryData<string[]>(['cost-regions-modal']);
-    return cached?.[0] ?? '';
+    const cached = queryClient.getQueryData<string[]>(["cost-regions-modal"]);
+    return cached?.[0] ?? "";
   });
   // Seed the "already defaulted" flag from the same cache lookup we used
   // to seed `region` itself — otherwise the auto-default effect would
   // overwrite a region the user has clicked between mount and the first
   // useEffect tick.
   const regionDefaultedRef = useRef<boolean>(
-    Boolean(queryClient.getQueryData<string[]>(['cost-regions-modal'])?.[0]),
+    Boolean(queryClient.getQueryData<string[]>(["cost-regions-modal"])?.[0]),
   );
   // Distinguishes user-initiated region changes (tab click) from the
   // auto-default. Path-reset only fires on user clicks — the auto-default
@@ -372,10 +484,11 @@ export function CostDatabaseSearchModal({
   }, []);
   /** Slash-joined classification breadcrumb selected in the left tree.
    *  Empty string = "All categories". */
-  const [selectedPath, setSelectedPath] = useState('');
+  const [selectedPath, setSelectedPath] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isAdding, setIsAdding] = useState(false);
-  const [activeVariantPick, setActiveVariantPick] = useState<PendingVariantPick | null>(null);
+  const [activeVariantPick, setActiveVariantPick] =
+    useState<PendingVariantPick | null>(null);
   const [activeMultiVariantPick, setActiveMultiVariantPick] =
     useState<PendingMultiVariantPick | null>(null);
   /** Per-row quantity overrides, keyed by item id. Items absent from the
@@ -394,7 +507,9 @@ export function CostDatabaseSearchModal({
   const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
   /** Cached sections list — fetched lazily when the dropdown is first opened
    *  or when handleAdd needs the parent context. ``null`` = not yet fetched. */
-  const [boqSections, setBoqSections] = useState<BOQSectionOption[] | null>(null);
+  const [boqSections, setBoqSections] = useState<BOQSectionOption[] | null>(
+    null,
+  );
   /** Open/closed flag for the section dropdown popover. */
   const [sectionMenuOpen, setSectionMenuOpen] = useState(false);
   const addButtonRef = useRef<HTMLButtonElement>(null);
@@ -406,8 +521,8 @@ export function CostDatabaseSearchModal({
 
   // Load available regions
   const { data: regionsData } = useQuery({
-    queryKey: ['cost-regions-modal'],
-    queryFn: () => apiGet<string[]>('/v1/costs/regions/'),
+    queryKey: ["cost-regions-modal"],
+    queryFn: () => apiGet<string[]>("/v1/costs/regions/"),
   });
   const regions = useMemo(() => regionsData ?? [], [regionsData]);
 
@@ -426,7 +541,7 @@ export function CostDatabaseSearchModal({
     isError: treeError,
     refetch: refetchTree,
   } = useQuery({
-    queryKey: ['cost-tree', region, 2],
+    queryKey: ["cost-tree", region, 2],
     // Open with depth=2 — far cheaper GROUP BY than depth=4 on cold SQLite
     // (2 json_extract columns vs 4). Deeper levels are reachable via the
     // search endpoint's `classification_path` filter when the user clicks
@@ -452,9 +567,9 @@ export function CostDatabaseSearchModal({
     refetch: refetchSearch,
   } = useInfiniteQuery<CostSearchPage, Error>({
     queryKey: [
-      'cost-search',
+      "cost-search",
       region,
-      query.length >= 2 ? query : '',
+      query.length >= 2 ? query : "",
       selectedPath,
     ],
     queryFn: ({ pageParam }) =>
@@ -489,18 +604,23 @@ export function CostDatabaseSearchModal({
       cursorErrorToastShown.current = false;
       return;
     }
-    const msg = searchErrorObj instanceof Error ? searchErrorObj.message : '';
+    const msg = searchErrorObj instanceof Error ? searchErrorObj.message : "";
     if (/cursor|400/i.test(msg) && !cursorErrorToastShown.current) {
       cursorErrorToastShown.current = true;
       addToast({
-        type: 'info',
-        title: t('boq.cursor_error_title', {
-          defaultValue: 'Loading older results failed — refreshing',
+        type: "info",
+        title: t("boq.cursor_error_title", {
+          defaultValue: "Loading older results failed — refreshing",
         }),
       });
       // Drop pages so the next fetch starts at cursor=null.
       queryClient.removeQueries({
-        queryKey: ['cost-search', region, query.length >= 2 ? query : '', selectedPath],
+        queryKey: [
+          "cost-search",
+          region,
+          query.length >= 2 ? query : "",
+          selectedPath,
+        ],
       });
       refetchSearch();
     }
@@ -539,7 +659,7 @@ export function CostDatabaseSearchModal({
   useEffect(() => {
     const node = sentinelRef.current;
     if (!node || !hasNextPage) return;
-    if (typeof IntersectionObserver === 'undefined') return;
+    if (typeof IntersectionObserver === "undefined") return;
 
     const root = listScrollRef.current ?? null;
     const observer = new IntersectionObserver(
@@ -548,7 +668,7 @@ export function CostDatabaseSearchModal({
           fetchNextPage();
         }
       },
-      { root, rootMargin: '200px 0px', threshold: 0 },
+      { root, rootMargin: "200px 0px", threshold: 0 },
     );
     observer.observe(node);
     return () => observer.disconnect();
@@ -563,12 +683,12 @@ export function CostDatabaseSearchModal({
     if (previousRegionRef.current === region) return;
     previousRegionRef.current = region;
     if (!userPickedRegionRef.current) return;
-    setSelectedPath('');
+    setSelectedPath("");
     setSelected(new Set());
     if (listScrollRef.current) {
       listScrollRef.current.scrollTop = 0;
     }
-    queryClient.invalidateQueries({ queryKey: ['cost-tree'] });
+    queryClient.invalidateQueries({ queryKey: ["cost-tree"] });
   }, [region, queryClient]);
 
   // Auto-default the region to the first country DB once regions arrive.
@@ -603,7 +723,9 @@ export function CostDatabaseSearchModal({
       positions: StructuredPosition[];
     }
     try {
-      const data = await apiGet<StructuredBOQ>(`/v1/boq/boqs/${boqId}/structured/`);
+      const data = await apiGet<StructuredBOQ>(
+        `/v1/boq/boqs/${boqId}/structured/`,
+      );
       const opts: BOQSectionOption[] = (data.sections ?? []).map((s) => {
         // Numeric suffix of the highest existing child ordinal under this
         // section, so the next sibling slot is `${maxNum + 1}`. Sections
@@ -611,7 +733,7 @@ export function CostDatabaseSearchModal({
         // so we read the trailing dot-segment of each child ordinal.
         let maxNum = 0;
         for (const p of s.positions ?? []) {
-          const tail = p.ordinal.split('.').pop() ?? '';
+          const tail = p.ordinal.split(".").pop() ?? "";
           const n = parseInt(tail, 10);
           if (!Number.isNaN(n) && n > maxNum) maxNum = n;
         }
@@ -650,13 +772,13 @@ export function CostDatabaseSearchModal({
       }
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setSectionMenuOpen(false);
+      if (e.key === "Escape") setSectionMenuOpen(false);
     }
-    document.addEventListener('mousedown', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
     };
   }, [sectionMenuOpen]);
 
@@ -721,7 +843,7 @@ export function CostDatabaseSearchModal({
       // existing numeric component.
       const sections = await loadSections();
       const targetSection = selectedParentId
-        ? sections.find((s) => s.id === selectedParentId) ?? null
+        ? (sections.find((s) => s.id === selectedParentId) ?? null)
         : null;
 
       let nextOrdNum = 1; // root-mode counter (legacy)
@@ -731,15 +853,15 @@ export function CostDatabaseSearchModal({
         nextChildNum = targetSection.childMaxNum + 1;
       } else {
         try {
-          const boqData = await apiGet<{ positions?: Array<{ ordinal: string }> }>(
-            `/v1/boq/boqs/${boqId}`,
-          );
+          const boqData = await apiGet<{
+            positions?: Array<{ ordinal: string }>;
+          }>(`/v1/boq/boqs/${boqId}`);
           const positions = boqData.positions ?? [];
           if (positions.length > 0) {
             // Parse all ordinal numeric parts and find the max
             let maxNum = 0;
             for (const p of positions) {
-              const parts = p.ordinal.split('.');
+              const parts = p.ordinal.split(".");
               for (const part of parts) {
                 const n = parseInt(part, 10);
                 if (!isNaN(n) && n > maxNum) maxNum = n;
@@ -757,7 +879,9 @@ export function CostDatabaseSearchModal({
       // Promise wrapper around the single-slot variant picker — used when
       // a cost item has exactly one top-level variant slot. Cancelling
       // resolves with `null`; "Use average" resolves with `{ kind: 'default' }`.
-      const pickVariant = (item: CostSearchItem): Promise<VariantResolution | null> =>
+      const pickVariant = (
+        item: CostSearchItem,
+      ): Promise<VariantResolution | null> =>
         new Promise((resolve) => {
           setActiveVariantPick({ item, resolve });
         });
@@ -781,7 +905,7 @@ export function CostDatabaseSearchModal({
           setActiveMultiVariantPick({
             item,
             slots,
-            positionTitle: item.description || 'Position',
+            positionTitle: item.description || "Position",
             batchProgress,
             remainingCount,
             suggestedPicks,
@@ -805,11 +929,11 @@ export function CostDatabaseSearchModal({
       const fallbackCurrencyFor = (it: CostSearchItem) =>
         (it.currency && it.currency.trim()) ||
         (it.region && REGION_MAP[it.region]?.currency) ||
-        'EUR';
+        "EUR";
       selectedItems.forEach((it, idx) => {
         const itSlots = collectVariantSlots(it, fallbackCurrencyFor(it));
         const willOpenMulti =
-          itSlots.length >= 2 || itSlots.some((s) => s.slotId !== 'top');
+          itSlots.length >= 2 || itSlots.some((s) => s.slotId !== "top");
         if (willOpenMulti) multiQueue.push(idx);
       });
       const multiTotal = multiQueue.length;
@@ -831,7 +955,11 @@ export function CostDatabaseSearchModal({
       // doesn't silently drop everything (the previous behaviour bubbled the
       // first error to the outer catch and aborted the rest of the loop).
       let succeeded = 0;
-      const failed: Array<{ description: string; code: string; error: string }> = [];
+      const failed: Array<{
+        description: string;
+        code: string;
+        error: string;
+      }> = [];
 
       for (const item of selectedItems) {
         const variants = item.metadata_?.variants;
@@ -848,7 +976,7 @@ export function CostDatabaseSearchModal({
         //   exactly 1 top-level slot          → existing anchored popover
         //   0 slots                            → no variant flow
         const useMultiPicker =
-          slots.length >= 2 || slots.some((s) => s.slotId !== 'top');
+          slots.length >= 2 || slots.some((s) => s.slotId !== "top");
 
         if (useMultiPicker) {
           multiCurrent++;
@@ -860,7 +988,7 @@ export function CostDatabaseSearchModal({
             const projected: Record<string, SlotPick> = {};
             for (const s of slots) {
               const cached = cachedSlotsByName[s.name];
-              if (cached?.kind === 'variant') {
+              if (cached?.kind === "variant") {
                 // Match by variant.index when the same index exists; else
                 // fall back to median. Different CWICR rows can carry the
                 // same slot name with disjoint variant catalogs, so a
@@ -870,20 +998,20 @@ export function CostDatabaseSearchModal({
                 );
                 projected[s.slotId] = stillThere
                   ? cached
-                  : { kind: 'default', strategy: 'median' };
-              } else if (cached?.kind === 'default') {
+                  : { kind: "default", strategy: "median" };
+              } else if (cached?.kind === "default") {
                 projected[s.slotId] = cached;
               } else {
-                projected[s.slotId] = { kind: 'default', strategy: 'median' };
+                projected[s.slotId] = { kind: "default", strategy: "median" };
               }
             }
             multiResult = { picks: projected };
             appliedToCount++;
-            const topPick = projected['top'];
-            if (topPick?.kind === 'variant') {
-              resolution = { kind: 'variant', variant: topPick.variant };
-            } else if (topPick?.kind === 'default') {
-              resolution = { kind: 'default', strategy: topPick.strategy };
+            const topPick = projected["top"];
+            if (topPick?.kind === "variant") {
+              resolution = { kind: "variant", variant: topPick.variant };
+            } else if (topPick?.kind === "default") {
+              resolution = { kind: "default", strategy: topPick.strategy };
             }
           } else {
             const progress =
@@ -917,16 +1045,16 @@ export function CostDatabaseSearchModal({
             // Project the top-level pick (if present) back into the legacy
             // resolution shape so the existing top-level resource-append
             // block below stays untouched.
-            const topPick = r.picks['top'];
-            if (topPick?.kind === 'variant') {
-              resolution = { kind: 'variant', variant: topPick.variant };
-            } else if (topPick?.kind === 'default') {
-              resolution = { kind: 'default', strategy: topPick.strategy };
+            const topPick = r.picks["top"];
+            if (topPick?.kind === "variant") {
+              resolution = { kind: "variant", variant: topPick.variant };
+            } else if (topPick?.kind === "default") {
+              resolution = { kind: "default", strategy: topPick.strategy };
             }
           }
         } else if (
           slots.length === 1 &&
-          slots[0]?.slotId === 'top' &&
+          slots[0]?.slotId === "top" &&
           variants &&
           variants.length >= 2 &&
           stats
@@ -940,11 +1068,13 @@ export function CostDatabaseSearchModal({
           // Section-relative ordinal: <parent>.<NNN+next>. Padded 3-digit
           // suffix so dictionary sort matches numeric order up to 999
           // children (which is far past any realistic per-section row count).
-          const tail = String(nextChildNum).padStart(3, '0');
+          const tail = String(nextChildNum).padStart(3, "0");
           ordinal = `${targetSection.ordinal}.${tail}`;
         } else {
-          const section = String(Math.floor((nextOrdNum - 1) / 999) + 1).padStart(2, '0');
-          const pos = String(((nextOrdNum - 1) % 999) + 1).padStart(3, '0');
+          const section = String(
+            Math.floor((nextOrdNum - 1) / 999) + 1,
+          ).padStart(2, "0");
+          const pos = String(((nextOrdNum - 1) % 999) + 1).padStart(3, "0");
           ordinal = `${section}.${pos}`;
         }
         // Convert cost item components to position resources.
@@ -977,9 +1107,9 @@ export function CostDatabaseSearchModal({
           unit_rate: number;
           total: number;
           variant?: { label: string; price: number; index: number };
-          variant_default?: 'mean' | 'median';
+          variant_default?: "mean" | "median";
           available_variants?: CostVariant[];
-          available_variant_stats?: import('@/features/costs/api').VariantStats;
+          available_variant_stats?: import("@/features/costs/api").VariantStats;
         }> = (item.components || []).map((c, i) => {
           const compVariants = c.available_variants;
           const compStats = c.available_variant_stats;
@@ -991,9 +1121,9 @@ export function CostDatabaseSearchModal({
           if (!hasCompVariants) {
             return {
               name: c.name,
-              code: c.code || '',
-              type: c.type || 'other',
-              unit: c.unit || 'pcs',
+              code: c.code || "",
+              type: c.type || "other",
+              unit: c.unit || "pcs",
               quantity: c.quantity ?? 1,
               unit_rate: c.unit_rate ?? 0,
               total: c.cost || (c.quantity ?? 1) * (c.unit_rate ?? 0),
@@ -1003,7 +1133,7 @@ export function CostDatabaseSearchModal({
           // Compute the dedupe key. Prefer resource_code; fall back to the
           // first variant's label so two unrelated catalogs that happen to
           // ship without codes don't accidentally collapse.
-          const code = (c.code || '').trim();
+          const code = (c.code || "").trim();
           const dedupeKey = code || (compVariants![0]?.label ?? `__c${i}`);
           const primaryIdx = variantPrimaryIdx.get(dedupeKey) ?? i;
           if (!variantPrimaryIdx.has(dedupeKey)) {
@@ -1017,18 +1147,18 @@ export function CostDatabaseSearchModal({
           const compPick = multiResult?.picks[`comp:${primaryIdx}`];
           const qty = c.quantity ?? 1;
 
-          if (compPick?.kind === 'variant') {
+          if (compPick?.kind === "variant") {
             const v = compPick.variant;
-            const cs = (compStats!.common_start || '').trim();
+            const cs = (compStats!.common_start || "").trim();
             const composedName =
-              (v.full_label || '').trim() ||
+              (v.full_label || "").trim() ||
               (cs ? `${cs} ${v.label}`.trim() : v.label) ||
               c.name;
             return {
               name: composedName,
-              code: c.code || '',
-              type: c.type || 'other',
-              unit: c.unit || 'pcs',
+              code: c.code || "",
+              type: c.type || "other",
+              unit: c.unit || "pcs",
               quantity: qty,
               unit_rate: v.price,
               total: qty * v.price,
@@ -1042,15 +1172,15 @@ export function CostDatabaseSearchModal({
 
           // Default strategy — explicit from the modal (mean | median),
           // otherwise silent median for backwards compatibility.
-          const strategy: 'mean' | 'median' =
-            compPick?.kind === 'default' ? compPick.strategy : 'median';
+          const strategy: "mean" | "median" =
+            compPick?.kind === "default" ? compPick.strategy : "median";
           const rate =
-            strategy === 'mean' ? compStats!.mean : compStats!.median;
+            strategy === "mean" ? compStats!.mean : compStats!.median;
           return {
             name: c.name,
-            code: c.code || '',
-            type: c.type || 'other',
-            unit: c.unit || 'pcs',
+            code: c.code || "",
+            type: c.type || "other",
+            unit: c.unit || "pcs",
             quantity: qty,
             unit_rate: rate,
             total: qty * rate,
@@ -1063,7 +1193,7 @@ export function CostDatabaseSearchModal({
         });
 
         // Resolve description + variant metadata from the resolution.
-        const baseDescription = item.description || 'Unnamed item';
+        const baseDescription = item.description || "Unnamed item";
         const description = baseDescription;
         let variantMeta: Record<string, unknown> = {};
 
@@ -1079,16 +1209,16 @@ export function CostDatabaseSearchModal({
         let topMirroredOnComponent = false;
         if (topVariantsForCheck && topVariantsForCheck.length >= 2) {
           const topHash = topVariantsForCheck
-            .map((v) => (v.label || '').trim())
-            .join('|');
+            .map((v) => (v.label || "").trim())
+            .join("|");
           for (const c of item.components || []) {
             if (
               Array.isArray(c.available_variants) &&
               c.available_variants.length >= 2
             ) {
               const compHash = c.available_variants
-                .map((v) => (v.label || '').trim())
-                .join('|');
+                .map((v) => (v.label || "").trim())
+                .join("|");
               if (compHash === topHash) {
                 topMirroredOnComponent = true;
                 break;
@@ -1100,7 +1230,8 @@ export function CostDatabaseSearchModal({
         // Currency for the variant resource entry — uses the catalog's
         // native currency when present, else "" (let the BOQ row inherit
         // from the project, do not lie with EUR).
-        const itemCurrency = item.currency && item.currency.trim() ? item.currency : '';
+        const itemCurrency =
+          item.currency && item.currency.trim() ? item.currency : "";
         // common_start is the abstract resource's base name
         // (price_abstract_resource_common_start). When non-empty it is the
         // shared prefix every variant variable_part hangs off of (e.g.
@@ -1112,9 +1243,9 @@ export function CostDatabaseSearchModal({
         // user reported. In the empty-CS case the variant's full_label
         // already carries the complete display name on its own.
         const commonStart =
-          (stats?.common_start && stats.common_start.trim()) || '';
+          (stats?.common_start && stats.common_start.trim()) || "";
 
-        if (resolution?.kind === 'variant' && !topMirroredOnComponent) {
+        if (resolution?.kind === "variant" && !topMirroredOnComponent) {
           variantMeta = {
             variant: {
               label: resolution.variant.label,
@@ -1144,18 +1275,19 @@ export function CostDatabaseSearchModal({
           //      resource has no separate common_start (the label already
           //      carries the full display text). Falls back to baseDescription
           //      only when the label is also empty (defensive).
-          const variantFullLabel = (resolution.variant.full_label || '').trim();
-          const variantLabel = (resolution.variant.label || '').trim();
-          const composedName = variantFullLabel
-            || (commonStart && variantLabel
-                ? `${commonStart} ${variantLabel}`.trim()
-                : variantLabel)
-            || baseDescription;
+          const variantFullLabel = (resolution.variant.full_label || "").trim();
+          const variantLabel = (resolution.variant.label || "").trim();
+          const composedName =
+            variantFullLabel ||
+            (commonStart && variantLabel
+              ? `${commonStart} ${variantLabel}`.trim()
+              : variantLabel) ||
+            baseDescription;
           resources.push({
             name: composedName,
             code: item.code,
-            type: 'material',
-            unit: item.unit || 'pcs',
+            type: "material",
+            unit: item.unit || "pcs",
             quantity: 1,
             unit_rate: resolution.variant.price,
             total: resolution.variant.price,
@@ -1171,14 +1303,14 @@ export function CostDatabaseSearchModal({
             available_variants: variants,
             available_variant_stats: stats,
           });
-        } else if (resolution?.kind === 'default' && !topMirroredOnComponent) {
+        } else if (resolution?.kind === "default" && !topMirroredOnComponent) {
           // Mean is the production default; median is exposed only by
           // legacy callers.  Fall back to median if mean is zero (defensive).
           const stats2 = item.metadata_!.variant_stats!;
           const meanRate = stats2.mean;
           const medianRate = stats2.median;
           const defaultRate =
-            resolution.strategy === 'mean' && meanRate > 0
+            resolution.strategy === "mean" && meanRate > 0
               ? meanRate
               : medianRate > 0
                 ? medianRate
@@ -1194,8 +1326,8 @@ export function CostDatabaseSearchModal({
           resources.push({
             name: commonStart || baseDescription,
             code: item.code,
-            type: 'material',
-            unit: item.unit || 'pcs',
+            type: "material",
+            unit: item.unit || "pcs",
             quantity: 1,
             unit_rate: defaultRate,
             total: defaultRate,
@@ -1211,8 +1343,12 @@ export function CostDatabaseSearchModal({
         // unit_rate = sum of all resource totals when resources exist,
         // otherwise fall back to the catalog rate (positions without a
         // component breakdown still need a price).
-        const resourcesTotal = resources.reduce((s, r) => s + (r.total ?? 0), 0);
-        const unitRate = resources.length > 0 ? resourcesTotal : (item.rate ?? 0);
+        const resourcesTotal = resources.reduce(
+          (s, r) => s + (r.total ?? 0),
+          0,
+        );
+        const unitRate =
+          resources.length > 0 ? resourcesTotal : (item.rate ?? 0);
         // Stamp catalog-native currency on every resource line so the
         // BOQ row's per-resource currency cell shows it correctly.
         for (const r of resources) {
@@ -1242,64 +1378,75 @@ export function CostDatabaseSearchModal({
 
         try {
           await apiPost(`/v1/boq/boqs/${boqId}/positions/`, {
-          boq_id: boqId,
-          ...(targetSection ? { parent_id: targetSection.id } : {}),
-          ordinal,
-          description,
-          unit: item.unit || 'pcs',
-          quantity: positionQty,
-          unit_rate: unitRate,
-          classification: item.classification || {},
-          source: 'cost_database',
-          metadata: {
-            cost_item_code: item.code,
-            cost_item_region: item.region,
-            cost_item_id: item.id,
-            // Resolve currency: catalog field (now populated server-side
-            // via _resolve_currency) → region map fallback → empty.
-            // Empty string means "let the BOQ row inherit project
-            // currency". Defaulting to EUR here mislabelled every
-            // non-Eurozone rate (USD/GBP/BRL/RUB) when the catalog
-            // row had an empty currency string.
-            currency:
-              (item.currency && item.currency.trim()) ||
-              (item.region && REGION_MAP[item.region]?.currency) ||
-              '',
-            ...variantCacheMeta,
-            ...variantMeta,
-            // Provenance — which UI surface produced this position so
-            // adoption of the multi-variant modal is measurable from the
-            // server side without diffing payloads.
-            ui_source: multiResult
-              ? 'multi_picker'
-              : resolution
-                ? 'single_popover'
-                : slots.length > 0
-                  ? 'silent_default'
-                  : 'no_variants',
-            ...(resources.length > 0 ? { resources } : {}),
-            // Carry the catalog's scope-of-work bullets onto the new
-            // position so the BOQ grid can render the (i) hint next
-            // to the description. The CWICR loader populates this for
-            // every region with non-empty ``work_composition_text``.
-            ...(Array.isArray((item.metadata_ as Record<string, unknown> | undefined)?.scope_of_work) &&
-            ((item.metadata_ as Record<string, unknown>).scope_of_work as unknown[]).length > 0
-              ? { scope_of_work: (item.metadata_ as Record<string, unknown>).scope_of_work }
-              : {}),
-          },
+            boq_id: boqId,
+            ...(targetSection ? { parent_id: targetSection.id } : {}),
+            ordinal,
+            description,
+            unit: item.unit || "pcs",
+            quantity: positionQty,
+            unit_rate: unitRate,
+            classification: item.classification || {},
+            source: "cost_database",
+            metadata: {
+              cost_item_code: item.code,
+              cost_item_region: item.region,
+              cost_item_id: item.id,
+              // Resolve currency: catalog field (now populated server-side
+              // via _resolve_currency) → region map fallback → empty.
+              // Empty string means "let the BOQ row inherit project
+              // currency". Defaulting to EUR here mislabelled every
+              // non-Eurozone rate (USD/GBP/BRL/RUB) when the catalog
+              // row had an empty currency string.
+              currency:
+                (item.currency && item.currency.trim()) ||
+                (item.region && REGION_MAP[item.region]?.currency) ||
+                "",
+              ...variantCacheMeta,
+              ...variantMeta,
+              // Provenance — which UI surface produced this position so
+              // adoption of the multi-variant modal is measurable from the
+              // server side without diffing payloads.
+              ui_source: multiResult
+                ? "multi_picker"
+                : resolution
+                  ? "single_popover"
+                  : slots.length > 0
+                    ? "silent_default"
+                    : "no_variants",
+              ...(resources.length > 0 ? { resources } : {}),
+              // Carry the catalog's scope-of-work bullets onto the new
+              // position so the BOQ grid can render the (i) hint next
+              // to the description. The CWICR loader populates this for
+              // every region with non-empty ``work_composition_text``.
+              ...(Array.isArray(
+                (item.metadata_ as Record<string, unknown> | undefined)
+                  ?.scope_of_work,
+              ) &&
+              (
+                (item.metadata_ as Record<string, unknown>)
+                  .scope_of_work as unknown[]
+              ).length > 0
+                ? {
+                    scope_of_work: (item.metadata_ as Record<string, unknown>)
+                      .scope_of_work,
+                  }
+                : {}),
+            },
           });
           succeeded++;
         } catch (postErr) {
           // Per-item failure recovery: log to the failed[] array and keep
           // iterating so a single 4xx/5xx doesn't drop the rest of the
           // batch. The trailing summary toast lists the casualties.
-          const msg = postErr instanceof Error ? postErr.message : String(postErr);
+          const msg =
+            postErr instanceof Error ? postErr.message : String(postErr);
           failed.push({
-            description: description || item.code || 'Unnamed item',
-            code: item.code || '',
+            description: description || item.code || "Unnamed item",
+            code: item.code || "",
             error: msg,
           });
-          if (import.meta.env.DEV) console.error('Failed to POST position:', item.code, msg);
+          if (import.meta.env.DEV)
+            console.error("Failed to POST position:", item.code, msg);
           // Don't increment ordinal — leave the slot open for the next item.
           continue;
         }
@@ -1316,14 +1463,14 @@ export function CostDatabaseSearchModal({
           // fallback strategy). One toast per add batch — multiple
           // positions adding sequentially share the announcement.
           const explicitCount = Object.values(multiResult.picks).filter(
-            (p) => p.kind === 'variant',
+            (p) => p.kind === "variant",
           ).length;
           if (explicitCount > 0) {
             addToast({
-              type: 'success',
-              title: t('boq.mvp.toast_applied', {
-                defaultValue: '{{count}} variant chosen',
-                defaultValue_other: '{{count}} variants chosen',
+              type: "success",
+              title: t("boq.mvp.toast_applied", {
+                defaultValue: "{{count}} variant chosen",
+                defaultValue_other: "{{count}} variants chosen",
                 count: explicitCount,
               }),
             });
@@ -1331,24 +1478,24 @@ export function CostDatabaseSearchModal({
           }
         }
 
-        if (resolution?.kind === 'variant' && !variantToastShown) {
+        if (resolution?.kind === "variant" && !variantToastShown) {
           addToast({
-            type: 'success',
-            title: t('boq.variant_applied', {
-              defaultValue: 'Variant applied: {{label}}',
+            type: "success",
+            title: t("boq.variant_applied", {
+              defaultValue: "Variant applied: {{label}}",
               label: resolution.variant.label,
             }),
           });
           variantToastShown = true;
-        } else if (resolution?.kind === 'default' && !defaultToastShown) {
+        } else if (resolution?.kind === "default" && !defaultToastShown) {
           addToast({
-            type: 'info',
-            title: t('boq.variant_default_applied_title', {
-              defaultValue: 'Applied with average price',
+            type: "info",
+            title: t("boq.variant_default_applied_title", {
+              defaultValue: "Applied with average price",
             }),
-            message: t('boq.variant_default_applied_msg', {
+            message: t("boq.variant_default_applied_msg", {
               defaultValue:
-                'Click the row in the BOQ to choose a specific variant.',
+                "Click the row in the BOQ to choose a specific variant.",
             }),
           });
           defaultToastShown = true;
@@ -1361,10 +1508,10 @@ export function CostDatabaseSearchModal({
       // stay toast-free.
       if (cachedSlotsByName && appliedToCount > 0) {
         addToast({
-          type: 'success',
-          title: t('boq.mvp.toast_apply_to_remaining', {
-            defaultValue: 'Applied picks to {{count}} more item',
-            defaultValue_other: 'Applied picks to {{count}} more items',
+          type: "success",
+          title: t("boq.mvp.toast_apply_to_remaining", {
+            defaultValue: "Applied picks to {{count}} more item",
+            defaultValue_other: "Applied picks to {{count}} more items",
             count: appliedToCount,
           }),
         });
@@ -1378,17 +1525,20 @@ export function CostDatabaseSearchModal({
       if (failed.length === 0) {
         onAdded();
       } else if (succeeded > 0) {
-        const sample = failed.slice(0, 3).map((f) => f.code || f.description).join(', ');
-        const more = failed.length > 3 ? ` (+${failed.length - 3})` : '';
+        const sample = failed
+          .slice(0, 3)
+          .map((f) => f.code || f.description)
+          .join(", ");
+        const more = failed.length > 3 ? ` (+${failed.length - 3})` : "";
         addToast({
-          type: 'warning',
-          title: t('boq.add_partial_success', {
-            defaultValue: 'Added {{ok}} of {{total}} positions',
+          type: "warning",
+          title: t("boq.add_partial_success", {
+            defaultValue: "Added {{ok}} of {{total}} positions",
             ok: succeeded,
             total: succeeded + failed.length,
           }),
-          message: t('boq.add_partial_failed_items', {
-            defaultValue: 'Failed: {{items}}{{more}}',
+          message: t("boq.add_partial_failed_items", {
+            defaultValue: "Failed: {{items}}{{more}}",
             items: sample,
             more,
           }),
@@ -1396,12 +1546,12 @@ export function CostDatabaseSearchModal({
         onAdded();
       } else {
         addToast({
-          type: 'error',
-          title: t('boq.add_all_failed', {
-            defaultValue: 'Could not add any of the {{count}} positions',
+          type: "error",
+          title: t("boq.add_all_failed", {
+            defaultValue: "Could not add any of the {{count}} positions",
             count: failed.length,
           }),
-          message: failed[0]?.error || '',
+          message: failed[0]?.error || "",
         });
       }
     } catch (err) {
@@ -1409,10 +1559,11 @@ export function CostDatabaseSearchModal({
       // try (e.g. JSON.parse on the BOQ-detail fetch). Per-item POST errors
       // are now collected in the failed[] array and surfaced via the partial-
       // success toast above.
-      if (import.meta.env.DEV) console.error('Add-from-cost-DB outer error:', err);
+      if (import.meta.env.DEV)
+        console.error("Add-from-cost-DB outer error:", err);
       addToast({
-        type: 'error',
-        title: t('boq.add_failed', { defaultValue: 'Failed to add positions' }),
+        type: "error",
+        title: t("boq.add_failed", { defaultValue: "Failed to add positions" }),
         message: err instanceof Error ? err.message : String(err),
       });
     } finally {
@@ -1444,7 +1595,7 @@ export function CostDatabaseSearchModal({
   // textarea, or contenteditable so typing in the search bar keeps working.
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         onClose();
         return;
@@ -1452,39 +1603,43 @@ export function CostDatabaseSearchModal({
       const target = e.target as HTMLElement | null;
       const inEditable =
         target instanceof HTMLElement &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
           target.isContentEditable);
       if (inEditable) return;
       if (items.length === 0) return;
 
       switch (e.key) {
-        case 'ArrowDown':
+        case "ArrowDown":
           e.preventDefault();
-          setCursorIndex((i) => Math.min(items.length - 1, (i < 0 ? -1 : i) + 1));
+          setCursorIndex((i) =>
+            Math.min(items.length - 1, (i < 0 ? -1 : i) + 1),
+          );
           break;
-        case 'ArrowUp':
+        case "ArrowUp":
           e.preventDefault();
           setCursorIndex((i) => Math.max(0, (i < 0 ? items.length : i) - 1));
           break;
-        case 'PageDown':
+        case "PageDown":
           e.preventDefault();
-          setCursorIndex((i) => Math.min(items.length - 1, (i < 0 ? 0 : i) + 10));
+          setCursorIndex((i) =>
+            Math.min(items.length - 1, (i < 0 ? 0 : i) + 10),
+          );
           break;
-        case 'PageUp':
+        case "PageUp":
           e.preventDefault();
           setCursorIndex((i) => Math.max(0, (i < 0 ? 0 : i) - 10));
           break;
-        case 'Home':
+        case "Home":
           e.preventDefault();
           setCursorIndex(0);
           break;
-        case 'End':
+        case "End":
           e.preventDefault();
           setCursorIndex(items.length - 1);
           break;
-        case ' ':
-        case 'Spacebar': {
+        case " ":
+        case "Spacebar": {
           e.preventDefault();
           const idx = cursorIndex < 0 ? 0 : cursorIndex;
           if (cursorIndex < 0) setCursorIndex(0);
@@ -1492,7 +1647,7 @@ export function CostDatabaseSearchModal({
           if (it) toggleSelect(it.id);
           break;
         }
-        case 'Enter':
+        case "Enter":
           if (cursorIndex >= 0 && cursorIndex < items.length) {
             e.preventDefault();
             const it = items[cursorIndex];
@@ -1504,9 +1659,18 @@ export function CostDatabaseSearchModal({
           break;
       }
     }
-    document.addEventListener('keydown', handleKeyDown, { capture: true });
-    return () => document.removeEventListener('keydown', handleKeyDown, { capture: true });
-  }, [onClose, items, cursorIndex, toggleSelect, selected.size, isAdding, handleAdd]);
+    document.addEventListener("keydown", handleKeyDown, { capture: true });
+    return () =>
+      document.removeEventListener("keydown", handleKeyDown, { capture: true });
+  }, [
+    onClose,
+    items,
+    cursorIndex,
+    toggleSelect,
+    selected.size,
+    isAdding,
+    handleAdd,
+  ]);
 
   // Reset the keyboard cursor when the result list flips (e.g. region change).
   useEffect(() => {
@@ -1521,34 +1685,37 @@ export function CostDatabaseSearchModal({
     const el = listScrollRef.current?.querySelector<HTMLTableRowElement>(
       `[data-cursor-index="${cursorIndex}"]`,
     );
-    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [cursorIndex]);
 
   const fmtRate = (n: number) =>
-    new Intl.NumberFormat(getIntlLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+    new Intl.NumberFormat(getIntlLocale(), {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n);
 
   // Compose the count label.  When ``totalCount`` is known we render the
   // canonical "{{loaded}} of {{total}}" form; while still loading more pages
   // without a known total we show "{{loaded}}+ items".
   const countLabel = (() => {
     if (isLoading && items.length === 0) {
-      return t('boq.tree_loading', { defaultValue: 'Loading...' });
+      return t("boq.tree_loading", { defaultValue: "Loading..." });
     }
     if (totalCount != null) {
-      return t('boq.loaded_n_of_m', {
-        defaultValue: '{{loaded}} of {{total}} items',
+      return t("boq.loaded_n_of_m", {
+        defaultValue: "{{loaded}} of {{total}} items",
         loaded: items.length.toLocaleString(),
         total: totalCount.toLocaleString(),
       });
     }
-    return t('boq.cost_results_count', {
-      defaultValue: '{{loaded}}+ items',
+    return t("boq.cost_results_count", {
+      defaultValue: "{{loaded}}+ items",
       loaded: items.length.toLocaleString(),
     });
   })();
 
   // Active filter chips — selected category breadcrumb + free-text query.
-  const hasActiveFilters = selectedPath !== '' || query.length >= 2;
+  const hasActiveFilters = selectedPath !== "" || query.length >= 2;
 
   /** Live projected sum for the current selection — Σ(rate × qty) across
    *  the items the user has selected (qty falls back to 1). Surfaces the
@@ -1562,7 +1729,7 @@ export function CostDatabaseSearchModal({
     for (const item of items) {
       if (!selected.has(item.id)) continue;
       const qty = rowQuantity[item.id] ?? 1;
-      const rate = typeof item.rate === 'number' ? item.rate : 0;
+      const rate = typeof item.rate === "number" ? item.rate : 0;
       sum += rate * qty;
       if (!currency) {
         currency =
@@ -1571,17 +1738,27 @@ export function CostDatabaseSearchModal({
           null;
       }
     }
-    return { total: sum, currency: currency || 'EUR' };
+    return { total: sum, currency: currency || "EUR" };
   }, [selected, items, rowQuantity]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose} aria-hidden="true">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={onClose}
+      aria-hidden="true"
+    >
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={onSelectForResources
-          ? t('boq.add_resource_from_database', { defaultValue: 'Add Resources from Database' })
-          : t('boq.add_from_database', { defaultValue: 'Add from Cost Database' })}
+        aria-label={
+          onSelectForResources
+            ? t("boq.add_resource_from_database", {
+                defaultValue: "Add Resources from Database",
+              })
+            : t("boq.add_from_database", {
+                defaultValue: "Add from Cost Database",
+              })
+        }
         className="bg-surface-elevated rounded-2xl border border-border shadow-2xl w-full max-w-6xl mx-4 max-h-[88vh] overflow-hidden animate-fade-in flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
@@ -1593,16 +1770,29 @@ export function CostDatabaseSearchModal({
           <div className="flex-1">
             <h2 className="text-base font-semibold text-content-primary">
               {onSelectForResources
-                ? t('boq.add_resource_from_database', { defaultValue: 'Add Resources from Database' })
-                : t('boq.add_from_database', { defaultValue: 'Add from Cost Database' })}
+                ? t("boq.add_resource_from_database", {
+                    defaultValue: "Add Resources from Database",
+                  })
+                : t("boq.add_from_database", {
+                    defaultValue: "Add from Cost Database",
+                  })}
             </h2>
             <p className="text-xs text-content-tertiary">
               {onSelectForResources
-                ? t('boq.search_and_add_resources', { defaultValue: 'Search cost items to add as resources to position' })
-                : t('boq.search_and_add', { defaultValue: 'Search items and add them to your estimate' })}
+                ? t("boq.search_and_add_resources", {
+                    defaultValue:
+                      "Search cost items to add as resources to position",
+                  })
+                : t("boq.search_and_add", {
+                    defaultValue: "Search items and add them to your estimate",
+                  })}
             </p>
           </div>
-          <button onClick={onClose} aria-label={t('common.close', { defaultValue: 'Close' })} className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary">
+          <button
+            onClick={onClose}
+            aria-label={t("common.close", { defaultValue: "Close" })}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary"
+          >
             <X size={16} />
           </button>
         </div>
@@ -1624,13 +1814,13 @@ export function CostDatabaseSearchModal({
                 onClick={() => setRegionByUser(r)}
                 className={`shrink-0 flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                   isActive
-                    ? 'bg-oe-blue text-white'
-                    : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary'
+                    ? "bg-oe-blue text-white"
+                    : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
                 }`}
               >
-                {flag && flag !== 'custom' ? (
+                {flag && flag !== "custom" ? (
                   <CountryFlag code={flag} size={13} />
-                ) : flag === 'custom' ? (
+                ) : flag === "custom" ? (
                   <span className="text-[10px]">&#9733;</span>
                 ) : null}
                 <span>{label}</span>
@@ -1638,14 +1828,14 @@ export function CostDatabaseSearchModal({
             );
           })}
           <button
-            onClick={() => setRegionByUser('')}
+            onClick={() => setRegionByUser("")}
             className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-              region === ''
-                ? 'bg-oe-blue text-white'
-                : 'bg-surface-secondary text-content-secondary hover:bg-surface-tertiary'
+              region === ""
+                ? "bg-oe-blue text-white"
+                : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
             }`}
           >
-            {t('catalog.all_regions', { defaultValue: 'All databases' })}
+            {t("catalog.all_regions", { defaultValue: "All databases" })}
           </button>
         </div>
 
@@ -1659,19 +1849,22 @@ export function CostDatabaseSearchModal({
             data-testid="cost-modal-sidebar"
           >
             <div className="px-3 pt-3 pb-1 text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
-              {t('boq.cost_tree_title', { defaultValue: 'Categories' })}
+              {t("boq.cost_tree_title", { defaultValue: "Categories" })}
             </div>
             {treeLoading ? (
               <div className="flex flex-1 items-center justify-center text-xs text-content-tertiary">
                 <Loader2 size={14} className="mr-1.5 animate-spin" />
-                {t('boq.tree_loading', { defaultValue: 'Loading...' })}
+                {t("boq.tree_loading", { defaultValue: "Loading..." })}
               </div>
             ) : treeError ? (
               <div className="px-3 py-4 text-center">
-                <AlertCircle size={16} className="mx-auto mb-1.5 text-semantic-error" />
+                <AlertCircle
+                  size={16}
+                  className="mx-auto mb-1.5 text-semantic-error"
+                />
                 <p className="mb-2 text-2xs text-content-tertiary">
-                  {t('boq.cost_tree_error', {
-                    defaultValue: 'Could not load categories',
+                  {t("boq.cost_tree_error", {
+                    defaultValue: "Could not load categories",
                   })}
                 </p>
                 <Button
@@ -1679,7 +1872,7 @@ export function CostDatabaseSearchModal({
                   size="sm"
                   onClick={() => refetchTree()}
                 >
-                  {t('common.retry', { defaultValue: 'Retry' })}
+                  {t("common.retry", { defaultValue: "Retry" })}
                 </Button>
               </div>
             ) : (
@@ -1703,7 +1896,9 @@ export function CostDatabaseSearchModal({
                 className="md:hidden flex items-center gap-1 rounded-md border border-border-light bg-surface-primary px-2 py-1.5 text-xs text-content-secondary"
                 aria-expanded={mobileTreeOpen}
               >
-                <span>{t('boq.cost_tree_title', { defaultValue: 'Categories' })}</span>
+                <span>
+                  {t("boq.cost_tree_title", { defaultValue: "Categories" })}
+                </span>
                 <ChevronDown size={12} />
               </button>
               <div className="relative flex-1">
@@ -1715,8 +1910,12 @@ export function CostDatabaseSearchModal({
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t('boq.search_cost_items', { defaultValue: 'Search cost items by description...' })}
-                  aria-label={t('boq.search_cost_items', { defaultValue: 'Search cost items by description...' })}
+                  placeholder={t("boq.search_cost_items", {
+                    defaultValue: "Search cost items by description...",
+                  })}
+                  aria-label={t("boq.search_cost_items", {
+                    defaultValue: "Search cost items by description...",
+                  })}
                   className="h-10 w-full rounded-lg border border-border bg-surface-primary pl-10 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue"
                 />
               </div>
@@ -1732,12 +1931,16 @@ export function CostDatabaseSearchModal({
                 ) : treeError ? (
                   <div className="px-3 py-4 text-center">
                     <p className="mb-2 text-2xs text-content-tertiary">
-                      {t('boq.cost_tree_error', {
-                        defaultValue: 'Could not load categories',
+                      {t("boq.cost_tree_error", {
+                        defaultValue: "Could not load categories",
                       })}
                     </p>
-                    <Button variant="secondary" size="sm" onClick={() => refetchTree()}>
-                      {t('common.retry', { defaultValue: 'Retry' })}
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => refetchTree()}
+                    >
+                      {t("common.retry", { defaultValue: "Retry" })}
                     </Button>
                   </div>
                 ) : (
@@ -1754,7 +1957,9 @@ export function CostDatabaseSearchModal({
             {/* Active filter chips + result count */}
             <div className="flex items-center gap-2 px-6 py-2 border-b border-border-light shrink-0 text-2xs text-content-tertiary flex-wrap">
               <span data-testid="cost-results-count">{countLabel}</span>
-              {hasActiveFilters && <span className="text-content-quaternary">·</span>}
+              {hasActiveFilters && (
+                <span className="text-content-quaternary">·</span>
+              )}
               {selectedPath && (
                 <span
                   data-testid="filter-chip-category"
@@ -1762,18 +1967,22 @@ export function CostDatabaseSearchModal({
                 >
                   <span title={selectedPath} className="max-w-[200px] truncate">
                     {selectedPath
-                      .split('/')
+                      .split("/")
                       .map((seg) =>
-                        seg === '__unspecified__'
-                          ? t('boq.uncategorized', { defaultValue: '(Uncategorized)' })
+                        seg === "__unspecified__"
+                          ? t("boq.uncategorized", {
+                              defaultValue: "(Uncategorized)",
+                            })
                           : seg,
                       )
-                      .join(' / ')}
+                      .join(" / ")}
                   </span>
                   <button
                     type="button"
-                    onClick={() => handleSelectPath('')}
-                    aria-label={t('boq.clear_filter', { defaultValue: 'Clear filter' })}
+                    onClick={() => handleSelectPath("")}
+                    aria-label={t("boq.clear_filter", {
+                      defaultValue: "Clear filter",
+                    })}
                     className="hover:text-oe-blue-active"
                   >
                     <X size={10} />
@@ -1789,8 +1998,10 @@ export function CostDatabaseSearchModal({
                   <span className="max-w-[140px] truncate">{query}</span>
                   <button
                     type="button"
-                    onClick={() => setQuery('')}
-                    aria-label={t('boq.clear_filter', { defaultValue: 'Clear filter' })}
+                    onClick={() => setQuery("")}
+                    aria-label={t("boq.clear_filter", {
+                      defaultValue: "Clear filter",
+                    })}
                     className="hover:text-content-primary"
                   >
                     <X size={10} />
@@ -1825,8 +2036,14 @@ export function CostDatabaseSearchModal({
                       >
                         <div className="h-4 w-4 rounded-sm bg-surface-secondary/70 animate-pulse" />
                         <div className="flex-1 min-w-0 space-y-1.5">
-                          <div className="h-3 rounded bg-surface-secondary/70 animate-pulse" style={{ width: `${50 + ((i * 7) % 40)}%` }} />
-                          <div className="h-2.5 rounded bg-surface-secondary/50 animate-pulse" style={{ width: `${30 + ((i * 11) % 30)}%` }} />
+                          <div
+                            className="h-3 rounded bg-surface-secondary/70 animate-pulse"
+                            style={{ width: `${50 + ((i * 7) % 40)}%` }}
+                          />
+                          <div
+                            className="h-2.5 rounded bg-surface-secondary/50 animate-pulse"
+                            style={{ width: `${30 + ((i * 11) % 30)}%` }}
+                          />
                         </div>
                         <div className="h-4 w-12 rounded bg-surface-secondary/70 animate-pulse" />
                         <div className="h-4 w-16 rounded bg-surface-secondary/70 animate-pulse" />
@@ -1836,39 +2053,44 @@ export function CostDatabaseSearchModal({
                   </div>
                 </div>
               ) : items.length === 0 ? (
-                regions.length === 0 && query.length < 2 && !region && !selectedPath ? (
+                regions.length === 0 &&
+                query.length < 2 &&
+                !region &&
+                !selectedPath ? (
                   <div className="px-6 py-10 text-center">
                     <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-oe-blue-subtle/40">
                       <Database size={22} className="text-oe-blue" />
                     </div>
                     <h3 className="mb-1 text-sm font-semibold text-content-primary">
-                      {t('boq.no_databases_title', {
-                        defaultValue: 'No cost database installed yet',
+                      {t("boq.no_databases_title", {
+                        defaultValue: "No cost database installed yet",
                       })}
                     </h3>
                     <p className="mx-auto mb-4 max-w-sm text-xs text-content-tertiary">
-                      {t('boq.no_databases_help', {
+                      {t("boq.no_databases_help", {
                         defaultValue:
-                          "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+                          "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 48 regional databases are one click away.",
                       })}
                     </p>
                     <Button
                       size="sm"
                       onClick={() => {
                         onClose();
-                        navigate('/costs/import');
+                        navigate("/costs/import");
                       }}
                       icon={<Plus size={14} />}
                     >
-                      {t('boq.import_database_cta', {
-                        defaultValue: 'Import a database',
+                      {t("boq.import_database_cta", {
+                        defaultValue: "Import a database",
                       })}
                     </Button>
                   </div>
                 ) : (
                   <div className="px-6 py-8 text-center">
                     <p className="text-sm text-content-tertiary">
-                      {t('boq.no_items_found', { defaultValue: 'No matching items found' })}
+                      {t("boq.no_items_found", {
+                        defaultValue: "No matching items found",
+                      })}
                     </p>
                   </div>
                 )
@@ -1877,14 +2099,20 @@ export function CostDatabaseSearchModal({
                   <thead className="bg-surface-tertiary sticky top-0 z-10">
                     <tr>
                       <th className="px-3 py-2 w-8" />
-                      <th className="px-3 py-2 text-start text-xs font-medium text-content-secondary">{t('boq.description')}</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-content-secondary w-16">{t('boq.unit')}</th>
-                      <th className="px-3 py-2 text-end text-xs font-medium text-content-secondary w-20">
-                        {t('boq.quantity_short', { defaultValue: 'Qty' })}
+                      <th className="px-3 py-2 text-start text-xs font-medium text-content-secondary">
+                        {t("boq.description")}
                       </th>
-                      <th className="px-3 py-2 text-end text-xs font-medium text-content-secondary w-24">{t('costs.rate', 'Rate')}</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-content-secondary w-16">
+                        {t("boq.unit")}
+                      </th>
+                      <th className="px-3 py-2 text-end text-xs font-medium text-content-secondary w-20">
+                        {t("boq.quantity_short", { defaultValue: "Qty" })}
+                      </th>
+                      <th className="px-3 py-2 text-end text-xs font-medium text-content-secondary w-24">
+                        {t("costs.rate", "Rate")}
+                      </th>
                       <th className="px-3 py-2 text-center text-xs font-medium text-content-secondary w-20">
-                        {t('boq.region', { defaultValue: 'Database' })}
+                        {t("boq.region", { defaultValue: "Database" })}
                       </th>
                     </tr>
                   </thead>
@@ -1901,16 +2129,22 @@ export function CostDatabaseSearchModal({
                             toggleSelect(item.id);
                           }}
                           className={
-                            'cursor-pointer transition-colors ' +
-                            (isSel ? 'bg-oe-blue-subtle/20 ' : 'hover:bg-surface-secondary/50 ') +
+                            "cursor-pointer transition-colors " +
+                            (isSel
+                              ? "bg-oe-blue-subtle/20 "
+                              : "hover:bg-surface-secondary/50 ") +
                             (isCursor
-                              ? 'outline outline-1 outline-oe-blue/60 -outline-offset-1'
-                              : '')
+                              ? "outline outline-1 outline-oe-blue/60 -outline-offset-1"
+                              : "")
                           }
                         >
                           <td className="px-3 py-2.5">
-                            <div className={`h-4 w-4 rounded border-2 flex items-center justify-center ${isSel ? 'border-oe-blue bg-oe-blue' : 'border-content-quaternary'}`}>
-                              {isSel && <Check size={10} className="text-white" />}
+                            <div
+                              className={`h-4 w-4 rounded border-2 flex items-center justify-center ${isSel ? "border-oe-blue bg-oe-blue" : "border-content-quaternary"}`}
+                            >
+                              {isSel && (
+                                <Check size={10} className="text-white" />
+                              )}
                             </div>
                           </td>
                           <td className="px-3 py-2.5 max-w-[420px]">
@@ -1925,11 +2159,14 @@ export function CostDatabaseSearchModal({
                               // ``common_start`` as the primary line and the rate-code
                               // description as a smaller subtitle when present so the
                               // estimator can scan variant rows by their material name.
-                              const cs = item.metadata_?.variant_stats?.common_start?.trim() ?? '';
+                              const cs =
+                                item.metadata_?.variant_stats?.common_start?.trim() ??
+                                "";
                               const hasCs = cs.length > 0;
-                              const desc = item.description || 'Unnamed item';
+                              const desc = item.description || "Unnamed item";
                               const primary = hasCs ? cs : desc;
-                              const secondary = hasCs && desc && desc !== cs ? desc : '';
+                              const secondary =
+                                hasCs && desc && desc !== cs ? desc : "";
                               return (
                                 <>
                                   <span
@@ -1946,13 +2183,17 @@ export function CostDatabaseSearchModal({
                                       {secondary}
                                     </span>
                                   )}
-                                  <span className="text-2xs text-content-quaternary font-mono">{item.code}</span>
+                                  <span className="text-2xs text-content-quaternary font-mono">
+                                    {item.code}
+                                  </span>
                                 </>
                               );
                             })()}
                           </td>
                           <td className="px-3 py-2.5 text-center">
-                            <Badge variant="neutral" size="sm">{item.unit}</Badge>
+                            <Badge variant="neutral" size="sm">
+                              {item.unit}
+                            </Badge>
                           </td>
                           <td
                             className="px-3 py-2.5 text-end"
@@ -1962,11 +2203,11 @@ export function CostDatabaseSearchModal({
                               type="number"
                               min="0"
                               step="0.01"
-                              value={rowQuantity[item.id] ?? ''}
+                              value={rowQuantity[item.id] ?? ""}
                               placeholder="1"
                               onChange={(e) => {
                                 const raw = e.target.value;
-                                if (raw === '') {
+                                if (raw === "") {
                                   // Empty input → clear override so the POST falls back to 1.
                                   setRowQuantity((cur) => {
                                     const next = { ...cur };
@@ -1977,7 +2218,10 @@ export function CostDatabaseSearchModal({
                                 }
                                 const parsed = parseFloat(raw);
                                 if (!isNaN(parsed) && parsed >= 0) {
-                                  setRowQuantity((cur) => ({ ...cur, [item.id]: parsed }));
+                                  setRowQuantity((cur) => ({
+                                    ...cur,
+                                    [item.id]: parsed,
+                                  }));
                                 }
                               }}
                               onFocus={(e) => {
@@ -1988,13 +2232,13 @@ export function CostDatabaseSearchModal({
                                 e.currentTarget.select();
                               }}
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
+                                if (e.key === "Enter") {
                                   e.preventDefault();
                                   e.currentTarget.blur();
                                 }
                               }}
-                              aria-label={t('boq.quantity_for_item', {
-                                defaultValue: 'Quantity for {{item}}',
+                              aria-label={t("boq.quantity_for_item", {
+                                defaultValue: "Quantity for {{item}}",
                                 item: item.description || item.code,
                               })}
                               className="w-16 h-7 px-1.5 text-xs tabular-nums text-end rounded border border-border-light bg-surface-elevated text-content-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
@@ -2005,13 +2249,23 @@ export function CostDatabaseSearchModal({
                             <div className="inline-flex items-center gap-1.5">
                               <span>{fmtRate(item.rate)}</span>
                               {(() => {
-                                const vc = item.metadata_?.variant_stats?.count ?? 0;
+                                const vc =
+                                  item.metadata_?.variant_stats?.count ?? 0;
                                 const vs = item.metadata_?.variant_stats;
                                 if (vc < 2 || !vs) return null;
                                 return (
-                                  <Badge variant="blue" size="sm" className="text-2xs">
-                                    <span title={`${fmtRate(vs.min)} – ${fmtRate(vs.max)}`}>
-                                      {t('costs.variants_count', { count: vc, defaultValue: '{{count}} variants' })}
+                                  <Badge
+                                    variant="blue"
+                                    size="sm"
+                                    className="text-2xs"
+                                  >
+                                    <span
+                                      title={`${fmtRate(vs.min)} – ${fmtRate(vs.max)}`}
+                                    >
+                                      {t("costs.variants_count", {
+                                        count: vc,
+                                        defaultValue: "{{count}} variants",
+                                      })}
                                     </span>
                                   </Badge>
                                 );
@@ -2023,19 +2277,24 @@ export function CostDatabaseSearchModal({
                                 // entry whose price never landed (CWICR rows with
                                 // empty rate column); ``lump_sum`` is high-risk
                                 // because qty × rate becomes ambiguous.
-                                const lowRate = !(typeof item.rate === 'number' && item.rate > 0);
-                                const lumpSum = (item.unit || '').toLowerCase() === 'lump_sum';
+                                const lowRate = !(
+                                  typeof item.rate === "number" && item.rate > 0
+                                );
+                                const lumpSum =
+                                  (item.unit || "").toLowerCase() ===
+                                  "lump_sum";
                                 if (!lowRate && !lumpSum) return null;
                                 return (
                                   <span
                                     title={
                                       lowRate
-                                        ? t('boq.warn_zero_rate', {
-                                            defaultValue: 'No rate — review before commit',
-                                          })
-                                        : t('boq.warn_lump_sum', {
+                                        ? t("boq.warn_zero_rate", {
                                             defaultValue:
-                                              'Lump sum — quantity × rate may not match expected total',
+                                              "No rate — review before commit",
+                                          })
+                                        : t("boq.warn_lump_sum", {
+                                            defaultValue:
+                                              "Lump sum — quantity × rate may not match expected total",
                                           })
                                     }
                                   >
@@ -2050,14 +2309,23 @@ export function CostDatabaseSearchModal({
                           </td>
                           <td className="px-3 py-2.5 text-center">
                             {(() => {
-                              const info = item.region ? REGION_MAP[item.region] : null;
-                              if (!info) return <span className="text-2xs text-content-quaternary">&mdash;</span>;
+                              const info = item.region
+                                ? REGION_MAP[item.region]
+                                : null;
+                              if (!info)
+                                return (
+                                  <span className="text-2xs text-content-quaternary">
+                                    &mdash;
+                                  </span>
+                                );
                               return (
                                 <span className="inline-flex items-center gap-1 text-2xs text-content-tertiary">
-                                  {info.flag && info.flag !== 'custom' && (
+                                  {info.flag && info.flag !== "custom" && (
                                     <CountryFlag code={info.flag} size={11} />
                                   )}
-                                  <span className="truncate max-w-[60px]">{info.label?.split(' ')[0] || item.region}</span>
+                                  <span className="truncate max-w-[60px]">
+                                    {info.label?.split(" ")[0] || item.region}
+                                  </span>
                                 </span>
                               );
                             })()}
@@ -2081,7 +2349,7 @@ export function CostDatabaseSearchModal({
                   {isFetchingNextPage ? (
                     <span className="inline-flex items-center gap-1.5 text-2xs text-content-tertiary">
                       <Loader2 size={12} className="animate-spin" />
-                      {t('boq.tree_loading', { defaultValue: 'Loading...' })}
+                      {t("boq.tree_loading", { defaultValue: "Loading..." })}
                     </span>
                   ) : (
                     <Button
@@ -2089,7 +2357,7 @@ export function CostDatabaseSearchModal({
                       size="sm"
                       onClick={() => fetchNextPage()}
                     >
-                      {t('boq.load_more', { defaultValue: 'Load more' })}
+                      {t("boq.load_more", { defaultValue: "Load more" })}
                     </Button>
                   )}
                 </div>
@@ -2103,8 +2371,10 @@ export function CostDatabaseSearchModal({
           <div className="flex items-center gap-2 text-xs">
             <span className="text-content-tertiary">
               {selected.size > 0
-                ? `${selected.size} ${t('boq.items_selected', { defaultValue: 'items selected' })}`
-                : t('boq.click_to_select', { defaultValue: 'Click rows to select' })}
+                ? `${selected.size} ${t("boq.items_selected", { defaultValue: "items selected" })}`
+                : t("boq.click_to_select", {
+                    defaultValue: "Click rows to select",
+                  })}
             </span>
             {selectionPreview && (
               <>
@@ -2112,13 +2382,14 @@ export function CostDatabaseSearchModal({
                 <span
                   className="font-mono font-semibold tabular-nums text-content-secondary"
                   data-testid="cost-modal-selection-preview"
-                  title={t('boq.preview_total_hint', {
+                  title={t("boq.preview_total_hint", {
                     defaultValue:
-                      'Catalog-rate × quantity for the selection. Variant picks may adjust this.',
+                      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
                   })}
                 >
-                  ≈ {new Intl.NumberFormat(getIntlLocale(), {
-                    style: 'currency',
+                  ≈{" "}
+                  {new Intl.NumberFormat(getIntlLocale(), {
+                    style: "currency",
                     currency: selectionPreview.currency,
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
@@ -2140,23 +2411,25 @@ export function CostDatabaseSearchModal({
                   data-testid="cost-modal-section-picker"
                   aria-haspopup="listbox"
                   aria-expanded={sectionMenuOpen}
-                  title={t('boq.add_to_section_hint', {
-                    defaultValue: 'Choose where new items land in the BOQ',
+                  title={t("boq.add_to_section_hint", {
+                    defaultValue: "Choose where new items land in the BOQ",
                   })}
                 >
                   <Layers size={12} className="text-content-tertiary" />
                   <span className="text-content-tertiary">
-                    {t('boq.add_to_label', { defaultValue: 'Add to:' })}
+                    {t("boq.add_to_label", { defaultValue: "Add to:" })}
                   </span>
                   <span className="font-semibold text-content-primary truncate max-w-[160px]">
                     {selectedParentId
                       ? (() => {
-                          const s = boqSections.find((x) => x.id === selectedParentId);
+                          const s = boqSections.find(
+                            (x) => x.id === selectedParentId,
+                          );
                           return s
-                            ? `${s.ordinal} ${s.description || ''}`.trim()
-                            : t('boq.add_to_root', { defaultValue: '[Root]' });
+                            ? `${s.ordinal} ${s.description || ""}`.trim()
+                            : t("boq.add_to_root", { defaultValue: "[Root]" });
                         })()
-                      : t('boq.add_to_root', { defaultValue: '[Root]' })}
+                      : t("boq.add_to_root", { defaultValue: "[Root]" })}
                   </span>
                   <ChevronDown size={12} className="text-content-tertiary" />
                 </button>
@@ -2175,18 +2448,18 @@ export function CostDatabaseSearchModal({
                         setSectionMenuOpen(false);
                       }}
                       className={
-                        'w-full px-3 py-2 flex items-center justify-between gap-3 text-start hover:bg-surface-hover ' +
+                        "w-full px-3 py-2 flex items-center justify-between gap-3 text-start hover:bg-surface-hover " +
                         (selectedParentId === null
-                          ? 'bg-blue-50/40 dark:bg-blue-950/20'
-                          : '')
+                          ? "bg-blue-50/40 dark:bg-blue-950/20"
+                          : "")
                       }
                     >
                       <span className="text-xs font-medium text-content-primary">
-                        {t('boq.add_to_root', { defaultValue: '[Root]' })}
+                        {t("boq.add_to_root", { defaultValue: "[Root]" })}
                       </span>
                       <span className="text-2xs text-content-tertiary">
-                        {t('boq.add_to_root_hint', {
-                          defaultValue: 'top-level',
+                        {t("boq.add_to_root_hint", {
+                          defaultValue: "top-level",
                         })}
                       </span>
                     </button>
@@ -2202,10 +2475,10 @@ export function CostDatabaseSearchModal({
                           setSectionMenuOpen(false);
                         }}
                         className={
-                          'w-full px-3 py-2 flex items-center justify-between gap-3 text-start hover:bg-surface-hover ' +
+                          "w-full px-3 py-2 flex items-center justify-between gap-3 text-start hover:bg-surface-hover " +
                           (selectedParentId === s.id
-                            ? 'bg-blue-50/40 dark:bg-blue-950/20'
-                            : '')
+                            ? "bg-blue-50/40 dark:bg-blue-950/20"
+                            : "")
                         }
                         data-testid={`cost-modal-section-option-${s.id}`}
                       >
@@ -2216,17 +2489,17 @@ export function CostDatabaseSearchModal({
                           <span className="text-xs text-content-primary truncate">
                             {s.description || (
                               <span className="italic text-content-tertiary">
-                                {t('boq.untitled_section', {
-                                  defaultValue: '(untitled)',
+                                {t("boq.untitled_section", {
+                                  defaultValue: "(untitled)",
                                 })}
                               </span>
                             )}
                           </span>
                         </div>
                         <span className="text-2xs text-content-tertiary tabular-nums shrink-0">
-                          {t('boq.section_child_count', {
-                            defaultValue: '{{count}} item',
-                            defaultValue_other: '{{count}} items',
+                          {t("boq.section_child_count", {
+                            defaultValue: "{{count}} item",
+                            defaultValue_other: "{{count}} items",
                             count: s.childCount,
                           })}
                         </span>
@@ -2237,21 +2510,33 @@ export function CostDatabaseSearchModal({
               </div>
             )}
             <Button variant="secondary" size="sm" onClick={onClose}>
-              {t('common.cancel', 'Cancel')}
+              {t("common.cancel", "Cancel")}
             </Button>
             <Button
               ref={addButtonRef}
               variant="primary"
               size="sm"
               disabled={selected.size === 0 || isAdding}
-              icon={isAdding ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+              icon={
+                isAdding ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Plus size={14} />
+                )
+              }
               onClick={handleAdd}
             >
               {isAdding
-                ? t('boq.adding', { defaultValue: 'Adding...' })
+                ? t("boq.adding", { defaultValue: "Adding..." })
                 : onSelectForResources
-                  ? t('boq.add_as_resources', { defaultValue: 'Add {{count}} as resources', count: selected.size })
-                  : t('boq.add_n_positions', { defaultValue: 'Add {{count}} to BOQ', count: selected.size })}
+                  ? t("boq.add_as_resources", {
+                      defaultValue: "Add {{count}} as resources",
+                      count: selected.size,
+                    })
+                  : t("boq.add_n_positions", {
+                      defaultValue: "Add {{count}} to BOQ",
+                      count: selected.size,
+                    })}
             </Button>
           </div>
         </div>
@@ -2263,38 +2548,39 @@ export function CostDatabaseSearchModal({
           Default strategy is "mean" (matches CostX/iTWO defaults); the
           legacy "median" tag in the Cost-DB browser remains available
           via the `defaultStrategy` prop on direct callers. */}
-      {activeVariantPick && activeVariantPick.item.metadata_?.variants
-        && activeVariantPick.item.metadata_?.variant_stats && (
-        <VariantPicker
-          variants={activeVariantPick.item.metadata_.variants}
-          stats={activeVariantPick.item.metadata_.variant_stats}
-          defaultStrategy="mean"
-          anchorEl={addButtonRef.current}
-          unitLabel={activeVariantPick.item.unit || ''}
-          currency={
-            activeVariantPick.item.currency
-            || (activeVariantPick.item.region
-              ? REGION_MAP[activeVariantPick.item.region]?.currency
-              : null)
-            || 'USD'
-          }
-          onApply={(chosen) => {
-            const pending = activeVariantPick;
-            setActiveVariantPick(null);
-            pending.resolve({ kind: 'variant', variant: chosen });
-          }}
-          onUseDefault={(strategy) => {
-            const pending = activeVariantPick;
-            setActiveVariantPick(null);
-            pending.resolve({ kind: 'default', strategy });
-          }}
-          onClose={() => {
-            const pending = activeVariantPick;
-            setActiveVariantPick(null);
-            pending.resolve(null);
-          }}
-        />
-      )}
+      {activeVariantPick &&
+        activeVariantPick.item.metadata_?.variants &&
+        activeVariantPick.item.metadata_?.variant_stats && (
+          <VariantPicker
+            variants={activeVariantPick.item.metadata_.variants}
+            stats={activeVariantPick.item.metadata_.variant_stats}
+            defaultStrategy="mean"
+            anchorEl={addButtonRef.current}
+            unitLabel={activeVariantPick.item.unit || ""}
+            currency={
+              activeVariantPick.item.currency ||
+              (activeVariantPick.item.region
+                ? REGION_MAP[activeVariantPick.item.region]?.currency
+                : null) ||
+              "USD"
+            }
+            onApply={(chosen) => {
+              const pending = activeVariantPick;
+              setActiveVariantPick(null);
+              pending.resolve({ kind: "variant", variant: chosen });
+            }}
+            onUseDefault={(strategy) => {
+              const pending = activeVariantPick;
+              setActiveVariantPick(null);
+              pending.resolve({ kind: "default", strategy });
+            }}
+            onClose={() => {
+              const pending = activeVariantPick;
+              setActiveVariantPick(null);
+              pending.resolve(null);
+            }}
+          />
+        )}
 
       {/* Multi-variant picker — centered modal that handles a CostItem with
           2+ independent variant slots in one go. Single-slot top-level picks

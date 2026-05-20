@@ -25,6 +25,7 @@ from app.modules.service.models import (
     DebriefReport,
     ServiceAsset,
     ServiceContract,
+    ServiceRecurringSchedule,
     ServiceSchedule,
     ServiceTicket,
     ServiceWorkOrder,
@@ -36,6 +37,7 @@ from app.modules.service.repository import (
     ChecklistRepository,
     ContractRepository,
     DebriefRepository,
+    RecurringScheduleRepository,
     ScheduleRepository,
     SLADefinitionRepository,
     TicketRepository,
@@ -48,6 +50,9 @@ from app.modules.service.schemas import (
     ContractDashboardResponse,
     NCRFromWorkOrderRequest,
     NCRFromWorkOrderResponse,
+    RecurringScheduleCreate,
+    RecurringScheduleMaterializeResponse,
+    RecurringScheduleUpdate,
     ServiceAssetCreate,
     ServiceAssetUpdate,
     ServiceContractCreate,
@@ -56,6 +61,7 @@ from app.modules.service.schemas import (
     ServiceScheduleUpdate,
     ServiceTicketCreate,
     ServiceTicketUpdate,
+    SLABreachCheckResponse,
     SLABreachEntry,
     SLABreachScanResponse,
     SLADefinitionCreate,
@@ -165,6 +171,49 @@ def compute_sla_due_at(
     return reported_at + timedelta(minutes=minutes)
 
 
+# ── T10: priority-driven SLA lookup ───────────────────────────────────────
+
+# Hours-from-reported until breach, by priority. Both the historical
+# (low/med/high/critical) vocabulary used by the existing ticket schema and
+# the ServiceTitan-style (low/normal/high/urgent) vocabulary used by the
+# T10 spec resolve through the same table so the two stay interchangeable.
+_PRIORITY_SLA_HOURS: dict[str, int] = {
+    "urgent": 4,
+    "critical": 4,
+    "high": 8,
+    "normal": 24,
+    "med": 24,
+    "low": 72,
+}
+
+
+def priority_sla_minutes(priority: str | None) -> int:
+    """Return the SLA window (minutes) for ``priority``.
+
+    Unknown priorities fall back to the ``normal`` bucket (24h) rather than
+    raising — a stray UI value should never make a ticket SLA-immortal.
+    """
+    if priority is None:
+        return _PRIORITY_SLA_HOURS["normal"] * 60
+    return _PRIORITY_SLA_HOURS.get(priority.lower(), _PRIORITY_SLA_HOURS["normal"]) * 60
+
+
+def compute_sla_due(ticket: ServiceTicket) -> datetime:
+    """T10: priority-driven SLA due-at, independent of any SLADefinition.
+
+    Used by ``check_breaches()`` and by the recurring-schedule materialiser,
+    both of which need to stamp ``sla_due_at`` without first looking up the
+    parent contract's optional SLA tier. The full SLADefinition-aware path
+    is still :func:`compute_sla_due_at` (kept for create_ticket()).
+    """
+    reported = ticket.reported_at
+    if not reported:
+        reported_dt = datetime.now(UTC)
+    else:
+        reported_dt = _parse_iso(reported)
+    return reported_dt + timedelta(minutes=priority_sla_minutes(ticket.priority))
+
+
 def compute_work_order_total(items: list[ServiceWorkOrderItem]) -> Decimal:
     """Sum of ``item.total`` across a work order's items, rounded to 2dp."""
     total = Decimal("0")
@@ -202,6 +251,7 @@ class ServiceService:
         self.sla_repo = SLADefinitionRepository(session)
         self.schedule_repo = ScheduleRepository(session)
         self.checklist_repo = ChecklistRepository(session)
+        self.recurring_repo = RecurringScheduleRepository(session)
 
     # ── Contract ─────────────────────────────────────────────────────────
 
@@ -379,9 +429,7 @@ class ServiceService:
                     detail="asset_id does not belong to this contract",
                 )
 
-        reported_at_dt = (
-            _parse_iso(data.reported_at) if data.reported_at else datetime.now(UTC)
-        )
+        reported_at_dt = _parse_iso(data.reported_at) if data.reported_at else datetime.now(UTC)
 
         sla: SLADefinition | None = None
         if contract.sla_definition_id is not None:
@@ -472,17 +520,9 @@ class ServiceService:
             # Keep lifecycle timestamps consistent with the dedicated
             # resolve/close endpoints when an admin corrects status via PATCH —
             # otherwise a 'closed' ticket can end up with closed_at = NULL.
-            if (
-                new_status == "resolved"
-                and ticket.status != "resolved"
-                and ticket.resolved_at is None
-            ):
+            if new_status == "resolved" and ticket.status != "resolved" and ticket.resolved_at is None:
                 fields["resolved_at"] = _utcnow_iso()
-            if (
-                new_status == "closed"
-                and ticket.status != "closed"
-                and ticket.closed_at is None
-            ):
+            if new_status == "closed" and ticket.status != "closed" and ticket.closed_at is None:
                 fields["closed_at"] = _utcnow_iso()
 
         if not fields:
@@ -521,7 +561,8 @@ class ServiceService:
         await self.session.refresh(ticket)
         logger.info(
             "Service ticket dispatched: %s → technician %s",
-            ticket.ticket_number, body.technician_id,
+            ticket.ticket_number,
+            body.technician_id,
         )
         event_bus.publish_detached(
             "service.ticket.dispatched",
@@ -625,7 +666,9 @@ class ServiceService:
 
         await self.session.refresh(wo)
         logger.info(
-            "Work order created: %s for ticket %s", wo_number, ticket.ticket_number,
+            "Work order created: %s for ticket %s",
+            wo_number,
+            ticket.ticket_number,
         )
         event_bus.publish_detached(
             "service.work_order.created",
@@ -643,11 +686,7 @@ class ServiceService:
         work_order_id: uuid.UUID,
         data: WorkOrderItemCreate,
     ) -> ServiceWorkOrderItem:
-        total = (
-            data.total
-            if data.total is not None
-            else (data.quantity * data.unit_rate).quantize(Decimal("0.01"))
-        )
+        total = data.total if data.total is not None else (data.quantity * data.unit_rate).quantize(Decimal("0.01"))
         item = ServiceWorkOrderItem(
             work_order_id=work_order_id,
             item_type=data.item_type,
@@ -706,9 +745,7 @@ class ServiceService:
             "status": "completed",
             "completed_at": _utcnow_iso(),
             "billed_amount": billed_amount,
-            "debrief_summary": (
-                body.debrief.solution[:1000] if body.debrief.solution else wo.debrief_summary
-            ),
+            "debrief_summary": (body.debrief.solution[:1000] if body.debrief.solution else wo.debrief_summary),
         }
         if body.customer_signature is not None:
             update_fields["customer_signature"] = body.customer_signature
@@ -730,7 +767,8 @@ class ServiceService:
         await self.session.refresh(wo)
         logger.info(
             "Work order completed: %s (billed_amount=%s)",
-            wo.work_order_number, billed_amount,
+            wo.work_order_number,
+            billed_amount,
         )
         event_bus.publish_detached(
             "service.work_order.completed",
@@ -945,9 +983,7 @@ class ServiceService:
                 ServiceWorkOrder.status.in_(("scheduled", "dispatched", "in_progress")),
             )
         )
-        scheduled_work_orders = int(
-            (await self.session.execute(scheduled_wo_stmt)).scalar_one()
-        )
+        scheduled_work_orders = int((await self.session.execute(scheduled_wo_stmt)).scalar_one())
 
         # completed_at is stored full-ISO ("…T…+00:00"); compare against a
         # matching full-ISO bound (not a bare date) so the string ordering is
@@ -965,9 +1001,7 @@ class ServiceService:
         )
         completed_wos = list((await self.session.execute(completed_wo_stmt)).scalars().all())
 
-        billed_amount_total = sum(
-            (Decimal(wo.billed_amount or 0) for wo in completed_wos), Decimal("0")
-        )
+        billed_amount_total = sum((Decimal(wo.billed_amount or 0) for wo in completed_wos), Decimal("0"))
 
         # Monthly revenue: contract.value / (period months). Falls back to
         # billed_amount_total when the contract has no value or zero duration.
@@ -977,9 +1011,7 @@ class ServiceService:
                 start = datetime.fromisoformat(contract.period_start)
                 end = datetime.fromisoformat(contract.period_end)
                 months = max(1, (end.year - start.year) * 12 + (end.month - start.month))
-                monthly_revenue = (Decimal(contract.value) / Decimal(months)).quantize(
-                    Decimal("0.01")
-                )
+                monthly_revenue = (Decimal(contract.value) / Decimal(months)).quantize(Decimal("0.01"))
             except (ValueError, TypeError):
                 pass
 
@@ -1062,9 +1094,7 @@ class ServiceService:
                 due_dt = _parse_iso(ticket.sla_due_at) if ticket.sla_due_at else None
             except (ValueError, TypeError):
                 continue
-            minutes_overdue = (
-                int((now_dt - due_dt).total_seconds() // 60) if due_dt else 0
-            )
+            minutes_overdue = int((now_dt - due_dt).total_seconds() // 60) if due_dt else 0
             breaches.append(
                 SLABreachEntry(
                     ticket_id=ticket.id,
@@ -1079,7 +1109,8 @@ class ServiceService:
 
             if notify and ticket.sla_breach_notified_at is None:
                 await self.ticket_repo.update_fields(
-                    ticket.id, sla_breach_notified_at=now_iso,
+                    ticket.id,
+                    sla_breach_notified_at=now_iso,
                 )
                 newly_notified += 1
                 event_bus.publish_detached(
@@ -1124,10 +1155,7 @@ class ServiceService:
         if contract.project_id is None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=(
-                    "NCR requires a project-scoped contract. "
-                    f"Contract {contract.contract_number} has no project."
-                ),
+                detail=(f"NCR requires a project-scoped contract. Contract {contract.contract_number} has no project."),
             )
 
         # Late import to avoid pulling NCR into service-module import graph.
@@ -1177,7 +1205,9 @@ class ServiceService:
         )
         logger.info(
             "NCR filed from work order: %s → %s (project=%s)",
-            wo.work_order_number, ncr_number, contract.project_id,
+            wo.work_order_number,
+            ncr_number,
+            contract.project_id,
         )
         return NCRFromWorkOrderResponse(
             ncr_id=ncr.id,
@@ -1240,3 +1270,323 @@ class ServiceService:
         item_meta["procurement_requested_by"] = user_id
         await self.work_order_item_repo.update_fields(item_id, metadata_=item_meta)
         return item_id
+
+    # ── T10: SLA breach detector (priority-driven, dateutil-free) ────────
+
+    async def check_breaches(
+        self,
+        *,
+        contract_id: uuid.UUID | None = None,
+    ) -> SLABreachCheckResponse:
+        """Find tickets whose ``sla_due_at`` is past and stamp ``sla_breached_at``.
+
+        Operates only on tickets where ``sla_breached_at IS NULL`` so re-runs
+        don't re-stamp. Emits ``service.sla.breached`` for each newly stamped
+        ticket. Returns the count of newly breached tickets plus the total
+        currently-breached open tickets.
+
+        Distinct from :meth:`scan_sla_breaches` (which only handles the
+        *notification* idempotency stamp ``sla_breach_notified_at``) — this
+        method is the T10 ground-truth marker used by the dashboard countdown.
+        """
+        from sqlalchemy import select
+
+        now_dt = datetime.now(UTC)
+        now_iso = now_dt.isoformat()
+
+        stmt = select(ServiceTicket).where(
+            ServiceTicket.sla_due_at.isnot(None),
+            ServiceTicket.sla_due_at < now_iso,
+            ServiceTicket.sla_breached_at.is_(None),
+            ServiceTicket.status.in_(("new", "assigned", "in_progress")),
+        )
+        if contract_id is not None:
+            stmt = stmt.where(ServiceTicket.contract_id == contract_id)
+
+        tickets = list((await self.session.execute(stmt)).scalars().all())
+
+        newly_breached: list[uuid.UUID] = []
+        # Capture each ticket's identifying fields BEFORE update_fields so the
+        # SQLAlchemy ``expire_all()`` it issues doesn't force a re-load of
+        # ``ticket.id`` outside the async greenlet (the event payload also
+        # reads several columns; we snapshot them up front to keep the
+        # session traffic minimal).
+        snapshots = [
+            (
+                t.id,
+                t.ticket_number,
+                t.contract_id,
+                t.priority,
+                t.sla_due_at,
+                t.assigned_to,
+            )
+            for t in tickets
+        ]
+        for tid, tnum, cid, prio, due, assignee in snapshots:
+            await self.ticket_repo.update_fields(tid, sla_breached_at=now_iso)
+            newly_breached.append(tid)
+            event_bus.publish_detached(
+                "service.sla.breached",
+                {
+                    "ticket_id": str(tid),
+                    "ticket_number": tnum,
+                    "contract_id": str(cid),
+                    "priority": prio,
+                    "sla_due_at": due,
+                    "sla_breached_at": now_iso,
+                    "assigned_to": assignee,
+                },
+                source_module="service",
+            )
+
+        # Total currently-breached tickets (whether newly stamped or not).
+        total_stmt = select(ServiceTicket).where(
+            ServiceTicket.sla_breached_at.isnot(None),
+            ServiceTicket.status.in_(("new", "assigned", "in_progress")),
+        )
+        if contract_id is not None:
+            total_stmt = total_stmt.where(ServiceTicket.contract_id == contract_id)
+        total_breached = len(list((await self.session.execute(total_stmt)).scalars().all()))
+
+        return SLABreachCheckResponse(
+            checked_at=now_iso,
+            newly_breached=len(newly_breached),
+            total_breached=total_breached,
+            breached_ticket_ids=newly_breached,
+        )
+
+    # ── T10: RRULE-driven recurring schedules ────────────────────────────
+
+    @staticmethod
+    def _rrule_next_after(rrule_str: str, after: datetime) -> datetime | None:
+        """Return the first RRULE occurrence strictly after ``after``.
+
+        Wraps ``dateutil.rrule.rrulestr`` so the rest of the service module
+        doesn't import dateutil directly. Returns None when the rule is
+        exhausted (e.g. ``COUNT=`` reached).
+        """
+        # Local import: dateutil is a transitive dep already, but keep the
+        # module-level import surface tight.
+        from dateutil.rrule import rrulestr
+
+        # An RRULE without DTSTART is anchored at ``after`` so we always get a
+        # forward-looking occurrence. Strip any user-supplied prefix so we
+        # never end up with "RRULE:RRULE:..." which dateutil rejects.
+        rule_body = rrule_str.strip()
+        if rule_body.upper().startswith("RRULE:"):
+            rule_body = rule_body[6:]
+        try:
+            rule = rrulestr(rule_body, dtstart=after)
+        except (ValueError, TypeError) as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"Invalid RRULE: {exc}",
+            ) from exc
+        candidate = rule.after(after, inc=False)
+        if candidate is None:
+            return None
+        # Normalise to UTC-aware so downstream ISO formatting is well-defined.
+        if candidate.tzinfo is None:
+            candidate = candidate.replace(tzinfo=UTC)
+        return candidate
+
+    async def create_recurring(
+        self,
+        data: RecurringScheduleCreate,
+    ) -> ServiceRecurringSchedule:
+        """Persist a recurring schedule and compute its first ``next_run_at``."""
+        # If contract scope is set, validate the contract exists so the user
+        # gets a clean 404 (and a derived project_id when not supplied).
+        project_id = data.project_id
+        if data.contract_id is not None:
+            contract = await self.get_contract(data.contract_id)
+            if project_id is None:
+                project_id = contract.project_id
+
+        # Compute first run if caller didn't pre-supply one.
+        if data.next_run_at is not None:
+            next_run_iso: str | None = data.next_run_at
+        else:
+            anchor = datetime.now(UTC)
+            next_dt = self._rrule_next_after(data.rrule, anchor)
+            next_run_iso = next_dt.isoformat() if next_dt else None
+
+        sched = ServiceRecurringSchedule(
+            project_id=project_id,
+            contract_id=data.contract_id,
+            name=data.name,
+            rrule=data.rrule,
+            template_ticket_data=dict(data.template_ticket_data),
+            next_run_at=next_run_iso,
+            enabled=data.enabled,
+            metadata_=data.metadata,
+        )
+        sched = await self.recurring_repo.create(sched)
+
+        event_bus.publish_detached(
+            "service.recurring.created",
+            {
+                "schedule_id": str(sched.id),
+                "name": sched.name,
+                "rrule": sched.rrule,
+                "next_run_at": sched.next_run_at,
+            },
+            source_module="service",
+        )
+        return sched
+
+    async def get_recurring(
+        self,
+        schedule_id: uuid.UUID,
+    ) -> ServiceRecurringSchedule:
+        sched = await self.recurring_repo.get_by_id(schedule_id)
+        if sched is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Recurring schedule not found",
+            )
+        return sched
+
+    async def update_recurring(
+        self,
+        schedule_id: uuid.UUID,
+        data: RecurringScheduleUpdate,
+    ) -> ServiceRecurringSchedule:
+        sched = await self.get_recurring(schedule_id)
+        fields: dict[str, Any] = data.model_dump(exclude_unset=True)
+        if "metadata" in fields:
+            fields["metadata_"] = fields.pop("metadata")
+        if not fields:
+            return sched
+        # If the RRULE changed and no explicit next_run_at was supplied, leave
+        # next_run_at alone — the materialiser will recompute it on its next
+        # tick. This avoids surprising the user mid-cycle.
+        await self.recurring_repo.update_fields(schedule_id, **fields)
+        await self.session.refresh(sched)
+        return sched
+
+    async def delete_recurring(self, schedule_id: uuid.UUID) -> None:
+        await self.get_recurring(schedule_id)
+        await self.recurring_repo.delete(schedule_id)
+
+    async def materialize_recurring(
+        self,
+        schedule_id: uuid.UUID,
+        *,
+        force: bool = False,
+        user_id: str | None = None,
+    ) -> RecurringScheduleMaterializeResponse:
+        """Create a ticket from the schedule's template and advance ``next_run_at``.
+
+        ``force`` lets the dispatcher trigger a "Run now" outside the normal
+        cron cadence (handy for testing or backfilling). When False, refuses
+        to materialise if the schedule is disabled or not yet due.
+        """
+        sched = await self.get_recurring(schedule_id)
+
+        if not sched.enabled and not force:
+            return RecurringScheduleMaterializeResponse(
+                schedule_id=sched.id,
+                next_run_at=sched.next_run_at,
+                materialized=False,
+                reason="Schedule disabled",
+            )
+
+        now_dt = datetime.now(UTC)
+        now_iso = now_dt.isoformat()
+
+        if not force:
+            if not sched.next_run_at:
+                return RecurringScheduleMaterializeResponse(
+                    schedule_id=sched.id,
+                    materialized=False,
+                    reason="next_run_at not set",
+                )
+            if sched.next_run_at > now_iso:
+                return RecurringScheduleMaterializeResponse(
+                    schedule_id=sched.id,
+                    next_run_at=sched.next_run_at,
+                    materialized=False,
+                    reason="Not due yet",
+                )
+
+        # Build a ServiceTicketCreate from the template. ``contract_id`` is
+        # required, taken from the template payload or — when the schedule
+        # itself carries one — from the schedule row.
+        template = dict(sched.template_ticket_data or {})
+        contract_id_raw = template.get("contract_id") or (str(sched.contract_id) if sched.contract_id else None)
+        if not contract_id_raw:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Schedule has no contract_id to materialise a ticket against",
+            )
+
+        try:
+            ticket_create = ServiceTicketCreate(
+                contract_id=uuid.UUID(str(contract_id_raw)),
+                asset_id=(uuid.UUID(str(template["asset_id"])) if template.get("asset_id") else None),
+                title=str(template.get("title") or sched.name),
+                description=str(template.get("description") or ""),
+                priority=str(template.get("priority") or "med"),
+                reported_at=now_iso,
+                source="auto_ppm",
+                metadata=dict(template.get("metadata") or {}),
+            )
+        except (ValueError, TypeError) as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"Invalid template_ticket_data: {exc}",
+            ) from exc
+
+        # Snapshot schedule fields BEFORE any update_fields() call — the
+        # repository's ``expire_all()`` would otherwise force a re-load of
+        # ``sched.rrule`` / ``sched.next_run_at`` outside the async greenlet.
+        sched_id = sched.id
+        sched_rrule = sched.rrule
+        prev_next_run = sched.next_run_at
+
+        ticket = await self.create_ticket(ticket_create, user_id=user_id)
+        ticket_id = ticket.id
+        ticket_number = ticket.ticket_number
+        # Backfill the schedule link on the ticket so the dashboard can list
+        # "tickets from this schedule" without an extra metadata round-trip.
+        await self.ticket_repo.update_fields(
+            ticket_id,
+            recurring_schedule_id=sched_id,
+        )
+
+        # Advance next_run_at via the RRULE, anchored at the *previous*
+        # next_run_at so we honour the configured cadence even if the cron
+        # tick ran late.
+        anchor_str = prev_next_run or now_iso
+        try:
+            anchor_dt = _parse_iso(anchor_str)
+        except (ValueError, TypeError):
+            anchor_dt = now_dt
+        next_dt = self._rrule_next_after(sched_rrule, anchor_dt)
+        next_run_iso = next_dt.isoformat() if next_dt else None
+
+        await self.recurring_repo.update_fields(
+            sched_id,
+            next_run_at=next_run_iso,
+            last_run_at=now_iso,
+        )
+
+        event_bus.publish_detached(
+            "service.recurring.materialized",
+            {
+                "schedule_id": str(sched_id),
+                "ticket_id": str(ticket_id),
+                "ticket_number": ticket_number,
+                "next_run_at": next_run_iso,
+            },
+            source_module="service",
+        )
+
+        return RecurringScheduleMaterializeResponse(
+            schedule_id=sched_id,
+            ticket_id=ticket_id,
+            ticket_number=ticket_number,
+            next_run_at=next_run_iso,
+            materialized=True,
+        )

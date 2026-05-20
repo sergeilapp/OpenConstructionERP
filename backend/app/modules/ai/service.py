@@ -68,9 +68,7 @@ async def _resolve_project_currency(
 
     from app.modules.projects.models import Project
 
-    project = (
-        await session.execute(select(Project).where(Project.id == project_id))
-    ).scalar_one_or_none()
+    project = (await session.execute(select(Project).where(Project.id == project_id))).scalar_one_or_none()
     if project is None:
         return ""
     return project.currency or ""
@@ -169,11 +167,7 @@ def _build_settings_response(settings: AISettings) -> AISettingsResponse:
     model_overrides: dict[str, str] = {}
     if isinstance(raw_overrides, dict):
         # Only surface non-empty string overrides.
-        model_overrides = {
-            str(k): str(v).strip()
-            for k, v in raw_overrides.items()
-            if isinstance(v, str) and v.strip()
-        }
+        model_overrides = {str(k): str(v).strip() for k, v in raw_overrides.items() if isinstance(v, str) and v.strip()}
 
     return AISettingsResponse(
         id=settings.id,
@@ -429,11 +423,7 @@ class AIService:
 
         # Currency precedence: explicit request → project default →
         # empty string (LLM prompts tolerate a blank currency token).
-        currency = (
-            request.currency
-            or await _resolve_project_currency(self.session, request.project_id)
-            or ""
-        )
+        currency = request.currency or await _resolve_project_currency(self.session, request.project_id) or ""
         # No standard fallback — empty token signals "no preferred classification"
         # so the LLM is steered by the project's explicit setting (or absence).
         standard_val = request.standard or ""
@@ -605,11 +595,7 @@ class AIService:
         job_id = job.id  # Save before expire_all() in update_fields
 
         # Build prompt — currency: explicit arg → project default → blank.
-        currency_val = (
-            currency
-            or await _resolve_project_currency(self.session, project_id)
-            or ""
-        )
+        currency_val = currency or await _resolve_project_currency(self.session, project_id) or ""
         # No standard / location fallback — explicit-only avoids steering
         # the LLM toward DIN 276 / Europe on non-DACH projects.
         standard_val = standard or ""
@@ -788,11 +774,7 @@ class AIService:
         job_id = job.id  # Save before expire_all() in update_fields
 
         # Currency: explicit arg → project default → blank token.
-        currency_val = (
-            currency
-            or await _resolve_project_currency(self.session, project_id)
-            or ""
-        )
+        currency_val = currency or await _resolve_project_currency(self.session, project_id) or ""
         # No region/standard steering — empty tokens let the LLM rely on
         # the file's content rather than defaulting to DACH / DIN 276.
         standard_val = standard or ""

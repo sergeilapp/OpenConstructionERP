@@ -23,17 +23,13 @@
  * cascade re-fetches when *any* sibling card changes, even when the
  * card's own input is idle.
  */
-import { useCallback, useEffect, useId, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { Filter, RotateCcw, Search, X } from 'lucide-react';
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { Filter, RotateCcw, Search, X } from "lucide-react";
 
-import {
-  getCascadeRowCount,
-  getCascadeValues,
-  type CascadeValue,
-} from './api';
-import { useDebouncedValue } from './SmartValueAutocomplete';
+import { getCascadeRowCount, getCascadeValues, type CascadeValue } from "./api";
+import { useDebouncedValue } from "./SmartValueAutocomplete";
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -139,7 +135,7 @@ export function CascadeFilterPanel({
   /* Live row counter — re-runs whenever the selection changes. */
   const selectionStable = stableKey(value);
   const rowCountQuery = useQuery({
-    queryKey: ['dashboards-cascade-rowcount', snapshotId, selectionStable],
+    queryKey: ["dashboards-cascade-rowcount", snapshotId, selectionStable],
     queryFn: () => getCascadeRowCount(snapshotId, value),
     enabled: !!snapshotId,
     staleTime: 30 * 1000,
@@ -152,7 +148,7 @@ export function CascadeFilterPanel({
 
   return (
     <div
-      className={`flex flex-col gap-3 ${className ?? ''}`}
+      className={`flex flex-col gap-3 ${className ?? ""}`}
       data-testid="cascade-filter-panel"
     >
       <div className="flex items-center justify-between gap-2 text-sm">
@@ -160,13 +156,13 @@ export function CascadeFilterPanel({
           <Filter className="h-4 w-4" />
           <span data-testid="cascade-row-count">
             {rowCountQuery.data
-              ? t('dashboards.cascade.rows_match', {
-                  defaultValue: '{{matched}} of {{total}} rows match‌⁠‍',
+              ? t("dashboards.cascade.rows_match", {
+                  defaultValue: "{{matched}} of {{total}} rows match‌⁠‍",
                   matched: rowCountQuery.data.matched.toLocaleString(),
                   total: rowCountQuery.data.total.toLocaleString(),
                 })
-              : t('dashboards.cascade.rows_loading', {
-                  defaultValue: 'Counting rows…‌⁠‍',
+              : t("dashboards.cascade.rows_loading", {
+                  defaultValue: "Counting rows…‌⁠‍",
                 })}
           </span>
         </div>
@@ -178,8 +174,8 @@ export function CascadeFilterPanel({
           data-testid="cascade-reset-all"
         >
           <RotateCcw className="h-3 w-3" />
-          {t('dashboards.cascade.reset_all', {
-            defaultValue: 'Reset all filters‌⁠‍',
+          {t("dashboards.cascade.reset_all", {
+            defaultValue: "Reset all filters‌⁠‍",
           })}
         </button>
       </div>
@@ -235,13 +231,13 @@ function CascadeFilterCard({
 }: CascadeFilterCardProps) {
   const { t } = useTranslation();
   const inputId = useId();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, debounceMs);
   const othersStable = stableKey(others);
 
   const cascadeQuery = useQuery({
     queryKey: [
-      'dashboards-cascade-values',
+      "dashboards-cascade-values",
       snapshotId,
       column,
       debouncedQuery,
@@ -263,7 +259,7 @@ function CascadeFilterCard({
   // should still clear so they can pick the next value without manually
   // emptying it.
   useEffect(() => {
-    if (chips.length === 0) setQuery('');
+    if (chips.length === 0) setQuery("");
   }, [chips.length]);
 
   const candidates: CascadeValue[] = cascadeQuery.data?.values ?? [];
@@ -291,7 +287,7 @@ function CascadeFilterCard({
             className="text-xs text-content-tertiary hover:text-content-primary"
             data-testid={`cascade-clear-${column}`}
           >
-            {t('common.clear', { defaultValue: 'Clear' })}
+            {t("common.clear", { defaultValue: "Clear" })}
           </button>
         )}
       </div>
@@ -312,7 +308,7 @@ function CascadeFilterCard({
                 type="button"
                 onClick={() => onRemoveChip(chip)}
                 disabled={disabled}
-                aria-label={t('common.remove', { defaultValue: 'Remove‌⁠‍' })}
+                aria-label={t("common.remove", { defaultValue: "Remove‌⁠‍" })}
                 className="rounded p-0.5 hover:bg-oe-blue/25 disabled:opacity-40"
                 data-testid={`cascade-chip-x-${column}-${chip}`}
               >
@@ -330,8 +326,8 @@ function CascadeFilterCard({
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={t('dashboards.cascade.search_ph', {
-            defaultValue: 'Search values…‌⁠‍',
+          placeholder={t("dashboards.cascade.search_ph", {
+            defaultValue: "Search values…‌⁠‍",
           })}
           disabled={disabled}
           className="w-full rounded border border-border-light bg-surface-primary px-7 py-1.5 text-sm text-content-primary placeholder:text-content-tertiary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue disabled:opacity-50"
@@ -346,17 +342,17 @@ function CascadeFilterCard({
       >
         {cascadeQuery.isError && (
           <li className="px-3 py-2 text-xs text-rose-300">
-            {t('dashboards.cascade.error', {
-              defaultValue: 'Could not load values',
+            {t("dashboards.cascade.error", {
+              defaultValue: "Could not load values",
             })}
           </li>
         )}
         {!cascadeQuery.isError && selectableCandidates.length === 0 && (
           <li className="px-3 py-2 text-xs text-content-tertiary">
             {cascadeQuery.isLoading
-              ? t('common.loading', { defaultValue: 'Loading…' })
-              : t('dashboards.cascade.empty', {
-                  defaultValue: 'No matching values',
+              ? t("common.loading", { defaultValue: "Loading…" })
+              : t("dashboards.cascade.empty", {
+                  defaultValue: "No matching values",
                 })}
           </li>
         )}

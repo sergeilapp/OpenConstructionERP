@@ -5,13 +5,28 @@
  * NOTE: three.js must be installed (`npm install three @types/three`).
  */
 
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { CameraTween, type CameraState } from "./CameraTween";
 
 export interface Viewpoint {
   position: { x: number; y: number; z: number };
   target: { x: number; y: number; z: number };
 }
+
+/** Canonical orientations driven by the View Cube (W6.6). */
+export type ViewPreset =
+  | "top"
+  | "bottom"
+  | "front"
+  | "back"
+  | "left"
+  | "right"
+  | "iso_ne"
+  | "iso_nw"
+  | "iso_se"
+  | "iso_sw"
+  | "fit";
 
 export class SceneManager {
   readonly scene: THREE.Scene;
@@ -25,10 +40,23 @@ export class SceneManager {
   private gridHelper: THREE.GridHelper | null = null;
   /** On-demand rendering flag — drops idle CPU from 60 FPS to ~0%. */
   private _needsRender = true;
+  /** Active camera tween (W6.6) — null when the camera is at rest. */
+  private _tween: CameraTween | null = null;
+  /** Reject the pending flyTo() promise when a new tween cancels it. */
+  private _tweenReject: ((err: Error) => void) | null = null;
+  /** Subscribers to camera-change events (used by the View Cube widget). */
+  private _cameraChangeListeners = new Set<() => void>();
+  /**
+   * Last preset name + accumulated 90° rotation applied when the user
+   * re-clicks the same View Cube face (Revit-style "snap-and-spin").
+   */
+  private _lastPreset: ViewPreset | null = null;
+  private _lastPresetRotationSteps = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     const parent = canvas.parentElement;
-    if (!parent) throw new Error('BIMViewer: canvas must have a parent element');
+    if (!parent)
+      throw new Error("BIMViewer: canvas must have a parent element");
     this.container = parent;
 
     // Renderer
@@ -68,7 +96,8 @@ export class SceneManager {
     // than to keep recomputing the range every time the model changes.
 
     // Camera — wide near/far so any unit fits without manual zoom.
-    const aspect = this.container.clientWidth / Math.max(this.container.clientHeight, 1);
+    const aspect =
+      this.container.clientWidth / Math.max(this.container.clientHeight, 1);
     this.camera = new THREE.PerspectiveCamera(45, aspect, 0.01, 1_000_000);
     this.camera.position.set(30, 20, 30);
     this.camera.lookAt(0, 0, 0);
@@ -76,15 +105,15 @@ export class SceneManager {
     // Controls — smooth, professional orbit behaviour.
     this.controls = new OrbitControls(this.camera, canvas);
     this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.08;       // smoother deceleration (was 0.1)
-    this.controls.rotateSpeed = 0.8;          // slightly slower rotation for precision
+    this.controls.dampingFactor = 0.08; // smoother deceleration (was 0.1)
+    this.controls.rotateSpeed = 0.8; // slightly slower rotation for precision
     this.controls.panSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
     this.controls.minDistance = 0.01;
     this.controls.maxDistance = 100_000;
     // Prevent camera from flipping upside down — construction models
     // should always have "up" pointing up.
-    this.controls.minPolarAngle = 0.05;       // ~3° from top
+    this.controls.minPolarAngle = 0.05; // ~3° from top
     this.controls.maxPolarAngle = Math.PI - 0.05; // ~3° from bottom
     this.controls.target.set(0, 0, 0);
     // Remap mouse buttons so Ctrl+Left doesn't trigger pan (which would
@@ -101,37 +130,42 @@ export class SceneManager {
     // Ctrl+Click and Shift+Click are free for multi-select in the
     // SelectionManager.  Re-enable on keyup.
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Control' || e.key === 'Shift') {
+      if (e.key === "Control" || e.key === "Shift") {
         this.controls.enabled = false;
       }
     };
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'Control' || e.key === 'Shift') {
+      if (e.key === "Control" || e.key === "Shift") {
         this.controls.enabled = true;
       }
     };
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
     // Also handle the case where modifier was held during pointerdown
     // on the canvas — OrbitControls checks enabled on pointer events.
-    canvas.addEventListener('pointerdown', (e: PointerEvent) => {
-      if (e.ctrlKey || e.metaKey || e.shiftKey) {
-        this.controls.enabled = false;
-        // Re-enable after a short delay so the next non-modified
-        // interaction works normally.
-        const restore = () => {
-          this.controls.enabled = true;
-          window.removeEventListener('pointerup', restore);
-        };
-        window.addEventListener('pointerup', restore);
-      }
-    }, { capture: true }); // capture phase — runs BEFORE OrbitControls
+    canvas.addEventListener(
+      "pointerdown",
+      (e: PointerEvent) => {
+        if (e.ctrlKey || e.metaKey || e.shiftKey) {
+          this.controls.enabled = false;
+          // Re-enable after a short delay so the next non-modified
+          // interaction works normally.
+          const restore = () => {
+            this.controls.enabled = true;
+            window.removeEventListener("pointerup", restore);
+          };
+          window.addEventListener("pointerup", restore);
+        }
+      },
+      { capture: true },
+    ); // capture phase — runs BEFORE OrbitControls
 
     // On-demand rendering: only render when the camera moves or the
     // scene is explicitly invalidated.  Drops idle CPU from 60 FPS
     // constant rendering to ~0%.
-    this.controls.addEventListener('change', () => {
+    this.controls.addEventListener("change", () => {
       this._needsRender = true;
+      this._emitCameraChange();
     });
 
     // Lighting
@@ -321,7 +355,8 @@ export class SceneManager {
     // Replace the existing grid (GridHelper has no resize API).
     // Respect dark mode by checking the scene background luminance.
     const bg = this.scene.background;
-    const isDark = bg instanceof THREE.Color && bg.getHSL({ h: 0, s: 0, l: 0 }).l < 0.3;
+    const isDark =
+      bg instanceof THREE.Color && bg.getHSL({ h: 0, s: 0, l: 0 }).l < 0.3;
     const centerColor = isDark ? 0x333344 : 0xcccccc;
     const lineColor = isDark ? 0x2a2a3a : 0xe0e0e0;
     this.scene.remove(this.gridHelper);
@@ -329,7 +364,12 @@ export class SceneManager {
     const mat = this.gridHelper.material;
     if (Array.isArray(mat)) mat.forEach((m) => m.dispose());
     else mat?.dispose();
-    this.gridHelper = new THREE.GridHelper(extent, divisions, centerColor, lineColor);
+    this.gridHelper = new THREE.GridHelper(
+      extent,
+      divisions,
+      centerColor,
+      lineColor,
+    );
     // Sit the grid just below the model floor so it doesn't z-fight
     // with the lowest geometry.
     this.gridHelper.position.set(center.x, box.min.y - 0.001, center.z);
@@ -387,7 +427,10 @@ export class SceneManager {
   }
 
   /** Set camera to a specific viewpoint. */
-  setViewpoint(position: Viewpoint['position'], target: Viewpoint['target']): void {
+  setViewpoint(
+    position: Viewpoint["position"],
+    target: Viewpoint["target"],
+  ): void {
     this.camera.position.set(position.x, position.y, position.z);
     this.controls.target.set(target.x, target.y, target.z);
     this.controls.update();
@@ -402,7 +445,7 @@ export class SceneManager {
    *   - `'side'`  — looking at the +X face
    *   - `'iso'`   — the default 3/4 orthographic-ish perspective angle
    */
-  setCameraPreset(view: 'top' | 'front' | 'side' | 'iso'): void {
+  setCameraPreset(view: "top" | "front" | "side" | "iso"): void {
     // Recompute the scene bounding box (same walker that zoomToFit uses,
     // minus the helpers) so the preset always matches what's currently loaded.
     this.scene.updateMatrixWorld(true);
@@ -434,16 +477,16 @@ export class SceneManager {
 
     this.controls.target.copy(center);
     switch (view) {
-      case 'top':
+      case "top":
         this.camera.position.set(center.x, center.y + dist, center.z + 0.001);
         break;
-      case 'front':
+      case "front":
         this.camera.position.set(center.x, center.y, center.z + dist);
         break;
-      case 'side':
+      case "side":
         this.camera.position.set(center.x + dist, center.y, center.z);
         break;
-      case 'iso':
+      case "iso":
       default:
         this.camera.position.set(
           center.x + dist * 0.7,
@@ -471,6 +514,43 @@ export class SceneManager {
         z: this.controls.target.z,
       },
     };
+  }
+
+  /**
+   * Capture the current viewport as a PNG data-URL.
+   *
+   * By default returns the renderer canvas verbatim (matches what the user
+   * sees on screen). When ``opts.width`` is provided we downscale into an
+   * off-screen canvas first — used by the saved-views feature to attach a
+   * small thumbnail (320×180 ≈ 30–60 KB) instead of a full-resolution PNG
+   * (~1 MB) which would blow through the localStorage quota after a handful
+   * of views.
+   *
+   * Three.js on-demand rendering means the back-buffer can be one frame
+   * stale relative to the latest selection / colour change; we force a
+   * synchronous render before reading the pixels so the screenshot matches
+   * what was visible the instant the call was made.
+   */
+  getScreenshot(opts?: { width?: number; height?: number }): string {
+    // Force a synchronous render so the back-buffer matches the current
+    // scene graph — otherwise a recent selection / colour mutation that
+    // hasn't tripped the on-demand render flag yet would be missing.
+    this.renderer.render(this.scene, this.camera);
+    const sourceCanvas = this.renderer.domElement;
+    const width = opts?.width;
+    const height = opts?.height;
+    if (!width || !height) {
+      return sourceCanvas.toDataURL("image/png");
+    }
+    // Downscale path — used for saved-view thumbnails. Off-screen canvas
+    // keeps the live renderer untouched.
+    const out = document.createElement("canvas");
+    out.width = Math.max(1, Math.floor(width));
+    out.height = Math.max(1, Math.floor(height));
+    const ctx = out.getContext("2d");
+    if (!ctx) return sourceCanvas.toDataURL("image/png");
+    ctx.drawImage(sourceCanvas, 0, 0, out.width, out.height);
+    return out.toDataURL("image/png");
   }
 
   /** Toggle grid visibility. */
@@ -510,7 +590,7 @@ export class SceneManager {
         // Infer divisions from vertex count: a GridHelper with N divisions
         // has (N+1)*2*2 = 4*(N+1) vertices on each axis → total position
         // count = 4*(N+1)*2.  We approximate by taking position count / 8.
-        const posAttr = this.gridHelper.geometry.getAttribute('position');
+        const posAttr = this.gridHelper.geometry.getAttribute("position");
         if (posAttr) {
           const approxDiv = Math.round(posAttr.count / 8) - 1;
           if (approxDiv > 1) divisions = approxDiv;
@@ -523,12 +603,268 @@ export class SceneManager {
       else mat?.dispose();
       const centerColor = isDark ? 0x333344 : 0xcccccc;
       const lineColor = isDark ? 0x2a2a3a : 0xe0e0e0;
-      this.gridHelper = new THREE.GridHelper(size, divisions, centerColor, lineColor);
+      this.gridHelper = new THREE.GridHelper(
+        size,
+        divisions,
+        centerColor,
+        lineColor,
+      );
       this.gridHelper.position.copy(pos);
       this.gridHelper.visible = wasVisible;
       this.scene.add(this.gridHelper);
     }
     this._needsRender = true;
+  }
+
+  /**
+   * Subscribe to camera-orientation changes (W6.6).
+   *
+   * The View Cube widget uses this to keep its 3-D cube synchronised with
+   * the main camera. Returns an unsubscribe function for cleanup.
+   */
+  onCameraChange(cb: () => void): () => void {
+    this._cameraChangeListeners.add(cb);
+    return () => {
+      this._cameraChangeListeners.delete(cb);
+    };
+  }
+
+  private _emitCameraChange(): void {
+    for (const listener of this._cameraChangeListeners) {
+      try {
+        listener();
+      } catch {
+        // A throwing subscriber must not break the OrbitControls loop.
+      }
+    }
+  }
+
+  /**
+   * Smoothly fly the camera from its current pose to the requested
+   * `target` over `durationMs` ms (default 600). Resolves on completion
+   * and rejects with `Error('flyTo cancelled')` when a newer tween (or
+   * an explicit cancellation) supersedes the current animation.
+   *
+   * While the tween is running OrbitControls.enabled is set to false so
+   * mouse interaction can't fight the animation; it is restored on
+   * completion or abort.
+   */
+  flyTo(target: CameraState, durationMs = 600): Promise<void> {
+    // Abort any previously-running tween: reject its promise + stop rAF.
+    if (this._tween) {
+      this._tween.cancel();
+      this._tween = null;
+    }
+    if (this._tweenReject) {
+      const reject = this._tweenReject;
+      this._tweenReject = null;
+      reject(new Error("flyTo cancelled"));
+    }
+
+    const from: CameraState = {
+      position: [
+        this.camera.position.x,
+        this.camera.position.y,
+        this.camera.position.z,
+      ],
+      target: [
+        this.controls.target.x,
+        this.controls.target.y,
+        this.controls.target.z,
+      ],
+      up: [this.camera.up.x, this.camera.up.y, this.camera.up.z],
+    };
+
+    return new Promise<void>((resolve, reject) => {
+      const tween = new CameraTween();
+      this._tween = tween;
+      this._tweenReject = reject;
+      const wasEnabled = this.controls.enabled;
+      this.controls.enabled = false;
+
+      tween.start(
+        from,
+        target,
+        durationMs,
+        (state) => {
+          this.camera.position.set(
+            state.position[0],
+            state.position[1],
+            state.position[2],
+          );
+          this.controls.target.set(
+            state.target[0],
+            state.target[1],
+            state.target[2],
+          );
+          if (state.up) {
+            this.camera.up.set(state.up[0], state.up[1], state.up[2]);
+          }
+          this.camera.lookAt(this.controls.target);
+          this._needsRender = true;
+          this._emitCameraChange();
+        },
+        () => {
+          this.controls.enabled = wasEnabled;
+          this.controls.update();
+          this._needsRender = true;
+          this._tween = null;
+          this._tweenReject = null;
+          resolve();
+        },
+      );
+    });
+  }
+
+  /**
+   * Snap the camera to one of the canonical View Cube orientations
+   * around the current scene bounding box (W6.6).
+   *
+   * Re-clicking the SAME face rotates the camera by an additional 90°
+   * around the view axis, matching Revit's View Cube behaviour.
+   */
+  setViewPreset(name: ViewPreset, durationMs = 600): Promise<void> {
+    const box = this._computeContentBoundingBox();
+    if (box.isEmpty()) {
+      return Promise.resolve();
+    }
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    if (!Number.isFinite(maxDim) || maxDim <= 0) {
+      return Promise.resolve();
+    }
+
+    if (name === "fit") {
+      // For "fit" we keep the current direction but reframe distance.
+      const fov = this.camera.fov * (Math.PI / 180);
+      const dist = (maxDim / (2 * Math.tan(fov / 2))) * 1.05;
+      const dir = this.camera.position
+        .clone()
+        .sub(this.controls.target)
+        .normalize();
+      const newPos = center.clone().add(dir.multiplyScalar(dist));
+      return this.flyTo(
+        {
+          position: [newPos.x, newPos.y, newPos.z],
+          target: [center.x, center.y, center.z],
+          up: [0, 1, 0],
+        },
+        durationMs,
+      );
+    }
+
+    // Track Revit-style re-click rotation: only orth + iso presets rotate.
+    let rotationSteps = 0;
+    if (this._lastPreset === name) {
+      rotationSteps = (this._lastPresetRotationSteps + 1) % 4;
+    }
+    this._lastPreset = name;
+    this._lastPresetRotationSteps = rotationSteps;
+    const rollAngle = (rotationSteps * Math.PI) / 2;
+
+    const fov = this.camera.fov * (Math.PI / 180);
+    const dist = (maxDim / (2 * Math.tan(fov / 2))) * 1.2;
+
+    // The SceneManager's convention is Y-up. The bottom view needs a
+    // flipped up vector so the camera doesn't look "upside-down".
+    let position = new THREE.Vector3();
+    let up = new THREE.Vector3(0, 1, 0);
+    switch (name) {
+      case "top":
+        position.set(center.x, center.y + dist, center.z);
+        // Z-down so the model's "north" reads correctly looking down.
+        up.set(0, 0, -1);
+        break;
+      case "bottom":
+        position.set(center.x, center.y - dist, center.z);
+        up.set(0, 0, 1);
+        break;
+      case "front":
+        position.set(center.x, center.y, center.z + dist);
+        up.set(0, 1, 0);
+        break;
+      case "back":
+        position.set(center.x, center.y, center.z - dist);
+        up.set(0, 1, 0);
+        break;
+      case "right":
+        position.set(center.x + dist, center.y, center.z);
+        up.set(0, 1, 0);
+        break;
+      case "left":
+        position.set(center.x - dist, center.y, center.z);
+        up.set(0, 1, 0);
+        break;
+      case "iso_ne":
+      case "iso_nw":
+      case "iso_se":
+      case "iso_sw": {
+        // 45° elevation, azimuth chosen per corner. Y-up scene means
+        // the iso direction is in the XZ-plane plus a Y component.
+        const elev = Math.PI / 4; // 45° up from the horizon
+        const azimuthMap: Record<string, number> = {
+          iso_ne: Math.PI / 4, // +X / +Z
+          iso_nw: (3 * Math.PI) / 4, // -X / +Z
+          iso_se: -Math.PI / 4, // +X / -Z
+          iso_sw: (-3 * Math.PI) / 4, // -X / -Z
+        };
+        const az = azimuthMap[name] ?? Math.PI / 4;
+        const r = dist;
+        position.set(
+          center.x + r * Math.cos(elev) * Math.sin(az),
+          center.y + r * Math.sin(elev),
+          center.z + r * Math.cos(elev) * Math.cos(az),
+        );
+        up.set(0, 1, 0);
+        break;
+      }
+    }
+
+    // Apply the re-click roll: rotate `up` around the view axis (the
+    // vector from target to camera). 0/90/180/270° steps.
+    if (rollAngle !== 0) {
+      const viewAxis = position.clone().sub(center).normalize();
+      up.applyAxisAngle(viewAxis, rollAngle);
+    }
+
+    return this.flyTo(
+      {
+        position: [position.x, position.y, position.z],
+        target: [center.x, center.y, center.z],
+        up: [up.x, up.y, up.z],
+      },
+      durationMs,
+    );
+  }
+
+  /**
+   * Walk the scene graph and union all real-content mesh bounding boxes.
+   * Mirrors the helper inside zoomToFit() / setCameraPreset() so the
+   * View Cube presets always frame what the user actually loaded.
+   */
+  private _computeContentBoundingBox(): THREE.Box3 {
+    this.scene.updateMatrixWorld(true);
+    const box = new THREE.Box3();
+    const tmp = new THREE.Box3();
+    this.scene.traverse((obj) => {
+      if (
+        obj instanceof THREE.GridHelper ||
+        obj instanceof THREE.AxesHelper ||
+        obj instanceof THREE.Light ||
+        obj instanceof THREE.Camera
+      ) {
+        return;
+      }
+      if (obj instanceof THREE.Mesh && obj.geometry) {
+        if (!obj.geometry.boundingBox) obj.geometry.computeBoundingBox();
+        tmp.setFromObject(obj);
+        if (!tmp.isEmpty() && Number.isFinite(tmp.min.x)) {
+          box.union(tmp);
+        }
+      }
+    });
+    return box;
   }
 
   /** Dispose all Three.js resources. */
@@ -537,6 +873,22 @@ export class SceneManager {
       cancelAnimationFrame(this.animationId);
       this.animationId = null;
     }
+    // Abort any in-flight camera tween before tearing the renderer down,
+    // so the rAF callback can't fire against a disposed camera.
+    if (this._tween) {
+      this._tween.cancel();
+      this._tween = null;
+    }
+    if (this._tweenReject) {
+      const reject = this._tweenReject;
+      this._tweenReject = null;
+      try {
+        reject(new Error("flyTo cancelled"));
+      } catch {
+        // Swallow — caller might not have attached a .catch().
+      }
+    }
+    this._cameraChangeListeners.clear();
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
 

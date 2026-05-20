@@ -10,9 +10,9 @@
  *    `document_ids` JSON column.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Paperclip,
   Image as ImageIcon,
@@ -20,22 +20,26 @@ import {
   Loader2,
   Trash2,
   Upload,
-} from 'lucide-react';
-import { WideModalSection, WideModalField, Badge } from '@/shared/ui';
-import { useToastStore } from '@/stores/useToastStore';
-import { uploadDocument, uploadPhoto, deleteDocument } from '@/features/documents/api';
+} from "lucide-react";
+import { WideModalSection, WideModalField, Badge } from "@/shared/ui";
+import { useToastStore } from "@/stores/useToastStore";
+import {
+  uploadDocument,
+  uploadPhoto,
+  deleteDocument,
+} from "@/features/documents/api";
 import {
   fetchFieldReportTemplates,
   fetchReportDocuments,
   linkReportDocuments,
   type FieldReportTemplate,
   type TemplateFieldDefinition,
-} from './api';
+} from "./api";
 
 export type TemplateFieldValues = Record<string, string | number | boolean>;
 
 const inputCls =
-  'w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary';
+  "w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary";
 const textareaCls = `${inputCls} resize-y`;
 
 /* ── Template picker ───────────────────────────────────────────────────── */
@@ -57,7 +61,7 @@ export function TemplatePicker({
 }) {
   const { t } = useTranslation();
   const { data: templates = [], isLoading } = useQuery({
-    queryKey: ['fieldreports', 'templates', projectId],
+    queryKey: ["fieldreports", "templates", projectId],
     queryFn: () => fetchFieldReportTemplates(projectId),
     enabled: !!projectId,
   });
@@ -74,7 +78,7 @@ export function TemplatePicker({
 
   return (
     <WideModalField
-      label={t('fieldreports.template', { defaultValue: 'Report template' })}
+      label={t("fieldreports.template", { defaultValue: "Report template" })}
       span={2}
     >
       <select
@@ -86,17 +90,21 @@ export function TemplatePicker({
           onChange(id, tpl);
         }}
         className={inputCls}
-        aria-label={t('fieldreports.template', { defaultValue: 'Report template' })}
+        aria-label={t("fieldreports.template", {
+          defaultValue: "Report template",
+        })}
       >
         <option value="">
-          {t('fieldreports.no_template', { defaultValue: 'No template — blank report' })}
+          {t("fieldreports.no_template", {
+            defaultValue: "No template — blank report",
+          })}
         </option>
         {templates.map((tpl) => (
           <option key={tpl.id} value={tpl.id}>
             {tpl.name}
             {tpl.is_builtin
-              ? ` · ${t('fieldreports.builtin', { defaultValue: 'built-in' })}`
-              : ''}
+              ? ` · ${t("fieldreports.builtin", { defaultValue: "built-in" })}`
+              : ""}
           </option>
         ))}
       </select>
@@ -121,15 +129,15 @@ export function TemplateFieldEditor({
 
   return (
     <WideModalSection
-      title={t('fieldreports.template_fields', {
-        defaultValue: 'Template: {{name}}',
+      title={t("fieldreports.template_fields", {
+        defaultValue: "Template: {{name}}",
         name: template.name,
       })}
       columns={2}
     >
       {template.fields.map((f: TemplateFieldDefinition) => {
         const v = values[f.key];
-        const isWide = f.type === 'textarea';
+        const isWide = f.type === "textarea";
         return (
           <WideModalField
             key={f.key}
@@ -138,23 +146,23 @@ export function TemplateFieldEditor({
             span={isWide ? 2 : 1}
             hint={f.help_text || undefined}
           >
-            {f.type === 'textarea' ? (
+            {f.type === "textarea" ? (
               <textarea
                 rows={3}
-                value={String(v ?? '')}
+                value={String(v ?? "")}
                 placeholder={f.placeholder}
                 onChange={(e) => onChange(f.key, e.target.value)}
                 className={textareaCls}
               />
-            ) : f.type === 'select' ? (
+            ) : f.type === "select" ? (
               <select
-                value={String(v ?? '')}
+                value={String(v ?? "")}
                 onChange={(e) => onChange(f.key, e.target.value)}
                 className={inputCls}
                 aria-label={f.label}
               >
                 <option value="">
-                  {t('common.select', { defaultValue: 'Select…' })}
+                  {t("common.select", { defaultValue: "Select…" })}
                 </option>
                 {f.options.map((opt) => (
                   <option key={opt} value={opt}>
@@ -162,7 +170,7 @@ export function TemplateFieldEditor({
                   </option>
                 ))}
               </select>
-            ) : f.type === 'checkbox' ? (
+            ) : f.type === "checkbox" ? (
               <label className="flex items-center gap-2 text-sm text-content-secondary">
                 <input
                   type="checkbox"
@@ -171,25 +179,25 @@ export function TemplateFieldEditor({
                   className="h-4 w-4 rounded border-border-light"
                 />
                 {f.placeholder ||
-                  t('fieldreports.yes', { defaultValue: 'Yes' })}
+                  t("fieldreports.yes", { defaultValue: "Yes" })}
               </label>
             ) : (
               <input
                 type={
-                  f.type === 'number'
-                    ? 'number'
-                    : f.type === 'date'
-                      ? 'date'
-                      : 'text'
+                  f.type === "number"
+                    ? "number"
+                    : f.type === "date"
+                      ? "date"
+                      : "text"
                 }
-                value={String(v ?? '')}
+                value={String(v ?? "")}
                 placeholder={f.placeholder}
                 onChange={(e) =>
                   onChange(
                     f.key,
-                    f.type === 'number'
-                      ? e.target.value === ''
-                        ? ''
+                    f.type === "number"
+                      ? e.target.value === ""
+                        ? ""
                         : Number(e.target.value)
                       : e.target.value,
                   )
@@ -221,7 +229,7 @@ export function ReportAttachments({
   const [busy, setBusy] = useState(false);
 
   const { data: docs = [], isLoading } = useQuery({
-    queryKey: ['fieldreports', 'documents', reportId],
+    queryKey: ["fieldreports", "documents", reportId],
     queryFn: () => fetchReportDocuments(reportId),
     enabled: !!reportId,
   });
@@ -235,14 +243,14 @@ export function ReportAttachments({
         for (const file of Array.from(files)) {
           if (asPhoto) {
             const photo = await uploadPhoto(projectId, file, {
-              category: 'site',
+              category: "site",
               caption: file.name,
             });
             // PhotoItem carries the underlying document_id — link that so
             // it flows through the existing report document_ids column.
             if (photo.document_id) linkIds.push(photo.document_id);
           } else {
-            const doc = await uploadDocument(projectId, file, 'other');
+            const doc = await uploadDocument(projectId, file, "other");
             linkIds.push(doc.id);
           }
         }
@@ -250,24 +258,24 @@ export function ReportAttachments({
           await linkReportDocuments(reportId, linkIds);
         }
         await qc.invalidateQueries({
-          queryKey: ['fieldreports', 'documents', reportId],
+          queryKey: ["fieldreports", "documents", reportId],
         });
         addToast({
-          type: 'success',
-          title: '',
-          message: t('fieldreports.attachment_added', {
-            defaultValue: 'Attachment added',
+          type: "success",
+          title: "",
+          message: t("fieldreports.attachment_added", {
+            defaultValue: "Attachment added",
           }),
         });
       } catch (err: unknown) {
         addToast({
-          type: 'error',
-          title: t('common.error', { defaultValue: 'Error' }),
+          type: "error",
+          title: t("common.error", { defaultValue: "Error" }),
           message:
             err instanceof Error
               ? err.message
-              : t('fieldreports.attach_failed', {
-                  defaultValue: 'Attachment failed',
+              : t("fieldreports.attach_failed", {
+                  defaultValue: "Attachment failed",
                 }),
         });
       } finally {
@@ -283,17 +291,17 @@ export function ReportAttachments({
       try {
         await deleteDocument(docId);
         await qc.invalidateQueries({
-          queryKey: ['fieldreports', 'documents', reportId],
+          queryKey: ["fieldreports", "documents", reportId],
         });
       } catch (err: unknown) {
         addToast({
-          type: 'error',
-          title: t('common.error', { defaultValue: 'Error' }),
+          type: "error",
+          title: t("common.error", { defaultValue: "Error" }),
           message:
             err instanceof Error
               ? err.message
-              : t('fieldreports.delete_failed', {
-                  defaultValue: 'Delete failed',
+              : t("fieldreports.delete_failed", {
+                  defaultValue: "Delete failed",
                 }),
         });
       } finally {
@@ -305,11 +313,11 @@ export function ReportAttachments({
 
   return (
     <WideModalSection
-      title={t('fieldreports.attachments', { defaultValue: 'Attachments' })}
+      title={t("fieldreports.attachments", { defaultValue: "Attachments" })}
       columns={1}
     >
       <WideModalField
-        label={t('fieldreports.attachments', { defaultValue: 'Attachments' })}
+        label={t("fieldreports.attachments", { defaultValue: "Attachments" })}
         className="sm:[&>label]:hidden"
       >
         <div className="w-full space-y-3">
@@ -322,7 +330,7 @@ export function ReportAttachments({
               className="hidden"
               onChange={(e) => {
                 void handleFiles(e.target.files, true);
-                e.target.value = '';
+                e.target.value = "";
               }}
             />
             <input
@@ -332,7 +340,7 @@ export function ReportAttachments({
               className="hidden"
               onChange={(e) => {
                 void handleFiles(e.target.files, false);
-                e.target.value = '';
+                e.target.value = "";
               }}
             />
             <button
@@ -346,7 +354,7 @@ export function ReportAttachments({
               ) : (
                 <ImageIcon size={14} />
               )}
-              {t('fieldreports.attach_photo', { defaultValue: 'Attach photo' })}
+              {t("fieldreports.attach_photo", { defaultValue: "Attach photo" })}
             </button>
             <button
               type="button"
@@ -359,8 +367,8 @@ export function ReportAttachments({
               ) : (
                 <Upload size={14} />
               )}
-              {t('fieldreports.attach_document', {
-                defaultValue: 'Attach document',
+              {t("fieldreports.attach_document", {
+                defaultValue: "Attach document",
               })}
             </button>
           </div>
@@ -368,13 +376,13 @@ export function ReportAttachments({
           {isLoading ? (
             <div className="flex items-center gap-2 text-sm text-content-tertiary">
               <Loader2 size={14} className="animate-spin" />
-              {t('common.loading', { defaultValue: 'Loading…' })}
+              {t("common.loading", { defaultValue: "Loading…" })}
             </div>
           ) : docs.length === 0 ? (
             <p className="flex items-center gap-1.5 text-xs text-content-tertiary">
               <Paperclip size={12} />
-              {t('fieldreports.no_attachments', {
-                defaultValue: 'No photos or documents attached yet.',
+              {t("fieldreports.no_attachments", {
+                defaultValue: "No photos or documents attached yet.",
               })}
             </p>
           ) : (
@@ -390,7 +398,7 @@ export function ReportAttachments({
                     rel="noopener noreferrer"
                     className="flex min-w-0 flex-1 items-center gap-2 text-sm text-content-primary hover:text-oe-blue"
                   >
-                    {d.mime_type.startsWith('image/') ? (
+                    {d.mime_type.startsWith("image/") ? (
                       <ImageIcon size={14} className="shrink-0" />
                     ) : (
                       <FileText size={14} className="shrink-0" />
@@ -403,8 +411,8 @@ export function ReportAttachments({
                     disabled={busy}
                     onClick={() => handleDelete(d.id)}
                     className="rounded p-1 text-semantic-error/60 hover:bg-semantic-error-bg hover:text-semantic-error disabled:opacity-50"
-                    title={t('common.delete', { defaultValue: 'Delete' })}
-                    aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                    title={t("common.delete", { defaultValue: "Delete" })}
+                    aria-label={t("common.delete", { defaultValue: "Delete" })}
                   >
                     <Trash2 size={14} />
                   </button>

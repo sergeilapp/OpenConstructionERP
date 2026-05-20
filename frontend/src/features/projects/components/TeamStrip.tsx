@@ -15,12 +15,12 @@
  * key so the strip auto-refreshes.
  */
 
-import { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, X, Trash2, UserPlus } from 'lucide-react';
-import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
-import { UserSearchInput } from '@/shared/ui/UserSearchInput';
+import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus, X, Trash2, UserPlus } from "lucide-react";
+import { apiGet, apiPost, apiDelete } from "@/shared/lib/api";
+import { UserSearchInput } from "@/shared/ui/UserSearchInput";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -38,9 +38,9 @@ export interface ProjectMember {
  * whitelist (see AddProjectMemberRequest); these are the user-facing labels.
  */
 const ROLE_CHOICES: readonly string[] = [
-  'estimator',
-  'viewer',
-  'project_manager',
+  "estimator",
+  "viewer",
+  "project_manager",
 ] as const;
 
 const MAX_VISIBLE_AVATARS = 6;
@@ -51,9 +51,11 @@ const MAX_VISIBLE_AVATARS = 6;
  * Pick up to two letters as initials. Falls back to the email prefix
  * when full_name is empty so we never render a blank circle.
  */
-export function getInitials(member: Pick<ProjectMember, 'full_name' | 'email'>): string {
-  const source = member.full_name?.trim() || member.email?.split('@')[0] || '';
-  if (!source) return '?';
+export function getInitials(
+  member: Pick<ProjectMember, "full_name" | "email">,
+): string {
+  const source = member.full_name?.trim() || member.email?.split("@")[0] || "";
+  if (!source) return "?";
   const parts = source.split(/\s+/).filter(Boolean);
   if (parts.length === 1) {
     return parts[0]!.slice(0, 2).toUpperCase();
@@ -66,8 +68,10 @@ export function getInitials(member: Pick<ProjectMember, 'full_name' | 'email'>):
  * same colour. Hashing the email is stable across renders / sessions and
  * makes the strip visually distinguishable at a glance.
  */
-function colourForUser(member: Pick<ProjectMember, 'user_id' | 'email'>): string {
-  const seed = member.user_id || member.email || '';
+function colourForUser(
+  member: Pick<ProjectMember, "user_id" | "email">,
+): string {
+  const seed = member.user_id || member.email || "";
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = (hash * 31 + seed.charCodeAt(i)) | 0;
@@ -85,7 +89,7 @@ interface AvatarProps {
   className?: string;
 }
 
-function Avatar({ member, size = 32, className = '' }: AvatarProps) {
+function Avatar({ member, size = 32, className = "" }: AvatarProps) {
   return (
     <div
       role="img"
@@ -125,8 +129,8 @@ function MemberListModal({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={t('projects.team.modal_members_title', {
-        defaultValue: 'Project members‌⁠‍',
+      aria-label={t("projects.team.modal_members_title", {
+        defaultValue: "Project members‌⁠‍",
       })}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
       onClick={onClose}
@@ -137,14 +141,14 @@ function MemberListModal({
       >
         <div className="flex items-center justify-between border-b border-border-light px-4 py-3">
           <h2 className="text-base font-semibold text-content-primary">
-            {t('projects.team.modal_members_title', {
-              defaultValue: 'Project members‌⁠‍',
+            {t("projects.team.modal_members_title", {
+              defaultValue: "Project members‌⁠‍",
             })}
           </h2>
           <button
             onClick={onClose}
             className="text-content-tertiary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={18} />
           </button>
@@ -165,8 +169,7 @@ function MemberListModal({
                   {m.email} · {m.role}
                   {m.is_owner ? (
                     <span className="ml-1 text-oe-blue">
-                      ·{' '}
-                      {t('projects.team.owner', { defaultValue: 'Owner' })}
+                      · {t("projects.team.owner", { defaultValue: "Owner" })}
                     </span>
                   ) : null}
                 </div>
@@ -175,8 +178,8 @@ function MemberListModal({
                 <button
                   onClick={() => onRemove(m.user_id)}
                   className="text-content-tertiary hover:text-semantic-error transition-colors"
-                  aria-label={t('projects.team.remove_member', {
-                    defaultValue: 'Remove member‌⁠‍',
+                  aria-label={t("projects.team.remove_member", {
+                    defaultValue: "Remove member‌⁠‍",
                   })}
                   data-testid="team-strip-remove-btn"
                 >
@@ -207,9 +210,9 @@ function AddMemberModal({
   errorMessage,
 }: AddMemberModalProps) {
   const { t } = useTranslation();
-  const [userId, setUserId] = useState<string>('');
-  const [displayName, setDisplayName] = useState<string>('');
-  const [role, setRole] = useState<string>('estimator');
+  const [userId, setUserId] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>("");
+  const [role, setRole] = useState<string>("estimator");
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -224,8 +227,8 @@ function AddMemberModal({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={t('projects.team.modal_add_title', {
-        defaultValue: 'Add member‌⁠‍',
+      aria-label={t("projects.team.modal_add_title", {
+        defaultValue: "Add member‌⁠‍",
       })}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
       onClick={onClose}
@@ -238,15 +241,15 @@ function AddMemberModal({
       >
         <div className="flex items-center justify-between border-b border-border-light px-4 py-3">
           <h2 className="text-base font-semibold text-content-primary">
-            {t('projects.team.modal_add_title', {
-              defaultValue: 'Add member‌⁠‍',
+            {t("projects.team.modal_add_title", {
+              defaultValue: "Add member‌⁠‍",
             })}
           </h2>
           <button
             type="button"
             onClick={onClose}
             className="text-content-tertiary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={18} />
           </button>
@@ -254,7 +257,7 @@ function AddMemberModal({
         <div className="px-4 py-4 space-y-4">
           <div>
             <label className="block text-xs font-medium text-content-secondary mb-1.5">
-              {t('projects.team.user_label', { defaultValue: 'User' })}
+              {t("projects.team.user_label", { defaultValue: "User" })}
             </label>
             <UserSearchInput
               value={userId}
@@ -270,7 +273,7 @@ function AddMemberModal({
               htmlFor="team-strip-role-select"
               className="block text-xs font-medium text-content-secondary mb-1.5"
             >
-              {t('projects.team.role_label', { defaultValue: 'Role' })}
+              {t("projects.team.role_label", { defaultValue: "Role" })}
             </label>
             <select
               id="team-strip-role-select"
@@ -282,8 +285,8 @@ function AddMemberModal({
                 <option key={r} value={r}>
                   {t(`projects.team.role.${r}`, {
                     defaultValue:
-                      r === 'project_manager'
-                        ? 'Project manager'
+                      r === "project_manager"
+                        ? "Project manager"
                         : r.charAt(0).toUpperCase() + r.slice(1),
                   })}
                 </option>
@@ -306,7 +309,7 @@ function AddMemberModal({
             onClick={onClose}
             className="px-3 py-1.5 text-sm rounded-lg text-content-secondary hover:bg-surface-secondary"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
           <button
             type="submit"
@@ -315,8 +318,8 @@ function AddMemberModal({
             data-testid="team-strip-add-submit"
           >
             {isSubmitting
-              ? t('common.adding', { defaultValue: 'Adding...' })
-              : t('projects.team.add_member', { defaultValue: 'Add member' })}
+              ? t("common.adding", { defaultValue: "Adding..." })
+              : t("projects.team.add_member", { defaultValue: "Add member" })}
           </button>
         </div>
       </form>
@@ -346,7 +349,7 @@ export function TeamStrip({
   const [addError, setAddError] = useState<string | undefined>();
 
   const { data: members = [], isLoading } = useQuery<ProjectMember[]>({
-    queryKey: ['project-members', projectId],
+    queryKey: ["project-members", projectId],
     queryFn: () =>
       apiGet<ProjectMember[]>(`/v1/projects/${projectId}/members/`),
     enabled: !!projectId && initialMembers === undefined,
@@ -362,7 +365,7 @@ export function TeamStrip({
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['project-members', projectId],
+        queryKey: ["project-members", projectId],
       });
       setAddOpen(false);
       setAddError(undefined);
@@ -371,7 +374,7 @@ export function TeamStrip({
       // ApiError carries the parsed JSON body; surface backend.detail.
       const detail =
         (err as { body?: { detail?: string } })?.body?.detail ??
-        (err instanceof Error ? err.message : 'Failed to add member');
+        (err instanceof Error ? err.message : "Failed to add member");
       setAddError(detail);
     },
   });
@@ -381,7 +384,7 @@ export function TeamStrip({
       apiDelete(`/v1/projects/${projectId}/members/${userId}/`),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['project-members', projectId],
+        queryKey: ["project-members", projectId],
       });
     },
   });
@@ -401,8 +404,8 @@ export function TeamStrip({
       <div
         className="flex items-center gap-2"
         data-testid="team-strip"
-        aria-label={t('projects.team.strip_label', {
-          defaultValue: 'Project team',
+        aria-label={t("projects.team.strip_label", {
+          defaultValue: "Project team",
         })}
       >
         <div className="flex -space-x-2">
@@ -416,8 +419,8 @@ export function TeamStrip({
               className="text-xs text-content-tertiary italic"
               data-testid="team-strip-empty"
             >
-              {t('projects.team.empty', {
-                defaultValue: 'No members yet',
+              {t("projects.team.empty", {
+                defaultValue: "No members yet",
               })}
             </span>
           ) : (
@@ -430,13 +433,12 @@ export function TeamStrip({
             onClick={() => setListOpen(true)}
             className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-surface-secondary text-xs font-semibold text-content-secondary border-2 border-white hover:bg-surface-tertiary transition-colors -ml-2"
             data-testid="team-strip-more"
-            aria-label={t('projects.team.more_count', {
+            aria-label={t("projects.team.more_count", {
               count: overflowCount,
-              defaultValue: '+{{count}} more',
+              defaultValue: "+{{count}} more",
             })}
           >
-            +{overflowCount}{' '}
-            {t('projects.team.more', { defaultValue: 'more' })}
+            +{overflowCount} {t("projects.team.more", { defaultValue: "more" })}
           </button>
         )}
         {/* Render the manage shortcut even when the strip is empty so the
@@ -448,11 +450,11 @@ export function TeamStrip({
               onClick={() => setAddOpen(true)}
               className="ml-1 inline-flex items-center justify-center h-8 w-8 rounded-full border border-dashed border-border text-content-tertiary hover:text-oe-blue hover:border-oe-blue transition-colors"
               data-testid="team-strip-add-button"
-              aria-label={t('projects.team.add_member', {
-                defaultValue: 'Add member',
+              aria-label={t("projects.team.add_member", {
+                defaultValue: "Add member",
               })}
-              title={t('projects.team.add_member', {
-                defaultValue: 'Add member',
+              title={t("projects.team.add_member", {
+                defaultValue: "Add member",
               })}
             >
               <Plus size={16} />
@@ -465,7 +467,7 @@ export function TeamStrip({
                 data-testid="team-strip-manage"
               >
                 <UserPlus size={12} />
-                {t('projects.team.manage', { defaultValue: 'Manage' })}
+                {t("projects.team.manage", { defaultValue: "Manage" })}
               </button>
             )}
           </>

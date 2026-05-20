@@ -92,12 +92,15 @@ export function deriveGeometry(
  *  exporter is inconsistent across source CAD formats, so we accept a few
  *  spellings per concept. First non-empty hit wins. */
 const RELATION_SOURCES: Array<{ label: string; keys: string[] }> = [
-  { label: 'Level', keys: ['level', 'storey', 'story', 'floor', 'reference_level'] },
-  { label: 'Zone', keys: ['zone', 'space', 'room', 'area'] },
-  { label: 'System', keys: ['system', 'parent_system', 'mep_system'] },
-  { label: 'Assembly', keys: ['assembly', 'parent', 'host', 'group'] },
-  { label: 'Phase', keys: ['phase', 'phase_created', 'construction_phase'] },
-  { label: 'Workset', keys: ['workset'] },
+  {
+    label: "Level",
+    keys: ["level", "storey", "story", "floor", "reference_level"],
+  },
+  { label: "Zone", keys: ["zone", "space", "room", "area"] },
+  { label: "System", keys: ["system", "parent_system", "mep_system"] },
+  { label: "Assembly", keys: ["assembly", "parent", "host", "group"] },
+  { label: "Phase", keys: ["phase", "phase_created", "construction_phase"] },
+  { label: "Workset", keys: ["workset"] },
 ];
 
 function pickString(
@@ -112,7 +115,7 @@ function pickString(
     const v = lower.get(key.toLowerCase());
     if (v === null || v === undefined) continue;
     const s = String(v).trim();
-    if (s && s !== 'None' && s !== 'null' && s !== 'N/A') return s;
+    if (s && s !== "None" && s !== "null" && s !== "N/A") return s;
   }
   return null;
 }
@@ -131,7 +134,7 @@ export function deriveRelations(input: {
   const meta = input.metadata ?? undefined;
   for (const src of RELATION_SOURCES) {
     let value: string | null = null;
-    if (src.label === 'Level' && input.storey && input.storey.trim()) {
+    if (src.label === "Level" && input.storey && input.storey.trim()) {
       value = input.storey.trim();
     }
     value =

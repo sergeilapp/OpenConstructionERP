@@ -68,9 +68,7 @@ class ComponentCreate(BaseModel):
     quantity: float = Field(default=1.0, ge=0.0, le=_NUM_MAX, allow_inf_nan=False)
     unit: str = Field(..., min_length=1, max_length=20)
     unit_cost: float = Field(default=0.0, ge=0.0, le=_NUM_MAX, allow_inf_nan=False)
-    unit_rate: float | None = Field(
-        default=None, ge=0.0, le=_NUM_MAX, allow_inf_nan=False, exclude=True
-    )
+    unit_rate: float | None = Field(default=None, ge=0.0, le=_NUM_MAX, allow_inf_nan=False, exclude=True)
     resource_type: str | None = Field(default=None, max_length=20)
     metadata: dict[str, Any] | None = None
 
@@ -172,9 +170,7 @@ class AssemblyUpdate(BaseModel):
     # Same bounds as AssemblyCreate.bid_factor (ASM-002 / NEW-ASM-101) —
     # an UPDATE must not be a back door for a non-finite / negative
     # markup that would poison the recalculated total_rate.
-    bid_factor: float | None = Field(
-        default=None, ge=0.0, le=_NUM_MAX, allow_inf_nan=False
-    )
+    bid_factor: float | None = Field(default=None, ge=0.0, le=_NUM_MAX, allow_inf_nan=False)
     regional_factors: dict[str, Any] | None = None
     is_template: bool | None = None
     project_id: UUID | None = None
@@ -274,9 +270,7 @@ class CloneAssemblyRequest(BaseModel):
 class ReorderComponentsRequest(BaseModel):
     """Request body for reordering components within an assembly."""
 
-    component_ids: list[UUID] = Field(
-        ..., min_length=1, description="Ordered list of component IDs"
-    )
+    component_ids: list[UUID] = Field(..., min_length=1, description="Ordered list of component IDs")
 
 
 class AssemblyExport(BaseModel):

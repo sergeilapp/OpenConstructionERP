@@ -11,12 +11,16 @@
  * `metadata.dwg_entity_ids`).
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { X, ListChecks, Loader2, Plus } from 'lucide-react';
-import { createTask, type TaskType, type TaskPriority } from '@/features/tasks/api';
-import { useToastStore } from '@/stores/useToastStore';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { X, ListChecks, Loader2, Plus } from "lucide-react";
+import {
+  createTask,
+  type TaskType,
+  type TaskPriority,
+} from "@/features/tasks/api";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface CreateTaskFromDwgModalProps {
   projectId: string;
@@ -35,10 +39,10 @@ interface CreateTaskFromDwgModalProps {
 }
 
 const PRIORITY_COLORS: Record<TaskPriority, string> = {
-  low: 'text-content-tertiary',
-  normal: 'text-content-secondary',
-  high: 'text-amber-600',
-  urgent: 'text-rose-600',
+  low: "text-content-tertiary",
+  normal: "text-content-secondary",
+  high: "text-amber-600",
+  urgent: "text-rose-600",
 };
 
 export default function CreateTaskFromDwgModal({
@@ -54,34 +58,56 @@ export default function CreateTaskFromDwgModal({
   const addToast = useToastStore((s) => s.addToast);
 
   const TASK_TYPES: { value: TaskType; label: string }[] = [
-    { value: 'task', label: t('tasks.type_task', { defaultValue: 'Task' }) },
-    { value: 'topic', label: t('tasks.type_topic', { defaultValue: 'Topic' }) },
-    { value: 'information', label: t('tasks.type_information', { defaultValue: 'Info' }) },
-    { value: 'decision', label: t('tasks.type_decision', { defaultValue: 'Decision‌⁠‍' }) },
+    { value: "task", label: t("tasks.type_task", { defaultValue: "Task" }) },
+    { value: "topic", label: t("tasks.type_topic", { defaultValue: "Topic" }) },
+    {
+      value: "information",
+      label: t("tasks.type_information", { defaultValue: "Info" }),
+    },
+    {
+      value: "decision",
+      label: t("tasks.type_decision", { defaultValue: "Decision‌⁠‍" }),
+    },
   ];
 
   const PRIORITIES: { value: TaskPriority; label: string; color: string }[] = [
-    { value: 'low', label: t('tasks.priority_low', { defaultValue: 'Low' }), color: PRIORITY_COLORS.low },
-    { value: 'normal', label: t('tasks.priority_normal', { defaultValue: 'Normal‌⁠‍' }), color: PRIORITY_COLORS.normal },
-    { value: 'high', label: t('tasks.priority_high', { defaultValue: 'High' }), color: PRIORITY_COLORS.high },
-    { value: 'urgent', label: t('tasks.priority_urgent', { defaultValue: 'Urgent‌⁠‍' }), color: PRIORITY_COLORS.urgent },
+    {
+      value: "low",
+      label: t("tasks.priority_low", { defaultValue: "Low" }),
+      color: PRIORITY_COLORS.low,
+    },
+    {
+      value: "normal",
+      label: t("tasks.priority_normal", { defaultValue: "Normal‌⁠‍" }),
+      color: PRIORITY_COLORS.normal,
+    },
+    {
+      value: "high",
+      label: t("tasks.priority_high", { defaultValue: "High" }),
+      color: PRIORITY_COLORS.high,
+    },
+    {
+      value: "urgent",
+      label: t("tasks.priority_urgent", { defaultValue: "Urgent‌⁠‍" }),
+      color: PRIORITY_COLORS.urgent,
+    },
   ];
 
   const defaultTitle = entityLabel
-    ? t('dwg_takeoff.issue_on_entity', {
-        defaultValue: 'Issue on {{name}}‌⁠‍',
+    ? t("dwg_takeoff.issue_on_entity", {
+        defaultValue: "Issue on {{name}}‌⁠‍",
         name: entityLabel,
       })
-    : t('dwg_takeoff.issue_on_entities', {
-        defaultValue: 'Issue on {{count}} DWG entity/entities‌⁠‍',
+    : t("dwg_takeoff.issue_on_entities", {
+        defaultValue: "Issue on {{count}} DWG entity/entities‌⁠‍",
         count: entityIds.length,
       });
 
   const [title, setTitle] = useState(defaultTitle);
-  const [description, setDescription] = useState('');
-  const [taskType, setTaskType] = useState<TaskType>('task');
-  const [priority, setPriority] = useState<TaskPriority>('normal');
-  const [dueDate, setDueDate] = useState('');
+  const [description, setDescription] = useState("");
+  const [taskType, setTaskType] = useState<TaskType>("task");
+  const [priority, setPriority] = useState<TaskPriority>("normal");
+  const [dueDate, setDueDate] = useState("");
 
   const createMut = useMutation({
     mutationFn: () =>
@@ -101,22 +127,24 @@ export default function CreateTaskFromDwgModal({
       }),
     onSuccess: (task) => {
       addToast({
-        type: 'success',
-        title: t('dwg_takeoff.task_created_title', { defaultValue: 'Task created' }),
-        message: t('dwg_takeoff.task_created_msg', {
+        type: "success",
+        title: t("dwg_takeoff.task_created_title", {
+          defaultValue: "Task created",
+        }),
+        message: t("dwg_takeoff.task_created_msg", {
           defaultValue: '"{{title}}" pinned to {{count}} DWG entity/entities',
           title: task.title,
           count: entityIds.length,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['tasks'] });
+      qc.invalidateQueries({ queryKey: ["tasks"] });
       onCreated?.();
       onClose();
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -140,15 +168,16 @@ export default function CreateTaskFromDwgModal({
           <div className="flex items-center gap-2">
             <ListChecks size={16} className="text-amber-600" />
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('dwg_takeoff.create_task_title', {
-                defaultValue: 'Create task pinned to DWG entity',
+              {t("dwg_takeoff.create_task_title", {
+                defaultValue: "Create task pinned to DWG entity",
               })}
             </h2>
             <span className="text-[11px] text-content-tertiary">
               {entityIds.length === 1
-                ? entityLabel || t('dwg_takeoff.entity', { defaultValue: 'Entity' })
-                : t('dwg_takeoff.create_task_bulk', {
-                    defaultValue: '{{count}} entities',
+                ? entityLabel ||
+                  t("dwg_takeoff.entity", { defaultValue: "Entity" })
+                : t("dwg_takeoff.create_task_bulk", {
+                    defaultValue: "{{count}} entities",
                     count: entityIds.length,
                   })}
             </span>
@@ -156,7 +185,7 @@ export default function CreateTaskFromDwgModal({
           <button
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -166,7 +195,7 @@ export default function CreateTaskFromDwgModal({
         <div className="p-5 space-y-3">
           <div>
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-              {t('dwg_takeoff.task_title', { defaultValue: 'Title' })}
+              {t("dwg_takeoff.task_title", { defaultValue: "Title" })}
               <span className="text-rose-500 ml-0.5">*</span>
             </label>
             <input
@@ -180,14 +209,16 @@ export default function CreateTaskFromDwgModal({
 
           <div>
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-              {t('dwg_takeoff.task_description', { defaultValue: 'Description' })}
+              {t("dwg_takeoff.task_description", {
+                defaultValue: "Description",
+              })}
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              placeholder={t('dwg_takeoff.task_description_placeholder', {
-                defaultValue: 'What needs to be done?',
+              placeholder={t("dwg_takeoff.task_description_placeholder", {
+                defaultValue: "What needs to be done?",
               })}
               className="w-full px-2 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue resize-none"
             />
@@ -196,7 +227,7 @@ export default function CreateTaskFromDwgModal({
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-                {t('dwg_takeoff.task_type', { defaultValue: 'Type' })}
+                {t("dwg_takeoff.task_type", { defaultValue: "Type" })}
               </label>
               <select
                 value={taskType}
@@ -212,13 +243,13 @@ export default function CreateTaskFromDwgModal({
             </div>
             <div>
               <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-                {t('dwg_takeoff.task_priority', { defaultValue: 'Priority' })}
+                {t("dwg_takeoff.task_priority", { defaultValue: "Priority" })}
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
                 className={`w-full px-2 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue ${
-                  PRIORITIES.find((p) => p.value === priority)?.color ?? ''
+                  PRIORITIES.find((p) => p.value === priority)?.color ?? ""
                 }`}
               >
                 {PRIORITIES.map((p) => (
@@ -232,7 +263,9 @@ export default function CreateTaskFromDwgModal({
 
           <div>
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-              {t('dwg_takeoff.task_due_date', { defaultValue: 'Due date (optional)' })}
+              {t("dwg_takeoff.task_due_date", {
+                defaultValue: "Due date (optional)",
+              })}
             </label>
             <input
               type="date"
@@ -247,9 +280,9 @@ export default function CreateTaskFromDwgModal({
             <div className="flex items-start gap-1.5">
               <ListChecks size={11} className="shrink-0 mt-0.5" />
               <span>
-                {t('dwg_takeoff.task_pin_note', {
+                {t("dwg_takeoff.task_pin_note", {
                   defaultValue:
-                    'This task will be linked to {{count}} DWG entity/entities. Consumers can locate the drawing and entity via the task metadata.',
+                    "This task will be linked to {{count}} DWG entity/entities. Consumers can locate the drawing and entity via the task metadata.",
                   count: entityIds.length,
                 })}
               </span>
@@ -264,7 +297,7 @@ export default function CreateTaskFromDwgModal({
             onClick={onClose}
             className="text-xs text-content-tertiary hover:text-content-primary px-2"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
           <button
             type="button"
@@ -277,7 +310,7 @@ export default function CreateTaskFromDwgModal({
             ) : (
               <Plus size={12} />
             )}
-            {t('dwg_takeoff.task_create', { defaultValue: 'Create task' })}
+            {t("dwg_takeoff.task_create", { defaultValue: "Create task" })}
           </button>
         </div>
       </div>

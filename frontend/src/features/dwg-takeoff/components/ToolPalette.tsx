@@ -6,8 +6,8 @@
  * estimator to hover for this information).
  */
 
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
+import { useTranslation } from "react-i18next";
+import clsx from "clsx";
 import {
   MousePointer2,
   Hand,
@@ -20,20 +20,20 @@ import {
   Spline,
   Minus,
   Crosshair,
-} from 'lucide-react';
+} from "lucide-react";
 
 export type DwgTool =
-  | 'select'
-  | 'pan'
-  | 'distance'
-  | 'area'
-  | 'text_pin'
-  | 'arrow'
-  | 'rectangle'
-  | 'circle'
-  | 'polyline'
-  | 'line'
-  | 'calibrate';
+  | "select"
+  | "pan"
+  | "distance"
+  | "area"
+  | "text_pin"
+  | "arrow"
+  | "rectangle"
+  | "circle"
+  | "polyline"
+  | "line"
+  | "calibrate";
 
 interface ToolDef {
   id: DwgTool;
@@ -48,20 +48,92 @@ interface ToolDef {
  *  All shortcuts are uppercase single-char keys; `Esc` cancels the draw
  *  (tracked globally, not shown per button). */
 const TOOLS: ToolDef[] = [
-  { id: 'select', icon: MousePointer2, labelKey: 'dwg_takeoff.tool_select', labelFallback: 'Select', shortcut: 'V' },
-  { id: 'pan', icon: Hand, labelKey: 'dwg_takeoff.tool_pan', labelFallback: 'Pan', shortcut: 'H' },
-  { id: 'distance', icon: Ruler, labelKey: 'dwg_takeoff.tool_distance', labelFallback: 'Distance', shortcut: 'D' },
-  { id: 'line', icon: Minus, labelKey: 'dwg_takeoff.tool_line', labelFallback: 'Line', shortcut: 'L' },
-  { id: 'polyline', icon: Spline, labelKey: 'dwg_takeoff.tool_polyline', labelFallback: 'Polyline', shortcut: 'P' },
-  { id: 'area', icon: PenTool, labelKey: 'dwg_takeoff.tool_area', labelFallback: 'Area', shortcut: 'A' },
-  { id: 'rectangle', icon: Square, labelKey: 'dwg_takeoff.tool_rectangle', labelFallback: 'Rectangle', shortcut: 'R' },
-  { id: 'circle', icon: Circle, labelKey: 'dwg_takeoff.tool_circle', labelFallback: 'Circle', shortcut: 'C' },
-  { id: 'arrow', icon: ArrowRight, labelKey: 'dwg_takeoff.tool_arrow', labelFallback: 'Arrow' },
-  { id: 'text_pin', icon: Type, labelKey: 'dwg_takeoff.tool_text_pin', labelFallback: 'Text pin', shortcut: 'T' },
-  { id: 'calibrate', icon: Crosshair, labelKey: 'dwg_takeoff.tool_calibrate', labelFallback: 'Calibrate', shortcut: 'K' },
+  {
+    id: "select",
+    icon: MousePointer2,
+    labelKey: "dwg_takeoff.tool_select",
+    labelFallback: "Select",
+    shortcut: "V",
+  },
+  {
+    id: "pan",
+    icon: Hand,
+    labelKey: "dwg_takeoff.tool_pan",
+    labelFallback: "Pan",
+    shortcut: "H",
+  },
+  {
+    id: "distance",
+    icon: Ruler,
+    labelKey: "dwg_takeoff.tool_distance",
+    labelFallback: "Distance",
+    shortcut: "D",
+  },
+  {
+    id: "line",
+    icon: Minus,
+    labelKey: "dwg_takeoff.tool_line",
+    labelFallback: "Line",
+    shortcut: "L",
+  },
+  {
+    id: "polyline",
+    icon: Spline,
+    labelKey: "dwg_takeoff.tool_polyline",
+    labelFallback: "Polyline",
+    shortcut: "P",
+  },
+  {
+    id: "area",
+    icon: PenTool,
+    labelKey: "dwg_takeoff.tool_area",
+    labelFallback: "Area",
+    shortcut: "A",
+  },
+  {
+    id: "rectangle",
+    icon: Square,
+    labelKey: "dwg_takeoff.tool_rectangle",
+    labelFallback: "Rectangle",
+    shortcut: "R",
+  },
+  {
+    id: "circle",
+    icon: Circle,
+    labelKey: "dwg_takeoff.tool_circle",
+    labelFallback: "Circle",
+    shortcut: "C",
+  },
+  {
+    id: "arrow",
+    icon: ArrowRight,
+    labelKey: "dwg_takeoff.tool_arrow",
+    labelFallback: "Arrow",
+  },
+  {
+    id: "text_pin",
+    icon: Type,
+    labelKey: "dwg_takeoff.tool_text_pin",
+    labelFallback: "Text pin",
+    shortcut: "T",
+  },
+  {
+    id: "calibrate",
+    icon: Crosshair,
+    labelKey: "dwg_takeoff.tool_calibrate",
+    labelFallback: "Calibrate",
+    shortcut: "K",
+  },
 ];
 
-const PRESET_COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899'];
+const PRESET_COLORS = [
+  "#ef4444",
+  "#f59e0b",
+  "#22c55e",
+  "#3b82f6",
+  "#8b5cf6",
+  "#ec4899",
+];
 
 interface Props {
   activeTool: DwgTool;
@@ -70,7 +142,12 @@ interface Props {
   onColorChange: (color: string) => void;
 }
 
-export function ToolPalette({ activeTool, onToolChange, activeColor, onColorChange }: Props) {
+export function ToolPalette({
+  activeTool,
+  onToolChange,
+  activeColor,
+  onColorChange,
+}: Props) {
   const { t } = useTranslation();
 
   return (
@@ -88,13 +165,13 @@ export function ToolPalette({ activeTool, onToolChange, activeColor, onColorChan
             title={title}
             aria-label={title}
             data-testid={`dwg-tool-${id}`}
-            data-shortcut={shortcut ?? ''}
+            data-shortcut={shortcut ?? ""}
             onClick={() => onToolChange(id)}
             className={clsx(
-              'flex h-8 w-8 items-center justify-center rounded-md transition-colors',
+              "flex h-8 w-8 items-center justify-center rounded-md transition-colors",
               activeTool === id
-                ? 'bg-oe-blue text-white'
-                : 'text-muted-foreground hover:bg-surface-secondary hover:text-foreground',
+                ? "bg-oe-blue text-white"
+                : "text-muted-foreground hover:bg-surface-secondary hover:text-foreground",
             )}
           >
             <Icon size={16} />
@@ -112,8 +189,10 @@ export function ToolPalette({ activeTool, onToolChange, activeColor, onColorChan
           aria-label={`Color ${color}`}
           onClick={() => onColorChange(color)}
           className={clsx(
-            'h-5 w-5 rounded-full border-2 transition-transform',
-            activeColor === color ? 'scale-125 border-foreground' : 'border-transparent',
+            "h-5 w-5 rounded-full border-2 transition-transform",
+            activeColor === color
+              ? "scale-125 border-foreground"
+              : "border-transparent",
           )}
           style={{ backgroundColor: color }}
         />

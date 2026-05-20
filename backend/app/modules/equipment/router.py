@@ -77,6 +77,7 @@ from app.modules.equipment.schemas import (
     EquipmentResponse,
     EquipmentTypeCreate,
     EquipmentTypeResponse,
+    EquipmentTypeUpdate,
     EquipmentUpdate,
     FleetDashboardResponse,
     FuelLogCreate,
@@ -126,6 +127,35 @@ async def create_type(
 ) -> EquipmentTypeResponse:
     t = await service.create_type(data)
     return EquipmentTypeResponse.model_validate(t)
+
+
+@router.patch("/types/{type_id}", response_model=EquipmentTypeResponse)
+async def update_type(
+    type_id: uuid.UUID,
+    data: EquipmentTypeUpdate,
+    _perm: None = Depends(RequirePermission("equipment.update")),
+    service: EquipmentService = Depends(_get_service),
+) -> EquipmentTypeResponse:
+    t = await service.type_repo.get_by_id(type_id)
+    if t is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Equipment type not found",
+        )
+    fields = data.model_dump(exclude_unset=True)
+    if fields:
+        await service.type_repo.update_fields(type_id, **fields)
+        await service.session.refresh(t)
+    return EquipmentTypeResponse.model_validate(t)
+
+
+@router.delete("/types/{type_id}", status_code=204)
+async def delete_type(
+    type_id: uuid.UUID,
+    _perm: None = Depends(RequirePermission("equipment.delete")),
+    service: EquipmentService = Depends(_get_service),
+) -> None:
+    await service.delete_type(type_id)
 
 
 # ── Equipment CRUD ───────────────────────────────────────────────────────
@@ -416,6 +446,7 @@ async def list_inspections(
         items = await service.inspection_repo.list_for_equipment(equipment_id)
     else:
         from datetime import date as _d
+
         items = await service.inspection_repo.expiring_within(_d.today().isoformat(), 365)
     return [InspectionResponse.model_validate(i) for i in items]
 
@@ -559,9 +590,7 @@ async def list_fuel_logs(
     _perm: None = Depends(RequirePermission("equipment.read")),
     service: EquipmentService = Depends(_get_service),
 ) -> list[FuelLogResponse]:
-    items, _ = await service.fuel_repo.list_for_equipment(
-        equipment_id, offset=offset, limit=limit
-    )
+    items, _ = await service.fuel_repo.list_for_equipment(equipment_id, offset=offset, limit=limit)
     return [FuelLogResponse.model_validate(i) for i in items]
 
 
@@ -584,9 +613,7 @@ async def update_fuel_log(
 ) -> FuelLogResponse:
     log = await service.fuel_repo.get_by_id(log_id)
     if log is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Fuel log not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Fuel log not found")
     fields = data.model_dump(exclude_unset=True)
     if fields:
         await service.fuel_repo.update_fields(log_id, **fields)
@@ -611,9 +638,7 @@ async def fuel_efficiency(
     _perm: None = Depends(RequirePermission("equipment.read")),
     service: EquipmentService = Depends(_get_service),
 ) -> dict[str, Decimal]:
-    return await service.fuel_repo.fuel_consumption(
-        equipment_id, period_start, period_end
-    )
+    return await service.fuel_repo.fuel_consumption(equipment_id, period_start, period_end)
 
 
 # ── Parts Logs ───────────────────────────────────────────────────────────
@@ -627,9 +652,7 @@ async def list_parts_logs(
     _perm: None = Depends(RequirePermission("equipment.read")),
     service: EquipmentService = Depends(_get_service),
 ) -> list[PartsLogResponse]:
-    items, _ = await service.parts_repo.list_for_equipment(
-        equipment_id, offset=offset, limit=limit
-    )
+    items, _ = await service.parts_repo.list_for_equipment(equipment_id, offset=offset, limit=limit)
     return [PartsLogResponse.model_validate(i) for i in items]
 
 
@@ -699,6 +722,21 @@ async def update_damage_report(
         await service.damage_repo.update_fields(report_id, **fields)
         await service.session.refresh(d)
     return DamageReportResponse.model_validate(d)
+
+
+@router.delete("/damage-reports/{report_id}", status_code=204)
+async def delete_damage_report(
+    report_id: uuid.UUID,
+    _perm: None = Depends(RequirePermission("equipment.update")),
+    service: EquipmentService = Depends(_get_service),
+) -> None:
+    d = await service.damage_repo.get_by_id(report_id)
+    if d is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Damage report not found",
+        )
+    await service.damage_repo.delete(report_id)
 
 
 # ── Fleet Dashboard ──────────────────────────────────────────────────────

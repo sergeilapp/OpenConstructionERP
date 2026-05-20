@@ -6,7 +6,7 @@
  * page owns the side-effecting actions (Save / Run / Stop) so dirty-state and
  * network stay in the page.
  */
-import clsx from 'clsx';
+import clsx from "clsx";
 import {
   Maximize2,
   Redo2,
@@ -15,15 +15,15 @@ import {
   Square,
   Undo2,
   Play,
-} from 'lucide-react';
-import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+} from "lucide-react";
+import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   selectCanRedo,
   selectCanUndo,
   usePipelineStore,
-} from '../usePipelineStore';
+} from "../usePipelineStore";
 
 export interface PipelineToolbarProps {
   onFitView?: () => void;
@@ -46,10 +46,17 @@ interface TBtnProps {
   icon: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
-  variant?: 'default' | 'primary' | 'danger';
+  variant?: "default" | "primary" | "danger";
 }
 
-function TBtn({ label, testId, icon, onClick, disabled, variant = 'default' }: TBtnProps) {
+function TBtn({
+  label,
+  testId,
+  icon,
+  onClick,
+  disabled,
+  variant = "default",
+}: TBtnProps) {
   return (
     <button
       type="button"
@@ -59,14 +66,14 @@ function TBtn({ label, testId, icon, onClick, disabled, variant = 'default' }: T
       title={label}
       aria-label={label}
       className={clsx(
-        'inline-flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-xs font-medium',
-        'transition-colors disabled:cursor-not-allowed disabled:opacity-40',
-        variant === 'primary' &&
-          'border-oe-blue bg-oe-blue text-white hover:bg-oe-blue/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
-        variant === 'danger' &&
-          'border-semantic-error bg-semantic-error text-white hover:opacity-90',
-        variant === 'default' &&
-          'border-border bg-surface-primary text-content-primary hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/30',
+        "inline-flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-xs font-medium",
+        "transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+        variant === "primary" &&
+          "border-oe-blue bg-oe-blue text-white hover:bg-oe-blue/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
+        variant === "danger" &&
+          "border-semantic-error bg-semantic-error text-white hover:opacity-90",
+        variant === "default" &&
+          "border-border bg-surface-primary text-content-primary hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/30",
       )}
     >
       {icon}
@@ -95,22 +102,22 @@ export function PipelineToolbar({
   return (
     <div
       role="toolbar"
-      aria-label={t('pipeline.toolbar.aria', {
-        defaultValue: 'Pipeline toolbar‌⁠‍',
+      aria-label={t("pipeline.toolbar.aria", {
+        defaultValue: "Pipeline toolbar‌⁠‍",
       })}
-      data-testid={testId ?? 'pipeline-toolbar'}
+      data-testid={testId ?? "pipeline-toolbar"}
       className="flex h-11 items-center gap-2 border-b border-border bg-surface-primary px-3"
     >
       <div className="flex items-center gap-1">
         <TBtn
-          label={t('pipeline.toolbar.undo', { defaultValue: 'Undo' })}
+          label={t("pipeline.toolbar.undo", { defaultValue: "Undo" })}
           testId="pipeline-undo"
           icon={<Undo2 size={14} aria-hidden="true" />}
           onClick={undo}
           disabled={!canUndo}
         />
         <TBtn
-          label={t('pipeline.toolbar.redo', { defaultValue: 'Redo' })}
+          label={t("pipeline.toolbar.redo", { defaultValue: "Redo" })}
           testId="pipeline-redo"
           icon={<Redo2 size={14} aria-hidden="true" />}
           onClick={redo}
@@ -121,14 +128,14 @@ export function PipelineToolbar({
       <span className="h-6 w-px bg-border" aria-hidden="true" />
 
       <TBtn
-        label={t('pipeline.toolbar.fit', { defaultValue: 'Fit view‌⁠‍' })}
+        label={t("pipeline.toolbar.fit", { defaultValue: "Fit view‌⁠‍" })}
         testId="pipeline-fit"
         icon={<Maximize2 size={14} aria-hidden="true" />}
         onClick={onFitView}
       />
       <TBtn
-        label={t('pipeline.toolbar.explain', {
-          defaultValue: 'Explain this pipeline‌⁠‍',
+        label={t("pipeline.toolbar.explain", {
+          defaultValue: "Explain this pipeline‌⁠‍",
         })}
         testId="pipeline-explain"
         icon={<Sparkles size={14} aria-hidden="true" />}
@@ -140,8 +147,8 @@ export function PipelineToolbar({
           data-testid="pipeline-issue-chip"
           className="ms-1 inline-flex items-center gap-1 rounded-md border border-semantic-warning/40 bg-semantic-warning-bg px-2 py-1 text-xs font-medium text-semantic-warning"
         >
-          {t('pipeline.toolbar.issues', {
-            defaultValue: '{{count}} issue(s)‌⁠‍',
+          {t("pipeline.toolbar.issues", {
+            defaultValue: "{{count}} issue(s)‌⁠‍",
             count: issueCount,
           })}
         </span>
@@ -150,7 +157,7 @@ export function PipelineToolbar({
       <span className="ms-auto h-6 w-px bg-border" aria-hidden="true" />
 
       <TBtn
-        label={t('pipeline.toolbar.save', { defaultValue: 'Save' })}
+        label={t("pipeline.toolbar.save", { defaultValue: "Save" })}
         testId="pipeline-save"
         icon={<Save size={14} aria-hidden="true" />}
         onClick={onSave}
@@ -158,7 +165,7 @@ export function PipelineToolbar({
       />
       {running ? (
         <TBtn
-          label={t('pipeline.toolbar.stop', { defaultValue: 'Stop' })}
+          label={t("pipeline.toolbar.stop", { defaultValue: "Stop" })}
           testId="pipeline-stop"
           icon={<Square size={14} aria-hidden="true" />}
           onClick={onStop}
@@ -166,7 +173,7 @@ export function PipelineToolbar({
         />
       ) : (
         <TBtn
-          label={t('pipeline.toolbar.run', { defaultValue: 'Run' })}
+          label={t("pipeline.toolbar.run", { defaultValue: "Run" })}
           testId="pipeline-run"
           icon={<Play size={14} aria-hidden="true" />}
           onClick={onRun}

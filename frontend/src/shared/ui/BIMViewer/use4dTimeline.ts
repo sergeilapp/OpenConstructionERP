@@ -15,14 +15,14 @@
  *     the scrubber without any error handling.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '@/shared/lib/api';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { apiGet } from "@/shared/lib/api";
 import {
   computeScheduleBounds,
   pickActiveActivityName,
   type FourDActivity,
-} from './4dStatus';
+} from "./4dStatus";
 
 /** Response shape for `/v1/schedule/schedules/?project_id=...`.  We only
  *  need the id, but keep the full shape loose so casual changes on the
@@ -113,11 +113,15 @@ const MS_PER_DAY = 86_400_000;
  *  fetch activities for each schedule.  Parallelised via `Promise.all`.
  *  Kept inside the hook file so module boundaries stay tidy — this is
  *  not a reusable fetch layer, it's specific to the 4D scrubber. */
-async function fetchAllActivities(projectId: string): Promise<ScheduleActivity[]> {
-  const schedules = await apiGet<ScheduleSummary[] | { items: ScheduleSummary[] }>(
-    `/v1/schedule/schedules/?project_id=${encodeURIComponent(projectId)}`,
-  );
-  const schedList = Array.isArray(schedules) ? schedules : schedules.items ?? [];
+async function fetchAllActivities(
+  projectId: string,
+): Promise<ScheduleActivity[]> {
+  const schedules = await apiGet<
+    ScheduleSummary[] | { items: ScheduleSummary[] }
+  >(`/v1/schedule/schedules/?project_id=${encodeURIComponent(projectId)}`);
+  const schedList = Array.isArray(schedules)
+    ? schedules
+    : (schedules.items ?? []);
   if (schedList.length === 0) return [];
 
   const results = await Promise.all(
@@ -126,7 +130,7 @@ async function fetchAllActivities(projectId: string): Promise<ScheduleActivity[]
         const acts = await apiGet<
           ScheduleActivity[] | { items: ScheduleActivity[] }
         >(`/v1/schedule/schedules/${encodeURIComponent(sched.id)}/activities/`);
-        return Array.isArray(acts) ? acts : acts.items ?? [];
+        return Array.isArray(acts) ? acts : (acts.items ?? []);
       } catch {
         // Individual schedule failure is non-fatal — we may still have
         // actionable data in the other schedules.  Log at debug only to
@@ -148,8 +152,9 @@ export function use4dTimeline(
   enabled: boolean,
 ): Use4dTimelineResult {
   const query = useQuery({
-    queryKey: ['4d-timeline-activities', projectId],
-    queryFn: () => (projectId ? fetchAllActivities(projectId) : Promise.resolve([])),
+    queryKey: ["4d-timeline-activities", projectId],
+    queryFn: () =>
+      projectId ? fetchAllActivities(projectId) : Promise.resolve([]),
     enabled: !!projectId && enabled,
     staleTime: 60_000,
   });

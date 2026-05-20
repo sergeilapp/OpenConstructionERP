@@ -16,11 +16,11 @@
 /* ── Translate (test harness) ─────────────────────────────────────────── */
 
 export type TranslationTier =
-  | 'lookup_muse'
-  | 'lookup_iate'
-  | 'cache'
-  | 'llm'
-  | 'fallback';
+  | "lookup_muse"
+  | "lookup_iate"
+  | "cache"
+  | "llm"
+  | "fallback";
 
 export interface TranslateRequestBody {
   readonly text: string;
@@ -40,7 +40,7 @@ export interface TranslateResponse {
 
 /* ── Lookup-table download trigger ────────────────────────────────────── */
 
-export type LookupKind = 'muse' | 'iate';
+export type LookupKind = "muse" | "iate";
 
 export interface DownloadRequestBody {
   readonly kind: LookupKind;
@@ -78,7 +78,7 @@ export interface CacheStats {
 export interface InFlightTask {
   readonly task_id: string;
   readonly kind: LookupKind;
-  readonly status: 'queued' | 'running' | 'done' | 'failed';
+  readonly status: "queued" | "running" | "done" | "failed";
   readonly progress: number; // 0.0 .. 1.0
   readonly error?: string;
   readonly path?: string;

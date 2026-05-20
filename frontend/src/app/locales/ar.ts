@@ -2,29 +2,40 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  "translation": {
-    "about.ai_desc": "يتضمن OpenConstructionERP أدوات اختيارية مدعومة بالذكاء الاصطناعي — تقدير سريع من الأوصاف النصية، واقتراحات تكلفة ذكية، ومساعد محادثة لجدول الكميات. تتطلب هذه الميزات مفتاح API من مزود من اختيارك (Anthropic أو OpenAI أو Google). الذكاء الاصطناعي دائمًا اختياري: يتم تفعيله فقط عند إعداده، وأنت من يقرر البيانات المرسلة. بدون مفتاح API، تعمل جميع الميزات الأخرى بالكامل دون اتصال.",
+  translation: {
+    "about.ai_desc":
+      "يتضمن OpenConstructionERP أدوات اختيارية مدعومة بالذكاء الاصطناعي — تقدير سريع من الأوصاف النصية، واقتراحات تكلفة ذكية، ومساعد محادثة لجدول الكميات. تتطلب هذه الميزات مفتاح API من مزود من اختيارك (Anthropic أو OpenAI أو Google). الذكاء الاصطناعي دائمًا اختياري: يتم تفعيله فقط عند إعداده، وأنت من يقرر البيانات المرسلة. بدون مفتاح API، تعمل جميع الميزات الأخرى بالكامل دون اتصال.",
     "about.ai_title": "حول ميزات الذكاء الاصطناعي",
     "about.cap.boq": "جدول الكميات",
-    "about.cap.boq_desc": "أنشئ جدول كميات مفصّل بأقسام هرمية وبنود وبنود مركبة وهوامش ربح (مصاريف عامة وأرباح وضريبة القيمة المضافة) وإجماليات تلقائية. يدعم DIN 276 وNRM 1/2 وMasterFormat وأنظمة التصنيف المخصصة.",
+    "about.cap.boq_desc":
+      "أنشئ جدول كميات مفصّل بأقسام هرمية وبنود وبنود مركبة وهوامش ربح (مصاريف عامة وأرباح وضريبة القيمة المضافة) وإجماليات تلقائية. يدعم DIN 276 وNRM 1/2 وMasterFormat وأنظمة التصنيف المخصصة.",
     "about.cap.catalog": "كتالوج الموارد",
-    "about.cap.catalog_desc": "أكثر من 7,000 مورد — مواد ومعدات وعمالة ومشغلين ومرافق. أنشئ بنودًا مركبة (أسعار مركبة) قابلة لإعادة الاستخدام من عناصر الكتالوج وطبّقها مباشرة على بنود جدول الكميات.",
+    "about.cap.catalog_desc":
+      "أكثر من 7,000 مورد — مواد ومعدات وعمالة ومشغلين ومرافق. أنشئ بنودًا مركبة (أسعار مركبة) قابلة لإعادة الاستخدام من عناصر الكتالوج وطبّقها مباشرة على بنود جدول الكميات.",
     "about.cap.costmodel": "نموذج التكلفة خماسي الأبعاد",
-    "about.cap.costmodel_desc": "تتبع الميزانيات عبر الزمن باستخدام إدارة القيمة المكتسبة (SPI وCPI)، وتصور منحنى S، وتوقعات التدفق النقدي، ولقطات التكلفة، ونمذجة سيناريوهات ماذا لو لاتخاذ قرارات مستنيرة.",
+    "about.cap.costmodel_desc":
+      "تتبع الميزانيات عبر الزمن باستخدام إدارة القيمة المكتسبة (SPI وCPI)، وتصور منحنى S، وتوقعات التدفق النقدي، ولقطات التكلفة، ونمذجة سيناريوهات ماذا لو لاتخاذ قرارات مستنيرة.",
     "about.cap.costs": "قواعد بيانات التكاليف",
-    "about.cap.costs_desc": "أكثر من 55,000 بند تكلفة عبر 11 قاعدة بيانات إقليمية تغطي DACH والمملكة المتحدة وأمريكا الشمالية والشرق الأوسط والمزيد. أضف أسعارك الخاصة أو استورد من Excel أو أنشئ قاعدة بيانات مخصصة من الصفر.",
+    "about.cap.costs_desc":
+      "أكثر من 55,000 بند تكلفة عبر 11 قاعدة بيانات إقليمية تغطي DACH والمملكة المتحدة وأمريكا الشمالية والشرق الأوسط والمزيد. أضف أسعارك الخاصة أو استورد من Excel أو أنشئ قاعدة بيانات مخصصة من الصفر.",
     "about.cap.import": "الاستيراد والتصدير",
-    "about.cap.import_desc": "دعم كامل لاستيراد وتصدير GAEB XML (X83) وExcel وCSV. أنشئ تقارير PDF احترافية. تكامل سلس مع أدواتك وسير عملك الحالي.",
+    "about.cap.import_desc":
+      "دعم كامل لاستيراد وتصدير GAEB XML (X83) وExcel وCSV. أنشئ تقارير PDF احترافية. تكامل سلس مع أدواتك وسير عملك الحالي.",
     "about.cap.schedule": "الجدولة رباعية الأبعاد",
-    "about.cap.schedule_desc": "أنشئ جداول زمنية للمشروع مع حساب المسار الحرج CPM ومخططات غانت التفاعلية وتحليل مخاطر مونت كارلو وتعيين الموارد والتوليد التلقائي للأنشطة من جدول الكميات.",
+    "about.cap.schedule_desc":
+      "أنشئ جداول زمنية للمشروع مع حساب المسار الحرج CPM ومخططات غانت التفاعلية وتحليل مخاطر مونت كارلو وتعيين الموارد والتوليد التلقائي للأنشطة من جدول الكميات.",
     "about.cap.tendering": "المناقصات والعطاءات",
-    "about.cap.tendering_desc": "أنشئ حزم مناقصات بالنطاق والبنود، ووزعها على المقاولين من الباطن، واجمع العروض وقارنها جنبًا إلى جنب في مرآة أسعار، واتخذ قرارات الترسية بناءً على البيانات.",
+    "about.cap.tendering_desc":
+      "أنشئ حزم مناقصات بالنطاق والبنود، ووزعها على المقاولين من الباطن، واجمع العروض وقارنها جنبًا إلى جنب في مرآة أسعار، واتخذ قرارات الترسية بناءً على البيانات.",
     "about.cap.validation": "التحقق من الجودة",
-    "about.cap.validation_desc": "محرك جودة مدمج يتحقق تلقائيًا من الكميات المفقودة والأسعار الصفرية والبنود المكررة والامتثال للتصنيف والشذوذ في الأسعار — مع لوحة تحكم بنظام إشارات المرور.",
+    "about.cap.validation_desc":
+      "محرك جودة مدمج يتحقق تلقائيًا من الكميات المفقودة والأسعار الصفرية والبنود المكررة والامتثال للتصنيف والشذوذ في الأسعار — مع لوحة تحكم بنظام إشارات المرور.",
     "about.capabilities_title": "ما يمكنك فعله",
     "about.close": "فهمت",
-    "about.intro": "OpenConstructionERP هي منصة حديثة لإدارة تكاليف البناء. تغطي سير عمل التقدير الكامل — من إنشاء جدول الكميات إلى المناقصات ومقارنة العطاءات. مصممة للمحترفين حول العالم، تدعم المعايير الدولية وتعمل بـ 20 لغة.",
-    "about.intro2": "على عكس الحلول التجارية التقليدية، يعمل OpenConstructionERP بالكامل على جهاز الكمبيوتر الخاص بك. لا تغادر بيانات مشروعك جهازك أبدًا — لديك الملكية والتحكم الكامل. الكود المصدري مفتوح وقابل للتدقيق، لذا تعرف دائمًا بالضبط ما يفعله البرنامج.",
+    "about.intro":
+      "OpenConstructionERP هي منصة حديثة لإدارة تكاليف البناء. تغطي سير عمل التقدير الكامل — من إنشاء جدول الكميات إلى المناقصات ومقارنة العطاءات. مصممة للمحترفين حول العالم، تدعم المعايير الدولية وتعمل بـ 20 لغة.",
+    "about.intro2":
+      "على عكس الحلول التجارية التقليدية، يعمل OpenConstructionERP بالكامل على جهاز الكمبيوتر الخاص بك. لا تغادر بيانات مشروعك جهازك أبدًا — لديك الملكية والتحكم الكامل. الكود المصدري مفتوح وقابل للتدقيق، لذا تعرف دائمًا بالضبط ما يفعله البرنامج.",
     "about.numbers_title": "المنصة بالأرقام",
     "about.stat.costs": "بنود التكلفة",
     "about.stat.free": "مجاني ومفتوح المصدر",
@@ -41,13 +52,18 @@ const resource = {
     "about.who.qsurveyor": "مساحو الكميات",
     "about.who.students": "الطلاب والمعلمون",
     "about.who.subs": "المقاولون من الباطن",
-    "about.who_desc": "صُمم OpenConstructionERP لأي شخص يعمل في إدارة تكاليف البناء — سواء كنت تعمل في مشاريع سكنية أو بنية تحتية كبيرة، داخليًا أو كمستشار.",
+    "about.who_desc":
+      "صُمم OpenConstructionERP لأي شخص يعمل في إدارة تكاليف البناء — سواء كنت تعمل في مشاريع سكنية أو بنية تحتية كبيرة، داخليًا أو كمستشار.",
     "about.who_title": "لمن هذا",
-    "about.why_1": "بيانات تكاليف البناء هي من أهم الأصول التي تمتلكها الشركة. مع البرامج الاحتكارية، غالبًا ما تكون بياناتك محبوسة داخل تنسيقات لا يمكنك التحكم بها. إذا رفع المورد الأسعار أو غيّر الشروط أو أوقف المنتج — فقد تفقد الوصول إلى سنوات من العمل.",
-    "about.why_2": "يتبع OpenConstructionERP نهجًا مختلفًا. تُخزّن بياناتك بتنسيقات مفتوحة (SQLite وJSON وCSV) على أجهزتك الخاصة. يمكنك تصدير كل شيء في أي وقت. الكود المصدري قابل للتدقيق العام بموجب AGPL-3.0، لذا لا توجد نقل بيانات مخفي ولا تتبع ولا مفاجآت.",
-    "about.why_3": "المنصة معيارية — ثبّت فقط ما تحتاجه. وحدات المجتمع توسع الوظائف دون تضخيم النواة. ولأنها تعمل محليًا، فإنها تعمل دون اتصال وبأداء سريع حتى مع المشاريع الكبيرة.",
+    "about.why_1":
+      "بيانات تكاليف البناء هي من أهم الأصول التي تمتلكها الشركة. مع البرامج الاحتكارية، غالبًا ما تكون بياناتك محبوسة داخل تنسيقات لا يمكنك التحكم بها. إذا رفع المورد الأسعار أو غيّر الشروط أو أوقف المنتج — فقد تفقد الوصول إلى سنوات من العمل.",
+    "about.why_2":
+      "يتبع OpenConstructionERP نهجًا مختلفًا. تُخزّن بياناتك بتنسيقات مفتوحة (SQLite وJSON وCSV) على أجهزتك الخاصة. يمكنك تصدير كل شيء في أي وقت. الكود المصدري قابل للتدقيق العام بموجب AGPL-3.0، لذا لا توجد نقل بيانات مخفي ولا تتبع ولا مفاجآت.",
+    "about.why_3":
+      "المنصة معيارية — ثبّت فقط ما تحتاجه. وحدات المجتمع توسع الوظائف دون تضخيم النواة. ولأنها تعمل محليًا، فإنها تعمل دون اتصال وبأداء سريع حتى مع المشاريع الكبيرة.",
     "about.why_title": "لماذا المصدر المفتوح مهم",
-    "ai.advisor_desc": "اطرح أسئلة حول التكاليف والمواد والأسعار — من قاعدة بياناتك ومعرفة الذكاء الاصطناعي",
+    "ai.advisor_desc":
+      "اطرح أسئلة حول التكاليف والمواد والأسعار — من قاعدة بياناتك ومعرفة الذكاء الاصطناعي",
     "ai.advisor_empty": "اسألني أي شيء عن تكاليف البناء",
     "ai.advisor_error": "خطأ في مستشار الذكاء الاصطناعي",
     "ai.advisor_placeholder": "اسأل عن التكاليف والمواد والأسعار...",
@@ -57,7 +73,8 @@ const resource = {
     "ai.advisor_q4": "ما هي أجور العمل النموذجية للكهربائيين؟",
     "ai.advisor_sources": "المصادر:",
     "ai.advisor_title": "مستشار التكاليف بالذكاء الاصطناعي",
-    "ai.advisor_unavailable": "تعذر الحصول على رد. يرجى التحقق من إعدادات الذكاء الاصطناعي.",
+    "ai.advisor_unavailable":
+      "تعذر الحصول على رد. يرجى التحقق من إعدادات الذكاء الاصطناعي.",
     "ai.analyze_photo": "تحليل الصورة",
     "ai.area": "المساحة (م²)",
     "ai.boq_name": "اسم جدول الكميات",
@@ -74,7 +91,8 @@ const resource = {
     "ai.building_residential": "سكني",
     "ai.building_retail": "تجاري",
     "ai.building_type": "نوع المبنى",
-    "ai.cad_info": "ملفات CAD/BIM (مثل .rvt و.ifc و.dwg و.dgn) تتطلب تثبيت محوّل DDC. سيتم استخراج العناصر واستخدامها لتوليد تقدير تكلفة. حمّل المحوّلات من GitHub وضعها في ~/.openestimator/converters/.",
+    "ai.cad_info":
+      "ملفات CAD/BIM (مثل .rvt و.ifc و.dwg و.dgn) تتطلب تثبيت محوّل DDC. سيتم استخراج العناصر واستخدامها لتوليد تقدير تكلفة. حمّل المحوّلات من GitHub وضعها في ~/.openestimator/converters/.",
     "ai.choose_project": "-- اختر مشروعًا --",
     "ai.col_description": "الوصف",
     "ai.col_pos": "بند",
@@ -111,9 +129,12 @@ const resource = {
     "ai.location_placeholder": "مثلاً برلين",
     "ai.new_estimate": "تقدير جديد",
     "ai.parse_import": "تحليل واستيراد",
-    "ai.paste_info": "يكتشف تلقائيًا البيانات المفصولة بعلامات الجدولة أو الفاصلة المنقوطة أو الفاصلة. سيقوم الذكاء الاصطناعي بتحليل وهيكلة بياناتك إلى بنود تقدير.",
-    "ai.paste_placeholder": "الصق بيانات جدول الكميات هنا (من Excel أو Word أو أي جدول)...\n\nمثال:\nبند\tالوصف\tالوحدة\tالكمية\tالسعر\n01.01\tالحفر\tم³\t250\t18.50\n01.02\tخرسانة C30/37\tم³\t120\t145.00\n01.03\tحديد تسليح BSt 500\tكجم\t12000\t1.85",
-    "ai.pdf_hint": "ارفع مستندات جدول الكميات أو المواصفات أو الرسومات بتنسيق PDF.",
+    "ai.paste_info":
+      "يكتشف تلقائيًا البيانات المفصولة بعلامات الجدولة أو الفاصلة المنقوطة أو الفاصلة. سيقوم الذكاء الاصطناعي بتحليل وهيكلة بياناتك إلى بنود تقدير.",
+    "ai.paste_placeholder":
+      "الصق بيانات جدول الكميات هنا (من Excel أو Word أو أي جدول)...\n\nمثال:\nبند\tالوصف\tالوحدة\tالكمية\tالسعر\n01.01\tالحفر\tم³\t250\t18.50\n01.02\tخرسانة C30/37\tم³\t120\t145.00\n01.03\tحديد تسليح BSt 500\tكجم\t12000\t1.85",
+    "ai.pdf_hint":
+      "ارفع مستندات جدول الكميات أو المواصفات أو الرسومات بتنسيق PDF.",
     "ai.powered_by": "مدعوم بـ {{model}}",
     "ai.results": "نتائج التقدير",
     "ai.save": "حفظ",
@@ -121,7 +142,8 @@ const resource = {
     "ai.save_failed": "فشل حفظ جدول الكميات",
     "ai.save_to_boq": "حفظ كجدول كميات",
     "ai.select_project": "اختر المشروع",
-    "ai.setup_required_desc": "أضف مفتاح API الخاص بك لـ Anthropic Claude أو OpenAI أو Google Gemini لتوليد تقديرات من النصوص والصور وملفات PDF وملفات CAD.",
+    "ai.setup_required_desc":
+      "أضف مفتاح API الخاص بك لـ Anthropic Claude أو OpenAI أو Google Gemini لتوليد تقديرات من النصوص والصور وملفات PDF وملفات CAD.",
     "ai.setup_required_title": "اربط ذكاءك الاصطناعي للبدء",
     "ai.standard_auto": "كشف تلقائي",
     "ai.standard_label": "المعيار",
@@ -132,7 +154,8 @@ const resource = {
     "ai.tab_pdf_desc": "جداول كميات، مواصفات، مناقصات",
     "ai.tab_photo_desc": "صورة مبنى أو مستند ممسوح",
     "ai.tab_text_desc": "صف مشروعك بالنص",
-    "ai.try_again": "يرجى المحاولة مرة أخرى أو التحقق من إعدادات الذكاء الاصطناعي.",
+    "ai.try_again":
+      "يرجى المحاولة مرة أخرى أو التحقق من إعدادات الذكاء الاصطناعي.",
     "analytics.action_create_project": "إنشاء مشروع",
     "analytics.action_import_costs": "استيراد قاعدة بيانات التكاليف",
     "analytics.actual_short": "فعلي",
@@ -149,7 +172,8 @@ const resource = {
     "analytics.col_status": "الحالة",
     "analytics.col_variance": "التباين",
     "analytics.col_variance_pct": "التباين %",
-    "analytics.empty_description": "أنشئ مشاريع بميزانيات لعرض تحليلات عبر المشاريع.",
+    "analytics.empty_description":
+      "أنشئ مشاريع بميزانيات لعرض تحليلات عبر المشاريع.",
     "analytics.empty_title": "لا توجد بيانات تحليلية بعد",
     "analytics.export_csv": "تصدير CSV",
     "analytics.filter_region": "تصفية حسب المنطقة",
@@ -174,12 +198,14 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "منصة احترافية لتقدير تكاليف البناء",
     "assemblies.assemblies_found": "بنود مركبة",
-    "assemblies.description": "وصفات تكلفة قابلة لإعادة الاستخدام لعناصر البناء الشائعة",
+    "assemblies.description":
+      "وصفات تكلفة قابلة لإعادة الاستخدام لعناصر البناء الشائعة",
     "assemblies.new_assembly": "بند مركب جديد",
     "assemblies.no_results": "لم يتم العثور على بنود مركبة",
     "assemblies.no_results_hint": "حاول تعديل البحث أو عوامل التصفية",
     "assemblies.title": "البنود المركبة",
-    "assemblies.what_are_assemblies": "البنود المركبة هي وصفات تكلفة قابلة لإعادة الاستخدام تجمع بين موارد متعددة (مواد وعمالة ومعدات) في سعر مركب واحد. على سبيل المثال، بند مركب \"جدار خرساني مسلح\" يشمل الخرسانة وحديد التسليح والقوالب والعمالة. طبّق البنود المركبة على بنود جدول الكميات لملء تكاليف المكونات تلقائيًا.",
+    "assemblies.what_are_assemblies":
+      'البنود المركبة هي وصفات تكلفة قابلة لإعادة الاستخدام تجمع بين موارد متعددة (مواد وعمالة ومعدات) في سعر مركب واحد. على سبيل المثال، بند مركب "جدار خرساني مسلح" يشمل الخرسانة وحديد التسليح والقوالب والعمالة. طبّق البنود المركبة على بنود جدول الكميات لملء تكاليف المكونات تلقائيًا.',
     "auth.back_to_login": "العودة لتسجيل الدخول",
     "auth.check_email": "تحقق من بريدك الإلكتروني",
     "auth.confirm_password": "تأكيد كلمة المرور",
@@ -188,7 +214,8 @@ const resource = {
     "auth.create_account": "إنشاء حساب",
     "auth.email": "البريد الإلكتروني",
     "auth.forgot_password": "نسيت كلمة المرور؟",
-    "auth.forgot_subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",
+    "auth.forgot_subtitle":
+      "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",
     "auth.full_name": "الاسم الكامل",
     "auth.full_name_placeholder": "محمد أحمد",
     "auth.has_account": "لديك حساب بالفعل؟",
@@ -208,13 +235,16 @@ const resource = {
     "auth.register_subtitle": "ابدأ مع OpenEstimate",
     "auth.register_title": "إنشاء حساب",
     "auth.remember_me": "تذكرني لمدة 30 يومًا",
-    "auth.reset_error": "تعذرت معالجة طلب إعادة التعيين. يرجى المحاولة مرة أخرى.",
-    "auth.reset_sent": "إذا كان هناك حساب مرتبط بهذا البريد الإلكتروني، فستتلقى رابط إعادة تعيين كلمة المرور قريبًا.",
+    "auth.reset_error":
+      "تعذرت معالجة طلب إعادة التعيين. يرجى المحاولة مرة أخرى.",
+    "auth.reset_sent":
+      "إذا كان هناك حساب مرتبط بهذا البريد الإلكتروني، فستتلقى رابط إعادة تعيين كلمة المرور قريبًا.",
     "auth.send_reset_link": "إرسال رابط إعادة التعيين",
     "auth.server_error": "تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى.",
     "auth.sign_in": "تسجيل الدخول",
     "backup.confirm_replace_btn": "استبدال جميع البيانات",
-    "backup.confirm_replace_message": "سيؤدي هذا إلى استبدال جميع البيانات الموجودة بمحتويات النسخة الاحتياطية. لا يمكن التراجع عن هذا الإجراء.",
+    "backup.confirm_replace_message":
+      "سيؤدي هذا إلى استبدال جميع البيانات الموجودة بمحتويات النسخة الاحتياطية. لا يمكن التراجع عن هذا الإجراء.",
     "backup.confirm_replace_title": "استبدال جميع البيانات؟",
     "backup.drop_zone_hint": "ملف النسخة الاحتياطية .zip",
     "backup.drop_zone_label": "أفلت ملف النسخة الاحتياطية هنا أو انقر للتصفح",
@@ -232,14 +262,16 @@ const resource = {
     "backup.mode_merge": "دمج (إضافة الجديد، الاحتفاظ بالموجود)",
     "backup.mode_replace": "استبدال (الكتابة فوق كل شيء)",
     "backup.record_counts": "عدد السجلات",
-    "backup.replace_warning": "تحذير: وضع الاستبدال سيحذف جميع البيانات الموجودة.",
+    "backup.replace_warning":
+      "تحذير: وضع الاستبدال سيحذف جميع البيانات الموجودة.",
     "backup.restore_btn": "استعادة",
     "backup.restore_error": "خطأ في الاستعادة",
     "backup.restore_failed": "فشلت الاستعادة",
     "backup.restore_failed_detail": "تعذّر الاستعادة من النسخة الاحتياطية",
     "backup.restore_mode": "وضع الاستعادة",
     "backup.restore_success": "تمت استعادة النسخة الاحتياطية",
-    "backup.restore_success_detail": "تمت استعادة جميع البيانات من النسخة الاحتياطية.",
+    "backup.restore_success_detail":
+      "تمت استعادة جميع البيانات من النسخة الاحتياطية.",
     "backup.restoring": "جارٍ الاستعادة...",
     "backup.subtitle": "تصدير واستيراد بياناتك",
     "backup.title": "النسخ الاحتياطي والاستعادة",
@@ -253,7 +285,7 @@ const resource = {
     "bim.cad_upload_success": "تم رفع ملف CAD",
     "bim.cad_upload_success_desc": "تم رفع الملف بنجاح. ستبدأ المعالجة قريباً.",
     "bim.classification": "التصنيف",
-    "bim.confirm_delete_model": "حذف \"{{name}}\"؟ ستُزال جميع العناصر.",
+    "bim.confirm_delete_model": 'حذف "{{name}}"؟ ستُزال جميع العناصر.',
     "bim.disc_architecture": "معماري",
     "bim.disc_civil": "مدني",
     "bim.disc_electrical": "كهربائي",
@@ -268,25 +300,34 @@ const resource = {
     "bim.element_count": "{{count}} عنصر",
     "bim.element_tree": "شجرة العناصر",
     "bim.getting_started": "عارض BIM",
-    "bim.getting_started_desc": "ارفع بيانات العناصر (CSV/Excel) وهندسة ثلاثية الأبعاد اختيارية (DAE) من محوّل CAD لعرض نماذج المباني بتقنية ثلاثية الأبعاد. يمكن ربط العناصر ببنود BOQ للتحقق من الكميات.",
+    "bim.getting_started_desc":
+      "ارفع بيانات العناصر (CSV/Excel) وهندسة ثلاثية الأبعاد اختيارية (DAE) من محوّل CAD لعرض نماذج المباني بتقنية ثلاثية الأبعاد. يمكن ربط العناصر ببنود BOQ للتحقق من الكميات.",
     "bim.hide_upload": "إغلاق",
     "bim.landing_drop_here": "أفلت ملفك هنا",
-    "bim.landing_feat_3d_desc": "عارض Three.js تفاعلي مع تصفية الطوابق وتلوين التخصصات وتحديد العناصر.",
+    "bim.landing_feat_3d_desc":
+      "عارض Three.js تفاعلي مع تصفية الطوابق وتلوين التخصصات وتحديد العناصر.",
     "bim.landing_feat_3d_title": "عرض ثلاثي الأبعاد",
-    "bim.landing_feat_boq_desc": "ربط عناصر BIM ببنود التكلفة للتحقق التلقائي من الكميات وحساب الكميات 5D.",
+    "bim.landing_feat_boq_desc":
+      "ربط عناصر BIM ببنود التكلفة للتحقق التلقائي من الكميات وحساب الكميات 5D.",
     "bim.landing_feat_boq_title": "ربط BOQ",
-    "bim.landing_feat_compare_desc": "مقارنة الإصدارات لاكتشاف العناصر المضافة والمحذوفة والمعدَّلة تلقائياً.",
+    "bim.landing_feat_compare_desc":
+      "مقارنة الإصدارات لاكتشاف العناصر المضافة والمحذوفة والمعدَّلة تلقائياً.",
     "bim.landing_feat_compare_title": "مقارنة النماذج",
-    "bim.landing_feat_extract_desc": "الجدران والبلاطات والأعمدة والعوارض وMEP — مع الخصائص والمساحات والأحجام والتصنيف.",
+    "bim.landing_feat_extract_desc":
+      "الجدران والبلاطات والأعمدة والعوارض وMEP — مع الخصائص والمساحات والأحجام والتصنيف.",
     "bim.landing_feat_extract_title": "استخراج العناصر",
-    "bim.landing_feat_format_desc": "IFC يُعالَج فورياً. RVT عبر DDC cad2data. CSV/Excel للبيانات المحوَّلة مسبقاً.",
+    "bim.landing_feat_format_desc":
+      "IFC يُعالَج فورياً. RVT عبر DDC cad2data. CSV/Excel للبيانات المحوَّلة مسبقاً.",
     "bim.landing_feat_format_title": "متوافق مع جميع الصيغ",
-    "bim.landing_feat_qty_desc": "حدّد قواعد لاستخراج المساحة والحجم والطول — طبّقها على نموذجك بالكامل دفعةً واحدة.",
+    "bim.landing_feat_qty_desc":
+      "حدّد قواعد لاستخراج المساحة والحجم والطول — طبّقها على نموذجك بالكامل دفعةً واحدة.",
     "bim.landing_feat_qty_title": "خرائط الكميات",
-    "bim.landing_hero_subtitle": "ارفع ملفات IFC أو Revit لعرض عناصر المبنى واستخراج الكميات وربطها بجدول الكميات.",
+    "bim.landing_hero_subtitle":
+      "ارفع ملفات IFC أو Revit لعرض عناصر المبنى واستخراج الكميات وربطها بجدول الكميات.",
     "bim.landing_hero_title": "عارض BIM ثلاثي الأبعاد",
     "bim.landing_processing": "جارٍ المعالجة...",
-    "bim.landing_size_hint": "IFC، Revit، CSV، أو Excel · الحد الأقصى 500 ميغابايت",
+    "bim.landing_size_hint":
+      "IFC، Revit، CSV، أو Excel · الحد الأقصى 500 ميغابايت",
     "bim.landing_upload_process": "رفع ومعالجة",
     "bim.link_to_boq": "ربط بـ BOQ",
     "bim.load_error": "فشل تحميل عناصر النموذج",
@@ -305,19 +346,24 @@ const resource = {
     "bim.loading_geometry": "جارٍ تحميل هندسة 3D…",
     "bim.loading_finalising": "جارٍ إنهاء المشهد…",
     "bim.loading_streaming": "جارٍ بثّ الهندسة من الخادم…",
-    "bim.loading_parsing": "جارٍ تحليل هندسة 3D — قد يستغرق ذلك 20-60 ثانية للنماذج الكبيرة (>50 MB)؛ لا تُحدِّث الصفحة",
-    "bim.loading_navigate_hint": "يمكنك التنقل إلى صفحات أخرى — سيستمر التحميل في الخلفية",
+    "bim.loading_parsing":
+      "جارٍ تحليل هندسة 3D — قد يستغرق ذلك 20-60 ثانية للنماذج الكبيرة (>50 MB)؛ لا تُحدِّث الصفحة",
+    "bim.loading_navigate_hint":
+      "يمكنك التنقل إلى صفحات أخرى — سيستمر التحميل في الخلفية",
     "bim.no_models": "لم يتم رفع أي نماذج بعد",
     "bim.no_models_hint_upload": "ارفع بيانات BIM للبدء.",
     "bim.no_project": "لم يتم اختيار مشروع",
     "bim.no_project_desc": "اختر مشروعاً لعرض نماذج BIM.",
     "bim.no_search_results": "لا توجد عناصر مطابقة",
     "bim.overlay_delete_btn": "حذف",
-    "bim.overlay_error_desc": "تعذّر استخراج العناصر. جرّب التحويل إلى IFC أولاً أو ارفع البيانات يدوياً.",
+    "bim.overlay_error_desc":
+      "تعذّر استخراج العناصر. جرّب التحويل إلى IFC أولاً أو ارفع البيانات يدوياً.",
     "bim.overlay_error_title": "فشلت المعالجة",
-    "bim.overlay_needs_converter_desc": "ملفات {{format}} تتطلب DDC cad2data للاستخراج. حوّل إلى IFC أولاً، أو ارفع بيانات محوَّلة مسبقاً.",
+    "bim.overlay_needs_converter_desc":
+      "ملفات {{format}} تتطلب DDC cad2data للاستخراج. حوّل إلى IFC أولاً، أو ارفع بيانات محوَّلة مسبقاً.",
     "bim.overlay_needs_converter_title": "محوّل مطلوب",
-    "bim.overlay_processing_desc": "جارٍ استخراج العناصر من ملف {{format}}. قد يستغرق هذا لحظة.",
+    "bim.overlay_processing_desc":
+      "جارٍ استخراج العناصر من ملف {{format}}. قد يستغرق هذا لحظة.",
     "bim.overlay_processing_title": "جارٍ معالجة النموذج...",
     "bim.overlay_upload_converted_btn": "رفع البيانات المحوَّلة",
     "bim.prop_category": "الفئة",
@@ -346,7 +392,8 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "الهندسة ثلاثية الأبعاد",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle": "تم التحويل مسبقاً؟ ارفع البيانات والهندسة بشكل منفصل",
+    "bim.upload_advanced_mode_toggle":
+      "تم التحويل مسبقاً؟ ارفع البيانات والهندسة بشكل منفصل",
     "bim.upload_btn": "رفع",
     "bim.upload_cad_hint": "مدعوم: RVT، IFC، DWG، DGN",
     "bim.upload_cad_label": "ملف CAD / BIM",
@@ -355,15 +402,18 @@ const resource = {
     "bim.upload_data_hint": "CSV أو Excel من محوّل CAD",
     "bim.upload_data_label": "بيانات العناصر (مطلوب)",
     "bim.upload_depth_complete": "كامل · جميع الفئات (بطيء)",
-    "bim.upload_depth_help": "يتحكم في عدد فئات Revit المستخرجة. معرّفات العناصر والخصائص الكاملة محفوظة دائماً.",
+    "bim.upload_depth_help":
+      "يتحكم في عدد فئات Revit المستخرجة. معرّفات العناصر والخصائص الكاملة محفوظة دائماً.",
     "bim.upload_depth_label": "عمق التحويل",
     "bim.upload_depth_medium": "متوسط · فئات موسّعة (متوازن)",
     "bim.upload_depth_standard": "قياسي · الفئات الرئيسية (سريع)",
-    "bim.upload_desc_full": "رفع بيانات العناصر والهندسة ثلاثية الأبعاد الاختيارية",
+    "bim.upload_desc_full":
+      "رفع بيانات العناصر والهندسة ثلاثية الأبعاد الاختيارية",
     "bim.upload_discipline_label": "التخصص",
     "bim.upload_drop_here": "أفلت الملف هنا",
     "bim.upload_failed": "فشل الرفع",
-    "bim.upload_generate_pdf_help": "يصدّر اللوحات التي أعدّها المصمّم داخل النموذج كملف PDF واحد إلى المستندات. يعمل بعد جاهزية النموذج — لا يؤخّر الرفع.",
+    "bim.upload_generate_pdf_help":
+      "يصدّر اللوحات التي أعدّها المصمّم داخل النموذج كملف PDF واحد إلى المستندات. يعمل بعد جاهزية النموذج — لا يؤخّر الرفع.",
     "bim.upload_generate_pdf_label": "تصدير صفحات المشروع كـ PDF أيضاً (خلفية)",
     "bim.upload_geo_hint": "صيغة DAE (Collada) للعرض ثلاثي الأبعاد",
     "bim.upload_geo_label": "الهندسة ثلاثية الأبعاد (اختياري)",
@@ -373,9 +423,11 @@ const resource = {
     "bim.upload_panel_title": "رفع نموذج",
     "bim.upload_remove_file": "إزالة",
     "bim.upload_result": "نتيجة الرفع",
-    "bim.upload_rvt_note": "ملاحظة: ملفات RVT تتطلب DDC cad2data. يُنصح باستخدام IFC.",
+    "bim.upload_rvt_note":
+      "ملاحظة: ملفات RVT تتطلب DDC cad2data. يُنصح باستخدام IFC.",
     "bim.upload_simple_mode_toggle": "التبديل إلى الوضع البسيط",
-    "bim.upload_size_hint": "Revit (.rvt)، IFC (.ifc) · الحد الأقصى 500 ميغابايت",
+    "bim.upload_size_hint":
+      "Revit (.rvt)، IFC (.ifc) · الحد الأقصى 500 ميغابايت",
     "bim.upload_storeys": "الطوابق:",
     "bim.upload_success": "تم رفع بيانات BIM",
     "bim.upload_success_desc": "تم رفع النموذج بنجاح.",
@@ -407,13 +459,15 @@ const resource = {
     "boq.aace_methodology": "المنهجية",
     "boq.aace_metrics": "مقاييس التصنيف",
     "boq.aace_positions": "البنود",
-    "boq.aace_reference": "بناءً على الممارسة الموصى بها 18R-97 من AACE International. يتم الكشف التلقائي عن التصنيف من مقاييس اكتمال جدول الكميات.",
+    "boq.aace_reference":
+      "بناءً على الممارسة الموصى بها 18R-97 من AACE International. يتم الكشف التلقائي عن التصنيف من مقاييس اكتمال جدول الكميات.",
     "boq.aace_to": "إلى",
     "boq.aace_with_classification": "مع التصنيف",
     "boq.aace_with_rates": "مع أسعار الوحدة",
     "boq.aace_with_resources": "مع موارد كاملة",
     "boq.accept": "قبول",
-    "boq.accept_all_anomaly_suggestions": "قبول كل الأسعار المقترحة ({{count}})",
+    "boq.accept_all_anomaly_suggestions":
+      "قبول كل الأسعار المقترحة ({{count}})",
     "boq.add_all_failed": "تعذّر إضافة أيٍّ من البنود البالغة {{count}}",
     "boq.add_all_to_boq": "إضافة الكل إلى جدول الكميات",
     "boq.add_as_resources": "إضافة {{count}} كموارد",
@@ -451,7 +505,8 @@ const resource = {
     "boq.ai_apply_rate": "تطبيق السعر المعدَّل",
     "boq.ai_assistant": "مساعد الذكاء الاصطناعي",
     "boq.ai_assistant_short": "المساعد",
-    "boq.ai_assistant_tooltip": "صف ما تحتاجه بنص عادي — ينشئ الذكاء الاصطناعي بنود جدول الكميات بأسعار واقعية.",
+    "boq.ai_assistant_tooltip":
+      "صف ما تحتاجه بنص عادي — ينشئ الذكاء الاصطناعي بنود جدول الكميات بأسعار واقعية.",
     "boq.ai_chat_error": "فشل طلب الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.",
     "boq.ai_chat_short": "محادثة AI",
     "boq.ai_classification": "تصنيف بالذكاء الاصطناعي",
@@ -459,29 +514,37 @@ const resource = {
     "boq.ai_connected_via": "متصل عبر {{provider}}",
     "boq.ai_enhance_subtitle": "أضف مواصفات تقنية ومعايير ودرجات مواد",
     "boq.ai_enhance_title": "تحسين الوصف",
-    "boq.ai_error_generic": "تعذّر الاتصال بخدمة الذكاء الاصطناعي. تحقّق من توفّر نموذج التضمين.",
+    "boq.ai_error_generic":
+      "تعذّر الاتصال بخدمة الذكاء الاصطناعي. تحقّق من توفّر نموذج التضمين.",
     "boq.ai_escalate_subtitle": "اضبط السعر للتضخم وتغيرات السوق",
     "boq.ai_escalate_title": "تعديل السعر",
     "boq.ai_escalated": "معدَّل",
     "boq.ai_factor_labor": "عمالة",
     "boq.ai_factor_material": "مواد",
     "boq.ai_factor_region": "إقليمي",
-    "boq.ai_generated_summary": "تم توليد {{count}} بنود بإجمالي {{total}} {{currency}}.",
+    "boq.ai_generated_summary":
+      "تم توليد {{count}} بنود بإجمالي {{total}} {{currency}}.",
     "boq.ai_global_actions": "إجراءات على مستوى جدول الكميات",
-    "boq.ai_hint": "اطلب مني توليد بنود جدول الكميات. مثال: \"أضف بنود MEP لمبنى مكتبي من 5 طوابق\"",
+    "boq.ai_hint":
+      'اطلب مني توليد بنود جدول الكميات. مثال: "أضف بنود MEP لمبنى مكتبي من 5 طوابق"',
     "boq.ai_missing_items": "بنود ناقصة",
     "boq.ai_no_classification": "لم يُعثر على تصنيف",
-    "boq.ai_no_classification_msg": "تعذّر تحديد التصنيف من قاعدة بيانات التكاليف.",
-    "boq.ai_no_prereqs": "لم تُعثر على بنود ناقصة — يبدو جدول الكميات مكتملًا لهذا البند.",
+    "boq.ai_no_classification_msg":
+      "تعذّر تحديد التصنيف من قاعدة بيانات التكاليف.",
+    "boq.ai_no_prereqs":
+      "لم تُعثر على بنود ناقصة — يبدو جدول الكميات مكتملًا لهذا البند.",
     "boq.ai_no_rate": "لم يُعثر على سعر",
     "boq.ai_no_rate_msg": "لم تُعثر على بنود مشابهة في قاعدة بيانات التكاليف.",
-    "boq.ai_no_selection": "حدد بندًا في الشبكة لإجراءات الذكاء الاصطناعي على البند",
+    "boq.ai_no_selection":
+      "حدد بندًا في الشبكة لإجراءات الذكاء الاصطناعي على البند",
     "boq.ai_not_configured": "الذكاء الاصطناعي غير مهيّأ",
-    "boq.ai_not_configured_desc": "أضف مفتاح API في الإعدادات لاستخدام الإجراءات الذكية.",
+    "boq.ai_not_configured_desc":
+      "أضف مفتاح API في الإعدادات لاستخدام الإجراءات الذكية.",
     "boq.ai_original": "الأصلي",
     "boq.ai_placeholder": "صِف البنود المراد توليدها...",
     "boq.ai_position_actions": "إجراءات البند",
-    "boq.ai_prereqs_subtitle": "ابحث عن المتطلبات السابقة والمصاحبة والتالية الناقصة",
+    "boq.ai_prereqs_subtitle":
+      "ابحث عن المتطلبات السابقة والمصاحبة والتالية الناقصة",
     "boq.ai_prereqs_title": "اقتراح بنود مرتبطة",
     "boq.ai_rate_error": "فشل اقتراح السعر",
     "boq.ai_rate_suggestion": "اقتراح سعر بالذكاء الاصطناعي",
@@ -489,13 +552,16 @@ const resource = {
     "boq.ai_scope_subtitle": "ابحث عن الحرف والحزم والبنود الحرجة الناقصة",
     "boq.ai_scope_title": "فحص اكتمال النطاق",
     "boq.ai_selected_position": "البند المحدَّد",
-    "boq.ai_smart_footer": "مدعوم بمزوّد الذكاء الاصطناعي الخاص بك (الإعدادات > الذكاء الاصطناعي). النتائج اقتراحات — راجع دائمًا.",
+    "boq.ai_smart_footer":
+      "مدعوم بمزوّد الذكاء الاصطناعي الخاص بك (الإعدادات > الذكاء الاصطناعي). النتائج اقتراحات — راجع دائمًا.",
     "boq.ai_smart_panel": "الإجراءات الذكية",
     "boq.ai_smart_short": "إجراءات ذكية",
-    "boq.ai_smart_tooltip": "حسّن الأوصاف، اعثر على البنود الناقصة، افحص اكتمال النطاق، عدّل الأسعار إلى الأسعار الحالية.",
+    "boq.ai_smart_tooltip":
+      "حسّن الأوصاف، اعثر على البنود الناقصة، افحص اكتمال النطاق، عدّل الأسعار إلى الأسعار الحالية.",
     "boq.ai_specs": "المواصفات",
     "boq.ai_welcome": "اطلب مني توليد بنود جدول الكميات. مثال: ",
-    "boq.all_anomalies_resolved": "تم تطبيق كل الأسعار المقترحة البالغ عددها {{count}}",
+    "boq.all_anomalies_resolved":
+      "تم تطبيق كل الأسعار المقترحة البالغ عددها {{count}}",
     "boq.all_projects": "جميع المشاريع",
     "boq.all_rates_normal": "كل الأسعار ضمن النطاق السوقي الطبيعي.",
     "boq.all_statuses": "جميع الحالات",
@@ -505,7 +571,8 @@ const resource = {
     "boq.anomaly_cancelled": "تم إلغاء فحص الأسعار",
     "boq.anomaly_check_error": "فشل فحص الشذوذ",
     "boq.anomaly_rate_applied": "تم تطبيق السعر المقترح",
-    "boq.anomaly_tip": "يقارن كل سعر وحدة بأسعار السوق الوسيطة من قاعدة بيانات التكاليف. يُعلِم البنود مرتفعة ومنخفضة السعر.",
+    "boq.anomaly_tip":
+      "يقارن كل سعر وحدة بأسعار السوق الوسيطة من قاعدة بيانات التكاليف. يُعلِم البنود مرتفعة ومنخفضة السعر.",
     "boq.applied": "تم التطبيق",
     "boq.apply_all_suggestions": "تطبيق الكل",
     "boq.apply_defaults_failed": "فشل تطبيق القالب",
@@ -521,19 +588,22 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "السعر لكل وحدة",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab أو Enter للإدراج",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available": "${variantCount} متغيرات متاحة",
+    "boq.autocomplete_tooltip_variants_available":
+      "${variantCount} متغيرات متاحة",
     "boq.back_to_project": "العودة إلى المشروع",
     "boq.batch_actions": "إجراءات مجمَّعة",
     "boq.batch_change_unit": "تغيير الوحدة",
     "boq.batch_clear_selection": "مسح التحديد",
     "boq.batch_delete": "حذف المحدد",
     "boq.batch_delete_confirm": "حذف {{count}} بنود",
-    "boq.batch_delete_confirm_message": "هل أنت متأكد من حذف {{count}} بنود محدَّدة؟ لا يمكن التراجع.",
+    "boq.batch_delete_confirm_message":
+      "هل أنت متأكد من حذف {{count}} بنود محدَّدة؟ لا يمكن التراجع.",
     "boq.batch_delete_confirm_title": "حذف البنود",
     "boq.batch_deleted": "تم حذف {{count}} بنود",
     "boq.batch_unit_changed": "تم تغيير الوحدة إلى {{unit}} لـ {{count}} بنود",
     "boq.bim_agg_distinct_label": "{{n}} قيم",
-    "boq.bim_agg_distinct_title": "قيمة لكل عنصر — الجمع لا معنى له، لذا تُسرَد كل قيمة فريدة. انقر واحدة لتطبيقها.",
+    "boq.bim_agg_distinct_title":
+      "قيمة لكل عنصر — الجمع لا معنى له، لذا تُسرَد كل قيمة فريدة. انقر واحدة لتطبيقها.",
     "boq.bim_agg_sum_title": "مجموع عبر كل العناصر المرتبطة",
     "boq.bim_collapse_sums": "إظهار كميات العنوان فقط",
     "boq.bim_expand_sums": "إظهار كل القيم العددية من BIM",
@@ -570,19 +640,22 @@ const resource = {
     "boq.column_calc_invalid_formula": "صيغة بها خطأ في بناء الجملة",
     "boq.column_calc_needs_formula": "العمود المحسوب يحتاج صيغة",
     "boq.column_decimals": "الكسور العشرية",
-    "boq.column_delete_confirm": "هل تريد إزالة العمود «{{name}}»؟ تُحفظ القيم الموجودة في البنود لكن لا تُعرض.",
+    "boq.column_delete_confirm":
+      "هل تريد إزالة العمود «{{name}}»؟ تُحفظ القيم الموجودة في البنود لكن لا تُعرض.",
     "boq.column_delete_confirm_title": "إزالة العمود؟",
     "boq.column_delete_failed": "تعذّر إزالة العمود",
     "boq.column_formula": "الصيغة",
     "boq.column_name": "اسم العمود",
     "boq.column_name_duplicate": "يوجد بالفعل عمود باسم «{{name}}»",
     "boq.column_name_invalid": "اسم العمود غير صالح",
-    "boq.column_name_invalid_hint": "استخدم حروفًا (أي نظام كتابة) وأرقامًا ومسافات. يجب أن يبدأ بحرف.",
+    "boq.column_name_invalid_hint":
+      "استخدم حروفًا (أي نظام كتابة) وأرقامًا ومسافات. يجب أن يبدأ بحرف.",
     "boq.column_name_placeholder": "مثال: مورِّد، ملاحظات، رقم أمر الشراء",
     "boq.column_name_reserved": "«{{name}}» اسم عمود محجوز",
     "boq.column_options": "الخيارات (مفصولة بفاصلة أو سطر جديد)",
     "boq.column_removed": "تمت إزالة العمود",
-    "boq.column_select_needs_options": "عمود الاختيار يحتاج خيارًا واحدًا على الأقل",
+    "boq.column_select_needs_options":
+      "عمود الاختيار يحتاج خيارًا واحدًا على الأقل",
     "boq.column_test_formula": "اختبار",
     "boq.column_test_result": "النتيجة:",
     "boq.column_type": "النوع",
@@ -632,7 +705,8 @@ const resource = {
     "boq.cost_finder_search_placeholder": "ابحث في بنود التكلفة بالوصف...",
     "boq.cost_finder_short": "باحث التكلفة",
     "boq.cost_finder_title": "باحث التكاليف بالذكاء الاصطناعي",
-    "boq.cost_finder_tooltip": "ابحث في 55,000+ بند تكلفة بالوصف. اعثر على أسعار المواد والعمالة والمعدات من القواعد الإقليمية.",
+    "boq.cost_finder_tooltip":
+      "ابحث في 55,000+ بند تكلفة بالوصف. اعثر على أسعار المواد والعمالة والمعدات من القواعد الإقليمية.",
     "boq.cost_results_count": "{{loaded}}+ عنصر",
     "boq.cost_risk_base_total": "الإجمالي الأساسي",
     "boq.cost_risk_contingency": "الاحتياطي (P80 - P50)",
@@ -664,8 +738,10 @@ const resource = {
     "boq.current": "حالي",
     "boq.cursor_error_title": "فشل تحميل النتائج القديمة — جارٍ التحديث",
     "boq.custom_columns": "أعمدة مخصصة",
-    "boq.custom_columns_hint": "تظهر الأعمدة المخصصة في شبكة جدول الكميات قبل عمود الإجراءات. تُخزَّن القيم لكل بند وتُصدَّر مع جدول الكميات. إزالة عمود يخفيه لكن يحافظ على البيانات.",
-    "boq.custom_columns_subtitle": "أضف حقولك الخاصة — مورد، ملاحظات، معلومات الشراء…",
+    "boq.custom_columns_hint":
+      "تظهر الأعمدة المخصصة في شبكة جدول الكميات قبل عمود الإجراءات. تُخزَّن القيم لكل بند وتُصدَّر مع جدول الكميات. إزالة عمود يخفيه لكن يحافظ على البيانات.",
+    "boq.custom_columns_subtitle":
+      "أضف حقولك الخاصة — مورد، ملاحظات، معلومات الشراء…",
     "boq.date": "التاريخ",
     "boq.delete_failed": "فشل الحذف",
     "boq.delete_section": "حذف القسم مع كل البنود",
@@ -684,8 +760,10 @@ const resource = {
     "boq.dwg_link_tooltip_v2": "رسم DWG — انقر للتفاصيل والتنقل",
     "boq.editor": "محرر جدول الكميات",
     "boq.element_count": "{{count}} عناصر",
-    "boq.empty_position_quality_hint": "البند الفارغ يخفض نتيجة الجودة حتى تُملأ الكمية والسعر",
-    "boq.empty_section": "لا توجد بنود في هذا القسم. انقر \"إضافة بند\" لإضافة واحد.",
+    "boq.empty_position_quality_hint":
+      "البند الفارغ يخفض نتيجة الجودة حتى تُملأ الكمية والسعر",
+    "boq.empty_section":
+      'لا توجد بنود في هذا القسم. انقر "إضافة بند" لإضافة واحد.',
     "boq.enter_description": "أدخل الوصف...",
     "boq.errors": "أخطاء",
     "boq.estimate_type_budget": "ميزانية",
@@ -707,7 +785,8 @@ const resource = {
     "boq.export_format_excel": "Excel (.xlsx)",
     "boq.export_format_gaeb": "GAEB XML (.x83)",
     "boq.export_format_pdf": "PDF",
-    "boq.export_quality_warning_desc": "تقديرك بنتيجة جودة أقل من 60٪. الكميات الناقصة أو الأسعار الصفرية أو الأوصاف غير المكتملة قد تؤثر على المستند المصدَّر. ضع في اعتبارك مراجعة التقدير قبل التصدير.",
+    "boq.export_quality_warning_desc":
+      "تقديرك بنتيجة جودة أقل من 60٪. الكميات الناقصة أو الأسعار الصفرية أو الأوصاف غير المكتملة قد تؤثر على المستند المصدَّر. ضع في اعتبارك مراجعة التقدير قبل التصدير.",
     "boq.file_downloaded": "تم تنزيل الملف",
     "boq.filled": "ممتلئ",
     "boq.filtered": "مصفّاة",
@@ -720,28 +799,34 @@ const resource = {
     "boq.fx_rate_input": "سعر صرف {{from}}←{{to}}",
     "boq.fx_rate_label": "سعر الصرف",
     "boq.fx_rate_project_badge": "مشروع",
-    "boq.gaeb_export_desc": "سيُصدِّر هذا جدول الكميات بصيغة GAEB XML 3.3، متوافق مع سير عمل المناقصات القياسي.",
+    "boq.gaeb_export_desc":
+      "سيُصدِّر هذا جدول الكميات بصيغة GAEB XML 3.3، متوافق مع سير عمل المناقصات القياسي.",
     "boq.gaeb_export_title": "تصدير GAEB XML (X83)",
     "boq.gaeb_grand_total": "الإجمالي الكلي",
     "boq.gaeb_positions": "البنود",
     "boq.go_to_settings": "الذهاب إلى الإعدادات",
     "boq.got_it": "فهمت",
     "boq.grand_total": "الإجمالي الكلي",
-    "boq.grand_total_conversion_tooltip_v2": "جدول الكميات بالكامل مُعروض بـ {{disp}} بمعدل {{rate}} ({{base}} ← {{disp}}). للعرض فقط — يحتفظ الخادم بالقيم الأساسية. التبديل إلى «أساسي» لتحرير الأسعار.",
+    "boq.grand_total_conversion_tooltip_v2":
+      "جدول الكميات بالكامل مُعروض بـ {{disp}} بمعدل {{rate}} ({{base}} ← {{disp}}). للعرض فقط — يحتفظ الخادم بالقيم الأساسية. التبديل إلى «أساسي» لتحرير الأسعار.",
     "boq.grid_settings": "إعدادات الشبكة",
     "boq.gross_total": "الإجمالي الإجمالي",
     "boq.how_it_works": "كيف يعمل",
     "boq.ignore": "تجاهل",
     "boq.import": "استيراد",
-    "boq.import_catalog_hint": "استورد كتالوج موارد من الإعدادات أو صفحة الكتالوج",
+    "boq.import_catalog_hint":
+      "استورد كتالوج موارد من الإعدادات أو صفحة الكتالوج",
     "boq.import_database_cta": "استورد قاعدة بيانات",
     "boq.import_failed": "فشل الاستيراد",
     "boq.import_file": "استيراد ملف",
     "boq.import_rows": "استيراد {{count}} صفوف",
     "boq.import_started": "جارٍ استيراد {{name}}…",
-    "boq.import_started_gaeb_hint": "جارٍ تحليل GAEB XML — مستقل عن مساحة الأسماء، يدعم X81/X83/X84.",
-    "boq.import_started_hint": "الملفات الكبيرة (PDF / CAD / 1000+ صفوف) قد تستغرق حتى 60 ثانية.",
-    "boq.import_timeout": "لم يستجب الخادم خلال 90 ثانية. قد يكون الملف كبيرًا جدًا — جرّب تقسيمه.",
+    "boq.import_started_gaeb_hint":
+      "جارٍ تحليل GAEB XML — مستقل عن مساحة الأسماء، يدعم X81/X83/X84.",
+    "boq.import_started_hint":
+      "الملفات الكبيرة (PDF / CAD / 1000+ صفوف) قد تستغرق حتى 60 ثانية.",
+    "boq.import_timeout":
+      "لم يستجب الخادم خلال 90 ثانية. قد يكون الملف كبيرًا جدًا — جرّب تقسيمه.",
     "boq.import_tooltip": "استورد GAEB أو Excel أو CSV إلى جدول الكميات هذا",
     "boq.inline_edit_number": "تحرير القيمة",
     "boq.inline_edit_text": "تحرير النص",
@@ -754,15 +839,18 @@ const resource = {
     "boq.link_finance": "عرض الميزانية",
     "boq.link_validation": "تشغيل التحقق",
     "boq.linked_geometry": "هندسة مرتبطة",
-    "boq.list_subtitle_count": "{{boqCount}} تقديرات عبر {{projectCount}} مشاريع",
+    "boq.list_subtitle_count":
+      "{{boqCount}} تقديرات عبر {{projectCount}} مشاريع",
     "boq.load_more": "تحميل المزيد",
     "boq.loaded_n_of_m": "{{loaded}} من {{total}} عنصر",
     "boq.loading_element_data": "جارٍ تحميل بيانات العنصر...",
     "boq.loading_full_properties": "جارٍ تحميل كل الخصائص…",
     "boq.lock": "قفل التقدير",
-    "boq.lock_confirm": "قفل هذا التقدير؟\n\nالتقديرات المقفلة لا يمكن تحريرها. فك القفل يتطلب صلاحيات المسؤول.",
+    "boq.lock_confirm":
+      "قفل هذا التقدير؟\n\nالتقديرات المقفلة لا يمكن تحريرها. فك القفل يتطلب صلاحيات المسؤول.",
     "boq.lock_failed": "فشل القفل",
-    "boq.lock_tooltip": "القفل يمنع التحرير. أنشئ مراجعة لإجراء تغييرات على تقدير مقفل.",
+    "boq.lock_tooltip":
+      "القفل يمنع التحرير. أنشئ مراجعة لإجراء تغييرات على تقدير مقفل.",
     "boq.locked": "مقفل",
     "boq.locked_next": "التقدير مقفل. هل تريد إنشاء ميزانية مشروع؟",
     "boq.locked_success": "تم قفل التقدير",
@@ -790,7 +878,8 @@ const resource = {
     "boq.markups_title": "الهوامش والتكاليف العامة",
     "boq.mvp.apply": "تطبيق وإضافة إلى جدول الكميات",
     "boq.mvp.apply_to_remaining": "تطبيق على المتبقي {{count}}",
-    "boq.mvp.apply_to_remaining_hint": "استخدم هذه الاختيارات لجميع البنود متعددة المتغيرات الأخرى في هذه الدفعة",
+    "boq.mvp.apply_to_remaining_hint":
+      "استخدم هذه الاختيارات لجميع البنود متعددة المتغيرات الأخرى في هذه الدفعة",
     "boq.mvp.batch_progress": "العنصر {{current}} من {{total}}",
     "boq.mvp.bulk_cheapest": "الأرخص للكل",
     "boq.mvp.bulk_label": "تعبئة سريعة:",
@@ -815,7 +904,8 @@ const resource = {
     "boq.mvp.toast_applied": "تم اختيار {{count}} متغير",
     "boq.mvp.toast_applied_one": "تم اختيار بديل واحد",
     "boq.mvp.toast_applied_other": "تم اختيار {{count}} بديل",
-    "boq.mvp.toast_apply_to_remaining": "تم تطبيق الاختيارات على {{count}} بند إضافي",
+    "boq.mvp.toast_apply_to_remaining":
+      "تم تطبيق الاختيارات على {{count}} بند إضافي",
     "boq.n_selected": "{{count}} بنود محدَّدة",
     "boq.name": "الاسم",
     "boq.name_label": "اسم جدول الكميات",
@@ -830,16 +920,20 @@ const resource = {
     "boq.no_boqs_in_project": "لا توجد جداول كميات في هذا المشروع.",
     "boq.no_catalog_results": "لا توجد موارد تطابق بحثك",
     "boq.no_changes": "لا توجد تغييرات",
-    "boq.no_custom_columns": "لا توجد أعمدة مخصصة بعد. اختر إعدادًا مسبقًا أدناه أو أضف عمودك الخاص.",
-    "boq.no_databases_help": "لا توجد قاعدة بيانات أسعار على هذا الخادم، فلا يوجد ما يُعرض في البحث. استورد حزمة CWICR مجانية — 30 قاعدة بيانات إقليمية على بُعد نقرة.",
+    "boq.no_custom_columns":
+      "لا توجد أعمدة مخصصة بعد. اختر إعدادًا مسبقًا أدناه أو أضف عمودك الخاص.",
+    "boq.no_databases_help":
+      "لا توجد قاعدة بيانات أسعار على هذا الخادم، فلا يوجد ما يُعرض في البحث. استورد حزمة CWICR مجانية — 30 قاعدة بيانات إقليمية على بُعد نقرة.",
     "boq.no_databases_title": "لم تُثبَّت قاعدة بيانات تكلفة بعد",
     "boq.no_items_found": "لم يتم العثور على بنود مطابقة",
     "boq.no_markups": "لا هوامش بعد. أضف واحدًا أو طبق نموذجًا.",
     "boq.no_numeric_found": "لا توجد قيم عددية في هذا العنصر",
     "boq.no_numeric_quantities": "لا توجد كميات عددية",
     "boq.no_positions": "لا توجد بنود بعد. أضف قسمًا للبدء.",
-    "boq.no_quantities_hint_button": "لا توجد كميات — اضغط «إظهار الكل» أعلاه لعرض كل خصائص BIM",
-    "boq.no_resources": "لا توجد موارد معيّنة. اختر بند تكلفة بأيقونة ⚡ من اقتراحات الإكمال التلقائي للملء تلقائيًا.",
+    "boq.no_quantities_hint_button":
+      "لا توجد كميات — اضغط «إظهار الكل» أعلاه لعرض كل خصائص BIM",
+    "boq.no_resources":
+      "لا توجد موارد معيّنة. اختر بند تكلفة بأيقونة ⚡ من اقتراحات الإكمال التلقائي للملء تلقائيًا.",
     "boq.no_results": "لا توجد تقديرات مطابقة",
     "boq.no_results_hint": "حاول تعديل البحث أو عوامل التصفية",
     "boq.no_section": "بدون قسم (المستوى الأعلى)",
@@ -848,7 +942,8 @@ const resource = {
     "boq.not_found": "لم يتم العثور على جدول الكميات",
     "boq.of_estimates": "{{current}} من {{total}} تقديرات",
     "boq.open_in_bim": "فتح في BIM",
-    "boq.open_in_bim_title": "افتح في عارض ثلاثي الأبعاد مع تحديد العنصر المرتبط مسبقًا",
+    "boq.open_in_bim_title":
+      "افتح في عارض ثلاثي الأبعاد مع تحديد العنصر المرتبط مسبقًا",
     "boq.open_in_bim_viewer": "فتح في عارض BIM",
     "boq.options": "خيارات",
     "boq.ordinal": "بند",
@@ -856,15 +951,18 @@ const resource = {
     "boq.partial": "جزئي",
     "boq.paste_columns": "الأعمدة",
     "boq.paste_detected": "تم اكتشاف {{count}} صفوف",
-    "boq.paste_excel_hint": "انسخ الصفوف من Excel أو Google Sheets والصقها أدناه",
+    "boq.paste_excel_hint":
+      "انسخ الصفوف من Excel أو Google Sheets والصقها أدناه",
     "boq.paste_failed": "تعذّر اللصق — بيانات غير صالحة أو خلايا للقراءة فقط",
     "boq.paste_from_excel": "لصق من Excel",
     "boq.paste_from_excel_short": "لصق",
     "boq.paste_import_count": "تمت إضافة {{count}} بنود إلى جدول الكميات",
     "boq.paste_import_failed": "فشل الاستيراد",
     "boq.paste_import_success": "تم الاستيراد بنجاح",
-    "boq.paste_no_data": "لم تُكتشف صفوف صالحة. تأكد أن البيانات مفصولة بعلامة جدولة.",
-    "boq.paste_placeholder": "ألصق بيانات مفصولة بعلامة جدولة هنا...\n\nمثال:\nالوصف\tالوحدة\tالكمية\tالسعر\nأساس خرساني\tم3\t120\t185.00\nحديد تسليح B500S\tكغ\t2400\t1.45",
+    "boq.paste_no_data":
+      "لم تُكتشف صفوف صالحة. تأكد أن البيانات مفصولة بعلامة جدولة.",
+    "boq.paste_placeholder":
+      "ألصق بيانات مفصولة بعلامة جدولة هنا...\n\nمثال:\nالوصف\tالوحدة\tالكمية\tالسعر\nأساس خرساني\tم3\t120\t185.00\nحديد تسليح B500S\tكغ\t2400\t1.45",
     "boq.paste_showing": "عرض أول 50 من {{total}} صفوف",
     "boq.pdf_link_tooltip_v2": "حصر PDF — انقر للتفاصيل والتنقل",
     "boq.pending": "قيد الانتظار",
@@ -879,22 +977,26 @@ const resource = {
     "boq.position_duplicated": "تم تكرار البند",
     "boq.position_restored": "تم استعادة البند",
     "boq.position_variant_v_label": "توسيع الموارد",
-    "boq.position_variant_v_tooltip": "يحمل هذا البند موردًا متغيّرًا — انقر لتوسيع لوحة الموارد.",
+    "boq.position_variant_v_tooltip":
+      "يحمل هذا البند موردًا متغيّرًا — انقر لتوسيع لوحة الموارد.",
     "boq.positions": "بنود",
     "boq.positions_added": "تمت إضافة البنود من قاعدة بيانات التكاليف",
     "boq.positions_label": "بنود",
     "boq.positions_removed": "تمت إزالة {{count}} بنود",
     "boq.positions_reordered": "تمت إعادة ترتيب البنود",
     "boq.positions_short": "بنود",
-    "boq.preset_already_applied": "كل الأعمدة من هذا الإعداد المسبق موجودة بالفعل",
+    "boq.preset_already_applied":
+      "كل الأعمدة من هذا الإعداد المسبق موجودة بالفعل",
     "boq.preset_applied": "تمت إضافة {{count}} أعمدة من إعداد «{{name}}»",
     "boq.preset_partial": "تم تطبيق الإعداد المسبق جزئيًا",
     "boq.preset_regional": "معايير إقليمية",
     "boq.preset_universal": "بدء سريع بإعداد مسبق",
     "boq.preview": "معاينة",
-    "boq.preview_total_hint": "سعر الكتالوج × الكمية للتحديد. اختيارات المتغيرات قد تعدّل هذا.",
+    "boq.preview_total_hint":
+      "سعر الكتالوج × الكمية للتحديد. اختيارات المتغيرات قد تعدّل هذا.",
     "boq.price_check": "فحص الأسعار",
-    "boq.price_review_desc": "راجع كل اقتراح أدناه. اقبل لتحديث السعر، أو تجاهل للإبقاء على سعرك الحالي.",
+    "boq.price_review_desc":
+      "راجع كل اقتراح أدناه. اقبل لتحديث السعر، أو تجاهل للإبقاء على سعرك الحالي.",
     "boq.price_review_title": "نتائج فحص الأسعار",
     "boq.project": "المشروع",
     "boq.projects_label": "مشاريع",
@@ -926,26 +1028,34 @@ const resource = {
     "boq.quick_use_template": "استخدام قالب",
     "boq.quick_use_template_desc": "ابدأ من قالب تقدير جاهز",
     "boq.rate_applied": "تم تطبيق السعر",
-    "boq.rate_from_resources": "السعر محسوب من الموارد. حرّر الموارد الفردية للتغيير.",
+    "boq.rate_from_resources":
+      "السعر محسوب من الموارد. حرّر الموارد الفردية للتغيير.",
     "boq.recalc_confirm_button": "تحديث الأسعار",
-    "boq.recalc_confirm_step1": "1. ابحث في قاعدة بيانات التكاليف عن بنود مطابقة بالوصف",
+    "boq.recalc_confirm_step1":
+      "1. ابحث في قاعدة بيانات التكاليف عن بنود مطابقة بالوصف",
     "boq.recalc_confirm_step2": "2. أرفق تفاصيل الموارد (مواد، عمالة، معدات)",
     "boq.recalc_confirm_step3": "3. أعد حساب أسعار الوحدات من مكونات الموارد",
     "boq.recalc_confirm_subtitle": "مطابقة البنود مع قاعدة بيانات التكاليف",
     "boq.recalc_confirm_title": "تحديث أسعار الوحدات",
-    "boq.recalc_confirm_warning": "البنود ذات الأسعار اليدوية التي لا تطابق قاعدة بيانات التكاليف لن تتغير.",
+    "boq.recalc_confirm_warning":
+      "البنود ذات الأسعار اليدوية التي لا تطابق قاعدة بيانات التكاليف لن تتغير.",
     "boq.recalc_enriched": "تمت مطابقة {{count}} بنود مع قاعدة بيانات التكاليف",
-    "boq.recalc_skipped": "{{count}} بنود بدون بيانات تكلفة (تم الإبقاء على الأسعار اليدوية)",
+    "boq.recalc_skipped":
+      "{{count}} بنود بدون بيانات تكلفة (تم الإبقاء على الأسعار اليدوية)",
     "boq.recalc_updated": "تم إعادة حساب {{count}} أسعار وحدات من الموارد",
     "boq.recalculate": "إعادة الحساب",
-    "boq.recalculate_all_manual": "كل البنود تستخدم أسعارًا يدوية — أضف موارد من قاعدة بيانات التكاليف لتفعيل حساب الأسعار التلقائي.",
+    "boq.recalculate_all_manual":
+      "كل البنود تستخدم أسعارًا يدوية — أضف موارد من قاعدة بيانات التكاليف لتفعيل حساب الأسعار التلقائي.",
     "boq.recalculate_complete": "اكتملت إعادة الحساب",
     "boq.recalculate_failed": "فشلت إعادة الحساب",
-    "boq.recalculate_failed_hint": "تحقّق من تشغيل الخلفية وتحميل قاعدة بيانات التكاليف.",
+    "boq.recalculate_failed_hint":
+      "تحقّق من تشغيل الخلفية وتحميل قاعدة بيانات التكاليف.",
     "boq.recalculate_no_changes": "لا حاجة لتغييرات",
     "boq.recalculate_rates": "تحديث الأسعار",
-    "boq.recalculate_summary": "إعادة الحساب: {{sections}} أقسام، {{positions}} بنود",
-    "boq.recalculate_tip": "يطابق البنود مع قاعدة بيانات التكاليف، يرفق تفاصيل الموارد (مواد، عمالة، معدات)، ويعيد حساب أسعار الوحدات من المكونات.",
+    "boq.recalculate_summary":
+      "إعادة الحساب: {{sections}} أقسام، {{positions}} بنود",
+    "boq.recalculate_tip":
+      "يطابق البنود مع قاعدة بيانات التكاليف، يرفق تفاصيل الموارد (مواد، عمالة، معدات)، ويعيد حساب أسعار الوحدات من المكونات.",
     "boq.recalculating": "جارٍ التحديث...",
     "boq.recent_activity": "النشاط الأخير",
     "boq.redo": "إعادة (Ctrl+Y)",
@@ -954,10 +1064,12 @@ const resource = {
     "boq.remove_resource": "إزالة المورد",
     "boq.renumber": "إعادة ترقيم البنود",
     "boq.renumber_apply": "تطبيق إعادة الترقيم",
-    "boq.renumber_dialog_subtitle": "اختر نظام ترقيم. يُحفظ الترتيب الحالي — تُعاد كتابة الأرقام فقط.",
+    "boq.renumber_dialog_subtitle":
+      "اختر نظام ترقيم. يُحفظ الترتيب الحالي — تُعاد كتابة الأرقام فقط.",
     "boq.renumber_dialog_title": "إعادة ترقيم البنود",
     "boq.renumber_done": "تمت إعادة ترقيم {{count}} بنود",
-    "boq.renumber_done_hint": "تم حفظ الترتيب — تمت إعادة كتابة الأرقام فقط. التراجع بـ Ctrl+Z غير مدعوم لإعادة الترقيم.",
+    "boq.renumber_done_hint":
+      "تم حفظ الترتيب — تمت إعادة كتابة الأرقام فقط. التراجع بـ Ctrl+Z غير مدعوم لإعادة الترقيم.",
     "boq.renumber_failed": "فشل إعادة الترقيم",
     "boq.renumber_no_preview": "لا توجد بنود للمعاينة بعد.",
     "boq.renumber_pad": "حشو الأقسام بأصفار",
@@ -965,14 +1077,19 @@ const resource = {
     "boq.renumber_pad_on": "ستكون الأقسام 01، 02، 03 (مكوّن من رقمين بحشو)",
     "boq.renumber_preview": "معاينة (أول 5 بنود)",
     "boq.renumber_scheme_dotted": "عشري قصير",
-    "boq.renumber_scheme_dotted_desc": "ترقيم عشري قصير شائع في القياس بأسلوب NRM.",
+    "boq.renumber_scheme_dotted_desc":
+      "ترقيم عشري قصير شائع في القياس بأسلوب NRM.",
     "boq.renumber_scheme_gap10": "فجوة 10",
     "boq.renumber_scheme_gap100": "فجوة 100",
-    "boq.renumber_scheme_gap100_desc": "مساحة أكبر لجداول الكميات الكبيرة التي قد تنمو بعد المناقصة.",
-    "boq.renumber_scheme_gap10_desc": "تترك مساحة لإدراج بنود مثل 01.15 بين 01.10 و01.20 لاحقًا. مخرج المناقصات الألماني القياسي.",
+    "boq.renumber_scheme_gap100_desc":
+      "مساحة أكبر لجداول الكميات الكبيرة التي قد تنمو بعد المناقصة.",
+    "boq.renumber_scheme_gap10_desc":
+      "تترك مساحة لإدراج بنود مثل 01.15 بين 01.10 و01.20 لاحقًا. مخرج المناقصات الألماني القياسي.",
     "boq.renumber_scheme_sequential": "تسلسلي",
-    "boq.renumber_scheme_sequential_desc": "ترقيم تقليدي مدمج. الأفضل لجداول الكميات ثابتة النطاق التي لن تحصل على بنود إضافية لاحقًا.",
-    "boq.renumber_warning": "يطغى هذا على أي أرقام بنود محرّرة يدويًا. يُحفظ ترتيب العرض الحالي — تتغير الأرقام فقط.",
+    "boq.renumber_scheme_sequential_desc":
+      "ترقيم تقليدي مدمج. الأفضل لجداول الكميات ثابتة النطاق التي لن تحصل على بنود إضافية لاحقًا.",
+    "boq.renumber_warning":
+      "يطغى هذا على أي أرقام بنود محرّرة يدويًا. يُحفظ ترتيب العرض الحالي — تتغير الأرقام فقط.",
     "boq.renumbering": "جارٍ إعادة الترقيم...",
     "boq.reorder_failed": "فشلت إعادة ترتيب البنود",
     "boq.res_code": "الرمز",
@@ -989,21 +1106,27 @@ const resource = {
     "boq.resource_catalog_code": "رمز الكتالوج: {{code}}",
     "boq.resource_currency": "العملة",
     "boq.resource_currency_add_custom": "إضافة مخصصة: {{code}}",
-    "boq.resource_currency_custom": "عملة مخصصة: {{code}} (ليست في صرف المشروع أو قائمة ISO 4217)",
-    "boq.resource_currency_hint": "عملة هذا المورد. الافتراضي هو عملة المشروع الأساسية.",
-    "boq.resource_currency_no_match": "لا توجد مطابقات — اكتب حرفين على الأقل لإضافة رمز مخصص.",
+    "boq.resource_currency_custom":
+      "عملة مخصصة: {{code}} (ليست في صرف المشروع أو قائمة ISO 4217)",
+    "boq.resource_currency_hint":
+      "عملة هذا المورد. الافتراضي هو عملة المشروع الأساسية.",
+    "boq.resource_currency_no_match":
+      "لا توجد مطابقات — اكتب حرفين على الأقل لإضافة رمز مخصص.",
     "boq.resource_currency_pick": "العملة — {{symbol}} {{code}}",
     "boq.resource_currency_search": "اكتب أو ابحث (مثال: EUR، MYC)",
     "boq.resource_customised": "مورد مخصَّص — لا يوجد رمز كتالوج",
     "boq.resource_is_variant_badge": "مورد متغيّر — خيارات أسعار متعددة متاحة",
     "boq.resource_name": "الاسم",
     "boq.resource_name_placeholder": "مثال: خرسانة C30/37",
-    "boq.resource_no_fx_rate": "لا يوجد سعر صرف مهيّأ لـ {{code}} — الإجمالي معروض بـ {{code}}",
-    "boq.resource_no_fx_rate_click": "لا يوجد سعر صرف مهيّأ لـ {{code}} — انقر لضبط واحد في إعدادات المشروع",
+    "boq.resource_no_fx_rate":
+      "لا يوجد سعر صرف مهيّأ لـ {{code}} — الإجمالي معروض بـ {{code}}",
+    "boq.resource_no_fx_rate_click":
+      "لا يوجد سعر صرف مهيّأ لـ {{code}} — انقر لضبط واحد في إعدادات المشروع",
     "boq.resource_no_fx_short": "اضبط الصرف",
     "boq.resource_summary": "ملخص الموارد",
     "boq.resource_total": "إجمالي الموارد",
-    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base":
+      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "النوع",
     "boq.resource_type_composite": "مركب",
     "boq.resource_type_electricity": "كهرباء",
@@ -1014,13 +1137,19 @@ const resource = {
     "boq.resource_type_other": "أخرى",
     "boq.resource_type_subcontractor": "مقاول من الباطن",
     "boq.resource_type_variant_chip": "متغير",
-    "boq.resource_type_variant_tooltip": "مورد متغيّر — اختر من كتالوج {{base}}. انقر لإعادة تصنيف نوع المورد.",
-    "boq.resource_variant_bar_tooltip_default": "افتراضي تلقائي ({{strategy}}){{captured}} — انقر الشريحة للتحسين.",
-    "boq.resource_variant_bar_tooltip_picked": "متغير صريح: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip":
+      "مورد متغيّر — اختر من كتالوج {{base}}. انقر لإعادة تصنيف نوع المورد.",
+    "boq.resource_variant_bar_tooltip_default":
+      "افتراضي تلقائي ({{strategy}}){{captured}} — انقر الشريحة للتحسين.",
+    "boq.resource_variant_bar_tooltip_picked":
+      "متغير صريح: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default": "تم التطبيق التلقائي بسعر {{strategy}}. {{count}} خيارات ({{range}}). انقر للتحسين.",
-    "boq.resource_variant_pill_tooltip_picked": "متغير: {{label}} @ {{price}} {{currency}}{{delta}}. انقر للتبديل.",
-    "boq.resource_variant_pill_tooltip_unset": "{{count}} متغيرات مسعّرة متاحة ({{range}}). انقر لاختيار واحد.",
+    "boq.resource_variant_pill_tooltip_default":
+      "تم التطبيق التلقائي بسعر {{strategy}}. {{count}} خيارات ({{range}}). انقر للتحسين.",
+    "boq.resource_variant_pill_tooltip_picked":
+      "متغير: {{label}} @ {{price}} {{currency}}{{delta}}. انقر للتبديل.",
+    "boq.resource_variant_pill_tooltip_unset":
+      "{{count}} متغيرات مسعّرة متاحة ({{range}}). انقر لاختيار واحد.",
     "boq.resources_added": "تمت إضافة الموارد إلى البند",
     "boq.resources_total": "إجمالي الموارد",
     "boq.restore": "استعادة",
@@ -1031,7 +1160,8 @@ const resource = {
     "boq.rs_abc_pill_tooltip": "فئة {{cls}} · {{pct}}٪ من تكلفة موارد المشروع",
     "boq.rs_all": "الكل",
     "boq.rs_col_abc": "ABC ٪",
-    "boq.rs_col_abc_tooltip": "تحليل باريتو / ABC — البنود A تشكل ~80٪ من التكلفة، B ~15٪، C ~5٪. انقر لإبراز حدود الفئات.",
+    "boq.rs_col_abc_tooltip":
+      "تحليل باريتو / ABC — البنود A تشكل ~80٪ من التكلفة، B ~15٪، C ~5٪. انقر لإبراز حدود الفئات.",
     "boq.rs_col_avg_rate": "متوسط السعر",
     "boq.rs_col_name": "الاسم",
     "boq.rs_col_positions": "بند",
@@ -1058,10 +1188,13 @@ const resource = {
     "boq.rs_total": "الإجمالي",
     "boq.rs_variant_applied_to_n": "تم التطبيق على {{count}} بند",
     "boq.rs_variant_pill_mixed": "مختلط · {{count}} خيارات",
-    "boq.rs_variant_pill_mixed_tooltip": "تم اختيار متغيرات مختلفة عبر البنود. انقر لاختيار واحد للجميع.",
+    "boq.rs_variant_pill_mixed_tooltip":
+      "تم اختيار متغيرات مختلفة عبر البنود. انقر لاختيار واحد للجميع.",
     "boq.rs_variant_pill_options": "▾ {{count}} خيارات",
-    "boq.rs_variant_pill_picked_tooltip": "متغير: {{label}}. انقر للتبديل (يُطبَّق على كل البنود).",
-    "boq.rs_variant_pill_unset_tooltip": "{{count}} متغيرات مسعّرة متاحة. انقر لاختيار واحد لكل البنود.",
+    "boq.rs_variant_pill_picked_tooltip":
+      "متغير: {{label}}. انقر للتبديل (يُطبَّق على كل البنود).",
+    "boq.rs_variant_pill_unset_tooltip":
+      "{{count}} متغيرات مسعّرة متاحة. انقر لاختيار واحد لكل البنود.",
     "boq.save_as_assembly": "حفظ كبند مركّب",
     "boq.save_as_assembly_failed": "فشل إنشاء البند المركّب",
     "boq.save_failed": "فشل الحفظ",
@@ -1075,8 +1208,10 @@ const resource = {
     "boq.scope_of_work_label": "ما هو العمل المُضمَّن في هذا السعر",
     "boq.scope_placeholder": "نطاق جدول الكميات هذا...",
     "boq.search_and_add": "ابحث عن بنود وأضفها إلى تقديرك",
-    "boq.search_and_add_resources": "ابحث في بنود التكلفة لإضافتها كموارد للبند",
-    "boq.search_catalog_resources": "ابحث في الموارد بالاسم أو الرمز أو الفئة...",
+    "boq.search_and_add_resources":
+      "ابحث في بنود التكلفة لإضافتها كموارد للبند",
+    "boq.search_catalog_resources":
+      "ابحث في الموارد بالاسم أو الرمز أو الفئة...",
     "boq.search_cost_items": "ابحث في بنود التكلفة حسب الوصف...",
     "boq.search_estimates": "البحث في التقديرات...",
     "boq.search_placeholder": "البحث في التقديرات...",
@@ -1144,9 +1279,11 @@ const resource = {
     "boq.source_dwg": "رسم DWG",
     "boq.source_id_label": "رقم البند",
     "boq.source_measurement_label": "القياس",
-    "boq.source_no_measurement": "بيانات القياس غير مخزنة محليًا — افتح المصدر لعرض التفاصيل.",
+    "boq.source_no_measurement":
+      "بيانات القياس غير مخزنة محليًا — افتح المصدر لعرض التفاصيل.",
     "boq.source_open": "فتح المصدر",
-    "boq.source_open_title": "افتح المستند المصدر في عارضه مع التركيز على هذا البند",
+    "boq.source_open_title":
+      "افتح المستند المصدر في عارضه مع التركيز على هذا البند",
     "boq.source_pdf": "حصر PDF",
     "boq.source_pdf_page": "الصفحة {{page}}",
     "boq.start_building": "ابدأ بناء تقديرك",
@@ -1156,11 +1293,14 @@ const resource = {
     "boq.step_add_positions": "إضافة بنود",
     "boq.step_add_positions_desc": "أضف بنودًا بأوصاف ووحدات لكل قسم",
     "boq.step_add_sections": "إضافة أقسام",
-    "boq.step_add_sections_desc": "نظّم تقديرك إلى أقسام (مثل الأساسات، الجدران، السقف)",
+    "boq.step_add_sections_desc":
+      "نظّم تقديرك إلى أقسام (مثل الأساسات، الجدران، السقف)",
     "boq.step_review": "مراجعة الإجماليات",
-    "boq.step_review_desc": "أضف هوامش الربح للمصاريف العامة والأرباح، ثم راجع الإجمالي الكلي",
+    "boq.step_review_desc":
+      "أضف هوامش الربح للمصاريف العامة والأرباح، ثم راجع الإجمالي الكلي",
     "boq.step_set_quantities": "تحديد الكميات",
-    "boq.step_set_quantities_desc": "أدخل الكميات وأسعار الوحدة لكل بند لحساب الإجماليات",
+    "boq.step_set_quantities_desc":
+      "أدخل الكميات وأسعار الوحدة لكل بند لحساب الإجماليات",
     "boq.subtotal": "الإجمالي الفرعي",
     "boq.suggest_classification": "صنّف",
     "boq.suggest_rate": "اقتراح سعر",
@@ -1173,15 +1313,20 @@ const resource = {
     "boq.templates": "قوالب جدول الكميات",
     "boq.templates_coming_soon": "القوالب قريبًا",
     "boq.templates_coming_soon_desc": "سيتوفر محدد القوالب في تحديث مستقبلي.",
-    "boq.templates_subtitle": "ابدأ بقالب احترافي لنوع المبنى الخاص بك. اختر قالبًا، حدد المساحة، وأنشئ جدول كميات كاملاً على الفور.",
-    "boq.tip_autocomplete": "املأ الأوصاف لجميع البنود — ابدأ بالكتابة لرؤية اقتراحات من قاعدة بيانات التكاليف",
-    "boq.tip_markups": "أضف هوامش ربح للمصاريف العامة والأرباح باستخدام قسم الهوامش أسفل الجدول",
+    "boq.templates_subtitle":
+      "ابدأ بقالب احترافي لنوع المبنى الخاص بك. اختر قالبًا، حدد المساحة، وأنشئ جدول كميات كاملاً على الفور.",
+    "boq.tip_autocomplete":
+      "املأ الأوصاف لجميع البنود — ابدأ بالكتابة لرؤية اقتراحات من قاعدة بيانات التكاليف",
+    "boq.tip_markups":
+      "أضف هوامش ربح للمصاريف العامة والأرباح باستخدام قسم الهوامش أسفل الجدول",
     "boq.tip_menu": "انقر على قائمة (...) في القسم لإضافة بنود أو حذفه",
-    "boq.tip_sections": "أضف أقسامًا لتنظيم تقديرك (مثل الأساسات، الجدران، السقف)",
+    "boq.tip_sections":
+      "أضف أقسامًا لتنظيم تقديرك (مثل الأساسات، الجدران، السقف)",
     "boq.tip_tab": "استخدم Tab للتنقل بين الحقول، Enter لحفظ التغييرات",
     "boq.tips_title": "نصائح وتلميحات",
     "boq.title": "جدول الكميات",
-    "boq.toolbar_hint": "استخدم شريط الأدوات لإضافة أقسام وبنود، والاستيراد من قاعدة بيانات التكاليف أو البنود المركبة، والتصدير إلى GAEB/PDF/Excel، أو تشغيل تقدير الذكاء الاصطناعي. الصافي = مجموع إجماليات البنود. الهوامش تُطبّق كنسب مئوية. الإجمالي الكلي = الصافي + الهوامش + ضريبة القيمة المضافة.",
+    "boq.toolbar_hint":
+      "استخدم شريط الأدوات لإضافة أقسام وبنود، والاستيراد من قاعدة بيانات التكاليف أو البنود المركبة، والتصدير إلى GAEB/PDF/Excel، أو تشغيل تقدير الذكاء الاصطناعي. الصافي = مجموع إجماليات البنود. الهوامش تُطبّق كنسب مئوية. الإجمالي الكلي = الصافي + الهوامش + ضريبة القيمة المضافة.",
     "boq.toolbar_quality": "الجودة",
     "boq.toolbar_summary_aria": "{{sections}} أقسام · {{positions}} بنود",
     "boq.total": "الإجمالي",
@@ -1198,9 +1343,12 @@ const resource = {
     "boq.unit_options": "خيارات الوحدة",
     "boq.unit_rate": "سعر الوحدة",
     "boq.unit_rate_variant_pill": "▾ {{count}} خيارات",
-    "boq.unit_rate_variant_pill_tooltip_default": "تم التطبيق التلقائي بسعر {{strategy}} ({{count}} خيارات، {{range}}). انقر للتحسين.",
-    "boq.unit_rate_variant_pill_tooltip_picked": "حاليًا: {{label}}. انقر للتبديل إلى متغير مختلف.",
-    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} متغيرات مسعّرة متاحة ({{range}}). انقر لاختيار واحد.",
+    "boq.unit_rate_variant_pill_tooltip_default":
+      "تم التطبيق التلقائي بسعر {{strategy}} ({{count}} خيارات، {{range}}). انقر للتحسين.",
+    "boq.unit_rate_variant_pill_tooltip_picked":
+      "حاليًا: {{label}}. انقر للتبديل إلى متغير مختلف.",
+    "boq.unit_rate_variant_pill_tooltip_unset":
+      "{{count}} متغيرات مسعّرة متاحة ({{range}}). انقر لاختيار واحد.",
     "boq.unlock": "فك القفل",
     "boq.unlock_failed": "فشل فك القفل",
     "boq.unlocked_success": "تم فك قفل التقدير",
@@ -1208,7 +1356,8 @@ const resource = {
     "boq.untitled_section": "(بدون عنوان)",
     "boq.update_failed": "فشل تحديث البند",
     "boq.validate": "التحقق",
-    "boq.validate_tip": "يفحص الأوصاف الناقصة، الكميات الصفرية، فجوات الأسعار، الامتثال للتصنيف، والبنود المكررة.",
+    "boq.validate_tip":
+      "يفحص الأوصاف الناقصة، الكميات الصفرية، فجوات الأسعار، الامتثال للتصنيف، والبنود المكررة.",
     "boq.validating": "جارٍ الفحص...",
     "boq.validation_all_passed": "اجتازت كل الفحوص البالغة {{count}}",
     "boq.validation_complete": "اكتمل التحقق",
@@ -1228,21 +1377,26 @@ const resource = {
     "boq.variables_description": "الوصف",
     "boq.variables_description_placeholder": "ملاحظة اختيارية",
     "boq.variables_empty": "لا توجد متغيرات بعد. أضف الأول أدناه.",
-    "boq.variables_help": "حدد قيمًا مسماة يمكنك الإشارة إليها في الصيغ. مثال: اضبط $GFA = 1500، ثم اكتب =$GFA * 0.15 في أي خلية كمية أو سعر.",
+    "boq.variables_help":
+      "حدد قيمًا مسماة يمكنك الإشارة إليها في الصيغ. مثال: اضبط $GFA = 1500، ثم اكتب =$GFA * 0.15 في أي خلية كمية أو سعر.",
     "boq.variables_name": "الاسم",
     "boq.variables_saved": "تم حفظ المتغيرات",
     "boq.variables_title": "متغيرات جدول الكميات",
     "boq.variables_type": "النوع",
     "boq.variables_value": "القيمة",
     "boq.variant_applied": "تم تطبيق النسخة: {{label}}",
-    "boq.variant_default_applied_msg": "انقر الصف في جدول الكميات لاختيار متغير محدد.",
+    "boq.variant_default_applied_msg":
+      "انقر الصف في جدول الكميات لاختيار متغير محدد.",
     "boq.variant_default_applied_title": "تم التطبيق بالسعر المتوسط",
     "boq.variant_default_pill": "افتراضي · حسّن ▾",
-    "boq.variant_default_pill_tooltip": "تم التطبيق التلقائي بسعر {{strategy}}. انقر خلية سعر الوحدة لاختيار متغير محدد.",
+    "boq.variant_default_pill_tooltip":
+      "تم التطبيق التلقائي بسعر {{strategy}}. انقر خلية سعر الوحدة لاختيار متغير محدد.",
     "boq.variant_default_pill_with_count": "مجرَّد · {{count}} خيارات",
     "boq.variant_header_code_tooltip": "مورد متغيّر مجرّد — يرث كمية البند",
-    "boq.variant_header_pill_tooltip": "اختر / بدّل متغير سعر لهذا المورد المجرّد",
-    "boq.variant_header_qty_edit_tooltip": "انقر مرتين لتحرير الكمية (متزامنة مع البند).",
+    "boq.variant_header_pill_tooltip":
+      "اختر / بدّل متغير سعر لهذا المورد المجرّد",
+    "boq.variant_header_qty_edit_tooltip":
+      "انقر مرتين لتحرير الكمية (متزامنة مع البند).",
     "boq.variant_header_type_label": "بديل",
     "boq.variant_header_type_tooltip": "انقر لاختيار متغير سعر من الكتالوج",
     "boq.variant_resource_added": "تمت إضافة المورد: {{label}}",
@@ -1250,24 +1404,32 @@ const resource = {
     "boq.variant_resource_repicked": "تم تحديث المتغير: {{label}}",
     "boq.vat": "ضريبة القيمة المضافة",
     "boq.vector_download": "نزّل قاعدة بيانات التكاليف أولاً",
-    "boq.vector_download_desc": "استيراد قواعد بيانات CWICR (55,000+ بند، 9 مناطق)",
-    "boq.vector_index_desc": "بناء فهرس متجهات من بنود التكلفة المستوردة (~30 ث)",
+    "boq.vector_download_desc":
+      "استيراد قواعد بيانات CWICR (55,000+ بند، 9 مناطق)",
+    "boq.vector_index_desc":
+      "بناء فهرس متجهات من بنود التكلفة المستوردة (~30 ث)",
     "boq.vector_index_error": "فشل الفهرسة",
-    "boq.vector_index_error_msg": "فشل فهرسة قاعدة بيانات التكاليف. جرّب استيراد قاعدة بيانات أولاً.",
+    "boq.vector_index_error_msg":
+      "فشل فهرسة قاعدة بيانات التكاليف. جرّب استيراد قاعدة بيانات أولاً.",
     "boq.vector_index_now": "فهرسة قاعدة بيانات التكاليف الموجودة",
     "boq.vector_indexed": "قاعدة المتجهات جاهزة",
-    "boq.vector_indexed_msg": "تمت فهرسة قاعدة بيانات التكاليف. ميزات الذكاء الاصطناعي متاحة الآن.",
+    "boq.vector_indexed_msg":
+      "تمت فهرسة قاعدة بيانات التكاليف. ميزات الذكاء الاصطناعي متاحة الآن.",
     "boq.vector_indexing": "جارٍ الفهرسة...",
-    "boq.vector_setup_desc": "اقتراحات الأسعار بالذكاء الاصطناعي والتصنيف وكشف الشذوذ تتطلب قاعدة بيانات تكلفة مفهرسة بالمتجهات. إعداد لمرة واحدة يستغرق حوالي 30 ثانية.",
+    "boq.vector_setup_desc":
+      "اقتراحات الأسعار بالذكاء الاصطناعي والتصنيف وكشف الشذوذ تتطلب قاعدة بيانات تكلفة مفهرسة بالمتجهات. إعداد لمرة واحدة يستغرق حوالي 30 ثانية.",
     "boq.vector_setup_subtitle": "إعداد مطلوب لمرة واحدة",
     "boq.vector_setup_title": "إعداد ميزات الذكاء الاصطناعي",
-    "boq.vector_status_empty": "لم تُعثر على قاعدة متجهات. استورد قاعدة بيانات تكلفة أو افهرس بنود التكلفة الموجودة.",
-    "boq.vector_status_partial": "قاعدة المتجهات بها {{count}} بنود مفهرسة. الحد الأدنى ~100 بند مطلوب لميزات الذكاء الاصطناعي.",
+    "boq.vector_status_empty":
+      "لم تُعثر على قاعدة متجهات. استورد قاعدة بيانات تكلفة أو افهرس بنود التكلفة الموجودة.",
+    "boq.vector_status_partial":
+      "قاعدة المتجهات بها {{count}} بنود مفهرسة. الحد الأدنى ~100 بند مطلوب لميزات الذكاء الاصطناعي.",
     "boq.version_history": "سجل الإصدارات",
     "boq.view_comments": "التعليقات ({{count}})",
     "boq.view_in_bim": "عرض في BIM ثلاثي الأبعاد ({{count}})",
     "boq.view_in_cost_db": "عرض في قاعدة بيانات التكاليف",
-    "boq.warn_lump_sum": "مبلغ مقطوع — الكمية × السعر قد لا يطابق الإجمالي المتوقع",
+    "boq.warn_lump_sum":
+      "مبلغ مقطوع — الكمية × السعر قد لا يطابق الإجمالي المتوقع",
     "boq.warn_zero_rate": "بدون سعر — راجع قبل التثبيت",
     "boq.warnings": "تحذيرات",
     "catalog.add_resource": "إضافة مورد",
@@ -1292,12 +1454,15 @@ const resource = {
     "catalog.creating": "جارٍ الإنشاء...",
     "catalog.delete_failed": "فشل الحذف",
     "catalog.delete_region": "حذف المنطقة",
-    "catalog.empty_hint": "استورد كتالوجًا إقليميًا لملء الموارد، أو استخرج من بنود التكلفة.",
-    "catalog.empty_with_regions": "لا توجد موارد تطابق عوامل التصفية الحالية. حاول تغيير النوع أو المنطقة.",
+    "catalog.empty_hint":
+      "استورد كتالوجًا إقليميًا لملء الموارد، أو استخرج من بنود التكلفة.",
+    "catalog.empty_with_regions":
+      "لا توجد موارد تطابق عوامل التصفية الحالية. حاول تغيير النوع أو المنطقة.",
     "catalog.import": "استيراد",
     "catalog.import_failed": "فشل الاستيراد",
     "catalog.import_region": "استيراد منطقة",
-    "catalog.import_regions_desc": "تنزيل كتالوجات موارد جاهزة من قواعد بيانات CWICR الإقليمية",
+    "catalog.import_regions_desc":
+      "تنزيل كتالوجات موارد جاهزة من قواعد بيانات CWICR الإقليمية",
     "catalog.import_regions_title": "استيراد كتالوج الموارد",
     "catalog.import_success": "اكتمل الاستيراد",
     "catalog.importing": "جارٍ الاستيراد...",
@@ -1306,7 +1471,8 @@ const resource = {
     "catalog.loaded": "تم التحميل",
     "catalog.my_catalog": "كتالوجي",
     "catalog.my_catalog_empty": "كتالوجك فارغ",
-    "catalog.my_catalog_empty_desc": "أضف المواد والمعدات وأسعار العمالة الخاصة بك. يمكن استخدام الموارد المخصصة في البنود المركبة وتطبيقها على بنود جدول الكميات.",
+    "catalog.my_catalog_empty_desc":
+      "أضف المواد والمعدات وأسعار العمالة الخاصة بك. يمكن استخدام الموارد المخصصة في البنود المركبة وتطبيقها على بنود جدول الكميات.",
     "catalog.name": "الاسم",
     "catalog.no_results": "لم يتم العثور على موارد",
     "catalog.no_results_hint": "حاول تعديل البحث أو عوامل التصفية",
@@ -1332,13 +1498,15 @@ const resource = {
     "catalog.total": "الإجمالي",
     "catalog.unit_rate": "سعر الوحدة",
     "catalog.usage": "الاستخدام",
-    "catalog.what_is_catalog": "أسعار المواد والعمالة والمعدات والمشغلين منظمة حسب المنطقة. ثبّت الكتالوجات الإقليمية من الوحدات، ثم استخدمها لبناء بنود مركبة أو إضافة بنود مباشرة إلى جدول الكميات.",
+    "catalog.what_is_catalog":
+      "أسعار المواد والعمالة والمعدات والمشغلين منظمة حسب المنطقة. ثبّت الكتالوجات الإقليمية من الوحدات، ثم استخدمها لبناء بنود مركبة أو إضافة بنود مباشرة إلى جدول الكميات.",
     "catalog.with_n_components": "مع {{count}} مكونات",
     "cde.action_promote": "Promote",
     "cde.approval_comments_placeholder": "ملاحظات اختيارية لسجل التدقيق...",
     "cde.approval_field_comments": "الملاحظات",
     "cde.approval_field_signature": "التوقيع",
-    "cde.approval_modal_body": "ترقية {{code}} من SHARED إلى PUBLISHED تستوجب موافقة موقّعة (ISO 19650). يُسجَّل توقيعك وملاحظاتك في سجل التدقيق.",
+    "cde.approval_modal_body":
+      "ترقية {{code}} من SHARED إلى PUBLISHED تستوجب موافقة موقّعة (ISO 19650). يُسجَّل توقيعك وملاحظاتك في سجل التدقيق.",
     "cde.approval_modal_title": "توقيع موافقة البوابة B",
     "cde.approval_signature_placeholder": "الاسم الكامل / الأحرف الأولى",
     "cde.approval_signature_required": "التوقيع مطلوب",
@@ -1363,7 +1531,8 @@ const resource = {
     "cde.field_title": "Title",
     "cde.gate_label": "البوابة {{code}}",
     "cde.history_by_role": "بواسطة: {{role}}",
-    "cde.history_empty": "لا توجد انتقالات حالة بعد — قم بترقية الحاوية لبدء سجل التدقيق.",
+    "cde.history_empty":
+      "لا توجد انتقالات حالة بعد — قم بترقية الحاوية لبدء سجل التدقيق.",
     "cde.history_signature": "موقّع: {{signer}}",
     "cde.history_title": "سجل انتقالات الحالة",
     "cde.label_revisions": "سجل المراجعات",
@@ -1390,7 +1559,8 @@ const resource = {
     "changeorders.add_item": "إضافة بند",
     "changeorders.all_statuses": "جميع الحالات",
     "changeorders.approve": "موافقة",
-    "changeorders.approve_confirm": "الموافقة على أمر التغيير هذا؟ سيُطبَّق التأثير على ميزانية المشروع.",
+    "changeorders.approve_confirm":
+      "الموافقة على أمر التغيير هذا؟ سيُطبَّق التأثير على ميزانية المشروع.",
     "changeorders.approved": "تمت الموافقة على أمر التغيير",
     "changeorders.approved_at": "تاريخ الموافقة",
     "changeorders.approved_impact": "التأثير الموافق عليه",
@@ -1402,7 +1572,8 @@ const resource = {
     "changeorders.delete_item_confirm": "حذف هذا البند؟",
     "changeorders.deleted": "تم حذف أمر التغيير",
     "changeorders.empty": "لا توجد أوامر تغيير",
-    "changeorders.empty_desc": "أنشئ أمر تغيير لتتبع تغييرات النطاق مع التأثير على التكلفة والجدول الزمني",
+    "changeorders.empty_desc":
+      "أنشئ أمر تغيير لتتبع تغييرات النطاق مع التأثير على التكلفة والجدول الزمني",
     "changeorders.export_csv": "تصدير CSV",
     "changeorders.filter_status": "تصفية حسب الحالة",
     "changeorders.item_added": "تمت إضافة البند",
@@ -1419,7 +1590,8 @@ const resource = {
     "changeorders.orig_rate": "السعر الأصلي",
     "changeorders.pending": "معلّق",
     "changeorders.pending_approval": "في انتظار الموافقة",
-    "changeorders.pending_approval_hint": "المديرون والمسؤولون فقط يمكنهم الموافقة.",
+    "changeorders.pending_approval_hint":
+      "المديرون والمسؤولون فقط يمكنهم الموافقة.",
     "changeorders.reason": "السبب",
     "changeorders.reject": "رفض",
     "changeorders.reject_confirm": "رفض أمر التغيير هذا؟",
@@ -1435,10 +1607,12 @@ const resource = {
     "changeorders.status_submitted": "مُقدَّم",
     "changeorders.status_under_review": "قيد المراجعة",
     "changeorders.submit": "تقديم",
-    "changeorders.submit_confirm": "تقديم أمر التغيير هذا للمراجعة؟ لا يمكن التراجع عن هذا.",
+    "changeorders.submit_confirm":
+      "تقديم أمر التغيير هذا للمراجعة؟ لا يمكن التراجع عن هذا.",
     "changeorders.submitted": "تم تقديم أمر التغيير",
     "changeorders.submitted_at": "تاريخ التقديم",
-    "changeorders.subtitle": "تتبع تغييرات النطاق مع التأثير على التكلفة والجدول الزمني",
+    "changeorders.subtitle":
+      "تتبع تغييرات النطاق مع التأثير على التكلفة والجدول الزمني",
     "changeorders.title_placeholder": "مثال: أعمال أساسات إضافية",
     "changeorders.total": "إجمالي الأوامر",
     "changeorders.type": "النوع",
@@ -1447,7 +1621,8 @@ const resource = {
     "changeorders.type_removed": "محذوف",
     "changeorders.unit_placeholder": "م²، م³، قطعة...",
     "changeorders.workflow": "سير العمل",
-    "changeorders.workflow_desc": "سير عمل أمر التغيير: مسودة (إعداد نطاق التغيير) ← مُقدَّم (إرسال للمراجعة) ← موافق عليه أو مرفوض. يتتبع كل أمر التأثير على التكلفة والجدول الزمني بالأيام. أضف بنوداً لتفصيل ما تغيّر — الكميات والأسعار الأصلية مقابل الجديدة. يُحسب فارق التكلفة تلقائياً.",
+    "changeorders.workflow_desc":
+      "سير عمل أمر التغيير: مسودة (إعداد نطاق التغيير) ← مُقدَّم (إرسال للمراجعة) ← موافق عليه أو مرفوض. يتتبع كل أمر التأثير على التكلفة والجدول الزمني بالأيام. أضف بنوداً لتفصيل ما تغيّر — الكميات والأسعار الأصلية مقابل الجديدة. يُحسب فارق التكلفة تلقائياً.",
     "command_palette.action_import_database": "استيراد قاعدة بيانات",
     "command_palette.action_new_boq": "جدول كميات جديد",
     "command_palette.action_new_project": "مشروع جديد",
@@ -1542,7 +1717,8 @@ const resource = {
     "common.previous": "السابق",
     "common.project": "المشروع",
     "common.quantity": "الكمية",
-    "common.rate_limit_wait": "يرجى الانتظار {{seconds}} ثانية قبل المحاولة مجدداً.",
+    "common.rate_limit_wait":
+      "يرجى الانتظار {{seconds}} ثانية قبل المحاولة مجدداً.",
     "common.recommended": "موصى به",
     "common.region": "المنطقة",
     "common.remove": "إزالة",
@@ -1589,8 +1765,10 @@ const resource = {
     "compliance.doc_type.permit_electrical": "ترخيص كهرباء",
     "compliance.doc_type.permit_other": "ترخيص آخر",
     "compliance.doc_type.permit_plumbing": "ترخيص سباكة",
-    "compliance.empty.description": "تتبّع وثائق التأمين والتراخيص والكفالات والشهادات. احصل على تحذير قبل انتهاء كل منها.",
-    "compliance.empty.no_project_description": "مستندات الامتثال مرتبطة بالمشروع — افتح مشروعًا أولاً.",
+    "compliance.empty.description":
+      "تتبّع وثائق التأمين والتراخيص والكفالات والشهادات. احصل على تحذير قبل انتهاء كل منها.",
+    "compliance.empty.no_project_description":
+      "مستندات الامتثال مرتبطة بالمشروع — افتح مشروعًا أولاً.",
     "compliance.empty.no_project_title": "افتح مشروعًا",
     "compliance.empty.title": "لا توجد مستندات امتثال بعد",
     "compliance.field.attachment": "مستند مرفق (اختياري)",
@@ -1612,7 +1790,8 @@ const resource = {
     "compliance.modal.create_submit": "إنشاء المستند",
     "compliance.modal.create_title": "مستند امتثال جديد",
     "compliance.page.new": "مستند جديد",
-    "compliance.page.subtitle": "تتبّع التأمين والتراخيص والكفالات والشهادات مع تذكيرات بانتهاء الصلاحية.",
+    "compliance.page.subtitle":
+      "تتبّع التأمين والتراخيص والكفالات والشهادات مع تذكيرات بانتهاء الصلاحية.",
     "compliance.page.title": "مستندات الامتثال",
     "compliance.status.active": "ساري",
     "compliance.status.cancelled": "ملغى",
@@ -1639,7 +1818,8 @@ const resource = {
     "conflict.manual_placeholder": "اكتب القيمة المدموجة...",
     "conflict.next": "التالي",
     "conflict.panel_aria_label": "لوحة حل التعارض",
-    "conflict.panel_subtitle": "قام متعاون عن بُعد بتعديل الحقل نفسه. اختر طريقة الحل.",
+    "conflict.panel_subtitle":
+      "قام متعاون عن بُعد بتعديل الحقل نفسه. اختر طريقة الحل.",
     "conflict.panel_title": "تم اكتشاف تعارض في الدمج",
     "conflict.previous": "السابق",
     "conflict.their_version": "نسختهم",
@@ -1722,7 +1902,8 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} م²",
     "costmodel.benchmark_cost_per_m2": "التكلفة / م²",
     "costmodel.benchmark_current_cost": "الحالي: {{value}}/م²",
-    "costmodel.benchmark_enter_area": "أدخل مساحة المشروع لعرض مقارنة تكلفة المتر المربع المرجعية",
+    "costmodel.benchmark_enter_area":
+      "أدخل مساحة المشروع لعرض مقارنة تكلفة المتر المربع المرجعية",
     "costmodel.benchmark_per_m2": "لكل م²",
     "costmodel.benchmark_project_area": "مساحة المشروع (م²)",
     "costmodel.benchmark_project_type": "نوع المشروع",
@@ -1766,7 +1947,8 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "الحالة",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint": "للانتهاء ضمن الميزانية، تحتاج CPI بقيمة {{tcpi}} من الآن",
+    "costmodel.evm_tcpi_hint":
+      "للانتهاء ضمن الميزانية، تحتاج CPI بقيمة {{tcpi}} من الآن",
     "costmodel.evm_time_elapsed": "الوقت المنقضي",
     "costmodel.evm_title": "تحليل القيمة المكتسبة",
     "costmodel.evm_unknown": "غير معروف",
@@ -1790,7 +1972,8 @@ const resource = {
     "costmodel.total_budget": "إجمالي الميزانية",
     "costmodel.variance": "التباين",
     "costmodel.vs_budget": "مقابل الميزانية",
-    "costmodel.what_is_5d": "إدارة التكلفة خماسية الأبعاد تضيف تتبع التكلفة عبر الزمن لمشروعك. راقب الميزانية مقابل المصروف الفعلي بمخططات منحنى S، وتتبع القيمة المكتسبة (SPI = كفاءة الجدول الزمني، CPI = كفاءة التكلفة — كلاهما >= 1.0 يعني صحي)، وشغّل سيناريوهات ماذا لو للتنبؤ بالنتائج.",
+    "costmodel.what_is_5d":
+      "إدارة التكلفة خماسية الأبعاد تضيف تتبع التكلفة عبر الزمن لمشروعك. راقب الميزانية مقابل المصروف الفعلي بمخططات منحنى S، وتتبع القيمة المكتسبة (SPI = كفاءة الجدول الزمني، CPI = كفاءة التكلفة — كلاهما >= 1.0 يعني صحي)، وشغّل سيناريوهات ماذا لو للتنبؤ بالنتائج.",
     "costmodel.whatif_adjusted_bac": "BAC المعدّل",
     "costmodel.whatif_adjusted_eac": "EAC المعدّل",
     "costmodel.whatif_calculate": "حساب التأثير",
@@ -1801,7 +1984,8 @@ const resource = {
     "costmodel.whatif_material": "تكلفة المواد",
     "costmodel.whatif_original_bac": "BAC الأصلي",
     "costmodel.whatif_reset": "إعادة تعيين",
-    "costmodel.whatif_scenario_name": "ماذا لو: م{{material}}% ع{{labor}}% مد{{duration}}%",
+    "costmodel.whatif_scenario_name":
+      "ماذا لو: م{{material}}% ع{{labor}}% مد{{duration}}%",
     "costmodel.whatif_title": "سيناريوهات ماذا لو",
     "costs.active": "نشط",
     "costs.active_db_changed": "تم تغيير القاعدة النشطة",
@@ -1826,7 +2010,8 @@ const resource = {
     "costs.choose_variant": "اختر نسخة السعر",
     "costs.classification": "التصنيف",
     "costs.clear_all": "مسح الكل",
-    "costs.clear_all_confirm_body": "سيؤدي ذلك إلى إزالة دائمة لجميع بنود التكلفة CWICR البالغة {{count}}. يمكنك إعادة استيرادها لاحقًا.",
+    "costs.clear_all_confirm_body":
+      "سيؤدي ذلك إلى إزالة دائمة لجميع بنود التكلفة CWICR البالغة {{count}}. يمكنك إعادة استيرادها لاحقًا.",
     "costs.clear_all_confirm_title": "مسح كل القواعد البالغ عددها {{count}}؟",
     "costs.clear_failed": "فشل المسح",
     "costs.clear_filters": "مسح الكل",
@@ -1842,7 +2027,8 @@ const resource = {
     "costs.component_labor": "عمالة",
     "costs.component_material": "مواد",
     "costs.confirm_delete": "هل تريد حذف هذا البند المخصص؟",
-    "costs.confirm_delete_region": "هل تريد حذف كل بنود التكلفة لـ {{region}}؟ لا يمكن التراجع.",
+    "costs.confirm_delete_region":
+      "هل تريد حذف كل بنود التكلفة لـ {{region}}؟ لا يمكن التراجع.",
     "costs.confirm_delete_title": "حذف بند التكلفة؟",
     "costs.copy_rate": "نسخ السعر",
     "costs.cost_items_count": "أكثر من 55,000 بند تكلفة",
@@ -1870,7 +2056,8 @@ const resource = {
     "costs.cwicr_match.query_label": "الاستعلام",
     "costs.cwicr_match.search": "بحث",
     "costs.cwicr_match.title": "مطابقة أسعار CWICR",
-    "costs.db_downloading": "جارٍ تنزيل وفهرسة بنود التكلفة مع تفاصيل الموارد الكاملة. إعداد لمرة واحدة.",
+    "costs.db_downloading":
+      "جارٍ تنزيل وفهرسة بنود التكلفة مع تفاصيل الموارد الكاملة. إعداد لمرة واحدة.",
     "costs.db_installed": "تم تثبيت قاعدة البيانات بنجاح",
     "costs.db_installing": "جارٍ تثبيت {{name}}...",
     "costs.db_saved_offline": "تم حفظ بنود التكلفة محليًا ومتاحة دون اتصال.",
@@ -1878,13 +2065,16 @@ const resource = {
     "costs.description_placeholder": "مثال: جدار خرساني مسلح C30/37، 25 سم",
     "costs.duplicates_skipped": "تم تخطي المكررات",
     "costs.empty_hint": "ابدأ بالكتابة للبحث في قاعدة بيانات التكاليف",
-    "costs.empty_pick_region_above": "اختر بطاقة منطقة أعلاه وانقر «تثبيت» لتحميل قاعدة بيانات تكلفة إقليمية.",
+    "costs.empty_pick_region_above":
+      "اختر بطاقة منطقة أعلاه وانقر «تثبيت» لتحميل قاعدة بيانات تكلفة إقليمية.",
     "costs.equipment": "المعدات",
     "costs.escalated_cost": "التكلفة المعدَّلة",
     "costs.escalation": "التعديل",
     "costs.escalation_calculator": "حاسبة تعديل التكلفة",
-    "costs.escalation_desc": "اضبط التكاليف وفقًا للتضخم باستخدام مؤشرات البناء المنشورة",
-    "costs.escalation_disclaimer": "بناءً على مؤشرات منشورة. تحقّق ببيانات خاصة بالمشروع.",
+    "costs.escalation_desc":
+      "اضبط التكاليف وفقًا للتضخم باستخدام مؤشرات البناء المنشورة",
+    "costs.escalation_disclaimer":
+      "بناءً على مؤشرات منشورة. تحقّق ببيانات خاصة بالمشروع.",
     "costs.escalation_factor": "المعامل",
     "costs.export": "تصدير",
     "costs.export_excel": "تصدير Excel",
@@ -1893,12 +2083,14 @@ const resource = {
     "costs.export_success_msg": "تم تنزيل ملف Excel.",
     "costs.favourites": "المفضلة",
     "costs.filters_active": "مرشحات نشطة",
-    "costs.import_accepted": "Excel (.xlsx) أو CSV (.csv) - حد أقصى 10 ميجابايت",
+    "costs.import_accepted":
+      "Excel (.xlsx) أو CSV (.csv) - حد أقصى 10 ميجابايت",
     "costs.import_all": "استيراد الكل",
     "costs.import_and_more": "و {{count}} أخطاء أخرى",
     "costs.import_another": "استيراد آخر",
     "costs.import_click_to_change": "انقر لاختيار ملف مختلف",
-    "costs.import_columns_hint": "يتم الكشف التلقائي عن الأعمدة. الرؤوس المقبولة: الرمز، الوصف، الوحدة، السعر/التكلفة، العملة، DIN 276/التصنيف.",
+    "costs.import_columns_hint":
+      "يتم الكشف التلقائي عن الأعمدة. الرؤوس المقبولة: الرمز، الوصف، الوحدة، السعر/التكلفة، العملة، DIN 276/التصنيف.",
     "costs.import_complete": "اكتمل الاستيراد",
     "costs.import_database": "استيراد قاعدة البيانات",
     "costs.import_drop_here": "أسقط ملفك هنا",
@@ -1907,9 +2099,11 @@ const resource = {
     "costs.import_errors": "أخطاء",
     "costs.import_failed": "فشل الاستيراد",
     "costs.import_file_too_large": "الملف كبير جدًا",
-    "costs.import_first_hint": "استورد قاعدة بيانات تكاليف إقليمية لبدء البحث في أكثر من 55,000 بند.",
+    "costs.import_first_hint":
+      "استورد قاعدة بيانات تكاليف إقليمية لبدء البحث في أكثر من 55,000 بند.",
     "costs.import_format_csv": "CSV (.csv) بنفس الأعمدة",
-    "costs.import_format_excel": "Excel (.xlsx) بأعمدة: الرمز، الوصف، الوحدة، السعر",
+    "costs.import_format_excel":
+      "Excel (.xlsx) بأعمدة: الرمز، الوصف، الوحدة، السعر",
     "costs.import_formats_title": "التنسيقات المدعومة",
     "costs.import_go_to_database": "الذهاب إلى قاعدة بيانات التكاليف",
     "costs.import_imported": "مستورد",
@@ -1941,17 +2135,22 @@ const resource = {
     "costs.loading_databases": "جارٍ تحميل القواعد…",
     "costs.manual_rate": "سعر يدوي (% سنويًا)",
     "costs.materials": "المواد",
-    "costs.n_cost_items_to_recipe": "{{count}} بنود تكلفة ← وصفة قابلة لإعادة الاستخدام",
+    "costs.n_cost_items_to_recipe":
+      "{{count}} بنود تكلفة ← وصفة قابلة لإعادة الاستخدام",
     "costs.n_items_selected": "تم تحديد {{count}} بنود",
     "costs.n_positions_will_be_created": "سيتم إنشاء {{count}} بنود",
     "costs.n_selected": "{{count}} محدَّد",
-    "costs.no_boqs_helper": "لا توجد جداول كميات في هذا المشروع. أنشئ واحدًا أولاً في محرر جدول الكميات.",
+    "costs.no_boqs_helper":
+      "لا توجد جداول كميات في هذا المشروع. أنشئ واحدًا أولاً في محرر جدول الكميات.",
     "costs.no_database_loaded": "لم يتم تحميل قاعدة بيانات",
-    "costs.no_databases_installed": "لا توجد قواعد مثبتة بعد. اختر منطقة أعلاه للتثبيت.",
+    "costs.no_databases_installed":
+      "لا توجد قواعد مثبتة بعد. اختر منطقة أعلاه للتثبيت.",
     "costs.no_favourites": "لا توجد مفضّلات بعد",
-    "costs.no_favourites_hint": "انقر أيقونة النجمة على أي بند تكلفة لإضافته إلى مفضّلتك",
+    "costs.no_favourites_hint":
+      "انقر أيقونة النجمة على أي بند تكلفة لإضافته إلى مفضّلتك",
     "costs.no_recent": "لا توجد بنود مستخدمة مؤخرًا",
-    "costs.no_recent_hint": "ستظهر هنا البنود التي تضيفها إلى جدول الكميات للوصول السريع",
+    "costs.no_recent_hint":
+      "ستظهر هنا البنود التي تضيفها إلى جدول الكميات للوصول السريع",
     "costs.no_results": "لم يتم العثور على بنود تكلفة",
     "costs.no_results_hint": "حاول تعديل البحث أو عوامل التصفية",
     "costs.no_variants_hint": "سعر واحد",
@@ -1964,13 +2163,15 @@ const resource = {
     "costs.phase_finalizing": "جارٍ الإنهاء...",
     "costs.phase_reading": "جارٍ قراءة ملف Parquet...",
     "costs.phase_writing": "جارٍ الكتابة إلى قاعدة البيانات المحلية...",
-    "costs.positions_created_hint": "تم إنشاء البنود بأسعار وحدات من قاعدة بيانات التكاليف",
+    "costs.positions_created_hint":
+      "تم إنشاء البنود بأسعار وحدات من قاعدة بيانات التكاليف",
     "costs.rate": "السعر",
     "costs.recently_used": "المستخدمة مؤخرًا",
     "costs.region_cleared": "تم مسح المنطقة",
     "costs.region_filter_count": "{{shown}} من {{total}}",
     "costs.region_filter_no_results": "لا توجد مناطق تطابق «{{q}}»",
-    "costs.region_filter_placeholder": "تصفية حسب الدولة أو المدينة أو العملة أو اللغة…",
+    "costs.region_filter_placeholder":
+      "تصفية حسب الدولة أو المدينة أو العملة أو اللغة…",
     "costs.region_plural": "مناطق",
     "costs.region_singular": "منطقة",
     "costs.remove_from_favourites": "إزالة من المفضّلة",
@@ -1978,7 +2179,8 @@ const resource = {
     "costs.search_hint": "ابحث في بنود التكلفة حسب الوصف أو الرمز",
     "costs.search_in_region": "ابحث في {{name}}...",
     "costs.search_placeholder": "البحث بالوصف أو الرمز...",
-    "costs.semantic_placeholder": "صِف ما تحتاجه (الذكاء الاصطناعي يجد المشابه)...",
+    "costs.semantic_placeholder":
+      "صِف ما تحتاجه (الذكاء الاصطناعي يجد المشابه)...",
     "costs.set_active": "تعيين كنشط",
     "costs.showing": "عرض",
     "costs.showing_range": "{{from}}-{{to}} من {{total}}",
@@ -2019,14 +2221,16 @@ const resource = {
     "costs.variant_sort_price_asc": "السعر ↑",
     "costs.variant_sort_price_desc": "السعر ↓",
     "costs.variant_use_average": "استخدام السعر المتوسط",
-    "costs.variant_use_default_tooltip": "تطبيق السعر المتوسط دون اختيار متغير محدد. يمكنك التحسين لاحقًا بالنقر على الصف.",
+    "costs.variant_use_default_tooltip":
+      "تطبيق السعر المتوسط دون اختيار متغير محدد. يمكنك التحسين لاحقًا بالنقر على الصف.",
     "costs.variant_use_median": "استخدام السعر الوسيط",
     "costs.variants_count": "{{count}} نسخة",
     "costs.variants_range": "{{min}} — {{max}}",
     "costs.vec_indexing_all": "جارٍ توليد المتجهات لكل المناطق...",
     "costs.vec_indexing_region": "جارٍ توليد المتجهات لـ {{name}}...",
     "costs.vec_phase_checking": "جارٍ فحص المتجهات الجاهزة على GitHub...",
-    "costs.vec_phase_embedding": "جارٍ توليد متجهات 384 بُعد من بنود التكلفة...",
+    "costs.vec_phase_embedding":
+      "جارٍ توليد متجهات 384 بُعد من بنود التكلفة...",
     "costs.vec_phase_indexing": "جارٍ الفهرسة في LanceDB وتحديث الإحصاءات...",
     "costs.vec_phase_model": "جارٍ تحميل نموذج التضمين (لمرة واحدة فقط)...",
     "costs.vec_phase_progress": "الخطوة {{step}} من 4",
@@ -2034,7 +2238,8 @@ const resource = {
     "costs.vec_step_fetch": "جلب",
     "costs.vec_step_index": "فهرسة",
     "costs.vec_step_model": "نموذج",
-    "costs.what_is_cost_db": "أسعار الوحدة والأسعار المركبة للمواد والعمالة والمعدات. استورد قواعد بيانات إقليمية (CWICR وBKI وRSMeans) من الوحدات أو أضف أسعارًا مخصصة. فعّل البحث الدلالي بالذكاء الاصطناعي للاستعلامات بلغة طبيعية.",
+    "costs.what_is_cost_db":
+      "أسعار الوحدة والأسعار المركبة للمواد والعمالة والمعدات. استورد قواعد بيانات إقليمية (CWICR وBKI وRSMeans) من الوحدات أو أضف أسعارًا مخصصة. فعّل البحث الدلالي بالذكاء الاصطناعي للاستعلامات بلغة طبيعية.",
     "costs.yearly_breakdown": "تفصيل سنة بسنة",
     "costs.yes_clear_all": "نعم، مسح الكل",
     "dashboard.active_projects": "المشاريع النشطة",
@@ -2058,12 +2263,14 @@ const resource = {
     "dashboard.getting_started": "البدء",
     "dashboard.import_database": "استيراد قاعدة البيانات",
     "dashboard.import_existing_boq": "استيراد BOQ موجود",
-    "dashboard.import_existing_boq_desc": "استخدام الذكاء الاصطناعي للتقدير من مستند موجود",
+    "dashboard.import_existing_boq_desc":
+      "استخدام الذكاء الاصطناعي للتقدير من مستند موجود",
     "dashboard.install_demo": "تثبيت مشروع تجريبي",
     "dashboard.install_demo_desc": "مشروع سكني جاهز ببيانات واقعية",
     "dashboard.kpi_active_estimates": "التقديرات النشطة",
     "dashboard.kpi_estimates_unit": "تقدير{{s}}",
-    "dashboard.kpi_hint": "ملخص عبر جميع المشاريع. تتحدث القيم عند إضافة تقديرات وأنشطة جدول زمني.",
+    "dashboard.kpi_hint":
+      "ملخص عبر جميع المشاريع. تتحدث القيم عند إضافة تقديرات وأنشطة جدول زمني.",
     "dashboard.kpi_no_schedules": "لا توجد جداول زمنية",
     "dashboard.kpi_not_validated": "غ.م.",
     "dashboard.kpi_quality": "نقاط الجودة",
@@ -2090,15 +2297,19 @@ const resource = {
     "dashboard.run_setup": "تشغيل معالج الإعداد",
     "dashboard.show_shortcuts": "عرض اختصارات لوحة المفاتيح",
     "dashboard.step_ai_search": "تفعيل البحث بالذكاء الاصطناعي",
-    "dashboard.step_ai_search_desc": "توليد تضمينات متجهية للمطابقة الدلالية للتكاليف",
+    "dashboard.step_ai_search_desc":
+      "توليد تضمينات متجهية للمطابقة الدلالية للتكاليف",
     "dashboard.step_build_boq": "بناء جدول الكميات",
     "dashboard.step_build_boq_desc": "أنشئ جدول كميات بمساعدة الذكاء الاصطناعي",
     "dashboard.step_connect_ai": "ربط الذكاء الاصطناعي",
-    "dashboard.step_connect_ai_desc": "أضف مفاتيح API الخاصة بك للتقدير المدعوم بالذكاء الاصطناعي",
+    "dashboard.step_connect_ai_desc":
+      "أضف مفاتيح API الخاصة بك للتقدير المدعوم بالذكاء الاصطناعي",
     "dashboard.step_create_project": "إنشاء مشروع",
-    "dashboard.step_create_project_desc": "ابدأ مشروع تقدير تكاليف البناء الأول",
+    "dashboard.step_create_project_desc":
+      "ابدأ مشروع تقدير تكاليف البناء الأول",
     "dashboard.step_load_db": "تحميل قاعدة بيانات التكاليف",
-    "dashboard.step_load_db_desc": "استورد بيانات أسعار إقليمية بأكثر من 55,000 بند",
+    "dashboard.step_load_db_desc":
+      "استورد بيانات أسعار إقليمية بأكثر من 55,000 بند",
     "dashboard.subtitle": "مساحة عمل تقدير تكاليف البناء",
     "dashboard.subtitle_2": "تخطيط ذكي للموارد لمشاريعك الإنشائية",
     "dashboard.system_status": "حالة النظام",
@@ -2110,14 +2321,17 @@ const resource = {
     "dashboard.value_by_project": "القيمة حسب المشروع",
     "dashboard.vector_db": "قاعدة البيانات المتجهية",
     "dashboard.welcome": "مرحبًا بك في OpenConstructionERP",
-    "dashboard.welcome_body": "هذا المشروع مبني ومُصان من قِبل المجتمع. دعمك يساعدنا في إضافة ميزات جديدة وقواعد بيانات إقليمية والإبقاء عليه مجانياً للجميع.",
+    "dashboard.welcome_body":
+      "هذا المشروع مبني ومُصان من قِبل المجتمع. دعمك يساعدنا في إضافة ميزات جديدة وقواعد بيانات إقليمية والإبقاء عليه مجانياً للجميع.",
     "dashboard.welcome_consult": "استشارات احترافية",
     "dashboard.welcome_consult_desc": "نشر مخصص وتدريب وحلول مؤسسية عالمية",
     "dashboard.welcome_desc": "ابدأ بتثبيت مشروع تجريبي أو أنشئ مشروعك الخاص.",
     "dashboard.welcome_sponsor": "كن راعياً",
-    "dashboard.welcome_sponsor_desc": "موّل ميزات جديدة وأبقِ المشروع مجانياً للجميع",
+    "dashboard.welcome_sponsor_desc":
+      "موّل ميزات جديدة وأبقِ المشروع مجانياً للجميع",
     "dashboard.welcome_star": "أضف نجمة على GitHub",
-    "dashboard.welcome_star_desc": "ساعد الآخرين على اكتشاف المشروع — يستغرق ثانيتين",
+    "dashboard.welcome_star_desc":
+      "ساعد الآخرين على اكتشاف المشروع — يستغرق ثانيتين",
     "dashboard.welcome_start": "ابدأ الآن",
     "dashboard.welcome_sub": "تقدير تكاليف البناء — مجاني ومفتوح المصدر",
     "dashboard.welcome_title": "مرحباً بك في OpenConstructionERP",
@@ -2126,7 +2340,8 @@ const resource = {
     "demo.install": "تثبيت",
     "demo.install_error": "فشل تثبيت المشروع التجريبي. يرجى المحاولة مرة أخرى.",
     "demo.installing": "جارٍ التثبيت...",
-    "demo.modal_subtitle": "ثبّت مشروعًا كاملاً بجدول كميات وجدول زمني وميزانية ومناقصات",
+    "demo.modal_subtitle":
+      "ثبّت مشروعًا كاملاً بجدول كميات وجدول زمني وميزانية ومناقصات",
     "demo.modal_title": "استيراد مشروع تجريبي",
     "documents.cat_all": "الكل",
     "documents.cat_contract": "عقد",
@@ -2145,43 +2360,51 @@ const resource = {
     "documents.drop_hint": "اسحب وأفلت الملفات هنا، أو انقر على تحميل",
     "documents.drop_hint_types": "PDF، صور، Excel، DWG، IFC — أي نوع ملف",
     "documents.empty": "لا توجد مستندات بعد",
-    "documents.empty_hint": "قم بتحميل ملفك الأول — رسومات أو عقود أو صور أو أي مستند مشروع.",
+    "documents.empty_hint":
+      "قم بتحميل ملفك الأول — رسومات أو عقود أو صور أو أي مستند مشروع.",
     "documents.file_too_large": "{{name}} يتجاوز حد 100 ميغابايت",
     "documents.no_results": "لم يتم العثور على نتائج",
     "documents.no_results_hint": "جرّب مصطلح بحث آخر",
     "documents.preview": "معاينة",
     "documents.search": "البحث عن الملفات...",
     "documents.select_project": "اختر مشروعاً",
-    "documents.select_project_hint": "استخدم محوّل المشاريع في الرأس لاختيار مشروع أولاً.",
+    "documents.select_project_hint":
+      "استخدم محوّل المشاريع في الرأس لاختيار مشروع أولاً.",
     "documents.sort_date": "حسب التاريخ",
     "documents.sort_name": "حسب الاسم",
     "documents.sort_size": "حسب الحجم",
     "documents.stats": "{{count}} ملفات · {{size}}",
-    "documents.subtitle": "تحميل وإدارة ملفات المشروع — الرسومات والعقود والمواصفات",
+    "documents.subtitle":
+      "تحميل وإدارة ملفات المشروع — الرسومات والعقود والمواصفات",
     "documents.title": "المستندات",
     "documents.upload": "تحميل الملفات",
     "documents.upload_failed": "فشل التحميل",
     "documents.upload_skipped": "تم تخطي الملف",
-    "documents.upload_summary": "اكتمل التحميل: {{success}} تم تحميلها، {{failed}} فشلت",
+    "documents.upload_summary":
+      "اكتمل التحميل: {{success}} تم تحميلها، {{failed}} فشلت",
     "documents.uploaded": "تم التحميل",
     "error.details": "تفاصيل الخطأ",
     "error.go_back": "الرجوع",
     "error.go_dashboard": "الذهاب إلى لوحة التحكم",
     "error.not_found": "الصفحة غير موجودة",
-    "error.not_found_desc": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها. تحقق من الرابط أو عد إلى لوحة التحكم.",
+    "error.not_found_desc":
+      "الصفحة التي تبحث عنها غير موجودة أو تم نقلها. تحقق من الرابط أو عد إلى لوحة التحكم.",
     "error.something_wrong": "حدث خطأ ما",
     "error.try_again": "حاول مرة أخرى",
-    "error.unexpected_error": "حدث خطأ غير متوقع أثناء عرض هذه الصفحة. يمكنك محاولة إعادة التحميل أو العودة إلى لوحة التحكم.",
+    "error.unexpected_error":
+      "حدث خطأ غير متوقع أثناء عرض هذه الصفحة. يمكنك محاولة إعادة التحميل أو العودة إلى لوحة التحكم.",
     "errors.bad_request": "تعذر معالجة الطلب. يرجى التحقق من المدخلات.",
     "errors.client": "تعذر إكمال الطلب.",
-    "errors.conflict": "تعارض مع البيانات الحالية — يرجى التحديث والمحاولة مرة أخرى.",
+    "errors.conflict":
+      "تعارض مع البيانات الحالية — يرجى التحديث والمحاولة مرة أخرى.",
     "errors.forbidden": "ليس لديك صلاحية لتنفيذ هذا الإجراء.",
     "errors.network": "تعذر الوصول إلى الخادم. يرجى التحقق من الاتصال.",
     "errors.not_found": "لم يتم العثور على العنصر المطلوب.",
     "errors.payload_too_large": "الملف كبير جدًا. يرجى تجربة ملف أصغر.",
     "errors.rate_limit": "طلبات كثيرة جدًا. يرجى الانتظار قليلاً.",
     "errors.server": "خطأ في الخادم. يرجى المحاولة لاحقًا.",
-    "errors.timeout": "استغرق الطلب وقتًا طويلاً وتم إلغاؤه. يرجى المحاولة مرة أخرى.",
+    "errors.timeout":
+      "استغرق الطلب وقتًا طويلاً وتم إلغاؤه. يرجى المحاولة مرة أخرى.",
     "errors.unauthorized": "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.",
     "errors.unavailable": "الخادم غير متاح مؤقتًا. يرجى المحاولة لاحقًا.",
     "errors.unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
@@ -2193,7 +2416,8 @@ const resource = {
     "explorer.boq_create_failed": "فشل إنشاء بنود BOQ",
     "explorer.boq_created_success": "تم إنشاء {{count}} بند في BOQ",
     "explorer.categories": "الفئات",
-    "explorer.chart_click_hint": "انقر على شريط / شريحة / نقطة للتصفية المتقاطعة",
+    "explorer.chart_click_hint":
+      "انقر على شريط / شريحة / نقطة للتصفية المتقاطعة",
     "explorer.chart_type": "النوع",
     "explorer.clear_all_filters": "مسح الكل",
     "explorer.click_header_sort": "انقر على رؤوس الأعمدة للترتيب",
@@ -2206,7 +2430,8 @@ const resource = {
     "explorer.conversion_failed": "فشل التحويل",
     "explorer.converters": "محوّلات CAD",
     "explorer.converters_desc": "محوّلات مجتمع DDC لاستخراج بيانات عناصر BIM",
-    "explorer.converters_external_hint": "محوّلات CAD تستلزم تثبيت أدوات DDC cad2data على خادمك",
+    "explorer.converters_external_hint":
+      "محوّلات CAD تستلزم تثبيت أدوات DDC cad2data على خادمك",
     "explorer.converting": "جارٍ تحويل {{name}}...",
     "explorer.converting_msg": "جارٍ التحويل...",
     "explorer.count": "العدد",
@@ -2215,7 +2440,8 @@ const resource = {
     "explorer.create_boq_title": "إنشاء BOQ من Pivot",
     "explorer.create_positions": "إنشاء {{count}} بند",
     "explorer.data_completeness": "اكتمال البيانات",
-    "explorer.delete_session_confirm": "حذف هذا التحليل؟ لا يمكن التراجع عن هذا.",
+    "explorer.delete_session_confirm":
+      "حذف هذا التحليل؟ لا يمكن التراجع عن هذا.",
     "explorer.delete_view": "حذف",
     "explorer.documents": "المستندات",
     "explorer.done": "اكتمل التحويل! جارٍ التحميل...",
@@ -2237,7 +2463,8 @@ const resource = {
     "explorer.heatmap": "تبديل خريطة الحرارة للقيم",
     "explorer.heatmap_short": "خريطة الحرارة",
     "explorer.installed": "مُثبَّت",
-    "explorer.invalid_format": "صيغة الملف غير مدعومة. استخدم RVT أو IFC أو DWG أو DGN.",
+    "explorer.invalid_format":
+      "صيغة الملف غير مدعومة. استخدم RVT أو IFC أو DWG أو DGN.",
     "explorer.like_describe": "مثل df.describe()",
     "explorer.limit": "الحد",
     "explorer.line": "خطي",
@@ -2248,12 +2475,15 @@ const resource = {
     "explorer.model_name": "اسم النموذج",
     "explorer.more_columns": "المزيد",
     "explorer.new_file": "ملف جديد",
-    "explorer.no_active_filters": "انقر على أي شريط أو شريحة في الرسم البياني للتصفية عبر التبويبات.",
+    "explorer.no_active_filters":
+      "انقر على أي شريط أو شريحة في الرسم البياني للتصفية عبر التبويبات.",
     "explorer.no_chart_data": "لا توجد بيانات للرسم البياني",
     "explorer.no_groups": "لم تُعثر على مجموعات. جرّب أعمدة مختلفة.",
-    "explorer.no_saved_views": "لا توجد عروض محفوظة بعد. احفظ الفلاتر والرسم البياني وإعدادات pivot للرجوع إليها لاحقاً.",
+    "explorer.no_saved_views":
+      "لا توجد عروض محفوظة بعد. احفظ الفلاتر والرسم البياني وإعدادات pivot للرجوع إليها لاحقاً.",
     "explorer.non_null": "غير فارغ",
-    "explorer.or_click": "أو انقر للتصفح — جدول البيانات والـ pivot والرسوم البيانية والإحصائيات",
+    "explorer.or_click":
+      "أو انقر للتصفح — جدول البيانات والـ pivot والرسوم البيانية والإحصائيات",
     "explorer.page_of": "صفحة {{page}} من {{total}}",
     "explorer.page_summary": "مجاميع الصفحة:",
     "explorer.pie": "دائري",
@@ -2269,19 +2499,23 @@ const resource = {
     "explorer.save_permanently": "حفظ دائم",
     "explorer.save_to_project": "حفظ في المشروع (BIM Hub)",
     "explorer.save_to_project_btn": "حفظ في المشروع",
-    "explorer.save_to_project_desc": "ينشئ نموذج BIM بجميع العناصر المستخرجة في المشروع المختار.",
+    "explorer.save_to_project_desc":
+      "ينشئ نموذج BIM بجميع العناصر المستخرجة في المشروع المختار.",
     "explorer.save_view": "حفظ العرض",
     "explorer.save_view_prompt": "سمِّ هذا العرض",
     "explorer.saved": "تم حفظ التحليل بشكل دائم",
     "explorer.saved_to_project": "تم الحفظ في BIM Hub",
-    "explorer.saved_to_project_msg": "تم حفظ العناصر في BIM Hub. اعرضها في عارض BIM.",
+    "explorer.saved_to_project_msg":
+      "تم حفظ العناصر في BIM Hub. اعرضها في عارض BIM.",
     "explorer.saved_views": "العروض المحفوظة",
     "explorer.scatter": "نقطي",
     "explorer.search_all": "بحث في جميع الأعمدة...",
-    "explorer.select_columns_for_chart": "اختر أعمدة التجميع والقيمة لإنشاء رسم بياني.",
+    "explorer.select_columns_for_chart":
+      "اختر أعمدة التجميع والقيمة لإنشاء رسم بياني.",
     "explorer.select_project": "اختر مشروعاً...",
     "explorer.selected": "محدد",
-    "explorer.session_expired_desc": "جلسات CAD صالحة لمدة 24 ساعة. ارفع ملفك مجدداً للمتابعة.",
+    "explorer.session_expired_desc":
+      "جلسات CAD صالحة لمدة 24 ساعة. ارفع ملفك مجدداً للمتابعة.",
     "explorer.session_expired_title": "انتهت صلاحية الجلسة أو غير موجودة",
     "explorer.setup_guide": "دليل الإعداد",
     "explorer.show_all": "الكل",
@@ -2386,13 +2620,15 @@ const resource = {
     "fieldreports.import": "استيراد",
     "fieldreports.import_btn": "استيراد",
     "fieldreports.import_reports": "استيراد تقارير الموقع",
-    "fieldreports.import_result": "مستورد: {{imported}}، متخطَّى: {{skipped}}، أخطاء: {{errors}}",
+    "fieldreports.import_result":
+      "مستورد: {{imported}}، متخطَّى: {{skipped}}، أخطاء: {{errors}}",
     "fieldreports.list_view": "قائمة",
     "fieldreports.new_report": "تقرير جديد",
     "fieldreports.no_match": "لا توجد تقارير مطابقة",
     "fieldreports.no_match_desc": "حاول تعديل فلاتر الحالة أو النوع.",
     "fieldreports.no_project": "اختر مشروعاً",
-    "fieldreports.no_project_desc": "اختر مشروعاً من الشريط الجانبي لعرض تقارير الموقع.",
+    "fieldreports.no_project_desc":
+      "اختر مشروعاً من الشريط الجانبي لعرض تقارير الموقع.",
     "fieldreports.notes": "الملاحظات",
     "fieldreports.notes_placeholder": "ملاحظات أو مشاهدات إضافية...",
     "fieldreports.report_date": "التاريخ",
@@ -2422,7 +2658,8 @@ const resource = {
     "fieldreports.wind": "الرياح",
     "fieldreports.wind_placeholder": "مثال: 15 كم/س شمال غرب",
     "fieldreports.work_performed": "العمل المنجز",
-    "fieldreports.work_performed_placeholder": "صف أنشطة العمل المنجزة اليوم...",
+    "fieldreports.work_performed_placeholder":
+      "صف أنشطة العمل المنجزة اليوم...",
     "fieldreports.workers": "عمال",
     "fieldreports.workforce_section": "القوى العاملة",
     "files.actions.copy": "نسخ",
@@ -2444,7 +2681,8 @@ const resource = {
     "files.activity.bucket.earlier": "سابقًا",
     "files.activity.bucket.today": "اليوم",
     "files.activity.bucket.yesterday": "أمس",
-    "files.activity.empty_hint": "ستظهر هنا عمليات الرفع وإعادة التسمية والتغييرات الأخرى.",
+    "files.activity.empty_hint":
+      "ستظهر هنا عمليات الرفع وإعادة التسمية والتغييرات الأخرى.",
     "files.activity.empty_title": "لا يوجد نشاط بعد",
     "files.activity.error_hint": "تحقّق من اتصالك وحاول مرة أخرى.",
     "files.activity.error_title": "تعذّر تحميل النشاط",
@@ -2453,7 +2691,8 @@ const resource = {
     "files.bulk.clear": "مسح",
     "files.bulk.confirm_delete": "حذف {{count}} ملفات؟",
     "files.bulk.delete": "حذف",
-    "files.bulk.delete_all_failed": "تعذّر حذف أيٍّ من الملفات الـ {{count}} المحدَّدة.",
+    "files.bulk.delete_all_failed":
+      "تعذّر حذف أيٍّ من الملفات الـ {{count}} المحدَّدة.",
     "files.bulk.delete_failed": "فشل الحذف الجماعي",
     "files.bulk.delete_partial": "تم حذف {{deleted}} من {{total}}",
     "files.bulk.delete_partial_detail": "تعذّر حذف {{failed}} ملفًا.",
@@ -2489,7 +2728,8 @@ const resource = {
     "files.email.generate": "إنشاء رابط مشاركة",
     "files.email.open_mail_client": "فتح برنامج البريد",
     "files.email.paste_into_email": "نص بريد نموذجي",
-    "files.email.sample_body": "مرحبًا،\n\nهذا هو الملف الذي طلبته — {{name}} ({{size}}).\nرابط التنزيل (ينتهي في {{expires}}):\n{{url}}\n\n— مُرسل من OpenConstructionERP",
+    "files.email.sample_body":
+      "مرحبًا،\n\nهذا هو الملف الذي طلبته — {{name}} ({{size}}).\nرابط التنزيل (ينتهي في {{expires}}):\n{{url}}\n\n— مُرسل من OpenConstructionERP",
     "files.email.sample_subject": "الملف: {{name}}",
     "files.email.title": "مشاركة عبر البريد الإلكتروني",
     "files.email.ttl": "انتهاء صلاحية الرابط بعد",
@@ -2502,19 +2742,25 @@ const resource = {
     "files.empty": "لا توجد ملفات تطابق عوامل التصفية.",
     "files.empty_category": "لا توجد {{category}} بعد",
     "files.export.download_btn": "تنزيل الحزمة",
-    "files.export.intro": "اختر ما تريد تضمينه. الحزم الأصغر تُنقل أسرع؛ والأكبر تحتفظ بمزيد من البيانات.",
-    "files.export.large_warn": "حزمة كبيرة — أبقِ هذه التبويبة مفتوحة أثناء التصدير.",
+    "files.export.intro":
+      "اختر ما تريد تضمينه. الحزم الأصغر تُنقل أسرع؛ والأكبر تحتفظ بمزيد من البيانات.",
+    "files.export.large_warn":
+      "حزمة كبيرة — أبقِ هذه التبويبة مفتوحة أثناء التصدير.",
     "files.export.preview_btn": "معاينة",
     "files.export.scope_bim": "نماذج BIM",
     "files.export.scope_bim_hint": "تضيف نماذج BIM والعناصر والهندسة القياسية.",
     "files.export.scope_documents": "المستندات",
-    "files.export.scope_documents_hint": "تضيف المستندات والصور المرفوعة مع صورها المصغّرة.",
+    "files.export.scope_documents_hint":
+      "تضيف المستندات والصور المرفوعة مع صورها المصغّرة.",
     "files.export.scope_dwg": "رسومات DWG",
-    "files.export.scope_dwg_hint": "تضيف رسومات DWG والإصدارات واللوحات المرتبطة.",
+    "files.export.scope_dwg_hint":
+      "تضيف رسومات DWG والإصدارات واللوحات المرتبطة.",
     "files.export.scope_full": "المشروع الكامل",
-    "files.export.scope_full_hint": "كل شيء — حزمة ترحيل كاملة بما فيها كل المرفقات.",
+    "files.export.scope_full_hint":
+      "كل شيء — حزمة ترحيل كاملة بما فيها كل المرفقات.",
     "files.export.scope_metadata": "البيانات الوصفية فقط",
-    "files.export.scope_metadata_hint": "مناسبة للبريد الإلكتروني. جداول الكميات والروابط — بدون مرفقات.",
+    "files.export.scope_metadata_hint":
+      "مناسبة للبريد الإلكتروني. جداول الكميات والروابط — بدون مرفقات.",
     "files.export.stat_attachments": "المرفقات",
     "files.export.stat_format": "الصيغة",
     "files.export.stat_scope": "النطاق",
@@ -2528,16 +2774,21 @@ const resource = {
     "files.go_to_projects": "الذهاب إلى المشاريع",
     "files.import.choose_mode": "وضع الاستيراد",
     "files.import.confirm": "استيراد",
-    "files.import.destructive_warn": "سيؤدي هذا إلى حذف صفوف المشروع المُدارة من الحزمة في المشروع المستهدف بشكل دائم قبل الاستيراد. لا يمكن التراجع.",
+    "files.import.destructive_warn":
+      "سيؤدي هذا إلى حذف صفوف المشروع المُدارة من الحزمة في المشروع المستهدف بشكل دائم قبل الاستيراد. لا يمكن التراجع.",
     "files.import.drop_hint": "انقر للتصفح",
     "files.import.imported": "تم الاستيراد",
-    "files.import.intro": "اختر ملف ‎.ocep‎ مُصدَّرًا من هذه أو أي مساحة عمل أخرى.",
+    "files.import.intro":
+      "اختر ملف ‎.ocep‎ مُصدَّرًا من هذه أو أي مساحة عمل أخرى.",
     "files.import.mode_merge": "الدمج في مشروع قائم",
-    "files.import.mode_merge_hint": "يضيف صفوفًا إلى مشروع تختاره. تُتجاهل المُعرِّفات القائمة.",
+    "files.import.mode_merge_hint":
+      "يضيف صفوفًا إلى مشروع تختاره. تُتجاهل المُعرِّفات القائمة.",
     "files.import.mode_new": "إنشاء مشروع جديد",
-    "files.import.mode_new_hint": "الأكثر أمانًا. مُعرِّفات جديدة في كل مكان؛ لا يتغيّر شيء في مساحة عملك.",
+    "files.import.mode_new_hint":
+      "الأكثر أمانًا. مُعرِّفات جديدة في كل مكان؛ لا يتغيّر شيء في مساحة عملك.",
     "files.import.mode_replace": "استبدال مشروع قائم",
-    "files.import.mode_replace_hint": "يمسح صفوف المشروع المُدارة من الحزمة ثم يستورد. عملية مدمّرة.",
+    "files.import.mode_replace_hint":
+      "يمسح صفوف المشروع المُدارة من الحزمة ثم يستورد. عملية مدمّرة.",
     "files.import.no_attachments": "لا يوجد",
     "files.import.open_imported": "فتح المشروع المستورد",
     "files.import.pick_project": "— اختر مشروعًا —",
@@ -2554,10 +2805,13 @@ const resource = {
     "files.import.target_project": "المشروع المستهدف",
     "files.import.title": "استيراد حزمة المشروع",
     "files.import.validating": "جاري التحقق من الحزمة…",
-    "files.no_project_desc": "اختر مشروعًا من لوحة التحكم لرؤية جميع مستنداته وصوره وملفات BIM و DWG في مكان واحد.",
+    "files.no_project_desc":
+      "اختر مشروعًا من لوحة التحكم لرؤية جميع مستنداته وصوره وملفات BIM و DWG في مكان واحد.",
     "files.no_project_title": "لا يوجد مشروع نشط",
-    "files.permissions.empty": "يمكن لجميع أعضاء المشروع الوصول إلى هذا المجلد.",
-    "files.permissions.error_duplicate": "هذا العضو لديه بالفعل وصول بهذا المستوى.",
+    "files.permissions.empty":
+      "يمكن لجميع أعضاء المشروع الوصول إلى هذا المجلد.",
+    "files.permissions.error_duplicate":
+      "هذا العضو لديه بالفعل وصول بهذا المستوى.",
     "files.permissions.error_grant": "تعذّر منح الوصول.",
     "files.permissions.error_revoke": "تعذّر إلغاء الوصول.",
     "files.permissions.grant": "منح الوصول",
@@ -2565,7 +2819,8 @@ const resource = {
     "files.permissions.granting": "جارٍ المنح…",
     "files.permissions.list_title": "الوصول الحالي",
     "files.permissions.lock_tooltip": "مقيَّد: يمكن لـ {{count}} عضو الوصول",
-    "files.permissions.lock_tooltip_plural": "مقيَّد: يمكن لـ {{count}} أعضاء الوصول",
+    "files.permissions.lock_tooltip_plural":
+      "مقيَّد: يمكن لـ {{count}} أعضاء الوصول",
     "files.permissions.manage": "إدارة الوصول",
     "files.permissions.revoke": "إلغاء",
     "files.permissions.revoke_confirm": "هل تريد إلغاء وصول {{name}}؟",
@@ -2573,7 +2828,8 @@ const resource = {
     "files.permissions.role.owner": "مالك — تحكم كامل",
     "files.permissions.role.viewer": "مُشاهِد — قراءة فقط",
     "files.permissions.role_label": "الدور",
-    "files.permissions.subtitle": "حدّد من يمكنه عرض الملفات في {{folder}} وتعديلها.",
+    "files.permissions.subtitle":
+      "حدّد من يمكنه عرض الملفات في {{folder}} وتعديلها.",
     "files.permissions.title": "صلاحيات المجلد",
     "files.permissions.user_label": "العضو",
     "files.permissions.user_placeholder": "اختر عضوًا في المشروع",
@@ -2628,7 +2884,8 @@ const resource = {
     "files.upload_no_project": "لا يوجد مشروع نشط",
     "files.upload_queued": "تمت إضافة {{count}} ملفات إلى الطابور",
     "files.upload_too_large": "الملفات كبيرة جدًا",
-    "files.upload_too_large_msg": "{{count}} ملف(ات) تجاوزت الحد ١٠٠ ميغابايت وتم تخطيها.",
+    "files.upload_too_large_msg":
+      "{{count}} ملف(ات) تجاوزت الحد ١٠٠ ميغابايت وتم تخطيها.",
     "files.uploaded": "تم الرفع",
     "files.uploading": "جارٍ الرفع…",
     "files.view_grid": "عرض شبكي",
@@ -2638,15 +2895,18 @@ const resource = {
     "finance.approve": "Approve",
     "finance.approve_failed": "فشلت الموافقة على الفاتورة",
     "finance.behind": "Behind",
-    "finance.boq_tip_desc": "اذهب إلى جدول الكميات ← اقفل التقدير ← انقر «إنشاء ميزانية من التقدير» لتعبئة بنود الميزانية تلقائيًا.",
+    "finance.boq_tip_desc":
+      "اذهب إلى جدول الكميات ← اقفل التقدير ← انقر «إنشاء ميزانية من التقدير» لتعبئة بنود الميزانية تلقائيًا.",
     "finance.boq_tip_title": "نصيحة:",
     "finance.budget_create_failed": "فشل إنشاء بند الميزانية",
     "finance.budget_created": "تم إنشاء بند الميزانية بنجاح",
-    "finance.budget_file_hint": "الأعمدة: رمز WBS، الفئة، الميزانية الأصلية، الملاحظات",
+    "finance.budget_file_hint":
+      "الأعمدة: رمز WBS، الفئة، الميزانية الأصلية، الملاحظات",
     "finance.budget_line": "الميزانية",
     "finance.budget_notes_placeholder": "مثال: يشمل احتياطيًا لتأخيرات الطقس",
     "finance.budgets": "الميزانيات",
-    "finance.budgets_explanation": "تتعقب ميزانية المشروع التكاليف الأصلية مقابل الفعلية حسب فئة WBS. يُلوَّن التباين بالأخضر عند البقاء ضمن الميزانية، وبالأحمر عند تجاوزها.",
+    "finance.budgets_explanation":
+      "تتعقب ميزانية المشروع التكاليف الأصلية مقابل الفعلية حسب فئة WBS. يُلوَّن التباين بالأخضر عند البقاء ضمن الميزانية، وبالأحمر عند تجاوزها.",
     "finance.cat_equipment": "معدات",
     "finance.cat_labor": "عمالة",
     "finance.cat_material": "مواد",
@@ -2674,7 +2934,8 @@ const resource = {
     "finance.evm_eac": "EAC (التقدير عند الاكتمال)",
     "finance.evm_etc": "ETC (التقدير حتى الاكتمال)",
     "finance.evm_ev": "EV (القيمة المكتسبة)",
-    "finance.evm_explanation": "تقارن إدارة القيمة المكتسبة (EVM) التقدّم المخطّط بالأداء الفعلي. SPI > 1.0 = متقدم على الجدول. CPI > 1.0 = ضمن الميزانية. أنشئ لقطات دوريًا لتتبّع الاتجاهات بمرور الوقت.",
+    "finance.evm_explanation":
+      "تقارن إدارة القيمة المكتسبة (EVM) التقدّم المخطّط بالأداء الفعلي. SPI > 1.0 = متقدم على الجدول. CPI > 1.0 = ضمن الميزانية. أنشئ لقطات دوريًا لتتبّع الاتجاهات بمرور الوقت.",
     "finance.evm_hint_cost": "كفاءة التكلفة",
     "finance.evm_hint_forecast": "التكلفة الإجمالية المتوقعة",
     "finance.evm_hint_schedule": "كفاءة الجدول",
@@ -2694,16 +2955,19 @@ const resource = {
     "finance.import": "استيراد",
     "finance.import_btn": "استيراد",
     "finance.import_budgets": "استيراد الميزانيات",
-    "finance.import_result": "تم الاستيراد: {{imported}}، تم التخطي: {{skipped}}، أخطاء: {{errors}}",
+    "finance.import_result":
+      "تم الاستيراد: {{imported}}، تم التخطي: {{skipped}}، أخطاء: {{errors}}",
     "finance.invoice_approved": "تمت الموافقة على الفاتورة",
     "finance.invoice_create_failed": "فشل إنشاء الفاتورة",
     "finance.invoice_created": "تم إنشاء الفاتورة بنجاح",
-    "finance.invoice_desc_placeholder": "مثال: دفعة تقدّم لأعمال الخرسانة - المرحلة 2",
+    "finance.invoice_desc_placeholder":
+      "مثال: دفعة تقدّم لأعمال الخرسانة - المرحلة 2",
     "finance.invoice_number": "Invoice #",
     "finance.invoice_paid": "تم تسجيل الفاتورة كمدفوعة",
     "finance.invoice_ref": "رقم الفاتورة",
     "finance.invoices": "الفواتير",
-    "finance.invoices_explanation": "تتبّع كل فواتير المشروع في مكان واحد. الذمم الدائنة = فواتير من مقاولين/مورّدين. الذمم المدينة = فواتير ترسلها للعملاء. عَلِّم الفواتير كمدفوعة لإنشاء سجلات الدفع تلقائيًا.",
+    "finance.invoices_explanation":
+      "تتبّع كل فواتير المشروع في مكان واحد. الذمم الدائنة = فواتير من مقاولين/مورّدين. الذمم المدينة = فواتير ترسلها للعملاء. عَلِّم الفواتير كمدفوعة لإنشاء سجلات الدفع تلقائيًا.",
     "finance.invoices_export_failed": "فشل تصدير الفواتير",
     "finance.invoices_export_success": "تم تصدير الفواتير بنجاح",
     "finance.issue_date": "تاريخ الإصدار",
@@ -2730,10 +2994,12 @@ const resource = {
     "finance.pay_failed": "فشل تعليم الفاتورة كمدفوعة",
     "finance.payable": "Payable",
     "finance.payable_desc": "فاتورة عليك دفعها",
-    "finance.payable_receivable_tooltip": "الذمم الدائنة = فواتير مستحقة عليك لمورّدين. الذمم المدينة = فواتير مستحقة لك من العملاء.",
+    "finance.payable_receivable_tooltip":
+      "الذمم الدائنة = فواتير مستحقة عليك لمورّدين. الذمم المدينة = فواتير مستحقة لك من العملاء.",
     "finance.payment_date": "تاريخ الدفع",
     "finance.payments": "المدفوعات",
-    "finance.payments_explanation": "تُنشأ سجلات الدفع عند تعليم الفواتير كمدفوعة.",
+    "finance.payments_explanation":
+      "تُنشأ سجلات الدفع عند تعليم الفواتير كمدفوعة.",
     "finance.receivable": "Receivable",
     "finance.receivable_desc": "فاتورة ترسلها",
     "finance.reference": "Reference",
@@ -2818,7 +3084,8 @@ const resource = {
     "inspections.title_required": "العنوان مطلوب",
     "integrations.add_another": "إضافة آخر",
     "integrations.calendar": "التقويم",
-    "integrations.calendar_desc": "الاشتراك في Google/Outlook Calendar (خلاصة iCal)",
+    "integrations.calendar_desc":
+      "الاشتراك في Google/Outlook Calendar (خلاصة iCal)",
     "integrations.coming_soon": "قريباً",
     "integrations.confirm_disconnect": "قطع الاتصال بهذا التكامل؟",
     "integrations.connect": "اتصال",
@@ -2833,9 +3100,11 @@ const resource = {
     "integrations.setup_steps": "تعليمات الإعداد",
     "integrations.slack": "Slack",
     "integrations.slack_desc": "إرسال إشعارات إلى Slack عبر Incoming Webhook",
-    "integrations.subtitle": "اربط الخدمات الخارجية لاستلام إشعارات المشروع في أدواتك المفضلة.",
+    "integrations.subtitle":
+      "اربط الخدمات الخارجية لاستلام إشعارات المشروع في أدواتك المفضلة.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc": "إرسال إشعارات إلى قناة Teams عبر Incoming Webhook",
+    "integrations.teams_desc":
+      "إرسال إشعارات إلى قناة Teams عبر Incoming Webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "استلام إشعارات عبر روبوت Telegram",
     "integrations.test": "اختبار",
@@ -2845,33 +3114,46 @@ const resource = {
     "integrations.webhook": "Webhooks",
     "integrations.webhook_desc": "إرسال الأحداث إلى أي URL (HTTP POST)",
     "login.benefit.ai": "تقدير بمساعدة الذكاء الاصطناعي",
-    "login.benefit.ai_desc": "اقتراحات ذكية مع درجات ثقة. أنت تقرر، والذكاء الاصطناعي يساعد.",
+    "login.benefit.ai_desc":
+      "اقتراحات ذكية مع درجات ثقة. أنت تقرر، والذكاء الاصطناعي يساعد.",
     "login.benefit.allinone": "جدول كميات + 4D + 5D + مناقصات",
-    "login.benefit.allinone_desc": "سير عمل كامل من تقدير التكلفة إلى مقارنة العطاءات في أداة واحدة.",
+    "login.benefit.allinone_desc":
+      "سير عمل كامل من تقدير التكلفة إلى مقارنة العطاءات في أداة واحدة.",
     "login.benefit.free": "مجاني للجميع",
-    "login.benefit.free_desc": "بدون رسوم ترخيص. بدون حدود. مبني بواسطة مقدّري التكاليف، لمقدّري التكاليف.",
+    "login.benefit.free_desc":
+      "بدون رسوم ترخيص. بدون حدود. مبني بواسطة مقدّري التكاليف، لمقدّري التكاليف.",
     "login.benefit.local": "بياناتك تبقى على جهازك",
-    "login.benefit.local_desc": "بدون سحابة. بدون خوادم طرف ثالث. تحكم كامل في بيانات مشروعك.",
+    "login.benefit.local_desc":
+      "بدون سحابة. بدون خوادم طرف ثالث. تحكم كامل في بيانات مشروعك.",
     "login.benefit.open_source": "مفتوح المصدر 100%",
-    "login.benefit.open_source_desc": "كود شفاف. لا تبعية للمورد. صدّر كل شيء في أي وقت.",
+    "login.benefit.open_source_desc":
+      "كود شفاف. لا تبعية للمورد. صدّر كل شيء في أي وقت.",
     "login.benefit.standards": "معايير دولية",
-    "login.benefit.standards_desc": "أكثر من 55,000 عنصر تكلفة في 11 قاعدة بيانات إقليمية حول العالم.",
-    "login.hero_desc": "جدول كميات احترافي، جدولة 4D، نموذج تكلفة 5D، ومناقصات — الكل في منصة واحدة مفتوحة المصدر.",
+    "login.benefit.standards_desc":
+      "أكثر من 55,000 عنصر تكلفة في 11 قاعدة بيانات إقليمية حول العالم.",
+    "login.hero_desc":
+      "جدول كميات احترافي، جدولة 4D، نموذج تكلفة 5D، ومناقصات — الكل في منصة واحدة مفتوحة المصدر.",
     "login.hero_highlight": "بمفهوم جديد",
     "login.hero_title": "تقدير تكاليف البناء،",
     "login.learn_more": "تعرّف على المزيد حول المنصة",
     "login.open_source_badge": "أول نظام ERP مفتوح المصدر للبناء",
-    "login.privacy": "تتم معالجة وتخزين جميع البيانات محليًا على جهازك. لا يتم إرسال أي شيء إلى خوادم خارجية. أنت تملك بياناتك — دائمًا.",
-    "login.privacy_ai": "إذا استخدمت أدوات الذكاء الاصطناعي المدمجة، قد يتم إرسال بعض البيانات إلى مزود الذكاء الاصطناعي الذي تقوم بإعداده (OpenAI أو Anthropic وغيرها). أنت تتحكم في المزود الذي تستخدمه والبيانات التي تشاركها.",
+    "login.privacy":
+      "تتم معالجة وتخزين جميع البيانات محليًا على جهازك. لا يتم إرسال أي شيء إلى خوادم خارجية. أنت تملك بياناتك — دائمًا.",
+    "login.privacy_ai":
+      "إذا استخدمت أدوات الذكاء الاصطناعي المدمجة، قد يتم إرسال بعض البيانات إلى مزود الذكاء الاصطناعي الذي تقوم بإعداده (OpenAI أو Anthropic وغيرها). أنت تتحكم في المزود الذي تستخدمه والبيانات التي تشاركها.",
     "marketplace.active": "نشط",
     "marketplace.available": "الوحدات المتاحة",
     "marketplace.builtin": "مدمج",
-    "marketplace.builtin_message": "هذه الوحدة مدمجة في التثبيت الخاص بك وجاهزة للاستخدام.",
+    "marketplace.builtin_message":
+      "هذه الوحدة مدمجة في التثبيت الخاص بك وجاهزة للاستخدام.",
     "marketplace.catalog_imported": "تم استيراد الكتالوج",
-    "marketplace.catalog_imported_message": "تم استيراد {{imported}} مورد، تم تخطي {{skipped}} لـ {{region}}.",
+    "marketplace.catalog_imported_message":
+      "تم استيراد {{imported}} مورد، تم تخطي {{skipped}} لـ {{region}}.",
     "marketplace.demo_installed": "تم تثبيت التجريبي",
-    "marketplace.demo_installed_message": "تم إنشاء {{name}} بجدول كميات كامل وجدول زمني وميزانية ومناقصات.",
-    "marketplace.description": "وسّع OpenEstimate بقواعد بيانات التكاليف الإقليمية وكتالوجات الموارد (CWICR) وفهارس البحث المتجهي للذكاء الاصطناعي وحزم اللغات والمشاريع التجريبية والتكاملات. ثبّت وحدة لتفعيلها — ألغِ التثبيت في أي وقت.",
+    "marketplace.demo_installed_message":
+      "تم إنشاء {{name}} بجدول كميات كامل وجدول زمني وميزانية ومناقصات.",
+    "marketplace.description":
+      "وسّع OpenEstimate بقواعد بيانات التكاليف الإقليمية وكتالوجات الموارد (CWICR) وفهارس البحث المتجهي للذكاء الاصطناعي وحزم اللغات والمشاريع التجريبية والتكاملات. ثبّت وحدة لتفعيلها — ألغِ التثبيت في أي وقت.",
     "marketplace.free": "مجاني",
     "marketplace.import_failed": "فشل الاستيراد",
     "marketplace.imported": "مستورد",
@@ -2880,7 +3162,8 @@ const resource = {
     "marketplace.install_failed": "فشل التثبيت",
     "marketplace.installed_modules": "الوحدات الأساسية المثبتة",
     "marketplace.installing": "جارٍ التثبيت...",
-    "marketplace.language_activated": "تم تفعيل حزمة اللغة. غيّر اللغة في الإعدادات.",
+    "marketplace.language_activated":
+      "تم تفعيل حزمة اللغة. غيّر اللغة في الإعدادات.",
     "marketplace.language_already_included": "هذه اللغة مضمنة بالفعل.",
     "marketplace.manage": "إدارة",
     "marketplace.module_disabled": "تم تعطيل {{name}}",
@@ -2891,14 +3174,16 @@ const resource = {
     "marketplace.no_results_hint": "حاول تعديل البحث أو فلتر الفئة.",
     "marketplace.rules": "قواعد",
     "marketplace.search_placeholder": "البحث في الوحدات...",
-    "marketplace.subtitle": "تصفح وثبّت إضافات لقواعد بيانات التكاليف وأدوات الذكاء الاصطناعي ومحوّلات CAD والمزيد.",
+    "marketplace.subtitle":
+      "تصفح وثبّت إضافات لقواعد بيانات التكاليف وأدوات الذكاء الاصطناعي ومحوّلات CAD والمزيد.",
     "marketplace.title": "متجر الوحدات",
     "marketplace.uninstall": "إلغاء التثبيت",
     "marketplace.unknown_region": "منطقة غير معروفة",
     "marketplace.validation_rule_sets": "مجموعات قواعد التحقق",
     "marketplace.validation_rules_active": "قواعد تحقق نشطة",
     "marketplace.vector_index": "فهرس متجهي",
-    "marketplace.vector_index_hint": "استورد قاعدة بيانات التكاليف أولاً، ثم أنشئ المتجهات.",
+    "marketplace.vector_index_hint":
+      "استورد قاعدة بيانات التكاليف أولاً، ثم أنشئ المتجهات.",
     "markups.action_archive": "أرشفة",
     "markups.action_resolve": "حل",
     "markups.active": "نشط",
@@ -2926,7 +3211,8 @@ const resource = {
     "markups.delete_title": "حذف العلامة؟",
     "markups.deleted": "تم حذف العلامة",
     "markups.document": "المستند",
-    "markups.empty_desc": "ستظهر العلامات والتعليقات التوضيحية من مستندات مشروعك هنا.",
+    "markups.empty_desc":
+      "ستظهر العلامات والتعليقات التوضيحية من مستندات مشروعك هنا.",
     "markups.empty_title": "لم يتم العثور على علامات",
     "markups.export": "تصدير",
     "markups.export_csv": "تصدير CSV",
@@ -2977,36 +3263,46 @@ const resource = {
     "markups.view_grid": "شبكة",
     "markups.view_list": "قائمة",
     "match_elements.action.apply": "تطبيق على BOQ ({{n}})",
-    "match_elements.action.apply_title": "كتابة المطابقات المؤكدة في BOQ المشروع",
+    "match_elements.action.apply_title":
+      "كتابة المطابقات المؤكدة في BOQ المشروع",
     "match_elements.action.confirm_all": "تأكيد الكل ≥ {{thr}}",
     "match_elements.action.confirm_selected": "تأكيد {{count}} ≥ {{thr}}",
     "match_elements.action.lexical_all": "مطابقة معجمية — أعلى 10",
     "match_elements.action.lexical_selected": "معجمية ({{count}})",
     "match_elements.action.resources_all": "مطابقة الموارد — أعلى 10",
     "match_elements.action.resources_selected": "الموارد ({{count}})",
-    "match_elements.action.resources_title": "المطابقة مع كتالوج المواد/الموارد",
+    "match_elements.action.resources_title":
+      "المطابقة مع كتالوج المواد/الموارد",
     "match_elements.action.skip_n": "تخطي {{count}} (سيتم تحديده)",
     "match_elements.action.vector_all": "مطابقة المتجهات — أعلى 10",
     "match_elements.action.vector_selected": "مطابقة المتجهات ({{count}})",
     "match_elements.active_project": "المشروع النشط",
     "match_elements.advisor_browse_all": "كل ما على Hugging Face",
-    "match_elements.advisor_empty_detail": "اختر كتالوجًا جاهزًا آخر أدناه، أو ولّد متجهات الكتالوج الحالي.",
+    "match_elements.advisor_empty_detail":
+      "اختر كتالوجًا جاهزًا آخر أدناه، أو ولّد متجهات الكتالوج الحالي.",
     "match_elements.advisor_empty_title": "الكتالوج لم تُولَّد له متجهات بعد",
-    "match_elements.advisor_install_hint": "لا توجد كتالوجات {{lang}} محمَّلة بعد. تثبيت بنقرة واحدة:",
+    "match_elements.advisor_install_hint":
+      "لا توجد كتالوجات {{lang}} محمَّلة بعد. تثبيت بنقرة واحدة:",
     "match_elements.advisor_install_size": "~{{mb}} م.ب · {{lang}}",
     "match_elements.advisor_loading": "جارٍ تحميل الكتالوجات المتاحة…",
-    "match_elements.advisor_mismatch_detail": "اختر كتالوج {{lang}} أدناه — مشروعك يتحدث {{lang}}، لذا يجب أن تأتي المطابقات من دليل أسعار بنفس اللغة.",
+    "match_elements.advisor_mismatch_detail":
+      "اختر كتالوج {{lang}} أدناه — مشروعك يتحدث {{lang}}، لذا يجب أن تأتي المطابقات من دليل أسعار بنفس اللغة.",
     "match_elements.advisor_mismatch_title": "التبديل إلى كتالوج {{lang}}",
-    "match_elements.advisor_missing_detail": "اختر كتالوجًا جاهزًا أدناه، أو حمّل كتالوجًا جديدًا.",
-    "match_elements.advisor_missing_title": "مجموعة متجهات {{lang}} غير محمَّلة",
-    "match_elements.advisor_none_available": "لا توجد كتالوجات {{lang}} محمَّلة بعد. زر /costs لاستيراد واحد.",
+    "match_elements.advisor_missing_detail":
+      "اختر كتالوجًا جاهزًا أدناه، أو حمّل كتالوجًا جديدًا.",
+    "match_elements.advisor_missing_title":
+      "مجموعة متجهات {{lang}} غير محمَّلة",
+    "match_elements.advisor_none_available":
+      "لا توجد كتالوجات {{lang}} محمَّلة بعد. زر /costs لاستيراد واحد.",
     "match_elements.advisor_rates_count": "{{n}} سعرًا",
     "match_elements.advisor_region_match": "الأفضل",
-    "match_elements.alert.applied": "تم إنشاء {{n}} بنود BOQ · الإجمالي {{total}} {{ccy}}",
+    "match_elements.alert.applied":
+      "تم إنشاء {{n}} بنود BOQ · الإجمالي {{total}} {{ccy}}",
     "match_elements.alert.apply_failed": "فشل التطبيق على جدول الكميات",
     "match_elements.alert.bulk_confirm_failed": "فشل التأكيد المجمَّع",
     "match_elements.alert.confirmed": "تم تأكيد {{count}} مجموعة",
-    "match_elements.alert.marked_tbd": "تم وضع علامة على {{count}} مجموعة كسيتم تحديدها",
+    "match_elements.alert.marked_tbd":
+      "تم وضع علامة على {{count}} مجموعة كسيتم تحديدها",
     "match_elements.alert.skip_failed": "فشل التخطي",
     "match_elements.analytics_alerts_count": "{{n}} تنبيه",
     "match_elements.analytics_alerts_count_plural": "{{n}} تنبيهات",
@@ -3014,9 +3310,11 @@ const resource = {
     "match_elements.analytics_by_country": "حسب الدولة",
     "match_elements.analytics_by_ifc": "حسب فئة IFC",
     "match_elements.analytics_by_source": "حسب نوع المصدر",
-    "match_elements.analytics_caption": "{{n}} بحثًا · {{picks}} اختيارات · معدل الاختيار {{rate}} · متوسط النتيجة {{score}} · آخر {{days}} يومًا",
+    "match_elements.analytics_caption":
+      "{{n}} بحثًا · {{picks}} اختيارات · معدل الاختيار {{rate}} · متوسط النتيجة {{score}} · آخر {{days}} يومًا",
     "match_elements.analytics_collapse": "طيّ التحليلات",
-    "match_elements.analytics_empty_caption": "لا توجد عمليات بحث بعد في نافذة الـ {{days}} يومًا الأخيرة — شغّل /match-elements لتعبئتها.",
+    "match_elements.analytics_empty_caption":
+      "لا توجد عمليات بحث بعد في نافذة الـ {{days}} يومًا الأخيرة — شغّل /match-elements لتعبئتها.",
     "match_elements.analytics_expand": "توسيع التحليلات",
     "match_elements.analytics_footer": "أُنشئ في {{at}} · {{ref}}",
     "match_elements.analytics_hist_band": "توزيع نطاق الثقة",
@@ -3041,14 +3339,19 @@ const resource = {
     "match_elements.analytics_window_label": "النافذة",
     "match_elements.aria.select_all": "تحديد جميع المجموعات المرئية",
     "match_elements.aria.select_group": "تحديد {{key}}",
-    "match_elements.auto_confirm_help": "تأكيد المرشحين تلقائيًا عند هذه الدرجة أو أعلى.",
+    "match_elements.auto_confirm_help":
+      "تأكيد المرشحين تلقائيًا عند هذه الدرجة أو أعلى.",
     "match_elements.auto_confirm_threshold": "حد التأكيد التلقائي",
     "match_elements.busy.applying": "جارٍ تطبيق المجموعات المؤكدة على BOQ…",
     "match_elements.busy.bulk_confirm_all": "تأكيد جماعي للمطابقات ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_selected": "تأكيد جماعي لـ {{count}} محدد ≥ {{thr}}…",
-    "match_elements.busy.mark_tbd": "وضع علامة على {{count}} مجموعة كسيتم تحديدها…",
-    "match_elements.busy.run_all": "تشغيل matcher {{method}} على جميع المجموعات…",
-    "match_elements.busy.run_selected": "تشغيل matcher {{method}} على {{count}} محدد…",
+    "match_elements.busy.bulk_confirm_selected":
+      "تأكيد جماعي لـ {{count}} محدد ≥ {{thr}}…",
+    "match_elements.busy.mark_tbd":
+      "وضع علامة على {{count}} مجموعة كسيتم تحديدها…",
+    "match_elements.busy.run_all":
+      "تشغيل matcher {{method}} على جميع المجموعات…",
+    "match_elements.busy.run_selected":
+      "تشغيل matcher {{method}} على {{count}} محدد…",
     "match_elements.clear_filter": "مسح الفلتر",
     "match_elements.clear_selection": "مسح التحديد",
     "match_elements.col.actions": "الإجراءات",
@@ -3064,49 +3367,63 @@ const resource = {
     "match_elements.detail.apply_total": "الإجمالي",
     "match_elements.detail.auto_loaded_resources": "الموارد المحملة تلقائياً:",
     "match_elements.detail.building_preview": "بناء المعاينة…",
-    "match_elements.detail.candidate_no_id": "المرشح ليس له معرف قاعدة بيانات — لا يمكن التأكيد",
+    "match_elements.detail.candidate_no_id":
+      "المرشح ليس له معرف قاعدة بيانات — لا يمكن التأكيد",
     "match_elements.detail.close": "إغلاق لوحة التفاصيل",
     "match_elements.detail.col.code": "الرمز",
     "match_elements.detail.col.conf": "الثقة",
     "match_elements.detail.col.description": "الوصف",
     "match_elements.detail.col.unit_rate": "الوحدة · السعر",
     "match_elements.detail.confirm": "تأكيد",
-    "match_elements.detail.confirm_first": "أكد التطابق أولاً لرؤية معاينة BOQ.",
-    "match_elements.detail.element_ids_count": "{{count}} معرف عنصر. تمييز ثلاثي الأبعاد في المرحلة A.12.",
+    "match_elements.detail.confirm_first":
+      "أكد التطابق أولاً لرؤية معاينة BOQ.",
+    "match_elements.detail.element_ids_count":
+      "{{count}} معرف عنصر. تمييز ثلاثي الأبعاد في المرحلة A.12.",
     "match_elements.detail.elements_count": "{{count}} عنصر",
     "match_elements.detail.error_title": "تعذّر تحميل التفاصيل",
-    "match_elements.detail.no_matchers_run": "لم يتم تشغيل أي matcher لهذه المجموعة بعد.",
-    "match_elements.detail.opening_warning": "المضيف به فتحات لكن الإجمالي == الصافي (خطأ تصدير IFC)",
+    "match_elements.detail.no_matchers_run":
+      "لم يتم تشغيل أي matcher لهذه المجموعة بعد.",
+    "match_elements.detail.opening_warning":
+      "المضيف به فتحات لكن الإجمالي == الصافي (خطأ تصدير IFC)",
     "match_elements.detail.retry": "إعادة المحاولة",
     "match_elements.detail.tabs_label": "أقسام لوحة التفاصيل",
-    "match_elements.detail.use_action_bar": "استخدم أزرار شريط الإجراءات أعلاه.",
+    "match_elements.detail.use_action_bar":
+      "استخدم أزرار شريط الإجراءات أعلاه.",
     "match_elements.detail_for": "افتح لوحة التفاصيل لـ {{label}}",
     "match_elements.embedder_copied": "تم النسخ",
     "match_elements.embedder_copy_command": "نسخ الأمر",
     "match_elements.embedder_homepage_link": "صفحة النموذج",
-    "match_elements.embedder_install_hint_after": "بعد التثبيت، أعد تشغيل الخلفية.",
+    "match_elements.embedder_install_hint_after":
+      "بعد التثبيت، أعد تشغيل الخلفية.",
     "match_elements.embedder_languages_caption": "{{n}}+ لغة",
-    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} م.ب · {{license}} · {{n}}+ لغة",
+    "match_elements.embedder_loaded_caption":
+      "{{model}} · {{precision}} · ~{{size}} م.ب · {{license}} · {{n}}+ لغة",
     "match_elements.embedder_loaded_title": "نموذج اللغة جاهز",
     "match_elements.embedder_loading": "جارٍ فحص نموذج اللغة…",
     "match_elements.embedder_no_api_key": "بدون مفتاح API",
-    "match_elements.embedder_required_body": "يستخدم OpenConstructionERP نموذج BGE-M3 — مرمّز متعدد اللغات مجاني ومفتوح المصدر من BAAI. يعمل بالكامل على جهازك. بدون مفتاح API. بدون استدعاءات سحابية. ثبّته مرة واحدة بأمر واحد:",
+    "match_elements.embedder_required_body":
+      "يستخدم OpenConstructionERP نموذج BGE-M3 — مرمّز متعدد اللغات مجاني ومفتوح المصدر من BAAI. يعمل بالكامل على جهازك. بدون مفتاح API. بدون استدعاءات سحابية. ثبّته مرة واحدة بأمر واحد:",
     "match_elements.embedder_required_title": "نموذج لغة مجاني مطلوب",
     "match_elements.embedder_runs_locally": "يعمل محليًا",
-    "match_elements.embedder_runtime_caption": "وقت التشغيل: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_size_caption": "~{{int8}} م.ب تنزيل (INT8) أو ~{{fp32}} م.ب (FP32).",
+    "match_elements.embedder_runtime_caption":
+      "وقت التشغيل: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_size_caption":
+      "~{{int8}} م.ب تنزيل (INT8) أو ~{{fp32}} م.ب (FP32).",
     "match_elements.error_dismiss": "إغلاق",
-    "match_elements.footer": "المراحل A.10–A.12 — التحديد المتعدد للعمليات الجماعية، التأكيد بناءً على العتبة، تدفق عدم التطابق ومكتبة قوالب المستأجر نشطة. الشرائح القابلة للسحب وتمييز ثلاثي الأبعاد ستصل في المرحلة B.",
+    "match_elements.footer":
+      "المراحل A.10–A.12 — التحديد المتعدد للعمليات الجماعية، التأكيد بناءً على العتبة، تدفق عدم التطابق ومكتبة قوالب المستأجر نشطة. الشرائح القابلة للسحب وتمييز ثلاثي الأبعاد ستصل في المرحلة B.",
     "match_elements.group_by": "تجميع حسب",
     "match_elements.group_by_active": "{{count}} نشط · انقر للإزالة",
     "match_elements.group_by_empty": "اختر سمة واحدة على الأقل",
     "match_elements.group_by_remove": "انقر للإزالة من التجميع",
     "match_elements.group_by_sample": "مثال",
     "match_elements.group_by_show_all": "إظهار الكل ({{count}})",
-    "match_elements.group_by_show_all_help": "خصائص خاصة بالمستأجر من نموذج BIM هذا",
+    "match_elements.group_by_show_all_help":
+      "خصائص خاصة بالمستأجر من نموذج BIM هذا",
     "match_elements.group_by_show_less": "إظهار أقل",
     "match_elements.hero_eyebrow": "BIM ← جدول الكميات",
-    "match_elements.lang_mismatch_detail": "منطقة المشروع {{region}} تتحدث {{projLang}}، لكن الكتالوج المرتبط {{catalogue}} باللغة {{boundLang}}. ستظهر نتائج المطابقة بلغة خاطئة حتى تعيد الربط.",
+    "match_elements.lang_mismatch_detail":
+      "منطقة المشروع {{region}} تتحدث {{projLang}}، لكن الكتالوج المرتبط {{catalogue}} باللغة {{boundLang}}. ستظهر نتائج المطابقة بلغة خاطئة حتى تعيد الربط.",
     "match_elements.lang_mismatch_open_costs": "أو حمّل كتالوج {{lang}}",
     "match_elements.lang_mismatch_rebind": "إعادة ربط الكتالوج",
     "match_elements.lang_mismatch_title": "لغة الكتالوج لا تطابق المشروع",
@@ -3124,51 +3441,66 @@ const resource = {
     "match_elements.new_excel.button_title": "تحميل ملف .xlsx لجدول الكميات",
     "match_elements.new_excel.create": "تحميل وإنشاء جلسة",
     "match_elements.new_excel.drop": "أسقط ملف .xlsx هنا أو انقر للتصفح",
-    "match_elements.new_excel.format_hint": ".xlsx فقط · مدعوم عناوين الأعمدة متعددة اللغات",
-    "match_elements.new_excel.hint": "ارفع ملف .xlsx يحتوي على الأقل عمود « الوصف » (أو ما يعادله محليًا — Description, Beschreibung, Описание, Descripción, 描述، إلخ). أعمدة اختيارية: الكمية، الوحدة، الرمز، الفئة. يتم التعرف على الكميات بفاصلة عشرية.",
+    "match_elements.new_excel.format_hint":
+      ".xlsx فقط · مدعوم عناوين الأعمدة متعددة اللغات",
+    "match_elements.new_excel.hint":
+      "ارفع ملف .xlsx يحتوي على الأقل عمود « الوصف » (أو ما يعادله محليًا — Description, Beschreibung, Описание, Descripción, 描述، إلخ). أعمدة اختيارية: الكمية، الوحدة، الرمز، الفئة. يتم التعرف على الكميات بفاصلة عشرية.",
     "match_elements.new_excel.name_label": "اسم الجلسة (اختياري)",
-    "match_elements.new_excel.name_placeholder": "مثلًا جدول كميات المناقصة المراجعة 3",
+    "match_elements.new_excel.name_placeholder":
+      "مثلًا جدول كميات المناقصة المراجعة 3",
     "match_elements.new_excel.title": "جلسة جديدة من Excel BoQ",
     "match_elements.new_session": "جلسة جديدة",
     "match_elements.new_text.button": "من النص",
     "match_elements.new_text.button_title": "ألصق الأوصاف — واحد لكل سطر",
     "match_elements.new_text.create": "إنشاء جلسة",
-    "match_elements.new_text.hint": "سطر واحد لكل بند. كل سطر يصبح مجموعة؛ يجد البحث الدلالي أقرب أسعار CWICR. أي لغة — يتعامل المُرمِّز متعدد اللغات مع الاستعلامات عبر اللغات.",
+    "match_elements.new_text.hint":
+      "سطر واحد لكل بند. كل سطر يصبح مجموعة؛ يجد البحث الدلالي أقرب أسعار CWICR. أي لغة — يتعامل المُرمِّز متعدد اللغات مع الاستعلامات عبر اللغات.",
     "match_elements.new_text.lines_label": "الأوصاف (واحد لكل سطر)",
-    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder":
+      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.name_label": "اسم الجلسة (اختياري)",
     "match_elements.new_text.name_placeholder": "مثلًا تقدير سريع للربع الثالث",
     "match_elements.new_text.title": "جلسة جديدة — ألصق الأوصاف",
-    "match_elements.no_groups": "لا توجد مجموعات بعد — استورد نموذج BIM لملء هذا المشروع.",
+    "match_elements.no_groups":
+      "لا توجد مجموعات بعد — استورد نموذج BIM لملء هذا المشروع.",
     "match_elements.no_match": "لا تطابق…",
     "match_elements.no_match.apply": "تطبيق",
     "match_elements.no_match.cancel": "إلغاء",
     "match_elements.no_match.close": "إغلاق حوار «بدون مطابقة»",
-    "match_elements.no_match.custom.sub": "أضف موقعاً خاصاً بالمشروع مع الوصف والوحدة والسعر.",
+    "match_elements.no_match.custom.sub":
+      "أضف موقعاً خاصاً بالمشروع مع الوصف والوحدة والسعر.",
     "match_elements.no_match.custom.title": "إنشاء موقع مخصص",
     "match_elements.no_match.error": "تعذّر التطبيق: {{error}}",
     "match_elements.no_match.heading": "لا تطابق — اختر إجراءً",
     "match_elements.no_match.placeholder.description": "وصف الموقع",
     "match_elements.no_match.placeholder.rate": "سعر الوحدة",
     "match_elements.no_match.placeholder.unit": "الوحدة",
-    "match_elements.no_match.rfq.sub": "علامة للمناقصة — اطلب عروض الأسعار من المقاولين الفرعيين.",
+    "match_elements.no_match.rfq.sub":
+      "علامة للمناقصة — اطلب عروض الأسعار من المقاولين الفرعيين.",
     "match_elements.no_match.rfq.title": "إرسال إلى RFQ",
-    "match_elements.no_match.tbd.sub": "أوقف المجموعة؛ راجع لاحقاً. مستبعدة من إجماليات BOQ حتى الحل.",
+    "match_elements.no_match.tbd.sub":
+      "أوقف المجموعة؛ راجع لاحقاً. مستبعدة من إجماليات BOQ حتى الحل.",
     "match_elements.no_match.tbd.title": "علامة سيتم تحديده",
-    "match_elements.no_prior_sessions": "لا توجد جلسات مطابقة سابقة لهذا المشروع.",
-    "match_elements.no_project_hint": "افتح محدد المشروع في الرأس، أو قم بزيارة",
+    "match_elements.no_prior_sessions":
+      "لا توجد جلسات مطابقة سابقة لهذا المشروع.",
+    "match_elements.no_project_hint":
+      "افتح محدد المشروع في الرأس، أو قم بزيارة",
     "match_elements.no_project_title": "لم يتم تحديد مشروع نشط.",
     "match_elements.no_session": "لا توجد جلسة بعد",
     "match_elements.project_settings": "إعدادات المشروع",
-    "match_elements.project_settings_help": "افتح إعدادات المشروع (المنطقة، العملة، اللغة، أسعار الصرف)",
+    "match_elements.project_settings_help":
+      "افتح إعدادات المشروع (المنطقة، العملة، اللغة، أسعار الصرف)",
     "match_elements.refresh_title": "تحديث — يجلب أحدث عناصر BIM",
     "match_elements.region_bim_models": "نموذج BIM",
-    "match_elements.region_bim_models_help": "اختر النموذج المصدر — تُقرأ الكميات من هنا",
-    "match_elements.region_lang_help": "تتحول منطقة المشروع إلى هذه اللغة ← مجموعة cwicr_{{lang}}_v3",
+    "match_elements.region_bim_models_help":
+      "اختر النموذج المصدر — تُقرأ الكميات من هنا",
+    "match_elements.region_lang_help":
+      "تتحول منطقة المشروع إلى هذه اللغة ← مجموعة cwicr_{{lang}}_v3",
     "match_elements.region_sessions": "جلسة المطابقة",
     "match_elements.region_sessions_help": "استأنف جلسة قائمة أو ابدأ جديدة",
     "match_elements.region_settings": "إعدادات المطابقة",
-    "match_elements.region_settings_help": "اضبط طريقة العثور على المطابقات وما يظهر بالأسفل",
+    "match_elements.region_settings_help":
+      "اضبط طريقة العثور على المطابقات وما يظهر بالأسفل",
     "match_elements.select_project": "اختر المشروع…",
     "match_elements.selected_count": "{{n}} محددة",
     "match_elements.session_confirmed": "مؤكَّد",
@@ -3188,7 +3520,8 @@ const resource = {
     "match_elements.stage.12_Equipment": "المعدات",
     "match_elements.stage.13_Sitework": "أعمال الموقع",
     "match_elements.stage_any": "أي مرحلة",
-    "match_elements.stage_help": "ثبّت المطابقات على مرحلة OmniClass واحدة. اتركه فارغًا للبحث في جميع المراحل.",
+    "match_elements.stage_help":
+      "ثبّت المطابقات على مرحلة OmniClass واحدة. اتركه فارغًا للبحث في جميع المراحل.",
     "match_elements.stage_label": "مرحلة البناء",
     "match_elements.status.applied": "مطبق",
     "match_elements.status.confirmed": "مؤكد",
@@ -3209,7 +3542,8 @@ const resource = {
     "match_elements.step_4_done": "{{n}} تم التطبيق",
     "match_elements.step_4_help": "الكتابة إلى جدول الكميات",
     "match_elements.step_4_label": "التطبيق على جدول الكميات",
-    "match_elements.subtitle": "تخطيط عناصر BIM ← مواقع CWICR. BIM نشط؛ DWG / PDF / صورة ستصل في المراحل القادمة.",
+    "match_elements.subtitle":
+      "تخطيط عناصر BIM ← مواقع CWICR. BIM نشط؛ DWG / PDF / صورة ستصل في المراحل القادمة.",
     "match_elements.subtractive_badge": "فراغ",
     "match_elements.subtractive_hint": "خصم / غير قابل للفوترة",
     "match_elements.tab.apply": "معاينة التطبيق",
@@ -3218,8 +3552,10 @@ const resource = {
     "match_elements.templates.close": "إغلاق مكتبة القوالب",
     "match_elements.templates.count": "{{count}} توقيع",
     "match_elements.templates.empty": "لا توجد قوالب محفوظة بعد.",
-    "match_elements.templates.empty_hint": "تظهر التطابقات المؤكدة مع تمكين «حفظ في المكتبة» هنا وتنتشر إلى المشاريع المستقبلية.",
-    "match_elements.templates.footer": "القوالب على نطاق المستأجر. التوقيعات المؤكدة تقترح المطابقات تلقائياً في المشاريع المستقبلية.",
+    "match_elements.templates.empty_hint":
+      "تظهر التطابقات المؤكدة مع تمكين «حفظ في المكتبة» هنا وتنتشر إلى المشاريع المستقبلية.",
+    "match_elements.templates.footer":
+      "القوالب على نطاق المستأجر. التوقيعات المؤكدة تقترح المطابقات تلقائياً في المشاريع المستقبلية.",
     "match_elements.templates.last": "آخر استخدام {{date}}",
     "match_elements.templates.loading": "تحميل المكتبة…",
     "match_elements.templates.remove_confirm": "إزالة هذا القالب من المكتبة؟",
@@ -3239,40 +3575,57 @@ const resource = {
     "match_elements.trade.subtractive": "فراغات",
     "match_elements.trade_filter": "تصفية حسب التخصص",
     "match_elements.use_net": "استخدام الكميات الصافية (خصم الفتحات)",
-    "match_elements.use_net_help": "إيقاف = إجمالي. الإعداد الافتراضي يخصم IfcOpeningElement / IfcRelVoidsElement من كميات المضيف.",
-    "match_elements.vector_status_disconnected": "قاعدة المتجهات غير قابلة للوصول",
-    "match_elements.vector_status_disconnected_detail": "Qdrant لا يستجيب · {{error}}",
-    "match_elements.vector_status_disconnected_help": "Qdrant لا يستجيب — ستعود المطابقات إلى الوضع المعجمي فقط",
+    "match_elements.use_net_help":
+      "إيقاف = إجمالي. الإعداد الافتراضي يخصم IfcOpeningElement / IfcRelVoidsElement من كميات المضيف.",
+    "match_elements.vector_status_disconnected":
+      "قاعدة المتجهات غير قابلة للوصول",
+    "match_elements.vector_status_disconnected_detail":
+      "Qdrant لا يستجيب · {{error}}",
+    "match_elements.vector_status_disconnected_help":
+      "Qdrant لا يستجيب — ستعود المطابقات إلى الوضع المعجمي فقط",
     "match_elements.vector_status_empty": "قاعدة المتجهات فارغة",
-    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} مُحمَّلة لكن بـ 0 أسعار — قم بتوليد المتجهات من /costs",
+    "match_elements.vector_status_empty_detail":
+      "{{lang}} · {{collection}} مُحمَّلة لكن بـ 0 أسعار — قم بتوليد المتجهات من /costs",
     "match_elements.vector_status_loading": "جارٍ فحص قاعدة المتجهات…",
     "match_elements.vector_status_missing": "المجموعة غير محمَّلة",
-    "match_elements.vector_status_missing_detail": "{{collection}} للغة «{{lang}}» غير موجودة في Qdrant — زر /costs لتوليد المتجهات",
+    "match_elements.vector_status_missing_detail":
+      "{{collection}} للغة «{{lang}}» غير موجودة في Qdrant — زر /costs لتوليد المتجهات",
     "match_elements.vector_status_no_country": "المنطقة/اللغة غير معروفة",
-    "match_elements.vector_status_no_country_detail": "حدّد منطقة المشروع في /projects/.../settings لتثبيت المجموعة",
+    "match_elements.vector_status_no_country_detail":
+      "حدّد منطقة المشروع في /projects/.../settings لتثبيت المجموعة",
     "match_elements.vector_status_non_qdrant": "خلفية LanceDB القديمة",
-    "match_elements.vector_status_non_qdrant_detail": "المجموعات لكل لغة تنطبق فقط على Qdrant — المحرك الحالي LanceDB",
+    "match_elements.vector_status_non_qdrant_detail":
+      "المجموعات لكل لغة تنطبق فقط على Qdrant — المحرك الحالي LanceDB",
     "match_elements.vector_status_open_costs": "فتح /costs",
     "match_elements.vector_status_ready": "قاعدة المتجهات جاهزة",
-    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} أسعار · {{collection}}",
+    "match_elements.vector_status_ready_detail":
+      "{{lang}} · {{rateCount}} أسعار · {{collection}}",
     "match_elements.visible_groups": "{{n}} مرئية",
-    "match_elements.info.bullet_extract": "نستخرج العناصر: الأوصاف والوحدات والكميات والمناطق والتصنيف.",
-    "match_elements.info.bullet_save": "احفظ الجلسة — يمكنك العودة إليها وتعديلها وتصديرها كـ BoQ لاحقًا.",
-    "match_elements.info.bullet_search": "يتم البحث عن كل عنصر في كتالوج التكاليف المحدد باستخدام التشابه المتجهي + الإشارات المعجمية + تعزيز المنطقة/الوحدة.",
-    "match_elements.info.bullet_shortlist": "تحصل على قائمة قصيرة مرتبة بالثقة لكل عنصر — اختر الأفضل، وعدّل الكمية إذا لزم الأمر.",
-    "match_elements.info.bullet_upload": "حمّل نموذج BIM أو جدول الكميات الخاص بك.",
+    "match_elements.info.bullet_extract":
+      "نستخرج العناصر: الأوصاف والوحدات والكميات والمناطق والتصنيف.",
+    "match_elements.info.bullet_save":
+      "احفظ الجلسة — يمكنك العودة إليها وتعديلها وتصديرها كـ BoQ لاحقًا.",
+    "match_elements.info.bullet_search":
+      "يتم البحث عن كل عنصر في كتالوج التكاليف المحدد باستخدام التشابه المتجهي + الإشارات المعجمية + تعزيز المنطقة/الوحدة.",
+    "match_elements.info.bullet_shortlist":
+      "تحصل على قائمة قصيرة مرتبة بالثقة لكل عنصر — اختر الأفضل، وعدّل الكمية إذا لزم الأمر.",
+    "match_elements.info.bullet_upload":
+      "حمّل نموذج BIM أو جدول الكميات الخاص بك.",
     "match_elements.info.button_aria": "كيف تعمل المطابقة",
     "match_elements.info.button_title": "كيف تعمل المطابقة",
     "match_elements.info.dialog_aria": "كيف تعمل المطابقة",
-    "match_elements.info.footer": "الجلسات المحفوظة موجودة في القائمة على هذه الصفحة.",
+    "match_elements.info.footer":
+      "الجلسات المحفوظة موجودة في القائمة على هذه الصفحة.",
     "match_elements.info.title": "كيف تعمل المطابقة",
     "match_progress.elapsed": "المنقضي",
     "match_progress.error_fallback": "خطأ غير معروف",
     "match_progress.error_label": "تفاصيل الخطأ",
     "match_progress.headline_done": "اكتمل كل شيء — جارٍ فتح النتائج",
     "match_progress.headline_error": "حدث خطأ ما",
-    "match_progress.headline_long": "كاد ينتهي — قد تستغرق المشاريع الكبيرة دقيقة",
-    "match_progress.long_hint": "لا يزال العمل جاريًا — التشغيلات الأولى على نماذج BIM الكبيرة تستغرق وقتًا أطول لأن المتجهات في طور الإحماء. التشغيلات اللاحقة على المشروع نفسه أسرع بكثير.",
+    "match_progress.headline_long":
+      "كاد ينتهي — قد تستغرق المشاريع الكبيرة دقيقة",
+    "match_progress.long_hint":
+      "لا يزال العمل جاريًا — التشغيلات الأولى على نماذج BIM الكبيرة تستغرق وقتًا أطول لأن المتجهات في طور الإحماء. التشغيلات اللاحقة على المشروع نفسه أسرع بكثير.",
     "match_progress.overall_aria": "التقدم العام للمطابقة",
     "match_progress.retry": "حاول مرة أخرى",
     "match_progress.stage_currency": "تطبيع العملة",
@@ -3281,9 +3634,12 @@ const resource = {
     "match_progress.stage_load": "تحميل عناصر BIM",
     "match_progress.stage_rerank": "إعادة الترتيب حسب الصلة",
     "match_progress.stage_vector": "البحث المتجهي (أعلى المرشحين)",
-    "match_progress.subtitle_done": "جميع المراحل خضراء — جارٍ التسليم إلى لوحة المراجعة.",
-    "match_progress.subtitle_error": "تعذّر على المُطابِق الإنهاء — حاول مرة أخرى أو اختر كتالوجًا آخر.",
-    "match_progress.subtitle_running": "نبحث في الكتالوج بإشارات المتجهات + المعجمية + المنطقة. آمن أن تتركها مفتوحة في علامة تبويب.",
+    "match_progress.subtitle_done":
+      "جميع المراحل خضراء — جارٍ التسليم إلى لوحة المراجعة.",
+    "match_progress.subtitle_error":
+      "تعذّر على المُطابِق الإنهاء — حاول مرة أخرى أو اختر كتالوجًا آخر.",
+    "match_progress.subtitle_running":
+      "نبحث في الكتالوج بإشارات المتجهات + المعجمية + المنطقة. آمن أن تتركها مفتوحة في علامة تبويب.",
     "match_progress.title_done": "اكتملت المطابقة",
     "match_progress.title_error": "فشلت المطابقة",
     "match_progress.title_running": "المطابقة قيد التنفيذ",
@@ -3294,7 +3650,8 @@ const resource = {
     "match_wizard.create_failed": "تعذّر بدء المطابقة",
     "match_wizard.creating": "جارٍ إنشاء الجلسة وتشغيل المطابقة المتجهية…",
     "match_wizard.excel_drop": "انقر أو أفلت ملف Excel",
-    "match_wizard.excel_hint": "اكتشاف أعمدة متعدد اللغات — EN/DE/RU/ES/PT/CJK/…",
+    "match_wizard.excel_hint":
+      "اكتشاف أعمدة متعدد اللغات — EN/DE/RU/ES/PT/CJK/…",
     "match_wizard.excel_label": "ارفع جدول كميات بصيغة xlsx.",
     "match_wizard.install_aria": "تثبيت {{region}}",
     "match_wizard.install_button": "تثبيت",
@@ -3307,9 +3664,12 @@ const resource = {
     "match_wizard.loading_catalogues": "جارٍ تحميل الكتالوجات…",
     "match_wizard.loading_models": "جارٍ تحميل نماذج BIM…",
     "match_wizard.match_kickoff_warn": "تم إنشاء الجلسة",
-    "match_wizard.match_kickoff_warn_msg": "الجلسة جاهزة، لكن المطابقة التلقائية فشلت: {{error}}. أعد التشغيل من شريط الأدوات.",
-    "match_wizard.no_bim": "لا توجد نماذج BIM في هذا المشروع. ارفع نموذجًا في /bim، أو بدّل إلى Excel BoQ / نص ملصوق.",
-    "match_wizard.no_installed": "لا توجد كتالوجات مثبَّتة بعد. ثبّت واحدًا من الرصيف العائم أسفل اليسار — سيحتفظ المعالج باختياراتك أثناء التنزيل.",
+    "match_wizard.match_kickoff_warn_msg":
+      "الجلسة جاهزة، لكن المطابقة التلقائية فشلت: {{error}}. أعد التشغيل من شريط الأدوات.",
+    "match_wizard.no_bim":
+      "لا توجد نماذج BIM في هذا المشروع. ارفع نموذجًا في /bim، أو بدّل إلى Excel BoQ / نص ملصوق.",
+    "match_wizard.no_installed":
+      "لا توجد كتالوجات مثبَّتة بعد. ثبّت واحدًا من الرصيف العائم أسفل اليسار — سيحتفظ المعالج باختياراتك أثناء التنزيل.",
     "match_wizard.pill_catalogue": "كتالوج",
     "match_wizard.pill_run": "تشغيل",
     "match_wizard.pill_source": "مصدر",
@@ -3322,29 +3682,35 @@ const resource = {
     "match_wizard.review_stage": "المرحلة",
     "match_wizard.review_text_lines": "تم لصق {{n}} أسطر",
     "match_wizard.run_button": "تشغيل المطابقة",
-    "match_wizard.stage_any_help": "المطابقة عبر المشروع بأكمله — لا يُطبَّق مرشّح مرحلة.",
+    "match_wizard.stage_any_help":
+      "المطابقة عبر المشروع بأكمله — لا يُطبَّق مرشّح مرحلة.",
     "match_wizard.stage_other_label": "مراحل أخرى",
     "match_wizard.step1_eyebrow": "الخطوة 1",
-    "match_wizard.step1_help": "تثبيت مرحلة يضيّق نطاق عناصر BIM وأسعار الكتالوج على ذلك العمل. اختر «أي مرحلة» للبحث عبر المشروع كاملًا.",
+    "match_wizard.step1_help":
+      "تثبيت مرحلة يضيّق نطاق عناصر BIM وأسعار الكتالوج على ذلك العمل. اختر «أي مرحلة» للبحث عبر المشروع كاملًا.",
     "match_wizard.step1_title": "ما المرحلة التي تطابقها؟",
     "match_wizard.step2_chip_bgem3": "تضمينات BGE-M3",
     "match_wizard.step2_chip_lang": "استعلامات بلغة طبيعية",
     "match_wizard.step2_chip_semantic": "بحث دلالي",
     "match_wizard.step2_eyebrow": "الخطوة 2",
-    "match_wizard.step2_help": "كل كتالوج هو فهرس متجهي لبنود مسعّرة — تحدّث إليه بلغة طبيعية («جدار خرساني مسلح 24 سم»، «حامل كابلات ELT»، «أنبوب فولاذي DN200») فيُعيد أقرب بنود دليل الأسعار، بغضّ النظر عن الصياغة أو اللغة الدقيقة. الأسعار من دليل المنطقة؛ بدّل إذا أردت أسعارًا من مكان آخر.",
+    "match_wizard.step2_help":
+      "كل كتالوج هو فهرس متجهي لبنود مسعّرة — تحدّث إليه بلغة طبيعية («جدار خرساني مسلح 24 سم»، «حامل كابلات ELT»، «أنبوب فولاذي DN200») فيُعيد أقرب بنود دليل الأسعار، بغضّ النظر عن الصياغة أو اللغة الدقيقة. الأسعار من دليل المنطقة؛ بدّل إذا أردت أسعارًا من مكان آخر.",
     "match_wizard.step2_title": "اختر كتالوج التكلفة",
     "match_wizard.step3_eyebrow": "الخطوة 3",
-    "match_wizard.step3_help": "يوفّر BIM مطابقات واعية بالكميات. Excel والنص الملصوق مناسبان للقوائم العفوية.",
+    "match_wizard.step3_help":
+      "يوفّر BIM مطابقات واعية بالكميات. Excel والنص الملصوق مناسبان للقوائم العفوية.",
     "match_wizard.step3_title": "من أين تأتي البنود؟",
     "match_wizard.step4_eyebrow": "الخطوة 4",
-    "match_wizard.step4_help": "سننشئ الجلسة ونشغّل مطابقة متجهية. يمكنك إعادة التشغيل بـ المعجمي / الموارد من صفحة النتائج لاحقًا.",
+    "match_wizard.step4_help":
+      "سننشئ الجلسة ونشغّل مطابقة متجهية. يمكنك إعادة التشغيل بـ المعجمي / الموارد من صفحة النتائج لاحقًا.",
     "match_wizard.step4_title": "تبدو الأمور جيدة — لنبدأ المطابقة",
     "match_wizard.tab_bim": "نموذج BIM",
     "match_wizard.tab_excel": "جدول كميات Excel",
     "match_wizard.tab_text": "نص ملصوق",
     "match_wizard.text_count": "{{n}} أسطر",
     "match_wizard.text_label": "ألصق الأوصاف، واحد في كل سطر",
-    "match_wizard.text_placeholder": "جدار خرساني C30/37، 240 مم\nباب — مفرد، خشب صلب\n…",
+    "match_wizard.text_placeholder":
+      "جدار خرساني C30/37، 240 مم\nباب — مفرد، خشب صلب\n…",
     "meetings.action_complete": "Complete",
     "meetings.action_due": "Due",
     "meetings.action_owner": "Owner",
@@ -3388,19 +3754,25 @@ const resource = {
     "modules.active_count": "نشط",
     "modules.cannot_disable": "لا يمكن التعطيل",
     "modules.cat_regional": "المعايير الإقليمية",
-    "modules.cat_regional_desc": "صيغ استيراد/تصدير BOQ والمعايير التصنيفية الخاصة بكل دولة",
-    "modules.community_desc": "يتمتع OpenConstructionERP ببنية إضافات معيارية. يمكن لأي شخص إنشاء وحدات مخصصة — قواعد بيانات التكاليف، والمعايير الإقليمية، ومحوّلات CAD، ولوحات التحليل، وتكاملات الأنظمة الخارجية، أو أي وظيفة أخرى. ستظهر وحدتك في قسم الوحدات ويمكن لأي مستخدم تثبيتها.",
-    "modules.community_how": "كل وحدة عبارة عن حزمة Python مع ملف manifest.py. أنشئ وحدتك واختبرها محلياً وشاركها مع المجتمع. حتى لو كانت لديك فكرة فحسب — أرسل لنا وصفاً نصياً وسنساعدك في بنائها.",
+    "modules.cat_regional_desc":
+      "صيغ استيراد/تصدير BOQ والمعايير التصنيفية الخاصة بكل دولة",
+    "modules.community_desc":
+      "يتمتع OpenConstructionERP ببنية إضافات معيارية. يمكن لأي شخص إنشاء وحدات مخصصة — قواعد بيانات التكاليف، والمعايير الإقليمية، ومحوّلات CAD، ولوحات التحليل، وتكاملات الأنظمة الخارجية، أو أي وظيفة أخرى. ستظهر وحدتك في قسم الوحدات ويمكن لأي مستخدم تثبيتها.",
+    "modules.community_how":
+      "كل وحدة عبارة عن حزمة Python مع ملف manifest.py. أنشئ وحدتك واختبرها محلياً وشاركها مع المجتمع. حتى لو كانت لديك فكرة فحسب — أرسل لنا وصفاً نصياً وسنساعدك في بنائها.",
     "modules.community_submit_email": "إرسال الوحدة عبر البريد الإلكتروني",
     "modules.community_submit_github": "اقتراح على GitHub",
     "modules.community_telegram": "النقاش على Telegram",
     "modules.community_title": "أنشئ وحدتك الخاصة",
     "modules.community_type_data": "وحدات البيانات",
-    "modules.community_type_data_desc": "قواعد بيانات التكاليف الإقليمية، وكتالوجات الموارد، ومكتبات المواد، ومعايير التصنيف (DIN، NRM، SNIP، إلخ.)",
+    "modules.community_type_data_desc":
+      "قواعد بيانات التكاليف الإقليمية، وكتالوجات الموارد، ومكتبات المواد، ومعايير التصنيف (DIN، NRM، SNIP، إلخ.)",
     "modules.community_type_integration": "التكاملات",
-    "modules.community_type_integration_desc": "الاتصال بـ SAP وProcore وMS Project وBIM 360 وPlanRadar وPrimavera أو أي نظام خارجي عبر API",
+    "modules.community_type_integration_desc":
+      "الاتصال بـ SAP وProcore وMS Project وBIM 360 وPlanRadar وPrimavera أو أي نظام خارجي عبر API",
     "modules.community_type_tools": "الأدوات والتحليلات",
-    "modules.community_type_tools_desc": "تقارير مخصصة، ولوحات معلومات، وآلات حساب، ومحوّلات الصيغ، ونماذج الذكاء الاصطناعي، أو أي أداة إنشائية متخصصة",
+    "modules.community_type_tools_desc":
+      "تقارير مخصصة، ولوحات معلومات، وآلات حساب، ومحوّلات الصيغ، ونماذج الذكاء الاصطناعي، أو أي أداة إنشائية متخصصة",
     "modules.core": "أساسي",
     "modules.core_module_locked": "وحدة أساسية — لا يمكن تعطيلها",
     "modules.depends_on": "يتطلب: {{deps}}",
@@ -3457,9 +3829,11 @@ const resource = {
     "nav.carbon": "الكربون و ESG",
     "nav.bi_dashboards": "لوحات BI",
     "nav.group_operations": "عمليات الموقع",
-    "nav.group_operations_desc": "العمليات اليومية في الموقع — تذاكر الخدمة، المعدات، اليوميات، بوابة المقاولين الفرعيين، الموارد",
+    "nav.group_operations_desc":
+      "العمليات اليومية في الموقع — تذاكر الخدمة، المعدات، اليوميات، بوابة المقاولين الفرعيين، الموارد",
     "nav.group_commercial": "تجاري",
-    "nav.group_commercial_desc": "خط الأعمال التجاري — CRM، العقود، العطاءات، التغييرات، الموردون، التطوير العقاري",
+    "nav.group_commercial_desc":
+      "خط الأعمال التجاري — CRM، العقود، العطاءات، التغييرات، الموردون، التطوير العقاري",
     "nav.group_bi": "تحليلات",
     "nav.group_bi_desc": "لوحات BI مبنية على إسقاطات مستودع البيانات",
     "nav.de_din": "DE DIN 276 Exchange",
@@ -3478,7 +3852,8 @@ const resource = {
     "nav.group_databases": "قواعد البيانات",
     "nav.group_documentation": "المستندات",
     "nav.group_estimation": "التقدير",
-    "nav.group_estimation_desc": "الأدوات الأساسية: المشاريع وجدول الكميات والتكاليف والبنود المركبة",
+    "nav.group_estimation_desc":
+      "الأدوات الأساسية: المشاريع وجدول الكميات والتكاليف والبنود المركبة",
     "nav.group_field": "الموقع والتقارير",
     "nav.group_finance": "المالية والمشتريات",
     "nav.group_overview": "نظرة عامة",
@@ -3577,27 +3952,36 @@ const resource = {
     "ncr.title_required": "العنوان مطلوب",
     "notification.document_uploaded_body": "{{document_name}}",
     "notification.document_uploaded_title": "تم رفع مستند",
-    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} في {{inspection_date}}",
+    "notification.inspection_scheduled_body":
+      "{{inspection_number}} — {{title}} في {{inspection_date}}",
     "notification.inspection_scheduled_title": "تم جدولة تفتيش",
-    "notification.invoice_approved_body": "الفاتورة {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body":
+      "الفاتورة {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.invoice_approved_title": "تمت الموافقة على الفاتورة",
     "notification.meeting_scheduled_body": "{{title}} في {{meeting_date}}",
     "notification.meeting_scheduled_title": "تم جدولة اجتماع",
-    "notification.ncr_created_body": "تقرير عدم المطابقة {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body":
+      "تقرير عدم المطابقة {{ncr_number}} — {{title}} ({{severity}})",
     "notification.ncr_created_title": "تم تسجيل عدم مطابقة",
-    "notification.rfi_assigned_body": "طلب المعلومات {{rfi_number}} — {{subject}}",
+    "notification.rfi_assigned_body":
+      "طلب المعلومات {{rfi_number}} — {{subject}}",
     "notification.rfi_assigned_title": "تم تعيين طلب معلومات لك",
-    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
-    "notification.submittal_status_changed_title": "تغيّرت حالة المستند المقدَّم",
+    "notification.submittal_status_changed_body":
+      "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_title":
+      "تغيّرت حالة المستند المقدَّم",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.task_assigned_title": "تم تعيين مهمة جديدة",
-    "notifications.boq.created.body": "تم حفظ قائمة الكميات الخاصة بك '{{boq_name}}'.",
+    "notifications.boq.created.body":
+      "تم حفظ قائمة الكميات الخاصة بك '{{boq_name}}'.",
     "notifications.boq.created.title": "تم إنشاء قائمة الكميات",
-    "notifications.cde.state_transitioned.body": "انتقلت الحاوية إلى '{{new_state}}'.",
+    "notifications.cde.state_transitioned.body":
+      "انتقلت الحاوية إلى '{{new_state}}'.",
     "notifications.cde.state_transitioned.title": "تغيرت حالة المستند",
     "notifications.just_now": "الآن",
     "notifications.mark_all_read": "تعليم الكل كمقروء",
-    "notifications.meeting.action_assigned.body": "من اجتماع {{meeting_number}}: {{description}}",
+    "notifications.meeting.action_assigned.body":
+      "من اجتماع {{meeting_number}}: {{description}}",
     "notifications.meeting.action_assigned.title": "تم تكليفك ببند إجراء",
     "notifications.no_notifications": "لا توجد إشعارات",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
@@ -3608,18 +3992,23 @@ const resource = {
     "notifications.risk.assigned.title": "تم تكليفك بمخاطرة",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.approved.title": "تمت الموافقة على النموذج",
-    "notifications.submittal.rejected.body": "{{code}} ({{title}}). السبب: {{reason}}",
+    "notifications.submittal.rejected.body":
+      "{{code}} ({{title}}). السبب: {{reason}}",
     "notifications.submittal.rejected.title": "تم رفض النموذج",
-    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). السبب: {{reason}}",
+    "notifications.submittal.revise_resubmit.body":
+      "{{code}} ({{title}}). السبب: {{reason}}",
     "notifications.submittal.revise_resubmit.title": "النموذج يحتاج إلى مراجعة",
     "notifications.submittal.submitted.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "نموذج بانتظار المراجعة",
     "notifications.title": "الإشعارات",
-    "notifications.transmittal.acknowledged.body": "أكد المستلم استلام {{code}} ({{title}}).",
-    "notifications.transmittal.acknowledged.title": "تم تأكيد استلام خطاب النقل",
+    "notifications.transmittal.acknowledged.body":
+      "أكد المستلم استلام {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.title":
+      "تم تأكيد استلام خطاب النقل",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.issued.title": "تم إرسال خطاب نقل إليك",
-    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body":
+      "{{code}} ({{title}}). {{response_summary}}",
     "notifications.transmittal.responded.title": "تم الرد على خطاب النقل",
     "notifications.unread": "Unread",
     "onboarding.ai_feature_1": "توليد تقديرات من أوصاف نصية",
@@ -3634,19 +4023,27 @@ const resource = {
     "onboarding.api_key": "مفتاح API",
     "onboarding.api_key_placeholder": "الصق مفتاح API هنا...",
     "onboarding.company_architecture": "مكتب هندسي / معماري",
-    "onboarding.company_architecture_desc": "نصمم المباني — BIM والمستندات وبيئة البيانات المشتركة",
+    "onboarding.company_architecture_desc":
+      "نصمم المباني — BIM والمستندات وبيئة البيانات المشتركة",
     "onboarding.company_estimator": "مُسعِّر / مستشار تكاليف",
-    "onboarding.company_estimator_desc": "نركّز على تقدير التكاليف وحساب الكميات",
+    "onboarding.company_estimator_desc":
+      "نركّز على تقدير التكاليف وحساب الكميات",
     "onboarding.company_full_enterprise": "مؤسسة كاملة",
-    "onboarding.company_full_enterprise_desc": "نحتاج كل شيء — دورة حياة البناء الكاملة",
+    "onboarding.company_full_enterprise_desc":
+      "نحتاج كل شيء — دورة حياة البناء الكاملة",
     "onboarding.company_general_contractor": "مقاول عام",
-    "onboarding.company_general_contractor_desc": "ننفّذ المشاريع — التسعير والمشتريات وإدارة الموقع",
+    "onboarding.company_general_contractor_desc":
+      "ننفّذ المشاريع — التسعير والمشتريات وإدارة الموقع",
     "onboarding.company_project_management": "شركة إدارة مشاريع",
-    "onboarding.company_project_management_desc": "ندير مشاريع كبيرة — التخطيط والتواصل والمستندات",
-    "onboarding.company_type_subtitle": "سنقوم بضبط أفضل مجموعة وحدات تناسب سير عملك.",
+    "onboarding.company_project_management_desc":
+      "ندير مشاريع كبيرة — التخطيط والتواصل والمستندات",
+    "onboarding.company_type_subtitle":
+      "سنقوم بضبط أفضل مجموعة وحدات تناسب سير عملك.",
     "onboarding.company_type_title": "ما نوع شركتك؟",
-    "onboarding.cost_db_hint": "يمكنك إضافة المزيد من قواعد البيانات لاحقًا في قاعدة بيانات التكاليف ← استيراد.",
-    "onboarding.cost_db_subtitle": "حمّل قاعدة بيانات أسعار للتقديرات الدقيقة. اختر منطقتك:",
+    "onboarding.cost_db_hint":
+      "يمكنك إضافة المزيد من قواعد البيانات لاحقًا في قاعدة بيانات التكاليف ← استيراد.",
+    "onboarding.cost_db_subtitle":
+      "حمّل قاعدة بيانات أسعار للتقديرات الدقيقة. اختر منطقتك:",
     "onboarding.cost_db_title": "قاعدة بيانات التكاليف",
     "onboarding.create_error": "فشل إنشاء المشروع",
     "onboarding.create_project": "إنشاء وبدء التقدير",
@@ -3657,7 +4054,8 @@ const resource = {
     "onboarding.get_started": "ابدأ الآن",
     "onboarding.items_loaded": "بنود محملة",
     "onboarding.loading_database": "جارٍ استيراد قاعدة البيانات...",
-    "onboarding.loading_database_hint": "جارٍ تحميل ~55,000 بند. يستغرق هذا 1-3 دقائق.",
+    "onboarding.loading_database_hint":
+      "جارٍ تحميل ~55,000 بند. يستغرق هذا 1-3 دقائق.",
     "onboarding.mod_5d_desc": "نموذج تكلفة 5D مع تتبع القيمة المكتسبة",
     "onboarding.mod_advisor_desc": "مستشار التكلفة الذكي وروبوت الدردشة",
     "onboarding.mod_ai_estimate_desc": "تقدير سريع بالذكاء الاصطناعي",
@@ -3670,22 +4068,28 @@ const resource = {
     "onboarding.mod_changeorders_desc": "تتبع أوامر التغيير والموافقة عليها",
     "onboarding.mod_collaboration_desc": "أدوات التعاون الفوري",
     "support.button_label": "ادعمنا",
-    "support.button_tooltip": "ادعم المشروع — أعطنا نجمة، شارك، أو أرسل دراسة حالة",
+    "support.button_tooltip":
+      "ادعم المشروع — أعطنا نجمة، شارك، أو أرسل دراسة حالة",
     "support.button_aria": "ادعمنا",
     "support.modal_title": "ساعد OpenConstructionERP على النمو",
-    "support.modal_subtitle": "نبني هذا المشروع علنًا ونوفر كل ميزة مجانًا. بعض الإجراءات الصغيرة منك تُبقي التطوير مستمرًا — لا تكلف شيئًا لكنها تُحدث فرقًا كبيرًا.",
+    "support.modal_subtitle":
+      "نبني هذا المشروع علنًا ونوفر كل ميزة مجانًا. بعض الإجراءات الصغيرة منك تُبقي التطوير مستمرًا — لا تكلف شيئًا لكنها تُحدث فرقًا كبيرًا.",
     "support.action_star_title": "أعطنا نجمة على GitHub",
-    "support.action_star_body": "30 ثانية. النجوم هي الطريقة التي تكتشف بها فرق البناء الجديدة المشروع، وتؤمّن لنا الوقت للإصدار التالي.",
+    "support.action_star_body":
+      "30 ثانية. النجوم هي الطريقة التي تكتشف بها فرق البناء الجديدة المشروع، وتؤمّن لنا الوقت للإصدار التالي.",
     "support.action_share_title": "شارك مع فريقك أو شبكتك",
-    "support.action_share_body": "منشور واحد على LinkedIn أو X / Twitter يصل إلى عشرات من المساحين والمخططين ومديري BIM. ساعدنا في وضع برامج البناء مفتوحة المصدر على الخريطة.",
+    "support.action_share_body":
+      "منشور واحد على LinkedIn أو X / Twitter يصل إلى عشرات من المساحين والمخططين ومديري BIM. ساعدنا في وضع برامج البناء مفتوحة المصدر على الخريطة.",
     "support.share_twitter": "نشر على X",
     "support.share_linkedin": "نشر على LinkedIn",
     "support.share_copy": "نسخ النص + الرابط",
     "support.share_copied": "تم النسخ!",
     "support.action_case_study_title": "هل لديك دراسة حالة أو فيديو أو مقال؟",
     "support.action_case_study_tag": "سنقوم بترويجها",
-    "support.action_case_study_body": "أرنا كيف تستخدم OpenConstructionERP — فيديو، دراسة حالة، أو منشور على LinkedIn. يمكنك إرسال الرابط مباشرة، أو الإشارة إلى @DataDrivenConstruction في منشورك — سنراه ونعيد مشاركته عبر نشرتنا الإخبارية وقنواتنا الاجتماعية، حيث يتابع عملنا عشرات الآلاف من محترفي البناء وكبار خبراء الصناعة. البريد الإلكتروني للروابط: ",
-    "support.thanks": "شكرًا لك. كل نجمة ومشاركة وقصة تُبقي هذا المشروع حيًا حقًا — مبني بـ ❤️ لمجتمع البناء.",
+    "support.action_case_study_body":
+      "أرنا كيف تستخدم OpenConstructionERP — فيديو، دراسة حالة، أو منشور على LinkedIn. يمكنك إرسال الرابط مباشرة، أو الإشارة إلى @DataDrivenConstruction في منشورك — سنراه ونعيد مشاركته عبر نشرتنا الإخبارية وقنواتنا الاجتماعية، حيث يتابع عملنا عشرات الآلاف من محترفي البناء وكبار خبراء الصناعة. البريد الإلكتروني للروابط: ",
+    "support.thanks":
+      "شكرًا لك. كل نجمة ومشاركة وقصة تُبقي هذا المشروع حيًا حقًا — مبني بـ ❤️ لمجتمع البناء.",
     "onboarding.mod_group_estimation": "التقدير",
     "onboarding.mod_group_ai": "الذكاء الاصطناعي",
     "onboarding.mod_group_bim_advanced": "BIM و 3D",
@@ -3698,109 +4102,153 @@ const resource = {
     "onboarding.mod_group_regional": "حزم إقليمية",
     "onboarding.mod_group_platform": "المنصة",
     "onboarding.mod_cost_match": "مطابقة التكاليف",
-    "onboarding.mod_cost_match_desc": "مطابقة تلقائية لبنود جدول الكميات مع عناصر قاعدة بيانات التكاليف",
+    "onboarding.mod_cost_match_desc":
+      "مطابقة تلقائية لبنود جدول الكميات مع عناصر قاعدة بيانات التكاليف",
     "onboarding.mod_match": "مطابقة العناصر",
-    "onboarding.mod_match_desc": "ربط عناصر BIM/CAD ببنود جدول الكميات والأسعار",
+    "onboarding.mod_match_desc":
+      "ربط عناصر BIM/CAD ببنود جدول الكميات والأسعار",
     "onboarding.mod_dwg_takeoff": "حصر DWG",
     "onboarding.mod_dwg_takeoff_desc": "حصر الكميات مباشرة من رسومات DWG",
     "onboarding.mod_cad": "استيراد CAD",
-    "onboarding.mod_cad_desc": "استيراد DWG/DGN/RVT/IFC عبر خط أنابيب DDC cad2data",
+    "onboarding.mod_cad_desc":
+      "استيراد DWG/DGN/RVT/IFC عبر خط أنابيب DDC cad2data",
     "onboarding.mod_bim_requirements": "متطلبات BIM",
-    "onboarding.mod_bim_requirements_desc": "تعريف متطلبات النموذج والتحقق منها (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc":
+      "تعريف متطلبات النموذج والتحقق منها (IDS / EIR)",
     "onboarding.mod_match_elements": "مطابقة العناصر",
-    "onboarding.mod_match_elements_desc": "مطابقة BIM-التكلفة بمساعدة الذكاء الاصطناعي مع درجات ثقة",
+    "onboarding.mod_match_elements_desc":
+      "مطابقة BIM-التكلفة بمساعدة الذكاء الاصطناعي مع درجات ثقة",
     "onboarding.mod_opencde_api": "واجهة OpenCDE",
-    "onboarding.mod_opencde_api_desc": "واجهة برمجة تطبيقات متوافقة مع OpenCDE لـ BCF + المستندات + Foundation",
+    "onboarding.mod_opencde_api_desc":
+      "واجهة برمجة تطبيقات متوافقة مع OpenCDE لـ BCF + المستندات + Foundation",
     "onboarding.mod_erp_chat": "محادثة ERP",
-    "onboarding.mod_erp_chat_desc": "مساعد دردشة بالذكاء الاصطناعي داخل التطبيق مع سياق ERP كامل",
+    "onboarding.mod_erp_chat_desc":
+      "مساعد دردشة بالذكاء الاصطناعي داخل التطبيق مع سياق ERP كامل",
     "onboarding.mod_compliance_ai": "الذكاء الاصطناعي للامتثال",
     "onboarding.mod_compliance_ai_desc": "فحوصات امتثال تنظيمية مدعومة بـ LLM",
     "onboarding.mod_schedule_advanced": "جدولة متقدمة",
-    "onboarding.mod_schedule_advanced_desc": "Last Planner System مع التطلعات الأسبوعية و PPC",
+    "onboarding.mod_schedule_advanced_desc":
+      "Last Planner System مع التطلعات الأسبوعية و PPC",
     "onboarding.mod_eac": "محرك EAC",
     "onboarding.mod_eac_desc": "تقدير عند الإكمال مع التوقعات المتدحرجة",
     "onboarding.mod_bid_management": "إدارة العروض",
-    "onboarding.mod_bid_management_desc": "إدارة العروض الصادرة، استراتيجيات التسعير، تتبع الفوز/الخسارة",
+    "onboarding.mod_bid_management_desc":
+      "إدارة العروض الصادرة، استراتيجيات التسعير، تتبع الفوز/الخسارة",
     "onboarding.mod_contracts": "العقود",
-    "onboarding.mod_contracts_desc": "محرك أنواع العقود (FIDIC، NEC، JCT، سعر مقطوع، تكلفة ومواد)",
+    "onboarding.mod_contracts_desc":
+      "محرك أنواع العقود (FIDIC، NEC، JCT، سعر مقطوع، تكلفة ومواد)",
     "onboarding.mod_variations": "التغييرات",
-    "onboarding.mod_variations_desc": "تغييرات القياس بالموقع مع سير عمل الموافقة",
+    "onboarding.mod_variations_desc":
+      "تغييرات القياس بالموقع مع سير عمل الموافقة",
     "onboarding.mod_crm": "CRM",
-    "onboarding.mod_crm_desc": "خط المبيعات، العملاء المحتملين، الفرص، الحسابات",
+    "onboarding.mod_crm_desc":
+      "خط المبيعات، العملاء المحتملين، الفرص، الحسابات",
     "onboarding.mod_supplier_catalogs": "كتالوجات الموردين",
-    "onboarding.mod_supplier_catalogs_desc": "أسعار موردين مباشرة وإدارة الموردين",
+    "onboarding.mod_supplier_catalogs_desc":
+      "أسعار موردين مباشرة وإدارة الموردين",
     "onboarding.mod_property_dev": "التطوير العقاري",
-    "onboarding.mod_property_dev_desc": "الأرض، المراحل، مزيج المبيعات، الجدوى للمطورين",
+    "onboarding.mod_property_dev_desc":
+      "الأرض، المراحل، مزيج المبيعات، الجدوى للمطورين",
     "onboarding.mod_service": "الخدمة والصيانة",
-    "onboarding.mod_service_desc": "طلبات الخدمة بعد التسليم، الضمانات، الصيانة",
+    "onboarding.mod_service_desc":
+      "طلبات الخدمة بعد التسليم، الضمانات، الصيانة",
     "onboarding.mod_equipment": "المعدات والأسطول",
-    "onboarding.mod_equipment_desc": "المعدات، الأدوات، المركبات — الاستخدام، الصيانة، أسعار الإيجار",
+    "onboarding.mod_equipment_desc":
+      "المعدات، الأدوات، المركبات — الاستخدام، الصيانة، أسعار الإيجار",
     "onboarding.mod_resources": "الموارد",
     "onboarding.mod_resources_desc": "تخطيط موارد العمالة والمواد والمعدات",
     "onboarding.mod_daily_diary": "اليومية",
-    "onboarding.mod_daily_diary_desc": "يومية موقع يومية مع الطقس وفرق العمل والمعدات والصور",
+    "onboarding.mod_daily_diary_desc":
+      "يومية موقع يومية مع الطقس وفرق العمل والمعدات والصور",
     "onboarding.mod_subcontractors": "المقاولون من الباطن",
-    "onboarding.mod_subcontractors_desc": "إعداد المقاولين من الباطن، العقود، المدفوعات، الأداء",
+    "onboarding.mod_subcontractors_desc":
+      "إعداد المقاولين من الباطن، العقود، المدفوعات، الأداء",
     "onboarding.mod_portal": "بوابة العميل",
-    "onboarding.mod_portal_desc": "بوابة خارجية للعملاء والشركاء بصلاحيات محدودة",
+    "onboarding.mod_portal_desc":
+      "بوابة خارجية للعملاء والشركاء بصلاحيات محدودة",
     "onboarding.mod_notifications": "الإشعارات",
-    "onboarding.mod_notifications_desc": "إشعارات داخل التطبيق، البريد الإلكتروني، و webhook",
+    "onboarding.mod_notifications_desc":
+      "إشعارات داخل التطبيق، البريد الإلكتروني، و webhook",
     "onboarding.mod_hse_advanced": "HSE متقدم",
-    "onboarding.mod_hse_advanced_desc": "صحة وسلامة وبيئة متقدمة — toolbox talks و JHA والتدقيق",
+    "onboarding.mod_hse_advanced_desc":
+      "صحة وسلامة وبيئة متقدمة — toolbox talks و JHA والتدقيق",
     "onboarding.mod_qms": "نظام إدارة الجودة",
-    "onboarding.mod_qms_desc": "QMS متوافق مع ISO 9001 — الإجراءات، التدقيقات، KPIs",
+    "onboarding.mod_qms_desc":
+      "QMS متوافق مع ISO 9001 — الإجراءات، التدقيقات، KPIs",
     "onboarding.mod_compliance": "DSL الامتثال",
     "onboarding.mod_compliance_desc": "لغة خاصة بالمجال code-as-rules للامتثال",
     "onboarding.mod_compliance_docs": "وثائق الامتثال",
-    "onboarding.mod_compliance_docs_desc": "مكتبة الشهادات، تتبع الصلاحية، تذكيرات التجديد",
+    "onboarding.mod_compliance_docs_desc":
+      "مكتبة الشهادات، تتبع الصلاحية، تذكيرات التجديد",
     "onboarding.mod_carbon": "الكربون والاستدامة",
-    "onboarding.mod_carbon_desc": "الكربون المتجسد + التشغيلي، تقارير ESG، EN 15978",
+    "onboarding.mod_carbon_desc":
+      "الكربون المتجسد + التشغيلي، تقارير ESG، EN 15978",
     "onboarding.mod_bi_dashboards": "لوحات BI",
-    "onboarding.mod_bi_dashboards_desc": "تحليلات تفاعلية عبر الوحدات مع التعمق التفصيلي",
+    "onboarding.mod_bi_dashboards_desc":
+      "تحليلات تفاعلية عبر الوحدات مع التعمق التفصيلي",
     "onboarding.mod_enterprise_workflows": "سير عمل المؤسسات",
-    "onboarding.mod_enterprise_workflows_desc": "سير عمل موافقات مخصص قائم على FSM للمؤسسات الكبيرة",
+    "onboarding.mod_enterprise_workflows_desc":
+      "سير عمل موافقات مخصص قائم على FSM للمؤسسات الكبيرة",
     "onboarding.mod_full_evm": "EVM كامل",
-    "onboarding.mod_full_evm_desc": "إدارة القيمة المكتسبة الكاملة — PV/EV/AC، SPI/CPI، CV/SV، ETC/EAC",
+    "onboarding.mod_full_evm_desc":
+      "إدارة القيمة المكتسبة الكاملة — PV/EV/AC، SPI/CPI، CV/SV، ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ والمناقصات",
-    "onboarding.mod_rfq_bidding_desc": "سير عمل RFQ متعدد الجولات، المناقصات المختومة، المزادات الإلكترونية",
+    "onboarding.mod_rfq_bidding_desc":
+      "سير عمل RFQ متعدد الجولات، المناقصات المختومة، المزادات الإلكترونية",
     "onboarding.mod_integrations": "التكاملات",
-    "onboarding.mod_integrations_desc": "Webhooks، SAP، Procore، MS Project عبر n8n",
+    "onboarding.mod_integrations_desc":
+      "Webhooks، SAP، Procore، MS Project عبر n8n",
     "onboarding.mod_dach_pack": "حزمة إقليمية — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc": "المعايير، التصنيفات، العملات، الصيغ لـ DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ لـ DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "حزمة إقليمية — المملكة المتحدة",
-    "onboarding.mod_uk_pack_desc": "المعايير، التصنيفات، العملات، الصيغ للمملكة المتحدة",
+    "onboarding.mod_uk_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ للمملكة المتحدة",
     "onboarding.mod_us_pack": "حزمة إقليمية — الولايات المتحدة",
-    "onboarding.mod_us_pack_desc": "المعايير، التصنيفات، العملات، الصيغ للولايات المتحدة",
+    "onboarding.mod_us_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ للولايات المتحدة",
     "onboarding.mod_india_pack": "حزمة إقليمية — الهند",
-    "onboarding.mod_india_pack_desc": "المعايير، التصنيفات، العملات، الصيغ للهند",
-    "onboarding.mod_middle_east_pack": "حزمة إقليمية — الشرق الأوسط ودول الخليج",
-    "onboarding.mod_middle_east_pack_desc": "المعايير، التصنيفات، العملات، الصيغ للشرق الأوسط ودول الخليج",
+    "onboarding.mod_india_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ للهند",
+    "onboarding.mod_middle_east_pack":
+      "حزمة إقليمية — الشرق الأوسط ودول الخليج",
+    "onboarding.mod_middle_east_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ للشرق الأوسط ودول الخليج",
     "onboarding.mod_latam_pack": "حزمة إقليمية — أمريكا اللاتينية",
-    "onboarding.mod_latam_pack_desc": "المعايير، التصنيفات، العملات، الصيغ لأمريكا اللاتينية",
+    "onboarding.mod_latam_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ لأمريكا اللاتينية",
     "onboarding.mod_asia_pac_pack": "حزمة إقليمية — آسيا والمحيط الهادئ",
-    "onboarding.mod_asia_pac_pack_desc": "المعايير، التصنيفات، العملات، الصيغ لآسيا والمحيط الهادئ",
+    "onboarding.mod_asia_pac_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ لآسيا والمحيط الهادئ",
     "onboarding.mod_russia_pack": "حزمة إقليمية — روسيا ورابطة الدول المستقلة",
-    "onboarding.mod_russia_pack_desc": "المعايير، التصنيفات، العملات، الصيغ لروسيا ورابطة الدول المستقلة",
+    "onboarding.mod_russia_pack_desc":
+      "المعايير، التصنيفات، العملات، الصيغ لروسيا ورابطة الدول المستقلة",
     "onboarding.mod_users": "المستخدمون و Auth",
     "onboarding.mod_users_desc": "حسابات المستخدمين، الأدوار، JWT، مفاتيح API",
     "onboarding.mod_teams": "الفرق",
     "onboarding.mod_teams_desc": "تجميع الفرق، نطاق الرؤية، تخصيص المشاريع",
     "onboarding.mod_uploads": "التحميلات",
-    "onboarding.mod_uploads_desc": "تحميل مباشر للملفات الكبيرة مع إمكانية الاستئناف",
+    "onboarding.mod_uploads_desc":
+      "تحميل مباشر للملفات الكبيرة مع إمكانية الاستئناف",
     "onboarding.mod_jobs": "المهام الخلفية",
-    "onboarding.mod_jobs_desc": "قوائم انتظار workers للاستيرادات والتصديرات وخطوط CV",
+    "onboarding.mod_jobs_desc":
+      "قوائم انتظار workers للاستيرادات والتصديرات وخطوط CV",
     "onboarding.mod_search": "البحث الدلالي",
-    "onboarding.mod_search_desc": "بحث متجهي + معجمي عبر جدول الكميات والمستندات والرسومات",
+    "onboarding.mod_search_desc":
+      "بحث متجهي + معجمي عبر جدول الكميات والمستندات والرسومات",
     "onboarding.mod_backup": "النسخ الاحتياطي والاستعادة",
     "onboarding.mod_backup_desc": "نسخ احتياطية تلقائية مع استعادة لحظية",
     "onboarding.mod_admin": "وحدة تحكم المشرف",
     "onboarding.mod_admin_desc": "نقاط نهاية المشغل، خطوط QA، صيانة النظام",
     "onboarding.mod_i18n_foundation": "أساس i18n",
-    "onboarding.mod_i18n_foundation_desc": "وقت تشغيل i18n لـ 27 لغة مع قطع لغة كسولة",
+    "onboarding.mod_i18n_foundation_desc":
+      "وقت تشغيل i18n لـ 27 لغة مع قطع لغة كسولة",
     "onboarding.mod_collaboration_locks": "أقفال التعاون",
-    "onboarding.mod_collaboration_locks_desc": "أقفال متفائلة ومتشائمة للتحرير متعدد المستخدمين",
+    "onboarding.mod_collaboration_locks_desc":
+      "أقفال متفائلة ومتشائمة للتحرير متعدد المستخدمين",
     "onboarding.mod_architecture_map": "خريطة المعمارية",
-    "onboarding.mod_architecture_map_desc": "خريطة بصرية تفاعلية لمعمارية النظام",
+    "onboarding.mod_architecture_map_desc":
+      "خريطة بصرية تفاعلية لمعمارية النظام",
     "onboarding.mod_dashboards": "لوحات المعلومات",
     "onboarding.mod_dashboards_desc": "لوحات معلومات لكل مشروع ومحفظة",
     "onboarding.mod_contacts_desc": "دليل جهات الاتصال والفرق",
@@ -3845,14 +4293,18 @@ const resource = {
     "onboarding.mod_transmittals_desc": "إرسال المستندات",
     "onboarding.mod_validation_desc": "قواعد الجودة وفحص الامتثال",
     "onboarding.mode_advanced": "متقدم",
-    "onboarding.mode_advanced_desc": "أنا متمرّس — أرني كل شيء. مجموعة أدوات احترافية كاملة بكل الخيارات الظاهرة.",
+    "onboarding.mode_advanced_desc":
+      "أنا متمرّس — أرني كل شيء. مجموعة أدوات احترافية كاملة بكل الخيارات الظاهرة.",
     "onboarding.mode_simple": "بسيط",
-    "onboarding.mode_simple_desc": "أبدأ للتو — أرني الأساسيات. واجهة نظيفة بأهم الميزات.",
-    "onboarding.mode_subtitle": "يمكنك التبديل بين الأوضاع في أي وقت من الإعدادات.",
+    "onboarding.mode_simple_desc":
+      "أبدأ للتو — أرني الأساسيات. واجهة نظيفة بأهم الميزات.",
+    "onboarding.mode_subtitle":
+      "يمكنك التبديل بين الأوضاع في أي وقت من الإعدادات.",
     "onboarding.mode_title": "اختر وضع الواجهة",
     "onboarding.modules_active": "وحدات نشطة",
     "onboarding.modules_label": "وحدات",
-    "onboarding.modules_subtitle": "تم الاختيار المسبق بناءً على نوع شركتك. يمكنك تفعيل أو تعطيل أي وحدة.",
+    "onboarding.modules_subtitle":
+      "تم الاختيار المسبق بناءً على نوع شركتك. يمكنك تفعيل أو تعطيل أي وحدة.",
     "onboarding.modules_title": "مراجعة الوحدات",
     "onboarding.next": "التالي",
     "onboarding.previous": "الخطوة السابقة",
@@ -3868,15 +4320,20 @@ const resource = {
     "onboarding.save_continue": "حفظ ومتابعة",
     "onboarding.skip": "تخطي",
     "onboarding.standard": "المعيار",
-    "onboarding.step1.description": "يمنحك الشريط الجانبي وصولاً سريعًا إلى جميع الوحدات: المشاريع والتقديرات وقواعد بيانات التكاليف والجداول الزمنية والمزيد.",
+    "onboarding.step1.description":
+      "يمنحك الشريط الجانبي وصولاً سريعًا إلى جميع الوحدات: المشاريع والتقديرات وقواعد بيانات التكاليف والجداول الزمنية والمزيد.",
     "onboarding.step1.title": "شريط التنقل الجانبي",
-    "onboarding.step2.description": "ابدأ هنا بإنشاء مشروعك الأول. يحتوي كل مشروع على جداول كميات وجداول زمنية ومستندات في مكان واحد.",
+    "onboarding.step2.description":
+      "ابدأ هنا بإنشاء مشروعك الأول. يحتوي كل مشروع على جداول كميات وجداول زمنية ومستندات في مكان واحد.",
     "onboarding.step2.title": "المشاريع",
-    "onboarding.step3.description": "أنشئ تقديرات مفصلة باستخدام محرر جدول الكميات — بنود هرمية وبنود مركبة وتجميع تكاليف فوري.",
+    "onboarding.step3.description":
+      "أنشئ تقديرات مفصلة باستخدام محرر جدول الكميات — بنود هرمية وبنود مركبة وتجميع تكاليف فوري.",
     "onboarding.step3.title": "جدول الكميات",
-    "onboarding.step4.description": "تصفح وأدر قواعد بيانات أسعار التكلفة بما في ذلك CWICR المدمج بأكثر من 55,000 بند عبر 9 لغات.",
+    "onboarding.step4.description":
+      "تصفح وأدر قواعد بيانات أسعار التكلفة بما في ذلك CWICR المدمج بأكثر من 55,000 بند عبر 9 لغات.",
     "onboarding.step4.title": "قواعد بيانات التكاليف",
-    "onboarding.step5.description": "بدّل بين الوضع البسيط (الأدوات الأساسية) والوضع المتقدم (جميع الميزات بما في ذلك المناقصات والجدولة).",
+    "onboarding.step5.description":
+      "بدّل بين الوضع البسيط (الأدوات الأساسية) والوضع المتقدم (جميع الميزات بما في ذلك المناقصات والجدولة).",
     "onboarding.step5.title": "الوضع البسيط / المتقدم",
     "onboarding.step_company": "الشركة",
     "onboarding.step_label": "الخطوة",
@@ -3890,7 +4347,8 @@ const resource = {
     "onboarding.testing": "جارٍ الاختبار...",
     "onboarding.tour_step": "خطوة الجولة",
     "onboarding.welcome_hint": "مجاني ومفتوح المصدر. لا حاجة لبطاقة ائتمان.",
-    "onboarding.welcome_subtitle": "منصة تقدير تكاليف البناء الاحترافية.\nأعد مساحة عملك في خطوات بسيطة.",
+    "onboarding.welcome_subtitle":
+      "منصة تقدير تكاليف البناء الاحترافية.\nأعد مساحة عملك في خطوات بسيطة.",
     "onboarding.welcome_title": "مرحبًا بك في OpenConstructionERP",
     "photos.caption": "تعليق",
     "photos.cat_defect": "عيب",
@@ -3963,53 +4421,74 @@ const resource = {
     "procurement.total": "الإجمالي",
     "procurement.vendor": "Vendor",
     "project_intelligence.ai.cost_advisor_title": "مستشار ذكاء التكلفة",
-    "project_intelligence.ai_not_configured_desc": "اربط مزوّد ذكاء اصطناعي (Anthropic Claude أو OpenAI أو Google Gemini) للحصول على توصيات مخصّصة وواعية بالسياق لمشروعك. بدون الذكاء الاصطناعي، ستظل ترى تحليلًا مبنيًا على القواعد أدناه.",
-    "project_intelligence.ai_not_configured_title": "مزوّد الذكاء الاصطناعي غير متصل",
+    "project_intelligence.ai_not_configured_desc":
+      "اربط مزوّد ذكاء اصطناعي (Anthropic Claude أو OpenAI أو Google Gemini) للحصول على توصيات مخصّصة وواعية بالسياق لمشروعك. بدون الذكاء الاصطناعي، ستظل ترى تحليلًا مبنيًا على القواعد أدناه.",
+    "project_intelligence.ai_not_configured_title":
+      "مزوّد الذكاء الاصطناعي غير متصل",
     "project_intelligence.analytics.cost_drivers": "محرّكات التكلفة",
-    "project_intelligence.analytics.cost_drivers_sub": "أعلى 5 بنود من حيث الإجمالي",
+    "project_intelligence.analytics.cost_drivers_sub":
+      "أعلى 5 بنود من حيث الإجمالي",
     "project_intelligence.analytics.errors": "أخطاء",
     "project_intelligence.analytics.no_data": "لا توجد بيانات بعد",
     "project_intelligence.analytics.price_volatility": "تقلّب الأسعار",
-    "project_intelligence.analytics.price_volatility_sub": "تشتّت إجمالي العروض بين المورّدين",
+    "project_intelligence.analytics.price_volatility_sub":
+      "تشتّت إجمالي العروض بين المورّدين",
     "project_intelligence.analytics.schedule_cost": "الجدول ↔ التكلفة",
-    "project_intelligence.analytics.schedule_cost_sub": "تكلفة العمالة حسب المرحلة",
+    "project_intelligence.analytics.schedule_cost_sub":
+      "تكلفة العمالة حسب المرحلة",
     "project_intelligence.analytics.scope_coverage": "تغطية النطاق",
-    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} من {{baseline}} بنود",
-    "project_intelligence.analytics.scope_coverage_sub": "عدد بنود جدول الكميات مقابل المرجع",
+    "project_intelligence.analytics.scope_coverage_ratio":
+      "{{current}} من {{baseline}} بنود",
+    "project_intelligence.analytics.scope_coverage_sub":
+      "عدد بنود جدول الكميات مقابل المرجع",
     "project_intelligence.analytics.validation_live": "تحقق فوري",
-    "project_intelligence.analytics.validation_live_sub": "عدد القواعد الناجحة (تحديث كل 60 ث)",
+    "project_intelligence.analytics.validation_live_sub":
+      "عدد القواعد الناجحة (تحديث كل 60 ث)",
     "project_intelligence.analytics.vendor_concentration": "تركّز المورّدين",
-    "project_intelligence.analytics.vendor_concentration_sub": "حصة أعلى 3 مقدّمي عروض",
+    "project_intelligence.analytics.vendor_concentration_sub":
+      "حصة أعلى 3 مقدّمي عروض",
     "project_intelligence.analytics.warnings": "تحذيرات",
     "project_intelligence.analyzing": "جارٍ تحليل المشروع...",
     "project_intelligence.analyzing_project": "جارٍ تحليل المشروع...",
     "project_intelligence.ask_placeholder": "اسأل عن هذا المشروع...",
     "project_intelligence.auth_error": "انتهت الجلسة",
-    "project_intelligence.auth_hint": "يرجى تحديث الصفحة أو تسجيل الدخول مجددًا للمتابعة.",
+    "project_intelligence.auth_hint":
+      "يرجى تحديث الصفحة أو تسجيل الدخول مجددًا للمتابعة.",
     "project_intelligence.back_to_rec": "العودة إلى التوصيات",
-    "project_intelligence.chat_error": "عذرًا، تعذّر معالجة سؤالك. حاول مرة أخرى.",
-    "project_intelligence.chat_prompt": "اسأل أي سؤال عن هذا المشروع. مثال: «لماذا درجتي منخفضة؟» أو «بماذا أبدأ؟»",
+    "project_intelligence.chat_error":
+      "عذرًا، تعذّر معالجة سؤالك. حاول مرة أخرى.",
+    "project_intelligence.chat_prompt":
+      "اسأل أي سؤال عن هذا المشروع. مثال: «لماذا درجتي منخفضة؟» أو «بماذا أبدأ؟»",
     "project_intelligence.chat_toggle": "تبديل المحادثة",
     "project_intelligence.critical_gaps": "ثغرات حرجة",
     "project_intelligence.enable_failed": "تعذّر تفعيل الوحدة",
     "project_intelligence.enable_module": "تفعيل الوحدة",
     "project_intelligence.enabling": "جارٍ التفعيل…",
-    "project_intelligence.gaps.dollar_impact": "{{count}} بنود بدون أسعار → ~{{amount}} عدم يقين بالتكلفة",
-    "project_intelligence.go_to_ai_settings": "الإعدادات — تكوين الذكاء الاصطناعي",
+    "project_intelligence.gaps.dollar_impact":
+      "{{count}} بنود بدون أسعار → ~{{amount}} عدم يقين بالتكلفة",
+    "project_intelligence.go_to_ai_settings":
+      "الإعدادات — تكوين الذكاء الاصطناعي",
     "project_intelligence.kpi.budget_variance": "انحراف الميزانية",
     "project_intelligence.kpi.risk_adjusted_cost": "التكلفة المعدَّلة بالمخاطر",
-    "project_intelligence.kpi.risk_sub": "±{{band}} (فاصل ثقة 90٪، {{count}} حالات شذوذ)",
+    "project_intelligence.kpi.risk_sub":
+      "±{{band}} (فاصل ثقة 90٪، {{count}} حالات شذوذ)",
     "project_intelligence.kpi.schedule_health": "صحة الجدول",
     "project_intelligence.kpi.schedule_sub": "أنشطة على المرجع",
-    "project_intelligence.kpi.variance_sub": "الميزانية {{budget}} · الحالي {{current}}",
+    "project_intelligence.kpi.variance_sub":
+      "الميزانية {{budget}} · الحالي {{current}}",
     "project_intelligence.load_error": "تعذّر تحميل التحليل",
-    "project_intelligence.module_disabled_ask_admin": "اطلب من المسؤول تفعيل هذه الوحدة للمتابعة.",
-    "project_intelligence.module_disabled_body": "تعتمد هذه اللوحة على وحدة Project Intelligence الاختيارية. وهي معطّلة حاليًا على هذا الخادم، فلا يجد المستشار وكاشف الثغرات وشبكة التحليلات بيانات للاستعلام.",
-    "project_intelligence.module_disabled_footnote": "لا تُجمع بيانات أثناء توقّف الوحدة. التفعيل قابل للإلغاء من صفحة الوحدات.",
+    "project_intelligence.module_disabled_ask_admin":
+      "اطلب من المسؤول تفعيل هذه الوحدة للمتابعة.",
+    "project_intelligence.module_disabled_body":
+      "تعتمد هذه اللوحة على وحدة Project Intelligence الاختيارية. وهي معطّلة حاليًا على هذا الخادم، فلا يجد المستشار وكاشف الثغرات وشبكة التحليلات بيانات للاستعلام.",
+    "project_intelligence.module_disabled_footnote":
+      "لا تُجمع بيانات أثناء توقّف الوحدة. التفعيل قابل للإلغاء من صفحة الوحدات.",
     "project_intelligence.module_disabled_title": "Project Intelligence معطّلة",
-    "project_intelligence.no_gaps_desc": "لا توجد مشكلات حرجة في مشروعك. واصل التحسين لتقليل التباين.",
+    "project_intelligence.no_gaps_desc":
+      "لا توجد مشكلات حرجة في مشروعك. واصل التحسين لتقليل التباين.",
     "project_intelligence.no_gaps_title": "لا توجد ثغرات حرجة",
-    "project_intelligence.no_recommendations": "لا توجد توصيات متاحة بعد. جرّب تحديث التحليل.",
+    "project_intelligence.no_recommendations":
+      "لا توجد توصيات متاحة بعد. جرّب تحديث التحليل.",
     "project_intelligence.open_modules_page": "فتح صفحة الوحدات",
     "project_intelligence.page_title_v191": "لوحة التقدير",
     "project_intelligence.readiness_title": "جاهزية التقدير",
@@ -4018,13 +4497,17 @@ const resource = {
     "project_intelligence.role_estimator": "مقدّر تكاليف",
     "project_intelligence.role_explorer": "مستكشف",
     "project_intelligence.role_manager": "مدير",
-    "project_intelligence.score_tooltip_v191": "ترجيح النتيجة (RFC 25): جدول الكميات 40٪، نموذج التكلفة 30٪، التحقق 20٪، المخاطر 10٪.",
-    "project_intelligence.select_domain": "اختر تبويب مجال أعلاه لرؤية مقاييس مفصّلة.",
+    "project_intelligence.score_tooltip_v191":
+      "ترجيح النتيجة (RFC 25): جدول الكميات 40٪، نموذج التكلفة 30٪، التحقق 20٪، المخاطر 10٪.",
+    "project_intelligence.select_domain":
+      "اختر تبويب مجال أعلاه لرؤية مقاييس مفصّلة.",
     "project_intelligence.show_more_gaps": "{{count}} أكثر",
     "project_intelligence.thinking": "يفكر...",
     "project_intelligence.unnamed": "مشروع بدون اسم",
-    "project_intelligence.v191_header_desc": "انحراف التكلفة، حالات الشذوذ، تحليلات العروض — تحديث كل 60 ث.",
-    "project_intelligence.v191_select_prompt": "اختر مشروعًا من الترويسة لرؤية انحراف تكلفته وحالات شذوذه وتحليلات عروضه.",
+    "project_intelligence.v191_header_desc":
+      "انحراف التكلفة، حالات الشذوذ، تحليلات العروض — تحديث كل 60 ث.",
+    "project_intelligence.v191_select_prompt":
+      "اختر مشروعًا من الترويسة لرؤية انحراف تكلفته وحالات شذوذه وتحليلات عروضه.",
     "projects.4d_schedule": "الجدول الزمني 4D",
     "projects.5d_budget": "ميزانية 5D",
     "projects.active": "نشط",
@@ -4037,7 +4520,8 @@ const resource = {
     "projects.confirm_delete": "حذف هذا المشروع؟",
     "projects.create_boq": "إنشاء جدول كميات",
     "projects.create_error": "فشل إنشاء المشروع",
-    "projects.create_hint": "المنطقة تحدد قواعد بيانات التكاليف المتاحة ومعدلات ضريبة القيمة المضافة. معيار التصنيف يحدد هيكل التكلفة: DIN 276 لبلدان DACH وNRM للمملكة المتحدة وMasterFormat لأمريكا الشمالية وUniFormat لأوقيانوسيا. العملة تحدد جميع الأسعار في جدول الكميات.",
+    "projects.create_hint":
+      "المنطقة تحدد قواعد بيانات التكاليف المتاحة ومعدلات ضريبة القيمة المضافة. معيار التصنيف يحدد هيكل التكلفة: DIN 276 لبلدان DACH وNRM للمملكة المتحدة وMasterFormat لأمريكا الشمالية وUniFormat لأوقيانوسيا. العملة تحدد جميع الأسعار في جدول الكميات.",
     "projects.created": "أُنشئ {{date}}",
     "projects.currency": "العملة",
     "projects.delete_failed": "فشل حذف المشروع",
@@ -4060,15 +4544,18 @@ const resource = {
     "projects.no_boqs": "لا توجد جداول كميات بعد",
     "projects.no_boqs_desc": "أنشئ جدول كميات لبدء تقدير تكاليف هذا المشروع.",
     "projects.no_budget": "لا توجد بيانات ميزانية",
-    "projects.no_budget_desc": "أعد نموذج تكلفة 5D لتتبع التكاليف المخططة مقابل الفعلية.",
+    "projects.no_budget_desc":
+      "أعد نموذج تكلفة 5D لتتبع التكاليف المخططة مقابل الفعلية.",
     "projects.no_projects": "لا توجد مشاريع بعد",
     "projects.no_projects_description": "أنشئ مشروع تقدير تكاليف البناء الأول",
     "projects.no_results": "لا توجد مشاريع مطابقة",
     "projects.no_results_hint": "حاول تعديل البحث أو عوامل التصفية",
     "projects.no_schedules": "لا توجد جداول زمنية بعد",
-    "projects.no_schedules_desc": "أنشئ جدولاً زمنيًا لإدارة الجداول الزمنية للمشروع.",
+    "projects.no_schedules_desc":
+      "أنشئ جدولاً زمنيًا لإدارة الجداول الزمنية للمشروع.",
     "projects.no_tenders": "لا توجد حزم مناقصات",
-    "projects.no_tenders_desc": "أنشئ حزم مناقصات لإدارة المزايدات لهذا المشروع.",
+    "projects.no_tenders_desc":
+      "أنشئ حزم مناقصات لإدارة المزايدات لهذا المشروع.",
     "projects.not_found": "لم يتم العثور على المشروع",
     "projects.not_found_desc": "المشروع الذي تبحث عنه غير موجود أو تم حذفه.",
     "projects.of": "من",
@@ -4076,7 +4563,8 @@ const resource = {
     "projects.overview": "نظرة عامة",
     "projects.photos.close_aria": "إغلاق",
     "projects.photos.count_label": "{{count}} من {{total}} صورة",
-    "projects.photos.empty_desc": "ارفع صور الموقع للاحتفاظ بسجلات بصرية مع المشروع.",
+    "projects.photos.empty_desc":
+      "ارفع صور الموقع للاحتفاظ بسجلات بصرية مع المشروع.",
     "projects.photos.empty_title": "لا توجد صور بعد",
     "projects.photos.lightbox_aria": "عارض الصور",
     "projects.photos.next_aria": "التالي",
@@ -4104,7 +4592,8 @@ const resource = {
     "projects.projects_label": "مشاريع",
     "projects.region": "المنطقة",
     "projects.regional_factor": "المعامل الإقليمي",
-    "projects.regional_factor_hint": "اضرب جميع الأسعار بهذا المعامل (مثلاً ميونخ = 1.12، برلين = 1.05)",
+    "projects.regional_factor_hint":
+      "اضرب جميع الأسعار بهذا المعامل (مثلاً ميونخ = 1.12، برلين = 1.05)",
     "projects.remaining": "المتبقي",
     "projects.schedule_subtitle": "جداول المشروع الزمنية والجدول الزمني",
     "projects.search_placeholder": "البحث في المشاريع...",
@@ -4171,7 +4660,8 @@ const resource = {
     "punch.col_title": "العنوان",
     "punch.create_item": "إنشاء",
     "punch.description_placeholder": "قدم تفاصيل حول المشكلة...",
-    "punch.empty_desc": "أنشئ بنود معالجة لتتبع العيوب والنواقص والأعمال المعلقة.",
+    "punch.empty_desc":
+      "أنشئ بنود معالجة لتتبع العيوب والنواقص والأعمال المعلقة.",
     "punch.empty_title": "لا توجد بنود معالجة",
     "punch.field_assigned_to": "مُعيَّن إلى",
     "punch.field_category": "الفئة",
@@ -4218,28 +4708,35 @@ const resource = {
     "quantities.badge_ai": "ذ.ا.",
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "قريبًا",
-    "quantities.converter_desc": "ارفع ملفات CAD/BIM (.rvt و.ifc و.dwg و.dgn) ويقوم محوّل DDC باستخراج جميع العناصر في جدول منظم — جدران وبلاطات وأعمدة وأبواب ونوافذ — بأحجام ومساحات وكميات محسوبة. ثم يقوم الذكاء الاصطناعي بربط هذه العناصر ببنود التكلفة وتوليد جدول كميات كامل تلقائيًا.",
+    "quantities.converter_desc":
+      "ارفع ملفات CAD/BIM (.rvt و.ifc و.dwg و.dgn) ويقوم محوّل DDC باستخراج جميع العناصر في جدول منظم — جدران وبلاطات وأعمدة وأبواب ونوافذ — بأحجام ومساحات وكميات محسوبة. ثم يقوم الذكاء الاصطناعي بربط هذه العناصر ببنود التكلفة وتوليد جدول كميات كامل تلقائيًا.",
     "quantities.converter_path": "التثبيت في: ~/.openestimator/converters/",
     "quantities.converter_title": "كيف يعمل تحويل CAD/BIM",
     "quantities.download_converters": "تنزيل محوّلات DDC",
     "quantities.how_it_works": "كيف يعمل",
-    "quantities.manual_desc": "تحتاج لإضافة كميات مباشرة؟ اذهب إلى محرر جدول الكميات.",
+    "quantities.manual_desc":
+      "تحتاج لإضافة كميات مباشرة؟ اذهب إلى محرر جدول الكميات.",
     "quantities.manual_title": "إدخال يدوي سريع",
-    "quantities.method_ai_desc": "صِف مبناك وسيقوم الذكاء الاصطناعي بتوليد جدول كميات بأحجام وتكاليف مقدّرة.",
+    "quantities.method_ai_desc":
+      "صِف مبناك وسيقوم الذكاء الاصطناعي بتوليد جدول كميات بأحجام وتكاليف مقدّرة.",
     "quantities.method_ai_title": "إدخال نصي بالذكاء الاصطناعي",
-    "quantities.method_cad_desc": "استورد ملفات DWG وRVT وIFC أو DGN واستخرج الكميات مباشرة من الهندسة ثلاثية الأبعاد.",
+    "quantities.method_cad_desc":
+      "استورد ملفات DWG وRVT وIFC أو DGN واستخرج الكميات مباشرة من الهندسة ثلاثية الأبعاد.",
     "quantities.method_cad_title": "نماذج CAD / BIM",
-    "quantities.method_pdf_desc": "ارفع رسومات إنشائية (PDF) واستخرج الكميات تلقائيًا بحصر كميات مدعوم بالذكاء الاصطناعي.",
+    "quantities.method_pdf_desc":
+      "ارفع رسومات إنشائية (PDF) واستخرج الكميات تلقائيًا بحصر كميات مدعوم بالذكاء الاصطناعي.",
     "quantities.method_pdf_title": "رسومات PDF",
     "quantities.open": "فتح",
     "quantities.open_boq": "فتح محرر جدول الكميات",
     "quantities.step1_desc": "اختر طريقة الإدخال: نص أو PDF أو نموذج CAD.",
     "quantities.step1_title": "ارفع أو صِف",
-    "quantities.step2_desc": "يحلل ذكاؤنا الاصطناعي مدخلاتك ويستخرج كميات منظمة.",
+    "quantities.step2_desc":
+      "يحلل ذكاؤنا الاصطناعي مدخلاتك ويستخرج كميات منظمة.",
     "quantities.step2_title": "الذكاء الاصطناعي يستخرج الكميات",
     "quantities.step3_desc": "تحقق من النتائج وأضفها إلى جدول الكميات.",
     "quantities.step3_title": "مراجعة وإضافة لجدول الكميات",
-    "quantities.subtitle": "اجمع كميات المشروع — من إدخال نصي بالذكاء الاصطناعي أو رسومات PDF أو نماذج CAD/BIM",
+    "quantities.subtitle":
+      "اجمع كميات المشروع — من إدخال نصي بالذكاء الاصطناعي أو رسومات PDF أو نماذج CAD/BIM",
     "quantities.title": "حصر الكميات",
     "reporting.active_projects": "المشاريع النشطة",
     "reporting.approved_pos": "موافق عليها",
@@ -4270,7 +4767,8 @@ const resource = {
     "reporting.invoices_month": "الفواتير المستحقة (الشهر)",
     "reporting.invoices_week": "الفواتير المستحقة (الأسبوع)",
     "reporting.no_boqs": "لا توجد BOQs في هذا المشروع",
-    "reporting.no_finance_data": "لا توجد بيانات مالية لهذا المشروع. أنشئ فواتير وميزانيات أولاً.",
+    "reporting.no_finance_data":
+      "لا توجد بيانات مالية لهذا المشروع. أنشئ فواتير وميزانيات أولاً.",
     "reporting.no_projects": "لم تُعثر على مشاريع",
     "reporting.no_safety_data": "لا توجد بيانات سلامة لهذا المشروع.",
     "reporting.observations": "الملاحظات",
@@ -4307,22 +4805,29 @@ const resource = {
     "reporting.total_projects": "إجمالي المشاريع",
     "reporting.total_tasks": "إجمالي المهام",
     "reports.5d_report": "تقرير التكلفة 5D",
-    "reports.5d_report_desc": "تحليل الميزانية مقابل الفعلي مع منحنى S والتنبؤ بالتكاليف.",
+    "reports.5d_report_desc":
+      "تحليل الميزانية مقابل الفعلي مع منحنى S والتنبؤ بالتكاليف.",
     "reports.boq_report": "تقرير جدول الكميات",
-    "reports.boq_report_desc": "جدول كميات كامل بأقسام وبنود وهوامش ربح وإجماليات. متوفر كـ PDF أو Excel.",
+    "reports.boq_report_desc":
+      "جدول كميات كامل بأقسام وبنود وهوامش ربح وإجماليات. متوفر كـ PDF أو Excel.",
     "reports.cash_flow": "توقعات التدفق النقدي",
-    "reports.cash_flow_desc": "إسقاط شهري للتدفق النقدي من منحنى S — المخطط مقابل الفعلي.",
+    "reports.cash_flow_desc":
+      "إسقاط شهري للتدفق النقدي من منحنى S — المخطط مقابل الفعلي.",
     "reports.change_order_register": "سجل أوامر التغيير",
-    "reports.change_order_register_desc": "سجل كامل لتغييرات النطاق مع التأثير التراكمي على التكلفة والجدول الزمني.",
+    "reports.change_order_register_desc":
+      "سجل كامل لتغييرات النطاق مع التأثير التراكمي على التكلفة والجدول الزمني.",
     "reports.coming_soon": "قريبًا",
     "reports.cost_report": "تقرير التكلفة",
-    "reports.cost_report_desc": "تحليل التكلفة حسب الفئة مع مخططات ملخصة وتحليل تكاليف مفصل.",
+    "reports.cost_report_desc":
+      "تحليل التكلفة حسب الفئة مع مخططات ملخصة وتحليل تكاليف مفصل.",
     "reports.download_error": "فشل توليد التقرير",
     "reports.download_format": "تنزيل {{format}}",
     "reports.download_success": "تم تنزيل التقرير بنجاح",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc": "تصدير مناقصة GAEB X83 — تنسيق التبادل القياسي لسوق البناء في DACH.",
-    "reports.guide_desc": "تقرير جدول الكميات = جدول كميات مفصل بالإجماليات. تقرير التكلفة = تحليل التكلفة حسب الفئة. GAEB XML = تنسيق المناقصات الألماني (.x83) لتبادل المقاولين من الباطن. التحقق = نتائج فحص الامتثال. الجدول الزمني = ملخص أنشطة غانت. 5D = منحنيات الميزانية مقابل التكلفة الفعلية.",
+    "reports.gaeb_xml_desc":
+      "تصدير مناقصة GAEB X83 — تنسيق التبادل القياسي لسوق البناء في DACH.",
+    "reports.guide_desc":
+      "تقرير جدول الكميات = جدول كميات مفصل بالإجماليات. تقرير التكلفة = تحليل التكلفة حسب الفئة. GAEB XML = تنسيق المناقصات الألماني (.x83) لتبادل المقاولين من الباطن. التحقق = نتائج فحص الامتثال. الجدول الزمني = ملخص أنشطة غانت. 5D = منحنيات الميزانية مقابل التكلفة الفعلية.",
     "reports.no_boqs": "لا توجد جداول كميات في هذا المشروع",
     "reports.no_projects": "لا توجد مشاريع متاحة",
     "reports.preset_audit": "تقرير التدقيق",
@@ -4331,19 +4836,24 @@ const resource = {
     "reports.preset_monthly": "التقدم الشهري",
     "reports.presets": "قوالب سريعة:",
     "reports.progress_report": "تقرير التقدم",
-    "reports.progress_report_desc": "أداء EVM وحالة الجدول الزمني وأبرز المخاطر في تقرير واحد.",
+    "reports.progress_report_desc":
+      "أداء EVM وحالة الجدول الزمني وأبرز المخاطر في تقرير واحد.",
     "reports.risk_register": "سجل المخاطر",
-    "reports.risk_register_desc": "مصفوفة المخاطر مع الاحتمالية والتأثير والدرجات وخطط التخفيف.",
+    "reports.risk_register_desc":
+      "مصفوفة المخاطر مع الاحتمالية والتأثير والدرجات وخطط التخفيف.",
     "reports.schedule_report": "تقرير الجدول الزمني",
-    "reports.schedule_report_desc": "مخطط غانت مع الجدول الزمني للمشروع والمعالم والمسار الحرج.",
+    "reports.schedule_report_desc":
+      "مخطط غانت مع الجدول الزمني للمشروع والمعالم والمسار الحرج.",
     "reports.select_boq_first": "يرجى اختيار مشروع وجدول كميات أولاً",
     "reports.select_project_first": "يرجى اختيار مشروع أولاً",
     "reports.subtitle": "أنشئ تقارير احترافية لمشاريعك",
     "reports.tender_comparison": "مقارنة العطاءات",
-    "reports.tender_comparison_desc": "مقارنة جانبية لعروض مقاولي الباطن مع تحليل الانحراف.",
+    "reports.tender_comparison_desc":
+      "مقارنة جانبية لعروض مقاولي الباطن مع تحليل الانحراف.",
     "reports.title": "التقارير",
     "reports.validation_report": "تقرير التحقق",
-    "reports.validation_report_desc": "تقرير فحص الامتثال وفق معايير DIN 276 أو NRM أو MasterFormat.",
+    "reports.validation_report_desc":
+      "تقرير فحص الامتثال وفق معايير DIN 276 أو NRM أو MasterFormat.",
     "requirements.add": "إضافة متطلب",
     "requirements.add_requirement": "إضافة متطلب",
     "requirements.all_categories": "جميع الفئات",
@@ -4356,16 +4866,19 @@ const resource = {
     "requirements.click_to_upload_csv": "انقر لتحميل ملف CSV",
     "requirements.click_to_upload_json": "انقر لتحميل ملف JSON",
     "requirements.confidence": "الثقة",
-    "requirements.confirm_delete_set": "حذف مجموعة المتطلبات هذه وجميع متطلباتها؟",
+    "requirements.confirm_delete_set":
+      "حذف مجموعة المتطلبات هذه وجميع متطلباتها؟",
     "requirements.constraint": "القيد",
     "requirements.constraint_type": "نوع القيد",
     "requirements.constraint_value": "القيمة",
     "requirements.csv_loaded": "تم تحميل {{count}} صف من CSV",
-    "requirements.csv_parse_error": "يجب أن يحتوي CSV على رؤوس: entity، attribute، constraint_value",
+    "requirements.csv_parse_error":
+      "يجب أن يحتوي CSV على رؤوس: entity، attribute، constraint_value",
     "requirements.delete_set": "حذف المجموعة",
     "requirements.edit_requirement": "تعديل متطلب",
     "requirements.empty": "لا توجد متطلبات بعد",
-    "requirements.empty_desc": "أضف متطلبات لتحديد ثلاثيات الكيان-السمة-القيد لمشروعك.",
+    "requirements.empty_desc":
+      "أضف متطلبات لتحديد ثلاثيات الكيان-السمة-القيد لمشروعك.",
     "requirements.entity": "الكيان",
     "requirements.entity_placeholder": "مثال: جدار، أرضية، سقف",
     "requirements.export": "تصدير",
@@ -4377,20 +4890,25 @@ const resource = {
     "requirements.gate_result": "بوابة {{num}}: {{status}}",
     "requirements.import": "استيراد",
     "requirements.import_count": "جاري استيراد {{count}} متطلب...",
-    "requirements.import_csv_desc": "قم بتحميل ملف CSV بأعمدة: entity، attribute، constraint_value",
+    "requirements.import_csv_desc":
+      "قم بتحميل ملف CSV بأعمدة: entity، attribute، constraint_value",
     "requirements.import_json_desc": "قم بتحميل مصفوفة JSON لكائنات المتطلبات",
-    "requirements.import_placeholder": "جدار | سُمك | min | 200 | mm | إنشائي | يجب\nسقف | قيمة_u | max | 0.20 | W/m²K | حراري | يجب",
+    "requirements.import_placeholder":
+      "جدار | سُمك | min | 200 | mm | إنشائي | يجب\nسقف | قيمة_u | max | 0.20 | W/m²K | حراري | يجب",
     "requirements.import_requirements": "استيراد المتطلبات",
     "requirements.import_text": "استيراد من نص",
-    "requirements.import_text_desc": "الصق مواصفات المتطلبات. يجب أن يتبع كل سطر التنسيق: كيان | سمة | نوع_القيد | قيمة | وحدة | فئة | أولوية",
+    "requirements.import_text_desc":
+      "الصق مواصفات المتطلبات. يجب أن يتبع كل سطر التنسيق: كيان | سمة | نوع_القيد | قيمة | وحدة | فئة | أولوية",
     "requirements.imported": "تم استيراد {{count}} متطلب",
     "requirements.json_loaded": "تم تحميل {{count}} عنصر من JSON",
-    "requirements.json_parse_error": "يجب أن يكون JSON مصفوفة كائنات تحتوي على entity، attribute، constraint_value",
+    "requirements.json_parse_error":
+      "يجب أن يكون JSON مصفوفة كائنات تحتوي على entity، attribute، constraint_value",
     "requirements.linked_position": "بند جدول الكميات المرتبط",
     "requirements.new_set": "مجموعة متطلبات جديدة",
     "requirements.no_match": "لا توجد متطلبات تطابق عوامل التصفية.",
     "requirements.no_sets": "لا توجد مجموعات متطلبات",
-    "requirements.no_sets_desc": "أنشئ مجموعة متطلبات لبدء تحديد متطلبات المشروع وبوابات الجودة.",
+    "requirements.no_sets_desc":
+      "أنشئ مجموعة متطلبات لبدء تحديد متطلبات المشروع وبوابات الجودة.",
     "requirements.not_linked": "غير مرتبط",
     "requirements.notes": "ملاحظات",
     "requirements.notes_placeholder": "ملاحظات إضافية أو سياق...",
@@ -4480,17 +4998,20 @@ const resource = {
     "risk.contingency": "خطة الطوارئ",
     "risk.created": "تم إنشاء الخطر",
     "risk.critical": "حرج (16-25)",
-    "risk.delete_message": "سيُحذف هذا الخطر نهائياً. لا يمكن التراجع عن هذا الإجراء.",
+    "risk.delete_message":
+      "سيُحذف هذا الخطر نهائياً. لا يمكن التراجع عن هذا الإجراء.",
     "risk.delete_title": "حذف الخطر",
     "risk.deleted": "تم حذف الخطر",
-    "risk.disclaimer": "يوفّر محاكاة مونت كارلو تقديرات احتمالية فقط. تعتمد النتائج على افتراضات المدخلات.",
+    "risk.disclaimer":
+      "يوفّر محاكاة مونت كارلو تقديرات احتمالية فقط. تعتمد النتائج على افتراضات المدخلات.",
     "risk.dist": "التوزيع",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "مثلثي",
     "risk.dist_uniform": "منتظم",
     "risk.distribution": "توزيع التكلفة (رسم بياني)",
     "risk.empty": "لم تُسجَّل مخاطر",
-    "risk.empty_desc": "أضف المخاطر لتتبع المشكلات المحتملة واستراتيجيات التخفيف",
+    "risk.empty_desc":
+      "أضف المخاطر لتتبع المشكلات المحتملة واستراتيجيات التخفيف",
     "risk.export_csv": "تصدير CSV",
     "risk.exposure": "إجمالي التعرض للخطر",
     "risk.heatmap": "مصفوفة المخاطر",
@@ -4572,7 +5093,8 @@ const resource = {
     "schedule.buffer": "احتياطي",
     "schedule.calculate_cpm": "المسار الحرج",
     "schedule.completed": "مكتمل",
-    "schedule.cpm_result": "المسار الحرج: {{duration}} يوم، {{count}} أنشطة حرجة",
+    "schedule.cpm_result":
+      "المسار الحرج: {{duration}} يوم، {{count}} أنشطة حرجة",
     "schedule.create_activity": "إنشاء نشاط",
     "schedule.create_schedule": "إنشاء جدول زمني",
     "schedule.critical_path": "المسار الحرج",
@@ -4587,7 +5109,8 @@ const resource = {
     "schedule.fifty_pct_confidence": "ثقة 50%",
     "schedule.generate": "توليد",
     "schedule.generate_from_boq": "توليد من جدول الكميات",
-    "schedule.generate_from_boq_description": "اختر جدول كميات لتوليد أنشطة الجدول الزمني تلقائيًا. سيتم إنشاء نشاط واحد لكل قسم في جدول الكميات بمدد متناسبة مع التكلفة.",
+    "schedule.generate_from_boq_description":
+      "اختر جدول كميات لتوليد أنشطة الجدول الزمني تلقائيًا. سيتم إنشاء نشاط واحد لكل قسم في جدول الكميات بمدد متناسبة مع التكلفة.",
     "schedule.in_progress": "قيد التنفيذ",
     "schedule.mean_label": "المتوسط (المسار الحرج)",
     "schedule.ninetyfive_pct_confidence": "ثقة 95%",
@@ -4598,7 +5121,8 @@ const resource = {
     "schedule.no_projects": "لا توجد مشاريع متاحة",
     "schedule.no_projects_hint": "أنشئ مشروعًا أولاً، ثم أضف جداول زمنية إليه",
     "schedule.no_schedules": "لا توجد جداول زمنية بعد",
-    "schedule.no_schedules_hint": "أنشئ جدولاً زمنيًا لبدء تخطيط الجدول الزمني لمشروعك",
+    "schedule.no_schedules_hint":
+      "أنشئ جدولاً زمنيًا لبدء تخطيط الجدول الزمني لمشروعك",
     "schedule.planned_duration": "المدة المخططة",
     "schedule.project_schedules": "الجداول الزمنية لهذا المشروع",
     "schedule.risk_analysis": "تحليل المخاطر (PERT)",
@@ -4619,7 +5143,8 @@ const resource = {
     "schedule.type_task": "مهمة",
     "schedule.wbs_code": "رمز WBS",
     "schedule.wbs_code_placeholder": "مثلاً 01.02.003",
-    "schedule.what_is_4d": "الجدولة 4D تربط بنود جدول الكميات بالجدول الزمني للمشروع. أنشئ أنشطة وحدد التبعيات وتصور التقدم على مخطط غانت. يبرز تحليل المسار الحرج الأنشطة التي تؤثر مباشرة على تاريخ انتهاء المشروع. أنواع الأنشطة: مهمة = عنصر عمل، معلم = نقطة تفتيش بمدة صفرية، ملخص = رأس تجميع.",
+    "schedule.what_is_4d":
+      "الجدولة 4D تربط بنود جدول الكميات بالجدول الزمني للمشروع. أنشئ أنشطة وحدد التبعيات وتصور التقدم على مخطط غانت. يبرز تحليل المسار الحرج الأنشطة التي تؤثر مباشرة على تاريخ انتهاء المشروع. أنواع الأنشطة: مهمة = عنصر عمل، معلم = نقطة تفتيش بمدة صفرية، ملخص = رأس تجميع.",
     "schedule.zoom_day": "يوم",
     "schedule.zoom_month": "شهر",
     "schedule.zoom_week": "أسبوع",
@@ -4629,15 +5154,19 @@ const resource = {
     "settings.active": "نشط",
     "settings.ai_api_key": "مفتاح API",
     "settings.ai_connected": "متصل",
-    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — الأفضل لتقدير تكاليف البناء",
+    "settings.ai_desc_anthropic":
+      "Claude 3.5 Sonnet / Opus — الأفضل لتقدير تكاليف البناء",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — إمكانيات متعددة الوسائط",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — مدعوم على نطاق واسع",
     "settings.ai_error": "خطأ في الاتصال",
     "settings.ai_get_key": "احصل على مفتاح API",
-    "settings.ai_guidance": "ميزات الذكاء الاصطناعي (التقدير وتحليل حصر الكميات والبحث الدلالي) تتطلب مفتاح API. يوصى باستخدام Anthropic Claude للحصول على أفضل دقة. المفاتيح مخزنة بشكل مشفر ولا تغادر خادمك أبدًا.",
-    "settings.ai_key_hint": "مفتاح API مشفر ومخزن بشكل آمن. لا تتم مشاركته أبدًا.",
+    "settings.ai_guidance":
+      "ميزات الذكاء الاصطناعي (التقدير وتحليل حصر الكميات والبحث الدلالي) تتطلب مفتاح API. يوصى باستخدام Anthropic Claude للحصول على أفضل دقة. المفاتيح مخزنة بشكل مشفر ولا تغادر خادمك أبدًا.",
+    "settings.ai_key_hint":
+      "مفتاح API مشفر ومخزن بشكل آمن. لا تتم مشاركته أبدًا.",
     "settings.ai_key_placeholder": "أدخل مفتاح API...",
-    "settings.ai_key_placeholder_existing": "أدخل مفتاحًا جديدًا لاستبدال الحالي...",
+    "settings.ai_key_placeholder_existing":
+      "أدخل مفتاحًا جديدًا لاستبدال الحالي...",
     "settings.ai_key_set": "تم إعداد المفتاح",
     "settings.ai_last_tested": "(آخر اختبار: {{time}})",
     "settings.ai_not_configured": "غير مُعَد",
@@ -4672,10 +5201,13 @@ const resource = {
     "settings.measurement_system": "نظام القياس",
     "settings.member_since": "عضو منذ",
     "settings.metric": "متري (م، كغ)",
-    "settings.mode_advanced_detail": "مجموعة أدوات احترافية كاملة مع جميع الوحدات والميزات الظاهرة.",
-    "settings.mode_simple_detail": "أدوات التسعير الأساسية. واجهة نظيفة للعمل المركّز.",
+    "settings.mode_advanced_detail":
+      "مجموعة أدوات احترافية كاملة مع جميع الوحدات والميزات الظاهرة.",
+    "settings.mode_simple_detail":
+      "أدوات التسعير الأساسية. واجهة نظيفة للعمل المركّز.",
     "settings.mode_toggle": "التبديل بين الوضع البسيط والمتقدم",
-    "settings.modules_link_desc": "تفعيل وتعطيل وضبط الوحدات الفردية في قسم الوحدات.",
+    "settings.modules_link_desc":
+      "تفعيل وتعطيل وضبط الوحدات الفردية في قسم الوحدات.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "صيغة الأرقام",
     "settings.paper_size": "حجم الورق",
@@ -4687,7 +5219,8 @@ const resource = {
     "settings.regional_subtitle": "التنسيقات والوحدات وتفضيلات الترجمة",
     "settings.regional_title": "الإعدادات الإقليمية",
     "settings.restart_onboarding": "فتح معالج الإعداد",
-    "settings.setup_wizard_subtitle": "أعد تشغيل الإعداد الأولي لتغيير اللغة أو تثبيت قواعد البيانات أو الكتالوجات أو المشاريع التجريبية",
+    "settings.setup_wizard_subtitle":
+      "أعد تشغيل الإعداد الأولي لتغيير اللغة أو تثبيت قواعد البيانات أو الكتالوجات أو المشاريع التجريبية",
     "settings.setup_wizard_title": "معالج الإعداد",
     "settings.show_key": "إظهار",
     "settings.sign_out": "تسجيل الخروج",
@@ -4829,18 +5362,21 @@ const resource = {
     "sustainability.boq": "جدول الكميات",
     "sustainability.breakdown_title": "التحليل حسب المادة",
     "sustainability.calculate": "حساب",
-    "sustainability.empty_desc": "اختر مشروعًا وجدول كميات أعلاه، ثم انقر حساب لتحليل انبعاثات CO2 بناءً على أنواع المواد.",
+    "sustainability.empty_desc":
+      "اختر مشروعًا وجدول كميات أعلاه، ثم انقر حساب لتحليل انبعاثات CO2 بناءً على أنواع المواد.",
     "sustainability.empty_title": "تحليل البصمة الكربونية CO2",
     "sustainability.export_pdf": "تصدير تقرير CO2 بصيغة PDF",
     "sustainability.material": "المادة",
-    "sustainability.no_area": "أدخل مساحة المشروع لعرض المقارنة المرجعية لكل م2",
+    "sustainability.no_area":
+      "أدخل مساحة المشروع لعرض المقارنة المرجعية لكل م2",
     "sustainability.positions_matched": "بنود متطابقة",
     "sustainability.project": "المشروع",
     "sustainability.project_area": "المشروع",
     "sustainability.rating": "التصنيف",
     "sustainability.select_boq": "-- اختر جدول كميات --",
     "sustainability.select_project": "-- اختر مشروعًا --",
-    "sustainability.subtitle": "اختر مشروعًا وجدول كميات لتحليل البصمة الكربونية CO2",
+    "sustainability.subtitle":
+      "اختر مشروعًا وجدول كميات لتحليل البصمة الكربونية CO2",
     "sustainability.title": "الاستدامة / CO2",
     "sustainability.total_co2": "إجمالي CO2",
     "takeoff.add_selected_to_boq": "إضافة {{count}} إلى جدول الكميات",
@@ -4870,12 +5406,14 @@ const resource = {
     "takeoff.markup.comment_placeholder": "اكتب تعليقًا...",
     "takeoff.markup.comment_send": "إرسال",
     "takeoff.markup.comments_drawer": "تعليقات الترميز",
-    "takeoff.markup.comments_empty": "لا توجد تعليقات بعد — كن أول من يضيف واحدًا.",
+    "takeoff.markup.comments_empty":
+      "لا توجد تعليقات بعد — كن أول من يضيف واحدًا.",
     "takeoff.markup.comments_load_failed": "تعذّر تحميل التعليقات.",
     "takeoff.markup.comments_title": "التعليقات",
     "takeoff.minutes_ago": "منذ {{count}} دقيقة",
     "takeoff.no_documents": "لم يتم رفع مستندات",
-    "takeoff.no_documents_description": "ارفع رسومات إنشائية PDF لبدء استخراج الكميات بالذكاء الاصطناعي.",
+    "takeoff.no_documents_description":
+      "ارفع رسومات إنشائية PDF لبدء استخراج الكميات بالذكاء الاصطناعي.",
     "takeoff.pages": "صفحات",
     "takeoff.pdf_limit": "ملفات .pdf حتى {{size}} ميجابايت",
     "takeoff.quick_measurements": "القياسات السريعة",
@@ -4883,7 +5421,8 @@ const resource = {
     "takeoff.select_all": "تحديد الكل",
     "takeoff.select_boq": "جدول الكميات",
     "takeoff.select_boq_placeholder": "اختر جدول كميات...",
-    "takeoff.select_boq_to_add": "اختر مشروعًا وجدول كميات أعلاه لإضافة القياسات.",
+    "takeoff.select_boq_to_add":
+      "اختر مشروعًا وجدول كميات أعلاه لإضافة القياسات.",
     "takeoff.select_items_hint": "حدد البنود لإضافتها إلى جدول الكميات",
     "takeoff.select_project": "المشروع",
     "takeoff.select_project_first": "اختر مشروعًا أولاً",
@@ -4899,7 +5438,8 @@ const resource = {
     "takeoff.uploaded_documents": "المستندات المرفوعة",
     "takeoff.value": "القيمة",
     "takeoff.view": "عرض",
-    "takeoff.workflow_desc": "ارفع رسم PDF ← يحلل الذكاء الاصطناعي الصفحات ويستخرج العناصر (جدران وبلاطات وأبواب وغيرها) مع الكميات ← راجع النتائج وعدّلها ← أضف البنود المحددة إلى جدول الكميات. درجات الثقة: أخضر (>80%) = ثقة عالية، أصفر (50-80%) = مراجعة موصى بها، أحمر (<50%) = التحقق اليدوي مطلوب.",
+    "takeoff.workflow_desc":
+      "ارفع رسم PDF ← يحلل الذكاء الاصطناعي الصفحات ويستخرج العناصر (جدران وبلاطات وأبواب وغيرها) مع الكميات ← راجع النتائج وعدّلها ← أضف البنود المحددة إلى جدول الكميات. درجات الثقة: أخضر (>80%) = ثقة عالية، أصفر (50-80%) = مراجعة موصى بها، أحمر (<50%) = التحقق اليدوي مطلوب.",
     "tasks.assignee_placeholder": "اختر المكلَّف",
     "tasks.checklist_progress": "{{done}} من {{total}} مكتمل",
     "tasks.column_empty": "لا توجد مهام في هذا العمود",
@@ -4931,10 +5471,12 @@ const resource = {
     "tendering.at": "في",
     "tendering.award": "ترسية",
     "tendering.award_bid": "ترسية هذا العطاء",
-    "tendering.award_confirm": "هل تريد ترسية هذا العقد على {{company}}؟ لا يمكن التراجع عن هذا الإجراء.",
+    "tendering.award_confirm":
+      "هل تريد ترسية هذا العقد على {{company}}؟ لا يمكن التراجع عن هذا الإجراء.",
     "tendering.award_confirm_title": "ترسية العقد؟",
     "tendering.bid_comparison": "مقارنة العطاءات",
-    "tendering.bid_comparison_chart_label": "مخطط شريطي لمقارنة إجماليات العطاءات",
+    "tendering.bid_comparison_chart_label":
+      "مخطط شريطي لمقارنة إجماليات العطاءات",
     "tendering.bid_count": "{{count}} عرض",
     "tendering.bid_totals_chart": "نظرة عامة على إجماليات العطاءات",
     "tendering.bids_count": "عطاءات",
@@ -4964,7 +5506,8 @@ const resource = {
     "tendering.new_package": "حزمة مناقصة جديدة",
     "tendering.no_bids_yet": "لا توجد عطاءات بعد",
     "tendering.no_packages": "لا توجد حزم مناقصات",
-    "tendering.no_packages_description": "أنشئ مناقصة من جدول الكميات لبدء جمع العروض",
+    "tendering.no_packages_description":
+      "أنشئ مناقصة من جدول الكميات لبدء جمع العروض",
     "tendering.notes": "ملاحظات",
     "tendering.notes_placeholder": "ملاحظات اختيارية...",
     "tendering.other": "أخرى",
@@ -4975,7 +5518,8 @@ const resource = {
     "tendering.recommendation": "التوصية",
     "tendering.select_boq": "اختر جدول كميات...",
     "tendering.select_project": "المشروع",
-    "tendering.select_project_desc": "اختر مشروعًا وأنشئ مناقصة من جدول الكميات للبدء",
+    "tendering.select_project_desc":
+      "اختر مشروعًا وأنشئ مناقصة من جدول الكميات للبدء",
     "tendering.select_project_first": "اختر مشروعًا أولاً",
     "tendering.select_project_placeholder": "اختر مشروعًا...",
     "tendering.select_project_title": "اختر مشروعًا",
@@ -4996,7 +5540,8 @@ const resource = {
     "tendering.total": "الإجمالي",
     "tendering.total_amount": "المبلغ الإجمالي",
     "tendering.vs_budget": "مقابل الميزانية",
-    "tendering.workflow_desc": "سير عمل المناقصات: مسودة (إعداد الحزمة) ← مُصدر (إرسال للمزايدين) ← جمع (استلام العطاءات) ← تقييم (مقارنة العروض جنبًا إلى جنب) ← مُرسى (اختيار الفائز). أنشئ حزمة من جدول كميات، أضف عطاءات المقاولين من الباطن، ثم استخدم جدول المقارنة لتحديد أفضل عرض. أضف 2+ عطاءات لرؤية تحليل جنبًا إلى جنب.",
+    "tendering.workflow_desc":
+      "سير عمل المناقصات: مسودة (إعداد الحزمة) ← مُصدر (إرسال للمزايدين) ← جمع (استلام العطاءات) ← تقييم (مقارنة العروض جنبًا إلى جنب) ← مُرسى (اختيار الفائز). أنشئ حزمة من جدول كميات، أضف عطاءات المقاولين من الباطن، ثم استخدم جدول المقارنة لتحديد أفضل عرض. أضف 2+ عطاءات لرؤية تحليل جنبًا إلى جنب.",
     "toasts.activity_created": "تم إنشاء النشاط",
     "toasts.assembly_applied": "تم تطبيق التجميعة على BOQ",
     "toasts.assembly_deleted": "تم حذف التجميعة",
@@ -5138,7 +5683,605 @@ const resource = {
     "onboarding.company_property_developer": "مطور عقاري",
     "onboarding.company_property_developer_desc": "فرق التطوير العقاري",
     "onboarding.explore_all_modules": "استكشف جميع {{count}} وحدات",
-  }
+    "boq.add_child_position": "إضافة بند فرعي",
+    "boq.add_sub_section": "إضافة قسم فرعي",
+    "boq.ai_no_answer":
+      "لم يُرجع المساعد إجابة. يُرجى إعادة الصياغة أو المحاولة مرة أخرى.",
+    "boq.compare_added": "مُضاف",
+    "boq.compare_against": "مقارنة مع",
+    "boq.compare_btn": "مقارنة",
+    "boq.compare_btn_hint": "قارن هذه التقدير مع قائمة كميات أخرى",
+    "boq.compare_col_delta": "Δ الأساس",
+    "boq.compare_col_line": "بند",
+    "boq.compare_col_qty": "الكمية",
+    "boq.compare_col_rate": "سعر الوحدة",
+    "boq.compare_error": "تعذّر مقارنة قوائم الكميات هذه.",
+    "boq.compare_hide_unchanged": "إخفاء الأسطر غير المتغيرة",
+    "boq.compare_no_diff": "لا توجد فروق بين قوائم الكميات هذه.",
+    "boq.compare_pick": "— اختر قائمة كميات —",
+    "boq.compare_qty": "الكمية",
+    "boq.compare_rate": "سعر الوحدة",
+    "boq.compare_removed": "محذوف",
+    "boq.compare_select_hint":
+      "اختر قائمة كميات أخرى أعلاه لعرض المقارنة سطرًا بسطر.",
+    "boq.compare_unchanged": "بدون تغيير",
+    "boq.compare_ct_added": "مُضاف",
+    "boq.compare_ct_removed": "محذوف",
+    "boq.compare_ct_qty_changed": "الكمية",
+    "boq.compare_ct_rate_changed": "سعر الوحدة",
+    "boq.compare_ct_changed": "متغير",
+    "boq.compare_ct_unchanged": "بدون تغيير",
+    "boq.model_link_action": "ربط بالنموذج…",
+    "boq.model_link_aggregation": "التجميع",
+    "boq.model_link_agg_sum": "المجموع",
+    "boq.model_link_agg_max": "الأعلى",
+    "boq.model_link_agg_min": "الأدنى",
+    "boq.model_link_agg_count": "العدد",
+    "boq.model_link_agg_first": "الأول",
+    "boq.model_link_create": "إنشاء رابط",
+    "boq.model_link_created": "تم إنشاء رابط النموذج",
+    "boq.model_link_created_hint":
+      "لم تتغير الكمية بعد — استخدم «تحديث من النموذج» ثم «تطبيق» لاستيرادها.",
+    "boq.model_link_delete": "حذف الرابط",
+    "boq.model_link_delete_failed": "تعذّر إزالة رابط النموذج",
+    "boq.model_link_deleted": "تمت إزالة رابط النموذج",
+    "boq.model_link_elem_count": "{{count}} عنصر",
+    "boq.model_link_elements": "العناصر (محدد {{selected}})",
+    "boq.model_link_existing": "الروابط القائمة",
+    "boq.model_link_failed": "تعذّر إنشاء رابط النموذج",
+    "boq.model_link_model": "نموذج BIM",
+    "boq.model_link_new": "رابط جديد",
+    "boq.model_link_no_elements": "لا توجد عناصر في هذا النموذج.",
+    "boq.model_link_no_models": "لا توجد نماذج BIM في هذا المشروع بعد.",
+    "boq.model_link_none": "لا توجد روابط نموذج لهذا البند بعد.",
+    "boq.model_link_pick_field": "— اختر كمية —",
+    "boq.model_link_pick_model": "— اختر نموذجًا —",
+    "boq.model_link_quantity_field": "حقل الكمية",
+    "boq.model_link_status_active": "متزامن",
+    "boq.model_link_status_stale": "قديم",
+    "boq.model_link_status_broken": "مقطوع",
+    "boq.model_link_subtitle":
+      "البند {{ordinal}} — اربط كميته بعناصر نموذج BIM",
+    "boq.model_link_title": "رابط النموذج",
+    "boq.model_link_version": "النموذج v{{v}}",
+    "boq.model_review_all_synced": "جميع الكميات المرتبطة متزامنة مع النموذج.",
+    "boq.model_review_applied": "تم تطبيق {{count}} تحديث كمية",
+    "boq.model_review_apply": "تطبيق {{count}} المحددة",
+    "boq.model_review_apply_failed": "فشل التطبيق",
+    "boq.model_review_btn": "مزامنة النموذج",
+    "boq.model_review_btn_hint": "إعادة سحب الكميات من نماذج BIM المرتبطة",
+    "boq.model_review_hint":
+      "تعيد حساب الكميات المرتبطة وفق أحدث إصدار للنموذج. لن يتغيّر شيء حتى تضغط «تطبيق».",
+    "boq.model_review_missing": "{{count}} مفقود",
+    "boq.model_review_no_links": "لا توجد روابط نموذج في قائمة الكميات هذه",
+    "boq.model_review_refresh": "تحديث من النموذج",
+    "boq.model_review_refresh_failed": "فشل التحديث من النموذج",
+    "boq.model_review_run": "شغّل التحديث لرؤية التغييرات المستمدة من النموذج.",
+    "boq.model_review_title": "مراجعة كميات النموذج",
+    "boq.position_added_edit_hint":
+      "أدخل الوصف، ثم انتقل بـ Tab بين الوحدة والكمية وسعر الوحدة",
+    "boq.link_badge_instance":
+      "نسخة مرتبطة من الكود {{code}} — التعديل على تعريفه سيؤدي إلى تباينها",
+    "boq.link_badge_master": "أصل الكود {{code}} — مرتبط بـ {{count}}",
+    "boq.link_master_badge": "الأصل",
+    "boq.link_propagated_msg": "تم تحديث {{count}} بند مرتبط في هذا المشروع.",
+    "boq.link_propagated_title": "تم نشر التعريف",
+    "boq.max_depth_reached_tooltip":
+      "تم الوصول إلى أقصى عمق تداخل ({{max}} مستويات) — قم بتسطيح الهيكل أو استخدم مستويات فرعية أقل.",
+    "boq.resource_link_propagated_msg":
+      "تم تحديث المورد المشترك على {{count}} بند آخر في هذا المشروع.",
+    "boq.resource_link_propagated_title": "تم نشر تعريف المورد",
+    "boq.link_role_instance": "نسخة مرتبطة",
+    "boq.link_role_master": "الأصل (التعريف المعتمد)",
+    "boq.link_unlinked_msg":
+      "أدى تعديلك إلى تغيير هذه النسخة المرتبطة، فلم تعد تتبع الكود المشترك. إذا لم يكن التباين مقصودًا، فأعد الكود إلى ما كان عليه.",
+    "boq.link_unlinked_title": "تم فصل البند عن الكود المشترك",
+    "boq.linked_positions_count":
+      "{{total}} بنود تتشارك هذا الكود ({{instances}} نسخة مرتبطة). الأصل هو التعريف المعتمد؛ تعديله يُنشَر على جميع النسخ في المشروع.",
+    "boq.linked_positions_error": "تعذّر تحميل البنود المرتبطة.",
+    "boq.linked_positions_none":
+      "هذا البند مستقل — لا يوجد بند آخر يتشارك معه الكود.",
+    "boq.linked_positions_subtitle":
+      "الكود {{code}} — عرض من البند {{ordinal}}",
+    "boq.linked_positions_title": "البنود المرتبطة",
+    "boq.no_description": "(بدون وصف)",
+    "boq.reuse_code_action": "إعادة استخدام كود قائم…",
+    "boq.reuse_code_existing": "الأكواد القائمة: {{codes}}",
+    "boq.reuse_code_msg":
+      "تم إنشاء نسخة مرتبطة — {{count}} بنود تتشارك هذا الكود. الكمية قابلة للتعديل بشكل مستقل.",
+    "boq.reuse_code_prompt":
+      "أدخل كودًا قائمًا لإعادة استخدامه هنا (يُنسخ التعريف والبنود الفرعية، وتبقى الكمية مستقلة):",
+    "boq.reuse_code_title": "تمت إعادة استخدام الكود {{code}}",
+    "boq.show_linked": "إظهار البنود المرتبطة",
+    "boq.unlink_done_msg":
+      "تم الاحتفاظ بالكود {{code}}. لم يعد هذا البند يتبع الكود المشترك؛ وتم الحفاظ على قيمه.",
+    "boq.unlink_done_title": "تم فصل البند",
+    "boq.unlink_failed": "فشل فصل البند",
+    "boq.unlink_this": "افصل هذا البند",
+    "login.github": "GitHub",
+    "login.github_sub": "كود المصدر",
+    "login.community": "المجتمع",
+    "login.community_sub": "احصل على مساعدة وناقش",
+    "login.brand_edit": "تخصيص الشعار",
+    "login.brand_title": "العلامة التجارية البيضاء",
+    "login.brand_desc":
+      "يظهر على شاشة تسجيل الدخول هذه وفي جميع أنحاء التطبيق. يُحفَظ في هذا المتصفح فقط.",
+    "login.brand_upload": "رفع الشعار",
+    "login.brand_name_ph": "اسم الشركة",
+    "login.brand_reset": "إعادة التعيين إلى الافتراضي",
+    "login.brand_too_big": "الصورة كبيرة جدًا (الحد الأقصى 512 ك.ب).",
+    "login.brand_bad_type":
+      "يُرجى اختيار صورة بصيغة PNG أو JPG أو SVG أو WebP.",
+    "nav.project_route": "مسار المشروع",
+    "nav.phase_estimation": "التقدير",
+    "nav.phase_planning": "التخطيط",
+    "nav.phase_execution": "التنفيذ",
+    "nav.phase_closure": "الجودة والإقفال",
+    "nav.clash_detection": "كشف التعارضات",
+    "schedule_advanced.master_hint":
+      "اختر جدولًا رئيسيًا ليصبح خطة العمل لعلامات التبويب «المراحل» و«النظرة المستقبلية» و«الأسبوعي» و«القيود». استخدم إجراءات الصف لإعادة تسميته أو تغيير تواريخه المخطط لها وحالته أو حذفه.",
+    "schedule_advanced.no_master_yet_desc":
+      "الجدول الرئيسي هو الخطة الأعلى التي تتجمع فيها كل خطط المراحل والنظرات المستقبلية وخطط العمل الأسبوعية. أنشئ واحدًا لبدء تخطيط السحب — يمكنك إعادة تسميته أو تغيير تواريخه أو حذفه في أي وقت.",
+    "schedule_advanced.active_selection": "خطة العمل",
+    "schedule_advanced.master_status.active": "نشط",
+    "schedule_advanced.master_status.archived": "مؤرشف",
+    "schedule_advanced.edit_master": "تعديل الجدول الرئيسي",
+    "schedule_advanced.master_updated": "تم تحديث الجدول الرئيسي",
+    "schedule_advanced.master_deleted": "تم حذف الجدول الرئيسي",
+    "schedule_advanced.delete_master_title": "حذف الجدول الرئيسي؟",
+    "schedule_advanced.delete_master_message":
+      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
+    "schedule_advanced.err_master_name_required": "اسم الجدول الرئيسي مطلوب.",
+    "schedule_advanced.master_name_placeholder": "مثال: الجدول الرئيسي للبناء",
+    "schedule_advanced.master_status_hint":
+      "أرشف الجدول للاحتفاظ بسجله دون أن يكون خطة العمل. يمكن إعادة تنشيط الجداول المؤرشفة هنا في أي وقت.",
+    "schedule_advanced.master_notes_placeholder":
+      "النطاق والمرجع التعاقدي والمعالم الرئيسية…",
+    "files.cta.add_first_short": "إضافة ملفات",
+    "files.folder.files_count": "ملفات",
+    "files.folder.subfolders": "{{count}} مجلدات",
+    "files.folder.share": "{{pct}}٪ من إجمالي التخزين",
+    "notifications.safety.incident_created": "تم الإبلاغ عن حادثة سلامة",
+    "notifications.safety.incident_created_body":
+      "الحادثة {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation": "ملاحظة سلامة عالية الخطورة",
+    "notifications.safety.high_risk_body":
+      "الملاحظة {{observation_number}} (الخطورة {{risk_score}}): {{description}}",
+    "notifications.bi.alert.title": "تم تشغيل تنبيه لوحة المعلومات",
+    "notifications.bi.alert.body":
+      "{{alert_name}} — {{kpi_code}} يساوي {{value}} (العتبة {{threshold}} {{condition}}).",
+    "notifications.bi.report.title": "التقرير المجدول جاهز",
+    "notifications.bi.report.body":
+      "تم إنشاء التقرير {{report_code}} بـ {{row_count}} صف.",
+    "notifications.supplier_catalogs.po.sent.title": "تم إرسال أمر الشراء",
+    "notifications.supplier_catalogs.po.sent.body":
+      "تم إرسال أمر شراء إلى المورّد {{vendor_id}} بقيمة {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title":
+      "استثناء في الفاتورة",
+    "notifications.supplier_catalogs.invoice.exception.body":
+      "تحتاج فاتورة أمر الشراء {{po_id}} إلى مراجعة: {{reason}}",
+    "notifications.supplier_catalogs.stock.low.title": "تحذير: مخزون منخفض",
+    "notifications.supplier_catalogs.stock.low.body":
+      "{{sku}}: المتبقي {{available_qty}}، عند نقطة إعادة الطلب {{reorder_point}} أو أقل.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title":
+      "إدراج المورّد في القائمة السوداء",
+    "notifications.supplier_catalogs.vendor.blacklisted.body":
+      "تم إدراج المورّد {{code}} في القائمة السوداء: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title":
+      "وثيقة امتثال المورّد منتهية الصلاحية",
+    "notifications.supplier_catalogs.kyc.expired.body":
+      "انتهت صلاحية {{doc_type}} في {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title":
+      "وثيقة امتثال المورّد على وشك الانتهاء",
+    "notifications.supplier_catalogs.kyc.expiring.body":
+      "تنتهي صلاحية {{doc_type}} في {{expires_on}} (المتبقي {{days_until_expiry}} يومًا).",
+    "notifications.resources.cert_expiring.title": "شهادة على وشك الانتهاء",
+    "notifications.resources.cert_expiring.body":
+      "{{resource_name}} — تنتهي صلاحية {{cert_type}} في {{valid_until}} (المتبقي {{days_left}} يومًا).",
+    "notifications.resources.assignment_proposed.title": "اقتراح تعيين مورد",
+    "notifications.resources.assignment_proposed.body":
+      "مقترح للمهمة {{task}} ابتداءً من {{start}}.",
+    "notifications.resources.assignment_confirmed.title": "تأكيد تعيين المورد",
+    "notifications.resources.assignment_confirmed.body":
+      "تم تأكيد التعيين للمهمة {{task}}.",
+    "notifications.contracts.signed.title": "تم توقيع العقد",
+    "notifications.contracts.signed.body":
+      "تم توقيع العقد {{code}} بقيمة {{value}} {{currency}}.",
+    "notifications.contracts.claim_submitted.title": "تم تقديم مطالبة تعاقدية",
+    "notifications.contracts.claim_submitted.body":
+      "تم تقديم مطالبة بقيمة {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.title": "تم سداد المطالبة التعاقدية",
+    "notifications.contracts.claim_paid.body":
+      "سداد المطالبة: {{amount}} {{currency}}.",
+    "notifications.contracts.retention_released.title":
+      "تم الإفراج عن المحتجزات",
+    "notifications.contracts.retention_released.body":
+      "العقد {{contract_code}}: تم الإفراج عن {{amount_released}}، والمتبقي {{remaining}}.",
+    "notifications.crm.lead_qualified.title": "تأهيل العميل المحتمل",
+    "notifications.crm.lead_qualified.body":
+      "تم تأهيل العميل المحتمل {{name}}.",
+    "notifications.crm.opportunity_won.title": "تم الفوز بالفرصة",
+    "notifications.crm.opportunity_won.body":
+      "{{name}} مكسوبة — القيمة {{value}}.",
+    "notifications.crm.opportunity_scored.title": "تم تقييم الفرصة",
+    "notifications.crm.opportunity_scored.body":
+      "{{title}} حصلت على {{score}} (الفئة {{band}}).",
+    "notifications.carbon.boq_position_assigned.title":
+      "تم تعيين معامل الكربون",
+    "notifications.carbon.boq_position_assigned.body":
+      "بند قائمة الكميات {{boq_position_id}}: {{carbon_kg}} كغ مكافئ CO₂ ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title":
+      "تم التعاقد مع المشتري",
+    "notifications.property_dev.buyer_contracted.body":
+      "تعاقد {{buyer}} على القطعة {{plot}}.",
+    "notifications.property_dev.handover_completed.title": "اكتمل التسليم",
+    "notifications.property_dev.handover_completed.body":
+      "اكتمل تسليم القطعة {{plot}}.",
+    "notifications.property_dev.warranty_raised.title": "تم رفع مطالبة ضمان",
+    "notifications.property_dev.warranty_raised.body":
+      "تم رفع مطالبة ضمان {{category}} على القطعة {{plot}}.",
+    "notifications.bid_management.invitation_sent.title":
+      "تم إرسال دعوة العطاء",
+    "notifications.bid_management.invitation_sent.body":
+      "تم إرسال دعوة للحزمة {{package}}، الموعد النهائي {{due}}.",
+    "notifications.bid_management.awarded.title": "تم إرساء العطاء",
+    "notifications.bid_management.awarded.body":
+      "تم إرساء {{package}} بقيمة {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title":
+      "تم إزالة قيد الجدول",
+    "notifications.schedule_advanced.constraint_cleared.body":
+      "لم تعد المهمة {{task}} محظورة.",
+    "notifications.daily_diary.signed.title": "تم توقيع اليومية",
+    "notifications.daily_diary.signed.body": "تم توقيع يومية {{date}}.",
+    "notifications.service.ticket_dispatched.title": "تم إرسال تذكرة الخدمة",
+    "notifications.service.ticket_dispatched.body":
+      "تم إرسال التذكرة {{ticket_number}} (الأولوية {{priority}}).",
+    "notifications.service.ticket_resolved.title": "تم حل تذكرة الخدمة",
+    "notifications.service.ticket_resolved.body":
+      "تم حل التذكرة {{ticket_number}}.",
+    "notifications.service.work_order_billed.title": "تمت فوترة أمر العمل",
+    "notifications.service.work_order_billed.body":
+      "تمت فوترة أمر العمل {{wo_number}} بقيمة {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.title":
+      "تم تقديم التأهيل المسبق",
+    "notifications.subcontractors.prequal_submitted.body":
+      "قدّم {{subcontractor_name}} تأهيلًا مسبقًا.",
+    "notifications.subcontractors.payment_app_submitted.title":
+      "تم تقديم طلب الدفع",
+    "notifications.subcontractors.payment_app_submitted.body":
+      "تم تقديم الطلب {{application_number}} بقيمة {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title":
+      "تم الإفراج عن محتجزات المقاول من الباطن",
+    "notifications.subcontractors.retention_released.body":
+      "تم الإفراج عن محتجزات بقيمة {{amount}} {{currency}}.",
+    "notifications.equipment.assigned.title": "تم تعيين المعدات",
+    "notifications.equipment.assigned.body":
+      "تم تعيين {{equipment_code}} للمشروع {{project_name}}.",
+    "notifications.equipment.damage_reported.title":
+      "تم الإبلاغ عن تلف المعدات",
+    "notifications.equipment.damage_reported.body":
+      "تم الإبلاغ عن تلف {{equipment_code}} ({{severity}}).",
+    "notifications.portal.user_invited.title": "تم دعوة مستخدم البوابة",
+    "notifications.portal.user_invited.body":
+      "تمت دعوة {{portal_user_email}} بصفة {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer":
+      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
+    "match_elements.vector_status_disconnected_fallback":
+      "لا يزال بإمكانك المتابعة الآن: تنتقل المطابقة تلقائيًا إلى التسجيل المعجمي (الكلمات المفتاحية) والمستند إلى القواعد طالما أن قاعدة البيانات المتجهية غير متصلة.",
+    "match_elements.vector_status_retry": "إعادة الاتصال",
+    "match_elements.vector_status_open_costs_long":
+      "فتح أدوات قاعدة بيانات التكاليف",
+    "match_elements.pipeline.title": "خط أنابيب المطابقة",
+    "match_elements.pipeline.subtitle":
+      "سبع خطوات من ملف CAD إلى قائمة كميات مُسعّرة — كل خطوة مرئية وقابلة للضبط",
+    "match_elements.pipeline.done_suffix": "تم",
+    "match_elements.pipeline.run_all": "تشغيل جميع المراحل",
+    "match_elements.pipeline.running_all": "تشغيل الكل…",
+    "match_elements.pipeline.loading": "تحميل خط الأنابيب…",
+    "match_elements.pipeline.load_failed": "تعذّر تحميل خط الأنابيب.",
+    "match_elements.pipeline.loading_prompts": "تحميل المطالبات…",
+    "match_elements.pipeline.run": "تشغيل",
+    "match_elements.pipeline.rerun": "إعادة التشغيل",
+    "match_elements.pipeline.adjust": "ضبط",
+    "match_elements.pipeline.adjust_stage": "ضبط المرحلة",
+    "match_elements.pipeline.rerun_from_here": "إعادة التشغيل من هنا",
+    "match_elements.pipeline.status_pending": "لم يُشغَّل",
+    "match_elements.pipeline.status_running": "قيد التشغيل",
+    "match_elements.pipeline.status_done": "تم",
+    "match_elements.pipeline.status_error": "خطأ",
+    "match_elements.pipeline.status_stale": "بحاجة إلى إعادة تشغيل",
+    "match_elements.pipeline.status_skipped": "متخطّى",
+    "match_elements.pipeline.stale_hint":
+      "تغيرت مرحلة سابقة — أعد تشغيل هذه الخطوة لتحديث مخرجاتها.",
+    "match_elements.pipeline.llm_badge": "LLM",
+    "match_elements.pipeline.llm_tunable":
+      "مُعزَّز بـ LLM — المطالبة قابلة للتحرير",
+    "match_elements.pipeline.group_by": "التجميع حسب المفاتيح",
+    "match_elements.pipeline.group_by_hint":
+      "مفصولة بفواصل. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.method": "الطريقة",
+    "match_elements.pipeline.max_groups": "الحد الأقصى للمجموعات",
+    "match_elements.pipeline.llm_provider": "مزوّد LLM",
+    "match_elements.pipeline.prompt": "المطالبة",
+    "match_elements.pipeline.system": "system",
+    "match_elements.pipeline.system_readonly":
+      "مطالبة النظام — للقراءة فقط. اعمل لها نسخة قابلة للتحرير لتعديلها وضبطها وفق احتياجات شركتك.",
+    "match_elements.pipeline.system_prompt": "مطالبة النظام",
+    "match_elements.pipeline.user_template": "قالب المستخدم",
+    "match_elements.pipeline.variables": "المتغيرات التي تملؤها المرحلة:",
+    "match_elements.pipeline.fork": "اعمل نسخة للتحرير",
+    "match_elements.pipeline.duplicate": "تكرار",
+    "match_elements.pipeline.save_prompt": "حفظ المطالبة",
+    "match_elements.pipeline.revert": "تراجع",
+    "match_elements.pipeline.run_failed": "فشل تشغيل المرحلة",
+    "match_elements.pipeline.intro_title": "افتح خط أنابيب المطابقة المرئي",
+    "match_elements.pipeline.intro_blurb":
+      "سبع خطوات من ملف CAD إلى قائمة كميات مُسعّرة — تحويل وتحميل وهيكل وتصفية وتجميع ومطابقة وتجميع نهائي. كل خطوة مرئية وموثّقة وقابلة للضبط (المطالبات، مزوّد LLM، مفاتيح التجميع).",
+    "match_elements.pipeline.intro_cta": "افتح خط الأنابيب",
+    "match_elements.pipeline.intro_resume": "استئناف آخر جلسة",
+    "match_elements.pipeline.busy_hint":
+      "هناك مرحلة قيد التشغيل — انتظر انتهاءها قبل بدء أخرى.",
+    "match_elements.pipeline.step_convert": "تحويل",
+    "match_elements.pipeline.step_load": "تحميل",
+    "match_elements.pipeline.step_schema": "هيكل",
+    "match_elements.pipeline.step_filter": "تصفية",
+    "match_elements.pipeline.step_group": "تجميع",
+    "match_elements.pipeline.step_match": "مطابقة",
+    "match_elements.pipeline.step_rollup": "تجميع نهائي",
+    "clash.title": "كشف التعارضات",
+    "clash.subtitle":
+      "كشف التعارضات الهندسية وتنسيق الخلوصات عبر نماذج BIM متّحدة — مع مصفوفة تعارضات وتصدير BCF.",
+    "clash.pick_project": "اختر مشروعًا",
+    "clash.new_run": "تشغيل تعارضات جديد",
+    "clash.models": "النماذج",
+    "clash.no_models": "لا توجد نماذج BIM مُحلَّلة في هذا المشروع.",
+    "clash.tolerance": "السماحية (مم)",
+    "clash.clearance": "الخلوص (مم)",
+    "clash.mode": "نطاق الاختبار",
+    "clash.mode_cross": "بين التخصصات فقط",
+    "clash.mode_all": "كل الأزواج",
+    "clash.mode_sets": "المجموعة A مقابل المجموعة B (حسب النوع)",
+    "clash.sets_hint":
+      "يتم اختبار الأزواج التي يكون فيها أحد العنصرين في المجموعة A والآخر في المجموعة B فقط — مثلًا، كل الجدران (A) مقابل كل الأنابيب (B).",
+    "clash.set_a": "المجموعة A",
+    "clash.set_b": "المجموعة B",
+    "clash.sets_required":
+      "اختر نوعًا أو تخصصًا واحدًا على الأقل لكلٍّ من المجموعتين A وB.",
+    "clash.set_search": "البحث في الأنواع / التخصصات…",
+    "clash.set_empty": "لا توجد عناصر — اختر نموذجًا مُحلَّلًا أولًا.",
+    "clash.disciplines": "التخصصات",
+    "clash.element_types": "أنواع العناصر",
+    "clash.run": "تشغيل كشف التعارضات",
+    "clash.history": "سجل التشغيلات",
+    "clash.no_runs": "لا توجد تشغيلات بعد.",
+    "clash.run_failed": "فشل تشغيل كشف التعارضات",
+    "clash.run_done": "تم العثور على {{n}} تعارض في {{e}} عنصر",
+    "clash.status_failed": "تعذّر تحديث الحالة",
+    "clash.status_saved": "تم تحديث الحالة",
+    "clash.bcf_done": "تم تصدير {{n}} تعارض إلى BCF (تم تخطّي {{s}})",
+    "clash.empty_title": "لم يتم اختيار تشغيل تعارضات",
+    "clash.empty_desc":
+      "اختر نماذج BIM على اليسار وشغّل كشف التعارضات لبناء مصفوفة التنسيق.",
+    "clash.kpi_total": "إجمالي التعارضات",
+    "clash.kpi_hard": "صلبة",
+    "clash.kpi_clearance": "خلوص",
+    "clash.kpi_open": "مفتوحة",
+    "clash.kpi_resolved": "مُحَلّة",
+    "clash.kpi_disciplines": "التخصصات",
+    "clash.kpi_matrix_cells": "خلايا المصفوفة",
+    "clash.matrix_title": "مصفوفة التعارضات — تخصص × تخصص",
+    "clash.matrix_open": "{{n}} مفتوحة",
+    "clash.clear_filter": "مسح الفلتر",
+    "clash.no_clashes": "لا توجد تعارضات — النماذج نظيفة.",
+    "clash.no_clashes_title": "لم يتم اكتشاف تعارضات",
+    "clash.no_match_title": "لا توجد تعارضات تطابق الفلاتر",
+    "clash.no_match_desc": "حاول توسيع الفلاتر النشطة أو مسحها.",
+    "clash.results_error": "فشل تحميل نتائج التعارضات",
+    "clash.results_error_desc":
+      "تعذّر تحميل نتائج التعارضات. هذا لا يعني أن النماذج نظيفة — يُرجى المحاولة مجددًا.",
+    "clash.retry": "إعادة المحاولة",
+    "clash.capped_notice":
+      "يتم عرض أول {{loaded}} من أصل {{total}} تعارضًا — حسّن الفلاتر لتضييق نطاق المراجعة.",
+    "clash.results": "نتائج التعارضات",
+    "clash.count_of": "{{shown}} من {{total}}",
+    "clash.search_ph": "ابحث باسم العنصر…",
+    "clash.all_types": "كل الأنواع",
+    "clash.type_hard": "صلبة",
+    "clash.type_clearance": "خلوص",
+    "clash.export_sel": "تصدير {{n}} إلى BCF",
+    "clash.export_open": "تصدير المفتوحة → BCF",
+    "clash.export_row": "تصدير هذا التعارض إلى BCF",
+    "clash.filter_status": "الحالة",
+    "clash.filter_min_pen": "الحد الأدنى للاختراق",
+    "clash.clear_all": "مسح الكل",
+    "clash.col_a": "العنصر A",
+    "clash.col_b": "العنصر B",
+    "clash.col_type": "النوع",
+    "clash.col_penetration": "الاختراق",
+    "clash.col_distance": "المسافة",
+    "clash.col_status": "الحالة",
+    "clash.col_actions": "الإجراءات",
+    "clash.select_all": "تحديد الكل في الصفحة",
+    "clash.select_row": "تحديد التعارض",
+    "clash.bcf": "BCF",
+    "clash.isolate_3d": "عزل في 3D",
+    "clash.isolate_3d_short": "3D",
+    "clash.n_selected": "محدد: {{n}}",
+    "clash.clear_selection": "مسح",
+    "clash.clear_filter_short": "مسح",
+    "clash.page_range": "{{from}}–{{to}} من {{total}}",
+    "clash.page_of": "صفحة {{p}} / {{n}}",
+    "clash.prev": "السابق",
+    "clash.next": "التالي",
+    "clash.status.new": "جديد",
+    "clash.status.active": "نشط",
+    "clash.status.reviewed": "مُراجَع",
+    "clash.status.approved": "معتمد",
+    "clash.status.resolved": "محلول",
+    "clash.status.ignored": "متجاهَل",
+    "nav.pipelines": "منشئ خطوط الأنابيب",
+    "pipeline.untitled": "خط أنابيب بدون عنوان",
+    "pipeline.empty.title": "ابنِ أتمتتك الأولى",
+    "pipeline.empty.description":
+      "اسحب مشغّلًا وبضع خطوات من اللوحة على اليسار، اربطها، ثم اضغط «تشغيل».",
+    "pipeline.toast.saved": "تم حفظ خط الأنابيب",
+    "pipeline.toast.save_failed": "تعذّر حفظ خط الأنابيب",
+    "pipeline.toast.run_failed": "تعذّر بدء التشغيل",
+    "pipeline.explain.coming_soon_title": "اشرح خط الأنابيب هذا",
+    "pipeline.explain.coming_soon_body":
+      "تأتي طريقة العرض السردية بلغة بسيطة في الإصدار القادم.",
+    "pipeline.tour.palette_title": "اختر خطواتك",
+    "pipeline.tour.palette_body":
+      "اسحب خطوة من هنا إلى اللوحة، أو انقر عليها لإسقاطها في المنتصف.",
+    "pipeline.tour.canvas_title": "اربط الخطوات",
+    "pipeline.tour.canvas_body":
+      "اسحب من نقطة إخراج خطوة إلى مدخل الخطوة التالية. تُظهر الألوان نوع البيانات.",
+    "pipeline.tour.run_title": "شغّلها",
+    "pipeline.tour.run_body":
+      "اضغط «تشغيل» لتنفيذ خط الأنابيب وراقب كل خطوة تُضيء مباشرة.",
+    "pipeline.toolbar.aria": "شريط أدوات خط الأنابيب",
+    "pipeline.toolbar.undo": "تراجع",
+    "pipeline.toolbar.redo": "إعادة",
+    "pipeline.toolbar.fit": "ملاءمة العرض",
+    "pipeline.toolbar.explain": "اشرح خط الأنابيب هذا",
+    "pipeline.toolbar.issues": "{{count}} مشكلة",
+    "pipeline.toolbar.save": "حفظ",
+    "pipeline.toolbar.run": "تشغيل",
+    "pipeline.toolbar.stop": "إيقاف",
+    "pipeline.palette.title": "الخطوات",
+    "pipeline.palette.aria": "لوحة العقد",
+    "pipeline.palette.expand": "توسيع اللوحة",
+    "pipeline.palette.collapse": "طي اللوحة",
+    "pipeline.palette.search": "ابحث عن الخطوات",
+    "pipeline.palette.search_ph": "بحث…",
+    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.none": "لا توجد أنواع عقد متاحة.",
+    "pipeline.palette.module_chip": "يؤثر على الوحدة {{module}}",
+    "pipeline.palette.writes": "يكتب",
+    "pipeline.palette.writes_chip":
+      "هذه الخطوة تكتب بيانات — تحتاج إلى بوابة قبلها",
+    "pipeline.palette.cat_trigger": "المصادر / المشغّلات",
+    "pipeline.palette.cat_source": "احصل على البيانات",
+    "pipeline.palette.cat_transform": "تحويل",
+    "pipeline.palette.cat_gate": "التحقق",
+    "pipeline.palette.cat_ai": "الذكاء الاصطناعي",
+    "pipeline.palette.cat_action": "الإجراءات / المخرجات",
+    "pipeline.palette.cat_flow": "تحكّم التدفق",
+    "pipeline.inspector.aria": "المفتّش",
+    "pipeline.inspector.expand": "توسيع المفتّش",
+    "pipeline.inspector.collapse": "طي المفتّش",
+    "pipeline.inspector.tab_node": "عقدة",
+    "pipeline.inspector.tab_pipeline": "خط الأنابيب",
+    "pipeline.inspector.context_node": "تعديل خطوة",
+    "pipeline.inspector.context_pipeline": "تعديل خط الأنابيب",
+    "pipeline.inspector.no_params": "لا توجد إعدادات لتهيئتها في هذه الخطوة.",
+    "pipeline.inspector.enabled": "مُفعَّل",
+    "pipeline.inspector.choose": "اختر…",
+    "pipeline.inspector.duplicate": "تكرار",
+    "pipeline.inspector.delete": "حذف",
+    "pipeline.inspector.name": "الاسم",
+    "pipeline.inspector.name_ph": "أتمتتي",
+    "pipeline.inspector.description": "الوصف",
+    "pipeline.inspector.published": "منشور (يمكن تشغيله)",
+    "pipeline.inspector.summary_stub":
+      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.canvas.aria": "لوحة محرر خط الأنابيب",
+    "pipeline.canvas.hint":
+      "اسحب الخطوات من اللوحة، واربط منافذها، ثم اضغط «تشغيل».",
+    "pipeline.canvas.legend_sr":
+      "لون الحافة وشكلها ونمطها معًا يرمزون لنوع البيانات.",
+    "pipeline.connect.incompatible_title": "لا يمكن ربط هذه الخطوات",
+    "pipeline.connect.incompatible_body":
+      "هذا الإخراج هو {{from}}؛ وهذا الإدخال يتوقع {{to}}.",
+    "pipeline.node.rename": "إعادة تسمية العقدة",
+    "pipeline.node.rename_hint": "انقر نقرتين لإعادة التسمية",
+    "pipeline.node.ai_badge": "AI",
+    "pipeline.node.ai_confidence": "اقتراح الذكاء الاصطناعي — راجع درجة الثقة",
+    "pipeline.node.help": "ماذا تفعل هذه العقدة",
+    "pipeline.node.help_generic":
+      "اضبط هذه الخطوة في المفتّش. تتلقى البيانات من الخطوة المتصلة قبلها وتمرر النتيجة.",
+    "pipeline.node.collapse": "طي",
+    "pipeline.node.expand": "توسيع",
+    "pipeline.node.more_params": "+{{count}} المزيد",
+    "pipeline.node.took_ms": "{{ms}} م.ث",
+    "pipeline.port.aria_input": "إدخال: {{label}}، النوع {{type}}",
+    "pipeline.port.aria_output": "إخراج: {{label}}، النوع {{type}}",
+    "pipeline.port.table": "جدول / صفوف",
+    "pipeline.port.file": "ملف / وثيقة",
+    "pipeline.port.bim": "نموذج BIM",
+    "pipeline.port.number": "رقم",
+    "pipeline.port.boolean": "منطقي / علم",
+    "pipeline.port.any": "أي / تمرير",
+    "pipeline.port.error": "فرع الخطأ",
+    "pipeline.dock.run": "تشغيل",
+    "pipeline.dock.expand": "توسيع مرسى التشغيل",
+    "pipeline.dock.collapse": "طي مرسى التشغيل",
+    "pipeline.dock.idle": "خامل",
+    "pipeline.dock.progress": "{{pct}}٪",
+    "pipeline.dock.tab_run": "تشغيل",
+    "pipeline.dock.tab_history": "السجل",
+    "pipeline.dock.no_steps":
+      "أضف خطوات واضغط «تشغيل» لمراقبة تدفق البيانات عبر خط الأنابيب.",
+    "pipeline.dock.loading_history": "تحميل سجل التشغيلات…",
+    "pipeline.dock.no_runs_title": "لا توجد تشغيلات بعد",
+    "pipeline.dock.no_runs_desc":
+      "اضغط «تشغيل» لرؤية تدفق البيانات عبر خط الأنابيب.",
+    "pipeline.dock.manual": "يدوي",
+    "pipeline.dock.queued_hint": "في انتظار عامل ليلتقط التشغيل…",
+    "pipeline.runstatus.pending": "قيد الانتظار",
+    "pipeline.runstatus.queued": "في الطابور",
+    "pipeline.runstatus.running": "قيد التشغيل",
+    "pipeline.runstatus.started": "قيد التشغيل",
+    "pipeline.runstatus.done": "تم",
+    "pipeline.runstatus.success": "تم",
+    "pipeline.runstatus.error": "خطأ",
+    "pipeline.runstatus.failed": "فشل",
+    "pipeline.runstatus.skipped": "متخطّى",
+    "pipeline.runstatus.stale": "بحاجة إلى إعادة تشغيل",
+    "pipeline.runstatus.paused": "متوقف مؤقتًا",
+    "pipeline.runstatus.cancelled": "ملغى",
+    "pipeline.trigger.manual": "يدوي",
+    "pipeline.trigger.schedule": "مُجدوَل",
+    "pipeline.trigger.event": "حدث",
+    "pipeline.nodetype.trigger.manual": "مشغّل يدوي",
+    "pipeline.nodetype.trigger.manual.desc":
+      "ابدأ خط الأنابيب من نداء REST. بدون مدخلات.",
+    "pipeline.nodetype.source.project": "احصل على المشروع",
+    "pipeline.nodetype.source.project.desc":
+      "تحميل معرف المشروع المرتبط واسمه.",
+    "pipeline.nodetype.source.boq": "احصل على بنود قائمة الكميات",
+    "pipeline.nodetype.source.boq.desc":
+      "تحميل جميع بنود قائمة الكميات للمشروع كصفوف (المعرفات + عينة صغيرة).",
+    "pipeline.nodetype.transform.filter": "تصفية الصفوف",
+    "pipeline.nodetype.transform.filter.desc":
+      "الاحتفاظ فقط بالصفوف المطابقة لاختبار حقل/عامل/قيمة بسيط.",
+    "pipeline.nodetype.gate.validation": "بوابة التحقق",
+    "pipeline.nodetype.gate.validation.desc":
+      "تشغيل محرك التحقق على الصفوف؛ يوقف التشغيل عند أخطاء حاجبة.",
+    "pipeline.nodetype.action.export.excel": "تصدير إلى Excel",
+    "pipeline.nodetype.action.export.excel.desc":
+      "كتابة الصفوف في ملف .xlsx (تُعيد مرجع تنزيل؛ لا تغيّر قاعدة البيانات).",
+    "pipeline.nodehelp.trigger.manual":
+      "هنا يبدأ خط الأنابيب. لا يحمل إعدادات — اربطه بخطوة بيانات بعد ذلك.",
+    "pipeline.nodehelp.source.project":
+      "يحمّل المشروع المرتبط بخط الأنابيب هذا. اترك معرف المشروع فارغًا لاستخدام المعرف من رابط الصفحة.",
+    "pipeline.nodehelp.source.boq":
+      "يقرأ جميع بنود قائمة الكميات للمشروع. تُنقل بين الخطوات المعرفات وعينة صغيرة فقط؛ وتبقى البيانات الكاملة على الخادم.",
+    "pipeline.nodehelp.transform.filter":
+      "يحتفظ فقط بالصفوف المطابقة لاختبار الحقل/العامل/القيمة الذي ضبطته في المفتّش. اترك الحقل فارغًا لتمرير كل شيء.",
+    "pipeline.nodehelp.gate.validation":
+      "يشغّل محرك التحقق على الصفوف. إذا كانت هناك أخطاء حاجبة فإن التشغيل يتوقف هنا، حتى لا تعمل خطوات الكتابة اللاحقة على بيانات سيئة.",
+    "pipeline.nodehelp.action.export.excel":
+      "يكتب الصفوف الواردة في ملف Excel ويعيد مرجع تنزيل. لا يغيّر أي بيانات.",
+    "pipeline.param.source.project.project_id": "معرف المشروع (اختياري)",
+    "pipeline.param.source.boq.project_id": "معرف المشروع (اختياري)",
+    "pipeline.param.transform.filter.field": "الحقل",
+    "pipeline.param.transform.filter.op": "العامل",
+    "pipeline.param.transform.filter.value": "القيمة",
+    "pipeline.param.gate.validation.rule_sets": "مجموعات القواعد",
+    "pipeline.param.action.export.excel.filename": "اسم الملف",
+    "pipeline.param.action.export.excel.columns": "الأعمدة",
+  },
 } as { translation: Record<string, string> };
 
 export default resource;

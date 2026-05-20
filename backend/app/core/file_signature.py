@@ -112,22 +112,12 @@ def detect(head: bytes) -> str | None:
 # Common upload-endpoint allow-lists. Keep them at the module level so
 # they're easy to review — each endpoint imports the constant it needs
 # rather than sprinkling magic literals through handlers.
-ALLOWED_DOCUMENT_TYPES: Final[frozenset[str]] = frozenset(
-    {"pdf", "png", "jpeg", "gif", "webp", "zip", "ole", "xml"}
-)
-ALLOWED_BIM_TYPES: Final[frozenset[str]] = frozenset(
-    {"ole", "zip", "ifc", "glb", "xml"}
-)
-ALLOWED_DWG_TYPES: Final[frozenset[str]] = frozenset(
-    {"dwg", "dxf", "ole"}
-)
-ALLOWED_CAD_TYPES: Final[frozenset[str]] = (
-    ALLOWED_BIM_TYPES | ALLOWED_DWG_TYPES
-)
+ALLOWED_DOCUMENT_TYPES: Final[frozenset[str]] = frozenset({"pdf", "png", "jpeg", "gif", "webp", "zip", "ole", "xml"})
+ALLOWED_BIM_TYPES: Final[frozenset[str]] = frozenset({"ole", "zip", "ifc", "glb", "xml"})
+ALLOWED_DWG_TYPES: Final[frozenset[str]] = frozenset({"dwg", "dxf", "ole"})
+ALLOWED_CAD_TYPES: Final[frozenset[str]] = ALLOWED_BIM_TYPES | ALLOWED_DWG_TYPES
 ALLOWED_GAEB_TYPES: Final[frozenset[str]] = frozenset({"xml"})
-ALLOWED_PHOTO_TYPES: Final[frozenset[str]] = frozenset(
-    {"jpeg", "png", "gif", "webp", "heic", "heif", "tiff"}
-)
+ALLOWED_PHOTO_TYPES: Final[frozenset[str]] = frozenset({"jpeg", "png", "gif", "webp", "heic", "heif", "tiff"})
 
 
 class FileSignatureMismatch(ValueError):

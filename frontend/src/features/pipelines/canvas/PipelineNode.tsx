@@ -11,8 +11,8 @@
  *   - Run-state accent bar on the logical-start edge + a status icon so state
  *     never relies on color alone (03_ux_visual §2.3).
  */
-import { Handle, Position, type NodeProps } from '@xyflow/react';
-import clsx from 'clsx';
+import { Handle, Position, type NodeProps } from "@xyflow/react";
+import clsx from "clsx";
 import {
   ChevronDown,
   ChevronRight,
@@ -23,21 +23,21 @@ import {
   Play,
   XCircle,
   type LucideProps,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   useCallback,
   useMemo,
   useState,
   type ComponentType,
   type KeyboardEvent,
-} from 'react';
-import { useTranslation } from 'react-i18next';
+} from "react";
+import { useTranslation } from "react-i18next";
 
-import { useIsRTL } from '@/shared/hooks/useIsRTL';
+import { useIsRTL } from "@/shared/hooks/useIsRTL";
 
-import { getCategoryTokens, getPortTokens, PORT_SHAPE_SVG } from '../tokens';
-import { usePipelineStore, type CanvasNode } from '../usePipelineStore';
-import type { RunStatus } from '../api';
+import { getCategoryTokens, getPortTokens, PORT_SHAPE_SVG } from "../tokens";
+import { usePipelineStore, type CanvasNode } from "../usePipelineStore";
+import type { RunStatus } from "../api";
 
 export interface PipelineNodeData extends Record<string, unknown> {
   node: CanvasNode;
@@ -68,22 +68,22 @@ function runVisual(status: RunStatus | undefined): {
   spin?: boolean;
 } {
   switch (status) {
-    case 'queued':
-      return { Icon: Clock, accent: 'bg-oe-blue/60' };
-    case 'running':
-      return { Icon: Loader2, accent: 'bg-oe-blue', spin: true };
-    case 'done':
-    case 'success':
-      return { Icon: Play, accent: 'bg-semantic-success' };
-    case 'error':
-    case 'failed':
-      return { Icon: XCircle, accent: 'bg-semantic-error' };
-    case 'paused':
-      return { Icon: Clock, accent: 'bg-semantic-warning' };
-    case 'cancelled':
-      return { Icon: CircleSlash, accent: 'bg-content-tertiary' };
+    case "queued":
+      return { Icon: Clock, accent: "bg-oe-blue/60" };
+    case "running":
+      return { Icon: Loader2, accent: "bg-oe-blue", spin: true };
+    case "done":
+    case "success":
+      return { Icon: Play, accent: "bg-semantic-success" };
+    case "error":
+    case "failed":
+      return { Icon: XCircle, accent: "bg-semantic-error" };
+    case "paused":
+      return { Icon: Clock, accent: "bg-semantic-warning" };
+    case "cancelled":
+      return { Icon: CircleSlash, accent: "bg-content-tertiary" };
     default:
-      return { Icon: null, accent: 'bg-transparent' };
+      return { Icon: null, accent: "bg-transparent" };
   }
 }
 
@@ -98,7 +98,7 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
   );
 
   const [editingTitle, setEditingTitle] = useState(false);
-  const [draftTitle, setDraftTitle] = useState(node?.title ?? '');
+  const [draftTitle, setDraftTitle] = useState(node?.title ?? "");
   const [showHelp, setShowHelp] = useState(false);
 
   const tokens = useMemo(
@@ -115,12 +115,12 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
 
   const handleTitleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
+      if (event.key === "Enter") {
         event.preventDefault();
         commitTitle();
-      } else if (event.key === 'Escape') {
+      } else if (event.key === "Escape") {
         event.preventDefault();
-        setDraftTitle(node?.title ?? '');
+        setDraftTitle(node?.title ?? "");
         setEditingTitle(false);
       }
     },
@@ -134,20 +134,20 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
   const outputSide = isRTL ? Position.Left : Position.Right;
   const rows = Math.max(node.inputs.length, node.outputs.length);
   const paramChips = Object.entries(node.params).filter(
-    ([, v]) => v !== undefined && v !== null && v !== '',
+    ([, v]) => v !== undefined && v !== null && v !== "",
   );
   const rv = runVisual(runNodeState?.status);
-  const isAi = node.category === 'ai';
+  const isAi = node.category === "ai";
 
   return (
     <div
       data-testid={`pipeline-node-${id}`}
       data-node-category={node.category}
       data-node-type={node.type}
-      data-node-selected={selected ? 'true' : 'false'}
+      data-node-selected={selected ? "true" : "false"}
       className={clsx(
-        'relative min-w-[220px] max-w-[340px] overflow-hidden rounded-lg border-2 ps-3 pe-3 py-2 text-sm shadow-sm',
-        'transition-colors',
+        "relative min-w-[220px] max-w-[340px] overflow-hidden rounded-lg border-2 ps-3 pe-3 py-2 text-sm shadow-sm",
+        "transition-colors",
         selected ? tokens.classes.bgSelected : tokens.classes.bg,
         selected ? tokens.classes.borderSelected : tokens.classes.border,
         tokens.classes.text,
@@ -157,9 +157,9 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
       <span
         aria-hidden="true"
         className={clsx(
-          'absolute inset-y-0 start-0 w-1',
+          "absolute inset-y-0 start-0 w-1",
           rv.accent,
-          runNodeState?.status === 'queued' && 'animate-pulse',
+          runNodeState?.status === "queued" && "animate-pulse",
         )}
       />
 
@@ -167,7 +167,7 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
       <div className="flex items-center gap-2">
         <span
           className={clsx(
-            'flex h-5 w-5 shrink-0 items-center justify-center',
+            "flex h-5 w-5 shrink-0 items-center justify-center",
             tokens.classes.icon,
           )}
         >
@@ -182,8 +182,8 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
             onBlur={commitTitle}
             onKeyDown={handleTitleKeyDown}
             autoFocus
-            aria-label={t('pipeline.node.rename', {
-              defaultValue: 'Rename node‌⁠‍',
+            aria-label={t("pipeline.node.rename", {
+              defaultValue: "Rename node‌⁠‍",
             })}
             className="h-6 w-full rounded border border-border bg-white px-1 text-sm dark:bg-gray-900"
           />
@@ -196,8 +196,8 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
               setEditingTitle(true);
             }}
             className="truncate text-start font-medium hover:underline"
-            title={t('pipeline.node.rename_hint', {
-              defaultValue: 'Double-click to rename‌⁠‍',
+            title={t("pipeline.node.rename_hint", {
+              defaultValue: "Double-click to rename‌⁠‍",
             })}
           >
             {node.title}
@@ -206,23 +206,23 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
         {isAi && (
           <span
             className="ms-1 shrink-0 rounded bg-violet-200 px-1 text-2xs font-semibold text-violet-800 dark:bg-violet-800 dark:text-violet-100"
-            title={t('pipeline.node.ai_confidence', {
-              defaultValue: 'AI suggestion — review the confidence score‌⁠‍',
+            title={t("pipeline.node.ai_confidence", {
+              defaultValue: "AI suggestion — review the confidence score‌⁠‍",
             })}
           >
-            {t('pipeline.node.ai_badge', { defaultValue: 'AI' })}
+            {t("pipeline.node.ai_badge", { defaultValue: "AI" })}
           </span>
         )}
         <button
           type="button"
-          aria-label={t('pipeline.node.help', {
-            defaultValue: 'What this node does‌⁠‍',
+          aria-label={t("pipeline.node.help", {
+            defaultValue: "What this node does‌⁠‍",
           })}
           aria-expanded={showHelp}
           onClick={() => setShowHelp((v) => !v)}
           className={clsx(
-            'ms-auto flex h-5 w-5 shrink-0 items-center justify-center rounded',
-            'hover:bg-black/5 dark:hover:bg-white/10',
+            "ms-auto flex h-5 w-5 shrink-0 items-center justify-center rounded",
+            "hover:bg-black/5 dark:hover:bg-white/10",
             tokens.classes.icon,
           )}
         >
@@ -232,14 +232,14 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
           type="button"
           aria-label={
             node.expanded
-              ? t('pipeline.node.collapse', { defaultValue: 'Collapse‌⁠‍' })
-              : t('pipeline.node.expand', { defaultValue: 'Expand' })
+              ? t("pipeline.node.collapse", { defaultValue: "Collapse‌⁠‍" })
+              : t("pipeline.node.expand", { defaultValue: "Expand" })
           }
           data-testid={`pipeline-node-toggle-${id}`}
           onClick={() => toggleExpanded(node.id)}
           className={clsx(
-            'flex h-5 w-5 shrink-0 items-center justify-center rounded',
-            'hover:bg-black/5 dark:hover:bg-white/10',
+            "flex h-5 w-5 shrink-0 items-center justify-center rounded",
+            "hover:bg-black/5 dark:hover:bg-white/10",
             tokens.classes.icon,
           )}
         >
@@ -255,12 +255,15 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
       {showHelp && (
         <p
           data-testid={`pipeline-node-help-${id}`}
-          className={clsx('mt-1.5 text-xs leading-relaxed', tokens.classes.textSubtle)}
+          className={clsx(
+            "mt-1.5 text-xs leading-relaxed",
+            tokens.classes.textSubtle,
+          )}
         >
           {t(`pipeline.nodehelp.${node.type}`, {
-            defaultValue: t('pipeline.node.help_generic', {
+            defaultValue: t("pipeline.node.help_generic", {
               defaultValue:
-                'Configure this step in the Inspector. It receives data from the connected step before it and passes its result on.',
+                "Configure this step in the Inspector. It receives data from the connected step before it and passes its result on.",
             }),
           })}
         </p>
@@ -270,7 +273,10 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
       {paramChips.length > 0 && (
         <div
           data-testid={`pipeline-node-params-${id}`}
-          className={clsx('mt-1 flex flex-wrap gap-1 text-xs', tokens.classes.textSubtle)}
+          className={clsx(
+            "mt-1 flex flex-wrap gap-1 text-xs",
+            tokens.classes.textSubtle,
+          )}
         >
           {(node.expanded ? paramChips : paramChips.slice(0, 3)).map(
             ([key, value]) => (
@@ -286,8 +292,8 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
           )}
           {!node.expanded && paramChips.length > 3 && (
             <span className="inline-flex items-center px-1 text-xs italic">
-              {t('pipeline.node.more_params', {
-                defaultValue: '+{{count}} more',
+              {t("pipeline.node.more_params", {
+                defaultValue: "+{{count}} more",
                 count: paramChips.length - 3,
               })}
             </span>
@@ -314,8 +320,8 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
                         position={inputSide}
                         id={input.id}
                         data-testid={`pipeline-node-input-${id}-${input.id}`}
-                        aria-label={t('pipeline.port.aria_input', {
-                          defaultValue: 'input: {{label}}, type {{type}}',
+                        aria-label={t("pipeline.port.aria_input", {
+                          defaultValue: "input: {{label}}, type {{type}}",
                           label: input.label,
                           type: t(getPortTokens(input.dataType).labelKey, {
                             defaultValue: getPortTokens(input.dataType)
@@ -323,7 +329,7 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
                           }),
                         })}
                         style={{
-                          background: '#fff',
+                          background: "#fff",
                           border: `1px solid ${getPortTokens(input.dataType).color}`,
                           width: 9,
                           height: 9,
@@ -344,8 +350,8 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
                         position={outputSide}
                         id={output.id}
                         data-testid={`pipeline-node-output-${id}-${output.id}`}
-                        aria-label={t('pipeline.port.aria_output', {
-                          defaultValue: 'output: {{label}}, type {{type}}',
+                        aria-label={t("pipeline.port.aria_output", {
+                          defaultValue: "output: {{label}}, type {{type}}",
                           label: output.label,
                           type: t(getPortTokens(output.dataType).labelKey, {
                             defaultValue: getPortTokens(output.dataType)
@@ -353,7 +359,7 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
                           }),
                         })}
                         style={{
-                          background: '#fff',
+                          background: "#fff",
                           border: `1px solid ${getPortTokens(output.dataType).color}`,
                           width: 9,
                           height: 9,
@@ -373,7 +379,7 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
         <div
           data-testid={`pipeline-node-status-${id}`}
           className={clsx(
-            'mt-2 flex items-center gap-1.5 border-t pt-1.5 text-xs',
+            "mt-2 flex items-center gap-1.5 border-t pt-1.5 text-xs",
             tokens.classes.textSubtle,
           )}
           aria-live="polite"
@@ -381,17 +387,17 @@ export function PipelineNode({ id, data, selected }: PipelineNodeProps) {
           <rv.Icon
             size={13}
             aria-hidden="true"
-            className={rv.spin ? 'animate-spin' : undefined}
+            className={rv.spin ? "animate-spin" : undefined}
           />
           <span>
             {t(`pipeline.runstatus.${runNodeState.status}`, {
-              defaultValue: String(runNodeState.status ?? ''),
+              defaultValue: String(runNodeState.status ?? ""),
             })}
           </span>
-          {typeof runNodeState.took_ms === 'number' && (
+          {typeof runNodeState.took_ms === "number" && (
             <span className="ms-auto tabular-nums">
-              {t('pipeline.node.took_ms', {
-                defaultValue: '{{ms}} ms',
+              {t("pipeline.node.took_ms", {
+                defaultValue: "{{ms}} ms",
                 ms: runNodeState.took_ms,
               })}
             </span>

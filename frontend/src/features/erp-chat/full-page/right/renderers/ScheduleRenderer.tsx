@@ -6,9 +6,12 @@ interface Activity {
   is_critical?: boolean;
 }
 
-function parseDayOffset(val: string | number | undefined, minDate: number): number {
+function parseDayOffset(
+  val: string | number | undefined,
+  minDate: number,
+): number {
   if (val == null) return 0;
-  if (typeof val === 'number') return val;
+  if (typeof val === "number") return val;
   const ms = new Date(val).getTime();
   if (isNaN(ms)) return 0;
   return Math.round((ms - minDate) / (1000 * 60 * 60 * 24));
@@ -19,7 +22,14 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
 
   if (activities.length === 0) {
     return (
-      <div style={{ padding: 24, color: 'var(--chat-text-tertiary)', textAlign: 'center', fontFamily: 'var(--chat-font-body)' }}>
+      <div
+        style={{
+          padding: 24,
+          color: "var(--chat-text-tertiary)",
+          textAlign: "center",
+          fontFamily: "var(--chat-font-body)",
+        }}
+      >
         No schedule data available
       </div>
     );
@@ -27,7 +37,7 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
 
   // Determine if data uses date strings or day offsets
   const hasDateStrings = activities.some(
-    (a) => typeof a.start === 'string' && !isNaN(new Date(a.start).getTime()),
+    (a) => typeof a.start === "string" && !isNaN(new Date(a.start).getTime()),
   );
 
   let minDay = 0;
@@ -36,11 +46,11 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
   if (hasDateStrings) {
     const dates = activities.flatMap((a) => {
       const vals: number[] = [];
-      if (typeof a.start === 'string') {
+      if (typeof a.start === "string") {
         const ms = new Date(a.start).getTime();
         if (!isNaN(ms)) vals.push(ms);
       }
-      if (typeof a.end === 'string') {
+      if (typeof a.end === "string") {
         const ms = new Date(a.end).getTime();
         if (!isNaN(ms)) vals.push(ms);
       }
@@ -49,17 +59,23 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
     const minDate = Math.min(...dates);
     const maxDate = Math.max(...dates);
     minDay = 0;
-    maxDay = Math.max(1, Math.round((maxDate - minDate) / (1000 * 60 * 60 * 24)));
+    maxDay = Math.max(
+      1,
+      Math.round((maxDate - minDate) / (1000 * 60 * 60 * 24)),
+    );
 
     // Rewrite start/end as day offsets
     for (const a of activities) {
-      (a as Record<string, unknown>)._startDay = parseDayOffset(a.start, minDate);
+      (a as Record<string, unknown>)._startDay = parseDayOffset(
+        a.start,
+        minDate,
+      );
       (a as Record<string, unknown>)._endDay = parseDayOffset(a.end, minDate);
     }
   } else {
     for (const a of activities) {
-      const s = typeof a.start === 'number' ? a.start : 0;
-      const e = typeof a.end === 'number' ? a.end : s + (a.duration_days ?? 1);
+      const s = typeof a.start === "number" ? a.start : 0;
+      const e = typeof a.end === "number" ? a.end : s + (a.duration_days ?? 1);
       (a as Record<string, unknown>)._startDay = s;
       (a as Record<string, unknown>)._endDay = e;
       if (s < minDay) minDay = s;
@@ -71,21 +87,30 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
   const criticalCount = activities.filter((a) => a.is_critical).length;
 
   return (
-    <div style={{ overflow: 'auto', height: '100%', padding: 12, fontFamily: 'var(--chat-font-body)' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <div
+      style={{
+        overflow: "auto",
+        height: "100%",
+        padding: 12,
+        fontFamily: "var(--chat-font-body)",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         {activities.map((a, i) => {
           const s = ((a as Record<string, unknown>)._startDay as number) ?? 0;
           const e = ((a as Record<string, unknown>)._endDay as number) ?? s + 1;
           const leftPct = ((s - minDay) / range) * 100;
           const widthPct = Math.max(((e - s) / range) * 100, 1);
-          const color = a.is_critical ? 'var(--chat-accent)' : 'var(--chat-tool-running)';
+          const color = a.is_critical
+            ? "var(--chat-accent)"
+            : "var(--chat-tool-running)";
 
           return (
             <div
               key={a.name || `activity-${i}`}
               style={{
-                display: 'flex',
-                alignItems: 'center',
+                display: "flex",
+                alignItems: "center",
                 gap: 8,
                 minHeight: 28,
               }}
@@ -95,10 +120,10 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
                   width: 140,
                   flexShrink: 0,
                   fontSize: 12,
-                  color: 'var(--chat-text-secondary)',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  color: "var(--chat-text-secondary)",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                 }}
                 title={a.name}
               >
@@ -107,19 +132,19 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
               <div
                 style={{
                   flex: 1,
-                  position: 'relative',
+                  position: "relative",
                   height: 18,
-                  background: 'var(--chat-surface-1)',
+                  background: "var(--chat-surface-1)",
                   borderRadius: 3,
-                  overflow: 'hidden',
+                  overflow: "hidden",
                 }}
               >
                 <div
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     left: `${leftPct}%`,
                     width: `${widthPct}%`,
-                    height: '100%',
+                    height: "100%",
                     background: color,
                     borderRadius: 3,
                     minWidth: 4,
@@ -132,9 +157,9 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
                   width: 40,
                   flexShrink: 0,
                   fontSize: 11,
-                  fontFamily: 'var(--chat-font-mono)',
-                  color: 'var(--chat-text-tertiary)',
-                  textAlign: 'right',
+                  fontFamily: "var(--chat-font-mono)",
+                  color: "var(--chat-text-tertiary)",
+                  textAlign: "right",
                 }}
               >
                 {Math.round(e - s)}d
@@ -147,16 +172,17 @@ export default function ScheduleRenderer({ data }: { data: unknown }) {
         style={{
           marginTop: 12,
           paddingTop: 10,
-          borderTop: '1px solid var(--chat-border-subtle)',
+          borderTop: "1px solid var(--chat-border-subtle)",
           fontSize: 12,
-          color: 'var(--chat-text-secondary)',
-          fontFamily: 'var(--chat-font-mono)',
+          color: "var(--chat-text-secondary)",
+          fontFamily: "var(--chat-font-mono)",
         }}
       >
         {activities.length} activities &middot; {Math.round(range)} days total
         {criticalCount > 0 && (
-          <span style={{ color: 'var(--chat-accent)' }}>
-            {' '}&middot; {criticalCount} critical path
+          <span style={{ color: "var(--chat-accent)" }}>
+            {" "}
+            &middot; {criticalCount} critical path
           </span>
         )}
       </div>

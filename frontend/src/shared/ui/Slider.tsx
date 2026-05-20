@@ -1,8 +1,8 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 
-import clsx from 'clsx';
-import type { ReactNode } from 'react';
+import clsx from "clsx";
+import type { ReactNode } from "react";
 
 export interface SliderProps {
   value: number;
@@ -34,7 +34,7 @@ export function Slider({
 }: SliderProps) {
   const display = format ? format(value) : String(value);
   return (
-    <div className={clsx('flex flex-col gap-1.5', className)}>
+    <div className={clsx("flex flex-col gap-1.5", className)}>
       {(label || description) && (
         <div className="flex items-end justify-between gap-2">
           <div className="min-w-0">
@@ -44,7 +44,9 @@ export function Slider({
               </div>
             )}
             {description && (
-              <div className="text-xs text-content-tertiary mt-0.5">{description}</div>
+              <div className="text-xs text-content-tertiary mt-0.5">
+                {description}
+              </div>
             )}
           </div>
           <div className="text-sm font-medium text-content-primary tabular-nums">

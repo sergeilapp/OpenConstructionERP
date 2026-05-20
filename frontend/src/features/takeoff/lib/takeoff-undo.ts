@@ -7,7 +7,7 @@
  * the next snapshot after applying / reversing an operation.
  */
 
-import type { Measurement, Point, UndoOperation } from './takeoff-types';
+import type { Measurement, Point, UndoOperation } from "./takeoff-types";
 
 export interface TakeoffState {
   measurements: Measurement[];
@@ -23,13 +23,13 @@ export function reverseOperation(
   op: UndoOperation,
 ): TakeoffState {
   switch (op.kind) {
-    case 'add_point':
+    case "add_point":
       return {
         ...state,
         activePoints: state.activePoints.slice(0, -1),
       };
 
-    case 'complete_measurement':
+    case "complete_measurement":
       return {
         measurements: state.measurements.filter(
           (m) => m.id !== op.measurement.id,
@@ -37,7 +37,7 @@ export function reverseOperation(
         activePoints: [...op.previousActivePoints],
       };
 
-    case 'add_count_point':
+    case "add_count_point":
       if (op.wasNew) {
         return {
           ...state,
@@ -55,13 +55,13 @@ export function reverseOperation(
         ),
       };
 
-    case 'delete_measurement':
+    case "delete_measurement":
       return {
         ...state,
         measurements: [...state.measurements, op.measurement],
       };
 
-    case 'change_annotation':
+    case "change_annotation":
       return {
         ...state,
         measurements: state.measurements.map((m) =>
@@ -89,32 +89,32 @@ export function applyOperation(
   op: UndoOperation,
 ): TakeoffState {
   switch (op.kind) {
-    case 'add_point':
+    case "add_point":
       return {
         ...state,
         activePoints: [...state.activePoints, op.point],
       };
 
-    case 'complete_measurement':
+    case "complete_measurement":
       return {
         measurements: [...state.measurements, op.measurement],
         activePoints: [],
       };
 
-    case 'add_count_point':
+    case "add_count_point":
       if (op.wasNew) {
         // Reconstruct the count measurement from the previous snapshot if we
         // have one, or fall back to a minimal singleton.
         const base = op.previousMeasurement ?? {
           id: op.measurementId,
-          type: 'count' as const,
+          type: "count" as const,
           points: [] as Point[],
           value: 0,
-          unit: 'pcs',
-          label: '',
-          annotation: '',
+          unit: "pcs",
+          label: "",
+          annotation: "",
           page: 1,
-          group: 'General',
+          group: "General",
         };
         const restored: Measurement = {
           ...base,
@@ -141,7 +141,7 @@ export function applyOperation(
         ),
       };
 
-    case 'delete_measurement':
+    case "delete_measurement":
       return {
         ...state,
         measurements: state.measurements.filter(
@@ -149,7 +149,7 @@ export function applyOperation(
         ),
       };
 
-    case 'change_annotation':
+    case "change_annotation":
       // Without a "newAnnotation" field we can't deterministically redo
       // this op from the typed payload alone.  The React layer handles
       // annotation redo by pushing a synthetic op onto the undo stack

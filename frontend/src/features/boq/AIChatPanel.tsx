@@ -1,24 +1,24 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
-import { X, Send, Check, Settings, AlertCircle, Sparkles } from 'lucide-react';
-import { Button } from '@/shared/ui';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { X, Send, Check, Settings, AlertCircle, Sparkles } from "lucide-react";
+import { Button } from "@/shared/ui";
 import {
   boqApi,
   type AIChatItem,
   type AIChatResponse,
   type AIChatContext,
   type CreatePositionData,
-} from './api';
-import { ApiError } from '@/shared/lib/api';
-import { useIsRTL } from '@/shared/hooks/useIsRTL';
-import { getIntlLocale } from '@/shared/lib/formatters';
+} from "./api";
+import { ApiError } from "@/shared/lib/api";
+import { useIsRTL } from "@/shared/hooks/useIsRTL";
+import { getIntlLocale } from "@/shared/lib/formatters";
 
 /* ── Types ──────────────────────────────────────────────────────────── */
 
 interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant' | 'error';
+  role: "user" | "assistant" | "error";
   text: string;
   items?: AIChatItem[];
 }
@@ -43,7 +43,7 @@ export function AIChatPanel({
   const { t, i18n } = useTranslation();
   const isRTL = useIsRTL();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -51,7 +51,7 @@ export function AIChatPanel({
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // Focus input when panel opens
@@ -67,40 +67,47 @@ export function AIChatPanel({
       boqApi.aiChat(boqId, { message, context, locale: i18n.language }),
     onSuccess: (response: AIChatResponse, _message: string) => {
       // Remove the loading indicator
-      setMessages((prev) => prev.filter((m) => m.id !== 'loading'));
+      setMessages((prev) => prev.filter((m) => m.id !== "loading"));
 
       const hasItems = response.items.length > 0;
-      const total = response.items.reduce((s, item) => s + (item.total ?? 0), 0);
-      const currency = context.currency || '';
+      const total = response.items.reduce(
+        (s, item) => s + (item.total ?? 0),
+        0,
+      );
+      const currency = context.currency || "";
       const summary = hasItems
-        ? t('boq.ai_generated_summary', {
-            defaultValue: 'Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍',
+        ? t("boq.ai_generated_summary", {
+            defaultValue:
+              "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
             count: response.items.length,
-            total: total.toLocaleString(i18n.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            total: total.toLocaleString(i18n.language, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
             currency,
           })
-        : '';
+        : "";
 
       // The assistant's natural-language answer is primary — a knowledge
       // question now gets a real reply here instead of an empty chat
       // (issue #138). Fall back to the operational summary/message so the
       // bubble is never blank even when the model only returned positions.
-      const reply = (response.reply ?? '').trim();
+      const reply = (response.reply ?? "").trim();
       const text = reply
         ? hasItems && summary
           ? `${reply}\n\n${summary}`
           : reply
         : summary ||
           response.message ||
-          t('boq.ai_no_answer', {
+          t("boq.ai_no_answer", {
             defaultValue:
-              'The assistant did not return an answer. Please rephrase or try again.‌⁠‍',
+              "The assistant did not return an answer. Please rephrase or try again.‌⁠‍",
           });
 
       // Add assistant response
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
-        role: 'assistant',
+        role: "assistant",
         text,
         items: hasItems ? response.items : undefined,
       };
@@ -116,10 +123,10 @@ export function AIChatPanel({
     },
     onError: (error: unknown) => {
       // Remove the loading indicator
-      setMessages((prev) => prev.filter((m) => m.id !== 'loading'));
+      setMessages((prev) => prev.filter((m) => m.id !== "loading"));
 
-      let errorText = t('boq.ai_chat_error', {
-        defaultValue: 'AI request failed. Please try again.‌⁠‍',
+      let errorText = t("boq.ai_chat_error", {
+        defaultValue: "AI request failed. Please try again.‌⁠‍",
       });
 
       if (error instanceof ApiError) {
@@ -133,7 +140,7 @@ export function AIChatPanel({
         ...prev,
         {
           id: `error-${Date.now()}`,
-          role: 'error',
+          role: "error",
           text: errorText,
         },
       ]);
@@ -147,15 +154,15 @@ export function AIChatPanel({
     // Add user message
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
-      role: 'user',
+      role: "user",
       text: trimmed,
     };
     setMessages((prev) => [
       ...prev,
       userMsg,
-      { id: 'loading', role: 'assistant', text: '' },
+      { id: "loading", role: "assistant", text: "" },
     ]);
-    setInputValue('');
+    setInputValue("");
 
     // Send to AI
     chatMutation.mutate(trimmed);
@@ -163,7 +170,7 @@ export function AIChatPanel({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+      if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         handleSend();
       }
@@ -216,16 +223,16 @@ export function AIChatPanel({
     }).format(n);
 
   const isNoApiKey = messages.some(
-    (m) => m.role === 'error' && m.text.includes('No AI API key configured'),
+    (m) => m.role === "error" && m.text.includes("No AI API key configured"),
   );
 
   // RTL fix: see AISmartPanel for full explanation — flip slide-off direction
   // so the closed panel hides off-screen on its anchored edge.
-  const offTranslate = isRTL ? '-translate-x-full' : 'translate-x-full';
+  const offTranslate = isRTL ? "-translate-x-full" : "translate-x-full";
   return (
     <div
       className={`fixed right-0 top-12 z-40 h-[calc(100%-3rem)] w-[320px] bg-surface-elevated border-l border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
-        isOpen ? 'translate-x-0' : offTranslate
+        isOpen ? "translate-x-0" : offTranslate
       }`}
     >
       {/* ── Header ────────────────────────────────────────────────── */}
@@ -233,7 +240,7 @@ export function AIChatPanel({
         <div className="flex items-center gap-2">
           <Sparkles size={16} className="text-oe-blue" />
           <h2 className="text-sm font-semibold text-content-primary">
-            {t('boq.ai_assistant', { defaultValue: 'AI Assistant‌⁠‍' })}
+            {t("boq.ai_assistant", { defaultValue: "AI Assistant‌⁠‍" })}
           </h2>
         </div>
         <button
@@ -254,7 +261,7 @@ export function AIChatPanel({
               <Sparkles size={22} className="text-oe-blue" />
             </div>
             <p className="text-sm text-content-secondary max-w-[260px]">
-              {t('boq.ai_welcome', {
+              {t("boq.ai_welcome", {
                 defaultValue:
                   'Ask me anything about construction, methods, materials or pricing — or ask me to generate BOQ positions, e.g. "Add MEP items for a 5-story office building".‌⁠‍',
               })}
@@ -264,23 +271,32 @@ export function AIChatPanel({
 
         {messages.map((msg) => {
           // Loading indicator
-          if (msg.id === 'loading') {
+          if (msg.id === "loading") {
             return (
               <div key="loading" className="flex items-start gap-2">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-oe-blue-subtle/40">
                   <Sparkles size={12} className="text-oe-blue" />
                 </div>
                 <div className="flex items-center gap-1 mt-0.5">
-                  <span className="h-2 w-2 rounded-full bg-content-tertiary animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="h-2 w-2 rounded-full bg-content-tertiary animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="h-2 w-2 rounded-full bg-content-tertiary animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <span
+                    className="h-2 w-2 rounded-full bg-content-tertiary animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <span
+                    className="h-2 w-2 rounded-full bg-content-tertiary animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <span
+                    className="h-2 w-2 rounded-full bg-content-tertiary animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
                 </div>
               </div>
             );
           }
 
           // Error message
-          if (msg.role === 'error') {
+          if (msg.role === "error") {
             return (
               <div key={msg.id} className="flex items-start gap-2">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-semantic-error-bg">
@@ -294,7 +310,9 @@ export function AIChatPanel({
                       className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-oe-blue hover:underline"
                     >
                       <Settings size={11} />
-                      {t('boq.go_to_settings', { defaultValue: 'Go to Settings‌⁠‍' })}
+                      {t("boq.go_to_settings", {
+                        defaultValue: "Go to Settings‌⁠‍",
+                      })}
                     </a>
                   )}
                 </div>
@@ -303,11 +321,13 @@ export function AIChatPanel({
           }
 
           // User message
-          if (msg.role === 'user') {
+          if (msg.role === "user") {
             return (
               <div key={msg.id} className="flex justify-end">
                 <div className="max-w-[85%] rounded-lg bg-oe-blue px-3 py-2">
-                  <p className="text-xs text-white whitespace-pre-wrap">{msg.text}</p>
+                  <p className="text-xs text-white whitespace-pre-wrap">
+                    {msg.text}
+                  </p>
                 </div>
               </div>
             );
@@ -335,13 +355,15 @@ export function AIChatPanel({
                         <tr className="border-b border-border-light bg-surface-secondary">
                           <th className="w-7 px-1.5 py-1.5" />
                           <th className="px-2 py-1.5 text-left font-medium text-content-tertiary">
-                            {t('boq.description', { defaultValue: 'Description' })}
+                            {t("boq.description", {
+                              defaultValue: "Description",
+                            })}
                           </th>
                           <th className="w-10 px-1 py-1.5 text-center font-medium text-content-tertiary">
-                            {t('boq.unit', { defaultValue: 'Unit' })}
+                            {t("boq.unit", { defaultValue: "Unit" })}
                           </th>
                           <th className="w-16 px-1.5 py-1.5 text-right font-medium text-content-tertiary">
-                            {t('boq.total', { defaultValue: 'Total' })}
+                            {t("boq.total", { defaultValue: "Total" })}
                           </th>
                         </tr>
                       </thead>
@@ -354,22 +376,33 @@ export function AIChatPanel({
                               key={key}
                               onClick={() => toggleItem(key)}
                               className={`border-t border-border-light cursor-pointer transition-colors ${
-                                isSelected ? 'bg-oe-blue-subtle/20' : 'hover:bg-surface-secondary'
+                                isSelected
+                                  ? "bg-oe-blue-subtle/20"
+                                  : "hover:bg-surface-secondary"
                               }`}
                             >
                               <td className="px-1.5 py-1.5 text-center">
                                 <div
                                   className={`h-3.5 w-3.5 rounded border flex items-center justify-center mx-auto ${
                                     isSelected
-                                      ? 'bg-oe-blue border-oe-blue'
-                                      : 'border-border bg-surface-elevated'
+                                      ? "bg-oe-blue border-oe-blue"
+                                      : "border-border bg-surface-elevated"
                                   }`}
                                 >
-                                  {isSelected && <Check size={9} className="text-white" strokeWidth={3} />}
+                                  {isSelected && (
+                                    <Check
+                                      size={9}
+                                      className="text-white"
+                                      strokeWidth={3}
+                                    />
+                                  )}
                                 </div>
                               </td>
                               <td className="px-2 py-1.5 text-content-primary truncate max-w-0">
-                                <span className="block truncate" title={item.description}>
+                                <span
+                                  className="block truncate"
+                                  title={item.description}
+                                >
                                   {item.description}
                                 </span>
                               </td>
@@ -392,14 +425,18 @@ export function AIChatPanel({
                         size="sm"
                         onClick={() => handleAddItems(msg.id, msg.items!, true)}
                       >
-                        {t('boq.add_all_to_boq', { defaultValue: 'Add all to BOQ' })}
+                        {t("boq.add_all_to_boq", {
+                          defaultValue: "Add all to BOQ",
+                        })}
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleAddItems(msg.id, msg.items!, false)}
+                        onClick={() =>
+                          handleAddItems(msg.id, msg.items!, false)
+                        }
                       >
-                        {t('boq.add_selected', {
+                        {t("boq.add_selected", {
                           defaultValue: `Add selected (${[...selectedItems].filter((k) => k.startsWith(msg.id)).length})`,
                         })}
                       </Button>
@@ -423,8 +460,8 @@ export function AIChatPanel({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={t('boq.ai_placeholder', {
-              defaultValue: 'Ask a question or describe positions to generate…',
+            placeholder={t("boq.ai_placeholder", {
+              defaultValue: "Ask a question or describe positions to generate…",
             })}
             disabled={chatMutation.isPending}
             className="flex-1 rounded-lg border border-border-light bg-surface-elevated px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary outline-none focus:ring-2 focus:ring-oe-blue/20 focus:border-oe-blue/40 disabled:opacity-50 transition-all"

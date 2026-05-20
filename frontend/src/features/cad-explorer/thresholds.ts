@@ -35,12 +35,12 @@ export interface ThresholdRule {
 }
 
 /** Semantic zone a value falls into. `null` means no rule matched. */
-export type ThresholdZone = 'low' | 'mid' | 'high';
+export type ThresholdZone = "low" | "mid" | "high";
 
 /** Default colour palette — matches Tailwind red-500 / amber-500 / emerald-500. */
-export const DEFAULT_LOW_COLOR = '#ef4444';
-export const DEFAULT_MID_COLOR = '#f59e0b';
-export const DEFAULT_HIGH_COLOR = '#10b981';
+export const DEFAULT_LOW_COLOR = "#ef4444";
+export const DEFAULT_MID_COLOR = "#f59e0b";
+export const DEFAULT_HIGH_COLOR = "#10b981";
 
 /** Hard cap on rule count to keep the URL short and the UI skimmable. */
 export const MAX_RULES = 5;
@@ -86,9 +86,9 @@ export function resolveThresholdColor(
   if (value == null || !Number.isFinite(value)) return null;
   if (column !== undefined && column !== rule.column) return null;
   if (!Number.isFinite(rule.low) || !Number.isFinite(rule.high)) return null;
-  if (value < rule.low) return 'low';
-  if (value >= rule.high) return 'high';
-  return 'mid';
+  if (value < rule.low) return "low";
+  if (value >= rule.high) return "high";
+  return "mid";
 }
 
 /* ── Style application ────────────────────────────────────────────────── */
@@ -105,9 +105,15 @@ export interface ThresholdStyle {
 
 /** Convert `#rrggbb` to `rgba(r, g, b, a)`. Tolerant of malformed hex. */
 function hexToRgba(hex: string, alpha: number): string {
-  const h = hex.replace(/^#/, '');
+  const h = hex.replace(/^#/, "");
   if (h.length !== 3 && h.length !== 6) return `rgba(0, 0, 0, ${alpha})`;
-  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
   const r = parseInt(full.slice(0, 2), 16);
   const g = parseInt(full.slice(2, 4), 16);
   const b = parseInt(full.slice(4, 6), 16);
@@ -123,17 +129,30 @@ function hexToRgba(hex: string, alpha: number): string {
  * itself is too saturated to read numbers against.
  */
 function darken(hex: string, amount: number): string {
-  const h = hex.replace(/^#/, '');
+  const h = hex.replace(/^#/, "");
   if (h.length !== 3 && h.length !== 6) return hex;
-  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
   const r = parseInt(full.slice(0, 2), 16);
   const g = parseInt(full.slice(2, 4), 16);
   const b = parseInt(full.slice(4, 6), 16);
-  if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) return hex;
+  if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b))
+    return hex;
   const f = Math.max(0, Math.min(1, 1 - amount));
-  const rr = Math.round(r * f).toString(16).padStart(2, '0');
-  const gg = Math.round(g * f).toString(16).padStart(2, '0');
-  const bb = Math.round(b * f).toString(16).padStart(2, '0');
+  const rr = Math.round(r * f)
+    .toString(16)
+    .padStart(2, "0");
+  const gg = Math.round(g * f)
+    .toString(16)
+    .padStart(2, "0");
+  const bb = Math.round(b * f)
+    .toString(16)
+    .padStart(2, "0");
   return `#${rr}${gg}${bb}`;
 }
 
@@ -155,13 +174,17 @@ export function applyRuleToBar(
   const zone = resolveThresholdColor(value, rule);
   if (!zone || !rule) {
     return {
-      bar: '#3b82f6',
-      text: 'inherit',
-      bg: 'transparent',
+      bar: "#3b82f6",
+      text: "inherit",
+      bg: "transparent",
     };
   }
   const base =
-    zone === 'low' ? rule.lowColor : zone === 'high' ? rule.highColor : rule.midColor;
+    zone === "low"
+      ? rule.lowColor
+      : zone === "high"
+        ? rule.highColor
+        : rule.midColor;
   return {
     bar: base,
     // 30% darken keeps the text readable on the 10% bg tint without
@@ -175,17 +198,17 @@ export function applyRuleToBar(
 
 /** Compress `#rrggbb` → `rrggbb` for shorter URLs; no-op otherwise. */
 function stripHash(c: string): string {
-  return c.startsWith('#') ? c.slice(1) : c;
+  return c.startsWith("#") ? c.slice(1) : c;
 }
 
 /** Re-prefix `rrggbb` → `#rrggbb`; no-op if already prefixed. */
 function prefixHash(c: string): string {
-  return c.startsWith('#') ? c : `#${c}`;
+  return c.startsWith("#") ? c : `#${c}`;
 }
 
 /** Encode a column name so it survives our separator chars (`~` and `;`). */
 function encodeColumn(col: string): string {
-  return encodeURIComponent(col).replace(/~/g, '%7E').replace(/;/g, '%3B');
+  return encodeURIComponent(col).replace(/~/g, "%7E").replace(/;/g, "%3B");
 }
 
 function decodeColumn(col: string): string {
@@ -208,7 +231,7 @@ function decodeColumn(col: string): string {
  * producing an un-parseable string.
  */
 export function serialiseThresholds(rules: readonly ThresholdRule[]): string {
-  if (!rules.length) return '';
+  if (!rules.length) return "";
   const capped = rules.slice(0, MAX_RULES);
   const chunks: string[] = [];
   for (const r of capped) {
@@ -222,13 +245,13 @@ export function serialiseThresholds(rules: readonly ThresholdRule[]): string {
       stripHash(r.midColor),
       stripHash(r.highColor),
     ];
-    chunks.push(parts.join('~'));
+    chunks.push(parts.join("~"));
   }
   // Soft-cap the total length by dropping trailing rules.
-  let out = chunks.join(';');
+  let out = chunks.join(";");
   while (out.length > MAX_URL_LENGTH && chunks.length > 1) {
     chunks.pop();
-    out = chunks.join(';');
+    out = chunks.join(";");
   }
   return out;
 }
@@ -237,17 +260,19 @@ export function serialiseThresholds(rules: readonly ThresholdRule[]): string {
  * Inverse of `serialiseThresholds`. Tolerant of malformed input — skips
  * bad rules so the UI degrades gracefully on hand-edited URLs.
  */
-export function parseThresholds(raw: string | null | undefined): ThresholdRule[] {
+export function parseThresholds(
+  raw: string | null | undefined,
+): ThresholdRule[] {
   if (!raw) return [];
   const out: ThresholdRule[] = [];
-  for (const chunk of raw.split(';')) {
+  for (const chunk of raw.split(";")) {
     if (!chunk) continue;
-    const parts = chunk.split('~');
+    const parts = chunk.split("~");
     if (parts.length < 6) continue;
     const [col, lowS, highS, lowC, midC, highC] = parts;
-    const column = decodeColumn(col || '');
-    const low = parseFloat(lowS || '');
-    const high = parseFloat(highS || '');
+    const column = decodeColumn(col || "");
+    const low = parseFloat(lowS || "");
+    const high = parseFloat(highS || "");
     if (!column) continue;
     if (!Number.isFinite(low) || !Number.isFinite(high)) continue;
     out.push({
@@ -280,7 +305,8 @@ export function isRuleValid(
   availableColumns: readonly string[],
 ): boolean {
   if (!rule.column) return false;
-  if (availableColumns.length > 0 && !availableColumns.includes(rule.column)) return false;
+  if (availableColumns.length > 0 && !availableColumns.includes(rule.column))
+    return false;
   if (!Number.isFinite(rule.low) || !Number.isFinite(rule.high)) return false;
   if (rule.low >= rule.high) return false;
   return true;

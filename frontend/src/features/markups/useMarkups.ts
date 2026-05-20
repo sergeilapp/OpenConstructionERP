@@ -8,14 +8,10 @@
  * caller.
  */
 
-import { useMemo } from 'react';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useMemo } from "react";
+import { useQueries, useQuery } from "@tanstack/react-query";
 
-import {
-  fetchMarkupsByPage,
-  fetchMarkupComments,
-  type Markup,
-} from './api';
+import { fetchMarkupsByPage, fetchMarkupComments, type Markup } from "./api";
 
 interface UseMarkupsArgs {
   projectId: string | null | undefined;
@@ -34,8 +30,8 @@ export interface UseMarkupsResult {
   error: Error | null;
 }
 
-const MARKUPS_QUERY_KEY = ['markups-by-page'] as const;
-const COUNTS_QUERY_KEY = ['markup-comment-counts'] as const;
+const MARKUPS_QUERY_KEY = ["markups-by-page"] as const;
+const COUNTS_QUERY_KEY = ["markup-comment-counts"] as const;
 
 /**
  * Hook contract:
@@ -54,18 +50,22 @@ export function useMarkups({
     enabled &&
     !!projectId &&
     !!documentId &&
-    typeof pageNumber === 'number' &&
+    typeof pageNumber === "number" &&
     pageNumber > 0;
 
   const markupsQuery = useQuery<Markup[]>({
     queryKey: [
       ...MARKUPS_QUERY_KEY,
-      projectId ?? '',
-      documentId ?? '',
+      projectId ?? "",
+      documentId ?? "",
       pageNumber ?? 0,
     ],
     queryFn: () =>
-      fetchMarkupsByPage(projectId as string, documentId as string, pageNumber as number),
+      fetchMarkupsByPage(
+        projectId as string,
+        documentId as string,
+        pageNumber as number,
+      ),
     enabled: ready,
     staleTime: 30_000,
   });

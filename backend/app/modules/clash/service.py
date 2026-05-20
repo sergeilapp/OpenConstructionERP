@@ -40,16 +40,17 @@ import hashlib
 import logging
 import math
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from itertools import combinations
 
 import numpy as np
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.modules.bcf.bcf_xml import BCFParseError, parse_bcfzip
 from app.modules.bcf.schemas import PerspectiveCamera, TopicCreate, Vec3, ViewpointCreate
 from app.modules.bcf.service import BCFService
-from app.modules.clash.models import ClashResult, ClashRun
+from app.modules.clash.models import ClashCluster, ClashResult, ClashRun
 from app.modules.clash.repository import ClashRepository
 from app.modules.clash.schemas import (
     CLASH_SEVERITIES,
@@ -88,7 +89,93 @@ _UNSET: object = object()
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
+
+
+def _signature_from_description(desc: str) -> str:
+    """Recover the canonical clash signature from a BCF topic description.
+
+    Mirrors the format the exporter writes:
+
+        "{clash_type_capitalized} clash · {disc_a} ↔ {disc_b}\n"
+        "A: {a_name} ({a_stable_id})\n"
+        "B: {b_name} ({b_stable_id})\n"
+        ...
+
+    Pulled from the description body alone so a third-party BCF tool
+    that round-trips topic_status / comments / assigned_to but leaves
+    the description untouched still resolves. Returns ``""`` when the
+    expected lines are missing (the import then falls back to the
+    topic GUID before giving up).
+    """
+    if not desc:
+        return ""
+    lines = desc.split("\n")
+    head = lines[0] if lines else ""
+    clash_type = ""
+    low = head.lower()
+    if low.startswith("hard clash"):
+        clash_type = "hard"
+    elif low.startswith("clearance clash"):
+        clash_type = "clearance"
+    if not clash_type:
+        return ""
+
+    def _stable_from(line: str) -> str:
+        """Pull the stable id from a ``X: name (stable_id)`` line."""
+        lp = line.rfind("(")
+        rp = line.rfind(")")
+        if lp < 0 or rp <= lp:
+            return ""
+        return line[lp + 1 : rp].strip()
+
+    a_sid = ""
+    b_sid = ""
+    for line in lines[1:]:
+        if line.startswith("A: ") and not a_sid:
+            a_sid = _stable_from(line)
+        elif line.startswith("B: ") and not b_sid:
+            b_sid = _stable_from(line)
+        if a_sid and b_sid:
+            break
+    if not a_sid or not b_sid:
+        return ""
+    return _signature(a_sid, b_sid, clash_type)
+
+
+# BCF topic_status (free-text by spec) → our review-workflow enum.
+# Anything we can't confidently map drops to ``None`` so the import
+# leaves the existing status untouched (never silently corrupts state).
+_BCF_STATUS_MAP: dict[str, str] = {
+    "open": "active",
+    "active": "active",
+    "in progress": "active",
+    "in-progress": "active",
+    "review": "reviewed",
+    "reviewed": "reviewed",
+    "to be reviewed": "reviewed",
+    "resolved": "resolved",
+    "closed": "resolved",
+    "fixed": "resolved",
+    "approved": "approved",
+    "accepted": "approved",
+    "ignored": "ignored",
+    "rejected": "ignored",
+    "wont fix": "ignored",
+    "won't fix": "ignored",
+}
+
+
+def _bcf_status_to_clash_status(topic_status: str | None) -> str | None:
+    """Map a BCF topic_status string onto our review-workflow enum.
+
+    Case- and whitespace-insensitive. Returns ``None`` for an unmapped
+    or empty value so the caller can leave the row's status untouched.
+    """
+    if not topic_status:
+        return None
+    key = topic_status.strip().lower()
+    return _BCF_STATUS_MAP.get(key)
 
 
 def _signature(a_stable_id: str, b_stable_id: str, clash_type: str) -> str:
@@ -107,9 +194,451 @@ def _signature(a_stable_id: str, b_stable_id: str, clash_type: str) -> str:
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
 
 
-def _severity_for(
-    clash_type: str, penetration_m: float, distance_m: float, clearance_m: float
-) -> str:
+_SEVERITY_BUMP_NEXT: dict[str, str] = {
+    "low": "medium",
+    "medium": "high",
+    "high": "critical",
+    "critical": "critical",
+}
+
+
+# ── Wave A4 — rules / clusters / FP feedback ─────────────────────────────
+
+# Minimum false-positive count on a single discipline pair before the
+# rule-suggestion endpoint will recommend an automatic tolerance bump.
+# Tuned conservatively: a one-off FP is noise, but three on the same
+# pair is a coordination signal worth surfacing.
+_FP_SUGGESTION_THRESHOLD = 3
+# Cluster pass safety cap — DBSCAN is O(n²) in the worst case (no
+# spatial index), and a coordination run can produce tens of thousands
+# of clashes. Above this point we no-op the clustering and leave every
+# row at ``cluster_id=NULL`` rather than spending unbounded CPU.
+_MAX_CLUSTER_RESULTS = 5_000
+# Default neighbourhood radius (metres) + minimum cluster size for the
+# spatial DBSCAN pass over clash centroids. ``eps_m`` is "two clashes
+# this close are in the same cluster"; ``min_samples`` is the minimum
+# group size to count as a real cluster (others become NULL noise).
+_DEFAULT_CLUSTER_EPS_M = 0.6
+_DEFAULT_CLUSTER_MIN_SAMPLES = 2
+
+
+def _apply_rules(run: object, pair: tuple[str, str]) -> dict | None:
+    """Find the matching rule for a discipline pair, or ``None``.
+
+    ``pair`` is ``(discipline_a, discipline_b)`` from a candidate clash
+    pair — symmetric, so ``(A, B)`` and ``(B, A)`` both match a rule
+    declared for ``(A, B)``. Disabled rules are skipped. The *first*
+    enabled match in the run's ``rules`` list wins (the rule editor
+    preserves user order, so "more specific" rows naturally sort to
+    the top by author convention).
+
+    Returns the raw rule dict (or ``None``) so callers don't depend on
+    the Pydantic schema — keeps this fully testable without instantiating
+    :class:`ClashRule`. Defensive: any malformed rule entry is skipped,
+    never crashes.
+    """
+    rules = getattr(run, "rules", None) or []
+    if not isinstance(rules, list):
+        return None
+    da_n = (pair[0] or "").strip().lower()
+    db_n = (pair[1] or "").strip().lower()
+    if not da_n and not db_n:
+        return None
+    for rule in rules:
+        if not isinstance(rule, dict):
+            continue
+        if not bool(rule.get("enabled", True)):
+            continue
+        ra = str(rule.get("discipline_a") or "").strip().lower()
+        rb = str(rule.get("discipline_b") or "").strip().lower()
+        if not ra or not rb:
+            continue
+        if {ra, rb} == {da_n, db_n}:
+            return rule
+    return None
+
+
+def _label_for_cluster(members: list[object], cluster_id: int) -> str:
+    """Heuristic short label for a cluster, no LLM call.
+
+    Picks the most common discipline pair across the cluster's members
+    and appends the most common storey (when known). Examples:
+
+        "MEP × Structural — Level 3"
+        "Architectural × Architectural"   (intra-discipline cluster)
+        "Cluster 7"                       (no usable members)
+
+    Pure function over the member rows — used both at write time
+    (engine path) and as the fallback for ad-hoc relabelling.
+    """
+    if not members:
+        return f"Cluster {cluster_id}"
+    pair_counts: dict[tuple[str, str], int] = {}
+    storey_counts: dict[int, int] = {}
+    for m in members:
+        a = str(getattr(m, "a_discipline", "") or "Unassigned").strip() or "Unassigned"
+        b = str(getattr(m, "b_discipline", "") or "Unassigned").strip() or "Unassigned"
+        pair = (a, b) if a <= b else (b, a)
+        pair_counts[pair] = pair_counts.get(pair, 0) + 1
+        for sk in ("a_storey", "b_storey"):
+            sv = getattr(m, sk, None)
+            if sv is None:
+                continue
+            try:
+                storey_counts[int(sv)] = storey_counts.get(int(sv), 0) + 1
+            except (TypeError, ValueError):
+                continue
+    if not pair_counts:
+        return f"Cluster {cluster_id}"
+    # Dominant pair (tie-break alphabetically for determinism).
+    top_pair, _ = max(pair_counts.items(), key=lambda kv: (kv[1], -ord(kv[0][0][0])) if kv[0][0] else (kv[1], 0))
+    # The simpler stable sort: highest count, then alphabetic.
+    top_pair = max(pair_counts, key=lambda p: (pair_counts[p], -ord(p[0][:1] or "z")))
+    label = f"{top_pair[0]} × {top_pair[1]}"
+    if storey_counts:
+        top_storey = max(storey_counts, key=lambda s: (storey_counts[s], -s))
+        label += f" — Level {top_storey}"
+    return label[:255]
+
+
+def _dbscan_cluster(
+    points: list[tuple[float, float, float]],
+    eps_m: float = _DEFAULT_CLUSTER_EPS_M,
+    min_samples: int = _DEFAULT_CLUSTER_MIN_SAMPLES,
+) -> list[int | None]:
+    """Hand-rolled DBSCAN over 3-D centroids → cluster id per point.
+
+    Returns a parallel list of ``cluster_id``s (1-based) or ``None`` for
+    DBSCAN noise. Pure Python, no sklearn — uses O(n²) neighbourhood
+    scans capped by :data:`_MAX_CLUSTER_RESULTS`. Above the cap every
+    point becomes ``None`` (graceful no-op): the cluster column simply
+    stays unset and the chip group renders empty.
+
+    Standard density-based clustering (Ester 1996):
+      * A point is a *core* point if it has ``min_samples`` neighbours
+        within ``eps_m`` (inclusive of itself).
+      * Each unvisited core point spawns a new cluster; its density-
+        reachable neighbours are absorbed iteratively (BFS).
+      * Non-core points adjacent to a cluster get its label (border).
+      * Points reached by no core remain ``None`` (noise).
+
+    Deterministic: clusters are numbered in the iteration order of
+    ``points``, so two identical inputs always produce the same labels.
+    """
+    n = len(points)
+    if n == 0 or n > _MAX_CLUSTER_RESULTS:
+        return [None] * n
+    if min_samples < 1:
+        min_samples = 1
+    eps_sq = float(eps_m) * float(eps_m)
+
+    # O(n²) neighbourhood scan — explicit upper-bound by the cap above.
+    # Each entry is a list of neighbour indices (inclusive of self).
+    neighbours: list[list[int]] = [[] for _ in range(n)]
+    for i in range(n):
+        xi, yi, zi = points[i]
+        for j in range(i, n):
+            xj, yj, zj = points[j]
+            dx = xi - xj
+            dy = yi - yj
+            dz = zi - zj
+            if dx * dx + dy * dy + dz * dz <= eps_sq:
+                neighbours[i].append(j)
+                if i != j:
+                    neighbours[j].append(i)
+
+    labels: list[int | None] = [None] * n
+    visited = [False] * n
+    cluster_id = 0
+    for i in range(n):
+        if visited[i]:
+            continue
+        visited[i] = True
+        nbrs = neighbours[i]
+        if len(nbrs) < min_samples:
+            # Not core — leave as noise; may still get absorbed later by
+            # a neighbouring core point's BFS.
+            continue
+        cluster_id += 1
+        labels[i] = cluster_id
+        # BFS-expand from this seed.
+        queue = list(nbrs)
+        qi = 0
+        while qi < len(queue):
+            k = queue[qi]
+            qi += 1
+            if not visited[k]:
+                visited[k] = True
+                k_nbrs = neighbours[k]
+                if len(k_nbrs) >= min_samples:
+                    # k is also core — extend the frontier.
+                    for kn in k_nbrs:
+                        if labels[kn] is None and kn not in queue:
+                            queue.append(kn)
+            if labels[k] is None:
+                labels[k] = cluster_id
+    return labels
+
+
+def _suggest_rule_from_fps(
+    fp_pairs: list[tuple[str, str]],
+    fp_max_penetration_by_pair: dict[tuple[str, str], float] | None = None,
+) -> tuple[dict | None, str, int]:
+    """Mine a (rule, reason, fp_count) suggestion from FP discipline pairs.
+
+    ``fp_pairs`` is the list of canonicalised ``(disc_a, disc_b)`` tuples
+    (alphabetically ordered per pair) extracted from the run's recorded
+    false-positives. When any single pair crosses
+    :data:`_FP_SUGGESTION_THRESHOLD` we propose a rule that widens that
+    pair's tolerance just past the largest observed FP penetration (so
+    the same geometric near-misses no longer trip the engine), with a
+    safe floor and ceiling. ``fp_count = 0`` and ``rule = None`` when no
+    pair has enough signal — the UI then hides the suggestion banner.
+    """
+    if not fp_pairs:
+        return None, "", 0
+    counts: dict[tuple[str, str], int] = {}
+    for pair in fp_pairs:
+        counts[pair] = counts.get(pair, 0) + 1
+    # Largest-FP pair, ties broken alphabetically for determinism.
+    top_pair, top_count = max(counts.items(), key=lambda kv: (kv[1], -ord((kv[0][0] or "z")[:1] or "z")))
+    if top_count < _FP_SUGGESTION_THRESHOLD:
+        return None, "", top_count
+    # Tolerance proposal: a safe 0.05 m default, widened just past the
+    # largest observed FP penetration when known (capped at 0.50 m so we
+    # never recommend something catastrophic).
+    proposed_tol = 0.05
+    if fp_max_penetration_by_pair:
+        max_pen = float(fp_max_penetration_by_pair.get(top_pair, 0.0) or 0.0)
+        if max_pen > 0:
+            proposed_tol = min(0.50, max(0.05, round(max_pen + 0.01, 3)))
+    rule = {
+        "id": f"sugg-{top_pair[0]}-{top_pair[1]}",
+        "discipline_a": top_pair[0],
+        "discipline_b": top_pair[1],
+        "tolerance_m": proposed_tol,
+        "severity_override": None,
+        "enabled": True,
+    }
+    reason = f"{top_count} false positives on {top_pair[0]} × {top_pair[1]} — widen tolerance to {proposed_tol:g} m"
+    return rule, reason, top_count
+
+
+def _coerce_rules(rules: object) -> list[dict]:
+    """Defensive normaliser — return only dict rule entries.
+
+    The ``rules`` column is plain JSON, so a misbehaving caller could
+    insert non-dict noise. The router exposes whatever this returns, so
+    we strip junk silently rather than 500ing.
+    """
+    if not isinstance(rules, list):
+        return []
+    return [r for r in rules if isinstance(r, dict)]
+
+
+def _existing_rule_pairs(rules: object) -> set[frozenset[str]]:
+    """Lowercase symmetric pairs already covered by the run's rule set."""
+    out: set[frozenset[str]] = set()
+    for r in _coerce_rules(rules):
+        a = str(r.get("discipline_a") or "").strip().lower()
+        b = str(r.get("discipline_b") or "").strip().lower()
+        if a and b:
+            out.add(frozenset((a, b)))
+    return out
+
+
+def _collect_fp_pairs(
+    rows: list[ClashResult],
+) -> tuple[list[tuple[str, str]], dict[tuple[str, str], float]]:
+    """Extract canonical FP discipline pairs + their max penetration.
+
+    A clash is treated as a false-positive sample when its current
+    ``status == 'ignored'`` (the FP feedback loop flips ignored on the
+    way through), OR when its history audit trail carries an
+    ``fp_flag``/``flag_fp`` entry. Pair tuples are alphabetically
+    canonical so the suggester sees ``(A, B)`` and ``(B, A)`` as one.
+    """
+    pairs: list[tuple[str, str]] = []
+    max_pen: dict[tuple[str, str], float] = {}
+    for r in rows:
+        is_fp = (r.status or "") == "ignored"
+        if not is_fp:
+            for h in r.history or []:
+                fld = str((h or {}).get("field", "")).lower()
+                if fld in ("fp_flag", "flag_fp", "false_positive"):
+                    is_fp = True
+                    break
+        if not is_fp:
+            continue
+        a = (r.a_discipline or "").strip() or "Unassigned"
+        b = (r.b_discipline or "").strip() or "Unassigned"
+        pair = (a, b) if a <= b else (b, a)
+        pairs.append(pair)
+        pen = float(r.penetration_m or 0.0)
+        if pen > max_pen.get(pair, 0.0):
+            max_pen[pair] = pen
+    return pairs, max_pen
+
+
+def _dominant_pair_and_storey(
+    members: list[ClashResult],
+) -> tuple[tuple[str, str], int | None]:
+    """Most-common discipline pair + storey of a cluster's member rows.
+
+    Returns ``("",""), None`` when ``members`` is empty so the caller
+    can render the chip with a generic ``"Cluster N"`` label without
+    branching on type. Mirrors the inner logic of
+    :func:`_label_for_cluster` but exposed as a structured tuple for the
+    REST projection.
+    """
+    if not members:
+        return ("", ""), None
+    pair_counts: dict[tuple[str, str], int] = {}
+    storey_counts: dict[int, int] = {}
+    for m in members:
+        a = (getattr(m, "a_discipline", "") or "Unassigned").strip() or "Unassigned"
+        b = (getattr(m, "b_discipline", "") or "Unassigned").strip() or "Unassigned"
+        pair = (a, b) if a <= b else (b, a)
+        pair_counts[pair] = pair_counts.get(pair, 0) + 1
+        for sk in ("a_storey", "b_storey"):
+            sv = getattr(m, sk, None)
+            if sv is None:
+                continue
+            try:
+                storey_counts[int(sv)] = storey_counts.get(int(sv), 0) + 1
+            except (TypeError, ValueError):
+                continue
+    if not pair_counts:
+        return ("", ""), None
+    top_pair = max(pair_counts, key=lambda p: (pair_counts[p], p))
+    top_storey: int | None = None
+    if storey_counts:
+        top_storey = max(storey_counts, key=lambda s: (storey_counts[s], -s))
+    return top_pair, top_storey
+
+
+def _resolved_mttr_hours(rows: list[ClashResult]) -> float | None:
+    """Average wall-clock hours from row creation to first ``resolved``.
+
+    Each row contributes one sample iff its history has at least one
+    ``status``-field entry with ``after == 'resolved'``. The earliest
+    such entry's ``ts`` minus the row's ``created_at`` is the row's
+    resolution latency in hours. Returns ``None`` when no row qualifies
+    (the dashboard hides the MTTR tile in that case).
+    """
+    samples: list[float] = []
+    for r in rows:
+        history = getattr(r, "history", None) or []
+        resolved_ts: str | None = None
+        for h in history:
+            if not isinstance(h, dict):
+                continue
+            if str(h.get("field", "")).lower() != "status":
+                continue
+            if str(h.get("after", "")).lower() != "resolved":
+                continue
+            ts = str(h.get("ts") or "")
+            if ts and (resolved_ts is None or ts < resolved_ts):
+                resolved_ts = ts
+        if not resolved_ts:
+            continue
+        try:
+            ended = datetime.fromisoformat(resolved_ts.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        started = getattr(r, "created_at", None)
+        if started is None:
+            continue
+        # Both timestamps need to be tz-aware for the subtraction to
+        # work; coerce naive timestamps (legacy SQLite test rows) to UTC.
+        utc = UTC
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=utc)
+        if ended.tzinfo is None:
+            ended = ended.replace(tzinfo=utc)
+        delta = (ended - started).total_seconds() / 3600.0
+        if delta >= 0:
+            samples.append(delta)
+    if not samples:
+        return None
+    return round(sum(samples) / len(samples), 3)
+
+
+def _compute_kpi(rows: list[ClashResult]) -> dict:
+    """Build the dashboard JSON projection for ``GET /runs/{id}/kpi``.
+
+    One pass over the row list. ``top_clashing_pairs`` is the top five
+    discipline pairs by ``count`` (open_count desc, then pair alphabetic
+    on ties — deterministic).
+    """
+    total = len(rows)
+    by_status: dict[str, int] = {}
+    by_severity: dict[str, int] = dict.fromkeys(CLASH_SEVERITIES, 0)
+    by_type: dict[str, int] = {}
+    pair_counts: dict[tuple[str, str], dict[str, int]] = {}
+    for r in rows:
+        st = r.status or "new"
+        by_status[st] = by_status.get(st, 0) + 1
+        sev = getattr(r, "severity", None) or "medium"
+        by_severity[sev] = by_severity.get(sev, 0) + 1
+        ct = r.clash_type or "hard"
+        by_type[ct] = by_type.get(ct, 0) + 1
+        a = (r.a_discipline or "Unassigned").strip() or "Unassigned"
+        b = (r.b_discipline or "Unassigned").strip() or "Unassigned"
+        pair = (a, b) if a <= b else (b, a)
+        cell = pair_counts.setdefault(pair, {"count": 0, "open_count": 0})
+        cell["count"] += 1
+        if st in OPEN_STATUSES:
+            cell["open_count"] += 1
+    by_pair_full: list[dict] = []
+    for (a, b), c in sorted(pair_counts.items()):
+        count = c["count"]
+        open_count = c["open_count"]
+        share = (open_count / count) if count else 0.0
+        by_pair_full.append(
+            {
+                "a": a,
+                "b": b,
+                "count": count,
+                "open_count": open_count,
+                "open_share": round(share, 4),
+            }
+        )
+    # Top five by count desc, open_count desc, pair alphabetic — stable.
+    top_pairs = sorted(
+        by_pair_full,
+        key=lambda p: (-p["count"], -p["open_count"], p["a"], p["b"]),
+    )[:5]
+    return {
+        "total": total,
+        "by_status": by_status,
+        "by_severity": by_severity,
+        "by_type": by_type,
+        "by_discipline_pair": by_pair_full,
+        "mttr_hours": _resolved_mttr_hours(rows),
+        "top_clashing_pairs": top_pairs,
+    }
+
+
+def _severity_suggestion(clash_type: str, penetration_m: float, base: str) -> str | None:
+    """Wave A2 advisory bump for deep hard clashes (pure annotation).
+
+    The engine-assigned ``severity`` stays the source of truth — this is
+    a non-authoritative ``meta['severity_suggestion']`` the UI surfaces
+    as a "Suggested: …" chip the user can act on. Triggers when a hard
+    clash interpenetrates more than 0.10 m AND the base severity has
+    headroom; ``None`` otherwise (clearance, shallow, or already at the
+    ceiling).
+    """
+    if clash_type != "hard" or penetration_m <= 0.10:
+        return None
+    nxt = _SEVERITY_BUMP_NEXT.get(base)
+    if not nxt or nxt == base:
+        return None
+    return nxt
+
+
+def _severity_for(clash_type: str, penetration_m: float, distance_m: float, clearance_m: float) -> str:
     """Geometry-derived triage urgency.
 
     Hard clash — keyed off interpenetration depth (deeper = worse):
@@ -425,9 +954,7 @@ def _coplanar_tri_tri(t1: np.ndarray, t2: np.ndarray, normal: np.ndarray) -> boo
             d[1, 0] * d[2, 1] - d[1, 1] * d[2, 0],
             d[2, 0] * d[0, 1] - d[2, 1] * d[0, 0],
         )
-        return (s[0] >= 0 and s[1] >= 0 and s[2] >= 0) or (
-            s[0] <= 0 and s[1] <= 0 and s[2] <= 0
-        )
+        return (s[0] >= 0 and s[1] >= 0 and s[2] >= 0) or (s[0] <= 0 and s[1] <= 0 and s[2] <= 0)
 
     return _inside(p1[0], p2) or _inside(p2[0], p1)
 
@@ -523,8 +1050,12 @@ def _tri_tri_intersect_mask(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     m_int = cand & ~coplanar
     if m_int.any():
         out[ai[m_int], bj[m_int]] = _interval_overlap(
-            a_c[m_int], b_c[m_int], n1c[m_int], n2c[m_int],
-            dA[m_int], dB[m_int],
+            a_c[m_int],
+            b_c[m_int],
+            n1c[m_int],
+            n2c[m_int],
+            dA[m_int],
+            dB[m_int],
         )
 
     # Coplanar pairs (rare) handled with the 2-D fallback, one at a time.
@@ -569,9 +1100,7 @@ def _interval_overlap(
         # The "lone" vertex is the one whose sign differs from the other
         # two (Möller). Fully vectorised: default 0; if s0==s1 the odd one
         # out is vertex 2; else if s0==s2 it is vertex 1; else vertex 0.
-        lone = np.where(
-            s[:, 0] == s[:, 1], 2, np.where(s[:, 0] == s[:, 2], 1, 0)
-        ).astype(np.int64)
+        lone = np.where(s[:, 0] == s[:, 1], 2, np.where(s[:, 0] == s[:, 2], 1, 0)).astype(np.int64)
         idx = np.arange(p.shape[0])
         o = lone
         a1 = (o + 1) % 3
@@ -671,9 +1200,7 @@ def _point_tri_dist2(pts: np.ndarray, tri: np.ndarray) -> np.ndarray:
     return np.einsum("ij,ij->i", diff, diff)
 
 
-def _min_mesh_distance(
-    A: np.ndarray, B: np.ndarray
-) -> tuple[float, np.ndarray, np.ndarray]:
+def _min_mesh_distance(A: np.ndarray, B: np.ndarray) -> tuple[float, np.ndarray, np.ndarray]:
     """Real minimum surface gap between two triangle meshes (sampled).
 
     Symmetric: every vertex of A is tested against every triangle of B
@@ -744,9 +1271,7 @@ def _closest_on_tri(p: np.ndarray, tri: np.ndarray) -> np.ndarray:
     return out[0]
 
 
-def _penetration_depth(
-    A: np.ndarray, B: np.ndarray, mask: np.ndarray
-) -> tuple[float, np.ndarray]:
+def _penetration_depth(A: np.ndarray, B: np.ndarray, mask: np.ndarray) -> tuple[float, np.ndarray]:
     """Honest penetration estimate from the *actually intersecting* tris.
 
     Collect the vertices of every triangle pair flagged intersecting,
@@ -791,9 +1316,7 @@ class ClashService:
 
     # ── Run lifecycle ──────────────────────────────────────────────────
 
-    async def create_run(
-        self, project_id: uuid.UUID, data: ClashRunCreate, user_id: str
-    ) -> ClashRun:
+    async def create_run(self, project_id: uuid.UUID, data: ClashRunCreate, user_id: str) -> ClashRun:
         """Persist + execute a clash run synchronously, return it complete."""
         models = await self.repo.models_for_project(project_id)
         valid_ids = {m.id for m in models}
@@ -803,9 +1326,7 @@ class ClashService:
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="None of the requested models belong to this project",
             )
-        if data.mode not in (
-            "cross_discipline", "all", "selected", "selection_sets"
-        ):
+        if data.mode not in ("cross_discipline", "all", "selected", "selection_sets"):
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=f"Unknown clash mode '{data.mode}'",
@@ -813,17 +1334,11 @@ class ClashService:
         if data.clash_type not in CLASH_TYPES:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=f"Unknown clash type '{data.clash_type}' "
-                f"(expected one of {', '.join(CLASH_TYPES)})",
+                detail=f"Unknown clash type '{data.clash_type}' (expected one of {', '.join(CLASH_TYPES)})",
             )
         set_a = set_b = None
         if data.mode == "selection_sets":
-            if (
-                data.set_a is None
-                or data.set_b is None
-                or data.set_a.is_empty
-                or data.set_b.is_empty
-            ):
+            if data.set_a is None or data.set_b is None or data.set_a.is_empty or data.set_b.is_empty:
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail="selection_sets mode requires a non-empty "
@@ -833,9 +1348,12 @@ class ClashService:
             set_a = data.set_a.model_dump()
             set_b = data.set_b.model_dump()
 
-        name = (data.name or "").strip() or (
-            f"Clash run {_now():%Y-%m-%d %H:%M}"
-        )
+        name = (data.name or "").strip() or (f"Clash run {_now():%Y-%m-%d %H:%M}")
+        # Wave A4 — initial rule set carried straight from the request.
+        # The engine consults the (possibly empty) list during the broad
+        # phase; the rule editor endpoints (PATCH /rules) can mutate it
+        # post-hoc without re-running the engine.
+        rules_payload = [r.model_dump() for r in (data.rules or [])]
         run = ClashRun(
             project_id=project_id,
             name=name,
@@ -852,6 +1370,7 @@ class ClashService:
             status="running",
             created_by=str(user_id),
             summary={},
+            rules=rules_payload,
         )
         self.repo.add_run(run)
         await self.session.flush()
@@ -866,6 +1385,13 @@ class ClashService:
             run.element_count = len(elements)
             run.total_clashes = len(results)
             run.summary = _build_summary(results)
+            # Wave A4 — spatial cluster pass over centroids. Pure
+            # write-only: failures degrade to "no clusters" rather than
+            # failing the whole run.
+            try:
+                await self._persist_clusters(run, results)
+            except Exception:  # noqa: BLE001 — clustering is best-effort
+                logger.exception("Clash run %s cluster pass failed", run.id)
             run.status = "completed"
             run.completed_at = _now()
         except Exception as exc:  # noqa: BLE001 — surface, don't 500 the run
@@ -876,9 +1402,7 @@ class ClashService:
         await self.session.flush()
         return run
 
-    async def _load_geometry(
-        self, model_ids: list[uuid.UUID]
-    ) -> dict[str, object]:
+    async def _load_geometry(self, model_ids: list[uuid.UUID]) -> dict[str, object]:
         """Best-effort load of real GLB triangle meshes per element.
 
         Returns ``{element_id: ElementGeom}``. If the geometry provider
@@ -900,9 +1424,7 @@ class ClashService:
                 merged.update(part)
         return merged
 
-    async def _carry_forward(
-        self, run: ClashRun, results: list[ClashResult]
-    ) -> None:
+    async def _carry_forward(self, run: ClashRun, results: list[ClashResult]) -> None:
         """Persist triage across re-runs by matching clash signatures.
 
         Find the most recent *completed* run of this project that shares
@@ -924,9 +1446,7 @@ class ClashService:
                 return
             prior_rows = await self.repo.all_results(prior_run.id)
         except Exception:  # noqa: BLE001 — carry-forward is best-effort
-            logger.exception(
-                "Clash carry-forward lookup failed for run %s", run.id
-            )
+            logger.exception("Clash carry-forward lookup failed for run %s", run.id)
             return
 
         # Index prior rows by signature. On the (rare) signature collision
@@ -956,10 +1476,16 @@ class ClashService:
                 prior_comments = list(getattr(prior, "comments", None) or [])
                 if prior_comments:
                     r.comments = prior_comments + list(r.comments or [])
+                # Wave A3 — carry watchers + audit log across re-runs so
+                # subscriptions and history survive the engine rerun.
+                prior_watchers = list(getattr(prior, "watchers", None) or [])
+                if prior_watchers:
+                    r.watchers = prior_watchers
+                prior_history = list(getattr(prior, "history", None) or [])
+                if prior_history:
+                    r.history = prior_history
             except Exception:  # noqa: BLE001 — skip just this row
-                logger.exception(
-                    "Clash carry-forward failed for signature %s", sig
-                )
+                logger.exception("Clash carry-forward failed for signature %s", sig)
                 continue
 
     async def compare_runs(
@@ -1008,9 +1534,7 @@ class ClashService:
             }
 
         new = [_summary(cur_by_sig[s]) for s in sorted(cur_sigs - base_sigs)]
-        resolved = [
-            _summary(base_by_sig[s]) for s in sorted(base_sigs - cur_sigs)
-        ]
+        resolved = [_summary(base_by_sig[s]) for s in sorted(base_sigs - cur_sigs)]
         persistent = [
             {
                 "current": _summary(cur_by_sig[s]),
@@ -1034,21 +1558,232 @@ class ClashService:
     async def list_runs(self, project_id: uuid.UUID) -> list[ClashRun]:
         return await self.repo.list_runs(project_id)
 
-    async def get_run(
-        self, project_id: uuid.UUID, run_id: uuid.UUID
-    ) -> ClashRun:
+    async def get_run(self, project_id: uuid.UUID, run_id: uuid.UUID) -> ClashRun:
         run = await self.repo.get_run(project_id, run_id)
         if run is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Clash run not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clash run not found")
         return run
 
-    async def delete_run(
-        self, project_id: uuid.UUID, run_id: uuid.UUID
-    ) -> None:
+    async def delete_run(self, project_id: uuid.UUID, run_id: uuid.UUID) -> None:
         run = await self.get_run(project_id, run_id)
         await self.repo.delete_run(run)
+
+    # ── Wave A4: clusters, rules, suggestions, KPI ─────────────────────
+
+    async def _persist_clusters(self, run: ClashRun, results: list[ClashResult]) -> None:
+        """Run DBSCAN over centroids → stamp ``cluster_id`` + ClashCluster.
+
+        Pure side-effect over the result rows + the ``oe_clash_cluster``
+        table. Skipped when there are fewer than two results (a single
+        clash is never a "cluster"). The cluster pass is wrapped in a
+        broad ``except`` by the caller — every failure mode here
+        (degenerate centroids, DBSCAN cap, write error) leaves
+        ``cluster_id`` columns at ``NULL`` and the chip group simply
+        renders empty.
+        """
+        if not results or len(results) < _DEFAULT_CLUSTER_MIN_SAMPLES:
+            return
+        # Defensive copy of the existing rows so re-run replaces (the
+        # carry-forward path may have produced a fresh list).
+        await self.repo.clear_clusters(run.id)
+        points = [(float(r.cx or 0.0), float(r.cy or 0.0), float(r.cz or 0.0)) for r in results]
+        labels = _dbscan_cluster(points)
+        # Group members by label so we can persist one ClashCluster per
+        # bucket. ``None`` is DBSCAN noise — no row, no chip.
+        buckets: dict[int, list[ClashResult]] = {}
+        for r, cid in zip(results, labels, strict=False):
+            r.cluster_id = cid
+            if cid is None:
+                continue
+            buckets.setdefault(cid, []).append(r)
+        if not buckets:
+            return
+        cluster_rows: list[ClashCluster] = []
+        for cid, members in sorted(buckets.items()):
+            label = _label_for_cluster(members, cid)
+            cluster_rows.append(
+                ClashCluster(
+                    run_id=run.id,
+                    cluster_id=cid,
+                    label=label,
+                    size=len(members),
+                )
+            )
+        self.repo.add_clusters(cluster_rows)
+
+    async def list_clusters(self, project_id: uuid.UUID, run_id: uuid.UUID) -> list[dict]:
+        """Return ``[{cluster_id, label, size, dominant_disciplines, storey}]``.
+
+        ``dominant_disciplines`` and ``storey`` are derived from the
+        cluster's member rows (a single pass — no per-cluster DB query).
+        IDOR-guarded via :meth:`get_run`.
+        """
+        await self.get_run(project_id, run_id)
+        clusters = await self.repo.clusters_for_run(run_id)
+        if not clusters:
+            return []
+        # Index members so we can attach the dominant pair + storey.
+        rows = await self.repo.all_results(run_id)
+        by_cluster: dict[int, list[ClashResult]] = {}
+        for r in rows:
+            cid = getattr(r, "cluster_id", None)
+            if cid is None:
+                continue
+            by_cluster.setdefault(int(cid), []).append(r)
+
+        out: list[dict] = []
+        for c in clusters:
+            members = by_cluster.get(int(c.cluster_id), [])
+            dom_pair, dom_storey = _dominant_pair_and_storey(members)
+            out.append(
+                {
+                    "cluster_id": int(c.cluster_id),
+                    "label": c.label or "",
+                    "size": int(c.size or len(members)),
+                    "dominant_disciplines": list(dom_pair),
+                    "storey": dom_storey,
+                }
+            )
+        return out
+
+    async def list_rules(self, project_id: uuid.UUID, run_id: uuid.UUID) -> list[dict]:
+        """Return the run's persisted rule list (raw JSON-friendly dicts)."""
+        run = await self.get_run(project_id, run_id)
+        return _coerce_rules(run.rules)
+
+    async def replace_rules(
+        self,
+        project_id: uuid.UUID,
+        run_id: uuid.UUID,
+        rules: list[dict],
+    ) -> list[dict]:
+        """Replace the rule set on a run (capped at 500). Returns the saved list.
+
+        Capped server-side as a defence-in-depth complement to the
+        schema's ``max_length=500`` — a misbehaving client cannot stuff
+        the run with thousands of inert rows. Reassigns the JSON column
+        so SQLAlchemy detects the change across backends.
+        """
+        run = await self.get_run(project_id, run_id)
+        capped = list(rules)[:500]
+        run.rules = capped
+        await self.session.flush()
+        return _coerce_rules(run.rules)
+
+    async def rule_suggestions(self, project_id: uuid.UUID, run_id: uuid.UUID) -> list[dict]:
+        """Mine the run's recorded false-positive history for rule suggestions.
+
+        Each suggestion is keyed off discipline pairs that were *ignored
+        with a reason* (FP feedback). A pair must cross
+        :data:`_FP_SUGGESTION_THRESHOLD` to surface. The pair is matched
+        symmetrically; a rule already on the run (same pair, regardless
+        of tolerance) suppresses the suggestion to avoid suggesting
+        what's already in place.
+        """
+        run = await self.get_run(project_id, run_id)
+        rows = await self.repo.all_results(run_id)
+        fp_pairs, fp_max_pen = _collect_fp_pairs(rows)
+        existing_pairs = _existing_rule_pairs(run.rules)
+        # Filter out pairs that already have a rule, then mine.
+        filtered_pairs = [p for p in fp_pairs if frozenset(p) not in existing_pairs]
+        filtered_max_pen = {k: v for k, v in fp_max_pen.items() if frozenset(k) not in existing_pairs}
+        rule, reason, fp_count = _suggest_rule_from_fps(filtered_pairs, filtered_max_pen)
+        if rule is None:
+            return []
+        return [{"rule": rule, "reason": reason, "fp_count": fp_count}]
+
+    async def apply_rule_suggestion(
+        self,
+        project_id: uuid.UUID,
+        run_id: uuid.UUID,
+        discipline_a: str,
+        discipline_b: str,
+        tolerance_m: float,
+        *,
+        actor: str,
+    ) -> tuple[bool, int]:
+        """Append a new rule + re-evaluate existing results.
+
+        Adds a fresh :class:`ClashRule` row to ``run.rules`` (symmetric on
+        the pair — duplicates against any existing pair are skipped with
+        ``rule_added=False``). Any hard clash on the pair whose
+        ``penetration_m`` now falls at or below ``tolerance_m`` is
+        flipped to ``status='ignored'``, with a history entry.
+
+        Returns ``(rule_added, results_affected)``.
+        """
+        run = await self.get_run(project_id, run_id)
+        da = (discipline_a or "").strip()
+        db_ = (discipline_b or "").strip()
+        if not da or not db_:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="discipline_a and discipline_b must be non-empty",
+            )
+        existing = _coerce_rules(run.rules)
+        pair = frozenset((da.lower(), db_.lower()))
+        already = any(
+            frozenset(
+                (
+                    str(r.get("discipline_a") or "").strip().lower(),
+                    str(r.get("discipline_b") or "").strip().lower(),
+                )
+            )
+            == pair
+            for r in existing
+        )
+        rule_added = False
+        if not already:
+            new_rule = {
+                "id": f"sugg-{da}-{db_}-{int(_now().timestamp())}"[:64],
+                "discipline_a": da[:64],
+                "discipline_b": db_[:64],
+                "tolerance_m": float(tolerance_m),
+                "severity_override": None,
+                "enabled": True,
+            }
+            run.rules = (existing + [new_rule])[:500]
+            rule_added = True
+        # Re-evaluate: every hard clash on this pair whose penetration
+        # now sits at or below the new tolerance becomes ``ignored``.
+        rows = await self.repo.all_results(run_id)
+        affected = 0
+        for r in rows:
+            if (r.clash_type or "") != "hard":
+                continue
+            r_pair = frozenset(((r.a_discipline or "").strip().lower(), (r.b_discipline or "").strip().lower()))
+            if r_pair != pair:
+                continue
+            if float(r.penetration_m or 0.0) > float(tolerance_m):
+                continue
+            if r.status == "ignored":
+                continue
+            self._append_history(
+                r,
+                str(actor or "system"),
+                "status",
+                r.status,
+                "ignored",
+            )
+            r.status = "ignored"
+            affected += 1
+        # Refresh the cached status counts so the dashboard KPI stays true.
+        if affected or rule_added:
+            run.summary = _build_summary(rows)
+        await self.session.flush()
+        return rule_added, affected
+
+    async def compute_kpi(self, project_id: uuid.UUID, run_id: uuid.UUID) -> dict:
+        """Aggregate a dashboard-ready KPI payload for a run.
+
+        Single in-memory pass over every result row — no extra DB calls
+        beyond the existing list-by-run query. MTTR is derived from the
+        history audit trail (status→resolved transitions); ``None`` when
+        no row has a qualifying transition yet (the UI hides the tile).
+        """
+        await self.get_run(project_id, run_id)
+        rows = await self.repo.all_results(run_id)
+        return _compute_kpi(rows)
 
     # ── Engine ─────────────────────────────────────────────────────────
 
@@ -1071,9 +1806,7 @@ class ClashService:
             ),
         )
 
-        boxes: list[
-            tuple[object, tuple[float, float, float, float, float, float], str, object]
-        ] = []
+        boxes: list[tuple[object, tuple[float, float, float, float, float, float], str, object]] = []
         for el in ordered:
             g = geoms.get(str(getattr(el, "id", "")))
             aabb = None
@@ -1082,8 +1815,12 @@ class ClashService:
                 if ga is not None and len(ga) == 6 and all(math.isfinite(v) for v in ga):
                     if ga[3] > ga[0] and ga[4] > ga[1] and ga[5] > ga[2]:
                         aabb = (
-                            float(ga[0]), float(ga[1]), float(ga[2]),
-                            float(ga[3]), float(ga[4]), float(ga[5]),
+                            float(ga[0]),
+                            float(ga[1]),
+                            float(ga[2]),
+                            float(ga[3]),
+                            float(ga[4]),
+                            float(ga[5]),
                         )
             if aabb is None:
                 aabb = _norm_bbox(getattr(el, "bounding_box", None))
@@ -1101,18 +1838,12 @@ class ClashService:
         # O(pairs) times. Doing it once per element here makes it O(n)
         # with byte-identical output (pure memoisation — the narrow-phase
         # maths is untouched), which is the bulk of the runtime win.
-        tri_by_idx: list[object] = [
-            (_triangles(g) if g is not None else None) for _, _, _, g in boxes
-        ]
-        obb_by_idx: list[object] = [
-            (_obb(g) if g is not None else None) for _, _, _, g in boxes
-        ]
+        tri_by_idx: list[object] = [(_triangles(g) if g is not None else None) for _, _, _, g in boxes]
+        obb_by_idx: list[object] = [(_obb(g) if g is not None else None) for _, _, _, g in boxes]
 
         # Cell size = 60th-percentile element extent, clamped to a sane
         # band so neither tiny bolts nor whole storeys distort the grid.
-        extents = sorted(
-            max(bb[3] - bb[0], bb[4] - bb[1], bb[5] - bb[2]) for _, bb, _, _ in boxes
-        )
+        extents = sorted(max(bb[3] - bb[0], bb[4] - bb[1], bb[5] - bb[2]) for _, bb, _, _ in boxes)
         cell = extents[int(len(extents) * 0.6)]
         cell = min(max(cell, 0.5), 10.0)
 
@@ -1134,9 +1865,7 @@ class ClashService:
 
         dfilter: set[frozenset[str]] | None = None
         if run.mode == "selected" and run.discipline_filter:
-            dfilter = {
-                frozenset((str(a), str(b))) for a, b in run.discipline_filter
-            }
+            dfilter = {frozenset((str(a), str(b))) for a, b in run.discipline_filter}
         # Navisworks-style selection sets: only A×B cross pairs survive.
         sel_a = run.set_a if run.mode == "selection_sets" else None
         sel_b = run.set_b if run.mode == "selection_sets" else None
@@ -1151,9 +1880,10 @@ class ClashService:
         # Federated noise filter ("ignore clashes within the same file").
         # Meaningless on a single-model run, so only honoured when the run
         # actually spans more than one model.
-        ignore_same_model = bool(
-            getattr(run, "ignore_same_model", False)
-        ) and len({str(getattr(e, "model_id", "")) for e, _, _, _ in boxes}) > 1
+        ignore_same_model = (
+            bool(getattr(run, "ignore_same_model", False))
+            and len({str(getattr(e, "model_id", "")) for e, _, _, _ in boxes}) > 1
+        )
 
         seen: set[tuple[int, int]] = set()
         results: list[ClashResult] = []
@@ -1179,9 +1909,7 @@ class ClashService:
                 seen.add(key)
                 pairs_tested += 1
                 if pairs_tested > _MAX_PAIRS:
-                    logger.warning(
-                        "Clash run %s hit the %d-pair cap", run.id, _MAX_PAIRS
-                    )
+                    logger.warning("Clash run %s hit the %d-pair cap", run.id, _MAX_PAIRS)
                     return results
                 ea, ba, da, ga = boxes[key[0]]
                 eb, bb_, db, gb = boxes[key[1]]
@@ -1190,10 +1918,7 @@ class ClashService:
                 # Federated noise filter: drop intra-model pairs so a
                 # model is never clashed against itself when the user
                 # only wants cross-discipline/cross-trade coordination.
-                if ignore_same_model and (
-                    getattr(ea, "model_id", None)
-                    == getattr(eb, "model_id", None)
-                ):
+                if ignore_same_model and (getattr(ea, "model_id", None) == getattr(eb, "model_id", None)):
                     continue
                 # Discipline gating.
                 if run.mode == "cross_discipline" and da == db:
@@ -1207,29 +1932,52 @@ class ClashService:
                     ta_ = _type_of(ea)
                     tb_ = _type_of(eb)
                     if not (
-                        (
-                            _in_set(ea, ta_, da, sel_a)
-                            and _in_set(eb, tb_, db, sel_b)
-                        )
-                        or (
-                            _in_set(ea, ta_, da, sel_b)
-                            and _in_set(eb, tb_, db, sel_a)
-                        )
+                        (_in_set(ea, ta_, da, sel_a) and _in_set(eb, tb_, db, sel_b))
+                        or (_in_set(ea, ta_, da, sel_b) and _in_set(eb, tb_, db, sel_a))
                     ):
                         continue
 
+                # Wave A4 — per-discipline-pair tolerance override. The
+                # first matching enabled rule (symmetric on the pair)
+                # swaps in its ``tolerance_m`` for the run-wide value and
+                # the result will pick up its ``severity_override``.
+                pair_rule = _apply_rules(run, (da, db))
+                pair_tol = tol
+                if pair_rule is not None:
+                    try:
+                        pair_tol = float(pair_rule.get("tolerance_m") or tol)
+                    except (TypeError, ValueError):
+                        pair_tol = tol
+
                 row = self._test_pair(
-                    run, ea, ba, da, ga, eb, bb_, db, gb, tol, clr,
-                    triA=tri_by_idx[key[0]], triB=tri_by_idx[key[1]],
-                    oa=obb_by_idx[key[0]], ob=obb_by_idx[key[1]],
+                    run,
+                    ea,
+                    ba,
+                    da,
+                    ga,
+                    eb,
+                    bb_,
+                    db,
+                    gb,
+                    pair_tol,
+                    clr,
+                    triA=tri_by_idx[key[0]],
+                    triB=tri_by_idx[key[1]],
+                    oa=obb_by_idx[key[0]],
+                    ob=obb_by_idx[key[1]],
                     hard_enabled=hard_enabled,
                 )
                 if row is not None:
+                    if pair_rule is not None:
+                        sev_override = pair_rule.get("severity_override")
+                        if isinstance(sev_override, str) and sev_override in CLASH_SEVERITIES:
+                            row.severity = sev_override
                     results.append(row)
                     if len(results) >= _MAX_RESULTS:
                         logger.warning(
                             "Clash run %s hit the %d-result cap",
-                            run.id, _MAX_RESULTS,
+                            run.id,
+                            _MAX_RESULTS,
                         )
                         return results
         return results
@@ -1297,7 +2045,17 @@ class ClashService:
 
         if triA is None or triB is None:
             return cls._test_pair_bbox(
-                run, ea, ba, da, eb, bb, db, tol, clr, ga, gb,
+                run,
+                ea,
+                ba,
+                da,
+                eb,
+                bb,
+                db,
+                tol,
+                clr,
+                ga,
+                gb,
                 hard_enabled=hard_enabled,
             )
 
@@ -1346,8 +2104,19 @@ class ClashService:
             return None
 
         return cls._row(
-            run, ea, da, eb, db, clash_type, penetration, distance,
-            cx, cy, cz, ga, gb,
+            run,
+            ea,
+            da,
+            eb,
+            db,
+            clash_type,
+            penetration,
+            distance,
+            cx,
+            cy,
+            cz,
+            ga,
+            gb,
         )
 
     @classmethod
@@ -1409,8 +2178,19 @@ class ClashService:
             return None
 
         return cls._row(
-            run, ea, da, eb, db, clash_type, penetration, distance,
-            cx, cy, cz, ga, gb,
+            run,
+            ea,
+            da,
+            eb,
+            db,
+            clash_type,
+            penetration,
+            distance,
+            cx,
+            cy,
+            cz,
+            ga,
+            gb,
         )
 
     @staticmethod
@@ -1453,6 +2233,11 @@ class ClashService:
         a_sid = str(getattr(ea, "stable_id", "") or "")
         b_sid = str(getattr(eb, "stable_id", "") or "")
         clr = float(getattr(run, "clearance_m", 0.0) or 0.0)
+        sev = _severity_for(clash_type, penetration, distance, clr)
+        suggestion = _severity_suggestion(clash_type, penetration, sev)
+        meta: dict = {}
+        if suggestion is not None:
+            meta["severity_suggestion"] = suggestion
         return ClashResult(
             run_id=run.id,
             a_element_id=ea.id,  # type: ignore[attr-defined]
@@ -1476,12 +2261,125 @@ class ClashService:
             cy=round(cy, 4),
             cz=round(cz, 4),
             status="new",
-            severity=_severity_for(clash_type, penetration, distance, clr),
+            severity=sev,
             signature=_signature(a_sid, b_sid, clash_type),
             comments=[],
+            watchers=[],
+            history=[],
+            meta=meta,
         )
 
     # ── Result triage ──────────────────────────────────────────────────
+
+    @staticmethod
+    def _append_history(
+        result: ClashResult,
+        actor: str,
+        field: str,
+        before: object,
+        after: object,
+    ) -> None:
+        """Append one audit entry to ``result.history``.
+
+        ``before`` / ``after`` are best-effort string-coerced for the
+        Activity tab; ``None`` survives as ``None`` (no prior / no
+        natural pair). Reassigns the JSON column (instead of in-place
+        ``.append``) so SQLAlchemy detects the change on every backend
+        (the same dirty-tracking pattern the comments column uses).
+        """
+
+        def _str(v: object) -> str | None:
+            if v is None:
+                return None
+            return str(v)
+
+        entry = {
+            "ts": _now().isoformat(),
+            "actor": str(actor or "system"),
+            "field": str(field),
+            "before": _str(before),
+            "after": _str(after),
+        }
+        result.history = list(result.history or []) + [entry]
+
+    @staticmethod
+    def _extract_mentions(text: str) -> list[str]:
+        """Pull ``<at>user-id</at>`` user-ids from a comment body.
+
+        The frontend serialises an @mention as the literal token
+        ``<at>{userId}</at>`` inside the text; this is the matching
+        parser. Defensive — duplicates are de-duplicated preserving
+        first-seen order, and obvious junk (empty / whitespace) skipped.
+        Never raises.
+        """
+        if not text:
+            return []
+        out: list[str] = []
+        seen: set[str] = set()
+        i = 0
+        while True:
+            start = text.find("<at>", i)
+            if start < 0:
+                break
+            end = text.find("</at>", start + 4)
+            if end < 0:
+                break
+            uid = text[start + 4 : end].strip()
+            if uid and uid not in seen:
+                seen.add(uid)
+                out.append(uid)
+            i = end + 5
+        return out
+
+    async def _notify(
+        self,
+        recipients: list[str],
+        notification_type: str,
+        title_key: str,
+        *,
+        project_id: uuid.UUID,
+        run_id: uuid.UUID,
+        result_id: uuid.UUID,
+        actor: str,
+        body_context: dict | None = None,
+    ) -> None:
+        """Fan a clash event out to recipients via the notifications module.
+
+        Best-effort — any failure (missing module, bad user id, db error)
+        is logged and swallowed; collaboration never blocks triage.
+        ``actor`` is filtered out so the caller never notifies themselves.
+        Duplicates are de-duplicated preserving order.
+        """
+        seen: set[str] = set()
+        targets: list[str] = []
+        for uid in recipients:
+            sid = str(uid or "").strip()
+            if not sid or sid == str(actor) or sid in seen:
+                continue
+            seen.add(sid)
+            targets.append(sid)
+        if not targets:
+            return
+        try:
+            from app.modules.notifications.service import NotificationService
+
+            svc = NotificationService(self.session)
+            await svc.notify_users(
+                targets,
+                notification_type=notification_type,
+                title_key=title_key,
+                entity_type="clash_result",
+                entity_id=str(result_id),
+                body_context=body_context or {},
+                action_url=f"/clash?run={run_id}&result={result_id}",
+                metadata={"project_id": str(project_id), "run_id": str(run_id)},
+            )
+        except Exception:  # noqa: BLE001 — never block triage on notify
+            logger.info(
+                "Clash notification skipped (type=%s, result=%s)",
+                notification_type,
+                result_id,
+            )
 
     async def update_result(
         self,
@@ -1492,43 +2390,317 @@ class ClashService:
         new_status: str | None,
         assigned_to: str | None,
         due_date: str | None = None,
+        severity: str | None = None,
         add_comment: dict | None = None,
+        actor: str | None = None,
     ) -> ClashResult:
         run = await self.get_run(project_id, run_id)
         result = await self.repo.get_result(run_id, result_id)
         if result is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Clash not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clash not found")
+        actor_id = str(actor or "system")
+        # Track which fields changed so we can fan notifications out once
+        # at the end (cheaper than N parallel publish calls).
+        changed_fields: list[str] = []
         if new_status is not None:
             if new_status not in CLASH_STATUSES:
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail=f"Invalid clash status '{new_status}'",
                 )
-            result.status = new_status
+            if result.status != new_status:
+                self._append_history(result, actor_id, "status", result.status, new_status)
+                result.status = new_status
+                changed_fields.append("status")
+        if severity is not None:
+            if severity not in CLASH_SEVERITIES:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail=f"Invalid clash severity '{severity}'",
+                )
+            if result.severity != severity:
+                self._append_history(result, actor_id, "severity", result.severity, severity)
+                result.severity = severity
+                changed_fields.append("severity")
         if assigned_to is not None:
-            result.assigned_to = assigned_to or None
+            new_assignee = assigned_to or None
+            if (result.assigned_to or None) != new_assignee:
+                self._append_history(
+                    result,
+                    actor_id,
+                    "assigned_to",
+                    result.assigned_to,
+                    new_assignee,
+                )
+                result.assigned_to = new_assignee
+                changed_fields.append("assigned_to")
         if due_date is not None:
-            result.due_date = due_date or None
+            new_due = due_date or None
+            if (result.due_date or None) != new_due:
+                self._append_history(result, actor_id, "due_date", result.due_date, new_due)
+                result.due_date = new_due
+                changed_fields.append("due_date")
+        mentioned: list[str] = []
+        added_comment_ts: str | None = None
         if add_comment is not None:
             text = str(add_comment.get("text") or "").strip()
             if text:
+                ts = _now().isoformat()
                 item = {
                     "author": str(add_comment.get("author") or "system"),
                     "author_id": add_comment.get("author_id"),
-                    "ts": _now().isoformat(),
+                    "ts": ts,
                     "text": text,
+                    "reply_to": add_comment.get("reply_to") or None,
                 }
                 # Reassign (not in-place append) so the plain-JSON column
                 # is detected dirty and persisted on every backend.
                 result.comments = list(result.comments or []) + [item]
+                self._append_history(result, actor_id, "comment_add", None, text[:160])
+                mentioned = self._extract_mentions(text)
+                added_comment_ts = ts
         await self.session.flush()
         # Refresh the cached status counts so the dashboard KPI stays true.
         rows, _ = await self.repo.list_results(run_id, limit=_MAX_RESULTS)
         run.summary = _build_summary(list(rows))
         await self.session.flush()
+
+        # ── Fan-out: best-effort notifications to watchers + @mentions ──
+        # Watchers learn about every triage mutation + new comment;
+        # @mentioned users learn about the comment specifically. The
+        # caller is filtered out inside :meth:`_notify`.
+        watchers = [str(w) for w in (result.watchers or []) if w]
+        if changed_fields and watchers:
+            await self._notify(
+                watchers,
+                notification_type="clash_updated",
+                title_key="clash.notification.updated",
+                project_id=project_id,
+                run_id=run_id,
+                result_id=result_id,
+                actor=actor_id,
+                body_context={
+                    "fields": ",".join(changed_fields),
+                    "a_name": result.a_name,
+                    "b_name": result.b_name,
+                },
+            )
+        if added_comment_ts is not None:
+            if watchers:
+                await self._notify(
+                    watchers,
+                    notification_type="clash_comment",
+                    title_key="clash.notification.comment",
+                    project_id=project_id,
+                    run_id=run_id,
+                    result_id=result_id,
+                    actor=actor_id,
+                    body_context={
+                        "a_name": result.a_name,
+                        "b_name": result.b_name,
+                    },
+                )
+            if mentioned:
+                await self._notify(
+                    mentioned,
+                    notification_type="clash_mention",
+                    title_key="clash.notification.mention",
+                    project_id=project_id,
+                    run_id=run_id,
+                    result_id=result_id,
+                    actor=actor_id,
+                    body_context={
+                        "a_name": result.a_name,
+                        "b_name": result.b_name,
+                    },
+                )
         return result
+
+    # ── Watchers ───────────────────────────────────────────────────────
+
+    async def set_watch(
+        self,
+        project_id: uuid.UUID,
+        run_id: uuid.UUID,
+        result_id: uuid.UUID,
+        user_id: str,
+        watching: bool,
+    ) -> tuple[list[str], bool]:
+        """Add or remove ``user_id`` from this clash's watcher list.
+
+        Idempotent: a duplicate watch / unwatch is a no-op. Returns the
+        current watcher list plus the caller's own watching flag.
+        """
+        await self.get_run(project_id, run_id)  # IDOR / 404 guard
+        result = await self.repo.get_result(run_id, result_id)
+        if result is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clash not found")
+        uid = str(user_id)
+        current = [str(w) for w in (result.watchers or []) if w]
+        if watching:
+            if uid not in current:
+                current.append(uid)
+        else:
+            current = [w for w in current if w != uid]
+        # Reassign to mark the JSON column dirty across backends.
+        result.watchers = current
+        await self.session.flush()
+        return current, uid in current
+
+    # ── BCF import (round-trip triage sync) ────────────────────────────
+
+    async def import_bcf(
+        self,
+        project_id: uuid.UUID,
+        run_id: uuid.UUID,
+        payload: bytes,
+        *,
+        actor: str,
+    ) -> tuple[int, int, int]:
+        """Replay a ``.bcfzip`` against this run, syncing triage state.
+
+        Reuses the existing BCF 2.1/3.0 codec from the ``bcf`` module so
+        we never duplicate XML parsing. For each parsed topic we
+        recompute the canonical clash signature from the stable IDs the
+        matching :meth:`export_bcf` embedded into the topic
+        description, and patch the matching :class:`ClashResult` row
+        with the topic's status / assignee / due date / new comments /
+        BCF guid (BCF status maps onto our ``CLASH_STATUSES`` enum, with
+        unknown values left as-is so a third-party round-trip never
+        corrupts our review state). Topics with no signature hit are
+        logged + counted as ``unmatched`` — they are never created here,
+        because a clash is an engine-derived artefact, not a user issue.
+
+        Returns ``(matched, unmatched, parse_errors)``.
+        """
+        await self.get_run(project_id, run_id)  # IDOR + 404 guard
+        try:
+            parsed = parse_bcfzip(payload)
+        except BCFParseError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"Invalid BCF archive: {exc}",
+            ) from exc
+
+        # Index this run's results by signature once — a federated run
+        # can carry tens of thousands of rows. O(N + T) instead of O(N×T).
+        all_rows = await self.repo.all_results(run_id)
+        by_sig: dict[str, ClashResult] = {}
+        for r in all_rows:
+            sig = (getattr(r, "signature", "") or "").strip()
+            if sig and sig not in by_sig:
+                by_sig[sig] = r
+
+        matched = 0
+        unmatched = 0
+        parse_errors = sum(1 for i in parsed.issues if getattr(i, "severity", "") == "error")
+        for topic in parsed.topics:
+            sig = _signature_from_description(topic.description or "")
+            row: ClashResult | None = None
+            if sig:
+                row = by_sig.get(sig)
+            if row is None and getattr(topic, "guid", None):
+                row = next(
+                    (r for r in all_rows if (r.bcf_topic_guid or "") == topic.guid),
+                    None,
+                )
+            if row is None:
+                logger.info(
+                    "BCF topic %s has no matching clash signature (skipped)",
+                    getattr(topic, "guid", "?"),
+                )
+                unmatched += 1
+                continue
+            self._sync_row_from_topic(row, topic, actor=actor)
+            matched += 1
+
+        if matched:
+            await self.session.flush()
+            # Re-roll the cached run summary so the by_status counts
+            # reflect the imported state (the KPI strip stays honest).
+            rows2, _ = await self.repo.list_results(run_id, limit=_MAX_RESULTS)
+            run = await self.get_run(project_id, run_id)
+            run.summary = _build_summary(list(rows2))
+            await self.session.flush()
+
+        logger.info(
+            "BCF import on run %s: matched=%d unmatched=%d errors=%d",
+            run_id,
+            matched,
+            unmatched,
+            parse_errors,
+        )
+        return matched, unmatched, parse_errors
+
+    def _sync_row_from_topic(self, row: ClashResult, topic: object, *, actor: str) -> None:
+        """Patch a clash row with a parsed BCF topic's triage state.
+
+        Pulled out of :meth:`import_bcf` so the row-merge logic is one
+        cohesive block we can keep narrow and test-isolatable. Every
+        mutation goes through :meth:`_append_history` so the audit log
+        records the BCF round-trip just like an in-app edit.
+        """
+        new_status = _bcf_status_to_clash_status(getattr(topic, "topic_status", None))
+        if new_status and row.status != new_status:
+            self._append_history(row, actor, "status", row.status, new_status)
+            row.status = new_status
+        new_assignee = (getattr(topic, "assigned_to", None) or "").strip() or None
+        if new_assignee is not None and (row.assigned_to or None) != new_assignee:
+            self._append_history(row, actor, "assigned_to", row.assigned_to, new_assignee)
+            row.assigned_to = new_assignee
+        due = getattr(topic, "due_date", None)
+        if due is not None:
+            try:
+                iso_day = due.strftime("%Y-%m-%d")
+            except Exception:  # noqa: BLE001 — never block import on date format
+                iso_day = None
+            if iso_day and (row.due_date or None) != iso_day:
+                self._append_history(row, actor, "due_date", row.due_date, iso_day)
+                row.due_date = iso_day
+        # Append any BCF comments we haven't yet — keyed on (author|text)
+        # so a re-import doesn't double up.
+        existing_keys = {
+            f"{(c.get('author') or '').strip()}|{(c.get('text') or '').strip()}"
+            for c in (row.comments or [])
+            if isinstance(c, dict)
+        }
+        new_comments: list[dict] = []
+        for c in getattr(topic, "comments", None) or []:
+            text = (getattr(c, "comment", "") or "").strip()
+            if not text:
+                continue
+            author = (getattr(c, "author", "") or "").strip() or "system"
+            key = f"{author}|{text}"
+            if key in existing_keys:
+                continue
+            existing_keys.add(key)
+            ts_raw = getattr(c, "date", None)
+            try:
+                ts_iso = ts_raw.isoformat() if ts_raw is not None else _now().isoformat()
+            except Exception:  # noqa: BLE001
+                ts_iso = _now().isoformat()
+            new_comments.append(
+                {
+                    "author": author,
+                    "author_id": None,
+                    "ts": ts_iso,
+                    "text": text,
+                    "reply_to": None,
+                }
+            )
+        if new_comments:
+            row.comments = list(row.comments or []) + new_comments
+            self._append_history(
+                row,
+                actor,
+                "bcf_import",
+                None,
+                f"{len(new_comments)} comment(s)",
+            )
+        new_guid = getattr(topic, "guid", None) or None
+        if new_guid and row.bcf_topic_guid != new_guid:
+            self._append_history(row, actor, "bcf_topic_guid", row.bcf_topic_guid, new_guid)
+            row.bcf_topic_guid = new_guid
 
     async def resolve_author(self, user_id: str) -> str:
         """Best-effort human label for a comment author.
@@ -1540,9 +2712,7 @@ class ClashService:
         try:
             from app.modules.users.repository import UserRepository
 
-            user = await UserRepository(self.session).get_by_id(
-                uuid.UUID(str(user_id))
-            )
+            user = await UserRepository(self.session).get_by_id(uuid.UUID(str(user_id)))
             if user is not None:
                 name = (getattr(user, "full_name", "") or "").strip()
                 if name:
@@ -1667,9 +2837,7 @@ def _build_summary(results: list[ClashResult]) -> dict:
         sa_ = getattr(r, "a_storey", None)
         sb_ = getattr(r, "b_storey", None)
         if sa_ is not None and sb_ is not None:
-            la, lb = (int(sa_), int(sb_)) if int(sa_) <= int(sb_) else (
-                int(sb_), int(sa_)
-            )
+            la, lb = (int(sa_), int(sb_)) if int(sa_) <= int(sb_) else (int(sb_), int(sa_))
             storeys.add(la)
             storeys.add(lb)
             lc = level_cell.setdefault((la, lb), {"count": 0, "open_count": 0})
@@ -1678,12 +2846,10 @@ def _build_summary(results: list[ClashResult]) -> dict:
                 lc["open_count"] += 1
 
     matrix = [
-        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]}
-        for (a, b), v in sorted(cell.items())
+        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]} for (a, b), v in sorted(cell.items())
     ]
     level_matrix = [
-        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]}
-        for (a, b), v in sorted(level_cell.items())
+        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]} for (a, b), v in sorted(level_cell.items())
     ]
     return {
         "disciplines": sorted(disciplines),

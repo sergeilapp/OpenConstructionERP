@@ -1,1 +1,1 @@
-export { CRMPage } from './CRMPage';
+export { CRMPage } from "./CRMPage";

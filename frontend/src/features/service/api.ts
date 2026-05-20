@@ -4,21 +4,27 @@
  * Backed by /api/v1/service/ — see backend/app/modules/service/router.py
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type ContractStatus = 'draft' | 'active' | 'expired' | 'terminated';
-export type AssetStatus = 'active' | 'decommissioned' | 'maintenance';
-export type TicketStatus = 'new' | 'assigned' | 'in_progress' | 'resolved' | 'closed' | 'cancelled';
-export type TicketPriority = 'low' | 'med' | 'high' | 'critical';
+export type ContractStatus = "draft" | "active" | "expired" | "terminated";
+export type AssetStatus = "active" | "decommissioned" | "maintenance";
+export type TicketStatus =
+  | "new"
+  | "assigned"
+  | "in_progress"
+  | "resolved"
+  | "closed"
+  | "cancelled";
+export type TicketPriority = "low" | "med" | "high" | "critical";
 export type WorkOrderStatus =
-  | 'scheduled'
-  | 'dispatched'
-  | 'in_progress'
-  | 'completed'
-  | 'billed'
-  | 'cancelled';
+  | "scheduled"
+  | "dispatched"
+  | "in_progress"
+  | "completed"
+  | "billed"
+  | "cancelled";
 
 export interface ServiceContract {
   id: string;
@@ -74,6 +80,10 @@ export interface ServiceTicket {
   assigned_to?: string | null;
   resolved_at?: string | null;
   closed_at?: string | null;
+  // T10: SLA breach + recurring-schedule fields.
+  sla_breach_notified_at?: string | null;
+  sla_breached_at?: string | null;
+  recurring_schedule_id?: string | null;
   metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
@@ -82,7 +92,7 @@ export interface ServiceTicket {
 export interface WorkOrderItem {
   id: string;
   work_order_id: string;
-  item_type: 'labor' | 'material' | 'travel' | 'fee';
+  item_type: "labor" | "material" | "travel" | "fee";
   description: string;
   quantity: number | string;
   unit: string;
@@ -172,17 +182,19 @@ export function listContracts(params?: {
   limit?: number;
 }): Promise<ServiceContract[]> {
   const qs = new URLSearchParams();
-  if (params?.customer_id) qs.set('customer_id', params.customer_id);
-  if (params?.project_id) qs.set('project_id', params.project_id);
-  if (params?.status) qs.set('status', params.status);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.customer_id) qs.set("customer_id", params.customer_id);
+  if (params?.project_id) qs.set("project_id", params.project_id);
+  if (params?.status) qs.set("status", params.status);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
-  return apiGet<ServiceContract[]>(`/v1/service/contracts/${q ? `?${q}` : ''}`);
+  return apiGet<ServiceContract[]>(`/v1/service/contracts/${q ? `?${q}` : ""}`);
 }
 
-export function createContract(data: CreateContractPayload): Promise<ServiceContract> {
-  return apiPost<ServiceContract>('/v1/service/contracts/', data);
+export function createContract(
+  data: CreateContractPayload,
+): Promise<ServiceContract> {
+  return apiPost<ServiceContract>("/v1/service/contracts/", data);
 }
 
 export function updateContract(
@@ -209,15 +221,15 @@ export function listAssets(params: {
   limit?: number;
 }): Promise<ServiceAsset[]> {
   const qs = new URLSearchParams();
-  qs.set('contract_id', params.contract_id);
-  if (params.status) qs.set('status', params.status);
-  if (params.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params.limit !== undefined) qs.set('limit', String(params.limit));
+  qs.set("contract_id", params.contract_id);
+  if (params.status) qs.set("status", params.status);
+  if (params.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
   return apiGet<ServiceAsset[]>(`/v1/service/assets/?${qs.toString()}`);
 }
 
 export function createAsset(data: CreateAssetPayload): Promise<ServiceAsset> {
-  return apiPost<ServiceAsset>('/v1/service/assets/', data);
+  return apiPost<ServiceAsset>("/v1/service/assets/", data);
 }
 
 export function updateAsset(
@@ -242,18 +254,20 @@ export function listTickets(params?: {
   limit?: number;
 }): Promise<ServiceTicket[]> {
   const qs = new URLSearchParams();
-  if (params?.contract_id) qs.set('contract_id', params.contract_id);
-  if (params?.project_id) qs.set('project_id', params.project_id);
-  if (params?.status) qs.set('status', params.status);
-  if (params?.priority) qs.set('priority', params.priority);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.contract_id) qs.set("contract_id", params.contract_id);
+  if (params?.project_id) qs.set("project_id", params.project_id);
+  if (params?.status) qs.set("status", params.status);
+  if (params?.priority) qs.set("priority", params.priority);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
-  return apiGet<ServiceTicket[]>(`/v1/service/tickets/${q ? `?${q}` : ''}`);
+  return apiGet<ServiceTicket[]>(`/v1/service/tickets/${q ? `?${q}` : ""}`);
 }
 
-export function createTicket(data: CreateTicketPayload): Promise<ServiceTicket> {
-  return apiPost<ServiceTicket>('/v1/service/tickets/', data);
+export function createTicket(
+  data: CreateTicketPayload,
+): Promise<ServiceTicket> {
+  return apiPost<ServiceTicket>("/v1/service/tickets/", data);
 }
 
 export function updateTicket(
@@ -291,21 +305,27 @@ export function listWorkOrders(params?: {
   limit?: number;
 }): Promise<WorkOrder[]> {
   const qs = new URLSearchParams();
-  if (params?.status) qs.set('status', params.status);
-  if (params?.technician_id) qs.set('technician_id', params.technician_id);
-  if (params?.offset !== undefined) qs.set('offset', String(params.offset));
-  if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+  if (params?.status) qs.set("status", params.status);
+  if (params?.technician_id) qs.set("technician_id", params.technician_id);
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
   const q = qs.toString();
-  return apiGet<WorkOrder[]>(`/v1/service/work-orders/${q ? `?${q}` : ''}`);
+  return apiGet<WorkOrder[]>(`/v1/service/work-orders/${q ? `?${q}` : ""}`);
 }
 
-export function createWorkOrder(data: CreateWorkOrderPayload): Promise<WorkOrder> {
-  return apiPost<WorkOrder>('/v1/service/work-orders/', data);
+export function createWorkOrder(
+  data: CreateWorkOrderPayload,
+): Promise<WorkOrder> {
+  return apiPost<WorkOrder>("/v1/service/work-orders/", data);
 }
 
 export function updateWorkOrder(
   id: string,
-  data: { status?: WorkOrderStatus; technician_id?: string; scheduled_for?: string },
+  data: {
+    status?: WorkOrderStatus;
+    technician_id?: string;
+    scheduled_for?: string;
+  },
 ): Promise<WorkOrder> {
   return apiPatch<WorkOrder>(`/v1/service/work-orders/${id}`, data);
 }
@@ -316,9 +336,129 @@ export function billWorkOrder(id: string): Promise<WorkOrder> {
 
 export function completeWorkOrder(
   id: string,
-  debrief: { problem: string; cause: string; solution: string; follow_up_required?: boolean },
+  debrief: {
+    problem: string;
+    cause: string;
+    solution: string;
+    follow_up_required?: boolean;
+  },
 ): Promise<WorkOrder> {
   return apiPost<WorkOrder>(`/v1/service/work-orders/${id}/complete`, {
     debrief,
   });
+}
+
+/* ── T10: SLA breach check + recurring schedules ─────────────────────── */
+
+export interface SLABreachCheckResponse {
+  checked_at: string;
+  newly_breached: number;
+  total_breached: number;
+  breached_ticket_ids: string[];
+}
+
+export interface RecurringSchedule {
+  id: string;
+  project_id?: string | null;
+  contract_id?: string | null;
+  name: string;
+  rrule: string;
+  template_ticket_data: Record<string, unknown>;
+  next_run_at?: string | null;
+  last_run_at?: string | null;
+  enabled: boolean;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateRecurringSchedulePayload {
+  name: string;
+  rrule: string;
+  project_id?: string | null;
+  contract_id?: string | null;
+  template_ticket_data?: Record<string, unknown>;
+  next_run_at?: string | null;
+  enabled?: boolean;
+}
+
+export interface UpdateRecurringSchedulePayload {
+  name?: string;
+  rrule?: string;
+  project_id?: string | null;
+  contract_id?: string | null;
+  template_ticket_data?: Record<string, unknown>;
+  next_run_at?: string | null;
+  enabled?: boolean;
+}
+
+export interface MaterializeResponse {
+  schedule_id: string;
+  ticket_id?: string | null;
+  ticket_number?: string | null;
+  next_run_at?: string | null;
+  materialized: boolean;
+  reason?: string | null;
+}
+
+export function checkTicketBreaches(params?: {
+  contract_id?: string;
+}): Promise<SLABreachCheckResponse> {
+  const qs = new URLSearchParams();
+  if (params?.contract_id) qs.set("contract_id", params.contract_id);
+  const q = qs.toString();
+  return apiPost<SLABreachCheckResponse>(
+    `/v1/service/tickets/check-breaches${q ? `?${q}` : ""}`,
+    {},
+  );
+}
+
+export function listRecurringSchedules(params?: {
+  project_id?: string;
+  enabled?: boolean;
+  offset?: number;
+  limit?: number;
+}): Promise<RecurringSchedule[]> {
+  const qs = new URLSearchParams();
+  if (params?.project_id) qs.set("project_id", params.project_id);
+  if (params?.enabled !== undefined) qs.set("enabled", String(params.enabled));
+  if (params?.offset !== undefined) qs.set("offset", String(params.offset));
+  if (params?.limit !== undefined) qs.set("limit", String(params.limit));
+  const q = qs.toString();
+  return apiGet<RecurringSchedule[]>(
+    `/v1/service/recurring-schedules/${q ? `?${q}` : ""}`,
+  );
+}
+
+export function createRecurringSchedule(
+  data: CreateRecurringSchedulePayload,
+): Promise<RecurringSchedule> {
+  return apiPost<RecurringSchedule>("/v1/service/recurring-schedules/", data);
+}
+
+export function updateRecurringSchedule(
+  id: string,
+  data: UpdateRecurringSchedulePayload,
+): Promise<RecurringSchedule> {
+  return apiPatch<RecurringSchedule>(
+    `/v1/service/recurring-schedules/${id}`,
+    data,
+  );
+}
+
+export function deleteRecurringSchedule(id: string): Promise<void> {
+  return apiDelete(`/v1/service/recurring-schedules/${id}`);
+}
+
+export function materializeRecurringSchedule(
+  id: string,
+  options?: { force?: boolean },
+): Promise<MaterializeResponse> {
+  const qs = new URLSearchParams();
+  if (options?.force) qs.set("force", "true");
+  const q = qs.toString();
+  return apiPost<MaterializeResponse>(
+    `/v1/service/recurring-schedules/${id}/materialize${q ? `?${q}` : ""}`,
+    {},
+  );
 }

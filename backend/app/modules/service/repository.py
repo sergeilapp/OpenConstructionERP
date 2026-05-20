@@ -18,6 +18,7 @@ from app.modules.service.models import (
     DebriefReport,
     ServiceAsset,
     ServiceContract,
+    ServiceRecurringSchedule,
     ServiceSchedule,
     ServiceTicket,
     ServiceWorkOrder,
@@ -69,9 +70,7 @@ class ContractRepository(_BaseRepo[ServiceContract]):
     model = ServiceContract
 
     async def next_contract_number(self) -> str:
-        count = (
-            await self.session.execute(select(func.count()).select_from(ServiceContract))
-        ).scalar_one()
+        count = (await self.session.execute(select(func.count()).select_from(ServiceContract))).scalar_one()
         return f"SC-{count + 1:04d}"
 
     async def list_for_customer(
@@ -85,9 +84,7 @@ class ContractRepository(_BaseRepo[ServiceContract]):
         base = select(ServiceContract).where(ServiceContract.customer_id == customer_id)
         if status is not None:
             base = base.where(ServiceContract.status == status)
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceContract.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -100,9 +97,7 @@ class ContractRepository(_BaseRepo[ServiceContract]):
         limit: int = 50,
     ) -> tuple[list[ServiceContract], int]:
         base = select(ServiceContract).where(ServiceContract.project_id == project_id)
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceContract.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -117,9 +112,7 @@ class ContractRepository(_BaseRepo[ServiceContract]):
         base = select(ServiceContract)
         if status is not None:
             base = base.where(ServiceContract.status == status)
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceContract.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -144,9 +137,7 @@ class AssetRepository(_BaseRepo[ServiceAsset]):
         base = select(ServiceAsset).where(ServiceAsset.contract_id == contract_id)
         if status is not None:
             base = base.where(ServiceAsset.status == status)
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceAsset.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -163,9 +154,7 @@ class TicketRepository(_BaseRepo[ServiceTicket]):
     async def next_ticket_number(self, contract_id: uuid.UUID) -> str:
         count = (
             await self.session.execute(
-                select(func.count())
-                .select_from(ServiceTicket)
-                .where(ServiceTicket.contract_id == contract_id)
+                select(func.count()).select_from(ServiceTicket).where(ServiceTicket.contract_id == contract_id)
             )
         ).scalar_one()
         return f"T-{count + 1:05d}"
@@ -184,9 +173,7 @@ class TicketRepository(_BaseRepo[ServiceTicket]):
             base = base.where(ServiceTicket.status == status)
         if priority is not None:
             base = base.where(ServiceTicket.priority == priority)
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceTicket.reported_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -203,9 +190,7 @@ class TicketRepository(_BaseRepo[ServiceTicket]):
             .join(ServiceContract, ServiceContract.id == ServiceTicket.contract_id)
             .where(ServiceContract.project_id == project_id)
         )
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceTicket.reported_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -230,9 +215,7 @@ class TicketRepository(_BaseRepo[ServiceTicket]):
             base = base.where(ServiceTicket.status == status)
         if priority is not None:
             base = base.where(ServiceTicket.priority == priority)
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceTicket.reported_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -269,9 +252,7 @@ class WorkOrderRepository(_BaseRepo[ServiceWorkOrder]):
     model = ServiceWorkOrder
 
     async def next_work_order_number(self) -> str:
-        count = (
-            await self.session.execute(select(func.count()).select_from(ServiceWorkOrder))
-        ).scalar_one()
+        count = (await self.session.execute(select(func.count()).select_from(ServiceWorkOrder))).scalar_one()
         return f"WO-{count + 1:06d}"
 
     async def list_for_ticket(self, ticket_id: uuid.UUID) -> list[ServiceWorkOrder]:
@@ -296,9 +277,7 @@ class WorkOrderRepository(_BaseRepo[ServiceWorkOrder]):
             base = base.where(ServiceWorkOrder.status == status)
         if technician_id is not None:
             base = base.where(ServiceWorkOrder.technician_id == technician_id)
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(ServiceWorkOrder.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -354,9 +333,7 @@ class SLADefinitionRepository(_BaseRepo[SLADefinition]):
         base = select(SLADefinition)
         if active_only:
             base = base.where(SLADefinition.is_active.is_(True))
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(SLADefinition.name).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
@@ -419,9 +396,54 @@ class ChecklistRepository(_BaseRepo[AssetInspectionChecklist]):
             base = base.where(AssetInspectionChecklist.asset_type == asset_type)
         if active_only:
             base = base.where(AssetInspectionChecklist.is_active.is_(True))
-        total = (
-            await self.session.execute(select(func.count()).select_from(base.subquery()))
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(AssetInspectionChecklist.name).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), int(total)
+
+
+# ── Recurring schedule repository ─────────────────────────────────────────
+
+
+class RecurringScheduleRepository(_BaseRepo[ServiceRecurringSchedule]):
+    """‌⁠‍Data access for the RRULE-driven recurring-ticket schedule (T10)."""
+
+    model = ServiceRecurringSchedule
+
+    async def list_for_project(
+        self,
+        project_id: uuid.UUID | None,
+        *,
+        offset: int = 0,
+        limit: int = 100,
+        enabled: bool | None = None,
+    ) -> tuple[list[ServiceRecurringSchedule], int]:
+        base = select(ServiceRecurringSchedule)
+        if project_id is not None:
+            base = base.where(ServiceRecurringSchedule.project_id == project_id)
+        if enabled is not None:
+            base = base.where(ServiceRecurringSchedule.enabled.is_(enabled))
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        stmt = base.order_by(ServiceRecurringSchedule.created_at.desc()).offset(offset).limit(limit)
+        rows = (await self.session.execute(stmt)).scalars().all()
+        return list(rows), int(total)
+
+    async def list_due(
+        self,
+        *,
+        now_iso: str,
+        limit: int = 100,
+    ) -> list[ServiceRecurringSchedule]:
+        """Schedules ready to be materialised (enabled + next_run_at <= now)."""
+        stmt = (
+            select(ServiceRecurringSchedule)
+            .where(
+                ServiceRecurringSchedule.enabled.is_(True),
+                ServiceRecurringSchedule.next_run_at.isnot(None),
+                ServiceRecurringSchedule.next_run_at <= now_iso,
+            )
+            .order_by(ServiceRecurringSchedule.next_run_at)
+            .limit(limit)
+        )
+        rows = (await self.session.execute(stmt)).scalars().all()
+        return list(rows)

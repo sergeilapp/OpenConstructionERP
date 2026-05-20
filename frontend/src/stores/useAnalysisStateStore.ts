@@ -9,16 +9,16 @@
  * `oe_data_explorer_views_${sessionId}` — backend persistence is a future
  * follow-up (see RFC 16 §4.4).
  */
-import { create } from 'zustand';
+import { create } from "zustand";
 
-export type ChartKind = 'bar' | 'line' | 'pie' | 'scatter';
-export type ChartFormat = 'number' | 'currency' | 'percent';
+export type ChartKind = "bar" | "line" | "pie" | "scatter";
+export type ChartFormat = "number" | "currency" | "percent";
 
 /** Pivot visualization modes. `table` is the original behaviour (dense
  *  grid with in-cell data bars). The other four render the same
  *  aggregated groups with a different geometry — see PivotTab for the
  *  per-mode renderer. */
-export type PivotVizMode = 'table' | 'heatmap' | 'bar' | 'treemap' | 'matrix';
+export type PivotVizMode = "table" | "heatmap" | "bar" | "treemap" | "matrix";
 
 export interface SlicerFilter {
   column: string;
@@ -36,7 +36,7 @@ export interface ChartConfig {
   /** null = show all groups */
   topN: number | null;
   /** When topN is set, 'top' or 'bottom' slice direction. */
-  topNDirection: 'top' | 'bottom';
+  topNDirection: "top" | "bottom";
   format: ChartFormat;
 }
 
@@ -45,7 +45,7 @@ export interface PivotConfigSnapshot {
   aggCols: string[];
   aggFn: string;
   topN: number | null;
-  topNDirection: 'top' | 'bottom';
+  topNDirection: "top" | "bottom";
   /** Visualization mode for the aggregated result. Optional so existing
    *  saved views (pre-Q2b) keep working — a missing value is treated as
    *  `table`. */
@@ -100,13 +100,13 @@ interface AnalysisState extends AnalysisStateSnapshot {
 }
 
 const DEFAULT_CHART: ChartConfig = {
-  kind: 'bar',
-  category: '',
-  value: '',
-  aggFn: 'sum',
+  kind: "bar",
+  category: "",
+  value: "",
+  aggFn: "sum",
   topN: null,
-  topNDirection: 'top',
-  format: 'number',
+  topNDirection: "top",
+  format: "number",
 };
 
 function storageKey(sessionId: string): string {
@@ -114,7 +114,7 @@ function storageKey(sessionId: string): string {
 }
 
 function loadViews(sessionId: string | null): SavedView[] {
-  if (!sessionId || typeof window === 'undefined') return [];
+  if (!sessionId || typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(storageKey(sessionId));
     if (!raw) return [];
@@ -126,7 +126,7 @@ function loadViews(sessionId: string | null): SavedView[] {
 }
 
 function persistViews(sessionId: string | null, views: SavedView[]): void {
-  if (!sessionId || typeof window === 'undefined') return;
+  if (!sessionId || typeof window === "undefined") return;
   try {
     window.localStorage.setItem(storageKey(sessionId), JSON.stringify(views));
   } catch {
@@ -197,7 +197,10 @@ export const useAnalysisStateStore = create<AnalysisState>((set, get) => ({
   hydrateFromUrl: ({ slicers, chart, pivot }) => {
     const patch: Partial<AnalysisStateSnapshot> = {};
     if (slicers && slicers.length > 0) {
-      patch.slicers = slicers.map((s) => ({ column: s.column, values: [...s.values] }));
+      patch.slicers = slicers.map((s) => ({
+        column: s.column,
+        values: [...s.values],
+      }));
     }
     if (chart && Object.keys(chart).length > 0) {
       patch.chart = { ...get().chart, ...chart };
@@ -209,12 +212,15 @@ export const useAnalysisStateStore = create<AnalysisState>((set, get) => ({
   },
 
   saveView: (name) => {
-    const trimmed = name.trim() || 'Untitled view';
+    const trimmed = name.trim() || "Untitled view";
     const view: SavedView = {
       id: `v_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
       name: trimmed,
       createdAt: Date.now(),
-      slicers: get().slicers.map((s) => ({ column: s.column, values: [...s.values] })),
+      slicers: get().slicers.map((s) => ({
+        column: s.column,
+        values: [...s.values],
+      })),
       chart: { ...get().chart },
       pivot: get().pivot ? { ...get().pivot! } : null,
     };
@@ -228,7 +234,10 @@ export const useAnalysisStateStore = create<AnalysisState>((set, get) => ({
     const view = get().views.find((v) => v.id === id);
     if (!view) return;
     set({
-      slicers: view.slicers.map((s) => ({ column: s.column, values: [...s.values] })),
+      slicers: view.slicers.map((s) => ({
+        column: s.column,
+        values: [...s.values],
+      })),
       chart: { ...view.chart },
       pivot: view.pivot ? { ...view.pivot } : null,
     });

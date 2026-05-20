@@ -9,8 +9,8 @@
  *   GET    /v1/dashboards/snapshots/{snapshot_id}/manifest   — manifest.json
  */
 
-import { apiGet, apiDelete, apiPatch, apiPost } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { apiGet, apiDelete, apiPatch, apiPost } from "@/shared/lib/api";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -109,49 +109,53 @@ export interface CreateSnapshotInput {
  * a SnapshotError envelope; we re-throw with the structured message so
  * callers can key on `message_key`.
  */
-export async function createSnapshot(input: CreateSnapshotInput): Promise<Snapshot> {
+export async function createSnapshot(
+  input: CreateSnapshotInput,
+): Promise<Snapshot> {
   const formData = new FormData();
-  formData.append('label', input.label);
+  formData.append("label", input.label);
   for (const file of input.files) {
-    formData.append('files', file, file.name);
+    formData.append("files", file, file.name);
   }
   if (input.disciplines) {
     for (const disc of input.disciplines) {
-      formData.append('disciplines', disc ?? '');
+      formData.append("disciplines", disc ?? "");
     }
   }
   if (input.parentSnapshotId) {
-    formData.append('parent_snapshot_id', input.parentSnapshotId);
+    formData.append("parent_snapshot_id", input.parentSnapshotId);
   }
 
   const token = useAuthStore.getState().accessToken;
   const headers: Record<string, string> = {
-    Accept: 'application/json',
-    'X-DDC-Client': 'OE/1.0',
+    Accept: "application/json",
+    "X-DDC-Client": "OE/1.0",
   };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const resp = await fetch(
     `/api/v1/dashboards/projects/${encodeURIComponent(input.projectId)}/snapshots?locale=en`,
-    { method: 'POST', headers, body: formData },
+    { method: "POST", headers, body: formData },
   );
 
   if (!resp.ok) {
     let err: SnapshotError = {
-      message_key: 'snapshot.unknown',
+      message_key: "snapshot.unknown",
       message: `Snapshot upload failed (HTTP ${resp.status})`,
     };
     try {
       const body = await resp.json();
-      if (typeof body?.message_key === 'string') {
+      if (typeof body?.message_key === "string") {
         err = body as SnapshotError;
-      } else if (typeof body?.detail === 'string') {
+      } else if (typeof body?.detail === "string") {
         err.message = body.detail;
       }
     } catch {
       // fall through with default
     }
-    const thrown = new Error(err.message) as Error & { snapshotError: SnapshotError };
+    const thrown = new Error(err.message) as Error & {
+      snapshotError: SnapshotError;
+    };
     thrown.snapshotError = err;
     throw thrown;
   }
@@ -166,11 +170,11 @@ export async function deleteSnapshot(snapshotId: string): Promise<void> {
 /* ── Quick-Insight Panel (T02) ──────────────────────────────────────────── */
 
 export type QuickInsightChartType =
-  | 'histogram'
-  | 'bar'
-  | 'line'
-  | 'scatter'
-  | 'donut';
+  | "histogram"
+  | "bar"
+  | "line"
+  | "scatter"
+  | "donut";
 
 export interface QuickInsightChart {
   chart_type: QuickInsightChartType;
@@ -178,7 +182,7 @@ export interface QuickInsightChart {
   data: Array<Record<string, unknown>>;
   x_field: string;
   y_field: string;
-  agg_fn: 'mean' | 'count' | null;
+  agg_fn: "mean" | "count" | null;
   interestingness: number;
   metadata: Record<string, unknown>;
 }
@@ -199,11 +203,11 @@ export async function getQuickInsights(
   opts?: { limit?: number },
 ): Promise<QuickInsightsResponse> {
   const params = new URLSearchParams();
-  if (opts?.limit) params.set('limit', String(opts.limit));
+  if (opts?.limit) params.set("limit", String(opts.limit));
   const qs = params.toString();
   return apiGet<QuickInsightsResponse>(
     `/v1/dashboards/snapshots/${encodeURIComponent(snapshotId)}/quick-insights${
-      qs ? `?${qs}` : ''
+      qs ? `?${qs}` : ""
     }`,
   );
 }
@@ -233,8 +237,8 @@ export async function getSmartValues(
   opts?: { query?: string; limit?: number },
 ): Promise<SmartValuesResponse> {
   const params = new URLSearchParams({ column });
-  if (opts?.query) params.set('q', opts.query);
-  if (opts?.limit) params.set('limit', String(opts.limit));
+  if (opts?.query) params.set("q", opts.query);
+  if (opts?.limit) params.set("limit", String(opts.limit));
   return apiGet<SmartValuesResponse>(
     `/v1/dashboards/snapshots/${encodeURIComponent(snapshotId)}/values?${params.toString()}`,
   );
@@ -284,7 +288,7 @@ export async function getCascadeValues(
   const payload: CascadeValuesRequest = {
     selected: body.selected ?? {},
     target_column: body.target_column,
-    q: body.q ?? '',
+    q: body.q ?? "",
     limit: body.limit ?? 50,
   };
   return apiPost<CascadeValuesResponse, CascadeValuesRequest>(
@@ -304,7 +308,9 @@ export async function getCascadeRowCount(
   snapshotId: string,
   selected: Record<string, string[]>,
 ): Promise<CascadeRowCountResponse> {
-  const params = new URLSearchParams({ selected: JSON.stringify(selected ?? {}) });
+  const params = new URLSearchParams({
+    selected: JSON.stringify(selected ?? {}),
+  });
   return apiGet<CascadeRowCountResponse>(
     `/v1/dashboards/snapshots/${encodeURIComponent(snapshotId)}/row-count?${params.toString()}`,
   );
@@ -312,7 +318,7 @@ export async function getCascadeRowCount(
 
 /* ── Dashboard Presets & Collections (T05) ───────────────────────────────── */
 
-export type DashboardPresetKind = 'preset' | 'collection';
+export type DashboardPresetKind = "preset" | "collection";
 
 export interface DashboardPreset {
   id: string;
@@ -325,7 +331,7 @@ export interface DashboardPreset {
   config_json: Record<string, unknown>;
   shared_with_project: boolean;
   /** T09: 'synced' | 'stale' | 'needs_review'. Defaults to 'synced'. */
-  sync_status?: 'synced' | 'stale' | 'needs_review';
+  sync_status?: "synced" | "stale" | "needs_review";
   /** T09: ISO timestamp of the last sync-check call, null if never run. */
   last_sync_check_at?: string | null;
   created_at: string;
@@ -361,13 +367,13 @@ export async function listDashboardPresets(opts?: {
   offset?: number;
 }): Promise<DashboardPresetListResponse> {
   const params = new URLSearchParams();
-  if (opts?.projectId) params.set('project_id', opts.projectId);
-  if (opts?.kind) params.set('kind', opts.kind);
-  if (opts?.limit) params.set('limit', String(opts.limit));
-  if (opts?.offset) params.set('offset', String(opts.offset));
+  if (opts?.projectId) params.set("project_id", opts.projectId);
+  if (opts?.kind) params.set("kind", opts.kind);
+  if (opts?.limit) params.set("limit", String(opts.limit));
+  if (opts?.offset) params.set("offset", String(opts.offset));
   const qs = params.toString();
   return apiGet<DashboardPresetListResponse>(
-    `/v1/dashboards/presets${qs ? `?${qs}` : ''}`,
+    `/v1/dashboards/presets${qs ? `?${qs}` : ""}`,
   );
 }
 
@@ -412,14 +418,14 @@ export async function shareDashboardPreset(
 
 /* ── Sync Protocol (T09 / task #192) ─────────────────────────────────────── */
 
-export type SyncStatus = 'synced' | 'stale' | 'needs_review';
+export type SyncStatus = "synced" | "stale" | "needs_review";
 export type SyncIssueKind =
-  | 'column_rename'
-  | 'dropped_column'
-  | 'dropped_filter_value'
-  | 'dtype_change';
-export type SyncSeverity = 'warning' | 'error';
-export type SyncSuggestedFix = 'auto_rename' | 'drop_filter' | 'manual';
+  | "column_rename"
+  | "dropped_column"
+  | "dropped_filter_value"
+  | "dtype_change";
+export type SyncSeverity = "warning" | "error";
+export type SyncSuggestedFix = "auto_rename" | "drop_filter" | "manual";
 
 export interface SyncIssue {
   kind: SyncIssueKind;
@@ -485,7 +491,7 @@ export interface SnapshotRowsResponse {
   offset: number;
 }
 
-export type ExportFormat = 'csv' | 'xlsx' | 'parquet';
+export type ExportFormat = "csv" | "xlsx" | "parquet";
 
 export interface SnapshotRowsQuery {
   columns?: string[];
@@ -498,14 +504,14 @@ export interface SnapshotRowsQuery {
 function _rowsQueryParams(opts?: SnapshotRowsQuery): URLSearchParams {
   const params = new URLSearchParams();
   if (opts?.columns && opts.columns.length > 0) {
-    params.set('columns', opts.columns.join(','));
+    params.set("columns", opts.columns.join(","));
   }
   if (opts?.filters && Object.keys(opts.filters).length > 0) {
-    params.set('filters', JSON.stringify(opts.filters));
+    params.set("filters", JSON.stringify(opts.filters));
   }
-  if (opts?.orderBy) params.set('order_by', opts.orderBy);
-  if (opts?.limit !== undefined) params.set('limit', String(opts.limit));
-  if (opts?.offset !== undefined) params.set('offset', String(opts.offset));
+  if (opts?.orderBy) params.set("order_by", opts.orderBy);
+  if (opts?.limit !== undefined) params.set("limit", String(opts.limit));
+  if (opts?.offset !== undefined) params.set("offset", String(opts.offset));
   return params;
 }
 
@@ -517,7 +523,7 @@ export async function getSnapshotRows(
   const qs = params.toString();
   return apiGet<SnapshotRowsResponse>(
     `/v1/dashboards/snapshots/${encodeURIComponent(snapshotId)}/rows${
-      qs ? `?${qs}` : ''
+      qs ? `?${qs}` : ""
     }`,
   );
 }
@@ -532,7 +538,7 @@ export function buildSnapshotExportUrl(
   opts?: SnapshotRowsQuery,
 ): string {
   const params = _rowsQueryParams(opts);
-  params.set('format', format);
+  params.set("format", format);
   return `/api/v1/dashboards/snapshots/${encodeURIComponent(
     snapshotId,
   )}/export?${params.toString()}`;
@@ -541,21 +547,21 @@ export function buildSnapshotExportUrl(
 /* ── Dataset Integrity Overview (T07) ────────────────────────────────────── */
 
 export type IntegrityIssueCode =
-  | 'all_null'
-  | 'high_null_pct'
-  | 'constant'
-  | 'dtype_mismatch'
-  | 'outliers_present'
-  | 'high_zero_pct'
-  | 'low_cardinality_string'
-  | 'uuid_like';
+  | "all_null"
+  | "high_null_pct"
+  | "constant"
+  | "dtype_mismatch"
+  | "outliers_present"
+  | "high_zero_pct"
+  | "low_cardinality_string"
+  | "uuid_like";
 
 export type IntegrityInferredType =
-  | 'numeric'
-  | 'datetime'
-  | 'boolean'
-  | 'string'
-  | 'empty';
+  | "numeric"
+  | "datetime"
+  | "boolean"
+  | "string"
+  | "empty";
 
 export interface IntegritySampleValue {
   value: string;
@@ -657,8 +663,8 @@ export async function getSnapshotTimeline(
   input: GetSnapshotTimelineInput,
 ): Promise<SnapshotTimelineResponse> {
   const params = new URLSearchParams({ project_id: input.projectId });
-  if (input.limit !== undefined) params.set('limit', String(input.limit));
-  if (input.before) params.set('before', input.before);
+  if (input.limit !== undefined) params.set("limit", String(input.limit));
+  if (input.before) params.set("before", input.before);
   return apiGet<SnapshotTimelineResponse>(
     `/v1/dashboards/snapshots/timeline?${params.toString()}`,
   );
@@ -711,9 +717,9 @@ export async function diffSnapshots(
 
 /* ── Multi-Source Project Federation (T10 / task #193) ───────────────────── */
 
-export type FederationSchemaAlign = 'intersect' | 'union' | 'strict';
+export type FederationSchemaAlign = "intersect" | "union" | "strict";
 
-export type FederationAggKind = 'count' | 'sum' | 'avg' | 'min' | 'max';
+export type FederationAggKind = "count" | "sum" | "avg" | "min" | "max";
 
 export interface FederationSnapshotRef {
   snapshot_id: string;
@@ -778,13 +784,13 @@ export interface FederatedAggregateInput {
 export async function buildFederation(
   input: BuildFederationInput,
 ): Promise<FederationView> {
-  return apiPost<FederationView, { snapshot_ids: string[]; schema_align: FederationSchemaAlign }>(
-    `/v1/dashboards/federation/build`,
-    {
-      snapshot_ids: input.snapshotIds,
-      schema_align: input.schemaAlign ?? 'intersect',
-    },
-  );
+  return apiPost<
+    FederationView,
+    { snapshot_ids: string[]; schema_align: FederationSchemaAlign }
+  >(`/v1/dashboards/federation/build`, {
+    snapshot_ids: input.snapshotIds,
+    schema_align: input.schemaAlign ?? "intersect",
+  });
 }
 
 /**
@@ -808,10 +814,10 @@ export async function federatedAggregate(
     }
   >(`/v1/dashboards/federation/aggregate`, {
     snapshot_ids: input.snapshotIds,
-    schema_align: input.schemaAlign ?? 'intersect',
+    schema_align: input.schemaAlign ?? "intersect",
     group_by: input.groupBy,
     measure: input.measure,
-    agg: input.agg ?? 'count',
+    agg: input.agg ?? "count",
     limit: input.limit ?? 1000,
   });
 }

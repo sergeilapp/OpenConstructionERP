@@ -14,10 +14,10 @@
  * Clears state when the active project changes so you never see stale
  * rows from a previous project.
  */
-import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowUpRight,
   ClipboardList,
@@ -26,33 +26,56 @@ import {
   Edit3,
   Package,
   Search,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Badge, Breadcrumb, Button, Card, EmptyState, Input } from '@/shared/ui';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useToastStore } from '@/stores/useToastStore';
-
-import { AssetDetailDrawer } from './AssetDetailDrawer';
-import { AssetEditModal } from './AssetEditModal';
 import {
-  downloadCobieXlsx,
-  listTrackedAssets,
-  type AssetSummary,
-} from './api';
+  Badge,
+  Breadcrumb,
+  Button,
+  Card,
+  EmptyState,
+  Input,
+} from "@/shared/ui";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useToastStore } from "@/stores/useToastStore";
+
+import { AssetDetailDrawer } from "./AssetDetailDrawer";
+import { AssetEditModal } from "./AssetEditModal";
+import { downloadCobieXlsx, listTrackedAssets, type AssetSummary } from "./api";
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
-const OPERATIONAL_STATUSES: Array<{ value: string; labelKey: string; tone: string }> = [
-  { value: 'operational', labelKey: 'assets.status.operational', tone: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' },
-  { value: 'under_maintenance', labelKey: 'assets.status.under_maintenance', tone: 'bg-amber-500/15 text-amber-300 border-amber-500/30' },
-  { value: 'decommissioned', labelKey: 'assets.status.decommissioned', tone: 'bg-rose-500/15 text-rose-300 border-rose-500/30' },
-  { value: 'planned', labelKey: 'assets.status.planned', tone: 'bg-sky-500/15 text-sky-300 border-sky-500/30' },
+const OPERATIONAL_STATUSES: Array<{
+  value: string;
+  labelKey: string;
+  tone: string;
+}> = [
+  {
+    value: "operational",
+    labelKey: "assets.status.operational",
+    tone: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  },
+  {
+    value: "under_maintenance",
+    labelKey: "assets.status.under_maintenance",
+    tone: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  },
+  {
+    value: "decommissioned",
+    labelKey: "assets.status.decommissioned",
+    tone: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  },
+  {
+    value: "planned",
+    labelKey: "assets.status.planned",
+    tone: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  },
 ];
 
 function statusTone(status?: string | null): string {
   return (
     OPERATIONAL_STATUSES.find((s) => s.value === status)?.tone ??
-    'bg-neutral-700/40 text-neutral-300 border-neutral-600/50'
+    "bg-neutral-700/40 text-neutral-300 border-neutral-600/50"
   );
 }
 
@@ -66,14 +89,14 @@ export function AssetsPage() {
   const navigate = useNavigate();
   const toast = useToastStore((s) => s.addToast);
 
-  const search = searchParams.get('search') ?? '';
-  const status = searchParams.get('status') ?? '';
+  const search = searchParams.get("search") ?? "";
+  const status = searchParams.get("status") ?? "";
 
   const [editing, setEditing] = useState<AssetSummary | null>(null);
   const [detailing, setDetailing] = useState<AssetSummary | null>(null);
 
   const patchSearch = useCallback(
-    (next: Partial<Record<'search' | 'status', string>>) => {
+    (next: Partial<Record<"search" | "status", string>>) => {
       const updated = new URLSearchParams(searchParams);
       for (const [key, value] of Object.entries(next)) {
         if (!value) updated.delete(key);
@@ -85,7 +108,7 @@ export function AssetsPage() {
   );
 
   const assetsQuery = useQuery({
-    queryKey: ['bim-assets', activeProjectId, search, status],
+    queryKey: ["bim-assets", activeProjectId, search, status],
     queryFn: () =>
       listTrackedAssets(activeProjectId!, {
         search: search || undefined,
@@ -106,16 +129,23 @@ export function AssetsPage() {
   if (!activeProjectId) {
     return (
       <div className="p-6">
-        <Breadcrumb items={[{ label: t('nav.assets', { defaultValue: 'Assets‌⁠‍' }) }]} />
+        <Breadcrumb
+          items={[{ label: t("nav.assets", { defaultValue: "Assets‌⁠‍" }) }]}
+        />
         <EmptyState
           icon={<Package size={48} />}
-          title={t('assets.no_project.title', { defaultValue: 'No active project‌⁠‍' })}
-          description={t('assets.no_project.desc', {
-            defaultValue: 'Pick a project first from the Projects page to see its tracked assets.‌⁠‍',
+          title={t("assets.no_project.title", {
+            defaultValue: "No active project‌⁠‍",
+          })}
+          description={t("assets.no_project.desc", {
+            defaultValue:
+              "Pick a project first from the Projects page to see its tracked assets.‌⁠‍",
           })}
           action={
-            <Button onClick={() => navigate('/projects')}>
-              {t('assets.cta.go_projects', { defaultValue: 'Go to Projects‌⁠‍' })}
+            <Button onClick={() => navigate("/projects")}>
+              {t("assets.cta.go_projects", {
+                defaultValue: "Go to Projects‌⁠‍",
+              })}
             </Button>
           }
         />
@@ -127,9 +157,16 @@ export function AssetsPage() {
     <div className="flex h-full flex-col p-6">
       <Breadcrumb
         items={[
-          { label: t('nav.projects', { defaultValue: 'Projects‌⁠‍' }), to: '/projects' },
-          { label: activeProjectName || t('nav.project', { defaultValue: 'Project' }) },
-          { label: t('nav.assets', { defaultValue: 'Assets' }) },
+          {
+            label: t("nav.projects", { defaultValue: "Projects‌⁠‍" }),
+            to: "/projects",
+          },
+          {
+            label:
+              activeProjectName ||
+              t("nav.project", { defaultValue: "Project" }),
+          },
+          { label: t("nav.assets", { defaultValue: "Assets" }) },
         ]}
       />
 
@@ -138,22 +175,23 @@ export function AssetsPage() {
         <div className="flex items-center gap-2">
           <ClipboardList size={22} className="text-oe-blue" />
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('assets.title', { defaultValue: 'Asset Register' })}
+            {t("assets.title", { defaultValue: "Asset Register" })}
           </h1>
           <Badge variant="neutral">{total}</Badge>
         </div>
         <div className="text-sm text-content-secondary">
-          {t('assets.subtitle', {
-            defaultValue: 'Equipment, fixtures and systems extracted from your BIM models.',
+          {t("assets.subtitle", {
+            defaultValue:
+              "Equipment, fixtures and systems extracted from your BIM models.",
           })}
         </div>
       </div>
 
       {/* ── Purpose intro ─────────────────────────────────────────────── */}
       <p className="mb-4 max-w-3xl text-xs leading-relaxed text-content-tertiary">
-        {t('assets.page_intro', {
+        {t("assets.page_intro", {
           defaultValue:
-            'The Asset Register is your facility-management handover list. Any BIM element tagged with a manufacturer, model or serial in the CAD-BIM Viewer appears here. Track operational status and warranties, then export the whole register as a COBie spreadsheet for the operator.',
+            "The Asset Register is your facility-management handover list. Any BIM element tagged with a manufacturer, model or serial in the CAD-BIM Viewer appears here. Track operational status and warranties, then export the whole register as a COBie spreadsheet for the operator.",
         })}
       </p>
 
@@ -168,8 +206,8 @@ export function AssetsPage() {
             <Input
               value={search}
               onChange={(e) => patchSearch({ search: e.target.value })}
-              placeholder={t('assets.search_placeholder', {
-                defaultValue: 'Search manufacturer, model, serial…',
+              placeholder={t("assets.search_placeholder", {
+                defaultValue: "Search manufacturer, model, serial…",
               })}
               className="pl-9"
               data-testid="asset-search"
@@ -178,15 +216,15 @@ export function AssetsPage() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => patchSearch({ status: '' })}
+              onClick={() => patchSearch({ status: "" })}
               className={`rounded-md border px-3 py-1 text-xs ${
-                status === ''
-                  ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                  : 'border-border-medium text-content-secondary hover:bg-surface-secondary'
+                status === ""
+                  ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                  : "border-border-medium text-content-secondary hover:bg-surface-secondary"
               }`}
               data-testid="asset-status-all"
             >
-              {t('assets.status.all', { defaultValue: 'All statuses' })}
+              {t("assets.status.all", { defaultValue: "All statuses" })}
             </button>
             {OPERATIONAL_STATUSES.map((s) => (
               <button
@@ -195,12 +233,12 @@ export function AssetsPage() {
                 onClick={() => patchSearch({ status: s.value })}
                 className={`rounded-md border px-3 py-1 text-xs ${
                   status === s.value
-                    ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                    : 'border-border-medium text-content-secondary hover:bg-surface-secondary'
+                    ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                    : "border-border-medium text-content-secondary hover:bg-surface-secondary"
                 }`}
                 data-testid={`asset-status-${s.value}`}
               >
-                {t(s.labelKey, { defaultValue: s.value.replace('_', ' ') })}
+                {t(s.labelKey, { defaultValue: s.value.replace("_", " ") })}
               </button>
             ))}
           </div>
@@ -211,19 +249,23 @@ export function AssetsPage() {
       <Card className="flex-1 overflow-auto">
         {assetsQuery.isLoading ? (
           <div className="p-6 text-sm text-content-secondary">
-            {t('common.loading', { defaultValue: 'Loading…' })}
+            {t("common.loading", { defaultValue: "Loading…" })}
           </div>
         ) : items.length === 0 ? (
           <EmptyState
             icon={<Package size={40} />}
-            title={t('assets.empty.title', { defaultValue: 'No tracked assets yet' })}
-            description={t('assets.empty.desc', {
+            title={t("assets.empty.title", {
+              defaultValue: "No tracked assets yet",
+            })}
+            description={t("assets.empty.desc", {
               defaultValue:
-                'Open a BIM model, pick an element, and set a manufacturer or serial to register it as an asset.',
+                "Open a BIM model, pick an element, and set a manufacturer or serial to register it as an asset.",
             })}
             action={
-              <Button variant="secondary" onClick={() => navigate('/bim')}>
-                {t('assets.cta.open_bim', { defaultValue: 'Open CAD-BIM Viewer' })}
+              <Button variant="secondary" onClick={() => navigate("/bim")}>
+                {t("assets.cta.open_bim", {
+                  defaultValue: "Open CAD-BIM Viewer",
+                })}
               </Button>
             }
           />
@@ -232,14 +274,32 @@ export function AssetsPage() {
             <thead className="sticky top-0 z-10 bg-surface-primary text-xs uppercase tracking-wider text-content-tertiary shadow-sm">
               <tr>
                 <th className="w-10 px-2 py-2"></th>
-                <th className="px-3 py-2 text-left">{t('assets.col.element', { defaultValue: 'Element' })}</th>
-                <th className="px-3 py-2 text-left">{t('assets.col.manufacturer', { defaultValue: 'Manufacturer' })}</th>
-                <th className="px-3 py-2 text-left">{t('assets.col.model', { defaultValue: 'Model' })}</th>
-                <th className="px-3 py-2 text-left">{t('assets.col.serial', { defaultValue: 'Serial' })}</th>
-                <th className="px-3 py-2 text-left">{t('assets.col.status', { defaultValue: 'Status' })}</th>
-                <th className="px-3 py-2 text-left">{t('assets.col.warranty', { defaultValue: 'Warranty until' })}</th>
-                <th className="px-3 py-2 text-left">{t('assets.col.model_file', { defaultValue: 'BIM model' })}</th>
-                <th className="px-3 py-2 text-right">{t('assets.col.actions', { defaultValue: 'Actions' })}</th>
+                <th className="px-3 py-2 text-left">
+                  {t("assets.col.element", { defaultValue: "Element" })}
+                </th>
+                <th className="px-3 py-2 text-left">
+                  {t("assets.col.manufacturer", {
+                    defaultValue: "Manufacturer",
+                  })}
+                </th>
+                <th className="px-3 py-2 text-left">
+                  {t("assets.col.model", { defaultValue: "Model" })}
+                </th>
+                <th className="px-3 py-2 text-left">
+                  {t("assets.col.serial", { defaultValue: "Serial" })}
+                </th>
+                <th className="px-3 py-2 text-left">
+                  {t("assets.col.status", { defaultValue: "Status" })}
+                </th>
+                <th className="px-3 py-2 text-left">
+                  {t("assets.col.warranty", { defaultValue: "Warranty until" })}
+                </th>
+                <th className="px-3 py-2 text-left">
+                  {t("assets.col.model_file", { defaultValue: "BIM model" })}
+                </th>
+                <th className="px-3 py-2 text-right">
+                  {t("assets.col.actions", { defaultValue: "Actions" })}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -258,11 +318,11 @@ export function AssetsPage() {
                         setDetailing(asset);
                       }}
                       className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border-medium text-oe-blue hover:border-oe-blue hover:bg-oe-blue/10"
-                      title={t('assets.view_geometry', {
-                        defaultValue: 'View geometry & properties',
+                      title={t("assets.view_geometry", {
+                        defaultValue: "View geometry & properties",
                       })}
-                      aria-label={t('assets.view_geometry', {
-                        defaultValue: 'View geometry & properties',
+                      aria-label={t("assets.view_geometry", {
+                        defaultValue: "View geometry & properties",
                       })}
                       data-testid={`asset-view-${asset.id}`}
                     >
@@ -273,16 +333,24 @@ export function AssetsPage() {
                     <div className="font-medium text-content-primary">
                       {asset.name || asset.element_type}
                     </div>
-                    <div className="text-xs text-content-tertiary">{asset.stable_id}</div>
+                    <div className="text-xs text-content-tertiary">
+                      {asset.stable_id}
+                    </div>
                   </td>
                   <td className="px-3 py-2 text-content-primary">
-                    {asset.asset_info.manufacturer ?? <span className="text-content-quaternary">—</span>}
+                    {asset.asset_info.manufacturer ?? (
+                      <span className="text-content-quaternary">—</span>
+                    )}
                   </td>
                   <td className="px-3 py-2 text-content-primary">
-                    {asset.asset_info.model ?? <span className="text-content-quaternary">—</span>}
+                    {asset.asset_info.model ?? (
+                      <span className="text-content-quaternary">—</span>
+                    )}
                   </td>
                   <td className="px-3 py-2 font-mono text-xs text-content-secondary">
-                    {asset.asset_info.serial_number ?? <span className="text-content-quaternary">—</span>}
+                    {asset.asset_info.serial_number ?? (
+                      <span className="text-content-quaternary">—</span>
+                    )}
                   </td>
                   <td className="px-3 py-2">
                     {asset.asset_info.operational_status ? (
@@ -291,14 +359,16 @@ export function AssetsPage() {
                           asset.asset_info.operational_status,
                         )}`}
                       >
-                        {asset.asset_info.operational_status.replace('_', ' ')}
+                        {asset.asset_info.operational_status.replace("_", " ")}
                       </span>
                     ) : (
                       <span className="text-content-quaternary">—</span>
                     )}
                   </td>
                   <td className="px-3 py-2 text-content-secondary">
-                    {asset.asset_info.warranty_until ?? <span className="text-content-quaternary">—</span>}
+                    {asset.asset_info.warranty_until ?? (
+                      <span className="text-content-quaternary">—</span>
+                    )}
                   </td>
                   <td className="px-3 py-2">
                     <div className="flex flex-col items-start gap-0.5">
@@ -306,15 +376,20 @@ export function AssetsPage() {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/bim/${asset.model_id}?element=${asset.id}`);
+                          navigate(
+                            `/bim/${asset.model_id}?element=${asset.id}`,
+                          );
                         }}
                         className="inline-flex max-w-[180px] items-center gap-1 truncate text-oe-blue hover:underline"
-                        title={t('assets.open_in_bim', {
-                          defaultValue: 'Open in 3D Viewer',
+                        title={t("assets.open_in_bim", {
+                          defaultValue: "Open in 3D Viewer",
                         })}
                       >
                         <span className="truncate">{asset.model_name}</span>
-                        <ArrowUpRight size={12} className="shrink-0 opacity-60" />
+                        <ArrowUpRight
+                          size={12}
+                          className="shrink-0 opacity-60"
+                        />
                       </button>
                       <button
                         type="button"
@@ -322,27 +397,31 @@ export function AssetsPage() {
                           e.stopPropagation();
                           downloadCobieXlsx(
                             asset.model_id,
-                            `${asset.model_name || 'model'}-cobie.xlsx`,
+                            `${asset.model_name || "model"}-cobie.xlsx`,
                           ).catch((err) => {
                             toast({
-                              type: 'error',
-                              title: t('assets.cobie_failed', {
-                                defaultValue: 'COBie export failed',
+                              type: "error",
+                              title: t("assets.cobie_failed", {
+                                defaultValue: "COBie export failed",
                               }),
-                              message: err instanceof Error ? err.message : undefined,
+                              message:
+                                err instanceof Error ? err.message : undefined,
                             });
                           });
                         }}
                         className="inline-flex items-center gap-1 text-2xs text-content-tertiary hover:text-oe-blue"
-                        title={t('assets.cobie_export', {
-                          defaultValue: 'Download COBie (XLSX) for this model',
+                        title={t("assets.cobie_export", {
+                          defaultValue: "Download COBie (XLSX) for this model",
                         })}
                       >
                         <Download size={11} /> COBie
                       </button>
                     </div>
                   </td>
-                  <td className="px-3 py-2 text-right" onClick={(e) => e.stopPropagation()}>
+                  <td
+                    className="px-3 py-2 text-right"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Button
                       variant="secondary"
                       size="sm"
@@ -350,7 +429,7 @@ export function AssetsPage() {
                       data-testid={`asset-edit-${asset.id}`}
                     >
                       <Edit3 size={14} />
-                      {t('common.edit', { defaultValue: 'Edit' })}
+                      {t("common.edit", { defaultValue: "Edit" })}
                     </Button>
                   </td>
                 </tr>
@@ -366,8 +445,8 @@ export function AssetsPage() {
           onClose={() => setEditing(null)}
           onSaved={() => {
             toast({
-              type: 'success',
-              title: t('assets.saved', { defaultValue: 'Asset info saved' }),
+              type: "success",
+              title: t("assets.saved", { defaultValue: "Asset info saved" }),
             });
             setEditing(null);
           }}

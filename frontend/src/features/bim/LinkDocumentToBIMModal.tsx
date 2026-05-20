@@ -8,14 +8,14 @@
  * → done.
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import { X, Search, FileText, Link2, Loader2 } from 'lucide-react';
-import { apiGet } from '@/shared/lib/api';
-import { createDocumentBIMLink } from './api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
-import { useToastStore } from '@/stores/useToastStore';
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { X, Search, FileText, Link2, Loader2 } from "lucide-react";
+import { apiGet } from "@/shared/lib/api";
+import { createDocumentBIMLink } from "./api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer";
+import { useToastStore } from "@/stores/useToastStore";
 
 interface DocumentItem {
   id: string;
@@ -45,16 +45,16 @@ export default function LinkDocumentToBIMModal({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   // Reset transient UI state whenever the modal is opened with a new
   // element selection.  Mirrors the pattern in AddToBOQModal.
   useEffect(() => {
-    setSearch('');
+    setSearch("");
   }, [elements]);
 
   const docsQuery = useQuery({
-    queryKey: ['documents-for-bim-link', projectId],
+    queryKey: ["documents-for-bim-link", projectId],
     queryFn: () =>
       apiGet<DocumentItem[]>(
         `/v1/documents/?project_id=${encodeURIComponent(projectId)}`,
@@ -68,13 +68,13 @@ export default function LinkDocumentToBIMModal({
     if (!q) return docs;
     return docs.filter((d) => {
       const hay =
-        (d.name || '') +
-        ' ' +
-        (d.category || '') +
-        ' ' +
-        (d.drawing_number || '') +
-        ' ' +
-        (d.discipline || '');
+        (d.name || "") +
+        " " +
+        (d.category || "") +
+        " " +
+        (d.drawing_number || "") +
+        " " +
+        (d.discipline || "");
       return hay.toLowerCase().includes(q);
     });
   }, [docs, search]);
@@ -88,13 +88,13 @@ export default function LinkDocumentToBIMModal({
           await createDocumentBIMLink({
             document_id: documentId,
             bim_element_id: el.id,
-            link_type: 'manual',
+            link_type: "manual",
           });
           created++;
         } catch (e: unknown) {
           // 409 / "already linked" is fine in bulk mode — keep going
           const err = e as { message?: string };
-          if (!err?.message?.toLowerCase().includes('already')) {
+          if (!err?.message?.toLowerCase().includes("already")) {
             // Re-throw other errors so the toast surfaces them
             throw e;
           }
@@ -104,21 +104,23 @@ export default function LinkDocumentToBIMModal({
     },
     onSuccess: (count) => {
       addToast({
-        type: 'success',
-        title: t('bim.doc_linked_title', { defaultValue: 'Document linked‌⁠‍' }),
-        message: t('bim.doc_linked_msg', {
-          defaultValue: 'Linked to {{count}} BIM element(s)‌⁠‍',
+        type: "success",
+        title: t("bim.doc_linked_title", {
+          defaultValue: "Document linked‌⁠‍",
+        }),
+        message: t("bim.doc_linked_msg", {
+          defaultValue: "Linked to {{count}} BIM element(s)‌⁠‍",
           count,
         }),
       });
-      qc.invalidateQueries({ queryKey: ['bim-elements'] });
+      qc.invalidateQueries({ queryKey: ["bim-elements"] });
       onLinked?.();
       onClose();
     },
     onError: (err: Error) => {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: err.message || String(err),
       });
     },
@@ -140,13 +142,13 @@ export default function LinkDocumentToBIMModal({
           <div className="flex items-center gap-2">
             <FileText size={16} className="text-violet-600" />
             <h2 className="text-sm font-semibold text-content-primary">
-              {t('bim.link_doc_title', { defaultValue: 'Link a document‌⁠‍' })}
+              {t("bim.link_doc_title", { defaultValue: "Link a document‌⁠‍" })}
             </h2>
             <span className="text-[11px] text-content-tertiary">
               {elements.length === 1
-                ? '→ ' + (elements[0]!.name || elements[0]!.element_type)
-                : t('bim.link_doc_bulk', {
-                    defaultValue: '→ {{count}} elements‌⁠‍',
+                ? "→ " + (elements[0]!.name || elements[0]!.element_type)
+                : t("bim.link_doc_bulk", {
+                    defaultValue: "→ {{count}} elements‌⁠‍",
                     count: elements.length,
                   })}
             </span>
@@ -154,7 +156,7 @@ export default function LinkDocumentToBIMModal({
           <button
             onClick={onClose}
             className="p-1 rounded text-content-tertiary hover:text-content-primary hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -171,8 +173,9 @@ export default function LinkDocumentToBIMModal({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('bim.search_documents', {
-                defaultValue: 'Search by name, category, drawing number, discipline…‌⁠‍',
+              placeholder={t("bim.search_documents", {
+                defaultValue:
+                  "Search by name, category, drawing number, discipline…‌⁠‍",
               })}
               autoFocus
               className="w-full ps-8 pe-3 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
@@ -185,15 +188,18 @@ export default function LinkDocumentToBIMModal({
           {docsQuery.isLoading ? (
             <div className="flex items-center justify-center py-8 text-content-tertiary">
               <Loader2 size={16} className="animate-spin mr-2" />
-              {t('common.loading', { defaultValue: 'Loading…' })}
+              {t("common.loading", { defaultValue: "Loading…" })}
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-8 text-[11px] text-content-tertiary italic">
               {docs.length === 0
-                ? t('bim.no_docs', {
-                    defaultValue: 'No documents in this project yet — upload one first',
+                ? t("bim.no_docs", {
+                    defaultValue:
+                      "No documents in this project yet — upload one first",
                   })
-                : t('bim.no_doc_match', { defaultValue: 'No documents match your search' })}
+                : t("bim.no_doc_match", {
+                    defaultValue: "No documents match your search",
+                  })}
             </div>
           ) : (
             <ul className="space-y-1">
@@ -218,7 +224,9 @@ export default function LinkDocumentToBIMModal({
                       </div>
                       <div className="flex items-center gap-2 text-[10px] text-content-tertiary">
                         {d.category && (
-                          <span className="uppercase tracking-wider">{d.category}</span>
+                          <span className="uppercase tracking-wider">
+                            {d.category}
+                          </span>
                         )}
                         {d.discipline && <span>{d.discipline}</span>}
                       </div>
@@ -238,7 +246,7 @@ export default function LinkDocumentToBIMModal({
             onClick={onClose}
             className="text-xs text-content-tertiary hover:text-content-primary px-2"
           >
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </button>
         </div>
       </div>

@@ -9,8 +9,8 @@
  * pills (right-bottom corner) so all three can coexist.
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Database,
   Check,
@@ -18,11 +18,11 @@ import {
   Loader2,
   ChevronUp,
   ChevronDown,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   useCatalogueInstallStore,
   type CatalogueInstallJob,
-} from '@/stores/useCatalogueInstallStore';
+} from "@/stores/useCatalogueInstallStore";
 
 function elapsed(startedAt: number): string {
   const sec = Math.round((Date.now() - startedAt) / 1000);
@@ -38,14 +38,14 @@ function elapsed(startedAt: number): string {
 // Without this, the bar pinned at 95% with a static "Downloading…"
 // looked frozen; users were closing the tab thinking the install died.
 const STAGE_LABELS: Record<string, string> = {
-  'catalogue_install.stage_downloading': 'Downloading from HuggingFace…',
-  'catalogue_install.stage_restoring': 'Restoring snapshot to Qdrant…',
-  'catalogue_install.stage_indexing': 'Indexing vectors (~110k positions)…',
-  'catalogue_install.stage_finalizing':
-    'Finalizing — large catalogues can take 10–15 min, this is normal',
-  'catalogue_install.stage_done': 'Done',
-  'catalogue_install.stage_failed': 'Failed',
-  'catalogue_install.stage_stalled': 'Stalled',
+  "catalogue_install.stage_downloading": "Downloading from HuggingFace…",
+  "catalogue_install.stage_restoring": "Restoring snapshot to Qdrant…",
+  "catalogue_install.stage_indexing": "Indexing vectors (~110k positions)…",
+  "catalogue_install.stage_finalizing":
+    "Finalizing — large catalogues can take 10–15 min, this is normal",
+  "catalogue_install.stage_done": "Done",
+  "catalogue_install.stage_failed": "Failed",
+  "catalogue_install.stage_stalled": "Stalled",
 };
 
 export function GlobalCatalogueInstallIndicator() {
@@ -58,11 +58,11 @@ export function GlobalCatalogueInstallIndicator() {
 
   const allJobs = useMemo(() => Array.from(jobs.values()), [jobs]);
   const active = useMemo(
-    () => allJobs.filter((j) => j.status === 'downloading'),
+    () => allJobs.filter((j) => j.status === "downloading"),
     [allJobs],
   );
   const finished = useMemo(
-    () => allJobs.filter((j) => j.status !== 'downloading'),
+    () => allJobs.filter((j) => j.status !== "downloading"),
     [allJobs],
   );
 
@@ -81,7 +81,7 @@ export function GlobalCatalogueInstallIndicator() {
     const timers: ReturnType<typeof setTimeout>[] = [];
     for (const job of finished) {
       if (!job.completedAt) continue;
-      const lifetime = job.status === 'ready' ? 6 * 1000 : 30 * 1000;
+      const lifetime = job.status === "ready" ? 6 * 1000 : 30 * 1000;
       const remaining = lifetime - (Date.now() - job.completedAt);
       if (remaining <= 0) {
         dismissJob(job.region);
@@ -99,18 +99,21 @@ export function GlobalCatalogueInstallIndicator() {
 
   // Stacked higher than BIM (bottom-20) / DWG (bottom-32-ish) docks so
   // all three are simultaneously visible if they all fire.
-  const pillPosition = 'fixed bottom-44 right-4 z-[60]';
+  const pillPosition = "fixed bottom-44 right-4 z-[60]";
 
   if (!expanded) {
-    const isActive = primary.status === 'downloading';
+    const isActive = primary.status === "downloading";
     return (
       <button
         onClick={() => setExpanded(true)}
         className={`${pillPosition} flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface-elevated border border-border-light shadow-lg hover:shadow-xl transition-all max-w-xs`}
       >
         {isActive ? (
-          <Loader2 size={14} className="text-emerald-600 animate-spin shrink-0" />
-        ) : primary.status === 'ready' ? (
+          <Loader2
+            size={14}
+            className="text-emerald-600 animate-spin shrink-0"
+          />
+        ) : primary.status === "ready" ? (
           <Check size={14} className="text-emerald-500 shrink-0" />
         ) : (
           <X size={14} className="text-red-500 shrink-0" />
@@ -134,16 +137,16 @@ export function GlobalCatalogueInstallIndicator() {
               </div>
               <p className="text-[10px] text-content-tertiary mt-0.5 truncate">
                 {t(primary.stage, {
-                  defaultValue: STAGE_LABELS[primary.stage] ?? 'Working…',
-                })}{' '}
+                  defaultValue: STAGE_LABELS[primary.stage] ?? "Working…",
+                })}{" "}
                 · {elapsed(primary.startedAt)}
               </p>
             </>
           )}
-          {!isActive && primary.status === 'ready' && (
+          {!isActive && primary.status === "ready" && (
             <p className="text-[10px] text-emerald-600 mt-0.5">
-              {t('catalogue_install.indicator_ready', {
-                defaultValue: 'Ready to use‌⁠‍',
+              {t("catalogue_install.indicator_ready", {
+                defaultValue: "Ready to use‌⁠‍",
               })}
             </p>
           )}
@@ -159,20 +162,22 @@ export function GlobalCatalogueInstallIndicator() {
   }
 
   return (
-    <div className={`${pillPosition} w-80 rounded-xl bg-surface-elevated border border-border-light shadow-xl overflow-hidden animate-fade-in`}>
+    <div
+      className={`${pillPosition} w-80 rounded-xl bg-surface-elevated border border-border-light shadow-xl overflow-hidden animate-fade-in`}
+    >
       <div className="flex items-center justify-between px-4 py-2.5 bg-surface-secondary/50 border-b border-border-light">
         <div className="flex items-center gap-2">
           <Database size={14} className="text-emerald-600" />
           <span className="text-xs font-semibold text-content-primary">
-            {t('catalogue_install.indicator_title', {
-              defaultValue: 'Catalogue installs‌⁠‍',
+            {t("catalogue_install.indicator_title", {
+              defaultValue: "Catalogue installs‌⁠‍",
             })}
           </span>
         </div>
         <button
           onClick={() => setExpanded(false)}
           className="p-1 rounded hover:bg-surface-secondary text-content-tertiary"
-          aria-label={t('common.collapse', { defaultValue: 'Collapse‌⁠‍' })}
+          aria-label={t("common.collapse", { defaultValue: "Collapse‌⁠‍" })}
         >
           <ChevronDown size={14} />
         </button>
@@ -191,20 +196,30 @@ export function GlobalCatalogueInstallIndicator() {
   );
 }
 
-function JobRow({ job, onDismiss }: { job: CatalogueInstallJob; onDismiss: () => void }) {
+function JobRow({
+  job,
+  onDismiss,
+}: {
+  job: CatalogueInstallJob;
+  onDismiss: () => void;
+}) {
   const { t } = useTranslation();
-  const isActive = job.status === 'downloading';
-  const isDone = job.status === 'ready';
-  const isError = job.status === 'error';
+  const isActive = job.status === "downloading";
+  const isDone = job.status === "ready";
+  const isError = job.status === "error";
   return (
     <div className="px-4 py-3 flex items-start gap-3">
       <div className="mt-0.5 shrink-0">
-        {isActive && <Loader2 size={16} className="text-emerald-600 animate-spin" />}
+        {isActive && (
+          <Loader2 size={16} className="text-emerald-600 animate-spin" />
+        )}
         {isDone && <Check size={16} className="text-emerald-500" />}
         {isError && <X size={16} className="text-red-500" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium text-content-primary truncate">{job.label}</p>
+        <p className="text-xs font-medium text-content-primary truncate">
+          {job.label}
+        </p>
         <p className="text-[10px] text-content-quaternary">
           ~{job.sizeMb} MB · {job.language?.toUpperCase()}
         </p>
@@ -223,8 +238,8 @@ function JobRow({ job, onDismiss }: { job: CatalogueInstallJob; onDismiss: () =>
             </div>
             <p className="text-[10px] text-content-quaternary mt-0.5">
               {t(job.stage, {
-                defaultValue: STAGE_LABELS[job.stage] ?? 'Working…',
-              })}{' '}
+                defaultValue: STAGE_LABELS[job.stage] ?? "Working…",
+              })}{" "}
               — {elapsed(job.startedAt)}
             </p>
           </div>
@@ -232,7 +247,9 @@ function JobRow({ job, onDismiss }: { job: CatalogueInstallJob; onDismiss: () =>
         {isError && (
           <p className="text-[10px] text-red-500 mt-0.5 line-clamp-2">
             {job.errorMessage ||
-              t('catalogue_install.indicator_error', { defaultValue: 'Install failed‌⁠‍' })}
+              t("catalogue_install.indicator_error", {
+                defaultValue: "Install failed‌⁠‍",
+              })}
           </p>
         )}
         <div className="mt-1.5 flex items-center gap-2">
@@ -240,7 +257,7 @@ function JobRow({ job, onDismiss }: { job: CatalogueInstallJob; onDismiss: () =>
             onClick={onDismiss}
             className="text-[10px] text-content-quaternary hover:text-content-secondary ms-auto"
           >
-            {t('common.dismiss', { defaultValue: 'Dismiss‌⁠‍' })}
+            {t("common.dismiss", { defaultValue: "Dismiss‌⁠‍" })}
           </button>
         </div>
       </div>

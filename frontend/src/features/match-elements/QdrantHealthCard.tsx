@@ -16,9 +16,9 @@
 // without Docker (Postgres→SQLite, Redis→memory, MinIO→local fs); the
 // native binary brings Qdrant in line with that policy.
 
-import { useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -26,15 +26,15 @@ import {
   Loader2,
   RefreshCw,
   Server,
-} from 'lucide-react';
-import clsx from 'clsx';
+} from "lucide-react";
+import clsx from "clsx";
 
-import { useToastStore } from '@/stores/useToastStore';
+import { useToastStore } from "@/stores/useToastStore";
 import {
   fetchQdrantHealth,
   installQdrantNative,
   type QdrantHealth,
-} from './api';
+} from "./api";
 
 interface Props {
   /** When true, the card renders even when Qdrant is healthy (used for
@@ -54,7 +54,7 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
   const [isInstalling, setIsInstalling] = useState(false);
 
   const healthQ = useQuery<QdrantHealth>({
-    queryKey: ['match-qdrant-health'],
+    queryKey: ["match-qdrant-health"],
     queryFn: fetchQdrantHealth,
     // Re-poll every 30s when down so a user who fixed the issue
     // elsewhere (started a manual qdrant from terminal etc.) sees the
@@ -75,50 +75,50 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
       const result = await installQdrantNative();
       // Push the install result straight into the React Query cache so
       // the card flips to "running" without waiting for the next poll.
-      queryClient.setQueryData(['match-qdrant-health'], result);
+      queryClient.setQueryData(["match-qdrant-health"], result);
       if (result.reachable) {
         addToast({
-          type: 'success',
+          type: "success",
           title: t(
-            'qdrant_health.install_success_title',
-            'Vector database ready',
+            "qdrant_health.install_success_title",
+            "Vector database ready",
           ),
           message: t(
-            'qdrant_health.install_success_body',
-            'Qdrant is now running locally. You can install catalogues.',
+            "qdrant_health.install_success_body",
+            "Qdrant is now running locally. You can install catalogues.",
           ),
         });
         // Invalidate downstream queries so the catalogues panel and
         // readiness pill refresh — they consult Qdrant directly.
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['catalogues-v3'] }),
+          queryClient.invalidateQueries({ queryKey: ["catalogues-v3"] }),
           queryClient.invalidateQueries({
-            queryKey: ['match-vector-readiness'],
+            queryKey: ["match-vector-readiness"],
           }),
         ]);
         if (onReachable) onReachable();
       } else {
         addToast({
-          type: 'warning',
+          type: "warning",
           title: t(
-            'qdrant_health.install_partial_title',
-            'Vector database installed',
+            "qdrant_health.install_partial_title",
+            "Vector database installed",
           ),
           message:
             result.message ||
             t(
-              'qdrant_health.install_partial_body',
-              'Installation finished but the server did not bind to the port. Click Refresh in a few seconds.',
+              "qdrant_health.install_partial_body",
+              "Installation finished but the server did not bind to the port. Click Refresh in a few seconds.",
             ),
         });
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       addToast({
-        type: 'error',
+        type: "error",
         title: t(
-          'qdrant_health.install_failed_title',
-          'Vector database install failed',
+          "qdrant_health.install_failed_title",
+          "Vector database install failed",
         ),
         message: msg,
       });
@@ -150,7 +150,7 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
         <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-300 shrink-0" />
         <div className="text-sm">
           <div className="font-semibold text-emerald-900 dark:text-emerald-100">
-            {t('qdrant_health.up_title', 'Vector database is running')}
+            {t("qdrant_health.up_title", "Vector database is running")}
           </div>
           <div className="text-xs text-emerald-800 dark:text-emerald-200">
             {health.url}
@@ -173,10 +173,7 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-semibold text-rose-900 dark:text-rose-100 flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 shrink-0" />
-            {t(
-              'qdrant_health.down_title',
-              'Vector database is not running',
-            )}
+            {t("qdrant_health.down_title", "Vector database is not running")}
           </h3>
           <p className="mt-1 text-xs text-rose-800 dark:text-rose-200 leading-relaxed">
             {health.message}
@@ -193,13 +190,13 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
                 onClick={handleInstall}
                 disabled={isInstalling}
                 className={clsx(
-                  'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold',
-                  'bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-60 disabled:cursor-not-allowed',
-                  'transition-colors shadow-sm',
+                  "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold",
+                  "bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-60 disabled:cursor-not-allowed",
+                  "transition-colors shadow-sm",
                 )}
                 aria-label={t(
-                  'qdrant_health.install_aria',
-                  'Install the native Qdrant binary (no Docker)',
+                  "qdrant_health.install_aria",
+                  "Install the native Qdrant binary (no Docker)",
                 )}
               >
                 {isInstalling ? (
@@ -208,10 +205,10 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
                   <Download className="w-3.5 h-3.5" />
                 )}
                 {isInstalling
-                  ? t('qdrant_health.install_in_progress', 'Installing…')
+                  ? t("qdrant_health.install_in_progress", "Installing…")
                   : t(
-                      'qdrant_health.install_button',
-                      'Install Qdrant (no Docker)',
+                      "qdrant_health.install_button",
+                      "Install Qdrant (no Docker)",
                     )}
               </button>
             )}
@@ -220,19 +217,19 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
               onClick={handleRefresh}
               disabled={healthQ.isFetching || isInstalling}
               className={clsx(
-                'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium',
-                'border border-rose-300 dark:border-rose-700 bg-white/70 dark:bg-rose-950/40',
-                'text-rose-800 dark:text-rose-100 hover:bg-white dark:hover:bg-rose-900/50',
-                'disabled:opacity-60 transition-colors',
+                "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium",
+                "border border-rose-300 dark:border-rose-700 bg-white/70 dark:bg-rose-950/40",
+                "text-rose-800 dark:text-rose-100 hover:bg-white dark:hover:bg-rose-900/50",
+                "disabled:opacity-60 transition-colors",
               )}
             >
               <RefreshCw
                 className={clsx(
-                  'w-3.5 h-3.5',
-                  healthQ.isFetching && 'animate-spin',
+                  "w-3.5 h-3.5",
+                  healthQ.isFetching && "animate-spin",
                 )}
               />
-              {t('qdrant_health.refresh_button', 'Refresh status')}
+              {t("qdrant_health.refresh_button", "Refresh status")}
             </button>
             {health.download_url && !health.installed && (
               <a
@@ -241,10 +238,7 @@ export function QdrantHealthCard({ alwaysShow = false, onReachable }: Props) {
                 rel="noopener noreferrer"
                 className="text-xs underline text-rose-700 dark:text-rose-200 hover:text-rose-900 dark:hover:text-rose-50"
               >
-                {t(
-                  'qdrant_health.download_manual',
-                  'Manual download',
-                )}
+                {t("qdrant_health.download_manual", "Manual download")}
               </a>
             )}
           </div>

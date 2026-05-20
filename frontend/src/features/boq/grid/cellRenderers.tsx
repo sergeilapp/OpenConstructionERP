@@ -1,8 +1,16 @@
-import { useState, useCallback, useRef, useMemo, useEffect, useLayoutEffect, forwardRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import type { ICellRendererParams, Column, GridApi } from 'ag-grid-community';
-import type { Position } from '../api';
+import {
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useEffect,
+  useLayoutEffect,
+  forwardRef,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import type { ICellRendererParams, Column, GridApi } from "ag-grid-community";
+import type { Position } from "../api";
 import {
   ChevronDown,
   ChevronRight,
@@ -29,9 +37,9 @@ import {
   Check,
   AlertTriangle,
   Link2,
-} from 'lucide-react';
-import { createPortal } from 'react-dom';
-import { useQuery, useQueries } from '@tanstack/react-query';
+} from "lucide-react";
+import { createPortal } from "react-dom";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import {
   COMMON_CURRENCIES,
   CURRENCY_SYMBOL,
@@ -39,18 +47,21 @@ import {
   fmtWithCurrency,
   getUnitsForLocale,
   saveCustomUnit,
-} from '../boqHelpers';
-import { RESOURCE_TYPES, getResourceTypeLabel } from '../boqResourceTypes';
-import { countComments } from '../CommentDrawer';
-import { BIMQuantityPicker } from './BIMQuantityPicker';
-import { MiniGeometryPreview } from '@/shared/ui/MiniGeometryPreview';
-import { fetchBIMElementsByIds, fetchBIMElementProperties } from '@/features/bim/api';
-import type { BIMElementData } from '@/shared/ui/BIMViewer/ElementManager';
-import { getIntlLocale } from '@/shared/lib/formatters';
-import { useFxRatesStore, getFxRate } from '@/stores/useFxRatesStore';
-import { isFormula, evaluateFormula } from './cellEditors';
-import { VariantPicker } from '@/features/costs/VariantPicker';
-import type { CostVariant, VariantStats } from '@/features/costs/api';
+} from "../boqHelpers";
+import { RESOURCE_TYPES, getResourceTypeLabel } from "../boqResourceTypes";
+import { countComments } from "../CommentDrawer";
+import { BIMQuantityPicker } from "./BIMQuantityPicker";
+import { MiniGeometryPreview } from "@/shared/ui/MiniGeometryPreview";
+import {
+  fetchBIMElementsByIds,
+  fetchBIMElementProperties,
+} from "@/features/bim/api";
+import type { BIMElementData } from "@/shared/ui/BIMViewer/ElementManager";
+import { getIntlLocale } from "@/shared/lib/formatters";
+import { useFxRatesStore, getFxRate } from "@/stores/useFxRatesStore";
+import { isFormula, evaluateFormula } from "./cellEditors";
+import { VariantPicker } from "@/features/costs/VariantPicker";
+import type { CostVariant, VariantStats } from "@/features/costs/api";
 
 /* ── Variant suffix stripper ──────────────────────────────────────────
  *  Legacy CWICR position-mode applies appended "(Variant: <label>)" /
@@ -71,36 +82,36 @@ import type { CostVariant, VariantStats } from '@/features/costs/api';
  *  Both are case-insensitive, Unicode-aware, and cover Latin + Cyrillic
  *  spellings (incl. common typos: "Вриант", "Варинт"). ────────────── */
 const VARIANT_KEYWORDS =
-  '(?:Variant|Variante|Variantă|Variantti|Variation|Varianta|Variantas|Varianti|Wariant|Wariacja|Variabel|Sürüm|Вариант|Варіант|Варијанта|Вріант|Вриант|Варинт|Варіант|Vairantă)';
+  "(?:Variant|Variante|Variantă|Variantti|Variation|Varianta|Variantas|Varianti|Wariant|Wariacja|Variabel|Sürüm|Вариант|Варіант|Варијанта|Вріант|Вриант|Варинт|Варіант|Vairantă)";
 const VARIANT_SUFFIX_WITH_PARENS_RE = new RegExp(
   `\\s*[(（\\[]\\s*${VARIANT_KEYWORDS}\\s*[:：][\\s\\S]*?[)）\\]]\\s*$`,
-  'iu',
+  "iu",
 );
 const VARIANT_SUFFIX_BARE_RE = new RegExp(
   `\\s*[\\.,;·\\-—]?\\s*${VARIANT_KEYWORDS}\\s*[:：][^\\n\\r]*$`,
-  'iu',
+  "iu",
 );
 
 function stripVariantSuffix(s: string | null | undefined): string {
-  if (!s) return '';
+  if (!s) return "";
   let out = String(s);
   // Loop the with-parens pass to strip multiple stacked suffixes.
   for (let i = 0; i < 3; i++) {
-    const next = out.replace(VARIANT_SUFFIX_WITH_PARENS_RE, '');
+    const next = out.replace(VARIANT_SUFFIX_WITH_PARENS_RE, "");
     if (next === out) break;
     out = next;
   }
-  out = out.replace(VARIANT_SUFFIX_BARE_RE, '');
+  out = out.replace(VARIANT_SUFFIX_BARE_RE, "");
   return out.trim();
 }
 
 /* ── Validation Status Dot ────────────────────────────────────────── */
 
 const VALIDATION_DOT_STYLES: Record<string, string> = {
-  passed: 'bg-emerald-500',
-  warnings: 'bg-amber-500',
-  errors: 'bg-red-500',
-  pending: 'bg-gray-300 dark:bg-gray-600',
+  passed: "bg-emerald-500",
+  warnings: "bg-amber-500",
+  errors: "bg-red-500",
+  pending: "bg-gray-300 dark:bg-gray-600",
 };
 
 /**
@@ -112,14 +123,22 @@ function getValidationTooltip(
   t: (key: string, opts?: Record<string, string>) => string,
 ): string {
   switch (status) {
-    case 'passed':
-      return t('boq.validation_passed', { defaultValue: 'Validation passed — position is complete‌⁠‍' });
-    case 'warnings':
-      return t('boq.validation_warnings', { defaultValue: 'Validation warnings — review recommended‌⁠‍' });
-    case 'errors':
-      return t('boq.validation_errors', { defaultValue: 'Validation errors — action required‌⁠‍' });
-    case 'pending':
-      return t('boq.validation_pending', { defaultValue: 'Validation pending — not yet checked‌⁠‍' });
+    case "passed":
+      return t("boq.validation_passed", {
+        defaultValue: "Validation passed — position is complete‌⁠‍",
+      });
+    case "warnings":
+      return t("boq.validation_warnings", {
+        defaultValue: "Validation warnings — review recommended‌⁠‍",
+      });
+    case "errors":
+      return t("boq.validation_errors", {
+        defaultValue: "Validation errors — action required‌⁠‍",
+      });
+    case "pending":
+      return t("boq.validation_pending", {
+        defaultValue: "Validation pending — not yet checked‌⁠‍",
+      });
     default:
       return status;
   }
@@ -157,11 +176,11 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
   const isCollapsed = ctx.collapsedSections?.has(data.id) ?? false;
   const childCount: number = data._childCount ?? 0;
   const subtotal: number = data._subtotal ?? data.total ?? 0;
-  const description: string = data.description ?? '';
+  const description: string = data.description ?? "";
   // Issue #136 — nesting level drives left-indentation so a sub-section
   // reads as a real child of its parent section in the смета.
-  const depth: number = typeof data._depth === 'number' ? data._depth : 0;
-  const ordinal: string = data.ordinal ?? '';
+  const depth: number = typeof data._depth === "number" ? data._depth : 0;
+  const ordinal: string = data.ordinal ?? "";
 
   // Issue #88 — when a non-base display currency is active, divide the
   // subtotal by the rate before formatting and print in the active code.
@@ -169,13 +188,15 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
   // view conversion. Mirrors `totalFormatter` in columnDefs.ts.
   const dc = ctx.displayCurrency;
   const displayedSubtotal = dc && dc.rate > 0 ? subtotal / dc.rate : subtotal;
-  const displayCode = dc && dc.rate > 0 ? dc.code : (ctx.currencyCode ?? 'EUR');
+  const displayCode = dc && dc.rate > 0 ? dc.code : (ctx.currencyCode ?? "EUR");
   const formattedSubtotal = ctx.fmt
-    ? fmtWithCurrency(displayedSubtotal, ctx.locale ?? 'de-DE', displayCode)
+    ? fmtWithCurrency(displayedSubtotal, ctx.locale ?? "de-DE", displayCode)
     : `${displayedSubtotal.toFixed(2)}`;
 
-  const t = ctx.t ?? ((key: string, opts?: Record<string, string | number>) =>
-    (opts?.defaultValue as string) ?? key);
+  const t =
+    ctx.t ??
+    ((key: string, opts?: Record<string, string | number>) =>
+      (opts?.defaultValue as string) ?? key);
 
   const [dragOver, setDragOver] = useState(false);
 
@@ -194,31 +215,25 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
     const next = nameDraft.trim();
     setRenaming(false);
     if (next && next !== description) {
-      ctx.onUpdatePosition?.(
-        data.id,
-        { description: next },
-        { description },
-      );
+      ctx.onUpdatePosition?.(data.id, { description: next }, { description });
     }
   }, [nameDraft, description, ctx, data]);
 
   return (
     <div
       className={`flex items-center w-full h-full px-2 gap-2 select-none group/section transition-colors ${
-        depth > 0 ? 'border-l-[3px] border-oe-blue' : ''
-      } ${
-        dragOver ? 'bg-oe-blue-subtle border-t-2 border-oe-blue' : ''
-      }`}
+        depth > 0 ? "border-l-[3px] border-oe-blue" : ""
+      } ${dragOver ? "bg-oe-blue-subtle border-t-2 border-oe-blue" : ""}`}
       style={depth > 0 ? { paddingLeft: 8 + depth * 22 } : undefined}
       draggable
       onDragStart={(e) => {
-        e.dataTransfer.setData('text/x-section-id', data.id);
-        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData("text/x-section-id", data.id);
+        e.dataTransfer.effectAllowed = "move";
       }}
       onDragOver={(e) => {
-        if (e.dataTransfer.types.includes('text/x-section-id')) {
+        if (e.dataTransfer.types.includes("text/x-section-id")) {
           e.preventDefault();
-          e.dataTransfer.dropEffect = 'move';
+          e.dataTransfer.dropEffect = "move";
           setDragOver(true);
         }
       }}
@@ -226,7 +241,7 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
       onDrop={(e) => {
         e.preventDefault();
         setDragOver(false);
-        const fromId = e.dataTransfer.getData('text/x-section-id');
+        const fromId = e.dataTransfer.getData("text/x-section-id");
         if (fromId && fromId !== data.id) {
           ctx.onReorderSections?.(fromId, data.id);
         }
@@ -244,9 +259,10 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
         className="shrink-0 h-6 w-6 flex items-center justify-center rounded
                    text-content-secondary hover:text-content-primary
                    hover:bg-surface-tertiary/80 transition-colors"
-        title={isCollapsed
-          ? t('boq.expand_section', { defaultValue: 'Expand section‌⁠‍' })
-          : t('boq.collapse_section', { defaultValue: 'Collapse section' })
+        title={
+          isCollapsed
+            ? t("boq.expand_section", { defaultValue: "Expand section‌⁠‍" })
+            : t("boq.collapse_section", { defaultValue: "Collapse section" })
         }
       >
         {isCollapsed ? (
@@ -261,9 +277,11 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
       </span>
 
       {ordinal && (
-        <span className="shrink-0 inline-flex items-center h-4 px-1.5 rounded
+        <span
+          className="shrink-0 inline-flex items-center h-4 px-1.5 rounded
                          bg-oe-blue-subtle text-oe-blue text-[10px] font-mono font-semibold
-                         tabular-nums">
+                         tabular-nums"
+        >
           {ordinal}
         </span>
       )}
@@ -276,8 +294,8 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => {
             e.stopPropagation();
-            if (e.key === 'Enter') commitRename();
-            else if (e.key === 'Escape') {
+            if (e.key === "Enter") commitRename();
+            else if (e.key === "Escape") {
               setNameDraft(description);
               setRenaming(false);
             }
@@ -286,7 +304,9 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
           className="min-w-0 flex-1 text-xs font-bold text-content-primary uppercase
                      tracking-wide bg-surface-primary border border-oe-blue rounded
                      px-1.5 py-0.5 outline-none"
-          aria-label={t('boq.rename_section', { defaultValue: 'Rename section' })}
+          aria-label={t("boq.rename_section", {
+            defaultValue: "Rename section",
+          })}
         />
       ) : (
         <button
@@ -296,25 +316,28 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
             e.stopPropagation();
             startRename();
           }}
-          title={t('boq.rename_section_hint', {
-            defaultValue: 'Double-click to rename',
+          title={t("boq.rename_section_hint", {
+            defaultValue: "Double-click to rename",
           })}
           className="text-xs font-bold text-content-primary uppercase tracking-wide
                      truncate min-w-0 text-left bg-transparent cursor-text"
         >
-          {description || t('boq.untitled_section', {
-            defaultValue: 'Untitled section',
-          })}
+          {description ||
+            t("boq.untitled_section", {
+              defaultValue: "Untitled section",
+            })}
         </button>
       )}
 
-      <span className="shrink-0 inline-flex items-center h-4 px-1.5 rounded-full
+      <span
+        className="shrink-0 inline-flex items-center h-4 px-1.5 rounded-full
                        bg-surface-tertiary text-[10px] font-medium text-content-tertiary
-                       tabular-nums">
-        {childCount} {childCount === 1
-          ? t('boq.item', { defaultValue: 'item' })
-          : t('boq.items', { defaultValue: 'items' })
-        }
+                       tabular-nums"
+      >
+        {childCount}{" "}
+        {childCount === 1
+          ? t("boq.item", { defaultValue: "item" })
+          : t("boq.items", { defaultValue: "items" })}
       </span>
 
       <div className="flex-1" />
@@ -331,8 +354,10 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
                      bg-transparent hover:bg-oe-blue-subtle
                      opacity-0 group-hover/section:opacity-100
                      transition-all"
-          title={t('boq.rename_section', { defaultValue: 'Rename section' })}
-          aria-label={t('boq.rename_section', { defaultValue: 'Rename section' })}
+          title={t("boq.rename_section", { defaultValue: "Rename section" })}
+          aria-label={t("boq.rename_section", {
+            defaultValue: "Rename section",
+          })}
         >
           <Pencil size={10} />
         </button>
@@ -349,41 +374,58 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
                      bg-oe-blue-subtle text-oe-blue
                      hover:bg-oe-blue hover:text-white
                      transition-colors"
-          title={t('boq.add_sub_section', { defaultValue: 'Add sub-section nested under this section' })}
-          aria-label={t('boq.add_sub_section', { defaultValue: 'Add sub-section' })}
+          title={t("boq.add_sub_section", {
+            defaultValue: "Add sub-section nested under this section",
+          })}
+          aria-label={t("boq.add_sub_section", {
+            defaultValue: "Add sub-section",
+          })}
         >
           <FolderPlus size={11} />
-          {t('boq.sub_section_short', { defaultValue: 'Sub' })}
+          {t("boq.sub_section_short", { defaultValue: "Sub" })}
         </button>
       )}
 
+      {/* Issue #149 — the per-section "Add position" affordance is the most
+          common action on a section and MUST be discoverable, so it stays
+          visible at all times (not hover-revealed). It targets this exact
+          section id, so the new partida lands in this section — never in the
+          last one. Rendered as the primary section action; "Sub" sits beside
+          it for the rarer nested-section case. */}
       <button
         onClick={(e) => {
           e.stopPropagation();
           ctx.onAddPosition?.(data.id);
         }}
-        className="shrink-0 h-5 flex items-center gap-0.5 px-1.5 rounded
-                   text-[10px] font-medium
-                   text-content-tertiary hover:text-oe-blue
-                   bg-transparent hover:bg-oe-blue-subtle
-                   opacity-0 group-hover/section:opacity-100
-                   transition-all"
-        title={t('boq.add_position_to_section', { defaultValue: 'Add position to this section' })}
+        className="shrink-0 h-5 flex items-center gap-1 px-2 rounded ring-1 ring-oe-blue
+                   text-[10px] font-semibold
+                   bg-oe-blue text-white
+                   hover:bg-oe-blue/90
+                   transition-colors"
+        title={t("boq.add_position_to_section", {
+          defaultValue: "Add position to this section",
+        })}
+        aria-label={t("boq.add_position_to_section", {
+          defaultValue: "Add position to this section",
+        })}
       >
-        <Plus size={10} />
-        {t('boq.add_item', { defaultValue: 'Add' })}
+        <Plus size={11} />
+        {t("boq.add_position", { defaultValue: "Add Position" })}
       </button>
 
       {(ctx as FullGridContext | undefined)?.onDeleteSection && (
         <button
           onClick={(e) => {
             e.stopPropagation();
-            if (window.confirm(
-              t('boq.confirm_delete_section', {
-                defaultValue: 'Delete this section and all {{count}} positions inside it?',
-                count: childCount,
-              })
-            )) {
+            if (
+              window.confirm(
+                t("boq.confirm_delete_section", {
+                  defaultValue:
+                    "Delete this section and all {{count}} positions inside it?",
+                  count: childCount,
+                }),
+              )
+            ) {
               (ctx as FullGridContext).onDeleteSection!(data.id);
             }
           }}
@@ -393,8 +435,12 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
                      bg-transparent hover:bg-red-50 dark:hover:bg-red-950/30
                      opacity-0 group-hover/section:opacity-100
                      transition-all"
-          title={t('boq.delete_section', { defaultValue: 'Delete section with all positions' })}
-          aria-label={t('boq.delete_section', { defaultValue: 'Delete section with all positions' })}
+          title={t("boq.delete_section", {
+            defaultValue: "Delete section with all positions",
+          })}
+          aria-label={t("boq.delete_section", {
+            defaultValue: "Delete section with all positions",
+          })}
         >
           <Trash2 size={10} />
         </button>
@@ -419,33 +465,60 @@ export interface ActionsContext {
   onOpenCostDbForPosition: (id: string) => void;
   onAddManualResource: (positionId: string) => void;
   onDuplicatePosition: (positionId: string) => void;
-  onShowContextMenu: (e: React.MouseEvent, rowType: ContextMenuTarget, data: Record<string, unknown>) => void;
-  anomalyMap?: Map<string, { severity: string; message: string; suggestion: number }>;
+  onShowContextMenu: (
+    e: React.MouseEvent,
+    rowType: ContextMenuTarget,
+    data: Record<string, unknown>,
+  ) => void;
+  anomalyMap?: Map<
+    string,
+    { severity: string; message: string; suggestion: number }
+  >;
 }
 
-export type ContextMenuTarget = 'position' | 'resource' | 'section' | 'addResource' | 'footer';
+export type ContextMenuTarget =
+  | "position"
+  | "resource"
+  | "section"
+  | "addResource"
+  | "footer";
 
 export interface ResourceGridContext {
   expandedPositions: Set<string>;
   onToggleResources: (positionId: string) => void;
   onRemoveResource: (positionId: string, resourceIndex: number) => void;
-  onUpdateResource: (positionId: string, resourceIndex: number, field: string, value: number | string) => void;
+  onUpdateResource: (
+    positionId: string,
+    resourceIndex: number,
+    field: string,
+    value: number | string,
+  ) => void;
   /** Update multiple fields of a resource in ONE mutation. Use when two fields must
    *  change atomically (e.g. renaming a catalogued resource also clears its code).
    *  Without this, two sequential `onUpdateResource` calls race on the React Query
    *  cache and the second silently overwrites the first. */
-  onUpdateResourceFields?: (positionId: string, resourceIndex: number, fields: Record<string, number | string>) => void;
+  onUpdateResourceFields?: (
+    positionId: string,
+    resourceIndex: number,
+    fields: Record<string, number | string>,
+  ) => void;
   onSaveResourceToCatalog: (positionId: string, resourceIndex: number) => void;
   /** Save a variant-header synthetic row to the user's catalog under the
    *  user-edited custom name. Reads the chosen variant off the position
    *  directly (no resource index — the variant row is synthetic). */
-  onSaveVariantHeaderToCatalog?: (positionId: string, customName: string) => void;
+  onSaveVariantHeaderToCatalog?: (
+    positionId: string,
+    customName: string,
+  ) => void;
   /** Edit qty / rate on the variant-header synthetic row. The row mirrors
    *  the parent position, so qty edits flow into ``position.quantity``
    *  and rate edits into ``position.unit_rate`` (clearing the
    *  ``metadata.variant`` snapshot so the row "becomes a regular article"
    *  with a manually-overridden rate, per the user's spec). */
-  onUpdateVariantHeader?: (positionId: string, fields: { quantity?: number; unit_rate?: number }) => void;
+  onUpdateVariantHeader?: (
+    positionId: string,
+    fields: { quantity?: number; unit_rate?: number },
+  ) => void;
   onOpenCostDbForPosition: (positionId: string) => void;
   onOpenCatalogForPosition: (positionId: string) => void;
   /**
@@ -483,7 +556,10 @@ export interface ResourceGridContext {
    *  ``onRepickPositionVariant`` so the position's ``unit_rate`` /
    *  ``metadata.variant`` flip directly. ``anchorEl`` is the V button
    *  itself so the popover positions correctly. */
-  onOpenPositionVariantPicker?: (positionId: string, anchorEl: HTMLElement | null) => void;
+  onOpenPositionVariantPicker?: (
+    positionId: string,
+    anchorEl: HTMLElement | null,
+  ) => void;
   /** Issue #105 — when a resource is in a foreign currency that has no FX
    *  rate configured for the project, the warning badge becomes clickable
    *  and routes the user straight to Project Settings → FX Rates. */
@@ -495,36 +571,49 @@ export interface ResourceGridContext {
   t: (key: string, options?: Record<string, string | number>) => string;
 }
 
-export type FullGridContext = ActionsContext & ResourceGridContext & SectionGroupContext & {
-  onApplyAnomalySuggestion?: (positionId: string, suggestedRate: number) => void;
-  /** First ready BIM model ID for the current project (used for mini 3D previews). */
-  bimModelId?: string | null;
-  /** Update a BOQ position — used by QuantityCellRenderer to apply BIM quantities. */
-  onUpdatePosition?: (id: string, data: Record<string, unknown>, oldData: Record<string, unknown>) => void;
-  /** Highlight linked BIM elements in the 3D viewer (triggered from ordinal badge). */
-  onHighlightBIMElements?: (elementIds: string[]) => void;
-  /** Delete a section with all its child positions. */
-  onDeleteSection?: (sectionId: string) => void;
-  /** Reorder sections via drag-and-drop. */
-  onReorderSections?: (fromId: string, toId: string) => void;
-  /** Issue #90: persist a Quantity-cell formula on the row's metadata. */
-  onFormulaApplied?: (positionId: string, formula: string, result: number) => void;
-  /**
-   * RFC 37 / Issue #93 — project-level FX template used by the per-resource
-   * currency picker. Empty / undefined ⇒ single-currency project.
-   */
-  fxRates?: { currency: string; rate: number; label?: string }[];
-  /**
-   * Live BOQ positions — used by full-width resource rows to render
-   * per-resource custom-field values (read-only) without a separate
-   * round-trip. Optional; when omitted, custom-column slots on resource
-   * rows render empty placeholders that still preserve grid alignment.
-   */
-  positions?: Position[];
-  /** Custom column definitions — used to map ``custom_*`` colIds back to
-   *  the stored ``custom_fields`` key. Optional. */
-  customColumns?: { name: string; display_name?: string }[];
-};
+export type FullGridContext = ActionsContext &
+  ResourceGridContext &
+  SectionGroupContext & {
+    onApplyAnomalySuggestion?: (
+      positionId: string,
+      suggestedRate: number,
+    ) => void;
+    /** First ready BIM model ID for the current project (used for mini 3D previews). */
+    bimModelId?: string | null;
+    /** Update a BOQ position — used by QuantityCellRenderer to apply BIM quantities. */
+    onUpdatePosition?: (
+      id: string,
+      data: Record<string, unknown>,
+      oldData: Record<string, unknown>,
+    ) => void;
+    /** Highlight linked BIM elements in the 3D viewer (triggered from ordinal badge). */
+    onHighlightBIMElements?: (elementIds: string[]) => void;
+    /** Delete a section with all its child positions. */
+    onDeleteSection?: (sectionId: string) => void;
+    /** Reorder sections via drag-and-drop. */
+    onReorderSections?: (fromId: string, toId: string) => void;
+    /** Issue #90: persist a Quantity-cell formula on the row's metadata. */
+    onFormulaApplied?: (
+      positionId: string,
+      formula: string,
+      result: number,
+    ) => void;
+    /**
+     * RFC 37 / Issue #93 — project-level FX template used by the per-resource
+     * currency picker. Empty / undefined ⇒ single-currency project.
+     */
+    fxRates?: { currency: string; rate: number; label?: string }[];
+    /**
+     * Live BOQ positions — used by full-width resource rows to render
+     * per-resource custom-field values (read-only) without a separate
+     * round-trip. Optional; when omitted, custom-column slots on resource
+     * rows render empty placeholders that still preserve grid alignment.
+     */
+    positions?: Position[];
+    /** Custom column definitions — used to map ``custom_*`` colIds back to
+     *  the stored ``custom_fields`` key. Optional. */
+    customColumns?: { name: string; display_name?: string }[];
+  };
 
 /* ── Actions Cell Renderer ────────────────────────────────────────── */
 
@@ -534,8 +623,13 @@ export function ActionsCellRenderer(params: ICellRendererParams) {
 
   if (!data || data._isSection || data._isFooter) return null;
 
-  const t = ctx?.t ?? ((key: string, opts?: Record<string, string | number>) => (opts?.defaultValue as string) ?? key);
-  const commentCount = countComments(data.metadata as Record<string, unknown> | undefined);
+  const t =
+    ctx?.t ??
+    ((key: string, opts?: Record<string, string | number>) =>
+      (opts?.defaultValue as string) ?? key);
+  const commentCount = countComments(
+    data.metadata as Record<string, unknown> | undefined,
+  );
   const anomaly = ctx?.anomalyMap?.get(data.id as string);
 
   return (
@@ -544,13 +638,19 @@ export function ActionsCellRenderer(params: ICellRendererParams) {
       {anomaly && (
         <span
           className={`flex h-4 items-center px-1 rounded shrink-0 ${
-            anomaly.severity === 'error'
-              ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
-              : 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+            anomaly.severity === "error"
+              ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+              : "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
           }`}
           title={anomaly.message}
         >
-          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" className="shrink-0">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 16 16"
+            fill="none"
+            className="shrink-0"
+          >
             <path d="M8 1L1 14h14L8 1z" fill="currentColor" opacity="0.8" />
             <path d="M7.5 6v4h1V6h-1zm0 5v1h1v-1h-1z" fill="white" />
           </svg>
@@ -566,23 +666,31 @@ export function ActionsCellRenderer(params: ICellRendererParams) {
           className="flex h-4 items-center gap-0.5 px-1 rounded bg-amber-100 text-amber-600
                      dark:bg-amber-900/30 dark:text-amber-400
                      hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors shrink-0"
-          title={t('boq.comment_count', { defaultValue: '{{count}} comment(s)', count: commentCount })}
-          aria-label={t('boq.comment_count', { defaultValue: '{{count}} comment(s)', count: commentCount })}
+          title={t("boq.comment_count", {
+            defaultValue: "{{count}} comment(s)",
+            count: commentCount,
+          })}
+          aria-label={t("boq.comment_count", {
+            defaultValue: "{{count}} comment(s)",
+            count: commentCount,
+          })}
         >
-          <span className="text-[9px] font-bold tabular-nums">{commentCount}</span>
+          <span className="text-[9px] font-bold tabular-nums">
+            {commentCount}
+          </span>
         </button>
       )}
       {/* More actions button — triggers context menu */}
       <button
         onClick={(e) => {
           e.stopPropagation();
-          ctx?.onShowContextMenu?.(e, 'position', data);
+          ctx?.onShowContextMenu?.(e, "position", data);
         }}
         className="flex h-6 w-6 items-center justify-center rounded
                    text-content-tertiary/50 hover:text-content-primary
                    hover:bg-surface-tertiary transition-all"
-        title={t('common.actions', { defaultValue: 'Actions' })}
-        aria-label={t('common.actions', { defaultValue: 'Actions' })}
+        title={t("common.actions", { defaultValue: "Actions" })}
+        aria-label={t("common.actions", { defaultValue: "Actions" })}
       >
         <MoreHorizontal size={14} />
       </button>
@@ -596,10 +704,22 @@ export function ExpandCellRenderer(params: ICellRendererParams) {
   const { data, context } = params;
   const ctx = context as FullGridContext | undefined;
 
-  if (!data || data._isSection || data._isFooter || data._isResource || data._isAddResource) return null;
+  if (
+    !data ||
+    data._isSection ||
+    data._isFooter ||
+    data._isResource ||
+    data._isAddResource
+  )
+    return null;
 
-  const t = ctx?.t ?? ((key: string, opts?: Record<string, string>) => (opts?.defaultValue as string) ?? key);
-  const hasResources = Array.isArray(data.metadata?.resources) && data.metadata.resources.length > 0;
+  const t =
+    ctx?.t ??
+    ((key: string, opts?: Record<string, string>) =>
+      (opts?.defaultValue as string) ?? key);
+  const hasResources =
+    Array.isArray(data.metadata?.resources) &&
+    data.metadata.resources.length > 0;
   if (!hasResources) return null;
 
   const resCount = Array.isArray(data.metadata?.resources)
@@ -607,8 +727,14 @@ export function ExpandCellRenderer(params: ICellRendererParams) {
     : 0;
   const isExpanded = ctx?.expandedPositions?.has(data.id) ?? false;
   const expandTitle = isExpanded
-    ? t('boq.collapse_resources', { defaultValue: 'Collapse {{count}} resources', count: resCount })
-    : t('boq.expand_resources', { defaultValue: 'Show {{count}} resources', count: resCount });
+    ? t("boq.collapse_resources", {
+        defaultValue: "Collapse {{count}} resources",
+        count: resCount,
+      })
+    : t("boq.expand_resources", {
+        defaultValue: "Show {{count}} resources",
+        count: resCount,
+      });
 
   // Solid theme tokens ONLY. `--oe-blue` is a hex-valued CSS variable, so
   // Tailwind opacity modifiers over it (`bg-oe-blue/10`, `ring-oe-blue/30`)
@@ -625,8 +751,8 @@ export function ExpandCellRenderer(params: ICellRendererParams) {
         style={{ width: 22, height: 22 }}
         className={`shrink-0 flex items-center justify-center rounded-md ring-1 transition-colors cursor-pointer hover:bg-oe-blue hover:text-white hover:ring-oe-blue ${
           isExpanded
-            ? 'bg-oe-blue-subtle text-oe-blue-dark ring-oe-blue'
-            : 'bg-oe-blue-subtle text-oe-blue ring-oe-blue-subtle'
+            ? "bg-oe-blue-subtle text-oe-blue-dark ring-oe-blue"
+            : "bg-oe-blue-subtle text-oe-blue ring-oe-blue-subtle"
         }`}
         title={expandTitle}
         aria-label={expandTitle}
@@ -671,16 +797,16 @@ function ScopeOfWorkHint({
       setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === "Escape") setOpen(false);
     };
     const onScroll = () => setOpen(false);
-    document.addEventListener('mousedown', onDocMouseDown);
-    document.addEventListener('keydown', onKey);
-    window.addEventListener('scroll', onScroll, true);
+    document.addEventListener("mousedown", onDocMouseDown);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", onScroll, true);
     return () => {
-      document.removeEventListener('mousedown', onDocMouseDown);
-      document.removeEventListener('keydown', onKey);
-      window.removeEventListener('scroll', onScroll, true);
+      document.removeEventListener("mousedown", onDocMouseDown);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", onScroll, true);
     };
   }, [open]);
 
@@ -698,8 +824,8 @@ function ScopeOfWorkHint({
     setOpen(true);
   };
 
-  const label = t('boq.scope_of_work_label', {
-    defaultValue: 'What work is included in this rate',
+  const label = t("boq.scope_of_work_label", {
+    defaultValue: "What work is included in this rate",
   });
 
   return (
@@ -721,29 +847,31 @@ function ScopeOfWorkHint({
       >
         <Info size={12} strokeWidth={2} />
       </button>
-      {open && pos && createPortal(
-        <div
-          ref={popRef}
-          role="tooltip"
-          className="fixed z-[2000] w-[320px] max-w-[90vw]
+      {open &&
+        pos &&
+        createPortal(
+          <div
+            ref={popRef}
+            role="tooltip"
+            className="fixed z-[2000] w-[320px] max-w-[90vw]
                      rounded-lg border border-border-light bg-surface-primary
                      shadow-lg p-3 text-xs text-content-secondary"
-          style={{ top: pos.top, left: pos.left }}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-content-tertiary">
-            {label}
-          </div>
-          <ul className="list-disc pl-4 space-y-1 leading-relaxed max-h-[280px] overflow-auto">
-            {steps.map((step, i) => (
-              <li key={i} className="text-content-primary">
-                {step}
-              </li>
-            ))}
-          </ul>
-        </div>,
-        document.body,
-      )}
+            style={{ top: pos.top, left: pos.left }}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-content-tertiary">
+              {label}
+            </div>
+            <ul className="list-disc pl-4 space-y-1 leading-relaxed max-h-[280px] overflow-auto">
+              {steps.map((step, i) => (
+                <li key={i} className="text-content-primary">
+                  {step}
+                </li>
+              ))}
+            </ul>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
@@ -782,7 +910,7 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
   // call order between renders. ``positionId`` is intentionally derived
   // safely with optional chaining so the hook deps stay stable for non-
   // position rows too.
-  const positionId = (data?.id as string | undefined) ?? '';
+  const positionId = (data?.id as string | undefined) ?? "";
   const handleVClick = useCallback(() => {
     if (!positionId) return;
     ctx?.onToggleResources?.(positionId);
@@ -810,21 +938,27 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
       e.stopPropagation();
       e.stopImmediatePropagation();
     };
-    node.addEventListener('pointerdown', stopAndToggle, true);
-    node.addEventListener('mousedown', stopOnly, true);
-    node.addEventListener('click', stopOnly, true);
+    node.addEventListener("pointerdown", stopAndToggle, true);
+    node.addEventListener("mousedown", stopOnly, true);
+    node.addEventListener("click", stopOnly, true);
     return () => {
-      node.removeEventListener('pointerdown', stopAndToggle, true);
-      node.removeEventListener('mousedown', stopOnly, true);
-      node.removeEventListener('click', stopOnly, true);
+      node.removeEventListener("pointerdown", stopAndToggle, true);
+      node.removeEventListener("mousedown", stopOnly, true);
+      node.removeEventListener("click", stopOnly, true);
     };
   }, [handleVClick]);
 
   // Sections + footer + resource rows have their own renderers; bail
   // out cleanly so AG Grid falls back to the default text rendering
   // for those (driven by `colDef.cellClass`).
-  if (!data || data._isSection || data._isFooter || data._isResource || data._isAddResource) {
-    return <span>{value ?? ''}</span>;
+  if (
+    !data ||
+    data._isSection ||
+    data._isFooter ||
+    data._isResource ||
+    data._isAddResource
+  ) {
+    return <span>{value ?? ""}</span>;
   }
 
   // Strip legacy "(Variant: …)" trailing parenthetical — variant choice
@@ -833,10 +967,17 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
   const displayValue = stripVariantSuffix(value as string | null | undefined);
 
   const meta = (data.metadata ?? {}) as Record<string, unknown>;
-  const variant = (meta as { variant?: { label?: string; price?: number; index?: number } }).variant;
-  const variantDefault = (meta as { variant_default?: 'mean' | 'median' }).variant_default;
-  const hasVariant = !!variant && typeof variant.label === 'string' && typeof variant.price === 'number';
-  const hasDefault = !hasVariant && (variantDefault === 'mean' || variantDefault === 'median');
+  const variant = (
+    meta as { variant?: { label?: string; price?: number; index?: number } }
+  ).variant;
+  const variantDefault = (meta as { variant_default?: "mean" | "median" })
+    .variant_default;
+  const hasVariant =
+    !!variant &&
+    typeof variant.label === "string" &&
+    typeof variant.price === "number";
+  const hasDefault =
+    !hasVariant && (variantDefault === "mean" || variantDefault === "median");
 
   // Scope-of-work hint — non-empty list sourced from the catalog when
   // the position was applied from CWICR (universal scope detector:
@@ -845,11 +986,12 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
   // popover; absent metadata = no icon, no chrome.
   const scopeRaw = (meta as { scope_of_work?: unknown }).scope_of_work;
   const scopeSteps: string[] = Array.isArray(scopeRaw)
-    ? scopeRaw.filter((s): s is string => typeof s === 'string' && s.trim().length > 0)
+    ? scopeRaw.filter(
+        (s): s is string => typeof s === "string" && s.trim().length > 0,
+      )
     : [];
-  const scopeHint = scopeSteps.length > 0 ? (
-    <ScopeOfWorkHint steps={scopeSteps} t={t} />
-  ) : null;
+  const scopeHint =
+    scopeSteps.length > 0 ? <ScopeOfWorkHint steps={scopeSteps} t={t} /> : null;
 
   /* ── "V" icon — surfaces when EITHER:
    *     (a) at least one resource on this position carries cached
@@ -869,14 +1011,15 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
   const resourcesArr = (meta as { resources?: unknown[] }).resources;
   const variantResourceIdx = Array.isArray(resourcesArr)
     ? resourcesArr.findIndex((r) => {
-        if (!r || typeof r !== 'object') return false;
+        if (!r || typeof r !== "object") return false;
         const av = (r as { available_variants?: unknown }).available_variants;
         return Array.isArray(av) && av.length >= 2;
       })
     : -1;
   const hasResourceVariants = variantResourceIdx >= 0;
 
-  const posLevelVariants = (meta as { cost_item_variants?: unknown }).cost_item_variants;
+  const posLevelVariants = (meta as { cost_item_variants?: unknown })
+    .cost_item_variants;
   const hasPositionVariants =
     Array.isArray(posLevelVariants) && posLevelVariants.length >= 2;
 
@@ -893,7 +1036,7 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
       // Stack above any AG Grid focus / selection overlay that may sit
       // on top of the cell content (cause of the "ничего не происходит"
       // case where the click landed on an invisible overlay).
-      style={{ position: 'relative', zIndex: 10 }}
+      style={{ position: "relative", zIndex: 10 }}
       className="shrink-0 inline-flex h-[18px] w-[18px] items-center justify-center
                  rounded-md cursor-pointer
                  bg-violet-50 dark:bg-violet-900/30
@@ -903,12 +1046,12 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
                  hover:bg-violet-100 dark:hover:bg-violet-800/40
                  hover:ring-violet-300 dark:hover:ring-violet-600
                  transition-colors duration-150"
-      title={t('boq.position_variant_v_tooltip', {
+      title={t("boq.position_variant_v_tooltip", {
         defaultValue:
-          'This position carries a variant resource — click to expand the resource panel.',
+          "This position carries a variant resource — click to expand the resource panel.",
       })}
-      aria-label={t('boq.position_variant_v_label', {
-        defaultValue: 'Expand resources',
+      aria-label={t("boq.position_variant_v_label", {
+        defaultValue: "Expand resources",
       })}
       data-testid={`position-variant-v-${positionId}`}
     >
@@ -922,13 +1065,15 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
   // the estimator sees the cost-driver split without having to expand
   // the resources sub-rows. Skipped silently when the field is absent
   // (manual or non-assembly positions).
-  const breakdownRaw = (meta as { resource_breakdown?: Record<string, { pct?: number }> }).resource_breakdown;
+  const breakdownRaw = (
+    meta as { resource_breakdown?: Record<string, { pct?: number }> }
+  ).resource_breakdown;
   const breakdownEntries: Array<{ rt: string; pct: number }> =
-    breakdownRaw && typeof breakdownRaw === 'object'
+    breakdownRaw && typeof breakdownRaw === "object"
       ? Object.entries(breakdownRaw)
           .map(([rt, v]) => ({
             rt,
-            pct: typeof v?.pct === 'number' ? Math.round(v.pct) : 0,
+            pct: typeof v?.pct === "number" ? Math.round(v.pct) : 0,
           }))
           .filter((e) => e.pct > 0)
           .sort((a, b) => b.pct - a.pct)
@@ -937,15 +1082,15 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
     breakdownEntries.length > 0 ? (
       <span
         className="shrink-0 inline-flex items-center gap-0.5 rounded text-[10px] font-medium px-1 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 cursor-help"
-        title={t('boq.resource_breakdown_tip', {
-          defaultValue: 'Cost driver split — sourced from the linked assembly',
+        title={t("boq.resource_breakdown_tip", {
+          defaultValue: "Cost driver split — sourced from the linked assembly",
         })}
         data-testid="boq-resource-breakdown-pill"
       >
         {breakdownEntries
           .slice(0, 3)
           .map((e) => `${e.pct}% ${e.rt.slice(0, 3).toUpperCase()}`)
-          .join(' · ')}
+          .join(" · ")}
       </span>
     ) : null;
 
@@ -993,18 +1138,20 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
   // Stats / option count come from `cost_item_variant_count` /
   // `cost_item_variant_mean` snapshots if the apply path stamped them;
   // otherwise we fall back to a generic "default · refine" hint.
-  const optsRaw = (meta as { cost_item_variant_count?: number }).cost_item_variant_count;
-  const meanRaw = (meta as { cost_item_variant_mean?: number }).cost_item_variant_mean;
-  const opts = typeof optsRaw === 'number' && optsRaw >= 2 ? optsRaw : null;
-  const mean = typeof meanRaw === 'number' && meanRaw > 0 ? meanRaw : null;
+  const optsRaw = (meta as { cost_item_variant_count?: number })
+    .cost_item_variant_count;
+  const meanRaw = (meta as { cost_item_variant_mean?: number })
+    .cost_item_variant_mean;
+  const opts = typeof optsRaw === "number" && optsRaw >= 2 ? optsRaw : null;
+  const mean = typeof meanRaw === "number" && meanRaw > 0 ? meanRaw : null;
 
-  const tooltip = t('boq.variant_default_pill_tooltip', {
+  const tooltip = t("boq.variant_default_pill_tooltip", {
     defaultValue:
-      'Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.',
+      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     strategy:
-      variantDefault === 'mean'
-        ? t('costs.variant_mean_word', { defaultValue: 'average' })
-        : t('costs.variant_median_word', { defaultValue: 'median' }),
+      variantDefault === "mean"
+        ? t("costs.variant_mean_word", { defaultValue: "average" })
+        : t("costs.variant_median_word", { defaultValue: "median" }),
   });
 
   return (
@@ -1022,15 +1169,17 @@ export function DescriptionCellRenderer(params: ICellRendererParams) {
         data-testid="boq-variant-default-pill"
       >
         {opts != null
-          ? t('boq.variant_default_pill_with_count', {
-              defaultValue: 'Abstract \u00B7 {{count}} options',
+          ? t("boq.variant_default_pill_with_count", {
+              defaultValue: "Abstract \u00B7 {{count}} options",
               count: opts,
             })
-          : t('boq.variant_default_pill', { defaultValue: 'Default \u00B7 refine \u25BE' })}
+          : t("boq.variant_default_pill", {
+              defaultValue: "Default \u00B7 refine \u25BE",
+            })}
         {mean != null && (
           <span className="text-content-tertiary tabular-nums">
-            {'\u00A0\u00B7\u00A0'}
-            {t('costs.variant_avg_short', { defaultValue: 'avg' })} {fmt(mean)}
+            {"\u00A0\u00B7\u00A0"}
+            {t("costs.variant_avg_short", { defaultValue: "avg" })} {fmt(mean)}
           </span>
         )}
       </span>
@@ -1045,48 +1194,52 @@ export function OrdinalCellRenderer(params: ICellRendererParams) {
   if (!data || data._isSection || data._isFooter) return <span>{value}</span>;
 
   const ctx = context as FullGridContext | undefined;
-  const t = ctx?.t ?? ((key: string, opts?: Record<string, string | number>) => (opts?.defaultValue as string) ?? key);
-  const status = data.validation_status ?? 'pending';
-  const dotColor = VALIDATION_DOT_STYLES[status] ?? VALIDATION_DOT_STYLES.pending;
+  const t =
+    ctx?.t ??
+    ((key: string, opts?: Record<string, string | number>) =>
+      (opts?.defaultValue as string) ?? key);
+  const status = data.validation_status ?? "pending";
+  const dotColor =
+    VALIDATION_DOT_STYLES[status] ?? VALIDATION_DOT_STYLES.pending;
 
   // ── Issue #127: linked-position indicator ──────────────────────────
   // A "master" is the definition of record for a shared reference_code; an
   // "instance" follows the master's definition but keeps its own ordinal &
   // quantity. Distinct styling + a tooltip showing the shared code and how
   // many positions share it.
-  const linkRole = data.link_role as 'master' | 'instance' | null | undefined;
-  const refCode = (data.reference_code as string | null | undefined) ?? '';
+  const linkRole = data.link_role as "master" | "instance" | null | undefined;
+  const refCode = (data.reference_code as string | null | undefined) ?? "";
   const linkedCount =
-    typeof data.linked_instance_count === 'number'
+    typeof data.linked_instance_count === "number"
       ? data.linked_instance_count
       : 0;
   const linkTooltip =
-    linkRole === 'master'
-      ? t('boq.link_badge_master', {
-          defaultValue: 'Master of code {{code}} — {{count}} linked‌⁠‍',
+    linkRole === "master"
+      ? t("boq.link_badge_master", {
+          defaultValue: "Master of code {{code}} — {{count}} linked‌⁠‍",
           code: refCode || (value as string),
           count: linkedCount,
         })
-      : t('boq.link_badge_instance', {
+      : t("boq.link_badge_instance", {
           defaultValue:
-            'Linked instance of code {{code}} — edits to its definition will diverge it‌⁠‍',
+            "Linked instance of code {{code}} — edits to its definition will diverge it‌⁠‍",
           code: refCode || (value as string),
         });
 
   return (
     <div className="flex items-center justify-end gap-1 overflow-hidden w-full">
-      {(linkRole === 'master' || linkRole === 'instance') && (
+      {(linkRole === "master" || linkRole === "instance") && (
         <span
           className={`inline-flex h-4 shrink-0 items-center gap-0.5 rounded px-1 text-[9px] font-semibold ${
-            linkRole === 'master'
-              ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
-              : 'bg-oe-blue/10 text-oe-blue'
+            linkRole === "master"
+              ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+              : "bg-oe-blue/10 text-oe-blue"
           } cursor-help`}
           title={linkTooltip}
           aria-label={linkTooltip}
         >
           <Link2 size={9} />
-          {linkRole === 'master' && linkedCount > 0 ? linkedCount : null}
+          {linkRole === "master" && linkedCount > 0 ? linkedCount : null}
         </span>
       )}
       <span className="text-xs font-mono truncate min-w-0">{value}</span>
@@ -1104,15 +1257,24 @@ export function OrdinalCellRenderer(params: ICellRendererParams) {
 export function BimLinkCellRenderer(params: ICellRendererParams) {
   const { data, context } = params;
   const ctx = context as FullGridContext | undefined;
-  const t = ctx?.t ?? ((key: string, opts?: Record<string, string | number>) => (opts?.defaultValue as string) ?? key);
+  const t =
+    ctx?.t ??
+    ((key: string, opts?: Record<string, string | number>) =>
+      (opts?.defaultValue as string) ?? key);
 
-  if (!data || data._isFooter || data._isResource || data._isAddResource || data._isSection) {
+  if (
+    !data ||
+    data._isFooter ||
+    data._isResource ||
+    data._isAddResource ||
+    data._isSection
+  ) {
     return null;
   }
 
   const bimLinks: unknown = data.cad_element_ids;
   const bimLinkIds: string[] = Array.isArray(bimLinks)
-    ? bimLinks.filter((x): x is string => typeof x === 'string' && x.length > 0)
+    ? bimLinks.filter((x): x is string => typeof x === "string" && x.length > 0)
     : [];
   const bimLinkCount = bimLinkIds.length;
   const hasBimLink = bimLinkCount > 0 && !!ctx?.bimModelId;
@@ -1128,8 +1290,8 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
   // even when the source metadata is missing (legacy rows, seed data).
   // Treat the prefix as a soft link so the red icon surfaces and the
   // user can at least jump back to the PDF takeoff page for context.
-  const isTakeoffOrdinal = typeof data.ordinal === 'string'
-    && /^TK\.\d+$/.test(data.ordinal.trim());
+  const isTakeoffOrdinal =
+    typeof data.ordinal === "string" && /^TK\.\d+$/.test(data.ordinal.trim());
   const hasPdfLink = !!pdfMeasurementId || !!pdfSource || isTakeoffOrdinal;
 
   const dwgAnnotationId = meta.dwg_annotation_id as string | undefined;
@@ -1160,13 +1322,15 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
 
   const handleOpenPdf = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if (pdfBtnRef.current) setPdfAnchor(pdfBtnRef.current.getBoundingClientRect());
+    if (pdfBtnRef.current)
+      setPdfAnchor(pdfBtnRef.current.getBoundingClientRect());
     setShowPdfPopover(true);
   }, []);
 
   const handleOpenDwg = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if (dwgBtnRef.current) setDwgAnchor(dwgBtnRef.current.getBoundingClientRect());
+    if (dwgBtnRef.current)
+      setDwgAnchor(dwgBtnRef.current.getBoundingClientRect());
     setShowDwgPopover(true);
   }, []);
 
@@ -1174,18 +1338,18 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
    *  linked measurement so the user lands on the exact annotation. */
   const pdfDeepLink = useMemo(() => {
     const params = new URLSearchParams();
-    params.set('tab', 'measurements');
-    if (pdfMeasurementId) params.set('focus', pdfMeasurementId);
-    if (pdfDocumentId) params.set('name', pdfDocumentId);
-    if (pdfPage) params.set('page', String(pdfPage));
+    params.set("tab", "measurements");
+    if (pdfMeasurementId) params.set("focus", pdfMeasurementId);
+    if (pdfDocumentId) params.set("name", pdfDocumentId);
+    if (pdfPage) params.set("page", String(pdfPage));
     return `/takeoff?${params.toString()}`;
   }, [pdfMeasurementId, pdfDocumentId, pdfPage]);
 
   /** Same for DWG. */
   const dwgDeepLink = useMemo(() => {
     const params = new URLSearchParams();
-    if (dwgDrawingId) params.set('drawingId', dwgDrawingId);
-    if (dwgAnnotationId) params.set('focus', dwgAnnotationId);
+    if (dwgDrawingId) params.set("drawingId", dwgDrawingId);
+    if (dwgAnnotationId) params.set("focus", dwgAnnotationId);
     return `/dwg-takeoff?${params.toString()}`;
   }, [dwgDrawingId, dwgAnnotationId]);
 
@@ -1193,9 +1357,12 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
 
   const popoverStyle = anchorRect
     ? {
-        position: 'fixed' as const,
+        position: "fixed" as const,
         left: Math.min(anchorRect.right + 8, window.innerWidth - 660),
-        top: Math.max(8, Math.min(anchorRect.top - 40, window.innerHeight - 520)),
+        top: Math.max(
+          8,
+          Math.min(anchorRect.top - 40, window.innerHeight - 520),
+        ),
         zIndex: 9999,
       }
     : undefined;
@@ -1213,8 +1380,14 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
           className="h-6 px-1.5 inline-flex items-center gap-0.5 rounded
                      bg-oe-blue/10 text-oe-blue text-[10px] font-semibold
                      hover:bg-oe-blue/25 transition-colors cursor-pointer"
-          title={t('boq.bim_link_tooltip', { defaultValue: '{{count}} BIM element(s) linked — click to preview', count: bimLinkCount })}
-          aria-label={t('boq.bim_link_tooltip', { defaultValue: '{{count}} BIM element(s) linked — click to preview', count: bimLinkCount })}
+          title={t("boq.bim_link_tooltip", {
+            defaultValue: "{{count}} BIM element(s) linked — click to preview",
+            count: bimLinkCount,
+          })}
+          aria-label={t("boq.bim_link_tooltip", {
+            defaultValue: "{{count}} BIM element(s) linked — click to preview",
+            count: bimLinkCount,
+          })}
         >
           <Cuboid size={11} />
           {bimLinkCount}
@@ -1228,10 +1401,16 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
           className="h-6 w-6 inline-flex items-center justify-center rounded
                      bg-rose-500/10 text-rose-600 dark:text-rose-400
                      hover:bg-rose-500/25 transition-colors cursor-pointer"
-          title={pdfSource
-            ? `${t('boq.pdf_link_tooltip_v2', { defaultValue: 'PDF takeoff — click for details & navigation' })} — ${pdfSource}`
-            : t('boq.pdf_link_tooltip_v2', { defaultValue: 'PDF takeoff — click for details & navigation' })}
-          aria-label={t('boq.pdf_link_tooltip_v2', { defaultValue: 'PDF takeoff — click for details & navigation' })}
+          title={
+            pdfSource
+              ? `${t("boq.pdf_link_tooltip_v2", { defaultValue: "PDF takeoff — click for details & navigation" })} — ${pdfSource}`
+              : t("boq.pdf_link_tooltip_v2", {
+                  defaultValue: "PDF takeoff — click for details & navigation",
+                })
+          }
+          aria-label={t("boq.pdf_link_tooltip_v2", {
+            defaultValue: "PDF takeoff — click for details & navigation",
+          })}
         >
           <FileText size={12} />
         </button>
@@ -1244,17 +1423,24 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
           className="h-6 w-6 inline-flex items-center justify-center rounded
                      bg-amber-500/10 text-amber-600 dark:text-amber-400
                      hover:bg-amber-500/25 transition-colors cursor-pointer"
-          title={dwgSource
-            ? `${t('boq.dwg_link_tooltip_v2', { defaultValue: 'DWG drawing — click for details & navigation' })} — ${dwgSource}`
-            : t('boq.dwg_link_tooltip_v2', { defaultValue: 'DWG drawing — click for details & navigation' })}
-          aria-label={t('boq.dwg_link_tooltip_v2', { defaultValue: 'DWG drawing — click for details & navigation' })}
+          title={
+            dwgSource
+              ? `${t("boq.dwg_link_tooltip_v2", { defaultValue: "DWG drawing — click for details & navigation" })} — ${dwgSource}`
+              : t("boq.dwg_link_tooltip_v2", {
+                  defaultValue: "DWG drawing — click for details & navigation",
+                })
+          }
+          aria-label={t("boq.dwg_link_tooltip_v2", {
+            defaultValue: "DWG drawing — click for details & navigation",
+          })}
         >
           <FileBox size={12} />
         </button>
       )}
 
       {/* PDF source info popover */}
-      {showPdfPopover && pdfAnchor &&
+      {showPdfPopover &&
+        pdfAnchor &&
         createPortal(
           <>
             <div
@@ -1281,7 +1467,8 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
         )}
 
       {/* DWG source info popover */}
-      {showDwgPopover && dwgAnchor &&
+      {showDwgPopover &&
+        dwgAnchor &&
         createPortal(
           <>
             <div
@@ -1306,7 +1493,9 @@ export function BimLinkCellRenderer(params: ICellRendererParams) {
           </>,
           document.body,
         )}
-      {showPreview && anchorRect && ctx?.bimModelId &&
+      {showPreview &&
+        anchorRect &&
+        ctx?.bimModelId &&
         createPortal(
           <>
             {/* Backdrop blur overlay */}
@@ -1340,17 +1529,26 @@ const BimLinkPopover = forwardRef<
     style: React.CSSProperties;
     onClose: () => void;
     positionData?: Record<string, unknown>;
-    onUpdatePosition?: (id: string, data: Record<string, unknown>, oldData: Record<string, unknown>) => void;
+    onUpdatePosition?: (
+      id: string,
+      data: Record<string, unknown>,
+      oldData: Record<string, unknown>,
+    ) => void;
   }
->(function BimLinkPopover({ modelId, elementIds, style, onClose, positionData, onUpdatePosition }, ref) {
+>(function BimLinkPopover(
+  { modelId, elementIds, style, onClose, positionData, onUpdatePosition },
+  ref,
+) {
   const { t } = useTranslation();
   const popoverNavigate = useNavigate();
   const innerRef = useRef<HTMLDivElement>(null);
   const combinedRef = useCallback(
     (node: HTMLDivElement | null) => {
-      (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      if (typeof ref === 'function') ref(node);
-      else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      (innerRef as React.MutableRefObject<HTMLDivElement | null>).current =
+        node;
+      if (typeof ref === "function") ref(node);
+      else if (ref)
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
     },
     [ref],
   );
@@ -1361,23 +1559,23 @@ const BimLinkPopover = forwardRef<
         onClose();
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
   const [glbOk, setGlbOk] = useState(true);
   const [showAllProps, setShowAllProps] = useState(false);
   const [showAllSums, setShowAllSums] = useState(false);
   const { data, isLoading } = useQuery({
-    queryKey: ['bim-link-preview', modelId, ...elementIds],
+    queryKey: ["bim-link-preview", modelId, ...elementIds],
     queryFn: () => fetchBIMElementsByIds(modelId, elementIds),
     enabled: elementIds.length > 0,
     staleTime: 5 * 60_000,
@@ -1394,8 +1592,12 @@ const BimLinkPopover = forwardRef<
   // has something actionable to apply.
   const parquetFetches = useQueries({
     queries: elements.map((el) => ({
-      queryKey: ['bim-parquet-row', modelId, el.mesh_ref || el.id],
-      queryFn: () => fetchBIMElementProperties(modelId, el.mesh_ref || el.stable_id || el.id),
+      queryKey: ["bim-parquet-row", modelId, el.mesh_ref || el.id],
+      queryFn: () =>
+        fetchBIMElementProperties(
+          modelId,
+          el.mesh_ref || el.stable_id || el.id,
+        ),
       enabled: !!modelId && !!el.mesh_ref,
       staleTime: 5 * 60_000,
     })),
@@ -1415,13 +1617,17 @@ const BimLinkPopover = forwardRef<
    *  Parquet fills the rest. */
   const extractNumerics = useCallback(
     (el: BIMElementData, includeAllProperties: boolean) => {
-      const entries: { key: string; value: number; source: 'qty' | 'prop' | 'parquet' }[] = [];
+      const entries: {
+        key: string;
+        value: number;
+        source: "qty" | "prop" | "parquet";
+      }[] = [];
       const seen = new Set<string>();
       if (el.quantities) {
         for (const [k, v] of Object.entries(el.quantities)) {
-          const num = typeof v === 'number' ? v : parseFloat(String(v));
+          const num = typeof v === "number" ? v : parseFloat(String(v));
           if (!isNaN(num) && num !== 0) {
-            entries.push({ key: k, value: num, source: 'qty' });
+            entries.push({ key: k, value: num, source: "qty" });
             seen.add(k);
           }
         }
@@ -1429,9 +1635,9 @@ const BimLinkPopover = forwardRef<
       if (includeAllProperties && el.properties) {
         for (const [k, v] of Object.entries(el.properties)) {
           if (seen.has(k)) continue;
-          const num = typeof v === 'number' ? v : parseFloat(String(v));
+          const num = typeof v === "number" ? v : parseFloat(String(v));
           if (!isNaN(num) && num !== 0) {
-            entries.push({ key: k, value: num, source: 'prop' });
+            entries.push({ key: k, value: num, source: "prop" });
             seen.add(k);
           }
         }
@@ -1444,10 +1650,10 @@ const BimLinkPopover = forwardRef<
         for (const [k, v] of Object.entries(parquet)) {
           if (seen.has(k)) continue;
           // Skip the `id` column (that's the Revit ElementId, not a quantity)
-          if (k === 'id') continue;
-          const num = typeof v === 'number' ? v : parseFloat(String(v));
+          if (k === "id") continue;
+          const num = typeof v === "number" ? v : parseFloat(String(v));
           if (!isNaN(num) && num !== 0) {
-            entries.push({ key: k, value: num, source: 'parquet' });
+            entries.push({ key: k, value: num, source: "parquet" });
             seen.add(k);
           }
         }
@@ -1459,7 +1665,8 @@ const BimLinkPopover = forwardRef<
 
   const isEnriching = parquetFetches.some((q) => q.isLoading);
 
-  const currentQuantity = typeof positionData?.quantity === 'number' ? positionData.quantity : 0;
+  const currentQuantity =
+    typeof positionData?.quantity === "number" ? positionData.quantity : 0;
   const canApply = !!positionData?.id && !!onUpdatePosition;
 
   const handleUseQuantity = useCallback(
@@ -1493,7 +1700,7 @@ const BimLinkPopover = forwardRef<
       return [] as {
         key: string;
         label: string;
-        agg: 'sum' | 'distinct';
+        agg: "sum" | "distinct";
         sum: number;
         unit: string;
         count: number;
@@ -1503,63 +1710,64 @@ const BimLinkPopover = forwardRef<
     type Entry = {
       key: string;
       label: string;
-      agg: 'sum' | 'distinct';
+      agg: "sum" | "distinct";
       sum: number;
       unit: string;
       count: number;
       uniqueValues: number[];
     };
-    const classify = (k: string): 'sum' | 'distinct' => {
+    const classify = (k: string): "sum" | "distinct" => {
       const low = k.toLowerCase();
       // Additive — quantities that roll up
       if (
-        low.includes('area') ||
-        low.endsWith('_m2') ||
-        low.includes('volume') ||
-        low.endsWith('_m3') ||
-        low === 'length' ||
-        low.endsWith('_length') ||
-        low.endsWith('_m') ||
-        low.includes('perimeter') ||
-        low.includes('weight') ||
-        low.endsWith('_kg') ||
-        low.includes('count') ||
-        low === 'qty' ||
-        low === 'quantity'
+        low.includes("area") ||
+        low.endsWith("_m2") ||
+        low.includes("volume") ||
+        low.endsWith("_m3") ||
+        low === "length" ||
+        low.endsWith("_length") ||
+        low.endsWith("_m") ||
+        low.includes("perimeter") ||
+        low.includes("weight") ||
+        low.endsWith("_kg") ||
+        low.includes("count") ||
+        low === "qty" ||
+        low === "quantity"
       ) {
-        return 'sum';
+        return "sum";
       }
       // Per-element constants — thickness, width, height, span, rating…
-      return 'distinct';
+      return "distinct";
     };
     const unitOf = (k: string): string => {
       const low = k.toLowerCase();
-      if (low.includes('area') || low.endsWith('_m2')) return 'm\u00B2';
-      if (low.includes('volume') || low.endsWith('_m3')) return 'm\u00B3';
+      if (low.includes("area") || low.endsWith("_m2")) return "m\u00B2";
+      if (low.includes("volume") || low.endsWith("_m3")) return "m\u00B3";
       if (
-        low.includes('length') ||
-        low.endsWith('_m') ||
-        low.includes('height') ||
-        low.includes('width') ||
-        low.includes('perimeter')
+        low.includes("length") ||
+        low.endsWith("_m") ||
+        low.includes("height") ||
+        low.includes("width") ||
+        low.includes("perimeter")
       )
-        return 'm';
-      if (low.includes('thickness')) return 'mm';
-      if (low.includes('weight') || low.endsWith('_kg')) return 'kg';
-      if (low.includes('count')) return 'pcs';
-      return '';
+        return "m";
+      if (low.includes("thickness")) return "mm";
+      if (low.includes("weight") || low.endsWith("_kg")) return "kg";
+      if (low.includes("count")) return "pcs";
+      return "";
     };
     const map = new Map<string, Entry>();
     const bump = (k: string, num: number) => {
       const existing = map.get(k);
       const label = k
-        .replace(/_m2$|_m3$|_m$|_kg$/, '')
-        .replace(/_/g, ' ')
+        .replace(/_m2$|_m3$|_m$|_kg$/, "")
+        .replace(/_/g, " ")
         .replace(/\b\w/g, (c) => c.toUpperCase());
       if (existing) {
         existing.sum += num;
         existing.count += 1;
-        if (!existing.uniqueValues.includes(num)) existing.uniqueValues.push(num);
+        if (!existing.uniqueValues.includes(num))
+          existing.uniqueValues.push(num);
       } else {
         map.set(k, {
           key: k,
@@ -1576,7 +1784,7 @@ const BimLinkPopover = forwardRef<
       const dbKeys = new Set<string>();
       if (el.quantities) {
         for (const [k, v] of Object.entries(el.quantities)) {
-          const num = typeof v === 'number' ? v : parseFloat(String(v));
+          const num = typeof v === "number" ? v : parseFloat(String(v));
           if (isNaN(num) || num === 0) continue;
           bump(k, num);
           dbKeys.add(k);
@@ -1595,9 +1803,9 @@ const BimLinkPopover = forwardRef<
         const parquet = parquetByElementId[el.id];
         if (parquet) {
           for (const [k, v] of Object.entries(parquet)) {
-            if (k === 'id') continue;
+            if (k === "id") continue;
             if (dbKeys.has(k)) continue;
-            const num = typeof v === 'number' ? v : parseFloat(String(v));
+            const num = typeof v === "number" ? v : parseFloat(String(v));
             if (isNaN(num) || num === 0) continue;
             bump(k, num);
           }
@@ -1607,8 +1815,8 @@ const BimLinkPopover = forwardRef<
     // Sort: SUM entries first (they're the headline numbers), then DISTINCT
     // in descending order of "informativeness" (variety of values).
     return Array.from(map.values()).sort((a, b) => {
-      if (a.agg !== b.agg) return a.agg === 'sum' ? -1 : 1;
-      if (a.agg === 'sum') return b.sum - a.sum;
+      if (a.agg !== b.agg) return a.agg === "sum" ? -1 : 1;
+      if (a.agg === "sum") return b.sum - a.sum;
       return b.uniqueValues.length - a.uniqueValues.length;
     });
   }, [elements, parquetByElementId, showAllSums]);
@@ -1618,7 +1826,11 @@ const BimLinkPopover = forwardRef<
       ref={combinedRef}
       className="rounded-xl shadow-2xl border border-border-light dark:border-border-dark
                  bg-white dark:bg-surface-elevated overflow-hidden flex flex-col"
-      style={{ ...style, width: canApply ? 900 : 380, maxHeight: 'calc(100vh - 48px)' }}
+      style={{
+        ...style,
+        width: canApply ? 900 : 380,
+        maxHeight: "calc(100vh - 48px)",
+      }}
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >
@@ -1627,10 +1839,15 @@ const BimLinkPopover = forwardRef<
         <div className="flex items-center gap-2">
           <Cuboid size={14} className="text-oe-blue" />
           <span className="text-xs font-semibold text-content-primary">
-            {t('boq.linked_geometry', { defaultValue: 'Linked Geometry' })}
+            {t("boq.linked_geometry", { defaultValue: "Linked Geometry" })}
           </span>
           <span className="text-[10px] text-content-tertiary tabular-nums">
-            ({t('boq.element_count', { defaultValue: '{{count}} element(s)', count: elementIds.length })})
+            (
+            {t("boq.element_count", {
+              defaultValue: "{{count}} element(s)",
+              count: elementIds.length,
+            })}
+            )
           </span>
         </div>
         <div className="flex items-center gap-1">
@@ -1639,17 +1856,21 @@ const BimLinkPopover = forwardRef<
             onClick={(e) => {
               e.stopPropagation();
               const params = new URLSearchParams();
-              if (elementIds[0]) params.set('focus', elementIds[0]);
-              if (elementIds.length > 1) params.set('select', elementIds.join(','));
+              if (elementIds[0]) params.set("focus", elementIds[0]);
+              if (elementIds.length > 1)
+                params.set("select", elementIds.join(","));
               popoverNavigate(`/bim/${modelId}?${params.toString()}`);
               onClose();
             }}
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold
                        text-oe-blue hover:bg-oe-blue/10 transition-colors"
-            title={t('boq.open_in_bim_title', { defaultValue: 'Open in 3D viewer with the linked element pre-selected' })}
+            title={t("boq.open_in_bim_title", {
+              defaultValue:
+                "Open in 3D viewer with the linked element pre-selected",
+            })}
           >
             <ExternalLink size={11} />
-            {t('boq.open_in_bim', { defaultValue: 'Open in BIM' })}
+            {t("boq.open_in_bim", { defaultValue: "Open in BIM" })}
           </button>
           <button
             onClick={onClose}
@@ -1661,7 +1882,7 @@ const BimLinkPopover = forwardRef<
         </div>
       </div>
 
-      <div className={canApply ? 'flex flex-1 min-h-0 overflow-hidden' : ''}>
+      <div className={canApply ? "flex flex-1 min-h-0 overflow-hidden" : ""}>
         {/* LEFT column: properties (moved out of the middle so the BIM
             properties read first, like a spec sheet next to the
             geometry).  Header is a static label — the toggle that
@@ -1672,111 +1893,160 @@ const BimLinkPopover = forwardRef<
             <div className="flex items-center gap-1.5 px-3 py-1.5 w-full bg-blue-50/50 dark:bg-blue-950/20 border-b border-border-light/50 dark:border-border-dark/50 shrink-0">
               <Info size={11} className="text-blue-600 shrink-0" />
               <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex-1 text-left">
-                {t('boq.bim_properties', { defaultValue: 'Properties' })}
+                {t("boq.bim_properties", { defaultValue: "Properties" })}
               </span>
               <button
                 type="button"
                 onClick={() => setShowAllProps((v) => !v)}
                 className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold transition-colors ${
                   showAllProps
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-white dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/60'
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "bg-white dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/60"
                 }`}
                 title={
                   showAllProps
-                    ? t('boq.bim_props_show_basic_title', { defaultValue: 'Hide non-quantity properties' })
-                    : t('boq.bim_props_show_all_title', { defaultValue: 'Include every numeric property from BIM' })
+                    ? t("boq.bim_props_show_basic_title", {
+                        defaultValue: "Hide non-quantity properties",
+                      })
+                    : t("boq.bim_props_show_all_title", {
+                        defaultValue: "Include every numeric property from BIM",
+                      })
                 }
               >
                 {showAllProps
-                  ? t('boq.bim_show_less', { defaultValue: 'Show less' })
-                  : t('boq.bim_show_all', { defaultValue: 'Show all' })}
-                <ChevronDown size={10} className={`transition-transform ${showAllProps ? 'rotate-180' : ''}`} />
+                  ? t("boq.bim_show_less", { defaultValue: "Show less" })
+                  : t("boq.bim_show_all", { defaultValue: "Show all" })}
+                <ChevronDown
+                  size={10}
+                  className={`transition-transform ${showAllProps ? "rotate-180" : ""}`}
+                />
               </button>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto">
               {isLoading && (
                 <div className="flex items-center justify-center gap-2 py-4">
-                  <Loader2 size={12} className="animate-spin text-content-tertiary" />
+                  <Loader2
+                    size={12}
+                    className="animate-spin text-content-tertiary"
+                  />
                 </div>
               )}
-              {!isLoading && elements.map((el) => {
-                const numericEntries = extractNumerics(el, showAllProps);
-                if (numericEntries.length === 0) return null;
-                return (
-                  <div key={el.id} className="px-3 py-1.5 border-b border-border-light/30 dark:border-border-dark/30 last:border-b-0">
-                    {elements.length > 1 && (
-                      <div className="text-[9px] font-medium text-content-tertiary mb-0.5 truncate">{el.name || el.element_type}</div>
-                    )}
-                    {numericEntries.map(({ key, value, source }) => {
-                      const isCurrent = canApply && Math.abs(value - currentQuantity) < 0.001;
-                      const paramLabel = key.replace(/_/g, ' ');
-                      return (
-                        <div
-                          key={key}
-                          className="group/prow flex items-center justify-between gap-1.5 py-0.5 rounded-sm hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-colors"
-                        >
-                          <span
-                            className={`text-[10px] truncate ${
-                              source === 'qty'
-                                ? 'text-content-secondary'
-                                : source === 'parquet'
-                                  ? 'text-emerald-700 dark:text-emerald-400'
-                                  : 'text-content-tertiary italic'
-                            }`}
-                            title={source === 'parquet' ? 'From Parquet row (DDC export)' : source === 'prop' ? 'From element properties' : 'From element quantities'}
+              {!isLoading &&
+                elements.map((el) => {
+                  const numericEntries = extractNumerics(el, showAllProps);
+                  if (numericEntries.length === 0) return null;
+                  return (
+                    <div
+                      key={el.id}
+                      className="px-3 py-1.5 border-b border-border-light/30 dark:border-border-dark/30 last:border-b-0"
+                    >
+                      {elements.length > 1 && (
+                        <div className="text-[9px] font-medium text-content-tertiary mb-0.5 truncate">
+                          {el.name || el.element_type}
+                        </div>
+                      )}
+                      {numericEntries.map(({ key, value, source }) => {
+                        const isCurrent =
+                          canApply && Math.abs(value - currentQuantity) < 0.001;
+                        const paramLabel = key.replace(/_/g, " ");
+                        return (
+                          <div
+                            key={key}
+                            className="group/prow flex items-center justify-between gap-1.5 py-0.5 rounded-sm hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-colors"
                           >
-                            {paramLabel}
-                          </span>
-                          <div className="flex items-center gap-1 shrink-0">
-                            <span className="text-[10px] font-mono text-content-primary tabular-nums font-medium">
-                              {value.toLocaleString(getIntlLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                            <span
+                              className={`text-[10px] truncate ${
+                                source === "qty"
+                                  ? "text-content-secondary"
+                                  : source === "parquet"
+                                    ? "text-emerald-700 dark:text-emerald-400"
+                                    : "text-content-tertiary italic"
+                              }`}
+                              title={
+                                source === "parquet"
+                                  ? "From Parquet row (DDC export)"
+                                  : source === "prop"
+                                    ? "From element properties"
+                                    : "From element quantities"
+                              }
+                            >
+                              {paramLabel}
                             </span>
-                            {canApply && (
-                              isCurrent ? (
-                                <span
-                                  className="text-[8px] font-semibold uppercase text-emerald-600 bg-emerald-100 dark:bg-emerald-900/40 px-1 py-0.5 rounded"
-                                  title={t('boq.bim_qty_current_title', { defaultValue: 'Already the position quantity' })}
-                                >
-                                  {t('boq.bim_qty_current', { defaultValue: 'current' })}
-                                </span>
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleUseQuantity(value, `BIM: ${paramLabel}`);
-                                  }}
-                                  className="inline-flex items-center gap-0.5 px-1.5 h-4 rounded-sm text-[9px] font-semibold
+                            <div className="flex items-center gap-1 shrink-0">
+                              <span className="text-[10px] font-mono text-content-primary tabular-nums font-medium">
+                                {value.toLocaleString(getIntlLocale(), {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 4,
+                                })}
+                              </span>
+                              {canApply &&
+                                (isCurrent ? (
+                                  <span
+                                    className="text-[8px] font-semibold uppercase text-emerald-600 bg-emerald-100 dark:bg-emerald-900/40 px-1 py-0.5 rounded"
+                                    title={t("boq.bim_qty_current_title", {
+                                      defaultValue:
+                                        "Already the position quantity",
+                                    })}
+                                  >
+                                    {t("boq.bim_qty_current", {
+                                      defaultValue: "current",
+                                    })}
+                                  </span>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleUseQuantity(
+                                        value,
+                                        `BIM: ${paramLabel}`,
+                                      );
+                                    }}
+                                    className="inline-flex items-center gap-0.5 px-1.5 h-4 rounded-sm text-[9px] font-semibold
                                              text-emerald-700 dark:text-emerald-300
                                              bg-emerald-100/70 dark:bg-emerald-900/30
                                              hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-500
                                              opacity-0 group-hover/prow:opacity-100 transition-all"
-                                  title={t('boq.set_as_quantity_title', { defaultValue: 'Push this value into the BOQ quantity field' })}
-                                >
-                                  {t('boq.set_as_quantity', { defaultValue: 'Set as qty' })}
-                                  <ArrowRight size={8} />
-                                </button>
-                              )
-                            )}
+                                    title={t("boq.set_as_quantity_title", {
+                                      defaultValue:
+                                        "Push this value into the BOQ quantity field",
+                                    })}
+                                  >
+                                    {t("boq.set_as_quantity", {
+                                      defaultValue: "Set as qty",
+                                    })}
+                                    <ArrowRight size={8} />
+                                  </button>
+                                ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              {!isLoading &&
+                !isEnriching &&
+                elements.every(
+                  (el) => extractNumerics(el, showAllProps).length === 0,
+                ) && (
+                  <div className="py-3 text-center text-[10px] text-content-tertiary">
+                    {!showAllProps
+                      ? t("boq.no_quantities_hint_button", {
+                          defaultValue:
+                            'No quantities — press "Show all" above to surface every BIM property',
+                        })
+                      : t("boq.no_numeric_found", {
+                          defaultValue: "No numeric values in this element",
+                        })}
                   </div>
-                );
-              })}
-              {!isLoading && !isEnriching && elements.every((el) => extractNumerics(el, showAllProps).length === 0) && (
-                <div className="py-3 text-center text-[10px] text-content-tertiary">
-                  {!showAllProps
-                    ? t('boq.no_quantities_hint_button', { defaultValue: 'No quantities — press "Show all" above to surface every BIM property' })
-                    : t('boq.no_numeric_found', { defaultValue: 'No numeric values in this element' })}
-                </div>
-              )}
+                )}
               {isEnriching && !isLoading && (
                 <div className="flex items-center justify-center gap-2 py-2 text-[10px] text-content-tertiary">
                   <Loader2 size={10} className="animate-spin" />
-                  {t('boq.loading_full_properties', { defaultValue: 'Loading full properties…' })}
+                  {t("boq.loading_full_properties", {
+                    defaultValue: "Loading full properties…",
+                  })}
                 </div>
               )}
             </div>
@@ -1784,7 +2054,13 @@ const BimLinkPopover = forwardRef<
         )}
 
         {/* MIDDLE column: 3D preview + element cards */}
-        <div className={canApply ? 'w-[380px] shrink-0 border-r border-border-light dark:border-border-dark flex flex-col' : 'w-full'}>
+        <div
+          className={
+            canApply
+              ? "w-[380px] shrink-0 border-r border-border-light dark:border-border-dark flex flex-col"
+              : "w-full"
+          }
+        >
           {/* 3D Preview */}
           {glbOk && (
             <MiniGeometryPreview
@@ -1801,22 +2077,30 @@ const BimLinkPopover = forwardRef<
           <div className="max-h-[180px] overflow-y-auto">
             {isLoading && (
               <div className="flex items-center justify-center py-6 text-content-tertiary text-xs">
-                {t('boq.loading_element_data', { defaultValue: 'Loading element data...' })}
+                {t("boq.loading_element_data", {
+                  defaultValue: "Loading element data...",
+                })}
               </div>
             )}
-            {!isLoading && elements.map((el) => (
-              <div key={el.id} className="px-3 py-2 border-b border-border-light/50 dark:border-border-dark/50 last:border-b-0">
-                <div className="flex items-center gap-2">
-                  <Cuboid size={11} className="text-oe-blue/60 shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[11px] font-medium text-content-primary truncate">
-                      {el.name || el.element_type}
+            {!isLoading &&
+              elements.map((el) => (
+                <div
+                  key={el.id}
+                  className="px-3 py-2 border-b border-border-light/50 dark:border-border-dark/50 last:border-b-0"
+                >
+                  <div className="flex items-center gap-2">
+                    <Cuboid size={11} className="text-oe-blue/60 shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[11px] font-medium text-content-primary truncate">
+                        {el.name || el.element_type}
+                      </div>
+                      <div className="text-[9px] text-content-tertiary font-mono">
+                        {el.element_type}
+                      </div>
                     </div>
-                    <div className="text-[9px] text-content-tertiary font-mono">{el.element_type}</div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 
@@ -1831,164 +2115,226 @@ const BimLinkPopover = forwardRef<
             <div className="flex items-center gap-1.5 px-3 py-1.5 w-full bg-emerald-50/50 dark:bg-emerald-950/20 border-b border-border-light/50 dark:border-border-dark/50 shrink-0">
               <Ruler size={11} className="text-emerald-600 shrink-0" />
               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex-1 text-left">
-                {t('boq.apply_to_boq', { defaultValue: 'Apply to BOQ' })}
+                {t("boq.apply_to_boq", { defaultValue: "Apply to BOQ" })}
               </span>
               {isEnriching && (
-                <Loader2 size={10} className="animate-spin text-emerald-600/60 shrink-0" />
+                <Loader2
+                  size={10}
+                  className="animate-spin text-emerald-600/60 shrink-0"
+                />
               )}
               <button
                 type="button"
                 onClick={() => setShowAllSums((v) => !v)}
                 className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold transition-colors ${
                   showAllSums
-                    ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                    : 'bg-white dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-900/60'
+                    ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                    : "bg-white dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-900/60"
                 }`}
                 title={
                   showAllSums
-                    ? t('boq.bim_collapse_sums', { defaultValue: 'Show only headline quantities' })
-                    : t('boq.bim_expand_sums', { defaultValue: 'Show all numeric values from BIM' })
+                    ? t("boq.bim_collapse_sums", {
+                        defaultValue: "Show only headline quantities",
+                      })
+                    : t("boq.bim_expand_sums", {
+                        defaultValue: "Show all numeric values from BIM",
+                      })
                 }
               >
                 {showAllSums
-                  ? t('boq.bim_show_less', { defaultValue: 'Show less' })
-                  : t('boq.bim_show_all', { defaultValue: 'Show all' })}
-                <ChevronDown size={10} className={`transition-transform ${showAllSums ? 'rotate-180' : ''}`} />
+                  ? t("boq.bim_show_less", { defaultValue: "Show less" })
+                  : t("boq.bim_show_all", { defaultValue: "Show all" })}
+                <ChevronDown
+                  size={10}
+                  className={`transition-transform ${showAllSums ? "rotate-180" : ""}`}
+                />
               </button>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto">
               {isLoading && (
                 <div className="flex items-center justify-center gap-2 py-4">
-                  <Loader2 size={12} className="animate-spin text-content-tertiary" />
+                  <Loader2
+                    size={12}
+                    className="animate-spin text-content-tertiary"
+                  />
                 </div>
               )}
               {!isLoading && quantitySums.length === 0 && (
                 <div className="py-3 text-center text-[10px] text-content-tertiary">
-                  {t('boq.no_numeric_quantities', { defaultValue: 'No numeric quantities' })}
+                  {t("boq.no_numeric_quantities", {
+                    defaultValue: "No numeric quantities",
+                  })}
                 </div>
               )}
-              {!isLoading && quantitySums.map((s) => {
-                // SUM entries get the traditional "Use this number" row.
-                if (s.agg === 'sum') {
-                  const isCurrent = Math.abs(s.sum - currentQuantity) < 0.001;
-                  const fmt = Number.isInteger(s.sum)
-                    ? s.sum.toLocaleString(getIntlLocale())
-                    : s.sum.toLocaleString(getIntlLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 4 });
-                  return (
-                    <div
-                      key={s.key}
-                      className={`flex items-center gap-1 px-3 py-1.5 group/qrow transition-colors ${
-                        isCurrent
-                          ? 'bg-emerald-50/60 dark:bg-emerald-950/20'
-                          : 'hover:bg-emerald-50/80 dark:hover:bg-emerald-950/30'
-                      }`}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1">
-                          <span className="text-[11px] text-content-secondary truncate">{s.label}</span>
-                          <span
-                            className="text-[8px] font-bold uppercase text-emerald-600/80 tracking-wider shrink-0"
-                            title={t('boq.bim_agg_sum_title', { defaultValue: 'Summed across all linked elements' })}
-                          >
-                            Σ
+              {!isLoading &&
+                quantitySums.map((s) => {
+                  // SUM entries get the traditional "Use this number" row.
+                  if (s.agg === "sum") {
+                    const isCurrent = Math.abs(s.sum - currentQuantity) < 0.001;
+                    const fmt = Number.isInteger(s.sum)
+                      ? s.sum.toLocaleString(getIntlLocale())
+                      : s.sum.toLocaleString(getIntlLocale(), {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 4,
+                        });
+                    return (
+                      <div
+                        key={s.key}
+                        className={`flex items-center gap-1 px-3 py-1.5 group/qrow transition-colors ${
+                          isCurrent
+                            ? "bg-emerald-50/60 dark:bg-emerald-950/20"
+                            : "hover:bg-emerald-50/80 dark:hover:bg-emerald-950/30"
+                        }`}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1">
+                            <span className="text-[11px] text-content-secondary truncate">
+                              {s.label}
+                            </span>
+                            <span
+                              className="text-[8px] font-bold uppercase text-emerald-600/80 tracking-wider shrink-0"
+                              title={t("boq.bim_agg_sum_title", {
+                                defaultValue:
+                                  "Summed across all linked elements",
+                              })}
+                            >
+                              Σ
+                            </span>
+                          </div>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-[12px] tabular-nums text-content-primary font-semibold">
+                              {fmt}
+                            </span>
+                            {s.unit && (
+                              <span className="text-[9px] text-content-quaternary font-mono">
+                                {s.unit}
+                              </span>
+                            )}
+                            {elements.length > 1 && s.count > 1 && (
+                              <span className="text-[8px] text-content-quaternary">
+                                ({s.count} el.)
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {isCurrent ? (
+                          <span className="text-[9px] text-emerald-600 font-semibold shrink-0 bg-emerald-100 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded inline-flex items-center gap-0.5">
+                            <CheckCircle2 size={9} />
+                            {t("boq.bim_qty_current", {
+                              defaultValue: "current",
+                            })}
                           </span>
-                        </div>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-[12px] tabular-nums text-content-primary font-semibold">{fmt}</span>
-                          {s.unit && <span className="text-[9px] text-content-quaternary font-mono">{s.unit}</span>}
-                          {elements.length > 1 && s.count > 1 && (
-                            <span className="text-[8px] text-content-quaternary">({s.count} el.)</span>
-                          )}
-                        </div>
-                      </div>
-                      {isCurrent ? (
-                        <span className="text-[9px] text-emerald-600 font-semibold shrink-0 bg-emerald-100 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded inline-flex items-center gap-0.5">
-                          <CheckCircle2 size={9} />
-                          {t('boq.bim_qty_current', { defaultValue: 'current' })}
-                        </span>
-                      ) : (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUseQuantity(s.sum, `BIM: ${s.label} (Σ)`);
-                          }}
-                          className="shrink-0 h-6 flex items-center gap-1 px-2.5 rounded-md text-[10px] font-semibold
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUseQuantity(s.sum, `BIM: ${s.label} (Σ)`);
+                            }}
+                            className="shrink-0 h-6 flex items-center gap-1 px-2.5 rounded-md text-[10px] font-semibold
                                      text-white bg-gradient-to-r from-emerald-500 to-emerald-600
                                      hover:from-emerald-600 hover:to-emerald-700
                                      shadow-sm hover:shadow-md ring-1 ring-emerald-500/20 hover:ring-emerald-500/40
                                      active:scale-[0.97] transition-all"
-                          title={t('boq.bim_qty_use_as_quantity', { defaultValue: 'Set as quantity' })}
+                            title={t("boq.bim_qty_use_as_quantity", {
+                              defaultValue: "Set as quantity",
+                            })}
+                          >
+                            {t("boq.bim_qty_use_as_quantity", {
+                              defaultValue: "Set as quantity",
+                            })}
+                            <ArrowRight size={10} />
+                          </button>
+                        )}
+                      </div>
+                    );
+                  }
+                  // DISTINCT entries: list unique values (e.g. wall thicknesses
+                  // across a multi-wall selection). Single value → one chip.
+                  // Many values → scrollable chip strip, each individually
+                  // clickable to apply that specific number.
+                  const unique = s.uniqueValues;
+                  const sortedUnique = [...unique].sort((a, b) => a - b);
+                  const fmtVal = (n: number) =>
+                    Number.isInteger(n)
+                      ? n.toLocaleString(getIntlLocale())
+                      : n.toLocaleString(getIntlLocale(), {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 4,
+                        });
+                  return (
+                    <div
+                      key={s.key}
+                      className="px-3 py-1.5 border-b border-border-light/30 dark:border-border-dark/30 last:border-b-0 hover:bg-sky-50/40 dark:hover:bg-sky-950/20 transition-colors"
+                    >
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <span className="text-[11px] text-content-secondary truncate">
+                          {s.label}
+                        </span>
+                        <span
+                          className="text-[8px] font-bold uppercase text-sky-600/80 tracking-wider shrink-0"
+                          title={t("boq.bim_agg_distinct_title", {
+                            defaultValue:
+                              "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+                          })}
                         >
-                          {t('boq.bim_qty_use_as_quantity', { defaultValue: 'Set as quantity' })}
-                          <ArrowRight size={10} />
-                        </button>
-                      )}
+                          {sortedUnique.length === 1
+                            ? "="
+                            : t("boq.bim_agg_distinct_label", {
+                                defaultValue: "{{n}} values",
+                                n: sortedUnique.length,
+                              })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 flex-wrap">
+                        {sortedUnique.map((v) => {
+                          const isCurrent =
+                            Math.abs(v - currentQuantity) < 0.001;
+                          return (
+                            <button
+                              key={v}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!isCurrent)
+                                  handleUseQuantity(
+                                    v,
+                                    `BIM: ${s.label} = ${fmtVal(v)}`,
+                                  );
+                              }}
+                              disabled={isCurrent}
+                              className={`group/chip inline-flex items-center gap-0.5 px-2 py-1 rounded-md border text-[10px] tabular-nums font-mono transition-all ${
+                                isCurrent
+                                  ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border-emerald-300 cursor-default"
+                                  : "bg-surface-primary text-content-primary border-border-light hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-sm active:scale-[0.97]"
+                              }`}
+                              title={
+                                isCurrent
+                                  ? t("boq.bim_qty_current", {
+                                      defaultValue: "current",
+                                    })
+                                  : t("boq.bim_qty_use_as_quantity", {
+                                      defaultValue: "Set as quantity",
+                                    })
+                              }
+                            >
+                              <span className="font-semibold">{fmtVal(v)}</span>
+                              {s.unit && (
+                                <span className="text-[8px] opacity-70 group-hover/chip:opacity-100">
+                                  {s.unit}
+                                </span>
+                              )}
+                              {!isCurrent && (
+                                <ArrowRight
+                                  size={8}
+                                  className="opacity-0 group-hover/chip:opacity-100 transition-opacity -mr-0.5"
+                                />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   );
-                }
-                // DISTINCT entries: list unique values (e.g. wall thicknesses
-                // across a multi-wall selection). Single value → one chip.
-                // Many values → scrollable chip strip, each individually
-                // clickable to apply that specific number.
-                const unique = s.uniqueValues;
-                const sortedUnique = [...unique].sort((a, b) => a - b);
-                const fmtVal = (n: number) =>
-                  Number.isInteger(n)
-                    ? n.toLocaleString(getIntlLocale())
-                    : n.toLocaleString(getIntlLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 4 });
-                return (
-                  <div key={s.key} className="px-3 py-1.5 border-b border-border-light/30 dark:border-border-dark/30 last:border-b-0 hover:bg-sky-50/40 dark:hover:bg-sky-950/20 transition-colors">
-                    <div className="flex items-center gap-1 mb-0.5">
-                      <span className="text-[11px] text-content-secondary truncate">{s.label}</span>
-                      <span
-                        className="text-[8px] font-bold uppercase text-sky-600/80 tracking-wider shrink-0"
-                        title={t('boq.bim_agg_distinct_title', {
-                          defaultValue:
-                            'Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.',
-                        })}
-                      >
-                        {sortedUnique.length === 1
-                          ? '='
-                          : t('boq.bim_agg_distinct_label', {
-                              defaultValue: '{{n}} values',
-                              n: sortedUnique.length,
-                            })}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 flex-wrap">
-                      {sortedUnique.map((v) => {
-                        const isCurrent = Math.abs(v - currentQuantity) < 0.001;
-                        return (
-                          <button
-                            key={v}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (!isCurrent) handleUseQuantity(v, `BIM: ${s.label} = ${fmtVal(v)}`);
-                            }}
-                            disabled={isCurrent}
-                            className={`group/chip inline-flex items-center gap-0.5 px-2 py-1 rounded-md border text-[10px] tabular-nums font-mono transition-all ${
-                              isCurrent
-                                ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border-emerald-300 cursor-default'
-                                : 'bg-surface-primary text-content-primary border-border-light hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-sm active:scale-[0.97]'
-                            }`}
-                            title={
-                              isCurrent
-                                ? t('boq.bim_qty_current', { defaultValue: 'current' })
-                                : t('boq.bim_qty_use_as_quantity', { defaultValue: 'Set as quantity' })
-                            }
-                          >
-                            <span className="font-semibold">{fmtVal(v)}</span>
-                            {s.unit && <span className="text-[8px] opacity-70 group-hover/chip:opacity-100">{s.unit}</span>}
-                            {!isCurrent && (
-                              <ArrowRight size={8} className="opacity-0 group-hover/chip:opacity-100 transition-opacity -mr-0.5" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
+                })}
             </div>
           </div>
         )}
@@ -1997,18 +2343,18 @@ const BimLinkPopover = forwardRef<
       {/* Footer — navigate to BIM viewer */}
       <div className="px-4 py-2 border-t border-border-light dark:border-border-dark bg-surface-secondary/20">
         <a
-          href={`/bim?model=${encodeURIComponent(modelId)}&highlight=${encodeURIComponent(elementIds.join(','))}`}
+          href={`/bim?model=${encodeURIComponent(modelId)}&highlight=${encodeURIComponent(elementIds.join(","))}`}
           className="flex items-center justify-center gap-2 w-full h-8 rounded-lg
                      bg-oe-blue/10 hover:bg-oe-blue/20 text-oe-blue text-xs font-medium
                      transition-colors"
           onClick={(e) => {
             e.preventDefault();
             onClose();
-            window.location.href = `/bim?model=${encodeURIComponent(modelId)}&highlight=${encodeURIComponent(elementIds.join(','))}`;
+            window.location.href = `/bim?model=${encodeURIComponent(modelId)}&highlight=${encodeURIComponent(elementIds.join(","))}`;
           }}
         >
           <Boxes size={14} />
-          {t('boq.open_in_bim_viewer', { defaultValue: 'Open in BIM Viewer' })}
+          {t("boq.open_in_bim_viewer", { defaultValue: "Open in BIM Viewer" })}
         </a>
       </div>
     </div>
@@ -2023,7 +2369,7 @@ const BimLinkPopover = forwardRef<
  * cell grid context exposes an update callback, so the same popover
  * doubles as a "set quantity from source" affordance. */
 interface PdfDwgSourcePopoverProps {
-  kind: 'pdf' | 'dwg';
+  kind: "pdf" | "dwg";
   anchor: DOMRect;
   sourceName: string | null;
   page?: number | null;
@@ -2034,7 +2380,11 @@ interface PdfDwgSourcePopoverProps {
   deepLink: string;
   onClose: () => void;
   onNavigate: () => void;
-  onApplyQuantity?: (id: string, data: Record<string, unknown>, oldData: Record<string, unknown>) => void;
+  onApplyQuantity?: (
+    id: string,
+    data: Record<string, unknown>,
+    oldData: Record<string, unknown>,
+  ) => void;
 }
 
 function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
@@ -2062,32 +2412,39 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
   const numericFromMeta = (keys: string[]): number | null => {
     for (const k of keys) {
       const raw = meta[k];
-      const num = typeof raw === 'number' ? raw : parseFloat(String(raw));
+      const num = typeof raw === "number" ? raw : parseFloat(String(raw));
       if (Number.isFinite(num) && num !== 0) return num;
     }
     return null;
   };
   const measurementValue =
-    kind === 'pdf'
-      ? numericFromMeta(['pdf_measurement_value', 'pdf_area', 'pdf_length'])
-      : numericFromMeta(['dwg_measurement_value', 'dwg_area', 'dwg_length']);
-  const measurementUnit = (meta[kind === 'pdf' ? 'pdf_measurement_unit' : 'dwg_measurement_unit'] as string | undefined)
-    ?? (meta[kind === 'pdf' ? 'pdf_unit' : 'dwg_unit'] as string | undefined)
-    ?? '';
-  const measurementType = (meta[kind === 'pdf' ? 'pdf_measurement_type' : 'dwg_annotation_type'] as string | undefined) ?? null;
+    kind === "pdf"
+      ? numericFromMeta(["pdf_measurement_value", "pdf_area", "pdf_length"])
+      : numericFromMeta(["dwg_measurement_value", "dwg_area", "dwg_length"]);
+  const measurementUnit =
+    (meta[kind === "pdf" ? "pdf_measurement_unit" : "dwg_measurement_unit"] as
+      | string
+      | undefined) ??
+    (meta[kind === "pdf" ? "pdf_unit" : "dwg_unit"] as string | undefined) ??
+    "";
+  const measurementType =
+    (meta[kind === "pdf" ? "pdf_measurement_type" : "dwg_annotation_type"] as
+      | string
+      | undefined) ?? null;
 
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
-      if (popRef.current && !popRef.current.contains(e.target as Node)) onClose();
+      if (popRef.current && !popRef.current.contains(e.target as Node))
+        onClose();
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
     };
   }, [onClose]);
 
@@ -2107,10 +2464,11 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
     // appear (cellRenderers QuantityCellRenderer/UnitCellRenderer key off
     // ``pdf_measurement_source`` / ``dwg_annotation_source``).
     const label =
-      kind === 'pdf'
-        ? `Takeoff: ${sourceName ?? measurementType ?? 'measurement'}${page != null ? ` (page ${page})` : ''}`
-        : `DWG: ${sourceName ?? measurementType ?? 'annotation'}`;
-    const linkKey = kind === 'pdf' ? 'pdf_measurement_source' : 'dwg_annotation_source';
+      kind === "pdf"
+        ? `Takeoff: ${sourceName ?? measurementType ?? "measurement"}${page != null ? ` (page ${page})` : ""}`
+        : `DWG: ${sourceName ?? measurementType ?? "annotation"}`;
+    const linkKey =
+      kind === "pdf" ? "pdf_measurement_source" : "dwg_annotation_source";
     onApplyQuantity!(
       id,
       {
@@ -2125,34 +2483,38 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
     onClose();
   };
 
-  const accent = kind === 'pdf'
-    ? 'from-rose-500 to-rose-600 ring-rose-500/20'
-    : 'from-amber-500 to-amber-600 ring-amber-500/20';
-  const accentBg = kind === 'pdf'
-    ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
-    : 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
+  const accent =
+    kind === "pdf"
+      ? "from-rose-500 to-rose-600 ring-rose-500/20"
+      : "from-amber-500 to-amber-600 ring-amber-500/20";
+  const accentBg =
+    kind === "pdf"
+      ? "bg-rose-500/10 text-rose-600 dark:text-rose-400"
+      : "bg-amber-500/10 text-amber-600 dark:text-amber-400";
 
   return (
     <div
       ref={popRef}
-      style={{ position: 'fixed', left, top, width, zIndex: 9999 }}
+      style={{ position: "fixed", left, top, width, zIndex: 9999 }}
       className="rounded-xl shadow-2xl border border-border-light dark:border-border-dark
                  bg-white dark:bg-surface-elevated overflow-hidden animate-card-in"
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
       role="dialog"
-      aria-label={kind === 'pdf' ? 'PDF takeoff source' : 'DWG drawing source'}
+      aria-label={kind === "pdf" ? "PDF takeoff source" : "DWG drawing source"}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-3.5 py-2 border-b border-border-light dark:border-border-dark bg-surface-secondary/30">
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className={`h-5 w-5 inline-flex items-center justify-center rounded ${accentBg}`}>
-            {kind === 'pdf' ? <FileText size={12} /> : <FileBox size={12} />}
+          <span
+            className={`h-5 w-5 inline-flex items-center justify-center rounded ${accentBg}`}
+          >
+            {kind === "pdf" ? <FileText size={12} /> : <FileBox size={12} />}
           </span>
           <span className="text-[11px] font-semibold text-content-primary uppercase tracking-wide">
-            {kind === 'pdf'
-              ? t('boq.source_pdf', { defaultValue: 'PDF takeoff' })
-              : t('boq.source_dwg', { defaultValue: 'DWG drawing' })}
+            {kind === "pdf"
+              ? t("boq.source_pdf", { defaultValue: "PDF takeoff" })
+              : t("boq.source_dwg", { defaultValue: "DWG drawing" })}
           </span>
         </div>
         <button
@@ -2160,7 +2522,7 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
           onClick={onClose}
           className="h-5 w-5 flex items-center justify-center rounded text-content-tertiary
                      hover:text-content-primary hover:bg-surface-tertiary transition-colors"
-          aria-label={t('common.close', { defaultValue: 'Close' })}
+          aria-label={t("common.close", { defaultValue: "Close" })}
         >
           <X size={12} />
         </button>
@@ -2171,17 +2533,24 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
         {/* Source document name */}
         <div>
           <div className="text-[9px] font-semibold uppercase tracking-wider text-content-tertiary mb-0.5">
-            {t('boq.source_doc_label', { defaultValue: 'Source document' })}
+            {t("boq.source_doc_label", { defaultValue: "Source document" })}
           </div>
-          <div className="text-[12px] font-medium text-content-primary truncate" title={sourceName || ''}>
-            {sourceName || t('boq.source_doc_unknown', { defaultValue: 'Unknown document' })}
+          <div
+            className="text-[12px] font-medium text-content-primary truncate"
+            title={sourceName || ""}
+          >
+            {sourceName ||
+              t("boq.source_doc_unknown", { defaultValue: "Unknown document" })}
           </div>
-          {kind === 'pdf' && page && (
+          {kind === "pdf" && page && (
             <div className="text-[10px] text-content-tertiary mt-0.5">
-              {t('boq.source_pdf_page', { defaultValue: 'Page {{page}}', page })}
+              {t("boq.source_pdf_page", {
+                defaultValue: "Page {{page}}",
+                page,
+              })}
             </div>
           )}
-          {kind === 'dwg' && drawingId && (
+          {kind === "dwg" && drawingId && (
             <div className="text-[10px] text-content-tertiary font-mono mt-0.5 truncate">
               {drawingId.slice(0, 8)}…
             </div>
@@ -2191,15 +2560,20 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
         {/* Measurement value(s) */}
         <div>
           <div className="text-[9px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('boq.source_measurement_label', { defaultValue: 'Measurement' })}
+            {t("boq.source_measurement_label", { defaultValue: "Measurement" })}
           </div>
           {measurementValue !== null ? (
             <div className="flex items-baseline gap-1.5">
               <span className="text-[20px] font-semibold tabular-nums text-content-primary leading-none">
-                {measurementValue.toLocaleString(getIntlLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                {measurementValue.toLocaleString(getIntlLocale(), {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 4,
+                })}
               </span>
               {measurementUnit && (
-                <span className="text-[11px] text-content-secondary font-medium">{measurementUnit}</span>
+                <span className="text-[11px] text-content-secondary font-medium">
+                  {measurementUnit}
+                </span>
               )}
               {measurementType && (
                 <span className="ml-auto text-[9px] uppercase tracking-wide text-content-tertiary bg-surface-secondary/60 px-1.5 py-0.5 rounded">
@@ -2209,7 +2583,10 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
             </div>
           ) : (
             <div className="text-[11px] text-content-tertiary italic">
-              {t('boq.source_no_measurement', { defaultValue: 'Measurement data not stored locally — open the source to view details.' })}
+              {t("boq.source_no_measurement", {
+                defaultValue:
+                  "Measurement data not stored locally — open the source to view details.",
+              })}
             </div>
           )}
         </div>
@@ -2218,10 +2595,10 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
         {(measurementId || annotationId) && (
           <div>
             <div className="text-[9px] font-semibold uppercase tracking-wider text-content-tertiary mb-0.5">
-              {t('boq.source_id_label', { defaultValue: 'Item id' })}
+              {t("boq.source_id_label", { defaultValue: "Item id" })}
             </div>
             <div className="text-[10px] font-mono text-content-tertiary truncate">
-              {(measurementId || annotationId || '').slice(0, 12)}…
+              {(measurementId || annotationId || "").slice(0, 12)}…
             </div>
           </div>
         )}
@@ -2234,20 +2611,25 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
             type="button"
             onClick={applyQuantity}
             className={`flex-1 h-8 flex items-center justify-center gap-1.5 rounded-md text-[11px] font-semibold text-white bg-gradient-to-r ${accent} ring-1 shadow-sm hover:shadow-md active:scale-[0.98] transition-all`}
-            title={t('boq.source_apply_qty_title', { defaultValue: 'Set this value as the BOQ position quantity' })}
+            title={t("boq.source_apply_qty_title", {
+              defaultValue: "Set this value as the BOQ position quantity",
+            })}
           >
             <ArrowRight size={12} />
-            {t('boq.source_apply_qty', { defaultValue: 'Set as quantity' })}
+            {t("boq.source_apply_qty", { defaultValue: "Set as quantity" })}
           </button>
         )}
         <button
           type="button"
           onClick={onNavigate}
-          className={`${canApply ? 'h-8 px-3' : 'flex-1 h-8'} flex items-center justify-center gap-1.5 rounded-md text-[11px] font-semibold text-oe-blue bg-oe-blue/10 hover:bg-oe-blue/20 transition-colors`}
-          title={t('boq.source_open_title', { defaultValue: 'Open the source document in its viewer, focused on this item' })}
+          className={`${canApply ? "h-8 px-3" : "flex-1 h-8"} flex items-center justify-center gap-1.5 rounded-md text-[11px] font-semibold text-oe-blue bg-oe-blue/10 hover:bg-oe-blue/20 transition-colors`}
+          title={t("boq.source_open_title", {
+            defaultValue:
+              "Open the source document in its viewer, focused on this item",
+          })}
         >
           <ExternalLink size={12} />
-          {t('boq.source_open', { defaultValue: 'Open source' })}
+          {t("boq.source_open", { defaultValue: "Open source" })}
         </button>
       </div>
     </div>
@@ -2269,7 +2651,7 @@ function InlineNumberInput({
 }) {
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const startEdit = useCallback(() => {
@@ -2290,7 +2672,7 @@ function InlineNumberInput({
       const evaluated = evaluateFormula(trimmed);
       parsed = evaluated !== null ? evaluated : NaN;
     } else {
-      parsed = parseFloat(trimmed.replace(',', '.'));
+      parsed = parseFloat(trimmed.replace(",", "."));
     }
     if (!isNaN(parsed) && parsed !== value) {
       onCommit(parsed);
@@ -2317,11 +2699,13 @@ function InlineNumberInput({
           onChange={(e) => setText(e.target.value)}
           onBlur={commit}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') commit();
-            if (e.key === 'Escape') setEditing(false);
+            if (e.key === "Enter") commit();
+            if (e.key === "Escape") setEditing(false);
           }}
-          className={`bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 text-right tabular-nums outline-none w-full ${className ?? ''}`}
-          aria-label={t('boq.inline_edit_number', { defaultValue: 'Edit value' })}
+          className={`bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 text-right tabular-nums outline-none w-full ${className ?? ""}`}
+          aria-label={t("boq.inline_edit_number", {
+            defaultValue: "Edit value",
+          })}
           placeholder="123  or  =2*PI()*3"
           autoFocus
         />
@@ -2329,11 +2713,15 @@ function InlineNumberInput({
           <span
             className={`absolute right-0 top-full mt-0.5 text-[10px] tabular-nums pointer-events-none whitespace-nowrap z-10 px-1 rounded shadow-sm bg-surface-elevated border ${
               isNaN(livePreview)
-                ? 'border-rose-300 text-rose-600 dark:text-rose-400'
-                : 'border-emerald-300 text-emerald-600 dark:text-emerald-400 font-semibold'
+                ? "border-rose-300 text-rose-600 dark:text-rose-400"
+                : "border-emerald-300 text-emerald-600 dark:text-emerald-400 font-semibold"
             }`}
           >
-            {isNaN(livePreview) ? <AlertTriangle size={10} strokeWidth={2} /> : '= ' + fmt.format(livePreview)}
+            {isNaN(livePreview) ? (
+              <AlertTriangle size={10} strokeWidth={2} />
+            ) : (
+              "= " + fmt.format(livePreview)
+            )}
           </span>
         )}
       </span>
@@ -2343,8 +2731,10 @@ function InlineNumberInput({
   return (
     <span
       onDoubleClick={startEdit}
-      className={`cursor-text hover:bg-oe-blue-subtle/50 rounded px-1 transition-colors ${className ?? ''}`}
-      title={t('boq.double_click_to_edit', { defaultValue: 'Double-click to edit' })}
+      className={`cursor-text hover:bg-oe-blue-subtle/50 rounded px-1 transition-colors ${className ?? ""}`}
+      title={t("boq.double_click_to_edit", {
+        defaultValue: "Double-click to edit",
+      })}
     >
       {fmt.format(value)}
     </span>
@@ -2362,7 +2752,7 @@ function InlineTextInput({
 }) {
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const startEdit = useCallback(() => {
@@ -2388,11 +2778,11 @@ function InlineTextInput({
         onChange={(e) => setText(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') commit();
-          if (e.key === 'Escape') setEditing(false);
+          if (e.key === "Enter") commit();
+          if (e.key === "Escape") setEditing(false);
         }}
-        className={`bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 outline-none ${className ?? ''}`}
-        aria-label={t('boq.inline_edit_text', { defaultValue: 'Edit text' })}
+        className={`bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 outline-none ${className ?? ""}`}
+        aria-label={t("boq.inline_edit_text", { defaultValue: "Edit text" })}
         autoFocus
       />
     );
@@ -2401,8 +2791,10 @@ function InlineTextInput({
   return (
     <span
       onDoubleClick={startEdit}
-      className={`cursor-text hover:bg-oe-blue-subtle/50 rounded px-1 transition-colors truncate ${className ?? ''}`}
-      title={t('boq.double_click_to_edit', { defaultValue: 'Double-click to edit' })}
+      className={`cursor-text hover:bg-oe-blue-subtle/50 rounded px-1 transition-colors truncate ${className ?? ""}`}
+      title={t("boq.double_click_to_edit", {
+        defaultValue: "Double-click to edit",
+      })}
     >
       {value}
     </span>
@@ -2439,7 +2831,9 @@ interface ColumnSlot {
  * so a memo keyed only on `api` would never invalidate. We mirror the
  * same pattern BOQGrid uses for `refreshCells` after positions change.
  */
-function useDisplayedColumnSlots(api: GridApi | undefined | null): ColumnSlot[] {
+function useDisplayedColumnSlots(
+  api: GridApi | undefined | null,
+): ColumnSlot[] {
   const [, force] = useState(0);
   useEffect(() => {
     if (!api) return undefined;
@@ -2447,15 +2841,15 @@ function useDisplayedColumnSlots(api: GridApi | undefined | null): ColumnSlot[] 
     // Cover every event that can change column geometry. AG Grid v32
     // fires individual events for resize / visibility / move; covering
     // all three keeps the resource row aligned during any user gesture.
-    api.addEventListener('columnResized', bump);
-    api.addEventListener('columnVisible', bump);
-    api.addEventListener('columnMoved', bump);
-    api.addEventListener('displayedColumnsChanged', bump);
+    api.addEventListener("columnResized", bump);
+    api.addEventListener("columnVisible", bump);
+    api.addEventListener("columnMoved", bump);
+    api.addEventListener("displayedColumnsChanged", bump);
     return () => {
-      api.removeEventListener('columnResized', bump);
-      api.removeEventListener('columnVisible', bump);
-      api.removeEventListener('columnMoved', bump);
-      api.removeEventListener('displayedColumnsChanged', bump);
+      api.removeEventListener("columnResized", bump);
+      api.removeEventListener("columnVisible", bump);
+      api.removeEventListener("columnMoved", bump);
+      api.removeEventListener("displayedColumnsChanged", bump);
     };
   }, [api]);
   if (!api) return [];
@@ -2476,12 +2870,12 @@ function useDisplayedColumnSlots(api: GridApi | undefined | null): ColumnSlot[] 
  */
 function computeLeftPad(slots: ColumnSlot[]): number {
   const get = (id: string) => slots.find((s) => s.colId === id)?.width ?? 0;
-  return get('_drag') + get('_checkbox') + get('_expand');
+  return get("_drag") + get("_checkbox") + get("_expand");
 }
 
 /** Columns that contribute to ``leftPad`` and therefore should NOT be
  *  rendered as standalone slots (their width is already in the pad). */
-const LEFT_PAD_COL_IDS = new Set<string>(['_drag', '_checkbox', '_expand']);
+const LEFT_PAD_COL_IDS = new Set<string>(["_drag", "_checkbox", "_expand"]);
 
 /**
  * Inline unit input for resource rows. Accepts free-form values and
@@ -2512,7 +2906,7 @@ function InlineUnitInput({
 }) {
   const { t, i18n } = useTranslation();
   const [editing, setEditing] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [open, setOpen] = useState(true);
   const [activeIdx, setActiveIdx] = useState(0);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
@@ -2586,22 +2980,25 @@ function InlineUnitInput({
   useLayoutEffect(() => {
     if (!editing || !open) return;
     const updateAnchor = () => {
-      if (inputRef.current) setAnchorRect(inputRef.current.getBoundingClientRect());
+      if (inputRef.current)
+        setAnchorRect(inputRef.current.getBoundingClientRect());
     };
     updateAnchor();
-    window.addEventListener('scroll', updateAnchor, true);
-    window.addEventListener('resize', updateAnchor);
+    window.addEventListener("scroll", updateAnchor, true);
+    window.addEventListener("resize", updateAnchor);
     return () => {
-      window.removeEventListener('scroll', updateAnchor, true);
-      window.removeEventListener('resize', updateAnchor);
+      window.removeEventListener("scroll", updateAnchor, true);
+      window.removeEventListener("resize", updateAnchor);
     };
   }, [editing, open]);
 
   // Scroll the active option into view as the user navigates.
   useEffect(() => {
     if (!editing || !open || !listRef.current) return;
-    const el = listRef.current.querySelector<HTMLLIElement>(`[data-idx="${activeIdx}"]`);
-    el?.scrollIntoView({ block: 'nearest' });
+    const el = listRef.current.querySelector<HTMLLIElement>(
+      `[data-idx="${activeIdx}"]`,
+    );
+    el?.scrollIntoView({ block: "nearest" });
   }, [activeIdx, editing, open]);
 
   // Native mousedown listener on the portaled <ul>. Mirrors the
@@ -2617,15 +3014,15 @@ function InlineUnitInput({
       const target = e.target as HTMLElement | null;
       const li = target?.closest?.('li[role="option"]') as HTMLElement | null;
       if (!li || !ul.contains(li)) return;
-      const picked = li.getAttribute('data-unit-value');
+      const picked = li.getAttribute("data-unit-value");
       if (picked == null) return;
       // Prevent the input from blurring (which would close the editor
       // before our commit runs) and stop outside-click detectors.
       e.preventDefault();
       commitWith(picked);
     };
-    ul.addEventListener('mousedown', handler);
-    return () => ul.removeEventListener('mousedown', handler);
+    ul.addEventListener("mousedown", handler);
+    return () => ul.removeEventListener("mousedown", handler);
   }, [editing, open, commitWith]);
 
   if (editing) {
@@ -2644,23 +3041,23 @@ function InlineUnitInput({
           onFocus={() => setOpen(true)}
           onClick={() => setOpen(true)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               e.preventDefault();
               const sel = filtered[activeIdx];
               if (open && sel != null) commitWith(sel);
               else commit();
-            } else if (e.key === 'Escape') {
+            } else if (e.key === "Escape") {
               e.preventDefault();
               if (open) setOpen(false);
               else cancelEdit();
-            } else if (e.key === 'ArrowDown') {
+            } else if (e.key === "ArrowDown") {
               e.preventDefault();
               setOpen(true);
               setActiveIdx((i) => Math.min(filtered.length - 1, i + 1));
-            } else if (e.key === 'ArrowUp') {
+            } else if (e.key === "ArrowUp") {
               e.preventDefault();
               setActiveIdx((i) => Math.max(0, i - 1));
-            } else if (e.key === 'Tab') {
+            } else if (e.key === "Tab") {
               // Plain Tab commits the current text — same behaviour as Enter
               // on a free-typed value, lets the user blow past the dropdown.
               commit();
@@ -2676,76 +3073,76 @@ function InlineUnitInput({
               commit();
             }, 100);
           }}
-          className={`w-full h-full bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 outline-none text-xs text-center font-mono ${className ?? ''}`}
-          aria-label={t('boq.inline_edit_unit', { defaultValue: 'Edit unit' })}
+          className={`w-full h-full bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 outline-none text-xs text-center font-mono ${className ?? ""}`}
+          aria-label={t("boq.inline_edit_unit", { defaultValue: "Edit unit" })}
           autoComplete="off"
           role="combobox"
           aria-expanded={open}
           aria-autocomplete="list"
         />
-        {open && filtered.length > 0 && anchorRect && createPortal(
-          (() => {
-            const MAX_HEIGHT = 256;
-            const GUTTER = 4;
-            const spaceBelow = window.innerHeight - anchorRect.bottom;
-            const flipAbove = spaceBelow < 160 && anchorRect.top > spaceBelow;
-            const top = flipAbove
-              ? Math.max(8, anchorRect.top - GUTTER - MAX_HEIGHT)
-              : anchorRect.bottom + GUTTER;
-            const left = Math.min(
-              anchorRect.left,
-              window.innerWidth - 200,
-            );
-            return (
-              <ul
-                ref={listRef}
-                role="listbox"
-                tabIndex={-1}
-                className="fixed z-[10001] max-h-64
+        {open &&
+          filtered.length > 0 &&
+          anchorRect &&
+          createPortal(
+            (() => {
+              const MAX_HEIGHT = 256;
+              const GUTTER = 4;
+              const spaceBelow = window.innerHeight - anchorRect.bottom;
+              const flipAbove = spaceBelow < 160 && anchorRect.top > spaceBelow;
+              const top = flipAbove
+                ? Math.max(8, anchorRect.top - GUTTER - MAX_HEIGHT)
+                : anchorRect.bottom + GUTTER;
+              const left = Math.min(anchorRect.left, window.innerWidth - 200);
+              return (
+                <ul
+                  ref={listRef}
+                  role="listbox"
+                  tabIndex={-1}
+                  className="fixed z-[10001] max-h-64
                            overflow-y-auto rounded border border-border-light bg-surface-elevated
                            shadow-xl text-xs"
-                style={{
-                  top: `${top}px`,
-                  left: `${Math.max(0, left)}px`,
-                  minWidth: `${Math.max(160, anchorRect.width)}px`,
-                }}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  e.nativeEvent.stopImmediatePropagation();
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.nativeEvent.stopImmediatePropagation();
-                }}
-              >
-                {filtered.map((u, idx) => (
-                  <li
-                    key={u + idx}
-                    data-idx={idx}
-                    data-unit-value={u}
-                    role="option"
-                    aria-selected={idx === activeIdx}
-                    onMouseEnter={() => setActiveIdx(idx)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.nativeEvent.stopImmediatePropagation();
-                      if (!committedRef.current) commitWith(u);
-                    }}
-                    className={`cursor-pointer px-2 py-1 font-mono whitespace-nowrap ${
-                      idx === activeIdx
-                        ? 'bg-oe-blue text-white'
-                        : 'text-content-primary hover:bg-surface-secondary'
-                    }`}
-                  >
-                    {u}
-                  </li>
-                ))}
-              </ul>
-            );
-          })(),
-          document.body,
-        )}
+                  style={{
+                    top: `${top}px`,
+                    left: `${Math.max(0, left)}px`,
+                    minWidth: `${Math.max(160, anchorRect.width)}px`,
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                  }}
+                >
+                  {filtered.map((u, idx) => (
+                    <li
+                      key={u + idx}
+                      data-idx={idx}
+                      data-unit-value={u}
+                      role="option"
+                      aria-selected={idx === activeIdx}
+                      onMouseEnter={() => setActiveIdx(idx)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.nativeEvent.stopImmediatePropagation();
+                        if (!committedRef.current) commitWith(u);
+                      }}
+                      className={`cursor-pointer px-2 py-1 font-mono whitespace-nowrap ${
+                        idx === activeIdx
+                          ? "bg-oe-blue text-white"
+                          : "text-content-primary hover:bg-surface-secondary"
+                      }`}
+                    >
+                      {u}
+                    </li>
+                  ))}
+                </ul>
+              );
+            })(),
+            document.body,
+          )}
       </div>
     );
   }
@@ -2753,8 +3150,10 @@ function InlineUnitInput({
   return (
     <span
       onDoubleClick={startEdit}
-      className={`cursor-text hover:bg-oe-blue-subtle/50 rounded px-1 transition-colors truncate ${className ?? ''}`}
-      title={t('boq.double_click_to_edit', { defaultValue: 'Double-click to edit' })}
+      className={`cursor-text hover:bg-oe-blue-subtle/50 rounded px-1 transition-colors truncate ${className ?? ""}`}
+      title={t("boq.double_click_to_edit", {
+        defaultValue: "Double-click to edit",
+      })}
     >
       {value}
     </span>
@@ -2788,14 +3187,20 @@ function ResourceTypePicker({
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  const baseBadge = RESOURCE_TYPE_BADGE[value] ?? RESOURCE_TYPE_BADGE.other ?? { bg: 'bg-gray-100 text-gray-600', label: '?' };
+  const baseBadge = RESOURCE_TYPE_BADGE[value] ??
+    RESOURCE_TYPE_BADGE.other ?? {
+      bg: "bg-gray-100 text-gray-600",
+      label: "?",
+    };
   const baseLabel = getResourceTypeLabel(value, t);
-  const variantLabel = t('boq.resource_type_variant_chip', { defaultValue: 'Variant' });
+  const variantLabel = t("boq.resource_type_variant_chip", {
+    defaultValue: "Variant",
+  });
   const label = isVariant ? variantLabel : baseLabel;
   const badge = isVariant
     ? {
         ...baseBadge,
-        bg: 'bg-gradient-to-br from-violet-500 to-purple-600 text-white ring-1 ring-violet-300/40 shadow-[0_1px_3px_rgba(139,92,246,0.45)]',
+        bg: "bg-gradient-to-br from-violet-500 to-purple-600 text-white ring-1 ring-violet-300/40 shadow-[0_1px_3px_rgba(139,92,246,0.45)]",
       }
     : baseBadge;
 
@@ -2806,13 +3211,13 @@ function ResourceTypePicker({
       setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === "Escape") setOpen(false);
     };
-    document.addEventListener('mousedown', onDocMouseDown);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener("mousedown", onDocMouseDown);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDocMouseDown);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener("mousedown", onDocMouseDown);
+      document.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
@@ -2841,67 +3246,81 @@ function ResourceTypePicker({
                     cursor-pointer outline-none border-0 focus:ring-1 focus:ring-oe-blue ${badge.bg}`}
         title={
           isVariant
-            ? t('boq.resource_type_variant_tooltip', {
+            ? t("boq.resource_type_variant_tooltip", {
                 defaultValue:
-                  'Variant resource — pick from {{base}} catalog. Click to reclassify resource type.',
+                  "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
                 base: baseLabel,
               })
-            : t('boq.resource_type', { defaultValue: 'Resource type' })
+            : t("boq.resource_type", { defaultValue: "Resource type" })
         }
         aria-label={
           isVariant
-            ? t('boq.resource_type_variant_tooltip', {
+            ? t("boq.resource_type_variant_tooltip", {
                 defaultValue:
-                  'Variant resource — pick from {{base}} catalog. Click to reclassify resource type.',
+                  "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
                 base: baseLabel,
               })
-            : t('boq.resource_type', { defaultValue: 'Resource type' })
+            : t("boq.resource_type", { defaultValue: "Resource type" })
         }
         aria-haspopup="listbox"
         aria-expanded={open}
       >
         {label}
       </button>
-      {open && pos && createPortal(
-        <div
-          role="listbox"
-          className="fixed z-[2000] bg-surface-primary border border-border-light rounded-md
+      {open &&
+        pos &&
+        createPortal(
+          <div
+            role="listbox"
+            className="fixed z-[2000] bg-surface-primary border border-border-light rounded-md
                      shadow-lg py-1 min-w-[160px] max-h-[260px] overflow-auto"
-          style={{ top: pos.top, left: pos.left }}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          {RESOURCE_TYPES.map((rt) => {
-            const b = RESOURCE_TYPE_BADGE[rt.value] ?? RESOURCE_TYPE_BADGE.other ?? { bg: 'bg-gray-100 text-gray-600', label: '?' };
-            const selected = rt.value === value;
-            return (
-              <button
-                key={rt.value}
-                type="button"
-                role="option"
-                aria-selected={selected}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onChange(rt.value);
-                  setOpen(false);
-                }}
-                className={`flex items-center gap-2 w-full px-2 py-1.5 text-[11px] text-left
+            style={{ top: pos.top, left: pos.left }}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            {RESOURCE_TYPES.map((rt) => {
+              const b = RESOURCE_TYPE_BADGE[rt.value] ??
+                RESOURCE_TYPE_BADGE.other ?? {
+                  bg: "bg-gray-100 text-gray-600",
+                  label: "?",
+                };
+              const selected = rt.value === value;
+              return (
+                <button
+                  key={rt.value}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChange(rt.value);
+                    setOpen(false);
+                  }}
+                  className={`flex items-center gap-2 w-full px-2 py-1.5 text-[11px] text-left
                             hover:bg-surface-secondary transition-colors
-                            ${selected ? 'bg-oe-blue-subtle/30' : ''}`}
-              >
-                <span className={`inline-flex items-center justify-center h-4 w-4 rounded
-                                  text-[9px] font-bold ${b.bg}`}>
-                  {b.label}
-                </span>
-                <span className="text-content-primary uppercase tracking-wider font-medium">
-                  {getResourceTypeLabel(rt.value, t)}
-                </span>
-                {selected && <Check size={11} strokeWidth={2.5} className="ml-auto text-oe-blue" />}
-              </button>
-            );
-          })}
-        </div>,
-        document.body,
-      )}
+                            ${selected ? "bg-oe-blue-subtle/30" : ""}`}
+                >
+                  <span
+                    className={`inline-flex items-center justify-center h-4 w-4 rounded
+                                  text-[9px] font-bold ${b.bg}`}
+                  >
+                    {b.label}
+                  </span>
+                  <span className="text-content-primary uppercase tracking-wider font-medium">
+                    {getResourceTypeLabel(rt.value, t)}
+                  </span>
+                  {selected && (
+                    <Check
+                      size={11}
+                      strokeWidth={2.5}
+                      className="ml-auto text-oe-blue"
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
@@ -2936,7 +3355,7 @@ function ResourceCurrencyCombobox({
   otherGroup: string[];
   /** Foreign→base rate (1 unit of `value` in `baseCode`). */
   fxRate?: number | undefined;
-  fxSource?: 'project' | 'global' | 'none';
+  fxSource?: "project" | "global" | "none";
   baseCode?: string;
   onCommitFxRate?: (rate: number) => void;
   /** True iff `value !== baseCode`. */
@@ -2945,41 +3364,47 @@ function ResourceCurrencyCombobox({
 }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const btnRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const projectSet = useMemo(() => new Set(projectGroup), [projectGroup]);
   const otherSet = useMemo(() => new Set(otherGroup), [otherGroup]);
-  const isUserDefined = value.length > 0 && !projectSet.has(value) && !otherSet.has(value);
+  const isUserDefined =
+    value.length > 0 && !projectSet.has(value) && !otherSet.has(value);
 
   useEffect(() => {
     if (!open) return;
     const onDocMouseDown = (e: MouseEvent) => {
       if (btnRef.current?.contains(e.target as Node)) return;
       // Allow clicks inside the popover (handled via stopPropagation in popover root)
-      const popover = document.getElementById('oe-currency-popover');
+      const popover = document.getElementById("oe-currency-popover");
       if (popover?.contains(e.target as Node)) return;
       setOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
-    document.addEventListener('mousedown', onDocMouseDown);
-    document.addEventListener('keydown', onKey);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDocMouseDown);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDocMouseDown);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener("mousedown", onDocMouseDown);
+      document.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
   const togglePopover = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    if (open) { setOpen(false); return; }
+    if (open) {
+      setOpen(false);
+      return;
+    }
     if (btnRef.current) {
       const rect = btnRef.current.getBoundingClientRect();
       setPos({ top: rect.bottom + 4, left: rect.left });
     }
-    setSearch('');
+    setSearch("");
     setOpen(true);
     // Focus the search input on next tick once the popover is mounted.
     requestAnimationFrame(() => inputRef.current?.focus());
@@ -2987,7 +3412,10 @@ function ResourceCurrencyCombobox({
 
   const commit = (raw: string) => {
     const next = raw.trim().toUpperCase().slice(0, 6);
-    if (next === '' || next === value) { setOpen(false); return; }
+    if (next === "" || next === value) {
+      setOpen(false);
+      return;
+    }
     onCommit(next);
     setOpen(false);
   };
@@ -2998,7 +3426,8 @@ function ResourceCurrencyCombobox({
   const q = search.trim().toUpperCase();
   const matchProject = projectGroup.filter((c) => !q || c.includes(q));
   const matchOther = otherGroup.filter((c) => !q || c.includes(q));
-  const exactMatch = q.length > 0 && (matchProject.includes(q) || matchOther.includes(q));
+  const exactMatch =
+    q.length > 0 && (matchProject.includes(q) || matchOther.includes(q));
   const canAddCustom = q.length >= 2 && !exactMatch;
 
   return (
@@ -3010,153 +3439,183 @@ function ResourceCurrencyCombobox({
         className={`shrink-0 h-4 px-1 rounded text-[9px] font-mono uppercase tracking-wide
                     text-center cursor-pointer outline-none focus:ring-1 focus:ring-oe-blue
                     inline-flex items-center justify-center gap-0.5
-                    ${isUserDefined
-                      ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-400 text-amber-800 dark:text-amber-200 font-bold'
-                      : 'bg-surface-primary border border-border-light text-content-secondary'}`}
-        style={{ minWidth: '36px' }}
-        title={isUserDefined
-          ? t('boq.resource_currency_custom', {
-              defaultValue: 'Custom currency: {{code}} (not in project FX or ISO 4217 list)',
-              code: value,
-            })
-          : t('boq.resource_currency_pick', {
-              defaultValue: 'Currency — {{symbol}} {{code}}',
-              symbol: CURRENCY_SYMBOL[value] ?? '',
-              code: value,
-            })}
+                    ${
+                      isUserDefined
+                        ? "bg-amber-50 dark:bg-amber-900/20 border border-amber-400 text-amber-800 dark:text-amber-200 font-bold"
+                        : "bg-surface-primary border border-border-light text-content-secondary"
+                    }`}
+        style={{ minWidth: "36px" }}
+        title={
+          isUserDefined
+            ? t("boq.resource_currency_custom", {
+                defaultValue:
+                  "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+                code: value,
+              })
+            : t("boq.resource_currency_pick", {
+                defaultValue: "Currency — {{symbol}} {{code}}",
+                symbol: CURRENCY_SYMBOL[value] ?? "",
+                code: value,
+              })
+        }
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={t('boq.resource_currency', { defaultValue: 'Currency' })}
+        aria-label={t("boq.resource_currency", { defaultValue: "Currency" })}
       >
         <span className="truncate">{value}</span>
         <ChevronDown size={8} className="opacity-60" />
       </button>
-      {open && pos && createPortal(
-        <div
-          id="oe-currency-popover"
-          role="listbox"
-          className="fixed z-[2000] bg-surface-primary border border-border-light rounded-md
+      {open &&
+        pos &&
+        createPortal(
+          <div
+            id="oe-currency-popover"
+            role="listbox"
+            className="fixed z-[2000] bg-surface-primary border border-border-light rounded-md
                      shadow-lg w-[220px] max-h-[320px] flex flex-col"
-          style={{ top: pos.top, left: pos.left }}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          <div className="p-2 border-b border-border-light">
-            <input
-              ref={inputRef}
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value.toUpperCase().slice(0, 6))}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  if (canAddCustom) commit(q);
-                  else if (matchProject[0] || matchOther[0]) commit(matchProject[0] ?? matchOther[0]!);
+            style={{ top: pos.top, left: pos.left }}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <div className="p-2 border-b border-border-light">
+              <input
+                ref={inputRef}
+                type="text"
+                value={search}
+                onChange={(e) =>
+                  setSearch(e.target.value.toUpperCase().slice(0, 6))
                 }
-              }}
-              placeholder={t('boq.resource_currency_search', { defaultValue: 'Type or search (e.g. EUR, MYC)' })}
-              className="w-full h-7 px-2 text-[11px] font-mono uppercase tracking-wide
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    if (canAddCustom) commit(q);
+                    else if (matchProject[0] || matchOther[0])
+                      commit(matchProject[0] ?? matchOther[0]!);
+                  }
+                }}
+                placeholder={t("boq.resource_currency_search", {
+                  defaultValue: "Type or search (e.g. EUR, MYC)",
+                })}
+                className="w-full h-7 px-2 text-[11px] font-mono uppercase tracking-wide
                          text-center bg-surface-secondary border border-border-light rounded
                          outline-none focus:ring-1 focus:ring-oe-blue"
-              autoComplete="off"
-              spellCheck={false}
-            />
-            {canAddCustom && (
-              <button
-                type="button"
-                onClick={() => commit(q)}
-                className="mt-1.5 w-full h-6 rounded text-[10px] font-bold uppercase tracking-wide
+                autoComplete="off"
+                spellCheck={false}
+              />
+              {canAddCustom && (
+                <button
+                  type="button"
+                  onClick={() => commit(q)}
+                  className="mt-1.5 w-full h-6 rounded text-[10px] font-bold uppercase tracking-wide
                            bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30 dark:hover:bg-amber-900/50
                            text-amber-800 dark:text-amber-200 border border-amber-400
                            flex items-center justify-center gap-1"
-              >
-                <Plus size={10} />
-                <span>{t('boq.resource_currency_add_custom', { defaultValue: 'Add custom: {{code}}', code: q })}</span>
-              </button>
-            )}
-            {/* FX rate editor — visible when the row's currency differs
+                >
+                  <Plus size={10} />
+                  <span>
+                    {t("boq.resource_currency_add_custom", {
+                      defaultValue: "Add custom: {{code}}",
+                      code: q,
+                    })}
+                  </span>
+                </button>
+              )}
+              {/* FX rate editor — visible when the row's currency differs
                 from the project base. Lets the estimator confirm or
                 tweak the rate without leaving the picker. Project-
                 scoped FX rates (set by the BOQ owner) are read-only
                 here; the global localStorage rate is editable. */}
-            {isForeign && baseCode && onCommitFxRate && (
-              <div className="mt-2 pt-2 border-t border-border-light/60">
-                <div className="text-[9px] uppercase tracking-wider text-content-tertiary mb-1">
-                  {t('boq.fx_rate_label', { defaultValue: 'FX rate' })}
-                  {fxSource === 'project' && (
-                    <span className="ml-1 px-1 rounded bg-oe-blue-subtle text-oe-blue text-[8px] font-bold">
-                      {t('boq.fx_rate_project_badge', { defaultValue: 'PROJECT' })}
-                    </span>
-                  )}
-                  {fxSource === 'global' && (
-                    <span className="ml-1 px-1 rounded bg-surface-secondary text-content-tertiary text-[8px] font-bold">
-                      {t('boq.fx_rate_global_badge', { defaultValue: 'GLOBAL' })}
-                    </span>
-                  )}
+              {isForeign && baseCode && onCommitFxRate && (
+                <div className="mt-2 pt-2 border-t border-border-light/60">
+                  <div className="text-[9px] uppercase tracking-wider text-content-tertiary mb-1">
+                    {t("boq.fx_rate_label", { defaultValue: "FX rate" })}
+                    {fxSource === "project" && (
+                      <span className="ml-1 px-1 rounded bg-oe-blue-subtle text-oe-blue text-[8px] font-bold">
+                        {t("boq.fx_rate_project_badge", {
+                          defaultValue: "PROJECT",
+                        })}
+                      </span>
+                    )}
+                    {fxSource === "global" && (
+                      <span className="ml-1 px-1 rounded bg-surface-secondary text-content-tertiary text-[8px] font-bold">
+                        {t("boq.fx_rate_global_badge", {
+                          defaultValue: "GLOBAL",
+                        })}
+                      </span>
+                    )}
+                  </div>
+                  <PopoverFxRateRow
+                    foreignCode={value}
+                    baseCode={baseCode}
+                    rate={fxRate}
+                    readOnly={fxSource === "project"}
+                    onCommit={onCommitFxRate}
+                    t={t}
+                  />
                 </div>
-                <PopoverFxRateRow
-                  foreignCode={value}
-                  baseCode={baseCode}
-                  rate={fxRate}
-                  readOnly={fxSource === 'project'}
-                  onCommit={onCommitFxRate}
-                  t={t}
-                />
-              </div>
-            )}
-          </div>
-          <div className="overflow-auto flex-1 py-1">
-            {matchProject.length > 0 && (
-              <div className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-content-tertiary">
-                {t('boq.currency_group_project', { defaultValue: 'Project' })}
-              </div>
-            )}
-            {matchProject.map((code) => (
-              <CurrencyOption
-                key={`p-${code}`}
-                code={code}
-                selected={code === value}
-                custom={false}
-                onPick={() => commit(code)}
-              />
-            ))}
-            {matchOther.length > 0 && (
-              <div className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-content-tertiary border-t border-border-light/60">
-                {t('boq.currency_group_world', { defaultValue: 'World currencies' })}
-              </div>
-            )}
-            {matchOther.map((code) => (
-              <CurrencyOption
-                key={`w-${code}`}
-                code={code}
-                selected={code === value}
-                custom={false}
-                onPick={() => commit(code)}
-              />
-            ))}
-            {/* Surface the currently saved custom value at the bottom so
-                the user can confirm it's persisted. */}
-            {isUserDefined && (!q || value.includes(q)) && (
-              <>
-                <div className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300 border-t border-border-light/60">
-                  {t('boq.currency_group_custom', { defaultValue: 'Custom (saved)' })}
+              )}
+            </div>
+            <div className="overflow-auto flex-1 py-1">
+              {matchProject.length > 0 && (
+                <div className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-content-tertiary">
+                  {t("boq.currency_group_project", { defaultValue: "Project" })}
                 </div>
+              )}
+              {matchProject.map((code) => (
                 <CurrencyOption
-                  code={value}
-                  selected
-                  custom
-                  onPick={() => setOpen(false)}
+                  key={`p-${code}`}
+                  code={code}
+                  selected={code === value}
+                  custom={false}
+                  onPick={() => commit(code)}
                 />
-              </>
-            )}
-            {matchProject.length === 0 && matchOther.length === 0 && !canAddCustom && (
-              <div className="px-2 py-3 text-[10px] text-center text-content-quaternary">
-                {t('boq.resource_currency_no_match', { defaultValue: 'No matches — type at least 2 letters to add a custom code.' })}
-              </div>
-            )}
-          </div>
-        </div>,
-        document.body,
-      )}
+              ))}
+              {matchOther.length > 0 && (
+                <div className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-content-tertiary border-t border-border-light/60">
+                  {t("boq.currency_group_world", {
+                    defaultValue: "World currencies",
+                  })}
+                </div>
+              )}
+              {matchOther.map((code) => (
+                <CurrencyOption
+                  key={`w-${code}`}
+                  code={code}
+                  selected={code === value}
+                  custom={false}
+                  onPick={() => commit(code)}
+                />
+              ))}
+              {/* Surface the currently saved custom value at the bottom so
+                the user can confirm it's persisted. */}
+              {isUserDefined && (!q || value.includes(q)) && (
+                <>
+                  <div className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300 border-t border-border-light/60">
+                    {t("boq.currency_group_custom", {
+                      defaultValue: "Custom (saved)",
+                    })}
+                  </div>
+                  <CurrencyOption
+                    code={value}
+                    selected
+                    custom
+                    onPick={() => setOpen(false)}
+                  />
+                </>
+              )}
+              {matchProject.length === 0 &&
+                matchOther.length === 0 &&
+                !canAddCustom && (
+                  <div className="px-2 py-3 text-[10px] text-center text-content-quaternary">
+                    {t("boq.resource_currency_no_match", {
+                      defaultValue:
+                        "No matches — type at least 2 letters to add a custom code.",
+                    })}
+                  </div>
+                )}
+            </div>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
@@ -3183,15 +3642,17 @@ function PopoverFxRateRow({
   onCommit: (next: number) => void;
   t: (key: string, opts?: Record<string, string>) => string;
 }) {
-  const [draft, setDraft] = useState(rate != null ? String(Number(rate.toFixed(6))) : '');
+  const [draft, setDraft] = useState(
+    rate != null ? String(Number(rate.toFixed(6))) : "",
+  );
   useEffect(() => {
-    setDraft(rate != null ? String(Number(rate.toFixed(6))) : '');
+    setDraft(rate != null ? String(Number(rate.toFixed(6))) : "");
   }, [rate]);
 
   const commit = () => {
-    const n = parseFloat(draft.replace(',', '.'));
+    const n = parseFloat(draft.replace(",", "."));
     if (Number.isFinite(n) && n > 0 && rate !== n) onCommit(n);
-    else setDraft(rate != null ? String(Number(rate.toFixed(6))) : '');
+    else setDraft(rate != null ? String(Number(rate.toFixed(6))) : "");
   };
 
   return (
@@ -3203,9 +3664,9 @@ function PopoverFxRateRow({
         onChange={(e) => setDraft(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
-          if (e.key === 'Escape') {
-            setDraft(rate != null ? String(Number(rate.toFixed(6))) : '');
+          if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+          if (e.key === "Escape") {
+            setDraft(rate != null ? String(Number(rate.toFixed(6))) : "");
             (e.target as HTMLInputElement).blur();
           }
         }}
@@ -3215,12 +3676,18 @@ function PopoverFxRateRow({
         autoComplete="off"
         className={`flex-1 min-w-0 h-5 px-1 rounded text-center tabular-nums
                     outline-none focus:ring-1 focus:ring-oe-blue
-                    ${readOnly
-                      ? 'bg-surface-secondary/40 border border-border-light/60 text-content-tertiary cursor-not-allowed'
-                      : rate == null
-                      ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-400 text-amber-800 dark:text-amber-200 cursor-text'
-                      : 'bg-surface-primary border border-border-light text-content-primary cursor-text'}`}
-        aria-label={t('boq.fx_rate_input', { defaultValue: 'FX rate {{from}}→{{to}}', from: foreignCode, to: baseCode })}
+                    ${
+                      readOnly
+                        ? "bg-surface-secondary/40 border border-border-light/60 text-content-tertiary cursor-not-allowed"
+                        : rate == null
+                          ? "bg-amber-50 dark:bg-amber-900/20 border border-amber-400 text-amber-800 dark:text-amber-200 cursor-text"
+                          : "bg-surface-primary border border-border-light text-content-primary cursor-text"
+                    }`}
+        aria-label={t("boq.fx_rate_input", {
+          defaultValue: "FX rate {{from}}→{{to}}",
+          from: foreignCode,
+          to: baseCode,
+        })}
       />
       <span className="text-content-secondary">{baseCode}</span>
     </div>
@@ -3243,29 +3710,49 @@ function CurrencyOption({
       type="button"
       role="option"
       aria-selected={selected}
-      onClick={(e) => { e.stopPropagation(); onPick(); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onPick();
+      }}
       className={`flex items-center gap-2 w-full px-2 py-1.5 text-[11px] text-left
                   hover:bg-surface-secondary transition-colors
-                  ${selected ? (custom ? 'bg-amber-100/40 dark:bg-amber-900/20' : 'bg-oe-blue-subtle/30') : ''}`}
+                  ${selected ? (custom ? "bg-amber-100/40 dark:bg-amber-900/20" : "bg-oe-blue-subtle/30") : ""}`}
     >
-      <span className={`inline-flex items-center justify-center w-7 text-[10px] font-mono ${custom ? 'text-amber-700 dark:text-amber-300 font-bold' : 'text-content-secondary'}`}>
-        {CURRENCY_SYMBOL[code] ?? '·'}
+      <span
+        className={`inline-flex items-center justify-center w-7 text-[10px] font-mono ${custom ? "text-amber-700 dark:text-amber-300 font-bold" : "text-content-secondary"}`}
+      >
+        {CURRENCY_SYMBOL[code] ?? "·"}
       </span>
-      <span className={`font-mono uppercase tracking-wide ${custom ? 'text-amber-800 dark:text-amber-200 font-bold' : 'text-content-primary'}`}>
+      <span
+        className={`font-mono uppercase tracking-wide ${custom ? "text-amber-800 dark:text-amber-200 font-bold" : "text-content-primary"}`}
+      >
         {code}
       </span>
-      {selected && <Check size={11} strokeWidth={2.5} className="ml-auto text-oe-blue" />}
+      {selected && (
+        <Check size={11} strokeWidth={2.5} className="ml-auto text-oe-blue" />
+      )}
     </button>
   );
 }
 
-export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Record<string, unknown>; ctx: FullGridContext; slots: ColumnSlot[]; leftPad: number }) {
-  const resourceType = (data._resourceType as string) || 'other';
+export function EditableResourceRow({
+  data,
+  ctx,
+  slots,
+  leftPad,
+}: {
+  data: Record<string, unknown>;
+  ctx: FullGridContext;
+  slots: ColumnSlot[];
+  leftPad: number;
+}) {
+  const resourceType = (data._resourceType as string) || "other";
   const qty = (data._resourceQty as number) ?? 0;
   const rate = (data._resourceRate as number) ?? 0;
   const total = qty * rate;
-  const baseCurrency = ctx.currencyCode ?? 'EUR';
-  const resourceCurrency = (data._resourceCurrency as string | undefined) || baseCurrency;
+  const baseCurrency = ctx.currencyCode ?? "EUR";
+  const resourceCurrency =
+    (data._resourceCurrency as string | undefined) || baseCurrency;
   const isForeign = resourceCurrency !== baseCurrency;
 
   /* ── Variant re-pick state (v2.6.26+) ────────────────────────────────
@@ -3275,30 +3762,44 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
    *  4px left-edge bar marks provenance: blue for an explicit pick,
    *  amber for an auto-default-from-mean, none when the resource has
    *  no variant link. */
-  const availableVariants = (data._resourceAvailableVariants as CostVariant[] | undefined);
-  const availableVariantStats = (data._resourceAvailableVariantStats as VariantStats | undefined);
+  const availableVariants = data._resourceAvailableVariants as
+    | CostVariant[]
+    | undefined;
+  const availableVariantStats = data._resourceAvailableVariantStats as
+    | VariantStats
+    | undefined;
   const resourceVariant = data._resourceVariant as
     | { label: string; price: number; index: number }
     | undefined;
-  const resourceVariantDefault = data._resourceVariantDefault as 'mean' | 'median' | undefined;
+  const resourceVariantDefault = data._resourceVariantDefault as
+    | "mean"
+    | "median"
+    | undefined;
   const resourceVariantSnapshot = data._resourceVariantSnapshot as
-    | { label?: string; rate?: number; currency?: string; captured_at?: string; source?: string }
+    | {
+        label?: string;
+        rate?: number;
+        currency?: string;
+        captured_at?: string;
+        source?: string;
+      }
     | undefined;
   const hasVariants =
     Array.isArray(availableVariants) &&
     availableVariants.length >= 2 &&
     availableVariantStats != null;
-  const canRepick = hasVariants && typeof ctx.onRepickResourceVariant === 'function';
+  const canRepick =
+    hasVariants && typeof ctx.onRepickResourceVariant === "function";
 
   // Provenance bar colour:
   //   blue   → explicit user pick (resource.variant set)
   //   amber  → auto-default (variant_default set)
   //   violet → variant resource w/ no pick yet (visual flag for the row)
   //   none   → plain row, no variant link
-  let variantBarTone: 'blue' | 'amber' | 'violet' | null = null;
-  if (resourceVariant) variantBarTone = 'blue';
-  else if (resourceVariantDefault) variantBarTone = 'amber';
-  else if (hasVariants) variantBarTone = 'violet';
+  let variantBarTone: "blue" | "amber" | "violet" | null = null;
+  if (resourceVariant) variantBarTone = "blue";
+  else if (resourceVariantDefault) variantBarTone = "amber";
+  else if (hasVariants) variantBarTone = "violet";
 
   const [variantPickerOpen, setVariantPickerOpen] = useState(false);
   const variantPillRef = useRef<HTMLButtonElement>(null);
@@ -3340,16 +3841,23 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   );
 
   const handleRepickUseDefault = useCallback(
-    (strategy: 'mean' | 'median') => {
+    (strategy: "mean" | "median") => {
       // The re-pick endpoint expects an explicit variant label; map the
       // mean/median strategy to the closest variant in the cache. Mirrors
       // the position-level pill's "Use average" CTA without forcing a
       // separate backend code path.
-      if (!availableVariants || availableVariants.length === 0 || !availableVariantStats) {
+      if (
+        !availableVariants ||
+        availableVariants.length === 0 ||
+        !availableVariantStats
+      ) {
         setVariantPickerOpen(false);
         return;
       }
-      const target = strategy === 'mean' ? availableVariantStats.mean : availableVariantStats.median;
+      const target =
+        strategy === "mean"
+          ? availableVariantStats.mean
+          : availableVariantStats.median;
       let bestIdx = 0;
       let bestDelta = Number.POSITIVE_INFINITY;
       for (let i = 0; i < availableVariants.length; i++) {
@@ -3374,7 +3882,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
 
   // Pill tooltip — surface variant code + price + delta-vs-mean chip.
   const variantPillTooltip = (() => {
-    if (!hasVariants) return '';
+    if (!hasVariants) return "";
     const meanRate = availableVariantStats!.mean;
     const minRate = availableVariantStats!.min;
     const maxRate = availableVariantStats!.max;
@@ -3385,10 +3893,10 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
           ? Math.round(((resourceVariant.price - meanRate) / meanRate) * 100)
           : null;
       const deltaStr =
-        delta == null ? '' : ` (${delta > 0 ? '+' : ''}${delta}% vs avg)`;
-      return ctx.t('boq.resource_variant_pill_tooltip_picked', {
+        delta == null ? "" : ` (${delta > 0 ? "+" : ""}${delta}% vs avg)`;
+      return ctx.t("boq.resource_variant_pill_tooltip_picked", {
         defaultValue:
-          'Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.',
+          "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
         label: resourceVariant.label,
         price: resourceVariant.price.toFixed(2),
         currency: resourceCurrency,
@@ -3396,56 +3904,62 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
       });
     }
     if (resourceVariantDefault) {
-      return ctx.t('boq.resource_variant_pill_tooltip_default', {
+      return ctx.t("boq.resource_variant_pill_tooltip_default", {
         defaultValue:
-          'Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.',
-        strategy: resourceVariantDefault === 'mean' ? 'average' : 'median',
+          "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+        strategy: resourceVariantDefault === "mean" ? "average" : "median",
         count: availableVariantStats!.count,
         range,
       });
     }
-    return ctx.t('boq.resource_variant_pill_tooltip_unset', {
+    return ctx.t("boq.resource_variant_pill_tooltip_unset", {
       defaultValue:
-        '{{count}} priced variants available ({{range}}). Click to pick one.',
+        "{{count}} priced variants available ({{range}}). Click to pick one.",
       count: availableVariantStats!.count,
       range,
     });
   })();
 
   const variantBarTooltip = (() => {
-    if (variantBarTone === null) return '';
+    if (variantBarTone === null) return "";
     const captured = resourceVariantSnapshot?.captured_at;
-    if (variantBarTone === 'blue' && resourceVariant) {
-      return ctx.t('boq.resource_variant_bar_tooltip_picked', {
-        defaultValue: 'Explicit variant: {{label}}{{captured}}',
+    if (variantBarTone === "blue" && resourceVariant) {
+      return ctx.t("boq.resource_variant_bar_tooltip_picked", {
+        defaultValue: "Explicit variant: {{label}}{{captured}}",
         label: resourceVariant.label,
-        captured: captured ? ` · captured ${captured.split('T')[0]}` : '',
+        captured: captured ? ` · captured ${captured.split("T")[0]}` : "",
       });
     }
-    if (variantBarTone === 'amber' && resourceVariantDefault) {
-      return ctx.t('boq.resource_variant_bar_tooltip_default', {
+    if (variantBarTone === "amber" && resourceVariantDefault) {
+      return ctx.t("boq.resource_variant_bar_tooltip_default", {
         defaultValue:
-          'Auto-default ({{strategy}}){{captured}} — click pill to refine.',
+          "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
         strategy: resourceVariantDefault,
-        captured: captured ? ` · captured ${captured.split('T')[0]}` : '',
+        captured: captured ? ` · captured ${captured.split("T")[0]}` : "",
       });
     }
-    return '';
+    return "";
   })();
   const fxRates = ctx.fxRates ?? [];
-  const fxEntry = isForeign ? fxRates.find((r) => r.currency === resourceCurrency) : undefined;
+  const fxEntry = isForeign
+    ? fxRates.find((r) => r.currency === resourceCurrency)
+    : undefined;
   // Project-scoped FX rates (set by the BOQ owner) take priority. When
   // missing, fall back to the global localStorage-persisted store so an
   // estimator can pick e.g. JPY without the BOQ owner having pre-loaded
   // a rate. Inline editing of the rate writes to the global store.
   const ratesVsUsd = useFxRatesStore((s) => s.ratesVsUsd);
   const setGlobalRate = useFxRatesStore((s) => s.setRate);
-  const globalRate = isForeign ? getFxRate(resourceCurrency, baseCurrency, ratesVsUsd) : undefined;
+  const globalRate = isForeign
+    ? getFxRate(resourceCurrency, baseCurrency, ratesVsUsd)
+    : undefined;
   const fxRate: number | undefined = fxEntry?.rate ?? globalRate;
-  const fxSource: 'project' | 'global' | 'none' = fxEntry?.rate
-    ? 'project'
-    : (globalRate != null ? 'global' : 'none');
-  const hasFxRate = !isForeign || (typeof fxRate === 'number' && fxRate > 0);
+  const fxSource: "project" | "global" | "none" = fxEntry?.rate
+    ? "project"
+    : globalRate != null
+      ? "global"
+      : "none";
+  const hasFxRate = !isForeign || (typeof fxRate === "number" && fxRate > 0);
   const totalInBase = isForeign && hasFxRate ? total * (fxRate ?? 1) : total;
 
   // When the user edits the global rate inline, we store "1 unit of <foreign> = X <USD>".
@@ -3453,21 +3967,27 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   //   ⇒ rateVsUsd(foreign) = rate(foreign→base) * rateVsUsd(base)
   const handleGlobalFxRateChange = useCallback(
     (newRateForeignToBase: number) => {
-      if (!Number.isFinite(newRateForeignToBase) || newRateForeignToBase <= 0) return;
+      if (!Number.isFinite(newRateForeignToBase) || newRateForeignToBase <= 0)
+        return;
       const baseVsUsd = ratesVsUsd[baseCurrency] ?? 1;
       setGlobalRate(resourceCurrency, newRateForeignToBase * baseVsUsd);
     },
     [resourceCurrency, baseCurrency, ratesVsUsd, setGlobalRate],
   );
 
-  const formattedTotal = fmtWithCurrency(total, ctx.locale ?? 'de-DE', resourceCurrency);
-  const formattedTotalInBase = isForeign && hasFxRate
-    ? fmtWithCurrency(totalInBase, ctx.locale ?? 'de-DE', baseCurrency)
-    : null;
+  const formattedTotal = fmtWithCurrency(
+    total,
+    ctx.locale ?? "de-DE",
+    resourceCurrency,
+  );
+  const formattedTotalInBase =
+    isForeign && hasFxRate
+      ? fmtWithCurrency(totalInBase, ctx.locale ?? "de-DE", baseCurrency)
+      : null;
 
   const posId = data._parentPositionId as string;
   const resIdx = data._resourceIndex as number;
-  const storedName = (data._resourceName as string) || '';
+  const storedName = (data._resourceName as string) || "";
   // For variant resources, the display name MUST surface the abstract
   // base (``price_abstract_resource_common_start``). Legacy applies
   // stored only the variable_part / "description (label)" form, so we
@@ -3475,8 +3995,10 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   // and the stored name doesn't already start with it. Plain rows pass
   // straight through.
   const variantCommonStart =
-    (availableVariantStats as { common_start?: string } | undefined)?.common_start?.trim() ?? '';
-  const variantLabelForName = resourceVariant?.label?.trim() ?? '';
+    (
+      availableVariantStats as { common_start?: string } | undefined
+    )?.common_start?.trim() ?? "";
+  const variantLabelForName = resourceVariant?.label?.trim() ?? "";
   // Resolve the matching variant in the cached available_variants array
   // so we can prefer its ``full_label`` (backend-composed
   // common_start + variable_part, truncated to 400 chars). The picked
@@ -3486,14 +4008,14 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   const matchingFullVariant: CostVariant | undefined = (() => {
     if (!Array.isArray(availableVariants) || !resourceVariant) return undefined;
     const byIdx = availableVariants.find(
-      (v) => typeof v.index === 'number' && v.index === resourceVariant.index,
+      (v) => typeof v.index === "number" && v.index === resourceVariant.index,
     );
     if (byIdx) return byIdx;
     return availableVariants.find(
-      (v) => (v.label || '').trim() === variantLabelForName,
+      (v) => (v.label || "").trim() === variantLabelForName,
     );
   })();
-  const variantFullLabel = (matchingFullVariant?.full_label || '').trim();
+  const variantFullLabel = (matchingFullVariant?.full_label || "").trim();
   // Variant resource name resolution priority:
   //   1. ``v.full_label`` from the matching cached variant (backend
   //      composes ``common_start + variable_part``, truncated to 400 chars).
@@ -3503,11 +4025,17 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   const labelStartsWithCommon =
     variantLabelForName.length > 0 &&
     variantCommonStart.length > 0 &&
-    variantLabelForName.toLowerCase().startsWith(variantCommonStart.toLowerCase());
-  let composedVariantName = '';
+    variantLabelForName
+      .toLowerCase()
+      .startsWith(variantCommonStart.toLowerCase());
+  let composedVariantName = "";
   if (variantFullLabel) {
     composedVariantName = variantFullLabel;
-  } else if (variantCommonStart && variantLabelForName && !labelStartsWithCommon) {
+  } else if (
+    variantCommonStart &&
+    variantLabelForName &&
+    !labelStartsWithCommon
+  ) {
     composedVariantName = `${variantCommonStart} ${variantLabelForName}`.trim();
   } else if (variantLabelForName) {
     composedVariantName = variantLabelForName;
@@ -3536,15 +4064,15 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
     composedTrim.toLowerCase().startsWith(variantCommonStart.toLowerCase());
   const originalName = composedExtendsStored
     ? composedVariantName
-    : (storedName || composedVariantName);
-  const resourceCode = (data._resourceCode as string | undefined) || '';
+    : storedName || composedVariantName;
+  const resourceCode = (data._resourceCode as string | undefined) || "";
 
   const handleQtyChange = useCallback(
-    (v: number) => ctx.onUpdateResource?.(posId, resIdx, 'quantity', v),
+    (v: number) => ctx.onUpdateResource?.(posId, resIdx, "quantity", v),
     [ctx, posId, resIdx],
   );
   const handleRateChange = useCallback(
-    (v: number) => ctx.onUpdateResource?.(posId, resIdx, 'unit_rate', v),
+    (v: number) => ctx.onUpdateResource?.(posId, resIdx, "unit_rate", v),
     [ctx, posId, resIdx],
   );
 
@@ -3570,21 +4098,21 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
         ctx.onUpdateResourceFields(
           posId,
           resIdx,
-          resourceCode ? { name: v, code: '' } : { name: v },
+          resourceCode ? { name: v, code: "" } : { name: v },
         );
       } else {
         // Backward-compat path for grid contexts that haven't wired the
         // batched update yet — preserves the old (racy) behaviour rather
         // than crashing.
-        ctx.onUpdateResource?.(posId, resIdx, 'name', v);
-        if (resourceCode) ctx.onUpdateResource?.(posId, resIdx, 'code', '');
+        ctx.onUpdateResource?.(posId, resIdx, "name", v);
+        if (resourceCode) ctx.onUpdateResource?.(posId, resIdx, "code", "");
       }
     },
     [ctx, posId, resIdx, storedName, originalName, resourceCode],
   );
 
   const handleTypeChange = useCallback(
-    (v: string) => ctx.onUpdateResource?.(posId, resIdx, 'type', v),
+    (v: string) => ctx.onUpdateResource?.(posId, resIdx, "type", v),
     [ctx, posId, resIdx],
   );
 
@@ -3592,8 +4120,8 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
     (v: string) => {
       // Empty string is the explicit "use project base" sentinel — record
       // an empty string so the backend can clear the override.
-      const value = v === baseCurrency ? '' : v;
-      ctx.onUpdateResource?.(posId, resIdx, 'currency', value);
+      const value = v === baseCurrency ? "" : v;
+      ctx.onUpdateResource?.(posId, resIdx, "currency", value);
     },
     [ctx, posId, resIdx, baseCurrency],
   );
@@ -3636,17 +4164,19 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   const totalTitle = (() => {
     if (!isForeign) return formattedTotal;
     if (hasFxRate && formattedTotalInBase) {
-      return ctx.t('boq.resource_total_in_base', {
-        defaultValue: '{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})',
+      return ctx.t("boq.resource_total_in_base", {
+        defaultValue:
+          "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
         foreign: formattedTotal,
         base: formattedTotalInBase,
         code: resourceCurrency,
-        rate: String(fxRate ?? ''),
+        rate: String(fxRate ?? ""),
         baseCode: baseCurrency,
       });
     }
-    return ctx.t('boq.resource_no_fx_rate', {
-      defaultValue: 'No FX rate configured for {{code}} — total shown in {{code}}',
+    return ctx.t("boq.resource_no_fx_rate", {
+      defaultValue:
+        "No FX rate configured for {{code}} — total shown in {{code}}",
       code: resourceCurrency,
     });
   })();
@@ -3666,9 +4196,16 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
       key="ordinal"
       className="shrink-0 inline-flex items-center justify-end self-center pr-2 text-[9px] font-mono whitespace-nowrap overflow-hidden"
       style={{ width: `${width}px` }}
-      title={resourceCode
-        ? ctx.t('boq.resource_catalog_code', { defaultValue: 'Catalogue code: {{code}}', code: resourceCode })
-        : ctx.t('boq.resource_customised', { defaultValue: 'Customised resource — no catalogue code' })}
+      title={
+        resourceCode
+          ? ctx.t("boq.resource_catalog_code", {
+              defaultValue: "Catalogue code: {{code}}",
+              code: resourceCode,
+            })
+          : ctx.t("boq.resource_customised", {
+              defaultValue: "Customised resource — no catalogue code",
+            })
+      }
     >
       {resourceCode ? (
         <span className="font-normal tracking-tight text-content-tertiary/70 overflow-hidden text-ellipsis">
@@ -3704,8 +4241,8 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
       {hasVariants && (
         <span
           aria-hidden="true"
-          title={ctx.t('boq.resource_is_variant_badge', {
-            defaultValue: 'Variant resource — multiple price options available',
+          title={ctx.t("boq.resource_is_variant_badge", {
+            defaultValue: "Variant resource — multiple price options available",
           })}
           className="shrink-0 relative inline-flex h-[18px] w-[18px] items-center justify-center
                      rounded-full overflow-hidden
@@ -3720,10 +4257,16 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
             className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-full
                        bg-gradient-to-b from-white/35 to-transparent"
           />
-          <span className="relative z-10 drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]">V</span>
+          <span className="relative z-10 drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]">
+            V
+          </span>
         </span>
       )}
-      <InlineTextInput value={originalName} onCommit={handleNameChange} className="flex-1 min-w-0 text-xs text-left" />
+      <InlineTextInput
+        value={originalName}
+        onCommit={handleNameChange}
+        className="flex-1 min-w-0 text-xs text-left"
+      />
     </span>
   );
 
@@ -3735,7 +4278,9 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
     >
       <InlineUnitInput
         value={data._resourceUnit as string}
-        onCommit={(v: string) => ctx.onUpdateResource?.(posId, resIdx, 'unit', v)}
+        onCommit={(v: string) =>
+          ctx.onUpdateResource?.(posId, resIdx, "unit", v)
+        }
         className="w-full text-xs text-center"
       />
     </span>
@@ -3798,10 +4343,10 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
             className={`shrink-0 inline-flex items-center gap-0.5 h-4 px-1 rounded text-[9px] font-semibold
                         transition-colors cursor-pointer ${
                           resourceVariant
-                            ? 'bg-oe-blue/15 text-oe-blue hover:bg-oe-blue/25'
+                            ? "bg-oe-blue/15 text-oe-blue hover:bg-oe-blue/25"
                             : resourceVariantDefault
-                            ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/60'
-                            : 'bg-surface-tertiary/60 text-content-secondary hover:bg-surface-tertiary'
+                              ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/60"
+                              : "bg-surface-tertiary/60 text-content-secondary hover:bg-surface-tertiary"
                         }`}
             title={variantPillTooltip}
             aria-label={variantPillTooltip}
@@ -3809,8 +4354,8 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
             aria-expanded={variantPickerOpen}
             data-testid={`resource-variant-pill-${data._resourceIndex}`}
           >
-            {ctx.t('boq.resource_variant_pill', {
-              defaultValue: '▾ {{count}}',
+            {ctx.t("boq.resource_variant_pill", {
+              defaultValue: "▾ {{count}}",
               count: availableVariantStats!.count,
             })}
           </button>
@@ -3832,7 +4377,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
           defaultStrategy="mean"
           defaultIndex={resourceVariant?.index}
           anchorEl={variantPillRef.current}
-          unitLabel={(data._resourceUnit as string) || ''}
+          unitLabel={(data._resourceUnit as string) || ""}
           currency={resourceCurrency}
           onApply={handleRepick}
           onUseDefault={handleRepickUseDefault}
@@ -3849,8 +4394,9 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
       style={{ width: `${width}px` }}
       title={totalTitle}
     >
-      {isForeign && !hasFxRate && (
-        ctx.onOpenFxRateSettings ? (
+      {isForeign &&
+        !hasFxRate &&
+        (ctx.onOpenFxRateSettings ? (
           <button
             type="button"
             onClick={(e) => {
@@ -3864,31 +4410,43 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
                        dark:hover:bg-amber-800/60 dark:hover:text-amber-100
                        focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-500
                        transition-colors"
-            title={ctx.t('boq.resource_no_fx_rate_click', {
-              defaultValue: 'No FX rate configured for {{code}} — click to set one in Project Settings',
+            title={ctx.t("boq.resource_no_fx_rate_click", {
+              defaultValue:
+                "No FX rate configured for {{code}} — click to set one in Project Settings",
               code: resourceCurrency,
             })}
-            aria-label={ctx.t('boq.resource_no_fx_rate_click', {
-              defaultValue: 'No FX rate configured for {{code}} — click to set one in Project Settings',
+            aria-label={ctx.t("boq.resource_no_fx_rate_click", {
+              defaultValue:
+                "No FX rate configured for {{code}} — click to set one in Project Settings",
               code: resourceCurrency,
             })}
           >
-            <AlertTriangle size={10} strokeWidth={2} className="me-0.5 inline-block" /> {ctx.t('boq.resource_no_fx_short', { defaultValue: 'set FX' })}
+            <AlertTriangle
+              size={10}
+              strokeWidth={2}
+              className="me-0.5 inline-block"
+            />{" "}
+            {ctx.t("boq.resource_no_fx_short", { defaultValue: "set FX" })}
           </button>
         ) : (
           <span
             className="inline-flex items-center justify-center h-3 px-1 rounded
                        text-[8px] font-bold uppercase
                        bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-            title={ctx.t('boq.resource_no_fx_rate', {
-              defaultValue: 'No FX rate configured for {{code}} — total shown in {{code}}',
+            title={ctx.t("boq.resource_no_fx_rate", {
+              defaultValue:
+                "No FX rate configured for {{code}} — total shown in {{code}}",
               code: resourceCurrency,
             })}
           >
-            <AlertTriangle size={10} strokeWidth={2} className="me-0.5 inline-block" /> no FX
+            <AlertTriangle
+              size={10}
+              strokeWidth={2}
+              className="me-0.5 inline-block"
+            />{" "}
+            no FX
           </span>
-        )
-      )}
+        ))}
       <span>{formattedTotal}</span>
     </span>
   );
@@ -3907,7 +4465,9 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
         className="shrink-0 h-4 w-4 flex items-center justify-center rounded
                    text-content-tertiary hover:text-oe-blue hover:bg-oe-blue-subtle
                    opacity-0 group-hover/res:opacity-100 transition-all"
-        title={ctx.t('boq.save_to_catalog', { defaultValue: 'Save to My Catalog' })}
+        title={ctx.t("boq.save_to_catalog", {
+          defaultValue: "Save to My Catalog",
+        })}
       >
         <BookmarkPlus size={10} />
       </button>
@@ -3932,21 +4492,27 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
     // is consistent regardless of which row type renders the cell).
     // Read-only for v2.9.29; per-resource editing on custom cols is a
     // follow-up.
-    const fieldName = slot.colId.slice('custom_'.length);
+    const fieldName = slot.colId.slice("custom_".length);
     const parent = ctx.positions?.find((p) => p.id === posId);
-    let display = '';
+    let display = "";
     if (parent) {
       const meta = parent.metadata as Record<string, unknown> | undefined;
-      const resources = meta?.resources as Array<Record<string, unknown>> | undefined;
-      const resMeta = resources?.[resIdx]?.metadata as Record<string, unknown> | undefined;
-      const resCf = resMeta?.custom_fields as Record<string, unknown> | undefined;
+      const resources = meta?.resources as
+        | Array<Record<string, unknown>>
+        | undefined;
+      const resMeta = resources?.[resIdx]?.metadata as
+        | Record<string, unknown>
+        | undefined;
+      const resCf = resMeta?.custom_fields as
+        | Record<string, unknown>
+        | undefined;
       const resVal = resCf?.[fieldName];
-      if (resVal !== undefined && resVal !== null && resVal !== '') {
+      if (resVal !== undefined && resVal !== null && resVal !== "") {
         display = String(resVal);
       } else {
         const cf = meta?.custom_fields as Record<string, unknown> | undefined;
         const parentVal = cf?.[fieldName];
-        if (parentVal !== undefined && parentVal !== null && parentVal !== '') {
+        if (parentVal !== undefined && parentVal !== null && parentVal !== "") {
           display = String(parentVal);
         }
       }
@@ -3975,13 +4541,13 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
                  bg-surface-secondary/35 dark:bg-surface-secondary/25
                  shadow-[inset_0_2px_3px_-1px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_3px_-1px_rgba(0,0,0,0.30)]
                  hover:bg-surface-secondary/55 dark:hover:bg-surface-secondary/40"
-      style={{ paddingLeft: `${leftPad}px`, paddingRight: '4px' }}
+      style={{ paddingLeft: `${leftPad}px`, paddingRight: "4px" }}
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        ctx.onShowContextMenu?.(e, 'resource', data);
+        ctx.onShowContextMenu?.(e, "resource", data);
       }}
-      data-resource-variant={hasVariants ? '1' : undefined}
+      data-resource-variant={hasVariants ? "1" : undefined}
     >
       {/* Provenance left-edge bar — 4px wide, full row height. Marks variant
           source so a quick scan reveals which resources were explicitly
@@ -3993,11 +4559,11 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
           title={variantBarTooltip}
           data-testid={`resource-variant-bar-${data._resourceIndex}-${variantBarTone}`}
           className={`absolute left-0 top-0 bottom-0 w-1 ${
-            variantBarTone === 'blue'
-              ? 'bg-oe-blue/70'
-              : variantBarTone === 'amber'
-              ? 'bg-amber-400 dark:bg-amber-500'
-              : 'bg-gradient-to-b from-violet-500 to-purple-600'
+            variantBarTone === "blue"
+              ? "bg-oe-blue/70"
+              : variantBarTone === "amber"
+                ? "bg-amber-400 dark:bg-amber-500"
+                : "bg-gradient-to-b from-violet-500 to-purple-600"
           }`}
         />
       )}
@@ -4013,24 +4579,24 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
       {slots.map((slot) => {
         if (LEFT_PAD_COL_IDS.has(slot.colId)) return null;
         switch (slot.colId) {
-          case 'ordinal':
+          case "ordinal":
             return renderOrdinalSlot(slot.width);
-          case '_bim_link':
+          case "_bim_link":
             return renderBimLinkSlot(slot.width);
-          case 'description':
+          case "description":
             return renderDescriptionSlot(slot.width);
-          case 'unit':
+          case "unit":
             return renderUnitSlot(slot.width);
-          case 'quantity':
+          case "quantity":
             return renderQuantitySlot(slot.width);
-          case 'unit_rate':
+          case "unit_rate":
             return renderUnitRateSlot(slot.width);
-          case 'total':
+          case "total":
             return renderTotalSlot(slot.width);
-          case '_actions':
+          case "_actions":
             return renderActionsSlot(slot.width);
           default:
-            if (slot.colId.startsWith('custom_')) {
+            if (slot.colId.startsWith("custom_")) {
               return renderCustomColumnSlot(slot);
             }
             // Unknown / hidden-but-displayed column → empty placeholder
@@ -4076,13 +4642,13 @@ function VariantHeaderResourceRow({
   leftPad: number;
 }) {
   const positionId = data._parentPositionId as string;
-  const headerName = (data._variantHeaderName as string) || '';
+  const headerName = (data._variantHeaderName as string) || "";
   const chosenLabel = data._variantHeaderChosenLabel as string | null;
   const chosenPrice = data._variantHeaderChosenPrice as number | null;
   const optCount = (data._variantHeaderCount as number) || 0;
-  const currency = (data._variantHeaderCurrency as string) || 'EUR';
+  const currency = (data._variantHeaderCurrency as string) || "EUR";
   const qty = (data._variantHeaderQty as number) || 0;
-  const unitLabel = (data._variantHeaderUnit as string) || '';
+  const unitLabel = (data._variantHeaderUnit as string) || "";
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const openPicker = useCallback(() => {
@@ -4099,7 +4665,7 @@ function VariantHeaderResourceRow({
   // (e.g. legacy mis-stamped imports), don't double up the prefix.
   // The position description never bleeds into this name.
   const trimmedBase = headerName.trim();
-  const trimmedChosen = (chosenLabel ?? '').trim();
+  const trimmedChosen = (chosenLabel ?? "").trim();
   const labelStartsWithBase =
     trimmedChosen.length > 0 &&
     trimmedBase.length > 0 &&
@@ -4121,7 +4687,8 @@ function VariantHeaderResourceRow({
   const [editedName, setEditedName] = useState(computedName);
   // Reset when the chosen variant changes upstream.
   useEffect(() => setEditedName(computedName), [computedName]);
-  const isCustomName = editedName.trim() !== computedName.trim() && editedName.trim().length > 0;
+  const isCustomName =
+    editedName.trim() !== computedName.trim() && editedName.trim().length > 0;
 
   // qty / rate edit handlers. The variant row is a SYNTHETIC view of the
   // parent position, so commits flow into ``onUpdateVariantHeader`` which
@@ -4156,8 +4723,9 @@ function VariantHeaderResourceRow({
       key="ordinal"
       className="shrink-0 inline-flex items-center justify-end self-center pr-2 text-[8px] font-mono whitespace-nowrap overflow-hidden"
       style={{ width: `${width}px` }}
-      title={ctx.t('boq.variant_header_code_tooltip', {
-        defaultValue: 'Abstract variant resource — inherits the position quantity',
+      title={ctx.t("boq.variant_header_code_tooltip", {
+        defaultValue:
+          "Abstract variant resource — inherits the position quantity",
       })}
     >
       <span className="px-1 py-0.5 rounded bg-violet-200/60 dark:bg-violet-800/40 text-violet-800 dark:text-violet-200 font-bold tracking-wider">
@@ -4187,12 +4755,12 @@ function VariantHeaderResourceRow({
                    hover:shadow-[0_2px_6px_rgba(217,70,239,0.5)]
                    hover:scale-105 active:scale-95
                    transition-all duration-150 cursor-pointer"
-        title={ctx.t('boq.variant_header_type_tooltip', {
-          defaultValue: 'Click to pick a price variant from the catalog',
+        title={ctx.t("boq.variant_header_type_tooltip", {
+          defaultValue: "Click to pick a price variant from the catalog",
         })}
         data-testid={`variant-header-chip-${positionId}`}
       >
-        {ctx.t('boq.variant_header_type_label', { defaultValue: 'Variant' })}
+        {ctx.t("boq.variant_header_type_label", { defaultValue: "Variant" })}
       </button>
     </span>
   );
@@ -4218,7 +4786,7 @@ function VariantHeaderResourceRow({
       className="shrink-0 text-center text-content-secondary font-mono uppercase self-center px-2 text-[11px]"
       style={{ width: `${width}px` }}
     >
-      {unitLabel || '—'}
+      {unitLabel || "—"}
     </span>
   );
 
@@ -4228,8 +4796,9 @@ function VariantHeaderResourceRow({
       className="shrink-0 text-right tabular-nums text-content-secondary self-center pr-2 pl-2"
       style={{ width: `${width}px` }}
       data-variant-header-interactive="1"
-      title={ctx.t('boq.variant_header_qty_edit_tooltip', {
-        defaultValue: 'Double-click to edit quantity (synced with the position).',
+      title={ctx.t("boq.variant_header_qty_edit_tooltip", {
+        defaultValue:
+          "Double-click to edit quantity (synced with the position).",
       })}
     >
       {showNumbers ? (
@@ -4240,7 +4809,7 @@ function VariantHeaderResourceRow({
           className="w-full text-xs !px-0"
         />
       ) : (
-        ''
+        ""
       )}
     </span>
   );
@@ -4266,12 +4835,13 @@ function VariantHeaderResourceRow({
                    hover:from-violet-400 hover:to-fuchsia-500 hover:shadow-[0_2px_6px_rgba(217,70,239,0.5)]
                    hover:scale-105 active:scale-95
                    transition-all duration-150 cursor-pointer"
-        title={ctx.t('boq.variant_header_pill_tooltip', {
-          defaultValue: 'Choose / switch a price variant for this abstract resource',
+        title={ctx.t("boq.variant_header_pill_tooltip", {
+          defaultValue:
+            "Choose / switch a price variant for this abstract resource",
         })}
         data-testid={`variant-header-pill-${positionId}`}
       >
-        {'▾ '} {optCount}
+        {"▾ "} {optCount}
       </button>
       {showNumbers && (
         <>
@@ -4297,7 +4867,7 @@ function VariantHeaderResourceRow({
       className="shrink-0 text-right tabular-nums font-semibold text-content-primary self-center pr-2 pl-2"
       style={{ width: `${width}px` }}
     >
-      {showNumbers ? fmtNum(total) : ''}
+      {showNumbers ? fmtNum(total) : ""}
     </span>
   );
 
@@ -4319,8 +4889,8 @@ function VariantHeaderResourceRow({
           className="shrink-0 h-4 w-4 flex items-center justify-center rounded
                      text-content-tertiary hover:text-oe-blue hover:bg-oe-blue-subtle
                      transition-all"
-          title={ctx.t('boq.rs_save_variant_to_catalog', {
-            defaultValue: 'Save as a regular article in your catalog',
+          title={ctx.t("boq.rs_save_variant_to_catalog", {
+            defaultValue: "Save as a regular article in your catalog",
           })}
         >
           <BookmarkPlus size={10} />
@@ -4340,7 +4910,7 @@ function VariantHeaderResourceRow({
                  border-b border-border-light/50
                  shadow-[inset_0_2px_3px_-1px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_2px_3px_-1px_rgba(0,0,0,0.30)]
                  transition-colors"
-      style={{ paddingLeft: `${leftPad}px`, paddingRight: '4px' }}
+      style={{ paddingLeft: `${leftPad}px`, paddingRight: "4px" }}
       data-testid={`variant-header-row-${positionId}`}
     >
       {/* Provenance bar — same width as the resource provenance bar so the
@@ -4357,21 +4927,21 @@ function VariantHeaderResourceRow({
       {slots.map((slot) => {
         if (LEFT_PAD_COL_IDS.has(slot.colId)) return null;
         switch (slot.colId) {
-          case 'ordinal':
+          case "ordinal":
             return renderOrdinalSlot(slot.width);
-          case '_bim_link':
+          case "_bim_link":
             return renderBimLinkSlot(slot.width);
-          case 'description':
+          case "description":
             return renderDescriptionSlot(slot.width);
-          case 'unit':
+          case "unit":
             return renderUnitSlot(slot.width);
-          case 'quantity':
+          case "quantity":
             return renderQuantitySlot(slot.width);
-          case 'unit_rate':
+          case "unit_rate":
             return renderUnitRateSlot(slot.width);
-          case 'total':
+          case "total":
             return renderTotalSlot(slot.width);
-          case '_actions':
+          case "_actions":
             return renderActionsSlot(slot.width);
           default:
             // Variant headers don't carry per-resource metadata (they're
@@ -4419,14 +4989,28 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
 
   // Resource sub-row
   if (data?._isResource) {
-    return <EditableResourceRow data={data} ctx={ctx} slots={slots} leftPad={leftPad} />;
+    return (
+      <EditableResourceRow
+        data={data}
+        ctx={ctx}
+        slots={slots}
+        leftPad={leftPad}
+      />
+    );
   }
 
   // Synthetic "abstract variant" header — surfaces the position-level
   // CWICR variant catalog as a visible row inside the resource panel.
   // V badge prominent + click anywhere reopens the position-level picker.
   if (data?._isVariantHeader) {
-    return <VariantHeaderResourceRow data={data} ctx={ctx} slots={slots} leftPad={leftPad} />;
+    return (
+      <VariantHeaderResourceRow
+        data={data}
+        ctx={ctx}
+        slots={slots}
+        leftPad={leftPad}
+      />
+    );
   }
 
   // "Add resource" row — column-driven layout so the action buttons sit
@@ -4435,7 +5019,10 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
   // width-matched placeholders that preserve grid alignment.
   if (data?._isAddResource) {
     const renderTotalSlot = (width: number) => {
-      if (typeof data._positionResourceTotal !== 'number' || data._positionResourceTotal <= 0) {
+      if (
+        typeof data._positionResourceTotal !== "number" ||
+        data._positionResourceTotal <= 0
+      ) {
         return (
           <span
             key="total"
@@ -4451,15 +5038,17 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
       const baseValue = data._positionResourceTotal as number;
       const dc = ctx.displayCurrency;
       const shown = dc && dc.rate > 0 ? baseValue / dc.rate : baseValue;
-      const code = dc && dc.rate > 0 ? dc.code : (ctx.currencyCode ?? 'EUR');
+      const code = dc && dc.rate > 0 ? dc.code : (ctx.currencyCode ?? "EUR");
       return (
         <span
           key="total"
           className="shrink-0 self-center text-right tabular-nums text-[10px] font-medium text-content-tertiary pr-2 pl-2"
           style={{ width: `${width}px` }}
-          title={ctx.t('boq.resources_total', { defaultValue: 'Resources total' })}
+          title={ctx.t("boq.resources_total", {
+            defaultValue: "Resources total",
+          })}
         >
-          {fmtWithCurrency(shown, ctx.locale ?? 'de-DE', code)}
+          {fmtWithCurrency(shown, ctx.locale ?? "de-DE", code)}
         </span>
       );
     };
@@ -4479,7 +5068,7 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
                      text-content-tertiary hover:text-oe-blue hover:bg-oe-blue-subtle transition-all"
         >
           <Plus size={10} />
-          {ctx.t('boq.add_resource_manual', { defaultValue: 'Add Resource' })}
+          {ctx.t("boq.add_resource_manual", { defaultValue: "Add Resource" })}
         </button>
         <button
           onClick={(e) => {
@@ -4490,7 +5079,7 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
                      text-content-tertiary hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"
         >
           <Plus size={10} />
-          {ctx.t('boq.add_from_database', { defaultValue: 'From Database' })}
+          {ctx.t("boq.add_from_database", { defaultValue: "From Database" })}
         </button>
         <button
           onClick={(e) => {
@@ -4501,7 +5090,9 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
                      text-content-tertiary hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all"
         >
           <Boxes size={10} />
-          {ctx.t('boq.add_from_catalog_short', { defaultValue: 'From Catalog' })}
+          {ctx.t("boq.add_from_catalog_short", {
+            defaultValue: "From Catalog",
+          })}
         </button>
       </span>
     );
@@ -4510,17 +5101,18 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
       <div
         className="flex items-center w-full h-full select-none
                     bg-surface-secondary/20 border-b border-border-light/30"
-        style={{ paddingLeft: `${leftPad}px`, paddingRight: '4px' }}
+        style={{ paddingLeft: `${leftPad}px`, paddingRight: "4px" }}
         onContextMenu={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          ctx.onShowContextMenu?.(e, 'addResource', data);
+          ctx.onShowContextMenu?.(e, "addResource", data);
         }}
       >
         {slots.map((slot) => {
           if (LEFT_PAD_COL_IDS.has(slot.colId)) return null;
-          if (slot.colId === 'description') return renderDescriptionSlot(slot.width);
-          if (slot.colId === 'total') return renderTotalSlot(slot.width);
+          if (slot.colId === "description")
+            return renderDescriptionSlot(slot.width);
+          if (slot.colId === "total") return renderTotalSlot(slot.width);
           // All other columns (ordinal, _bim_link, unit, _bim_qty,
           // quantity, unit_rate, classification, _actions, custom_*)
           // render an empty placeholder so the description and total
@@ -4550,14 +5142,18 @@ export function QuantityCellRenderer(params: ICellRendererParams) {
     // Footer rows (Direct Cost / Net Total / VAT / Gross Total) must not
     // display a numeric Qty — totals don't have a meaningful quantity (Bug 15).
     if (data?._isFooter) return <span />;
-    return <span className="text-right text-xs tabular-nums">{value != null ? value : ''}</span>;
+    return (
+      <span className="text-right text-xs tabular-nums">
+        {value != null ? value : ""}
+      </span>
+    );
   }
 
   const ctx = context as FullGridContext | undefined;
   // Smart formatting: >=1 → 2 decimals; <1 → up to 4; <0.01 → show all significant digits
-  let formatted = '';
+  let formatted = "";
   if (value != null) {
-    const num = typeof value === 'number' ? value : parseFloat(String(value));
+    const num = typeof value === "number" ? value : parseFloat(String(value));
     if (!isNaN(num)) {
       const absVal = Math.abs(num);
       let maxFrac = 2;
@@ -4568,7 +5164,7 @@ export function QuantityCellRenderer(params: ICellRendererParams) {
       }
       // Always use a dedicated formatter with the computed maxFrac
       // (ctx.fmt is fixed at 2 decimals and would hide small values)
-      const f = new Intl.NumberFormat(ctx?.locale ?? 'en', {
+      const f = new Intl.NumberFormat(ctx?.locale ?? "en", {
         minimumFractionDigits: 2,
         maximumFractionDigits: maxFrac,
       });
@@ -4580,23 +5176,23 @@ export function QuantityCellRenderer(params: ICellRendererParams) {
   const hasBimSource = !!meta.bim_qty_source;
   const hasPdfSource = !!meta.pdf_measurement_source;
   const hasDwgSource = !!meta.dwg_annotation_source;
-  const formulaSource = typeof meta.formula === 'string' ? meta.formula : null;
+  const formulaSource = typeof meta.formula === "string" ? meta.formula : null;
 
-  let colorClass = '';
+  let colorClass = "";
   let titleText: string | undefined;
   if (hasPdfSource) {
-    colorClass = 'font-semibold text-rose-700 dark:text-rose-400';
+    colorClass = "font-semibold text-rose-700 dark:text-rose-400";
     titleText = String(meta.pdf_measurement_source);
   } else if (hasDwgSource) {
-    colorClass = 'font-semibold text-amber-700 dark:text-amber-400';
+    colorClass = "font-semibold text-amber-700 dark:text-amber-400";
     titleText = String(meta.dwg_annotation_source);
   } else if (hasBimSource) {
-    colorClass = 'font-semibold text-emerald-700 dark:text-emerald-400';
+    colorClass = "font-semibold text-emerald-700 dark:text-emerald-400";
     titleText = String(meta.bim_qty_source);
   } else if (formulaSource) {
     // Issue #90: cells with a stored formula get a violet accent + the
     // formula string in the title so a user knows the qty is computed.
-    colorClass = 'font-semibold text-violet-700 dark:text-violet-300';
+    colorClass = "font-semibold text-violet-700 dark:text-violet-300";
     titleText = `Formula: ${formulaSource}`;
   }
 
@@ -4617,7 +5213,9 @@ export function QuantityCellRenderer(params: ICellRendererParams) {
         >
           ƒx
         </span>
-        <span className="font-semibold text-violet-700 dark:text-violet-300">{formatted}</span>
+        <span className="font-semibold text-violet-700 dark:text-violet-300">
+          {formatted}
+        </span>
       </span>
     );
   }
@@ -4678,25 +5276,39 @@ export function QuantityCellRenderer(params: ICellRendererParams) {
 export function UnitRateCellRenderer(params: ICellRendererParams) {
   const { data, value, context } = params;
   const ctx = context as FullGridContext | undefined;
-  const t = ctx?.t ?? ((key: string, opts?: Record<string, string | number>) =>
-    (opts?.defaultValue as string) ?? key);
+  const t =
+    ctx?.t ??
+    ((key: string, opts?: Record<string, string | number>) =>
+      (opts?.defaultValue as string) ?? key);
 
   // Footer / section / resource sub-row / add-resource row → default cell.
-  if (!data || data._isSection || data._isFooter || data._isResource || data._isAddResource) {
-    return <span className="text-right text-xs tabular-nums">{value ?? ''}</span>;
+  if (
+    !data ||
+    data._isSection ||
+    data._isFooter ||
+    data._isResource ||
+    data._isAddResource
+  ) {
+    return (
+      <span className="text-right text-xs tabular-nums">{value ?? ""}</span>
+    );
   }
 
   const meta = (data.metadata ?? {}) as Record<string, unknown>;
   const variants = meta.cost_item_variants as CostVariant[] | undefined;
   const stats = meta.cost_item_variant_stats as VariantStats | undefined;
-  const variant = (meta as { variant?: { label: string; price: number; index: number } }).variant;
-  const variantDefault = meta.variant_default as 'mean' | 'median' | undefined;
-  const currency = (meta.currency as string | undefined) || ctx?.currencyCode || 'USD';
+  const variant = (
+    meta as { variant?: { label: string; price: number; index: number } }
+  ).variant;
+  const variantDefault = meta.variant_default as "mean" | "median" | undefined;
+  const currency =
+    (meta.currency as string | undefined) || ctx?.currencyCode || "USD";
   const unit = data.unit as string | undefined;
   const resources = meta.resources;
   const isResourceDriven = Array.isArray(resources) && resources.length > 0;
 
-  const numericVal = typeof value === 'number' ? value : parseFloat(String(value ?? 0));
+  const numericVal =
+    typeof value === "number" ? value : parseFloat(String(value ?? 0));
   const formatted = (() => {
     try {
       return new Intl.NumberFormat(getIntlLocale(), {
@@ -4704,11 +5316,12 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
         maximumFractionDigits: 2,
       }).format(isNaN(numericVal) ? 0 : numericVal);
     } catch {
-      return String(value ?? '');
+      return String(value ?? "");
     }
   })();
 
-  const hasVariants = Array.isArray(variants) && variants.length >= 2 && stats != null;
+  const hasVariants =
+    Array.isArray(variants) && variants.length >= 2 && stats != null;
 
   // Picker state — owned per renderer instance.  AG Grid re-mounts the
   // renderer when the row scrolls out / back, so an open picker on a
@@ -4724,7 +5337,7 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
       if (!ctx?.onUpdatePosition || !data?.id) return;
       const newMeta = { ...meta };
       // Drop the auto-default marker — user made an explicit pick.
-      if ('variant_default' in newMeta) delete newMeta.variant_default;
+      if ("variant_default" in newMeta) delete newMeta.variant_default;
       newMeta.variant = {
         label: chosen.label,
         price: chosen.price,
@@ -4746,17 +5359,17 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
   );
 
   const handleUseDefault = useCallback(
-    (strategy: 'mean' | 'median') => {
+    (strategy: "mean" | "median") => {
       setPickerOpen(false);
       if (!ctx?.onUpdatePosition || !data?.id || !stats) return;
       const newRate =
-        strategy === 'mean' && stats.mean > 0
+        strategy === "mean" && stats.mean > 0
           ? stats.mean
           : stats.median > 0
             ? stats.median
             : numericVal;
       const newMeta = { ...meta };
-      if ('variant' in newMeta) delete newMeta.variant;
+      if ("variant" in newMeta) delete newMeta.variant;
       newMeta.variant_default = strategy;
       ctx.onUpdatePosition(
         data.id as string,
@@ -4776,9 +5389,11 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
   // No variant cache → just render the formatted number.  Cell is still
   // editable (click → AG Grid mounts agNumberCellEditor).
   if (!hasVariants) {
-    const colorClass = isResourceDriven ? 'text-content-tertiary' : '';
+    const colorClass = isResourceDriven ? "text-content-tertiary" : "";
     return (
-      <span className={`block text-right text-xs tabular-nums w-full h-full leading-[32px] ${colorClass}`}>
+      <span
+        className={`block text-right text-xs tabular-nums w-full h-full leading-[32px] ${colorClass}`}
+      >
         {formatted}
       </span>
     );
@@ -4789,25 +5404,25 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
   const optsCount = stats!.count;
   const minMax = `${stats!.min.toFixed(2)} – ${stats!.max.toFixed(2)} ${currency}`;
   const tooltip = variant
-    ? t('boq.unit_rate_variant_pill_tooltip_picked', {
+    ? t("boq.unit_rate_variant_pill_tooltip_picked", {
         defaultValue:
-          'Currently: {{label}}. Click to switch to a different variant.',
+          "Currently: {{label}}. Click to switch to a different variant.",
         label: variant.label,
       })
     : variantDefault
-      ? t('boq.unit_rate_variant_pill_tooltip_default', {
+      ? t("boq.unit_rate_variant_pill_tooltip_default", {
           defaultValue:
-            'Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.',
+            "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
           strategy:
-            variantDefault === 'mean'
-              ? t('costs.variant_mean_word', { defaultValue: 'average' })
-              : t('costs.variant_median_word', { defaultValue: 'median' }),
+            variantDefault === "mean"
+              ? t("costs.variant_mean_word", { defaultValue: "average" })
+              : t("costs.variant_median_word", { defaultValue: "median" }),
           count: optsCount,
           range: minMax,
         })
-      : t('boq.unit_rate_variant_pill_tooltip_unset', {
+      : t("boq.unit_rate_variant_pill_tooltip_unset", {
           defaultValue:
-            '{{count}} priced variants available ({{range}}). Click to pick one.',
+            "{{count}} priced variants available ({{range}}). Click to pick one.",
           count: optsCount,
           range: minMax,
         });
@@ -4831,8 +5446,8 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
           className={`shrink-0 inline-flex items-center gap-0.5 h-5 px-1.5 rounded text-[10px] font-semibold
                       transition-colors cursor-pointer ${
                         variant
-                          ? 'bg-oe-blue/15 text-oe-blue hover:bg-oe-blue/25'
-                          : 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/60'
+                          ? "bg-oe-blue/15 text-oe-blue hover:bg-oe-blue/25"
+                          : "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/60"
                       }`}
           title={tooltip}
           aria-label={tooltip}
@@ -4840,13 +5455,15 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
           aria-expanded={pickerOpen}
           data-testid={`boq-variant-pill-${data.id}`}
         >
-          {t('boq.unit_rate_variant_pill', {
-            defaultValue: '\u25BE {{count}} options',
+          {t("boq.unit_rate_variant_pill", {
+            defaultValue: "\u25BE {{count}} options",
             count: optsCount,
           })}
         </button>
       )}
-      <span className={isResourceDriven ? 'text-content-tertiary' : ''}>{formatted}</span>
+      <span className={isResourceDriven ? "text-content-tertiary" : ""}>
+        {formatted}
+      </span>
       {pickerOpen && hasVariants && (
         <VariantPicker
           variants={variants!}
@@ -4854,7 +5471,7 @@ export function UnitRateCellRenderer(params: ICellRendererParams) {
           defaultStrategy="mean"
           defaultIndex={variant?.index}
           anchorEl={anchorRef.current}
-          unitLabel={unit || ''}
+          unitLabel={unit || ""}
           currency={currency}
           onApply={handlePick}
           onUseDefault={handleUseDefault}
@@ -4872,7 +5489,9 @@ export function UnitCellRenderer(params: ICellRendererParams) {
   // Bug 9: render the raw unit code (e.g. "m2") with NO casing transform — must match
   // the agSelectCellEditor dropdown which lists lowercase values.
   if (!data || data._isSection || data._isFooter) {
-    return <span className="text-center text-2xs font-mono">{value ?? ''}</span>;
+    return (
+      <span className="text-center text-2xs font-mono">{value ?? ""}</span>
+    );
   }
 
   const meta = (data.metadata ?? {}) as Record<string, unknown>;
@@ -4882,16 +5501,20 @@ export function UnitCellRenderer(params: ICellRendererParams) {
 
   // No source indicator needed
   if (!bimSource && !pdfSource && !dwgSource) {
-    return <span className="text-center text-2xs font-mono w-full block">{value ?? ''}</span>;
+    return (
+      <span className="text-center text-2xs font-mono w-full block">
+        {value ?? ""}
+      </span>
+    );
   }
 
   if (pdfSource) {
     // Extract short label: "Takeoff: Area on Page 3" -> "Page 3"
-    const parts = pdfSource.split(' on ');
+    const parts = pdfSource.split(" on ");
     const shortLabel = (parts[parts.length - 1] ?? pdfSource).trim();
     return (
       <div className="flex flex-col items-center justify-center h-full w-full gap-0">
-        <span className="text-2xs font-mono leading-tight">{value ?? ''}</span>
+        <span className="text-2xs font-mono leading-tight">{value ?? ""}</span>
         <span
           className="text-[7px] leading-none font-medium text-rose-600 dark:text-rose-400 truncate max-w-full"
           title={pdfSource}
@@ -4908,7 +5531,7 @@ export function UnitCellRenderer(params: ICellRendererParams) {
     const shortLabel = (parts[parts.length - 1] ?? dwgSource).trim();
     return (
       <div className="flex flex-col items-center justify-center h-full w-full gap-0">
-        <span className="text-2xs font-mono leading-tight">{value ?? ''}</span>
+        <span className="text-2xs font-mono leading-tight">{value ?? ""}</span>
         <span
           className="text-[7px] leading-none font-medium text-amber-600 dark:text-amber-400 truncate max-w-full"
           title={dwgSource}
@@ -4921,12 +5544,12 @@ export function UnitCellRenderer(params: ICellRendererParams) {
 
   // BIM source (existing behavior)
   // Extract short param name: "BIM: Wall / Area" -> "Area"
-  const parts = (bimSource ?? '').split('/');
-  const paramName = (parts[parts.length - 1] ?? bimSource ?? '').trim();
+  const parts = (bimSource ?? "").split("/");
+  const paramName = (parts[parts.length - 1] ?? bimSource ?? "").trim();
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full gap-0">
-      <span className="text-2xs font-mono leading-tight">{value ?? ''}</span>
+      <span className="text-2xs font-mono leading-tight">{value ?? ""}</span>
       <span
         className="text-[7px] leading-none font-medium text-emerald-600 dark:text-emerald-400 truncate max-w-full"
         title={bimSource}
@@ -4945,14 +5568,26 @@ export function UnitCellRenderer(params: ICellRendererParams) {
 export function BimQtyPickerCellRenderer(params: ICellRendererParams) {
   const { data, context } = params;
   const ctx = context as FullGridContext | undefined;
-  const t = ctx?.t ?? ((key: string, opts?: Record<string, string>) => (opts?.defaultValue as string) ?? key);
+  const t =
+    ctx?.t ??
+    ((key: string, opts?: Record<string, string>) =>
+      (opts?.defaultValue as string) ?? key);
 
-  if (!data || data._isFooter || data._isResource || data._isAddResource || data._isSection) {
+  if (
+    !data ||
+    data._isFooter ||
+    data._isResource ||
+    data._isAddResource ||
+    data._isSection
+  ) {
     return null;
   }
 
   const cadElementIds: string[] = Array.isArray(data.cad_element_ids)
-    ? data.cad_element_ids.filter((x: unknown): x is string => typeof x === 'string' && (x as string).length > 0)
+    ? data.cad_element_ids.filter(
+        (x: unknown): x is string =>
+          typeof x === "string" && (x as string).length > 0,
+      )
     : [];
   const hasBimLink = cadElementIds.length > 0 && !!ctx?.bimModelId;
 
@@ -4977,8 +5612,12 @@ export function BimQtyPickerCellRenderer(params: ICellRendererParams) {
         className="h-6 w-6 flex items-center justify-center rounded
                    text-emerald-600/60 hover:text-emerald-600 hover:bg-emerald-50
                    dark:hover:bg-emerald-950/30 transition-colors cursor-pointer"
-        title={t('boq.pick_qty_from_bim', { defaultValue: 'Pick quantity from BIM' })}
-        aria-label={t('boq.pick_qty_from_bim', { defaultValue: 'Pick quantity from BIM' })}
+        title={t("boq.pick_qty_from_bim", {
+          defaultValue: "Pick quantity from BIM",
+        })}
+        aria-label={t("boq.pick_qty_from_bim", {
+          defaultValue: "Pick quantity from BIM",
+        })}
       >
         <Ruler size={13} />
       </button>
@@ -4988,12 +5627,18 @@ export function BimQtyPickerCellRenderer(params: ICellRendererParams) {
           cadElementIds={cadElementIds}
           bimModelId={ctx.bimModelId}
           currentQuantity={data.quantity ?? 0}
-          currentUnit={data.unit ?? ''}
+          currentUnit={data.unit ?? ""}
           anchorRect={anchorRect}
           onSelectQuantity={(val, source) => {
             ctx?.onUpdatePosition?.(
               data.id,
-              { quantity: val, metadata: { ...((data.metadata ?? {}) as Record<string, unknown>), bim_qty_source: source } },
+              {
+                quantity: val,
+                metadata: {
+                  ...((data.metadata ?? {}) as Record<string, unknown>),
+                  bim_qty_source: source,
+                },
+              },
               { quantity: data.quantity },
             );
             setShowPicker(false);

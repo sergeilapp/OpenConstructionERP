@@ -10,15 +10,15 @@
  * (`source` field).  Each module can also pass raw properties for display.
  */
 
-import { useCallback, useEffect, useRef, type CSSProperties } from 'react';
-import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
-import { X, Link2, Cuboid, PenLine, Ruler } from 'lucide-react';
+import { useCallback, useEffect, useRef, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import { X, Link2, Cuboid, PenLine, Ruler } from "lucide-react";
 
 /* ── Source-specific payload shapes ──────────────────────────────────── */
 
 export interface BIMElementPayload {
-  source: 'bim';
+  source: "bim";
   id: string;
   name: string;
   elementType: string;
@@ -31,7 +31,7 @@ export interface BIMElementPayload {
 }
 
 export interface DWGElementPayload {
-  source: 'dwg';
+  source: "dwg";
   id: string;
   type: string;
   layer: string;
@@ -42,7 +42,7 @@ export interface DWGElementPayload {
 }
 
 export interface PDFMeasurementPayload {
-  source: 'pdf';
+  source: "pdf";
   id: string;
   label: string;
   measurementType: string;
@@ -67,7 +67,7 @@ export interface ElementInfoPopoverProps {
   onClose: () => void;
   /** Optional "Link to BOQ" callback.  When provided the button is
    *  rendered; the callee receives the element id and source type. */
-  onLinkToBOQ?: (elementId: string, source: ElementPayload['source']) => void;
+  onLinkToBOQ?: (elementId: string, source: ElementPayload["source"]) => void;
   /** If true the popover renders inside a portal (document.body). */
   portal?: boolean;
 }
@@ -75,7 +75,7 @@ export interface ElementInfoPopoverProps {
 /* ── Helpers ─────────────────────────────────────────────────────────── */
 
 function isNumeric(v: unknown): v is number {
-  return typeof v === 'number' && Number.isFinite(v);
+  return typeof v === "number" && Number.isFinite(v);
 }
 
 /** Extract a flat list of { label, value, unit? } rows from the element. */
@@ -84,20 +84,20 @@ function extractRows(
 ): Array<{ label: string; value: string; unit?: string }> {
   const rows: Array<{ label: string; value: string; unit?: string }> = [];
 
-  if (el.source === 'bim') {
+  if (el.source === "bim") {
     // Quantities (always numeric)
     if (el.quantities) {
       for (const [k, v] of Object.entries(el.quantities)) {
         if (isNumeric(v)) {
-          const unit = k.includes('m2')
-            ? 'm\u00B2'
-            : k.includes('m3')
-              ? 'm\u00B3'
-              : k.includes('kg')
-                ? 'kg'
-                : k.includes('length') || k.includes('_m')
-                  ? 'm'
-                  : '';
+          const unit = k.includes("m2")
+            ? "m\u00B2"
+            : k.includes("m3")
+              ? "m\u00B3"
+              : k.includes("kg")
+                ? "kg"
+                : k.includes("length") || k.includes("_m")
+                  ? "m"
+                  : "";
           rows.push({ label: k, value: v.toFixed(3), unit });
         }
       }
@@ -110,7 +110,7 @@ function extractRows(
         }
       }
     }
-  } else if (el.source === 'dwg') {
+  } else if (el.source === "dwg") {
     if (el.measurements) {
       for (const [k, m] of Object.entries(el.measurements)) {
         rows.push({ label: k, value: m.value.toFixed(3), unit: m.unit });
@@ -120,18 +120,22 @@ function extractRows(
       for (const [k, v] of Object.entries(el.properties)) {
         if (isNumeric(v)) {
           rows.push({ label: k, value: (v as number).toFixed(3) });
-        } else if (typeof v === 'string' && v.trim()) {
+        } else if (typeof v === "string" && v.trim()) {
           rows.push({ label: k, value: v });
         }
       }
     }
-  } else if (el.source === 'pdf') {
-    rows.push({ label: el.measurementType, value: el.value.toFixed(3), unit: el.unit });
+  } else if (el.source === "pdf") {
+    rows.push({
+      label: el.measurementType,
+      value: el.value.toFixed(3),
+      unit: el.unit,
+    });
     if (el.properties) {
       for (const [k, v] of Object.entries(el.properties)) {
         if (isNumeric(v)) {
           rows.push({ label: k, value: (v as number).toFixed(3) });
-        } else if (typeof v === 'string' && v.trim()) {
+        } else if (typeof v === "string" && v.trim()) {
           rows.push({ label: k, value: v });
         }
       }
@@ -141,46 +145,48 @@ function extractRows(
   return rows;
 }
 
-function sourceIcon(source: ElementPayload['source']) {
+function sourceIcon(source: ElementPayload["source"]) {
   switch (source) {
-    case 'bim':
+    case "bim":
       return <Cuboid size={14} className="text-oe-blue" />;
-    case 'dwg':
+    case "dwg":
       return <PenLine size={14} className="text-emerald-500" />;
-    case 'pdf':
+    case "pdf":
       return <Ruler size={14} className="text-amber-500" />;
   }
 }
 
 function sourceLabel(
-  source: ElementPayload['source'],
+  source: ElementPayload["source"],
   t: (key: string, opts?: Record<string, string>) => string,
 ): string {
   switch (source) {
-    case 'bim':
-      return t('element_info.source_bim', { defaultValue: 'BIM Element‌⁠‍' });
-    case 'dwg':
-      return t('element_info.source_dwg', { defaultValue: 'DWG Entity‌⁠‍' });
-    case 'pdf':
-      return t('element_info.source_pdf', { defaultValue: 'PDF Measurement‌⁠‍' });
+    case "bim":
+      return t("element_info.source_bim", { defaultValue: "BIM Element‌⁠‍" });
+    case "dwg":
+      return t("element_info.source_dwg", { defaultValue: "DWG Entity‌⁠‍" });
+    case "pdf":
+      return t("element_info.source_pdf", {
+        defaultValue: "PDF Measurement‌⁠‍",
+      });
   }
 }
 
 function elementTitle(el: ElementPayload): string {
-  if (el.source === 'bim') return el.name || el.elementType;
-  if (el.source === 'dwg') return `${el.type} [${el.layer}]`;
+  if (el.source === "bim") return el.name || el.elementType;
+  if (el.source === "dwg") return `${el.type} [${el.layer}]`;
   return el.label || el.measurementType;
 }
 
 function elementSubtitle(el: ElementPayload): string | null {
-  if (el.source === 'bim') {
+  if (el.source === "bim") {
     const parts: string[] = [];
     if (el.category) parts.push(el.category);
     if (el.elementType) parts.push(el.elementType);
     if (el.storey) parts.push(el.storey);
-    return parts.length > 0 ? parts.join(' / ') : null;
+    return parts.length > 0 ? parts.join(" / ") : null;
   }
-  if (el.source === 'dwg') {
+  if (el.source === "dwg") {
     return el.layer;
   }
   return null;
@@ -201,10 +207,10 @@ export function ElementInfoPopover({
   // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
   // Close on click outside
@@ -214,8 +220,8 @@ export function ElementInfoPopover({
         onClose();
       }
     };
-    document.addEventListener('mousedown', handler, true);
-    return () => document.removeEventListener('mousedown', handler, true);
+    document.addEventListener("mousedown", handler, true);
+    return () => document.removeEventListener("mousedown", handler, true);
   }, [onClose]);
 
   const handleLinkClick = useCallback(() => {
@@ -258,7 +264,7 @@ export function ElementInfoPopover({
             type="button"
             onClick={onClose}
             className="rounded p-0.5 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={14} />
           </button>
@@ -269,7 +275,9 @@ export function ElementInfoPopover({
       <div className="max-h-64 overflow-y-auto">
         {rows.length === 0 ? (
           <div className="px-4 py-3 text-[11px] text-content-tertiary italic">
-            {t('element_info.no_properties', { defaultValue: 'No numeric properties available.‌⁠‍' })}
+            {t("element_info.no_properties", {
+              defaultValue: "No numeric properties available.‌⁠‍",
+            })}
           </div>
         ) : (
           <table className="w-full text-[11px]">
@@ -306,7 +314,7 @@ export function ElementInfoPopover({
             className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:bg-oe-blue-dark transition-colors"
           >
             <Link2 size={12} />
-            {t('element_info.link_to_boq', { defaultValue: 'Link to BOQ‌⁠‍' })}
+            {t("element_info.link_to_boq", { defaultValue: "Link to BOQ‌⁠‍" })}
           </button>
         </div>
       )}

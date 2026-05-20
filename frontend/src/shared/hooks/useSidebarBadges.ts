@@ -9,9 +9,9 @@
  * defaults when no project is selected or the query is still loading.
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '@/shared/lib/api';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
+import { useQuery } from "@tanstack/react-query";
+import { apiGet } from "@/shared/lib/api";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
 
 interface SidebarBadgesResponse {
   tasks_open: number;
@@ -31,7 +31,7 @@ export function useSidebarBadges(): SidebarBadgeCounts {
   const projectId = useProjectContextStore((s) => s.activeProjectId);
 
   const { data } = useQuery({
-    queryKey: ['sidebar-badges', projectId],
+    queryKey: ["sidebar-badges", projectId],
     queryFn: () =>
       apiGet<SidebarBadgesResponse>(
         `/v1/sidebar/badges/?project_id=${encodeURIComponent(projectId!)}`,

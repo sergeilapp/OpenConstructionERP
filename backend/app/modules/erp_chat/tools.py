@@ -88,9 +88,7 @@ async def _require_project_access(
             pass
 
         if str(project.owner_id) != str(user_id):
-            raise ToolAuthError(
-                f"Access denied: you do not own project {project_id}"
-            )
+            raise ToolAuthError(f"Access denied: you do not own project {project_id}")
     except ToolAuthError:
         raise
     except Exception as exc:
@@ -105,6 +103,7 @@ def _auth_error(msg: str) -> dict[str, Any]:
         "data": {"error": msg},
         "summary": f"Error: {msg}",
     }
+
 
 # ── Tool definitions (Anthropic function-calling format) ─────────────────────
 
@@ -190,7 +189,7 @@ TOOL_DEFINITIONS: list[dict[str, Any]] = [
     },
     {
         "name": "search_cwicr_database",
-        "description": "Search the CWICR construction cost database (55,000+ items) by keyword. Returns matching cost items with codes, descriptions, units, and rates.",
+        "description": "Search the CWICR construction cost database (55,000+ items across 48 regions) by keyword. Returns matching cost items with codes, descriptions, units, and rates.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -413,9 +412,7 @@ TOOL_DEFINITIONS: list[dict[str, Any]] = [
 # ── Tool handlers ────────────────────────────────────────────────────────────
 
 
-async def handle_get_all_projects(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_get_all_projects(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """List all projects visible to the current user."""
     try:
         from app.config import get_settings
@@ -423,7 +420,9 @@ async def handle_get_all_projects(
 
         svc = ProjectService(session, get_settings())
         projects, total = await svc.list_projects(
-            owner_id=None, is_admin=True, limit=50  # type: ignore[arg-type]
+            owner_id=None,
+            is_admin=True,
+            limit=50,  # type: ignore[arg-type]
         )
         return {
             "renderer": "projects_grid",
@@ -449,9 +448,7 @@ async def handle_get_all_projects(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_get_project_summary(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_get_project_summary(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Get detailed summary for a single project."""
     try:
         pid = _parse_uuid(args.get("project_id"), "project_id")
@@ -490,9 +487,7 @@ async def handle_get_project_summary(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_get_boq_items(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_get_boq_items(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Get BOQ positions for a project's first BOQ."""
     try:
         from app.modules.boq.service import BOQService
@@ -515,16 +510,18 @@ async def handle_get_boq_items(
         boq_data = await svc.get_boq_with_positions(boq.id)
         positions = []
         for pos in boq_data.positions:
-            positions.append({
-                "id": str(pos.id),
-                "ordinal": pos.ordinal,
-                "description": pos.description or "",
-                "unit": pos.unit or "",
-                "quantity": float(pos.quantity or 0),
-                "unit_rate": float(pos.unit_rate or 0),
-                "total": float(pos.total or 0),
-                "source": getattr(pos, "source", ""),
-            })
+            positions.append(
+                {
+                    "id": str(pos.id),
+                    "ordinal": pos.ordinal,
+                    "description": pos.description or "",
+                    "unit": pos.unit or "",
+                    "quantity": float(pos.quantity or 0),
+                    "unit_rate": float(pos.unit_rate or 0),
+                    "total": float(pos.total or 0),
+                    "source": getattr(pos, "source", ""),
+                }
+            )
 
         return {
             "renderer": "boq_table",
@@ -535,19 +532,14 @@ async def handle_get_boq_items(
                 "position_count": len(positions),
                 "grand_total": float(boq_data.grand_total or 0),
             },
-            "summary": (
-                f"BOQ '{boq.name}': {len(positions)} positions, "
-                f"grand total {boq_data.grand_total}"
-            ),
+            "summary": (f"BOQ '{boq.name}': {len(positions)} positions, grand total {boq_data.grand_total}"),
         }
     except Exception as exc:
         logger.exception("handle_get_boq_items failed")
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_get_schedule(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_get_schedule(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Get schedule/Gantt data for a project."""
     try:
         from app.modules.schedule.service import ScheduleService
@@ -571,17 +563,19 @@ async def handle_get_schedule(
 
         activities = []
         for act in gantt.activities:
-            activities.append({
-                "id": str(act.id),
-                "name": act.name,
-                "wbs_code": getattr(act, "wbs_code", ""),
-                "start_date": str(act.start_date) if act.start_date else "",
-                "end_date": str(act.end_date) if act.end_date else "",
-                "duration_days": act.duration_days,
-                "progress": act.progress,
-                "status": getattr(act, "status", ""),
-                "is_critical": getattr(act, "is_critical", False),
-            })
+            activities.append(
+                {
+                    "id": str(act.id),
+                    "name": act.name,
+                    "wbs_code": getattr(act, "wbs_code", ""),
+                    "start_date": str(act.start_date) if act.start_date else "",
+                    "end_date": str(act.end_date) if act.end_date else "",
+                    "duration_days": act.duration_days,
+                    "progress": act.progress,
+                    "status": getattr(act, "status", ""),
+                    "is_critical": getattr(act, "is_critical", False),
+                }
+            )
 
         summary_data = gantt.summary
         return {
@@ -597,18 +591,14 @@ async def handle_get_schedule(
                     "overall_progress": getattr(summary_data, "overall_progress", 0),
                 },
             },
-            "summary": (
-                f"Schedule '{schedule.name}': {len(activities)} activities"
-            ),
+            "summary": (f"Schedule '{schedule.name}': {len(activities)} activities"),
         }
     except Exception as exc:
         logger.exception("handle_get_schedule failed")
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_get_validation_results(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_get_validation_results(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Get validation reports for a project."""
     try:
         from app.modules.validation.repository import ValidationReportRepository
@@ -629,19 +619,21 @@ async def handle_get_validation_results(
 
         report_list = []
         for r in reports:
-            report_list.append({
-                "id": str(r.id),
-                "target_type": r.target_type,
-                "target_id": r.target_id,
-                "rule_set": r.rule_set,
-                "status": r.status,
-                "score": str(r.score) if r.score else None,
-                "total_rules": getattr(r, "total_rules", 0),
-                "passed_count": getattr(r, "passed_count", 0),
-                "warning_count": getattr(r, "warning_count", 0),
-                "error_count": getattr(r, "error_count", 0),
-                "created_at": str(r.created_at),
-            })
+            report_list.append(
+                {
+                    "id": str(r.id),
+                    "target_type": r.target_type,
+                    "target_id": r.target_id,
+                    "rule_set": r.rule_set,
+                    "status": r.status,
+                    "score": str(r.score) if r.score else None,
+                    "total_rules": getattr(r, "total_rules", 0),
+                    "passed_count": getattr(r, "passed_count", 0),
+                    "warning_count": getattr(r, "warning_count", 0),
+                    "error_count": getattr(r, "error_count", 0),
+                    "created_at": str(r.created_at),
+                }
+            )
 
         return {
             "renderer": "validation_dashboard",
@@ -653,9 +645,7 @@ async def handle_get_validation_results(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_get_risk_register(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_get_risk_register(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Get risk register with summary for a project."""
     try:
         from app.modules.risk.service import RiskService
@@ -671,19 +661,21 @@ async def handle_get_risk_register(
 
         risk_list = []
         for r in risks:
-            risk_list.append({
-                "id": str(r.id),
-                "code": r.code,
-                "title": r.title,
-                "category": r.category,
-                "probability": float(r.probability) if r.probability else 0,
-                "impact_severity": r.impact_severity,
-                "risk_score": float(r.risk_score) if r.risk_score else 0,
-                "risk_tier": getattr(r, "risk_tier", ""),
-                "status": r.status,
-                "mitigation_strategy": r.mitigation_strategy or "",
-                "owner_name": getattr(r, "owner_name", ""),
-            })
+            risk_list.append(
+                {
+                    "id": str(r.id),
+                    "code": r.code,
+                    "title": r.title,
+                    "category": r.category,
+                    "probability": float(r.probability) if r.probability else 0,
+                    "impact_severity": r.impact_severity,
+                    "risk_score": float(r.risk_score) if r.risk_score else 0,
+                    "risk_tier": getattr(r, "risk_tier", ""),
+                    "status": r.status,
+                    "mitigation_strategy": r.mitigation_strategy or "",
+                    "owner_name": getattr(r, "owner_name", ""),
+                }
+            )
 
         return {
             "renderer": "risk_register",
@@ -699,9 +691,7 @@ async def handle_get_risk_register(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_search_cwicr_database(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_search_cwicr_database(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Search the CWICR cost database."""
     try:
         from app.modules.costs.repository import CostItemRepository
@@ -713,15 +703,17 @@ async def handle_search_cwicr_database(
 
         results = []
         for item in items:
-            results.append({
-                "id": str(item.id),
-                "code": item.code,
-                "description": item.description or "",
-                "unit": item.unit or "",
-                "rate": str(item.rate) if item.rate else "0",
-                "source": getattr(item, "source", ""),
-                "region": getattr(item, "region", ""),
-            })
+            results.append(
+                {
+                    "id": str(item.id),
+                    "code": item.code,
+                    "description": item.description or "",
+                    "unit": item.unit or "",
+                    "rate": str(item.rate) if item.rate else "0",
+                    "source": getattr(item, "source", ""),
+                    "region": getattr(item, "region", ""),
+                }
+            )
 
         return {
             "renderer": "cost_items_table",
@@ -733,9 +725,7 @@ async def handle_search_cwicr_database(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_get_cost_model(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_get_cost_model(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Get cost model summary for a project from its first BOQ."""
     try:
         from app.modules.boq.service import BOQService
@@ -760,20 +750,24 @@ async def handle_get_cost_model(
         # Extract cost breakdown
         sections = []
         for sec in getattr(structured, "sections", []):
-            sections.append({
-                "title": getattr(sec, "title", ""),
-                "subtotal": float(getattr(sec, "subtotal", 0)),
-                "position_count": len(getattr(sec, "positions", [])),
-            })
+            sections.append(
+                {
+                    "title": getattr(sec, "title", ""),
+                    "subtotal": float(getattr(sec, "subtotal", 0)),
+                    "position_count": len(getattr(sec, "positions", [])),
+                }
+            )
 
         markups = []
         for m in getattr(structured, "markups", []):
-            markups.append({
-                "name": getattr(m, "name", ""),
-                "category": getattr(m, "category", ""),
-                "percentage": float(getattr(m, "percentage", 0)),
-                "amount": float(getattr(m, "amount", 0)),
-            })
+            markups.append(
+                {
+                    "name": getattr(m, "name", ""),
+                    "category": getattr(m, "category", ""),
+                    "percentage": float(getattr(m, "percentage", 0)),
+                    "amount": float(getattr(m, "amount", 0)),
+                }
+            )
 
         return {
             "renderer": "cost_model",
@@ -797,9 +791,7 @@ async def handle_get_cost_model(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_compare_projects(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_compare_projects(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Compare key metrics across multiple projects."""
     try:
         from app.config import get_settings
@@ -830,16 +822,18 @@ async def handle_compare_projects(
         for pid in project_ids:
             try:
                 p = await svc.get_project(pid)
-                comparisons.append({
-                    "id": str(p.id),
-                    "name": p.name,
-                    "code": getattr(p, "project_code", ""),
-                    "status": p.status,
-                    "contract_value": float(getattr(p, "contract_value", 0) or 0),
-                    "budget_estimate": float(getattr(p, "budget_estimate", 0) or 0),
-                    "region": getattr(p, "region", ""),
-                    "currency": getattr(p, "currency", "") or "",
-                })
+                comparisons.append(
+                    {
+                        "id": str(p.id),
+                        "name": p.name,
+                        "code": getattr(p, "project_code", ""),
+                        "status": p.status,
+                        "contract_value": float(getattr(p, "contract_value", 0) or 0),
+                        "budget_estimate": float(getattr(p, "budget_estimate", 0) or 0),
+                        "region": getattr(p, "region", ""),
+                        "currency": getattr(p, "currency", "") or "",
+                    }
+                )
             except Exception:
                 comparisons.append({"id": str(pid), "error": "Project not found"})
 
@@ -853,9 +847,7 @@ async def handle_compare_projects(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_run_validation(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_run_validation(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Trigger validation for a project and return results."""
     try:
         from app.modules.validation.repository import ValidationReportRepository
@@ -878,18 +870,20 @@ async def handle_run_validation(
 
         report_list = []
         for r in reports:
-            report_list.append({
-                "id": str(r.id),
-                "target_type": r.target_type,
-                "rule_set": r.rule_set,
-                "status": r.status,
-                "score": str(r.score) if r.score else None,
-                "total_rules": getattr(r, "total_rules", 0),
-                "passed_count": getattr(r, "passed_count", 0),
-                "warning_count": getattr(r, "warning_count", 0),
-                "error_count": getattr(r, "error_count", 0),
-                "created_at": str(r.created_at),
-            })
+            report_list.append(
+                {
+                    "id": str(r.id),
+                    "target_type": r.target_type,
+                    "rule_set": r.rule_set,
+                    "status": r.status,
+                    "score": str(r.score) if r.score else None,
+                    "total_rules": getattr(r, "total_rules", 0),
+                    "passed_count": getattr(r, "passed_count", 0),
+                    "warning_count": getattr(r, "warning_count", 0),
+                    "error_count": getattr(r, "error_count", 0),
+                    "created_at": str(r.created_at),
+                }
+            )
 
         return {
             "renderer": "validation_dashboard",
@@ -901,9 +895,7 @@ async def handle_run_validation(
         return {"renderer": "error", "data": {"error": str(exc)}, "summary": f"Error: {exc}"}
 
 
-async def handle_create_boq_item(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_create_boq_item(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Create a new BOQ position in a project's first BOQ."""
     try:
         from app.modules.boq.schemas import PositionCreate
@@ -1024,54 +1016,32 @@ async def _generic_collection_search(
     }
 
 
-async def handle_search_boq_positions(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_search_boq_positions(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     _ = (session, user_id)
-    return await _generic_collection_search(
-        args, short_type="boq", summary_label="BOQ search"
-    )
+    return await _generic_collection_search(args, short_type="boq", summary_label="BOQ search")
 
 
-async def handle_search_documents(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_search_documents(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     _ = (session, user_id)
-    return await _generic_collection_search(
-        args, short_type="documents", summary_label="Documents search"
-    )
+    return await _generic_collection_search(args, short_type="documents", summary_label="Documents search")
 
 
-async def handle_search_tasks(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_search_tasks(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     _ = (session, user_id)
-    return await _generic_collection_search(
-        args, short_type="tasks", summary_label="Tasks search"
-    )
+    return await _generic_collection_search(args, short_type="tasks", summary_label="Tasks search")
 
 
-async def handle_search_risks(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_search_risks(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     _ = (session, user_id)
-    return await _generic_collection_search(
-        args, short_type="risks", summary_label="Risks search"
-    )
+    return await _generic_collection_search(args, short_type="risks", summary_label="Risks search")
 
 
-async def handle_search_bim_elements(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_search_bim_elements(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     _ = (session, user_id)
-    return await _generic_collection_search(
-        args, short_type="bim", summary_label="BIM elements search"
-    )
+    return await _generic_collection_search(args, short_type="bim", summary_label="BIM elements search")
 
 
-async def handle_search_anything(
-    session: AsyncSession, args: dict[str, Any], user_id: str
-) -> dict[str, Any]:
+async def handle_search_anything(session: AsyncSession, args: dict[str, Any], user_id: str) -> dict[str, Any]:
     """Cross-collection unified search."""
     _ = (session, user_id)
     from app.modules.search.service import unified_search_service

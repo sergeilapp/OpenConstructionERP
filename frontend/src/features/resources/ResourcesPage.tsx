@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   useQuery,
   useQueries,
   useMutation,
   useQueryClient,
-} from '@tanstack/react-query';
-import clsx from 'clsx';
+} from "@tanstack/react-query";
+import clsx from "clsx";
 import {
   Users,
   ClipboardList,
@@ -31,7 +31,7 @@ import {
   Flame,
   AlertOctagon,
   ArrowRight,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Button,
   Card,
@@ -43,14 +43,14 @@ import {
   WideModalSection,
   WideModalField,
   ConfirmDialog,
-} from '@/shared/ui';
-import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
-import { useToastStore } from '@/stores/useToastStore';
-import { getErrorMessage } from '@/shared/lib/api';
-import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { usePreferencesStore } from '@/stores/usePreferencesStore';
+} from "@/shared/ui";
+import { DateDisplay } from "@/shared/ui/DateDisplay";
+import { MoneyDisplay } from "@/shared/ui/MoneyDisplay";
+import { useToastStore } from "@/stores/useToastStore";
+import { getErrorMessage } from "@/shared/lib/api";
+import { useProjectContextStore } from "@/stores/useProjectContextStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import {
   listResources,
   getResourceDashboard,
@@ -78,28 +78,34 @@ import {
   type AssignmentStatus,
   type BoardConflict,
   type Skill,
-} from './api';
-import { projectsApi } from '@/features/projects/api';
+} from "./api";
+import { projectsApi } from "@/features/projects/api";
 
-type Tab = 'resources' | 'requests' | 'assignments';
+type Tab = "resources" | "requests" | "assignments";
 
-const TYPE_VARIANT: Record<ResourceType, 'neutral' | 'blue' | 'success' | 'warning'> = {
-  person: 'blue',
-  crew: 'success',
-  equipment: 'warning',
-  subcontractor: 'neutral',
+const TYPE_VARIANT: Record<
+  ResourceType,
+  "neutral" | "blue" | "success" | "warning"
+> = {
+  person: "blue",
+  crew: "success",
+  equipment: "warning",
+  subcontractor: "neutral",
 };
 
-const ASSIGN_VARIANT: Record<AssignmentStatus, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
-  proposed: 'warning',
-  confirmed: 'blue',
-  in_progress: 'success',
-  completed: 'neutral',
-  cancelled: 'error',
+const ASSIGN_VARIANT: Record<
+  AssignmentStatus,
+  "neutral" | "blue" | "success" | "warning" | "error"
+> = {
+  proposed: "warning",
+  confirmed: "blue",
+  in_progress: "success",
+  completed: "neutral",
+  cancelled: "error",
 };
 
 const inputCls =
-  'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  "h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
 
 function startOfWeek(): string {
   const d = new Date();
@@ -128,11 +134,11 @@ function WorkflowIntro() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(
-    () => sessionStorage.getItem('oe.res.introDismissed') === '1',
+    () => sessionStorage.getItem("oe.res.introDismissed") === "1",
   );
   if (dismissed) return null;
   const dismiss = () => {
-    sessionStorage.setItem('oe.res.introDismissed', '1');
+    sessionStorage.setItem("oe.res.introDismissed", "1");
     setDismissed(true);
   };
   return (
@@ -143,43 +149,47 @@ function WorkflowIntro() {
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-content-primary">
-            {t('resources.intro_title', {
-              defaultValue: 'Plan who works where, and when‌⁠‍',
+            {t("resources.intro_title", {
+              defaultValue: "Plan who works where, and when‌⁠‍",
             })}
           </p>
           <p className="mt-1 text-xs leading-relaxed text-content-secondary">
-            {t('resources.intro_body', {
+            {t("resources.intro_body", {
               defaultValue:
-                'Register people, crews and equipment, then put them to work: a foreman raises a Request for what they need, a dispatcher Fulfils it by matching an available resource, and the resulting Assignment reserves that resource for a date range — with double-booking conflicts flagged automatically. Confirmed assignments are the source of truth for who is on site each day.‌⁠‍',
+                "Register people, crews and equipment, then put them to work: a foreman raises a Request for what they need, a dispatcher Fulfils it by matching an available resource, and the resulting Assignment reserves that resource for a date range — with double-booking conflicts flagged automatically. Confirmed assignments are the source of truth for who is on site each day.‌⁠‍",
             })}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <span className="text-2xs font-medium uppercase tracking-wide text-content-tertiary">
-              {t('resources.intro_connects', { defaultValue: 'Connects to‌⁠‍' })}
+              {t("resources.intro_connects", {
+                defaultValue: "Connects to‌⁠‍",
+              })}
             </span>
             <button
               type="button"
-              onClick={() => navigate('/schedule')}
+              onClick={() => navigate("/schedule")}
               className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
             >
-              {t('resources.intro_link_schedule', { defaultValue: '4D Schedule‌⁠‍' })}
+              {t("resources.intro_link_schedule", {
+                defaultValue: "4D Schedule‌⁠‍",
+              })}
               <ArrowRight size={11} />
             </button>
             <button
               type="button"
-              onClick={() => navigate('/tasks')}
+              onClick={() => navigate("/tasks")}
               className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
             >
-              {t('resources.intro_link_tasks', { defaultValue: 'Tasks' })}
+              {t("resources.intro_link_tasks", { defaultValue: "Tasks" })}
               <ArrowRight size={11} />
             </button>
             <button
               type="button"
-              onClick={() => navigate('/equipment')}
+              onClick={() => navigate("/equipment")}
               className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
             >
-              {t('resources.intro_link_equipment', {
-                defaultValue: 'Equipment fleet‌⁠‍',
+              {t("resources.intro_link_equipment", {
+                defaultValue: "Equipment fleet‌⁠‍",
               })}
               <ArrowRight size={11} />
             </button>
@@ -189,7 +199,7 @@ function WorkflowIntro() {
           type="button"
           onClick={dismiss}
           className="shrink-0 rounded-md p-1 text-content-tertiary transition-colors hover:bg-surface-secondary hover:text-content-primary"
-          aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+          aria-label={t("common.dismiss", { defaultValue: "Dismiss" })}
         >
           <X size={14} />
         </button>
@@ -202,9 +212,9 @@ function WorkflowIntro() {
 
 export function ResourcesPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>('resources');
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<ResourceType | ''>('');
+  const [tab, setTab] = useState<Tab>("resources");
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<ResourceType | "">("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [proposeOpen, setProposeOpen] = useState(false);
@@ -215,7 +225,7 @@ export function ResourcesPage() {
   const activeProjectName = useProjectContextStore((s) => s.activeProjectName);
   const setActiveProject = useProjectContextStore((s) => s.setActiveProject);
   const [requestsProjectId, setRequestsProjectId] = useState<string>(
-    activeProjectId ?? '',
+    activeProjectId ?? "",
   );
   // Keep the requests-tab project in lockstep with the global project
   // context when the user switches projects elsewhere (header, /projects,
@@ -228,17 +238,17 @@ export function ResourcesPage() {
   }, [activeProjectId]);
 
   const resourcesQ = useQuery({
-    queryKey: ['resources', 'list'],
+    queryKey: ["resources", "list"],
     queryFn: () => listResources({ limit: 200 }),
   });
 
   const conflictsQ = useQuery({
-    queryKey: ['resources', 'conflicts'],
+    queryKey: ["resources", "conflicts"],
     queryFn: () =>
       listBoardConflicts({ start: startOfWeek(), end: endOfWeek() }).catch(
         () => [] as BoardConflict[],
       ),
-    enabled: tab === 'assignments',
+    enabled: tab === "assignments",
   });
 
   const allResources: Resource[] = resourcesQ.data ?? [];
@@ -256,46 +266,50 @@ export function ResourcesPage() {
     });
   }, [allResources, search, typeFilter]);
 
-  const isLoading = tab === 'resources' && resourcesQ.isLoading;
+  const isLoading = tab === "resources" && resourcesQ.isLoading;
 
   return (
     <div className="space-y-5">
       <Breadcrumb
-        items={[{ label: t('resources.title', { defaultValue: 'Resources & Crews' }) }]}
+        items={[
+          {
+            label: t("resources.title", { defaultValue: "Resources & Crews" }),
+          },
+        ]}
       />
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold text-content-primary">
-            {t('resources.title', { defaultValue: 'Resources & Crews' })}
+            {t("resources.title", { defaultValue: "Resources & Crews" })}
           </h1>
           <p className="mt-1 text-sm text-content-secondary">
-            {t('resources.subtitle', {
+            {t("resources.subtitle", {
               defaultValue:
-                'People, equipment and crew assignments — propose, confirm, resolve conflicts.',
+                "People, equipment and crew assignments — propose, confirm, resolve conflicts.",
             })}
           </p>
         </div>
         <div className="flex gap-2">
-          {tab === 'assignments' && (
+          {tab === "assignments" && (
             <Button
               variant="primary"
               icon={<Plus size={14} />}
               onClick={() => setProposeOpen(true)}
             >
-              {t('resources.propose', { defaultValue: 'Propose Assignment' })}
+              {t("resources.propose", { defaultValue: "Propose Assignment" })}
             </Button>
           )}
-          {tab === 'resources' && (
+          {tab === "resources" && (
             <Button
               variant="primary"
               icon={<Plus size={14} />}
               onClick={() => setCreateOpen(true)}
             >
-              {t('resources.new_resource', { defaultValue: 'New Resource' })}
+              {t("resources.new_resource", { defaultValue: "New Resource" })}
             </Button>
           )}
-          {tab === 'requests' && (
+          {tab === "requests" && (
             <Button
               variant="primary"
               icon={<Plus size={14} />}
@@ -304,12 +318,12 @@ export function ResourcesPage() {
               title={
                 requestsProjectId
                   ? undefined
-                  : t('resources.requests_pick_project_first', {
-                      defaultValue: 'Select a project below first',
+                  : t("resources.requests_pick_project_first", {
+                      defaultValue: "Select a project below first",
                     })
               }
             >
-              {t('resources.new_request', { defaultValue: 'New Request' })}
+              {t("resources.new_request", { defaultValue: "New Request" })}
             </Button>
           )}
         </div>
@@ -323,18 +337,24 @@ export function ResourcesPage() {
           {(
             [
               {
-                id: 'resources',
-                label: t('resources.tab_resources', { defaultValue: 'Resources' }),
+                id: "resources",
+                label: t("resources.tab_resources", {
+                  defaultValue: "Resources",
+                }),
                 icon: Users,
               },
               {
-                id: 'requests',
-                label: t('resources.tab_requests', { defaultValue: 'Requests' }),
+                id: "requests",
+                label: t("resources.tab_requests", {
+                  defaultValue: "Requests",
+                }),
                 icon: ClipboardList,
               },
               {
-                id: 'assignments',
-                label: t('resources.tab_assignments', { defaultValue: 'Assignments' }),
+                id: "assignments",
+                label: t("resources.tab_assignments", {
+                  defaultValue: "Assignments",
+                }),
                 icon: CalendarRange,
               },
             ] as { id: Tab; label: string; icon: React.ElementType }[]
@@ -346,14 +366,14 @@ export function ResourcesPage() {
                 type="button"
                 onClick={() => {
                   setTab(tabItem.id);
-                  setSearch('');
-                  setTypeFilter('');
+                  setSearch("");
+                  setTypeFilter("");
                 }}
                 className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
                   tab === tabItem.id
-                    ? 'border-oe-blue text-oe-blue'
-                    : 'border-transparent text-content-secondary hover:text-content-primary',
+                    ? "border-oe-blue text-oe-blue"
+                    : "border-transparent text-content-secondary hover:text-content-primary",
                 )}
               >
                 <Icon size={14} />
@@ -364,7 +384,7 @@ export function ResourcesPage() {
         </nav>
       </div>
 
-      {tab === 'resources' && (
+      {tab === "resources" && (
         <>
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative flex-1 min-w-[200px] max-w-md">
@@ -374,31 +394,35 @@ export function ResourcesPage() {
               />
               <input
                 type="text"
-                placeholder={t('common.search', { defaultValue: 'Search…' })}
+                placeholder={t("common.search", { defaultValue: "Search…" })}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className={clsx(inputCls, 'pl-8')}
+                className={clsx(inputCls, "pl-8")}
               />
             </div>
             <select
               value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value as ResourceType | '')}
-              className={clsx(inputCls, 'max-w-[200px]')}
+              onChange={(e) =>
+                setTypeFilter(e.target.value as ResourceType | "")
+              }
+              className={clsx(inputCls, "max-w-[200px]")}
             >
               <option value="">
-                {t('resources.all_types', { defaultValue: 'All types' })}
+                {t("resources.all_types", { defaultValue: "All types" })}
               </option>
               <option value="person">
-                {t('resources.type_person', { defaultValue: 'Person' })}
+                {t("resources.type_person", { defaultValue: "Person" })}
               </option>
               <option value="crew">
-                {t('resources.type_crew', { defaultValue: 'Crew' })}
+                {t("resources.type_crew", { defaultValue: "Crew" })}
               </option>
               <option value="equipment">
-                {t('resources.type_equipment', { defaultValue: 'Equipment' })}
+                {t("resources.type_equipment", { defaultValue: "Equipment" })}
               </option>
               <option value="subcontractor">
-                {t('resources.type_subcontractor', { defaultValue: 'Subcontractor' })}
+                {t("resources.type_subcontractor", {
+                  defaultValue: "Subcontractor",
+                })}
               </option>
             </select>
           </div>
@@ -411,12 +435,12 @@ export function ResourcesPage() {
             ) : resourcesQ.isError ? (
               <EmptyState
                 icon={<AlertTriangle size={22} />}
-                title={t('resources.load_failed_title', {
-                  defaultValue: 'Could not load resources',
+                title={t("resources.load_failed_title", {
+                  defaultValue: "Could not load resources",
                 })}
                 description={getErrorMessage(resourcesQ.error)}
                 action={{
-                  label: t('common.retry', { defaultValue: 'Retry' }),
+                  label: t("common.retry", { defaultValue: "Retry" }),
                   onClick: () => resourcesQ.refetch(),
                 }}
               />
@@ -431,7 +455,7 @@ export function ResourcesPage() {
         </>
       )}
 
-      {tab === 'requests' && (
+      {tab === "requests" && (
         <RequestsTab
           projectId={requestsProjectId}
           onProjectChange={(id, name) => {
@@ -445,7 +469,7 @@ export function ResourcesPage() {
         />
       )}
 
-      {tab === 'assignments' && (
+      {tab === "assignments" && (
         <AssignmentsTab
           resources={allResources}
           conflicts={conflictsQ.data ?? []}
@@ -454,10 +478,15 @@ export function ResourcesPage() {
       )}
 
       {selectedId && (
-        <ResourceDrawer resourceId={selectedId} onClose={() => setSelectedId(null)} />
+        <ResourceDrawer
+          resourceId={selectedId}
+          onClose={() => setSelectedId(null)}
+        />
       )}
 
-      {createOpen && <CreateResourceModal onClose={() => setCreateOpen(false)} />}
+      {createOpen && (
+        <CreateResourceModal onClose={() => setCreateOpen(false)} />
+      )}
 
       {proposeOpen && (
         <ProposeAssignmentModal
@@ -485,13 +514,13 @@ function ResourceTable({
     return (
       <EmptyState
         icon={<Users size={22} />}
-        title={t('resources.empty_title', { defaultValue: 'No resources yet' })}
-        description={t('resources.empty_desc', {
+        title={t("resources.empty_title", { defaultValue: "No resources yet" })}
+        description={t("resources.empty_desc", {
           defaultValue:
-            'Add people, crews and equipment to start planning their assignments.',
+            "Add people, crews and equipment to start planning their assignments.",
         })}
         action={{
-          label: t('resources.new_resource', { defaultValue: 'New Resource' }),
+          label: t("resources.new_resource", { defaultValue: "New Resource" }),
           onClick: emptyAction,
         }}
       />
@@ -503,19 +532,19 @@ function ResourceTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-4 py-2.5 text-left">
-              {t('resources.col_code', { defaultValue: 'Code' })}
+              {t("resources.col_code", { defaultValue: "Code" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('resources.col_name', { defaultValue: 'Name' })}
+              {t("resources.col_name", { defaultValue: "Name" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('resources.col_type', { defaultValue: 'Type' })}
+              {t("resources.col_type", { defaultValue: "Type" })}
             </th>
             <th className="px-4 py-2.5 text-left">
-              {t('resources.col_status', { defaultValue: 'Status' })}
+              {t("resources.col_status", { defaultValue: "Status" })}
             </th>
             <th className="px-4 py-2.5 text-right">
-              {t('resources.col_rate', { defaultValue: 'Rate' })}
+              {t("resources.col_rate", { defaultValue: "Rate" })}
             </th>
           </tr>
         </thead>
@@ -529,7 +558,9 @@ function ResourceTable({
               <td className="px-4 py-2 font-mono text-xs text-content-secondary">
                 {r.code}
               </td>
-              <td className="px-4 py-2 font-medium text-content-primary">{r.name}</td>
+              <td className="px-4 py-2 font-medium text-content-primary">
+                {r.name}
+              </td>
               <td className="px-4 py-2">
                 <Badge variant={TYPE_VARIANT[r.resource_type]} size="sm">
                   {r.resource_type}
@@ -538,11 +569,11 @@ function ResourceTable({
               <td className="px-4 py-2">
                 <Badge
                   variant={
-                    r.status === 'active'
-                      ? 'success'
-                      : r.status === 'on_leave'
-                        ? 'warning'
-                        : 'neutral'
+                    r.status === "active"
+                      ? "success"
+                      : r.status === "on_leave"
+                        ? "warning"
+                        : "neutral"
                   }
                   dot
                   size="sm"
@@ -582,21 +613,21 @@ function ResourceTable({
 
 const REQUEST_STATUS_VARIANT: Record<
   RequestStatus,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  open: 'warning',
-  fulfilled: 'success',
-  cancelled: 'neutral',
+  open: "warning",
+  fulfilled: "success",
+  cancelled: "neutral",
 };
 
 const PRIORITY_VARIANT: Record<
   RequestPriority,
-  'neutral' | 'blue' | 'success' | 'warning' | 'error'
+  "neutral" | "blue" | "success" | "warning" | "error"
 > = {
-  low: 'neutral',
-  med: 'blue',
-  high: 'warning',
-  critical: 'error',
+  low: "neutral",
+  med: "blue",
+  high: "warning",
+  critical: "error",
 };
 
 const PRIORITY_ORDER: Record<RequestPriority, number> = {
@@ -606,7 +637,7 @@ const PRIORITY_ORDER: Record<RequestPriority, number> = {
   low: 3,
 };
 
-type SortKey = 'priority' | 'start_at' | 'created_at' | 'quantity';
+type SortKey = "priority" | "start_at" | "created_at" | "quantity";
 
 function isoLocalNow(offsetDays = 0): string {
   // datetime-local needs a value WITHOUT trailing Z. Build it from local clock.
@@ -648,19 +679,27 @@ function RequestsTab({
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
-  const [statusFilter, setStatusFilter] = useState<RequestStatus | ''>('open');
-  const [priorityFilter, setPriorityFilter] = useState<RequestPriority | ''>('');
-  const [search, setSearch] = useState('');
-  const [sortKey, setSortKey] = useState<SortKey>('priority');
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [statusFilter, setStatusFilter] = useState<RequestStatus | "">("open");
+  const [priorityFilter, setPriorityFilter] = useState<RequestPriority | "">(
+    "",
+  );
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("priority");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const [editTarget, setEditTarget] = useState<ResourceRequest | null>(null);
-  const [fulfillTarget, setFulfillTarget] = useState<ResourceRequest | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState<ResourceRequest | null>(null);
-  const [confirmCancel, setConfirmCancel] = useState<ResourceRequest | null>(null);
+  const [fulfillTarget, setFulfillTarget] = useState<ResourceRequest | null>(
+    null,
+  );
+  const [confirmDelete, setConfirmDelete] = useState<ResourceRequest | null>(
+    null,
+  );
+  const [confirmCancel, setConfirmCancel] = useState<ResourceRequest | null>(
+    null,
+  );
 
   const projectsQ = useQuery({
-    queryKey: ['resources', 'requests-projects'],
+    queryKey: ["resources", "requests-projects"],
     queryFn: () => projectsApi.list(),
     staleTime: 60_000,
   });
@@ -669,7 +708,7 @@ function RequestsTab({
   // a status filter is set. The dataset is normally small per project
   // (a few hundred rows at most) so client-side filtering is fine.
   const requestsQ = useQuery({
-    queryKey: ['resources', 'requests', projectId],
+    queryKey: ["resources", "requests", projectId],
     queryFn: () =>
       listRequests({
         project_id: projectId,
@@ -680,7 +719,7 @@ function RequestsTab({
 
   // Skill labels for the chips in the table — fetched once per session.
   const skillsQ = useQuery({
-    queryKey: ['resources', 'skills', 'all'],
+    queryKey: ["resources", "skills", "all"],
     queryFn: () => listSkills({ limit: 500 }).catch(() => [] as Skill[]),
     staleTime: 300_000,
   });
@@ -708,16 +747,17 @@ function RequestsTab({
         r.description.toLowerCase().includes(s)
       );
     });
-    const dir = sortDir === 'asc' ? 1 : -1;
+    const dir = sortDir === "asc" ? 1 : -1;
     rows.sort((a, b) => {
       let cmp = 0;
-      if (sortKey === 'priority') {
+      if (sortKey === "priority") {
         cmp = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
-      } else if (sortKey === 'start_at') {
+      } else if (sortKey === "start_at") {
         cmp = new Date(a.start_at).getTime() - new Date(b.start_at).getTime();
-      } else if (sortKey === 'created_at') {
-        cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-      } else if (sortKey === 'quantity') {
+      } else if (sortKey === "created_at") {
+        cmp =
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      } else if (sortKey === "quantity") {
         cmp = a.quantity - b.quantity;
       }
       return cmp * dir;
@@ -726,20 +766,27 @@ function RequestsTab({
   }, [all, statusFilter, priorityFilter, search, sortKey, sortDir]);
 
   const invalidateRequests = () => {
-    qc.invalidateQueries({ queryKey: ['resources', 'requests', projectId] });
+    qc.invalidateQueries({ queryKey: ["resources", "requests", projectId] });
   };
 
   const updateMut = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof updateRequest>[1] }) =>
-      updateRequest(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Parameters<typeof updateRequest>[1];
+    }) => updateRequest(id, data),
     onSuccess: () => {
       invalidateRequests();
       addToast({
-        type: 'success',
-        title: t('resources.request_updated_ok', { defaultValue: 'Request updated' }),
+        type: "success",
+        title: t("resources.request_updated_ok", {
+          defaultValue: "Request updated",
+        }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const deleteMut = useMutation({
@@ -747,20 +794,22 @@ function RequestsTab({
     onSuccess: () => {
       invalidateRequests();
       addToast({
-        type: 'success',
-        title: t('resources.request_deleted_ok', { defaultValue: 'Request deleted' }),
+        type: "success",
+        title: t("resources.request_deleted_ok", {
+          defaultValue: "Request deleted",
+        }),
       });
       setConfirmDelete(null);
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
-      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortKey(key);
-      setSortDir(key === 'priority' ? 'asc' : 'desc');
+      setSortDir(key === "priority" ? "asc" : "desc");
     }
   };
 
@@ -773,15 +822,15 @@ function RequestsTab({
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex-1 min-w-[240px]">
             <label className="block text-xs font-medium text-content-secondary mb-1">
-              {t('resources.requests_project_label', {
-                defaultValue: 'Project',
+              {t("resources.requests_project_label", {
+                defaultValue: "Project",
               })}
             </label>
             <select
               value={projectId}
               onChange={(e) => {
                 const id = e.target.value;
-                const name = projects.find((p) => p.id === id)?.name || '';
+                const name = projects.find((p) => p.id === id)?.name || "";
                 onProjectChange(id, name);
               }}
               className={inputCls}
@@ -789,57 +838,88 @@ function RequestsTab({
               data-testid="requests-project-select"
             >
               <option value="">
-                — {t('resources.requests_project_picker_placeholder', {
-                  defaultValue: 'Select a project to see its requests…',
-                })} —
+                —{" "}
+                {t("resources.requests_project_picker_placeholder", {
+                  defaultValue: "Select a project to see its requests…",
+                })}{" "}
+                —
               </option>
               {projects.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
               ))}
             </select>
           </div>
           <div className="min-w-[140px]">
             <label className="block text-xs font-medium text-content-secondary mb-1">
-              {t('resources.requests_status_label', { defaultValue: 'Status' })}
+              {t("resources.requests_status_label", { defaultValue: "Status" })}
             </label>
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as RequestStatus | '')}
+              onChange={(e) =>
+                setStatusFilter(e.target.value as RequestStatus | "")
+              }
               className={inputCls}
               data-testid="requests-status-filter"
             >
-              <option value="">{t('resources.status_all', { defaultValue: 'All' })}</option>
+              <option value="">
+                {t("resources.status_all", { defaultValue: "All" })}
+              </option>
               <option value="open">
-                {t('resources.req_status_open', { defaultValue: 'Open' })} ({counts.open})
+                {t("resources.req_status_open", { defaultValue: "Open" })} (
+                {counts.open})
               </option>
               <option value="fulfilled">
-                {t('resources.req_status_fulfilled', { defaultValue: 'Fulfilled' })} ({counts.fulfilled})
+                {t("resources.req_status_fulfilled", {
+                  defaultValue: "Fulfilled",
+                })}{" "}
+                ({counts.fulfilled})
               </option>
               <option value="cancelled">
-                {t('resources.req_status_cancelled', { defaultValue: 'Cancelled' })} ({counts.cancelled})
+                {t("resources.req_status_cancelled", {
+                  defaultValue: "Cancelled",
+                })}{" "}
+                ({counts.cancelled})
               </option>
             </select>
           </div>
           <div className="min-w-[140px]">
             <label className="block text-xs font-medium text-content-secondary mb-1">
-              {t('resources.requests_priority_label', { defaultValue: 'Priority' })}
+              {t("resources.requests_priority_label", {
+                defaultValue: "Priority",
+              })}
             </label>
             <select
               value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value as RequestPriority | '')}
+              onChange={(e) =>
+                setPriorityFilter(e.target.value as RequestPriority | "")
+              }
               className={inputCls}
               data-testid="requests-priority-filter"
             >
-              <option value="">{t('resources.priority_all', { defaultValue: 'All priorities' })}</option>
-              <option value="critical">{t('resources.priority_critical', { defaultValue: 'Critical' })}</option>
-              <option value="high">{t('resources.priority_high', { defaultValue: 'High' })}</option>
-              <option value="med">{t('resources.priority_med', { defaultValue: 'Medium' })}</option>
-              <option value="low">{t('resources.priority_low', { defaultValue: 'Low' })}</option>
+              <option value="">
+                {t("resources.priority_all", {
+                  defaultValue: "All priorities",
+                })}
+              </option>
+              <option value="critical">
+                {t("resources.priority_critical", { defaultValue: "Critical" })}
+              </option>
+              <option value="high">
+                {t("resources.priority_high", { defaultValue: "High" })}
+              </option>
+              <option value="med">
+                {t("resources.priority_med", { defaultValue: "Medium" })}
+              </option>
+              <option value="low">
+                {t("resources.priority_low", { defaultValue: "Low" })}
+              </option>
             </select>
           </div>
           <div className="min-w-[200px] flex-1">
             <label className="block text-xs font-medium text-content-secondary mb-1">
-              {t('common.search', { defaultValue: 'Search' })}
+              {t("common.search", { defaultValue: "Search" })}
             </label>
             <div className="relative">
               <Search
@@ -848,12 +928,12 @@ function RequestsTab({
               />
               <input
                 type="text"
-                placeholder={t('resources.requests_search_placeholder', {
-                  defaultValue: 'Search title or description…',
+                placeholder={t("resources.requests_search_placeholder", {
+                  defaultValue: "Search title or description…",
                 })}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className={clsx(inputCls, 'pl-8')}
+                className={clsx(inputCls, "pl-8")}
                 data-testid="requests-search"
               />
             </div>
@@ -865,9 +945,9 @@ function RequestsTab({
             onClick={() => invalidateRequests()}
             disabled={!projectId || requestsQ.isFetching}
             loading={requestsQ.isFetching}
-            aria-label={t('common.refresh', { defaultValue: 'Refresh' })}
+            aria-label={t("common.refresh", { defaultValue: "Refresh" })}
           >
-            {t('common.refresh', { defaultValue: 'Refresh' })}
+            {t("common.refresh", { defaultValue: "Refresh" })}
           </Button>
         </div>
 
@@ -875,61 +955,72 @@ function RequestsTab({
         {projectId && all.length > 0 && (
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
             <span className="text-content-secondary">
-              {t('resources.requests_summary', { defaultValue: 'In this project' })}:
+              {t("resources.requests_summary", {
+                defaultValue: "In this project",
+              })}
+              :
             </span>
             <button
               type="button"
-              onClick={() => setStatusFilter('')}
+              onClick={() => setStatusFilter("")}
               className={clsx(
-                'px-2 py-0.5 rounded-full border transition-colors',
-                statusFilter === ''
-                  ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                  : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                "px-2 py-0.5 rounded-full border transition-colors",
+                statusFilter === ""
+                  ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                  : "border-border-light text-content-secondary hover:bg-surface-secondary",
               )}
             >
-              {t('resources.status_all', { defaultValue: 'All' })} · {counts.total}
+              {t("resources.status_all", { defaultValue: "All" })} ·{" "}
+              {counts.total}
             </button>
             <button
               type="button"
-              onClick={() => setStatusFilter('open')}
+              onClick={() => setStatusFilter("open")}
               className={clsx(
-                'px-2 py-0.5 rounded-full border transition-colors',
-                statusFilter === 'open'
-                  ? 'border-amber-500 bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
-                  : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                "px-2 py-0.5 rounded-full border transition-colors",
+                statusFilter === "open"
+                  ? "border-amber-500 bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                  : "border-border-light text-content-secondary hover:bg-surface-secondary",
               )}
             >
-              {t('resources.req_status_open', { defaultValue: 'Open' })} · {counts.open}
+              {t("resources.req_status_open", { defaultValue: "Open" })} ·{" "}
+              {counts.open}
             </button>
             <button
               type="button"
-              onClick={() => setStatusFilter('fulfilled')}
+              onClick={() => setStatusFilter("fulfilled")}
               className={clsx(
-                'px-2 py-0.5 rounded-full border transition-colors',
-                statusFilter === 'fulfilled'
-                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
-                  : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                "px-2 py-0.5 rounded-full border transition-colors",
+                statusFilter === "fulfilled"
+                  ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                  : "border-border-light text-content-secondary hover:bg-surface-secondary",
               )}
             >
-              {t('resources.req_status_fulfilled', { defaultValue: 'Fulfilled' })} · {counts.fulfilled}
+              {t("resources.req_status_fulfilled", {
+                defaultValue: "Fulfilled",
+              })}{" "}
+              · {counts.fulfilled}
             </button>
             <button
               type="button"
-              onClick={() => setStatusFilter('cancelled')}
+              onClick={() => setStatusFilter("cancelled")}
               className={clsx(
-                'px-2 py-0.5 rounded-full border transition-colors',
-                statusFilter === 'cancelled'
-                  ? 'border-border bg-surface-tertiary text-content-primary'
-                  : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                "px-2 py-0.5 rounded-full border transition-colors",
+                statusFilter === "cancelled"
+                  ? "border-border bg-surface-tertiary text-content-primary"
+                  : "border-border-light text-content-secondary hover:bg-surface-secondary",
               )}
             >
-              {t('resources.req_status_cancelled', { defaultValue: 'Cancelled' })} · {counts.cancelled}
+              {t("resources.req_status_cancelled", {
+                defaultValue: "Cancelled",
+              })}{" "}
+              · {counts.cancelled}
             </button>
           </div>
         )}
 
         <p className="mt-3 text-xs text-content-secondary leading-relaxed">
-          {t('resources.requests_explainer', {
+          {t("resources.requests_explainer", {
             defaultValue:
               'Resource requests are "demand-side" records — foremen and PMs raise them when they need people or equipment on a specific date range. Dispatchers fulfil each request by matching one of your resources to it; that creates an assignment row in the Assignments tab.',
           })}
@@ -941,19 +1032,19 @@ function RequestsTab({
         <Card padding="md">
           <EmptyState
             icon={<ClipboardList size={22} />}
-            title={t('resources.requests_pick_project_title', {
-              defaultValue: 'Pick a project above to load its requests',
+            title={t("resources.requests_pick_project_title", {
+              defaultValue: "Pick a project above to load its requests",
             })}
             description={
               activeProjectName
-                ? t('resources.requests_pick_project_active', {
+                ? t("resources.requests_pick_project_active", {
                     defaultValue:
                       'You currently have "{{name}}" active elsewhere — pick it from the dropdown to start.',
                     name: activeProjectName,
                   })
-                : t('resources.requests_pick_project_desc', {
+                : t("resources.requests_pick_project_desc", {
                     defaultValue:
-                      'Requests are project-scoped — choose a project to see the open queue and start fulfilling.',
+                      "Requests are project-scoped — choose a project to see the open queue and start fulfilling.",
                   })
             }
           />
@@ -966,12 +1057,12 @@ function RequestsTab({
         <Card padding="md">
           <EmptyState
             icon={<AlertTriangle size={22} />}
-            title={t('resources.requests_load_failed_title', {
-              defaultValue: 'Could not load requests',
+            title={t("resources.requests_load_failed_title", {
+              defaultValue: "Could not load requests",
             })}
             description={getErrorMessage(requestsQ.error)}
             action={{
-              label: t('common.retry', { defaultValue: 'Retry' }),
+              label: t("common.retry", { defaultValue: "Retry" }),
               onClick: () => requestsQ.refetch(),
             }}
           />
@@ -981,36 +1072,38 @@ function RequestsTab({
           {all.length === 0 ? (
             <EmptyState
               icon={<ClipboardList size={22} />}
-              title={t('resources.requests_none_title_for_project', {
-                defaultValue: 'No requests on this project yet',
+              title={t("resources.requests_none_title_for_project", {
+                defaultValue: "No requests on this project yet",
               })}
-              description={t('resources.requests_none_desc_for_project', {
+              description={t("resources.requests_none_desc_for_project", {
                 defaultValue:
-                  'Open the first request to ask dispatchers for the people, crew or equipment you need.',
+                  "Open the first request to ask dispatchers for the people, crew or equipment you need.",
               })}
               action={{
-                label: t('resources.new_request', { defaultValue: 'New Request' }),
+                label: t("resources.new_request", {
+                  defaultValue: "New Request",
+                }),
                 onClick: () => onNewRequestOpenChange(true),
               }}
             />
           ) : (
             <EmptyState
               icon={<ClipboardList size={22} />}
-              title={t('resources.requests_none_title', {
-                defaultValue: 'No requests match the current filter',
+              title={t("resources.requests_none_title", {
+                defaultValue: "No requests match the current filter",
               })}
-              description={t('resources.requests_filter_hint', {
+              description={t("resources.requests_filter_hint", {
                 defaultValue:
-                  'Clear filters or try a different status / priority combination.',
+                  "Clear filters or try a different status / priority combination.",
               })}
               action={{
-                label: t('resources.requests_clear_filters', {
-                  defaultValue: 'Clear filters',
+                label: t("resources.requests_clear_filters", {
+                  defaultValue: "Clear filters",
                 }),
                 onClick: () => {
-                  setStatusFilter('');
-                  setPriorityFilter('');
-                  setSearch('');
+                  setStatusFilter("");
+                  setPriorityFilter("");
+                  setSearch("");
                 },
               }}
             />
@@ -1069,7 +1162,7 @@ function RequestsTab({
           onClose={() => setFulfillTarget(null)}
           onFulfilled={() => {
             invalidateRequests();
-            qc.invalidateQueries({ queryKey: ['resources', 'assignments'] });
+            qc.invalidateQueries({ queryKey: ["resources", "assignments"] });
             setFulfillTarget(null);
           }}
         />
@@ -1077,13 +1170,15 @@ function RequestsTab({
 
       <ConfirmDialog
         open={!!confirmDelete}
-        title={t('resources.delete_request_title', { defaultValue: 'Delete this request?' })}
-        message={t('resources.delete_request_msg', {
-          defaultValue:
-            'This permanently removes the request. Fulfilment history is kept on the assignment but the request itself disappears.',
+        title={t("resources.delete_request_title", {
+          defaultValue: "Delete this request?",
         })}
-        confirmLabel={t('common.delete', { defaultValue: 'Delete' })}
-        cancelLabel={t('common.cancel', { defaultValue: 'Cancel' })}
+        message={t("resources.delete_request_msg", {
+          defaultValue:
+            "This permanently removes the request. Fulfilment history is kept on the assignment but the request itself disappears.",
+        })}
+        confirmLabel={t("common.delete", { defaultValue: "Delete" })}
+        cancelLabel={t("common.cancel", { defaultValue: "Cancel" })}
         variant="danger"
         loading={deleteMut.isPending}
         onConfirm={() => {
@@ -1094,21 +1189,23 @@ function RequestsTab({
 
       <ConfirmDialog
         open={!!confirmCancel}
-        title={t('resources.cancel_request_title', { defaultValue: 'Cancel this request?' })}
-        message={t('resources.cancel_request_msg', {
+        title={t("resources.cancel_request_title", {
+          defaultValue: "Cancel this request?",
+        })}
+        message={t("resources.cancel_request_msg", {
           defaultValue:
-            'The request will be marked as cancelled and removed from the open queue. You can still reopen it from the cancelled filter.',
+            "The request will be marked as cancelled and removed from the open queue. You can still reopen it from the cancelled filter.",
         })}
-        confirmLabel={t('resources.cancel_request_confirm', {
-          defaultValue: 'Cancel request',
+        confirmLabel={t("resources.cancel_request_confirm", {
+          defaultValue: "Cancel request",
         })}
-        cancelLabel={t('common.keep', { defaultValue: 'Keep' })}
+        cancelLabel={t("common.keep", { defaultValue: "Keep" })}
         variant="warning"
         loading={updateMut.isPending}
         onConfirm={() => {
           if (confirmCancel) {
             updateMut.mutate(
-              { id: confirmCancel.id, data: { status: 'cancelled' } },
+              { id: confirmCancel.id, data: { status: "cancelled" } },
               { onSuccess: () => setConfirmCancel(null) },
             );
           }
@@ -1123,7 +1220,7 @@ interface RequestsTableProps {
   rows: ResourceRequest[];
   skillIdToName: Record<string, string>;
   sortKey: SortKey;
-  sortDir: 'asc' | 'desc';
+  sortDir: "asc" | "desc";
   onSort: (key: SortKey) => void;
   onEdit: (r: ResourceRequest) => void;
   onFulfill: (r: ResourceRequest) => void;
@@ -1148,9 +1245,9 @@ function RequestsTable({
   const SortArrow = ({ active }: { active: boolean }) => (
     <span
       className={clsx(
-        'inline-block ml-1 transition-transform',
-        active ? 'opacity-100' : 'opacity-30',
-        sortDir === 'desc' && active ? 'rotate-180' : '',
+        "inline-block ml-1 transition-transform",
+        active ? "opacity-100" : "opacity-30",
+        sortDir === "desc" && active ? "rotate-180" : "",
       )}
       aria-hidden="true"
     >
@@ -1166,44 +1263,44 @@ function RequestsTable({
             <th className="text-left px-4 py-2 font-medium">
               <button
                 type="button"
-                onClick={() => onSort('priority')}
+                onClick={() => onSort("priority")}
                 className="inline-flex items-center hover:text-content-primary"
               >
-                {t('resources.req_col_priority', { defaultValue: 'Priority' })}
-                <SortArrow active={sortKey === 'priority'} />
+                {t("resources.req_col_priority", { defaultValue: "Priority" })}
+                <SortArrow active={sortKey === "priority"} />
               </button>
             </th>
             <th className="text-left px-4 py-2 font-medium">
-              {t('resources.req_col_title', { defaultValue: 'Title' })}
+              {t("resources.req_col_title", { defaultValue: "Title" })}
             </th>
             <th className="text-left px-4 py-2 font-medium">
               <button
                 type="button"
-                onClick={() => onSort('start_at')}
+                onClick={() => onSort("start_at")}
                 className="inline-flex items-center hover:text-content-primary"
               >
-                {t('resources.req_col_window', { defaultValue: 'Window' })}
-                <SortArrow active={sortKey === 'start_at'} />
+                {t("resources.req_col_window", { defaultValue: "Window" })}
+                <SortArrow active={sortKey === "start_at"} />
               </button>
             </th>
             <th className="text-left px-4 py-2 font-medium">
               <button
                 type="button"
-                onClick={() => onSort('quantity')}
+                onClick={() => onSort("quantity")}
                 className="inline-flex items-center hover:text-content-primary"
               >
-                {t('resources.req_col_qty', { defaultValue: 'Qty' })}
-                <SortArrow active={sortKey === 'quantity'} />
+                {t("resources.req_col_qty", { defaultValue: "Qty" })}
+                <SortArrow active={sortKey === "quantity"} />
               </button>
             </th>
             <th className="text-left px-4 py-2 font-medium">
-              {t('resources.req_col_skills', { defaultValue: 'Skills' })}
+              {t("resources.req_col_skills", { defaultValue: "Skills" })}
             </th>
             <th className="text-left px-4 py-2 font-medium">
-              {t('common.status', { defaultValue: 'Status' })}
+              {t("common.status", { defaultValue: "Status" })}
             </th>
             <th className="text-right px-4 py-2 font-medium">
-              {t('resources.actions', { defaultValue: 'Actions' })}
+              {t("resources.actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
@@ -1256,14 +1353,18 @@ function RequestRow({
         setMenuOpen(false);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
   const PriorityIcon =
-    r.priority === 'critical' ? Flame : r.priority === 'high' ? AlertOctagon : null;
+    r.priority === "critical"
+      ? Flame
+      : r.priority === "high"
+        ? AlertOctagon
+        : null;
 
-  const isOpen = r.status === 'open';
+  const isOpen = r.status === "open";
 
   return (
     <tr className="hover:bg-surface-secondary/30">
@@ -1274,18 +1375,24 @@ function RequestRow({
         </Badge>
       </td>
       <td className="px-4 py-2.5">
-        <div className="font-medium text-content-primary truncate max-w-xs" title={r.title}>
+        <div
+          className="font-medium text-content-primary truncate max-w-xs"
+          title={r.title}
+        >
           {r.title}
         </div>
         {r.description && (
-          <div className="text-xs text-content-tertiary truncate max-w-xs" title={r.description}>
+          <div
+            className="text-xs text-content-tertiary truncate max-w-xs"
+            title={r.description}
+          >
             {r.description}
           </div>
         )}
       </td>
       <td className="px-4 py-2.5 text-xs text-content-secondary tabular-nums whitespace-nowrap">
         <DateDisplay value={r.start_at} />
-        {' → '}
+        {" → "}
         <DateDisplay value={r.end_at} />
       </td>
       <td className="px-4 py-2.5 tabular-nums">{r.quantity}</td>
@@ -1322,7 +1429,7 @@ function RequestRow({
               disabled={busy}
               data-testid={`request-fulfill-${r.id}`}
             >
-              {t('resources.fulfill', { defaultValue: 'Fulfill' })}
+              {t("resources.fulfill", { defaultValue: "Fulfill" })}
             </Button>
           )}
           <div className="relative" ref={menuRef}>
@@ -1330,13 +1437,19 @@ function RequestRow({
               type="button"
               onClick={() => setMenuOpen((o) => !o)}
               className="p-1.5 rounded hover:bg-surface-secondary text-content-secondary"
-              aria-label={t('resources.row_actions', { defaultValue: 'Row actions' })}
+              aria-label={t("resources.row_actions", {
+                defaultValue: "Row actions",
+              })}
               aria-haspopup="menu"
               aria-expanded={menuOpen}
               data-testid={`request-menu-${r.id}`}
               disabled={busy}
             >
-              {busy ? <Loader2 size={14} className="animate-spin" /> : <MoreHorizontal size={14} />}
+              {busy ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <MoreHorizontal size={14} />
+              )}
             </button>
             {menuOpen && (
               <div
@@ -1354,7 +1467,7 @@ function RequestRow({
                   }}
                 >
                   <Pencil size={12} />
-                  {t('common.edit', { defaultValue: 'Edit' })}
+                  {t("common.edit", { defaultValue: "Edit" })}
                 </button>
                 {isOpen && (
                   <button
@@ -1367,7 +1480,7 @@ function RequestRow({
                     }}
                   >
                     <UserPlus size={12} />
-                    {t('resources.fulfill', { defaultValue: 'Fulfill' })}
+                    {t("resources.fulfill", { defaultValue: "Fulfill" })}
                   </button>
                 )}
                 {isOpen && (
@@ -1381,7 +1494,9 @@ function RequestRow({
                     }}
                   >
                     <Ban size={12} />
-                    {t('resources.cancel_request', { defaultValue: 'Cancel request' })}
+                    {t("resources.cancel_request", {
+                      defaultValue: "Cancel request",
+                    })}
                   </button>
                 )}
                 <div className="my-1 border-t border-border-light" />
@@ -1395,7 +1510,7 @@ function RequestRow({
                   }}
                 >
                   <Trash2 size={12} />
-                  {t('common.delete', { defaultValue: 'Delete' })}
+                  {t("common.delete", { defaultValue: "Delete" })}
                 </button>
               </div>
             )}
@@ -1415,34 +1530,41 @@ interface NewRequestModalProps {
   onCreated: () => void;
 }
 
-function NewRequestModal({ projectId, skills, onClose, onCreated }: NewRequestModalProps) {
+function NewRequestModal({
+  projectId,
+  skills,
+  onClose,
+  onCreated,
+}: NewRequestModalProps) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
   const [busy, setBusy] = useState(false);
 
   const [form, setForm] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     start_at: isoLocalNow(1),
     end_at: isoLocalNow(3),
     quantity: 1,
-    priority: 'med' as RequestPriority,
+    priority: "med" as RequestPriority,
     required_skills: [] as string[],
   });
 
   async function submit() {
     if (!form.title.trim()) {
       addToast({
-        type: 'error',
-        title: t('resources.title_required', { defaultValue: 'Title is required' }),
+        type: "error",
+        title: t("resources.title_required", {
+          defaultValue: "Title is required",
+        }),
       });
       return;
     }
     if (new Date(form.end_at) <= new Date(form.start_at)) {
       addToast({
-        type: 'error',
-        title: t('resources.window_invalid', {
-          defaultValue: 'End must be after start',
+        type: "error",
+        title: t("resources.window_invalid", {
+          defaultValue: "End must be after start",
         }),
       });
       return;
@@ -1460,12 +1582,14 @@ function NewRequestModal({ projectId, skills, onClose, onCreated }: NewRequestMo
         required_skills: form.required_skills,
       });
       addToast({
-        type: 'success',
-        title: t('resources.request_created_ok', { defaultValue: 'Request created' }),
+        type: "success",
+        title: t("resources.request_created_ok", {
+          defaultValue: "Request created",
+        }),
       });
       onCreated();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1477,11 +1601,11 @@ function NewRequestModal({ projectId, skills, onClose, onCreated }: NewRequestMo
       onClose={onClose}
       busy={busy}
       size="lg"
-      title={t('resources.new_request', { defaultValue: 'New Request' })}
+      title={t("resources.new_request", { defaultValue: "New Request" })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -1490,7 +1614,7 @@ function NewRequestModal({ projectId, skills, onClose, onCreated }: NewRequestMo
             icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
             data-testid="new-request-submit"
           >
-            {t('resources.create_request', { defaultValue: 'Create request' })}
+            {t("resources.create_request", { defaultValue: "Create request" })}
           </Button>
         </>
       }
@@ -1507,7 +1631,12 @@ interface EditRequestModalProps {
   onSaved: () => void;
 }
 
-function EditRequestModal({ request, skills, onClose, onSaved }: EditRequestModalProps) {
+function EditRequestModal({
+  request,
+  skills,
+  onClose,
+  onSaved,
+}: EditRequestModalProps) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
   const [busy, setBusy] = useState(false);
@@ -1525,16 +1654,18 @@ function EditRequestModal({ request, skills, onClose, onSaved }: EditRequestModa
   async function submit() {
     if (!form.title.trim()) {
       addToast({
-        type: 'error',
-        title: t('resources.title_required', { defaultValue: 'Title is required' }),
+        type: "error",
+        title: t("resources.title_required", {
+          defaultValue: "Title is required",
+        }),
       });
       return;
     }
     if (new Date(form.end_at) <= new Date(form.start_at)) {
       addToast({
-        type: 'error',
-        title: t('resources.window_invalid', {
-          defaultValue: 'End must be after start',
+        type: "error",
+        title: t("resources.window_invalid", {
+          defaultValue: "End must be after start",
         }),
       });
       return;
@@ -1551,12 +1682,14 @@ function EditRequestModal({ request, skills, onClose, onSaved }: EditRequestModa
         required_skills: form.required_skills,
       });
       addToast({
-        type: 'success',
-        title: t('resources.request_updated_ok', { defaultValue: 'Request updated' }),
+        type: "success",
+        title: t("resources.request_updated_ok", {
+          defaultValue: "Request updated",
+        }),
       });
       onSaved();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1568,11 +1701,11 @@ function EditRequestModal({ request, skills, onClose, onSaved }: EditRequestModa
       onClose={onClose}
       busy={busy}
       size="lg"
-      title={t('resources.edit_request', { defaultValue: 'Edit Request' })}
+      title={t("resources.edit_request", { defaultValue: "Edit Request" })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -1580,7 +1713,7 @@ function EditRequestModal({ request, skills, onClose, onSaved }: EditRequestModa
             loading={busy}
             icon={busy ? <Loader2 size={14} /> : <CheckCircle2 size={14} />}
           >
-            {t('common.save', { defaultValue: 'Save' })}
+            {t("common.save", { defaultValue: "Save" })}
           </Button>
         </>
       }
@@ -1612,7 +1745,7 @@ function RequestFormFields({ form, setForm, skills }: RequestFormFieldsProps) {
     <>
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('resources.req_col_title', { defaultValue: 'Title' })}
+          label={t("resources.req_col_title", { defaultValue: "Title" })}
           required
           span={2}
         >
@@ -1620,26 +1753,29 @@ function RequestFormFields({ form, setForm, skills }: RequestFormFieldsProps) {
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             className={inputCls}
-            placeholder={t('resources.title_placeholder', {
-              defaultValue: 'e.g. 2 carpenters with formwork experience',
+            placeholder={t("resources.title_placeholder", {
+              defaultValue: "e.g. 2 carpenters with formwork experience",
             })}
             data-testid="request-form-title"
           />
         </WideModalField>
         <WideModalField
-          label={t('common.description', { defaultValue: 'Description' })}
+          label={t("common.description", { defaultValue: "Description" })}
           span={2}
         >
           <textarea
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className={clsx(inputCls, 'h-20 py-2 resize-y')}
-            placeholder={t('resources.description_placeholder', {
-              defaultValue: 'Optional notes for the dispatcher…',
+            className={clsx(inputCls, "h-20 py-2 resize-y")}
+            placeholder={t("resources.description_placeholder", {
+              defaultValue: "Optional notes for the dispatcher…",
             })}
           />
         </WideModalField>
-        <WideModalField label={t('resources.start', { defaultValue: 'Start' })} required>
+        <WideModalField
+          label={t("resources.start", { defaultValue: "Start" })}
+          required
+        >
           <input
             type="datetime-local"
             value={form.start_at}
@@ -1647,7 +1783,10 @@ function RequestFormFields({ form, setForm, skills }: RequestFormFieldsProps) {
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('resources.end', { defaultValue: 'End' })} required>
+        <WideModalField
+          label={t("resources.end", { defaultValue: "End" })}
+          required
+        >
           <input
             type="datetime-local"
             value={form.end_at}
@@ -1655,31 +1794,46 @@ function RequestFormFields({ form, setForm, skills }: RequestFormFieldsProps) {
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('resources.req_col_qty', { defaultValue: 'Quantity' })}>
+        <WideModalField
+          label={t("resources.req_col_qty", { defaultValue: "Quantity" })}
+        >
           <input
             type="number"
             min={1}
             max={999}
             value={form.quantity}
             onChange={(e) =>
-              setForm({ ...form, quantity: Math.max(1, Number(e.target.value) || 1) })
+              setForm({
+                ...form,
+                quantity: Math.max(1, Number(e.target.value) || 1),
+              })
             }
             className={inputCls}
           />
         </WideModalField>
         <WideModalField
-          label={t('resources.requests_priority_label', { defaultValue: 'Priority' })}
+          label={t("resources.requests_priority_label", {
+            defaultValue: "Priority",
+          })}
         >
           <select
             value={form.priority}
-            onChange={(e) => setForm({ ...form, priority: e.target.value as RequestPriority })}
+            onChange={(e) =>
+              setForm({ ...form, priority: e.target.value as RequestPriority })
+            }
             className={inputCls}
           >
-            <option value="low">{t('resources.priority_low', { defaultValue: 'Low' })}</option>
-            <option value="med">{t('resources.priority_med', { defaultValue: 'Medium' })}</option>
-            <option value="high">{t('resources.priority_high', { defaultValue: 'High' })}</option>
+            <option value="low">
+              {t("resources.priority_low", { defaultValue: "Low" })}
+            </option>
+            <option value="med">
+              {t("resources.priority_med", { defaultValue: "Medium" })}
+            </option>
+            <option value="high">
+              {t("resources.priority_high", { defaultValue: "High" })}
+            </option>
             <option value="critical">
-              {t('resources.priority_critical', { defaultValue: 'Critical' })}
+              {t("resources.priority_critical", { defaultValue: "Critical" })}
             </option>
           </select>
         </WideModalField>
@@ -1687,12 +1841,14 @@ function RequestFormFields({ form, setForm, skills }: RequestFormFieldsProps) {
 
       {skills.length > 0 && (
         <WideModalSection
-          title={t('resources.required_skills', { defaultValue: 'Required skills' })}
+          title={t("resources.required_skills", {
+            defaultValue: "Required skills",
+          })}
           columns={1}
         >
           <WideModalField
-            label={t('resources.required_skills_pick', {
-              defaultValue: 'Pick relevant skills',
+            label={t("resources.required_skills_pick", {
+              defaultValue: "Pick relevant skills",
             })}
           >
             <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
@@ -1711,10 +1867,10 @@ function RequestFormFields({ form, setForm, skills }: RequestFormFieldsProps) {
                       })
                     }
                     className={clsx(
-                      'rounded-full px-2 py-0.5 text-xs border transition-colors',
+                      "rounded-full px-2 py-0.5 text-xs border transition-colors",
                       checked
-                        ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                        : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                        ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                        : "border-border-light text-content-secondary hover:bg-surface-secondary",
                     )}
                   >
                     <Wrench size={10} className="inline mr-1" />
@@ -1750,18 +1906,20 @@ function FulfillRequestModal({
 
   // Suggest the first active resource as a default; user can change it.
   const defaultResource = useMemo(
-    () => resources.find((r) => r.status === 'active') ?? resources[0],
+    () => resources.find((r) => r.status === "active") ?? resources[0],
     [resources],
   );
 
   const [form, setForm] = useState({
-    resource_id: defaultResource?.id ?? '',
-    cost_rate: defaultResource ? String(defaultResource.default_cost_rate ?? '0') : '0',
+    resource_id: defaultResource?.id ?? "",
+    cost_rate: defaultResource
+      ? String(defaultResource.default_cost_rate ?? "0")
+      : "0",
     // Fall back to the user's currency preference (never a hardcoded
     // 'EUR') when the picked resource has no currency of its own.
     currency: defaultResource?.currency || prefCurrency,
     allocation_percent: 100,
-    notes: '',
+    notes: "",
   });
 
   // When the resource changes, copy its default rate + currency so the
@@ -1771,7 +1929,7 @@ function FulfillRequestModal({
     if (r) {
       setForm((f) => ({
         ...f,
-        cost_rate: String(r.default_cost_rate ?? '0'),
+        cost_rate: String(r.default_cost_rate ?? "0"),
         currency: r.currency || f.currency,
       }));
     }
@@ -1781,8 +1939,10 @@ function FulfillRequestModal({
   async function submit() {
     if (!form.resource_id) {
       addToast({
-        type: 'error',
-        title: t('resources.pick_resource', { defaultValue: 'Pick a resource.' }),
+        type: "error",
+        title: t("resources.pick_resource", {
+          defaultValue: "Pick a resource.",
+        }),
       });
       return;
     }
@@ -1796,12 +1956,14 @@ function FulfillRequestModal({
         notes: form.notes,
       });
       addToast({
-        type: 'success',
-        title: t('resources.fulfilled_ok', { defaultValue: 'Request fulfilled' }),
+        type: "success",
+        title: t("resources.fulfilled_ok", {
+          defaultValue: "Request fulfilled",
+        }),
       });
       onFulfilled();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -1813,11 +1975,13 @@ function FulfillRequestModal({
       onClose={onClose}
       busy={busy}
       size="lg"
-      title={t('resources.fulfill_request', { defaultValue: 'Fulfill Request' })}
+      title={t("resources.fulfill_request", {
+        defaultValue: "Fulfill Request",
+      })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -1826,18 +1990,19 @@ function FulfillRequestModal({
             icon={busy ? <Loader2 size={14} /> : <CheckCircle2 size={14} />}
             data-testid="fulfill-request-submit"
           >
-            {t('resources.fulfill', { defaultValue: 'Fulfill' })}
+            {t("resources.fulfill", { defaultValue: "Fulfill" })}
           </Button>
         </>
       }
     >
       <WideModalSection columns={1}>
-        <WideModalField label={t('resources.req_col_title', { defaultValue: 'Title' })}>
+        <WideModalField
+          label={t("resources.req_col_title", { defaultValue: "Title" })}
+        >
           <div className="text-sm text-content-primary">{request.title}</div>
           <p className="text-xs text-content-secondary mt-1">
-            <DateDisplay value={request.start_at} /> →{' '}
-            <DateDisplay value={request.end_at} /> ·{' '}
-            {request.quantity} ×{' '}
+            <DateDisplay value={request.start_at} /> →{" "}
+            <DateDisplay value={request.end_at} /> · {request.quantity} ×{" "}
             <Badge variant={PRIORITY_VARIANT[request.priority]} size="sm">
               {request.priority}
             </Badge>
@@ -1847,7 +2012,7 @@ function FulfillRequestModal({
 
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('resources.resource', { defaultValue: 'Resource' })}
+          label={t("resources.resource", { defaultValue: "Resource" })}
           required
           span={2}
         >
@@ -1858,7 +2023,7 @@ function FulfillRequestModal({
             data-testid="fulfill-resource-select"
           >
             <option value="">
-              — {t('common.select', { defaultValue: 'Select' })} —
+              — {t("common.select", { defaultValue: "Select" })} —
             </option>
             {resources.map((r) => (
               <option key={r.id} value={r.id}>
@@ -1868,7 +2033,7 @@ function FulfillRequestModal({
           </select>
         </WideModalField>
         <WideModalField
-          label={t('resources.allocation', { defaultValue: 'Allocation %' })}
+          label={t("resources.allocation", { defaultValue: "Allocation %" })}
         >
           <input
             type="number"
@@ -1878,13 +2043,18 @@ function FulfillRequestModal({
             onChange={(e) =>
               setForm({
                 ...form,
-                allocation_percent: Math.min(100, Math.max(0, Number(e.target.value) || 0)),
+                allocation_percent: Math.min(
+                  100,
+                  Math.max(0, Number(e.target.value) || 0),
+                ),
               })
             }
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('resources.col_rate', { defaultValue: 'Rate' })}>
+        <WideModalField
+          label={t("resources.col_rate", { defaultValue: "Rate" })}
+        >
           <input
             type="number"
             min={0}
@@ -1894,7 +2064,9 @@ function FulfillRequestModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('common.currency', { defaultValue: 'Currency' })}>
+        <WideModalField
+          label={t("common.currency", { defaultValue: "Currency" })}
+        >
           <input
             value={form.currency}
             onChange={(e) => setForm({ ...form, currency: e.target.value })}
@@ -1902,13 +2074,16 @@ function FulfillRequestModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('common.notes', { defaultValue: 'Notes' })} span={2}>
+        <WideModalField
+          label={t("common.notes", { defaultValue: "Notes" })}
+          span={2}
+        >
           <textarea
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
-            className={clsx(inputCls, 'h-16 py-2 resize-y')}
-            placeholder={t('resources.fulfil_notes_placeholder', {
-              defaultValue: 'Optional handoff notes for the assignee…',
+            className={clsx(inputCls, "h-16 py-2 resize-y")}
+            placeholder={t("resources.fulfil_notes_placeholder", {
+              defaultValue: "Optional handoff notes for the assignee…",
             })}
           />
         </WideModalField>
@@ -1936,7 +2111,7 @@ function AssignmentsTab({
   // with the action buttons hidden (the backend RBAC will reject anyway,
   // but we hide the affordance to keep the UI honest).
   const canEdit =
-    userRole === 'admin' || userRole === 'manager' || userRole === 'editor';
+    userRole === "admin" || userRole === "manager" || userRole === "editor";
 
   const idToName = useMemo(() => {
     const m: Record<string, string> = {};
@@ -1950,7 +2125,7 @@ function AssignmentsTab({
   const samples = resources.slice(0, 50);
   const assignmentQs = useQueries({
     queries: samples.map((r) => ({
-      queryKey: ['resources', 'assignments', r.id] as const,
+      queryKey: ["resources", "assignments", r.id] as const,
       queryFn: () => listAssignmentsForResource(r.id, { limit: 50 }),
       staleTime: 30_000,
     })),
@@ -1969,11 +2144,13 @@ function AssignmentsTab({
         out.push({ ...a, resource_name: r.name });
       }
     });
-    out.sort((a, b) => (a.start_at < b.start_at ? -1 : a.start_at > b.start_at ? 1 : 0));
+    out.sort((a, b) =>
+      a.start_at < b.start_at ? -1 : a.start_at > b.start_at ? 1 : 0,
+    );
     return out;
   }, [assignmentQs, samples]);
 
-  const [statusFilter, setStatusFilter] = useState<AssignmentStatus | ''>('');
+  const [statusFilter, setStatusFilter] = useState<AssignmentStatus | "">("");
   const filtered = useMemo(
     () => (statusFilter ? flat.filter((a) => a.status === statusFilter) : flat),
     [flat, statusFilter],
@@ -1990,7 +2167,9 @@ function AssignmentsTab({
     });
   const toggleAll = () =>
     setSelected((prev) =>
-      prev.size === filtered.length ? new Set() : new Set(filtered.map((a) => a.id)),
+      prev.size === filtered.length
+        ? new Set()
+        : new Set(filtered.map((a) => a.id)),
     );
   // Prune selection if the row disappears (e.g. after delete).
   useEffect(() => {
@@ -2012,9 +2191,9 @@ function AssignmentsTab({
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
   const invalidate = () => {
-    qc.invalidateQueries({ queryKey: ['resources', 'assignments'] });
-    qc.invalidateQueries({ queryKey: ['resources', 'dashboard'] });
-    qc.invalidateQueries({ queryKey: ['resources', 'conflicts'] });
+    qc.invalidateQueries({ queryKey: ["resources", "assignments"] });
+    qc.invalidateQueries({ queryKey: ["resources", "dashboard"] });
+    qc.invalidateQueries({ queryKey: ["resources", "conflicts"] });
   };
 
   const deleteMut = useMutation({
@@ -2022,20 +2201,22 @@ function AssignmentsTab({
     onSuccess: () => {
       invalidate();
       addToast({
-        type: 'success',
-        title: t('resources.assign_deleted_ok', {
-          defaultValue: 'Assignment deleted',
+        type: "success",
+        title: t("resources.assign_deleted_ok", {
+          defaultValue: "Assignment deleted",
         }),
       });
       setDeleteTarget(null);
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const bulkDeleteMut = useMutation({
     mutationFn: async (ids: string[]) => {
-      const results = await Promise.allSettled(ids.map((id) => deleteAssignment(id)));
-      const failed = results.filter((r) => r.status === 'rejected').length;
+      const results = await Promise.allSettled(
+        ids.map((id) => deleteAssignment(id)),
+      );
+      const failed = results.filter((r) => r.status === "rejected").length;
       return { total: ids.length, failed };
     },
     onSuccess: ({ total, failed }) => {
@@ -2044,17 +2225,17 @@ function AssignmentsTab({
       setBulkDeleteOpen(false);
       if (failed === 0) {
         addToast({
-          type: 'success',
-          title: t('resources.bulk_delete_ok', {
-            defaultValue: '{{count}} assignments deleted',
+          type: "success",
+          title: t("resources.bulk_delete_ok", {
+            defaultValue: "{{count}} assignments deleted",
             count: total,
           }),
         });
       } else {
         addToast({
-          type: 'warning',
-          title: t('resources.bulk_delete_partial', {
-            defaultValue: '{{ok}} of {{total}} deleted, {{failed}} failed',
+          type: "warning",
+          title: t("resources.bulk_delete_partial", {
+            defaultValue: "{{ok}} of {{total}} deleted, {{failed}} failed",
             ok: total - failed,
             total,
             failed,
@@ -2062,7 +2243,7 @@ function AssignmentsTab({
         });
       }
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   /* keyboard shortcuts — only when no modal/dialog is open */
@@ -2071,20 +2252,20 @@ function AssignmentsTab({
     if (editing || deleteTarget || bulkDeleteOpen) return;
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       if (!focusedId || !canEdit) return;
       const row = filtered.find((a) => a.id === focusedId);
       if (!row) return;
-      if (e.key === 'e' || e.key === 'E') {
+      if (e.key === "e" || e.key === "E") {
         e.preventDefault();
         setEditing(row);
-      } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      } else if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
         setDeleteTarget(row);
       }
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [editing, deleteTarget, bulkDeleteOpen, focusedId, filtered, canEdit]);
 
   return (
@@ -2094,7 +2275,9 @@ function AssignmentsTab({
           <Card padding="none">
             <div className="flex flex-wrap items-center gap-2 p-3 border-b border-border-light">
               <h3 className="text-sm font-semibold">
-                {t('resources.this_week', { defaultValue: 'This week & upcoming' })}
+                {t("resources.this_week", {
+                  defaultValue: "This week & upcoming",
+                })}
               </h3>
               <span className="text-xs text-content-tertiary tabular-nums">
                 {filtered.length}
@@ -2103,30 +2286,42 @@ function AssignmentsTab({
                 <select
                   value={statusFilter}
                   onChange={(e) =>
-                    setStatusFilter(e.target.value as AssignmentStatus | '')
+                    setStatusFilter(e.target.value as AssignmentStatus | "")
                   }
-                  className={clsx(inputCls, 'max-w-[160px]')}
-                  aria-label={t('resources.filter_status', {
-                    defaultValue: 'Filter by status',
+                  className={clsx(inputCls, "max-w-[160px]")}
+                  aria-label={t("resources.filter_status", {
+                    defaultValue: "Filter by status",
                   })}
                 >
                   <option value="">
-                    {t('resources.status_all', { defaultValue: 'All statuses' })}
+                    {t("resources.status_all", {
+                      defaultValue: "All statuses",
+                    })}
                   </option>
                   <option value="proposed">
-                    {t('resources.status_proposed', { defaultValue: 'Proposed' })}
+                    {t("resources.status_proposed", {
+                      defaultValue: "Proposed",
+                    })}
                   </option>
                   <option value="confirmed">
-                    {t('resources.status_confirmed', { defaultValue: 'Confirmed' })}
+                    {t("resources.status_confirmed", {
+                      defaultValue: "Confirmed",
+                    })}
                   </option>
                   <option value="in_progress">
-                    {t('resources.status_in_progress', { defaultValue: 'In progress' })}
+                    {t("resources.status_in_progress", {
+                      defaultValue: "In progress",
+                    })}
                   </option>
                   <option value="completed">
-                    {t('resources.status_completed', { defaultValue: 'Completed' })}
+                    {t("resources.status_completed", {
+                      defaultValue: "Completed",
+                    })}
                   </option>
                   <option value="cancelled">
-                    {t('resources.status_cancelled', { defaultValue: 'Cancelled' })}
+                    {t("resources.status_cancelled", {
+                      defaultValue: "Cancelled",
+                    })}
                   </option>
                 </select>
               </div>
@@ -2139,8 +2334,8 @@ function AssignmentsTab({
                 data-testid="assign-bulk-bar"
               >
                 <span className="font-medium">
-                  {t('resources.selected_count', {
-                    defaultValue: '{{count}} selected',
+                  {t("resources.selected_count", {
+                    defaultValue: "{{count}} selected",
                     count: selected.size,
                   })}
                 </span>
@@ -2149,7 +2344,7 @@ function AssignmentsTab({
                   onClick={() => setSelected(new Set())}
                   className="text-content-tertiary hover:text-content-primary"
                 >
-                  {t('common.clear', { defaultValue: 'Clear' })}
+                  {t("common.clear", { defaultValue: "Clear" })}
                 </button>
                 <Button
                   size="sm"
@@ -2160,7 +2355,9 @@ function AssignmentsTab({
                   data-testid="assign-bulk-delete"
                   disabled={bulkDeleteMut.isPending}
                 >
-                  {t('resources.bulk_delete', { defaultValue: 'Delete selected' })}
+                  {t("resources.bulk_delete", {
+                    defaultValue: "Delete selected",
+                  })}
                 </Button>
               </div>
             )}
@@ -2172,12 +2369,12 @@ function AssignmentsTab({
             ) : filtered.length === 0 ? (
               <EmptyState
                 icon={<CalendarRange size={22} />}
-                title={t('resources.assign_empty_title', {
-                  defaultValue: 'No assignments yet',
+                title={t("resources.assign_empty_title", {
+                  defaultValue: "No assignments yet",
                 })}
-                description={t('resources.assign_empty_desc', {
+                description={t("resources.assign_empty_desc", {
                   defaultValue:
-                    'Propose an assignment to put a resource on a project for a specific date range.',
+                    "Propose an assignment to put a resource on a project for a specific date range.",
                 })}
               />
             ) : (
@@ -2189,16 +2386,18 @@ function AssignmentsTab({
                         <th className="px-3 py-2 text-left w-8">
                           <input
                             type="checkbox"
-                            aria-label={t('common.select_all', {
-                              defaultValue: 'Select all',
+                            aria-label={t("common.select_all", {
+                              defaultValue: "Select all",
                             })}
                             checked={
-                              filtered.length > 0 && selected.size === filtered.length
+                              filtered.length > 0 &&
+                              selected.size === filtered.length
                             }
                             ref={(el) => {
                               if (el)
                                 el.indeterminate =
-                                  selected.size > 0 && selected.size < filtered.length;
+                                  selected.size > 0 &&
+                                  selected.size < filtered.length;
                             }}
                             onChange={toggleAll}
                             data-testid="assign-row-select-all"
@@ -2206,22 +2405,24 @@ function AssignmentsTab({
                         </th>
                       )}
                       <th className="px-3 py-2 text-left">
-                        {t('resources.col_resource', { defaultValue: 'Resource' })}
+                        {t("resources.col_resource", {
+                          defaultValue: "Resource",
+                        })}
                       </th>
                       <th className="px-3 py-2 text-left">
-                        {t('resources.start', { defaultValue: 'Start' })}
+                        {t("resources.start", { defaultValue: "Start" })}
                       </th>
                       <th className="px-3 py-2 text-left">
-                        {t('resources.end', { defaultValue: 'End' })}
+                        {t("resources.end", { defaultValue: "End" })}
                       </th>
                       <th className="px-3 py-2 text-right">
-                        {t('resources.alloc', { defaultValue: 'Alloc' })}
+                        {t("resources.alloc", { defaultValue: "Alloc" })}
                       </th>
                       <th className="px-3 py-2 text-left">
-                        {t('resources.col_status', { defaultValue: 'Status' })}
+                        {t("resources.col_status", { defaultValue: "Status" })}
                       </th>
                       <th className="px-3 py-2 text-right">
-                        {t('resources.actions', { defaultValue: 'Actions' })}
+                        {t("resources.actions", { defaultValue: "Actions" })}
                       </th>
                     </tr>
                   </thead>
@@ -2237,14 +2438,16 @@ function AssignmentsTab({
                           onClick={(e) => {
                             const target = e.target as HTMLElement;
                             if (
-                              target.closest('input,button,[data-testid^="assign-"]')
+                              target.closest(
+                                'input,button,[data-testid^="assign-"]',
+                              )
                             )
                               return;
                             onSelectResource(a.resource_id);
                           }}
                           className={clsx(
-                            'border-t border-border-light hover:bg-surface-secondary focus:bg-surface-secondary outline-none',
-                            isSelected && 'bg-oe-blue-subtle/20',
+                            "border-t border-border-light hover:bg-surface-secondary focus:bg-surface-secondary outline-none",
+                            isSelected && "bg-oe-blue-subtle/20",
                           )}
                           data-testid={`assign-row-${a.id}`}
                         >
@@ -2254,8 +2457,8 @@ function AssignmentsTab({
                                 type="checkbox"
                                 checked={isSelected}
                                 onChange={() => toggleOne(a.id)}
-                                aria-label={t('common.select_row', {
-                                  defaultValue: 'Select row',
+                                aria-label={t("common.select_row", {
+                                  defaultValue: "Select row",
                                 })}
                                 data-testid={`assign-row-select-${a.id}`}
                               />
@@ -2277,7 +2480,8 @@ function AssignmentsTab({
                             <DateDisplay value={a.end_at} />
                             {isPast && (
                               <span className="ms-1 text-[10px] uppercase text-content-tertiary">
-                                ({t('resources.past', { defaultValue: 'past' })})
+                                ({t("resources.past", { defaultValue: "past" })}
+                                )
                               </span>
                             )}
                           </td>
@@ -2285,7 +2489,11 @@ function AssignmentsTab({
                             {a.allocation_percent}%
                           </td>
                           <td className="px-3 py-1.5">
-                            <Badge variant={ASSIGN_VARIANT[a.status]} dot size="sm">
+                            <Badge
+                              variant={ASSIGN_VARIANT[a.status]}
+                              dot
+                              size="sm"
+                            >
                               {a.status}
                             </Badge>
                           </td>
@@ -2296,8 +2504,12 @@ function AssignmentsTab({
                                   type="button"
                                   onClick={() => setEditing(a)}
                                   className="rounded p-1 text-content-secondary hover:text-oe-blue hover:bg-oe-blue-subtle"
-                                  aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                                  title={t('common.edit', { defaultValue: 'Edit' })}
+                                  aria-label={t("common.edit", {
+                                    defaultValue: "Edit",
+                                  })}
+                                  title={t("common.edit", {
+                                    defaultValue: "Edit",
+                                  })}
                                   data-testid={`assign-edit-${a.id}`}
                                 >
                                   <Pencil size={13} />
@@ -2306,10 +2518,12 @@ function AssignmentsTab({
                                   type="button"
                                   onClick={() => setDeleteTarget(a)}
                                   className="rounded p-1 text-content-secondary hover:text-rose-600 hover:bg-rose-50"
-                                  aria-label={t('common.delete', {
-                                    defaultValue: 'Delete',
+                                  aria-label={t("common.delete", {
+                                    defaultValue: "Delete",
                                   })}
-                                  title={t('common.delete', { defaultValue: 'Delete' })}
+                                  title={t("common.delete", {
+                                    defaultValue: "Delete",
+                                  })}
                                   data-testid={`assign-delete-${a.id}`}
                                 >
                                   <Trash2 size={13} />
@@ -2318,9 +2532,9 @@ function AssignmentsTab({
                             ) : (
                               <span
                                 className="text-xs text-content-tertiary"
-                                title={t('resources.readonly_hint', {
+                                title={t("resources.readonly_hint", {
                                   defaultValue:
-                                    'Read-only — ask a manager to edit assignments',
+                                    "Read-only — ask a manager to edit assignments",
                                 })}
                               >
                                 —
@@ -2342,7 +2556,7 @@ function AssignmentsTab({
             <div className="p-4 border-b border-border-light flex items-center gap-2">
               <AlertTriangle size={14} className="text-semantic-warning" />
               <h3 className="text-sm font-semibold">
-                {t('resources.conflicts', { defaultValue: 'Conflicts' })}
+                {t("resources.conflicts", { defaultValue: "Conflicts" })}
               </h3>
               <span className="ms-auto text-xs text-content-tertiary tabular-nums">
                 {conflicts.length}
@@ -2350,8 +2564,8 @@ function AssignmentsTab({
             </div>
             {conflicts.length === 0 ? (
               <div className="p-6 text-center text-sm text-content-tertiary">
-                {t('resources.conflicts_none', {
-                  defaultValue: 'No conflicts this week.',
+                {t("resources.conflicts_none", {
+                  defaultValue: "No conflicts this week.",
                 })}
               </div>
             ) : (
@@ -2366,8 +2580,10 @@ function AssignmentsTab({
                       {idToName[c.resource_id] || c.resource_name}
                     </p>
                     <p className="mt-0.5 text-xs text-content-secondary">
-                      {c.conflicts.length}{' '}
-                      {t('resources.overlap_count', { defaultValue: 'overlap(s)' })}
+                      {c.conflicts.length}{" "}
+                      {t("resources.overlap_count", {
+                        defaultValue: "overlap(s)",
+                      })}
                     </p>
                   </li>
                 ))}
@@ -2389,13 +2605,13 @@ function AssignmentsTab({
       {/* Single-row delete confirm */}
       <ConfirmDialog
         open={!!deleteTarget}
-        title={t('resources.delete_confirm_title', {
-          defaultValue: 'Delete this assignment?',
+        title={t("resources.delete_confirm_title", {
+          defaultValue: "Delete this assignment?",
         })}
-        message={t('resources.delete_confirm_msg', {
-          defaultValue: 'This action cannot be undone.',
+        message={t("resources.delete_confirm_msg", {
+          defaultValue: "This action cannot be undone.",
         })}
-        confirmLabel={t('common.delete', { defaultValue: 'Delete' })}
+        confirmLabel={t("common.delete", { defaultValue: "Delete" })}
         onCancel={() => setDeleteTarget(null)}
         onConfirm={() => deleteTarget && deleteMut.mutate(deleteTarget.id)}
         loading={deleteMut.isPending}
@@ -2405,16 +2621,16 @@ function AssignmentsTab({
       {/* Bulk delete confirm */}
       <ConfirmDialog
         open={bulkDeleteOpen}
-        title={t('resources.bulk_delete_title', {
-          defaultValue: 'Delete {{count}} assignments?',
+        title={t("resources.bulk_delete_title", {
+          defaultValue: "Delete {{count}} assignments?",
           count: selected.size,
         })}
-        message={t('resources.bulk_delete_msg', {
+        message={t("resources.bulk_delete_msg", {
           defaultValue:
-            'You are about to delete {{count}} assignments. This action cannot be undone.',
+            "You are about to delete {{count}} assignments. This action cannot be undone.",
           count: selected.size,
         })}
-        confirmLabel={t('common.delete', { defaultValue: 'Delete' })}
+        confirmLabel={t("common.delete", { defaultValue: "Delete" })}
         onCancel={() => setBulkDeleteOpen(false)}
         onConfirm={() => bulkDeleteMut.mutate(Array.from(selected))}
         loading={bulkDeleteMut.isPending}
@@ -2435,7 +2651,7 @@ function toDatetimeLocal(iso: string): string {
   // Convert an ISO timestamp to the value format expected by
   // <input type="datetime-local"> (YYYY-MM-DDTHH:mm in local time).
   const d = new Date(iso);
-  const pad = (n: number) => String(n).padStart(2, '0');
+  const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
     d.getHours(),
   )}:${pad(d.getMinutes())}`;
@@ -2457,7 +2673,7 @@ function EditAssignmentModal({
     end_at: toDatetimeLocal(assignment.end_at),
     allocation_percent: assignment.allocation_percent,
     status: assignment.status,
-    notes: assignment.notes ?? '',
+    notes: assignment.notes ?? "",
   });
 
   const isPast = new Date(assignment.end_at).getTime() < Date.now();
@@ -2473,32 +2689,32 @@ function EditAssignmentModal({
       }),
     onSuccess: () => {
       addToast({
-        type: 'success',
-        title: t('resources.assign_saved_ok', {
-          defaultValue: 'Assignment saved',
+        type: "success",
+        title: t("resources.assign_saved_ok", {
+          defaultValue: "Assignment saved",
         }),
       });
       onSaved();
       onClose();
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const submit = () => {
     if (!form.start_at || !form.end_at) {
       addToast({
-        type: 'error',
-        title: t('resources.dates_required', {
-          defaultValue: 'Start and end are required.',
+        type: "error",
+        title: t("resources.dates_required", {
+          defaultValue: "Start and end are required.",
         }),
       });
       return;
     }
     if (new Date(form.end_at) <= new Date(form.start_at)) {
       addToast({
-        type: 'error',
-        title: t('resources.end_after_start', {
-          defaultValue: 'End must be after start.',
+        type: "error",
+        title: t("resources.end_after_start", {
+          defaultValue: "End must be after start.",
         }),
       });
       return;
@@ -2512,22 +2728,24 @@ function EditAssignmentModal({
       onClose={onClose}
       busy={mut.isPending}
       size="lg"
-      title={t('resources.edit_assignment', {
-        defaultValue: 'Edit assignment',
+      title={t("resources.edit_assignment", {
+        defaultValue: "Edit assignment",
       })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={mut.isPending}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
             onClick={submit}
             loading={mut.isPending}
             data-testid="assign-edit-save"
-            icon={mut.isPending ? <Loader2 size={14} /> : <CheckCircle2 size={14} />}
+            icon={
+              mut.isPending ? <Loader2 size={14} /> : <CheckCircle2 size={14} />
+            }
           >
-            {t('common.save', { defaultValue: 'Save' })}
+            {t("common.save", { defaultValue: "Save" })}
           </Button>
         </>
       }
@@ -2539,15 +2757,18 @@ function EditAssignmentModal({
         >
           <AlertTriangle size={12} className="mt-0.5 shrink-0" />
           <span>
-            {t('resources.edit_past_warning', {
+            {t("resources.edit_past_warning", {
               defaultValue:
-                'This assignment is in the past — changes are typically only for record corrections.',
+                "This assignment is in the past — changes are typically only for record corrections.",
             })}
           </span>
         </div>
       )}
       <WideModalSection columns={2}>
-        <WideModalField label={t('resources.start', { defaultValue: 'Start' })} required>
+        <WideModalField
+          label={t("resources.start", { defaultValue: "Start" })}
+          required
+        >
           <input
             type="datetime-local"
             name="start_at"
@@ -2556,7 +2777,10 @@ function EditAssignmentModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('resources.end', { defaultValue: 'End' })} required>
+        <WideModalField
+          label={t("resources.end", { defaultValue: "End" })}
+          required
+        >
           <input
             type="datetime-local"
             name="end_at"
@@ -2566,7 +2790,7 @@ function EditAssignmentModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('resources.allocation', { defaultValue: 'Allocation %' })}
+          label={t("resources.allocation", { defaultValue: "Allocation %" })}
         >
           <input
             type="number"
@@ -2577,13 +2801,18 @@ function EditAssignmentModal({
             onChange={(e) =>
               setForm({
                 ...form,
-                allocation_percent: Math.max(0, Math.min(100, Number(e.target.value) || 0)),
+                allocation_percent: Math.max(
+                  0,
+                  Math.min(100, Number(e.target.value) || 0),
+                ),
               })
             }
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('resources.col_status', { defaultValue: 'Status' })}>
+        <WideModalField
+          label={t("resources.col_status", { defaultValue: "Status" })}
+        >
           <select
             name="status"
             value={form.status}
@@ -2593,24 +2822,26 @@ function EditAssignmentModal({
             className={inputCls}
           >
             <option value="proposed">
-              {t('resources.status_proposed', { defaultValue: 'Proposed' })}
+              {t("resources.status_proposed", { defaultValue: "Proposed" })}
             </option>
             <option value="confirmed">
-              {t('resources.status_confirmed', { defaultValue: 'Confirmed' })}
+              {t("resources.status_confirmed", { defaultValue: "Confirmed" })}
             </option>
             <option value="in_progress">
-              {t('resources.status_in_progress', { defaultValue: 'In progress' })}
+              {t("resources.status_in_progress", {
+                defaultValue: "In progress",
+              })}
             </option>
             <option value="completed">
-              {t('resources.status_completed', { defaultValue: 'Completed' })}
+              {t("resources.status_completed", { defaultValue: "Completed" })}
             </option>
             <option value="cancelled">
-              {t('resources.status_cancelled', { defaultValue: 'Cancelled' })}
+              {t("resources.status_cancelled", { defaultValue: "Cancelled" })}
             </option>
           </select>
         </WideModalField>
         <WideModalField
-          label={t('resources.notes', { defaultValue: 'Notes' })}
+          label={t("resources.notes", { defaultValue: "Notes" })}
           span={2}
         >
           <textarea
@@ -2618,7 +2849,7 @@ function EditAssignmentModal({
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             rows={3}
-            className={clsx(inputCls, 'h-auto py-2')}
+            className={clsx(inputCls, "h-auto py-2")}
           />
         </WideModalField>
       </WideModalSection>
@@ -2640,37 +2871,45 @@ function ResourceDrawer({
   const addToast = useToastStore((s) => s.addToast);
 
   const dashQ = useQuery({
-    queryKey: ['resources', 'dashboard', resourceId],
+    queryKey: ["resources", "dashboard", resourceId],
     queryFn: () => getResourceDashboard(resourceId),
   });
 
   const timeOffQ = useQuery({
-    queryKey: ['resources', 'time-off', resourceId],
+    queryKey: ["resources", "time-off", resourceId],
     queryFn: () => listWindows(resourceId),
   });
 
   const confirmMut = useMutation({
     mutationFn: (id: string) => confirmAssignment(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['resources', 'dashboard', resourceId] });
+      qc.invalidateQueries({
+        queryKey: ["resources", "dashboard", resourceId],
+      });
       addToast({
-        type: 'success',
-        title: t('resources.confirmed_ok', { defaultValue: 'Assignment confirmed' }),
+        type: "success",
+        title: t("resources.confirmed_ok", {
+          defaultValue: "Assignment confirmed",
+        }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   const cancelMut = useMutation({
-    mutationFn: (id: string) => cancelAssignment(id, 'declined'),
+    mutationFn: (id: string) => cancelAssignment(id, "declined"),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['resources', 'dashboard', resourceId] });
+      qc.invalidateQueries({
+        queryKey: ["resources", "dashboard", resourceId],
+      });
       addToast({
-        type: 'success',
-        title: t('resources.declined_ok', { defaultValue: 'Assignment declined' }),
+        type: "success",
+        title: t("resources.declined_ok", {
+          defaultValue: "Assignment declined",
+        }),
       });
     },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: getErrorMessage(err) }),
   });
 
   // Close on Escape — consistent with every other dialog/drawer in the app
@@ -2678,15 +2917,15 @@ function ResourceDrawer({
   // dismissed by mouse, which is an a11y/keyboard-trap regression.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   const data = dashQ.data;
   const timeOff = (timeOffQ.data ?? []).filter(
-    (w) => w.window_type !== 'available',
+    (w) => w.window_type !== "available",
   );
   const loadError = dashQ.isError ? dashQ.error : null;
 
@@ -2696,8 +2935,8 @@ function ResourceDrawer({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t('resources.resource_detail', {
-          defaultValue: 'Resource detail',
+        aria-label={t("resources.resource_detail", {
+          defaultValue: "Resource detail",
         })}
         className="relative h-full w-full max-w-xl overflow-y-auto bg-surface-elevated shadow-xl"
         onClick={(e) => e.stopPropagation()}
@@ -2705,7 +2944,8 @@ function ResourceDrawer({
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-light bg-surface-elevated px-5 py-3">
           <div>
             <h2 className="text-base font-semibold">
-              {data?.resource.name ?? t('common.loading', { defaultValue: 'Loading…' })}
+              {data?.resource.name ??
+                t("common.loading", { defaultValue: "Loading…" })}
             </h2>
             {data && (
               <p className="text-xs text-content-tertiary font-mono">
@@ -2717,7 +2957,7 @@ function ResourceDrawer({
             type="button"
             onClick={onClose}
             className="rounded p-1 hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
+            aria-label={t("common.close", { defaultValue: "Close" })}
           >
             <X size={16} />
           </button>
@@ -2739,7 +2979,7 @@ function ResourceDrawer({
                   onClick={() => dashQ.refetch()}
                   className="font-medium underline hover:no-underline"
                 >
-                  {t('common.retry', { defaultValue: 'Retry' })}
+                  {t("common.retry", { defaultValue: "Retry" })}
                 </button>
               </div>
             </div>
@@ -2748,18 +2988,25 @@ function ResourceDrawer({
             <>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Field
-                  label={t('resources.col_type')}
+                  label={t("resources.col_type")}
                   value={
-                    <Badge variant={TYPE_VARIANT[data.resource.resource_type]} size="sm">
+                    <Badge
+                      variant={TYPE_VARIANT[data.resource.resource_type]}
+                      size="sm"
+                    >
                       {data.resource.resource_type}
                     </Badge>
                   }
                 />
                 <Field
-                  label={t('resources.col_status')}
+                  label={t("resources.col_status")}
                   value={
                     <Badge
-                      variant={data.resource.status === 'active' ? 'success' : 'neutral'}
+                      variant={
+                        data.resource.status === "active"
+                          ? "success"
+                          : "neutral"
+                      }
                       dot
                       size="sm"
                     >
@@ -2768,7 +3015,7 @@ function ResourceDrawer({
                   }
                 />
                 <Field
-                  label={t('resources.col_rate')}
+                  label={t("resources.col_rate")}
                   value={
                     <MoneyDisplay
                       amount={Number(data.resource.default_cost_rate) || 0}
@@ -2777,24 +3024,28 @@ function ResourceDrawer({
                   }
                 />
                 <Field
-                  label={t('resources.utilization', { defaultValue: 'Utilization (30d)' })}
+                  label={t("resources.utilization", {
+                    defaultValue: "Utilization (30d)",
+                  })}
                   value={
                     data.utilization_30d
                       ? `${data.utilization_30d.utilization_percent.toFixed(0)}%`
-                      : '—'
+                      : "—"
                   }
                 />
               </div>
 
               <Section
-                title={t('resources.current_assignments', {
-                  defaultValue: 'Current assignments',
+                title={t("resources.current_assignments", {
+                  defaultValue: "Current assignments",
                 })}
                 icon={<HardHat size={14} />}
               >
                 {data.active_assignments.length === 0 ? (
                   <EmptyHint
-                    text={t('resources.no_active', { defaultValue: 'None active.' })}
+                    text={t("resources.no_active", {
+                      defaultValue: "None active.",
+                    })}
                   />
                 ) : (
                   <AssignmentTable
@@ -2807,14 +3058,16 @@ function ResourceDrawer({
               </Section>
 
               <Section
-                title={t('resources.future_commitments', {
-                  defaultValue: 'Future commitments',
+                title={t("resources.future_commitments", {
+                  defaultValue: "Future commitments",
                 })}
                 icon={<CalendarRange size={14} />}
               >
                 {data.upcoming_assignments.length === 0 ? (
                   <EmptyHint
-                    text={t('resources.no_upcoming', { defaultValue: 'No upcoming work.' })}
+                    text={t("resources.no_upcoming", {
+                      defaultValue: "No upcoming work.",
+                    })}
                   />
                 ) : (
                   <AssignmentTable
@@ -2827,12 +3080,14 @@ function ResourceDrawer({
               </Section>
 
               <Section
-                title={t('resources.time_off', { defaultValue: 'Time off' })}
+                title={t("resources.time_off", { defaultValue: "Time off" })}
                 icon={<CalendarRange size={14} />}
               >
                 {timeOff.length === 0 ? (
                   <EmptyHint
-                    text={t('resources.no_time_off', { defaultValue: 'No time off logged.' })}
+                    text={t("resources.no_time_off", {
+                      defaultValue: "No time off logged.",
+                    })}
                   />
                 ) : (
                   <ul className="divide-y divide-border-light text-sm">
@@ -2843,10 +3098,10 @@ function ResourceDrawer({
                       >
                         <span className="text-content-secondary">
                           {w.window_type}
-                          {w.note ? ` · ${w.note}` : ''}
+                          {w.note ? ` · ${w.note}` : ""}
                         </span>
                         <span className="text-content-tertiary text-xs">
-                          <DateDisplay value={w.start_at} /> →{' '}
+                          <DateDisplay value={w.start_at} /> →{" "}
                           <DateDisplay value={w.end_at} />
                         </span>
                       </li>
@@ -2856,12 +3111,16 @@ function ResourceDrawer({
               </Section>
 
               <Section
-                title={t('resources.certifications', { defaultValue: 'Certifications' })}
+                title={t("resources.certifications", {
+                  defaultValue: "Certifications",
+                })}
                 icon={<Award size={14} />}
               >
                 {data.certifications.length === 0 ? (
                   <EmptyHint
-                    text={t('resources.no_certs', { defaultValue: 'No certifications.' })}
+                    text={t("resources.no_certs", {
+                      defaultValue: "No certifications.",
+                    })}
                   />
                 ) : (
                   <ul className="divide-y divide-border-light text-sm">
@@ -2870,7 +3129,9 @@ function ResourceDrawer({
                         <div className="flex items-center justify-between">
                           <span className="font-medium">{c.cert_type}</span>
                           <Badge
-                            variant={c.status === 'valid' ? 'success' : 'warning'}
+                            variant={
+                              c.status === "valid" ? "success" : "warning"
+                            }
                             size="sm"
                           >
                             {c.status}
@@ -2878,8 +3139,10 @@ function ResourceDrawer({
                         </div>
                         {c.valid_until && (
                           <p className="text-xs text-content-tertiary mt-0.5">
-                            {t('resources.valid_until', { defaultValue: 'Valid until' })}:{' '}
-                            {c.valid_until}
+                            {t("resources.valid_until", {
+                              defaultValue: "Valid until",
+                            })}
+                            : {c.valid_until}
                           </p>
                         )}
                       </li>
@@ -2916,7 +3179,11 @@ function Section({
 }
 
 function EmptyHint({ text }: { text: string }) {
-  return <p className="rounded-md bg-surface-secondary/60 p-3 text-xs text-content-tertiary">{text}</p>;
+  return (
+    <p className="rounded-md bg-surface-secondary/60 p-3 text-xs text-content-tertiary">
+      {text}
+    </p>
+  );
 }
 
 function AssignmentTable({
@@ -2937,19 +3204,19 @@ function AssignmentTable({
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
             <th className="px-3 py-2 text-left">
-              {t('resources.start', { defaultValue: 'Start' })}
+              {t("resources.start", { defaultValue: "Start" })}
             </th>
             <th className="px-3 py-2 text-left">
-              {t('resources.end', { defaultValue: 'End' })}
+              {t("resources.end", { defaultValue: "End" })}
             </th>
             <th className="px-3 py-2 text-left">
-              {t('resources.alloc', { defaultValue: 'Alloc' })}
+              {t("resources.alloc", { defaultValue: "Alloc" })}
             </th>
             <th className="px-3 py-2 text-left">
-              {t('resources.col_status', { defaultValue: 'Status' })}
+              {t("resources.col_status", { defaultValue: "Status" })}
             </th>
             <th className="px-3 py-2 text-right">
-              {t('resources.actions', { defaultValue: 'Actions' })}
+              {t("resources.actions", { defaultValue: "Actions" })}
             </th>
           </tr>
         </thead>
@@ -2971,7 +3238,7 @@ function AssignmentTable({
                 </Badge>
               </td>
               <td className="px-3 py-1.5 text-right">
-                {a.status === 'proposed' && (
+                {a.status === "proposed" && (
                   <div className="inline-flex gap-1">
                     <Button
                       size="sm"
@@ -2980,7 +3247,7 @@ function AssignmentTable({
                       onClick={() => onConfirm(a.id)}
                       disabled={busy}
                     >
-                      {t('resources.confirm', { defaultValue: 'Confirm' })}
+                      {t("resources.confirm", { defaultValue: "Confirm" })}
                     </Button>
                     <Button
                       size="sm"
@@ -2989,7 +3256,7 @@ function AssignmentTable({
                       onClick={() => onDecline(a.id)}
                       disabled={busy}
                     >
-                      {t('resources.decline', { defaultValue: 'Decline' })}
+                      {t("resources.decline", { defaultValue: "Decline" })}
                     </Button>
                   </div>
                 )}
@@ -3002,10 +3269,18 @@ function AssignmentTable({
   );
 }
 
-function Field({ label, value }: { label: React.ReactNode; value: React.ReactNode }) {
+function Field({
+  label,
+  value,
+}: {
+  label: React.ReactNode;
+  value: React.ReactNode;
+}) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-wide text-content-tertiary">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-content-tertiary">
+        {label}
+      </p>
       <p className="mt-0.5 text-sm text-content-primary">{value}</p>
     </div>
   );
@@ -3020,10 +3295,10 @@ function CreateResourceModal({ onClose }: { onClose: () => void }) {
   const prefCurrency = usePreferencesStore((s) => s.currency);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    code: '',
-    name: '',
-    resource_type: 'person' as ResourceType,
-    default_cost_rate: '0',
+    code: "",
+    name: "",
+    resource_type: "person" as ResourceType,
+    default_cost_rate: "0",
     // Seed with the user's currency preference, not a hardcoded 'EUR'.
     currency: prefCurrency,
   });
@@ -3031,9 +3306,9 @@ function CreateResourceModal({ onClose }: { onClose: () => void }) {
   async function submit() {
     if (!form.code || !form.name) {
       addToast({
-        type: 'error',
-        title: t('resources.required_missing', {
-          defaultValue: 'Code and name are required.',
+        type: "error",
+        title: t("resources.required_missing", {
+          defaultValue: "Code and name are required.",
         }),
       });
       return;
@@ -3048,13 +3323,13 @@ function CreateResourceModal({ onClose }: { onClose: () => void }) {
         currency: form.currency,
       });
       addToast({
-        type: 'success',
-        title: t('resources.created_ok', { defaultValue: 'Resource created' }),
+        type: "success",
+        title: t("resources.created_ok", { defaultValue: "Resource created" }),
       });
-      qc.invalidateQueries({ queryKey: ['resources', 'list'] });
+      qc.invalidateQueries({ queryKey: ["resources", "list"] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -3066,11 +3341,11 @@ function CreateResourceModal({ onClose }: { onClose: () => void }) {
       onClose={onClose}
       busy={busy}
       size="lg"
-      title={t('resources.new_resource', { defaultValue: 'New Resource' })}
+      title={t("resources.new_resource", { defaultValue: "New Resource" })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -3078,13 +3353,16 @@ function CreateResourceModal({ onClose }: { onClose: () => void }) {
             loading={busy}
             icon={busy ? <Loader2 size={14} /> : <Plus size={14} />}
           >
-            {t('common.create', { defaultValue: 'Create' })}
+            {t("common.create", { defaultValue: "Create" })}
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
-        <WideModalField label={t('resources.code', { defaultValue: 'Code' })} required>
+        <WideModalField
+          label={t("resources.code", { defaultValue: "Code" })}
+          required
+        >
           <input
             value={form.code}
             onChange={(e) => setForm({ ...form, code: e.target.value })}
@@ -3092,32 +3370,47 @@ function CreateResourceModal({ onClose }: { onClose: () => void }) {
             placeholder="e.g. CR-001"
           />
         </WideModalField>
-        <WideModalField label={t('resources.name', { defaultValue: 'Name' })} required>
+        <WideModalField
+          label={t("resources.name", { defaultValue: "Name" })}
+          required
+        >
           <input
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('resources.col_type', { defaultValue: 'Type' })} span={2}>
+        <WideModalField
+          label={t("resources.col_type", { defaultValue: "Type" })}
+          span={2}
+        >
           <select
             value={form.resource_type}
             onChange={(e) =>
-              setForm({ ...form, resource_type: e.target.value as ResourceType })
+              setForm({
+                ...form,
+                resource_type: e.target.value as ResourceType,
+              })
             }
             className={inputCls}
           >
-            <option value="person">{t('resources.type_person', { defaultValue: 'Person' })}</option>
-            <option value="crew">{t('resources.type_crew', { defaultValue: 'Crew' })}</option>
+            <option value="person">
+              {t("resources.type_person", { defaultValue: "Person" })}
+            </option>
+            <option value="crew">
+              {t("resources.type_crew", { defaultValue: "Crew" })}
+            </option>
             <option value="equipment">
-              {t('resources.type_equipment', { defaultValue: 'Equipment' })}
+              {t("resources.type_equipment", { defaultValue: "Equipment" })}
             </option>
             <option value="subcontractor">
-              {t('resources.type_subcontractor', { defaultValue: 'Subcontractor' })}
+              {t("resources.type_subcontractor", {
+                defaultValue: "Subcontractor",
+              })}
             </option>
           </select>
         </WideModalField>
-        <WideModalField label={t('resources.rate', { defaultValue: 'Rate' })}>
+        <WideModalField label={t("resources.rate", { defaultValue: "Rate" })}>
           <input
             type="number"
             value={form.default_cost_rate}
@@ -3127,7 +3420,9 @@ function CreateResourceModal({ onClose }: { onClose: () => void }) {
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('common.currency', { defaultValue: 'Currency' })}>
+        <WideModalField
+          label={t("common.currency", { defaultValue: "Currency" })}
+        >
           <input
             value={form.currency}
             onChange={(e) => setForm({ ...form, currency: e.target.value })}
@@ -3153,7 +3448,7 @@ function ProposeAssignmentModal({
   const [busy, setBusy] = useState(false);
 
   const skillsQ = useQuery({
-    queryKey: ['resources', 'skills'],
+    queryKey: ["resources", "skills"],
     queryFn: () => listSkills({ limit: 200 }).catch(() => []),
   });
 
@@ -3163,19 +3458,21 @@ function ProposeAssignmentModal({
   // the time the dispatcher actually picked. Use the same local-clock
   // helpers the other modals use.
   const [form, setForm] = useState({
-    resource_id: resources[0]?.id || '',
+    resource_id: resources[0]?.id || "",
     start_at: isoLocalNow(0),
     end_at: isoLocalNow(1),
     allocation_percent: 100,
-    notes: '',
+    notes: "",
     required_skills: [] as string[],
   });
 
   async function submit() {
     if (!form.resource_id) {
       addToast({
-        type: 'error',
-        title: t('resources.pick_resource', { defaultValue: 'Pick a resource.' }),
+        type: "error",
+        title: t("resources.pick_resource", {
+          defaultValue: "Pick a resource.",
+        }),
       });
       return;
     }
@@ -3183,9 +3480,9 @@ function ProposeAssignmentModal({
     try {
       if (new Date(form.end_at) <= new Date(form.start_at)) {
         addToast({
-          type: 'error',
-          title: t('resources.end_after_start', {
-            defaultValue: 'End must be after start.',
+          type: "error",
+          title: t("resources.end_after_start", {
+            defaultValue: "End must be after start.",
           }),
         });
         setBusy(false);
@@ -3200,13 +3497,15 @@ function ProposeAssignmentModal({
         notes: form.notes,
       });
       addToast({
-        type: 'success',
-        title: t('resources.proposed_ok', { defaultValue: 'Assignment proposed' }),
+        type: "success",
+        title: t("resources.proposed_ok", {
+          defaultValue: "Assignment proposed",
+        }),
       });
-      qc.invalidateQueries({ queryKey: ['resources'] });
+      qc.invalidateQueries({ queryKey: ["resources"] });
       onClose();
     } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
+      addToast({ type: "error", title: getErrorMessage(err) });
     } finally {
       setBusy(false);
     }
@@ -3218,11 +3517,11 @@ function ProposeAssignmentModal({
       onClose={onClose}
       busy={busy}
       size="lg"
-      title={t('resources.propose', { defaultValue: 'Propose Assignment' })}
+      title={t("resources.propose", { defaultValue: "Propose Assignment" })}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
+            {t("common.cancel", { defaultValue: "Cancel" })}
           </Button>
           <Button
             variant="primary"
@@ -3230,14 +3529,14 @@ function ProposeAssignmentModal({
             loading={busy}
             icon={busy ? <Loader2 size={14} /> : <CheckCircle2 size={14} />}
           >
-            {t('resources.propose', { defaultValue: 'Propose' })}
+            {t("resources.propose", { defaultValue: "Propose" })}
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
         <WideModalField
-          label={t('resources.resource', { defaultValue: 'Resource' })}
+          label={t("resources.resource", { defaultValue: "Resource" })}
           required
           span={2}
         >
@@ -3247,7 +3546,7 @@ function ProposeAssignmentModal({
             className={inputCls}
           >
             <option value="">
-              — {t('common.select', { defaultValue: 'Select' })} —
+              — {t("common.select", { defaultValue: "Select" })} —
             </option>
             {resources.map((r) => (
               <option key={r.id} value={r.id}>
@@ -3256,7 +3555,7 @@ function ProposeAssignmentModal({
             ))}
           </select>
         </WideModalField>
-        <WideModalField label={t('resources.start', { defaultValue: 'Start' })}>
+        <WideModalField label={t("resources.start", { defaultValue: "Start" })}>
           <input
             type="datetime-local"
             value={form.start_at}
@@ -3264,7 +3563,7 @@ function ProposeAssignmentModal({
             className={inputCls}
           />
         </WideModalField>
-        <WideModalField label={t('resources.end', { defaultValue: 'End' })}>
+        <WideModalField label={t("resources.end", { defaultValue: "End" })}>
           <input
             type="datetime-local"
             value={form.end_at}
@@ -3273,7 +3572,7 @@ function ProposeAssignmentModal({
           />
         </WideModalField>
         <WideModalField
-          label={t('resources.allocation', { defaultValue: 'Allocation %' })}
+          label={t("resources.allocation", { defaultValue: "Allocation %" })}
           span={2}
         >
           <input
@@ -3282,7 +3581,10 @@ function ProposeAssignmentModal({
             max={100}
             value={form.allocation_percent}
             onChange={(e) =>
-              setForm({ ...form, allocation_percent: Number(e.target.value) || 0 })
+              setForm({
+                ...form,
+                allocation_percent: Number(e.target.value) || 0,
+              })
             }
             className={inputCls}
           />
@@ -3291,10 +3593,16 @@ function ProposeAssignmentModal({
 
       {(skillsQ.data?.length ?? 0) > 0 && (
         <WideModalSection
-          title={t('resources.required_skills', { defaultValue: 'Required skills' })}
+          title={t("resources.required_skills", {
+            defaultValue: "Required skills",
+          })}
           columns={1}
         >
-          <WideModalField label={t('resources.required_skills_pick', { defaultValue: 'Pick relevant skills' })}>
+          <WideModalField
+            label={t("resources.required_skills_pick", {
+              defaultValue: "Pick relevant skills",
+            })}
+          >
             <div className="flex flex-wrap gap-1.5">
               {(skillsQ.data ?? []).slice(0, 20).map((s) => {
                 const checked = form.required_skills.includes(s.id);
@@ -3311,10 +3619,10 @@ function ProposeAssignmentModal({
                       })
                     }
                     className={clsx(
-                      'rounded-full px-2 py-0.5 text-xs border transition-colors',
+                      "rounded-full px-2 py-0.5 text-xs border transition-colors",
                       checked
-                        ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
-                        : 'border-border-light text-content-secondary hover:bg-surface-secondary',
+                        ? "border-oe-blue bg-oe-blue/10 text-oe-blue"
+                        : "border-border-light text-content-secondary hover:bg-surface-secondary",
                     )}
                   >
                     <Wrench size={10} className="inline mr-1" />
@@ -3329,4 +3637,3 @@ function ProposeAssignmentModal({
     </WideModal>
   );
 }
-

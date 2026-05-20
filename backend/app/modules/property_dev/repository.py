@@ -45,9 +45,7 @@ class _BaseRepo:
         await self.session.flush()
         return obj
 
-    async def update_fields(
-        self, entity_id: uuid.UUID, **fields: object
-    ) -> None:
+    async def update_fields(self, entity_id: uuid.UUID, **fields: object) -> None:
         if not fields:
             return
         stmt = (
@@ -74,23 +72,15 @@ class DevelopmentRepository(_BaseRepo):
 
     model = Development
 
-    async def list_all(
-        self, *, offset: int = 0, limit: int = 50
-    ) -> tuple[list[Development], int]:
+    async def list_all(self, *, offset: int = 0, limit: int = 50) -> tuple[list[Development], int]:
         base = select(Development)
-        total = (
-            await self.session.execute(
-                select(func.count()).select_from(base.subquery())
-            )
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(Development.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
 
     async def get_by_code(self, code: str) -> Development | None:
-        result = await self.session.execute(
-            select(Development).where(Development.code == code)
-        )
+        result = await self.session.execute(select(Development).where(Development.code == code))
         return result.scalar_one_or_none()
 
 
@@ -102,13 +92,9 @@ class HouseTypeRepository(_BaseRepo):
 
     model = HouseType
 
-    async def list_for_development(
-        self, development_id: uuid.UUID
-    ) -> list[HouseType]:
+    async def list_for_development(self, development_id: uuid.UUID) -> list[HouseType]:
         result = await self.session.execute(
-            select(HouseType)
-            .where(HouseType.development_id == development_id)
-            .order_by(HouseType.code)
+            select(HouseType).where(HouseType.development_id == development_id).order_by(HouseType.code)
         )
         return list(result.scalars().all())
 
@@ -121,9 +107,7 @@ class HouseTypeVariantRepository(_BaseRepo):
 
     model = HouseTypeVariant
 
-    async def list_for_house_type(
-        self, house_type_id: uuid.UUID
-    ) -> list[HouseTypeVariant]:
+    async def list_for_house_type(self, house_type_id: uuid.UUID) -> list[HouseTypeVariant]:
         result = await self.session.execute(
             select(HouseTypeVariant)
             .where(HouseTypeVariant.house_type_id == house_type_id)
@@ -151,23 +135,13 @@ class PlotRepository(_BaseRepo):
         base = select(Plot).where(Plot.development_id == development_id)
         if status is not None:
             base = base.where(Plot.status == status)
-        total = (
-            await self.session.execute(
-                select(func.count()).select_from(base.subquery())
-            )
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(Plot.plot_number).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
 
-    async def count_for_development_by_status(
-        self, development_id: uuid.UUID
-    ) -> dict[str, int]:
-        stmt = (
-            select(Plot.status, func.count())
-            .where(Plot.development_id == development_id)
-            .group_by(Plot.status)
-        )
+    async def count_for_development_by_status(self, development_id: uuid.UUID) -> dict[str, int]:
+        stmt = select(Plot.status, func.count()).where(Plot.development_id == development_id).group_by(Plot.status)
         result = await self.session.execute(stmt)
         return {status: count for status, count in result.all()}
 
@@ -180,9 +154,7 @@ class BuyerOptionGroupRepository(_BaseRepo):
 
     model = BuyerOptionGroup
 
-    async def list_for_development(
-        self, development_id: uuid.UUID
-    ) -> list[BuyerOptionGroup]:
+    async def list_for_development(self, development_id: uuid.UUID) -> list[BuyerOptionGroup]:
         result = await self.session.execute(
             select(BuyerOptionGroup)
             .where(BuyerOptionGroup.development_id == development_id)
@@ -208,12 +180,8 @@ class BuyerOptionRepository(_BaseRepo):
         result = await self.session.execute(base.order_by(BuyerOption.code))
         return list(result.scalars().all())
 
-    async def list_for_group(
-        self, group_id: uuid.UUID, *, active_only: bool = False
-    ) -> list[BuyerOption]:
-        return await self.list_active_options_for_group(
-            group_id, active_only=active_only
-        )
+    async def list_for_group(self, group_id: uuid.UUID, *, active_only: bool = False) -> list[BuyerOption]:
+        return await self.list_active_options_for_group(group_id, active_only=active_only)
 
 
 # ── Buyer ───────────────────────────────────────────────────────────────
@@ -235,38 +203,22 @@ class BuyerRepository(_BaseRepo):
         base = select(Buyer).where(Buyer.development_id == development_id)
         if status is not None:
             base = base.where(Buyer.status == status)
-        total = (
-            await self.session.execute(
-                select(func.count()).select_from(base.subquery())
-            )
-        ).scalar_one()
+        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
         stmt = base.order_by(Buyer.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
 
     async def get_for_plot(self, plot_id: uuid.UUID) -> Buyer | None:
-        result = await self.session.execute(
-            select(Buyer).where(Buyer.plot_id == plot_id)
-        )
+        result = await self.session.execute(select(Buyer).where(Buyer.plot_id == plot_id))
         return result.scalar_one_or_none()
 
-    async def count_for_development_by_status(
-        self, development_id: uuid.UUID
-    ) -> dict[str, int]:
-        stmt = (
-            select(Buyer.status, func.count())
-            .where(Buyer.development_id == development_id)
-            .group_by(Buyer.status)
-        )
+    async def count_for_development_by_status(self, development_id: uuid.UUID) -> dict[str, int]:
+        stmt = select(Buyer.status, func.count()).where(Buyer.development_id == development_id).group_by(Buyer.status)
         result = await self.session.execute(stmt)
         return {status: count for status, count in result.all()}
 
-    async def sum_contract_value(
-        self, development_id: uuid.UUID, *, status_in: list[str] | None = None
-    ) -> Any:
-        base = select(func.coalesce(func.sum(Buyer.contract_value), 0)).where(
-            Buyer.development_id == development_id
-        )
+    async def sum_contract_value(self, development_id: uuid.UUID, *, status_in: list[str] | None = None) -> Any:
+        base = select(func.coalesce(func.sum(Buyer.contract_value), 0)).where(Buyer.development_id == development_id)
         if status_in:
             base = base.where(Buyer.status.in_(status_in))
         result = await self.session.execute(base)
@@ -281,19 +233,13 @@ class BuyerSelectionRepository(_BaseRepo):
 
     model = BuyerSelection
 
-    async def list_for_buyer(
-        self, buyer_id: uuid.UUID
-    ) -> list[BuyerSelection]:
+    async def list_for_buyer(self, buyer_id: uuid.UUID) -> list[BuyerSelection]:
         result = await self.session.execute(
-            select(BuyerSelection)
-            .where(BuyerSelection.buyer_id == buyer_id)
-            .order_by(BuyerSelection.created_at.desc())
+            select(BuyerSelection).where(BuyerSelection.buyer_id == buyer_id).order_by(BuyerSelection.created_at.desc())
         )
         return list(result.scalars().all())
 
-    async def current_selection_for_buyer(
-        self, buyer_id: uuid.UUID
-    ) -> BuyerSelection | None:
+    async def current_selection_for_buyer(self, buyer_id: uuid.UUID) -> BuyerSelection | None:
         """Return the most recently created selection for a buyer."""
         result = await self.session.execute(
             select(BuyerSelection)
@@ -309,9 +255,7 @@ class BuyerSelectionItemRepository(_BaseRepo):
 
     model = BuyerSelectionItem
 
-    async def list_for_selection(
-        self, selection_id: uuid.UUID
-    ) -> list[BuyerSelectionItem]:
+    async def list_for_selection(self, selection_id: uuid.UUID) -> list[BuyerSelectionItem]:
         result = await self.session.execute(
             select(BuyerSelectionItem)
             .where(BuyerSelectionItem.selection_id == selection_id)
@@ -330,15 +274,11 @@ class HandoverRepository(_BaseRepo):
 
     async def list_for_plot(self, plot_id: uuid.UUID) -> list[Handover]:
         result = await self.session.execute(
-            select(Handover)
-            .where(Handover.plot_id == plot_id)
-            .order_by(Handover.created_at.desc())
+            select(Handover).where(Handover.plot_id == plot_id).order_by(Handover.created_at.desc())
         )
         return list(result.scalars().all())
 
-    async def list_for_development(
-        self, development_id: uuid.UUID
-    ) -> list[Handover]:
+    async def list_for_development(self, development_id: uuid.UUID) -> list[Handover]:
         # Join via Plot.development_id.
         stmt = (
             select(Handover)
@@ -349,18 +289,14 @@ class HandoverRepository(_BaseRepo):
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
-    async def count_progress_for_development(
-        self, development_id: uuid.UUID
-    ) -> tuple[int, int]:
+    async def count_progress_for_development(self, development_id: uuid.UUID) -> tuple[int, int]:
         """Return ``(completed, scheduled_not_completed)`` handover counts.
 
         SQL aggregate — avoids materialising every handover row just to
         derive two dashboard tallies (was an N-rows-in-Python scan).
         """
         completed_expr = func.count().filter(Handover.completed_at.isnot(None))
-        scheduled_expr = func.count().filter(
-            Handover.scheduled_at.isnot(None), Handover.completed_at.is_(None)
-        )
+        scheduled_expr = func.count().filter(Handover.scheduled_at.isnot(None), Handover.completed_at.is_(None))
         stmt = (
             select(completed_expr, scheduled_expr)
             .select_from(Handover)
@@ -379,18 +315,14 @@ class SnagRepository(_BaseRepo):
 
     model = Snag
 
-    async def list_for_handover(
-        self, handover_id: uuid.UUID, *, status: str | None = None
-    ) -> list[Snag]:
+    async def list_for_handover(self, handover_id: uuid.UUID, *, status: str | None = None) -> list[Snag]:
         base = select(Snag).where(Snag.handover_id == handover_id)
         if status is not None:
             base = base.where(Snag.status == status)
         result = await self.session.execute(base.order_by(Snag.created_at))
         return list(result.scalars().all())
 
-    async def count_open_for_development(
-        self, development_id: uuid.UUID
-    ) -> int:
+    async def count_open_for_development(self, development_id: uuid.UUID) -> int:
         stmt = (
             select(func.count())
             .select_from(Snag)
@@ -411,52 +343,36 @@ class WarrantyClaimRepository(_BaseRepo):
 
     model = WarrantyClaim
 
-    async def list_for_buyer(
-        self, buyer_id: uuid.UUID, *, status: str | None = None
-    ) -> list[WarrantyClaim]:
+    async def list_for_buyer(self, buyer_id: uuid.UUID, *, status: str | None = None) -> list[WarrantyClaim]:
         base = select(WarrantyClaim).where(WarrantyClaim.buyer_id == buyer_id)
         if status is not None:
             base = base.where(WarrantyClaim.status == status)
-        result = await self.session.execute(
-            base.order_by(WarrantyClaim.created_at.desc())
-        )
+        result = await self.session.execute(base.order_by(WarrantyClaim.created_at.desc()))
         return list(result.scalars().all())
 
-    async def list_for_plot(
-        self, plot_id: uuid.UUID, *, status: str | None = None
-    ) -> list[WarrantyClaim]:
+    async def list_for_plot(self, plot_id: uuid.UUID, *, status: str | None = None) -> list[WarrantyClaim]:
         base = select(WarrantyClaim).where(WarrantyClaim.plot_id == plot_id)
         if status is not None:
             base = base.where(WarrantyClaim.status == status)
-        result = await self.session.execute(
-            base.order_by(WarrantyClaim.created_at.desc())
-        )
+        result = await self.session.execute(base.order_by(WarrantyClaim.created_at.desc()))
         return list(result.scalars().all())
 
-    async def open_warranty_claims_for_buyer(
-        self, buyer_id: uuid.UUID
-    ) -> list[WarrantyClaim]:
+    async def open_warranty_claims_for_buyer(self, buyer_id: uuid.UUID) -> list[WarrantyClaim]:
         result = await self.session.execute(
             select(WarrantyClaim)
             .where(WarrantyClaim.buyer_id == buyer_id)
-            .where(
-                WarrantyClaim.status.in_(["raised", "under_review", "accepted"])
-            )
+            .where(WarrantyClaim.status.in_(["raised", "under_review", "accepted"]))
             .order_by(WarrantyClaim.created_at.desc())
         )
         return list(result.scalars().all())
 
-    async def count_open_for_development(
-        self, development_id: uuid.UUID
-    ) -> int:
+    async def count_open_for_development(self, development_id: uuid.UUID) -> int:
         stmt = (
             select(func.count())
             .select_from(WarrantyClaim)
             .join(Plot, Plot.id == WarrantyClaim.plot_id)
             .where(Plot.development_id == development_id)
-            .where(
-                WarrantyClaim.status.in_(["raised", "under_review", "accepted"])
-            )
+            .where(WarrantyClaim.status.in_(["raised", "under_review", "accepted"]))
         )
         result = await self.session.execute(stmt)
         return result.scalar_one() or 0
@@ -471,7 +387,8 @@ class HandoverDocRepository(_BaseRepo):
     model = HandoverDoc
 
     async def list_for_handover(
-        self, handover_id: uuid.UUID,
+        self,
+        handover_id: uuid.UUID,
     ) -> list[HandoverDoc]:
         result = await self.session.execute(
             select(HandoverDoc)
@@ -493,7 +410,8 @@ class BuyerPipelineQueries:
         self.session = session
 
     async def kanban_for_development(
-        self, development_id: uuid.UUID,
+        self,
+        development_id: uuid.UUID,
     ) -> list[tuple[Buyer, Plot | None]]:
         """Return (buyer, plot) tuples ordered by status / contract date."""
         stmt = (

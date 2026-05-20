@@ -1,5 +1,5 @@
-import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from '@/shared/lib/api';
-import type { CostVariant, VariantStats } from '@/features/costs/api';
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from "@/shared/lib/api";
+import type { CostVariant, VariantStats } from "@/features/costs/api";
 
 /* ── Core BOQ types ──────────────────────────────────────────────────── */
 
@@ -26,7 +26,7 @@ export interface BOQ {
  *                 keeps its OWN ordinal and OWN editable quantity.
  *  - `null`     — a plain standalone position (not part of any link group).
  */
-export type LinkRole = 'master' | 'instance' | null;
+export type LinkRole = "master" | "instance" | null;
 
 export interface Position {
   id: string;
@@ -149,11 +149,18 @@ export interface Markup {
   id: string;
   boq_id: string;
   name: string;
-  markup_type: 'percentage' | 'fixed' | 'per_unit';
-  category: 'overhead' | 'profit' | 'tax' | 'contingency' | 'insurance' | 'bond' | 'other';
+  markup_type: "percentage" | "fixed" | "per_unit";
+  category:
+    | "overhead"
+    | "profit"
+    | "tax"
+    | "contingency"
+    | "insurance"
+    | "bond"
+    | "other";
   percentage: number;
   fixed_amount: number;
-  apply_to: 'direct_cost' | 'subtotal' | 'cumulative';
+  apply_to: "direct_cost" | "subtotal" | "cumulative";
   sort_order: number;
   is_active: boolean;
   metadata: Record<string, unknown>;
@@ -202,7 +209,7 @@ export interface CreateBOQData {
  *  - `copy`       — one-time unlinked clone (snapshot, does not follow master).
  *  - `standalone` — force a plain new position, bypass reuse entirely.
  */
-export type LinkMode = 'link' | 'copy' | 'standalone';
+export type LinkMode = "link" | "copy" | "standalone";
 
 export interface CreatePositionData {
   boq_id: string;
@@ -241,6 +248,40 @@ export interface UpdatePositionData {
   link_mode?: LinkMode | null;
 }
 
+/**
+ * v3.12.0 Stream A — bulk update payload.
+ * Exactly one of `updates` / `rate_factor` / `quantity_factor` must be
+ * supplied; the server rejects mixed payloads with 422.
+ */
+export interface BulkPositionUpdateData {
+  ids: string[];
+  /** Allow-listed keys only: 'unit' | 'classification' | 'validation_status' | 'source'. */
+  updates?: Record<string, unknown>;
+  rate_factor?: number;
+  quantity_factor?: number;
+}
+
+export interface BulkUpdateResult {
+  updated: number;
+  skipped: number;
+  failed_ids: string[];
+  log_id: string | null;
+}
+
+export interface RestoreFieldData {
+  field: string;
+  value: unknown;
+  log_id: string;
+}
+
+export interface RestoreFieldResponse {
+  position_id: string;
+  field: string;
+  restored_value: unknown;
+  source_log_id: string;
+  new_log_id: string | null;
+}
+
 /* ── Normalize backend metadata_ → metadata ─────────────────────── */
 
 /**
@@ -257,10 +298,10 @@ export interface UpdatePositionData {
  * the rest of the editor already assumes.
  */
 function toFiniteNumber(v: unknown, fallback = 0): number {
-  if (typeof v === 'number') return Number.isFinite(v) ? v : fallback;
-  if (typeof v === 'string') {
+  if (typeof v === "number") return Number.isFinite(v) ? v : fallback;
+  if (typeof v === "string") {
     const trimmed = v.trim();
-    if (trimmed === '') return fallback;
+    if (trimmed === "") return fallback;
     const n = Number(trimmed);
     return Number.isFinite(n) ? n : fallback;
   }
@@ -290,7 +331,7 @@ export function normalizePosition(p: Position): Position {
     normMeta = {
       ...resolvedMeta,
       resources: res.map((r) => {
-        if (!r || typeof r !== 'object') return r;
+        if (!r || typeof r !== "object") return r;
         const rr = r as Record<string, unknown>;
         return {
           ...rr,
@@ -320,7 +361,11 @@ export function normalizePositions(positions: Position[]): Position[] {
 
 /** A section is a position with no unit (acts as a group header). */
 export function isSection(pos: Position): boolean {
-  return !pos.unit || pos.unit.trim() === '' || pos.unit.trim().toLowerCase() === 'section';
+  return (
+    !pos.unit ||
+    pos.unit.trim() === "" ||
+    pos.unit.trim().toLowerCase() === "section"
+  );
 }
 
 /**
@@ -364,9 +409,10 @@ export function groupPositionsIntoSections(
     // adding a raw string into ``subtotal`` concatenates → NaN (#131).
     const total = toFiniteNumber(pos.total);
     if (!baseCurrency) return total;
-    const meta = ((pos as { metadata?: Record<string, unknown> }).metadata
-      ?? {}) as Record<string, unknown>;
-    const sourceCurrency = (meta.currency as string | undefined) || baseCurrency;
+    const meta = ((pos as { metadata?: Record<string, unknown> }).metadata ??
+      {}) as Record<string, unknown>;
+    const sourceCurrency =
+      (meta.currency as string | undefined) || baseCurrency;
     if (sourceCurrency === baseCurrency || !fxRates) return total;
     const fx = fxRates.find((r) => r.currency === sourceCurrency);
     const fxRate = fx ? Number(fx.rate) : NaN;
@@ -427,7 +473,10 @@ export function buildHierarchy(positions: Position[]): HierarchyNode[] {
   const posMap = new Map<string, Position>();
   for (const p of sorted) posMap.set(p.id, p);
 
-  function buildChildren(parentId: string | null, level: number): HierarchyNode[] {
+  function buildChildren(
+    parentId: string | null,
+    level: number,
+  ): HierarchyNode[] {
     const children = sorted.filter((p) => p.parent_id === parentId);
     return children.map((pos) => {
       const childNodes = buildChildren(pos.id, level + 1);
@@ -445,7 +494,10 @@ export function buildHierarchy(positions: Position[]): HierarchyNode[] {
  * Get the depth (level) of a position in the hierarchy.
  * Follows parent_id chain up to root.
  */
-export function getPositionDepth(pos: Position, posMap: Map<string, Position>): number {
+export function getPositionDepth(
+  pos: Position,
+  posMap: Map<string, Position>,
+): number {
   let depth = 0;
   let current = pos;
   while (current.parent_id && posMap.has(current.parent_id)) {
@@ -458,21 +510,21 @@ export function getPositionDepth(pos: Position, posMap: Map<string, Position>): 
 /* ── Activity types ──────────────────────────────────────────────────── */
 
 export type ActivityAction =
-  | 'position_added'
-  | 'position_updated'
-  | 'position_deleted'
-  | 'quantity_updated'
-  | 'rate_updated'
-  | 'section_added'
-  | 'section_deleted'
-  | 'validation_run'
-  | 'excel_imported'
-  | 'csv_imported'
-  | 'boq_created'
-  | 'template_applied'
-  | 'markup_added'
-  | 'markup_updated'
-  | 'status_changed';
+  | "position_added"
+  | "position_updated"
+  | "position_deleted"
+  | "quantity_updated"
+  | "rate_updated"
+  | "section_added"
+  | "section_deleted"
+  | "validation_run"
+  | "excel_imported"
+  | "csv_imported"
+  | "boq_created"
+  | "template_applied"
+  | "markup_added"
+  | "markup_updated"
+  | "status_changed";
 
 export interface ActivityEntry {
   id: string;
@@ -482,6 +534,10 @@ export interface ActivityEntry {
   details: Record<string, unknown>;
   created_at: string;
   user_name?: string;
+  /** v3.12.0 — target_type (position / markup / boq) for the restore UI. */
+  target_type?: string;
+  /** v3.12.0 — target_id (position UUID) for the per-field restore endpoint. */
+  target_id?: string | null;
 }
 
 export interface ActivityResponse {
@@ -691,7 +747,7 @@ export interface ResourceSummaryItem {
    */
   current_variant_label?: string | null;
   /** Auto-default strategy when one was applied uniformly. */
-  variant_default?: 'mean' | 'median' | null;
+  variant_default?: "mean" | "median" | null;
   currency?: string | null;
   /** CWICR resource_code — used to dedupe ▾N pickers across summary rows
    *  that resolve to the same abstract-resource catalog. */
@@ -703,7 +759,7 @@ export interface ResourceSummaryItem {
   abc_percentage?: number;
   /** "A" | "B" | "C" — ABC bucket using the conventional 80/15/5 cumulative
    *  thresholds. ``null`` when grand_total is 0 (empty BOQ). */
-  abc_class?: 'A' | 'B' | 'C' | null;
+  abc_class?: "A" | "B" | "C" | null;
 }
 
 export interface ResourceTypeSummary {
@@ -751,7 +807,7 @@ export interface BOQSnapshot {
 /* ── Feature 1: model→BOQ quantity links ─────────────────────────────── */
 
 /** How multiple bound elements combine into one position quantity. */
-export type QuantityAggregation = 'sum' | 'max' | 'min' | 'count' | 'first';
+export type QuantityAggregation = "sum" | "max" | "min" | "count" | "first";
 
 /** A persisted live binding between a position field and BIM elements. */
 export interface QuantityLink {
@@ -776,7 +832,7 @@ export interface CreateQuantityLinkData {
   model_id: string;
   element_stable_ids: string[];
   quantity_field: string;
-  target_field?: 'quantity';
+  target_field?: "quantity";
   aggregation?: QuantityAggregation;
 }
 
@@ -827,12 +883,12 @@ export interface QuantityLinkApplyResponse {
 /* ── Feature 2: estimate baseline / line-level compare ───────────────── */
 
 export type CompareChangeType =
-  | 'added'
-  | 'removed'
-  | 'qty_changed'
-  | 'rate_changed'
-  | 'changed'
-  | 'unchanged';
+  | "added"
+  | "removed"
+  | "qty_changed"
+  | "rate_changed"
+  | "changed"
+  | "unchanged";
 
 export interface ComparePositionRow {
   change_type: CompareChangeType;
@@ -969,7 +1025,7 @@ export interface PricingAnomaly {
   field: string;
   current_value: number;
   market_range: { p25: number; median: number; p75: number };
-  severity: 'warning' | 'error';
+  severity: "warning" | "error";
   message: string;
   suggestion: number;
 }
@@ -1071,16 +1127,17 @@ export async function fetchCostSearch(
   params: CostSearchParams,
 ): Promise<CostSearchPage> {
   const qs = new URLSearchParams();
-  qs.set('limit', String(params.limit ?? 50));
-  if (params.region) qs.set('region', params.region);
+  qs.set("limit", String(params.limit ?? 50));
+  if (params.region) qs.set("region", params.region);
   if (params.q && params.q.length >= 2) {
-    qs.set('q', params.q);
-    qs.set('semantic', 'true');
+    qs.set("q", params.q);
+    qs.set("semantic", "true");
   }
-  if (params.unit) qs.set('unit', params.unit);
-  if (params.source) qs.set('source', params.source);
-  if (params.classification_path) qs.set('classification_path', params.classification_path);
-  if (params.cursor) qs.set('cursor', params.cursor);
+  if (params.unit) qs.set("unit", params.unit);
+  if (params.source) qs.set("source", params.source);
+  if (params.classification_path)
+    qs.set("classification_path", params.classification_path);
+  if (params.cursor) qs.set("cursor", params.cursor);
 
   const raw = await apiGet<{
     items: CostSearchItem[];
@@ -1098,14 +1155,11 @@ export async function fetchCostSearch(
   // Tolerate legacy offset-paginated shape.  When the backend hasn't shipped
   // the keyset endpoint yet, derive ``has_more`` from the row count vs limit.
   const has_more =
-    typeof raw.has_more === 'boolean' ? raw.has_more : items.length >= limit;
+    typeof raw.has_more === "boolean" ? raw.has_more : items.length >= limit;
 
   // ``total`` is only meaningful on the first page (no cursor in the request).
   // Honour ``null`` from the backend; fall back to legacy ``total``.
-  const total =
-    params.cursor == null
-      ? raw.total ?? null
-      : null;
+  const total = params.cursor == null ? (raw.total ?? null) : null;
 
   return { items, next_cursor, has_more, total };
 }
@@ -1125,12 +1179,12 @@ export function fetchCategoryTree(
   parentPath?: string,
 ): Promise<CategoryTreeNode[]> {
   const qs = new URLSearchParams();
-  if (region) qs.set('region', region);
-  if (typeof depth === 'number') qs.set('depth', String(depth));
-  if (parentPath) qs.set('parent_path', parentPath);
+  if (region) qs.set("region", region);
+  if (typeof depth === "number") qs.set("depth", String(depth));
+  if (parentPath) qs.set("parent_path", parentPath);
   const suffix = qs.toString();
   return apiGet<CategoryTreeNode[]>(
-    `/v1/costs/category-tree/${suffix ? `?${suffix}` : ''}`,
+    `/v1/costs/category-tree/${suffix ? `?${suffix}` : ""}`,
   );
 }
 
@@ -1138,30 +1192,63 @@ export function fetchCategoryTree(
 
 export const boqApi = {
   /* BOQ CRUD */
-  list: (projectId: string) => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${projectId}`),
+  list: (projectId: string) =>
+    apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${projectId}`),
   get: (boqId: string) => apiGet<BOQWithPositions>(`/v1/boq/boqs/${boqId}`),
-  create: (data: CreateBOQData) => apiPost<BOQ>('/v1/boq/boqs/', data),
+  create: (data: CreateBOQData) => apiPost<BOQ>("/v1/boq/boqs/", data),
   deleteBoq: (boqId: string) => apiDelete(`/v1/boq/boqs/${boqId}`),
 
   /* Duplicate */
-  duplicateBoq: (boqId: string) => apiPost<BOQ>(`/v1/boq/boqs/${boqId}/duplicate/`, {}),
+  duplicateBoq: (boqId: string) =>
+    apiPost<BOQ>(`/v1/boq/boqs/${boqId}/duplicate/`, {}),
   duplicatePosition: (posId: string) =>
     apiPost<Position>(`/v1/boq/positions/${posId}/duplicate/`, {}),
 
   /* Issue #136 — server-enforced structural limits (max nesting depth). */
-  getLimits: () => apiGet<BOQLimits>('/v1/boq/limits/'),
+  getLimits: () => apiGet<BOQLimits>("/v1/boq/limits/"),
 
   /* Section — Issue #136: optional parent_id nests a section under another. */
   addSection: (
     boqId: string,
     data: { ordinal: string; description: string; parent_id?: string | null },
-  ) => apiPost<Position>(`/v1/boq/boqs/${boqId}/sections/`, { boq_id: boqId, ...data }),
+  ) =>
+    apiPost<Position>(`/v1/boq/boqs/${boqId}/sections/`, {
+      boq_id: boqId,
+      ...data,
+    }),
 
   /* Position CRUD */
   addPosition: (data: CreatePositionData) =>
     apiPost<Position>(`/v1/boq/boqs/${data.boq_id}/positions/`, data),
   updatePosition: (posId: string, data: UpdatePositionData) =>
     apiPatch<Position>(`/v1/boq/positions/${posId}`, data),
+
+  /**
+   * v3.12.0 Stream A — bulk update positions.
+   * Sends one PATCH covering every selected position id; the server
+   * applies the same direct-set / rate-factor / quantity-factor mutation
+   * to every row and writes a single umbrella activity-log entry.
+   */
+  bulkUpdatePositions: (boqId: string, data: BulkPositionUpdateData) =>
+    apiPatch<BulkUpdateResult, BulkPositionUpdateData>(
+      `/v1/boq/boqs/${boqId}/positions/bulk-update/`,
+      data,
+    ),
+
+  /**
+   * v3.12.0 Stream A — restore a single field on a position from a prior
+   * `BOQActivityLog` entry. The backend writes through the normal update
+   * path so totals recompute, validation resets, and the version bumps.
+   */
+  restorePositionField: (
+    boqId: string,
+    positionId: string,
+    data: RestoreFieldData,
+  ) =>
+    apiPost<RestoreFieldResponse, RestoreFieldData>(
+      `/v1/boq/boqs/${boqId}/positions/${positionId}/restore-field/`,
+      data,
+    ),
   /**
    * Re-pick the variant on an existing resource row.  Backend reads the
    * cached ``available_variants`` array on the resource entry, finds the
@@ -1171,7 +1258,11 @@ export const boqApi = {
    * Added in v2.6.26 alongside the per-resource re-pick UI on
    * ``EditableResourceRow``.
    */
-  repickResourceVariant: (posId: string, resourceIdx: number, variantCode: string) =>
+  repickResourceVariant: (
+    posId: string,
+    resourceIdx: number,
+    variantCode: string,
+  ) =>
     apiPatch<Position>(
       `/v1/boq/positions/${posId}/resources/${resourceIdx}/variant/`,
       { variant_code: variantCode },
@@ -1184,7 +1275,9 @@ export const boqApi = {
    * UI used to swallow — making sub-section deletion silently no-op.
    */
   deletePosition: (posId: string, opts?: { cascade?: boolean }) =>
-    apiDelete(`/v1/boq/positions/${posId}${opts?.cascade ? '?cascade=true' : ''}`),
+    apiDelete(
+      `/v1/boq/positions/${posId}${opts?.cascade ? "?cascade=true" : ""}`,
+    ),
 
   /* ── Linked positions (Issue #127 — reuse the same code) ──────────── */
   /** List every member of this position's reference-code link group. */
@@ -1212,7 +1305,8 @@ export const boqApi = {
     }),
 
   /* Markups */
-  getMarkups: (boqId: string) => apiGet<MarkupsResponse>(`/v1/boq/boqs/${boqId}/markups/`),
+  getMarkups: (boqId: string) =>
+    apiGet<MarkupsResponse>(`/v1/boq/boqs/${boqId}/markups/`),
   addMarkup: (boqId: string, data: CreateMarkupData) =>
     apiPost<Markup>(`/v1/boq/boqs/${boqId}/markups/`, data),
   updateMarkup: (boqId: string, markupId: string, data: UpdateMarkupData) =>
@@ -1220,7 +1314,10 @@ export const boqApi = {
   deleteMarkup: (boqId: string, markupId: string) =>
     apiDelete(`/v1/boq/boqs/${boqId}/markups/${markupId}`),
   applyDefaults: (boqId: string, region: string) =>
-    apiPost<Markup[]>(`/v1/boq/boqs/${boqId}/markups/apply-defaults/?region=${encodeURIComponent(region)}`, {}),
+    apiPost<Markup[]>(
+      `/v1/boq/boqs/${boqId}/markups/apply-defaults/?region=${encodeURIComponent(region)}`,
+      {},
+    ),
 
   /* Activity */
   getActivity: async (boqId: string): Promise<ActivityResponse> => {
@@ -1231,6 +1328,8 @@ export const boqApi = {
         user_id: string;
         action: string;
         description: string;
+        target_type?: string;
+        target_id?: string | null;
         changes?: Record<string, unknown>;
         metadata_?: Record<string, unknown>;
         metadata?: Record<string, unknown>;
@@ -1247,6 +1346,10 @@ export const boqApi = {
         details: item.changes ?? item.metadata_ ?? item.metadata ?? {},
         created_at: item.created_at,
         user_name: undefined,
+        // v3.12.0 — surface target identity so the per-cell restore UI can
+        // call the position-scoped endpoint with the right ids.
+        target_type: item.target_type,
+        target_id: item.target_id ?? null,
       })),
       total: raw.total ?? 0,
     };
@@ -1258,9 +1361,15 @@ export const boqApi = {
 
   /* Cost autocomplete — uses vector semantic search when available */
   autocomplete: (q: string, limit = 8, region?: string) => {
-    const params = new URLSearchParams({ q, limit: String(limit), semantic: 'true' });
-    if (region) params.set('region', region);
-    return apiGet<CostAutocompleteItem[]>(`/v1/costs/autocomplete/?${params.toString()}`);
+    const params = new URLSearchParams({
+      q,
+      limit: String(limit),
+      semantic: "true",
+    });
+    if (region) params.set("region", region);
+    return apiGet<CostAutocompleteItem[]>(
+      `/v1/costs/autocomplete/?${params.toString()}`,
+    );
   },
 
   /* AI Chat */
@@ -1284,7 +1393,9 @@ export const boqApi = {
 
   /* AACE Estimate Classification */
   getClassification: (boqId: string) =>
-    apiGet<EstimateClassificationResponse>(`/v1/boq/boqs/${boqId}/classification/`),
+    apiGet<EstimateClassificationResponse>(
+      `/v1/boq/boqs/${boqId}/classification/`,
+    ),
 
   /* Sensitivity Analysis */
   getSensitivity: (boqId: string, variationPct = 10) =>
@@ -1321,16 +1432,16 @@ export const boqApi = {
   getSnapshots: (boqId: string) =>
     apiGet<BOQSnapshot[]>(`/v1/boq/boqs/${boqId}/snapshots/`),
   createSnapshot: (boqId: string, label?: string) =>
-    apiPost<BOQSnapshot>(`/v1/boq/boqs/${boqId}/snapshots/`, { name: label ?? '' }),
+    apiPost<BOQSnapshot>(`/v1/boq/boqs/${boqId}/snapshots/`, {
+      name: label ?? "",
+    }),
   restoreSnapshot: (boqId: string, snapshotId: string) =>
     apiPost<{ ok: boolean }>(`/v1/boq/boqs/${boqId}/restore/${snapshotId}`, {}),
 
   /* ── Feature 1: model→BOQ quantity links ──────────────────────────── */
   /** List every live model→position binding for one position. */
   getQuantityLinks: (positionId: string) =>
-    apiGet<QuantityLink[]>(
-      `/v1/boq/positions/${positionId}/quantity-links/`,
-    ),
+    apiGet<QuantityLink[]>(`/v1/boq/positions/${positionId}/quantity-links/`),
   /** Bind a position quantity to BIM elements. Does NOT mutate the
    *  quantity — that requires an explicit confirm/apply. */
   createQuantityLink: (positionId: string, data: CreateQuantityLinkData) =>
@@ -1339,9 +1450,7 @@ export const boqApi = {
       data,
     ),
   deleteQuantityLink: (positionId: string, linkId: string) =>
-    apiDelete<void>(
-      `/v1/boq/positions/${positionId}/quantity-links/${linkId}`,
-    ),
+    apiDelete<void>(`/v1/boq/positions/${positionId}/quantity-links/${linkId}`),
   /** Re-pull every link against the latest model version (read-only;
    *  flags stale rows and returns old→new→delta review payload). */
   refreshQuantityLinks: (boqId: string) =>
@@ -1358,9 +1467,7 @@ export const boqApi = {
 
   /* ── Feature 2: estimate baseline / line-level compare ─────────────── */
   compareBoqs: (boqId: string, otherId: string) =>
-    apiGet<BOQCompareResponse>(
-      `/v1/boq/boqs/${boqId}/compare/${otherId}`,
-    ),
+    apiGet<BOQCompareResponse>(`/v1/boq/boqs/${boqId}/compare/${otherId}`),
 
   /* Enrich positions with resources from cost database */
   enrichResources: (boqId: string) =>
@@ -1370,12 +1477,19 @@ export const boqApi = {
     ),
 
   /* AI: Classify position */
-  classify: (data: { description: string; unit?: string; project_standard?: string }) =>
-    apiPost<ClassifyResponse>('/v1/boq/boqs/classify/', data),
+  classify: (data: {
+    description: string;
+    unit?: string;
+    project_standard?: string;
+  }) => apiPost<ClassifyResponse>("/v1/boq/boqs/classify/", data),
 
   /* AI: Suggest rate */
-  suggestRate: (data: { description: string; unit?: string; classification?: Record<string, string>; region?: string }) =>
-    apiPost<SuggestRateResponse>('/v1/boq/boqs/suggest-rate/', data),
+  suggestRate: (data: {
+    description: string;
+    unit?: string;
+    classification?: Record<string, string>;
+    region?: string;
+  }) => apiPost<SuggestRateResponse>("/v1/boq/boqs/suggest-rate/", data),
 
   /* AI: Check anomalies */
   checkAnomalies: (boqId: string) =>
@@ -1388,7 +1502,8 @@ export const boqApi = {
     region?: string;
     limit?: number;
     min_score?: number;
-  }) => apiPost<CostItemSearchResponse>('/v1/boq/boqs/search-cost-items/', data),
+  }) =>
+    apiPost<CostItemSearchResponse>("/v1/boq/boqs/search-cost-items/", data),
 
   /* AI: Enhance description via LLM */
   enhanceDescription: (data: {
@@ -1396,7 +1511,11 @@ export const boqApi = {
     unit?: string;
     classification?: Record<string, string>;
     locale?: string;
-  }) => apiPost<EnhanceDescriptionResponse>('/v1/boq/boqs/enhance-description/', data),
+  }) =>
+    apiPost<EnhanceDescriptionResponse>(
+      "/v1/boq/boqs/enhance-description/",
+      data,
+    ),
 
   /* AI: Suggest prerequisites via LLM */
   suggestPrerequisites: (data: {
@@ -1405,15 +1524,22 @@ export const boqApi = {
     classification?: Record<string, string>;
     existing_descriptions?: string[];
     locale?: string;
-  }) => apiPost<SuggestPrerequisitesResponse>('/v1/boq/boqs/suggest-prerequisites/', data),
+  }) =>
+    apiPost<SuggestPrerequisitesResponse>(
+      "/v1/boq/boqs/suggest-prerequisites/",
+      data,
+    ),
 
   /* AI: Check scope completeness via LLM */
-  checkScope: (boqId: string, data: {
-    project_type?: string;
-    region?: string;
-    currency?: string;
-    locale?: string;
-  }) => apiPost<CheckScopeResponse>(`/v1/boq/boqs/${boqId}/check-scope/`, data),
+  checkScope: (
+    boqId: string,
+    data: {
+      project_type?: string;
+      region?: string;
+      currency?: string;
+      locale?: string;
+    },
+  ) => apiPost<CheckScopeResponse>(`/v1/boq/boqs/${boqId}/check-scope/`, data),
 
   /* AI: Escalate rate via LLM */
   escalateRate: (data: {
@@ -1425,13 +1551,16 @@ export const boqApi = {
     target_year?: number;
     region?: string;
     locale?: string;
-  }) => apiPost<EscalateRateResponse>('/v1/boq/boqs/escalate-rate/', data),
+  }) => apiPost<EscalateRateResponse>("/v1/boq/boqs/escalate-rate/", data),
 
   /* Custom Columns — manage user-defined fields per BOQ */
   listCustomColumns: (boqId: string) =>
     apiGet<CustomColumnDef[]>(`/v1/boq/boqs/${boqId}/columns/`),
   addCustomColumn: (boqId: string, data: CustomColumnDef) =>
-    apiPost<CustomColumnDef, CustomColumnDef>(`/v1/boq/boqs/${boqId}/columns/`, data),
+    apiPost<CustomColumnDef, CustomColumnDef>(
+      `/v1/boq/boqs/${boqId}/columns/`,
+      data,
+    ),
   deleteCustomColumn: (boqId: string, columnName: string) =>
     apiDelete<void>(`/v1/boq/boqs/${boqId}/columns/${columnName}`),
 
@@ -1440,7 +1569,10 @@ export const boqApi = {
   listBoqVariables: (boqId: string) =>
     apiGet<BOQVariable[]>(`/v1/boq/boqs/${boqId}/variables/`),
   replaceBoqVariables: (boqId: string, variables: BOQVariable[]) =>
-    apiPut<BOQVariable[], BOQVariable[]>(`/v1/boq/boqs/${boqId}/variables/`, variables),
+    apiPut<BOQVariable[], BOQVariable[]>(
+      `/v1/boq/boqs/${boqId}/variables/`,
+      variables,
+    ),
 
   /* Renumber positions using one of several professional schemes.
      - gap10:      01, 01.10, 01.20  (German tender default — leaves room to insert later)
@@ -1449,7 +1581,10 @@ export const boqApi = {
      - dotted:     1, 1.1, 1.2      (NRM-style short form) */
   renumberPositions: (
     boqId: string,
-    options?: { scheme?: 'gap10' | 'gap100' | 'sequential' | 'dotted'; pad?: boolean },
+    options?: {
+      scheme?: "gap10" | "gap100" | "sequential" | "dotted";
+      pad?: boolean;
+    },
   ) =>
     apiPost<{ renumbered: number; scheme: string }>(
       `/v1/boq/boqs/${boqId}/renumber/`,
@@ -1472,7 +1607,7 @@ export const boqApi = {
 export interface CustomColumnDef {
   name: string;
   display_name: string;
-  column_type: 'text' | 'number' | 'date' | 'select' | 'calculated';
+  column_type: "text" | "number" | "date" | "select" | "calculated";
   options?: string[];
   sort_order?: number;
   /** Formula source for `calculated` columns. e.g. `=quantity * unit_rate * 1.19`. */
@@ -1485,18 +1620,25 @@ export interface CustomColumnDef {
    *   - `resource_sum`           — sum of position resources matching `resource_role`
    *   - `percentage_of_unit_rate`— labor/material/etc share of unit_rate as %
    */
-  derived?: 'resource_sum' | 'percentage_of_unit_rate';
+  derived?: "resource_sum" | "percentage_of_unit_rate";
   /** Single role or a list — array form lets a column sum several resource
    *  types (e.g. GAEB Sonstiges-EP = `other + operator + subcontractor`)
    *  so the EP-split adds up to ``unit_rate``. */
   resource_role?:
-    | 'material'
-    | 'labor'
-    | 'equipment'
-    | 'operator'
-    | 'subcontractor'
-    | 'other'
-    | Array<'material' | 'labor' | 'equipment' | 'operator' | 'subcontractor' | 'other'>;
+    | "material"
+    | "labor"
+    | "equipment"
+    | "operator"
+    | "subcontractor"
+    | "other"
+    | Array<
+        | "material"
+        | "labor"
+        | "equipment"
+        | "operator"
+        | "subcontractor"
+        | "other"
+      >;
 }
 
 /**
@@ -1507,7 +1649,7 @@ export interface CustomColumnDef {
  */
 export interface BOQVariable {
   name: string;
-  type: 'number' | 'text' | 'date';
+  type: "number" | "text" | "date";
   value: number | string | null;
   description?: string | null;
 }
@@ -1527,7 +1669,7 @@ export interface PrerequisiteItem {
   description: string;
   unit: string;
   typical_rate_eur: number;
-  relationship: 'prerequisite' | 'companion' | 'successor';
+  relationship: "prerequisite" | "companion" | "successor";
   reason: string;
 }
 
@@ -1540,7 +1682,7 @@ export interface SuggestPrerequisitesResponse {
 export interface ScopeMissingItem {
   description: string;
   category: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   reason: string;
   estimated_rate: number;
   unit: string;
@@ -1566,7 +1708,7 @@ export interface EscalateRateResponse {
   escalated_rate: number;
   escalation_percent: number;
   factors: EscalationFactors;
-  confidence: 'high' | 'medium' | 'low';
+  confidence: "high" | "medium" | "low";
   reasoning: string;
   model_used: string;
   tokens_used: number;

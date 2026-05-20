@@ -17,8 +17,8 @@
  * blue as the rest of the application.
  */
 
-[data-chat-theme='light'],
-[data-chat-theme='dark'] {
+[data-chat-theme="light"],
+[data-chat-theme="dark"] {
   /* Backgrounds — map directly onto app surfaces.
      - chat-bg:        main canvas              → primary page background
      - chat-surface-1: topbar, banner, input bar → secondary tint

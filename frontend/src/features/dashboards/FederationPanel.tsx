@@ -12,12 +12,12 @@
  * re-render its own headline numbers without wiring a controlled state
  * graph through every prop.
  */
-import { useCallback, useMemo, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { Check, Layers, Loader2, Play, X } from 'lucide-react';
+import { useCallback, useMemo, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { Check, Layers, Loader2, Play, X } from "lucide-react";
 
-import { Button } from '@/shared/ui';
+import { Button } from "@/shared/ui";
 
 import {
   buildFederation,
@@ -26,8 +26,8 @@ import {
   type FederationAggregateResponse,
   type FederationSchemaAlign,
   type FederationView,
-} from './api';
-import { FederatedResultsTable } from './FederatedResultsTable';
+} from "./api";
+import { FederatedResultsTable } from "./FederatedResultsTable";
 
 export interface FederationPanelSnapshotOption {
   id: string;
@@ -51,8 +51,12 @@ export interface FederationPanelProps {
   className?: string;
 }
 
-const SCHEMA_ALIGN_MODES: FederationSchemaAlign[] = ['intersect', 'union', 'strict'];
-const AGG_OPTIONS: FederationAggKind[] = ['count', 'sum', 'avg', 'min', 'max'];
+const SCHEMA_ALIGN_MODES: FederationSchemaAlign[] = [
+  "intersect",
+  "union",
+  "strict",
+];
+const AGG_OPTIONS: FederationAggKind[] = ["count", "sum", "avg", "min", "max"];
 
 export function FederationPanel({
   available,
@@ -63,12 +67,15 @@ export function FederationPanel({
   const { t } = useTranslation();
 
   const [selected, setSelected] = useState<string[]>(initialSelection ?? []);
-  const [schemaAlign, setSchemaAlign] = useState<FederationSchemaAlign>('intersect');
+  const [schemaAlign, setSchemaAlign] =
+    useState<FederationSchemaAlign>("intersect");
   const [view, setView] = useState<FederationView | null>(null);
-  const [groupBy, setGroupBy] = useState<string>('');
-  const [measure, setMeasure] = useState<string>('*');
-  const [agg, setAgg] = useState<FederationAggKind>('count');
-  const [results, setResults] = useState<FederationAggregateResponse | null>(null);
+  const [groupBy, setGroupBy] = useState<string>("");
+  const [measure, setMeasure] = useState<string>("*");
+  const [agg, setAgg] = useState<FederationAggKind>("count");
+  const [results, setResults] = useState<FederationAggregateResponse | null>(
+    null,
+  );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const snapshotLabels = useMemo<Record<string, string>>(() => {
@@ -86,18 +93,17 @@ export function FederationPanel({
   }, [available]);
 
   const buildMutation = useMutation({
-    mutationFn: () =>
-      buildFederation({ snapshotIds: selected, schemaAlign }),
+    mutationFn: () => buildFederation({ snapshotIds: selected, schemaAlign }),
     onSuccess: (v) => {
       setView(v);
       setErrorMsg(null);
       // Reset measure when schema changes (column may not exist).
-      if (measure !== '*' && !v.columns.includes(measure)) {
-        setMeasure('*');
-        setAgg('count');
+      if (measure !== "*" && !v.columns.includes(measure)) {
+        setMeasure("*");
+        setAgg("count");
       }
       if (groupBy && !v.columns.includes(groupBy)) {
-        setGroupBy('');
+        setGroupBy("");
       }
     },
     onError: (err: unknown) => {
@@ -141,24 +147,24 @@ export function FederationPanel({
   const userColumns = useMemo<string[]>(() => {
     if (!view) return [];
     return view.columns.filter(
-      (c) => c !== '__project_id' && c !== '__snapshot_id',
+      (c) => c !== "__project_id" && c !== "__snapshot_id",
     );
   }, [view]);
 
   const canBuild = selected.length > 0 && !buildMutation.isPending;
   const canAggregate =
-    !!view && !aggregateMutation.isPending && (measure === '*' || !!measure);
+    !!view && !aggregateMutation.isPending && (measure === "*" || !!measure);
 
   return (
     <section
-      className={`space-y-4 rounded border border-border-light bg-surface-primary p-4 ${className ?? ''}`}
+      className={`space-y-4 rounded border border-border-light bg-surface-primary p-4 ${className ?? ""}`}
       data-testid="federation-panel"
     >
       <header className="flex items-center gap-2">
         <Layers className="h-4 w-4 text-emerald-400" />
         <h3 className="text-sm font-semibold text-content-primary">
-          {t('dashboards.federation.title', {
-            defaultValue: 'Multi-Source Federation‌⁠‍',
+          {t("dashboards.federation.title", {
+            defaultValue: "Multi-Source Federation‌⁠‍",
           })}
         </h3>
       </header>
@@ -166,15 +172,18 @@ export function FederationPanel({
       {/* ── Snapshot picker ─────────────────────────────────────────── */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-content-secondary">
-          {t('dashboards.federation.pick_snapshots', {
-            defaultValue: 'Pick snapshots to federate‌⁠‍',
+          {t("dashboards.federation.pick_snapshots", {
+            defaultValue: "Pick snapshots to federate‌⁠‍",
           })}
         </label>
-        <div className="flex flex-wrap gap-1.5" data-testid="federation-selected-chips">
+        <div
+          className="flex flex-wrap gap-1.5"
+          data-testid="federation-selected-chips"
+        >
           {selected.length === 0 && (
             <span className="text-xs italic text-content-tertiary">
-              {t('dashboards.federation.no_snapshots_selected', {
-                defaultValue: 'No snapshots selected‌⁠‍',
+              {t("dashboards.federation.no_snapshots_selected", {
+                defaultValue: "No snapshots selected‌⁠‍",
               })}
             </span>
           )}
@@ -190,8 +199,8 @@ export function FederationPanel({
               <button
                 type="button"
                 onClick={() => removeChip(id)}
-                aria-label={t('dashboards.federation.remove_snapshot', {
-                  defaultValue: 'Remove snapshot‌⁠‍',
+                aria-label={t("dashboards.federation.remove_snapshot", {
+                  defaultValue: "Remove snapshot‌⁠‍",
                 })}
                 className="rounded hover:bg-emerald-500/20"
                 data-testid={`federation-chip-remove-${id}`}
@@ -210,8 +219,8 @@ export function FederationPanel({
         >
           {available.length === 0 ? (
             <div className="px-3 py-2 text-xs text-content-tertiary">
-              {t('dashboards.federation.no_snapshots_available', {
-                defaultValue: 'No snapshots available.‌⁠‍',
+              {t("dashboards.federation.no_snapshots_available", {
+                defaultValue: "No snapshots available.‌⁠‍",
               })}
             </div>
           ) : (
@@ -226,11 +235,15 @@ export function FederationPanel({
                   onClick={() => toggleSnapshot(opt.id)}
                   data-testid={`federation-snapshot-option-${opt.id}`}
                   className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-surface-secondary ${
-                    isSelected ? 'bg-emerald-500/5 text-emerald-200' : 'text-content-primary'
+                    isSelected
+                      ? "bg-emerald-500/5 text-emerald-200"
+                      : "text-content-primary"
                   }`}
                 >
                   <span className="flex h-3 w-3 flex-shrink-0 items-center justify-center">
-                    {isSelected && <Check className="h-3 w-3 text-emerald-400" />}
+                    {isSelected && (
+                      <Check className="h-3 w-3 text-emerald-400" />
+                    )}
                   </span>
                   <span className="flex-1 truncate">{opt.label}</span>
                   {opt.projectLabel && (
@@ -248,8 +261,8 @@ export function FederationPanel({
       {/* ── Schema-align mode ───────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-2">
         <label className="text-xs font-medium text-content-secondary">
-          {t('dashboards.federation.schema_align', {
-            defaultValue: 'Schema alignment',
+          {t("dashboards.federation.schema_align", {
+            defaultValue: "Schema alignment",
           })}
         </label>
         <select
@@ -264,7 +277,9 @@ export function FederationPanel({
         >
           {SCHEMA_ALIGN_MODES.map((m) => (
             <option key={m} value={m}>
-              {t(`dashboards.federation.schema_align_${m}`, { defaultValue: m })}
+              {t(`dashboards.federation.schema_align_${m}`, {
+                defaultValue: m,
+              })}
             </option>
           ))}
         </select>
@@ -282,7 +297,7 @@ export function FederationPanel({
           ) : (
             <Play className="mr-1 h-3 w-3" />
           )}
-          {t('dashboards.federation.build', { defaultValue: 'Build view' })}
+          {t("dashboards.federation.build", { defaultValue: "Build view" })}
         </Button>
       </div>
 
@@ -293,9 +308,9 @@ export function FederationPanel({
           data-testid="federation-view-summary"
         >
           <p className="text-xs text-content-secondary">
-            {t('dashboards.federation.view_summary', {
+            {t("dashboards.federation.view_summary", {
               defaultValue:
-                '{{snapshots}} snapshots • {{projects}} projects • {{rows}} rows',
+                "{{snapshots}} snapshots • {{projects}} projects • {{rows}} rows",
               snapshots: view.snapshot_count,
               projects: view.project_count,
               rows: view.row_count,
@@ -304,7 +319,9 @@ export function FederationPanel({
 
           <div className="flex flex-wrap items-center gap-2">
             <label className="text-xs text-content-secondary">
-              {t('dashboards.federation.group_by', { defaultValue: 'Group by' })}
+              {t("dashboards.federation.group_by", {
+                defaultValue: "Group by",
+              })}
             </label>
             <select
               className="rounded border border-border-light bg-surface-primary px-2 py-1 text-xs text-content-primary"
@@ -313,8 +330,8 @@ export function FederationPanel({
               data-testid="federation-group-by"
             >
               <option value="">
-                {t('dashboards.federation.no_group_by', {
-                  defaultValue: '(none — group by source only)',
+                {t("dashboards.federation.no_group_by", {
+                  defaultValue: "(none — group by source only)",
                 })}
               </option>
               {userColumns.map((c) => (
@@ -325,7 +342,7 @@ export function FederationPanel({
             </select>
 
             <label className="text-xs text-content-secondary">
-              {t('dashboards.federation.measure', { defaultValue: 'Measure' })}
+              {t("dashboards.federation.measure", { defaultValue: "Measure" })}
             </label>
             <select
               className="rounded border border-border-light bg-surface-primary px-2 py-1 text-xs text-content-primary"
@@ -333,13 +350,13 @@ export function FederationPanel({
               onChange={(e) => {
                 const next = e.target.value;
                 setMeasure(next);
-                if (next === '*') setAgg('count');
+                if (next === "*") setAgg("count");
               }}
               data-testid="federation-measure"
             >
               <option value="*">
-                {t('dashboards.federation.measure_count_rows', {
-                  defaultValue: 'Count rows',
+                {t("dashboards.federation.measure_count_rows", {
+                  defaultValue: "Count rows",
                 })}
               </option>
               {userColumns.map((c) => (
@@ -354,7 +371,7 @@ export function FederationPanel({
               value={agg}
               onChange={(e) => setAgg(e.target.value as FederationAggKind)}
               data-testid="federation-agg"
-              disabled={measure === '*'}
+              disabled={measure === "*"}
             >
               {AGG_OPTIONS.map((a) => (
                 <option key={a} value={a}>
@@ -376,7 +393,9 @@ export function FederationPanel({
               ) : (
                 <Play className="mr-1 h-3 w-3" />
               )}
-              {t('dashboards.federation.run', { defaultValue: 'Run aggregate' })}
+              {t("dashboards.federation.run", {
+                defaultValue: "Run aggregate",
+              })}
             </Button>
           </div>
         </div>
@@ -401,12 +420,15 @@ export function FederationPanel({
   );
 }
 
-function extractError(err: unknown, t: ReturnType<typeof useTranslation>['t']): string {
-  if (err && typeof err === 'object' && 'message' in err) {
+function extractError(
+  err: unknown,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
+  if (err && typeof err === "object" && "message" in err) {
     const m = (err as { message?: string }).message;
-    if (typeof m === 'string' && m.trim().length > 0) return m;
+    if (typeof m === "string" && m.trim().length > 0) return m;
   }
-  return t('dashboards.federation.error_generic', {
-    defaultValue: 'Federation request failed.',
+  return t("dashboards.federation.error_generic", {
+    defaultValue: "Federation request failed.",
   });
 }

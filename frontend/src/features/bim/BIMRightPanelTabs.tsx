@@ -8,25 +8,45 @@
  *   - Tools: measure tool + saved views
  *   - Groups: saved element groups
  */
-import { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { X, ClipboardList, Layers, Wrench, Folders, Sparkles } from 'lucide-react';
-import type { BIMElementData } from '@/shared/ui/BIMViewer';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import {
+  X,
+  ClipboardList,
+  Layers,
+  Wrench,
+  Folders,
+  Sparkles,
+  Palette,
+  Bookmark,
+} from "lucide-react";
+import type {
+  BIMElementData,
+  ElementManager,
+  SelectionManager,
+} from "@/shared/ui/BIMViewer";
+import { restoreView, type SceneManager } from "@/shared/ui/BIMViewer";
 import {
   useBIMViewerStore,
   type BIMRightPanelTab,
-} from '@/stores/useBIMViewerStore';
-import type { Viewpoint as SavedViewpoint } from '@/shared/ui/BIMViewer';
-import BIMLinkedBOQPanel from './BIMLinkedBOQPanel';
-import BIMGroupsPanel from './BIMGroupsPanel';
-import BIMLayersPanel from './BIMLayersPanel';
-import BIMToolsPanel from './BIMToolsPanel';
-import { MatchSuggestionsPanel, useAcceptMatch } from '@/features/match';
-import type { MatchCandidate } from '@/features/match';
-import { boqApi, type BOQ } from '@/features/boq/api';
-import { useToastStore } from '@/stores/useToastStore';
-import type { BIMElementGroup } from './api';
+} from "@/stores/useBIMViewerStore";
+import type {
+  Viewpoint as SavedViewpoint,
+  BIMClipState,
+  SavedBIMFilterState,
+} from "@/shared/ui/BIMViewer";
+import BIMLinkedBOQPanel from "./BIMLinkedBOQPanel";
+import BIMGroupsPanel from "./BIMGroupsPanel";
+import BIMLayersPanel from "./BIMLayersPanel";
+import BIMToolsPanel from "./BIMToolsPanel";
+import ColorByPropertyPanel from "./ColorByPropertyPanel";
+import SelectionSetsPanel from "./SelectionSetsPanel";
+import { MatchSuggestionsPanel, useAcceptMatch } from "@/features/match";
+import type { MatchCandidate } from "@/features/match";
+import { boqApi, type BOQ } from "@/features/boq/api";
+import { useToastStore } from "@/stores/useToastStore";
+import type { BIMElementGroup } from "./api";
 
 interface BIMRightPanelTabsProps {
   modelId: string;
@@ -73,33 +93,157 @@ export default function BIMRightPanelTabs({
   // The measure/saved-view tool needs a camera snapshot + the ability to
   // restore one.  Rather than drill a SceneManager handle through the
   // component tree we use a tiny window-bound bridge: BIMViewer exposes
-  // helpers on `window.__oeBim`.  The indirection keeps the store slim.
-  const getCurrentViewpoint = useCallback(() => {
-    const bridge = (window as unknown as {
-      __oeBim?: {
-        getViewpoint(): {
-          position: { x: number; y: number; z: number };
-          target: { x: number; y: number; z: number };
-        } | null;
+  // helpers on `window.__oeBim` and BIMFilterPanel exposes filter state on
+  // `window.__oeBimFilter`.  The indirection keeps the store slim.
+  //
+  // v3.12.0 (Stream D) — the bridge surface now covers screenshot capture,
+  // filter snapshot, and clip-state round-trip so saved views can replay
+  // the full inspection context, not just the camera.
+  type BIMBridge = {
+    getViewpoint(): {
+      position: { x: number; y: number; z: number };
+      target: { x: number; y: number; z: number };
+    } | null;
+    setViewpoint(
+      pos: { x: number; y: number; z: number },
+      target: { x: number; y: number; z: number },
+    ): void;
+    getScreenshot(opts?: { width?: number; height?: number }): string | null;
+    getClipState(): BIMClipState | null;
+    setClipState(state: BIMClipState): void;
+    /** W6.6 — live manager handles surfaced for sibling panels (Trait Lens,
+     *  Element Bundles) and Playwright scripts. Null until the viewer scene
+     *  is fully mounted. */
+    sceneManager?: SceneManager | null;
+    elementManager?: ElementManager | null;
+    selectionManager?: SelectionManager | null;
+  };
+  type FilterBridge = {
+    get(): {
+      search: string;
+      storeys: string[];
+      types: string[];
+      buildingsOnly: boolean;
+    };
+    set(snapshot: {
+      search?: string;
+      storeys?: string[];
+      types?: string[];
+      buildingsOnly?: boolean;
+    }): void;
+  };
+  const getBridge = (): BIMBridge | null =>
+    (window as unknown as { __oeBim?: BIMBridge }).__oeBim ?? null;
+  const getFilterBridge = (): FilterBridge | null =>
+    (window as unknown as { __oeBimFilter?: FilterBridge }).__oeBimFilter ??
+    null;
+
+  // W6.6 — pull the live manager handles off the bridge so the Trait Lens
+  // and Element Bundles tabs can stay reactive. The BIMViewer publishes the
+  // managers on `window.__oeBim` after the scene mounts, which can lag a
+  // few frames behind this component's first render — we poll every 250 ms
+  // until they're available, then stop. This is the same back-off pattern
+  // BIMPage uses for the initial URL-state hydration.
+  const [bridgeManagers, setBridgeManagers] = useState<{
+    sceneManager: SceneManager | null;
+    elementManager: ElementManager | null;
+    selectionManager: SelectionManager | null;
+  }>({ sceneManager: null, elementManager: null, selectionManager: null });
+  useEffect(() => {
+    let cancelled = false;
+    const poll = () => {
+      if (cancelled) return;
+      const bridge = getBridge();
+      const next = {
+        sceneManager: bridge?.sceneManager ?? null,
+        elementManager: bridge?.elementManager ?? null,
+        selectionManager: bridge?.selectionManager ?? null,
       };
-    }).__oeBim;
-    return bridge?.getViewpoint() ?? null;
+      setBridgeManagers((prev) =>
+        prev.sceneManager === next.sceneManager &&
+        prev.elementManager === next.elementManager &&
+        prev.selectionManager === next.selectionManager
+          ? prev
+          : next,
+      );
+    };
+    poll();
+    const interval = window.setInterval(poll, 250);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [modelId]);
+  const sceneManager = bridgeManagers.sceneManager;
+  const elementManager = bridgeManagers.elementManager;
+  const selectionManager = bridgeManagers.selectionManager;
+
+  const getCurrentViewpoint = useCallback(() => {
+    return getBridge()?.getViewpoint() ?? null;
   }, []);
 
-  const onApplyViewpoint = useCallback((vp: SavedViewpoint) => {
-    const bridge = (window as unknown as {
-      __oeBim?: {
-        setViewpoint(
-          pos: { x: number; y: number; z: number },
-          target: { x: number; y: number; z: number },
-        ): void;
-      };
-    }).__oeBim;
-    bridge?.setViewpoint(
-      { x: vp.cameraPos[0], y: vp.cameraPos[1], z: vp.cameraPos[2] },
-      { x: vp.target[0], y: vp.target[1], z: vp.target[2] },
-    );
+  const getCurrentFilterState = useCallback((): SavedBIMFilterState | null => {
+    const snap = getFilterBridge()?.get();
+    if (!snap) return null;
+    return {
+      search: snap.search,
+      storeys: snap.storeys,
+      types: snap.types,
+      buildingsOnly: snap.buildingsOnly,
+    };
   }, []);
+
+  const getCurrentClipState = useCallback((): BIMClipState | null => {
+    return getBridge()?.getClipState() ?? null;
+  }, []);
+
+  const getCurrentScreenshot = useCallback(
+    (opts?: { width?: number; height?: number }): string | null => {
+      return getBridge()?.getScreenshot(opts) ?? null;
+    },
+    [],
+  );
+
+  const onApplyViewpoint = useCallback(
+    (vp: SavedViewpoint) => {
+      // W6.6 Stream B "Smooth Glide" — when a SceneManager handle is
+      // available, restore the camera with a 600 ms tween instead of an
+      // instant snap. Filter + clip state still go through the existing
+      // window-bound bridge because those don't tween.
+      if (sceneManager) {
+        restoreView(modelId, vp.id, sceneManager, { durationMs: 600 }).catch(
+          () => {
+            // Tween cancelled (a newer flyTo overtook us) — silently ignore.
+          },
+        );
+      } else {
+        const bridge = getBridge();
+        if (!bridge) return;
+        bridge.setViewpoint(
+          { x: vp.cameraPos[0], y: vp.cameraPos[1], z: vp.cameraPos[2] },
+          { x: vp.target[0], y: vp.target[1], z: vp.target[2] },
+        );
+      }
+      // Restore the rest of the view context when the viewpoint carries it.
+      // Older entries (pre-v3.12.0) only have camera + target; we leave the
+      // current filter / clip state untouched in that case to avoid a
+      // surprising wipe.
+      const bridge = getBridge();
+      if (vp.clipState && bridge) {
+        bridge.setClipState(vp.clipState);
+      }
+      if (vp.filterState) {
+        const fb = getFilterBridge();
+        fb?.set({
+          search: vp.filterState.search,
+          storeys: vp.filterState.storeys,
+          types: vp.filterState.types,
+          buildingsOnly: vp.filterState.buildingsOnly,
+        });
+      }
+    },
+    [modelId, sceneManager],
+  );
 
   const tabs: {
     id: BIMRightPanelTab;
@@ -107,28 +251,38 @@ export default function BIMRightPanelTabs({
     icon: typeof ClipboardList;
   }[] = [
     {
-      id: 'properties',
-      label: t('bim.tab_properties', { defaultValue: 'Properties‌⁠‍' }),
+      id: "properties",
+      label: t("bim.tab_properties", { defaultValue: "Properties‌⁠‍" }),
       icon: ClipboardList,
     },
     {
-      id: 'layers',
-      label: t('bim.tab_layers', { defaultValue: 'Layers‌⁠‍' }),
+      id: "layers",
+      label: t("bim.tab_layers", { defaultValue: "Layers‌⁠‍" }),
       icon: Layers,
     },
     {
-      id: 'tools',
-      label: t('bim.tab_tools', { defaultValue: 'Tools' }),
+      id: "tools",
+      label: t("bim.tab_tools", { defaultValue: "Tools" }),
       icon: Wrench,
     },
     {
-      id: 'groups',
-      label: t('bim.tab_groups', { defaultValue: 'Groups‌⁠‍' }),
+      id: "trait-lens",
+      label: t("bim.trait_lens.tab", { defaultValue: "Trait Lens" }),
+      icon: Palette,
+    },
+    {
+      id: "bundles",
+      label: t("bim.element_bundles.tab", { defaultValue: "Element Bundles" }),
+      icon: Bookmark,
+    },
+    {
+      id: "groups",
+      label: t("bim.tab_groups", { defaultValue: "Groups‌⁠‍" }),
       icon: Folders,
     },
     {
-      id: 'match',
-      label: t('bim.tab_match', { defaultValue: 'Match' }),
+      id: "match",
+      label: t("bim.tab_match", { defaultValue: "Match" }),
       icon: Sparkles,
     },
   ];
@@ -138,8 +292,8 @@ export default function BIMRightPanelTabs({
       {/* Tab strip */}
       <div
         role="tablist"
-        aria-label={t('bim.right_panel_tabs_aria', {
-          defaultValue: 'BIM right panel tabs‌⁠‍',
+        aria-label={t("bim.right_panel_tabs_aria", {
+          defaultValue: "BIM right panel tabs‌⁠‍",
         })}
         className="flex items-stretch border-b border-border-light bg-surface-secondary"
       >
@@ -155,8 +309,8 @@ export default function BIMRightPanelTabs({
               data-testid={`right-tab-${id}`}
               className={`flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium transition-colors ${
                 isActive
-                  ? 'text-oe-blue bg-surface-primary border-b-2 border-oe-blue'
-                  : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-tertiary'
+                  ? "text-oe-blue bg-surface-primary border-b-2 border-oe-blue"
+                  : "text-content-tertiary hover:text-content-secondary hover:bg-surface-tertiary"
               }`}
             >
               <Icon size={12} />
@@ -167,7 +321,9 @@ export default function BIMRightPanelTabs({
         <button
           type="button"
           onClick={onClose}
-          aria-label={t('bim.right_panel_close', { defaultValue: 'Close panel‌⁠‍' })}
+          aria-label={t("bim.right_panel_close", {
+            defaultValue: "Close panel‌⁠‍",
+          })}
           className="flex items-center justify-center px-2 text-content-tertiary hover:text-content-primary hover:bg-surface-tertiary"
         >
           <X size={14} />
@@ -176,7 +332,7 @@ export default function BIMRightPanelTabs({
 
       {/* Tab body */}
       <div className="flex-1 min-h-0 overflow-y-auto">
-        {activeTab === 'properties' && (
+        {activeTab === "properties" && (
           <PropertiesTabContent
             modelId={modelId}
             elements={elements}
@@ -185,19 +341,55 @@ export default function BIMRightPanelTabs({
             onClose={onClose}
           />
         )}
-        {activeTab === 'layers' && <BIMLayersPanel elements={elements} />}
-        {activeTab === 'tools' && (
+        {activeTab === "layers" && <BIMLayersPanel elements={elements} />}
+        {activeTab === "tools" && (
           <BIMToolsPanel
             modelId={modelId}
             getCurrentViewpoint={getCurrentViewpoint}
+            getCurrentFilterState={getCurrentFilterState}
+            getCurrentClipState={getCurrentClipState}
+            getCurrentScreenshot={getCurrentScreenshot}
             onApplyViewpoint={onApplyViewpoint}
           />
         )}
-        {activeTab === 'groups' && (
+        {activeTab === "trait-lens" && (
+          <div className="p-2">
+            <h3 className="px-1 text-[11px] font-semibold uppercase tracking-wide text-content-tertiary mb-1">
+              {t("bim.trait_lens.heading", { defaultValue: "Trait Lens" })}
+            </h3>
+            <p className="px-1 text-[10px] text-content-tertiary mb-2">
+              {t("bim.trait_lens.subtitle", {
+                defaultValue:
+                  "Color all elements by one property to spot patterns",
+              })}
+            </p>
+            <ColorByPropertyPanel elementManager={elementManager} />
+          </div>
+        )}
+        {activeTab === "bundles" && (
+          <div className="p-2">
+            <h3 className="px-1 text-[11px] font-semibold uppercase tracking-wide text-content-tertiary mb-1">
+              {t("bim.element_bundles.heading", {
+                defaultValue: "Element Bundles",
+              })}
+            </h3>
+            <p className="px-1 text-[10px] text-content-tertiary mb-2">
+              {t("bim.element_bundles.subtitle", {
+                defaultValue:
+                  "Save named selections you reuse across clash, BOQ link, and color-by",
+              })}
+            </p>
+            <SelectionSetsPanel
+              modelId={modelId}
+              selectionManager={selectionManager}
+            />
+          </div>
+        )}
+        {activeTab === "groups" && (
           <div className="p-2">
             {savedGroups.length === 0 ? (
               <p className="text-[11px] text-content-tertiary italic p-2">
-                {t('bim.groups_empty', {
+                {t("bim.groups_empty", {
                   defaultValue:
                     'No saved groups yet — apply a filter and click "Save as group".',
                 })}
@@ -217,7 +409,7 @@ export default function BIMRightPanelTabs({
             )}
           </div>
         )}
-        {activeTab === 'match' && (
+        {activeTab === "match" && (
           <MatchTabContent
             elements={elements}
             selectedElementId={selectedElementId ?? null}
@@ -270,11 +462,13 @@ function MatchTabContent({
   // dropdown is small enough to live above the candidate list without
   // pushing it off-screen.
   const boqsQuery = useQuery({
-    queryKey: ['boqs-for-link', projectId],
+    queryKey: ["boqs-for-link", projectId],
     queryFn: () => boqApi.list(projectId),
   });
   const boqs: BOQ[] = useMemo(() => boqsQuery.data ?? [], [boqsQuery.data]);
-  const [userSelectedBOQId, setUserSelectedBOQId] = useState<string | null>(null);
+  const [userSelectedBOQId, setUserSelectedBOQId] = useState<string | null>(
+    null,
+  );
   const selectedBOQId = useMemo<string | null>(() => {
     if (userSelectedBOQId && boqs.some((b) => b.id === userSelectedBOQId)) {
       return userSelectedBOQId;
@@ -286,9 +480,8 @@ function MatchTabContent({
     return (
       <div className="px-3 py-4">
         <p className="text-[11px] text-content-tertiary italic">
-          {t('bim.match_tab_no_selection', {
-            defaultValue:
-              'Select an element to see CWICR matches.',
+          {t("bim.match_tab_no_selection", {
+            defaultValue: "Select an element to see CWICR matches.",
           })}
         </p>
       </div>
@@ -303,18 +496,20 @@ function MatchTabContent({
     id: selected.id,
     element_type: selected.element_type,
     name: selected.name,
-    properties: (selected as { properties?: Record<string, unknown> }).properties ?? {},
-    quantities: (selected as { quantities?: Record<string, number> }).quantities ?? {},
+    properties:
+      (selected as { properties?: Record<string, unknown> }).properties ?? {},
+    quantities:
+      (selected as { quantities?: Record<string, number> }).quantities ?? {},
   };
 
   const onAccept = async (candidate: MatchCandidate) => {
     if (!selectedBOQId) {
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
-        message: t('match.no_boq_picked', {
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
+        message: t("match.no_boq_picked", {
           defaultValue:
-            'Pick a target BOQ before accepting a match — there is no BOQ in this project yet.',
+            "Pick a target BOQ before accepting a match — there is no BOQ in this project yet.",
         }),
       });
       return;
@@ -325,14 +520,13 @@ function MatchTabContent({
       // BOQ + BIM element id. The envelope itself comes off the panel's
       // response which has already echoed it back.
       const envelope = {
-        source: 'bim' as const,
-        source_lang: (rawElementData.language as string) ?? 'en',
-        category: (selected.element_type as string) ?? '',
-        description: (selected.name as string) ?? '',
+        source: "bim" as const,
+        source_lang: (rawElementData.language as string) ?? "en",
+        category: (selected.element_type as string) ?? "",
+        description: (selected.name as string) ?? "",
         properties:
           (rawElementData.properties as Record<string, unknown>) ?? {},
-        quantities:
-          (rawElementData.quantities as Record<string, number>) ?? {},
+        quantities: (rawElementData.quantities as Record<string, number>) ?? {},
         unit_hint: null,
         classifier_hint: null,
       };
@@ -345,18 +539,20 @@ function MatchTabContent({
         bim_element_id: selected.id,
       });
       addToast({
-        type: 'success',
-        title: t('match.accept_toast_title', { defaultValue: 'Match accepted' }),
+        type: "success",
+        title: t("match.accept_toast_title", {
+          defaultValue: "Match accepted",
+        }),
         // i18next-strict typing: when the key isn't statically known the
         // overload resolver picks the 2-arg ``[key, defaultValue]`` form
         // and rejects the interpolation object. Cast to ``string`` so we
         // can pass the rich options form without losing the translation
         // contract — the runtime behaviour is identical.
         message: (t as (k: string, opts: Record<string, unknown>) => string)(
-          'match.accept_position_toast',
+          "match.accept_position_toast",
           {
             defaultValue:
-              'Position {{ordinal}} created — {{code}}: {{description}}',
+              "Position {{ordinal}} created — {{code}}: {{description}}",
             ordinal: result.position_ordinal,
             code: candidate.code,
             description: candidate.description,
@@ -366,8 +562,8 @@ function MatchTabContent({
     } catch (err: unknown) {
       const msg = (err as { message?: string })?.message ?? String(err);
       addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
+        type: "error",
+        title: t("common.error", { defaultValue: "Error" }),
         message: msg,
       });
     }
@@ -377,10 +573,10 @@ function MatchTabContent({
     <div className="flex flex-col h-full">
       <div className="px-3 py-2 border-b border-border-light bg-surface-secondary">
         <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-          {t('bim.match_target_boq', { defaultValue: 'Target BOQ' })}
+          {t("bim.match_target_boq", { defaultValue: "Target BOQ" })}
         </label>
         <select
-          value={selectedBOQId ?? ''}
+          value={selectedBOQId ?? ""}
           onChange={(e) => setUserSelectedBOQId(e.target.value || null)}
           disabled={boqs.length === 0}
           className="w-full px-2 py-1 text-xs rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"
@@ -388,7 +584,9 @@ function MatchTabContent({
         >
           {boqs.length === 0 ? (
             <option value="">
-              {t('bim.no_boqs', { defaultValue: 'No BOQs in this project yet' })}
+              {t("bim.no_boqs", {
+                defaultValue: "No BOQs in this project yet",
+              })}
             </option>
           ) : (
             boqs.map((b) => (
@@ -407,7 +605,7 @@ function MatchTabContent({
           // fresh object each render, so depending on it inside the
           // panel itself would loop forever — keying on the stable
           // ``selectedElementId`` is the surgical fix.
-          key={selectedElementId ?? 'no-selection'}
+          key={selectedElementId ?? "no-selection"}
           source="bim"
           projectId={projectId}
           rawElementData={rawElementData}
@@ -457,7 +655,7 @@ function PropertiesTabContent({
 
   const propEntries = selected?.properties
     ? Object.entries(selected.properties as Record<string, unknown>)
-        .filter(([, v]) => v !== null && v !== undefined && v !== '')
+        .filter(([, v]) => v !== null && v !== undefined && v !== "")
         .sort(([a], [b]) => a.localeCompare(b))
     : [];
 
@@ -466,12 +664,21 @@ function PropertiesTabContent({
       {selected ? (
         <section className="px-3 py-2 border-b border-border-light">
           <h3 className="text-[11px] font-semibold uppercase tracking-wide text-content-tertiary mb-2">
-            {t('bim.properties_tab_element', { defaultValue: 'Element properties' })}
+            {t("bim.properties_tab_element", {
+              defaultValue: "Element properties",
+            })}
           </h3>
-          <div className="text-xs text-content-primary mb-1.5 truncate" title={selected.name ?? selected.id}>
-            <span className="font-semibold">{selected.name || selected.element_type || selected.id}</span>
+          <div
+            className="text-xs text-content-primary mb-1.5 truncate"
+            title={selected.name ?? selected.id}
+          >
+            <span className="font-semibold">
+              {selected.name || selected.element_type || selected.id}
+            </span>
             {selected.element_type && selected.name ? (
-              <span className="ml-1 text-content-tertiary">· {selected.element_type}</span>
+              <span className="ml-1 text-content-tertiary">
+                · {selected.element_type}
+              </span>
             ) : null}
           </div>
           {propEntries.length > 0 ? (
@@ -481,8 +688,15 @@ function PropertiesTabContent({
             >
               {propEntries.map(([k, v]) => (
                 <div key={k} className="contents">
-                  <dt className="text-content-tertiary truncate" title={k}>{k}</dt>
-                  <dd className="text-content-primary truncate" title={String(v)}>{String(v)}</dd>
+                  <dt className="text-content-tertiary truncate" title={k}>
+                    {k}
+                  </dt>
+                  <dd
+                    className="text-content-primary truncate"
+                    title={String(v)}
+                  >
+                    {String(v)}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -491,9 +705,9 @@ function PropertiesTabContent({
               className="text-[11px] text-content-tertiary italic"
               data-testid="properties-tab-empty"
             >
-              {t('bim.properties_tab_loading', {
+              {t("bim.properties_tab_loading", {
                 defaultValue:
-                  'No inline properties — open the element panel for full details.',
+                  "No inline properties — open the element panel for full details.",
               })}
             </p>
           )}
@@ -501,8 +715,9 @@ function PropertiesTabContent({
       ) : (
         <section className="px-3 py-2 border-b border-border-light">
           <p className="text-[11px] text-content-tertiary italic">
-            {t('bim.properties_tab_no_selection', {
-              defaultValue: 'Select an element in the viewer to see its properties.',
+            {t("bim.properties_tab_no_selection", {
+              defaultValue:
+                "Select an element in the viewer to see its properties.",
             })}
           </p>
         </section>

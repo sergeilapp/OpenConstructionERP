@@ -23,7 +23,7 @@ import React, {
   useState,
   type DragEvent,
   type KeyboardEvent,
-} from 'react';
+} from "react";
 import {
   Background,
   Controls,
@@ -45,23 +45,23 @@ import {
   type NodeTypes,
   type OnConnect,
   type ReactFlowInstance,
-} from '@xyflow/react';
-import { useTranslation } from 'react-i18next';
+} from "@xyflow/react";
+import { useTranslation } from "react-i18next";
 
-import { useIsRTL } from '@/shared/hooks/useIsRTL';
-import { useToastStore } from '@/stores/useToastStore';
+import { useIsRTL } from "@/shared/hooks/useIsRTL";
+import { useToastStore } from "@/stores/useToastStore";
 
-import { PipelineEdge } from './PipelineEdge';
-import { PipelineNode } from './PipelineNode';
+import { PipelineEdge } from "./PipelineEdge";
+import { PipelineNode } from "./PipelineNode";
 import {
   CATEGORY_MINIMAP_COLOR,
   getPortTokens,
   type NodeCategory,
-} from '../tokens';
-import { usePipelineStore, type PipelinePort } from '../usePipelineStore';
-import type { NodeTypeDef, PipelineGraph } from '../api';
+} from "../tokens";
+import { usePipelineStore, type PipelinePort } from "../usePipelineStore";
+import type { NodeTypeDef, PipelineGraph } from "../api";
 
-import '@xyflow/react/dist/style.css';
+import "@xyflow/react/dist/style.css";
 
 // @xyflow/react v12 exports ReactFlow as a generic forwardRef component which
 // can cause JSX type errors in strict TS. Cast to a plain FC (architecture
@@ -73,7 +73,7 @@ const NODE_TYPES: NodeTypes = { pipelineNode: PipelineNode };
 const EDGE_TYPES: EdgeTypes = { pipelineEdge: PipelineEdge };
 
 /** Palette drag payload mime — distinct from the EAC editor's. */
-export const PIPELINE_DND_MIME = 'application/x-oe-pipeline-node';
+export const PIPELINE_DND_MIME = "application/x-oe-pipeline-node";
 
 export interface PaletteDragItem {
   type: string;
@@ -87,18 +87,18 @@ export function portsFromDef(def: NodeTypeDef): {
   outputs: PipelinePort[];
 } {
   const map = (
-    arr: NodeTypeDef['inputs'],
-    dir: 'input' | 'output',
+    arr: NodeTypeDef["inputs"],
+    dir: "input" | "output",
   ): PipelinePort[] =>
     (arr ?? []).map((p, i) => ({
       id: p.id || `${dir}_${i}`,
       label: p.label || p.id || dir,
-      dataType: (p.type as PipelinePort['dataType']) || 'any',
+      dataType: (p.type as PipelinePort["dataType"]) || "any",
       direction: dir,
     }));
   return {
-    inputs: map(def.inputs, 'input'),
-    outputs: map(def.outputs, 'output'),
+    inputs: map(def.inputs, "input"),
+    outputs: map(def.outputs, "output"),
   };
 }
 
@@ -159,10 +159,8 @@ function PipelineCanvasInner({
     const idMap = new Map<string, string>();
     for (const gn of loadGraph.nodes) {
       const def = defByType.get(gn.type);
-      const ports = def
-        ? portsFromDef(def)
-        : { inputs: [], outputs: [] };
-      const category = (def?.category as string) ?? 'flow';
+      const ports = def ? portsFromDef(def) : { inputs: [], outputs: [] };
+      const category = (def?.category as string) ?? "flow";
       const label =
         gn.label ||
         def?.label ||
@@ -184,9 +182,9 @@ function PipelineCanvasInner({
       if (!src || !tgt) continue;
       addStoreEdge({
         source: src,
-        sourceHandle: ge.sourceHandle ?? 'out',
+        sourceHandle: ge.sourceHandle ?? "out",
         target: tgt,
-        targetHandle: ge.targetHandle ?? 'in',
+        targetHandle: ge.targetHandle ?? "in",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -197,7 +195,7 @@ function PipelineCanvasInner({
     () =>
       nodes.map((n) => ({
         id: n.id,
-        type: 'pipelineNode',
+        type: "pipelineNode",
         position: n.position,
         data: { node: n },
         selected: selection.has(n.id),
@@ -208,7 +206,7 @@ function PipelineCanvasInner({
   const finishedNodeIds = useMemo(() => {
     const s = new Set<string>();
     for (const [nid, st] of Object.entries(runNodeStates)) {
-      if (st?.status === 'done' || st?.status === 'success') s.add(nid);
+      if (st?.status === "done" || st?.status === "success") s.add(nid);
     }
     return s;
   }, [runNodeStates]);
@@ -221,7 +219,7 @@ function PipelineCanvasInner({
         sourceHandle: e.sourceHandle,
         target: e.target,
         targetHandle: e.targetHandle,
-        type: 'pipelineEdge',
+        type: "pipelineEdge",
         data: {
           dataType: e.dataType,
           flowing: finishedNodeIds.has(e.source),
@@ -236,11 +234,11 @@ function PipelineCanvasInner({
     (changes: NodeChange[]) => {
       const updated = applyNodeChanges(changes, rfNodes);
       for (const change of changes) {
-        if (change.type === 'position' && change.position) {
+        if (change.type === "position" && change.position) {
           moveNode(change.id, change.position);
-        } else if (change.type === 'remove') {
+        } else if (change.type === "remove") {
           removeNode(change.id);
-        } else if (change.type === 'select') {
+        } else if (change.type === "select") {
           const nextSelected = updated
             .filter((n) => n.selected)
             .map((n) => n.id);
@@ -255,7 +253,7 @@ function PipelineCanvasInner({
     (changes: EdgeChange[]) => {
       void applyEdgeChanges(changes, rfEdges);
       for (const change of changes) {
-        if (change.type === 'remove') removeEdge(change.id);
+        if (change.type === "remove") removeEdge(change.id);
       }
     },
     [rfEdges, removeEdge],
@@ -289,23 +287,23 @@ function PipelineCanvasInner({
           (p) => p.id === params.targetHandle,
         );
         addToast({
-          type: 'warning',
-          title: t('pipeline.connect.incompatible_title', {
+          type: "warning",
+          title: t("pipeline.connect.incompatible_title", {
             defaultValue: "These steps can't be connected‌⁠‍",
           }),
-          message: t('pipeline.connect.incompatible_body', {
+          message: t("pipeline.connect.incompatible_body", {
             defaultValue:
-              'This output is a {{from}}; that input expects a {{to}}.‌⁠‍',
+              "This output is a {{from}}; that input expects a {{to}}.‌⁠‍",
             from: srcPort
               ? t(getPortTokens(srcPort.dataType).labelKey, {
                   defaultValue: getPortTokens(srcPort.dataType).labelDefault,
                 })
-              : '—',
+              : "—",
             to: tgtPort
               ? t(getPortTokens(tgtPort.dataType).labelKey, {
                   defaultValue: getPortTokens(tgtPort.dataType).labelDefault,
                 })
-              : '—',
+              : "—",
           }),
         });
       }
@@ -320,28 +318,28 @@ function PipelineCanvasInner({
       const target = event.target as HTMLElement | null;
       if (
         target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
           target.isContentEditable)
       ) {
         return;
       }
-      if (mod && event.key.toLowerCase() === 'z' && !event.shiftKey) {
+      if (mod && event.key.toLowerCase() === "z" && !event.shiftKey) {
         event.preventDefault();
         undo();
       } else if (
         mod &&
-        (event.key.toLowerCase() === 'y' ||
-          (event.key.toLowerCase() === 'z' && event.shiftKey))
+        (event.key.toLowerCase() === "y" ||
+          (event.key.toLowerCase() === "z" && event.shiftKey))
       ) {
         event.preventDefault();
         redo();
-      } else if (mod && event.key.toLowerCase() === 'c') {
+      } else if (mod && event.key.toLowerCase() === "c") {
         copySelection();
-      } else if (mod && event.key.toLowerCase() === 'v') {
+      } else if (mod && event.key.toLowerCase() === "v") {
         event.preventDefault();
         pasteClipboard();
-      } else if (event.key === 'Delete' || event.key === 'Backspace') {
+      } else if (event.key === "Delete" || event.key === "Backspace") {
         if (selection.size === 0) return;
         event.preventDefault();
         for (const id of Array.from(selection)) removeNode(id);
@@ -353,7 +351,7 @@ function PipelineCanvasInner({
   // ── palette drop ────────────────────────────────────────────────────────
   const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
+    event.dataTransfer.dropEffect = "copy";
   }, []);
 
   const insertNodeType = useCallback(
@@ -363,7 +361,7 @@ function PipelineCanvasInner({
       const ports = portsFromDef(def);
       addStoreNode({
         type: def.type,
-        category: (def.category as string) ?? 'flow',
+        category: (def.category as string) ?? "flow",
         title:
           def.label ||
           t(`pipeline.nodetype.${def.type}`, { defaultValue: def.type }),
@@ -417,18 +415,18 @@ function PipelineCanvasInner({
       });
       insertNodeType(detail.type, center);
     };
-    window.addEventListener('oe-pipeline-insert', handler);
-    return () => window.removeEventListener('oe-pipeline-insert', handler);
+    window.addEventListener("oe-pipeline-insert", handler);
+    return () => window.removeEventListener("oe-pipeline-insert", handler);
   }, [insertNodeType, reactFlow]);
 
   return (
     <div
       ref={wrapperRef}
-      data-testid={testId ?? 'pipeline-canvas'}
+      data-testid={testId ?? "pipeline-canvas"}
       className="relative h-full w-full"
       role="application"
-      aria-label={t('pipeline.canvas.aria', {
-        defaultValue: 'Pipeline editor canvas‌⁠‍',
+      aria-label={t("pipeline.canvas.aria", {
+        defaultValue: "Pipeline editor canvas‌⁠‍",
       })}
       aria-describedby="pipeline-canvas-hint"
       tabIndex={0}
@@ -437,9 +435,9 @@ function PipelineCanvasInner({
       onDrop={onDrop}
     >
       <span id="pipeline-canvas-hint" className="sr-only">
-        {t('pipeline.canvas.hint', {
+        {t("pipeline.canvas.hint", {
           defaultValue:
-            'Drag steps from the palette, connect their ports, then press Run.‌⁠‍',
+            "Drag steps from the palette, connect their ports, then press Run.‌⁠‍",
         })}
       </span>
       <ReactFlow
@@ -452,36 +450,36 @@ function PipelineCanvasInner({
         onConnect={onConnect}
         onInit={setRfInstance}
         fitView
-        multiSelectionKeyCode={['Meta', 'Control', 'Shift']}
+        multiSelectionKeyCode={["Meta", "Control", "Shift"]}
         deleteKeyCode={null}
         proOptions={{ hideAttribution: true }}
         data-testid="pipeline-canvas-flow"
       >
         <Background gap={16} size={1} />
         <Controls
-          position={isRTL ? 'bottom-left' : 'bottom-right'}
+          position={isRTL ? "bottom-left" : "bottom-right"}
           showInteractive={false}
         />
         <MiniMap
-          position={isRTL ? 'bottom-left' : 'bottom-right'}
+          position={isRTL ? "bottom-left" : "bottom-right"}
           pannable
           zoomable
           nodeColor={(node: Node) => {
             const cat = (node.data as { node?: { category?: string } })?.node
               ?.category;
             return (
-              CATEGORY_MINIMAP_COLOR[(cat as NodeCategory) ?? 'flow'] ??
-              '#6b7280'
+              CATEGORY_MINIMAP_COLOR[(cat as NodeCategory) ?? "flow"] ??
+              "#6b7280"
             );
           }}
           maskColor="rgba(15,17,23,0.5)"
           style={{ borderRadius: 8 }}
         />
-        <Panel position={isRTL ? 'top-left' : 'top-right'}>
+        <Panel position={isRTL ? "top-left" : "top-right"}>
           <span className="sr-only">
-            {t('pipeline.canvas.legend_sr', {
+            {t("pipeline.canvas.legend_sr", {
               defaultValue:
-                'Edge colour, shape and dash together encode the data type.‌⁠‍',
+                "Edge colour, shape and dash together encode the data type.‌⁠‍",
             })}
           </span>
         </Panel>

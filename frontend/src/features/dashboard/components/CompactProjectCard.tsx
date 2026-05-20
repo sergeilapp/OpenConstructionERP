@@ -1,6 +1,10 @@
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { formatDistanceToNowStrict, isValid as isValidDate, parseISO } from 'date-fns';
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import {
+  formatDistanceToNowStrict,
+  isValid as isValidDate,
+  parseISO,
+} from "date-fns";
 import {
   ArrowRight,
   Building2,
@@ -9,9 +13,9 @@ import {
   PoundSterling,
   Globe2,
   Layers,
-} from 'lucide-react';
-import { Card } from '@/shared/ui';
-import { getIntlLocale } from '@/shared/lib/formatters';
+} from "lucide-react";
+import { Card } from "@/shared/ui";
+import { getIntlLocale } from "@/shared/lib/formatters";
 
 export interface CompactProjectCardProps {
   id: string;
@@ -29,24 +33,24 @@ export interface CompactProjectCardProps {
 }
 
 const regionColorMap: Record<string, string> = {
-  DACH: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  UK: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
-  US: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  GULF: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  RU: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  NORDIC: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300',
-  DEFAULT: 'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300',
+  DACH: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  UK: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
+  US: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  GULF: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+  RU: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+  NORDIC: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300",
+  DEFAULT: "bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300",
 };
 
 const standardLabels: Record<string, string> = {
-  din276: 'DIN 276',
-  nrm: 'NRM',
-  masterformat: 'MasterFormat',
+  din276: "DIN 276",
+  nrm: "NRM",
+  masterformat: "MasterFormat",
 };
 
 function getRegionAvatarClass(region?: string): string {
   if (region && regionColorMap[region]) return regionColorMap[region];
-  return 'bg-oe-blue-subtle text-oe-blue';
+  return "bg-oe-blue-subtle text-oe-blue";
 }
 
 const currencyFmt = new Intl.NumberFormat(getIntlLocale(), {
@@ -78,7 +82,7 @@ export function CompactProjectCard({
   const navigate = useNavigate();
 
   const CurrencyIcon =
-    currency === 'EUR' ? Euro : currency === 'GBP' ? PoundSterling : DollarSign;
+    currency === "EUR" ? Euro : currency === "GBP" ? PoundSterling : DollarSign;
 
   const modifiedSource = updatedAt || createdAt;
   const modifiedDate = modifiedSource ? parseISO(modifiedSource) : null;
@@ -89,9 +93,9 @@ export function CompactProjectCard({
   const absoluteModified =
     modifiedDate && isValidDate(modifiedDate)
       ? modifiedDate.toLocaleDateString(getIntlLocale())
-      : '';
+      : "";
 
-  const hasValue = typeof boqTotalValue === 'number' && boqTotalValue > 0;
+  const hasValue = typeof boqTotalValue === "number" && boqTotalValue > 0;
 
   return (
     <Card
@@ -108,9 +112,9 @@ export function CompactProjectCard({
           >
             {name.charAt(0).toUpperCase()}
           </div>
-          {status === 'archived' && (
+          {status === "archived" && (
             <span className="inline-flex items-center rounded-md bg-surface-secondary px-1.5 py-0.5 text-2xs font-medium text-content-tertiary">
-              {t('projects.status_archived', { defaultValue: 'Archived‌⁠‍' })}
+              {t("projects.status_archived", { defaultValue: "Archived‌⁠‍" })}
             </span>
           )}
         </div>
@@ -151,7 +155,9 @@ export function CompactProjectCard({
         <div className="px-3.5 pb-2">
           <div className="rounded-lg border border-border-light bg-gradient-to-br from-oe-blue-subtle/60 via-surface-elevated to-surface-elevated px-3 py-1.5">
             <div className="text-[10px] font-medium uppercase tracking-wider text-content-tertiary">
-              {t('projects.card_total_value', { defaultValue: 'Total value‌⁠‍' })}
+              {t("projects.card_total_value", {
+                defaultValue: "Total value‌⁠‍",
+              })}
             </div>
             <div className="mt-0.5 flex items-baseline gap-1.5">
               <span className="text-base font-bold tabular-nums text-content-primary">
@@ -176,11 +182,11 @@ export function CompactProjectCard({
                 {relativeModified}
               </span>
             )}
-            {typeof boqCount === 'number' && boqCount > 0 && (
+            {typeof boqCount === "number" && boqCount > 0 && (
               <span className="inline-flex items-center gap-1 rounded-md bg-surface-secondary px-1.5 py-0.5 text-2xs font-medium text-content-secondary">
                 <Layers size={10} strokeWidth={2.25} />
                 <span className="tabular-nums">{boqCount}</span>
-                <span>{t('projects.boq_short', { defaultValue: 'BOQs' })}</span>
+                <span>{t("projects.boq_short", { defaultValue: "BOQs" })}</span>
               </span>
             )}
           </div>

@@ -5,8 +5,8 @@
  * and restoring from previously exported backups.
  */
 
-import { useState, useRef, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Download,
   Upload,
@@ -17,10 +17,16 @@ import {
   Shield,
   HardDrive,
   X,
-} from 'lucide-react';
-import { Card, CardHeader, CardContent, Button, ConfirmDialog } from '@/shared/ui';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useToastStore } from '@/stores/useToastStore';
+} from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  ConfirmDialog,
+} from "@/shared/ui";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToastStore } from "@/stores/useToastStore";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,50 +49,50 @@ interface RestoreResult {
 
 async function exportBackup(): Promise<Blob> {
   const token = useAuthStore.getState().accessToken;
-  const resp = await fetch('/api/v1/backup/export/', {
-    method: 'POST',
+  const resp = await fetch("/api/v1/backup/export/", {
+    method: "POST",
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
-  if (!resp.ok) throw new Error('Export failed');
+  if (!resp.ok) throw new Error("Export failed");
   return resp.blob();
 }
 
 async function validateBackup(file: File): Promise<ValidateResult> {
   const token = useAuthStore.getState().accessToken;
   const form = new FormData();
-  form.append('file', file);
-  const resp = await fetch('/api/v1/backup/validate/', {
-    method: 'POST',
+  form.append("file", file);
+  const resp = await fetch("/api/v1/backup/validate/", {
+    method: "POST",
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     body: form,
   });
-  if (!resp.ok) throw new Error('Validation failed');
+  if (!resp.ok) throw new Error("Validation failed");
   return resp.json();
 }
 
 async function restoreBackup(
   file: File,
-  mode: 'replace' | 'merge',
+  mode: "replace" | "merge",
 ): Promise<RestoreResult> {
   const token = useAuthStore.getState().accessToken;
   const form = new FormData();
-  form.append('file', file);
-  form.append('mode', mode);
-  const resp = await fetch('/api/v1/backup/restore/', {
-    method: 'POST',
+  form.append("file", file);
+  form.append("mode", mode);
+  const resp = await fetch("/api/v1/backup/restore/", {
+    method: "POST",
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     body: form,
   });
-  if (!resp.ok) throw new Error('Restore failed');
+  if (!resp.ok) throw new Error("Restore failed");
   return resp.json();
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B';
+  if (bytes === 0) return "0 B";
   const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const sizes = ["B", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 }
@@ -99,13 +105,15 @@ export function BackupRestore() {
 
   // Export state
   const [exporting, setExporting] = useState(false);
-  const [exportResult, setExportResult] = useState<{ size: number } | null>(null);
+  const [exportResult, setExportResult] = useState<{ size: number } | null>(
+    null,
+  );
 
   // Import state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [validating, setValidating] = useState(false);
   const [validation, setValidation] = useState<ValidateResult | null>(null);
-  const [restoreMode, setRestoreMode] = useState<'replace' | 'merge'>('merge');
+  const [restoreMode, setRestoreMode] = useState<"replace" | "merge">("merge");
   const [restoring, setRestoring] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -124,8 +132,8 @@ export function BackupRestore() {
       const filename = `openconstructionerp-backup-${dateStr}.zip`;
 
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
+      const a = document.createElement("a");
+      a.style.display = "none";
       a.href = url;
       a.download = filename;
       document.body.appendChild(a);
@@ -137,17 +145,19 @@ export function BackupRestore() {
 
       setExportResult({ size: blob.size });
       addToast({
-        type: 'success',
-        title: t('backup.export_success', { defaultValue: 'Backup created‌⁠‍' }),
-        message: t('backup.export_success_detail', {
-          defaultValue: 'Downloaded {{size}} backup file‌⁠‍',
+        type: "success",
+        title: t("backup.export_success", {
+          defaultValue: "Backup created‌⁠‍",
+        }),
+        message: t("backup.export_success_detail", {
+          defaultValue: "Downloaded {{size}} backup file‌⁠‍",
           size: formatBytes(blob.size),
         }),
       });
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('backup.export_error', { defaultValue: 'Export failed‌⁠‍' }),
+        type: "error",
+        title: t("backup.export_error", { defaultValue: "Export failed‌⁠‍" }),
         message: err instanceof Error ? err.message : String(err),
       });
     } finally {
@@ -159,11 +169,13 @@ export function BackupRestore() {
 
   const handleFileSelect = useCallback(
     async (file: File) => {
-      if (!file.name.endsWith('.zip')) {
+      if (!file.name.endsWith(".zip")) {
         addToast({
-          type: 'warning',
-          title: t('backup.invalid_file', { defaultValue: 'Invalid file‌⁠‍' }),
-          message: t('backup.zip_only', { defaultValue: 'Please select a .zip backup file‌⁠‍' }),
+          type: "warning",
+          title: t("backup.invalid_file", { defaultValue: "Invalid file‌⁠‍" }),
+          message: t("backup.zip_only", {
+            defaultValue: "Please select a .zip backup file‌⁠‍",
+          }),
         });
         return;
       }
@@ -178,15 +190,23 @@ export function BackupRestore() {
 
         if (!result.valid) {
           addToast({
-            type: 'error',
-            title: t('backup.validation_failed', { defaultValue: 'Invalid backup' }),
-            message: result.errors?.[0] || t('backup.validation_failed_detail', { defaultValue: 'The backup file is not valid' }),
+            type: "error",
+            title: t("backup.validation_failed", {
+              defaultValue: "Invalid backup",
+            }),
+            message:
+              result.errors?.[0] ||
+              t("backup.validation_failed_detail", {
+                defaultValue: "The backup file is not valid",
+              }),
           });
         }
       } catch (err) {
         addToast({
-          type: 'error',
-          title: t('backup.validation_error', { defaultValue: 'Validation error' }),
+          type: "error",
+          title: t("backup.validation_error", {
+            defaultValue: "Validation error",
+          }),
           message: err instanceof Error ? err.message : String(err),
         });
         setSelectedFile(null);
@@ -201,7 +221,7 @@ export function BackupRestore() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) handleFileSelect(file);
-      e.target.value = '';
+      e.target.value = "";
     },
     [handleFileSelect],
   );
@@ -243,10 +263,12 @@ export function BackupRestore() {
           0,
         );
         addToast({
-          type: 'success',
-          title: t('backup.restore_success', { defaultValue: 'Backup restored' }),
-          message: t('backup.restore_success_detail', {
-            defaultValue: '{{count}} records imported successfully',
+          type: "success",
+          title: t("backup.restore_success", {
+            defaultValue: "Backup restored",
+          }),
+          message: t("backup.restore_success_detail", {
+            defaultValue: "{{count}} records imported successfully",
             count: totalRecords,
           }),
         });
@@ -254,15 +276,19 @@ export function BackupRestore() {
         setValidation(null);
       } else {
         addToast({
-          type: 'error',
-          title: t('backup.restore_failed', { defaultValue: 'Restore failed' }),
-          message: result.warnings?.[0] || t('backup.restore_failed_detail', { defaultValue: 'Could not restore from backup' }),
+          type: "error",
+          title: t("backup.restore_failed", { defaultValue: "Restore failed" }),
+          message:
+            result.warnings?.[0] ||
+            t("backup.restore_failed_detail", {
+              defaultValue: "Could not restore from backup",
+            }),
         });
       }
     } catch (err) {
       addToast({
-        type: 'error',
-        title: t('backup.restore_error', { defaultValue: 'Restore error' }),
+        type: "error",
+        title: t("backup.restore_error", { defaultValue: "Restore error" }),
         message: err instanceof Error ? err.message : String(err),
       });
     } finally {
@@ -271,7 +297,7 @@ export function BackupRestore() {
   }, [selectedFile, restoreMode, addToast, t]);
 
   const handleRestoreClick = useCallback(() => {
-    if (restoreMode === 'replace') {
+    if (restoreMode === "replace") {
       setShowConfirm(true);
     } else {
       handleRestore();
@@ -293,9 +319,9 @@ export function BackupRestore() {
     <>
       <Card>
         <CardHeader
-          title={t('backup.title', { defaultValue: 'Backup & Restore' })}
-          subtitle={t('backup.subtitle', {
-            defaultValue: 'Export your data or restore from a previous backup',
+          title={t("backup.title", { defaultValue: "Backup & Restore" })}
+          subtitle={t("backup.subtitle", {
+            defaultValue: "Export your data or restore from a previous backup",
           })}
         />
         <CardContent>
@@ -308,12 +334,14 @@ export function BackupRestore() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-semibold text-content-primary">
-                    {t('backup.export_title', { defaultValue: 'Create Backup' })}
+                    {t("backup.export_title", {
+                      defaultValue: "Create Backup",
+                    })}
                   </h4>
                   <p className="mt-0.5 text-xs text-content-secondary leading-relaxed">
-                    {t('backup.export_desc', {
+                    {t("backup.export_desc", {
                       defaultValue:
-                        'Export all your projects, BOQ data, cost databases, and settings as a ZIP file.',
+                        "Export all your projects, BOQ data, cost databases, and settings as a ZIP file.",
                     })}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -326,8 +354,12 @@ export function BackupRestore() {
                       icon={!exporting ? <Download size={14} /> : undefined}
                     >
                       {exporting
-                        ? t('backup.exporting', { defaultValue: 'Creating backup...' })
-                        : t('backup.export_btn', { defaultValue: 'Create Backup' })}
+                        ? t("backup.exporting", {
+                            defaultValue: "Creating backup...",
+                          })
+                        : t("backup.export_btn", {
+                            defaultValue: "Create Backup",
+                          })}
                     </Button>
                     {exportResult && (
                       <span className="flex items-center gap-1.5 text-xs text-semantic-success">
@@ -348,12 +380,14 @@ export function BackupRestore() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-semibold text-content-primary">
-                    {t('backup.import_title', { defaultValue: 'Restore from Backup' })}
+                    {t("backup.import_title", {
+                      defaultValue: "Restore from Backup",
+                    })}
                   </h4>
                   <p className="mt-0.5 text-xs text-content-secondary leading-relaxed">
-                    {t('backup.import_desc', {
+                    {t("backup.import_desc", {
                       defaultValue:
-                        'Upload a previously exported .zip backup file to restore your data.',
+                        "Upload a previously exported .zip backup file to restore your data.",
                     })}
                   </p>
 
@@ -366,25 +400,25 @@ export function BackupRestore() {
                       onClick={() => fileInputRef.current?.click()}
                       className={`mt-3 flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-6 py-5 transition-all ${
                         dragOver
-                          ? 'border-oe-blue bg-oe-blue-subtle/50'
-                          : 'border-border hover:border-oe-blue/50 hover:bg-surface-secondary/50'
+                          ? "border-oe-blue bg-oe-blue-subtle/50"
+                          : "border-border hover:border-oe-blue/50 hover:bg-surface-secondary/50"
                       }`}
                     >
                       <Upload
                         size={24}
                         className={
-                          dragOver ? 'text-oe-blue' : 'text-content-tertiary'
+                          dragOver ? "text-oe-blue" : "text-content-tertiary"
                         }
                       />
                       <div className="text-center">
                         <p className="text-sm font-medium text-content-secondary">
-                          {t('backup.drop_zone_label', {
-                            defaultValue: 'Drop a .zip backup file here',
+                          {t("backup.drop_zone_label", {
+                            defaultValue: "Drop a .zip backup file here",
                           })}
                         </p>
                         <p className="mt-0.5 text-xs text-content-tertiary">
-                          {t('backup.drop_zone_hint', {
-                            defaultValue: 'or click to browse',
+                          {t("backup.drop_zone_hint", {
+                            defaultValue: "or click to browse",
                           })}
                         </p>
                       </div>
@@ -401,8 +435,13 @@ export function BackupRestore() {
                   {/* Validating spinner */}
                   {validating && (
                     <div className="mt-3 flex items-center gap-2 text-sm text-content-secondary">
-                      <Loader2 size={16} className="animate-spin text-oe-blue" />
-                      {t('backup.validating', { defaultValue: 'Validating backup file...' })}
+                      <Loader2
+                        size={16}
+                        className="animate-spin text-oe-blue"
+                      />
+                      {t("backup.validating", {
+                        defaultValue: "Validating backup file...",
+                      })}
                     </div>
                   )}
 
@@ -411,7 +450,10 @@ export function BackupRestore() {
                     <div className="mt-3 space-y-3">
                       {/* File info */}
                       <div className="flex items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5">
-                        <FileArchive size={18} className="shrink-0 text-oe-blue" />
+                        <FileArchive
+                          size={18}
+                          className="shrink-0 text-oe-blue"
+                        />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-content-primary truncate">
                             {selectedFile.name}
@@ -425,7 +467,9 @@ export function BackupRestore() {
                         <button
                           onClick={clearFile}
                           className="shrink-0 rounded p-1 text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary transition-colors"
-                          aria-label={t('common.remove', { defaultValue: 'Remove' })}
+                          aria-label={t("common.remove", {
+                            defaultValue: "Remove",
+                          })}
                         >
                           <X size={14} />
                         </button>
@@ -438,8 +482,9 @@ export function BackupRestore() {
                           {Object.keys(validation.record_counts).length > 0 && (
                             <div className="rounded-lg border border-border-light bg-surface-primary p-3">
                               <p className="text-xs font-medium text-content-secondary mb-2">
-                                {t('backup.record_counts', {
-                                  defaultValue: 'Records in backup ({{total}} total)',
+                                {t("backup.record_counts", {
+                                  defaultValue:
+                                    "Records in backup ({{total}} total)",
                                   total: totalRecords,
                                 })}
                               </p>
@@ -451,7 +496,7 @@ export function BackupRestore() {
                                       className="flex items-center justify-between text-xs"
                                     >
                                       <span className="text-content-secondary capitalize">
-                                        {key.replace(/_/g, ' ')}
+                                        {key.replace(/_/g, " ")}
                                       </span>
                                       <span className="font-mono text-content-primary">
                                         {count}
@@ -485,11 +530,14 @@ export function BackupRestore() {
                           {!validation.compatible && (
                             <div className="rounded-lg border border-semantic-error/30 bg-semantic-error-bg px-3 py-2.5">
                               <div className="flex items-start gap-2 text-xs text-semantic-error">
-                                <AlertTriangle size={13} className="shrink-0 mt-0.5" />
+                                <AlertTriangle
+                                  size={13}
+                                  className="shrink-0 mt-0.5"
+                                />
                                 <span>
-                                  {t('backup.incompatible', {
+                                  {t("backup.incompatible", {
                                     defaultValue:
-                                      'This backup was created with an incompatible version and may not restore correctly.',
+                                      "This backup was created with an incompatible version and may not restore correctly.",
                                   })}
                                 </span>
                               </div>
@@ -502,43 +550,43 @@ export function BackupRestore() {
                               {/* Mode selector */}
                               <div>
                                 <label className="text-xs font-medium text-content-secondary block mb-2">
-                                  {t('backup.restore_mode', {
-                                    defaultValue: 'Restore mode',
+                                  {t("backup.restore_mode", {
+                                    defaultValue: "Restore mode",
                                   })}
                                 </label>
                                 <div className="flex gap-2">
                                   <button
-                                    onClick={() => setRestoreMode('merge')}
-                                    aria-pressed={restoreMode === 'merge'}
+                                    onClick={() => setRestoreMode("merge")}
+                                    aria-pressed={restoreMode === "merge"}
                                     className={`flex-1 rounded-lg px-3 py-2.5 text-xs font-medium border-2 transition-all ${
-                                      restoreMode === 'merge'
-                                        ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue'
-                                        : 'border-border-light hover:bg-surface-secondary text-content-secondary'
+                                      restoreMode === "merge"
+                                        ? "border-oe-blue bg-oe-blue-subtle text-oe-blue"
+                                        : "border-border-light hover:bg-surface-secondary text-content-secondary"
                                     }`}
                                   >
-                                    {t('backup.mode_merge', {
-                                      defaultValue: 'Merge (keep existing)',
+                                    {t("backup.mode_merge", {
+                                      defaultValue: "Merge (keep existing)",
                                     })}
                                   </button>
                                   <button
-                                    onClick={() => setRestoreMode('replace')}
-                                    aria-pressed={restoreMode === 'replace'}
+                                    onClick={() => setRestoreMode("replace")}
+                                    aria-pressed={restoreMode === "replace"}
                                     className={`flex-1 rounded-lg px-3 py-2.5 text-xs font-medium border-2 transition-all ${
-                                      restoreMode === 'replace'
-                                        ? 'border-semantic-error bg-semantic-error-bg text-semantic-error'
-                                        : 'border-border-light hover:bg-surface-secondary text-content-secondary'
+                                      restoreMode === "replace"
+                                        ? "border-semantic-error bg-semantic-error-bg text-semantic-error"
+                                        : "border-border-light hover:bg-surface-secondary text-content-secondary"
                                     }`}
                                   >
-                                    {t('backup.mode_replace', {
-                                      defaultValue: 'Replace all data',
+                                    {t("backup.mode_replace", {
+                                      defaultValue: "Replace all data",
                                     })}
                                   </button>
                                 </div>
-                                {restoreMode === 'replace' && (
+                                {restoreMode === "replace" && (
                                   <p className="mt-1.5 text-[11px] text-semantic-error leading-relaxed">
-                                    {t('backup.replace_warning', {
+                                    {t("backup.replace_warning", {
                                       defaultValue:
-                                        'This will permanently delete all existing data before restoring. This action cannot be undone.',
+                                        "This will permanently delete all existing data before restoring. This action cannot be undone.",
                                     })}
                                   </p>
                                 )}
@@ -546,19 +594,25 @@ export function BackupRestore() {
 
                               {/* Restore button */}
                               <Button
-                                variant={restoreMode === 'replace' ? 'danger' : 'primary'}
+                                variant={
+                                  restoreMode === "replace"
+                                    ? "danger"
+                                    : "primary"
+                                }
                                 size="md"
                                 onClick={handleRestoreClick}
                                 disabled={restoring}
                                 loading={restoring}
-                                icon={!restoring ? <Upload size={14} /> : undefined}
+                                icon={
+                                  !restoring ? <Upload size={14} /> : undefined
+                                }
                               >
                                 {restoring
-                                  ? t('backup.restoring', {
-                                      defaultValue: 'Restoring...',
+                                  ? t("backup.restoring", {
+                                      defaultValue: "Restoring...",
                                     })
-                                  : t('backup.restore_btn', {
-                                      defaultValue: 'Restore Backup',
+                                  : t("backup.restore_btn", {
+                                      defaultValue: "Restore Backup",
                                     })}
                               </Button>
                             </div>
@@ -579,15 +633,15 @@ export function BackupRestore() {
         open={showConfirm}
         onConfirm={handleRestore}
         onCancel={() => setShowConfirm(false)}
-        title={t('backup.confirm_replace_title', {
-          defaultValue: 'Replace all data?',
+        title={t("backup.confirm_replace_title", {
+          defaultValue: "Replace all data?",
         })}
-        message={t('backup.confirm_replace_message', {
+        message={t("backup.confirm_replace_message", {
           defaultValue:
-            'All existing projects, BOQ data, cost databases, and settings will be permanently deleted and replaced with the backup contents. This action cannot be undone.',
+            "All existing projects, BOQ data, cost databases, and settings will be permanently deleted and replaced with the backup contents. This action cannot be undone.",
         })}
-        confirmLabel={t('backup.confirm_replace_btn', {
-          defaultValue: 'Replace all data',
+        confirmLabel={t("backup.confirm_replace_btn", {
+          defaultValue: "Replace all data",
         })}
         variant="danger"
         loading={restoring}

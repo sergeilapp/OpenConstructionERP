@@ -3,13 +3,13 @@
  * Endpoints prefixed with /v1/dwg_takeoff/.
  */
 
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
-import { isModuleLoaded } from '@/shared/lib/moduleProbe';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { apiGet, apiPost, apiPatch, apiDelete } from "@/shared/lib/api";
+import { isModuleLoaded } from "@/shared/lib/moduleProbe";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type DwgScaleMode = 'preset' | 'calibrated' | 'per_annotation';
+export type DwgScaleMode = "preset" | "calibrated" | "per_annotation";
 
 export interface DwgDrawing {
   id: string;
@@ -33,15 +33,15 @@ export interface DwgDrawing {
 export interface DxfEntity {
   id: string;
   type:
-    | 'LINE'
-    | 'LWPOLYLINE'
-    | 'ARC'
-    | 'CIRCLE'
-    | 'ELLIPSE'
-    | 'TEXT'
-    | 'POINT'
-    | 'INSERT'
-    | 'HATCH';
+    | "LINE"
+    | "LWPOLYLINE"
+    | "ARC"
+    | "CIRCLE"
+    | "ELLIPSE"
+    | "TEXT"
+    | "POINT"
+    | "INSERT"
+    | "HATCH";
   layer: string;
   /** Hex color string (e.g. "#ff0000") or ACI number */
   color: string | number;
@@ -94,14 +94,14 @@ export interface DwgAnnotation {
   id: string;
   drawing_id: string;
   type:
-    | 'text_pin'
-    | 'arrow'
-    | 'rectangle'
-    | 'distance'
-    | 'area'
-    | 'circle'
-    | 'polyline'
-    | 'line';
+    | "text_pin"
+    | "arrow"
+    | "rectangle"
+    | "distance"
+    | "area"
+    | "circle"
+    | "polyline"
+    | "line";
   points: { x: number; y: number }[];
   /** Extra geometry (radius for circles, etc.) sent to the backend as the
    *  `geometry` blob so the canvas can render primitives that aren't
@@ -134,7 +134,7 @@ export interface DwgAnnotation {
 
 /** Virtual layer name applied to every user-drawn primitive annotation.
  *  Exported so the page + LayerPanel can check against a single constant. */
-export const USER_MARKUP_LAYER = 'USER_MARKUP';
+export const USER_MARKUP_LAYER = "USER_MARKUP";
 
 export interface DwgPin {
   id: string;
@@ -151,7 +151,7 @@ export interface CreateAnnotationPayload {
   drawing_id: string;
   /** Backend field name. The `DwgAnnotation` response still exposes `type`
    *  for backwards-compat with existing viewer code. */
-  annotation_type: DwgAnnotation['type'];
+  annotation_type: DwgAnnotation["type"];
   /** Backend stores all shape-specific data inside a single `geometry`
    *  JSON column; the viewer's `points` array goes in as `geometry.points`. */
   geometry: { points: { x: number; y: number }[]; [k: string]: unknown };
@@ -187,8 +187,10 @@ export async function fetchDrawings(projectId: string): Promise<DwgDrawing[]> {
   if (!projectId) return [];
   // /documents page lists drawings even when oe_dwg_takeoff is disabled —
   // return empty instead of 404-logging on every project switch.
-  if (!(await isModuleLoaded('oe_dwg_takeoff'))) return [];
-  return apiGet<DwgDrawing[]>(`/v1/dwg_takeoff/drawings/?project_id=${projectId}`);
+  if (!(await isModuleLoaded("oe_dwg_takeoff"))) return [];
+  return apiGet<DwgDrawing[]>(
+    `/v1/dwg_takeoff/drawings/?project_id=${projectId}`,
+  );
 }
 
 export async function uploadDrawing(
@@ -199,7 +201,7 @@ export async function uploadDrawing(
 ): Promise<DwgDrawing> {
   const token = useAuthStore.getState().accessToken;
   const form = new FormData();
-  form.append('file', file);
+  form.append("file", file);
 
   const params = new URLSearchParams({
     project_id: projectId,
@@ -207,14 +209,17 @@ export async function uploadDrawing(
     ...(discipline ? { discipline } : {}),
   });
 
-  const res = await fetch(`/api/v1/dwg_takeoff/drawings/upload/?${params.toString()}`, {
-    method: 'POST',
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'X-DDC-Client': 'OE/1.0',
+  const res = await fetch(
+    `/api/v1/dwg_takeoff/drawings/upload/?${params.toString()}`,
+    {
+      method: "POST",
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        "X-DDC-Client": "OE/1.0",
+      },
+      body: form,
     },
-    body: form,
-  });
+  );
   if (!res.ok) {
     const err = await res.text();
     throw new Error(err || res.statusText);
@@ -236,7 +241,10 @@ export async function fetchThumbnail(drawingId: string): Promise<string> {
   return apiGet<string>(`/v1/dwg_takeoff/drawings/${drawingId}/thumbnail/`);
 }
 
-export async function updateLayers(drawingId: string, layers: DxfLayer[]): Promise<void> {
+export async function updateLayers(
+  drawingId: string,
+  layers: DxfLayer[],
+): Promise<void> {
   return apiPatch(`/v1/dwg_takeoff/drawings/${drawingId}/layers`, { layers });
 }
 
@@ -263,7 +271,11 @@ interface RawAnnotation {
   drawing_id: string;
   annotation_type?: string;
   type?: string;
-  geometry?: { points?: { x: number; y: number }[]; radius?: number; [k: string]: unknown };
+  geometry?: {
+    points?: { x: number; y: number }[];
+    radius?: number;
+    [k: string]: unknown;
+  };
   points?: { x: number; y: number }[];
   radius?: number;
   text: string | null;
@@ -282,10 +294,13 @@ interface RawAnnotation {
 }
 
 function normaliseAnnotation(raw: RawAnnotation): DwgAnnotation {
-  const type = (raw.type ?? raw.annotation_type ?? 'text_pin') as DwgAnnotation['type'];
+  const type = (raw.type ??
+    raw.annotation_type ??
+    "text_pin") as DwgAnnotation["type"];
   const geom = raw.geometry ?? {};
   const points = raw.points ?? geom.points ?? [];
-  const radius = raw.radius ?? (typeof geom.radius === 'number' ? geom.radius : undefined);
+  const radius =
+    raw.radius ?? (typeof geom.radius === "number" ? geom.radius : undefined);
   return {
     ...raw,
     type,
@@ -294,15 +309,22 @@ function normaliseAnnotation(raw: RawAnnotation): DwgAnnotation {
   } as DwgAnnotation;
 }
 
-export async function fetchAnnotations(drawingId: string): Promise<DwgAnnotation[]> {
+export async function fetchAnnotations(
+  drawingId: string,
+): Promise<DwgAnnotation[]> {
   const raw = await apiGet<RawAnnotation[]>(
     `/v1/dwg_takeoff/annotations/?drawing_id=${encodeURIComponent(drawingId)}&limit=500`,
   );
   return raw.map(normaliseAnnotation);
 }
 
-export async function createAnnotation(data: CreateAnnotationPayload): Promise<DwgAnnotation> {
-  const raw = await apiPost<RawAnnotation>('/v1/dwg_takeoff/annotations/', data);
+export async function createAnnotation(
+  data: CreateAnnotationPayload,
+): Promise<DwgAnnotation> {
+  const raw = await apiPost<RawAnnotation>(
+    "/v1/dwg_takeoff/annotations/",
+    data,
+  );
   return normaliseAnnotation(raw);
 }
 
@@ -310,7 +332,10 @@ export async function updateAnnotation(
   id: string,
   data: UpdateAnnotationPayload,
 ): Promise<DwgAnnotation> {
-  const raw = await apiPatch<RawAnnotation>(`/v1/dwg_takeoff/annotations/${id}`, data);
+  const raw = await apiPatch<RawAnnotation>(
+    `/v1/dwg_takeoff/annotations/${id}`,
+    data,
+  );
   return normaliseAnnotation(raw);
 }
 
@@ -322,9 +347,12 @@ export async function linkAnnotationToBoq(
   annotId: string,
   boqPositionId: string,
 ): Promise<DwgAnnotation> {
-  const raw = await apiPost<RawAnnotation>(`/v1/dwg_takeoff/annotations/${annotId}/link-boq/`, {
-    position_id: boqPositionId,
-  });
+  const raw = await apiPost<RawAnnotation>(
+    `/v1/dwg_takeoff/annotations/${annotId}/link-boq/`,
+    {
+      position_id: boqPositionId,
+    },
+  );
   return normaliseAnnotation(raw);
 }
 
@@ -356,11 +384,15 @@ export interface CreateEntityGroupPayload {
 export async function createEntityGroup(
   data: CreateEntityGroupPayload,
 ): Promise<DwgEntityGroup> {
-  return apiPost<DwgEntityGroup>('/v1/dwg_takeoff/groups/', data);
+  return apiPost<DwgEntityGroup>("/v1/dwg_takeoff/groups/", data);
 }
 
-export async function fetchEntityGroups(drawingId: string): Promise<DwgEntityGroup[]> {
-  return apiGet<DwgEntityGroup[]>(`/v1/dwg_takeoff/groups/?drawing_id=${drawingId}`);
+export async function fetchEntityGroups(
+  drawingId: string,
+): Promise<DwgEntityGroup[]> {
+  return apiGet<DwgEntityGroup[]>(
+    `/v1/dwg_takeoff/groups/?drawing_id=${drawingId}`,
+  );
 }
 
 export async function deleteEntityGroup(groupId: string): Promise<void> {
@@ -377,13 +409,13 @@ export interface DwgOfflineReadiness {
 }
 
 export async function fetchOfflineReadiness(): Promise<DwgOfflineReadiness> {
-  if (!(await isModuleLoaded('oe_dwg_takeoff'))) {
+  if (!(await isModuleLoaded("oe_dwg_takeoff"))) {
     return {
       ready: false,
       converter_available: false,
       version: null,
-      message: 'DWG takeoff module is disabled',
+      message: "DWG takeoff module is disabled",
     };
   }
-  return apiGet<DwgOfflineReadiness>('/v1/dwg_takeoff/offline-readiness/');
+  return apiGet<DwgOfflineReadiness>("/v1/dwg_takeoff/offline-readiness/");
 }

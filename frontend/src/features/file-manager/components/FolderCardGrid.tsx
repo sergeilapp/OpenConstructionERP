@@ -5,7 +5,7 @@
  * CTA that opens the upload dialog.
  */
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
   FileText,
@@ -21,9 +21,9 @@ import {
   Settings,
   UploadCloud,
   type LucideIcon,
-} from 'lucide-react';
-import clsx from 'clsx';
-import type { FileTreeNode, FileKind } from '../types';
+} from "lucide-react";
+import clsx from "clsx";
+import type { FileTreeNode, FileKind } from "../types";
 
 const KIND_ICON: Record<FileKind, LucideIcon> = {
   document: FileText,
@@ -36,6 +36,20 @@ const KIND_ICON: Record<FileKind, LucideIcon> = {
   markup: PenTool,
 };
 
+/* Per-kind empty-state copy. Reads more useful than the generic
+   "No documents yet" — each line names the format and the action so
+   the user knows what to drop into this folder. */
+const KIND_EMPTY_HINT: Record<FileKind, string> = {
+  document: "Upload specs, contracts, RFIs or reports (PDF, DOCX)",
+  photo: "Capture or upload site photos (JPG, PNG, HEIC)",
+  sheet: "Upload drawing sheets (PDF, DWF) with revision tracking",
+  bim_model: "Upload IFC, RVT or NWD models for 3D coordination",
+  dwg_drawing: "Upload AutoCAD DWG drawings for 2D takeoff",
+  takeoff: "Generate quantity takeoffs from sheets and models",
+  report: "Generate analysis, validation or cost reports",
+  markup: "Create PDF markups and review sessions",
+};
+
 // One tone per kind. The square sits behind the icon and gives each
 // folder an at-a-glance identity. Same colour family as FileGrid tiles
 // so the card → grid transition feels continuous.
@@ -44,60 +58,61 @@ const KIND_TONE: Record<
   { tile: string; icon: string; ring: string; bar: string }
 > = {
   document: {
-    tile: 'bg-sky-50 dark:bg-sky-950/30',
-    icon: 'text-sky-600 dark:text-sky-400',
-    ring: 'group-hover:ring-sky-500/30',
-    bar: 'bg-sky-500',
+    tile: "bg-sky-50 dark:bg-sky-950/30",
+    icon: "text-sky-600 dark:text-sky-400",
+    ring: "group-hover:ring-sky-500/30",
+    bar: "bg-sky-500",
   },
   photo: {
-    tile: 'bg-emerald-50 dark:bg-emerald-950/30',
-    icon: 'text-emerald-600 dark:text-emerald-400',
-    ring: 'group-hover:ring-emerald-500/30',
-    bar: 'bg-emerald-500',
+    tile: "bg-emerald-50 dark:bg-emerald-950/30",
+    icon: "text-emerald-600 dark:text-emerald-400",
+    ring: "group-hover:ring-emerald-500/30",
+    bar: "bg-emerald-500",
   },
   sheet: {
-    tile: 'bg-amber-50 dark:bg-amber-950/30',
-    icon: 'text-amber-600 dark:text-amber-400',
-    ring: 'group-hover:ring-amber-500/30',
-    bar: 'bg-amber-500',
+    tile: "bg-amber-50 dark:bg-amber-950/30",
+    icon: "text-amber-600 dark:text-amber-400",
+    ring: "group-hover:ring-amber-500/30",
+    bar: "bg-amber-500",
   },
   bim_model: {
-    tile: 'bg-violet-50 dark:bg-violet-950/30',
-    icon: 'text-violet-600 dark:text-violet-400',
-    ring: 'group-hover:ring-violet-500/30',
-    bar: 'bg-violet-500',
+    tile: "bg-violet-50 dark:bg-violet-950/30",
+    icon: "text-violet-600 dark:text-violet-400",
+    ring: "group-hover:ring-violet-500/30",
+    bar: "bg-violet-500",
   },
   dwg_drawing: {
-    tile: 'bg-orange-50 dark:bg-orange-950/30',
-    icon: 'text-orange-600 dark:text-orange-400',
-    ring: 'group-hover:ring-orange-500/30',
-    bar: 'bg-orange-500',
+    tile: "bg-orange-50 dark:bg-orange-950/30",
+    icon: "text-orange-600 dark:text-orange-400",
+    ring: "group-hover:ring-orange-500/30",
+    bar: "bg-orange-500",
   },
   takeoff: {
-    tile: 'bg-cyan-50 dark:bg-cyan-950/30',
-    icon: 'text-cyan-600 dark:text-cyan-400',
-    ring: 'group-hover:ring-cyan-500/30',
-    bar: 'bg-cyan-500',
+    tile: "bg-cyan-50 dark:bg-cyan-950/30",
+    icon: "text-cyan-600 dark:text-cyan-400",
+    ring: "group-hover:ring-cyan-500/30",
+    bar: "bg-cyan-500",
   },
   report: {
-    tile: 'bg-pink-50 dark:bg-pink-950/30',
-    icon: 'text-pink-600 dark:text-pink-400',
-    ring: 'group-hover:ring-pink-500/30',
-    bar: 'bg-pink-500',
+    tile: "bg-pink-50 dark:bg-pink-950/30",
+    icon: "text-pink-600 dark:text-pink-400",
+    ring: "group-hover:ring-pink-500/30",
+    bar: "bg-pink-500",
   },
   markup: {
-    tile: 'bg-rose-50 dark:bg-rose-950/30',
-    icon: 'text-rose-600 dark:text-rose-400',
-    ring: 'group-hover:ring-rose-500/30',
-    bar: 'bg-rose-500',
+    tile: "bg-rose-50 dark:bg-rose-950/30",
+    icon: "text-rose-600 dark:text-rose-400",
+    ring: "group-hover:ring-rose-500/30",
+    bar: "bg-rose-500",
   },
 };
 
 function fmtBytes(bytes: number): string {
-  if (!bytes) return '0 B';
+  if (!bytes) return "0 B";
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
@@ -149,7 +164,7 @@ export function FolderCardGrid({
       <div className="flex flex-col items-center justify-center py-16 px-6 text-center text-content-tertiary">
         <Folder size={36} className="mb-3 opacity-60" />
         <p className="text-sm font-medium text-content-secondary">
-          {t('files.tree.empty', { defaultValue: 'No files yet.‌⁠‍' })}
+          {t("files.tree.empty", { defaultValue: "No files yet.‌⁠‍" })}
         </p>
         <button
           type="button"
@@ -157,7 +172,7 @@ export function FolderCardGrid({
           className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors"
         >
           <UploadCloud size={14} />
-          {t('files.upload', { defaultValue: 'Upload files‌⁠‍' })}
+          {t("files.upload", { defaultValue: "Upload files‌⁠‍" })}
         </button>
       </div>
     );
@@ -194,7 +209,7 @@ export function FolderCardGrid({
 // "category:bim_model"). Strip the prefix defensively so cached URLs and
 // older API responses still resolve to a valid FileKind.
 function bareKind(id: string): FileKind {
-  return id.replace(/^category:/, '') as FileKind;
+  return id.replace(/^category:/, "") as FileKind;
 }
 
 interface FolderCardProps {
@@ -224,10 +239,10 @@ function FolderCard({
   const isRestricted = permissionCount > 0;
   const lockTooltip = t(
     permissionCount === 1
-      ? 'files.permissions.lock_tooltip'
-      : 'files.permissions.lock_tooltip_plural',
+      ? "files.permissions.lock_tooltip"
+      : "files.permissions.lock_tooltip_plural",
     {
-      defaultValue: 'Restricted: {{count}} members can access‌⁠‍',
+      defaultValue: "Restricted: {{count}} members can access‌⁠‍",
       count: permissionCount,
     },
   );
@@ -238,16 +253,16 @@ function FolderCard({
         type="button"
         onClick={onUpload}
         className={clsx(
-          'group relative flex flex-col items-start text-left rounded-xl p-3.5 min-h-[124px]',
-          'border border-dashed border-border-light bg-surface-primary/40',
-          'hover:border-oe-blue/40 hover:bg-surface-primary transition-colors',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
+          "group relative flex flex-col items-start text-left rounded-xl p-3.5 min-h-[124px]",
+          "border border-dashed border-border-light bg-surface-primary/40",
+          "hover:border-oe-blue/40 hover:bg-surface-primary transition-colors",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
         )}
       >
         <div className="flex items-center gap-2 w-full">
           <span
             className={clsx(
-              'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg',
+              "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
               tone.tile,
             )}
           >
@@ -260,15 +275,15 @@ function FolderCard({
             {label}
           </h3>
         </div>
-        <p className="mt-2 text-xs text-content-tertiary">
-          {t('files.empty_category', {
-            defaultValue: 'No {{category}} yet‌⁠‍',
-            category: label.toLowerCase(),
+        <p className="mt-2 text-xs text-content-tertiary line-clamp-2">
+          {t(`files.empty_hint.${kind}`, {
+            defaultValue:
+              KIND_EMPTY_HINT[kind] ?? `No ${label.toLowerCase()} yet`,
           })}
         </p>
         <span className="mt-auto pt-2.5 inline-flex items-center gap-1.5 text-xs font-medium text-oe-blue opacity-80 group-hover:opacity-100">
           <UploadCloud size={12} />
-          {t('files.cta.add_first_short', { defaultValue: 'Add files‌⁠‍' })}
+          {t("files.cta.add_first_short", { defaultValue: "Add files‌⁠‍" })}
         </span>
       </button>
     );
@@ -282,10 +297,10 @@ function FolderCard({
     <div
       data-testid={`folder-card-${kind}`}
       className={clsx(
-        'group relative flex flex-col rounded-xl min-h-[124px]',
-        'border border-border-light bg-surface-elevated',
-        'transition-all duration-150',
-        'hover:-translate-y-0.5 hover:shadow-md hover:border-border-medium',
+        "group relative flex flex-col rounded-xl min-h-[124px]",
+        "border border-border-light bg-surface-elevated",
+        "transition-all duration-150",
+        "hover:-translate-y-0.5 hover:shadow-md hover:border-border-medium",
       )}
     >
       {/* Owner-only secondary actions overlay (gear + lock badge). */}
@@ -308,8 +323,12 @@ function FolderCard({
               onManageAccess();
             }}
             data-testid={`folder-manage-access-${kind}`}
-            aria-label={t('files.permissions.manage', { defaultValue: 'Manage access' })}
-            title={t('files.permissions.manage', { defaultValue: 'Manage access' })}
+            aria-label={t("files.permissions.manage", {
+              defaultValue: "Manage access",
+            })}
+            title={t("files.permissions.manage", {
+              defaultValue: "Manage access",
+            })}
             className="inline-flex h-5 w-5 items-center justify-center rounded-md text-content-tertiary opacity-0 group-hover:opacity-100 hover:bg-surface-secondary hover:text-content-primary transition-all"
           >
             <Settings size={11} />
@@ -321,16 +340,16 @@ function FolderCard({
         type="button"
         onClick={onOpen}
         className={clsx(
-          'flex flex-col text-left p-3.5 w-full h-full min-h-[124px]',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-xl',
+          "flex flex-col text-left p-3.5 w-full h-full min-h-[124px]",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-xl",
         )}
       >
         {/* Header: icon chip + title inline (compact, app design-system style) */}
         <div className="flex items-center gap-2 w-full pr-12">
           <span
             className={clsx(
-              'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg',
-              'transition-shadow group-hover:ring-2',
+              "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
+              "transition-shadow group-hover:ring-2",
               tone.tile,
               tone.ring,
             )}
@@ -351,7 +370,7 @@ function FolderCard({
             {node.file_count.toLocaleString()}
           </span>
           <span className="text-xs text-content-tertiary">
-            {t('files.folder.files_count', { defaultValue: 'files' })}
+            {t("files.folder.files_count", { defaultValue: "files" })}
           </span>
         </div>
         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-content-tertiary tabular-nums">
@@ -362,8 +381,8 @@ function FolderCard({
             <>
               <span className="text-content-quaternary">·</span>
               <span>
-                {t('files.folder.subfolders', {
-                  defaultValue: '{{count}} folders',
+                {t("files.folder.subfolders", {
+                  defaultValue: "{{count}} folders",
                   count: subfolders,
                 })}
               </span>
@@ -376,21 +395,26 @@ function FolderCard({
           <div
             className="flex-1 h-1 rounded-full bg-surface-tertiary overflow-hidden"
             role="img"
-            aria-label={t('files.folder.share', {
-              defaultValue: '{{pct}}% of total storage',
+            aria-label={t("files.folder.share", {
+              defaultValue: "{{pct}}% of total storage",
               pct: sharePct,
             })}
           >
             <div
-              className={clsx('h-full rounded-full transition-[width] duration-500', tone.bar)}
-              style={{ width: `${Math.max(sharePct, node.total_bytes > 0 ? 2 : 0)}%` }}
+              className={clsx(
+                "h-full rounded-full transition-[width] duration-500",
+                tone.bar,
+              )}
+              style={{
+                width: `${Math.max(sharePct, node.total_bytes > 0 ? 2 : 0)}%`,
+              }}
             />
           </div>
           <span className="text-2xs text-content-quaternary tabular-nums shrink-0 group-hover:hidden">
             {sharePct}%
           </span>
           <span className="hidden group-hover:inline-flex items-center gap-0.5 text-2xs font-medium text-oe-blue shrink-0">
-            {t('files.folder.open', { defaultValue: 'Open' })}
+            {t("files.folder.open", { defaultValue: "Open" })}
             <ArrowRight size={11} />
           </span>
         </div>

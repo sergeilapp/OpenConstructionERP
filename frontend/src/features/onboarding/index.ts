@@ -1,1 +1,5 @@
-export { OnboardingWizard, isOnboardingCompleted, markOnboardingCompleted } from './OnboardingWizard';
+export {
+  OnboardingWizard,
+  isOnboardingCompleted,
+  markOnboardingCompleted,
+} from "./OnboardingWizard";

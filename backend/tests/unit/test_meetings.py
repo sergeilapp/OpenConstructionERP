@@ -107,9 +107,7 @@ class _StubMeetingRepo:
     async def all_for_project(self, project_id: uuid.UUID) -> list[Any]:
         return [r for r in self.rows.values() if r.project_id == project_id]
 
-    async def action_items_for_project(
-        self, project_id: uuid.UUID
-    ) -> list[tuple[uuid.UUID, str, str, Any, list]]:
+    async def action_items_for_project(self, project_id: uuid.UUID) -> list[tuple[uuid.UUID, str, str, Any, list]]:
         return [
             (r.id, r.meeting_number, r.title, r.meeting_date, r.action_items or [])
             for r in self.rows.values()
@@ -210,9 +208,7 @@ async def test_update_meeting_title() -> None:
             meeting_date="2026-04-15",
         )
     )
-    updated = await service.update_meeting(
-        meeting.id, MeetingUpdate(title="Revised Kickoff")
-    )
+    updated = await service.update_meeting(meeting.id, MeetingUpdate(title="Revised Kickoff"))
     assert updated.title == "Revised Kickoff"
 
 

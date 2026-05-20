@@ -1,5 +1,5 @@
 // @ts-nocheck
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 
 // Node's `undici`-backed `fetch` rejects an `AbortSignal` created via the
 // jsdom-provided `AbortController` ("Expected signal to be an instance of
@@ -11,9 +11,9 @@ import '@testing-library/jest-dom';
 // regardless of the signal field.
 {
   const originalFetch = globalThis.fetch;
-  if (typeof originalFetch === 'function') {
+  if (typeof originalFetch === "function") {
     globalThis.fetch = ((input, init) => {
-      if (init && 'signal' in init) {
+      if (init && "signal" in init) {
         // Drop the realm-mismatched signal; keep the rest of the init.
         const { signal: _signal, ...rest } = init;
         return originalFetch(input, rest);
@@ -23,23 +23,22 @@ import '@testing-library/jest-dom';
   }
 }
 
-
 // Mock i18next. We expose the same surface that production code imports
 // from `react-i18next` — `useTranslation`, `Trans`, AND `initReactI18next`
 // (a noop plugin shape). Components that pull `t(key)` get sensible
 // English fallbacks via `defaultValue`; components that import
 // `initReactI18next` (because they live downstream of `app/i18n.ts`) get
 // a no-op plugin so the import side-effect doesn't crash.
-const noopPlugin = { type: '3rdParty', init: () => {} };
-vi.mock('react-i18next', () => ({
+const noopPlugin = { type: "3rdParty", init: () => {} };
+vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, opts?: Record<string, unknown>) => {
-      if (typeof opts === 'object' && opts !== null && 'defaultValue' in opts) {
+      if (typeof opts === "object" && opts !== null && "defaultValue" in opts) {
         return opts.defaultValue as string;
       }
       return key;
     },
-    i18n: { language: 'en', changeLanguage: vi.fn() },
+    i18n: { language: "en", changeLanguage: vi.fn() },
   }),
   Trans: ({ children }: { children: React.ReactNode }) => children,
   initReactI18next: noopPlugin,
@@ -47,8 +46,8 @@ vi.mock('react-i18next', () => ({
 }));
 
 // Mock react-router-dom navigation
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => vi.fn(),
@@ -62,9 +61,15 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: (key: string) => store[key] ?? null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; },
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
   };
 })();
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(window, "localStorage", { value: localStorageMock });

@@ -35,6 +35,7 @@ async def _can_open_isolated_session() -> bool:
     except Exception:
         return False
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -149,9 +150,7 @@ async def _on_subcontractor_prequalification_submitted(event: Event) -> None:
                 notification_type="task_assigned",
                 title_key="notifications.subcontractors.prequal_submitted.title",
                 body_key="notifications.subcontractors.prequal_submitted.body",
-                body_context={
-                    "subcontractor_name": str(data.get("subcontractor_name") or "")
-                },
+                body_context={"subcontractor_name": str(data.get("subcontractor_name") or "")},
                 entity_type="prequalification",
                 entity_id=str(application_id),
                 action_url=f"/subcontractors/prequalifications/{application_id}",
