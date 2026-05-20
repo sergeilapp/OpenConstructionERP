@@ -246,6 +246,34 @@ def map_payload_to_lead(
     return lead_fields, missing_required
 
 
+def _direct_map_payload(
+    payload: Any,
+    *,
+    default_lead_source: str = "web",
+) -> tuple[dict[str, Any], list[str]]:
+    """Fall-back direct mapping when no explicit mappings exist.
+
+    Extracts top-level keys from ``payload`` that exactly match allowed CRM
+    target fields. Returns ``(lead_fields, missing_required)`` — the
+    missing list is always empty because no field is marked required in
+    this mode.
+    """
+    if not isinstance(payload, dict):
+        return {"source": default_lead_source}, []
+
+    lead_fields: dict[str, Any] = {}
+    for key, value in payload.items():
+        if key in ALLOWED_TARGET_FIELDS:
+            is_empty = value is None or (
+                isinstance(value, str) and value.strip() == ""
+            )
+            if not is_empty:
+                lead_fields[key] = value
+
+    lead_fields.setdefault("source", default_lead_source)
+    return lead_fields, []
+
+
 class WebhookAuthError(Exception):
     """Raised by :meth:`authenticate_source` — carries an HTTP status.
 
@@ -628,11 +656,23 @@ class WebhookLeadsService:
 
         # Payload mapping.
         mappings = await self.mapping_repo.list_for_source(source.id)
-        lead_fields, missing = map_payload_to_lead(
-            parsed_payload,
-            mappings,
-            default_lead_source=source.default_lead_source,
-        )
+
+        if mappings:
+            # Explicit mappings configured — use the mapping engine.
+            lead_fields, missing = map_payload_to_lead(
+                parsed_payload,
+                mappings,
+                default_lead_source=source.default_lead_source,
+            )
+        else:
+            # No mappings — fall back to direct key matching. Top-level
+            # payload keys that exactly match allowed CRM target fields are
+            # used as-is. This lets external systems (Elementor, Zapier,
+            # etc.) send a pre-mapped payload without OCE-side configuration.
+            lead_fields, missing = _direct_map_payload(
+                parsed_payload,
+                default_lead_source=source.default_lead_source,
+            )
         if missing:
             msg = f"Missing required mapped field(s): {', '.join(sorted(missing))}"
             await self._write_log(
