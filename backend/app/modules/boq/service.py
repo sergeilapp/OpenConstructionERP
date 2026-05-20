@@ -291,6 +291,7 @@ from app.modules.boq.schemas import (
     MarkupResponse,
     MarkupUpdate,
     PositionCreate,
+    PositionLinksResponse,
     PositionResponse,
     PositionUpdate,
     QuantityLinkApplyResponse,
@@ -7774,6 +7775,7 @@ class BOQService:
         """Call LLM and return (raw_text, provider, tokens_used)."""
         from app.modules.ai.ai_client import call_ai
 
+
         provider, api_key, model_override = await self._get_ai_client(user_id)
         raw_text, tokens = await call_ai(
             provider=provider,
@@ -7781,6 +7783,7 @@ class BOQService:
             system=system,
             prompt=prompt,
             max_tokens=2048,
+
             model=model_override,
         )
         return raw_text, provider, tokens

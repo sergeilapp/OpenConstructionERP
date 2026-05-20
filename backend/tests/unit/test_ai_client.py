@@ -233,6 +233,40 @@ class TestResolveProviderAndKey:
             resolve_provider_and_key(None)
 
 
+class TestResolveProviderKeyModel:
+    def _make_settings(self, **kwargs):
+        defaults = {
+            "anthropic_api_key": None,
+            "openai_api_key": None,
+            "gemini_api_key": None,
+            "openrouter_api_key": None,
+            "mistral_api_key": None,
+            "groq_api_key": None,
+            "deepseek_api_key": None,
+            "preferred_model": "claude-sonnet",
+            "metadata_": None,
+        }
+        defaults.update(kwargs)
+        return SimpleNamespace(**defaults)
+
+    def test_returns_model_override_when_set(self):
+        settings = self._make_settings(
+            anthropic_api_key="sk-ant-123",
+            metadata_={"model_overrides": {"anthropic": "claude-opus-4"}},
+        )
+        provider, key, model_override = resolve_provider_key_model(settings)
+        assert provider == "anthropic"
+        assert key == "sk-ant-123"
+        assert model_override == "claude-opus-4"
+
+    def test_returns_none_when_no_override(self):
+        settings = self._make_settings(anthropic_api_key="sk-ant-123")
+        provider, key, model_override = resolve_provider_key_model(settings)
+        assert provider == "anthropic"
+        assert key == "sk-ant-123"
+        assert model_override is None
+
+
 # ── Model defaults & user-overridable model id (issue #129) ──────────────────
 
 

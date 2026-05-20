@@ -277,6 +277,9 @@ async def folder_access_for(
 
     Returns:
         * ``"owner"`` when the user is the project owner (full bypass).
+        * ``"owner"`` when the user is a global admin (consistent
+          with ``_verify_project_membership_or_404`` and the list-
+          documents endpoint).
         * The grant's role string (``"viewer"`` / ``"editor"`` /
           ``"owner"``) when the user has a specific grant covering
           this scope.
@@ -293,6 +296,15 @@ async def folder_access_for(
     user_id_norm = uuid.UUID(str(user_id))
 
     if await is_project_owner(session, project_id, user_id_norm):
+        return "owner"
+
+    # Admin bypass — global admins can read/write any project's
+    # documents even when they are not on the project team. Matches
+    # the same bypass in ``_verify_project_membership_or_404``.
+    from app.modules.users.repository import UserRepository
+
+    _user = await UserRepository(session).get_by_id(user_id_norm)
+    if _user is not None and getattr(_user, "role", "") == "admin":
         return "owner"
 
     if not await is_project_member(session, project_id, user_id_norm):

@@ -272,6 +272,7 @@ async def _build_ai_caller(
 
     try:
         settings_obj = await AISettingsRepository(session).get_by_user_id(uid)
+
         provider, api_key, model_override = resolve_provider_key_model(settings_obj)
     except Exception:
         return None
@@ -282,8 +283,8 @@ async def _build_ai_caller(
             api_key=api_key,
             system=system,
             prompt=prompt,
-            max_tokens=1024,
             model=model_override,
+            max_tokens=1024,
         )
         return text
 

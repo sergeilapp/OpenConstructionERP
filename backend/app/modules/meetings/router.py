@@ -684,6 +684,7 @@ async def _extract_with_ai(
         if not ai_settings:
             return False
 
+
         provider, api_key, model_override = resolve_provider_key_model(ai_settings)
 
         # Truncate transcript for AI prompt (leave room for the prompt template)
@@ -696,6 +697,7 @@ async def _extract_with_ai(
             system=_AI_MEETING_SYSTEM,
             prompt=ai_prompt,
             max_tokens=4096,
+
             model=model_override,
         )
 

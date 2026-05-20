@@ -106,7 +106,7 @@ async def llm_translate(
     try:
         from app.modules.ai.ai_client import (
             call_ai,
-            resolve_provider_and_key,
+            resolve_provider_key_model,
         )
     except Exception as exc:  # pragma: no cover — defensive
         logger.debug("AI client import failed: %s", exc)
@@ -118,7 +118,7 @@ async def llm_translate(
         return None
 
     try:
-        provider, api_key = resolve_provider_and_key(user_settings)
+        provider, api_key, model_override = resolve_provider_key_model(user_settings)
     except ValueError as exc:
         logger.debug("LLM translate skipped: %s", exc)
         return None
@@ -133,6 +133,7 @@ async def llm_translate(
             api_key=api_key,
             system=_SYSTEM,
             prompt=prompt,
+            model=model_override,
             # Construction terms are short — cap response length so a
             # confused LLM can't generate paragraphs and inflate cost.
             max_tokens=128,

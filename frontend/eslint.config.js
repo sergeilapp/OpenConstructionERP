@@ -104,6 +104,8 @@ export default [
       '*.config.ts',
       '*.config.mjs',
       '**/*.d.ts',
+      '_screenshot_*.mjs',
+      'verify-developed-by.mjs',
       'src/app/i18n.ts', // Auto-generated translation file (huge)
     ],
   },

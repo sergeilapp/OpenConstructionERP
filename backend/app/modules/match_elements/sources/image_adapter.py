@@ -342,7 +342,7 @@ class ImageSourceAdapter:
         # the AI module at import time — so a tenant that disabled
         # the AI module entirely doesn't break match-elements imports.
         try:
-            from app.modules.ai.ai_client import call_ai, resolve_provider_and_key
+            from app.modules.ai.ai_client import call_ai, resolve_provider_key_model
             from app.modules.ai.repository import AISettingsRepository
         except ImportError as exc:
             logger.warning("ImageAdapter: AI module not available: %s", exc)
@@ -376,16 +376,16 @@ class ImageSourceAdapter:
                     ).scalars().all()
                     for row in rows:
                         try:
-                            provider, api_key = resolve_provider_and_key(row)
+                            provider, api_key, model_override = resolve_provider_key_model(row)
                             settings_row = row
                             break
                         except ValueError:
                             continue
                 if settings_row is not None and provider is None:
                     try:
-                        provider, api_key = resolve_provider_and_key(settings_row)
+                        provider, api_key, model_override = resolve_provider_key_model(settings_row)
                     except ValueError:
-                        provider, api_key = None, None
+                        provider, api_key, model_override = None, None, None
             except Exception as exc:  # noqa: BLE001 — AI is best-effort
                 logger.warning("ImageAdapter: settings lookup failed: %s", exc)
 
@@ -405,6 +405,7 @@ class ImageSourceAdapter:
                 prompt=IMAGE_EXTRACTION_PROMPT,
                 image_base64=image_b64,
                 image_media_type=mime,
+                model=model_override if 'model_override' in dir() else None,
             )
         except Exception as exc:  # noqa: BLE001 — vision is best-effort
             logger.warning("ImageAdapter: AI call failed: %s", exc)

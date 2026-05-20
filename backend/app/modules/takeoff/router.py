@@ -3837,6 +3837,7 @@ async def analyze_document(
     settings = await settings_repo.get_by_user_id(_uuid.UUID(user_id))
 
     try:
+
         provider, api_key, model_override = resolve_provider_key_model(settings)
     except ValueError as exc:
         raise HTTPException(
@@ -3861,6 +3862,7 @@ async def analyze_document(
             api_key=api_key,
             system=SYSTEM_PROMPT,
             prompt=prompt,
+
             model=model_override,
         )
     except ValueError as exc:

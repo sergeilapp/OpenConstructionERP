@@ -21,6 +21,7 @@ import {
   toMeters,
   type ScaleConfig,
 } from '../../../modules/pdf-takeoff/data/scale-helpers';
+import { usePreferencesStore } from '@/stores/usePreferencesStore';
 
 /** What the user actually typed, for honest badge display.
  *
@@ -66,11 +67,13 @@ export function CalibrationDialog({
   onConfirm,
   onCancel,
   initialRealLength = 1,
-  initialUnit = 'm',
+  initialUnit,
 }: CalibrationDialogProps) {
   const { t } = useTranslation();
+  const measurementSystem = usePreferencesStore((s) => s.measurementSystem);
+  const defaultUnit: CalibrationUnit = initialUnit ?? (measurementSystem === 'imperial' ? 'ft' : 'm');
   const [realLength, setRealLength] = useState<string>(String(initialRealLength));
-  const [unit, setUnit] = useState<CalibrationUnit>(initialUnit);
+  const [unit, setUnit] = useState<CalibrationUnit>(defaultUnit);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

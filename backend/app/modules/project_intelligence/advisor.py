@@ -137,6 +137,7 @@ async def _get_ai_settings(session: AsyncSession) -> Any:
         return None
 
 
+
 async def _resolve_provider(session: AsyncSession) -> tuple[str, str, str | None] | None:
     """Resolve (provider, key, model_override). None if no LLM configured.
 
@@ -149,6 +150,7 @@ async def _resolve_provider(session: AsyncSession) -> tuple[str, str, str | None
         settings = await _get_ai_settings(session)
         if settings is None:
             return None
+
         provider, key, model_override = resolve_provider_key_model(settings)
         return (provider, key, model_override)
     except (ValueError, Exception):
@@ -179,6 +181,7 @@ async def generate_recommendations(
     if provider_info:
         try:
             from app.modules.ai.ai_client import call_ai
+
 
             provider, api_key, model_override = provider_info
             system = _build_system_prompt(role, language, state.standard)
@@ -226,6 +229,7 @@ async def explain_gap(
     if provider_info:
         try:
             from app.modules.ai.ai_client import call_ai
+
 
             provider, api_key, model_override = provider_info
             system = (
@@ -332,6 +336,7 @@ async def answer_question(
     if provider_info:
         try:
             from app.modules.ai.ai_client import call_ai
+
 
             provider, api_key, model_override = provider_info
             system = _build_system_prompt(role, language, state.standard)

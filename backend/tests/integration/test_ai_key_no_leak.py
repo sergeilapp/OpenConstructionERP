@@ -26,7 +26,6 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-
 # ── Fixtures ─────────────────────────────────────────────────────────────────
 
 
@@ -71,7 +70,7 @@ OPENAI_KEY = "sk-proj-OPENAI-NEVER-SHOW-ME-IN-RESPONSE-67890"
 GEMINI_KEY = "AIza-GEMINI-NEVER-SHOW-ME-IN-RESPONSE-abcdef"
 
 
-def _payload_with_keys() -> "AISettingsUpdate":  # type: ignore[name-defined]  # forward ref
+def _payload_with_keys() -> "AISettingsUpdate":  # type: ignore[name-defined]  # noqa: UP037, F821  # forward ref
     from app.modules.ai.schemas import AISettingsUpdate
 
     return AISettingsUpdate(

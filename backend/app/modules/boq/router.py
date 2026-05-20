@@ -2610,6 +2610,7 @@ async def ai_chat_boq(
     settings = await settings_repo.get_by_user_id(uid)
 
     try:
+
         provider, api_key, model_override = resolve_provider_key_model(settings)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
@@ -2639,6 +2640,7 @@ async def ai_chat_boq(
             system=with_locale(BOQ_CHAT_SYSTEM_PROMPT, locale),
             prompt=prompt,
             max_tokens=4096,
+
             model=model_override,
         )
     except Exception as exc:
@@ -5248,6 +5250,7 @@ async def smart_import(
     ai_settings = await settings_repo.get_by_user_id(user_uuid)
 
     try:
+
         provider, api_key, model_override = resolve_provider_key_model(ai_settings)
     except ValueError as exc:
         raise HTTPException(
@@ -5296,6 +5299,7 @@ async def smart_import(
             image_base64=image_b64,
             image_media_type=image_mime,
             max_tokens=4096,
+
             model=model_override,
         )
     except Exception as exc:
