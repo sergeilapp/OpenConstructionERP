@@ -187,3 +187,15 @@ Commit messages must follow: `feat, fix, refactor, docs, test, chore, perf, ci, 
 
 ## AI Integration
 AI providers (Anthropic, OpenAI, Gemini, Mistral, Groq, DeepSeek) are called via REST/httpx — no vendor SDKs in deps. API keys stored in DB and `~/.openestimate/config.json`.
+
+## Git & GitHub Workflow
+
+See `docs/DEVELOPER_WORKFLOW.md` for the complete guide covering:
+- Branch naming conventions and strategy
+- Feature branch workflow (create → develop → merge)
+- Updating from upstream releases
+- When to use branches vs issues vs roadmap
+- Testing before merging
+- Resolving merge conflicts
+- Server management (start/stop/restart/troubleshoot)
+- Git hygiene and commit message format
