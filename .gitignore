@@ -151,6 +151,9 @@ backend/data/dwg_uploads/
 # VPS deployment files (local deployment configs)
 deploy/vps/
 
+# VPS deployment files (local deployment configs)
+deploy/vps/
+
 # Local-only working state (not for commit)
 tmp/
 backend/_frontend_dist/

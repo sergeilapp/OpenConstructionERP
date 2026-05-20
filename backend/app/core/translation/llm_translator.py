@@ -133,6 +133,7 @@ async def llm_translate(
             api_key=api_key,
             system=_SYSTEM,
             prompt=prompt,
+<<<<<<< HEAD
             model=model_override,
             # Construction terms are short — cap response length so a
             # confused LLM can't generate paragraphs and inflate cost.
