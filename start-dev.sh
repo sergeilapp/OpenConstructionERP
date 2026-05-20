@@ -14,17 +14,18 @@ echo "[1/3] Starting PostgreSQL (Docker)..."
 docker compose up -d postgres 2>/dev/null || docker compose start postgres 2>/dev/null || echo "  (already running or using external postgres)"
 
 # Kill any existing dev servers
-pkill -f "uvicorn app.main:create_app" 2>/dev/null || true
-pkill -f "vite" 2>/dev/null || true
+pkill -f "uvicorn app.main:create_app --factory --reload --port 8000" 2>/dev/null || true
+pkill -f "node .*/node_modules/\.bin/vite" 2>/dev/null || true
 sleep 1
 
 # Activate venv and start backend
 echo "[2/3] Starting Backend (uvicorn)..."
-source venv/bin/activate
-cd backend
-nohup uvicorn app.main:create_app --factory --reload --port 8000 > /tmp/ocerp-backend.log 2>&1 &
+(
+    source venv/bin/activate
+    cd backend
+    exec uvicorn app.main:create_app --factory --reload --port 8000 >> /tmp/ocerp-backend.log 2>&1
+) &
 BACKEND_PID=$!
-cd ..
 echo "  Backend PID: $BACKEND_PID (log: /tmp/ocerp-backend.log)"
 
 # Wait for backend to be ready
@@ -39,8 +40,10 @@ done
 
 # Start frontend
 echo "[3/3] Starting Frontend (vite)..."
-cd frontend
-nohup npm run dev > /tmp/ocerp-frontend.log 2>&1 &
+(
+    cd frontend
+    exec npm run dev >> /tmp/ocerp-frontend.log 2>&1
+) &
 FRONTEND_PID=$!
 echo "  Frontend PID: $FRONTEND_PID (log: /tmp/ocerp-frontend.log)"
 
@@ -60,4 +63,4 @@ echo "  Backend:  http://localhost:8000 (PID $BACKEND_PID)"
 echo "  Frontend: http://localhost:5180 (PID $FRONTEND_PID)"
 echo "  Logs:     /tmp/ocerp-backend.log, /tmp/ocerp-frontend.log"
 echo ""
-echo "To stop: pkill -f 'uvicorn app.main:create_app'; pkill -f 'vite'"
+echo "To stop: pkill -f 'uvicorn app.main:create_app'; pkill -f 'node .*/node_modules/\.bin/vite'"
