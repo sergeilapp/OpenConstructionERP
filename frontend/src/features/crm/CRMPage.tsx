@@ -184,7 +184,7 @@ export function CRMPage() {
   });
   const oppsQ = useQuery({
     queryKey: ["crm", "opportunities"],
-    queryFn: () => listOpportunities({ limit: 500 }),
+    queryFn: () => listOpportunities({ limit: 200 }),
     enabled: view === "pipeline" || view === "list",
   });
   const leadsQ = useQuery({
