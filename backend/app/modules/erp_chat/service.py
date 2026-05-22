@@ -552,6 +552,7 @@ class ERPChatService:
             for i in range(0, len(text), chunk_size):
                 yield _sse("text", {"content": text[i : i + chunk_size]})
         except Exception as exc:
+            logger.warning("AI fallback error (%s): %s", provider, exc)
             yield _sse("error", {"message": f"AI error ({provider}): {exc}"})
 
     # ── Response parsing ─────────────────────────────────────────────────
