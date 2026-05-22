@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Package,
   Plus,
@@ -18,31 +18,21 @@ import {
   Download,
   FileText,
   AlertTriangle,
-} from "lucide-react";
-import {
-  Button,
-  Card,
-  Badge,
-  EmptyState,
-  Skeleton,
-  InfoHint,
-  SkeletonTable,
-  Breadcrumb,
-  ConfirmDialog,
-} from "@/shared/ui";
+} from 'lucide-react';
+import { Button, Card, Badge, EmptyState, Skeleton, InfoHint, SkeletonTable, Breadcrumb, ConfirmDialog } from '@/shared/ui';
 import {
   WideModal,
   WideModalSection,
   WideModalField,
-} from "@/shared/ui/WideModal";
-import { useConfirm } from "@/shared/hooks/useConfirm";
-import { apiGet, apiPost, apiPatch } from "@/shared/lib/api";
-import { useToastStore } from "@/stores/useToastStore";
-import { useProjectContextStore } from "@/stores/useProjectContextStore";
-import { BidComparisonChart } from "./BidComparisonChart";
-import { AddendumList } from "./AddendumList";
-import { LevelingMatrix } from "./LevelingMatrix";
-import { getIntlLocale } from "@/shared/lib/formatters";
+} from '@/shared/ui/WideModal';
+import { useConfirm } from '@/shared/hooks/useConfirm';
+import { apiGet, apiPost, apiPatch } from '@/shared/lib/api';
+import { useToastStore } from '@/stores/useToastStore';
+import { useProjectContextStore } from '@/stores/useProjectContextStore';
+import { BidComparisonChart } from './BidComparisonChart';
+import { AddendumList } from './AddendumList';
+import { LevelingMatrix } from './LevelingMatrix';
+import { getIntlLocale } from '@/shared/lib/formatters';
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -139,25 +129,22 @@ interface BidComparison {
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
-const STATUS_COLORS: Record<
-  string,
-  "neutral" | "blue" | "success" | "warning" | "error"
-> = {
-  draft: "neutral",
-  issued: "blue",
-  collecting: "blue",
-  evaluating: "warning",
-  awarded: "success",
-  closed: "neutral",
-  pending: "neutral",
-  submitted: "blue",
-  accepted: "success",
-  rejected: "error",
+const STATUS_COLORS: Record<string, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
+  draft: 'neutral',
+  issued: 'blue',
+  collecting: 'blue',
+  evaluating: 'warning',
+  awarded: 'success',
+  closed: 'neutral',
+  pending: 'neutral',
+  submitted: 'blue',
+  accepted: 'success',
+  rejected: 'error',
 };
 
 function formatCurrency(amount: number | string, currency?: string): string {
-  const num = typeof amount === "string" ? parseFloat(amount) || 0 : amount;
-  const code = (currency || "").trim().toUpperCase();
+  const num = typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
+  const code = (currency || '').trim().toUpperCase();
   // NEVER hard-fallback to EUR (task #217): a project priced in BRL/INR
   // must not render its tender amounts with a Euro sign. When the currency
   // is unknown, show a plain decimal number with no symbol.
@@ -169,7 +156,7 @@ function formatCurrency(amount: number | string, currency?: string): string {
   }
   try {
     return new Intl.NumberFormat(getIntlLocale(), {
-      style: "currency",
+      style: 'currency',
       currency: code,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
@@ -208,30 +195,25 @@ function DeviationBadge({ pct }: { pct: number }) {
   );
 }
 
-function translateStatus(
-  status: string,
-  t: ReturnType<typeof useTranslation>["t"],
-): string {
+function translateStatus(status: string, t: ReturnType<typeof useTranslation>['t']): string {
   const STATUS_I18N: Record<string, string> = {
-    draft: t("tendering.status_draft", "Draft"),
-    issued: t("tendering.status_issued", "Issued"),
-    collecting: t("tendering.status_collecting", "Collecting"),
-    evaluating: t("tendering.status_evaluating", "Evaluating"),
-    awarded: t("tendering.status_awarded", "Awarded"),
-    closed: t("tendering.status_closed", "Closed"),
-    pending: t("tendering.status_pending", "Pending"),
-    submitted: t("tendering.status_submitted", "Submitted"),
-    accepted: t("tendering.status_accepted", "Accepted"),
-    rejected: t("tendering.status_rejected", "Rejected"),
+    draft: t('tendering.status_draft', 'Draft'),
+    issued: t('tendering.status_issued', 'Issued'),
+    collecting: t('tendering.status_collecting', 'Collecting'),
+    evaluating: t('tendering.status_evaluating', 'Evaluating'),
+    awarded: t('tendering.status_awarded', 'Awarded'),
+    closed: t('tendering.status_closed', 'Closed'),
+    pending: t('tendering.status_pending', 'Pending'),
+    submitted: t('tendering.status_submitted', 'Submitted'),
+    accepted: t('tendering.status_accepted', 'Accepted'),
+    rejected: t('tendering.status_rejected', 'Rejected'),
   };
   return STATUS_I18N[status] || status;
 }
 
 function formatDate(dateStr: string): string {
   try {
-    return new Intl.DateTimeFormat(getIntlLocale(), {
-      dateStyle: "medium",
-    }).format(new Date(dateStr));
+    return new Intl.DateTimeFormat(getIntlLocale(), { dateStyle: 'medium' }).format(new Date(dateStr));
   } catch {
     return dateStr;
   }
@@ -255,7 +237,7 @@ function SelectDropdown({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className={`h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm transition-all duration-normal ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue hover:border-content-tertiary ${
-        !value ? "text-content-tertiary" : "text-content-primary"
+        !value ? 'text-content-tertiary' : 'text-content-primary'
       }`}
     >
       <option value="">{placeholder}</option>
@@ -282,24 +264,24 @@ function CreatePackageDialog({
   onCreated: () => void;
 }) {
   const { t } = useTranslation();
-  const [name, setName] = useState("");
-  const [boqId, setBoqId] = useState("");
-  const [description, setDescription] = useState("");
-  const [deadline, setDeadline] = useState("");
+  const [name, setName] = useState('');
+  const [boqId, setBoqId] = useState('');
+  const [description, setDescription] = useState('');
+  const [deadline, setDeadline] = useState('');
 
   const addToast = useToastStore((s) => s.addToast);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') onClose();
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
   }, [onClose]);
 
   const createMutation = useMutation({
     mutationFn: () =>
-      apiPost<TenderPackage>("/v1/tendering/packages/", {
+      apiPost<TenderPackage>('/v1/tendering/packages/', {
         project_id: projectId,
         boq_id: boqId,
         name,
@@ -309,40 +291,27 @@ function CreatePackageDialog({
     onSuccess: () => {
       onCreated();
       onClose();
-      addToast({
-        type: "success",
-        title: t("toasts.package_created", {
-          defaultValue: "Tender package created‌⁠‍",
-        }),
-      });
+      addToast({ type: 'success', title: t('toasts.package_created', { defaultValue: 'Tender package created‌⁠‍' }) });
     },
     onError: (error: Error) => {
-      addToast({
-        type: "error",
-        title: t("toasts.error", { defaultValue: "Error" }),
-        message: error.message,
-      });
+      addToast({ type: 'error', title: t('toasts.error', { defaultValue: 'Error' }), message: error.message });
     },
   });
 
   const fieldCls =
-    "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
+    'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
   return (
     <WideModal
       open
       onClose={onClose}
-      title={t("tendering.new_package", "New Tender Package")}
+      title={t('tendering.new_package', 'New Tender Package')}
       size="lg"
       busy={createMutation.isPending}
       footer={
         <>
-          <Button
-            variant="ghost"
-            onClick={onClose}
-            disabled={createMutation.isPending}
-          >
-            {t("common.cancel", "Cancel")}
+          <Button variant="ghost" onClick={onClose} disabled={createMutation.isPending}>
+            {t('common.cancel', 'Cancel')}
           </Button>
           <Button
             variant="primary"
@@ -350,14 +319,14 @@ function CreatePackageDialog({
             loading={createMutation.isPending}
             onClick={() => createMutation.mutate()}
           >
-            {t("tendering.create_package", "Create Package")}
+            {t('tendering.create_package', 'Create Package')}
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
         <WideModalField
-          label={t("tendering.package_name", "Package Name")}
+          label={t('tendering.package_name', 'Package Name')}
           required
           span={2}
         >
@@ -365,25 +334,19 @@ function CreatePackageDialog({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder={t(
-              "tendering.package_name_placeholder",
-              "e.g. Concrete Works Package",
-            )}
+            placeholder={t('tendering.package_name_placeholder', 'e.g. Concrete Works Package')}
             className={fieldCls}
           />
         </WideModalField>
-        <WideModalField
-          label={t("tendering.source_boq", "Source BOQ")}
-          required
-        >
+        <WideModalField label={t('tendering.source_boq', 'Source BOQ')} required>
           <SelectDropdown
             value={boqId}
             onChange={setBoqId}
             options={boqs.map((b) => ({ value: b.id, label: b.name }))}
-            placeholder={t("tendering.select_boq", "Select a BOQ...")}
+            placeholder={t('tendering.select_boq', 'Select a BOQ...')}
           />
         </WideModalField>
-        <WideModalField label={t("tendering.deadline", "Deadline")}>
+        <WideModalField label={t('tendering.deadline', 'Deadline')}>
           <input
             type="date"
             value={deadline}
@@ -392,7 +355,7 @@ function CreatePackageDialog({
           />
         </WideModalField>
         <WideModalField
-          label={t("tendering.description", "Description")}
+          label={t('tendering.description', 'Description')}
           span={2}
         >
           <textarea
@@ -400,10 +363,7 @@ function CreatePackageDialog({
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none"
-            placeholder={t(
-              "tendering.description_placeholder",
-              "Brief description of the package scope...",
-            )}
+            placeholder={t('tendering.description_placeholder', 'Brief description of the package scope...')}
           />
         </WideModalField>
       </WideModalSection>
@@ -426,17 +386,17 @@ function AddBidDialog({
 }) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
-  const [companyName, setCompanyName] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [totalAmount, setTotalAmount] = useState("");
-  const [notes, setNotes] = useState("");
+  const [companyName, setCompanyName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [totalAmount, setTotalAmount] = useState('');
+  const [notes, setNotes] = useState('');
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') onClose();
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
   }, [onClose]);
 
   const createMutation = useMutation({
@@ -444,47 +404,36 @@ function AddBidDialog({
       apiPost<BidData>(`/v1/tendering/packages/${packageId}/bids/`, {
         company_name: companyName,
         contact_email: contactEmail,
-        total_amount: totalAmount || "0",
+        total_amount: totalAmount || '0',
         currency,
         submitted_at: new Date().toISOString().slice(0, 10),
-        status: "submitted",
+        status: 'submitted',
         notes,
       }),
     onSuccess: () => {
       onCreated();
       onClose();
-      addToast({
-        type: "success",
-        title: t("toasts.bid_submitted", { defaultValue: "Bid submitted‌⁠‍" }),
-      });
+      addToast({ type: 'success', title: t('toasts.bid_submitted', { defaultValue: 'Bid submitted‌⁠‍' }) });
     },
     onError: (error: Error) => {
-      addToast({
-        type: "error",
-        title: t("toasts.error", { defaultValue: "Error" }),
-        message: error.message,
-      });
+      addToast({ type: 'error', title: t('toasts.error', { defaultValue: 'Error' }), message: error.message });
     },
   });
 
   const fieldCls =
-    "h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue";
+    'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary placeholder:text-content-tertiary transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
   return (
     <WideModal
       open
       onClose={onClose}
-      title={t("tendering.add_bid", "Add Bid")}
+      title={t('tendering.add_bid', 'Add Bid')}
       size="lg"
       busy={createMutation.isPending}
       footer={
         <>
-          <Button
-            variant="ghost"
-            onClick={onClose}
-            disabled={createMutation.isPending}
-          >
-            {t("common.cancel", "Cancel")}
+          <Button variant="ghost" onClick={onClose} disabled={createMutation.isPending}>
+            {t('common.cancel', 'Cancel')}
           </Button>
           <Button
             variant="primary"
@@ -492,14 +441,14 @@ function AddBidDialog({
             loading={createMutation.isPending}
             onClick={() => createMutation.mutate()}
           >
-            {t("tendering.submit_bid", "Submit Bid")}
+            {t('tendering.submit_bid', 'Submit Bid')}
           </Button>
         </>
       }
     >
       <WideModalSection columns={2}>
         <WideModalField
-          label={t("tendering.company_name", "Company Name")}
+          label={t('tendering.company_name', 'Company Name')}
           required
           span={2}
         >
@@ -507,14 +456,11 @@ function AddBidDialog({
             type="text"
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
-            placeholder={t(
-              "tendering.company_placeholder",
-              "e.g. Schmidt Bau GmbH",
-            )}
+            placeholder={t('tendering.company_placeholder', 'e.g. Schmidt Bau GmbH')}
             className={fieldCls}
           />
         </WideModalField>
-        <WideModalField label={t("tendering.contact_email", "Contact Email")}>
+        <WideModalField label={t('tendering.contact_email', 'Contact Email')}>
           <input
             type="email"
             value={contactEmail}
@@ -526,8 +472,8 @@ function AddBidDialog({
         <WideModalField
           label={
             currency
-              ? `${t("tendering.total_amount", "Total Amount")} (${currency})`
-              : t("tendering.total_amount", "Total Amount")
+              ? `${t('tendering.total_amount', 'Total Amount')} (${currency})`
+              : t('tendering.total_amount', 'Total Amount')
           }
         >
           <input
@@ -538,13 +484,13 @@ function AddBidDialog({
             className={fieldCls}
           />
         </WideModalField>
-        <WideModalField label={t("tendering.notes", "Notes")} span={2}>
+        <WideModalField label={t('tendering.notes', 'Notes')} span={2}>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
             className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none"
-            placeholder={t("tendering.notes_placeholder", "Optional notes...")}
+            placeholder={t('tendering.notes_placeholder', 'Optional notes...')}
           />
         </WideModalField>
       </WideModalSection>
@@ -570,7 +516,7 @@ function PackageCard({
       hoverable
       padding="none"
       className={`cursor-pointer transition-all ${
-        isSelected ? "ring-2 ring-oe-blue/40 border-oe-blue/40" : ""
+        isSelected ? 'ring-2 ring-oe-blue/40 border-oe-blue/40' : ''
       }`}
       onClick={onClick}
     >
@@ -585,10 +531,7 @@ function PackageCard({
           <div className="mt-0.5 flex items-center gap-3 text-xs text-content-secondary">
             <span className="flex items-center gap-1">
               <FileText size={12} />
-              {t("tendering.bid_count", {
-                defaultValue: "{{count}} bids‌⁠‍",
-                count: pkg.bid_count,
-              })}
+              {t('tendering.bid_count', { defaultValue: '{{count}} bids‌⁠‍', count: pkg.bid_count })}
             </span>
             {pkg.deadline && (
               <span className="flex items-center gap-1">
@@ -598,7 +541,7 @@ function PackageCard({
             )}
           </div>
         </div>
-        <Badge variant={STATUS_COLORS[pkg.status] || "neutral"} size="sm">
+        <Badge variant={STATUS_COLORS[pkg.status] || 'neutral'} size="sm">
           {translateStatus(pkg.status, t)}
         </Badge>
         <span className="text-content-tertiary">
@@ -640,17 +583,17 @@ function BidComparisonTable({
     return (
       <EmptyState
         icon={<BarChart3 size={28} strokeWidth={1.5} />}
-        title={t("tendering.no_bids_yet", "No bids yet")}
+        title={t('tendering.no_bids_yet', 'No bids yet')}
         description={t(
-          "tendering.no_bids_description",
-          "Add bids to see a side-by-side comparison.",
+          'tendering.no_bids_description',
+          'Add bids to see a side-by-side comparison.',
         )}
       />
     );
   }
 
   const stickyColClass =
-    "sticky left-0 z-10 bg-surface-primary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]";
+    'sticky left-0 z-10 bg-surface-primary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]';
   const hiddenCount = comparison.rows.length - visibleRows.length;
 
   return (
@@ -663,21 +606,14 @@ function BidComparisonTable({
             onChange={(e) => setHideLowVariance(e.target.checked)}
             className="h-3.5 w-3.5 rounded border-border text-oe-blue focus:ring-oe-blue/30"
           />
-          {t(
-            "tendering.compare.collapseLowVariance",
-            "Hide low-variance positions",
-          )}
+          {t('tendering.compare.collapseLowVariance', 'Hide low-variance positions')}
         </label>
         <label
           className={`inline-flex items-center gap-2 transition-opacity ${
-            hideLowVariance
-              ? "text-content-secondary"
-              : "text-content-tertiary opacity-60"
+            hideLowVariance ? 'text-content-secondary' : 'text-content-tertiary opacity-60'
           }`}
         >
-          <span>
-            {t("tendering.compare.varianceThreshold", "Variance threshold")}
-          </span>
+          <span>{t('tendering.compare.varianceThreshold', 'Variance threshold')}</span>
           <select
             value={varianceThreshold}
             onChange={(e) => setVarianceThreshold(Number(e.target.value))}
@@ -693,10 +629,7 @@ function BidComparisonTable({
         </label>
         {hideLowVariance && hiddenCount > 0 && (
           <span className="text-content-tertiary">
-            {t("tendering.compare.hiddenCount", {
-              defaultValue: "{{count}} hidden",
-              count: hiddenCount,
-            })}
+            {t('tendering.compare.hiddenCount', { defaultValue: '{{count}} hidden', count: hiddenCount })}
           </span>
         )}
       </div>
@@ -707,10 +640,10 @@ function BidComparisonTable({
               <th
                 className={`whitespace-nowrap px-3 py-2.5 text-left font-semibold text-content-primary ${stickyColClass} z-20`}
               >
-                {t("tendering.position", "Position")}
+                {t('tendering.position', 'Position')}
               </th>
               <th className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-content-primary">
-                {t("tendering.budget", "Budget")}
+                {t('tendering.budget', 'Budget')}
               </th>
               {comparison.bid_companies.map((company) => (
                 <th
@@ -731,12 +664,653 @@ function BidComparisonTable({
                 key={`${row.description}-${row.unit}-${idx}`}
                 className="group border-b border-border-light/50 transition-colors hover:bg-surface-secondary/30"
               >
+                <td className={`px-3 py-2.5 ${stickyColClass} z-20 group-hover:bg-surface-secondary/30`}>
+                  <span className="text-content-primary">{row.description || '-'}</span>
+                  <span className="ml-2 text-xs text-content-tertiary">{row.unit}</span>
+                </td>
+                <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums text-content-secondary">
+                  {formatNumber(row.budget_rate)}
+                </td>
+                {row.bids.map((bid, bi) => (
+                  <td
+                    key={`bid-${comparison.bid_companies[bi]}`}
+                    className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums"
+                  >
+                    <span className="text-content-primary">{formatNumber(bid.unit_rate)}</span>
+                    {bid.unit_rate > 0 && (
+                      <span className="ml-1.5">
+                        <DeviationBadge pct={bid.deviation_pct} />
+                      </span>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="border-t-2 border-border bg-surface-secondary/30">
+              <td
+                className={`px-3 py-3 font-bold text-content-primary sticky left-0 z-20 bg-surface-secondary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]`}
+              >
+                {t('tendering.total', 'TOTAL')}
+              </td>
+              <td className="whitespace-nowrap px-3 py-3 text-right font-bold tabular-nums text-content-primary">
+                {formatCurrency(comparison.budget_total, currency)}
+              </td>
+              {comparison.bid_totals.map((bt, i) => (
                 <td
-                  className={`px-3 py-2.5 ${stickyColClass} z-20 group-hover:bg-surface-secondary/30`}
+                  key={`total-${comparison.bid_companies[i]}`}
+                  className="whitespace-nowrap px-3 py-3 text-right tabular-nums"
                 >
-                  <span className="text-content-primary">
-                    {row.description || "-"}
+                  <span className="font-bold text-content-primary">
+                    {formatCurrency(bt.total, bt.currency)}
                   </span>
-                  <span className="ml-2 text-xs text-content-tertiary">
-                    {row.unit}
+                  <span className="ml-1.5">
+                    <DeviationBadge pct={bt.deviation_pct} />
                   </span>
+                </td>
+              ))}
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* ── Package Detail ───────────────────────────────────────────────────── */
+
+function PackageDetail({
+  packageId,
+  currency,
+}: {
+  packageId: string;
+  currency: string;
+}) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+  const { confirm, ...confirmProps } = useConfirm();
+  const [showAddBid, setShowAddBid] = useState(false);
+  // Sub-tab on the package detail view — bids/comparison ↔ addenda ↔
+  // leveling matrix. Defaults to "bids" so existing muscle memory keeps
+  // working; the two new tabs are additive.
+  const [activeTab, setActiveTab] = useState<'bids' | 'addenda' | 'leveling'>(
+    'bids',
+  );
+
+  // Fetch package with bids
+  const { data: pkg, isLoading: pkgLoading, isError: pkgError } = useQuery({
+    queryKey: ['tendering-package', packageId],
+    queryFn: () => apiGet<PackageWithBids>(`/v1/tendering/packages/${packageId}`),
+  });
+
+  // Fetch comparison
+  const {
+    data: comparison,
+    isLoading: comparisonLoading,
+    isError: comparisonError,
+  } = useQuery({
+    queryKey: ['tendering-comparison', packageId],
+    queryFn: () => apiGet<BidComparison>(`/v1/tendering/packages/${packageId}/comparison/`),
+  });
+
+  // Award mutation — routes through the dedicated apply-winner endpoint so
+  // the server performs the full transactional award (BOQ rate write-back,
+  // package → awarded, winning bid → accepted, competing bids → rejected).
+  // Previously this only PATCHed the bid status, leaving the package and
+  // losing bids in a stale state and never writing rates back to the BOQ.
+  const awardMutation = useMutation({
+    mutationFn: (bidId: string) =>
+      apiPost<{ positions_updated: number }>(
+        `/v1/tendering/packages/${packageId}/apply-winner/?bid_id=${bidId}`,
+        {},
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tendering-package', packageId] });
+      queryClient.invalidateQueries({ queryKey: ['tendering-comparison', packageId] });
+      queryClient.invalidateQueries({ queryKey: ['tendering-packages'] });
+      addToast({ type: 'success', title: t('toasts.bid_awarded', { defaultValue: 'Bid awarded‌⁠‍' }) });
+    },
+    onError: (error: Error) => {
+      addToast({ type: 'error', title: t('toasts.error', { defaultValue: 'Error' }), message: error.message });
+    },
+  });
+
+  // Update package status
+  const updateStatusMutation = useMutation({
+    mutationFn: (newStatus: string) =>
+      apiPatch<TenderPackage>(`/v1/tendering/packages/${packageId}`, {
+        status: newStatus,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tendering-package', packageId] });
+      queryClient.invalidateQueries({ queryKey: ['tendering-packages'] });
+      addToast({ type: 'success', title: t('toasts.status_updated', { defaultValue: 'Status updated‌⁠‍' }) });
+    },
+    onError: (error: Error) => {
+      addToast({ type: 'error', title: t('toasts.error', { defaultValue: 'Error' }), message: error.message });
+    },
+  });
+
+  const handleBidCreated = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['tendering-package', packageId] });
+    queryClient.invalidateQueries({ queryKey: ['tendering-comparison', packageId] });
+    queryClient.invalidateQueries({ queryKey: ['tendering-packages'] });
+  }, [queryClient, packageId]);
+
+  const handleExport = useCallback(() => {
+    if (!comparison) return;
+    const headers = ['Position', 'Unit', 'Budget Rate', ...comparison.bid_companies.map(c => `${c} Rate`)];
+    const rows = comparison.rows.map(row => [
+      row.description,
+      row.unit,
+      row.budget_rate.toFixed(2),
+      ...row.bids.map(b => b.unit_rate.toFixed(2)),
+    ]);
+    const footer = ['TOTAL', '', comparison.budget_total.toFixed(0), ...comparison.bid_totals.map(bt => bt.total.toFixed(0))];
+    const csv = [headers, ...rows, footer].map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bid-comparison-${pkg?.name || 'export'}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    addToast({ type: 'success', title: t('tendering.exported', { defaultValue: 'Comparison exported' }) });
+  }, [comparison, pkg, addToast, t]);
+
+  const lowestBid = useMemo(() => {
+    if (!comparison || comparison.bid_totals.length === 0) return undefined;
+    let min = comparison.bid_totals[0]!;
+    for (const bt of comparison.bid_totals) {
+      if (bt.total < min.total) min = bt;
+    }
+    return min;
+  }, [comparison]);
+
+  if (pkgLoading || (!pkg && !pkgError)) {
+    return (
+      <div className="mt-4">
+        <SkeletonTable rows={4} columns={5} />
+      </div>
+    );
+  }
+
+  if (pkgError || !pkg) {
+    return (
+      <div className="mt-4">
+        <Card className="py-12">
+          <EmptyState
+            icon={<AlertTriangle size={28} strokeWidth={1.5} />}
+            title={t('common.error', { defaultValue: 'Error' })}
+            description={t('tendering.package_load_error', {
+              defaultValue: 'Failed to load this tender package. Please try again.',
+            })}
+          />
+        </Card>
+      </div>
+    );
+  }
+
+  const awardablePackage = pkg.status === 'collecting' || pkg.status === 'evaluating';
+
+  return (
+    <div className="mt-4 space-y-4 animate-fade-in">
+      {/* Package info + actions */}
+      <Card>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-content-primary">{pkg.name}</h3>
+            {pkg.description && (
+              <p className="mt-0.5 text-sm text-content-secondary">{pkg.description}</p>
+            )}
+            <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-content-tertiary">
+              <Badge variant={STATUS_COLORS[pkg.status] || 'neutral'} size="sm">
+                {translateStatus(pkg.status, t)}
+              </Badge>
+              {pkg.deadline && (
+                <span className="flex items-center gap-1">
+                  <Clock size={12} />
+                  {t('tendering.deadline', 'Deadline')}: {formatDate(pkg.deadline)}
+                </span>
+              )}
+              <span>{t('tendering.bid_count', { defaultValue: '{{count}} bids', count: pkg.bids.length })}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<Plus size={14} />}
+              onClick={() => setShowAddBid(true)}
+            >
+              {t('tendering.add_bid', 'Add Bid')}
+            </Button>
+            {pkg.status === 'draft' && (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<Send size={14} />}
+                loading={updateStatusMutation.isPending}
+                onClick={() => updateStatusMutation.mutate('issued')}
+              >
+                {t('tendering.issue', 'Issue')}
+              </Button>
+            )}
+            {pkg.status === 'issued' && (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<Clock size={14} />}
+                loading={updateStatusMutation.isPending}
+                onClick={() => updateStatusMutation.mutate('collecting')}
+              >
+                {t('tendering.start_collecting', 'Start Collecting')}
+              </Button>
+            )}
+            {pkg.status === 'collecting' && (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<BarChart3 size={14} />}
+                loading={updateStatusMutation.isPending}
+                onClick={() => updateStatusMutation.mutate('evaluating')}
+              >
+                {t('tendering.evaluate', 'Evaluate Bids')}
+              </Button>
+            )}
+            {pkg.status === 'evaluating' && (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<Award size={14} />}
+                loading={updateStatusMutation.isPending}
+                onClick={() => updateStatusMutation.mutate('awarded')}
+              >
+                {t('tendering.mark_awarded', 'Mark Awarded')}
+              </Button>
+            )}
+            {(pkg.status === 'awarded' || pkg.status === 'evaluating') && (
+              <Button
+                variant="ghost"
+                size="sm"
+                loading={updateStatusMutation.isPending}
+                onClick={() => updateStatusMutation.mutate('closed')}
+              >
+                {t('tendering.close_package', 'Close')}
+              </Button>
+            )}
+          </div>
+        </div>
+      </Card>
+
+      {/* Sub-tab strip — RIB iTWO-style: bids ↔ addenda ↔ leveling */}
+      <div className="flex items-center gap-1 border-b border-border-light">
+        {([
+          { id: 'bids', label: t('tendering.tab_bids', 'Bids & Comparison') },
+          { id: 'addenda', label: t('tendering.tab_addenda', 'Addenda') },
+          { id: 'leveling', label: t('tendering.tab_leveling', 'Leveling') },
+        ] as const).map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setActiveTab(tab.id)}
+            className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === tab.id
+                ? 'border-oe-blue text-oe-blue'
+                : 'border-transparent text-content-secondary hover:text-content-primary'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Bids list */}
+      {activeTab === 'bids' && pkg.bids.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-content-primary">
+            {t('tendering.bids_received', 'Bids Received')}
+          </h4>
+          {pkg.bids.map((bid) => (
+            <Card key={bid.id} padding="none">
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-secondary text-content-tertiary">
+                  <Building2 size={14} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="text-sm font-medium text-content-primary">
+                    {bid.company_name}
+                  </span>
+                  {bid.contact_email && (
+                    <span className="ml-2 text-xs text-content-tertiary flex items-center gap-1 inline-flex">
+                      <Mail size={10} />
+                      {bid.contact_email}
+                    </span>
+                  )}
+                </div>
+                <span className="text-sm font-semibold tabular-nums text-content-primary">
+                  {formatCurrency(bid.total_amount, bid.currency)}
+                </span>
+                <Badge variant={STATUS_COLORS[bid.status] || 'neutral'} size="sm">
+                  {translateStatus(bid.status, t)}
+                </Badge>
+                {bid.status !== 'accepted' && bid.status !== 'rejected' && awardablePackage && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon={<Award size={14} />}
+                    loading={awardMutation.isPending}
+                    onClick={async () => {
+                      const ok = await confirm({
+                        title: t('tendering.award_confirm_title', { defaultValue: 'Award contract?' }),
+                        message: t('tendering.award_confirm', { defaultValue: 'Award this contract to {{company}}? Winning rates are written back to the BOQ and other bids are rejected. This action cannot be undone.', company: bid.company_name }),
+                        variant: 'warning',
+                      });
+                      if (ok) awardMutation.mutate(bid.id);
+                    }}
+                    title={t('tendering.award_bid', 'Award this bid')}
+                  >
+                    {t('tendering.award', 'Award')}
+                  </Button>
+                )}
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Comparison chart + table */}
+      {activeTab === 'bids' && (
+      <Card>
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-sm font-semibold text-content-primary flex items-center gap-2">
+            <BarChart3 size={16} className="text-oe-blue" />
+            {t('tendering.bid_comparison', 'Bid Comparison')}
+          </h4>
+          <Button variant="ghost" size="sm" icon={<Download size={14} />} onClick={handleExport}>
+            {t('tendering.export_comparison', 'Export')}
+          </Button>
+        </div>
+        {comparisonLoading ? (
+          <SkeletonTable rows={4} columns={4} />
+        ) : comparisonError ? (
+          <EmptyState
+            icon={<AlertTriangle size={28} strokeWidth={1.5} />}
+            title={t('common.error', { defaultValue: 'Error' })}
+            description={t('tendering.comparison_load_error', {
+              defaultValue: 'Failed to load the bid comparison. Please try again.',
+            })}
+          />
+        ) : comparison ? (
+          <>
+            <BidComparisonChart
+              bidTotals={comparison.bid_totals}
+              budgetTotal={comparison.budget_total}
+              currency={currency}
+            />
+            <BidComparisonTable comparison={comparison} currency={currency} />
+          </>
+        ) : null}
+      </Card>
+      )}
+
+      {/* Addenda sub-tab */}
+      {activeTab === 'addenda' && <AddendumList packageId={packageId} />}
+
+      {/* Leveling matrix sub-tab */}
+      {activeTab === 'leveling' && (
+        <LevelingMatrix packageId={packageId} currency={currency} />
+      )}
+
+      {/* Award recommendation */}
+      {activeTab === 'bids' && lowestBid && comparison && comparison.bid_count >= 2 && (
+        <Card className="border-semantic-success/20 bg-semantic-success-bg/30">
+          <div className="flex items-center gap-3">
+            <Award size={20} className="text-semantic-success" />
+            <div>
+              <p className="text-sm font-semibold text-semantic-success">
+                {t('tendering.recommendation', 'Recommendation')}
+              </p>
+              <p className="text-xs text-content-secondary">
+                {t('tendering.lowest_bid', 'Lowest bid from')}{' '}
+                <strong>{lowestBid.company_name}</strong>{' '}
+                {t('tendering.at', 'at')}{' '}
+                {formatCurrency(lowestBid.total, lowestBid.currency)}{' '}
+                (<DeviationBadge pct={lowestBid.deviation_pct} />
+                {' '}{t('tendering.vs_budget', 'vs budget')})
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Add bid dialog */}
+      {showAddBid && (
+        <AddBidDialog
+          packageId={packageId}
+          currency={currency}
+          onClose={() => setShowAddBid(false)}
+          onCreated={handleBidCreated}
+        />
+      )}
+      <ConfirmDialog {...confirmProps} />
+    </div>
+  );
+}
+
+/* ── Main Page ─────────────────────────────────────────────────────────── */
+
+export function TenderingPage() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const { activeProjectId, setActiveProject } = useProjectContextStore();
+
+  const selectedProjectId = activeProjectId ?? '';
+  const [selectedPackageId, setSelectedPackageId] = useState('');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+
+  // Fetch projects
+  const { data: projects, isLoading: projectsLoading } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => apiGet<Project[]>('/v1/projects/'),
+    staleTime: 5 * 60_000,
+  });
+
+  // Fetch BOQs for selected project (needed for create dialog)
+  const { data: boqs } = useQuery({
+    queryKey: ['boqs', selectedProjectId],
+    queryFn: () => apiGet<BOQ[]>(`/v1/boq/boqs/?project_id=${selectedProjectId}`),
+    enabled: !!selectedProjectId,
+  });
+
+  // Fetch packages for selected project
+  const {
+    data: packages,
+    isLoading: packagesLoading,
+    isError: packagesError,
+  } = useQuery({
+    queryKey: ['tendering-packages', selectedProjectId],
+    queryFn: () =>
+      apiGet<TenderPackage[]>(
+        `/v1/tendering/packages/?project_id=${selectedProjectId}`,
+      ),
+    enabled: !!selectedProjectId,
+  });
+
+  const selectedProject = useMemo(
+    () => projects?.find((p) => p.id === selectedProjectId),
+    [projects, selectedProjectId],
+  );
+
+  // Currency comes from the selected project — never hardcoded (task #217).
+  // Empty string when the project has none; formatCurrency then renders a
+  // symbol-less number rather than mislabelling amounts as EUR.
+  const currency = selectedProject?.currency || '';
+
+  const handleProjectChange = useCallback((id: string) => {
+    const name = projects?.find((p) => p.id === id)?.name ?? '';
+    if (id) {
+      setActiveProject(id, name);
+    } else {
+      useProjectContextStore.getState().clearProject();
+    }
+    setSelectedPackageId('');
+  }, [projects, setActiveProject]);
+
+  const handlePackageCreated = useCallback(() => {
+    queryClient.invalidateQueries({
+      queryKey: ['tendering-packages', selectedProjectId],
+    });
+  }, [queryClient, selectedProjectId]);
+
+  const projectOptions = (projects || []).map((p) => ({
+    value: p.id,
+    label: p.name,
+  }));
+
+  return (
+    <div className="w-full animate-fade-in">
+      <Breadcrumb items={[
+        { label: t('nav.dashboard', 'Dashboard'), to: '/' },
+        { label: t('tendering.title', 'Tendering') },
+      ]} className="mb-4" />
+
+      {/* Header */}
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-content-primary">
+            {t('tendering.title', 'Tendering')}
+          </h1>
+          <p className="mt-1 text-sm text-content-secondary">
+            {t(
+              'tendering.subtitle',
+              'Manage bid packages, collect and compare subcontractor offers',
+            )}
+          </p>
+        </div>
+      </div>
+
+      {/* Workflow explanation */}
+      <InfoHint className="mb-6" text={t('tendering.workflow_desc', { defaultValue: 'Tendering workflow: Draft (prepare package) → Issued (send to bidders) → Collecting (receive bids) → Evaluating (compare offers side-by-side) → Awarded (select winner). Create a package from a BOQ, add subcontractor bids, then use the comparison table to identify the best offer. Add 2+ bids to see a side-by-side analysis.' })} />
+
+      {/* Project selector + New package button */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end">
+        <div className="flex-1">
+          {projectsLoading ? (
+            <Skeleton height={40} className="w-full" rounded="md" />
+          ) : (
+            <div>
+              <label className="text-sm font-medium text-content-primary block mb-1.5">
+                {t('tendering.select_project', 'Project')}
+              </label>
+              <SelectDropdown
+                value={selectedProjectId}
+                onChange={handleProjectChange}
+                options={projectOptions}
+                placeholder={t('tendering.select_project_placeholder', 'Choose a project...')}
+              />
+            </div>
+          )}
+        </div>
+        <span title={!selectedProjectId ? t('tendering.select_project_first', { defaultValue: 'Select a project first' }) : undefined}>
+          <Button
+            variant="primary"
+            size="md"
+            icon={<Plus size={16} />}
+            disabled={!selectedProjectId}
+            onClick={() => setShowCreateDialog(true)}
+          >
+            {t('tendering.new_package', 'New Tender Package')}
+          </Button>
+        </span>
+      </div>
+
+      {/* No project selected */}
+      {!selectedProjectId && (
+        <EmptyState
+          icon={<FileText size={28} strokeWidth={1.5} />}
+          title={t('tendering.select_project_title', { defaultValue: 'Select a project' })}
+          description={t('tendering.select_project_desc', {
+            defaultValue: 'Select a project and create a tender from a BOQ to get started',
+          })}
+        />
+      )}
+
+      {/* Loading packages */}
+      {selectedProjectId && packagesLoading && (
+        <SkeletonTable rows={2} columns={4} />
+      )}
+
+      {/* Failed to load packages */}
+      {selectedProjectId && !packagesLoading && packagesError && (
+        <Card className="py-12">
+          <EmptyState
+            icon={<AlertTriangle size={28} strokeWidth={1.5} />}
+            title={t('common.error', { defaultValue: 'Error' })}
+            description={t('tendering.packages_load_error', {
+              defaultValue: 'Failed to load tender packages. Please try again.',
+            })}
+          />
+        </Card>
+      )}
+
+      {/* No packages */}
+      {selectedProjectId && !packagesLoading && !packagesError && packages && packages.length === 0 && (
+        <EmptyState
+          icon={<FileText size={28} strokeWidth={1.5} />}
+          title={t('tendering.no_packages', { defaultValue: 'No tenders yet' })}
+          description={t('tendering.no_packages_description', {
+            defaultValue: 'Create a tender from a BOQ to start collecting bids',
+          })}
+          action={{
+            label: t('tendering.new_package', { defaultValue: 'New Tender Package' }),
+            onClick: () => setShowCreateDialog(true),
+          }}
+        />
+      )}
+
+      {/* Packages list */}
+      {packages && packages.length > 0 && (
+        <div>
+          <h2 className="mb-3 text-sm font-semibold text-content-primary">
+            {t('tendering.packages', 'Packages')}
+          </h2>
+          <div className="space-y-2">
+            {packages.map((pkg) => (
+              <PackageCard
+                key={pkg.id}
+                pkg={pkg}
+                isSelected={selectedPackageId === pkg.id}
+                onClick={() =>
+                  setSelectedPackageId(
+                    selectedPackageId === pkg.id ? '' : pkg.id,
+                  )
+                }
+              />
+            ))}
+          </div>
+
+          {/* Selected package detail */}
+          {selectedPackageId && (
+            <PackageDetail
+              packageId={selectedPackageId}
+              currency={currency}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Create package dialog */}
+      {showCreateDialog && selectedProjectId && (
+        <CreatePackageDialog
+          projectId={selectedProjectId}
+          boqs={boqs || []}
+          onClose={() => setShowCreateDialog(false)}
+          onCreated={handlePackageCreated}
+        />
+      )}
+    </div>
+  );
+}
